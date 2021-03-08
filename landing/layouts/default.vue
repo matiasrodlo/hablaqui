@@ -1,7 +1,7 @@
 <template>
-  <v-app>
-    <v-app-bar fixed color="info" dark>
-      <v-btn fab small nuxt-link to="/" color="white" />
+  <v-app app>
+    <v-app-bar fixed color="info" dark app>
+      <v-btn fab small nuxt-link to="/" color="white">Logo</v-btn>
       <span class="ml-2">LOGO</span>
       <v-spacer></v-spacer>
       <v-btn text small class="text-capitalize">Hazte miembro</v-btn>
@@ -13,9 +13,7 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-main>
   </v-app>
 </template>
