@@ -34,7 +34,7 @@ steps:
     args: ["run", "build"]
     dir: "front"
     id: "build-front"
-    waitFor: ["install-front", "envvars-front"]
+    waitFor: ["install-front"]
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
