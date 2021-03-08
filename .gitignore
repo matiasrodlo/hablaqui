@@ -1,5 +1,7 @@
 api/package-lock.json
 api/package-lock.json
+landing/package-lock.json
+front/package-lock.json
 # Logs
 logs
 *.log

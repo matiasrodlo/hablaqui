@@ -1,0 +1,68 @@
+steps:
+  - name: node:10.15.1
+    entrypoint: npm
+    args: ["install"]
+    dir: "landing"
+    id: "install-landing"
+    waitFor: ["-"]
+  - name: node:10.15.1
+    entrypoint: npm
+    args: ["run", "build"]
+    dir: "landing"
+    id: "build-landing"
+    waitFor: ["install-landing"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "app",
+        "deploy",
+        "--version=$BRANCH_NAME",
+        "--no-promote",
+        "--no-stop-previous-version",
+      ]
+    dir: "landing"
+    id: "deploy-landing"
+    waitFor: ["install-landing", "build-landing"]
+  - name: node:10.15.1
+    entrypoint: npm
+    args: ["install"]
+    dir: "front"
+    id: "install-front"
+    waitFor: ["-"]
+  - name: node:10.15.1
+    entrypoint: npm
+    args: ["run", "build"]
+    dir: "front"
+    id: "build-front"
+    waitFor: ["install-front", "envvars-front"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "app",
+        "deploy",
+        "--version=$BRANCH_NAME",
+        "--no-promote",
+        "--no-stop-previous-version",
+      ]
+    dir: "front"
+    id: "deploy-front"
+    waitFor: ["install-front", "build-front"]
+  - name: node:10.15.1
+    entrypoint: npm
+    args: ["install"]
+    dir: "api"
+    id: "install-api"
+    waitFor: ["-"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "app",
+        "deploy",
+        "--version=$BRANCH_NAME",
+        "--no-promote",
+        "--no-stop-previous-version",
+      ]
+    dir: "api"
+    waitFor: ["install-api"]
+
+timeout: "2600s"
