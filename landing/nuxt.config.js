@@ -54,10 +54,12 @@ export default {
         light: {
           primary: '#6786ff',
           secondary: '#4ac193',
+          info: '#273647',
         },
         dark: {
           primary: '#6786ff',
           secondary: '#4ac193',
+          info: '#273647',
         },
       },
     },
