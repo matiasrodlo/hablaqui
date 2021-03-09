@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Specialists from '../views/Specialists.vue';
+import Prueba from '../views/Prueba.vue';
 
 Vue.use(VueRouter);
 
@@ -8,14 +9,20 @@ const routes = [
 	{
 		path: '/',
 		name: 'especialistas',
-		component: Home,
-		meta: { title: 'Nuestros especialistas' },
+		component: Specialists,
+		meta: { title: 'Nuestros especialistas', layout: 'layout' },
+	},
+	{
+		path: '/test',
+		name: 'prueba',
+		component: Prueba,
+		meta: { title: 'Prueba', layout: 'layout' },
 	},
 	{
 		path: '*',
 		name: 'Error',
 		component: require('@/views/404').default, // load sync
-		meta: { title: '404' },
+		meta: { title: '404', layout: 'simple' },
 	},
 ];
 

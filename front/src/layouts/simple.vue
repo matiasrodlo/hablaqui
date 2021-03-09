@@ -1,11 +1,13 @@
 <template>
 	<div>
-		hola mundo
+		<v-main>
+			<router-view />
+		</v-main>
 	</div>
 </template>
 
 <script>
 export default {
-	name: 'Home',
+	name: 'SimpleLayout',
 };
 </script>
