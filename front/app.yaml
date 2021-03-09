@@ -1,7 +1,7 @@
 runtime: nodejs10
 service: frontend
 handlers:
-    # Serve all static files with urls ending with a file extension
+    # Serve all static files withdd urls ending with a file extension
     - url: /(.*\..+)$
       static_files: dist/\1
       upload: dist/(.*\..+)$
