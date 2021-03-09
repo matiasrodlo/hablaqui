@@ -1,5 +1,5 @@
 <template>
-	<v-app>
+	<v-app style="background-color: #F0F8FF">
 		<component :is="$route.meta.layout">
 			<router-view />
 		</component>
@@ -15,3 +15,13 @@ export default {
 	}),
 };
 </script>
+
+<style>
+.v-btn i:hover {
+	transform: scale(1.15);
+}
+
+.v-btn {
+	text-transform: none !important;
+}
+</style>
