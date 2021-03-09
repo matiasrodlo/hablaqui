@@ -55,8 +55,37 @@
 				</v-row>
 				<v-row>
 					<v-col cols="12" sm="6" md="4" lg="3" v-for="item in items" :key="item._id">
-						<v-card style="border-radius:15px">
-							<v-card-text>{{ item.name }}</v-card-text>
+						<v-card style="border-radius:15px" class="text-center">
+							<div class="pa-2">
+								<v-btn
+									color="#9D9D9C"
+									class="elevation-0"
+									fab
+									width="100"
+									height="100"
+								></v-btn>
+							</div>
+							<v-card-text>
+								<div class="title text--secondary">{{ item.name }}</div>
+								<div class="body-1 primary--text">Cédula {{ item.rut }}</div>
+								<v-divider></v-divider>
+								<div class="body-2 mt-2">
+									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
+									neque tempora obcaecati, molestiae deleniti quos quibusdam
+									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
+									Commodi nulla dolorum quae. Possimus, ipsam!
+								</div>
+							</v-card-text>
+							<v-card-actions class="text-center">
+								<v-spacer></v-spacer>
+								<v-btn color="primary">Agenda cita oline</v-btn>
+								<v-spacer></v-spacer>
+							</v-card-actions>
+							<v-card-actions class="text-center">
+								<v-spacer></v-spacer>
+								<v-btn text color="#9D9D9C">Más información</v-btn>
+								<v-spacer></v-spacer>
+							</v-card-actions>
 						</v-card>
 					</v-col>
 				</v-row>
@@ -128,10 +157,10 @@ export default {
 	data() {
 		return {
 			items: [
-				{ _id: 1, name: 'user 1', rut: 1222231 },
-				{ _id: 2, name: 'user 2', rut: 1222231 },
-				{ _id: 3, name: 'user 3', rut: 1222231 },
-				{ _id: 4, name: 'user 4', rut: 1222231 },
+				{ _id: 1, name: 'user 1 trter', rut: 1222231 },
+				{ _id: 2, name: 'user 2 ewrew', rut: 1222231 },
+				{ _id: 3, name: 'user 3 wreewr', rut: 1222231 },
+				{ _id: 4, name: 'user 4 rerwe', rut: 1222231 },
 				{ _id: 5, name: 'user 5', rut: 1222231 },
 				{ _id: 6, name: 'user 6', rut: 1222231 },
 				{ _id: 7, name: 'user 7', rut: 1222231 },
