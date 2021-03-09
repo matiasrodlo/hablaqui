@@ -1,5 +1,5 @@
 <template>
-	<v-app style="background-color: #F0F8FF">
+	<v-app id="app" style="background-color: #F0F8FF">
 		<component :is="$route.meta.layout">
 			<router-view />
 		</component>
