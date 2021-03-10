@@ -9,37 +9,23 @@
 			flat
 			hide-on-scroll
 		>
-			<template slot:extension>
-				<v-row justify="space-between" align="flex-start" no-gutters>
-					<v-col cols="8" offset="2" offset-sm="0" sm="2">
-						<v-img
-							max-width="200"
-							alt="habla aqui Logo"
-							src="../assets/habla-aqui.png"
-						/>
-						<!-- TOD0 -->
-						<!-- <span>
-						<v-btn light rounded text x-large>
-							Nuestros especialistas
-						</v-btn>
-						<v-btn light rounded text x-large>
-							Para empresas
-						</v-btn>
-						<v-btn light rounded text x-large>
-							Para especialistas
-						</v-btn>
-					</span> -->
-					</v-col>
-					<v-col cols="12" sm="10" class="text-center text-sm-right">
-						<v-btn color="primary" rounded text x-large>
-							Entrar
-						</v-btn>
-						<v-btn rounded class="mx-2" color="primary">
-							Comenzar
-						</v-btn>
-					</v-col>
-				</v-row>
-			</template>
+			<v-img max-width="200" alt="habla aqui Logo" src="../assets/habla-aqui.png" contain />
+			<v-btn light rounded text x-large>
+				Nuestros especialistas
+			</v-btn>
+			<v-btn light rounded text x-large>
+				Para empresas
+			</v-btn>
+			<v-btn light rounded text x-large>
+				Para especialistas
+			</v-btn>
+			<v-spacer></v-spacer>
+			<v-btn color="primary" rounded text x-large>
+				Entrar
+			</v-btn>
+			<v-btn rounded class="mx-2" color="primary">
+				Comenzar
+			</v-btn>
 		</v-app-bar>
 		<v-main>
 			<router-view />
