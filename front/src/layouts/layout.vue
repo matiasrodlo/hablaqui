@@ -47,39 +47,51 @@
 			flat
 			hide-on-scroll
 		>
-			<v-img max-width="200" alt="habla aqui Logo" src="../assets/habla-aqui.png" contain />
-			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<br />
-				<v-btn
-					light
-					rounded
-					text
-					x-large
-					:to="{ name: 'especialistas' }"
-					active-class="info--text"
-				>
-					Nuestros especialistas
-				</v-btn>
-				<v-btn light rounded text x-large active-class="info--text">
-					Para empresas
-				</v-btn>
-				<v-btn light rounded text x-large active-class="info--text">
-					Para especialistas
-				</v-btn>
-				<v-spacer></v-spacer>
-				<v-btn color="primary" rounded text x-large>
-					Entrar
-				</v-btn>
-				<v-btn rounded class="mx-2" color="primary">
-					Comenzar
-				</v-btn>
-			</template>
-			<template v-else>
-				<v-spacer></v-spacer>
-				<v-btn icon @click="drawer = !drawer">
-					<v-icon>mdi-menu</v-icon>
-				</v-btn>
-			</template>
+			<v-row no-gutters>
+				<v-col cols="10" lg="2">
+					<v-img
+						max-width="200"
+						alt="habla aqui Logo"
+						src="../assets/habla-aqui.png"
+						contain
+					/>
+				</v-col>
+				<template v-if="$vuetify.breakpoint.mdAndUp">
+					<v-col cols="9" lg="7" class="text-left">
+						<v-btn
+							light
+							rounded
+							text
+							x-large
+							:to="{ name: 'especialistas' }"
+							active-class="info--text"
+						>
+							Nuestros especialistas
+						</v-btn>
+						<v-btn light rounded text x-large active-class="info--text">
+							Para empresas
+						</v-btn>
+						<v-btn light rounded text x-large active-class="info--text">
+							Para especialistas
+						</v-btn>
+					</v-col>
+					<v-col cols="3" class="text-right">
+						<v-btn color="primary" rounded text x-large>
+							Entrar
+						</v-btn>
+						<v-btn rounded class="mx-2" color="primary">
+							Comenzar
+						</v-btn>
+					</v-col>
+				</template>
+				<template v-else>
+					<v-col cols="2" class="text-right">
+						<v-btn icon @click="drawer = !drawer">
+							<v-icon>mdi-menu</v-icon>
+						</v-btn>
+					</v-col>
+				</template>
+			</v-row>
 		</v-app-bar>
 		<v-main>
 			<router-view />
@@ -151,14 +163,14 @@ export default {
 		height() {
 			if (this.$vuetify.breakpoint.xlAndUp) return '-150px';
 			if (this.$vuetify.breakpoint.lgAndUp) return '-140px';
-			if (this.$vuetify.breakpoint.mdAndUp) return '-60px';
+			if (this.$vuetify.breakpoint.mdAndUp) return '-30px';
 			if (this.$vuetify.breakpoint.smAndUp) return '-30px';
 			return '0px';
 		},
 		appbarHeight() {
 			if (this.$vuetify.breakpoint.xlAndUp) return '180';
 			if (this.$vuetify.breakpoint.lgAndUp) return '150';
-			if (this.$vuetify.breakpoint.mdAndUp) return '120';
+			if (this.$vuetify.breakpoint.mdAndUp) return '150';
 			if (this.$vuetify.breakpoint.smAndUp) return '100';
 			return '80';
 		},
