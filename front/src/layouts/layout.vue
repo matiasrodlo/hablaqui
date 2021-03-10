@@ -48,21 +48,15 @@
 			hide-on-scroll
 		>
 			<v-row no-gutters>
-				<v-col
-					cols="10"
-					lg="2"
-					@click="
-						() =>
-							$route.name !== 'especialistas' &&
-							$router.replace({ name: 'especialistas' })
-					"
-				>
-					<v-img
-						max-width="200"
-						alt="habla aqui Logo"
-						src="../assets/habla-aqui.png"
-						contain
-					/>
+				<v-col cols="10" lg="2">
+					<router-link :to="{ name: 'especialistas' }">
+						<v-img
+							max-width="200"
+							alt="habla aqui Logo"
+							src="../assets/habla-aqui.png"
+							contain
+						/>
+					</router-link>
 				</v-col>
 				<template v-if="$vuetify.breakpoint.mdAndUp">
 					<v-col cols="9" lg="7" class="text-left">
