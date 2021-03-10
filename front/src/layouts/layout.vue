@@ -93,12 +93,12 @@
 				</template>
 			</v-row>
 		</v-app-bar>
-		<v-main>
+		<v-main class="mb-16">
 			<router-view />
 		</v-main>
 		<v-footer absolute padless app>
 			<v-row>
-				<v-col cols="12" class="primary white--text">
+				<v-col cols="12" class="primary white--text pa-16">
 					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat, harum
 					dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod, adipisci esse
 					voluptas nisi omnis nihil animi similique natus. Lorem ipsum dolor sit amet,

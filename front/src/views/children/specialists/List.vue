@@ -70,9 +70,9 @@
 						<v-col cols="12" sm="6" md="4" lg="3" v-for="(item, i) in items" :key="i">
 							<v-card
 								min-height="450"
-								:dark="firstItem(i)"
 								style="border-radius:15px"
 								class="text-center"
+								:dark="firstItem(i)"
 								:color="firstItem(i) ? 'primary' : ''"
 							>
 								<div class="pa-2">
@@ -129,35 +129,84 @@
 					</template>
 					<template v-if="view == 2">
 						<v-col cols="12" v-for="(item, i) in items" :key="i">
-							<v-card>
-								<v-list three-line>
-									<v-list-item>
-										<v-list-item-avatar size="100">
+							<v-card
+								style="border-radius:15px"
+								:dark="firstItem(i)"
+								:color="firstItem(i) ? 'primary' : ''"
+							>
+								<v-card-text>
+									<v-row align="center" justify="center">
+										<v-col cols="2" class="text-center">
+											<v-list-item-avatar size="100" class="ml-4">
+												<v-btn
+													:style="
+														firstItem(i) && 'border: 8px solid #5EB3E4'
+													"
+													color="#9D9D9C"
+													class="elevation-0"
+													fab
+													width="100"
+													height="100"
+												></v-btn>
+											</v-list-item-avatar>
+											<div
+												v-if="!firstItem(i)"
+												class="caption text--secondary"
+											>
+												Cédula {{ item.rut }}
+											</div>
 											<v-btn
-												:style="firstItem(i) && 'border: 8px solid #5EB3E4'"
-												color="#9D9D9C"
-												class="elevation-0"
-												fab
-												width="100"
-												height="100"
-											></v-btn>
-										</v-list-item-avatar>
-										<v-list-item-content>
-											<v-list-item-title>
-												<div>{{ item.name }} - {{ item.rut }}</div>
-											</v-list-item-title>
-											<v-list-item-subtitle>
-												<div>
-													{{ item.description }}
-												</div>
-												<v-btn v-if="firstItem(i)" color="primary" dark>
-													Comenzar
-												</v-btn>
-											</v-list-item-subtitle>
-										</v-list-item-content>
-										<v-btn color="primary" rounded>Agenda cita oline</v-btn>
-									</v-list-item>
-								</v-list>
+												v-if="!firstItem(i)"
+												text
+												color="primary"
+												class="font-weight-bold"
+												:to="{
+													name: 'especialista',
+													params: { id: item._id },
+												}"
+											>
+												Más información
+											</v-btn>
+										</v-col>
+										<v-col cols="10">
+											<v-row justify="space-between">
+												<v-col
+													class="headline font-weight-bold"
+													:class="
+														firstItem(i)
+															? 'white--text'
+															: 'text--secondary'
+													"
+												>
+													{{ item.name }}
+												</v-col>
+												<v-col cols="3" class="text-right">
+													<v-btn
+														v-if="!firstItem(i)"
+														color="primary"
+														rounded
+													>
+														Agenda cita oline
+													</v-btn>
+												</v-col>
+											</v-row>
+											<div v-if="!firstItem(i)">
+												<v-chip
+													v-for="el in [3, 1, 2]"
+													:key="el"
+													small
+													class="mb-2 mx-2"
+												>
+													Ansiedad
+												</v-chip>
+											</div>
+											<div class="body-2 mt-2">{{ item.description }}</div>
+											<v-btn v-if="firstItem(i)" light class="px-10 mt-4">
+												Comenzar
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-card-text>
 							</v-card>
 						</v-col>
 					</template>
@@ -178,10 +227,7 @@ export default {
 					_id: 1,
 					name: 'Encuentra a tu psicólogo ideal',
 					rut: null,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
+					description: `Lorempsum dolor sit amet, consectetupsum dolor sit amet, consectetu`,
 				},
 				{
 					_id: 2,
