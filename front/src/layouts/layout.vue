@@ -48,7 +48,15 @@
 			hide-on-scroll
 		>
 			<v-row no-gutters>
-				<v-col cols="10" lg="2">
+				<v-col
+					cols="10"
+					lg="2"
+					@click="
+						() =>
+							$route.name !== 'especialistas' &&
+							$router.replace({ name: 'especialistas' })
+					"
+				>
 					<v-img
 						max-width="200"
 						alt="habla aqui Logo"

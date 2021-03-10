@@ -1,8 +1,14 @@
 <template>
 	<v-container fluid>
-		<v-row>
-			<v-col cols="12" class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
+		<v-row justify="space-between" align="center">
+			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				Elige a tu psicólogo online
+			</v-col>
+			<v-col cols="2" class="text-right">
+				<v-btn color="white" rounded class="my-6" @click="() => $router.go(-1)">
+					<v-icon>mdi-chevron-left</v-icon>
+					Regresar
+				</v-btn>
 			</v-col>
 		</v-row>
 		<v-row>
