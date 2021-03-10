@@ -136,7 +136,7 @@
 							>
 								<v-card-text>
 									<v-row align="center" justify="center">
-										<v-col cols="2" class="text-center">
+										<v-col cols="3" lg="2" class="text-center">
 											<v-list-item-avatar size="100" class="ml-4">
 												<v-btn
 													:style="
@@ -168,7 +168,7 @@
 												Más información
 											</v-btn>
 										</v-col>
-										<v-col cols="10">
+										<v-col cols="9" lg="10">
 											<v-row justify="space-between">
 												<v-col
 													class="headline font-weight-bold"
@@ -180,7 +180,7 @@
 												>
 													{{ item.name }}
 												</v-col>
-												<v-col cols="3" class="text-right">
+												<v-col cols="4" lg="3" class="text-right">
 													<v-btn
 														v-if="!firstItem(i)"
 														color="primary"
