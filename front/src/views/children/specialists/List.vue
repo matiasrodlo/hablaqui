@@ -50,6 +50,7 @@
 						<v-select
 							class="white"
 							hide-details
+							:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
 							outlined
 							label="Motivo de consulta"
 							no-data-text="Vacio"
@@ -59,6 +60,7 @@
 						<v-select
 							class="white"
 							hide-details
+							:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
 							outlined
 							label="Busca tu psicólogo"
 							no-data-text="Vacio"
