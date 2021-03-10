@@ -6,7 +6,7 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col cols="12" md="3">
+			<v-col cols="12" md="3" lg="2">
 				<v-card style="border-radius:15px" outlined>
 					<v-card-title class="text--secondary">
 						Filtrar por
@@ -20,7 +20,7 @@
 						<v-icon>mdi-view-grid-outline</v-icon>
 					</v-card-text>
 					<v-card-text>
-						<!-- <v-row>
+						<v-row>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Género</div>
 								<v-checkbox label="Hombre" hide-details></v-checkbox>
@@ -36,11 +36,11 @@
 								<v-checkbox label="Español" hide-details></v-checkbox>
 								<v-checkbox label="Ingles" hide-details></v-checkbox>
 							</v-col>
-						</v-row> -->
+						</v-row>
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" md="9">
+			<v-col cols="12" md="9" lg="10">
 				<v-row>
 					<v-col>
 						<v-select

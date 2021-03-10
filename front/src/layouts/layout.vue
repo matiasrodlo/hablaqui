@@ -1,13 +1,17 @@
 <template>
 	<div>
-		<!-- only mobile drawer -->
+		<!-- only sm and down drawer -->
 		<v-navigation-drawer v-model="drawer" absolute temporary>
 			<v-list-item>
 				<v-img max-width="150" src="../assets/habla-aqui.png"></v-img>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link>
+				<v-list-item
+					link
+					active-class="primary white--text"
+					:to="{ name: 'especialistas' }"
+				>
 					<v-list-item-content>
 						<v-list-item-title>Nuestros especialistas</v-list-item-title>
 					</v-list-item-content>
@@ -38,19 +42,28 @@
 			color="transparent"
 			app
 			:height="appbarHeight"
+			:style="{ backgroundPositionY: height }"
 			class="appbar-image"
 			flat
 			hide-on-scroll
 		>
 			<v-img max-width="200" alt="habla aqui Logo" src="../assets/habla-aqui.png" contain />
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn light rounded text x-large>
+				<br />
+				<v-btn
+					light
+					rounded
+					text
+					x-large
+					:to="{ name: 'especialistas' }"
+					active-class="info--text"
+				>
 					Nuestros especialistas
 				</v-btn>
-				<v-btn light rounded text x-large>
+				<v-btn light rounded text x-large active-class="info--text">
 					Para empresas
 				</v-btn>
-				<v-btn light rounded text x-large>
+				<v-btn light rounded text x-large active-class="info--text">
 					Para especialistas
 				</v-btn>
 				<v-spacer></v-spacer>
@@ -79,14 +92,7 @@
 					voluptas nisi omnis nihil animi similique natus. Lorem ipsum dolor sit amet,
 					consectetur adipisicing elit. Placeat, harum dolorem! A qui quaerat eius unde
 					beatae adipisci ex culpa. Quod, adipisci esse voluptas nisi omnis nihil animi
-					similique natus. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-					Placeat, harum dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod,
-					adipisci esse voluptas nisi omnis nihil animi similique natus. ipsum dolor sit
-					amet, consectetur adipisicing elit. Placeat, harum dolorem! A qui quaerat eius
-					unde beatae adipisci ex culpa. Quod, adipisci esse voluptas nisi omnis nihil
-					animi similique natus. ipsum dolor sit amet, consectetur adipisicing elit.
-					Placeat, harum dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod,
-					adipisci esse voluptas nisi omnis nihil animi similique natus.
+					similique natus. Lorem ipsum dolor sit ame.
 				</v-col>
 				<v-col cols="12" sm="3">
 					<div class="text-center headline text--secondary font-weight-bold">
@@ -143,13 +149,17 @@ export default {
 	},
 	computed: {
 		height() {
-			if (this.$vuetify.breakpoint.xl) return '-100px';
-			if (this.$vuetify.breakpoint.lg) return '-80px';
-			return '0';
+			if (this.$vuetify.breakpoint.xlAndUp) return '-150px';
+			if (this.$vuetify.breakpoint.lgAndUp) return '-140px';
+			if (this.$vuetify.breakpoint.mdAndUp) return '-60px';
+			if (this.$vuetify.breakpoint.smAndUp) return '-30px';
+			return '0px';
 		},
 		appbarHeight() {
-			if (this.$vuetify.breakpoint.xl) return '170';
-			if (this.$vuetify.breakpoint.lg) return '120';
+			if (this.$vuetify.breakpoint.xlAndUp) return '180';
+			if (this.$vuetify.breakpoint.lgAndUp) return '150';
+			if (this.$vuetify.breakpoint.mdAndUp) return '120';
+			if (this.$vuetify.breakpoint.smAndUp) return '100';
 			return '80';
 		},
 	},
