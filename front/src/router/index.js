@@ -1,22 +1,38 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Specialists from '../views/Specialists.vue';
-import Prueba from '../views/Prueba.vue';
+import index from '@/views/children/specialists/index.vue';
+import List from '@/views/children/specialists/List.vue';
+import Specialist from '@/views/children/specialists/Specialist.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
 	{
 		path: '/',
-		name: 'especialistas',
-		component: Specialists,
+		redirect: { name: 'especialistas' },
+		name: 'home',
+		component: index,
 		meta: { title: 'Nuestros especialistas', layout: 'layout' },
-	},
-	{
-		path: '/test',
-		name: 'prueba',
-		component: Prueba,
-		meta: { title: 'Prueba', layout: 'layout' },
+		children: [
+			{
+				path: '/especialistas',
+				name: 'especialistas',
+				component: List,
+				meta: {
+					title: 'Especialistas',
+					layout: 'layout',
+				},
+			},
+			{
+				path: '/especialista/:id',
+				name: 'especialista',
+				component: Specialist,
+				meta: {
+					title: 'Perfil del especialista',
+					layout: 'layout',
+				},
+			},
+		],
 	},
 	{
 		path: '*',
