@@ -78,6 +78,17 @@
 						</v-btn>
 					</v-col>
 					<v-col cols="3" class="text-right">
+						<v-btn
+							v-if="$route.name == 'especialista'"
+							text
+							color="primary"
+							rounded
+							x-large
+							@click="() => $router.go(-1)"
+						>
+							<v-icon>mdi-chevron-left</v-icon>
+							Regresar
+						</v-btn>
 						<v-btn color="primary" rounded text x-large>
 							Entrar
 						</v-btn>

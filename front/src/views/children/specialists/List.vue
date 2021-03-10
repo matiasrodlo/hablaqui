@@ -4,12 +4,6 @@
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				Elige a tu psicólogo online
 			</v-col>
-			<v-col cols="2" class="text-right">
-				<v-btn color="white" rounded class="my-6" @click="() => $router.go(-1)">
-					<v-icon>mdi-chevron-left</v-icon>
-					Regresar
-				</v-btn>
-			</v-col>
 		</v-row>
 		<v-row>
 			<v-col cols="12" md="3" lg="2">
@@ -21,11 +15,11 @@
 						<v-divider></v-divider>
 					</v-card-text>
 					<v-card-text style="height:70px" class="d-flex align-center">
-						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="view = 2">
+						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
 							<v-icon>mdi-menu</v-icon>
 						</v-btn>
 						<v-divider vertical class="mx-2"></v-divider>
-						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="view = 1">
+						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
 							<v-icon>mdi-view-grid-outline</v-icon>
 						</v-btn>
 					</v-card-text>
@@ -312,9 +306,19 @@ export default {
 			],
 		};
 	},
+	mounted() {
+		const view = localStorage.getItem('view');
+		if (view) {
+			this.view = view;
+		}
+	},
 	methods: {
 		firstItem(index) {
 			return index == 0;
+		},
+		setView(type) {
+			localStorage.setItem('view', type);
+			this.view = type;
 		},
 	},
 };
