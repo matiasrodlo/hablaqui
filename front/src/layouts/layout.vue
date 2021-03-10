@@ -71,7 +71,6 @@
 		<v-main>
 			<router-view />
 		</v-main>
-		<!--
 		<v-footer absolute padless app>
 			<v-row>
 				<v-col cols="12" class="primary white--text">
@@ -89,7 +88,7 @@
 					Placeat, harum dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod,
 					adipisci esse voluptas nisi omnis nihil animi similique natus.
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="12" sm="3">
 					<div class="text-center headline text--secondary font-weight-bold">
 						Acuerdos
 					</div>
@@ -100,7 +99,7 @@
 						Terminos y Condiciones
 					</div>
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="12" sm="3">
 					<div class="text-center headline text--secondary font-weight-bold">
 						Soporte Técnico
 					</div>
@@ -111,7 +110,7 @@
 						soporte@hablaqui.com
 					</div>
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="12" sm="3">
 					<div class="text-center headline text--secondary font-weight-bold">
 						Atención a clientes
 					</div>
@@ -122,7 +121,7 @@
 						John Harvard
 					</div>
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="12" sm="3">
 					<div class="text-center headline text--secondary font-weight-bold">
 						Pago seguro
 					</div>
@@ -131,7 +130,7 @@
 					</div>
 				</v-col>
 			</v-row>
-		</v-footer> -->
+		</v-footer>
 	</div>
 </template>
 
