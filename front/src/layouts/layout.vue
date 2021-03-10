@@ -1,19 +1,24 @@
 <template>
 	<div>
 		<v-app-bar
-			color="white"
+			color="transparent"
 			app
-			height="170"
+			height="190"
 			:style="{ backgroundPositionY: height }"
 			class="appbar-image"
 			flat
 			hide-on-scroll
 		>
-			<v-row justify="space-between" align="center" no-gutters>
-				<v-col cols="8" offset="2" offset-sm="0" sm="3">
-					<img style="width:100%" alt="habla aqui Logo" src="../assets/habla-aqui.png" />
-					<!-- TOD0 -->
-					<!-- <span>
+			<template slot:extension>
+				<v-row justify="space-between" align="flex-start" no-gutters>
+					<v-col cols="8" offset="2" offset-sm="0" sm="2">
+						<v-img
+							max-width="200"
+							alt="habla aqui Logo"
+							src="../assets/habla-aqui.png"
+						/>
+						<!-- TOD0 -->
+						<!-- <span>
 						<v-btn light rounded text x-large>
 							Nuestros especialistas
 						</v-btn>
@@ -24,16 +29,17 @@
 							Para especialistas
 						</v-btn>
 					</span> -->
-				</v-col>
-				<v-col cols="12" sm="9" class="text-center text-sm-right">
-					<v-btn color="primary" rounded text x-large>
-						Entrar
-					</v-btn>
-					<v-btn rounded class="mx-2" color="primary">
-						Comenzar
-					</v-btn>
-				</v-col>
-			</v-row>
+					</v-col>
+					<v-col cols="12" sm="10" class="text-center text-sm-right">
+						<v-btn color="primary" rounded text x-large>
+							Entrar
+						</v-btn>
+						<v-btn rounded class="mx-2" color="primary">
+							Comenzar
+						</v-btn>
+					</v-col>
+				</v-row>
+			</template>
 		</v-app-bar>
 		<v-main>
 			<router-view />
@@ -105,8 +111,8 @@
 export default {
 	computed: {
 		height() {
-			if (this.$vuetify.breakpoint.xl) return '-120px';
-			if (this.$vuetify.breakpoint.lg) return '-50px';
+			if (this.$vuetify.breakpoint.xl) return '-100px';
+			if (this.$vuetify.breakpoint.lg) return '-80px';
 			return '80px';
 		},
 	},
@@ -117,5 +123,10 @@ export default {
 .appbar-image {
 	background: url('../assets/appbar.png') no-repeat;
 	background-size: 100%;
+}
+
+v-app-bar.v-toolbar__content {
+	display: flex !important;
+	align-items: flex-start !important;
 }
 </style>
