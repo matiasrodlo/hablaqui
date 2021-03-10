@@ -1,12 +1,12 @@
 <template>
 	<v-container fluid>
 		<v-row>
-			<v-col cols="12" class="text-left font-weight-bold text-h3 text--secondary">
+			<v-col cols="12" class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				Elige a tu psicólogo online
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col cols="12" sm="4" md="3">
+			<v-col cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
 					<v-card-title class="text--secondary">
 						Filtrar por
@@ -20,19 +20,27 @@
 						<v-icon>mdi-view-grid-outline</v-icon>
 					</v-card-text>
 					<v-card-text>
-						<div class="title mt-2">Género</div>
-						<v-checkbox label="Hombre" hide-details></v-checkbox>
-						<v-checkbox label="Mujer" hide-details></v-checkbox>
-						<div class="title mt-2">Tipo de cita</div>
-						<v-checkbox label="Personal" hide-details></v-checkbox>
-						<v-checkbox label="Pareja" hide-details></v-checkbox>
-						<div class="title mt-2">Idioma</div>
-						<v-checkbox label="Español" hide-details></v-checkbox>
-						<v-checkbox label="Ingles" hide-details></v-checkbox>
+						<!-- <v-row>
+							<v-col cols="4" md="12">
+								<div class="title mt-2">Género</div>
+								<v-checkbox label="Hombre" hide-details></v-checkbox>
+								<v-checkbox label="Mujer" hide-details></v-checkbox>
+							</v-col>
+							<v-col cols="4" md="12">
+								<div class="title mt-2">Tipo de cita</div>
+								<v-checkbox label="Personal" hide-details></v-checkbox>
+								<v-checkbox label="Pareja" hide-details></v-checkbox>
+							</v-col>
+							<v-col cols="4" md="12">
+								<div class="title mt-2">Idioma</div>
+								<v-checkbox label="Español" hide-details></v-checkbox>
+								<v-checkbox label="Ingles" hide-details></v-checkbox>
+							</v-col>
+						</v-row> -->
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" sm="8" md="9">
+			<v-col cols="12" md="9">
 				<v-row>
 					<v-col>
 						<v-select
