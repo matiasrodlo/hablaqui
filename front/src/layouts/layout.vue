@@ -77,7 +77,7 @@
 							Para especialistas
 						</v-btn>
 					</v-col>
-					<v-col cols="3" class="text-right">
+					<v-col cols="3" class="text-right" style="position: relative">
 						<v-btn
 							v-if="$route.name == 'especialista'"
 							text
@@ -89,9 +89,9 @@
 							<v-icon>mdi-chevron-left</v-icon>
 							Regresar
 						</v-btn>
-						<v-btn color="primary" rounded text x-large>
-							Entrar
-						</v-btn>
+						<template>
+							<auth />
+						</template>
 						<v-btn rounded class="mx-2" color="primary">
 							Comenzar
 						</v-btn>
@@ -167,6 +167,9 @@
 
 <script>
 export default {
+	components: {
+		Auth: () => import('@/components/auth/Auth'),
+	},
 	data() {
 		return {
 			drawer: false,
