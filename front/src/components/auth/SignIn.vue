@@ -25,17 +25,5 @@ export default {
 	components: {
 		GoogleBtn: () => import('@/components/auth/GoogleBtn'),
 	},
-	data() {
-		return {
-			menu: false,
-			step: 1,
-		};
-	},
-	methods: {
-		setStep() {
-			if (this.step == 1) this.step = 2;
-			else this.step = 1;
-		},
-	},
 };
 </script>
