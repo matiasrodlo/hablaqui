@@ -17,6 +17,11 @@ export default {
 </script>
 
 <style>
+.v-text-field.v-text-field--enclosed {
+	border-radius: 10px;
+	padding: 1px !important;
+}
+
 .v-btn i:hover {
 	transform: scale(1.15);
 }
