@@ -1,5 +1,5 @@
 runtime: nodejs10
-
+service: landing
 instance_class: F2
 
 handlers:
