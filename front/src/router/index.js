@@ -1,38 +1,45 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import index from '@/views/children/specialists/index.vue';
-import List from '@/views/children/specialists/List.vue';
-import Specialist from '@/views/children/specialists/Specialist.vue';
-
 Vue.use(VueRouter);
+
+// views
+const index = () => import('@/views/children/specialists/index.vue');
+const List = () => import('@/views/children/specialists/List.vue');
+const Specialist = () => import('@/views/children/specialists/Specialist.vue');
 
 const routes = [
 	{
 		path: '/',
-		redirect: { name: 'especialistas' },
+		redirect: { name: 'psicologos' },
 		name: 'home',
 		component: index,
-		meta: { title: 'Nuestros especialistas', layout: 'layout' },
+		meta: { title: 'Nuestros psicologos', layout: 'layout' },
 		children: [
 			{
-				path: '/especialistas',
-				name: 'especialistas',
+				path: '/psicologos',
+				name: 'psicologos',
 				component: List,
 				meta: {
-					title: 'Especialistas',
+					title: 'Psicologos',
 					layout: 'layout',
 				},
 			},
 			{
-				path: '/especialista/:id',
-				name: 'especialista',
+				path: '/psicologo/:id',
+				name: 'psicologo',
 				component: Specialist,
 				meta: {
-					title: 'Perfil del especialista',
+					title: 'Perfil del psicologo',
 					layout: 'layout',
 				},
 			},
 		],
+	},
+	{
+		path: '/autenticacion',
+		name: 'autenticacion',
+		component: index,
+		meta: { title: 'Autenticacion', layout: 'simple' },
 	},
 	{
 		path: '*',
