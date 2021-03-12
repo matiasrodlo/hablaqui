@@ -1,13 +1,13 @@
 <template>
-	<v-img :src="$vuetify.breakpoint.smAndUp ? '../assets/login.png' : null">
+	<v-img :src="backgroundImg" height="100vh">
 		<v-container fluid class="login-image">
-			<v-row justify="center" align="center">
+			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="3" class="text-center">
 							<v-img max-width="200" src="../assets/habla-aqui.png"></v-img>
 						</v-col>
-						<v-col cols="12" class="text-center text-h6 text-sm-h4 font-weight-bold">
+						<v-col cols="12" class="text-center text-h4 font-weight-bold">
 							¡Me alegra que estés aquí!
 						</v-col>
 						<v-col cols="12" sm="10" md="8" class="text-center text-h5 text--secondary">
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import background from '@/assets/login.png';
 export default {
 	components: {
 		SignIn: () => import('@/components/auth/SignIn'),
@@ -107,6 +108,12 @@ export default {
 			menu: false,
 			step: 1,
 		};
+	},
+	computed: {
+		backgroundImg() {
+			if (this.$vuetify.breakpoint.smAndUp) return background;
+			return null;
+		},
 	},
 	methods: {
 		setStep() {
