@@ -2,23 +2,24 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-// views
-const index = () => import('@/views/children/specialists/index.vue');
-const List = () => import('@/views/children/specialists/List.vue');
-const Specialist = () => import('@/views/children/specialists/Specialist.vue');
+// auth view
+const Auth = () => import('@/views/Auth');
+
+// Psychologists view
+const index = () => import('@/views/Psychologist');
+const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 
 const routes = [
 	{
 		path: '/',
 		redirect: { name: 'psicologos' },
-		name: 'home',
 		component: index,
-		meta: { title: 'Nuestros psicologos', layout: 'layout' },
 		children: [
 			{
 				path: '/psicologos',
 				name: 'psicologos',
-				component: List,
+				component: Psychologists,
 				meta: {
 					title: 'Psicologos',
 					layout: 'layout',
@@ -27,7 +28,7 @@ const routes = [
 			{
 				path: '/psicologo/:id',
 				name: 'psicologo',
-				component: Specialist,
+				component: Psychologist,
 				meta: {
 					title: 'Perfil del psicologo',
 					layout: 'layout',
@@ -36,9 +37,9 @@ const routes = [
 		],
 	},
 	{
-		path: '/autenticacion',
-		name: 'autenticacion',
-		component: index,
+		path: '/auth',
+		name: 'auth',
+		component: Auth,
 		meta: { title: 'Autenticacion', layout: 'simple' },
 	},
 	{

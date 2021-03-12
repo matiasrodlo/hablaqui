@@ -22,7 +22,7 @@
 						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'auth' }">
 					<v-list-item-content>
 						<v-list-item-title>Entrar</v-list-item-title>
 					</v-list-item-content>
@@ -74,7 +74,7 @@
 						</v-btn>
 					</v-col>
 					<v-col cols="3" class="text-right" style="position: relative">
-						<v-btn color="primary" rounded text x-large>
+						<v-btn color="primary" rounded text x-large :to="{ name: 'auth' }">
 							Entrar
 						</v-btn>
 						<v-btn rounded class="mx-2" color="primary">
