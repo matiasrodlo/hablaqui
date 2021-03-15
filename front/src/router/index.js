@@ -9,6 +9,7 @@ const Auth = () => import('@/views/Auth');
 const index = () => import('@/views/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
+const Faq = () => import('@/views/Faq');
 
 const routes = [
 	{
@@ -41,6 +42,12 @@ const routes = [
 		name: 'auth',
 		component: Auth,
 		meta: { title: 'Autenticacion', layout: 'simple' },
+	},
+	{
+		path: '/faq',
+		name: 'faq',
+		component: Faq,
+		meta: { title: 'Preguntas frecuentes', layout: 'simple' },
 	},
 	{
 		path: '*',
