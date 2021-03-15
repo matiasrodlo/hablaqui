@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            width: 100%;
+        }
+        .longStringBreak {
+            word-wrap: break-word;
+            /* Just to keep text selection hightlight inside the table: */
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid black;
+            overflow:hidden;
+        }
+        tr { page-break-inside: avoid; page-break-after: auto; }
+    </style>
+</head>
+<body>
+<div>
+    <h3>Reporte de Hospedajes</h3>
+
+        <% if (lodgings.length > 0) { %>
+            <% lodgings.forEach(placeLodging => {%>
+            <table>
+            <h3><%= placeLodging.placeName %></h3>
+            <tr>
+                <th>Lugar</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Monto total</th>
+            </tr>
+            <% placeLodging.lodgings.forEach(lodging => {%>
+            <tr>
+                    <td><%= placeLodging.placeName %></td>
+                    <td><%= lodging.start %></td>
+                    <td><%= lodging.end %></td>
+                    <td><%= lodging.mountTotal %></td>
+            <tr>
+            <%  });%>
+        </table>
+            <p>TOTAL NETO: <%= `$ ${placeLodging.lodgingTotalAmount}` %></p>
+            <% let totalWithIva = placeLodging.lodgingTotalAmount * 1.19 %>
+            <p>TOTAL: <%=  `$ ${Math.trunc(totalWithIva)}` %> IVA Incluido</p>
+            <%  });%>
+            <% }%>
+
+</div>
+</body>
+</html>
+
