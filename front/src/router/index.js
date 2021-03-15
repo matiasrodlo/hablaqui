@@ -38,16 +38,16 @@ const routes = [
 		],
 	},
 	{
+		path: '/faq',
+		name: 'faq',
+		component: Faq,
+		meta: { title: 'Preguntas frecuentes', layout: 'layout' },
+	},
+	{
 		path: '/auth',
 		name: 'auth',
 		component: Auth,
 		meta: { title: 'Autenticacion', layout: 'simple' },
-	},
-	{
-		path: '/faq',
-		name: 'faq',
-		component: Faq,
-		meta: { title: 'Preguntas frecuentes', layout: 'simple' },
 	},
 	{
 		path: '*',
