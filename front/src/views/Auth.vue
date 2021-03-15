@@ -26,7 +26,7 @@
 								<v-window-item :value="1"><sign-in /></v-window-item>
 								<v-window-item :value="2"><sign-up /></v-window-item>
 							</v-window>
-							<div class="mt-4 mb-2 text--secondary subtitle-1 font-weight-bold">
+							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1">
 									¿No eres parte de Hablaquí?
 								</small>
@@ -35,6 +35,14 @@
 							<v-btn outlined block rounded color="primary" @click="setStep">
 								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
 							</v-btn>
+							<v-btn text color="primary" to="/privacidad">Aviso de privacidad</v-btn>
+							-
+							<v-btn text color="primary" to="/terminos-y-condiciones"
+								>Términos y Condiciones</v-btn
+							>
+							<div class="font-weight-bold caption secondary--text">
+								2021 Hablaqui
+							</div>
 						</v-col>
 					</v-row>
 				</v-col>

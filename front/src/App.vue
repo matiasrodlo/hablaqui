@@ -23,6 +23,11 @@ export default {
 	fieldset {
 	color: #e0e0e0 !important;
 }
+
+.theme--light.v-label {
+	font-weight: 500;
+	color: #54565a;
+}
 .v-text-field.v-text-field--enclosed {
 	border-radius: 10px;
 	padding: 1px !important;
