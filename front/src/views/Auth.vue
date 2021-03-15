@@ -4,19 +4,24 @@
 			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
-						<v-col cols="6" sm="3" class="text-center">
+						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
 							<v-img max-width="200" src="../assets/habla-aqui.png"></v-img>
 						</v-col>
-						<v-col cols="12" class="text-center text-h4 font-weight-bold">
+						<v-col cols="12" class="text-center text-h6 text-lg-h4 font-weight-bold">
 							¡Me alegra que estés aquí!
 						</v-col>
-						<v-col cols="12" sm="10" md="8" class="text-center text-h5 text--secondary">
+						<v-col
+							cols="12"
+							sm="10"
+							lg="8"
+							class="text-center text-h6 text-lg-h5 text--secondary"
+						>
 							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-							nonummy nibh euismod
+							nonummy
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
-						<v-col cols="12" sm="10" md="8">
+						<v-col cols="12" sm="10" lg="8">
 							<v-window v-model="step">
 								<v-window-item :value="1"><sign-in /></v-window-item>
 								<v-window-item :value="2"><sign-up /></v-window-item>
