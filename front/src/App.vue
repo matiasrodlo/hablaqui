@@ -17,6 +17,17 @@ export default {
 </script>
 
 <style>
+.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)
+	> .v-input__control
+	> .v-input__slot
+	fieldset {
+	color: #e0e0e0 !important;
+}
+.v-text-field.v-text-field--enclosed {
+	border-radius: 10px;
+	padding: 1px !important;
+}
+
 .v-btn i:hover {
 	transform: scale(1.15);
 }

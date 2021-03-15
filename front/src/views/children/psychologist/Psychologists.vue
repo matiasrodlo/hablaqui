@@ -119,7 +119,7 @@
 										<v-btn
 											text
 											color="#9D9D9C"
-											:to="{ name: 'especialista', params: { id: item._id } }"
+											:to="{ name: 'psicologo', params: { id: item._id } }"
 										>
 											Más información
 										</v-btn>
@@ -163,7 +163,7 @@
 												color="primary"
 												class="font-weight-bold"
 												:to="{
-													name: 'especialista',
+													name: 'psicologo',
 													params: { id: item._id },
 												}"
 											>

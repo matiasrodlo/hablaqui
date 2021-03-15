@@ -7,11 +7,7 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item
-					link
-					active-class="primary white--text"
-					:to="{ name: 'especialistas' }"
-				>
+				<v-list-item link active-class="primary white--text" :to="{ name: 'psicologos' }">
 					<v-list-item-content>
 						<v-list-item-title>Nuestros especialistas</v-list-item-title>
 					</v-list-item-content>
@@ -26,7 +22,7 @@
 						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'auth' }">
 					<v-list-item-content>
 						<v-list-item-title>Entrar</v-list-item-title>
 					</v-list-item-content>
@@ -49,7 +45,7 @@
 		>
 			<v-row no-gutters>
 				<v-col cols="10" lg="2">
-					<router-link :to="{ name: 'especialistas' }">
+					<router-link :to="{ name: 'psicologos' }">
 						<v-img
 							max-width="200"
 							alt="habla aqui Logo"
@@ -65,7 +61,7 @@
 							rounded
 							text
 							x-large
-							:to="{ name: 'especialistas' }"
+							:to="{ name: 'psicologos' }"
 							active-class="info--text"
 						>
 							Nuestros especialistas
@@ -78,20 +74,9 @@
 						</v-btn>
 					</v-col>
 					<v-col cols="3" class="text-right" style="position: relative">
-						<v-btn
-							v-if="$route.name == 'especialista'"
-							text
-							color="primary"
-							rounded
-							x-large
-							@click="() => $router.go(-1)"
-						>
-							<v-icon>mdi-chevron-left</v-icon>
-							Regresar
+						<v-btn color="primary" rounded text x-large :to="{ name: 'auth' }">
+							Entrar
 						</v-btn>
-						<template>
-							<auth />
-						</template>
 						<v-btn rounded class="mx-2" color="primary">
 							Comenzar
 						</v-btn>
@@ -167,9 +152,6 @@
 
 <script>
 export default {
-	components: {
-		Auth: () => import('@/components/auth/Auth'),
-	},
 	data() {
 		return {
 			drawer: false,

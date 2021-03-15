@@ -1,16 +1,19 @@
 <template>
 	<v-row no-gutters>
-		<v-col cols="12" class="text-center title primary--text text-uppercase">
-			Registrate
+		<v-col cols="12">
+			<v-text-field label="Nombre" type="text" outlined></v-text-field>
 		</v-col>
 		<v-col cols="12">
-			<v-text-field label="Correo electronico" type="text"></v-text-field>
+			<v-text-field label="Correo electronico" type="text" outlined></v-text-field>
 		</v-col>
 		<v-col cols="12">
-			<v-text-field label="Contraseña" type="password"></v-text-field>
+			<v-text-field label="Códico de Invitación" type="text" outlined></v-text-field>
 		</v-col>
 		<v-col cols="12">
-			<v-text-field label="Repite contraseña" type="password"></v-text-field>
+			<v-text-field label="Contraseña" type="password" outlined></v-text-field>
+		</v-col>
+		<v-col cols="12">
+			<v-text-field label="Repite contraseña" type="password" outlined></v-text-field>
 		</v-col>
 		<v-col cols="12">
 			<v-btn block rounded color="primary">

@@ -1,38 +1,53 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import index from '@/views/children/specialists/index.vue';
-import List from '@/views/children/specialists/List.vue';
-import Specialist from '@/views/children/specialists/Specialist.vue';
-
 Vue.use(VueRouter);
+
+// auth view
+const Auth = () => import('@/views/Auth');
+
+// Psychologists view
+const index = () => import('@/views/Psychologist');
+const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const Psychologist = () => import('@/views/children/psychologist/Psychologist');
+const Faq = () => import('@/views/Faq');
 
 const routes = [
 	{
 		path: '/',
-		redirect: { name: 'especialistas' },
-		name: 'home',
+		redirect: { name: 'psicologos' },
 		component: index,
-		meta: { title: 'Nuestros especialistas', layout: 'layout' },
 		children: [
 			{
-				path: '/especialistas',
-				name: 'especialistas',
-				component: List,
+				path: '/psicologos',
+				name: 'psicologos',
+				component: Psychologists,
 				meta: {
-					title: 'Especialistas',
+					title: 'Psicologos',
 					layout: 'layout',
 				},
 			},
 			{
-				path: '/especialista/:id',
-				name: 'especialista',
-				component: Specialist,
+				path: '/psicologo/:id',
+				name: 'psicologo',
+				component: Psychologist,
 				meta: {
-					title: 'Perfil del especialista',
+					title: 'Perfil del psicologo',
 					layout: 'layout',
 				},
 			},
 		],
+	},
+	{
+		path: '/faq',
+		name: 'faq',
+		component: Faq,
+		meta: { title: 'Preguntas frecuentes', layout: 'layout' },
+	},
+	{
+		path: '/auth',
+		name: 'auth',
+		component: Auth,
+		meta: { title: 'Autenticacion', layout: 'simple' },
 	},
 	{
 		path: '*',
