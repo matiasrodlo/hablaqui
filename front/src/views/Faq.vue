@@ -12,7 +12,7 @@
 					class="white"
 					label="Busca por tema o pregunta"
 					outlined
-					hide-details=""
+					hide-details
 				/>
 			</v-col>
 		</v-row>
@@ -26,12 +26,53 @@
 						</div>
 					</v-card-title>
 					<v-divider></v-divider>
-					<v-card-text>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo voluptas aut
-						incidunt sequi alias rerum suscipit harum assumenda itaque modi, nobis fugit
-						vitae eaque eius animi molestiae aperiam, at ducimus.
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">¿Qué es Hablaquí?</v-btn>
 					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">¿Cómo funciona?</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">
+							¿Cómo agendar mi primera cita en Hablaquí?
+						</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">
+							¿Como tomar mi primera cita en Hablaquí?
+						</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">
+							¿Las consultas en línas son efectivas?
+						</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">¿Qué es Hablaquí?</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-text class="py-1">
+						<v-btn text class="primary--text caption">
+							¿Necesito descargar alguna App de videollamada?
+						</v-btn>
+					</v-card-text>
+					<v-divider></v-divider>
 				</v-card>
+			</v-col>
+			<v-col
+				cols="12"
+				class="text-center font-weight-bold text-h5 text-lg-h3 text--secondary"
+			>
+				Contáctanos
+			</v-col>
+			<v-col cols="12" class="text-center font-weight-bold">
+				<span style="color:#BDBDBD">Lorem ipsum dolor sit amet, consectetuer </span>
+				<a style="text-decoration: none">adipiscing elit, sed diam no-</a>
 			</v-col>
 		</v-row>
 	</v-container>
