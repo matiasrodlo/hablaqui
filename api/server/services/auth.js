@@ -1,7 +1,6 @@
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
-import mailerService from './mailer';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
@@ -45,7 +44,6 @@ const register = async (user, res) => {
 
 	try {
 		const user = await newUser.save();
-		mailerService.sendNewAccountMessage(user.email);
 		logInfo(actionInfo(user.email, 'se registro con exito'));
 		return res.status(201).json({ token: generateJwt(user), user });
 	} catch (error) {
@@ -63,7 +61,6 @@ const sendPasswordRecover = async (email, res) => {
 		return res.sendStatus(404);
 	} else {
 		const token = generatePasswordRecoverJwt(user);
-		mailerService.sendPasswordRecover(email, token);
 		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
 		return res.sendStatus(200);
 	}
