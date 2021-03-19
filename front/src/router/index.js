@@ -6,10 +6,12 @@ Vue.use(VueRouter);
 const Auth = () => import('@/views/Auth');
 
 // Psychologists view
-const index = () => import('@/views/Psychologist');
-const Psychologists = () => import('@/views/children/psychologist/Psychologists');
-const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Faq = () => import('@/views/Faq');
+const index = () => import('@/views/Psychologist');
+const Privacy = () => import('@/views/Privacy');
+const Psychologist = () => import('@/views/children/psychologist/Psychologist');
+const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const TermsAndConditions = () => import('@/views/TermsAndConditions');
 
 const routes = [
 	{
@@ -42,6 +44,18 @@ const routes = [
 		name: 'faq',
 		component: Faq,
 		meta: { title: 'Preguntas frecuentes', layout: 'layout' },
+	},
+	{
+		path: '/terminos-y-condiciones',
+		name: 'terminos-y-condiciones',
+		component: TermsAndConditions,
+		meta: { title: 'Terminos y condiciones', layout: 'layout' },
+	},
+	{
+		path: '/privacidad',
+		name: 'privacidad',
+		component: Privacy,
+		meta: { title: 'Políticas de Privacidad', layout: 'layout' },
 	},
 	{
 		path: '/auth',

@@ -7,7 +7,10 @@
 						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
 							<v-img max-width="200" src="../assets/habla-aqui.png"></v-img>
 						</v-col>
-						<v-col cols="12" class="text-center text-h6 text-lg-h4 font-weight-bold">
+						<v-col
+							cols="12"
+							class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+						>
 							¡Me alegra que estés aquí!
 						</v-col>
 						<v-col
@@ -26,7 +29,7 @@
 								<v-window-item :value="1"><sign-in /></v-window-item>
 								<v-window-item :value="2"><sign-up /></v-window-item>
 							</v-window>
-							<div class="mt-4 mb-2 text--secondary subtitle-1 font-weight-bold">
+							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1">
 									¿No eres parte de Hablaquí?
 								</small>
@@ -35,6 +38,14 @@
 							<v-btn outlined block rounded color="primary" @click="setStep">
 								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
 							</v-btn>
+							<v-btn text color="primary" to="/privacidad">Aviso de privacidad</v-btn>
+							-
+							<v-btn text color="primary" to="/terminos-y-condiciones"
+								>Términos y Condiciones</v-btn
+							>
+							<div class="font-weight-bold caption secondary--text">
+								2021 Hablaqui
+							</div>
 						</v-col>
 					</v-row>
 				</v-col>
