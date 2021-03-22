@@ -26,6 +26,7 @@ const routes = [
 				meta: {
 					title: 'Psicologos',
 					layout: 'layout',
+					appBarColor: 'transparent',
 				},
 			},
 			{
@@ -35,6 +36,7 @@ const routes = [
 				meta: {
 					title: 'Perfil del psicologo',
 					layout: 'layout',
+					appBarColor: 'transparent',
 				},
 			},
 		],
@@ -43,19 +45,19 @@ const routes = [
 		path: '/faq',
 		name: 'faq',
 		component: Faq,
-		meta: { title: 'Preguntas frecuentes', layout: 'layout' },
+		meta: { title: 'Preguntas frecuentes', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/terminos-y-condiciones',
 		name: 'terminos-y-condiciones',
 		component: TermsAndConditions,
-		meta: { title: 'Terminos y condiciones', layout: 'layout' },
+		meta: { title: 'Terminos y condiciones', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/privacidad',
 		name: 'privacidad',
 		component: Privacy,
-		meta: { title: 'Políticas de Privacidad', layout: 'layout' },
+		meta: { title: 'Políticas de Privacidad', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/auth',
