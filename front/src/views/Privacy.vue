@@ -3,7 +3,7 @@
 		<v-row justify="center">
 			<v-col
 				cols="12"
-				class="text--secondary font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+				class="primary white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center pb-16"
 			>
 				Política de privacidad
 			</v-col>

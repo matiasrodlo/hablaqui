@@ -40,7 +40,7 @@
 			hide-on-scroll
 			:height="height"
 			src="@/assets/appbar.png"
-			color="transparent"
+			:color="scrolled > 40 ? 'transparent' : $route.meta.appBarColor"
 		>
 			<router-link :to="{ name: 'psicologos' }">
 				<v-img
@@ -150,6 +150,7 @@ export default {
 	data() {
 		return {
 			drawer: false,
+			scrolled: null,
 		};
 	},
 	computed: {
@@ -158,6 +159,18 @@ export default {
 			if (this.$vuetify.breakpoint.mdAndUp) return '180px';
 			if (this.$vuetify.breakpoint.smAndUp) return '150px';
 			return '100px';
+		},
+	},
+	created() {
+		window.addEventListener('scroll', this.handleScroll);
+		console.log(window);
+	},
+	destroyed() {
+		window.removeEventListener('scroll', this.handleScroll);
+	},
+	methods: {
+		handleScroll() {
+			this.scrolled = window.scrollY;
 		},
 	},
 };
