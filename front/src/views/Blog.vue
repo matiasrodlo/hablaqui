@@ -264,6 +264,52 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<!-- Categories -->
+		<div class="primary white--text">
+			<v-container class="pb-10">
+				<v-row justify="center">
+					<v-col cols="12" sm="4" class="text-left">
+						<div class="title font-weight-bold">Lorem ipsum</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+					</v-col>
+					<v-col cols="12" sm="4" class="text-left">
+						<div class="title font-weight-bold">Lorem ipsum</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+					</v-col>
+					<v-col cols="12" sm="4" class="text-left">
+						<div class="title font-weight-bold">Lorem ipsum</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
+					</v-col>
+					<v-col cols="12">
+						<div class="title font-weight-bold">
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
+						</div>
+						<div class="subtitle-1">
+							Lorem ipsum dolor sit amet,
+						</div>
+					</v-col>
+					<v-col cols="12">
+						<div class="title font-weight-bold">
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
+						</div>
+						<div class="subtitle-1">
+							Lorem ipsum dolor sit amet,
+						</div>
+						<div>
+							<v-icon color="white" x-large>mdi-facebook</v-icon>
+							<v-icon color="white" x-large>mdi-instagram</v-icon>
+							<v-icon color="white" x-large>mdi-linkedin</v-icon>
+						</div>
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
 	</div>
 </template>
 
