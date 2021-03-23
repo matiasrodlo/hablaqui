@@ -1,6 +1,6 @@
 <template>
 	<div>
-		evaluacion
+		{{ $route.meta.title }}
 	</div>
 </template>
 

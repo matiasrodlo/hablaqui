@@ -1,7 +1,5 @@
 <template>
-	<div>
-		reckutamiento
-	</div>
+	<div>{{ $route.meta.title }}</div>
 </template>
 
 <script>

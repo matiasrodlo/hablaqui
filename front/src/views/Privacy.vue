@@ -5,7 +5,7 @@
 				cols="12"
 				class="primary white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
 			>
-				Política de privacidad
+				{{ $route.meta.title }}
 			</v-col>
 			<v-col cols="12" md="10" v-for="el in [1, 2, 3, 4]" :key="el">
 				<strong>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,</strong> sed diam

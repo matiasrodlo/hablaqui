@@ -27,7 +27,7 @@ const routes = [
 				name: 'psicologos',
 				component: Psychologists,
 				meta: {
-					title: 'Psicologos',
+					title: 'Elige a tu psicólogo online',
 					layout: 'layout',
 					appBarColor: 'transparent',
 				},
@@ -48,7 +48,7 @@ const routes = [
 		path: '/blog',
 		name: 'blog',
 		component: Blog,
-		meta: { title: 'Nuestro Blog', layout: 'layout', appBarColor: 'transparent' },
+		meta: { title: 'Blog hablaquí', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
 		path: '/reclutamiento',
@@ -66,7 +66,11 @@ const routes = [
 		path: '/faq',
 		name: 'faq',
 		component: Faq,
-		meta: { title: 'Preguntas frecuentes', layout: 'layout', appBarColor: 'primary' },
+		meta: {
+			title: 'Bienvenido a nuestro portal de ayuda',
+			layout: 'layout',
+			appBarColor: 'primary',
+		},
 	},
 	{
 		path: '/terminos-y-condiciones',

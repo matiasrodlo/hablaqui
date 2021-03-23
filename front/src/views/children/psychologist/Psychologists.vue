@@ -2,7 +2,7 @@
 	<v-container fluid>
 		<v-row justify="space-between" align="center">
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
-				Elige a tu psicólogo online
+				{{ $route.meta.title }}
 			</v-col>
 		</v-row>
 		<v-row>

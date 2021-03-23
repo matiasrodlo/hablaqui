@@ -5,7 +5,7 @@
 				cols="12"
 				class="primary text-center font-weight-bold text-h5 text-lg-h3 white--text py-16"
 			>
-				Bienvenido a nuestro portal de ayuda
+				{{ $route.meta.title }}
 			</v-col>
 			<v-col cols="12" md="10" xl="8">
 				<v-text-field
