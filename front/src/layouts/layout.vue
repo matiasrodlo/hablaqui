@@ -163,7 +163,6 @@ export default {
 	},
 	created() {
 		window.addEventListener('scroll', this.handleScroll);
-		console.log(window);
 	},
 	destroyed() {
 		window.removeEventListener('scroll', this.handleScroll);
