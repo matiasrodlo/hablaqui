@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<!-- only sm and down drawer -->
-		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" app v-model="drawer">
+		<v-navigation-drawer app v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer">
 			<v-list-item>
-				<v-img max-width="150" src="../assets/habla-aqui.png"></v-img>
+				<v-img max-width="150" src="@/assets/habla-aqui.png"></v-img>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
@@ -46,7 +46,7 @@
 				<v-img
 					max-width="180"
 					alt="habla aqui Logo"
-					src="../assets/habla-aqui.png"
+					src="@/assets/habla-aqui.png"
 					contain
 				/>
 			</router-link>
@@ -82,66 +82,9 @@
 				</v-btn>
 			</template>
 		</v-app-bar>
-		<v-main class="mb-16">
+		<v-main>
 			<router-view />
 		</v-main>
-		<v-footer absolute padless app>
-			<v-card flat tile>
-				<v-card-text class="primary white--text py-16">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat, harum
-					dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod, adipisci esse
-					voluptas nisi omnis nihil animi similique natus. Lorem ipsum dolor sit amet,
-					consectetur adipisicing elit. Placeat, harum dolorem! A qui quaerat eius unde
-					beatae adipisci ex culpa. Quod, adipisci esse voluptas nisi omnis nihil animi
-					similique natus. Lorem ipsum dolor sit ame.
-				</v-card-text>
-				<v-card-text class="white--text py-16">
-					<v-row>
-						<v-col cols="12" sm="3">
-							<div class="text-center headline text--secondary font-weight-bold">
-								Acuerdos
-							</div>
-							<div class="text-center headline text--secondary">
-								Políticas de Privacidad
-							</div>
-							<div class="text-center headline text--secondary">
-								Terminos y Condiciones
-							</div>
-						</v-col>
-						<v-col cols="12" sm="3">
-							<div class="text-center headline text--secondary font-weight-bold">
-								Soporte Técnico
-							</div>
-							<div class="text-center headline text--secondary">
-								+52 1 5568 2686 6322
-							</div>
-							<div class="text-center headline text--secondary">
-								soporte@hablaqui.com
-							</div>
-						</v-col>
-						<v-col cols="12" sm="3">
-							<div class="text-center headline text--secondary font-weight-bold">
-								Atención a clientes
-							</div>
-							<div class="text-center headline text--secondary">
-								clientes@hablaqui.com
-							</div>
-							<div class="text-center headline text--secondary">
-								John Harvard
-							</div>
-						</v-col>
-						<v-col cols="12" sm="3">
-							<div class="text-center headline text--secondary font-weight-bold">
-								Pago seguro
-							</div>
-							<div class="text-center headline text--secondary">
-								LOGO PAYPAL
-							</div>
-						</v-col>
-					</v-row>
-				</v-card-text>
-			</v-card>
-		</v-footer>
 	</div>
 </template>
 

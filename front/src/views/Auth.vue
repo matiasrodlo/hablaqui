@@ -60,7 +60,7 @@
 								>
 									<v-btn
 										color="#9D9D9C"
-										class="elevation-0"
+										depressed
 										fab
 										width="200"
 										height="200"
