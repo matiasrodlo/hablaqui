@@ -6,18 +6,21 @@ Vue.use(VueRouter);
 const Auth = () => import('@/views/Auth');
 
 // Psychologists view
+const Blog = () => import('@/views/Blog');
+const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
-const index = () => import('@/views/Psychologist');
 const Privacy = () => import('@/views/Privacy');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const Recruitment = () => import('@/views/Recruitment');
 const TermsAndConditions = () => import('@/views/TermsAndConditions');
+const Test = () => import('@/views/Test');
 
 const routes = [
 	{
 		path: '/',
 		redirect: { name: 'psicologos' },
-		component: index,
+		component: Experts,
 		children: [
 			{
 				path: '/psicologos',
@@ -40,6 +43,24 @@ const routes = [
 				},
 			},
 		],
+	},
+	{
+		path: '/blog',
+		name: 'blog',
+		component: Blog,
+		meta: { title: 'Nuestro Blog', layout: 'layout', appBarColor: 'transparent' },
+	},
+	{
+		path: '/reclutamiento',
+		name: 'reclutamiento',
+		component: Recruitment,
+		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'transparent' },
+	},
+	{
+		path: '/evaluacion',
+		name: 'evaluacion',
+		component: Test,
+		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
 		path: '/faq',
