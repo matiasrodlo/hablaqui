@@ -86,7 +86,7 @@
 			<router-view />
 		</v-main>
 		<v-footer absolute padless app>
-			<v-card flat>
+			<v-card flat tile>
 				<v-card-text class="primary white--text py-16">
 					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat, harum
 					dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod, adipisci esse

@@ -49,13 +49,9 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6">
+				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
 					<v-window v-model="onboarding" class="login-circle-image">
-						<v-window-item
-							v-for="n in length"
-							:key="`card-${n}`"
-							class="login-plus-image"
-						>
+						<v-window-item v-for="n in length" :key="`card-${n}`">
 							<div class="text-center ">
 								<v-list-item-avatar
 									size="200"
@@ -138,7 +134,7 @@ export default {
 }
 .login-plus-image {
 	background: url('../assets/plus-login.png') no-repeat;
-	background-position-x: 65%;
+	background-position-x: 66%;
 	-webkit-background-size: 7%;
 	-moz-background-size: 7%;
 	-o-background-size: 7%;
