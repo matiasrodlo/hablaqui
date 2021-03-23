@@ -67,11 +67,11 @@
 				<v-btn light rounded text active-class="info--text">
 					Para especialistas
 				</v-btn>
-				<v-btn color="primary" rounded text x-large :to="{ name: 'auth' }">
+				<v-spacer></v-spacer>
+				<v-btn color="primary" rounded text :to="{ name: 'auth' }">
 					Entrar
 				</v-btn>
-				<v-spacer></v-spacer>
-				<v-btn rounded class="mx-2" color="primary">
+				<v-btn rounded class="mx-2" color="primary" depressed>
 					Comenzar
 				</v-btn>
 			</template>
@@ -174,15 +174,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped>
-.appbar-image {
-	background: url('../assets/appbar.png') no-repeat;
-	background-size: 100%;
-}
-
-v-app-bar.v-toolbar__content {
-	display: flex !important;
-	align-items: flex-start !important;
-}
-</style>

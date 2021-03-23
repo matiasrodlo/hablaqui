@@ -3,7 +3,7 @@
 		<v-row justify="center">
 			<v-col
 				cols="12"
-				class="text--secondary font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+				class="primary text-center font-weight-bold text-h5 text-lg-h3 white--text py-16"
 			>
 				Terminos y condiciones de uso
 			</v-col>
