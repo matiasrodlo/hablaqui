@@ -8,7 +8,7 @@ const getAll = async () => {
     try{
         logInfo(infoMessages('obtuvo todos los psicologos'));
         const psychologists = await Psychologist.find();
-        return okResponse()
+        return okResponse('true', psychologists)
     } catch (e) {
         errorCallback(e, res, 'Error consiguiendo los psicologos');
     }
