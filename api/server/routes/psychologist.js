@@ -6,8 +6,11 @@ import grantAccess from '../middleware/strategies/rbac';
 const psychologistsRouter = Router();
 
 psychologistsRouter.get(
-    '/psychologists/all',
-    [passport.authenticate('jwt', { session: true }), grantAccess('readAny', 'profile')],
+    '/psychologists/all'/*,
+    [
+        passport.authenticate('jwt', { session: false }),
+        grantAccess('readAny', 'appointments'),
+    ]*/,
     psychologistsController.getAll
 );
 

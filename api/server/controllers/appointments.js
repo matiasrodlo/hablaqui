@@ -1,11 +1,11 @@
-import { okResponse } from "../utils/responses/functions";
+import { restResponse } from "../utils/responses/functions";
 import appointmentsService from '../services/appointments';
 
 const appointmentsController = {
     async getAll(req, res) {
-        const appointments = await appointmentsService.getAll();
+        const { data, code } = await appointmentsService.getAll();
 
-        return okResponse()
+        return restResponse(data, code, res)
     }
 }
 

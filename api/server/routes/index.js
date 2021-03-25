@@ -1,3 +1,4 @@
+import appointmentsRouter from './appointments';
 import authRoutes from './auth';
 import psychologistsRouter from './psychologist';
 import userRoutes from './user';
@@ -8,4 +9,5 @@ export default app => {
 	app.use(apiVersion, userRoutes);
 	app.use(apiVersion, authRoutes);
 	app.use(apiVersion, psychologistsRouter);
+	app.use(apiVersion, appointmentsRouter);
 };

@@ -1,11 +1,11 @@
 import psychologistsService from '../services/psychologist';
-import { okResponse } from '../utils/responses/functions';
+import { restResponse } from '../utils/responses/functions';
 
 const psychologistsController = {
     async getAll(req, res) {
-        const psychogists = await psychologistsService.getAll();
+        const { data, code } = await psychologistsService.getAll();
 
-        return okResponse()
+        return restResponse(data, code, res)
     }
 }
 

@@ -1,5 +1,5 @@
 import UniqueValidator from "mongoose-unique-validator";
-import { Schema, model } from 'moongoose';
+import { Schema, model } from 'mongoose';
 
 let appointment = new Schema({
     nombre: {

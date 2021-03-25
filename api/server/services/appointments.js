@@ -8,7 +8,7 @@ const getAll = async () => {
     try {
         logInfo(infoMessages('obtuvo todas las consultas'));
         const appointments = await Appointments.find();
-        return okResponse('true', appointments)
+        return okResponse('consultas obtenidas', { appointments })
     } catch (e) {
         errorCallback(e, res, 'Error consiguiendo las consultas')
     }
