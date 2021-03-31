@@ -10,7 +10,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 process.env.URLDB =
 	process.env.URLDB ||
-	'mongodb+srv://silvita:Perez123@sochamar-staging-api-awvck.gcp.mongodb.net/sochamar';
+	'mongodb+srv://silvita:Perez123@hablaqui-staging.awvck.mongodb.net/hablaqui';
 
 process.env.FRONTEND_URL =
 	process.env.FRONTEND_URL || 'http://localhost:8080/#';
