@@ -57,12 +57,6 @@ const routes = [
 		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
-		path: '/evaluacion',
-		name: 'evaluacion',
-		component: Test,
-		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'transparent' },
-	},
-	{
 		path: '/faq',
 		name: 'faq',
 		component: Faq,
@@ -71,6 +65,12 @@ const routes = [
 			layout: 'layout',
 			appBarColor: 'primary',
 		},
+	},
+	{
+		path: '/evaluacion',
+		name: 'evaluacion',
+		component: Test,
+		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/terminos-y-condiciones',

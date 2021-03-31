@@ -119,8 +119,7 @@ export default {
 	},
 	computed: {
 		appbarBlue() {
-			const route = this.$route.name;
-			return route == 'privacidad' || route == 'blog' || route == 'terminos-y-condiciones';
+			return this.$route.name == 'blog';
 		},
 		height() {
 			if (this.$vuetify.breakpoint.lgAndUp) return '220px';
