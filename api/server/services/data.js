@@ -15,9 +15,15 @@ const uploadCsv = async(req, res) => {
         if (req.file.originalname === 'psychologists.csv') {
             csvtojson()
             .fromFile(req.file.path)
-            .then(data => 
-                Psychologist.insertMany(data)
-                )
+            .then(data => {
+                data.forEach( (data) => {
+                    const newSpecialties = data.specialties.split(';');
+
+                    data.specialties = newSpecialties;
+                    const newData = new Psychologist(data);
+                    const save = newData.save()
+                });
+            })
 
             return okResponse('psicologos subidos', '')
         }
@@ -28,6 +34,7 @@ const uploadCsv = async(req, res) => {
             .then(data => 
                 Appointments.insertMany(data)
                 )
+
             return okResponse('consultas subidas', '')
         }
 
