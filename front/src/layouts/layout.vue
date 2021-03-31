@@ -92,6 +92,8 @@
 					>
 						Comience su terapia ahora
 					</v-btn>
+					<v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
+					<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon>
 				</template>
 			</template>
 			<template v-else>
