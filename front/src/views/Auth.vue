@@ -5,7 +5,7 @@
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
-							<v-img max-width="200" src="../assets/habla-aqui.png"></v-img>
+							<v-img max-width="200" src="../assets/logo.png"></v-img>
 						</v-col>
 						<v-col
 							cols="12"

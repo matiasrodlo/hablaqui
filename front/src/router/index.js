@@ -19,11 +19,17 @@ const Test = () => import('@/views/Test');
 const routes = [
 	{
 		path: '/',
-		redirect: { name: 'psicologos' },
+		name: 'blog',
+		component: Blog,
+		meta: { title: 'Blog hablaquí', layout: 'layout', appBarColor: 'transparent' },
+	},
+	{
+		path: '/psicologos',
+		redirect: { name: 'all-psicologos' },
 		component: Experts,
 		children: [
 			{
-				path: '/psicologos',
+				path: 'all',
 				name: 'psicologos',
 				component: Psychologists,
 				meta: {
@@ -33,7 +39,7 @@ const routes = [
 				},
 			},
 			{
-				path: '/psicologo/:id',
+				path: ':id',
 				name: 'psicologo',
 				component: Psychologist,
 				meta: {
@@ -43,12 +49,6 @@ const routes = [
 				},
 			},
 		],
-	},
-	{
-		path: '/blog',
-		name: 'blog',
-		component: Blog,
-		meta: { title: 'Blog hablaquí', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
 		path: '/reclutamiento',
