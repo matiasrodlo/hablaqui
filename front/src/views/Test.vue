@@ -59,10 +59,25 @@
 		</div>
 		<v-container style="margin-top: 200px">
 			<v-row>
-				<v-col cols="12">
-					Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odit, rem? Libero
-					iusto hic necessitatibus quis distinctio commodi id adipisci omnis, odit velit,
-					error ex blanditiis nostrum beatae quas corrupti veritatis.
+				<v-col cols="6">
+					<v-card>
+						<v-card-text
+							>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, et
+							earum, distinctio sint mollitia accusantium aut sed vel molestiae
+							eveniet repudiandae libero assumenda quisquam totam eum. Explicabo
+							reiciendis sunt velit.</v-card-text
+						>
+					</v-card>
+				</v-col>
+				<v-col cols="6">
+					<v-card>
+						<v-card-text
+							>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, et
+							earum, distinctio sint mollitia accusantium aut sed vel molestiae
+							eveniet repudiandae libero assumenda quisquam totam eum. Explicabo
+							reiciendis sunt velit.</v-card-text
+						>
+					</v-card>
 				</v-col>
 			</v-row>
 		</v-container>
