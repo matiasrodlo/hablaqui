@@ -9,16 +9,11 @@ const authSchema = {
 		email: Joi.string()
 			.email()
 			.required(),
-		role: Joi.string().required(),
 		password: Joi.string()
 			.min(5)
 			.max(100)
 			.required(),
-		analyst: Joi.boolean(),
-		idPerson: Joi.string(),
-		company: Joi.string()
-			.optional()
-			.allow(''),
+		invitedCode: Joi.string().allow(''),
 	}),
 	login: Joi.object({
 		email: Joi.string()
