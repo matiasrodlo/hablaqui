@@ -5,7 +5,7 @@
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
-							<v-img max-width="200" src="../assets/habla-aqui.png"></v-img>
+							<v-img max-width="200" src="../assets/logo.png"></v-img>
 						</v-col>
 						<v-col
 							cols="12"
@@ -49,13 +49,9 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6">
+				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
 					<v-window v-model="onboarding" class="login-circle-image">
-						<v-window-item
-							v-for="n in length"
-							:key="`card-${n}`"
-							class="login-plus-image"
-						>
+						<v-window-item v-for="n in length" :key="`card-${n}`">
 							<div class="text-center ">
 								<v-list-item-avatar
 									size="200"
@@ -64,7 +60,7 @@
 								>
 									<v-btn
 										color="#9D9D9C"
-										class="elevation-0"
+										depressed
 										fab
 										width="200"
 										height="200"
@@ -138,7 +134,7 @@ export default {
 }
 .login-plus-image {
 	background: url('../assets/plus-login.png') no-repeat;
-	background-position-x: 65%;
+	background-position-x: 66%;
 	-webkit-background-size: 7%;
 	-moz-background-size: 7%;
 	-o-background-size: 7%;

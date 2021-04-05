@@ -1,21 +1,16 @@
 import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
-import { errorCallback } from '../utils/functions/errorCallback';
 import { infoMessages } from '../utils/logger/infoMessages';
 import { okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
-    try{
-        logInfo(infoMessages('obtuvo todos los psicologos'));
-        const psychologists = await Psychologist.find();
-        return okResponse('psicologos obtenidos', { psychologists })
-    } catch (e) {
-        errorCallback(e, res, 'Error consiguiendo los psicologos');
-    }
-}
-
-const psychologistsService = {
-    getAll
+	const psychologists = await Psychologist.find();
+	logInfo(infoMessages('obtuvo todos los psicologos'));
+	return okResponse('psicologos obtenidos', { psychologists });
 };
 
-export default Object.freeze(psychologistsService)
+const psychologistsService = {
+	getAll,
+};
+
+export default Object.freeze(psychologistsService);

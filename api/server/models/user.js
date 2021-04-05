@@ -34,6 +34,15 @@ let userSchema = new Schema({
 		lowercase: true,
 		trim: true,
 	},
+	email: {
+		type: String,
+		lowercase: true,
+		trim: true,
+		unique: true,
+	},
+	password: {
+		type: String,
+	},
 	lastName: {
 		type: String,
 		lowercase: true,
@@ -43,18 +52,9 @@ let userSchema = new Schema({
 	googleId: {
 		type: String,
 	},
-	email: {
-		type: String,
-		lowercase: true,
-		trim: true,
-		unique: true,
-	},
 	phone: {
 		type: String,
 		trim: true,
-	},
-	password: {
-		type: String,
 	},
 	img: {
 		type: String,
@@ -112,7 +112,9 @@ class User extends Model {
 	 * @param {Object} personData data person
 	 */
 	static async createOneWithPersonData(personData) {
-		const password = personData.password ? personData.password : personData.email;
+		const password = personData.password
+			? personData.password
+			: personData.email;
 		const newUser = new User({
 			name: personData.firstName,
 			lastName: personData.lastName,
@@ -149,7 +151,9 @@ class User extends Model {
 		return this.findOne({ googleId: googleId });
 	}
 	static async removeUserFromSharingUsers(user, invitedUserEmail) {
-		const foundInvitedUser = user.sharingWithUsers.find(f => f.email === invitedUserEmail);
+		const foundInvitedUser = user.sharingWithUsers.find(
+			f => f.email === invitedUserEmail
+		);
 		user.sharingWithUsers.id(foundInvitedUser._id).remove();
 		await user.save();
 	}

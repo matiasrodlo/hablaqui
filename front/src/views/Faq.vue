@@ -3,9 +3,9 @@
 		<v-row justify="center">
 			<v-col
 				cols="12"
-				class="text-center font-weight-bold text-h5 text-lg-h3 text--secondary"
+				class="primary text-center font-weight-bold text-h5 text-lg-h3 white--text py-16"
 			>
-				Bienvenido a nuestro portal de ayuda
+				{{ $route.meta.title }}
 			</v-col>
 			<v-col cols="12" md="10" xl="8">
 				<v-text-field
@@ -64,6 +64,9 @@
 					<v-divider></v-divider>
 				</v-card>
 			</v-col>
+		</v-row>
+		<!-- footer -->
+		<v-row class="py-16">
 			<v-col
 				cols="12"
 				class="text-center font-weight-bold text-h5 text-lg-h3 text--secondary"
@@ -73,6 +76,33 @@
 			<v-col cols="12" class="text-center font-weight-bold">
 				<span style="color:#BDBDBD">Lorem ipsum dolor sit amet, consectetuer </span>
 				<a style="text-decoration: none">adipiscing elit, sed diam no-</a>
+			</v-col>
+		</v-row>
+		<v-row class="primary white--text py-16">
+			<v-col cols="12">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat, harum dolorem! A
+				qui quaerat eius unde beatae adipisci ex culpa. Quod, adipisci esse voluptas nisi
+				omnis nihil animi similique natus. Lorem ipsum dolor sit amet, consectetur
+				adipisicing elit. Placeat, harum dolorem! A qui quaerat eius unde beatae adipisci ex
+				culpa. Quod, adipisci esse voluptas nisi omnis nihil animi similique natus. Lorem
+				ipsum dolor sit ame.
+			</v-col>
+		</v-row>
+		<v-row justify="center" class="py-16">
+			<v-col cols="12" sm="6" md="5" class="text-center text-sm-left">
+				<div style="color:#BDBDBD">
+					Aviso de privacidad Términos y Condiciones
+				</div>
+				<div class="text--secondary">
+					© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+				</div>
+			</v-col>
+			<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
+				<v-chip color="secondary" label class="mx-2 px-4"></v-chip>
+				<v-chip color="secondary" label class="mx-2 px-4"></v-chip>
+				<v-chip color="secondary" label class="ml-2 px-4"></v-chip>
+				<div>Atención a clientes: clientes@hablaqui.com</div>
+				<div>Soporte técnico: soporte@hablaaqui.com</div>
 			</v-col>
 		</v-row>
 	</v-container>

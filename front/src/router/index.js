@@ -6,56 +6,83 @@ Vue.use(VueRouter);
 const Auth = () => import('@/views/Auth');
 
 // Psychologists view
+const Blog = () => import('@/views/Blog');
+const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
-const index = () => import('@/views/Psychologist');
 const Privacy = () => import('@/views/Privacy');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const Recruitment = () => import('@/views/Recruitment');
 const TermsAndConditions = () => import('@/views/TermsAndConditions');
+const Test = () => import('@/views/Test');
 
 const routes = [
 	{
 		path: '/',
-		redirect: { name: 'psicologos' },
-		component: index,
+		name: 'blog',
+		component: Blog,
+		meta: { title: 'Blog hablaquí', layout: 'layout', appBarColor: 'transparent' },
+	},
+	{
+		path: '/psicologos',
+		redirect: { name: 'all-psicologos' },
+		component: Experts,
 		children: [
 			{
-				path: '/psicologos',
+				path: 'all',
 				name: 'psicologos',
 				component: Psychologists,
 				meta: {
-					title: 'Psicologos',
+					title: 'Elige a tu psicólogo online',
 					layout: 'layout',
+					appBarColor: 'transparent',
 				},
 			},
 			{
-				path: '/psicologo/:id',
+				path: ':id',
 				name: 'psicologo',
 				component: Psychologist,
 				meta: {
 					title: 'Perfil del psicologo',
 					layout: 'layout',
+					appBarColor: 'transparent',
 				},
 			},
 		],
 	},
 	{
+		path: '/reclutamiento',
+		name: 'reclutamiento',
+		component: Recruitment,
+		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'transparent' },
+	},
+	{
 		path: '/faq',
 		name: 'faq',
 		component: Faq,
-		meta: { title: 'Preguntas frecuentes', layout: 'layout' },
+		meta: {
+			title: 'Bienvenido a nuestro portal de ayuda',
+			layout: 'layout',
+			appBarColor: 'primary',
+		},
+	},
+	{
+		path: '/evaluacion',
+		name: 'evaluacion',
+		component: Test,
+		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/terminos-y-condiciones',
 		name: 'terminos-y-condiciones',
 		component: TermsAndConditions,
-		meta: { title: 'Terminos y condiciones', layout: 'layout' },
+		meta: { title: 'Terminos y condiciones', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/privacidad',
 		name: 'privacidad',
 		component: Privacy,
-		meta: { title: 'Políticas de Privacidad', layout: 'layout' },
+		meta: { title: 'Políticas de Privacidad', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/auth',

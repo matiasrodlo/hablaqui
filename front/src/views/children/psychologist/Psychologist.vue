@@ -3,34 +3,37 @@
 		<v-card>
 			<v-card-text>
 				<v-row align="center" justify="center">
-					<v-col cols="3" lg="2" class="text-center">
-						<v-list-item-avatar size="200" class="ml-4">
+					<v-col cols="12" sm="3" lg="2" class="text-center">
+						<v-list-item-avatar
+							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+							class="ml-4"
+						>
 							<v-btn
 								color="#9D9D9C"
 								class="elevation-0"
 								fab
-								width="200"
-								height="200"
+								:width="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+								:height="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							></v-btn>
 						</v-list-item-avatar>
 						<div class="caption text--secondary">Cédula 12121212</div>
 					</v-col>
-					<v-col cols="9" lg="10">
+					<v-col cols="12" sm="9" lg="10">
 						<v-row justify="space-between">
-							<v-col class="text-left font-weight-bold text-h3 text--secondary">
+							<v-col
+								class="text-center text-sm-left font-weight-bold text-h3 text--secondary"
+							>
 								Fernanda Croffman
 							</v-col>
-							<v-col cols="4" lg="3" class="text-right">
-								<v-btn color="primary" rounded>
+							<v-col cols="12" sm="4" lg="3" class="text-right">
+								<v-btn block color="primary" rounded>
 									Agenda cita oline
 								</v-btn>
 							</v-col>
 						</v-row>
-						<div>
-							<v-chip v-for="el in [3, 1, 2]" :key="el" small class="mb-2 mx-2">
-								Ansiedad
-							</v-chip>
-						</div>
+						<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
+							Ansiedad
+						</v-chip>
 						<div class="body-2 mt-2">
 							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
 							nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat

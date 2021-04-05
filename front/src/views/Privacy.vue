@@ -3,9 +3,9 @@
 		<v-row justify="center">
 			<v-col
 				cols="12"
-				class="text--secondary font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+				class="primary white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
 			>
-				Política de privacidad
+				{{ $route.meta.title }}
 			</v-col>
 			<v-col cols="12" md="10" v-for="el in [1, 2, 3, 4]" :key="el">
 				<strong>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,</strong> sed diam
@@ -20,7 +20,9 @@
 				veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex
 				ea commodo consequat.
 			</v-col>
-			<v-col cols="5" class="text-left">
+		</v-row>
+		<v-row justify="center" class="py-16">
+			<v-col cols="12" sm="6" md="5" class="text-center text-sm-left">
 				<div style="color:#BDBDBD">
 					Aviso de privacidad Términos y Condiciones
 				</div>
@@ -28,7 +30,7 @@
 					© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
 				</div>
 			</v-col>
-			<v-col cols="5" class="text-right text--secondary">
+			<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
 				<v-chip color="primary" label class="mx-2 px-4"></v-chip>
 				<v-chip color="primary" label class="mx-2 px-4"></v-chip>
 				<v-chip color="primary" label class="ml-2 px-4"></v-chip>
