@@ -11,22 +11,15 @@ const create = async (req, res) => {
         client: req.client, 
     });
 
-    try {
-
-        const results = await Session.find({ psychologist: req.psychologist, date: req.date });
-        if (results.length !== 0) {
-            logInfo('Ya hay una sesion creada en esa hora')
-            return conflictResponse('ya hay una sesion creada en esa hora')
-        }
-
-        const session = newSession.save();
-        logInfo('creo una nueva cita');
-        return okResponse('sesion creada')
-
-    } catch (e) {
-        logError(e);
-        return errorCallback(e, res, 'error creando una cita')
+    const results = await Session.find({ psychologist: req.psychologist, date: req.date });
+    if (results.length !== 0) {
+        logInfo('Ya hay una sesion creada en esa hora')
+        return conflictResponse('ya hay una sesion creada en esa hora')
     }
+
+    const session = newSession.save();
+    logInfo('creo una nueva cita');
+    return okResponse('sesion creada')
 }
 
 const sessionService = {
