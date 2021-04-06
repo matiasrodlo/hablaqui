@@ -36,10 +36,7 @@ const register = async (user, res) => {
 		name: user.name,
 		email: user.email.toLowerCase(),
 		password: bcrypt.hashSync(user.password, 10),
-		role: user.role,
-		idPerson: user.idPerson,
-		company: user.company,
-		analyst: user.analyst,
+		inviteCode: user.inviteCode,
 	});
 
 	try {
