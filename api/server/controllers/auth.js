@@ -1,9 +1,25 @@
 import authService from '../services/auth';
+import { restResponse } from '../utils/responses/functions';
+import { errorCallback } from '../utils/functions/errorCallback';
 
 const authController = {
-	register(req, res) {
-		const { body } = req;
-		return authService.register(body, res);
+	async register(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await authService.register(body, res);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Ha ocurrido un error en el registro');
+		}
+	},
+	async login(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await authService.login(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res);
+		}
 	},
 	generateJwt(req, res) {
 		const { user } = req;

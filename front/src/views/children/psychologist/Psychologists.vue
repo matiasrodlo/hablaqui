@@ -50,7 +50,7 @@
 						<v-select
 							class="white"
 							hide-details
-							:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
+							:items="sychologists"
 							outlined
 							label="Motivo de consulta"
 							no-data-text="Vacio"
@@ -60,7 +60,7 @@
 						<v-select
 							class="white"
 							hide-details
-							:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
+							:items="sychologists"
 							outlined
 							label="Busca tu psicólogo"
 							no-data-text="Vacio"
@@ -69,7 +69,14 @@
 				</v-row>
 				<v-row>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" md="4" lg="3" v-for="(item, i) in items" :key="i">
+						<v-col
+							cols="12"
+							sm="6"
+							md="4"
+							lg="3"
+							v-for="(item, i) in sychologists"
+							:key="i"
+						>
 							<v-card
 								min-height="450"
 								style="border-radius:15px"
@@ -130,7 +137,7 @@
 						</v-col>
 					</template>
 					<template v-if="view == 2">
-						<v-col cols="12" v-for="(item, i) in items" :key="i">
+						<v-col cols="12" v-for="(item, i) in sychologists" :key="i">
 							<v-card
 								style="border-radius:15px"
 								:dark="firstItem(i)"
@@ -219,92 +226,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
-	name: 'Home',
+	name: 'psychologists',
 	data() {
-		return {
-			view: 2,
-			items: [
-				{
-					_id: 1,
-					name: 'Encuentra a tu psicólogo ideal',
-					rut: null,
-					description: `Lorempsum dolor sit amet, consectetupsum dolor sit amet, consectetu`,
-				},
-				{
-					_id: 2,
-					name: 'user 2 ewrew',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 3,
-					name: 'user 3 wreewr',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 4,
-					name: 'user 4 rerwe',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 5,
-					name: 'user 5',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 6,
-					name: 'user 6',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 7,
-					name: 'user 7',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 8,
-					name: 'user 8',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-				{
-					_id: 9,
-					name: 'user 9',
-					rut: 1222231,
-					description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim
-									neque tempora obcaecati, molestiae deleniti quos quibusdam
-									voluptatem, nesciunt aut, officiis minus laudantium iste minima.
-									Commodi nulla dolorum quae. Possimus, ipsam!`,
-				},
-			],
-		};
+		return { view: 2 };
+	},
+	computed: {
+		...mapGetters({ sychologists: 'Psychologist/psychologists' }),
 	},
 	mounted() {
 		const view = localStorage.getItem('view');

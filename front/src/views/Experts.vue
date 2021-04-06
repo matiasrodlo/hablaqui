@@ -61,3 +61,15 @@
 		</v-container>
 	</div>
 </template>
+
+<script>
+import { mapActions } from 'vuex';
+export default {
+	mounted() {
+		this.getPsychologists();
+	},
+	methods: {
+		...mapActions({ getPsychologists: 'Psychologist/getPsychologists' }),
+	},
+};
+</script>

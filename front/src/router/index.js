@@ -29,7 +29,7 @@ const routes = [
 		component: Experts,
 		children: [
 			{
-				path: 'all',
+				path: 'todos',
 				name: 'psicologos',
 				component: Psychologists,
 				meta: {

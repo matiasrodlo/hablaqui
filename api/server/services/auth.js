@@ -4,6 +4,7 @@ import User from '../models/user';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
+import { okResponse } from '../utils/responses/functions';
 
 const generateJwt = user => {
 	const payload = {
@@ -13,6 +14,27 @@ const generateJwt = user => {
 
 	return sign(payload, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRATION,
+	});
+};
+
+const login = async user => {
+	return okResponse(`Bienvenido ${user.name}`, {
+		user,
+		token: generateJwt(user),
+	});
+};
+
+const register = async payload => {
+	const newUser = {
+		...payload,
+		email: payload.email.toLowerCase(),
+		password: bcrypt.hashSync(payload.password, 10),
+	};
+	const user = await User.create(newUser);
+	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
+	return okResponse(`Bienvenido ${user.name}`, {
+		user,
+		token: generateJwt(user),
 	});
 };
 
@@ -31,33 +53,12 @@ const getUserByEmail = async email => {
 	return await User.findOne({ email: email });
 };
 
-const register = async (user, res) => {
-	const newUser = new User({
-		name: user.name,
-		email: user.email.toLowerCase(),
-		password: bcrypt.hashSync(user.password, 10),
-		inviteCode: user.inviteCode,
-	});
-
-	try {
-		const user = await newUser.save();
-		logInfo(actionInfo(user.email, 'se registro con exito'));
-		return res.status(201).json({ token: generateJwt(user), user });
-	} catch (error) {
-		logError(error);
-		return res.status(409).json({
-			status: false,
-			error,
-		});
-	}
-};
-
 const sendPasswordRecover = async (email, res) => {
 	const user = await getUserByEmail(email);
 	if (!user) {
 		return res.sendStatus(404);
 	} else {
-		const token = generatePasswordRecoverJwt(user);
+		generatePasswordRecoverJwt(user);
 		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
 		return res.sendStatus(200);
 	}
@@ -86,6 +87,7 @@ const googleAuthCallback = (req, res) => {
 };
 
 const authService = {
+	login,
 	generateJwt,
 	register,
 	sendPasswordRecover,
