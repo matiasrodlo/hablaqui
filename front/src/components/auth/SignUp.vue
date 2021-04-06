@@ -122,11 +122,11 @@ export default {
 				invitedCode: '',
 			};
 		},
-		onSubmit() {
+		async onSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				this.register(this.form);
+				await this.register(this.form);
 				this.loading = false;
 			}
 		},
