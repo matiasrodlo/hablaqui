@@ -43,6 +43,9 @@ let userSchema = new Schema({
 	password: {
 		type: String,
 	},
+	invitedCode: {
+		type: String,
+	},
 	lastName: {
 		type: String,
 		lowercase: true,

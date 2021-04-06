@@ -1,9 +1,16 @@
 import authService from '../services/auth';
+import { restResponse } from '../utils/responses/functions';
+import { errorCallback } from '../utils/functions/errorCallback';
 
 const authController = {
-	register(req, res) {
-		const { body } = req;
-		return authService.register(body, res);
+	async register(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await authService.register(body, res);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo los psicologos');
+		}
 	},
 	generateJwt(req, res) {
 		const { user } = req;

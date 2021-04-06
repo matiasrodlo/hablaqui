@@ -4,6 +4,7 @@ import User from '../models/user';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
+import { okResponse } from '../utils/responses/functions';
 
 const generateJwt = user => {
 	const payload = {
@@ -31,28 +32,18 @@ const getUserByEmail = async email => {
 	return await User.findOne({ email: email });
 };
 
-const register = async (user, res) => {
-	const newUser = new User({
-		name: user.name,
-		email: user.email.toLowerCase(),
-		password: bcrypt.hashSync(user.password, 10),
-		role: user.role,
-		idPerson: user.idPerson,
-		company: user.company,
-		analyst: user.analyst,
+const register = async payload => {
+	const newUser = {
+		...payload,
+		email: payload.email.toLowerCase(),
+		password: bcrypt.hashSync(payload.password, 10),
+	};
+	const user = await User.create(newUser);
+	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
+	return okResponse(`Bienvenido ${user.name}`, {
+		user,
+		token: generateJwt(user),
 	});
-
-	try {
-		const user = await newUser.save();
-		logInfo(actionInfo(user.email, 'se registro con exito'));
-		return res.status(201).json({ token: generateJwt(user), user });
-	} catch (error) {
-		logError(error);
-		return res.status(409).json({
-			status: false,
-			error,
-		});
-	}
 };
 
 const sendPasswordRecover = async (email, res) => {
@@ -60,7 +51,7 @@ const sendPasswordRecover = async (email, res) => {
 	if (!user) {
 		return res.sendStatus(404);
 	} else {
-		const token = generatePasswordRecoverJwt(user);
+		generatePasswordRecoverJwt(user);
 		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
 		return res.sendStatus(200);
 	}

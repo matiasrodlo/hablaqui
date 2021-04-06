@@ -9,6 +9,7 @@ export default {
 				method: 'post',
 				data: payload,
 			});
+			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			router.push({ name: 'blog' });
@@ -23,10 +24,11 @@ export default {
 				method: 'post',
 				data: payload,
 			});
+			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			router.push({ name: 'blog' });
-			snackBarSuccess(`Bienvenido ${data.user.name}`)(commit);
+			snackBarSuccess(data.message)(commit);
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
