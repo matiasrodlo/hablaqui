@@ -9,7 +9,6 @@ export default {
 				method: 'post',
 				data: payload,
 			});
-			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
@@ -25,7 +24,6 @@ export default {
 				method: 'post',
 				data: payload,
 			});
-			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
