@@ -44,6 +44,17 @@ const userController = {
 		}
 	},
 
+	async updatePsychologist(req, res) {
+		try {
+			const { user } = req;
+			const { newPsychologist } = req.body;
+			const { data, code } = await userService.updatePlan(user, newPsychologist);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando el psicologo')
+		}
+	},
+
 	async getSessions(req, res) {
 		try {
 			const { user } = req;

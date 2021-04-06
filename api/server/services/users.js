@@ -60,11 +60,23 @@ const usersService = {
 		return okResponse('plan actualizado', { profile: updated });
 	},
 
+	async updatePlan(user, newPsychologist) {
+		let updated = null;
+		updated = await User.findByIdAndUpdate(user._id, {psychologist: newPsychologist}, {
+			new: true,
+			runValidators: true,
+			context: 'query',
+		});
+
+		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
+		return okResponse('psicologo actualizado', { profile: updated });
+	},
+
 	async getSessions(user) {
 		let finishedSessions = user.finishedSessions;
 
 		return okResponse('sesiones conseguidas', { finishedSessions })
-	}
+	},
 };
 
 export default usersService;

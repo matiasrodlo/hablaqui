@@ -29,6 +29,10 @@ const userSchema = {
 		newPlan: Joi.string()
 			.required(),
 	}),
+	updatePsychologist: Joi.object({
+		newPsychologist: Joi.object()
+			.required(),
+	}),
 	idPerson: Joi.object({
 		idPerson: Joi.objectId(),
 	}),
