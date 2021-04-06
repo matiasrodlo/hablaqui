@@ -12,6 +12,7 @@ export default {
 			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
+			commit('setLoggedIn');
 			router.push({ name: 'blog' });
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -27,6 +28,7 @@ export default {
 			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
+			commit('setLoggedIn');
 			router.push({ name: 'blog' });
 			snackBarSuccess(data.message)(commit);
 		} catch (error) {

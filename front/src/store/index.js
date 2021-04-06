@@ -6,7 +6,11 @@ import User from '@/store/modules/User';
 
 Vue.use(Vuex);
 
+const dataPerssist = createPersistedState({
+	paths: ['User'],
+});
+
 export default new Vuex.Store({
 	modules: { Snackbar, User },
-	plugins: [createPersistedState()],
+	plugins: [dataPerssist],
 });

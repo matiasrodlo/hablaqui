@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<pre>{{ user }}</pre>
 		<v-container>
 			<!-- header -->
 			<v-row>
@@ -313,6 +314,14 @@
 	</div>
 </template>
 
+<script>
+import { mapGetters } from 'vuex';
+export default {
+	computed: {
+		...mapGetters({ user: 'User/user' }),
+	},
+};
+</script>
 <style lang="scss" scoped>
 .v-text-field.v-text-field--enclosed,
 .v-sheet.v-card {
