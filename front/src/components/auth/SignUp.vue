@@ -23,7 +23,7 @@
 			<v-col cols="12">
 				<v-text-field
 					autocomplete="off"
-					v-model="form.invitedCode"
+					v-model="form.inviteCode"
 					label="Códico de Invitación"
 					type="text"
 					outlined
@@ -119,7 +119,7 @@ export default {
 				name: '',
 				email: '',
 				password: '',
-				invitedCode: '',
+				inviteCode: '',
 			};
 		},
 		async onSubmit() {

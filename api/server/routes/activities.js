@@ -11,7 +11,7 @@ const activitiesRouter = Router();
 activitiesRouter.get(
 	'/activities',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('readAny', 'activities'),
 	],
 	activitiesController.getAll
@@ -20,7 +20,7 @@ activitiesRouter.get(
 activitiesRouter.post(
 	'/activities/create',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('createAny', 'activities'),
 		validation(activitiesSchema.create, 'body'),
 	],
@@ -29,7 +29,7 @@ activitiesRouter.post(
 activitiesRouter.delete(
 	'/activities/delete/all',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('deleteAny', 'activities'),
 	],
 	activitiesController.deleteAll

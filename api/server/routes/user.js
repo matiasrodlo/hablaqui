@@ -12,25 +12,16 @@ const userRouter = Router();
 userRouter.get(
 	'/user/profile',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('readOwn', 'profile'),
 	],
-	userController.getProfile
-);
-
-userRouter.get(
-	'/users',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('readAny', 'profile'),
-	],
-	userController.getUsers
+	userController.getUser
 );
 
 userRouter.get(
 	'/user/profile/:id',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('readOwn', 'profile'),
 	],
 	userController.getUser
@@ -39,26 +30,17 @@ userRouter.get(
 userRouter.put(
 	'/user/update/profile',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		/*grantAccess('updateOwn', 'profile'),*/
 		validation(userSchema.updateProfile, 'body'),
 	],
 	userController.updateProfile
 );
 
-userRouter.post(
-	'/user/:idPerson/notification-push',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('readOwn', 'profile'),
-	],
-	userController.sendNotificationPush
-);
-
 userRouter.patch(
 	'/user/update/password',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		/*grantAccess('updateOwn', 'profile'),*/
 		validation(userSchema.updatePassword, 'body'),
 	],
