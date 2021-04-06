@@ -47,6 +47,24 @@ const usersService = {
 		logInfo(actionInfo(user.email, 'actualizo su perfil'));
 		return okResponse('perfil obtenido', { profile: updated });
 	},
+
+	async updatePlan(user, newPlan) {
+		let updated = null;
+		updated = await User.findByIdAndUpdate(user._id, {myPlan: newPlan}, {
+			new: true,
+			runValidators: true,
+			context: 'query',
+		});
+
+		logInfo(actionInfo(user.email, 'actualizo su plan'));
+		return okResponse('plan actualizado', { profile: updated });
+	},
+
+	async getSessions(user) {
+		let finishedSessions = user.finishedSessions;
+
+		return okResponse('sesiones conseguidas', { finishedSessions })
+	}
 };
 
 export default usersService;

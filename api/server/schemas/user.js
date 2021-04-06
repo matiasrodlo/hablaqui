@@ -25,6 +25,10 @@ const userSchema = {
 			.max(100)
 			.required(),
 	}),
+	updatePlan: Joi.object({
+		newPlan: Joi.string()
+			.required(),
+	}),
 	idPerson: Joi.object({
 		idPerson: Joi.objectId(),
 	}),

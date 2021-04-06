@@ -37,4 +37,21 @@ userRouter.patch(
 	],
 	userController.updatePassword
 );
+
+userRouter.put(
+	'/user/update/plan',
+	[
+		passport.authenticate('jwt', { session: true }),
+		validation(userSchema.updatePlan, 'body'),
+	],
+	userController.updatePlan
+);
+
+userRouter.get(
+	'/user/sessions',
+	[
+		passport.authenticate('jwt', { session: true }),
+	],
+	userController.getSessions
+)
 export default userRouter;
