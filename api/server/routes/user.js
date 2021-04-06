@@ -10,15 +10,6 @@ import grantAccess from '../middleware/strategies/rbac';
 const userRouter = Router();
 
 userRouter.get(
-	'/user/profile',
-	[
-		passport.authenticate('jwt', { session: true }),
-		grantAccess('readOwn', 'profile'),
-	],
-	userController.getUser
-);
-
-userRouter.get(
 	'/user/profile/:id',
 	[
 		passport.authenticate('jwt', { session: true }),

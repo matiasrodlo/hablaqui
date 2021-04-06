@@ -11,6 +11,7 @@ const userSchema = {
 		state: Joi.boolean().allow(''),
 		google: Joi.boolean().allow(''),
 		googleId: Joi.string().allow(''),
+		psychologist: Joi.object().allow(''),
 		adminNotifyTime: Joi.string().allow(''),
 		__v: Joi.number(),
 	}).min(1),

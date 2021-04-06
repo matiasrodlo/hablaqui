@@ -74,6 +74,10 @@ let userSchema = new Schema({
 		type: Array,
 		required: false,
 	},
+	psychologist: {
+		type: Object,
+		required: false,
+	},
 	role: {
 		type: String,
 		default: 'user',
