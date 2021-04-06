@@ -40,8 +40,8 @@
 							</v-btn>
 							<v-btn text color="primary" to="/privacidad">Aviso de privacidad</v-btn>
 							-
-							<v-btn text color="primary" to="/terminos-y-condiciones"
-								>Términos y Condiciones</v-btn
+							<v-btn text color="primary" to="/terminos-y-condiciones">
+								Términos y Condiciones</v-btn
 							>
 							<div class="font-weight-bold caption secondary--text">
 								2021 Hablaqui
