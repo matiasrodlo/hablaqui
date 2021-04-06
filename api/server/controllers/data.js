@@ -1,11 +1,16 @@
 import dataService from '../services/data';
+import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
 
 const dataController = {
     async uploadCsv(req, res) {
-        const {data, code} = await dataService.uploadCsv(req, res)
+        try{
+            const {data, code} = await dataService.uploadCsv(req, res)
+            return restResponse(data, code, res)
+        } catch (e) {
+            errorCallback(e, res, 'error subiendo el archvio')
+        }
 
-        return restResponse(data, code, res)
     }
 }
 

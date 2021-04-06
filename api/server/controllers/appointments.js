@@ -1,11 +1,15 @@
 import { restResponse } from "../utils/responses/functions";
 import appointmentsService from '../services/appointments';
+import { errorCallback } from "../utils/functions/errorCallback";
 
 const appointmentsController = {
     async getAll(req, res) {
-        const { data, code } = await appointmentsService.getAll();
-
-        return restResponse(data, code, res)
+        try{
+            const { data, code } = await appointmentsService.getAll();
+            return restResponse(data, code, res)
+        } catch (e) {
+            errorCallback(e, res, 'error consiguiendo las consultas')
+        }
     }
 }
 
