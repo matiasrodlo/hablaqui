@@ -11,19 +11,28 @@ const userRouter = Router();
 
 userRouter.get(
 	'/user/profile',
-	[passport.authenticate('jwt', { session: false }), grantAccess('readOwn', 'profile')],
+	[
+		passport.authenticate('jwt', { session: false }),
+		grantAccess('readOwn', 'profile'),
+	],
 	userController.getProfile
 );
 
 userRouter.get(
 	'/users',
-	[passport.authenticate('jwt', { session: false }), grantAccess('readAny', 'profile')],
+	[
+		passport.authenticate('jwt', { session: false }),
+		grantAccess('readAny', 'profile'),
+	],
 	userController.getUsers
 );
 
 userRouter.get(
 	'/user/profile/:id',
-	[passport.authenticate('jwt', { session: false }), grantAccess('readOwn', 'profile')],
+	[
+		passport.authenticate('jwt', { session: false }),
+		grantAccess('readOwn', 'profile'),
+	],
 	userController.getUser
 );
 
@@ -39,7 +48,10 @@ userRouter.put(
 
 userRouter.post(
 	'/user/:idPerson/notification-push',
-	[passport.authenticate('jwt', { session: false }), grantAccess('readOwn', 'profile')],
+	[
+		passport.authenticate('jwt', { session: false }),
+		grantAccess('readOwn', 'profile'),
+	],
 	userController.sendNotificationPush
 );
 

@@ -5,13 +5,11 @@ import validation from '../middleware/validation';
 import authSchema from '../schemas/auth';
 
 const authRouter = Router();
-/*Ojo, aca podemos optimizar los nombres de ruta quitando cosas como /create o /delete/all*/
-/*Los verbos de por si ya estan dando a entender la accion que se realiza sobre esta ruta*/
 
 authRouter.post(
 	'/auth/login',
 	[validation(authSchema.login, 'body'), passport.authenticate('local')],
-	authController.generateJwt
+	authController.login
 );
 
 authRouter.get(

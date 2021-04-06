@@ -17,19 +17,11 @@ const generateJwt = user => {
 	});
 };
 
-const generatePasswordRecoverJwt = user => {
-	const payload = {
-		username: user.name,
-		sub: user._id,
-	};
-
-	return sign(payload, process.env.JWT_SECRET, {
-		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
+const login = async user => {
+	return okResponse(`Bienvenido ${user.name}`, {
+		user,
+		token: generateJwt(user),
 	});
-};
-
-const getUserByEmail = async email => {
-	return await User.findOne({ email: email });
 };
 
 const register = async payload => {
@@ -44,6 +36,21 @@ const register = async payload => {
 		user,
 		token: generateJwt(user),
 	});
+};
+
+const generatePasswordRecoverJwt = user => {
+	const payload = {
+		username: user.name,
+		sub: user._id,
+	};
+
+	return sign(payload, process.env.JWT_SECRET, {
+		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
+	});
+};
+
+const getUserByEmail = async email => {
+	return await User.findOne({ email: email });
 };
 
 const sendPasswordRecover = async (email, res) => {
@@ -80,6 +87,7 @@ const googleAuthCallback = (req, res) => {
 };
 
 const authService = {
+	login,
 	generateJwt,
 	register,
 	sendPasswordRecover,

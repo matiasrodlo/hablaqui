@@ -9,7 +9,16 @@ const authController = {
 			const { data, code } = await authService.register(body, res);
 			return restResponse(data, code, res);
 		} catch (error) {
-			errorCallback(error, res, 'Error obteniendo los psicologos');
+			errorCallback(error, res, 'Ha ocurrido un error en el registro');
+		}
+	},
+	async login(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await authService.login(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res);
 		}
 	},
 	generateJwt(req, res) {
