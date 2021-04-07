@@ -1,7 +1,5 @@
 import { Router } from "express";
 import passport from "passport";
-import upload from "../middleware/multer";
-import storage from "../middleware/storage";
 import userController from "../controllers/users";
 import userSchema from "../schemas/user";
 import validation from "../middleware/validation";
