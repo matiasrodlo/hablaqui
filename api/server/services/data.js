@@ -18,7 +18,7 @@ const uploadCsv = async (req, res) => {
 
 					data.specialties = newSpecialties;
 					const newData = new Psychologist(data);
-					const save = newData.save();
+					newData.save();
 				});
 			});
 
