@@ -28,40 +28,58 @@
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Género</div>
 								<v-checkbox
+									v-model="gender"
+									value="male"
 									:disabled="loading"
 									label="Hombre"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
+									v-model="gender"
+									value="female"
 									:disabled="loading"
 									label="Mujer"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Tipo de cita</div>
 								<v-checkbox
+									v-model="sessionType"
+									value="personal"
 									:disabled="loading"
 									label="Personal"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
+									v-model="sessionType"
+									value="pareja"
 									:disabled="loading"
 									label="Pareja"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Idioma</div>
 								<v-checkbox
+									v-model="language"
+									value="spanish"
 									:disabled="loading"
 									label="Español"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
+									v-model="language"
+									value="english"
 									:disabled="loading"
 									label="Ingles"
 									hide-details
+									@change="filterPanel"
 								></v-checkbox>
 							</v-col>
 						</v-row>
@@ -74,7 +92,7 @@
 						<v-combobox
 							class="white"
 							outlined
-							:items="[1, 2, 3]"
+							:items="['uno', 'dos', 'tres']"
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							hide-details
@@ -97,7 +115,7 @@
 					<v-col>
 						<v-text-field
 							label="Busca tu psicólogo"
-							v-model="searchPsychologist"
+							v-model="searchInput"
 							outlined
 							class="white"
 							hide-details
@@ -163,7 +181,7 @@
 									<div class="title text--secondary">
 										{{ item.name }}
 									</div>
-									<div class="body-1 primary--text">Cédula {{ item.rut }}</div>
+									<div class="body-1 primary--text">{{ item.gender }}</div>
 									<v-divider></v-divider>
 									<div class="body-2 mt-2">{{ item.description }}</div>
 								</v-card-text>
@@ -260,7 +278,7 @@
 													{{ item.name }}
 												</v-col>
 												<v-col cols="4" lg="3" class="text-right">
-													<v-btn color="primary" rounded>
+													<v-btn color="primary" rounded depressed>
 														Agenda cita oline
 													</v-btn>
 												</v-col>
@@ -299,11 +317,25 @@ export default {
 		},
 	},
 	data() {
-		return { motive: '', searchPsychologist: '', searchItem: '', view: 2 };
+		return {
+			motive: '',
+			searchInput: '',
+			view: 2,
+			gender: [],
+			sessionType: [],
+			language: [],
+		};
 	},
 	computed: {
 		items() {
-			return this.psychologists;
+			return this.psychologists.filter(item => {
+				let result =
+					item.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 && item;
+				if (this.gender.length) result = this.gender.includes(result.gender);
+				if (this.sessionType.length) result = this.sessionType.includes(result.sessionType);
+				if (this.language.length) result = this.language.includes(result.language);
+				return result;
+			});
 		},
 		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
 	},
@@ -312,11 +344,23 @@ export default {
 		if (view) {
 			this.view = view;
 		}
+		const panel = JSON.parse(localStorage.getItem('panel'));
+		this.gender = panel.gender;
+		this.sessionType = panel.sessionType;
+		this.language = panel.language;
 	},
 	methods: {
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
+		},
+		filterPanel() {
+			const panel = {
+				gender: this.gender,
+				sessionType: this.sessionType,
+				language: this.language,
+			};
+			localStorage.setItem('panel', JSON.stringify(panel));
 		},
 	},
 };
