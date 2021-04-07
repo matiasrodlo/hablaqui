@@ -121,24 +121,6 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">DESCRIPCIÓN PERSONAL</v-col>
-					<v-col class="body-1 text-left">
-						<ul>
-							<li>Angústia</li>
-							<li>Ansiedade</li>
-							<li>Relacionamentos / Conflitos Amorosos / Ciúmes</li>
-							<li>Relacionamentos / Conflitos Familiares</li>
-							<li>Doenças Emocionais / Doenças Mentais</li>
-							<li>Controle / Inteligência Emocional</li>
-							<li>Estresse</li>
-							<li>Autoconhecimento</li>
-						</ul>
-					</v-col>
-				</v-row>
-			</v-card-text>
-			<v-divider></v-divider>
-			<v-card-text>
-				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">REPROGRAMACIÓN</v-col>
 					<v-col class="body-1 text-left">
 						<ul>

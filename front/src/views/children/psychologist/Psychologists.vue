@@ -50,7 +50,8 @@
 						<v-select
 							class="white"
 							hide-details
-							:items="sychologists"
+							:items="psychologists"
+							item-text="name"
 							outlined
 							label="Motivo de consulta"
 							no-data-text="Vacio"
@@ -60,7 +61,8 @@
 						<v-select
 							class="white"
 							hide-details
-							:items="sychologists"
+							:items="psychologists"
+							item-text="name"
 							outlined
 							label="Busca tu psicólogo"
 							no-data-text="Vacio"
@@ -69,88 +71,92 @@
 				</v-row>
 				<v-row>
 					<template v-if="view == 1">
+						<v-col cols="12" sm="6" md="4" lg="3">
+							<v-card
+								height="450px"
+								style="border-radius:15px"
+								class="text-center"
+								color="primary"
+								dark
+							>
+								<v-card-text style="height: 85%">
+									<v-btn
+										style="border: 8px solid #5EB3E4"
+										color="#9D9D9C"
+										depressed
+										fab
+										width="100"
+										height="100"
+									></v-btn>
+									<div class="subtitle-1 font-weight-bold">
+										Encuentra a tu Psicólogo Ideal
+									</div>
+									<div class="body-2 mt-2">
+										Lorempsum dolor sit amet, consectetupsum dolor sit amet,
+										consectetu ipsum
+									</div>
+								</v-card-text>
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<v-btn class="px-10" light color="#F0F8FF" depressed>
+										Comenzar
+									</v-btn>
+									<v-spacer></v-spacer>
+								</v-card-actions>
+							</v-card>
+						</v-col>
 						<v-col
 							cols="12"
 							sm="6"
 							md="4"
 							lg="3"
-							v-for="(item, i) in sychologists"
+							v-for="(item, i) in psychologists"
 							:key="i"
 						>
-							<v-card
-								min-height="450"
-								style="border-radius:15px"
-								class="text-center"
-								:dark="firstItem(i)"
-								:color="firstItem(i) ? 'primary' : ''"
-							>
-								<div class="pa-2">
+							<v-card height="450px" style="border-radius:15px" class="text-center">
+								<v-card-text style="height: 75%">
 									<v-btn
-										:style="firstItem(i) && 'border: 8px solid #5EB3E4'"
 										color="#9D9D9C"
-										class="elevation-0"
+										depressed
 										fab
 										width="100"
 										height="100"
 									></v-btn>
-								</div>
-								<v-card-text>
-									<div
-										v-if="!firstItem(i)"
-										class="title"
-										:class="firstItem(i) ? 'white--text' : 'text--secondary'"
-									>
+									<div class="title text--secondary">
 										{{ item.name }}
 									</div>
-									<div v-if="!firstItem(i)" class="body-1 primary--text">
-										Cédula {{ item.rut }}
-									</div>
+									<div class="body-1 primary--text">Cédula {{ item.rut }}</div>
 									<v-divider></v-divider>
 									<div class="body-2 mt-2">{{ item.description }}</div>
 								</v-card-text>
-								<template v-if="firstItem(i)">
-									<v-card-actions>
-										<v-spacer></v-spacer>
-										<v-btn class="px-10" light color="#F0F8FF">Comenzar</v-btn>
-										<v-spacer></v-spacer>
-									</v-card-actions>
-								</template>
-								<template v-else>
-									<v-card-actions class="text-center">
-										<v-spacer></v-spacer>
-										<v-btn color="primary">Agenda cita oline</v-btn>
-										<v-spacer></v-spacer>
-									</v-card-actions>
-									<v-card-actions class="text-center">
-										<v-spacer></v-spacer>
-										<v-btn
-											text
-											color="#9D9D9C"
-											:to="{ name: 'psicologo', params: { id: item._id } }"
-										>
-											Más información
-										</v-btn>
-										<v-spacer></v-spacer>
-									</v-card-actions>
-								</template>
+								<v-card-actions class="text-center">
+									<v-spacer></v-spacer>
+									<v-btn color="primary" depressed>Agenda cita oline</v-btn>
+									<v-spacer></v-spacer>
+								</v-card-actions>
+								<v-card-actions class="text-center">
+									<v-spacer></v-spacer>
+									<v-btn
+										text
+										color="#9D9D9C"
+										:to="{ name: 'psicologo', params: { id: item._id } }"
+									>
+										Más información
+									</v-btn>
+									<v-spacer></v-spacer>
+								</v-card-actions>
 							</v-card>
 						</v-col>
 					</template>
 					<template v-if="view == 2">
-						<v-col cols="12" v-for="(item, i) in sychologists" :key="i">
-							<v-card
-								style="border-radius:15px"
-								:dark="firstItem(i)"
-								:color="firstItem(i) ? 'primary' : ''"
-							>
+						<v-col cols="12">
+							<v-card style="border-radius:15px" dark color="primary">
 								<v-card-text>
 									<v-row align="center" justify="center">
 										<v-col cols="3" lg="2" class="text-center">
 											<v-list-item-avatar size="100" class="ml-4">
 												<v-btn
-													:style="
-														firstItem(i) && 'border: 8px solid #5EB3E4'
-													"
+													style="border: 8px solid #5EB3E4"
 													color="#9D9D9C"
 													class="elevation-0"
 													fab
@@ -158,14 +164,45 @@
 													height="100"
 												></v-btn>
 											</v-list-item-avatar>
-											<div
-												v-if="!firstItem(i)"
-												class="caption text--secondary"
-											>
+										</v-col>
+										<v-col cols="9" lg="10">
+											<v-row justify="space-between">
+												<v-col
+													class="headline font-weight-bold white--text"
+												>
+													Encuentra a tu Psicólogo Ideal
+												</v-col>
+											</v-row>
+											<div class="body-2 mt-2">
+												Lorempsum dolor sit amet, consectetupsum dolor sit
+												amet, consectetu ipsum
+											</div>
+											<v-btn light class="px-10 mt-4" depressed>
+												Comenzar
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-card-text>
+							</v-card>
+						</v-col>
+						<v-col cols="12" v-for="(item, i) in psychologists" :key="i">
+							<v-card style="border-radius:15px">
+								<v-card-text>
+									<v-row align="center" justify="center">
+										<v-col cols="3" lg="2" class="text-center">
+											<v-list-item-avatar size="100" class="ml-4">
+												<v-btn
+													color="#9D9D9C"
+													class="elevation-0"
+													fab
+													width="100"
+													height="100"
+												></v-btn>
+											</v-list-item-avatar>
+											<div class="caption text--secondary">
 												Cédula {{ item.rut }}
 											</div>
 											<v-btn
-												v-if="!firstItem(i)"
 												text
 												color="primary"
 												class="font-weight-bold"
@@ -180,26 +217,17 @@
 										<v-col cols="9" lg="10">
 											<v-row justify="space-between">
 												<v-col
-													class="headline font-weight-bold"
-													:class="
-														firstItem(i)
-															? 'white--text'
-															: 'text--secondary'
-													"
+													class="headline font-weight-bold text--secondary"
 												>
 													{{ item.name }}
 												</v-col>
 												<v-col cols="4" lg="3" class="text-right">
-													<v-btn
-														v-if="!firstItem(i)"
-														color="primary"
-														rounded
-													>
+													<v-btn color="primary" rounded>
 														Agenda cita oline
 													</v-btn>
 												</v-col>
 											</v-row>
-											<div v-if="!firstItem(i)">
+											<div>
 												<v-chip
 													v-for="el in [3, 1, 2]"
 													:key="el"
@@ -210,9 +238,6 @@
 												</v-chip>
 											</div>
 											<div class="body-2 mt-2">{{ item.description }}</div>
-											<v-btn v-if="firstItem(i)" light class="px-10 mt-4">
-												Comenzar
-											</v-btn>
 										</v-col>
 									</v-row>
 								</v-card-text>
@@ -233,7 +258,7 @@ export default {
 		return { view: 2 };
 	},
 	computed: {
-		...mapGetters({ sychologists: 'Psychologist/psychologists' }),
+		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
 	},
 	mounted() {
 		const view = localStorage.getItem('view');
@@ -242,9 +267,6 @@ export default {
 		}
 	},
 	methods: {
-		firstItem(index) {
-			return index == 0;
-		},
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
