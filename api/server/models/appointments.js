@@ -2,7 +2,7 @@ import UniqueValidator from 'mongoose-unique-validator';
 import { Schema, model } from 'mongoose';
 
 let appointment = new Schema({
-	nombre: {
+	name: {
 		type: String,
 	},
 });
