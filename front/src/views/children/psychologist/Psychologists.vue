@@ -50,7 +50,7 @@
 						<v-select
 							class="white"
 							hide-details
-							:items="psychologists"
+							:items="[]"
 							item-text="name"
 							outlined
 							label="Motivo de consulta"
@@ -58,15 +58,25 @@
 						></v-select>
 					</v-col>
 					<v-col>
-						<v-select
+						<v-combobox
 							class="white"
-							hide-details
+							outlined
 							:items="psychologists"
 							item-text="name"
-							outlined
+							:search-input.sync="search"
 							label="Busca tu psicólogo"
-							no-data-text="Vacio"
-						></v-select>
+						>
+							<template v-slot:no-data>
+								<v-list-item>
+									<v-list-item-content>
+										<v-list-item-title>
+											No se han encontrado psicologos con el nombre "
+											<strong>{{ search }} </strong>"
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</template>
+						</v-combobox>
 					</v-col>
 				</v-row>
 				<v-row>
@@ -89,7 +99,7 @@
 										height="100"
 									></v-btn>
 									<div class="subtitle-1 font-weight-bold">
-										Encuentra a tu Psicólogo Ideal
+										Encuentra a tu psicólogo ideal
 									</div>
 									<div class="body-2 mt-2">
 										Lorempsum dolor sit amet, consectetupsum dolor sit amet,
@@ -170,7 +180,7 @@
 												<v-col
 													class="headline font-weight-bold white--text"
 												>
-													Encuentra a tu Psicólogo Ideal
+													Encuentra a tu psicólogo ideal
 												</v-col>
 											</v-row>
 											<div class="body-2 mt-2">
