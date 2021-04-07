@@ -1,29 +1,31 @@
-import { logError, logInfo } from "../config/pino"
-import Session from "../models/session";
-import { errorCallback } from "../utils/functions/errorCallback";
-import { conflictResponse, okResponse } from "../utils/responses/functions";
+import { logInfo } from '../config/pino';
+import Session from '../models/session';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const create = async (req, res) => {
-    const newSession = new Session({
-        date: req.date,
-        title: req.title,
-        psychologist: req.psychologist,
-        client: req.client, 
-    });
+	const newSession = new Session({
+		date: req.date,
+		title: req.title,
+		psychologist: req.psychologist,
+		client: req.client,
+	});
 
-    const results = await Session.find({ psychologist: req.psychologist, date: req.date });
-    if (results.length !== 0) {
-        logInfo('Ya hay una sesion creada en esa hora')
-        return conflictResponse('ya hay una sesion creada en esa hora')
-    }
+	const results = await Session.find({
+		psychologist: req.psychologist,
+		date: req.date,
+	});
+	if (results.length !== 0) {
+		logInfo('Ya hay una sesion creada en esa hora');
+		return conflictResponse('ya hay una sesion creada en esa hora');
+	}
 
-    const session = newSession.save();
-    logInfo('creo una nueva cita');
-    return okResponse('sesion creada')
-}
+	const session = newSession.save();
+	logInfo('creo una nueva cita');
+	return okResponse('sesion creada');
+};
 
 const sessionService = {
-    create
+	create,
 };
 
 export default Object.freeze(sessionService);

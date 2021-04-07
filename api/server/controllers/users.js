@@ -16,7 +16,10 @@ const userController = {
 		try {
 			const { user } = req;
 			const profile = req.body;
-			const { data, code } = await userService.updateProfile(user, profile);
+			const { data, code } = await userService.updateProfile(
+				user,
+				profile
+			);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando perfil');
@@ -26,7 +29,11 @@ const userController = {
 		try {
 			const { user } = req;
 			const { oldPassword, newPassword } = req.body;
-			const { data, code } = await userService.updatePassword(user, oldPassword, newPassword);
+			const { data, code } = await userService.updatePassword(
+				user,
+				oldPassword,
+				newPassword
+			);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando contraseña');
@@ -40,7 +47,7 @@ const userController = {
 			const { data, code } = await userService.updatePlan(user, newPlan);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el plan')
+			errorCallback(e, res, 'Error actualizando el plan');
 		}
 	},
 
@@ -48,10 +55,13 @@ const userController = {
 		try {
 			const { user } = req;
 			const { newPsychologist } = req.body;
-			const { data, code } = await userService.updatePlan(user, newPsychologist);
+			const { data, code } = await userService.updatePlan(
+				user,
+				newPsychologist
+			);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el psicologo')
+			errorCallback(e, res, 'Error actualizando el psicologo');
 		}
 	},
 
@@ -61,9 +71,9 @@ const userController = {
 			const { data, code } = await userService.getSessions(user);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error consiguiendo las sesiones')
+			errorCallback(e, res, 'Error consiguiendo las sesiones');
 		}
-	}
+	},
 };
 
 export default userController;

@@ -26,12 +26,10 @@ const userSchema = {
 			.required(),
 	}),
 	updatePlan: Joi.object({
-		newPlan: Joi.string()
-			.required(),
+		newPlan: Joi.string().required(),
 	}),
 	updatePsychologist: Joi.object({
-		newPsychologist: Joi.object()
-			.required(),
+		newPsychologist: Joi.object().required(),
 	}),
 	idPerson: Joi.object({
 		idPerson: Joi.objectId(),
