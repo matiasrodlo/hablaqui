@@ -92,7 +92,8 @@
 						<v-combobox
 							class="white"
 							outlined
-							:items="['uno', 'dos', 'tres']"
+							:items="appointments"
+							item-text="name"
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							hide-details
@@ -334,6 +335,7 @@ export default {
 			});
 		},
 		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
+		...mapGetters({ appointments: 'Appointments/appointments' }),
 	},
 	mounted() {
 		const view = localStorage.getItem('view');

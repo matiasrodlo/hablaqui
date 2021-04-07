@@ -73,10 +73,14 @@ export default {
 	async mounted() {
 		this.loading = true;
 		await this.getPsychologists();
+		await this.getAppointments();
 		this.loading = false;
 	},
 	methods: {
-		...mapActions({ getPsychologists: 'Psychologist/getPsychologists' }),
+		...mapActions({
+			getPsychologists: 'Psychologist/getPsychologists',
+			getAppointments: 'Appointments/getAppointments',
+		}),
 	},
 };
 </script>
