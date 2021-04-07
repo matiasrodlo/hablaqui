@@ -8,7 +8,7 @@ const appointmentsRouter = Router();
 appointmentsRouter.get(
 	'/appointments/all' /*,
     [
-        passport.authenticate('jwt', { session: false }),
+        passport.authenticate('jwt', { session: true }),
         grantAccess('readAny', 'appointments'),
     ]*/,
 	appointmentsController.getAll

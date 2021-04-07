@@ -8,7 +8,7 @@ const psychologistsRouter = Router();
 psychologistsRouter.get(
 	'/psychologists/all',
 	[
-		passport.authenticate('jwt', { session: false }),
+		passport.authenticate('jwt', { session: true }),
 		grantAccess('readAny', 'psychologists'),
 	],
 	psychologistsController.getAll
