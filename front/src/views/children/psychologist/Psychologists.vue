@@ -27,18 +27,42 @@
 						<v-row>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Género</div>
-								<v-checkbox label="Hombre" hide-details></v-checkbox>
-								<v-checkbox label="Mujer" hide-details></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Hombre"
+									hide-details
+								></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Mujer"
+									hide-details
+								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Tipo de cita</div>
-								<v-checkbox label="Personal" hide-details></v-checkbox>
-								<v-checkbox label="Pareja" hide-details></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Personal"
+									hide-details
+								></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Pareja"
+									hide-details
+								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Idioma</div>
-								<v-checkbox label="Español" hide-details></v-checkbox>
-								<v-checkbox label="Ingles" hide-details></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Español"
+									hide-details
+								></v-checkbox>
+								<v-checkbox
+									:disabled="loading"
+									label="Ingles"
+									hide-details
+								></v-checkbox>
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -54,6 +78,7 @@
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							hide-details
+							:disabled="loading"
 						>
 							<template v-slot:no-data>
 								<v-list-item>
@@ -76,10 +101,20 @@
 							outlined
 							class="white"
 							hide-details
+							:disabled="loading"
 						/>
 					</v-col>
 				</v-row>
-				<v-row>
+				<v-row v-if="loading">
+					<v-col v-for="i in 8" cols="12" sm="6" md="4" lg="3" :key="i">
+						<v-skeleton-loader
+							class="mx-auto"
+							max-width="300"
+							type="image, card-heading"
+						></v-skeleton-loader>
+					</v-col>
+				</v-row>
+				<v-row v-else>
 					<template v-if="view == 1">
 						<v-col cols="12" sm="6" md="4" lg="3">
 							<v-card
@@ -115,14 +150,7 @@
 								</v-card-actions>
 							</v-card>
 						</v-col>
-						<v-col
-							cols="12"
-							sm="6"
-							md="4"
-							lg="3"
-							v-for="(item, i) in psychologists"
-							:key="i"
-						>
+						<v-col cols="12" sm="6" md="4" lg="3" v-for="(item, i) in items" :key="i">
 							<v-card height="450px" style="border-radius:15px" class="text-center">
 								<v-card-text style="height: 75%">
 									<v-btn
@@ -195,7 +223,7 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="12" v-for="(item, i) in psychologists" :key="i">
+						<v-col cols="12" v-for="(item, i) in items" :key="i">
 							<v-card style="border-radius:15px">
 								<v-card-text>
 									<v-row align="center" justify="center">
@@ -264,10 +292,19 @@
 import { mapGetters } from 'vuex';
 export default {
 	name: 'psychologists',
+	props: {
+		loading: {
+			type: Boolean,
+			default: true,
+		},
+	},
 	data() {
 		return { motive: '', searchPsychologist: '', searchItem: '', view: 2 };
 	},
 	computed: {
+		items() {
+			return this.psychologists;
+		},
 		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
 	},
 	mounted() {

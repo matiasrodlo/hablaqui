@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<router-view />
+		<router-view :loading="loading" />
 		<!-- footer -->
 		<v-container fluid class="primary white--text py-16">
 			<v-row>
@@ -65,8 +65,15 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
-	mounted() {
-		this.getPsychologists();
+	data() {
+		return {
+			loading: false,
+		};
+	},
+	async mounted() {
+		this.loading = true;
+		await this.getPsychologists();
+		this.loading = false;
 	},
 	methods: {
 		...mapActions({ getPsychologists: 'Psychologist/getPsychologists' }),
