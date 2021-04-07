@@ -43,14 +43,8 @@ let userSchema = new Schema({
 	password: {
 		type: String,
 	},
-	invitedCode: {
+	inviteCode: {
 		type: String,
-	},
-	lastName: {
-		type: String,
-		lowercase: true,
-		trim: true,
-		default: '',
 	},
 	googleId: {
 		type: String,
@@ -58,8 +52,9 @@ let userSchema = new Schema({
 	phone: {
 		type: String,
 		trim: true,
+		required: false,
 	},
-	img: {
+	timeZone: {
 		type: String,
 		required: false,
 	},
@@ -71,32 +66,19 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	analyst: {
-		type: Boolean,
+	myPlan: {
+		type: String,
 		default: false,
+	},
+	finishedSessions: {
+		type: Array,
+		required: false,
 	},
 	role: {
 		type: String,
-		default: 'admin',
-		enum: ['person', 'admin', 'superUser'],
+		default: 'user',
+		enum: ['user', 'psychologist', 'admin'],
 	},
-	company: {
-		type: String,
-		default: '',
-	},
-	idPerson: {
-		type: String,
-		required: false,
-	},
-	adminNotifyTime: {
-		type: String,
-		default: '19:00',
-	},
-	notifications: [userNotifications],
-	sharingWithUsers: [userSharingSchema],
-	sharingWithMe: [userSharingSchema],
-	numberWorkOrders: { type: Array },
-	workOrdersName: { type: Array },
 });
 
 userSchema.methods.toJSON = function() {

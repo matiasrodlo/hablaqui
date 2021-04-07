@@ -37,10 +37,10 @@ userRouter.get(
 );
 
 userRouter.put(
-	'/user/profile',
+	'/user/update/profile',
 	[
 		passport.authenticate('jwt', { session: false }),
-		grantAccess('updateOwn', 'profile'),
+		/*grantAccess('updateOwn', 'profile'),*/
 		validation(userSchema.updateProfile, 'body'),
 	],
 	userController.updateProfile
@@ -56,53 +56,12 @@ userRouter.post(
 );
 
 userRouter.patch(
-	'/user/avatar',
+	'/user/update/password',
 	[
 		passport.authenticate('jwt', { session: false }),
-		grantAccess('updateOwn', 'profile'),
-		upload.single('avatar'),
-		storage,
-	],
-	userController.updateAvatar
-);
-
-userRouter.patch(
-	'/user/password',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('updateOwn', 'profile'),
+		/*grantAccess('updateOwn', 'profile'),*/
 		validation(userSchema.updatePassword, 'body'),
 	],
 	userController.updatePassword
-);
-
-userRouter.patch(
-	'/user/actions/share/place-and-person',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('updateOwn', 'profile'),
-		validation(userSchema.share, 'body'),
-	],
-	userController.sharePlaceAndPersons
-);
-
-userRouter.delete(
-	'/user/actions/share/remove',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('deleteAny', 'profile'),
-		validation(userSchema.share, 'body'),
-	],
-	userController.deleteSharingWithUser
-);
-
-userRouter.delete(
-	'/user/actions/share/remove-with-me',
-	[
-		passport.authenticate('jwt', { session: false }),
-		grantAccess('deleteAny', 'profile'),
-		validation(userSchema.share, 'body'),
-	],
-	userController.deleteSharingWithMeUser
 );
 export default userRouter;
