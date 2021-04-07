@@ -47,15 +47,14 @@
 			<v-col cols="12" md="9" lg="10">
 				<v-row>
 					<v-col>
-						<v-select
+						<v-combobox
 							class="white"
-							hide-details
-							:items="[]"
-							item-text="name"
 							outlined
+							:items="[]"
 							label="Motivo de consulta"
-							no-data-text="Vacio"
-						></v-select>
+							no-data-text="Vacío"
+						>
+						</v-combobox>
 					</v-col>
 					<v-col>
 						<v-combobox
