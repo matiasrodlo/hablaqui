@@ -12,7 +12,7 @@ import {
 const usersService = {
 	async getProfile(id) {
 		const user = await User.findById(id);
-		if (!user){
+		if (!user) {
 			return conflictResponse('perfil no encontrado');
 		}
 		return okResponse('perfil obtenido', { user });
@@ -27,16 +27,21 @@ const usersService = {
 		const foundUser = await User.findById(user._id);
 		// if the password is te same we cancel the update
 		const samePassword = oldPassword === newPassword;
-		if (samePassword) return conflictResponse('no puede ser la misma contraseña');
+		if (samePassword)
+			return conflictResponse('no puede ser la misma contraseña');
 		const isEqual = bcrypt.compareSync(oldPassword, foundUser.password);
 		//if the password doesn't match, we cancel the update
-		if (!isEqual) return conflictResponse('la contraseña anterior no es correcta');
+		if (!isEqual)
+			return conflictResponse('la contraseña anterior no es correcta');
 		else return await this.changeActualPassword(foundUser, newPassword);
 	},
 	async updateProfile(user, profile) {
 		let updated = null;
 		if (profile.idPerson)
-			updated = await User.findOneAndUpdate({ idPerson: profile.idPerson }, profile);
+			updated = await User.findOneAndUpdate(
+				{ idPerson: profile.idPerson },
+				profile
+			);
 		else
 			updated = await User.findByIdAndUpdate(user._id, profile, {
 				new: true,
@@ -50,11 +55,15 @@ const usersService = {
 
 	async updatePlan(user, newPlan) {
 		let updated = null;
-		updated = await User.findByIdAndUpdate(user._id, {myPlan: newPlan}, {
-			new: true,
-			runValidators: true,
-			context: 'query',
-		});
+		updated = await User.findByIdAndUpdate(
+			user._id,
+			{ myPlan: newPlan },
+			{
+				new: true,
+				runValidators: true,
+				context: 'query',
+			}
+		);
 
 		logInfo(actionInfo(user.email, 'actualizo su plan'));
 		return okResponse('plan actualizado', { profile: updated });
@@ -62,11 +71,15 @@ const usersService = {
 
 	async updatePlan(user, newPsychologist) {
 		let updated = null;
-		updated = await User.findByIdAndUpdate(user._id, {psychologist: newPsychologist}, {
-			new: true,
-			runValidators: true,
-			context: 'query',
-		});
+		updated = await User.findByIdAndUpdate(
+			user._id,
+			{ psychologist: newPsychologist },
+			{
+				new: true,
+				runValidators: true,
+				context: 'query',
+			}
+		);
 
 		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
 		return okResponse('psicologo actualizado', { profile: updated });
@@ -75,7 +88,7 @@ const usersService = {
 	async getSessions(user) {
 		let finishedSessions = user.finishedSessions;
 
-		return okResponse('sesiones conseguidas', { finishedSessions })
+		return okResponse('sesiones conseguidas', { finishedSessions });
 	},
 };
 

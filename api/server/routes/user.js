@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import upload from '../middleware/multer';
-import storage from '../middleware/storage';
 import userController from '../controllers/users';
 import userSchema from '../schemas/user';
 import validation from '../middleware/validation';
@@ -50,7 +48,7 @@ userRouter.put(
 userRouter.put(
 	'/user/update/psychologist',
 	[
-		passport.authenticate('jwt', { session : true }),
+		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.updatePsychologist, 'body'),
 	],
 	userController.updatePsychologist
@@ -58,9 +56,7 @@ userRouter.put(
 
 userRouter.get(
 	'/user/sessions',
-	[
-		passport.authenticate('jwt', { session: true }),
-	],
+	[passport.authenticate('jwt', { session: true })],
 	userController.getSessions
-)
+);
 export default userRouter;
