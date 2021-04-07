@@ -50,32 +50,33 @@
 						<v-combobox
 							class="white"
 							outlined
-							:items="[]"
+							:items="[1, 2, 3]"
+							:search-input.sync="motive"
 							label="Motivo de consulta"
-							no-data-text="Vacío"
-						>
-						</v-combobox>
-					</v-col>
-					<v-col>
-						<v-combobox
-							class="white"
-							outlined
-							:items="psychologists"
-							item-text="name"
-							:search-input.sync="search"
-							label="Busca tu psicólogo"
+							hide-details
 						>
 							<template v-slot:no-data>
 								<v-list-item>
 									<v-list-item-content>
 										<v-list-item-title>
-											No se han encontrado psicologos con el nombre "
-											<strong>{{ search }} </strong>"
+											No se encontraron resultados que coincidan con "<strong>
+												{{ motive }}
+											</strong>
+											" .
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
 							</template>
 						</v-combobox>
+					</v-col>
+					<v-col>
+						<v-text-field
+							label="Busca tu psicólogo"
+							v-model="searchPsychologist"
+							outlined
+							class="white"
+							hide-details
+						/>
 					</v-col>
 				</v-row>
 				<v-row>
@@ -264,7 +265,7 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'psychologists',
 	data() {
-		return { view: 2 };
+		return { motive: '', searchPsychologist: '', searchItem: '', view: 2 };
 	},
 	computed: {
 		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
