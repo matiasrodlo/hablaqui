@@ -169,7 +169,12 @@
 							</v-card>
 						</v-col>
 						<v-col cols="12" sm="6" md="4" lg="3" v-for="(item, i) in items" :key="i">
-							<v-card height="450px" style="border-radius:15px" class="text-center">
+							<v-card
+								height="450px"
+								style="border-radius:15px"
+								class="text-center"
+								:to="{ name: 'psicologo', params: { name: item.name } }"
+							>
 								<v-card-text style="height: 75%">
 									<v-btn
 										color="#9D9D9C"
@@ -192,11 +197,7 @@
 								</v-card-actions>
 								<v-card-actions class="text-center">
 									<v-spacer></v-spacer>
-									<v-btn
-										text
-										color="#9D9D9C"
-										:to="{ name: 'psicologo', params: { id: item._id } }"
-									>
+									<v-btn text color="#9D9D9C">
 										Más información
 									</v-btn>
 									<v-spacer></v-spacer>
@@ -242,7 +243,10 @@
 							</v-card>
 						</v-col>
 						<v-col cols="12" v-for="(item, i) in items" :key="i">
-							<v-card style="border-radius:15px">
+							<v-card
+								style="border-radius:15px"
+								:to="{ name: 'psicologo', params: { name: item.name } }"
+							>
 								<v-card-text>
 									<v-row align="center" justify="center">
 										<v-col cols="3" lg="2" class="text-center">
@@ -258,15 +262,7 @@
 											<div class="caption text--secondary">
 												Cédula {{ item.rut }}
 											</div>
-											<v-btn
-												text
-												color="primary"
-												class="font-weight-bold"
-												:to="{
-													name: 'psicologo',
-													params: { id: item._id },
-												}"
-											>
+											<v-btn text color="primary" class="font-weight-bold">
 												Más información
 											</v-btn>
 										</v-col>
@@ -345,9 +341,11 @@ export default {
 			this.view = view;
 		}
 		const panel = JSON.parse(localStorage.getItem('panel'));
-		this.gender = panel.gender;
-		this.sessionType = panel.sessionType;
-		this.language = panel.language;
+		if (panel) {
+			this.gender = panel.gender;
+			this.sessionType = panel.sessionType;
+			this.language = panel.language;
+		}
 	},
 	methods: {
 		setView(type) {
