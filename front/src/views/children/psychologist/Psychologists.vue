@@ -173,7 +173,7 @@
 								height="450px"
 								style="border-radius:15px"
 								class="text-center"
-								:to="{ name: 'psicologo', params: { name: item.name } }"
+								:to="{ name: 'psicologo', params: { id: item._id } }"
 							>
 								<v-card-text style="height: 75%">
 									<v-btn
@@ -245,7 +245,7 @@
 						<v-col cols="12" v-for="(item, i) in items" :key="i">
 							<v-card
 								style="border-radius:15px"
-								:to="{ name: 'psicologo', params: { name: item.name } }"
+								:to="{ name: 'psicologo', params: { id: item._id } }"
 							>
 								<v-card-text>
 									<v-row align="center" justify="center">

@@ -39,7 +39,7 @@ const routes = [
 				},
 			},
 			{
-				path: ':name',
+				path: ':id',
 				name: 'psicologo',
 				component: Psychologist,
 				meta: {

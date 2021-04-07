@@ -16,14 +16,14 @@
 								:height="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							></v-btn>
 						</v-list-item-avatar>
-						<div class="caption text--secondary">Cédula 12121212</div>
+						<div class="caption text--secondary">cedula xxxxx</div>
 					</v-col>
 					<v-col cols="12" sm="9" lg="10">
 						<v-row justify="space-between">
 							<v-col
 								class="text-center text-sm-left font-weight-bold text-h3 text--secondary"
 							>
-								Fernanda Croffman
+								{{ psychologist.name }}
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
 								<v-btn block color="primary" rounded>
@@ -34,11 +34,8 @@
 						<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
 							Ansiedad
 						</v-chip>
-						<div class="body-2 mt-2">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-							nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-							volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-							ullamcorper suscipit lobor
+						<div class="body-2 mt-2 text-capitalize">
+							{{ psychologist.description }}
 						</div>
 					</v-col>
 				</v-row>
@@ -50,17 +47,8 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">EXPERIENCIA</v-col>
-					<v-col class="body-1 text-left">
-						<ul>
-							<li>Angústia</li>
-							<li>Ansiedade</li>
-							<li>Relacionamentos / Conflitos Amorosos / Ciúmes</li>
-							<li>Relacionamentos / Conflitos Familiares</li>
-							<li>Doenças Emocionais / Doenças Mentais</li>
-							<li>Controle / Inteligência Emocional</li>
-							<li>Estresse</li>
-							<li>Autoconhecimento</li>
-						</ul>
+					<v-col class="body-1 text-left text-capitalize text-capitalize">
+						{{ psychologist.experience ? psychologist.experience : 'Vacío' }}
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -68,17 +56,18 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">ESPECIALIDADES</v-col>
-					<v-col class="body-1 text-left">
+					<v-col
+						v-if="psychologist.specialties.length"
+						class="body-1 text-left text-capitalize"
+					>
 						<ul>
-							<li>Angústia</li>
-							<li>Ansiedade</li>
-							<li>Relacionamentos / Conflitos Amorosos / Ciúmes</li>
-							<li>Relacionamentos / Conflitos Familiares</li>
-							<li>Doenças Emocionais / Doenças Mentais</li>
-							<li>Controle / Inteligência Emocional</li>
-							<li>Estresse</li>
-							<li>Autoconhecimento</li>
+							<li v-for="(specialties, i) in psychologist.specialties" :key="i">
+								{{ specialties }}
+							</li>
 						</ul>
+					</v-col>
+					<v-col v-else class="body-1 text-left text-capitalize">
+						Vacío
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -86,17 +75,8 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">FORMACIÓN</v-col>
-					<v-col class="body-1 text-left">
-						<ul>
-							<li>Angústia</li>
-							<li>Ansiedade</li>
-							<li>Relacionamentos / Conflitos Amorosos / Ciúmes</li>
-							<li>Relacionamentos / Conflitos Familiares</li>
-							<li>Doenças Emocionais / Doenças Mentais</li>
-							<li>Controle / Inteligência Emocional</li>
-							<li>Estresse</li>
-							<li>Autoconhecimento</li>
-						</ul>
+					<v-col class="body-1 text-left text-capitalize">
+						{{ psychologist.formation ? psychologist.formation : 'Vacío' }}
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -104,17 +84,8 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">DESCRIPCIÓN PERSONAL</v-col>
-					<v-col class="body-1 text-left">
-						<ul>
-							<li>Angústia</li>
-							<li>Ansiedade</li>
-							<li>Relacionamentos / Conflitos Amorosos / Ciúmes</li>
-							<li>Relacionamentos / Conflitos Familiares</li>
-							<li>Doenças Emocionais / Doenças Mentais</li>
-							<li>Controle / Inteligência Emocional</li>
-							<li>Estresse</li>
-							<li>Autoconhecimento</li>
-						</ul>
+					<v-col class="body-1 text-left text-capitalize">
+						HARD CODE...
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -122,12 +93,8 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">REPROGRAMACIÓN</v-col>
-					<v-col class="body-1 text-left">
-						<ul>
-							<li>
-								Remarcações podem ocorrer até 12 hora(s) antes sem custo adicional
-							</li>
-						</ul>
+					<v-col class="body-1 text-left text-capitalize">
+						HARD CODE...
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -136,7 +103,15 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from 'vuex';
+export default {
+	computed: {
+		psychologist() {
+			return this.psychologists.find(item => item._id === this.$route.params.id);
+		},
+		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
+	},
+};
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,4 +1,4 @@
-# front
+# Hablaqui 
 
 ## Project setup
 ```
@@ -25,5 +25,5 @@ npm run test:unit
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Visitanos
+[Ver demo](https://hablaqui-staging-306619.rj.r.appspot.com/#/).
