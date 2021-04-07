@@ -5,7 +5,7 @@ import { okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
-	logInfo(infoMessages('obtuvo todos los psicologos'));
+	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
