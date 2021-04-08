@@ -17,9 +17,8 @@ const uploadCsv = async (req, res) => {
 					const newSpecialties = data.specialties.split(';');
 
 					data.specialties = newSpecialties;
-					const newData = new Psychologist(data);
-					newData.save();
 				});
+				Psychologist.insertMany(data);
 			});
 
 		return okResponse('psicologos subidos', '');
