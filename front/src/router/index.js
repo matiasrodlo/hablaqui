@@ -9,7 +9,9 @@ const Auth = () => import('@/views/Auth');
 const Blog = () => import('@/views/Blog');
 const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
+const Home = () => import('@/views/children/profile/Home');
 const Privacy = () => import('@/views/Privacy');
+const Profile = () => import('@/views/Profile');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const Recruitment = () => import('@/views/Recruitment');
@@ -47,6 +49,20 @@ const routes = [
 					layout: 'layout',
 					appBarColor: 'transparent',
 				},
+			},
+		],
+	},
+	{
+		path: '/perfil',
+		name: 'perfil',
+		component: Profile,
+		redirect: { name: 'perfil-home' },
+		children: [
+			{
+				path: '/',
+				name: 'perfil-home',
+				component: Home,
+				meta: { title: 'Mi perfil', layout: 'layout', appBarColor: 'transparent' },
 			},
 		],
 	},
