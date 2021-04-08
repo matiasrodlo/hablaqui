@@ -54,7 +54,7 @@ const routes = [
 		path: '/reclutamiento',
 		name: 'reclutamiento',
 		component: Recruitment,
-		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'transparent' },
+		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/faq',
