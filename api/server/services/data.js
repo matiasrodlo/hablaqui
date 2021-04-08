@@ -10,29 +10,27 @@ const uploadCsv = async (req, res) => {
 	}
 
 	if (req.file.originalname === 'psychologists.csv') {
-		csvtojson()
-			.fromFile(req.file.path)
-			.then(data => {
-				data.forEach(data => {
-					const newSpecialties = data.specialties.split(';');
+		if (req.file.originalname === 'psychologists.csv') {
+			let data = await csvtojson().fromFile(req.file.path);
 
-					data.specialties = newSpecialties;
-				});
-				Psychologist.insertMany(data);
-			});
+			data = data.map(item => ({
+				...item,
+				specialties: item.specialties.split(';'),
+			}));
 
-		return okResponse('psicologos subidos', '');
+			await Psychologist.insertMany(data);
+
+			return okResponse('psicologos subidos');
+		}
 	}
 
 	if (req.file.originalname === 'appointments.csv') {
-		csvtojson()
-			.fromFile(req.file.path)
-			.then(data => Appointments.insertMany(data));
-
+		const data = await csvtojson().fromFile(req.file.path);
+		await Appointments.insertMany(data);
 		return okResponse('consultas subidas', '');
 	}
 
-	return okResponse('no se pudo subir el archivo', '');
+	return okResponse('no se pudo subir el archivo');
 };
 
 const dataService = {
