@@ -59,8 +59,9 @@ export default {
 	},
 	async upatePassword({ commit }, payload) {
 		try {
+			delete payload.repeatNewPassword;
 			const { data } = await axios('/user/update/password', {
-				method: 'put',
+				method: 'patch',
 				data: payload,
 			});
 			snackBarSuccess(data.message)(commit);

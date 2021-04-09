@@ -100,6 +100,11 @@ export default {
 			if (!this.$v.$invalid) {
 				this.loadingPassword = true;
 				await this.upatePassword(this.formPassword);
+				this.formPassword = {
+					newPassword: '',
+					repeatNewPassword: '',
+					oldPassword: '',
+				};
 				this.$v.$reset();
 				this.loadingPassword = false;
 			}
@@ -108,7 +113,7 @@ export default {
 	},
 	validations: {
 		formPassword: {
-			oldPassword: { require },
+			oldPassword: { required },
 			newPassword: {
 				required,
 				minLength: minLength(6),
