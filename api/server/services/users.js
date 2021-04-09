@@ -81,18 +81,15 @@ const usersService = {
 	},
 
 	async updateAvatar(user, avatar) {
-		let updated = null;
-		updated = await User.findByIdAndUpdate(
+		const profile = await User.findByIdAndUpdate(
 			user._id,
 			{ avatar },
 			{
 				new: true,
-				runValidators: true,
-				context: 'query',
 			}
 		);
 		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('avatar actualizado', { img: updated.avatar });
+		return okResponse('avatar actualizado', { user: profile });
 	},
 
 	async getSessions(user) {

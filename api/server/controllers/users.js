@@ -67,11 +67,10 @@ const userController = {
 
 	async updateAvatar(req, res) {
 		try {
-			const { user } = req;
-			const { newAvatar } = req.body;
+			const { user, file } = req;
 			const { data, code } = await userService.updateAvatar(
 				user,
-				newAvatar
+				file.cloudStoragePublicUrl
 			);
 			restResponse(data, code, res);
 		} catch (e) {
