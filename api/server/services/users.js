@@ -31,21 +31,14 @@ const usersService = {
 		else return await this.changeActualPassword(foundUser, newPassword);
 	},
 	async updateProfile(user, profile) {
-		let updated = null;
-		if (profile.idPerson)
-			updated = await User.findOneAndUpdate(
-				{ idPerson: profile.idPerson },
-				profile
-			);
-		else
-			updated = await User.findByIdAndUpdate(user._id, profile, {
-				new: true,
-				runValidators: true,
-				context: 'query',
-			});
+		const updated = await User.findByIdAndUpdate(user._id, profile, {
+			new: true,
+			runValidators: true,
+			context: 'query',
+		});
 
 		logInfo(actionInfo(user.email, 'actualizo su perfil'));
-		return okResponse('perfil obtenido', { profile: updated });
+		return okResponse('perfil obtenido', { user: updated });
 	},
 
 	async updatePlan(user, newPlan) {

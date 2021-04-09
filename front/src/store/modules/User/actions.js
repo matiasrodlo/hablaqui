@@ -33,4 +33,16 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async upateUser({ commit }, payload) {
+		try {
+			const { data } = await axios('/user/update/profile', {
+				method: 'put',
+				data: payload,
+			});
+			commit('setUser', data.user);
+			snackBarSuccess(data.message)(commit);
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 };
