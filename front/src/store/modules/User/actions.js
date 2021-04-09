@@ -45,4 +45,27 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async upateAvatar({ commit }, payload) {
+		try {
+			const { data } = await axios('/user/update/avatar', {
+				method: 'put',
+				data: payload,
+			});
+			commit('setUser', data.user);
+			snackBarSuccess(data.message)(commit);
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
+	async upatePassword({ commit }, payload) {
+		try {
+			const { data } = await axios('/user/update/password', {
+				method: 'put',
+				data: payload,
+			});
+			snackBarSuccess(data.message)(commit);
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 };

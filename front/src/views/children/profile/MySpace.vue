@@ -4,24 +4,36 @@
 			<v-col>
 				<v-list three-line style="border-radius:15px">
 					<v-list-item style="position: relative">
-						<v-btn
-							absolute
-							style="left: 120px; z-index: 1;"
-							bottom
-							color="primary"
-							icon
-							small
-							outlined
-						>
-							<v-icon>mdi-plus</v-icon>
-						</v-btn>
+						<v-file-input
+							id="upload"
+							ref="avatar"
+							class="d-none"
+							dense
+							filled
+							hide-details
+							accept="image/jpeg, image/png, image/gif, image/jpg"
+							placeholder="Agrega un avatar"
+							drop-placeholder="Arrastrar aqui..."
+							@change="uploadAvatar"
+						></v-file-input>
 						<v-list-item-avatar size="150">
-							<v-avatar size="150" color="#EEE">
-								<img v-if="user.avatar" :src="user.avatar" alt="John" />
-								<span v-else class="white--text text-h3 text-uppercase">
-									{{ initials }}
-								</span>
-							</v-avatar>
+							<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
+								<v-progress-circular
+									indeterminate
+									color="primary"
+								></v-progress-circular
+							></v-avatar>
+							<label v-else for="upload" style="cursor: pointer">
+								<v-avatar size="150" color="#EEE">
+									<v-img
+										v-if="user.avatar"
+										:src="user.avatar"
+										:alt="user.name"
+										contain
+									/>
+									<v-icon v-else x-large>mdi-camera</v-icon>
+								</v-avatar>
+							</label>
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title
@@ -103,7 +115,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
 	components: {
 		GeneralInformation: () => import('@/components/my-space/General'),
@@ -113,17 +125,25 @@ export default {
 	},
 	data() {
 		return {
+			loadingAvatar: false,
 			sidebar: 0,
 		};
 	},
 	computed: {
-		initials() {
-			if (this.user.name)
-				return `${this.user.name.substr(0, 1)}${this.user.lastName &&
-					this.user.lastName.substr(0, 1)}`;
-			return 'nada';
-		},
 		...mapGetters({ user: 'User/user' }),
+	},
+	methods: {
+		async uploadAvatar(file) {
+			this.loadingAvatar = true;
+			await this.upateAvatar(this.setAvatarObject(file));
+			this.loadingAvatar = false;
+		},
+		setAvatarObject(file) {
+			const avatar = new FormData();
+			avatar.append('avatar', file);
+			return avatar;
+		},
+		...mapActions({ upateAvatar: 'User/upateAvatar' }),
 	},
 };
 </script>

@@ -30,7 +30,6 @@
 						outlined
 						:search-input.sync="motive"
 						hide-details
-						:disabled="loading"
 					>
 						<template v-slot:no-data>
 							<v-list-item>
