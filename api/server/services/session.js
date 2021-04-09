@@ -2,7 +2,7 @@ import { logInfo } from '../config/pino';
 import Session from '../models/session';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 
-const create = async (req, res) => {
+const create = async req => {
 	const newSession = new Session({
 		date: req.date,
 		title: req.title,
@@ -19,7 +19,7 @@ const create = async (req, res) => {
 		return conflictResponse('ya hay una sesion creada en esa hora');
 	}
 
-	const session = newSession.save();
+	newSession.save();
 	logInfo('creo una nueva cita');
 	return okResponse('sesion creada');
 };
