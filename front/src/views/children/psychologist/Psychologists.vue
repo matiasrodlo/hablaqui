@@ -125,13 +125,20 @@
 					</v-col>
 				</v-row>
 				<v-row v-if="loading">
-					<v-col v-for="i in 8" cols="12" sm="6" md="4" lg="3" :key="i">
-						<v-skeleton-loader
-							class="mx-auto"
-							max-width="300"
-							type="image, card-heading"
-						></v-skeleton-loader>
-					</v-col>
+					<template v-if="view == 1">
+						<v-col v-for="i in 8" cols="12" sm="6" md="4" lg="3" :key="i">
+							<v-skeleton-loader
+								class="mx-auto"
+								max-width="300"
+								type="image, card-heading"
+							></v-skeleton-loader>
+						</v-col>
+					</template>
+					<template v-else>
+						<v-col v-for="i in 3" cols="12" :key="i">
+							<v-skeleton-loader class="mx-auto" type="image"> </v-skeleton-loader>
+						</v-col>
+					</template>
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
@@ -338,9 +345,12 @@ export default {
 		...mapGetters({ appointments: 'Appointments/appointments' }),
 	},
 	mounted() {
-		const view = localStorage.getItem('view');
-		if (view) {
-			this.view = view;
+		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
+		else {
+			const view = localStorage.getItem('view');
+			if (view) {
+				this.view = view;
+			}
 		}
 		const panel = JSON.parse(localStorage.getItem('panel'));
 		if (panel) {

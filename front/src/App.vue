@@ -24,6 +24,7 @@ export default {
 <style>
 html {
 	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)
