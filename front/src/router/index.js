@@ -3,13 +3,13 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const Agenda = () => import('@/views/children/profile/Agenda');
+const MyAgenda = () => import('@/views/children/profile/MyAgenda');
 const Auth = () => import('@/views/Auth');
 const Blog = () => import('@/views/Blog');
-const Daily = () => import('@/views/children/profile/Daily');
+const MyDaily = () => import('@/views/children/profile/MyDaily');
 const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
-const Home = () => import('@/views/children/profile/Home');
+const MySpace = () => import('@/views/children/profile/MySpace');
 const Privacy = () => import('@/views/Privacy');
 const Profile = () => import('@/views/Profile');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
@@ -61,19 +61,19 @@ const routes = [
 			{
 				path: 'espacio',
 				name: 'perfil-home',
-				component: Home,
+				component: MySpace,
 				meta: { title: 'Mi perfil', layout: 'simple' },
 			},
 			{
 				path: 'agenda',
 				name: 'agenda',
-				component: Agenda,
+				component: MyAgenda,
 				meta: { title: 'Mi agenda', layout: 'simple' },
 			},
 			{
 				path: 'diario',
 				name: 'diario',
-				component: Daily,
+				component: MyDaily,
 				meta: { title: 'Mi diario', layout: 'simple' },
 			},
 		],
