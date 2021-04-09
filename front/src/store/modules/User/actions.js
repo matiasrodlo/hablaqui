@@ -33,8 +33,9 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
-	async upateUser({ commit }, payload) {
+	async updateUser({ commit }, payload) {
 		try {
+			console.log('action');
 			const { data } = await axios('/user/update/profile', {
 				method: 'put',
 				data: payload,
