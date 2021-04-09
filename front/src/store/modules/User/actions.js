@@ -5,18 +5,15 @@ import router from '@/router';
 export default {
 	async login({ commit }, payload) {
 		try {
-			console.log('action');
 			const { data } = await axios('/auth/login', {
 				method: 'post',
 				data: payload,
 			});
-			console.log(data);
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
 			router.push({ name: 'espacio' });
 		} catch (e) {
-			console.log(e);
 			snackBarError(e)(commit);
 		}
 	},
