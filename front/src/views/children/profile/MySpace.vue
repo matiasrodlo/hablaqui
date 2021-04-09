@@ -2,7 +2,7 @@
 	<v-container>
 		<v-row>
 			<v-col>
-				<v-list three-line>
+				<v-list three-line style="border-radius:15px">
 					<v-list-item style="position: relative">
 						<v-btn
 							absolute
@@ -16,7 +16,7 @@
 							<v-icon>mdi-plus</v-icon>
 						</v-btn>
 						<v-list-item-avatar size="150">
-							<v-avatar size="150" color="#E0E0E0">
+							<v-avatar size="150" color="#EEE">
 								<img v-if="user.avatar" :src="user.avatar" alt="John" />
 								<span v-else class="white--text text-h3 text-uppercase">
 									{{ initials }}
@@ -39,7 +39,7 @@
 				</v-list>
 			</v-col>
 			<v-col cols="12">
-				<v-card color="#E0E0E0" flat>
+				<v-card color="#EEE" flat style="border-radius:15px">
 					<v-card-text>
 						<v-row>
 							<v-col cols="3" style="text-center">

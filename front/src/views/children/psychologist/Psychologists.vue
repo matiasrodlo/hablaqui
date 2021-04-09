@@ -126,25 +126,21 @@
 				</v-row>
 				<v-row v-if="loading">
 					<template v-if="view == 1">
-						<v-col v-for="i in 8" cols="12" sm="6" md="4" lg="3" :key="i">
-							<v-skeleton-loader
-								class="mx-auto"
-								max-width="300"
-								type="image, card-heading"
-							></v-skeleton-loader>
+						<v-col v-for="i in 8" cols="12" sm="6" md="4" :key="i">
+							<v-skeleton-loader type="image, card-heading" />
 						</v-col>
 					</template>
 					<template v-else>
 						<v-col v-for="i in 3" cols="12" :key="i">
-							<v-skeleton-loader class="mx-auto" type="image"> </v-skeleton-loader>
+							<v-skeleton-loader type="image" />
 						</v-col>
 					</template>
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" md="4" lg="3">
+						<v-col cols="12" sm="6" md="4">
 							<v-card
-								height="450px"
+								height="400px"
 								style="border-radius:15px"
 								class="text-center"
 								color="primary"
@@ -169,46 +165,59 @@
 								</v-card-text>
 								<v-card-actions>
 									<v-spacer></v-spacer>
-									<v-btn class="px-10" light color="#F0F8FF" depressed>
+									<v-btn
+										class="px-10"
+										light
+										color="#F0F8FF"
+										style="border-radius:10px"
+										depressed
+									>
 										Comenzar
 									</v-btn>
 									<v-spacer></v-spacer>
 								</v-card-actions>
 							</v-card>
 						</v-col>
-						<v-col cols="12" sm="6" md="4" lg="3" v-for="(item, i) in items" :key="i">
-							<v-card
-								height="450px"
-								style="border-radius:15px"
-								class="text-center"
-								:to="{ name: 'psicologo', params: { id: item._id } }"
-							>
-								<v-card-text style="height: 75%">
-									<v-btn
-										color="#9D9D9C"
-										depressed
-										fab
-										width="100"
-										height="100"
-									></v-btn>
-									<div class="title text--secondary">
-										{{ item.name }}
+						<v-col cols="12" sm="6" md="4" v-for="(item, i) in items" :key="i">
+							<v-card min-height="400" style="border-radius:15px" class="text-center">
+								<v-card-text style="height: 85%">
+									<div>
+										<v-btn
+											color="#9D9D9C"
+											depressed
+											fab
+											width="100"
+											height="100"
+										></v-btn>
+										<div class="subtitle-1 font-weight-bold text--secondary">
+											{{ item.name }}
+										</div>
+										<div class="body-1 primary--text">{{ item.gender }}</div>
 									</div>
-									<div class="body-1 primary--text">{{ item.gender }}</div>
 									<v-divider></v-divider>
-									<div class="body-2 mt-2">{{ item.description }}</div>
+									<div v-if="item.description" class="body-2 mt-2">
+										{{
+											item.description.length > 300
+												? item.description.slice(0, 300) + ' ...'
+												: item.description
+										}}
+									</div>
+									<div v-else class="text--secondary headline my-16">
+										Sin descripción
+									</div>
 								</v-card-text>
 								<v-card-actions class="text-center">
-									<v-spacer></v-spacer>
-									<v-btn color="primary" depressed>Agenda cita oline</v-btn>
-									<v-spacer></v-spacer>
-								</v-card-actions>
-								<v-card-actions class="text-center">
-									<v-spacer></v-spacer>
-									<v-btn text color="#9D9D9C">
+									<v-btn
+										text
+										color="#9D9D9C"
+										:to="{ name: 'psicologo', params: { id: item._id } }"
+									>
 										Más información
 									</v-btn>
 									<v-spacer></v-spacer>
+									<v-btn color="primary" depressed style="border-radius:10px"
+										>Agenda cita oline</v-btn
+									>
 								</v-card-actions>
 							</v-card>
 						</v-col>
