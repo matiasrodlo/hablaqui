@@ -54,6 +54,15 @@ userRouter.put(
 	userController.updatePsychologist
 );
 
+userRouter.put(
+	'/user/update/avatar',
+	[
+		passport.authenticate('jwt', { session: true }),
+		validation(userSchema.updateAvatar, 'body'),
+	],
+	userController.updateAvatar
+);
+
 userRouter.get(
 	'/user/sessions',
 	[passport.authenticate('jwt', { session: true })],

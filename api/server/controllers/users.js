@@ -65,6 +65,20 @@ const userController = {
 		}
 	},
 
+	async updateAvatar(req, res) {
+		try {
+			const { user } = req;
+			const { newAvatar } = req.body;
+			const { data, code } = await userService.updateAvatar(
+				user,
+				newAvatar
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando el avatar');
+		}
+	},
+
 	async getSessions(req, res) {
 		try {
 			const { user } = req;

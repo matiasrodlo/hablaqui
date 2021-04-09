@@ -1,13 +1,8 @@
 import User from '../models/user';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
-import { actionInfo, infoMessages } from '../utils/logger/infoMessages';
-import {
-	conflictResponse,
-	createdResponse,
-	notFoundResponse,
-	okResponse,
-} from '../utils/responses/functions';
+import { actionInfo } from '../utils/logger/infoMessages';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const usersService = {
 	async getProfile(id) {
@@ -69,7 +64,7 @@ const usersService = {
 		return okResponse('plan actualizado', { profile: updated });
 	},
 
-	async updatePlan(user, newPsychologist) {
+	async updatePsychologist(user, newPsychologist) {
 		let updated = null;
 		updated = await User.findByIdAndUpdate(
 			user._id,
@@ -83,6 +78,21 @@ const usersService = {
 
 		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
 		return okResponse('psicologo actualizado', { profile: updated });
+	},
+
+	async updateAvatar(user, avatar) {
+		let updated = null;
+		updated = await User.findByIdAndUpdate(
+			user._id,
+			{ avatar },
+			{
+				new: true,
+				runValidators: true,
+				context: 'query',
+			}
+		);
+		logInfo(`${user.email} actualizo su avatar`);
+		return okResponse('avatar actualizado', { img: updated.avatar });
 	},
 
 	async getSessions(user) {
