@@ -16,7 +16,7 @@ const usersService = {
 		user.password = bcrypt.hashSync(newPassword, 10);
 		await user.save();
 		logInfo(actionInfo(user.email, 'actualizo su contraseña'));
-		return okResponse('password actualizada');
+		return okResponse('Actualizó su contraseña');
 	},
 	async updatePassword(user, oldPassword, newPassword) {
 		const foundUser = await User.findById(user._id);
@@ -82,7 +82,7 @@ const usersService = {
 			}
 		);
 		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('avatar actualizado', { user: profile });
+		return okResponse('Avatar actualizado', { user: profile });
 	},
 
 	async getSessions(user) {
