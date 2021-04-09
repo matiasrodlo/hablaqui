@@ -4,14 +4,15 @@ Joi.objectId = require('joi-objectid')(Joi);
 const userSchema = {
 	updateProfile: Joi.object({
 		name: Joi.string().allow(''),
+		lastName: Joi.string().allow(''),
 		email: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
 		timeZone: Joi.string().allow(),
-		phone: Joi.string().allow(''),
 		state: Joi.boolean().allow(''),
 		google: Joi.boolean().allow(''),
 		googleId: Joi.string().allow(''),
 		psychologist: Joi.object().allow(''),
+		avatar: Joi.string().allow(''),
 		adminNotifyTime: Joi.string().allow(''),
 		__v: Joi.number(),
 	}).min(1),
@@ -30,6 +31,9 @@ const userSchema = {
 	}),
 	updatePsychologist: Joi.object({
 		newPsychologist: Joi.object().required(),
+	}),
+	updateAvatar: Joi.object({
+		newAvatar: Joi.string().required(),
 	}),
 	idPerson: Joi.object({
 		idPerson: Joi.objectId(),

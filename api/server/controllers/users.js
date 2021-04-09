@@ -65,6 +65,19 @@ const userController = {
 		}
 	},
 
+	async updateAvatar(req, res) {
+		try {
+			const { user, file } = req;
+			const { data, code } = await userService.updateAvatar(
+				user,
+				file.cloudStoragePublicUrl
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando el avatar');
+		}
+	},
+
 	async getSessions(req, res) {
 		try {
 			const { user } = req;

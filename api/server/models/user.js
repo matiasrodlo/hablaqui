@@ -3,36 +3,12 @@ import bcrypt from 'bcrypt';
 const mongoose = require('mongoose');
 const { Model, Schema } = mongoose;
 
-let userSharingSchema = new Schema({
-	email: {
-		type: String,
-	},
-});
-
-const userNotifications = new Schema({
-	_id: { type: String },
-	date: { type: Date },
-	// NOTA:
-	// Al cambiar el valor de state actualizar el store front/src/store/modules/lodging/state
-	// 0 initial state
-	// 1 accepted
-	// 2 denied
-	// 3 pending
-	// 4 registered
-	// 5
-	state: { type: Number, default: 0 },
-	retryCount: { type: Number, default: 0 },
-	//sms
-	//gps
-	//previous_day
-	type: { type: String },
-});
-
 let userSchema = new Schema({
 	name: {
 		type: String,
-		lowercase: true,
-		trim: true,
+	},
+	lastName: {
+		type: String,
 	},
 	email: {
 		type: String,
@@ -61,6 +37,10 @@ let userSchema = new Schema({
 	state: {
 		type: Boolean,
 		default: true,
+	},
+	avatar: {
+		type: String,
+		require: false,
 	},
 	google: {
 		type: Boolean,

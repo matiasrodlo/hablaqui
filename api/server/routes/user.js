@@ -4,6 +4,8 @@ import userController from '../controllers/users';
 import userSchema from '../schemas/user';
 import validation from '../middleware/validation';
 import grantAccess from '../middleware/strategies/rbac';
+import multer from '../middleware/multer';
+import storage from '../middleware/storage';
 
 const userRouter = Router();
 
@@ -52,6 +54,16 @@ userRouter.put(
 		validation(userSchema.updatePsychologist, 'body'),
 	],
 	userController.updatePsychologist
+);
+
+userRouter.put(
+	'/user/update/avatar',
+	[
+		passport.authenticate('jwt', { session: true }),
+		multer.single('avatar'),
+		storage,
+	],
+	userController.updateAvatar
 );
 
 userRouter.get(
