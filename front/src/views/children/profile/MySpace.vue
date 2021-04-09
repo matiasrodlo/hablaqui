@@ -6,16 +6,17 @@
 					<v-list-item style="position: relative">
 						<v-btn
 							absolute
-							style="left: 130px; z-index: 1;"
+							style="left: 120px; z-index: 1;"
 							bottom
 							color="primary"
 							icon
+							small
 							outlined
 						>
 							<v-icon>mdi-plus</v-icon>
 						</v-btn>
 						<v-list-item-avatar size="150">
-							<v-avatar size="150" color="#bdbdbd">
+							<v-avatar size="150" color="#E0E0E0">
 								<img v-if="user.avatar" :src="user.avatar" alt="John" />
 								<span v-else class="white--text text-h3 text-uppercase">
 									{{ initials }}
@@ -36,6 +37,73 @@
 						</v-list-item-content>
 					</v-list-item>
 				</v-list>
+			</v-col>
+			<v-col cols="12">
+				<v-card color="#E0E0E0" flat>
+					<v-card-text>
+						<v-row>
+							<v-col cols="3" style="text-center">
+								<v-btn
+									block
+									color="primary"
+									style="border-radius:10px"
+									small
+									depressed
+									class="my-2"
+								>
+									Información General
+								</v-btn>
+								<v-btn
+									block
+									style="border-radius:10px"
+									small
+									text
+									depressed
+									class="my-2"
+								>
+									Planes contratados
+								</v-btn>
+								<v-btn
+									block
+									style="border-radius:10px"
+									small
+									text
+									depressed
+									class="my-2"
+								>
+									Sesiones completadas
+								</v-btn>
+								<v-btn
+									block
+									style="border-radius:10px"
+									small
+									text
+									depressed
+									class="my-2"
+								>
+									Psicólogo
+								</v-btn>
+							</v-col>
+							<v-col cols="9" style="border-left: 1px solid white;">
+								Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique
+								iure voluptate mollitia dolore quidem quam inventore eligendi.
+								Voluptatem enim, sunt assumenda quasi hic, commodi possimus at
+								aliquam aperiam magnam doloribus! Lorem, ipsum dolor sit amet
+								consectetur adipisicing elit. Similique iure voluptate mollitia
+								dolore quidem quam inventore eligendi. Voluptatem enim, sunt
+								assumenda quasi hic, commodi possimus at aliquam aperiam magnam
+								doloribus! Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+								Similique iure voluptate mollitia dolore quidem quam inventore
+								eligendi. Voluptatem enim, sunt assumenda quasi hic, commodi
+								possimus at aliquam aperiam magnam doloribus! Lorem, ipsum dolor sit
+								amet consectetur adipisicing elit. Similique iure voluptate mollitia
+								dolore quidem quam inventore eligendi. Voluptatem enim, sunt
+								assumenda quasi hic, commodi possimus at aliquam aperiam magnam
+								doloribus!
+							</v-col>
+						</v-row>
+					</v-card-text>
+				</v-card>
 			</v-col>
 		</v-row>
 	</v-container>
