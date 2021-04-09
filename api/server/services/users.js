@@ -38,7 +38,7 @@ const usersService = {
 		});
 
 		logInfo(actionInfo(user.email, 'actualizo su perfil'));
-		return okResponse('perfil obtenido', { user: updated });
+		return okResponse('Actualizado exitosamente', { user: updated });
 	},
 
 	async updatePlan(user, newPlan) {
