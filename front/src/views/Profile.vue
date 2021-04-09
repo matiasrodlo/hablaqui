@@ -2,55 +2,45 @@
 	<div>
 		<v-navigation-drawer mini-variant-width="110" mini-variant permanent app>
 			<v-list-item style="height: 110px">
-				<img style="width: 40px" src="@/assets/logo_tiny.png" />
+				<v-btn fab x-large text to="/">
+					<img style="width: 40px" src="@/assets/logo_tiny.png" />
+				</v-btn>
 			</v-list-item>
-
 			<v-divider></v-divider>
 			<v-list class="pt-0">
 				<!-- home -->
-				<v-list-item link :to="{ name: 'perfil-home' }">
-					<v-list-item-icon>
-						<v-icon color="primary" large>
+				<v-list-item class="my-4">
+					<v-btn link color="primary" fab text :to="{ name: 'perfil-home' }">
+						<v-icon x-large>
 							{{
 								$route.name == 'perfil-home' ? 'mdi-account' : 'mdi-account-outline'
 							}}
 						</v-icon>
-					</v-list-item-icon>
-
-					<v-list-item-content class="primary--text">
-						<v-list-item-title>Mi perfil</v-list-item-title>
-					</v-list-item-content>
+					</v-btn>
 				</v-list-item>
 				<!-- agenda -->
-				<v-list-item link :to="{ name: 'agenda' }">
-					<v-list-item-icon>
-						<v-icon color="primary" large>
+				<v-list-item class="my-4">
+					<v-btn link color="primary" fab text :to="{ name: 'agenda' }">
+						<v-icon x-large>
 							{{
 								$route.name == 'agenda'
 									? 'mdi-calendar-month'
 									: 'mdi-calendar-month-outline'
 							}}
 						</v-icon>
-					</v-list-item-icon>
-					<v-list-item-content class="primary--text">
-						<v-list-item-title>Mi agenda</v-list-item-title>
-					</v-list-item-content>
+					</v-btn>
 				</v-list-item>
 				<!-- diario -->
-				<v-list-item link :to="{ name: 'diario' }">
-					<v-list-item-icon>
-						<v-icon color="primary" large>
+				<v-list-item class="my-4">
+					<v-btn link color="primary" fab text :to="{ name: 'diario' }">
+						<v-icon x-large>
 							{{
 								$route.name == 'diario'
 									? 'mdi-file-document-edit'
 									: 'mdi-file-document-edit-outline'
 							}}
 						</v-icon>
-					</v-list-item-icon>
-
-					<v-list-item-content class="primary--text">
-						<v-list-item-title>Agenda</v-list-item-title>
-					</v-list-item-content>
+					</v-btn>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
@@ -63,9 +53,9 @@
 				</small>
 			</div>
 			<v-spacer></v-spacer>
-			<v-btn text>Expertos</v-btn>
-			<v-btn text>Centro de ayuda</v-btn>
-			<v-btn text>
+			<v-btn text :to="{ name: 'psicologos' }">Expertos</v-btn>
+			<v-btn text :to="{ name: 'faq' }">Centro de ayuda</v-btn>
+			<v-btn text to="/">
 				<img style="width: 30px" src="@/assets/logo_tiny_white.png" />
 			</v-btn>
 		</v-app-bar>
