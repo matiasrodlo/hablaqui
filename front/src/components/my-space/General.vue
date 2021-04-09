@@ -77,6 +77,7 @@
 				</v-btn>
 			</v-col>
 		</v-row>
+		<update-password />
 	</div>
 </template>
 
@@ -89,6 +90,9 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
 export default {
 	mixins: [validationMixin],
+	components: {
+		UpdatePassword: () => import('@/components/my-space/UpdatePassword'),
+	},
 	data() {
 		return {
 			zone: '',

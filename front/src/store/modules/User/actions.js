@@ -35,7 +35,6 @@ export default {
 	},
 	async updateUser({ commit }, payload) {
 		try {
-			console.log('action');
 			const { data } = await axios('/user/update/profile', {
 				method: 'put',
 				data: payload,

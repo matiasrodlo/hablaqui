@@ -11,6 +11,7 @@
 				dense
 				:error-messages="oldPasswordErrors"
 				label="Contraseña actual"
+				type="password"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" class="title">
@@ -21,6 +22,7 @@
 				dense
 				:error-messages="newPasswordErrors"
 				label="Nueva Contraseña"
+				type="password"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" class="title">
@@ -31,10 +33,12 @@
 				dense
 				:error-messages="repeatNewPasswordErrors"
 				label="Repite la nueva contraseña"
+				type="password"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" class="text-center">
 			<v-btn
+				@click="updatePass"
 				:loading="loadingPassword"
 				color="primary"
 				depressed
@@ -50,15 +54,16 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
 
 export default {
 	mixins: [validationMixin],
 	data() {
 		return {
 			formPassword: {
-				password: '',
-				repeatPassword: '',
-				oldPassowrd: '',
+				newPassword: '',
+				repeatNewPassword: '',
+				oldPassword: '',
 			},
 			loadingPassword: false,
 		};
@@ -89,14 +94,19 @@ export default {
 			return errors;
 		},
 	},
-	validations: {
-		formUser: {
-			name: {
-				required,
-				minLength: minLength(3),
-				maxLength: maxLength(99),
-			},
+	methods: {
+		async updatePass() {
+			this.$v.$touch();
+			if (!this.$v.$invalid) {
+				this.loadingPassword = true;
+				await this.upatePassword(this.formPassword);
+				this.$v.$reset();
+				this.loadingPassword = false;
+			}
 		},
+		...mapActions({ upatePassword: 'User/upatePassword' }),
+	},
+	validations: {
 		formPassword: {
 			oldPassword: { require },
 			newPassword: {
@@ -106,11 +116,9 @@ export default {
 			},
 			repeatNewPassword: {
 				required,
-				sameAsPassword: sameAs('password'),
+				sameAsPassword: sameAs('newPassword'),
 			},
 		},
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>
