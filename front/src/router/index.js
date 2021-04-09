@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+
 Vue.use(VueRouter);
 
-// auth view
+const Agenda = () => import('@/views/children/profile/Agenda');
 const Auth = () => import('@/views/Auth');
-
-// Psychologists view
 const Blog = () => import('@/views/Blog');
+const Daily = () => import('@/views/children/profile/Daily');
 const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
 const Home = () => import('@/views/children/profile/Home');
@@ -59,10 +59,22 @@ const routes = [
 		redirect: { name: 'perfil-home' },
 		children: [
 			{
-				path: '/',
+				path: 'espacio',
 				name: 'perfil-home',
 				component: Home,
-				meta: { title: 'Mi perfil', layout: 'layout', appBarColor: 'transparent' },
+				meta: { title: 'Mi perfil', layout: 'simple' },
+			},
+			{
+				path: 'agenda',
+				name: 'agenda',
+				component: Agenda,
+				meta: { title: 'Mi agenda', layout: 'simple' },
+			},
+			{
+				path: 'diario',
+				name: 'diario',
+				component: Daily,
+				meta: { title: 'Mi diario', layout: 'simple' },
 			},
 		],
 	},

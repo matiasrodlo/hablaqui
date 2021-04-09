@@ -22,6 +22,10 @@ export default {
 </script>
 
 <style>
+html {
+	overflow-y: auto;
+}
+
 .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)
 	> .v-input__control
 	> .v-input__slot

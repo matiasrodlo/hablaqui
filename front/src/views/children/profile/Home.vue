@@ -1,7 +1,11 @@
 <template>
-	<div>
-		home
-	</div>
+	<v-container>
+		<v-row justify="center" align="center">
+			<v-col>
+				<h1>home</h1>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
 
 <script>
