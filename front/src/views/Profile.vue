@@ -46,7 +46,7 @@
 		</v-navigation-drawer>
 		<v-app-bar app dark height="110" color="primary" style="border-radius: 0 0 0 25px">
 			<div>
-				<div class="title">Mi espacio</div>
+				<div class="title">{{ $route.meta.title }}</div>
 				<small>
 					lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam nonummy nibh
 					euismo
