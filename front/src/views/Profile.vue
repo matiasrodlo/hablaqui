@@ -17,13 +17,13 @@
 								color="primary"
 								fab
 								text
-								:to="{ name: 'perfil-home' }"
+								:to="{ name: 'espacio' }"
 								v-bind="attrs"
 								v-on="on"
 							>
 								<v-icon x-large>
 									{{
-										$route.name == 'perfil-home'
+										$route.name == 'espacio'
 											? 'mdi-account'
 											: 'mdi-account-outline'
 									}}

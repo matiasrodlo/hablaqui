@@ -56,11 +56,11 @@ const routes = [
 		path: '/perfil',
 		name: 'perfil',
 		component: Profile,
-		redirect: { name: 'perfil-home' },
+		redirect: { name: 'espacio' },
 		children: [
 			{
 				path: 'espacio',
-				name: 'perfil-home',
+				name: 'espacio',
 				component: MySpace,
 				meta: { title: 'Mi espacio', layout: 'simple' },
 			},

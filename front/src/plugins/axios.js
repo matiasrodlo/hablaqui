@@ -12,11 +12,11 @@ export const api = axios.create({
  */
 const fetch = async (url, options) => {
 	const headers = {};
-	const user = JSON.parse(localStorage.getItem('vuex')).User;
-
-	if (user.token) {
-		headers['Authorization'] = `Bearer ${user.token}`;
-	}
+	const vuex = JSON.parse(localStorage.getItem('vuex'));
+	if (vuex)
+		if (vuex.User !== null && vuex.User.token) {
+			headers['Authorization'] = `Bearer ${vuex.User.token}`;
+		}
 
 	const response = await api(url, {
 		headers,
