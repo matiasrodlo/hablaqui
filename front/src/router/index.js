@@ -62,7 +62,7 @@ const routes = [
 				path: 'espacio',
 				name: 'perfil-home',
 				component: MySpace,
-				meta: { title: 'Mi perfil', layout: 'simple' },
+				meta: { title: 'Mi espacio', layout: 'simple' },
 			},
 			{
 				path: 'agenda',

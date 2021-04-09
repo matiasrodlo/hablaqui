@@ -10,37 +10,78 @@
 			<v-list class="pt-0">
 				<!-- home -->
 				<v-list-item class="my-4">
-					<v-btn link color="primary" fab text :to="{ name: 'perfil-home' }">
-						<v-icon x-large>
-							{{
-								$route.name == 'perfil-home' ? 'mdi-account' : 'mdi-account-outline'
-							}}
-						</v-icon>
-					</v-btn>
+					<v-tooltip color="primary" right>
+						<template v-slot:activator="{ on, attrs }">
+							<v-btn
+								link
+								color="primary"
+								fab
+								text
+								:to="{ name: 'perfil-home' }"
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-icon x-large>
+									{{
+										$route.name == 'perfil-home'
+											? 'mdi-account'
+											: 'mdi-account-outline'
+									}}
+								</v-icon>
+							</v-btn>
+						</template>
+						<span>Mi espacio</span>
+					</v-tooltip>
 				</v-list-item>
 				<!-- agenda -->
 				<v-list-item class="my-4">
-					<v-btn link color="primary" fab text :to="{ name: 'agenda' }">
-						<v-icon x-large>
-							{{
-								$route.name == 'agenda'
-									? 'mdi-calendar-month'
-									: 'mdi-calendar-month-outline'
-							}}
-						</v-icon>
-					</v-btn>
+					<v-tooltip color="primary" right>
+						<template v-slot:activator="{ on, attrs }">
+							<v-btn
+								link
+								color="primary"
+								fab
+								text
+								:to="{ name: 'agenda' }"
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-icon x-large>
+									{{
+										$route.name == 'agenda'
+											? 'mdi-calendar-month'
+											: 'mdi-calendar-month-outline'
+									}}
+								</v-icon>
+							</v-btn>
+						</template>
+						<span>Mi agenda</span>
+					</v-tooltip>
 				</v-list-item>
 				<!-- diario -->
 				<v-list-item class="my-4">
-					<v-btn link color="primary" fab text :to="{ name: 'diario' }">
-						<v-icon x-large>
-							{{
-								$route.name == 'diario'
-									? 'mdi-file-document-edit'
-									: 'mdi-file-document-edit-outline'
-							}}
-						</v-icon>
-					</v-btn>
+					<v-tooltip color="primary" right>
+						<template v-slot:activator="{ on, attrs }">
+							<v-btn
+								link
+								color="primary"
+								fab
+								text
+								:to="{ name: 'diario' }"
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-icon x-large>
+									{{
+										$route.name == 'diario'
+											? 'mdi-file-document-edit'
+											: 'mdi-file-document-edit-outline'
+									}}
+								</v-icon>
+							</v-btn>
+						</template>
+						<span>Mi diario</span>
+					</v-tooltip>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
@@ -53,14 +94,31 @@
 				</small>
 			</div>
 			<v-spacer></v-spacer>
-			<v-btn text :to="{ name: 'psicologos' }">Expertos</v-btn>
-			<v-btn text :to="{ name: 'faq' }">Centro de ayuda</v-btn>
-			<v-btn text to="/">
-				<img style="width: 30px" src="@/assets/logo_tiny_white.png" />
-			</v-btn>
+			<v-tooltip color="white" bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn text :to="{ name: 'psicologos' }" v-bind="attrs" v-on="on">
+						Expertos
+					</v-btn>
+				</template>
+				<span class="secondary--text">Nuestros psicologos</span>
+			</v-tooltip>
+			<v-tooltip color="white" bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn text :to="{ name: 'faq' }" v-bind="attrs" v-on="on">
+						Centro de ayuda
+					</v-btn>
+				</template>
+				<span class="secondary--text">Centro de ayuda</span>
+			</v-tooltip>
+			<v-tooltip color="white" bottom>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-bind="attrs" v-on="on">
+						<v-icon>mdi-logout-variant</v-icon>
+					</v-btn>
+				</template>
+				<span class="secondary--text">Salir</span>
+			</v-tooltip>
 		</v-app-bar>
-		<v-main>
-			<router-view />
-		</v-main>
+		<router-view />
 	</div>
 </template>
