@@ -45,61 +45,54 @@
 							<v-col cols="3" style="text-center">
 								<v-btn
 									block
-									color="primary"
+									:color="sidebar === 0 ? 'primary' : 'transparent'"
 									style="border-radius:10px"
 									small
 									depressed
 									class="my-2"
+									@click="sidebar = 0"
 								>
 									Información General
 								</v-btn>
 								<v-btn
+									:color="sidebar === 1 ? 'primary' : 'transparent'"
 									block
 									style="border-radius:10px"
 									small
-									text
 									depressed
 									class="my-2"
+									@click="sidebar = 1"
 								>
 									Planes contratados
 								</v-btn>
 								<v-btn
+									:color="sidebar === 2 ? 'primary' : 'transparent'"
 									block
 									style="border-radius:10px"
 									small
-									text
 									depressed
 									class="my-2"
+									@click="sidebar = 2"
 								>
 									Sesiones completadas
 								</v-btn>
 								<v-btn
+									:color="sidebar === 3 ? 'primary' : 'transparent'"
 									block
 									style="border-radius:10px"
 									small
-									text
 									depressed
 									class="my-2"
+									@click="sidebar = 3"
 								>
 									Psicólogo
 								</v-btn>
 							</v-col>
 							<v-col cols="9" style="border-left: 1px solid white;">
-								Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique
-								iure voluptate mollitia dolore quidem quam inventore eligendi.
-								Voluptatem enim, sunt assumenda quasi hic, commodi possimus at
-								aliquam aperiam magnam doloribus! Lorem, ipsum dolor sit amet
-								consectetur adipisicing elit. Similique iure voluptate mollitia
-								dolore quidem quam inventore eligendi. Voluptatem enim, sunt
-								assumenda quasi hic, commodi possimus at aliquam aperiam magnam
-								doloribus! Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-								Similique iure voluptate mollitia dolore quidem quam inventore
-								eligendi. Voluptatem enim, sunt assumenda quasi hic, commodi
-								possimus at aliquam aperiam magnam doloribus! Lorem, ipsum dolor sit
-								amet consectetur adipisicing elit. Similique iure voluptate mollitia
-								dolore quidem quam inventore eligendi. Voluptatem enim, sunt
-								assumenda quasi hic, commodi possimus at aliquam aperiam magnam
-								doloribus!
+								<general-information v-if="sidebar == 0" />
+								<my-plans v-if="sidebar == 1" />
+								<my-sesions v-if="sidebar == 2" />
+								<psicologo v-if="sidebar == 3" />
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -112,6 +105,17 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		GeneralInformation: () => import('@/components/my-space/General'),
+		MyPlans: () => import('@/components/my-space/MyPlans'),
+		MySesions: () => import('@/components/my-space/MySesions'),
+		Psicologo: () => import('@/components/my-space/Psicologo'),
+	},
+	data() {
+		return {
+			sidebar: 0,
+		};
+	},
 	computed: {
 		initials() {
 			if (this.user.name)
