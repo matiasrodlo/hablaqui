@@ -192,7 +192,9 @@
 										<div class="subtitle-1 font-weight-bold text--secondary">
 											{{ item.name }}
 										</div>
-										<div class="body-1 primary--text">{{ item.gender }}</div>
+										<div v-if="item.code" class="body-1 primary--text">
+											CEDULA {{ item.code }}
+										</div>
 									</div>
 									<v-divider></v-divider>
 									<div v-if="item.description" class="body-2 mt-2">

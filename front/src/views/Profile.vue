@@ -112,7 +112,7 @@
 			</v-tooltip>
 			<v-tooltip color="white" bottom>
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
+					<v-btn icon v-bind="attrs" v-on="on" @click="logout">
 						<v-icon>mdi-logout-variant</v-icon>
 					</v-btn>
 				</template>
@@ -122,3 +122,17 @@
 		<router-view />
 	</div>
 </template>
+
+<script>
+import { mapMutations } from 'vuex';
+export default {
+	methods: {
+		logout() {
+			this.resetUser();
+			localStorage.removeItem('vuex');
+			this.$router.push({ name: 'auth' });
+		},
+		...mapMutations({ resetUser: 'User/reset' }),
+	},
+};
+</script>

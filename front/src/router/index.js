@@ -62,19 +62,19 @@ const routes = [
 				path: 'espacio',
 				name: 'espacio',
 				component: MySpace,
-				meta: { title: 'Mi espacio', layout: 'simple' },
+				meta: { title: 'Mi espacio', layout: 'simple', requiresAuth: true },
 			},
 			{
 				path: 'agenda',
 				name: 'agenda',
 				component: MyAgenda,
-				meta: { title: 'Mi agenda', layout: 'simple' },
+				meta: { title: 'Mi agenda', layout: 'simple', requiresAuth: true },
 			},
 			{
 				path: 'diario',
 				name: 'diario',
 				component: MyDaily,
-				meta: { title: 'Mi diario', layout: 'simple' },
+				meta: { title: 'Mi diario', layout: 'simple', requiresAuth: true },
 			},
 		],
 	},
@@ -131,6 +131,20 @@ const router = new VueRouter({
 	scrollBehavior() {
 		return { x: 0, y: 0 };
 	},
+});
+
+router.beforeEach(async (to, from, next) => {
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+		const vuex = JSON.parse(localStorage.getItem('vuex'));
+		if (vuex && vuex.User.token && vuex.User.user) next();
+		else
+			next({
+				path: '/auth',
+				params: { nextUrl: to.fullPath },
+			});
+	} else {
+		next();
+	}
 });
 
 export default router;

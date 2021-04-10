@@ -16,7 +16,9 @@
 								:height="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							></v-btn>
 						</v-list-item-avatar>
-						<div class="caption text--secondary">cedula xxxxx</div>
+						<div v-if="psychologist.code" class="caption text--secondary">
+							cedula {{ psychologist.code }}
+						</div>
 					</v-col>
 					<v-col cols="12" sm="9" lg="10">
 						<v-row justify="space-between">
