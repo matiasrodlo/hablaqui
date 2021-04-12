@@ -12,6 +12,7 @@ const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
+const Payments = () => import('@/views/Payments');
 const Privacy = () => import('@/views/Privacy');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
@@ -112,6 +113,12 @@ const routes = [
 		name: 'terminos-y-condiciones',
 		component: TermsAndConditions,
 		meta: { title: 'Terminos y condiciones', layout: 'layout', appBarColor: 'primary' },
+	},
+	{
+		path: '/pagos',
+		name: 'pagos',
+		component: Payments,
+		meta: { title: 'Planes y pagos', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
 		path: '/privacidad',
