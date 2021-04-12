@@ -114,14 +114,18 @@
 						</v-combobox>
 					</v-col>
 					<v-col>
-						<v-text-field
-							label="Busca tu psicólogo"
-							v-model="searchInput"
-							outlined
+						<v-combobox
 							class="white"
+							outlined
+							:items="psychologists"
+							item-text="name"
+							:search-input.sync="searchInput"
+							label="Busca tu psicólogo"
 							hide-details
 							:disabled="loading"
-						/>
+							no-data-text="No hay psicologos en este momento"
+						>
+						</v-combobox>
 					</v-col>
 				</v-row>
 				<v-row v-if="loading">
