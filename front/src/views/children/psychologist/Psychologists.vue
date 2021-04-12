@@ -266,10 +266,7 @@
 							</v-card>
 						</v-col>
 						<v-col cols="12" v-for="(item, i) in items" :key="i">
-							<v-card
-								style="border-radius:15px"
-								:to="{ name: 'psicologo', params: { id: item._id } }"
-							>
+							<v-card style="border-radius:15px">
 								<v-card-text>
 									<v-row align="center" justify="center">
 										<v-col cols="3" lg="2" class="text-center">
@@ -285,7 +282,15 @@
 											<div class="caption text--secondary">
 												Cédula {{ item.rut }}
 											</div>
-											<v-btn text color="primary" class="font-weight-bold">
+											<v-btn
+												text
+												color="primary"
+												class="font-weight-bold"
+												:to="{
+													name: 'psicologo',
+													params: { id: item._id },
+												}"
+											>
 												Más información
 											</v-btn>
 										</v-col>
