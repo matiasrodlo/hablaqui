@@ -1,6 +1,22 @@
 <template>
 	<v-container fluid>
 		<v-row align="center" justify="center">
+			<ul id="breadcrumb">
+				<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
+					<span>Agendar</span>
+				</li>
+				<li>
+					<span :class="breakCrumbs == 1 ? 'child-selected' : 'child-un-selected'">
+						Escoger Plan
+					</span>
+				</li>
+				<li :class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'">
+					<span>Detalles</span>
+				</li>
+				<li :class="breakCrumbs == 3 ? 'child-selected' : 'child-un-selected'">
+					<span>Pago</span>
+				</li>
+			</ul>
 			<v-col cols="12">
 				<div class="text-center text-h4 font-weight-bold">Lorem ipsum dolor</div>
 				<div class="text-center caption font-weight-bold">
@@ -103,6 +119,7 @@
 export default {
 	data() {
 		return {
+			breakCrumbs: 1,
 			showLoading: true,
 		};
 	},
@@ -115,10 +132,88 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$info: #5eb3e4;
+$primary: #2070e5;
+
 .spinner {
 	height: 115px;
 	width: 115px;
 	background-color: #bdbdbd;
 	border-radius: 70px;
+}
+
+#breadcrumb {
+	list-style: none;
+	display: inline-block;
+
+	li {
+		float: left;
+	}
+}
+
+.child-selected {
+	font-weight: 500;
+	color: white;
+	display: block;
+	background: $primary;
+	text-decoration: none;
+	position: relative;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px 0 5px;
+	text-align: center;
+	margin-right: 23px;
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		border: 0 solid $primary;
+		border-width: 20px 10px;
+		width: 0;
+		height: 0;
+	}
+	&:before {
+		left: -15px;
+		border-left-color: transparent;
+	}
+	&:after {
+		left: 100%;
+		border-color: transparent;
+		border-left-color: $primary;
+	}
+}
+
+.child-un-selected {
+	font-weight: 500;
+	color: $primary;
+	display: block;
+	background: $info;
+	text-decoration: none;
+	position: relative;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px 0 5px;
+	text-align: center;
+	margin-right: 23px;
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		border: 0 solid $info;
+		border-width: 20px 10px;
+		width: 0;
+		height: 0;
+	}
+	&:before {
+		left: -15px;
+		border-left-color: transparent;
+	}
+	&:after {
+		left: 100%;
+		border-color: transparent;
+		border-left-color: $info;
+	}
 }
 </style>
