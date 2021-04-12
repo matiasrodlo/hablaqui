@@ -118,10 +118,10 @@
 import { mapActions, mapGetters } from 'vuex';
 export default {
 	components: {
-		GeneralInformation: () => import('@/components/my-space/General'),
-		MyPlans: () => import('@/components/my-space/MyPlans'),
-		MySesions: () => import('@/components/my-space/MySesions'),
-		Psicologo: () => import('@/components/my-space/Psicologo'),
+		GeneralInformation: () => import('@/components/dashboard/General'),
+		MyPlans: () => import('@/components/dashboard/MyPlans'),
+		MySesions: () => import('@/components/dashboard/MySesions'),
+		Psicologo: () => import('@/components/dashboard/Psicologo'),
 	},
 	data() {
 		return {

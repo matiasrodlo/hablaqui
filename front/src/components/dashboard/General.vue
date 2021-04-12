@@ -91,7 +91,7 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 export default {
 	mixins: [validationMixin],
 	components: {
-		UpdatePassword: () => import('@/components/my-space/UpdatePassword'),
+		UpdatePassword: () => import('@/components/dashboard/UpdatePassword'),
 	},
 	data() {
 		return {
