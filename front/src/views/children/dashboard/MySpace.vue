@@ -20,26 +20,27 @@
 					<v-card-text
 						style="flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end"
 					>
-						<div class="talkbubble" style="align-self: flex-start">
+						<div
+							v-for="(item, i) in messages"
+							:key="i"
+							class="talkbubble"
+							:class="item.sender == 'yo' ? 'talkbubble__one' : 'talkbubble__two'"
+						>
 							<p style="max-height: 75px;overflow-y: auto">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-								tristique diam vel tristique diam vel tristique diam vel
-							</p>
-						</div>
-						<div class="talkbubble" style="align-self: flex-end">
-							<p style="max-height: 75px;overflow-y: auto">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-								tristique diam vel tristique diam vel tristique diam vel
+								{{ item.msj }}
 							</p>
 						</div>
 					</v-card-text>
 					<v-card-text>
-						<v-textarea
-							rows="1"
-							prepend-inner-icon="mdi-plus-circle-outline"
-							append-icon="mdi-microphone"
-							label="Mensaje a Juan"
-						></v-textarea>
+						<v-form>
+							<v-textarea
+								rows="1"
+								no-resize
+								prepend-inner-icon="mdi-plus-circle-outline"
+								append-icon="mdi-microphone"
+								label="Mensaje a Juan"
+							></v-textarea>
+						</v-form>
 					</v-card-text>
 				</v-card>
 			</v-col>
@@ -58,10 +59,39 @@
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			messages: [
+				{
+					sender: 'yo',
+					msj:
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla  tristique diam vel tristique diam vel tristique diam vel',
+				},
+				{
+					sender: 'el',
+					msj:
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla  tristique diam vel tristique diam vel tristique diam vel',
+				},
+				{
+					sender: 'yo',
+					msj: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+				},
+				{
+					sender: 'yo',
+					msj: 'Nulla  tristique diam vel tristique diam vel tristique diam vel',
+				},
+			],
+		};
+	},
+};
 </script>
 
 <style lang="scss" scoped>
+$color__one: #bdbdbd;
+$color__two: #2070e5;
+$font__color_one: #424242;
+$font__color_two: #ffffff;
 .talkbubble {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -69,21 +99,45 @@ export default {};
 	width: 50%;
 	padding: 10px;
 	border-radius: 15px;
-	color: white;
-	border: solid #2070e5;
-	background: #2070e5;
-}
 
-.talkbubble:before {
-	content: '';
-	position: absolute;
-	right: 90%;
-	top: 100%;
-	width: 0;
-	height: 0;
+	&__one {
+		color: $font__color_one;
+		align-self: flex-end;
+		border: solid $color__one;
+		background: $color__one;
+	}
 
-	border-left: 13px solid transparent;
-	border-right: 13px solid transparent;
-	border-top: 26px solid #2070e5;
+	&__one:before {
+		content: '';
+		position: absolute;
+		right: 10%;
+		top: 100%;
+		width: 0;
+		height: 0;
+
+		border-left: 13px solid transparent;
+		border-right: 13px solid transparent;
+		border-top: 26px solid $color__one;
+	}
+
+	&__two {
+		color: $font__color_two;
+		align-self: flex-start;
+		border: solid $color__two;
+		background: $color__two;
+	}
+
+	&__two:before {
+		content: '';
+		position: absolute;
+		right: 90%;
+		top: 100%;
+		width: 0;
+		height: 0;
+
+		border-left: 13px solid transparent;
+		border-right: 13px solid transparent;
+		border-top: 26px solid $color__two;
+	}
 }
 </style>
