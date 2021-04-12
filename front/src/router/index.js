@@ -3,15 +3,16 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const MyAgenda = () => import('@/views/children/profile/MyAgenda');
 const Auth = () => import('@/views/Auth');
 const Blog = () => import('@/views/Blog');
-const MyDaily = () => import('@/views/children/profile/MyDaily');
+const Dashboard = () => import('@/views/Dashboard');
 const Experts = () => import('@/views/Experts');
 const Faq = () => import('@/views/Faq');
+const MyAgenda = () => import('@/views/children/profile/MyAgenda');
+const MyDaily = () => import('@/views/children/profile/MyDaily');
+const MyProfile = () => import('@/views/children/profile/MyProfile');
 const MySpace = () => import('@/views/children/profile/MySpace');
 const Privacy = () => import('@/views/Privacy');
-const Profile = () => import('@/views/Profile');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const Recruitment = () => import('@/views/Recruitment');
@@ -53,11 +54,17 @@ const routes = [
 		],
 	},
 	{
-		path: '/perfil',
-		name: 'perfil',
-		component: Profile,
-		redirect: { name: 'espacio' },
+		path: '/dashboard',
+		name: 'dasboard',
+		component: Dashboard,
+		redirect: { name: 'perfil' },
 		children: [
+			{
+				path: 'perfil',
+				name: 'perfil',
+				component: MyProfile,
+				meta: { title: 'Mi Perfil', layout: 'simple', requiresAuth: true },
+			},
 			{
 				path: 'espacio',
 				name: 'espacio',

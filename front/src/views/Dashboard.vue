@@ -8,7 +8,7 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list class="pt-0">
-				<!-- home -->
+				<!-- espacio -->
 				<v-list-item class="my-4">
 					<v-tooltip color="primary" right>
 						<template v-slot:activator="{ on, attrs }">
@@ -22,15 +22,36 @@
 								v-on="on"
 							>
 								<v-icon x-large>
+									{{ $route.name == 'espacio' ? 'mdi-home' : 'mdi-home-outline' }}
+								</v-icon>
+							</v-btn>
+						</template>
+						<span>Mi espacio</span>
+					</v-tooltip>
+				</v-list-item>
+				<!-- perfil -->
+				<v-list-item class="my-4">
+					<v-tooltip color="primary" right>
+						<template v-slot:activator="{ on, attrs }">
+							<v-btn
+								link
+								color="primary"
+								fab
+								text
+								:to="{ name: 'perfil' }"
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-icon x-large>
 									{{
-										$route.name == 'espacio'
+										$route.name == 'perfil'
 											? 'mdi-account'
 											: 'mdi-account-outline'
 									}}
 								</v-icon>
 							</v-btn>
 						</template>
-						<span>Mi espacio</span>
+						<span>Mi perfil</span>
 					</v-tooltip>
 				</v-list-item>
 				<!-- agenda -->

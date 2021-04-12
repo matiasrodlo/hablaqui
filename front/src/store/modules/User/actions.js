@@ -12,7 +12,7 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			router.push({ name: 'espacio' });
+			router.push({ name: 'perfil' });
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -27,7 +27,7 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			router.push({ name: 'espacio' });
+			router.push({ name: 'perfil' });
 			snackBarSuccess(data.message)(commit);
 		} catch (error) {
 			snackBarError(error)(commit);
