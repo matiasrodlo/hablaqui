@@ -44,13 +44,69 @@
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" sm="6" md="4" class="primary text-center text-h6 font-weight-bold">
+			<v-col cols="12" sm="6" md="4">
 				<v-row>
-					<v-col cols="12" class="accent text-center text-h6 font-weight-bold">
-						En contruccion
+					<v-col cols="12" class="text-h6 font-weight-bold">
+						<div class="text-left text-h5 font-weight-bold py-2">
+							Consejo Utiles
+						</div>
+						<v-card color="primary" class="ma-2" flat>
+							<v-card-text class="pa-1">
+								<v-btn x-small fab color="#E0E0E0" depressed>
+									<v-icon large color="primary">mdi-play</v-icon>
+								</v-btn>
+								<span class="white--text pl-1 caption font-weight-bold">
+									Lorem ipsum dolor sit amet, consectetuer adipis
+								</span>
+							</v-card-text>
+						</v-card>
+						<v-card color="#BDBDBD" class="ma-2" flat>
+							<v-card-text class="pa-1">
+								<v-btn x-small fab color="#E0E0E0" depressed>
+									<v-icon large color="black">mdi-play</v-icon>
+								</v-btn>
+								<span class="pl-1 caption font-weight-bold">
+									Lorem ipsum dolor sit amet, consectetuer adipis
+								</span>
+							</v-card-text>
+						</v-card>
+						<v-card color="#BDBDBD" class="ma-2" flat>
+							<v-card-text class="pa-1">
+								<v-btn x-small fab color="#E0E0E0" depressed>
+									<v-icon large color="black">mdi-play</v-icon>
+								</v-btn>
+								<span class="pl-1 caption font-weight-bold">
+									Lorem ipsum dolor sit amet, consectetuer adipis
+								</span>
+							</v-card-text>
+						</v-card>
 					</v-col>
-					<v-col cols="12" class="accent text-center text-h6 font-weight-bold">
-						En contruccion
+					<v-divider></v-divider>
+					<v-col cols="12">
+						<div class="text-left text-h5 font-weight-bold py-2">
+							Próxima sesión
+						</div>
+						<v-list three-line>
+							<template v-for="(item, index) in items">
+								<v-list-item :key="index">
+									<v-list-item-avatar size="60">
+										<v-icon size="60" :color="item.color">{{
+											item.icon
+										}}</v-icon>
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title
+											class="primary--text"
+											v-html="item.title"
+										></v-list-item-title>
+										<v-list-item-subtitle
+											v-html="item.subtitle"
+										></v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</template>
+						</v-list>
 					</v-col>
 				</v-row>
 			</v-col>
@@ -62,6 +118,24 @@
 export default {
 	data() {
 		return {
+			items: [
+				{
+					color: 'primary',
+					icon: 'mdi-calendar-month',
+					title: 'Lorem ipsum dolor sit amet',
+					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
+				},
+				{
+					icon: 'mdi-calendar-month',
+					title: 'Lorem ipsum dolor sit amet',
+					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
+				},
+				{
+					icon: 'mdi-calendar-month',
+					title: 'Lorem ipsum dolor sit amet',
+					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
+				},
+			],
 			messages: [
 				{
 					sender: 'yo',
