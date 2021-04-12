@@ -348,11 +348,17 @@ export default {
 	computed: {
 		items() {
 			return this.psychologists.filter(item => {
-				let result =
-					item.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 && item;
-				if (this.gender.length) result = this.gender.includes(result.gender);
-				if (this.sessionType.length) result = this.sessionType.includes(result.sessionType);
-				if (this.language.length) result = this.language.includes(result.language);
+				let result = item;
+				if (this.searchInput !== null)
+					result =
+						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
+						result;
+				else {
+					if (this.gender.length) result = this.gender.includes(result.gender);
+					if (this.sessionType.length)
+						result = this.sessionType.includes(result.sessionType);
+					if (this.language.length) result = this.language.includes(result.language);
+				}
 				return result;
 			});
 		},
