@@ -50,7 +50,7 @@
 						<div class="text-left text-h5 font-weight-bold py-2">
 							Consejo Utiles
 						</div>
-						<v-card color="primary" class="ma-2" flat>
+						<v-card color="primary" class="mx-2 my-4" flat>
 							<v-card-text class="pa-1">
 								<v-btn x-small fab color="#E0E0E0" depressed>
 									<v-icon large color="primary">mdi-play</v-icon>
@@ -60,7 +60,7 @@
 								</span>
 							</v-card-text>
 						</v-card>
-						<v-card color="#BDBDBD" class="ma-2" flat>
+						<v-card color="#BDBDBD" class="mx-2 my-4" flat>
 							<v-card-text class="pa-1">
 								<v-btn x-small fab color="#E0E0E0" depressed>
 									<v-icon large color="black">mdi-play</v-icon>
@@ -70,7 +70,7 @@
 								</span>
 							</v-card-text>
 						</v-card>
-						<v-card color="#BDBDBD" class="ma-2" flat>
+						<v-card color="#BDBDBD" class="mx-2 my-4" flat>
 							<v-card-text class="pa-1">
 								<v-btn x-small fab color="#E0E0E0" depressed>
 									<v-icon large color="black">mdi-play</v-icon>
