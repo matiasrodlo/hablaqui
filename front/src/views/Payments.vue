@@ -119,7 +119,7 @@
 export default {
 	data() {
 		return {
-			breakCrumbs: 1,
+			breakCrumbs: 0,
 			showLoading: true,
 		};
 	},
@@ -148,6 +148,20 @@ $primary: #2070e5;
 
 	li {
 		float: left;
+		&:first-child {
+			padding-left: 15px;
+			border-radius: 15px 0 0 15px;
+			&:before {
+				border: none;
+			}
+		}
+		&:last-child {
+			padding-right: 15px;
+			border-radius: 0 15px 15px 0;
+			&:after {
+				border: none;
+			}
+		}
 	}
 }
 
