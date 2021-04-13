@@ -110,7 +110,7 @@
 					ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-
 				</div>
 			</v-col>
-			<v-col cols="12" v-for="(el, i) in plans" :key="i" class="d-flex justify-center">
+			<v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
 				<v-card max-width="800">
 					<div v-if="el.recommended" class="d-flex align-center justify-end">
 						<span
@@ -136,11 +136,48 @@
 								</div>
 							</v-col>
 							<v-col cols="3" class="text-center mt-6">
-								<v-avatar color="primary" size="90"></v-avatar>
+								<v-avatar color="primary" size="100"> </v-avatar>
 								<v-btn class="mt-3" color="primary" text>
 									Seleccionar plan
 								</v-btn>
 							</v-col>
+							<v-col cols="12">
+								<v-btn
+									text
+									color="primary"
+									@click="() => (el.expandCard = !el.expandCard)"
+								>
+									{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
+								</v-btn>
+							</v-col>
+							<v-expand-transition>
+								<v-col v-if="el.expandCard" cols="12">
+									<v-list three-line max-width="500">
+										<v-list-item
+											v-for="(deal, k) in el.deals"
+											:key="k"
+											class="elevation-1 ma-2"
+										>
+											<v-list-item-content>
+												<v-list-item-title>
+													{{ deal.lapse }} de terapia ({{ deal.time }}) +
+													${{ deal.price }}
+												</v-list-item-title>
+												<v-list-item-subtitle>
+													Secondary line text Lorem ipsum dolor sit amet,
+												</v-list-item-subtitle>
+												<v-list-item-subtitle>
+													consectetur adipiscing elit.
+												</v-list-item-subtitle>
+											</v-list-item-content>
+											<v-list-item-action>
+												<v-btn fab x-small depressed color="primary">
+												</v-btn>
+											</v-list-item-action>
+										</v-list-item>
+									</v-list>
+								</v-col>
+							</v-expand-transition>
 						</v-row>
 					</v-card-text>
 				</v-card>
@@ -157,8 +194,13 @@ export default {
 			showLoading: true,
 			plans: [
 				{
+					deals: [
+						{ time: '30 min', lapse: '1 mes', price: 20 },
+						{ time: '30 min', lapse: '2 meses', price: 40 },
+						{ time: '30 min', lapse: '3 meses', price: 80 },
+					],
+					expandCard: false,
 					recommended: true,
-					price: 14,
 					mode: 'week',
 					title: 'Lorem ipsum dolor sit amet, consec',
 					subtitle: 'Lorem ipsum dolor sit amet, consecte',
@@ -166,7 +208,13 @@ export default {
 						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
 				},
 				{
+					deals: [
+						{ time: '30 min', lapse: '1 mes', price: 20 },
+						{ time: '30 min', lapse: '2 meses', price: 40 },
+						{ time: '30 min', lapse: '3 meses', price: 80 },
+					],
 					recommended: false,
+					expandCard: false,
 					price: 9,
 					mode: 'week',
 					title: 'Lorem ipsum dolor sit amet, consec',
