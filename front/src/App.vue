@@ -35,8 +35,8 @@ html {
 }
 
 .theme--light.v-label {
-	font-weight: 500;
-	color: #54565a;
+	font-weight: 400;
+	color: #e0e0e0;
 }
 .v-text-field.v-text-field--enclosed {
 	border-radius: 10px;

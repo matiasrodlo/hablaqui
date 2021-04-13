@@ -136,7 +136,7 @@
 								</div>
 							</v-col>
 							<v-col cols="3" class="text-center mt-6">
-								<v-avatar color="primary" size="100"> </v-avatar>
+								<v-avatar color="grey" size="100"> </v-avatar>
 								<v-btn class="mt-3" color="primary" text>
 									Seleccionar plan
 								</v-btn>
@@ -171,14 +171,148 @@
 												</v-list-item-subtitle>
 											</v-list-item-content>
 											<v-list-item-action>
-												<v-btn fab x-small depressed color="primary">
-												</v-btn>
+												<v-btn fab x-small depressed color="grey"> </v-btn>
 											</v-list-item-action>
 										</v-list-item>
 									</v-list>
 								</v-col>
 							</v-expand-transition>
 						</v-row>
+					</v-card-text>
+				</v-card>
+			</v-col>
+			<v-col cols="12" class="text-center">
+				<v-btn color="primary" style="border-radius: 10px">Continuar con el pago</v-btn>
+			</v-col>
+		</v-row>
+		<v-row justify="center">
+			<v-col cols="5">
+				<v-card>
+					<v-card-text>
+						<div class="my-3">Lorem ipsum dolor sit</div>
+						<v-text-field label="Ingresar codigo" dense outlined hide-details>
+							<template v-slot:append-outer>
+								<v-btn small color="primary" class="px-10">
+									Aplicar
+								</v-btn>
+							</template>
+						</v-text-field>
+					</v-card-text>
+					<v-list>
+						<v-list-item>
+							<v-list-item-content>
+								<v-list-item-title class="subtitle-2">
+									Lorem ipsum <span class="primary--text">dolor sit</span>
+								</v-list-item-title>
+								<v-list-item-subtitle class="title font-weight-bold">
+									Carolina Fettke
+								</v-list-item-subtitle>
+							</v-list-item-content>
+							<v-list-item-avatar size="100" class="ml-4">
+								<v-btn
+									color="grey"
+									class="elevation-0"
+									fab
+									width="100"
+									height="100"
+								></v-btn>
+							</v-list-item-avatar>
+						</v-list-item>
+					</v-list>
+					<v-card-text>
+						<div class="caption">
+							Lorem ipsum <span class="primary--text">dolor sit</span>
+						</div>
+						<div class="title font-weight-bold">Lorem ipsum dolor sit amet, con</div>
+						<div class="subtitle-1 my-2">
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+							nonummy nibh ipsum dolor sit amet, consec-tetuer adipiscing elit, sed
+							diam nonummy nibh Lorem ipsum dolor sit amet, consectetuer adipiscing
+							elit, sed diam nonummy nibh ipsum dolor
+						</div>
+					</v-card-text>
+				</v-card>
+			</v-col>
+			<v-col cols="5">
+				<v-card>
+					<v-card-text>
+						<v-btn color="primary" block style="border-radius: 10px">
+							Continuar con el pago
+						</v-btn>
+						<div class="caption my-4 text-center">
+							Lorem ipsum dolor sit amet, consectetuer
+						</div>
+						<div class=" font-weight-bold">
+							Lorem ipsum dolor sit amet,
+						</div>
+						<div>
+							Lorem ipsum dolor sit amet, consectetuer adipis
+						</div>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-list>
+						<v-list-item>
+							<v-list-item-content class="font-weight-bold headline">
+								Lorem ipsum dolor sit
+							</v-list-item-content>
+							<v-list-item-avatar size="100" class="font-weight-bold headline">
+								14$
+							</v-list-item-avatar>
+						</v-list-item>
+					</v-list>
+					<v-card-text>
+						<div class="caption text-center">
+							Lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam
+							nonummy nibh ipsum dolor
+						</div>
+					</v-card-text>
+					<v-card-text>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+					</v-card-text>
+				</v-card>
+			</v-col>
+		</v-row>
+		<v-row justify="center">
+			<v-col cols="12" sm="9" md="8" lg="6">
+				<v-card>
+					<v-card-text>
+						<v-text-field dense outlined hide-details readonly value="Pago total">
+							<template v-slot:append>
+								<span class="font-weight-bold"> 312 $</span>
+							</template>
+						</v-text-field>
+					</v-card-text>
+					<v-card-text>
+						<div class="font-weight-bold headline">Lorem ipsum dolor sit</div>
+						<div class="body-1">
+							Lorem ipsum <span class="primary--text">dolor sit</span>
+						</div>
+						<v-text-field
+							class="my-6"
+							outlined
+							dense
+							hide-details
+							label="Número de tarjeta"
+						>
+							<template v-slot:append>
+								<span class="text--secondary"> MM/AA CVC</span>
+							</template>
+						</v-text-field>
+						<v-btn color="primary" block style="border-radius: 10px" class="my-4">
+							Confirmar pago
+						</v-btn>
+						<div class="text-center body-1">
+							Lorem ipsum <span class="primary--text">dolor sit</span>
+						</div>
+					</v-card-text>
+					<v-card-text class="text-center">
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
 					</v-card-text>
 				</v-card>
 			</v-col>
