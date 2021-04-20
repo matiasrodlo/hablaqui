@@ -15,8 +15,8 @@ export default {
 	},
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
-		titleTemplate: '%s - landing',
-		title: 'landing',
+		titleTemplate: '%s',
+		title: 'Hablaqui',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -26,7 +26,7 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: [],
+	css: ['~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [],
@@ -66,14 +66,14 @@ export default {
 		theme: {
 			themes: {
 				light: {
-					primary: '#6786ff',
-					secondary: '#4ac193',
-					info: '#273647',
+					primary: '#2070E5',
+					secondary: '#54565A',
+					info: '#5EB3E4',
 				},
 				dark: {
-					primary: '#6786ff',
-					secondary: '#4ac193',
-					info: '#273647',
+					primary: '#2070E5',
+					secondary: '#54565A',
+					info: '#5EB3E4',
 				},
 			},
 		},

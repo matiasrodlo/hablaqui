@@ -4,28 +4,21 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const Auth = () => import('@/views/Auth');
-const Blog = () => import('@/views/Blog');
 const Dashboard = () => import('@/views/Dashboard');
 const Experts = () => import('@/views/Experts');
-const Faq = () => import('@/views/Faq');
 const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
-const Privacy = () => import('@/views/Privacy');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
-const Recruitment = () => import('@/views/Recruitment');
-const TermsAndConditions = () => import('@/views/TermsAndConditions');
 const Test = () => import('@/views/Test');
 
 const routes = [
 	{
 		path: '/',
-		name: 'blog',
-		component: Blog,
-		meta: { title: 'Blog hablaquí', layout: 'layout', appBarColor: 'transparent' },
+		redirect: { name: 'psicologos' },
 	},
 	{
 		path: '/psicologos',
@@ -87,44 +80,16 @@ const routes = [
 		],
 	},
 	{
-		path: '/reclutamiento',
-		name: 'reclutamiento',
-		component: Recruitment,
-		meta: { title: 'Reclutamiento', layout: 'layout', appBarColor: 'primary' },
-	},
-	{
-		path: '/faq',
-		name: 'faq',
-		component: Faq,
-		meta: {
-			title: 'Bienvenido a nuestro portal de ayuda',
-			layout: 'layout',
-			appBarColor: 'primary',
-		},
-	},
-	{
 		path: '/evaluacion',
 		name: 'evaluacion',
 		component: Test,
 		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
-		path: '/terminos-y-condiciones',
-		name: 'terminos-y-condiciones',
-		component: TermsAndConditions,
-		meta: { title: 'Terminos y condiciones', layout: 'layout', appBarColor: 'primary' },
-	},
-	{
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
 		meta: { title: 'Planes y pagos', layout: 'layout', appBarColor: 'transparent' },
-	},
-	{
-		path: '/privacidad',
-		name: 'privacidad',
-		component: Privacy,
-		meta: { title: 'Políticas de Privacidad', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
 		path: '/auth',

@@ -44,7 +44,7 @@
 				<v-col cols="12" sm="3">
 					<div class="text-center">
 						<img
-							:src="require('~/assets/sin-imagen.png')"
+							src="spin.svg"
 							alt="sin imagen"
 							width="100"
 							style="border-radius: 50px"
@@ -64,7 +64,7 @@
 				<v-col cols="12" sm="3">
 					<div class="text-center">
 						<img
-							:src="require('~/assets/sin-imagen.png')"
+							src="spin.svg"
 							alt="sin imagen"
 							width="100"
 							style="border-radius: 50px"
@@ -84,7 +84,7 @@
 				<v-col cols="12" sm="3">
 					<div class="text-center">
 						<img
-							:src="require('~/assets/sin-imagen.png')"
+							src="spin.svg"
 							alt="sin imagen"
 							width="100"
 							style="border-radius: 50px"
@@ -104,7 +104,7 @@
 				<v-col cols="12" sm="3">
 					<div class="text-center">
 						<img
-							:src="require('~/assets/sin-imagen.png')"
+							src="spin.svg"
 							alt="sin imagen"
 							width="100"
 							style="border-radius: 50px"
