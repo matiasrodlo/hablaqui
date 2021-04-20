@@ -1,4 +1,5 @@
 export default {
+	target: 'static',
 	publicRuntimeConfig: {
 		FRONTEND_URL:
 			process.env.NODE_ENV === 'production'
@@ -79,5 +80,7 @@ export default {
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
-	build: {},
+	build: {
+		publicPath: process.env.VUE_APP_LANDING,
+	},
 };
