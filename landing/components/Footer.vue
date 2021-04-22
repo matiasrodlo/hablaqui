@@ -3,8 +3,16 @@
 		<v-row class="white--text py-16">
 			<v-col cols="12" sm="3">
 				<div class="text-center headline text--secondary font-weight-bold">Acuerdos</div>
-				<div class="text-center headline text--secondary">Políticas de Privacidad</div>
-				<div class="text-center headline text--secondary">Terminos y Condiciones</div>
+				<div class="text-center">
+					<v-btn class="headline text--secondary" text link to="/politicas">
+						Políticas de Privacidad
+					</v-btn>
+				</div>
+				<div class="text-center">
+					<v-btn class="headline text--secondary" text link to="/condiciones">
+						Terminos y Condiciones
+					</v-btn>
+				</div>
 			</v-col>
 			<v-col cols="12" sm="3">
 				<div class="text-center headline text--secondary font-weight-bold">
