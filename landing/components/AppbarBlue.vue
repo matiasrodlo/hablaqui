@@ -40,6 +40,7 @@
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-spacer></v-spacer>
 				<v-btn
+					:href="`${$config.FRONTEND_URL}/`"
 					x-large
 					rounded
 					class="mx-2 primary--text font-weight-bold"
