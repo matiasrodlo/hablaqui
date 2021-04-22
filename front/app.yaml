@@ -1,5 +1,5 @@
 runtime: nodejs10
-# service: frontend
+service: frontend
 handlers:
     # Serve all static files withdd urls ending with a file extension
     - url: /(.*\..+)$
