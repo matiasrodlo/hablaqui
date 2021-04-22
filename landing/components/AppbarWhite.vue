@@ -6,7 +6,11 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link active-class="primary white--text">
+				<v-list-item
+					link
+					active-class="primary white--text"
+					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+				>
 					<v-list-item-content>
 						<v-list-item-title>Nuestros especialistas</v-list-item-title>
 					</v-list-item-content>
@@ -38,7 +42,14 @@
 				<img style="max-width: 180px" alt="habla aqui Logo" src="logo.png" contain />
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn light rounded text active-class="info--text" class="ml-4">
+				<v-btn
+					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					light
+					rounded
+					text
+					active-class="info--text"
+					class="ml-4"
+				>
 					Nuestros especialistas
 				</v-btn>
 				<v-btn light rounded text active-class="info--text"> Para empresas </v-btn>
