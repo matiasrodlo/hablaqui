@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div class="primary">
+			<Appbar />
+		</div>
 		<v-container fluid class="primary py-16">
 			<v-row justify="center" align="center">
 				<v-col cols="12" md="5" lg="6">
@@ -261,6 +264,7 @@
 export default {
 	components: {
 		Footer: () => import('@/components/Footer'),
+		Appbar: () => import('@/components/AppbarWhite'),
 	},
 };
 </script>

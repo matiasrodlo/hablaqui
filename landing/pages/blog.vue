@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<Appbar />
 		<v-container>
 			<!-- header -->
 			<v-row>
@@ -318,7 +319,13 @@
 		</div>
 	</div>
 </template>
-
+<script>
+export default {
+	components: {
+		Appbar: () => import('@/components/AppbarBlue'),
+	},
+};
+</script>
 <style lang="scss" scoped>
 .v-text-field.v-text-field--enclosed,
 .v-sheet.v-card {
