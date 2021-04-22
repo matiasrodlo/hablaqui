@@ -2,9 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import dataController from '../controllers/data';
 
-const upload = multer({
-	dest: 'uploads/',
-});
+const upload = multer({});
 
 const dataRouter = Router();
 
