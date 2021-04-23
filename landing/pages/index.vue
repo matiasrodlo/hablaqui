@@ -184,7 +184,7 @@
 				</v-container>
 			</div>
 		</div>
-		<!-- SECTION 4 / VENTAJAS -->
+		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container class="pt-10">
 			<v-row justify="center">
 				<v-col
