@@ -2,7 +2,11 @@
 	<div>
 		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
 			<v-list-item>
-				<img style="max-width: 150px" :src="`${$config.LANDING_URL}/logo.png`" />
+				<img
+					style="max-width: 150px"
+					:src="`${$config.LANDING_URL}/logo.png`"
+					alt="hablaqui logo"
+				/>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
@@ -42,7 +46,7 @@
 			<router-link to="/" exact>
 				<img
 					style="max-width: 180px"
-					alt="habla aqui Logo"
+					alt="hablaqui Logo"
 					:src="`${$config.LANDING_URL}/logo_white.png`"
 					contain
 				/>
