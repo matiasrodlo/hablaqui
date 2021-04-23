@@ -14,4 +14,4 @@
       "./pages/**/*",
     ],
     "exclude": ["node_modules", ".nuxt", "dist"]
-  }
+}
