@@ -160,7 +160,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img src="container-blue.png">
+		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
 			<v-container class="my-16">
 				<v-row justify="center" class="my-10">
 					<v-col cols="3" class="text-right">
@@ -216,7 +216,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img src="container-blue.png">
+		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
 			<v-container class="my-16">
 				<v-row align="center" justify="center" class="my-10">
 					<v-col cols="12">

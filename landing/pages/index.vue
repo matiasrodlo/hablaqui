@@ -5,7 +5,10 @@
 		</div>
 		<!-- section 1 -->
 		<div style="position: relative">
-			<img src="container-blue.png" style="height: 500px; width: 100%" />
+			<img
+				:src="`${$config.LANDING_URL}/container-blue.png`"
+				style="height: 500px; width: 100%"
+			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<div class="primary" style="height: 45px"></div>
 				<v-container class="white--text" style="height: 400px">
@@ -95,7 +98,10 @@
 		</v-container>
 		<!-- section 3 -->
 		<div style="position: relative">
-			<img src="container-blue.png" style="height: 500px; width: 100%" />
+			<img
+				:src="`${$config.LANDING_URL}/container-blue.png`"
+				style="height: 500px; width: 100%"
+			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container class="white--text" style="height: 400px">
 					<v-row justify="center" align="center" style="height: 400px">
@@ -179,7 +185,10 @@
 		</v-container>
 		<!-- SECTION 5 -->
 		<div style="position: relative">
-			<img src="container-blue.png" style="height: 500px; width: 100%" />
+			<img
+				:src="`${$config.LANDING_URL}/container-blue.png`"
+				style="height: 500px; width: 100%"
+			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container
 					class="white--text"

@@ -128,7 +128,7 @@
 			</v-row>
 		</v-container>
 		<!-- for companies -->
-		<v-img src="container-blue.png">
+		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
 			<v-container>
 				<v-row justify="center">
 					<v-col cols="12" class="py-16">
