@@ -18,7 +18,7 @@
 								Tu psicólogo Online
 							</div>
 							<div class="title my-4">
-								¡La salud mental y el bien estar están a tan solo unos clicks!
+								¡La salud mental y el bienestar están a tan solo unos clicks!
 							</div>
 							<v-btn
 								rounded
