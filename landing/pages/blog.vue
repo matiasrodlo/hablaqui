@@ -8,13 +8,13 @@
 					cols="12"
 					class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
 				>
-					Blog
+					BLOG HABLAQUÍ
 				</v-col>
 				<v-col cols="12">
 					<v-select
 						flat
 						solo
-						background-color="white"
+						background-color="#E0E0E0"
 						hide-details
 						:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
 						no-data-text="Vacio"
@@ -23,11 +23,10 @@
 							<span class="primary--text"> Seleccione un asunto </span>
 						</template>
 						<template #[`append`]>
-							<span class="primary--text subtitle-2"
-								>Editar filtros<v-icon color="primary"
-									>mdi-chevron-down</v-icon
-								></span
-							>
+							<span class="primary--text subtitle-2">
+								Editar filtros
+								<v-icon color="primary"> mdi-chevron-down </v-icon>
+							</span>
 						</template>
 						<template #[`selection`]="{ item }">
 							<span class="primary--text"> {{ item }} </span>
