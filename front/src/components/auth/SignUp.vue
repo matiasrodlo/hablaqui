@@ -51,6 +51,19 @@
 					@click:append="showRepeatPassword = !showRepeatPassword"
 				></v-text-field>
 			</v-col>
+			<v-col cols="12" class="d-flex align-center">
+				<v-checkbox class="d-inline-block" v-model="accept"></v-checkbox>
+				<span class="caption">
+					He leído y acepto los
+					<a :href="`${landingUrl}/condiciones`">
+						Términos y condiciones
+					</a>
+					y
+					<a :href="`${landingUrl}/politicas`">
+						la Política de privacidad.
+					</a>
+				</span>
+			</v-col>
 			<v-col cols="12">
 				<v-btn :loading="loading" type="submit" block rounded color="primary">
 					Registrar
@@ -64,6 +77,7 @@
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
+import { landing } from '@/config';
 
 export default {
 	name: 'SignUp',
@@ -74,9 +88,20 @@ export default {
 			loading: false,
 			showPassword: false,
 			showRepeatPassword: false,
+			accept: false,
 		};
 	},
 	computed: {
+		landingUrl() {
+			return landing;
+		},
+		conditionsErrors() {
+			const errors = [];
+			if (!this.$v.form.accept.$dirty) return errors;
+			!this.$v.form.accept.required &&
+				errors.push('Debes aceptar los terminos y condiciones y politicas de privacidad');
+			return errors;
+		},
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -151,6 +176,9 @@ export default {
 			repeatPassword: {
 				required,
 				sameAsPassword: sameAs('password'),
+			},
+			accept: {
+				required,
 			},
 		},
 	},

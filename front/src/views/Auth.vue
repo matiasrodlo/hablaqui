@@ -11,7 +11,11 @@
 							cols="12"
 							class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
-							¡Me alegra que estés aquí!
+							{{
+								this.step == 1
+									? '¡Qué gusto verte nuevamente!'
+									: '¡Nos alegra que estés aquí!'
+							}}
 						</v-col>
 						<v-col
 							cols="12"
@@ -19,8 +23,11 @@
 							lg="8"
 							class="text-center text-h6 text-lg-h5 text--secondary"
 						>
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-							nonummy
+							{{
+								this.step == 1
+									? 'Ingresa y continúa tu viaje de desarrollo personal ahora mismo.'
+									: 'Regístrate y comienza tu viaje de desarrollo personal ahora mismo.'
+							}}
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
@@ -38,9 +45,11 @@
 							<v-btn outlined block rounded color="primary" @click="setStep">
 								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
 							</v-btn>
-							<v-btn text color="primary" to="/privacidad">Aviso de privacidad</v-btn>
-							-
-							<v-btn text color="primary" to="/terminos-y-condiciones">
+							<v-btn text color="primary" :href="`${landingUrl}/politicas`"
+								>Aviso de privacidad</v-btn
+							>
+							y
+							<v-btn text color="primary" :href="`${landingUrl}/condiciones`">
 								Términos y Condiciones</v-btn
 							>
 							<div class="font-weight-bold caption secondary--text">
@@ -51,30 +60,23 @@
 				</v-col>
 				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
 					<v-window v-model="onboarding" class="login-circle-image">
-						<v-window-item v-for="n in length" :key="`card-${n}`">
+						<v-window-item v-for="n in length" :key="`card-${n.id}`">
 							<div class="text-center ">
-								<v-list-item-avatar
-									size="200"
-									class="ml-4 "
-									style="border: 10px solid white"
-								>
-									<v-btn
-										color="#9D9D9C"
-										depressed
-										fab
-										width="200"
-										height="200"
-									></v-btn>
+								<v-list-item-avatar size="400" class="ml-4">
+									<v-img :src="n.img"></v-img>
 								</v-list-item-avatar>
 							</div>
-							<div class="text-center white--text py-4">
-								Lorem ipsum dolor sit amet consectetur, fuga incidunt distinctio
-								laudantium impedit voluptate.
+							<div class="text-h6 text-center white--text py-4">
+								{{ n.text }}
 							</div>
 						</v-window-item>
 					</v-window>
 					<v-item-group v-model="onboarding" class="text-center" mandatory>
-						<v-item v-for="n in length" :key="`btn-${n}`" v-slot="{ active, toggle }">
+						<v-item
+							v-for="n in length"
+							:key="`btn-${n.id}`"
+							v-slot="{ active, toggle }"
+						>
 							<v-btn :input-value="active" icon @click="toggle" color="#BDBDBD">
 								<v-icon>mdi-record</v-icon>
 							</v-btn>
@@ -88,6 +90,9 @@
 
 <script>
 import background from '@/assets/login.png';
+import imageAuth from '@/assets/auth.png';
+import { landing } from '@/config';
+
 export default {
 	components: {
 		SignIn: () => import('@/components/auth/SignIn'),
@@ -95,13 +100,40 @@ export default {
 	},
 	data() {
 		return {
-			length: 4,
+			length: [
+				{
+					id: 1,
+					img: imageAuth,
+					text:
+						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+				},
+				{
+					id: 2,
+					img: imageAuth,
+					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+				},
+				{
+					id: 3,
+					img: imageAuth,
+					text:
+						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
+				},
+				{
+					id: 4,
+					img: imageAuth,
+					text:
+						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+				},
+			],
 			onboarding: 0,
 			menu: false,
 			step: 1,
 		};
 	},
 	computed: {
+		landingUrl() {
+			return landing;
+		},
 		backgroundImg() {
 			if (this.$vuetify.breakpoint.smAndUp) return background;
 			return null;
@@ -125,16 +157,16 @@ export default {
 <style lang="scss" scoped>
 .login-circle-image {
 	background: url('../assets/circle-login.png') no-repeat;
-	background-position-y: 70%;
-	background-position-x: 60%;
-	-webkit-background-size: 15%;
-	-moz-background-size: 15%;
-	-o-background-size: 15%;
-	background-size: 15%;
+	background-position-y: 60%;
+	background-position-x: 75%;
+	-webkit-background-size: 25%;
+	-moz-background-size: 25%;
+	-o-background-size: 25%;
+	background-size: 25%;
 }
 .login-plus-image {
 	background: url('../assets/plus-login.png') no-repeat;
-	background-position-x: 66%;
+	background-position-x: 70%;
 	-webkit-background-size: 7%;
 	-moz-background-size: 7%;
 	-o-background-size: 7%;

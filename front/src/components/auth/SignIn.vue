@@ -21,6 +21,9 @@
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
+			<v-col cols="12" class="text-left primary--text">
+				¿Olvidó la contraseña?
+			</v-col>
 		</v-row>
 		<v-row>
 			<v-col cols="12">
