@@ -1,6 +1,10 @@
 export default {
 	target: 'static',
 	publicRuntimeConfig: {
+		LANDING_URL:
+			process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 		FRONTEND_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.FRONTEND_URL
