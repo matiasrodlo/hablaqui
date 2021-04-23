@@ -1,7 +1,7 @@
 <template>
 	<v-img :src="backgroundImg" height="100vh">
 		<v-container
-			:class="this.$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
+			:class="$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
 			fluid
 			class="login-image"
 		>
