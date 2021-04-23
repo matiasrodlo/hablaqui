@@ -2,7 +2,7 @@
 	<div>
 		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
 			<v-list-item>
-				<v-img style="max-width: 150px" src="logo.png" />
+				<v-img style="max-width: 150px" :src="`${$config.LANDING_URL}/logo.png`" />
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
@@ -37,9 +37,19 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<v-app-bar flat :height="height" src="appbar.png" color="transparent">
+		<v-app-bar
+			flat
+			:height="height"
+			:src="`${$config.LANDING_URL}/appbar.png`"
+			color="transparent"
+		>
 			<router-link to="/" exact>
-				<img style="max-width: 180px" alt="habla aqui Logo" src="logo.png" contain />
+				<img
+					style="max-width: 180px"
+					alt="habla aqui Logo"
+					:src="`${$config.LANDING_URL}/logo.png`"
+					contain
+				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-btn

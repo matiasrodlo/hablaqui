@@ -15,7 +15,7 @@
 								Tu psicólogo Online
 							</div>
 							<div class="title my-4">
-								¡La salud mental y el bienestarestán a tan solo unos clicks!
+								¡La salud mental y el bienestar están a tan solo unos clicks!
 							</div>
 							<v-btn
 								rounded
@@ -289,7 +289,8 @@ export default {
 				},
 				{
 					title: 'Elige y paga el plan que más te acomode',
-					desc: 'Te ofrecemos planes convenientes. Pago 100% electrónico, rápido yseguro',
+					desc:
+						'Te ofrecemos planes convenientes. Pago 100% electrónico, rápido y seguro',
 					img: '',
 				},
 				{
@@ -318,13 +319,13 @@ export default {
 				{
 					title: 'ACCESIBILIDAD DONDESEA Y CUANDO SEA',
 					desc:
-						'Accede a tu espacioterapéutico desdecualquier lugar y en loshorarios que a ti teacomode',
+						'Accede a tu espacio terapéutico desde cualquier lugar y en los horarios que a ti te acomode',
 					img: '',
 				},
 				{
 					title: 'OBSERVA TU PROGRESOREAL EN LA TERAPIA',
 					desc:
-						'Contamos con un sistemade seguimiento de tuproceso, para quevisualices concretamentecómo vas en él',
+						'Contamos con un sistema de seguimiento de tu proceso, para que visualices con cretamente cómo vas en él',
 					img: '',
 				},
 			],
