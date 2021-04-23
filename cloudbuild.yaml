@@ -17,15 +17,15 @@ steps:
     waitFor: ["install-landing"]
   - name: node:10.15.1
     entrypoint: npm
-    args: ["run", "build"]
+    args: ["run", "generate"]
     dir: "landing"
-    id: "build-landing"
+    id: "generate-landing"
     waitFor: ["envvars-landing", "install-landing"]
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy", "--version=landing"]
     dir: "landing"
     id: "deploy-landing"
-    waitFor: ["envvars-landing", "install-landing", "build-landing"]
+    waitFor: ["envvars-landing", "install-landing", "generate-landing"]
   - name: node:10.15.1
     entrypoint: npm
     args: ["install"]
