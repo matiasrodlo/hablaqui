@@ -1,6 +1,10 @@
 <template>
 	<v-img :src="backgroundImg" height="100vh">
-		<v-container fluid class="login-image">
+		<v-container
+			:class="this.$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
+			fluid
+			class="login-image"
+		>
 			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
