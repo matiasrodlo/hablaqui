@@ -13,7 +13,7 @@
 				<div class="primary" style="height: 45px"></div>
 				<v-container class="white--text" style="height: 400px">
 					<v-row justify="center" align="center" style="height: 400px">
-						<v-col cols="8" sm="6" xl="5" class="text-center text-sm-left">
+						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Tu psicólogo Online
 							</div>
@@ -245,10 +245,18 @@
 						<v-col cols="12">
 							<v-slide-group center-active show-arrows>
 								<template #prev>
-									<v-icon color="white" size="70">mdi-chevron-left</v-icon>
+									<v-icon
+										color="white"
+										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
+										>mdi-chevron-left</v-icon
+									>
 								</template>
 								<template #next>
-									<v-icon color="white" size="70">mdi-chevron-right</v-icon>
+									<v-icon
+										color="white"
+										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
+										>mdi-chevron-right</v-icon
+									>
 								</template>
 								<v-slide-item
 									v-for="item in reseñas"
@@ -256,8 +264,8 @@
 									v-slot="{ toggle }"
 								>
 									<v-card
-										height="250"
-										width="300"
+										:height="$vuetify.breakpoint.smAndUp ? '250' : '310'"
+										:width="$vuetify.breakpoint.smAndUp ? '300' : '220'"
 										class="ma-4 text-center"
 										style="border-radius: 25px"
 										flat
