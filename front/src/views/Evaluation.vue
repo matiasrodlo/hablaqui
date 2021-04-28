@@ -85,7 +85,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+	name: 'Evaluation',
+};
 </script>
 
 <style lang="scss" scoped>

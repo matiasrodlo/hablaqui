@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 const Auth = () => import('@/views/Auth');
 const Dashboard = () => import('@/views/Dashboard');
+const Evaluation = () => import('@/views/Evaluation');
 const Experts = () => import('@/views/Experts');
 const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
@@ -13,7 +14,6 @@ const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
-const Test = () => import('@/views/Test');
 
 const routes = [
 	{
@@ -82,7 +82,7 @@ const routes = [
 	{
 		path: '/evaluacion',
 		name: 'evaluacion',
-		component: Test,
+		component: Evaluation,
 		meta: { title: 'Evaluacion', layout: 'layout', appBarColor: 'primary' },
 	},
 	{
