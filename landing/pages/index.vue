@@ -5,14 +5,11 @@
 		</div>
 		<!-- SECTION 1 / heading -->
 		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 500px; width: 100%"
-			/>
+			<img :src="`${$config.LANDING_URL}/GH1.png`" style="height: 700px; width: 100%" />
 			<div style="position: absolute; top: 0; width: 100%">
-				<div class="primary" style="height: 45px"></div>
-				<v-container class="white--text" style="height: 400px">
-					<v-row justify="center" align="center" style="height: 400px">
+				<div class="primary" style="height: 5px"></div>
+				<v-container class="white--text" style="height: 700px">
+					<v-row justify="center" align="center" style="height: 700px">
 						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Tu psicólogo Online
@@ -33,16 +30,17 @@
 							</v-btn>
 							<div class="title my-4">Desde $15.500CLP a la semana</div>
 						</v-col>
-						<v-col cols="4" sm="6" xl="5" class="text-center hidden-sm-and-down">
-							<v-btn
-								style="border: 8px solid #5eb3e4; cursor: initial"
-								depressed
-								fab
-								width="200"
-								height="200"
-							>
-								<v-avatar color="white" size="185"> </v-avatar>
-							</v-btn>
+						<v-col
+							v-if="!$vuetify.breakpoint.xs"
+							cols="4"
+							sm="6"
+							xl="5"
+							class="text-center"
+						>
+							<v-img
+								:height="$vuetify.breakpoint.smAndDown ? '400' : '600px'"
+								:src="`${$config.LANDING_URL}/tel.png`"
+							></v-img>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -112,7 +110,7 @@
 		<div style="position: relative">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 500px; width: 100%"
+				style="height: 700px; width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container
@@ -120,7 +118,7 @@
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
 					style="height: 500px"
 				>
-					<v-row justify="center" align="center" style="height: 500px">
+					<v-row justify="center" align="center" style="height: 600px">
 						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
@@ -198,16 +196,14 @@
 			<v-row>
 				<v-col v-for="item in ventajas" :key="item.id" cols="12" sm="4" class="my-16">
 					<v-card flat>
-						<v-card-text class="text-center my-10">
-							<v-btn depressed icon>
-								<v-icon size="120" color="primary">{{ item.img }}</v-icon>
-							</v-btn>
-						</v-card-text>
 						<v-card-text class="text-center">
-							<div class="title font-weight-bold">{{ item.title }}</div>
-							<div class="body-1">
-								{{ item.desc }}
-							</div>
+							<img style="height: 120px" :src="item.img" />
+						</v-card-text>
+						<v-card-text class="text-center title font-weight-bold">
+							{{ item.title }}
+						</v-card-text>
+						<v-card-text class="text-center body-1">
+							{{ item.desc }}
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -230,13 +226,13 @@
 		</v-container>
 		<!-- SECTION 5 / RESEÑA -->
 		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 500px; width: 100%"
-			/>
+			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
+			<div style="position: absolute; top: 0">
+				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+			</div>
 			<div style="position: absolute; top: 0; width: 100%">
-				<v-container class="white--text" style="height: 400px">
-					<v-row justify="center" align="center" style="height: 400px">
+				<v-container class="white--text" style="height: 700px">
+					<v-row justify="center" align="center" style="height: 600px">
 						<v-col cols="12" class="mt-16 text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Reseñas
@@ -362,21 +358,21 @@ export default {
 					title: 'Comodidad',
 					desc:
 						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
-					img: 'mdi-monitor',
+					img: `${this.$config.LANDING_URL}/ico1.png`,
 				},
 				{
 					id: 2,
 					title: 'Privacidad',
 					desc:
 						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
-					img: 'mdi-shield-lock',
+					img: `${this.$config.LANDING_URL}/ico2.png`,
 				},
 				{
 					id: 3,
 					title: 'Personalización',
 					desc:
 						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
-					img: 'mdi-face-agent',
+					img: `${this.$config.LANDING_URL}/ico3.png`,
 				},
 			],
 			reseñas: [
