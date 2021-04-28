@@ -95,13 +95,6 @@ export default {
 		landingUrl() {
 			return landing;
 		},
-		conditionsErrors() {
-			const errors = [];
-			if (!this.$v.form.accept.$dirty) return errors;
-			!this.$v.form.accept.required &&
-				errors.push('Debes aceptar los terminos y condiciones y politicas de privacidad');
-			return errors;
-		},
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -149,7 +142,10 @@ export default {
 		},
 		async onSubmit() {
 			this.$v.$touch();
-			if (!this.$v.$invalid) {
+			if (!this.accept) {
+				return alert('Debes aceptar los terminos y condiciones y politicas de privacidad');
+			}
+			if (!this.$v.$invalid && this.accept) {
 				this.loading = true;
 				await this.register(this.form);
 				this.loading = false;
@@ -176,9 +172,6 @@ export default {
 			repeatPassword: {
 				required,
 				sameAsPassword: sameAs('password'),
-			},
-			accept: {
-				required,
 			},
 		},
 	},
