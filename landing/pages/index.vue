@@ -32,7 +32,7 @@
 							</v-btn>
 							<div class="title my-4">Desde $15.500CLP a la semana</div>
 						</v-col>
-						<v-col cols="12" sm="6" xl="5" class="text-center">
+						<v-col cols="12" sm="6" xl="5">
 							<v-img
 								:height="heightPhone"
 								:src="`${$config.LANDING_URL}/tel.png`"
@@ -137,42 +137,17 @@
 								Ver más psicólogos
 							</v-btn>
 						</v-col>
-						<v-col cols="12" sm="6" xl="5" class="text-center">
-							<v-row justify="center">
-								<v-col cols="12" class="text-center">
-									<v-btn
-										style="border: 8px solid #5eb3e4; cursor: initial"
-										depressed
-										fab
-										width="100"
-										height="100"
-									>
-										<v-avatar color="white" size="85"> </v-avatar>
-									</v-btn>
-								</v-col>
-								<v-col cols="4" sm="6" md="3">
-									<v-btn
-										style="border: 8px solid #5eb3e4; cursor: initial"
-										depressed
-										fab
-										width="100"
-										height="100"
-									>
-										<v-avatar color="white" size="85"> </v-avatar>
-									</v-btn>
-								</v-col>
-								<v-col cols="4" sm="6" md="3">
-									<v-btn
-										style="border: 8px solid #5eb3e4; cursor: initial"
-										depressed
-										fab
-										width="100"
-										height="100"
-									>
-										<v-avatar color="white" size="85"> </v-avatar>
-									</v-btn>
-								</v-col>
-							</v-row>
+						<v-col cols="12" sm="6" xl="5" class="d-flex justify-center">
+							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
+								<div
+									style="
+										box-shadow: 12px 12px 0px 0px #03dfd8;
+										border-radius: 25px;
+									"
+								>
+									<v-img contain max-width="350" :src="mainImageSrc"></v-img>
+								</div>
+							</div>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -539,6 +514,7 @@ export default {
 						'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 				},
 			],
+			mainImageSrc: null,
 		};
 	},
 	computed: {
@@ -547,6 +523,21 @@ export default {
 			else if (this.$vuetify.breakpoint.smAndDown) return '500px';
 			else return '600px';
 		},
+	},
+	created() {
+		const images = [
+			{
+				id: 1,
+				image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
+			},
+			{ id: 2, image: `${this.$config.LANDING_URL}/Joaquín Bustos.png` },
+			{ id: 3, image: `${this.$config.LANDING_URL}/Jorge Calderon.png` },
+			{ id: 4, image: `${this.$config.LANDING_URL}/Tamara Stein.png` },
+		];
+		setInterval(
+			() => (this.mainImageSrc = images[Math.floor(Math.random() * images.length)].image),
+			5000
+		);
 	},
 };
 </script>
