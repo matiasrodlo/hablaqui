@@ -12,7 +12,7 @@
 				<div class="primary" style="height: 5px"></div>
 				<v-container class="white--text" style="height: 700px">
 					<v-row justify="center" align="center">
-						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
+						<v-col cols="12" sm="6" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Tu psicólogo Online
 							</div>
@@ -32,7 +32,7 @@
 							</v-btn>
 							<div class="title my-4">Desde $15.500CLP a la semana</div>
 						</v-col>
-						<v-col cols="12" sm="6" xl="5">
+						<v-col cols="12" sm="6">
 							<v-img
 								:height="heightPhone"
 								:src="`${$config.LANDING_URL}/tel.png`"
@@ -47,7 +47,6 @@
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					xl="10"
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Cómo funciona
@@ -115,7 +114,7 @@
 					style="height: 500px"
 				>
 					<v-row justify="center" align="center" style="height: 600px">
-						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
+						<v-col cols="12" sm="6" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
 							</div>
@@ -137,7 +136,7 @@
 								Ver más psicólogos
 							</v-btn>
 						</v-col>
-						<v-col cols="12" sm="6" xl="5" class="d-flex justify-center">
+						<v-col cols="12" sm="6" class="d-flex justify-center">
 							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
 								<div
 									style="
@@ -158,7 +157,6 @@
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					xl="10"
 					class="text-left text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Ventajas
@@ -357,6 +355,52 @@
 				</v-col>
 				<v-col cols="12" class="text-center headline my-6 text--secondary">
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-container>
+			<v-row align="center">
+				<v-col cols="2">
+					<v-img
+						contain
+						height="100"
+						:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
+					></v-img>
+				</v-col>
+				<v-col cols="2">
+					<v-img
+						contain
+						max-height="100"
+						:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
+					></v-img>
+				</v-col>
+				<v-col cols="2">
+					<v-img
+						contain
+						max-height="100"
+						:src="`${$config.LANDING_URL}/fonasa.jpg`"
+					></v-img>
+				</v-col>
+				<v-col cols="2">
+					<v-img
+						contain
+						max-height="100"
+						:src="`${$config.LANDING_URL}/banmedica.png`"
+					></v-img>
+				</v-col>
+				<v-col cols="2">
+					<v-img
+						contain
+						max-height="100"
+						:src="`${$config.LANDING_URL}/colmena.png`"
+					></v-img>
+				</v-col>
+				<v-col cols="2">
+					<v-img
+						contain
+						max-height="100"
+						:src="`${$config.LANDING_URL}/consalud.png`"
+					></v-img>
 				</v-col>
 			</v-row>
 		</v-container>
