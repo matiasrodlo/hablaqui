@@ -144,7 +144,36 @@
 										border-radius: 25px;
 									"
 								>
-									<v-img contain max-width="350" :src="mainImageSrc"></v-img>
+									<v-img
+										v-if="mainImageSrc"
+										contain
+										max-width="350"
+										class="d-flex justify-end"
+										:src="mainImageSrc.image"
+										style="position: relative"
+									>
+										<div
+											style="
+												background-color: black;
+												position: absolute;
+												bottom: 0;
+												height: 120px;
+												opacity: 0.6;
+												width: 100%;
+												border-radius: 0 0 20px 20px;
+											"
+											class="white--text"
+										>
+											<div class="title pt-1 pl-1">
+												{{ mainImageSrc.title }}
+											</div>
+											<div class="headline pl-1">{{ mainImageSrc.name }}</div>
+											<div class="caption pl-1 py-2">
+												<v-icon color="primary">mdi-check</v-icon
+												>{{ mainImageSrc.subtitle }}
+											</div>
+										</div>
+									</v-img>
 								</div>
 							</div>
 						</v-col>
@@ -576,14 +605,36 @@ export default {
 		const images = [
 			{
 				id: 1,
+				title: 'Terapeuta de Hablaquí con licencia',
+				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+				name: 'Aihnoa Con',
 				image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
 			},
-			{ id: 2, image: `${this.$config.LANDING_URL}/Joaquín Bustos.png` },
-			{ id: 3, image: `${this.$config.LANDING_URL}/Jorge Calderon.png` },
-			{ id: 4, image: `${this.$config.LANDING_URL}/Tamara Stein.png` },
+			{
+				id: 2,
+				name: 'Joaquín Bustos',
+				title: 'Terapeuta de Hablaquí con licencia',
+				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+				image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
+			},
+			{
+				id: 3,
+				name: 'Jorge Calderon',
+				title: 'Terapeuta de Hablaquí con licencia',
+				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+				image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
+			},
+			{
+				id: 4,
+				title: 'Terapeuta de Hablaquí con licencia',
+				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+				name: 'Tamara Stein',
+				image: `${this.$config.LANDING_URL}/Tamara Stein.png`,
+			},
 		];
+		this.mainImageSrc = images[0];
 		setInterval(
-			() => (this.mainImageSrc = images[Math.floor(Math.random() * images.length)].image),
+			() => (this.mainImageSrc = images[Math.floor(Math.random() * images.length)]),
 			5000
 		);
 	},
