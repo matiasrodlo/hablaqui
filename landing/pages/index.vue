@@ -11,7 +11,7 @@
 			<div style="position: absolute; top: 0; width: 100%">
 				<div class="primary" style="height: 5px"></div>
 				<v-container class="white--text" style="height: 700px">
-					<v-row justify="center" align="center" style="height: 700px">
+					<v-row justify="center" align="center">
 						<v-col cols="12" sm="6" xl="5" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Tu psicólogo Online
@@ -32,15 +32,9 @@
 							</v-btn>
 							<div class="title my-4">Desde $15.500CLP a la semana</div>
 						</v-col>
-						<v-col
-							v-if="!$vuetify.breakpoint.xs"
-							cols="4"
-							sm="6"
-							xl="5"
-							class="text-center"
-						>
+						<v-col cols="12" sm="6" xl="5" class="text-center">
 							<v-img
-								:height="$vuetify.breakpoint.smAndDown ? '400' : '600px'"
+								:height="heightPhone"
 								:src="`${$config.LANDING_URL}/tel.png`"
 							></v-img>
 						</v-col>
@@ -442,6 +436,13 @@ export default {
 				},
 			],
 		};
+	},
+	computed: {
+		heightPhone() {
+			if (this.$vuetify.breakpoint.xs) return '300px';
+			else if (this.$vuetify.breakpoint.smAndDown) return '500px';
+			else return '600px';
+		},
 	},
 };
 </script>
