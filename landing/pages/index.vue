@@ -279,9 +279,19 @@
 				<v-col cols="12" class="text-center text-h3 text--secondary">
 					Descarga nuestra aplicación
 				</v-col>
-				<v-col cols="12" class="text-center my-16">
-					<v-btn color="black" x-large class="ma-2 white--text"> Google play </v-btn>
-					<v-btn color="black" x-large class="ma-2 white--text"> itunes </v-btn>
+				<v-col cols="12" class="my-16 d-flex align-center justify-center">
+					<img
+						style="cursor: pointer"
+						height="75px"
+						:src="`${$config.LANDING_URL}/google-play-badge.png`"
+						alt="descarcar nuestra aplicaion"
+					/>
+					<img
+						style="cursor: pointer"
+						height="50px"
+						:src="`${$config.LANDING_URL}/ios.svg`"
+						alt="descarcar nuestra aplicaion"
+					/>
 				</v-col>
 			</v-row>
 		</v-container>
