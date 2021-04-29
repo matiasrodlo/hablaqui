@@ -193,20 +193,24 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<!-- SECTION 5 / RESEÑA -->
+		<!-- SECTION 5 / Efectividad -->
 		<div style="position: relative">
 			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
 			<div style="position: absolute; top: 0">
-				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</div>
 			<div style="position: absolute; top: 0; width: 100%">
-				<v-container class="white--text" style="height: 700px">
-					<v-row justify="center" align="center" style="height: 600px">
-						<v-col cols="12" class="mt-16 text-center text-sm-left">
+				<v-container>
+					<v-row>
+						<v-col cols="12" class="white--text mt-16 text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Efectividad
 							</div>
 						</v-col>
+					</v-row>
+				</v-container>
+				<v-container class="white--text" fluid>
+					<v-row justify="center" align="center" style="height: 500px">
 						<v-col cols="12">
 							<v-slide-group center-active show-arrows>
 								<template #prev>
