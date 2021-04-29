@@ -92,7 +92,7 @@ const routes = [
 		meta: { title: 'Planes y pagos', layout: 'layout', appBarColor: 'transparent' },
 	},
 	{
-		path: '/auth',
+		path: '/auth/:q?',
 		name: 'auth',
 		component: Auth,
 		meta: { title: 'Autenticacion', layout: 'simple' },

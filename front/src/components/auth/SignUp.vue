@@ -70,6 +70,15 @@
 				</v-btn>
 			</v-col>
 		</v-row>
+		<v-dialog v-model="dialog" width="300">
+			<v-sheet style="width: 300px; height: 100px">
+				<v-alert dense outlined type="error" width="300" height="100">
+					Debes aceptar los
+					<strong>terminos y condiciones</strong> y
+					<strong>politicas de privacidad</strong>
+				</v-alert>
+			</v-sheet>
+		</v-dialog>
 	</v-form>
 </template>
 
@@ -89,6 +98,7 @@ export default {
 			showPassword: false,
 			showRepeatPassword: false,
 			accept: false,
+			dialog: false,
 		};
 	},
 	computed: {
@@ -142,8 +152,8 @@ export default {
 		},
 		async onSubmit() {
 			this.$v.$touch();
-			if (!this.accept) {
-				return alert('Debes aceptar los terminos y condiciones y politicas de privacidad');
+			if (!this.$v.$invalid && !this.accept) {
+				return (this.dialog = true);
 			}
 			if (!this.$v.$invalid && this.accept) {
 				this.loading = true;

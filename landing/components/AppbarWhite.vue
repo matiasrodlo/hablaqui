@@ -16,25 +16,25 @@
 					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 				>
 					<v-list-item-content>
-						<v-list-item-title>Nuestros especialistas</v-list-item-title>
+						<v-list-item-title>Psicólogos</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link to="/faq">
 					<v-list-item-content>
-						<v-list-item-title>Para empresas</v-list-item-title>
+						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link to="/blog">
 					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
+						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :href="`${$config.FRONTEND_URL}/auth`">
 					<v-list-item-content>
-						<v-list-item-title>Entrar</v-list-item-title>
+						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :href="`${$config.FRONTEND_URL}/auth/q=register`">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -70,22 +70,46 @@
 					rounded
 					text
 					active-class="info--text"
-					class="ml-4"
+					class="ml-4 text-h6 text--secondary"
 				>
-					Nuestros especialistas
+					Psicólogos
 				</v-btn>
-				<v-btn light rounded text active-class="info--text"> Para empresas </v-btn>
-				<v-btn light rounded text active-class="info--text"> Para especialistas </v-btn>
+				<v-btn
+					light
+					rounded
+					text
+					active-class="info--text"
+					class="text-h6 text--secondary"
+					to="/faq"
+				>
+					Preguntas frecuentes
+				</v-btn>
+				<v-btn
+					light
+					rounded
+					text
+					active-class="info--text"
+					class="text-h6 text--secondary"
+					to="/blog"
+				>
+					Blog
+				</v-btn>
 				<v-spacer></v-spacer>
-				<v-btn color="primary" rounded text :href="`${$config.FRONTEND_URL}`">
-					Entrar
+				<v-btn
+					class="text-h6 text--secondary"
+					rounded
+					text
+					:href="`${$config.FRONTEND_URL}/auth`"
+				>
+					Iniciar sesión
 				</v-btn>
 				<v-btn
 					rounded
-					class="mx-2"
+					class="mx-2 text-h6"
 					color="primary"
 					depressed
-					:href="`${$config.FRONTEND_URL}/auth`"
+					x-large
+					:href="`${$config.FRONTEND_URL}/auth/q=register`"
 				>
 					Comenzar
 				</v-btn>

@@ -21,10 +21,10 @@
 								forma segura y privada con un psicólogo online cuando lo necesites.
 							</div>
 							<v-btn
-								rounded
+								style="border-radius: 15px"
 								color="white"
 								x-large
-								class="font-weight-bold"
+								class="font-weight-bold pa-8"
 								depressed
 								:href="`${$config.FRONTEND_URL}/auth`"
 							>
@@ -90,10 +90,10 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					<v-btn
-						rounded
+						style="border-radius: 15px"
 						color="primary"
 						x-large
-						class="font-weight-bold"
+						class="font-weight-bold pa-8"
 						depressed
 						:href="`${$config.FRONTEND_URL}/auth`"
 					>
@@ -127,10 +127,10 @@
 								efectiva y experta, pero también cálida y humana.
 							</div>
 							<v-btn
-								rounded
+								style="border-radius: 15px"
 								color="white"
 								x-large
-								class="font-weight-bold"
+								class="font-weight-bold pa-8"
 								depressed
 								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 							>
@@ -208,14 +208,14 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					<v-btn
-						rounded
+						style="border-radius: 15px"
 						color="primary"
 						x-large
-						class="font-weight-bold"
+						class="font-weight-bold pa-8"
 						depressed
 						:href="`${$config.FRONTEND_URL}/auth`"
 					>
-						PRUEBA AHORA
+						Quiero empezar
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -314,10 +314,10 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					<v-btn
-						rounded
+						style="border-radius: 15px"
 						color="primary"
 						x-large
-						class="font-weight-bold"
+						class="font-weight-bold pa-8"
 						depressed
 						:href="`${$config.FRONTEND_URL}/auth`"
 					>

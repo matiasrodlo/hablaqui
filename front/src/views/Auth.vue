@@ -134,6 +134,9 @@ export default {
 			step: 1,
 		};
 	},
+	created() {
+		if (this.$route.params.q) this.step = 2;
+	},
 	computed: {
 		landingUrl() {
 			return landing;
