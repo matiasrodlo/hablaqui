@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
+		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer">
 			<v-list-item>
 				<v-img
 					style="max-width: 150px"

@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<div class="primary">
-			<Appbar />
-		</div>
+		<client-only>
+			<div class="primary">
+				<Appbar />
+			</div>
+		</client-only>
 		<v-container fluid class="primary py-16">
 			<v-row justify="center" align="center">
 				<v-col cols="12" md="5" lg="6">

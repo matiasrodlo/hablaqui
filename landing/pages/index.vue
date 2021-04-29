@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<div class="primary">
-			<Appbar />
-		</div>
+		<client-only>
+			<div class="primary">
+				<Appbar />
+			</div>
+		</client-only>
 		<!-- SECTION 1 / heading -->
 		<div style="position: relative">
 			<img :src="`${$config.LANDING_URL}/GH1.png`" style="height: 700px; width: 100%" />

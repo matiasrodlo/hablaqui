@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<div class="primary">
-			<Appbar />
-		</div>
+		<client-only>
+			<div class="primary">
+				<Appbar />
+			</div>
+		</client-only>
 		<div
 			cols="12"
 			class="primary text-center font-weight-bold text-h5 text-lg-h3 white--text py-16"
