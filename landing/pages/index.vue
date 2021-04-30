@@ -105,20 +105,20 @@
 		<div style="position: relative">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 700px; width: 100%"
+				style="height: 800px; width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container
 					class="white--text"
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
-					style="height: 500px"
+					style="height: 700px"
 				>
-					<v-row justify="space-between" align="center" style="height: 600px">
+					<v-row justify="space-between" align="center" style="height: 700px">
 						<v-col cols="12" md="6" class="pt-16 text-center text-md-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
 							</div>
-							<div class="my-4">
+							<div class="my-4 subtitle-1">
 								Contamos con un amplio equipo de psicólogos enfocados a potenciar el
 								área que busques desarrollar. Todos nuestros profesionales son
 								rigurosamente seleccionados, certificados, y cuentan con un alto
@@ -233,7 +233,7 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<div style="position: relative">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
+			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 600px; width: 100%" />
 			<div style="position: absolute; top: 0">
 				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</div>
@@ -247,46 +247,40 @@
 						</v-col>
 					</v-row>
 				</v-container>
-				<v-container class="white--text" fluid>
-					<v-row justify="center" align="center" style="height: 500px">
+				<v-container class="white--text">
+					<v-row justify="center" align="center">
 						<v-col cols="12">
-							<v-slide-group center-active show-arrows>
-								<template #prev>
-									<v-icon
-										color="white"
-										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
-									>
-										mdi-chevron-left
-									</v-icon>
-								</template>
-								<template #next>
-									<v-icon
-										color="white"
-										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
-									>
-										mdi-chevron-right
-									</v-icon>
-								</template>
-								<v-slide-item
-									v-for="item in efectividad"
-									:key="item.id"
-									v-slot="{ toggle }"
-								>
-									<v-card
-										:height="$vuetify.breakpoint.smAndUp ? '250' : '310'"
-										:width="$vuetify.breakpoint.smAndUp ? '300' : '220'"
-										class="ma-4 text-center"
-										style="border-radius: 25px"
-										flat
-										@click="toggle"
-									>
-										<v-card-text class="text-center">
-											<img style="height: 80px" :src="item.img" />
-										</v-card-text>
-										<v-card-text>{{ item.text }}</v-card-text>
-									</v-card>
-								</v-slide-item>
-							</v-slide-group>
+							<v-carousel
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								hide-delimiter-background
+								height="400"
+							>
+								<v-carousel-item v-for="(item, i) in efectividad" :key="i">
+									<div class="text-center d-flex justify-center align-center">
+										<v-card
+											v-for="el in item"
+											:key="el.id"
+											width="330"
+											class="mx-4 d-inline-block"
+											style="border-radius: 25px"
+											light
+											flat
+										>
+											<v-card-text>
+												<img height="60" :src="el.img" />
+											</v-card-text>
+											<v-card-text>
+												<div>{{ el.text }}</div>
+												<v-btn link text color="blue" :href="el.href">
+													Leer estudio completo
+												</v-btn>
+											</v-card-text>
+										</v-card>
+									</div>
+								</v-carousel-item>
+							</v-carousel>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -563,42 +557,46 @@ export default {
 				},
 			],
 			efectividad: [
-				{
-					id: 1,
-					img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
-					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
-					text:
-						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
-				},
-				{
-					id: 3,
-					img: `${this.$config.LANDING_URL}/New York University.png`,
-					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-					text:
-						'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
-				},
-				{
-					id: 5,
-					img: `${this.$config.LANDING_URL}/Columbia University.png`,
-					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-					text:
-						'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
-				},
-				{
-					id: 2,
-					img: ``,
-					href: 'https://mhealth.jmir.org/2019/1/e10948/',
-					text:
-						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
-				},
-				{
-					id: 4,
-					img: ``,
-					href:
-						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
-					text:
-						'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
-				},
+				[
+					{
+						id: 1,
+						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
+						text:
+							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+					},
+					{
+						id: 3,
+						img: `${this.$config.LANDING_URL}/New York University.png`,
+						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
+						text:
+							'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
+					},
+					{
+						id: 5,
+						img: `${this.$config.LANDING_URL}/Columbia University.png`,
+						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
+						text:
+							'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
+					},
+				],
+				[
+					{
+						id: 2,
+						img: ``,
+						href: 'https://mhealth.jmir.org/2019/1/e10948/',
+						text:
+							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+					},
+					{
+						id: 4,
+						img: ``,
+						href:
+							'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
+						text:
+							'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+					},
+				],
 			],
 			mainImageSrc: null,
 			corousel: [
