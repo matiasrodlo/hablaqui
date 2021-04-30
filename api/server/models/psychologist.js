@@ -2,6 +2,9 @@ import uniqueValidator from 'mongoose-unique-validator';
 import { Schema, model } from 'mongoose';
 
 let psychologist = new Schema({
+	avatar: {
+		type: String,
+	},
 	code: {
 		type: String,
 	},
@@ -32,6 +35,9 @@ let psychologist = new Schema({
 	description: {
 		type: String,
 	},
+	model: {
+		type: Array,
+	}
 });
 
 psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
