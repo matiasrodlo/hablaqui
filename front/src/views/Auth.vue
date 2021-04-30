@@ -9,7 +9,9 @@
 				<v-col cols="12" sm="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
-							<v-img max-width="200" src="../assets/logo.png"></v-img>
+							<a :href="landingUrl">
+								<v-img max-width="200" src="../assets/logo.png"></v-img>
+							</a>
 						</v-col>
 						<v-col
 							cols="12"
@@ -49,11 +51,20 @@
 							<v-btn outlined block rounded color="primary" @click="setStep">
 								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
 							</v-btn>
-							<v-btn text color="primary" :href="`${landingUrl}/politicas`"
+							<v-btn
+								class="px-0"
+								text
+								color="primary"
+								:href="`${landingUrl}politicas`"
 								>Aviso de privacidad</v-btn
 							>
 							y
-							<v-btn text color="primary" :href="`${landingUrl}/condiciones`">
+							<v-btn
+								class="px-0"
+								text
+								color="primary"
+								:href="`${landingUrl}condiciones`"
+							>
 								Términos y Condiciones</v-btn
 							>
 							<div class="font-weight-bold caption secondary--text">
