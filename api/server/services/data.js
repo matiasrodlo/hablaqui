@@ -15,6 +15,7 @@ const uploadCsv = async file => {
 			data = data.map(item => ({
 				...item,
 				specialties: item.specialties.split(';'),
+				model: item.model.split(';'),
 			}));
 
 			await Psychologist.insertMany(data);
