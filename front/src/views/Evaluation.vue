@@ -1,5 +1,10 @@
 <template>
 	<div>
+		<!-- appbar -->
+		<div class="primary">
+			<appbar />
+		</div>
+		<!-- content -->
 		<div
 			class="primary white--text text-center"
 			style="position: relative; padding: 100px 0; height: 400px"
@@ -85,8 +90,13 @@
 </template>
 
 <script>
+import Appbar from '@/components/ui/Appbar.vue';
+
 export default {
 	name: 'Evaluation',
+	components: {
+		Appbar,
+	},
 };
 </script>
 
