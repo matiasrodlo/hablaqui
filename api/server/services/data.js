@@ -10,7 +10,7 @@ const uploadCsv = async file => {
 
 	if (file.originalname === 'psychologists.csv') {
 		if (file.originalname === 'psychologists.csv') {
-			let data = await csvtojson().fromFile(file.path);
+			let data = await csvtojson().fromString(file.buffer.toString());
 
 			data = data.map(item => ({
 				...item,
