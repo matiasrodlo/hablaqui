@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<!-- appbar -->
+		<appbar />
+		<!-- routing for child -->
 		<router-view :loading="loading" />
 		<!-- footer -->
 		<v-container fluid class="primary white--text py-16">
@@ -19,6 +22,7 @@
 </template>
 
 <script>
+import Appbar from '@/components/ui/Appbar.vue';
 import { mapActions } from 'vuex';
 export default {
 	data() {
@@ -28,6 +32,7 @@ export default {
 	},
 	components: {
 		Footer: () => import('@/components/footers/FooterExperts'),
+		Appbar,
 	},
 	async mounted() {
 		this.loading = true;

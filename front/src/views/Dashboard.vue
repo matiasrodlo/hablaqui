@@ -117,7 +117,7 @@
 			<v-spacer></v-spacer>
 			<v-tooltip color="white" bottom>
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn text :to="{ name: 'psicologos' }" v-bind="attrs" v-on="on">
+					<v-btn text :to="{ name: 'all-psicologos' }" v-bind="attrs" v-on="on">
 						Expertos
 					</v-btn>
 				</template>
@@ -125,7 +125,7 @@
 			</v-tooltip>
 			<v-tooltip color="white" bottom>
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn text :to="{ name: 'faq' }" v-bind="attrs" v-on="on">
+					<v-btn text :href="`${landing_page}/faq`" v-bind="attrs" v-on="on">
 						Centro de ayuda
 					</v-btn>
 				</template>
@@ -146,7 +146,14 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { landing } from '@/config';
+
 export default {
+	computed: {
+		landing_page() {
+			return landing;
+		},
+	},
 	methods: {
 		logout() {
 			this.resetUser();

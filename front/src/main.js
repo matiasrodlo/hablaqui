@@ -3,14 +3,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
-import Layout from './layouts/layout.vue';
-import Simple from './layouts/simple.vue';
 import './registerServiceWorker';
 
 Vue.config.productionTip = false;
-
-Vue.component('layout', Layout);
-Vue.component('simple', Simple);
 
 new Vue({
 	router,
