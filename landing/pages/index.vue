@@ -114,7 +114,7 @@
 					style="height: 500px"
 				>
 					<v-row justify="space-between" align="center" style="height: 600px">
-						<v-col cols="12" sm="6" class="text-center text-sm-left">
+						<v-col cols="12" md="6" class="pt-16 text-center text-md-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
 							</div>
@@ -136,7 +136,7 @@
 								Ver más psicólogos
 							</v-btn>
 						</v-col>
-						<v-col cols="12" md="5" class="d-flex justify-center">
+						<v-col cols="12" md="6" class="d-flex justify-center">
 							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
 								<v-carousel
 									cycle
