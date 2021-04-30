@@ -1,46 +1,26 @@
 <template>
-	<v-container fluid>
-		<v-row class="white--text py-16">
+	<v-container>
+		<v-row align="center" class="white--text py-16">
 			<v-col cols="12" sm="3">
-				<div class="text-center headline text--secondary font-weight-bold">
-					Acuerdos
-				</div>
-				<div class="text-center headline text--secondary">
+				<div class="headline text--secondary font-weight-bold">Acuerdos</div>
+				<v-btn class="px-0 headline text--secondary" text link to="/politicas">
 					Políticas de Privacidad
-				</div>
-				<div class="text-center headline text--secondary">
+				</v-btn>
+				<v-btn class="px-0 headline text--secondary" text link to="/condiciones">
 					Terminos y Condiciones
-				</div>
+				</v-btn>
 			</v-col>
-			<v-col cols="12" sm="3">
-				<div class="text-center headline text--secondary font-weight-bold">
-					Soporte Técnico
-				</div>
-				<div class="text-center headline text--secondary">
-					+52 1 5568 2686 6322
-				</div>
-				<div class="text-center headline text--secondary">
-					soporte@hablaqui.com
-				</div>
+			<v-col cols="12" sm="3" class="headline text--secondary">
+				<div class="font-weight-bold">Soporte Técnico</div>
+				<div>c@hablaqui.com</div>
+				<div>09:00am - 18:30pm</div>
 			</v-col>
-			<v-col cols="12" sm="3">
-				<div class="text-center headline text--secondary font-weight-bold">
-					Atención a clientes
-				</div>
-				<div class="text-center headline text--secondary">
-					clientes@hablaqui.com
-				</div>
-				<div class="text-center headline text--secondary">
-					John Harvard
-				</div>
+			<v-col cols="12" sm="3" class="headline text--secondary">
+				<v-img contain max-height="60" src="/img/Startup .png"></v-img>
+				<v-img contain max-height="60" src="/img//Adolfo Ibañez .png"></v-img>
 			</v-col>
-			<v-col cols="12" sm="3">
-				<div class="text-center headline text--secondary font-weight-bold">
-					Pago seguro
-				</div>
-				<div class="text-center headline text--secondary">
-					LOGO PAYPAL
-				</div>
+			<v-col cols="12" sm="3" class="headline text--secondary">
+				<v-img max-width="350" src="/img//Web Pay .png"></v-img>
 			</v-col>
 		</v-row>
 	</v-container>

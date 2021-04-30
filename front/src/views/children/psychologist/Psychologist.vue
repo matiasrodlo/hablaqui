@@ -1,9 +1,9 @@
 <template>
-	<v-container fluid>
+	<v-container>
 		<v-card>
 			<v-card-text>
 				<v-row align="center" justify="center">
-					<v-col cols="12" sm="3" lg="2" class="text-center">
+					<v-col cols="12" sm="3" class="text-center">
 						<v-list-item-avatar
 							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							class="ml-4"
@@ -20,7 +20,7 @@
 							cedula {{ psychologist.code }}
 						</div>
 					</v-col>
-					<v-col cols="12" sm="9" lg="10">
+					<v-col cols="12" sm="9">
 						<v-row justify="space-between">
 							<v-col
 								class="text-center text-sm-left font-weight-bold text-h3 text--secondary"

@@ -1,12 +1,12 @@
 <template>
-	<v-container fluid>
+	<v-container>
 		<v-row justify="space-between" align="center">
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				{{ $route.meta.title }}
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col cols="12" md="3" lg="2">
+			<v-col cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
 					<v-card-title class="text--secondary">
 						Filtrar por
@@ -43,22 +43,70 @@
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
+								<v-checkbox
+									v-model="gender"
+									value="No binario"
+									:disabled="loading"
+									label="No binario"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
+								<v-checkbox
+									v-model="gender"
+									value="LGBTIQ+"
+									:disabled="loading"
+									label="LGBTIQ+"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
-								<div class="title mt-2">Tipo de cita</div>
+								<div class="title mt-2">Modelo terapéuticos</div>
 								<v-checkbox
 									v-model="sessionType"
-									value="personal"
+									value="Cognitivo conductual"
 									:disabled="loading"
-									label="Personal"
+									label="Cognitivo conductual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="pareja"
+									value="Integrador"
 									:disabled="loading"
-									label="Pareja"
+									label="Integrador"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
+								<v-checkbox
+									v-model="sessionType"
+									value="Psicoanalisis"
+									:disabled="loading"
+									label="Psicoanálisis"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
+								<v-checkbox
+									v-model="sessionType"
+									value="Humanista"
+									:disabled="loading"
+									label="Humanista"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
+								<v-checkbox
+									v-model="sessionType"
+									value="Sistemico-relacional"
+									:disabled="loading"
+									label="Sistemico-relacional"
+									hide-details
+									@change="filterPanel"
+								></v-checkbox>
+								<v-checkbox
+									v-model="sessionType"
+									value="Terapia-breve"
+									:disabled="loading"
+									label="Terapia-breve"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -86,7 +134,7 @@
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" md="9" lg="10">
+			<v-col cols="12" md="9">
 				<v-row>
 					<v-col>
 						<v-combobox
@@ -142,7 +190,7 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" md="4">
+						<v-col cols="12" sm="6" lg="4">
 							<v-card
 								height="400px"
 								style="border-radius:15px"
@@ -152,19 +200,22 @@
 							>
 								<v-card-text style="height: 85%">
 									<v-btn
-										style="border: 8px solid #5EB3E4"
-										color="#9D9D9C"
-										depressed
 										fab
+										light
+										depressed
 										width="100"
 										height="100"
-									></v-btn>
-									<div class="subtitle-1 font-weight-bold">
-										Encuentra a tu psicólogo ideal
+										style="border: 8px solid #5EB3E4;"
+										class="mb-10"
+									>
+										<v-icon color="primary" size="60">mdi-magnify</v-icon>
+									</v-btn>
+									<div class="title font-weight-bold">
+										Te ayudamos a encontrar a tu psicólogo
 									</div>
-									<div class="body-2 mt-2">
-										Lorempsum dolor sit amet, consectetupsum dolor sit amet,
-										consectetu ipsum
+									<div class="subtitle-1 mt-2">
+										Encuentra al psicólogo que necesitas, solo responde las
+										siguientes preguntas.
 									</div>
 								</v-card-text>
 								<v-card-actions>
@@ -182,7 +233,7 @@
 								</v-card-actions>
 							</v-card>
 						</v-col>
-						<v-col cols="12" sm="6" md="4" v-for="(item, i) in items" :key="i">
+						<v-col cols="12" sm="6" lg="4" v-for="(item, i) in items" :key="i">
 							<v-card min-height="400" style="border-radius:15px" class="text-center">
 								<v-card-text style="height: 85%">
 									<div>
@@ -196,8 +247,8 @@
 										<div class="subtitle-1 font-weight-bold text--secondary">
 											{{ item.name }}
 										</div>
-										<div v-if="item.code" class="body-1 primary--text">
-											CEDULA {{ item.code }}
+										<div v-if="item.code" class="caption primary--text">
+											Codigo {{ item.code }}
 										</div>
 									</div>
 									<v-divider></v-divider>
@@ -213,6 +264,14 @@
 									</div>
 								</v-card-text>
 								<v-card-actions class="text-center">
+									<v-spacer></v-spacer>
+									<v-btn color="primary" depressed style="border-radius:10px">
+										Agenda cita oline
+									</v-btn>
+									<v-spacer></v-spacer>
+								</v-card-actions>
+								<v-card-actions class="text-center">
+									<v-spacer></v-spacer>
 									<v-btn
 										text
 										color="#9D9D9C"
@@ -221,9 +280,6 @@
 										Más información
 									</v-btn>
 									<v-spacer></v-spacer>
-									<v-btn color="primary" depressed style="border-radius:10px"
-										>Agenda cita oline</v-btn
-									>
 								</v-card-actions>
 							</v-card>
 						</v-col>
@@ -269,23 +325,23 @@
 							<v-card style="border-radius:15px">
 								<v-card-text>
 									<v-row align="center" justify="center">
-										<v-col cols="3" lg="2" class="text-center">
-											<v-list-item-avatar size="100" class="ml-4">
-												<v-btn
-													color="#9D9D9C"
-													class="elevation-0"
-													fab
-													width="100"
+										<v-col cols="3" lg="2">
+											<v-list-item-avatar text-center size="100" class="ml-4">
+												<v-img
+													class="primary"
 													height="100"
-												></v-btn>
+													width="100"
+													src=""
+												></v-img>
 											</v-list-item-avatar>
-											<div class="caption text--secondary">
+											<div class="text-center caption text--secondary">
 												Cédula {{ item.rut }}
 											</div>
 											<v-btn
 												text
 												color="primary"
-												class="font-weight-bold"
+												depressed
+												class="pa-0 font-weight-bold"
 												:to="{
 													name: 'psicologo',
 													params: { id: item._id },
