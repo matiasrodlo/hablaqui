@@ -113,7 +113,7 @@
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
 					style="height: 500px"
 				>
-					<v-row justify="center" align="center" style="height: 600px">
+					<v-row justify="space-between" align="center" style="height: 600px">
 						<v-col cols="12" sm="6" class="text-center text-sm-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
@@ -136,45 +136,54 @@
 								Ver más psicólogos
 							</v-btn>
 						</v-col>
-						<v-col cols="12" sm="6" class="d-flex justify-center">
+						<v-col cols="12" md="5" class="d-flex justify-center">
 							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
-								<div
+								<v-carousel
+									cycle
+									hide-delimiter-background
+									hide-delimiters
+									show-arrows-on-hover
+									reverse-transition="fade-transition"
+									transition="fade-transition"
+									height="400"
 									style="
 										box-shadow: 12px 12px 0px 0px #03dfd8;
 										border-radius: 25px;
 									"
 								>
-									<v-img
-										v-if="mainImageSrc"
-										contain
-										max-width="350"
-										class="d-flex justify-end"
-										:src="mainImageSrc.image"
-										style="position: relative"
-									>
-										<div
-											style="
-												background-color: black;
-												position: absolute;
-												bottom: 0;
-												height: 120px;
-												opacity: 0.6;
-												width: 100%;
-												border-radius: 0 0 20px 20px;
-											"
-											class="white--text"
+									<v-carousel-item v-for="item in corousel" :key="item.id">
+										<v-img
+											:src="item.image"
+											contain
+											max-width="350"
+											class="d-flex justify-end"
 										>
-											<div class="title pt-1 pl-1">
-												{{ mainImageSrc.title }}
+											<div
+												style="
+													background-color: black;
+													position: absolute;
+													bottom: 0;
+													height: 120px;
+													opacity: 0.6;
+													width: 100%;
+													border-radius: 0 0 20px 20px;
+												"
+												class="white--text"
+											>
+												<div class="title pt-1 pl-1">
+													{{ item.title }}
+												</div>
+												<div class="headline pl-1">
+													{{ item.name }}
+												</div>
+												<div class="caption pl-1 py-2">
+													<v-icon color="primary">mdi-check</v-icon
+													>{{ item.subtitle }}
+												</div>
 											</div>
-											<div class="headline pl-1">{{ mainImageSrc.name }}</div>
-											<div class="caption pl-1 py-2">
-												<v-icon color="primary">mdi-check</v-icon
-												>{{ mainImageSrc.subtitle }}
-											</div>
-										</div>
-									</v-img>
-								</div>
+										</v-img>
+									</v-carousel-item>
+								</v-carousel>
 							</div>
 						</v-col>
 					</v-row>
@@ -592,6 +601,36 @@ export default {
 				},
 			],
 			mainImageSrc: null,
+			corousel: [
+				{
+					id: 1,
+					title: 'Terapeuta de Hablaquí con licencia',
+					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					name: 'Aihnoa Con',
+					image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
+				},
+				{
+					id: 2,
+					name: 'Joaquín Bustos',
+					title: 'Terapeuta de Hablaquí con licencia',
+					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
+				},
+				{
+					id: 3,
+					name: 'Jorge Calderon',
+					title: 'Terapeuta de Hablaquí con licencia',
+					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
+				},
+				{
+					id: 4,
+					title: 'Terapeuta de Hablaquí con licencia',
+					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					name: 'Tamara Stein',
+					image: `${this.$config.LANDING_URL}/Tamara Stein.png`,
+				},
+			],
 		};
 	},
 	computed: {
@@ -600,43 +639,6 @@ export default {
 			else if (this.$vuetify.breakpoint.smAndDown) return '500px';
 			else return '600px';
 		},
-	},
-	created() {
-		const images = [
-			{
-				id: 1,
-				title: 'Terapeuta de Hablaquí con licencia',
-				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
-				name: 'Aihnoa Con',
-				image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
-			},
-			{
-				id: 2,
-				name: 'Joaquín Bustos',
-				title: 'Terapeuta de Hablaquí con licencia',
-				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
-				image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
-			},
-			{
-				id: 3,
-				name: 'Jorge Calderon',
-				title: 'Terapeuta de Hablaquí con licencia',
-				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
-				image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
-			},
-			{
-				id: 4,
-				title: 'Terapeuta de Hablaquí con licencia',
-				subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
-				name: 'Tamara Stein',
-				image: `${this.$config.LANDING_URL}/Tamara Stein.png`,
-			},
-		];
-		this.mainImageSrc = images[0];
-		setInterval(
-			() => (this.mainImageSrc = images[Math.floor(Math.random() * images.length)]),
-			5000
-		);
 	},
 };
 </script>
