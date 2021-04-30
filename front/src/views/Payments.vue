@@ -1,327 +1,347 @@
 <template>
-	<v-container>
-		<v-row align="center" justify="center">
-			<v-col cols="12">
-				<div class="text-center text-h4 font-weight-bold">Lorem ipsum dolor</div>
-				<div class="text-center caption font-weight-bold">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-				</div>
-			</v-col>
-			<v-col cols="12" md="2" class="text-center text-md-right">
-				<v-progress-circular indeterminate color="primary" size="130" :width="15">
-					<div class="spinner"></div>
-				</v-progress-circular>
-			</v-col>
-			<v-col cols="12" md="6" lg="5" xl="4" class="text-center text-md-left">
-				<div v-for="el in 4" :key="el" class="my-3 font-weight-bold">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit
-					<v-badge color="primary" class="mx-2"></v-badge>
-				</div>
-			</v-col>
-		</v-row>
-		<v-row align="center" justify="center">
-			<v-col cols="12" v-for="element in 2" :key="element" class="d-flex justify-center">
-				<v-card max-width="800" color="white" style="border-radius: 15px">
-					<v-card-text>
-						<v-row align="center" justify="center">
-							<v-col cols="12" sm="3" class="text-center">
-								<v-list-item-avatar
-									:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-									class="ml-4"
+	<div>
+		<!-- appbar -->
+		<appbar />
+		<v-container>
+			<v-row align="center" justify="center">
+				<v-col cols="12">
+					<div class="text-center text-h4 font-weight-bold">Lorem ipsum dolor</div>
+					<div class="text-center caption font-weight-bold">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+					</div>
+				</v-col>
+				<v-col cols="12" md="2" class="text-center text-md-right">
+					<v-progress-circular indeterminate color="primary" size="130" :width="15">
+						<div class="spinner"></div>
+					</v-progress-circular>
+				</v-col>
+				<v-col cols="12" md="6" lg="5" xl="4" class="text-center text-md-left">
+					<div v-for="el in 4" :key="el" class="my-3 font-weight-bold">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit
+						<v-badge color="primary" class="mx-2"></v-badge>
+					</div>
+				</v-col>
+			</v-row>
+			<v-row align="center" justify="center">
+				<v-col cols="12" v-for="element in 2" :key="element" class="d-flex justify-center">
+					<v-card max-width="800" color="white" style="border-radius: 15px">
+						<v-card-text>
+							<v-row align="center" justify="center">
+								<v-col cols="12" sm="3" class="text-center">
+									<v-list-item-avatar
+										:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+										class="ml-4"
+									>
+										<v-btn
+											color="#9D9D9C"
+											class="elevation-0"
+											fab
+											width="100"
+											height="100"
+										></v-btn>
+									</v-list-item-avatar>
+									<div class="caption text--secondary">
+										cedula xxxxxx
+									</div>
+									<v-btn text color="primary">Mas información</v-btn>
+								</v-col>
+								<v-col cols="12" sm="9">
+									<v-row justify="space-between">
+										<v-col
+											class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
+										>
+											Fernanda Croffman
+										</v-col>
+										<v-col cols="12" sm="6" class="text-right">
+											<v-btn color="primary" rounded>
+												Agenda cita online
+											</v-btn>
+										</v-col>
+									</v-row>
+									<v-chip
+										v-for="el in [3, 1, 2]"
+										:key="el"
+										small
+										class="my-4 mx-1"
+									>
+										Ansiedad
+									</v-chip>
+									<div class="body-2 mt-2 text-capitalize">
+										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+										quis nostrud exerci tation ullamcorper suscipit loborm dolor
+										sit amet, consectetuer adipiscing elit, sed diam nonummy
+										nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+										volutpat. Ut wisi enim ad minim veniam, qum dolor sit amet,
+										consectetuer adipiscing elit, sed diam nonummy
+									</div>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col cols="12" class="font-weight-bold mt-4 mb-16 text-center">
+					<span class="primary--text">¿No estas felíz con las opciones?</span> Mostrar mas
+					psicólogos Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
+				</v-col>
+			</v-row>
+			<v-row justify="center" align="center">
+				<v-col cols="12">
+					<div class="text-center">
+						<ul id="breadcrumb">
+							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
+								<span>Agendar</span>
+							</li>
+							<li>
+								<span
+									:class="
+										breakCrumbs == 1 ? 'child-selected' : 'child-un-selected'
+									"
 								>
+									Escoger Plan
+								</span>
+							</li>
+							<li :class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'">
+								<span>Detalles</span>
+							</li>
+							<li :class="breakCrumbs == 3 ? 'child-selected' : 'child-un-selected'">
+								<span>Pago</span>
+							</li>
+						</ul>
+					</div>
+				</v-col>
+				<v-col cols="12" style="max-width: 800px">
+					<div class="text-secondary mt-16 text-h4 font-weight-bold">
+						Lorem ipsum dolor sit
+					</div>
+					<div class="text-secondary text-h6 font-weight-bold">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-my
+						nibh ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-
+					</div>
+				</v-col>
+				<v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
+					<v-card max-width="800">
+						<div v-if="el.recommended" class="d-flex align-center justify-end">
+							<span
+								class="pa-2 primary white--text font-weight-bold"
+								style="border-radius: 0 0 0 15px"
+							>
+								Recomendado
+							</span>
+						</div>
+						<v-card-text>
+							<v-row justify="space-between" align="center">
+								<v-col>
+									<span class="text-h3">{{ el.price }} $</span>
+									<span class="text-h6 text--secondary">/{{ el.mode }}</span>
+									<div class="text-h6 primary--text font-weight-bold">
+										{{ el.title }}
+									</div>
+									<div class="my-2 font-weight-bold">
+										{{ el.subtitle }}
+									</div>
+									<div class="body-1 mt-2">
+										{{ el.description }}
+									</div>
+								</v-col>
+								<v-col cols="3" class="text-center mt-6">
+									<v-avatar color="grey" size="100"> </v-avatar>
+									<v-btn class="mt-3" color="primary" text>
+										Seleccionar plan
+									</v-btn>
+								</v-col>
+								<v-col cols="12">
 									<v-btn
-										color="#9D9D9C"
+										text
+										color="primary"
+										@click="() => (el.expandCard = !el.expandCard)"
+									>
+										{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
+									</v-btn>
+								</v-col>
+								<v-expand-transition>
+									<v-col v-if="el.expandCard" cols="12">
+										<v-list three-line max-width="500">
+											<v-list-item
+												v-for="(deal, k) in el.deals"
+												:key="k"
+												class="elevation-1 ma-2"
+											>
+												<v-list-item-content>
+													<v-list-item-title>
+														{{ deal.lapse }} de terapia ({{
+															deal.time
+														}}) + ${{ deal.price }}
+													</v-list-item-title>
+													<v-list-item-subtitle>
+														Secondary line text Lorem ipsum dolor sit
+														amet,
+													</v-list-item-subtitle>
+													<v-list-item-subtitle>
+														consectetur adipiscing elit.
+													</v-list-item-subtitle>
+												</v-list-item-content>
+												<v-list-item-action>
+													<v-btn fab x-small depressed color="grey">
+													</v-btn>
+												</v-list-item-action>
+											</v-list-item>
+										</v-list>
+									</v-col>
+								</v-expand-transition>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col cols="12" class="text-center">
+					<v-btn color="primary" style="border-radius: 10px">Continuar con el pago</v-btn>
+				</v-col>
+			</v-row>
+			<v-row justify="center">
+				<v-col cols="5">
+					<v-card>
+						<v-card-text>
+							<div class="my-3">Lorem ipsum dolor sit</div>
+							<v-text-field label="Ingresar codigo" dense outlined hide-details>
+								<template v-slot:append-outer>
+									<v-btn small color="primary" class="px-10">
+										Aplicar
+									</v-btn>
+								</template>
+							</v-text-field>
+						</v-card-text>
+						<v-list>
+							<v-list-item>
+								<v-list-item-content>
+									<v-list-item-title class="subtitle-2">
+										Lorem ipsum <span class="primary--text">dolor sit</span>
+									</v-list-item-title>
+									<v-list-item-subtitle class="title font-weight-bold">
+										Carolina Fettke
+									</v-list-item-subtitle>
+								</v-list-item-content>
+								<v-list-item-avatar size="100" class="ml-4">
+									<v-btn
+										color="grey"
 										class="elevation-0"
 										fab
 										width="100"
 										height="100"
 									></v-btn>
 								</v-list-item-avatar>
-								<div class="caption text--secondary">
-									cedula xxxxxx
-								</div>
-								<v-btn text color="primary">Mas información</v-btn>
-							</v-col>
-							<v-col cols="12" sm="9">
-								<v-row justify="space-between">
-									<v-col
-										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
-									>
-										Fernanda Croffman
-									</v-col>
-									<v-col cols="12" sm="6" class="text-right">
-										<v-btn color="primary" rounded>
-											Agenda cita online
-										</v-btn>
-									</v-col>
-								</v-row>
-								<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
-									Ansiedad
-								</v-chip>
-								<div class="body-2 mt-2 text-capitalize">
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-									nostrud exerci tation ullamcorper suscipit loborm dolor sit
-									amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-									Ut wisi enim ad minim veniam, qum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy
-								</div>
-							</v-col>
-						</v-row>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col cols="12" class="font-weight-bold mt-4 mb-16 text-center">
-				<span class="primary--text">¿No estas felíz con las opciones?</span> Mostrar mas
-				psicólogos Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
-			</v-col>
-		</v-row>
-		<v-row justify="center" align="center">
-			<v-col cols="12">
-				<div class="text-center">
-					<ul id="breadcrumb">
-						<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
-							<span>Agendar</span>
-						</li>
-						<li>
-							<span
-								:class="breakCrumbs == 1 ? 'child-selected' : 'child-un-selected'"
+							</v-list-item>
+						</v-list>
+						<v-card-text>
+							<div class="caption">
+								Lorem ipsum <span class="primary--text">dolor sit</span>
+							</div>
+							<div class="title font-weight-bold">
+								Lorem ipsum dolor sit amet, con
+							</div>
+							<div class="subtitle-1 my-2">
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+								nonummy nibh ipsum dolor sit amet, consec-tetuer adipiscing elit,
+								sed diam nonummy nibh Lorem ipsum dolor sit amet, consectetuer
+								adipiscing elit, sed diam nonummy nibh ipsum dolor
+							</div>
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col cols="5">
+					<v-card>
+						<v-card-text>
+							<v-btn color="primary" block style="border-radius: 10px">
+								Continuar con el pago
+							</v-btn>
+							<div class="caption my-4 text-center">
+								Lorem ipsum dolor sit amet, consectetuer
+							</div>
+							<div class=" font-weight-bold">
+								Lorem ipsum dolor sit amet,
+							</div>
+							<div>
+								Lorem ipsum dolor sit amet, consectetuer adipis
+							</div>
+						</v-card-text>
+						<v-divider></v-divider>
+						<v-list>
+							<v-list-item>
+								<v-list-item-content class="font-weight-bold headline">
+									Lorem ipsum dolor sit
+								</v-list-item-content>
+								<v-list-item-avatar size="100" class="font-weight-bold headline">
+									14$
+								</v-list-item-avatar>
+							</v-list-item>
+						</v-list>
+						<v-card-text>
+							<div class="caption text-center">
+								Lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam
+								nonummy nibh ipsum dolor
+							</div>
+						</v-card-text>
+						<v-card-text>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						</v-card-text>
+					</v-card>
+				</v-col>
+			</v-row>
+			<v-row justify="center">
+				<v-col cols="12" sm="9" md="8" lg="6">
+					<v-card>
+						<v-card-text>
+							<v-text-field dense outlined hide-details readonly value="Pago total">
+								<template v-slot:append>
+									<span class="font-weight-bold"> 312 $</span>
+								</template>
+							</v-text-field>
+						</v-card-text>
+						<v-card-text>
+							<div class="font-weight-bold headline">Lorem ipsum dolor sit</div>
+							<div class="body-1">
+								Lorem ipsum <span class="primary--text">dolor sit</span>
+							</div>
+							<v-text-field
+								class="my-6"
+								outlined
+								dense
+								hide-details
+								label="Número de tarjeta"
 							>
-								Escoger Plan
-							</span>
-						</li>
-						<li :class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'">
-							<span>Detalles</span>
-						</li>
-						<li :class="breakCrumbs == 3 ? 'child-selected' : 'child-un-selected'">
-							<span>Pago</span>
-						</li>
-					</ul>
-				</div>
-			</v-col>
-			<v-col cols="12" style="max-width: 800px">
-				<div class="text-secondary mt-16 text-h4 font-weight-bold">
-					Lorem ipsum dolor sit
-				</div>
-				<div class="text-secondary text-h6 font-weight-bold">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-my nibh
-					ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-
-				</div>
-			</v-col>
-			<v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
-				<v-card max-width="800">
-					<div v-if="el.recommended" class="d-flex align-center justify-end">
-						<span
-							class="pa-2 primary white--text font-weight-bold"
-							style="border-radius: 0 0 0 15px"
-						>
-							Recomendado
-						</span>
-					</div>
-					<v-card-text>
-						<v-row justify="space-between" align="center">
-							<v-col>
-								<span class="text-h3">{{ el.price }} $</span>
-								<span class="text-h6 text--secondary">/{{ el.mode }}</span>
-								<div class="text-h6 primary--text font-weight-bold">
-									{{ el.title }}
-								</div>
-								<div class="my-2 font-weight-bold">
-									{{ el.subtitle }}
-								</div>
-								<div class="body-1 mt-2">
-									{{ el.description }}
-								</div>
-							</v-col>
-							<v-col cols="3" class="text-center mt-6">
-								<v-avatar color="grey" size="100"> </v-avatar>
-								<v-btn class="mt-3" color="primary" text>
-									Seleccionar plan
-								</v-btn>
-							</v-col>
-							<v-col cols="12">
-								<v-btn
-									text
-									color="primary"
-									@click="() => (el.expandCard = !el.expandCard)"
-								>
-									{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
-								</v-btn>
-							</v-col>
-							<v-expand-transition>
-								<v-col v-if="el.expandCard" cols="12">
-									<v-list three-line max-width="500">
-										<v-list-item
-											v-for="(deal, k) in el.deals"
-											:key="k"
-											class="elevation-1 ma-2"
-										>
-											<v-list-item-content>
-												<v-list-item-title>
-													{{ deal.lapse }} de terapia ({{ deal.time }}) +
-													${{ deal.price }}
-												</v-list-item-title>
-												<v-list-item-subtitle>
-													Secondary line text Lorem ipsum dolor sit amet,
-												</v-list-item-subtitle>
-												<v-list-item-subtitle>
-													consectetur adipiscing elit.
-												</v-list-item-subtitle>
-											</v-list-item-content>
-											<v-list-item-action>
-												<v-btn fab x-small depressed color="grey"> </v-btn>
-											</v-list-item-action>
-										</v-list-item>
-									</v-list>
-								</v-col>
-							</v-expand-transition>
-						</v-row>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col cols="12" class="text-center">
-				<v-btn color="primary" style="border-radius: 10px">Continuar con el pago</v-btn>
-			</v-col>
-		</v-row>
-		<v-row justify="center">
-			<v-col cols="5">
-				<v-card>
-					<v-card-text>
-						<div class="my-3">Lorem ipsum dolor sit</div>
-						<v-text-field label="Ingresar codigo" dense outlined hide-details>
-							<template v-slot:append-outer>
-								<v-btn small color="primary" class="px-10">
-									Aplicar
-								</v-btn>
-							</template>
-						</v-text-field>
-					</v-card-text>
-					<v-list>
-						<v-list-item>
-							<v-list-item-content>
-								<v-list-item-title class="subtitle-2">
-									Lorem ipsum <span class="primary--text">dolor sit</span>
-								</v-list-item-title>
-								<v-list-item-subtitle class="title font-weight-bold">
-									Carolina Fettke
-								</v-list-item-subtitle>
-							</v-list-item-content>
-							<v-list-item-avatar size="100" class="ml-4">
-								<v-btn
-									color="grey"
-									class="elevation-0"
-									fab
-									width="100"
-									height="100"
-								></v-btn>
-							</v-list-item-avatar>
-						</v-list-item>
-					</v-list>
-					<v-card-text>
-						<div class="caption">
-							Lorem ipsum <span class="primary--text">dolor sit</span>
-						</div>
-						<div class="title font-weight-bold">Lorem ipsum dolor sit amet, con</div>
-						<div class="subtitle-1 my-2">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-							nonummy nibh ipsum dolor sit amet, consec-tetuer adipiscing elit, sed
-							diam nonummy nibh Lorem ipsum dolor sit amet, consectetuer adipiscing
-							elit, sed diam nonummy nibh ipsum dolor
-						</div>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col cols="5">
-				<v-card>
-					<v-card-text>
-						<v-btn color="primary" block style="border-radius: 10px">
-							Continuar con el pago
-						</v-btn>
-						<div class="caption my-4 text-center">
-							Lorem ipsum dolor sit amet, consectetuer
-						</div>
-						<div class=" font-weight-bold">
-							Lorem ipsum dolor sit amet,
-						</div>
-						<div>
-							Lorem ipsum dolor sit amet, consectetuer adipis
-						</div>
-					</v-card-text>
-					<v-divider></v-divider>
-					<v-list>
-						<v-list-item>
-							<v-list-item-content class="font-weight-bold headline">
-								Lorem ipsum dolor sit
-							</v-list-item-content>
-							<v-list-item-avatar size="100" class="font-weight-bold headline">
-								14$
-							</v-list-item-avatar>
-						</v-list-item>
-					</v-list>
-					<v-card-text>
-						<div class="caption text-center">
-							Lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam
-							nonummy nibh ipsum dolor
-						</div>
-					</v-card-text>
-					<v-card-text>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-					</v-card-text>
-				</v-card>
-			</v-col>
-		</v-row>
-		<v-row justify="center">
-			<v-col cols="12" sm="9" md="8" lg="6">
-				<v-card>
-					<v-card-text>
-						<v-text-field dense outlined hide-details readonly value="Pago total">
-							<template v-slot:append>
-								<span class="font-weight-bold"> 312 $</span>
-							</template>
-						</v-text-field>
-					</v-card-text>
-					<v-card-text>
-						<div class="font-weight-bold headline">Lorem ipsum dolor sit</div>
-						<div class="body-1">
-							Lorem ipsum <span class="primary--text">dolor sit</span>
-						</div>
-						<v-text-field
-							class="my-6"
-							outlined
-							dense
-							hide-details
-							label="Número de tarjeta"
-						>
-							<template v-slot:append>
-								<span class="text--secondary"> MM/AA CVC</span>
-							</template>
-						</v-text-field>
-						<v-btn color="primary" block style="border-radius: 10px" class="my-4">
-							Confirmar pago
-						</v-btn>
-						<div class="text-center body-1">
-							Lorem ipsum <span class="primary--text">dolor sit</span>
-						</div>
-					</v-card-text>
-					<v-card-text class="text-center">
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-					</v-card-text>
-				</v-card>
-			</v-col>
-		</v-row>
-	</v-container>
+								<template v-slot:append>
+									<span class="text--secondary"> MM/AA CVC</span>
+								</template>
+							</v-text-field>
+							<v-btn color="primary" block style="border-radius: 10px" class="my-4">
+								Confirmar pago
+							</v-btn>
+							<div class="text-center body-1">
+								Lorem ipsum <span class="primary--text">dolor sit</span>
+							</div>
+						</v-card-text>
+						<v-card-text class="text-center">
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
+						</v-card-text>
+					</v-card>
+				</v-col>
+			</v-row>
+		</v-container>
+	</div>
 </template>
 
 <script>
+import Appbar from '@/components/ui/Appbar.vue';
 export default {
+	components: {
+		Appbar,
+	},
 	data() {
 		return {
 			breakCrumbs: 0,

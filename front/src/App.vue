@@ -1,9 +1,9 @@
 <template>
 	<v-app style="background-color: #F0F8FF">
 		<snackbar />
-		<component :is="$route.meta.layout">
+		<v-main>
 			<router-view />
-		</component>
+		</v-main>
 	</v-app>
 </template>
 
@@ -15,9 +15,6 @@ export default {
 	components: {
 		Snackbar,
 	},
-	data: () => ({
-		//
-	}),
 };
 </script>
 

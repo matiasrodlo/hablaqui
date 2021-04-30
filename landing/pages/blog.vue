@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<Appbar />
+		<client-only>
+			<Appbar />
+		</client-only>
 		<v-container>
 			<!-- header -->
 			<v-row>

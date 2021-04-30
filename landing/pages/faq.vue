@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<Appbar />
+		<client-only>
+			<Appbar />
+		</client-only>
 		<v-container fluid>
 			<v-row justify="center">
 				<v-col cols="12" class="text-center font-weight-bold text-h5 text-lg-h3 py-16">

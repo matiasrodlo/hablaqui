@@ -117,7 +117,7 @@
 						<v-combobox
 							class="white"
 							outlined
-							:items="psychologists"
+							:items="panelFiter"
 							item-text="name"
 							:search-input.sync="searchInput"
 							label="Busca tu psicólogo"
@@ -352,23 +352,30 @@ export default {
 	},
 	computed: {
 		items() {
-			return this.psychologists.filter(item => {
+			return this.panelFiter.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result =
 						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
 						result;
-				else {
-					if (this.gender.length) result = this.gender.includes(result.gender);
-					if (this.sessionType.length)
-						result = this.sessionType.includes(result.sessionType);
-					if (this.language.length) result = this.language.includes(result.language);
-				}
+
 				return result;
 			});
 		},
-		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
-		...mapGetters({ appointments: 'Appointments/appointments' }),
+		panelFiter() {
+			return this.psychologists.filter(item => {
+				let result = item;
+				if (this.gender.length) result = this.gender.includes(result.gender);
+				if (this.sessionType.length) result = this.sessionType.includes(result.sessionType);
+				if (this.language.length) result = this.language.includes(result.language);
+
+				return result;
+			});
+		},
+		...mapGetters({
+			psychologists: 'Psychologist/psychologists',
+			appointments: 'Appointments/appointments',
+		}),
 	},
 	mounted() {
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);

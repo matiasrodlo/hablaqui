@@ -37,12 +37,20 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<v-app-bar
-			flat
-			:height="height"
-			:src="`${$config.LANDING_URL}/appbar_blue.png`"
-			color="transparent"
-		>
+		<div style="height: 150px; overflow: hidden">
+			<svg
+				class="shadow"
+				viewBox="0 0 500 150"
+				preserveAspectRatio="none"
+				style="height: 100%; width: 100%"
+			>
+				<path
+					d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
+					style="fill: #2070e5"
+				></path>
+			</svg>
+		</div>
+		<v-app-bar absolute flat height="100" color="transparent">
 			<router-link to="/" exact>
 				<img
 					style="max-width: 180px"
@@ -54,8 +62,8 @@
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-spacer></v-spacer>
 				<v-btn
-					:href="`${$config.FRONTEND_URL}/`"
-					x-large
+					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					large
 					rounded
 					class="mx-2 primary--text font-weight-bold"
 					color="white"
@@ -83,14 +91,12 @@ export default {
 			drawer: false,
 		};
 	},
-	computed: {
-		height() {
-			if (this.$vuetify.breakpoint.xlOnly) return '270px';
-			if (this.$vuetify.breakpoint.lgAndUp) return '220px';
-			if (this.$vuetify.breakpoint.mdAndUp) return '180px';
-			if (this.$vuetify.breakpoint.smAndUp) return '150px';
-			return '100px';
-		},
-	},
 };
 </script>
+
+<style lang="scss" scoped>
+.shadow {
+	-webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
+	filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
+}
+</style>

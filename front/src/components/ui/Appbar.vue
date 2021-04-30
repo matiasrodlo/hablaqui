@@ -1,40 +1,41 @@
 <template>
 	<div>
 		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
-			<v-list-item>
-				<v-img
-					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui Logo"
-				/>
+			<v-list-item link :href="`${landing_page}`">
+				<v-img style="max-width: 150px" src="/img/logo.png" alt="hablaqui Logo" />
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
 				<v-list-item
 					link
 					active-class="primary white--text"
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					:to="{ name: 'all-psicologos' }"
 				>
 					<v-list-item-content>
 						<v-list-item-title>Psicólogos</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link to="/faq">
+				<v-list-item link :href="`${landing_page}faq`">
 					<v-list-item-content>
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link to="/blog">
+				<v-list-item link :href="`${landing_page}blog`">
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth`">
+				<v-list-item v-if="loggedIn" @click="logout">
+					<v-list-item-content>
+						<v-list-item-title>Cerrar sesión</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else link :to="{ name: 'auth' }">
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth/q=register`">
+				<v-list-item v-if="loggedIn" link :to="{ name: 'auth', params: { q: 'register' } }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -55,17 +56,12 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="100" color="transparent">
-			<router-link to="/" exact>
-				<img
-					style="max-width: 180px"
-					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					contain
-				/>
-			</router-link>
+			<a :href="`${landing_page}`">
+				<v-img style="max-width: 180px" alt="hablaqui Logo" src="/img/logo.png" contain />
+			</a>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-btn
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					:to="{ name: 'all-psicologos' }"
 					light
 					rounded
 					text
@@ -80,7 +76,7 @@
 					text
 					active-class="info--text"
 					class="text-h6 text--secondary"
-					to="/faq"
+					:href="`${landing_page}faq`"
 				>
 					Preguntas frecuentes
 				</v-btn>
@@ -90,26 +86,25 @@
 					text
 					active-class="info--text"
 					class="text-h6 text--secondary"
-					to="/blog"
+					:href="`${landing_page}blog`"
 				>
 					Blog
 				</v-btn>
 				<v-spacer></v-spacer>
-				<v-btn
-					class="text-h6 text--secondary"
-					rounded
-					text
-					:href="`${$config.FRONTEND_URL}/auth`"
-				>
+				<v-btn v-if="loggedIn" class="text-h6 text--secondary" rounded text @click="logout">
+					Cerrar sesión
+				</v-btn>
+				<v-btn v-else class="text-h6 text--secondary" rounded text :to="{ name: 'auth' }">
 					Iniciar sesión
 				</v-btn>
 				<v-btn
+					v-if="!loggedIn"
 					rounded
 					class="mx-2 text-h6"
 					color="primary"
 					depressed
 					x-large
-					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					:to="{ name: 'auth', params: { q: 'register' } }"
 				>
 					Comenzar
 				</v-btn>
@@ -125,11 +120,27 @@
 </template>
 
 <script>
+import { landing } from '@/config';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
 	data() {
 		return {
 			drawer: false,
 		};
+	},
+	computed: {
+		landing_page() {
+			return landing;
+		},
+		...mapGetters({ loggedIn: 'User/loggedIn' }),
+	},
+	methods: {
+		logout() {
+			this.resetUser();
+			localStorage.removeItem('vuex');
+			this.$router.push({ name: 'auth' });
+		},
+		...mapMutations({ resetUser: 'User/reset' }),
 	},
 };
 </script>
