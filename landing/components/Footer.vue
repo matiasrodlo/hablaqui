@@ -24,7 +24,7 @@
 				></v-img>
 			</v-col>
 			<v-col cols="12" sm="3" class="headline text--secondary">
-				<v-img height="120" :src="`${$config.LANDING_URL}/Web Pay .png`"></v-img>
+				<v-img max-width="350" :src="`${$config.LANDING_URL}/Web Pay .png`"></v-img>
 			</v-col>
 		</v-row>
 	</v-container>
