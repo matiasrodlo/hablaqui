@@ -22,7 +22,7 @@
 					tratamiento no autorizado. Asimismo, custodiará la información de Usted
 					solamente durante el tiempo que sea apropiado para los fines mencionados en este
 					aviso o según sea requerido por la legislación aplicable.
-					<br /><br />
+					<br />
 					Únicamente el personal autorizado del Responsable, que ha cumplido y observado
 					los correspondientes requisitos de confidencialidad, podrá participar en el
 					tratamiento de sus datos personales. El personal autorizado tiene prohibido
@@ -69,7 +69,6 @@
 					delitos, ilícitos o irregularidades relacionados con los servicios brindados por
 					los prestadores de servicio.
 					<br />
-					<br />
 					Secundarias: (i) contactar al Titular para ofrecerle otros servicios y/o
 					productos, ya sean propios o de socios comerciales, (ii) mercadotecnia, y (iii)
 					publicidad o prospección comercial, en caso de que no desee que sus datos
@@ -93,7 +92,6 @@
 					tratamiento clínico, cobranza y el ejercicio de acciones legales; y d) Cuando en
 					su caso, los requieran los prestadores profesionales de los servicios
 					contratados.
-					<br />
 					<br />
 					Dicho contacto podrá hacerse en el domicilio y/o teléfono y/o correo electrónico
 					proporcionados por usted, ya sea en forma escrita, electrónica, personal o vía
@@ -145,8 +143,8 @@
 				</v-col>
 				<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
 					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
-					<v-icon color="primary" size="60">mdi-instagram</v-icon>
 					<v-icon color="primary" size="60">mdi-facebook</v-icon>
+					<v-icon color="primary" size="60">mdi-instagram</v-icon>
 					<div>Atención a clientes: clientes@hablaqui.com</div>
 					<div>Soporte técnico: soporte@hablaaqui.com</div>
 				</v-col>
