@@ -1,0 +1,42 @@
+[
+    {
+        "id": 0,
+        "title": "Preguntas principales",
+        "faq": [
+            {
+                "title": "¿Qué es Hablaquí?",
+                "description": "Hablaquí es una plataforma web que ofrece servicios de terapia psicológica online, a un precio accesible, y además por profesionales altamente calificados, que cuentan con formación especializada en aquello que tú desees tratar. El pago, agendamiento, sesiones y chat con tu terapeuta se realiza a través de nuestra plataforma web y aplicación móvil. Estamos aquí para orientarte y acompañarte en tu proceso de desarrollo personal, brindándote psicoterapia de calidad, a tu alcance y comodidad en todos los sentidos."
+            },
+            {
+                "title": "¿Para quién es Hablaquí?",
+                "description": "En Hablaquí estamos disponibles para atender a cualquier persona mayor de 18 años quese sienta afectada por algún motivo en su salud mental. Aunque no solamente atendemosa personas que tienen algún problema en particular, también ayudamos a personas que se sienten bien, pero que buscan mayor desarrollo personal, autoconocimiento, sentido de vida, etc. No es necesario que tengas algún diagnóstico previo para comenzar."
+            },
+            {
+                "title": "¿Quién será mi psicólogo?",
+                "description": "Te recomendamos un psicólogo online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir."
+            },
+            {
+                "title": "¿Necesito diagnóstico?",
+                "description": "No. Nuestros psicólogos están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un psicólogo o psiquiatra, va a ser útil, pero no es necesario para comenzar."
+            },
+            {
+                "title": "¿Puedo solicitar cambio de psicólogo?",
+                "description": "Si te sientes insatisfecho con tu psicólogo, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción."
+            },
+            {
+                "title": "¿Tienen licencia los psicólogos de Hablaquí?",
+                "description": "¡Absolutamente! En Hablaquí, contamos con una extensa red de psicólogos certificados. Todos los psicólogos de Hablaquí han sido cuidadosamente examinados y capacitados. Los psicólogos de Hablaquí se someten a una evaluación y revisión exhaustivas para cumplir con los requisitos de atención y son monitoreados, evaluados de cerca por su desempeño."
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "title": "Suscripciones y facturación",
+        "faq": [
+            {
+                "title": "¿Cómo puedo pagar?",
+                "description": "Puedes pagar como más te acomode. Aceptamos pagos con tarjeta de débito y crédito en cuotas, solo debes seleccionar tu plan y proceder a pagar."
+            }
+        ]
+    }
+]
