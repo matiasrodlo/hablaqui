@@ -41,9 +41,13 @@
 					<v-expansion-panels>
 						<v-expansion-panel v-for="(el, i) in selectedItem.faq" :key="i">
 							<v-expansion-panel-header
+								disable-icon-rotate
 								class="body-1 font-weight-bold text--secondary"
 							>
 								{{ el.title }}
+								<template #actions>
+									<v-icon color="info"> mdi-chevron-right </v-icon>
+								</template>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content>
 								{{ el.description }}
