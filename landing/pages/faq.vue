@@ -15,7 +15,7 @@
 						Bienvenido a nuestro portal de ayuda
 						<div class="text-h3 font-weight-bold">Estamos aquí para ayudar</div>
 					</v-col>
-					<!-- <v-col cols="12">
+					<v-col cols="12">
 						<v-text-field
 							v-model="search"
 							class="white"
@@ -23,7 +23,7 @@
 							outlined
 							hide-details
 						/>
-					</v-col> -->
+					</v-col>
 				</v-row>
 			</v-container>
 		</div>
