@@ -50,7 +50,19 @@
 								</template>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content>
-								{{ el.description }}
+								<div>
+									{{ el.description }}
+								</div>
+								<template v-if="el.detail">
+									<div v-for="(detail, a) in el.detail" :key="a">
+										<div class="text--secondary font-weight-bold body-1 mt-4">
+											{{ detail.title }}
+										</div>
+										<div class="caption">
+											{{ detail.description }}
+										</div>
+									</div>
+								</template>
 							</v-expansion-panel-content>
 						</v-expansion-panel>
 					</v-expansion-panels>
