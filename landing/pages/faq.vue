@@ -7,15 +7,17 @@
 		</client-only>
 		<div class="primary">
 			<v-container>
-				<v-row justify="center">
+				<v-row justify="center" no-gutters>
 					<v-col
 						cols="12"
-						class="white--text text-center font-weight-bold text-h5 text-lg-h3 py-16"
+						class="white--text text-center font-weight-bold text-h5 text-lg-h3 py-10"
 					>
 						Bienvenido a nuestro portal de ayuda
+						<div class="text-h3 font-weight-bold">Estamos aquí para ayudar</div>
 					</v-col>
 					<v-col cols="12">
 						<v-text-field
+							v-model="search"
 							class="white"
 							label="Busca por tema o pregunta"
 							outlined
@@ -26,7 +28,27 @@
 			</v-container>
 		</div>
 		<v-container v-if="items.length">
-			<v-row>
+			<v-row v-if="itemsFilter.length">
+				<v-col cols="12">
+					<div v-for="(item, g) in itemsFilter" :key="g">
+						<div class="text-center text--secondary font-weight-bold title mt-10">
+							{{ item.title }}
+						</div>
+						<div class="caption">
+							{{ item.description }}
+							<div v-for="(d, p) in item.detail" :key="p">
+								<div class="text--secondary font-weight-bold body-1 mt-4">
+									{{ d.title }}
+								</div>
+								<div class="caption">
+									{{ d.description }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</v-col>
+			</v-row>
+			<v-row v-else>
 				<v-col cols="2" sm="3">
 					<v-list-item-group v-model="selectedItem" color="primary" mandatory>
 						<v-list-item v-for="(q, i) in items" :key="i" :value="q">
@@ -96,7 +118,27 @@ export default {
 		return {
 			selectedItem: null,
 			items: [],
+			search: '',
 		};
+	},
+	computed: {
+		itemsFilter() {
+			if (this.search.length) {
+				let result = [];
+				this.items.map(el => {
+					const filtering = el.faq.filter(f => {
+						return (
+							f.title.toLowerCase().includes(this.search.toLowerCase()) ||
+							f.description.toLowerCase().includes(this.search.toLowerCase())
+						);
+					});
+					if (filtering.length) result = [...result, ...filtering];
+					return result;
+				});
+				return result;
+			}
+			return [];
+		},
 	},
 	async mounted() {
 		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
