@@ -36,7 +36,136 @@
             {
                 "title": "¿Cómo puedo pagar?",
                 "description": "Puedes pagar como más te acomode. Aceptamos pagos con tarjeta de débito y crédito en cuotas, solo debes seleccionar tu plan y proceder a pagar."
+            },
+            {
+                "title": "¿Tienen convenios con isapres?",
+                "description": "Si, más de 3 millones de personas están inscritas en alguna Isapre, y 14 millones en Fonasa. Por eso, todos nuestros psicólogos están habilitados para extender boletasreembolsables en Isapres y Fonasa, justo como funciona en una terapia presencial. Una vez contrates tu plan, puedes solicitar tu boleta a c@hablaqui.com"
+            },
+            {
+                "title": "¿Cómo puedo recibir un reembolso de mi Isapre?",
+                "description": "Funciona igual que en la terapia presencial. La diferencia es que debes solicitar tu boleta en c@hablaqui.com, y el documento que te entregaremos es el que debes mostrar en tu Isapre o Fonasa para recibir el reembolso correspondiente."
+            },
+            {
+                "title": "¿Cuál es su política de cancelación?",
+                "description": "Si ya no desea continuar, puede cancelar fácilmente en cualquier momento a través de la configuración de su cuenta. Si cancela su suscripción antes de que expire su plan, aún tendrá el tiempo restante que ya pagó."
+            },
+            {
+                "title": "¿Cómo pauso/congelo mi suscripción?",
+                "description": "Puede colocar su suscripción de Hablaquí en una pausa de 7 días en cualquier momento.Tenga en cuenta que la pausa finaliza automáticamente, por lo que es una buena idea establecer un recordatorio para que vuelva a activarla si necesita mantener su cuenta en pausa por más tiempo. Si desea poner su cuenta en pausa por un período de tiempo más largo, no dude en comunicarse con c@hablaqui.com para obtener ayuda."
+            },
+            {
+                "title": "¿Puedo pagar mi suscripción con una tarjeta de crédito internacional?",
+                "description": "¡Sí! Podrá ingresar su código postal internacional accediendo a www.hablaqui.com a través del navegador web de su computadora."
             }
         ]
+    },
+    {
+        "id": 2,
+        "title": "Servicios y programas",
+        "faq": [
+            {
+                "title": "¿Es la terapia en línea realmente efectiva?",
+                "description": "¡Absolutamente! Durante la última década, numerosos estudios de investigación han demostrado el potencial efectivo de la conversación terapéutica en línea. ¿El progreso del paciente es más lento en la terapia en línea? ¡No! Numerosos estudios demuestran que la terapia de mensajes puede ser tan eficaz como la terapia tradicional para el tratamiento de los problemas de salud emocional y conductual más comunes, como la depresión, la ansiedad, el abuso de sustancias, el estrés, el trastorno de estrés postraumático y más."
+            },
+            {
+                "title": "¿En qué se especializan sus psicólogos?",
+                "description": "No es necesario tener algún diagnóstico para verte beneficiado por nuestros servicios, sinembargo, si te ves afectado(a) por alguno de estos problemas de salud mental, estaremos encantados de orientarte y acompañarte en su tratamiento:",
+                "detail": [
+                    {
+                        "title": "Depresión",
+                        "description": "La depresión es un trastorno emocional que causa un sentimiento de tristeza constante y una pérdida de interés en realizar diferentes actividades. También denominada trastorno depresivo mayor o depresión clínica, afecta los sentimientos, los pensamientos y el comportamiento de una persona, y puede causar una variedad de problemas físicos y emocionales."
+                    },
+                    {
+                        "title": "Ansiedad y estrés",
+                        "description": "Es normal sentirse ansioso en algunos momentos. Sin embargo, la sensación de constante amenaza y la preocupación excesivas y continuas que son difíciles de controlar e interfieren en las actividades diarias pueden ser signo de un trastorno de ansiedad."
+                    },
+                    {
+                        "title": "Fobia social",
+                        "description": "Es normal sentirse nervioso en algunas situaciones sociales. Por ejemplo, tener una cita o dar una presentación pueden causar esa sensación de tener mariposas en el estómago. Pero en el trastorno de ansiedad social, también llamado «fobia social», las interacciones de todos los días causan muchísima ansiedad, temor, inseguridad y vergüenza por miedo al escrutinio o la opinión de los demás."
+                    },
+                    {
+                        "title": "Trastorno obsesivo compulsivo",
+                        "description": "El trastorno obsesivo compulsivo (TOC) se caracteriza por un patrón de pensamientos y miedos no deseados (obsesiones) que provocan comportamientos repetitivos (compulsiones). Estas obsesiones y compulsiones interfieren en las actividades diarias y causan un gran sufrimiento emocional."
+                    },
+                    {
+                        "title": "Ansiedad generalizada",
+                        "description": "Es normal sentirse ansioso en algunos momentos. Sin embargo, si la sensación de constante amenaza y la preocupación son excesivas y continuas, abarcan casi todos los aspectos de tu vida, y son difíciles de controlar, interfiriendo en las actividades diarias, hablamos de un trastorno de ansiedad generalizada."
+                    },
+                    {
+                        "title": "Autoconocimiento",
+                        "description": "El autoconocimiento es la práctica de explorar tu identidad, personalidad, historia de vida y sentido de vida para cultivar tu propio bienestar. El conocerse permite prevenir sufrimiento, comprender patrones de conducta, emoción y pensamiento en todo sentido, y buscar activamente y con claridad aquello que realmente te llena en la vida."
+                    },
+                    {
+                        "title": "Cambio de hábitos",
+                        "description": "Los hábitos son formas habituales y aprendidas de funcionamiento de una persona. Estos hábitos pueden facilitar el bienestar de alguien o impedirlo en gran medida.",
+                    },
+                    {
+                        "title": "Autoestima",
+                        "description": "La autoestima es la valoración, percepción o juicio positivo o negativo que una persona hace de sí misma en función de la evaluación de sus pensamientos, sentimientos y experiencias. Una autoestima baja no permite el establecimiento de relaciones interpersonales sanas, y puede incluso impedir la realización de actividades cotidianas"
+                    },
+                    {
+                        "title": "Enfoque de género y diversidad",
+                        "description": "Este abordaje terapéutico se caracteriza por tomar especialmente en cuenta las condiciones de discriminación y desigualdad social, económica, institucional y cultural que sufren ciertos grupos humanos como las mujeres, discapacitados, inmigrantes, LGBTQ+, minorías étnicas, etc."
+                    },
+                    {
+                        "title": "Dificultades interpersonales",
+                        "description": "Problemas para establecer relaciones humanas equilibradas, sanas y no conflictivas, ya sea con personas cercanas o simplemente personas con las que te encuentras en los contextos familiares, laborales o sociales del día a día."
+                    },
+                    {
+                        "title": "Control de ira",
+                        "description": "El manejo de la ira es el proceso de aprender a reconocer los signos que indican que te estás enojando y de tomar las medidas necesarias para calmarte y enfrentar la situación de una forma productiva. El manejo de la ira no pretende evitar que sientas ira ni fomenta que la reprimas. La ira es una emoción normal y saludable cuando sabes cómo expresarla adecuadamente; el manejo de la ira tiene que ver con aprender a lograr esto."
+                    },
+                    {
+                        "title": "Duelo y pérdida",
+                        "description": "Para algunas personas, los sentimientos de pérdida son debilitantes y no mejoran, incluso con el paso del tiempo. Esto se conoce como duelo complicado, a veces llamado «trastorno por duelo complejo persistente». En duelos complicados, las emociones dolorosas duran tanto y son tan intensas que te resulta difícil recuperarte de la pérdida y continuar con tu propia vida."
+                    },
+                    {
+                        "title": "Regulación emocional",
+                        "description": "La regulación emocional es la capacidad para manejar las emociones de forma apropiada. Supone tomar conciencia de la relación entre emoción, pensamientos y comportamiento; tener buenas estrategias de afrontamiento; capacidad para autogenerar emociones positivas, etc."
+                    },
+                    {
+                        "title": "Trastornos del sueño",
+                        "description": "Los trastornos del sueño son afecciones que provocan cambios en la forma de dormir. Un trastorno del sueño puede afectar tu salud, seguridad y calidad de vida en general. La falta de sueño puede afectar tu capacidad para conducir con seguridad y aumentar el riesgo de otros problemas de salud."
+                    },
+                    {
+                        "title": "Déficit atencional",
+                        "description": "Si te cuesta concentrarte en una actividad, si mantienes una especie de “inquietud interna”, si sientes una fuerte desorganización en tu vida, si tienes dificultad para establecer prioridades, falta de habilidad para manejar el tiempo, problemas paracompletar los trabajos en las fechas adecuadas, y si constantemente comete errores por descuido, puede que sufras de esta condición."
+                    },
+                    {
+                        "title": "Sexualidad",
+                        "description": "Con frecuencia oyes hablar de la importancia de la salud física, mental, y espiritual, pero sentir confianza sobre tu sexualidad también es importante. Lograr salud sexual permite relaciones sexo afectivas nutritivas y responsables, exploración y goce de la corporalidad, planificación del embarazo, anticoncepción y prevención de enfermedades."
+                    },
+                    {
+                        "title": "Trastornos de la conducta alimentaria (TCA)",
+                        "description": "Los TCA se caracterizan por una conducta alterada frente a la ingesta alimentaria o la aparición de conductas para controlar el peso. Con frecuencia los síntomas de TCA varían a lo largo del tiempo y pueden acabar desarrollando atracones o a la inversa. Los TCA están asociados a múltiples complicaciones médicas y psicológicas y afectan al funcionamiento psicosocial de la persona."
+                    },
+                    {
+                        "title": "Trastornos de personalidad",
+                        "description": "Un trastorno de personalidad es un tipo de trastorno mental crónico en el cual la persona no se da cuenta de su padecimiento, y tiene un patrón de pensamiento, desempeño y comportamiento marcado y poco saludable. Una persona con trastorno de personalidad tiene problemas para percibir y relacionarse con las situaciones y las personas. Esto causa problemas y limitaciones importantes en casi todos los contextos sociales y laborales de la persona."
+                    },
+                    {
+                        "title": "Trastorno del ánimo bipolar",
+                        "description": "El trastorno bipolar es una condición mental que causa cambios extremos en el estado de ánimo que comprenden altos y bajos emocionales por periodos de tiempo. Cuando te deprimes, puedes sentirte triste o desesperanzado y perder el interés o el placer en la mayoría de las actividades. Cuando tu estado de ánimo cambia a manía o hipomanía (menos extrema que la manía), es posible que te sientas eufórico, lleno de energía o inusualmente irritable. Estos cambios en el estado de ánimo pueden afectar el sueño, la energía, el nivel de actividad, el juicio, el comportamiento y la capacidad de pensar con claridad. Sin embargo, también hay algunos casos que no atendemos por el momento, por ejemplo: terapia de pareja, maternidad y paternidad con menores de edad, trastornos del espectro autista e ideación suicida (ganas de quitarse la vida). En el caso de TCA, trastornos de la personalidad y trastorno bipolar solamente ofrecemos terapia de acompañamiento, es decir, no es una psicoterapia orientada al cambio o a la mejoría directa de síntomas, sino que más bien un espacio seguro de escucha empática y orientación general.",
+                    }
+                ]
+            },
+            {
+                "title": "¿Qué tipos de psicoterapia ofrecen?",
+                "description": "",
+                "detail": [
+                    {}
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Seguridad y privacidad",
+        "faq": []
+    },
+    {
+        "id": 4,
+        "title": "Solución de problemas",
+        "faq": []
     }
 ]
