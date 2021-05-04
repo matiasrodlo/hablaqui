@@ -55,7 +55,7 @@
 								class="px-0"
 								text
 								color="primary"
-								:href="`${landingUrl}politicas`"
+								:href="`${landingUrl}/politicas`"
 								>Aviso de privacidad</v-btn
 							>
 							y
@@ -63,7 +63,7 @@
 								class="px-0"
 								text
 								color="primary"
-								:href="`${landingUrl}condiciones`"
+								:href="`${landingUrl}/condiciones`"
 							>
 								Términos y Condiciones</v-btn
 							>
