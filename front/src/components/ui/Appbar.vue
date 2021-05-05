@@ -15,12 +15,12 @@
 						<v-list-item-title>Psicólogos</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${landing_page}faq`">
+				<v-list-item link :href="`${landing_page}/faq`">
 					<v-list-item-content>
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${landing_page}blog`">
+				<v-list-item link :href="`${landing_page}/blog`">
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
@@ -76,7 +76,7 @@
 					text
 					active-class="info--text"
 					class="text-h6 text--secondary"
-					:href="`${landing_page}faq`"
+					:href="`${landing_page}/faq`"
 				>
 					Preguntas frecuentes
 				</v-btn>
@@ -86,7 +86,7 @@
 					text
 					active-class="info--text"
 					class="text-h6 text--secondary"
-					:href="`${landing_page}blog`"
+					:href="`${landing_page}/blog`"
 				>
 					Blog
 				</v-btn>

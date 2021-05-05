@@ -14,33 +14,30 @@
 		<v-container class="mt-16">
 			<v-row justify="center">
 				<v-col cols="12" md="10">
-					<strong>Lo que hacemos con tu información:</strong>
-					El término “información personal” como es usado aquí, es definido como cualquier
-					información que identifique o que pueda ser usada para identificar, contactar o
-					localizar a la persona a la que la información pertenece. La información
-					personal que recolectamos estará sujeta a esta política de privacidad, y será
-					modificada cada cierto tiempo. <br />
-					<br />
+					Lo que hacemos con tu información: El término “información personal” como es
+					usado aquí, es definido como cualquier información que identifique o que pueda
+					ser usada para identificar, contactar o localizar a la persona a la que la
+					información pertenece. La información personal que recolectamos estará sujeta a
+					esta política de privacidad, y será modificada cada cierto tiempo. <br />
 					Cuando te registras en HABLAQUÍ pedimos tu dirección de correo electrónico,
 					nombre, edad y número de contacto.
-					<br />
 					<br />
 					HABLAQUÍ usa la información que recolectamos para los siguientes propósitos
 					generales: provisión de productos y servicios, facturación, identificación y
 					autenticación, mejora de servicios, contactos, re-marketing e investigación.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 1 - </strong>Términos del sitio Hablaquí:Al utilizar este sitio,
-					declaras que tienes al menos la mayoría de edad en tu estado o provincia de
-					residencia. No puedes usar nuestros productos y servicios con ningún propósito
-					ilegal o no autorizado tampoco puedes, en el uso del Servicio, violar cualquier
-					ley en tu jurisdicción (incluyendo, pero no limitado a las leyes de derecho de
-					autor). No debes transmitir gusanos, virus o cualquier código de naturaleza
-					destructiva. El incumplimiento o violación de cualquiera de estos Términos darán
-					lugar al cese inmediato de tus Servicios.
+					<strong>Sección 1 - Términos del sitio Hablaquí:</strong> Al utilizar este
+					sitio, declaras que tienes al menos la mayoría de edad en tu estado o provincia
+					de residencia. No puedes usar nuestros productos y servicios con ningún
+					propósito ilegal o no autorizado tampoco puedes, en el uso del Servicio, violar
+					cualquier ley en tu jurisdicción (incluyendo, pero no limitado a las leyes de
+					derecho de autor). No debes transmitir gusanos, virus o cualquier código de
+					naturaleza destructiva. El incumplimiento o violación de cualquiera de estos
+					Términos darán lugar al cese inmediato de tus Servicios.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 2 - </strong>Condiciones Generales: Nos reservamos el derecho de
+					<strong>Sección 2 - Condiciones Generales:</strong> Nos reservamos el derecho de
 					rechazar la prestación de servicio a cualquier persona, por cualquier motivo y
 					en cualquier momento. Entiendes que tu contenido (sin incluir la información de
 					tu tarjeta de crédito), puede ser transferida sin encriptar e involucrar (a)
@@ -61,12 +58,11 @@
 					"Profesionales". Hablaquí no proporciona ningún servicio de salud mental u otros
 					de atención médica. Los "Profesionales" no pre-escriben medicamentos a través de
 					Hablaquí. Si usted está experimentando una crisis o emergencia, por favor
-					comuníquese a los servicios de emergencia más cercanos a su localidad. <br />
+					comuníquese a los servicios de emergencia más cercanos a su localidad.
 					<br />
 					Aceptas que debes pagar por anticipado las sesiones y programar tu cita en la
 					fecha y hora que puedas asistir, a través del calendario del "Profesional" que
 					mejor se adapte a tus necesidades.
-					<br />
 					<br />
 					Aceptas que estás reservando una sesión en una fecha y hora específica y que el
 					PROFESIONAL que has elegido estará disponible en esa sesión a través de
@@ -74,36 +70,35 @@
 					PROFESIONAL no puede asistir, serás notificado a través de email y tu sesión
 					será reprogramada cuando ambos lo acuerden.
 					<br />
-					<br />
 					Aceptas que, si por algún inconveniente no puedes asistir a tu sesión
 					programada, deberás cancelarla enviando un email a la siguiente dirección:
 					clientes@hablaqui.com, con al menos 8 horas de anticipación, de lo contrario
 					será tomada como realizada.
 					<br />
-					<br />
 					Reconoces que al cancelar una sesión con al menos 8 horas de anticipación puedes
 					reprogramar una vez más o dejarla en espera hasta que puedas asistir.
-					<br />
 					<br />
 					Aceptas que debes contar con los requerimientos técnicos adecuados para llevar a
 					cabo la videoconferencia.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 3 - </strong>Exactitud, Exhaustividad y Actualidad de la
-					Información: No nos hacemos responsables si la información disponible en este
-					sitio no es exacta, completa o actual. El material en este sitio es provisto
-					solo para información general y no debe confiarse en ella o utilizarse como la
-					única base para la toma de decisiones sin consultar, primeramente, información
-					más precisa, completa u oportuna. Cualquier dependencia en materia de este sitio
-					es bajo su propio riesgo. Este sitio puede contener cierta información
-					histórica. La información histórica, no es necesariamente actual y es provista
-					únicamente para tu referencia. Nos reservamos el derecho de modificar los
-					contenidos de este sitio en cualquier momento, pero no tenemos obligación de
-					actualizar cualquier información en nuestro sitio. Aceptas que es tu
-					responsabilidad monitorear los cambios en nuestro sitio.
+					<strong>
+						Sección 3 - Exactitud, Exhaustividad y Actualidad de la Información:
+					</strong>
+					No nos hacemos responsables si la información disponible en este sitio no es
+					exacta, completa o actual. El material en este sitio es provisto solo para
+					información general y no debe confiarse en ella o utilizarse como la única base
+					para la toma de decisiones sin consultar, primeramente, información más precisa,
+					completa u oportuna. Cualquier dependencia en materia de este sitio es bajo su
+					propio riesgo. Este sitio puede contener cierta información histórica. La
+					información histórica, no es necesariamente actual y es provista únicamente para
+					tu referencia. Nos reservamos el derecho de modificar los contenidos de este
+					sitio en cualquier momento, pero no tenemos obligación de actualizar cualquier
+					información en nuestro sitio. Aceptas que es tu responsabilidad monitorear los
+					cambios en nuestro sitio.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 4 - </strong>Modificaciones al Servicio y Precios: Los precios
+					<strong>Sección 4 - Modificaciones al Servicio y Precios:</strong> Los precios
 					de nuestros productos están sujetos a cambio sin aviso. Nos reservamos el
 					derecho de modificar o discontinuar el Servicio (o cualquier parte del
 					contenido) en cualquier momento sin aviso previo. No seremos responsables ante
@@ -111,7 +106,7 @@
 					suspensión o discontinuidad del Servicio.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 5 - </strong>Herramientas Opcionales: Es posible que te
+					<strong>Sección 5 - Herramientas Opcionales:</strong> Es posible que te
 					proporcionemos acceso a herramientas de terceros a los cuales no monitoreamos y
 					sobre los que no tenemos control ni entrada. Reconoces y aceptas que
 					proporcionamos acceso a este tipo de herramientas "tal cual" y "según
@@ -128,7 +123,7 @@
 					Servicio.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 6 - </strong>Enlaces de Terceras Partes: Cierto contenido,
+					<strong>Sección 6 - Enlaces de Terceras Partes:</strong> Cierto contenido,
 					productos y servicios disponibles vía nuestro Servicio puede incluir material de
 					terceras partes. Enlaces de terceras partes en este sitio pueden direccionarte a
 					sitios web de terceras partes que no están afiliadas con nosotros. No nos
@@ -144,12 +139,12 @@
 					de terceros deben ser dirigidas a la tercera parte.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 7 - </strong>Información Personal: Tu presentación de
+					<strong>Sección 7 - Información Personal:</strong> Tu presentación de
 					información personal a través del sitio se rige por nuestra Política de
 					Privacidad.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 8 - </strong>Errores, Inexactitudes y Omisiones: Tu presentación
+					<strong>Sección 8 - Errores, Inexactitudes y Omisiones:</strong> Tu presentación
 					De vez en cuando puede haber información en nuestro sitio o en el Servicio que
 					contiene errores tipográficos, inexactitudes u omisiones que puedan estar
 					relacionadas con las descripciones de productos, precios, promociones, ofertas y
@@ -166,7 +161,7 @@
 					sitio web relacionado ha sido modificado o actualizado.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 9 - </strong>Usos Prohibidos: En adición a otras prohibiciones
+					<strong>Sección 9 - Usos Prohibidos:</strong> En adición a otras prohibiciones
 					como se establece en los Términos de Servicio, se prohíbe el uso del sitio o su
 					contenido: (a) para ningún propósito ilegal; (b) para pedirle a otros que
 					realicen o participen en actos ilícitos; (c) para violar cualquier regulación,
@@ -187,9 +182,11 @@
 					relacionado por violar cualquiera de los ítems de los usos prohibidos.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 10 - </strong>Exclusión de Garantías y Limitación de
-					Responsabilidad: No garantizamos ni aseguramos que el uso de nuestro servicio
-					será ininterrumpido, puntual, seguro o libre de errores. No garantizamos que los
+					<strong>
+						Sección 10 - Exclusión de Garantías y Limitación de Responsabilidad:
+					</strong>
+					No garantizamos ni aseguramos que el uso de nuestro servicio será
+					ininterrumpido, puntual, seguro o libre de errores. No garantizamos que los
 					resultados que se puedan obtener del uso del servicio serán exactos o
 					confiables. Aceptas que de vez en cuando podemos quitar el servicio por períodos
 					de tiempo indefinidos o cancelar el servicio en cualquier momento sin previo
@@ -221,7 +218,7 @@
 					responsabilidad se limitará en la medida máxima permitida por la ley.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 11 - </strong>Indemnización: Aceptas indemnizar, defender y
+					<strong>Sección 11 - Indemnización:</strong> Aceptas indemnizar, defender y
 					mantener indemne Hablaquí y nuestras matrices, subsidiarias, afiliados, socios,
 					funcionarios, directores, agentes, contratistas, concesionarios, proveedores de
 					servicios, subcontratistas, proveedores, internos y empleados, de cualquier
@@ -231,7 +228,7 @@
 					violación de cualquier ley o de los derechos de u tercero.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 12 - </strong>Divisibilidad: En el caso de que se determine que
+					<strong>Sección 12 - Divisibilidad:</strong> En el caso de que se determine que
 					cualquier disposición de estas Condiciones de Servicio sea ilegal, nula o
 					inejecutable, dicha disposición será, no obstante, efectiva a obtener la máxima
 					medida permitida por la ley aplicable, y la parte no exigible se considerará
@@ -239,7 +236,7 @@
 					validez de aplicabilidad de las demás disposiciones restantes.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 13 - </strong>Rescisión: Las obligaciones y responsabilidades de
+					<strong>Sección 13 - Rescisión:</strong> Las obligaciones y responsabilidades de
 					las partes que hayan incurrido con anterioridad a la fecha de terminación
 					sobrevivirán a la terminación de este acuerdo a todos los efectos. Estas
 					Condiciones de servicio son efectivos a menos que y hasta que sea terminado por
@@ -253,7 +250,7 @@
 					a nuestros servicios (o cualquier parte del mismo).
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 14 - </strong>Acuerdo Completo: Nuestra falla para ejercer o
+					<strong>Sección 14 - Acuerdo Completo:</strong> Nuestra falla para ejercer o
 					hacer valer cualquier derecho o disposición de estas Condiciones de Servicio no
 					constituirá una renuncia a tal derecho o disposición. Estas Condiciones del
 					servicio y las políticas o reglas de operación publicadas por nosotros en este
@@ -266,14 +263,16 @@
 					contra del grupo de redacción.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 15 - </strong>Ley: Estas Condiciones del servicio y cualquier
+					<strong>Sección 15 - Ley:</strong> Estas Condiciones del servicio y cualquier
 					acuerdo aparte en el que te proporcionemos servicios se regirán e interpretarán
 					en conformidad con las leyes de Chile.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 16 - </strong>Cambios en los Términos y Condiciones del
-					Servicio: Puedes revisar la versión más actualizada de los Términos de Servicio
-					en cualquier momento en esta página. Nos reservamos el derecho, a nuestra sola
+					<strong>
+						Sección 16 - Cambios en los Términos y Condiciones del Servicio:
+					</strong>
+					Puedes revisar la versión más actualizada de los Términos de Servicio en
+					cualquier momento en esta página. Nos reservamos el derecho, a nuestra sola
 					discreción, de actualizar, modificar o reemplazar cualquier parte de estas
 					Condiciones del servicio mediante la publicación de las actualizaciones y los
 					cambios en nuestro sitio web. Es tu responsabilidad revisar nuestro sitio web
@@ -282,7 +281,7 @@
 					estas Condiciones de servicio implica la aceptación de dichos cambios.
 				</v-col>
 				<v-col cols="12" md="10">
-					<strong>Sección 17 - </strong>Información de Contacto: Preguntas y reclamaciones
+					<strong>Sección 17 - Información de Contacto:</strong> Preguntas y reclamaciones
 					acerca de los términos y condiciones del servicio deben ser enviadas a
 					clientes@hablaqui.com
 				</v-col>
@@ -296,8 +295,8 @@
 				</v-col>
 				<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
 					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
-					<v-icon color="primary" size="60">mdi-instagram</v-icon>
 					<v-icon color="primary" size="60">mdi-facebook</v-icon>
+					<v-icon color="primary" size="60">mdi-instagram</v-icon>
 					<div>Atención a clientes: clientes@hablaqui.com</div>
 					<div>Soporte técnico: soporte@hablaaqui.com</div>
 				</v-col>

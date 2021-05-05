@@ -1,105 +1,106 @@
 <template>
 	<div>
 		<client-only>
-			<Appbar />
+			<div class="primary">
+				<Appbar />
+			</div>
 		</client-only>
-		<v-container fluid>
-			<v-row justify="center">
-				<v-col cols="12" class="text-center font-weight-bold text-h5 text-lg-h3 py-16">
-					Bienvenido a nuestro portal de ayuda
-				</v-col>
-				<v-col cols="12" md="10" xl="8">
-					<v-text-field
-						class="white"
-						label="Busca por tema o pregunta"
-						outlined
-						hide-details
-					/>
-				</v-col>
-			</v-row>
-			<v-row>
-				<v-col v-for="el in [1, 2, 3, 4]" :key="el" cols="12" sm="6" lg="3">
-					<v-card>
-						<v-card-title class="text--secondary font-weight-bold title">
-							¿Qué es y como funciona Hablaquí?
-							<div class="caption font-weight-bold" style="color: #bdbdbd">
-								5 artículos sobre el tema
-							</div>
-						</v-card-title>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">¿Qué es Hablaquí?</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">¿Cómo funciona?</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">
-								¿Cómo agendar mi primera cita en Hablaquí?
-							</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">
-								¿Como tomar mi primera cita en Hablaquí?
-							</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">
-								¿Las consultas en línas son efectivas?
-							</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">¿Qué es Hablaquí?</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-text class="py-1">
-							<v-btn text class="primary--text caption">
-								¿Necesito descargar alguna App de videollamada?
-							</v-btn>
-						</v-card-text>
-						<v-divider></v-divider>
-					</v-card>
-				</v-col>
-			</v-row>
-			<!-- footer -->
-			<v-row class="py-16">
-				<v-col
-					cols="12"
-					class="text-center font-weight-bold text-h5 text-lg-h3 text--secondary"
-				>
-					Contáctanos
-				</v-col>
-				<v-col cols="12" class="text-center font-weight-bold">
-					<span style="color: #bdbdbd">Lorem ipsum dolor sit amet, consectetuer </span>
-					<a style="text-decoration: none">adipiscing elit, sed diam no-</a>
-				</v-col>
-			</v-row>
-			<v-row class="primary white--text py-16">
+		<div class="primary">
+			<v-container>
+				<v-row justify="center" no-gutters>
+					<v-col
+						cols="12"
+						class="white--text text-center font-weight-bold text-h5 text-lg-h3 py-10"
+					>
+						Bienvenido a nuestro portal de ayuda
+						<div class="text-h3 font-weight-bold">Estamos aquí para ayudar</div>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							v-model="search"
+							class="white"
+							label="Busca por tema o pregunta"
+							outlined
+							hide-details
+						/>
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
+		<v-container v-if="items.length">
+			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat, harum
-					dolorem! A qui quaerat eius unde beatae adipisci ex culpa. Quod, adipisci esse
-					voluptas nisi omnis nihil animi similique natus. Lorem ipsum dolor sit amet,
-					consectetur adipisicing elit. Placeat, harum dolorem! A qui quaerat eius unde
-					beatae adipisci ex culpa. Quod, adipisci esse voluptas nisi omnis nihil animi
-					similique natus. Lorem ipsum dolor sit ame.
+					<div v-for="(item, g) in itemsFilter" :key="g">
+						<div class="text-center text--secondary font-weight-bold title mt-10">
+							{{ item.title }}
+						</div>
+						<div class="caption">
+							{{ item.description }}
+							<div v-for="(d, p) in item.detail" :key="p">
+								<div class="text--secondary font-weight-bold body-1 mt-4">
+									{{ d.title }}
+								</div>
+								<div class="caption">
+									{{ d.description }}
+								</div>
+							</div>
+						</div>
+					</div>
 				</v-col>
 			</v-row>
-			<v-row justify="center" class="py-16">
-				<v-col cols="12" sm="6" md="5" class="text-center text-sm-left">
+			<v-row v-else>
+				<v-col cols="2" sm="3">
+					<v-list-item-group v-model="selectedItem" color="primary" mandatory>
+						<v-list-item v-for="(q, i) in items" :key="i" :value="q">
+							<v-list-item-content>
+								<v-list-item-title v-text="q.title"></v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list-item-group>
+				</v-col>
+				<v-col v-if="selectedItem" cols="12" sm="9">
+					<div class="primary--text headline">{{ selectedItem.title }}</div>
+					<v-expansion-panels>
+						<v-expansion-panel v-for="(el, i) in selectedItem.faq" :key="i">
+							<v-expansion-panel-header
+								disable-icon-rotate
+								class="body-1 font-weight-bold text--secondary"
+							>
+								{{ el.title }}
+								<template #actions>
+									<v-icon color="info"> mdi-chevron-right </v-icon>
+								</template>
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<div>
+									{{ el.description }}
+								</div>
+								<template v-if="el.detail">
+									<div v-for="(detail, a) in el.detail" :key="a">
+										<div class="text--secondary font-weight-bold body-1 mt-4">
+											{{ detail.title }}
+										</div>
+										<div class="caption">
+											{{ detail.description }}
+										</div>
+									</div>
+								</template>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-col>
+			</v-row>
+			<v-row justify="center" align="center">
+				<v-col cols="6" class="text-center text-sm-left">
 					<div style="color: #bdbdbd">Aviso de privacidad Términos y Condiciones</div>
 					<div class="text--secondary">
 						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
 					</div>
 				</v-col>
-				<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
-					<v-chip color="secondary" label class="mx-2 px-4"></v-chip>
-					<v-chip color="secondary" label class="mx-2 px-4"></v-chip>
-					<v-chip color="secondary" label class="ml-2 px-4"></v-chip>
+				<v-col cols="6" class="text-center text-sm-right text--secondary">
+					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
+					<v-icon color="primary" size="60">mdi-facebook</v-icon>
+					<v-icon color="primary" size="60">mdi-instagram</v-icon>
 					<div>Atención a clientes: clientes@hablaqui.com</div>
 					<div>Soporte técnico: soporte@hablaaqui.com</div>
 				</v-col>
@@ -112,6 +113,38 @@
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
+	},
+	data() {
+		return {
+			selectedItem: null,
+			items: [],
+			search: '',
+		};
+	},
+	computed: {
+		itemsFilter() {
+			if (this.search.length) {
+				let result = [];
+				this.items.map(el => {
+					const filtering = el.faq.filter(f => {
+						return (
+							f.title.toLowerCase().includes(this.search.toLowerCase()) ||
+							f.description.toLowerCase().includes(this.search.toLowerCase())
+						);
+					});
+					if (filtering.length) result = [...result, ...filtering];
+					return result;
+				});
+				return result;
+			}
+			return [];
+		},
+	},
+	async mounted() {
+		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
+		response = await response.json();
+		this.selectedItem = response[0];
+		this.items = response;
 	},
 };
 </script>
