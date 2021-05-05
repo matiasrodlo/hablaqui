@@ -1,9 +1,11 @@
 import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
-import { mercadopago_sandbox_key } from '../config/dotenv';
 import { okResponse } from '../utils/responses/functions';
 
-mercadopago.configurations.setAccessToken(mercadopago_sandbox_key);
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
+
+mercadopago.configurations.setAccessToken(MERCADOPAGO_KEY);
 
 const createPreference = async (body, res) => {
 	let newPreference = {
@@ -16,9 +18,9 @@ const createPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: 'http://google.com',
-			failure: 'http://google.com',
-			pending: 'http://google.com',
+			success: `${FRONTEND_URL}/pago/success-pay`,
+			failure: `${FRONTEND_URL}/pago/failure-pay`,
+			pending: `${FRONTEND_URL}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
 	};
