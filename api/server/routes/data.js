@@ -1,14 +1,18 @@
 import { Router } from 'express';
-import multer from 'multer';
+import multer from '../middleware/multer';
 import dataController from '../controllers/data';
-
-const upload = multer({});
+import passport from 'passport'
+import storage from '../middleware/storage'
 
 const dataRouter = Router();
 
 dataRouter.post(
 	'/data/upload',
-	upload.single('csvFile'),
+	[
+		passport.authenticate('jwt', { session: true }),
+		multer.single('csvFile'),
+		storage,
+	],
 	dataController.uploadCsv
 );
 

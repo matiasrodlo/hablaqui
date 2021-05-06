@@ -10,15 +10,40 @@ const uploadCsv = async file => {
 
 	if (file.originalname === 'psychologists.csv') {
 		if (file.originalname === 'psychologists.csv') {
-			let data = await csvtojson().fromFile(file.path);
+			let data = await csvtojson().fromString(file.buffer.toString());
 
 			data = data.map(item => ({
 				...item,
+				models: item.model.split(';'),
 				specialties: item.specialties.split(';'),
 			}));
 
-			await Psychologist.insertMany(data);
+			//await Psychologist.insertMany(data);
 
+			let allSpecialties = [];
+			data.forEach(item => {
+				if (item.specialties) {
+					item.specialties.forEach(specialtie => {
+						allSpecialties.push(specialtie);
+					});
+				}
+			});
+			let foundAppointments = await Appointments.find();
+			foundAppointments = foundAppointments.map(
+				appointment => appointment.name
+			);
+			let specialtiesToSave = [];
+			allSpecialties.forEach(item => {
+				// trim
+				if (item[0] === ' ') {
+					item = item.slice(1);
+				}
+				if (!foundAppointments.includes(item)) {
+					specialtiesToSave.push({ name: item });
+				}
+			});
+
+			Appointments.insertMany(specialtiesToSave);
 			return okResponse('psicologos subidos');
 		}
 	}

@@ -4,8 +4,10 @@ import { infoMessages } from '../utils/logger/infoMessages.js';
 import { okResponse } from '../utils/responses/functions.js';
 
 const getAll = async () => {
-	logInfo(infoMessages('obtuvo todas las consultas'));
-	const appointments = await Appointments.find();
+	logInfo('obtuvo todas las consultas');
+	let appointments = await Appointments.find();
+	// return only appointment name
+	appointments = appointments.map(item => item.name);
 	return okResponse('consultas obtenidas', { appointments });
 };
 
