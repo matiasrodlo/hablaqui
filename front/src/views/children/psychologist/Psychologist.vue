@@ -1,11 +1,17 @@
 <template>
 	<v-container>
-		<v-card>
+		<template v-if="!psychologist">
+			<v-col v-for="i in 3" cols="12" :key="i">
+				<v-skeleton-loader type="image" />
+			</v-col>
+		</template>
+		<v-card v-else>
 			<v-card-text>
 				<v-row align="center" justify="center">
 					<v-col cols="12" sm="3" class="text-center">
 						<v-list-item-avatar
 							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+							:color="psychologist.avatar ? 'trasnparent' : 'primary'"
 							class="ml-4"
 						>
 							<v-img
@@ -19,6 +25,9 @@
 									</v-row>
 								</template>
 							</v-img>
+							<span v-else class="white--text text-h2 font-weight-bold">
+								{{ psychologist.name.substr(0, 1) }}
+							</span>
 						</v-list-item-avatar>
 						<div v-if="psychologist.code" class="caption text--secondary">
 							Codigo {{ psychologist.code }}
@@ -52,7 +61,7 @@
 				</v-row>
 			</v-card-text>
 		</v-card>
-		<v-card class="mt-6">
+		<v-card v-if="psychologist" class="mt-6">
 			<v-card-text class="text-h4 primary--text font-weight-bold">Perfil</v-card-text>
 			<v-divider></v-divider>
 			<v-card-text>
