@@ -237,13 +237,23 @@
 							<v-card min-height="400" style="border-radius:15px" class="text-center">
 								<v-card-text style="height: 85%">
 									<div>
-										<v-btn
-											color="#9D9D9C"
-											depressed
-											fab
-											width="100"
-											height="100"
-										></v-btn>
+										<v-avatar
+											size="100"
+											:color="item.avatar ? 'trasnparent' : 'primary'"
+										>
+											<v-img
+												v-if="item.avatar"
+												:src="item.avatar"
+												width="100"
+												height="100"
+											></v-img>
+											<span
+												v-else
+												class="white--text headline font-weight-bold"
+											>
+												{{ item.name.substr(0, 1) }}
+											</span>
+										</v-avatar>
 										<div class="subtitle-1 font-weight-bold text--secondary">
 											{{ item.name }}
 										</div>
