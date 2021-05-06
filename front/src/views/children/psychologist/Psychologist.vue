@@ -1,8 +1,11 @@
 <template>
 	<v-container>
 		<template v-if="!psychologist">
-			<v-col v-for="i in 3" cols="12" :key="i">
+			<v-col cols="12">
 				<v-skeleton-loader type="image" />
+			</v-col>
+			<v-col cols="12">
+				<v-skeleton-loader type="image, image, image" height="600" />
 			</v-col>
 		</template>
 		<v-card v-else>
