@@ -17,9 +17,22 @@ const match = async body => {
 	return okResponse('psicologos encontrados', { matchedPsychologists });
 };
 
+const updateAvatar = async (id, avatar) => {
+	const profile = await Psychologist.findByIdAndUpdate(
+		id,
+		{ avatar },
+		{
+			new: true,
+		}
+	);
+	logInfo(`${id} actualizo su avatar`);
+	return okResponse('Avatar actualizado', { psychologist: profile });
+};
+
 const psychologistsService = {
 	getAll,
 	match,
+	updateAvatar,
 };
 
 export default Object.freeze(psychologistsService);

@@ -20,6 +20,19 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error haciendo match');
 		}
 	},
+	async updateAvatar(req, res) {
+		try {
+			const { user, file } = req;
+			const { id } = req.params;
+			const { data, code } = await psychologistsService.updateAvatar(
+				id,
+				file.cloudStoragePublicUrl
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando el avatar');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
