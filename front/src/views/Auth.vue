@@ -10,7 +10,7 @@
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
 							<a :href="landingUrl">
-								<v-img max-width="200" src="../assets/logo.png"></v-img>
+								<v-img max-width="200" src="img/logo.png"></v-img>
 							</a>
 						</v-col>
 						<v-col
@@ -104,8 +104,6 @@
 </template>
 
 <script>
-import background from '@/assets/login.png';
-import imageAuth from '@/assets/auth.png';
 import { landing } from '@/config';
 
 export default {
@@ -118,24 +116,24 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: imageAuth,
+					img: 'img/auth.png',
 					text:
 						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: imageAuth,
+					img: 'img/auth.png',
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: imageAuth,
+					img: 'img/auth.png',
 					text:
 						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: imageAuth,
+					img: 'img/auth.png',
 					text:
 						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
@@ -153,7 +151,7 @@ export default {
 			return landing;
 		},
 		backgroundImg() {
-			if (this.$vuetify.breakpoint.smAndUp) return background;
+			if (this.$vuetify.breakpoint.smAndUp) return 'img/login.png';
 			return null;
 		},
 	},
@@ -174,7 +172,7 @@ export default {
 
 <style lang="scss" scoped>
 .login-circle-image {
-	background: url('../assets/circle-login.png') no-repeat;
+	background: url('/img/circle-login.png') no-repeat;
 	background-position-y: 60%;
 	background-position-x: 75%;
 	-webkit-background-size: 25%;
@@ -183,7 +181,7 @@ export default {
 	background-size: 25%;
 }
 .login-plus-image {
-	background: url('../assets/plus-login.png') no-repeat;
+	background: url('/img/plus-login.png') no-repeat;
 	background-position-x: 70%;
 	-webkit-background-size: 7%;
 	-moz-background-size: 7%;
