@@ -17,9 +17,27 @@ const match = async body => {
 	return okResponse('psicologos encontrados', { matchedPsychologists });
 };
 
+const register = async (body, avatar) => {
+	const newPsychologist = {
+		name: body.name,
+		code: body.code,
+		description: body.description,
+		email: body.email,
+		experience: body.experience,
+		formation: body.formation,
+		specialties: JSON.parse(body.specialties),
+		models: JSON.parse(body.models),
+		avatar,
+	};
+	const psychologist = await Psychologist.create(newPsychologist);
+	console.log(psychologist, avatar, 'service');
+	return okResponse('psicologo creado');
+};
+
 const psychologistsService = {
 	getAll,
 	match,
+	register,
 };
 
 export default Object.freeze(psychologistsService);

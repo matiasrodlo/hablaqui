@@ -20,6 +20,20 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error haciendo match');
 		}
 	},
+	async register(req, res) {
+		try {
+			const { body } = req;
+			const avatar = req.file.cloudStoragePublicUrl;
+			console.log(body, 'controlelr');
+			const { data, code } = await psychologistsService.register(
+				body,
+				avatar
+			);
+			return restResponse('', 200, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error registrando un psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
