@@ -46,14 +46,11 @@
 								</v-btn>
 							</v-col>
 						</v-row>
-						<v-chip
-							class="ma-2"
-							small
-							v-for="(tag, i) in psychologist.specialties"
-							:key="i"
-						>
-							{{ tag }}
-						</v-chip>
+						<template v-for="(tag, i) in psychologist.specialties">
+							<v-chip v-if="i < 4" class="ma-2" :key="i" small>
+								{{ tag }}
+							</v-chip>
+						</template>
 						<div class="body-2 mt-2 text-capitalize">
 							{{ psychologist.description }}
 						</div>
