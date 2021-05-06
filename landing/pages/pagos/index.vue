@@ -1,13 +1,9 @@
 <template>
-	<div>
-		<router-view />
-	</div>
+	<div>Pagos</div>
 </template>
 
 <script>
-export default {
-	name: 'pagos',
-};
+export default {};
 </script>
 
 <style lang="scss" scoped></style>

@@ -226,6 +226,7 @@
 										color="#F0F8FF"
 										style="border-radius:10px"
 										depressed
+										:to="{ name: 'auth', params: { q: 'register' } }"
 									>
 										Comenzar
 									</v-btn>
@@ -237,13 +238,37 @@
 							<v-card min-height="400" style="border-radius:15px" class="text-center">
 								<v-card-text style="height: 85%">
 									<div>
-										<v-btn
-											color="#9D9D9C"
-											depressed
-											fab
-											width="100"
-											height="100"
-										></v-btn>
+										<v-avatar
+											size="100"
+											:color="item.avatar ? 'trasnparent' : 'primary'"
+										>
+											<v-img
+												v-if="item.avatar"
+												:src="item.avatar"
+												:lazy-src="item.avatar"
+												width="100"
+												height="100"
+											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="primary"
+														/>
+													</v-row>
+												</template>
+											</v-img>
+											<span
+												v-else
+												class="white--text headline font-weight-bold"
+											>
+												{{ item.name.substr(0, 1) }}
+											</span>
+										</v-avatar>
 										<div class="subtitle-1 font-weight-bold text--secondary">
 											{{ item.name }}
 										</div>
@@ -265,7 +290,12 @@
 								</v-card-text>
 								<v-card-actions class="text-center">
 									<v-spacer></v-spacer>
-									<v-btn color="primary" depressed style="border-radius:10px">
+									<v-btn
+										color="primary"
+										depressed
+										style="border-radius:10px"
+										to="/auth"
+									>
 										Agenda cita oline
 									</v-btn>
 									<v-spacer></v-spacer>
@@ -313,7 +343,12 @@
 												Lorempsum dolor sit amet, consectetupsum dolor sit
 												amet, consectetu ipsum
 											</div>
-											<v-btn light class="px-10 mt-4" depressed>
+											<v-btn
+												light
+												class="px-10 mt-4"
+												depressed
+												:to="{ name: 'auth', params: { q: 'register' } }"
+											>
 												Comenzar
 											</v-btn>
 										</v-col>
@@ -321,21 +356,44 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="12" v-for="(item, i) in items" :key="i">
+						<v-col cols="12" v-for="item in items" :key="item._id">
 							<v-card style="border-radius:15px">
 								<v-card-text>
 									<v-row align="center" justify="center">
-										<v-col cols="3" lg="2">
-											<v-list-item-avatar text-center size="100" class="ml-4">
+										<v-col cols="3" lg="2" class="text-center">
+											<v-avatar
+												size="100"
+												:color="item.avatar ? 'trasnparent' : 'primary'"
+											>
 												<v-img
-													class="primary"
-													height="100"
+													v-if="item.avatar"
+													:src="item.avatar"
+													:lazy-src="item.avatar"
 													width="100"
-													src=""
-												></v-img>
-											</v-list-item-avatar>
+													height="100"
+												>
+													<template #placeholder>
+														<v-row
+															class="fill-height ma-0"
+															align="center"
+															justify="center"
+														>
+															<v-progress-circular
+																indeterminate
+																color="primary"
+															/>
+														</v-row>
+													</template>
+												</v-img>
+												<span
+													v-else
+													class="white--text headline font-weight-bold"
+												>
+													{{ item.name.substr(0, 1) }}
+												</span>
+											</v-avatar>
 											<div class="text-center caption text--secondary">
-												Cédula {{ item.rut }}
+												Codigo {{ item.code }}
 											</div>
 											<v-btn
 												text
@@ -358,21 +416,24 @@
 													{{ item.name }}
 												</v-col>
 												<v-col cols="4" lg="3" class="text-right">
-													<v-btn color="primary" rounded depressed>
+													<v-btn
+														color="primary"
+														rounded
+														depressed
+														to="/auth"
+													>
 														Agenda cita oline
 													</v-btn>
 												</v-col>
 											</v-row>
-											<div>
-												<v-chip
-													v-for="el in [3, 1, 2]"
-													:key="el"
-													small
-													class="mb-2 mx-2"
-												>
-													Ansiedad
-												</v-chip>
-											</div>
+											<v-chip
+												class="ma-2"
+												small
+												v-for="tag in item.specialties"
+												:key="tag"
+											>
+												{{ tag }}
+											</v-chip>
 											<div class="body-2 mt-2">{{ item.description }}</div>
 										</v-col>
 									</v-row>

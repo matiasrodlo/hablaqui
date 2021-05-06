@@ -11,6 +11,15 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async match(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.match(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
