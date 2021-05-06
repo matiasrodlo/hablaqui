@@ -21,7 +21,7 @@
 							</v-img>
 						</v-list-item-avatar>
 						<div v-if="psychologist.code" class="caption text--secondary">
-							cedula {{ psychologist.code }}
+							Codigo {{ psychologist.code }}
 						</div>
 					</v-col>
 					<v-col cols="12" sm="9">
@@ -37,8 +37,13 @@
 								</v-btn>
 							</v-col>
 						</v-row>
-						<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
-							Ansiedad
+						<v-chip
+							class="ma-2"
+							small
+							v-for="(tag, i) in psychologist.specialties"
+							:key="i"
+						>
+							{{ tag }}
 						</v-chip>
 						<div class="body-2 mt-2 text-capitalize">
 							{{ psychologist.description }}
@@ -80,6 +85,27 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
+					<v-col cols="3" class="subtitle-1 primary--text text-uppercase">
+						Modelos de trabajo terapéutico
+					</v-col>
+					<v-col
+						v-if="psychologist.specialties.length"
+						class="body-1 text-left text-capitalize"
+					>
+						<ul>
+							<li v-for="(model, i) in psychologist.model" :key="i">
+								{{ model }}
+							</li>
+						</ul>
+					</v-col>
+					<v-col v-else class="body-1 text-left text-capitalize">
+						Vacío
+					</v-col>
+				</v-row>
+			</v-card-text>
+			<v-divider></v-divider>
+			<v-card-text>
+				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">FORMACIÓN</v-col>
 					<v-col class="body-1 text-left text-capitalize">
 						{{ psychologist.formation ? psychologist.formation : 'Vacío' }}
@@ -91,16 +117,9 @@
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">DESCRIPCIÓN PERSONAL</v-col>
 					<v-col class="body-1 text-left text-capitalize">
-						HARD CODE...
-					</v-col>
-				</v-row>
-			</v-card-text>
-			<v-divider></v-divider>
-			<v-card-text>
-				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">REPROGRAMACIÓN</v-col>
-					<v-col class="body-1 text-left text-capitalize">
-						HARD CODE...
+						{{
+							psychologist.description ? psychologist.description : 'Sin descripcion'
+						}}
 					</v-col>
 				</v-row>
 			</v-card-text>
