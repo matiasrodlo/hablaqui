@@ -290,7 +290,12 @@
 								</v-card-text>
 								<v-card-actions class="text-center">
 									<v-spacer></v-spacer>
-									<v-btn color="primary" depressed style="border-radius:10px">
+									<v-btn
+										color="primary"
+										depressed
+										style="border-radius:10px"
+										to="/auth"
+									>
 										Agenda cita oline
 									</v-btn>
 									<v-spacer></v-spacer>
@@ -341,7 +346,8 @@
 											<v-btn
 												light
 												class="px-10 mt-4"
-												depressed:to="{ name: 'auth', params: { q: 'register' } }"
+												depressed
+												:to="{ name: 'auth', params: { q: 'register' } }"
 											>
 												Comenzar
 											</v-btn>
@@ -410,7 +416,12 @@
 													{{ item.name }}
 												</v-col>
 												<v-col cols="4" lg="3" class="text-right">
-													<v-btn color="primary" rounded depressed>
+													<v-btn
+														color="primary"
+														rounded
+														depressed
+														to="/auth"
+													>
 														Agenda cita oline
 													</v-btn>
 												</v-col>

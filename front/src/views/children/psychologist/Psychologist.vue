@@ -44,7 +44,7 @@
 								{{ psychologist.name }}
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<v-btn block color="primary" rounded>
+								<v-btn block color="primary" rounded to="/auth">
 									Agenda cita oline
 								</v-btn>
 							</v-col>
