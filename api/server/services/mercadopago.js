@@ -5,7 +5,9 @@ import { okResponse } from '../utils/responses/functions';
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
 
-mercadopago.configurations.setAccessToken(MERCADOPAGO_KEY);
+mercadopago.configure({
+	access_token: MERCADOPAGO_KEY,
+});
 
 const createPreference = async (body, res) => {
 	let newPreference = {
