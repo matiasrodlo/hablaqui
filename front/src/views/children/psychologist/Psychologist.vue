@@ -8,13 +8,17 @@
 							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							class="ml-4"
 						>
-							<v-btn
-								color="#9D9D9C"
-								class="elevation-0"
-								fab
-								:width="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-								:height="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-							></v-btn>
+							<v-img
+								v-if="psychologist.avatar"
+								:lazy-src="psychologist.avatar"
+								:src="psychologist.avatar"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular indeterminate color="primary" />
+									</v-row>
+								</template>
+							</v-img>
 						</v-list-item-avatar>
 						<div v-if="psychologist.code" class="caption text--secondary">
 							cedula {{ psychologist.code }}

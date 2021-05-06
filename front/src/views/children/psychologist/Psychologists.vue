@@ -244,9 +244,23 @@
 											<v-img
 												v-if="item.avatar"
 												:src="item.avatar"
+												:lazy-src="item.avatar"
 												width="100"
 												height="100"
-											></v-img>
+											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="primary"
+														/>
+													</v-row>
+												</template>
+											</v-img>
 											<span
 												v-else
 												class="white--text headline font-weight-bold"
