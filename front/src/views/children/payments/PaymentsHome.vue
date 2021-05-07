@@ -57,6 +57,94 @@
 					</div>
 				</v-col>
 				<v-col cols="12" v-if="step == 1">
+					<v-row>
+						<v-col
+							cols="12"
+							v-for="(el, j) in plans"
+							:key="j"
+							class="d-flex justify-center"
+						>
+							<v-card>
+								<div v-if="el.recommended" class="d-flex align-center justify-end">
+									<span
+										class="pa-2 primary white--text font-weight-bold"
+										style="border-radius: 0 0 0 15px"
+									>
+										Recomendado
+									</span>
+								</div>
+								<v-card-text>
+									<v-row justify="space-between" align="center">
+										<v-col>
+											<span class="text-h3">{{ el.price }} $</span>
+											<span class="text-h6 text--secondary"
+												>/{{ el.mode }}</span
+											>
+											<div class="text-h6 primary--text font-weight-bold">
+												{{ el.title }}
+											</div>
+											<div class="my-2 font-weight-bold">
+												{{ el.subtitle }}
+											</div>
+											<div class="body-1 mt-2">
+												{{ el.description }}
+											</div>
+										</v-col>
+										<v-col cols="3" class="text-center mt-6">
+											<v-avatar color="grey" size="100"> </v-avatar>
+											<v-btn class="mt-3" color="primary" text>
+												Seleccionar plan
+											</v-btn>
+										</v-col>
+										<v-col cols="12">
+											<v-btn
+												text
+												color="primary"
+												@click="() => (el.expandCard = !el.expandCard)"
+											>
+												{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
+											</v-btn>
+										</v-col>
+										<v-expand-transition>
+											<v-col v-if="el.expandCard" cols="12">
+												<v-list three-line max-width="500">
+													<v-list-item
+														v-for="(deal, k) in el.deals"
+														:key="k"
+														class="elevation-1 ma-2"
+													>
+														<v-list-item-content>
+															<v-list-item-title>
+																{{ deal.lapse }} de terapia ({{
+																	deal.time
+																}}) + ${{ deal.price }}
+															</v-list-item-title>
+															<v-list-item-subtitle>
+																Secondary line text Lorem ipsum
+																dolor sit amet,
+															</v-list-item-subtitle>
+															<v-list-item-subtitle>
+																consectetur adipiscing elit.
+															</v-list-item-subtitle>
+														</v-list-item-content>
+														<v-list-item-action>
+															<v-btn
+																fab
+																x-small
+																depressed
+																color="grey"
+															>
+															</v-btn>
+														</v-list-item-action>
+													</v-list-item>
+												</v-list>
+											</v-col>
+										</v-expand-transition>
+									</v-row>
+								</v-card-text>
+							</v-card>
+						</v-col>
+					</v-row>
 					<div class="d-flex justify-space-between">
 						<v-btn x-large text color="primary" @click="step = 0">
 							<v-icon left>mdi-chevron-left</v-icon>
