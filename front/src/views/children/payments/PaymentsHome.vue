@@ -28,17 +28,48 @@
 						</ul>
 					</div>
 				</v-col>
-				<v-col cols="12" style="max-width: 800px">
-					<div class="text-secondary mt-16 text-h4 font-weight-bold">
-						Lorem ipsum dolor sit
+				<v-col v-if="step == 0" cols="12">
+					<div class="text-center text-secondary mt-16 text-h4 font-weight-bold">
+						Agenda la hora y día de tu consulta
 					</div>
-					<div class="text-secondary text-h6 font-weight-bold">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-my
-						nibh ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-
+					<div class="text-center text-secondary text-h6 font-weight-bold">
+						Agenda con total libertad cuando te resulte más conveniente.
+					</div>
+					<v-row justify="center">
+						<v-col cols="9" sm="6" md="6">
+							<v-date-picker full-width v-model="picker" locale="es"></v-date-picker>
+						</v-col>
+						<v-col cols="4">
+							<v-sheet height="400">
+								<v-calendar v-model="picker" color="primary" type="day">
+									<template v-slot:interval="{ hour }">
+										<div class="text-center">{{ hour }}</div>
+									</template>
+								</v-calendar>
+							</v-sheet>
+						</v-col>
+					</v-row>
+					<div class="text-right">
+						<v-btn x-large text color="primary" @click="step = 1">
+							Siguiente
+							<v-icon right>mdi-chevron-right</v-icon>
+						</v-btn>
 					</div>
 				</v-col>
-				<v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
-					<v-card max-width="800">
+				<v-col cols="12" v-if="step == 1">
+					<div class="d-flex justify-space-between">
+						<v-btn x-large text color="primary" @click="step = 0">
+							<v-icon left>mdi-chevron-left</v-icon>
+							Atras
+						</v-btn>
+						<v-btn x-large text color="primary" @click="step = 2">
+							Siguiente
+							<v-icon right>mdi-chevron-right</v-icon>
+						</v-btn>
+					</div>
+				</v-col>
+				<!-- <v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
+					<v-card>
 						<div v-if="el.recommended" class="d-flex align-center justify-end">
 							<span
 								class="pa-2 primary white--text font-weight-bold"
@@ -247,7 +278,7 @@
 							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
 						</v-card-text>
 					</v-card>
-				</v-col>
+				</v-col> -->
 			</v-row>
 		</v-container>
 	</div>
@@ -262,6 +293,8 @@ export default {
 	},
 	data() {
 		return {
+			step: 0,
+			picker: '',
 			breakCrumbs: 0,
 			showLoading: true,
 			plans: [
