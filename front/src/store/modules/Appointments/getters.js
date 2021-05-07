@@ -1,3 +1,3 @@
 export default {
-	appointments: state => state.appointments,
+	appointments: state => state.appointments.map(item => item.toLowerCase().trim()),
 };

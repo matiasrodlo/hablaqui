@@ -426,14 +426,11 @@
 													</v-btn>
 												</v-col>
 											</v-row>
-											<v-chip
-												class="ma-2"
-												small
-												v-for="tag in item.specialties"
-												:key="tag"
-											>
-												{{ tag }}
-											</v-chip>
+											<template v-for="(tag, i) in item.specialties">
+												<v-chip v-if="i < 4" class="ma-2" small :key="i">
+													<span class="text-capitalize">{{ tag }}</span>
+												</v-chip>
+											</template>
 											<div class="body-2 mt-2">{{ item.description }}</div>
 										</v-col>
 									</v-row>
@@ -475,6 +472,9 @@ export default {
 					result =
 						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
 						result;
+				if (this.motive) {
+					result = result.specialties.includes(this.motive.trim());
+				}
 
 				return result;
 			});
