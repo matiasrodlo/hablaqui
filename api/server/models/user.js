@@ -48,7 +48,6 @@ let userSchema = new Schema({
 	},
 	myPlan: {
 		type: String,
-		default: false,
 	},
 	finishedSessions: {
 		type: Array,
