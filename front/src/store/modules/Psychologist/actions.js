@@ -12,7 +12,6 @@ export default {
 	},
 	async registerPsychologist({ commit }, payload) {
 		try {
-			console.log(payload);
 			await axios('/psychologists/register', {
 				method: 'POST',
 				data: payload,

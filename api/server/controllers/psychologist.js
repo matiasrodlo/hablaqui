@@ -24,7 +24,6 @@ const psychologistsController = {
 		try {
 			const { body } = req;
 			const avatar = req.file.cloudStoragePublicUrl;
-			console.log(body, 'controlelr');
 			const { data, code } = await psychologistsService.register(
 				body,
 				avatar

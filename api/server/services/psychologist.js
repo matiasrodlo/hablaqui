@@ -43,12 +43,8 @@ const register = async (body, avatar) => {
 		psychologist,
 	};
 
-	const user = await User.create(newUser, (err, res) => {
-		console.log(err, res);
-	});
+	const user = await User.create(newUser);
 
-	console.log(psychologist, 'psico');
-	console.log(user, 'user');
 	return okResponse('psicologo creado');
 };
 

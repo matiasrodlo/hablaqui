@@ -194,7 +194,7 @@
 								label="Sistémico"
 								value="Sistémico"
 							></v-checkbox>
-							><v-checkbox
+							<v-checkbox
 								v-model="form.models"
 								label="Contextual"
 								value="Contextual"
@@ -223,6 +223,7 @@
 							<v-radio label="Prefiero no decirlo" value="n/a"></v-radio>
 						</v-radio-group>
 
+						<span v-if="terminado">Te has registrado con exito :D</span>
 						<v-btn block rounded color="primary" type="submit">
 							Regístrate
 						</v-btn>
@@ -247,6 +248,7 @@ export default {
 			showPassword: false,
 			showRepeatPassword: false,
 			loading: false,
+			terminado: false,
 		};
 	},
 	created() {
@@ -328,6 +330,7 @@ export default {
 			this.loading = true;
 			await this.registerPsychologist(payload);
 			this.loading = false;
+			this.terminado = true;
 		},
 		...mapActions({ registerPsychologist: 'Psychologist/registerPsychologist' }),
 	},
