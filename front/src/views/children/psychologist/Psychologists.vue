@@ -51,14 +51,6 @@
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
-								<v-checkbox
-									v-model="gender"
-									value="LGBTIQ+"
-									:disabled="loading"
-									label="LGBTIQ+"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Modelo terapéuticos</div>
@@ -67,14 +59,6 @@
 									value="Cognitivo conductual"
 									:disabled="loading"
 									label="Cognitivo conductual"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Integrador"
-									:disabled="loading"
-									label="Integrador"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -96,17 +80,17 @@
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="Sistemico-relacional"
+									value="Sistemica"
 									:disabled="loading"
-									label="Sistemico-relacional"
+									label="Sistemica"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="Terapia-breve"
+									value="Comtextual"
 									:disabled="loading"
-									label="Terapia-breve"
+									label="Comtextual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
