@@ -5,7 +5,15 @@
 		<v-container>
 			<v-row justify="center" align="center">
 				<v-col cols="12">
-					<div class="text-center">
+					<div class="d-flex justify-center align-center">
+						<v-btn
+							:disabled="breakCrumbs == 0"
+							icon
+							color="primary"
+							@click="() => (breakCrumbs -= 1)"
+						>
+							<v-icon size="48">mdi-chevron-left</v-icon>
+						</v-btn>
 						<ul id="breadcrumb">
 							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
 								<span>Agendar</span>
@@ -26,10 +34,18 @@
 								<span>Pago</span>
 							</li>
 						</ul>
+						<v-btn
+							icon
+							:disabled="breakCrumbs == 3"
+							color="primary"
+							@click="() => (breakCrumbs += 1)"
+						>
+							<v-icon size="48">mdi-chevron-right</v-icon>
+						</v-btn>
 					</div>
 				</v-col>
-				<v-col v-if="step == 0" cols="12">
-					<div class="text-center text-secondary mt-16 text-h4 font-weight-bold">
+				<v-col v-if="breakCrumbs == 0" cols="12">
+					<div class="text-center text-secondary mt-4 text-h4 font-weight-bold">
 						Agenda la hora y día de tu consulta
 					</div>
 					<div class="text-center text-secondary text-h6 font-weight-bold">
@@ -49,14 +65,8 @@
 							</v-sheet>
 						</v-col>
 					</v-row>
-					<div class="text-right">
-						<v-btn x-large text color="primary" @click="step = 1">
-							Siguiente
-							<v-icon right>mdi-chevron-right</v-icon>
-						</v-btn>
-					</div>
 				</v-col>
-				<v-col cols="12" v-if="step == 1">
+				<v-col cols="12" v-if="breakCrumbs == 1">
 					<v-row>
 						<v-col
 							cols="12"
@@ -146,11 +156,11 @@
 						</v-col>
 					</v-row>
 					<div class="d-flex justify-space-between">
-						<v-btn x-large text color="primary" @click="step = 0">
+						<v-btn x-large text color="primary" @click="breakCrumbs = 0">
 							<v-icon left>mdi-chevron-left</v-icon>
 							Atras
 						</v-btn>
-						<v-btn x-large text color="primary" @click="step = 2">
+						<v-btn x-large text color="primary" @click="breakCrumbs = 2">
 							Siguiente
 							<v-icon right>mdi-chevron-right</v-icon>
 						</v-btn>
@@ -381,7 +391,6 @@ export default {
 	},
 	data() {
 		return {
-			step: 0,
 			picker: '',
 			breakCrumbs: 0,
 			showLoading: true,

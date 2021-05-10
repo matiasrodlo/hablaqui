@@ -46,6 +46,7 @@ export default {
 				router.push({ name: 'pagos-home', query: { psi } });
 				// si no tiene plan y no hay psi seleccionado
 			} else if (!data.user.myPlan) {
+				localStorage.removeItem('psi');
 				router.push({ name: 'evaluacion' });
 				// o entonces enviamos a perfil
 			} else {

@@ -500,7 +500,7 @@ export default {
 			this.view = type;
 		},
 		toAuth(item) {
-			localStorage.setItem('psi', item);
+			localStorage.setItem('psi', JSON.stringify(item));
 			this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
