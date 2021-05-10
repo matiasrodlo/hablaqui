@@ -37,8 +37,8 @@ let psychologist = new Schema({
 	},
 	model: {
 		type: Array,
-	}
+	},
 });
 
-psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
+//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
 export default model('psychologist', psychologist);

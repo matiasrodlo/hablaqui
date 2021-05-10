@@ -78,31 +78,127 @@
 						<v-container fluid>
 							<v-checkbox
 								v-model="form.specialties"
-								label="Especialidad 1"
-								value="Especialidad 1"
-							>
-							</v-checkbox>
-							<v-checkbox
+								label="Depresión"
+								value="Depresión"
+							></v-checkbox
+							><v-checkbox
 								v-model="form.specialties"
-								label="Especialidad 2"
-								value="Especialidad 2"
-							>
-							</v-checkbox>
-							<v-checkbox
+								label="Ansiedad o estrés"
+								value="Ansiedad o estrés"
+							></v-checkbox
+							><v-checkbox
 								v-model="form.specialties"
-								label="Especialidad 3"
-								value="Especialidad 3"
-							>
-							</v-checkbox>
+								label="Fobia social"
+								value="Fobia social"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Trastorno obsesivo compulsivo"
+								value="Trastorno obsesivo compulsivo"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Ansiedad generalizada"
+								value="Ansiedad generalizada"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Autoconocimiento"
+								value="Autoconocimiento"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Cambio de hábitos"
+								value="Cambio de hábitos"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Autoestima"
+								value="Autoestima"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Enfoque de género y diversidad"
+								value="Enfoque de género y diversidad"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Dificultades interpersonales"
+								value="Dificultades interpersonales"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Control de ira"
+								value="Control de ira"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Duelo o perdida"
+								value="Duelo o perdida"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Regulación emocional"
+								value="Regulación emocional"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Trastornos del sueño"
+								value="Trastornos del sueño"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Déficit atencional"
+								value="Déficit atencional"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Sexualidad"
+								value="Sexualidad"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Trastornos de la conducta alimentaria"
+								value="Trastornos de la conducta alimentaria"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Trastornos de personalidad"
+								value="Trastornos de personalidad"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.specialties"
+								label="Trastornos del animo (bipolaridad)"
+								value="Trastornos del animo (bipolaridad)"
+							></v-checkbox>
 						</v-container>
 						<h3>Modelos</h3>
 						<v-container fluid>
-							<v-checkbox v-model="form.models" label="Modelo 1" value="Modelo 1">
-							</v-checkbox>
-							<v-checkbox v-model="form.models" label="Modelo 2" value="Modelo 2">
-							</v-checkbox>
-							<v-checkbox v-model="form.models" label="Modelo 3" value="Modelo 3">
-							</v-checkbox>
+							<v-checkbox
+								v-model="form.models"
+								label="Psicoanálisis"
+								value="Psicoanálisis"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.models"
+								label="Cognitivo-conductual"
+								value="Cognitivo-conductual"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.models"
+								label="Humanista"
+								value="Humanista"
+							></v-checkbox
+							><v-checkbox
+								v-model="form.models"
+								label="Sistémico"
+								value="Sistémico"
+							></v-checkbox>
+							><v-checkbox
+								v-model="form.models"
+								label="Contextual"
+								value="Contextual"
+							></v-checkbox>
 						</v-container>
 						<h3>Foto de Perfil</h3>
 						<p>
@@ -121,10 +217,10 @@
 							prepend-icon="mdi-camera"
 						></v-file-input>
 						<v-radio-group v-model="form.gender" column>
-							<v-radio label="Hombre"></v-radio>
-							<v-radio label="Mujer"></v-radio>
-							<v-radio label="No binario"></v-radio>
-							<v-radio label="Prefiero no decirlo"></v-radio>
+							<v-radio label="Hombre" value="male"></v-radio>
+							<v-radio label="Mujer" value="female"></v-radio>
+							<v-radio label="No binario" value="non-binary"></v-radio>
+							<v-radio label="Prefiero no decirlo" value="n/a"></v-radio>
 						</v-radio-group>
 
 						<v-btn block rounded color="primary" type="submit">

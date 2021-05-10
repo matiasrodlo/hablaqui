@@ -1,5 +1,7 @@
 import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
+import User from '../models/user';
+import bcrypt from 'bcrypt';
 import { okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
@@ -27,10 +29,26 @@ const register = async (body, avatar) => {
 		formation: body.formation,
 		specialties: JSON.parse(body.specialties),
 		models: JSON.parse(body.models),
+		gender: body.gender,
 		avatar,
 	};
 	const psychologist = await Psychologist.create(newPsychologist);
-	console.log(psychologist, avatar, 'service');
+
+	const newUser = {
+		name: body.name,
+		role: 'psychologist',
+		email: body.email,
+		password: bcrypt.hashSync(body.password, 10),
+		avatar,
+		psychologist,
+	};
+
+	const user = await User.create(newUser, (err, res) => {
+		console.log(err, res);
+	});
+
+	console.log(psychologist, 'psico');
+	console.log(user, 'user');
 	return okResponse('psicologo creado');
 };
 
