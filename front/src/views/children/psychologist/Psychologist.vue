@@ -1,23 +1,39 @@
 <template>
 	<v-container>
-		<v-card>
+		<template v-if="!psychologist">
+			<v-col cols="12">
+				<v-skeleton-loader type="image" />
+			</v-col>
+			<v-col cols="12">
+				<v-skeleton-loader type="image, image, image" height="600" />
+			</v-col>
+		</template>
+		<v-card v-else>
 			<v-card-text>
 				<v-row align="center" justify="center">
 					<v-col cols="12" sm="3" class="text-center">
 						<v-list-item-avatar
 							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+							:color="psychologist.avatar ? 'trasnparent' : 'primary'"
 							class="ml-4"
 						>
-							<v-btn
-								color="#9D9D9C"
-								class="elevation-0"
-								fab
-								:width="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-								:height="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-							></v-btn>
+							<v-img
+								v-if="psychologist.avatar"
+								:lazy-src="psychologist.avatar"
+								:src="psychologist.avatar"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular indeterminate color="primary" />
+									</v-row>
+								</template>
+							</v-img>
+							<span v-else class="white--text text-h2 font-weight-bold">
+								{{ psychologist.name.substr(0, 1) }}
+							</span>
 						</v-list-item-avatar>
 						<div v-if="psychologist.code" class="caption text--secondary">
-							cedula {{ psychologist.code }}
+							Codigo {{ psychologist.code }}
 						</div>
 					</v-col>
 					<v-col cols="12" sm="9">
@@ -28,14 +44,16 @@
 								{{ psychologist.name }}
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<v-btn block color="primary" rounded>
+								<v-btn block color="primary" rounded to="/auth">
 									Agenda cita oline
 								</v-btn>
 							</v-col>
 						</v-row>
-						<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
-							Ansiedad
-						</v-chip>
+						<template v-for="(tag, i) in psychologist.specialties">
+							<v-chip v-if="i < 4" class="ma-2" :key="i" small>
+								{{ tag }}
+							</v-chip>
+						</template>
 						<div class="body-2 mt-2 text-capitalize">
 							{{ psychologist.description }}
 						</div>
@@ -43,7 +61,7 @@
 				</v-row>
 			</v-card-text>
 		</v-card>
-		<v-card class="mt-6">
+		<v-card v-if="psychologist" class="mt-6">
 			<v-card-text class="text-h4 primary--text font-weight-bold">Perfil</v-card-text>
 			<v-divider></v-divider>
 			<v-card-text>
@@ -76,6 +94,27 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
+					<v-col cols="3" class="subtitle-1 primary--text text-uppercase">
+						Modelos de trabajo terapéutico
+					</v-col>
+					<v-col
+						v-if="psychologist.specialties.length"
+						class="body-1 text-left text-capitalize"
+					>
+						<ul>
+							<li v-for="(model, i) in psychologist.model" :key="i">
+								{{ model }}
+							</li>
+						</ul>
+					</v-col>
+					<v-col v-else class="body-1 text-left text-capitalize">
+						Vacío
+					</v-col>
+				</v-row>
+			</v-card-text>
+			<v-divider></v-divider>
+			<v-card-text>
+				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">FORMACIÓN</v-col>
 					<v-col class="body-1 text-left text-capitalize">
 						{{ psychologist.formation ? psychologist.formation : 'Vacío' }}
@@ -87,16 +126,9 @@
 				<v-row align="center">
 					<v-col cols="3" class="subtitle-1 primary--text">DESCRIPCIÓN PERSONAL</v-col>
 					<v-col class="body-1 text-left text-capitalize">
-						HARD CODE...
-					</v-col>
-				</v-row>
-			</v-card-text>
-			<v-divider></v-divider>
-			<v-card-text>
-				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">REPROGRAMACIÓN</v-col>
-					<v-col class="body-1 text-left text-capitalize">
-						HARD CODE...
+						{{
+							psychologist.description ? psychologist.description : 'Sin descripcion'
+						}}
 					</v-col>
 				</v-row>
 			</v-card-text>

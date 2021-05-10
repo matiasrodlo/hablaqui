@@ -3,7 +3,7 @@
 		<v-navigation-drawer mini-variant-width="110" mini-variant permanent app>
 			<v-list-item style="height: 110px">
 				<v-btn fab x-large text to="/">
-					<img style="width: 40px" src="@/assets/logo_tiny.png" />
+					<img style="width: 40px" src="img/logo_tiny.png" />
 				</v-btn>
 			</v-list-item>
 			<v-divider></v-divider>

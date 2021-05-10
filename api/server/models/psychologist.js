@@ -37,7 +37,7 @@ let psychologist = new Schema({
 	},
 	model: {
 		type: Array,
-	}
+	},
 });
 
 psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });

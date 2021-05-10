@@ -12,6 +12,10 @@ const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
+const PaymentsHome = () => import('@/views/children/payments/PaymentsHome');
+const PendingPay = () => import('@/views/children/payments/PendingPay');
+const SuccessPay = () => import('@/views/children/payments/SuccessPay');
+const FailurePay = () => import('@/views/children/payments/FailurePay');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 
@@ -85,7 +89,33 @@ const routes = [
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
-		meta: { title: 'Planes y pagos' },
+		redirect: { name: 'pagos-home' },
+		children: [
+			{
+				path: 'home',
+				name: 'pagos-home',
+				component: PaymentsHome,
+				meta: { title: 'Planes y pagos' },
+			},
+			{
+				path: 'pending-pay',
+				name: 'pending-pay',
+				component: PendingPay,
+				meta: { title: 'Pago pendiente' },
+			},
+			{
+				path: 'failure-pay',
+				name: 'failure-pay',
+				component: FailurePay,
+				meta: { title: 'Pago fallido' },
+			},
+			{
+				path: 'success-pay',
+				name: 'success-home',
+				component: SuccessPay,
+				meta: { title: 'Pago exitoso' },
+			},
+		],
 	},
 	{
 		path: '/auth/:q?',
