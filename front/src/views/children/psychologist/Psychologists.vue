@@ -56,9 +56,9 @@
 								<div class="title mt-2">Modelo terapéuticos</div>
 								<v-checkbox
 									v-model="sessionType"
-									value="Cognitivo-conductual"
+									value="Cognitivo conductual"
 									:disabled="loading"
-									label="Cognitivo-conductual"
+									label="Cognitivo conductual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -129,6 +129,7 @@
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							hide-details
+							clearable
 							:disabled="loading"
 						>
 							<template v-slot:no-data>
@@ -278,7 +279,7 @@
 										color="primary"
 										depressed
 										style="border-radius:10px"
-										to="/auth"
+										@click="toAuth(item)"
 									>
 										Agenda cita oline
 									</v-btn>
@@ -404,7 +405,7 @@
 														color="primary"
 														rounded
 														depressed
-														to="/auth"
+														@click="toAuth(item)"
 													>
 														Agenda cita oline
 													</v-btn>
@@ -497,6 +498,10 @@ export default {
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
+		},
+		toAuth(item) {
+			localStorage.setItem('psi', item);
+			this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
 			const panel = {
