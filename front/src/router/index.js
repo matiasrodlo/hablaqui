@@ -14,6 +14,7 @@ const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
 const PaymentsHome = () => import('@/views/children/payments/PaymentsHome');
 const PendingPay = () => import('@/views/children/payments/PendingPay');
+const RegisterPsi = () => import('@/views/RegisterPsi');
 const SuccessPay = () => import('@/views/children/payments/SuccessPay');
 const FailurePay = () => import('@/views/children/payments/FailurePay');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
@@ -122,6 +123,12 @@ const routes = [
 		name: 'auth',
 		component: Auth,
 		meta: { title: 'Autenticacion' },
+	},
+	{
+		path: '/nuevo-psicologo',
+		name: 'nuevo-psicologo',
+		component: RegisterPsi,
+		meta: { title: 'Nuevo psicologo' },
 	},
 	{
 		path: '*',
