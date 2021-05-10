@@ -56,9 +56,9 @@
 								<div class="title mt-2">Modelo terapéuticos</div>
 								<v-checkbox
 									v-model="sessionType"
-									value="Cognitivo conductual"
+									value="Cognitivo-conductual"
 									:disabled="loading"
-									label="Cognitivo conductual"
+									label="Cognitivo-conductual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -82,15 +82,15 @@
 									v-model="sessionType"
 									value="Sistemica"
 									:disabled="loading"
-									label="Sistemica"
+									label="Sistémica"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="Comtextual"
+									value="Contextual"
 									:disabled="loading"
-									label="Comtextual"
+									label="Contextual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
