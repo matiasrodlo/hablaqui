@@ -44,11 +44,11 @@
 						</v-btn>
 					</div>
 				</v-col>
-				<div v-if="breakCrumbs == 0" cols="12">
-					<div class="text-center text-secondary mt-4 text-h4 font-weight-bold">
+				<div v-if="breakCrumbs == 0">
+					<div class="text--secondary text-left font-weight-bold text-h4">
 						Agenda la hora y día de tu consulta
 					</div>
-					<div class="text-center text-secondary text-h6 font-weight-bold">
+					<div class="text--secondary text-left text-h6">
 						Agenda con total libertad cuando te resulte más conveniente.
 					</div>
 					<v-card
@@ -135,127 +135,14 @@
 						</v-card-actions>
 					</v-card>
 				</div>
-				<v-col cols="12" v-if="breakCrumbs == 1">
-					<v-row>
-						<v-col
-							cols="12"
-							v-for="(el, j) in plans"
-							:key="j"
-							class="d-flex justify-center"
-						>
-							<v-card max-width="700">
-								<div v-if="el.recommended" class="d-flex align-center justify-end">
-									<span
-										class="pa-2 primary white--text font-weight-bold"
-										style="border-radius: 0 0 0 15px"
-									>
-										Recomendado
-									</span>
-								</div>
-								<v-card-text>
-									<v-row justify="space-between" align="center">
-										<v-col cols="9">
-											<span class="text-h4 font-weight-bold">
-												${{ el.price }}
-											</span>
-											<span class="text-h6 text--secondary">
-												/{{ el.mode }}
-											</span>
-											<div class="text-h6 primary--text font-weight-bold">
-												{{ el.title }}
-											</div>
-											<div class="my-2 font-weight-bold">
-												{{ el.subtitle }}
-											</div>
-											<div class="body-1 mt-2">
-												{{ el.description }}
-											</div>
-										</v-col>
-										<v-col cols="3" class="text-center mt-6">
-											<v-avatar color="grey" size="100">
-												<v-img
-													:src="el.image"
-													:alt="el.title"
-													width="140"
-													height="140"
-												/>
-											</v-avatar>
-											<v-btn
-												class="mt-3"
-												color="primary"
-												text
-												@click="() => (el.expandCard = !el.expandCard)"
-											>
-												Seleccionar plan
-											</v-btn>
-										</v-col>
-										<v-expand-transition>
-											<v-col v-if="el.expandCard" cols="12">
-												<v-list-item-group
-													flat
-													style="max-width: 500px"
-													v-model="selectedItem"
-													color="primary"
-												>
-													<v-list-item
-														v-for="deal in el.deals"
-														:key="deal.id"
-														class="ma-2"
-														link
-														:value="deal"
-													>
-														<v-list-item-content>
-															<v-list-item-title
-																class="font-weight-bold text--secondary"
-															>
-																{{ deal.type }}
-															</v-list-item-title>
-															<v-list-item-subtitle>
-																<span
-																	class="font-weight-bold text--secondary"
-																>
-																	${{ deal.price }}
-																</span>
-																<span class="primary--text">
-																	{{ deal.lapse }}
-																</span>
-															</v-list-item-subtitle>
-														</v-list-item-content>
-														<v-list-item-action>
-															<v-btn
-																fab
-																x-small
-																depressed
-																:color="
-																	deal.id == selectedItem.id
-																		? 'primary'
-																		: '#E1F5FE'
-																"
-															>
-															</v-btn>
-														</v-list-item-action>
-													</v-list-item>
-												</v-list-item-group>
-												<div
-													v-if="
-														el.deals.some(u => selectedItem.id === u.id)
-													"
-													class="text-center"
-												>
-													<v-btn small color="primary">
-														Continuar
-													</v-btn>
-												</div>
-											</v-col>
-										</v-expand-transition>
-									</v-row>
-								</v-card-text>
-							</v-card>
-						</v-col>
-					</v-row>
-				</v-col>
-				<!-- <v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
-					<v-card>
+				<div v-if="breakCrumbs == 1">
+					<div class="text--secondary text-left font-weight-bold text-h4">
+						El mejor plan para ti
+					</div>
+					<div class="text--secondary text-left text-h6 mb-6">
+						Puedes cambiar de plan o cancelar tu suscripción cuando desees.
+					</div>
+					<v-card max-width="700" v-for="(el, j) in plans" :key="j" class="my-6">
 						<div v-if="el.recommended" class="d-flex align-center justify-end">
 							<span
 								class="pa-2 primary white--text font-weight-bold"
@@ -266,9 +153,9 @@
 						</div>
 						<v-card-text>
 							<v-row justify="space-between" align="center">
-								<v-col>
-									<span class="text-h3">{{ el.price }} $</span>
-									<span class="text-h6 text--secondary">/{{ el.mode }}</span>
+								<v-col cols="9">
+									<span class="text-h4 font-weight-bold"> ${{ el.price }} </span>
+									<span class="text-h6 text--secondary"> /{{ el.mode }} </span>
 									<div class="text-h6 primary--text font-weight-bold">
 										{{ el.title }}
 									</div>
@@ -280,191 +167,187 @@
 									</div>
 								</v-col>
 								<v-col cols="3" class="text-center mt-6">
-									<v-avatar color="grey" size="100"> </v-avatar>
-									<v-btn class="mt-3" color="primary" text>
-										Seleccionar plan
-									</v-btn>
-								</v-col>
-								<v-col cols="12">
+									<v-avatar color="grey" size="100">
+										<v-img
+											:src="el.image"
+											:alt="el.title"
+											width="140"
+											height="140"
+										/>
+									</v-avatar>
 									<v-btn
-										text
+										class="mt-3"
 										color="primary"
+										text
 										@click="() => (el.expandCard = !el.expandCard)"
 									>
-										{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
+										Seleccionar plan
 									</v-btn>
 								</v-col>
 								<v-expand-transition>
 									<v-col v-if="el.expandCard" cols="12">
-										<v-list three-line max-width="500">
+										<v-list-item-group
+											flat
+											style="max-width: 500px"
+											v-model="selectedItem"
+											color="primary"
+										>
 											<v-list-item
-												v-for="(deal, k) in el.deals"
-												:key="k"
-												class="elevation-1 ma-2"
+												v-for="deal in el.deals"
+												:key="deal.id"
+												class="ma-2"
+												link
+												:value="deal"
 											>
 												<v-list-item-content>
-													<v-list-item-title>
-														{{ deal.lapse }} de terapia ({{
-															deal.time
-														}}) + ${{ deal.price }}
+													<v-list-item-title
+														class="font-weight-bold text--secondary"
+													>
+														{{ deal.type }}
 													</v-list-item-title>
 													<v-list-item-subtitle>
-														Secondary line text Lorem ipsum dolor sit
-														amet,
-													</v-list-item-subtitle>
-													<v-list-item-subtitle>
-														consectetur adipiscing elit.
+														<span
+															class="font-weight-bold text--secondary"
+														>
+															${{ deal.price }}
+														</span>
+														<span class="primary--text">
+															{{ deal.lapse }}
+														</span>
 													</v-list-item-subtitle>
 												</v-list-item-content>
 												<v-list-item-action>
-													<v-btn fab x-small depressed color="grey">
+													<v-btn
+														fab
+														x-small
+														depressed
+														:color="
+															deal.id == selectedItem.id
+																? 'primary'
+																: '#E1F5FE'
+														"
+													>
 													</v-btn>
 												</v-list-item-action>
 											</v-list-item>
-										</v-list>
+										</v-list-item-group>
+										<div
+											v-if="el.deals.some(u => selectedItem.id === u.id)"
+											class="text-center"
+										>
+											<v-btn small color="primary">
+												Continuar
+											</v-btn>
+										</div>
 									</v-col>
 								</v-expand-transition>
 							</v-row>
 						</v-card-text>
 					</v-card>
-				</v-col>
-				<v-col cols="12" class="text-center">
-					<v-btn color="primary" style="border-radius: 10px">Continuar con el pago</v-btn>
-				</v-col>
-			</v-row>
-			<v-row justify="center">
-				<v-col cols="5">
-					<v-card>
+				</div>
+				<div v-if="breakCrumbs == 2">
+					<div class="text--secondary text-left font-weight-bold text-h3">
+						Revisa tu plan
+					</div>
+					<div class="text--secondary text-left text-h6">
+						¡Es momento de comenzar la terapia!
+					</div>
+					<v-card max-width="700" flat>
 						<v-card-text>
-							<div class="my-3">Lorem ipsum dolor sit</div>
-							<v-text-field label="Ingresar codigo" dense outlined hide-details>
-								<template v-slot:append-outer>
-									<v-btn small color="primary" class="px-10">
-										Aplicar
+							<v-row align="center" justify="center">
+								<v-col cols="7">
+									<div class="my-3 subtitle-2">Aplicar un cupón</div>
+									<v-text-field
+										label="Introduzca el codigo"
+										dense
+										outlined
+										hide-details
+									>
+										<template v-slot:append-outer>
+											<v-btn
+												small
+												color="primary"
+												class="px-10"
+												style="border-radius: 10px"
+											>
+												Solicitar
+											</v-btn>
+										</template>
+									</v-text-field>
+									<v-list-item class="px-0 my-10">
+										<v-list-item-content>
+											<v-list-item-title class="subtitle-2">
+												Psicólogo
+												<v-btn text color="primary"> Cambiar</v-btn>
+											</v-list-item-title>
+											<v-list-item-subtitle class="title font-weight-bold">
+												Joaquín Bustos
+											</v-list-item-subtitle>
+										</v-list-item-content>
+										<v-list-item-avatar size="70" class="ml-4">
+											<v-btn
+												color="grey"
+												class="elevation-0"
+												fab
+												width="70"
+												height="70"
+											></v-btn>
+										</v-list-item-avatar>
+									</v-list-item>
+									<div class="caption">
+										Suscripción
+										<span class="primary--text">Cambiar</span>
+									</div>
+									<div class="title font-weight-bold">
+										Sesiones por videollamada
+									</div>
+									<div class="subtitle-1 my-2">
+										4 sesiones en vivo/mensuales (50 min) Habla con un psicólogo
+										por videollamada, sin tener que desplazarte
+									</div>
+								</v-col>
+								<v-col cols="5">
+									<v-btn color="primary" block style="border-radius: 10px">
+										Continuar al pago
 									</v-btn>
-								</template>
-							</v-text-field>
-						</v-card-text>
-						<v-list>
-							<v-list-item>
-								<v-list-item-content>
-									<v-list-item-title class="subtitle-2">
-										Lorem ipsum <span class="primary--text">dolor sit</span>
-									</v-list-item-title>
-									<v-list-item-subtitle class="title font-weight-bold">
-										Carolina Fettke
-									</v-list-item-subtitle>
-								</v-list-item-content>
-								<v-list-item-avatar size="100" class="ml-4">
-									<v-btn
-										color="grey"
-										class="elevation-0"
-										fab
-										width="100"
-										height="100"
-									></v-btn>
-								</v-list-item-avatar>
-							</v-list-item>
-						</v-list>
-						<v-card-text>
-							<div class="caption">
-								Lorem ipsum <span class="primary--text">dolor sit</span>
-							</div>
-							<div class="title font-weight-bold">
-								Lorem ipsum dolor sit amet, con
-							</div>
-							<div class="subtitle-1 my-2">
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-								nonummy nibh ipsum dolor sit amet, consec-tetuer adipiscing elit,
-								sed diam nonummy nibh Lorem ipsum dolor sit amet, consectetuer
-								adipiscing elit, sed diam nonummy nibh ipsum dolor
-							</div>
+									<div class="caption my-4 text-center">
+										Este es un pago seguro con encriptado SSL.
+									</div>
+									<div class=" font-weight-bold">
+										Resumen
+									</div>
+									<div>
+										Sesiones por videollamada
+									</div>
+									<div
+										class="font-weight-bold text-h6 d-flex justify-space-between"
+									>
+										<span>Monto total</span>
+										<span>$17.500</span>
+									</div>
+									<div class="caption my-4 text-left">
+										Realiza el pago de tu suscripción con tarjeta de débito y
+										crédito en cuotas.
+									</div>
+									<div class="d-flex justify-space-around">
+										<v-img
+											width="80"
+											src="img/gráfico-venta-de-plan-19.png"
+										></v-img>
+										<v-img
+											width="80"
+											src="img/gráfico-venta-de-plan-20.png"
+										></v-img>
+										<v-img
+											width="80"
+											src="img/gráfico-venta-de-plan-21.png"
+										></v-img>
+									</div>
+								</v-col>
+							</v-row>
 						</v-card-text>
 					</v-card>
-				</v-col>
-				<v-col cols="5">
-					<v-card>
-						<v-card-text>
-							<v-btn color="primary" block style="border-radius: 10px">
-								Continuar con el pago
-							</v-btn>
-							<div class="caption my-4 text-center">
-								Lorem ipsum dolor sit amet, consectetuer
-							</div>
-							<div class=" font-weight-bold">
-								Lorem ipsum dolor sit amet,
-							</div>
-							<div>
-								Lorem ipsum dolor sit amet, consectetuer adipis
-							</div>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-list>
-							<v-list-item>
-								<v-list-item-content class="font-weight-bold headline">
-									Lorem ipsum dolor sit
-								</v-list-item-content>
-								<v-list-item-avatar size="100" class="font-weight-bold headline">
-									14$
-								</v-list-item-avatar>
-							</v-list-item>
-						</v-list>
-						<v-card-text>
-							<div class="caption text-center">
-								Lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam
-								nonummy nibh ipsum dolor
-							</div>
-						</v-card-text>
-						<v-card-text>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						</v-card-text>
-					</v-card>
-				</v-col>
-			</v-row>
-			<v-row justify="center">
-				<v-col cols="12" sm="9" md="8" lg="6">
-					<v-card>
-						<v-card-text>
-							<v-text-field dense outlined hide-details readonly value="Pago total">
-								<template v-slot:append>
-									<span class="font-weight-bold"> 312 $</span>
-								</template>
-							</v-text-field>
-						</v-card-text>
-						<v-card-text>
-							<div class="font-weight-bold headline">Lorem ipsum dolor sit</div>
-							<div class="body-1">
-								Lorem ipsum <span class="primary--text">dolor sit</span>
-							</div>
-							<v-text-field
-								class="my-6"
-								outlined
-								dense
-								hide-details
-								label="Número de tarjeta"
-							>
-								<template v-slot:append>
-									<span class="text--secondary"> MM/AA CVC</span>
-								</template>
-							</v-text-field>
-							<v-btn color="primary" block style="border-radius: 10px" class="my-4">
-								Confirmar pago
-							</v-btn>
-							<div class="text-center body-1">
-								Lorem ipsum <span class="primary--text">dolor sit</span>
-							</div>
-						</v-card-text>
-						<v-card-text class="text-center">
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
-						</v-card-text>
-					</v-card>
-				</v-col> -->
+				</div>
 			</v-row>
 		</v-container>
 	</div>
@@ -484,7 +367,7 @@ export default {
 		return {
 			selectedItem: '',
 			picker: '',
-			breakCrumbs: 1,
+			breakCrumbs: 2,
 			plans: [
 				{
 					id: 1,
