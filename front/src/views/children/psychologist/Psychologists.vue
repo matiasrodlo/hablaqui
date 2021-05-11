@@ -423,11 +423,24 @@
 												</v-col>
 											</v-row>
 
-											<template v-for="(tag, i) in item.specialties">
-												<v-chip v-if="i < 8" class="ma-2" small :key="i">
-													<span class="text-capitalize">{{ tag }}</span>
-												</v-chip>
-											</template>
+											<v-chip-group
+												:value="motive"
+												active-class="primary--text"
+											>
+												<template v-for="(tag, i) in item.specialties">
+													<v-chip
+														:value="tag"
+														class="ma-2"
+														small
+														:key="i"
+														@click="motive = tag"
+													>
+														<span class="text-capitalize">
+															{{ tag }}
+														</span>
+													</v-chip>
+												</template>
+											</v-chip-group>
 											<div class="body-2 mt-2">{{ item.description }}</div>
 										</v-col>
 									</v-row>
