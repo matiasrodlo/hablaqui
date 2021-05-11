@@ -121,6 +121,7 @@
 							>
 								{{ viewDate }}
 							</div>
+							<div v-else>Seleccione un dia y la hora para continuar</div>
 							<v-spacer></v-spacer>
 							<v-btn
 								v-if="newEvent && picker"
@@ -129,7 +130,7 @@
 								color="primary"
 								@click="breakCrumbs = 1"
 							>
-								ok
+								Continuar
 							</v-btn>
 						</v-card-actions>
 					</v-card>
@@ -142,7 +143,7 @@
 							:key="j"
 							class="d-flex justify-center"
 						>
-							<v-card>
+							<v-card max-width="700">
 								<div v-if="el.recommended" class="d-flex align-center justify-end">
 									<span
 										class="pa-2 primary white--text font-weight-bold"
@@ -153,11 +154,13 @@
 								</div>
 								<v-card-text>
 									<v-row justify="space-between" align="center">
-										<v-col>
-											<span class="text-h3">{{ el.price }} $</span>
-											<span class="text-h6 text--secondary"
-												>/{{ el.mode }}</span
-											>
+										<v-col cols="9">
+											<span class="text-h4 font-weight-bold">
+												${{ el.price }}
+											</span>
+											<span class="text-h6 text--secondary">
+												/{{ el.mode }}
+											</span>
 											<div class="text-h6 primary--text font-weight-bold">
 												{{ el.title }}
 											</div>
@@ -169,40 +172,53 @@
 											</div>
 										</v-col>
 										<v-col cols="3" class="text-center mt-6">
-											<v-avatar color="grey" size="100"> </v-avatar>
-											<v-btn class="mt-3" color="primary" text>
-												Seleccionar plan
-											</v-btn>
-										</v-col>
-										<v-col cols="12">
+											<v-avatar color="grey" size="100">
+												<v-img
+													:src="el.image"
+													:alt="el.title"
+													width="140"
+													height="140"
+												/>
+											</v-avatar>
 											<v-btn
-												text
+												class="mt-3"
 												color="primary"
+												text
 												@click="() => (el.expandCard = !el.expandCard)"
 											>
-												{{ el.expandCard ? 'Ver menos' : 'Ver más' }}
+												Seleccionar plan
 											</v-btn>
 										</v-col>
 										<v-expand-transition>
 											<v-col v-if="el.expandCard" cols="12">
-												<v-list three-line max-width="500">
+												<v-list-item-group
+													flat
+													style="max-width: 500px"
+													v-model="selectedItem"
+													color="primary"
+												>
 													<v-list-item
-														v-for="(deal, k) in el.deals"
-														:key="k"
-														class="elevation-1 ma-2"
+														v-for="deal in el.deals"
+														:key="deal.id"
+														class="ma-2"
+														link
+														:value="deal"
 													>
 														<v-list-item-content>
-															<v-list-item-title>
-																{{ deal.lapse }} de terapia ({{
-																	deal.time
-																}}) + ${{ deal.price }}
+															<v-list-item-title
+																class="font-weight-bold text--secondary"
+															>
+																{{ deal.type }}
 															</v-list-item-title>
 															<v-list-item-subtitle>
-																Secondary line text Lorem ipsum
-																dolor sit amet,
-															</v-list-item-subtitle>
-															<v-list-item-subtitle>
-																consectetur adipiscing elit.
+																<span
+																	class="font-weight-bold text--secondary"
+																>
+																	${{ deal.price }}
+																</span>
+																<span class="primary--text">
+																	{{ deal.lapse }}
+																</span>
 															</v-list-item-subtitle>
 														</v-list-item-content>
 														<v-list-item-action>
@@ -210,12 +226,26 @@
 																fab
 																x-small
 																depressed
-																color="grey"
+																:color="
+																	deal.id == selectedItem.id
+																		? 'primary'
+																		: '#E1F5FE'
+																"
 															>
 															</v-btn>
 														</v-list-item-action>
 													</v-list-item>
-												</v-list>
+												</v-list-item-group>
+												<div
+													v-if="
+														el.deals.some(u => selectedItem.id === u.id)
+													"
+													class="text-center"
+												>
+													<v-btn small color="primary">
+														Continuar
+													</v-btn>
+												</div>
 											</v-col>
 										</v-expand-transition>
 									</v-row>
@@ -223,16 +253,6 @@
 							</v-card>
 						</v-col>
 					</v-row>
-					<div class="d-flex justify-space-between">
-						<v-btn x-large text color="primary" @click="breakCrumbs = 0">
-							<v-icon left>mdi-chevron-left</v-icon>
-							Atras
-						</v-btn>
-						<v-btn x-large text color="primary" @click="breakCrumbs = 2">
-							Siguiente
-							<v-icon right>mdi-chevron-right</v-icon>
-						</v-btn>
-					</div>
 				</v-col>
 				<!-- <v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
 					<v-card>
@@ -462,37 +482,88 @@ export default {
 	},
 	data() {
 		return {
+			selectedItem: '',
 			picker: '',
-			breakCrumbs: 0,
+			breakCrumbs: 1,
 			plans: [
 				{
+					id: 1,
 					deals: [
-						{ time: '30 min', lapse: '1 mes', price: 20 },
-						{ time: '30 min', lapse: '2 meses', price: 40 },
-						{ time: '30 min', lapse: '3 meses', price: 80 },
+						{ id: 1, lapse: '/semana', price: '17.500', type: 'Pago semanal' },
+						{
+							id: 2,
+							lapse: '/semana ($63.000 mensual)',
+							price: '15.750',
+							type: 'Pago mensual',
+						},
+						{
+							id: 3,
+							lapse: '/semana ($168.000 mensual)',
+							price: '14.000',
+							type: 'Pago cada tres meses',
+						},
 					],
 					expandCard: false,
-					recommended: true,
-					mode: 'week',
-					title: 'Lorem ipsum dolor sit amet, consec',
-					subtitle: 'Lorem ipsum dolor sit amet, consecte',
+					recommended: false,
+					price: '17.500',
+					mode: 'Semana',
+					title: 'Sesiones por videollamada',
+					subtitle: '4 sesiones en vivo/mensuales (50 min)',
+					image: 'img/gráfico-venta-de-plan-15.png',
 					description:
-						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
+						'Habla con un psicólogo por videollamada, sin tener que desplazarte.',
 				},
 				{
+					id: 2,
 					deals: [
-						{ time: '30 min', lapse: '1 mes', price: 20 },
-						{ time: '30 min', lapse: '2 meses', price: 40 },
-						{ time: '30 min', lapse: '3 meses', price: 80 },
+						{ id: 4, lapse: '/Semana', price: '14.000', type: 'Pago semanal' },
+						{
+							id: 5,
+							lapse: '/semana ($50.400 mensual)',
+							price: '12.600',
+							type: 'Pago mensual',
+						},
+						{
+							id: 6,
+							lapse: '/semana ($134.400 trimestral)',
+							price: '11.200',
+							type: 'Pago cada tres meses',
+						},
 					],
 					recommended: false,
 					expandCard: false,
-					price: 9,
-					mode: 'week',
-					title: 'Lorem ipsum dolor sit amet, consec',
-					subtitle: 'Lorem ipsum dolor sit amet, consecte',
-					description:
-						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
+					price: '14.000',
+					mode: 'Semana',
+					title: 'Sesiones por mensajería',
+					subtitle: 'Mensajes de texto y audio.',
+					image: 'img/gráfico-venta-de-plan-16.png',
+					description: 'Respuestas diarias garantizadas 5 días a la semana.',
+				},
+				{
+					id: 3,
+					deals: [
+						{ id: 7, lapse: '/semana', price: '22.000', type: 'Pago semanal' },
+						{
+							id: 8,
+							lapse: '/semana ($79.200 mensual)',
+							price: '19.800',
+							type: 'Pago mensual',
+						},
+						{
+							id: 9,
+							lapse: '/semana ($211.200 trimestral)',
+							price: '17.600',
+							type: 'Pago cada tres meses',
+						},
+					],
+					recommended: true,
+					expandCard: false,
+					price: '22.000',
+					mode: 'Semana',
+					title: 'Mensajes de texto y audio',
+					subtitle: 'Mensajería + Sesiones por videollamada (30min)',
+					image: 'img/gráfico-venta-de-plan-17.png',
+					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
 			events: [
