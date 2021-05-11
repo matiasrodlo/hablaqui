@@ -155,6 +155,7 @@
 							:search-input.sync="searchInput"
 							label="Busca tu psicólogo"
 							hide-details
+							clearable
 							:disabled="loading"
 							no-data-text="No hay psicologos en este momento"
 						>
