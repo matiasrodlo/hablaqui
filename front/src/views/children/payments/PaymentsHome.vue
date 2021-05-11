@@ -102,7 +102,6 @@
 							</v-row>
 						</v-card-text>
 					</v-card>
-					{{ newEvent }}
 				</div>
 				<v-col cols="12" v-if="breakCrumbs == 1">
 					<v-row>
@@ -505,7 +504,7 @@ export default {
 					name: `Yo - ${this.user.name}`,
 					color: 'success',
 					start: this.createStart,
-					end: this.createStart,
+					end: this.createStart + 1800000,
 					timed: true,
 					disable: false,
 				};
