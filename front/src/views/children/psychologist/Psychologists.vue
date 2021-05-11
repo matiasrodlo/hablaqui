@@ -150,7 +150,7 @@
 						<v-combobox
 							class="white"
 							outlined
-							:items="panelFiter"
+							:items="filterLevelThree"
 							item-text="name"
 							:search-input.sync="searchInput"
 							label="Busca tu psicólogo"
@@ -219,7 +219,13 @@
 								</v-card-actions>
 							</v-card>
 						</v-col>
-						<v-col cols="12" sm="6" lg="4" v-for="(item, i) in items" :key="i">
+						<v-col
+							cols="12"
+							sm="6"
+							lg="4"
+							v-for="(item, i) in filterLevelThree"
+							:key="i"
+						>
 							<v-card min-height="400" style="border-radius:15px" class="text-center">
 								<v-card-text style="height: 85%">
 									<div>
@@ -307,13 +313,17 @@
 										<v-col cols="3" lg="2" class="text-center">
 											<v-list-item-avatar size="100" class="ml-4">
 												<v-btn
-													style="border: 8px solid #5EB3E4"
-													color="#9D9D9C"
-													class="elevation-0"
 													fab
+													light
+													depressed
 													width="100"
 													height="100"
-												></v-btn>
+													style="border: 8px solid #5EB3E4;"
+												>
+													<v-icon color="primary" size="60"
+														>mdi-magnify</v-icon
+													>
+												</v-btn>
 											</v-list-item-avatar>
 										</v-col>
 										<v-col cols="9" lg="10">
@@ -341,7 +351,7 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="12" v-for="item in items" :key="item._id">
+						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
 							<v-card style="border-radius:15px">
 								<v-card-text>
 									<v-row align="center" justify="center">
@@ -451,29 +461,31 @@ export default {
 		};
 	},
 	computed: {
-		items() {
-			return this.panelFiter.filter(item => {
+		filterLevelThree() {
+			return this.filterLevelTwo.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result =
 						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
 						result;
-				if (this.motive) {
-					result = result.specialties.includes(this.motive.trim());
-				}
-
 				return result;
 			});
 		},
-		panelFiter() {
-			return this.psychologists.filter(item => {
-				let result = item;
-				if (this.gender.length) result = this.gender.includes(result.gender);
-				if (this.sessionType.length) result = this.sessionType.includes(result.sessionType);
-				if (this.language.length) result = this.language.includes(result.language);
-
-				return result;
-			});
+		filterLevelTwo() {
+			if (!this.motive) return this.filterLevelOne;
+			return this.filterLevelOne.filter(
+				item => item.specialties.length && item.specialties.includes(this.motive)
+			);
+		},
+		filterLevelOne() {
+			if (!this.gender.length && !this.sessionType.length && !this.language.length)
+				return this.psychologists;
+			return this.psychologists.filter(
+				item =>
+					(this.gender.length && this.gender.includes(item.gender)) ||
+					(this.sessionType.length && this.sessionType.includes(item.sessionType)) ||
+					(this.language.length && this.language.includes(item.language))
+			);
 		},
 		...mapGetters({
 			psychologists: 'Psychologist/psychologists',
@@ -481,7 +493,6 @@ export default {
 		}),
 	},
 	mounted() {
-		console.log('OK');
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
