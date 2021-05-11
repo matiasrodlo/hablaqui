@@ -281,17 +281,11 @@
 												<v-btn text color="primary"> Cambiar</v-btn>
 											</v-list-item-title>
 											<v-list-item-subtitle class="title font-weight-bold">
-												Joaquín Bustos
+												{{ psi.name }}
 											</v-list-item-subtitle>
 										</v-list-item-content>
 										<v-list-item-avatar size="70" class="ml-4">
-											<v-btn
-												color="grey"
-												class="elevation-0"
-												fab
-												width="70"
-												height="70"
-											></v-btn>
+											<v-img :src="psi.avatar"></v-img>
 										</v-list-item-avatar>
 									</v-list-item>
 									<div class="caption">
@@ -464,6 +458,7 @@ export default {
 			createStart: null,
 			extendOriginal: null,
 			newEvent: null,
+			psi: null,
 		};
 	},
 	computed: {
@@ -478,6 +473,18 @@ export default {
 			else return '';
 		},
 		...mapGetters({ user: 'User/user' }),
+	},
+	beforeRouteEnter(to, from, next) {
+		const psi = JSON.parse(localStorage.getItem('psi'));
+		if (psi) {
+			next();
+			console.log(psi);
+		} else {
+			next({ name: 'evaluacion' });
+		}
+	},
+	created() {
+		this.psi = JSON.parse(localStorage.getItem('psi'));
 	},
 	methods: {
 		startDrag({ event, timed }) {
