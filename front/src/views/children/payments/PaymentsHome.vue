@@ -83,12 +83,25 @@
 											@mouseleave.native="cancelDrag"
 										>
 											<template v-slot:event="{ event, eventSummary }">
-												<div
-													:class="
-														!event.disable ? 'v-event-draggable' : ''
-													"
-													v-html="eventSummary()"
-												></div>
+												<div class="d-flex justify-space-between">
+													<div
+														:class="
+															!event.disable
+																? 'v-event-draggable'
+																: ''
+														"
+														v-html="eventSummary()"
+													></div>
+													<v-btn
+														v-if="!event.disable"
+														@click="resetEvent"
+														x-small
+														icon
+														color="error"
+													>
+														<v-icon>mdi-close</v-icon>
+													</v-btn>
+												</div>
 												<div
 													:class="
 														!event.disable ? 'v-event-drag-bottom' : ''
@@ -101,6 +114,24 @@
 								</v-col>
 							</v-row>
 						</v-card-text>
+						<v-card-actions>
+							<div
+								v-if="newEvent && picker"
+								class="primary--text font-weight-bold subtitle-1"
+							>
+								{{ viewDate }}
+							</div>
+							<v-spacer></v-spacer>
+							<v-btn
+								v-if="newEvent && picker"
+								x-large
+								text
+								color="primary"
+								@click="breakCrumbs = 1"
+							>
+								ok
+							</v-btn>
+						</v-card-actions>
 					</v-card>
 				</div>
 				<v-col cols="12" v-if="breakCrumbs == 1">
@@ -422,6 +453,8 @@
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
 import { mapGetters } from 'vuex';
+import moment from 'moment';
+
 export default {
 	name: 'PaymentsHome',
 	components: {
@@ -429,7 +462,6 @@ export default {
 	},
 	data() {
 		return {
-			timePicker: '',
 			picker: '',
 			breakCrumbs: 0,
 			plans: [
@@ -481,6 +513,16 @@ export default {
 		};
 	},
 	computed: {
+		viewDate() {
+			if (this.newEvent && this.picker)
+				return `Seleccionaste el dia
+					${moment(this.picker).format('ll')} 
+					desde las
+					${moment(this.newEvent.start).format('LT')}
+					a las 
+					${moment(this.newEvent.end).format('LT')}`;
+			else return '';
+		},
 		...mapGetters({ user: 'User/user' }),
 	},
 	methods: {
