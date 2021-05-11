@@ -59,37 +59,40 @@
 					>
 						<v-card-text>
 							<v-row>
-								<v-col cols="8">
+								<v-col cols="6">
 									<v-date-picker
 										full-width
 										v-model="picker"
+										@change="() => resetEvent()"
 										locale="es"
 									></v-date-picker>
 								</v-col>
-								<v-col cols="4">
+								<v-col cols="6">
 									<v-sheet height="400">
 										<v-calendar
 											ref="calendar"
-											v-model="value"
+											v-model="picker"
 											type="day"
 											hide-header
 											:events="events"
 											:event-ripple="false"
-											@change="getEvents"
 											@mousedown:event="startDrag"
 											@mousedown:time="startTime"
 											@mousemove:time="mouseMove"
 											@mouseup:time="endDrag"
 											@mouseleave.native="cancelDrag"
 										>
-											<template v-slot:event="{ event, timed, eventSummary }">
+											<template v-slot:event="{ event, eventSummary }">
 												<div
-													class="v-event-draggable"
+													:class="
+														!event.disable ? 'v-event-draggable' : ''
+													"
 													v-html="eventSummary()"
 												></div>
 												<div
-													v-if="timed"
-													class="v-event-drag-bottom"
+													:class="
+														!event.disable ? 'v-event-drag-bottom' : ''
+													"
 													@mousedown.stop="extendBottom(event)"
 												></div>
 											</template>
@@ -99,6 +102,7 @@
 							</v-row>
 						</v-card-text>
 					</v-card>
+					{{ newEvent }}
 				</div>
 				<v-col cols="12" v-if="breakCrumbs == 1">
 					<v-row>
@@ -418,6 +422,7 @@
 
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
+import { mapGetters } from 'vuex';
 export default {
 	name: 'PaymentsHome',
 	components: {
@@ -459,32 +464,29 @@ export default {
 						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
 				},
 			],
-			value: '',
-			events: [],
-			colors: ['#2196F3', '#3F51B5', '#673AB7', '#00BCD4', '#4CAF50', '#FF9800', '#757575'],
-			names: [
-				'Meeting',
-				'Holiday',
-				'PTO',
-				'Travel',
-				'Event',
-				'Birthday',
-				'Conference',
-				'Party',
+			events: [
+				{
+					name: 'Jose',
+					start: 1620715500000,
+					end: 1620715500000,
+					timed: true,
+					disable: true,
+				},
 			],
 			dragEvent: null,
 			dragStart: null,
 			createEvent: null,
 			createStart: null,
 			extendOriginal: null,
+			newEvent: null,
 		};
 	},
+	computed: {
+		...mapGetters({ user: 'User/user' }),
+	},
 	methods: {
-		setTime(e) {
-			console.log(e);
-		},
 		startDrag({ event, timed }) {
-			if (event && timed) {
+			if (event && timed && !event.disable) {
 				this.dragEvent = event;
 				this.dragTime = null;
 				this.extendOriginal = null;
@@ -500,17 +502,21 @@ export default {
 			} else {
 				this.createStart = this.roundTime(mouse);
 				this.createEvent = {
-					name: `Event #${this.events.length}`,
-					color: this.rndElement(this.colors),
+					name: `Yo - ${this.user.name}`,
+					color: 'success',
 					start: this.createStart,
 					end: this.createStart,
 					timed: true,
+					disable: false,
 				};
-
-				this.events.push(this.createEvent);
+				if (!this.newEvent) {
+					this.events.push(this.createEvent);
+					this.newEvent = this.createEvent;
+				}
 			}
 		},
 		extendBottom(event) {
+			if (event.disable) return;
 			this.createEvent = event;
 			this.createStart = event.start;
 			this.extendOriginal = event.end;
@@ -572,49 +578,17 @@ export default {
 		toTime(tms) {
 			return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime();
 		},
-		getEventColor(event) {
-			const rgb = parseInt(event.color.substring(1), 16);
-			const r = (rgb >> 16) & 0xff;
-			const g = (rgb >> 8) & 0xff;
-			const b = (rgb >> 0) & 0xff;
-
-			return event === this.dragEvent
-				? `rgba(${r}, ${g}, ${b}, 0.7)`
-				: event === this.createEvent
-				? `rgba(${r}, ${g}, ${b}, 0.7)`
-				: event.color;
-		},
-		getEvents({ start, end }) {
-			const events = [];
-
-			const min = new Date(`${start.date}T00:00:00`).getTime();
-			const max = new Date(`${end.date}T23:59:59`).getTime();
-			const days = (max - min) / 86400000;
-			const eventCount = this.rnd(days, days + 20);
-
-			for (let i = 0; i < eventCount; i++) {
-				const timed = this.rnd(0, 3) !== 0;
-				const firstTimestamp = this.rnd(min, max);
-				const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000;
-				const start = firstTimestamp - (firstTimestamp % 900000);
-				const end = start + secondTimestamp;
-
-				events.push({
-					name: this.rndElement(this.names),
-					color: this.rndElement(this.colors),
-					start,
-					end,
-					timed,
-				});
-			}
-
-			this.events = events;
-		},
-		rnd(a, b) {
-			return Math.floor((b - a + 1) * Math.random()) + a;
-		},
-		rndElement(arr) {
-			return arr[this.rnd(0, arr.length - 1)];
+		resetEvent() {
+			this.newEvent = null;
+			this.events = [
+				{
+					name: 'Jose',
+					start: 1620715500000,
+					end: 1620715500000,
+					timed: true,
+					disable: true,
+				},
+			];
 		},
 	},
 };
