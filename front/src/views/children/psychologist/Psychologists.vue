@@ -176,7 +176,7 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" lg="4">
+						<v-col v-if="!loggedIn" cols="12" sm="6" lg="4">
 							<v-card
 								height="400px"
 								style="border-radius:15px"
@@ -307,7 +307,7 @@
 						</v-col>
 					</template>
 					<template v-if="view == 2">
-						<v-col cols="12">
+						<v-col v-if="!loggedIn" cols="12">
 							<v-card style="border-radius:15px" dark color="primary">
 								<v-card-text>
 									<v-row align="center" justify="center">
