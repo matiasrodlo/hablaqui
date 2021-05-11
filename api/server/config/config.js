@@ -29,24 +29,6 @@ process.env.GOOGLE_STRATEGY_CALLBACK =
 	process.env.GOOGLE_STRATEGY_CALLBACK ||
 	'http://localhost:3000/api/v1/auth/google/callback';
 process.env.BUCKETNAME = process.env.BUCKETNAME || 'plhain-staging-bucket';
-process.env.MERCADOPAGO_SANDBOX_KEY =
-	process.env.MERCADOPAGO_SANDBOX_KEY ||
-	'TEST-282590749164606-042715-9739497e10049c77fda1560dd2c89780-16097895';
-process.env.MERCADOPAGO_PRODUCTION_KEY =
-	process.env.MERCADOPAGO_PRODUCTION_KEY || '';
-process.env.MERCADOPAGO_SUCCESS_URL =
-	process.env.MERCADOPAGO_SUCCESS_URL ||
-	'http://localhost:8080/#/billing?transaction=success';
-process.env.MERCADOPAGO_FAILURE_URL =
-	process.env.MERCADOPAGO_FAILURE_URL ||
-	'http://localhost:8080/#/billing?transaction=failure';
-process.env.MERCADOPAGO_PENDING_URL =
-	process.env.MERCADOPAGO_PENDING_URL ||
-	'http://localhost:8080/#/billing?transaction=pending';
-process.env.MERCADOPAGO_NOTIFICATION_URL =
-	process.env.MERCADOPAGO_NOTIFICATION_URL ||
-	'https://api-dot-plhain-staging.rj.r.appspot.com/api/v1/transactions/mercadopago/notifications';
-
 process.env.TWILIO_PROD_ACCOUNTSID =
 	process.env.TWILIO_PROD_ACCOUNTSID || 'AC67899c3ed7cba76e23be9660a586f7ff';
 

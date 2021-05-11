@@ -411,8 +411,9 @@
 													</v-btn>
 												</v-col>
 											</v-row>
+
 											<template v-for="(tag, i) in item.specialties">
-												<v-chip v-if="i < 4" class="ma-2" small :key="i">
+												<v-chip v-if="i < 8" class="ma-2" small :key="i">
 													<span class="text-capitalize">{{ tag }}</span>
 												</v-chip>
 											</template>
@@ -480,6 +481,7 @@ export default {
 		}),
 	},
 	mounted() {
+		console.log('OK');
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
