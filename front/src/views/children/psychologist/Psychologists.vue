@@ -51,14 +51,6 @@
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
-								<v-checkbox
-									v-model="gender"
-									value="LGBTIQ+"
-									:disabled="loading"
-									label="LGBTIQ+"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Modelo terapéuticos</div>
@@ -67,14 +59,6 @@
 									value="Cognitivo conductual"
 									:disabled="loading"
 									label="Cognitivo conductual"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Integrador"
-									:disabled="loading"
-									label="Integrador"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -96,17 +80,17 @@
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="Sistemico-relacional"
+									value="Sistemica"
 									:disabled="loading"
-									label="Sistemico-relacional"
+									label="Sistémica"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
 									v-model="sessionType"
-									value="Terapia-breve"
+									value="Contextual"
 									:disabled="loading"
-									label="Terapia-breve"
+									label="Contextual"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -145,6 +129,7 @@
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							hide-details
+							clearable
 							:disabled="loading"
 						>
 							<template v-slot:no-data>
@@ -294,7 +279,7 @@
 										color="primary"
 										depressed
 										style="border-radius:10px"
-										to="/auth"
+										@click="toAuth(item)"
 									>
 										Agenda cita oline
 									</v-btn>
@@ -420,20 +405,18 @@
 														color="primary"
 														rounded
 														depressed
-														to="/auth"
+														@click="toAuth(item)"
 													>
 														Agenda cita oline
 													</v-btn>
 												</v-col>
 											</v-row>
-											<v-chip
-												class="ma-2"
-												small
-												v-for="tag in item.specialties"
-												:key="tag"
-											>
-												{{ tag }}
-											</v-chip>
+
+											<template v-for="(tag, i) in item.specialties">
+												<v-chip v-if="i < 8" class="ma-2" small :key="i">
+													<span class="text-capitalize">{{ tag }}</span>
+												</v-chip>
+											</template>
 											<div class="body-2 mt-2">{{ item.description }}</div>
 										</v-col>
 									</v-row>
@@ -475,6 +458,9 @@ export default {
 					result =
 						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
 						result;
+				if (this.motive) {
+					result = result.specialties.includes(this.motive.trim());
+				}
 
 				return result;
 			});
@@ -495,6 +481,7 @@ export default {
 		}),
 	},
 	mounted() {
+		console.log('OK');
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
@@ -513,6 +500,10 @@ export default {
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
+		},
+		toAuth(item) {
+			localStorage.setItem('psi', JSON.stringify(item));
+			this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
 			const panel = {

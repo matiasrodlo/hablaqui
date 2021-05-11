@@ -12,7 +12,19 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			router.push({ name: 'perfil' });
+			// Psi seleccionado en boton agenda cita online
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			// si no tiene plan y tiene psi pre-seleccionado
+			if (!data.user.myPlan && psi) {
+				router.push({ name: 'pagos-home', query: { psi } });
+				// si no tiene plan y no hay psi seleccionado
+			} else if (!data.user.myPlan) {
+				router.push({ name: 'evaluacion' });
+				// o entonces enviamos a perfil
+			} else {
+				localStorage.removeItem('psi');
+				router.push({ name: 'perfil' });
+			}
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -27,7 +39,20 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			router.push({ name: 'perfil' });
+			// Psi seleccionado en boton agenda cita online
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			// si no tiene plan y tiene psi pre-seleccionado
+			if (!data.user.myPlan && psi) {
+				router.push({ name: 'pagos-home', query: { psi } });
+				// si no tiene plan y no hay psi seleccionado
+			} else if (!data.user.myPlan) {
+				localStorage.removeItem('psi');
+				router.push({ name: 'evaluacion' });
+				// o entonces enviamos a perfil
+			} else {
+				localStorage.removeItem('psi');
+				router.push({ name: 'perfil' });
+			}
 			snackBarSuccess(data.message)(commit);
 		} catch (error) {
 			snackBarError(error)(commit);

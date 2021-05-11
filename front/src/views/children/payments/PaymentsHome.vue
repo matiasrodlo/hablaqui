@@ -3,92 +3,17 @@
 		<!-- appbar -->
 		<appbar />
 		<v-container>
-			<v-row align="center" justify="center">
-				<v-col cols="12">
-					<div class="text-center text-h4 font-weight-bold">Lorem ipsum dolor</div>
-					<div class="text-center caption font-weight-bold">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-					</div>
-				</v-col>
-				<v-col cols="12" md="2" class="text-center text-md-right">
-					<v-progress-circular indeterminate color="primary" size="130" :width="15">
-						<div class="spinner"></div>
-					</v-progress-circular>
-				</v-col>
-				<v-col cols="12" md="6" lg="5" xl="4" class="text-center text-md-left">
-					<div v-for="el in 4" :key="el" class="my-3 font-weight-bold">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit
-						<v-badge color="primary" class="mx-2"></v-badge>
-					</div>
-				</v-col>
-			</v-row>
-			<v-row align="center" justify="center">
-				<v-col cols="12" v-for="element in 2" :key="element" class="d-flex justify-center">
-					<v-card max-width="800" color="white" style="border-radius: 15px">
-						<v-card-text>
-							<v-row align="center" justify="center">
-								<v-col cols="12" sm="3" class="text-center">
-									<v-list-item-avatar
-										:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-										class="ml-4"
-									>
-										<v-btn
-											color="#9D9D9C"
-											class="elevation-0"
-											fab
-											width="100"
-											height="100"
-										></v-btn>
-									</v-list-item-avatar>
-									<div class="caption text--secondary">
-										cedula xxxxxx
-									</div>
-									<v-btn text color="primary">Mas información</v-btn>
-								</v-col>
-								<v-col cols="12" sm="9">
-									<v-row justify="space-between">
-										<v-col
-											class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
-										>
-											Fernanda Croffman
-										</v-col>
-										<v-col cols="12" sm="6" class="text-right">
-											<v-btn color="primary" rounded>
-												Agenda cita online
-											</v-btn>
-										</v-col>
-									</v-row>
-									<v-chip
-										v-for="el in [3, 1, 2]"
-										:key="el"
-										small
-										class="my-4 mx-1"
-									>
-										Ansiedad
-									</v-chip>
-									<div class="body-2 mt-2 text-capitalize">
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-										quis nostrud exerci tation ullamcorper suscipit loborm dolor
-										sit amet, consectetuer adipiscing elit, sed diam nonummy
-										nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-										volutpat. Ut wisi enim ad minim veniam, qum dolor sit amet,
-										consectetuer adipiscing elit, sed diam nonummy
-									</div>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-				<v-col cols="12" class="font-weight-bold mt-4 mb-16 text-center">
-					<span class="primary--text">¿No estas felíz con las opciones?</span> Mostrar mas
-					psicólogos Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
-				</v-col>
-			</v-row>
 			<v-row justify="center" align="center">
 				<v-col cols="12">
-					<div class="text-center">
+					<div class="d-flex justify-center align-center">
+						<v-btn
+							:disabled="breakCrumbs == 0"
+							icon
+							color="primary"
+							@click="() => (breakCrumbs -= 1)"
+						>
+							<v-icon size="48">mdi-chevron-left</v-icon>
+						</v-btn>
 						<ul id="breadcrumb">
 							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
 								<span>Agendar</span>
@@ -109,19 +34,228 @@
 								<span>Pago</span>
 							</li>
 						</ul>
+						<v-btn
+							icon
+							:disabled="breakCrumbs == 3"
+							color="primary"
+							@click="() => (breakCrumbs += 1)"
+						>
+							<v-icon size="48">mdi-chevron-right</v-icon>
+						</v-btn>
 					</div>
 				</v-col>
-				<v-col cols="12" style="max-width: 800px">
-					<div class="text-secondary mt-16 text-h4 font-weight-bold">
-						Lorem ipsum dolor sit
+				<div v-if="breakCrumbs == 0" cols="12">
+					<div class="text-center text-secondary mt-4 text-h4 font-weight-bold">
+						Agenda la hora y día de tu consulta
 					</div>
-					<div class="text-secondary text-h6 font-weight-bold">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-my
-						nibh ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum-
+					<div class="text-center text-secondary text-h6 font-weight-bold">
+						Agenda con total libertad cuando te resulte más conveniente.
 					</div>
+					<v-card
+						class="mt-10"
+						elevation="10"
+						max-width="700"
+						style="border-radius: 25px"
+					>
+						<v-card-text>
+							<v-row>
+								<v-col cols="6">
+									<v-date-picker
+										full-width
+										v-model="picker"
+										@change="() => resetEvent()"
+										locale="es"
+									></v-date-picker>
+								</v-col>
+								<v-col cols="6">
+									<v-sheet height="400">
+										<v-calendar
+											ref="calendar"
+											v-model="picker"
+											type="day"
+											hide-header
+											:events="events"
+											:event-ripple="false"
+											@mousedown:event="startDrag"
+											@mousedown:time="startTime"
+											@mousemove:time="mouseMove"
+											@mouseup:time="endDrag"
+											@mouseleave.native="cancelDrag"
+										>
+											<template v-slot:event="{ event, eventSummary }">
+												<div class="d-flex justify-space-between">
+													<div
+														:class="
+															!event.disable
+																? 'v-event-draggable'
+																: ''
+														"
+														v-html="eventSummary()"
+													></div>
+													<v-btn
+														v-if="!event.disable"
+														@click="resetEvent"
+														x-small
+														icon
+														color="error"
+													>
+														<v-icon>mdi-close</v-icon>
+													</v-btn>
+												</div>
+												<div
+													:class="
+														!event.disable ? 'v-event-drag-bottom' : ''
+													"
+													@mousedown.stop="extendBottom(event)"
+												></div>
+											</template>
+										</v-calendar>
+									</v-sheet>
+								</v-col>
+							</v-row>
+						</v-card-text>
+						<v-card-actions>
+							<div
+								v-if="newEvent && picker"
+								class="primary--text font-weight-bold subtitle-1"
+							>
+								{{ viewDate }}
+							</div>
+							<div v-else>Seleccione un dia y la hora para continuar</div>
+							<v-spacer></v-spacer>
+							<v-btn
+								v-if="newEvent && picker"
+								x-large
+								text
+								color="primary"
+								@click="breakCrumbs = 1"
+							>
+								Continuar
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+				</div>
+				<v-col cols="12" v-if="breakCrumbs == 1">
+					<v-row>
+						<v-col
+							cols="12"
+							v-for="(el, j) in plans"
+							:key="j"
+							class="d-flex justify-center"
+						>
+							<v-card max-width="700">
+								<div v-if="el.recommended" class="d-flex align-center justify-end">
+									<span
+										class="pa-2 primary white--text font-weight-bold"
+										style="border-radius: 0 0 0 15px"
+									>
+										Recomendado
+									</span>
+								</div>
+								<v-card-text>
+									<v-row justify="space-between" align="center">
+										<v-col cols="9">
+											<span class="text-h4 font-weight-bold">
+												${{ el.price }}
+											</span>
+											<span class="text-h6 text--secondary">
+												/{{ el.mode }}
+											</span>
+											<div class="text-h6 primary--text font-weight-bold">
+												{{ el.title }}
+											</div>
+											<div class="my-2 font-weight-bold">
+												{{ el.subtitle }}
+											</div>
+											<div class="body-1 mt-2">
+												{{ el.description }}
+											</div>
+										</v-col>
+										<v-col cols="3" class="text-center mt-6">
+											<v-avatar color="grey" size="100">
+												<v-img
+													:src="el.image"
+													:alt="el.title"
+													width="140"
+													height="140"
+												/>
+											</v-avatar>
+											<v-btn
+												class="mt-3"
+												color="primary"
+												text
+												@click="() => (el.expandCard = !el.expandCard)"
+											>
+												Seleccionar plan
+											</v-btn>
+										</v-col>
+										<v-expand-transition>
+											<v-col v-if="el.expandCard" cols="12">
+												<v-list-item-group
+													flat
+													style="max-width: 500px"
+													v-model="selectedItem"
+													color="primary"
+												>
+													<v-list-item
+														v-for="deal in el.deals"
+														:key="deal.id"
+														class="ma-2"
+														link
+														:value="deal"
+													>
+														<v-list-item-content>
+															<v-list-item-title
+																class="font-weight-bold text--secondary"
+															>
+																{{ deal.type }}
+															</v-list-item-title>
+															<v-list-item-subtitle>
+																<span
+																	class="font-weight-bold text--secondary"
+																>
+																	${{ deal.price }}
+																</span>
+																<span class="primary--text">
+																	{{ deal.lapse }}
+																</span>
+															</v-list-item-subtitle>
+														</v-list-item-content>
+														<v-list-item-action>
+															<v-btn
+																fab
+																x-small
+																depressed
+																:color="
+																	deal.id == selectedItem.id
+																		? 'primary'
+																		: '#E1F5FE'
+																"
+															>
+															</v-btn>
+														</v-list-item-action>
+													</v-list-item>
+												</v-list-item-group>
+												<div
+													v-if="
+														el.deals.some(u => selectedItem.id === u.id)
+													"
+													class="text-center"
+												>
+													<v-btn small color="primary">
+														Continuar
+													</v-btn>
+												</div>
+											</v-col>
+										</v-expand-transition>
+									</v-row>
+								</v-card-text>
+							</v-card>
+						</v-col>
+					</v-row>
 				</v-col>
-				<v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
-					<v-card max-width="800">
+				<!-- <v-col cols="12" v-for="(el, j) in plans" :key="j" class="d-flex justify-center">
+					<v-card>
 						<div v-if="el.recommended" class="d-flex align-center justify-end">
 							<span
 								class="pa-2 primary white--text font-weight-bold"
@@ -330,7 +464,7 @@
 							<v-avatar color="grey" size="70" class="ma-2"></v-avatar>
 						</v-card-text>
 					</v-card>
-				</v-col>
+				</v-col> -->
 			</v-row>
 		</v-container>
 	</div>
@@ -338,6 +472,9 @@
 
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
+import { mapGetters } from 'vuex';
+import moment from 'moment';
+
 export default {
 	name: 'PaymentsHome',
 	components: {
@@ -345,45 +482,226 @@ export default {
 	},
 	data() {
 		return {
-			breakCrumbs: 0,
-			showLoading: true,
+			selectedItem: '',
+			picker: '',
+			breakCrumbs: 1,
 			plans: [
 				{
+					id: 1,
 					deals: [
-						{ time: '30 min', lapse: '1 mes', price: 20 },
-						{ time: '30 min', lapse: '2 meses', price: 40 },
-						{ time: '30 min', lapse: '3 meses', price: 80 },
+						{ id: 1, lapse: '/semana', price: '17.500', type: 'Pago semanal' },
+						{
+							id: 2,
+							lapse: '/semana ($63.000 mensual)',
+							price: '15.750',
+							type: 'Pago mensual',
+						},
+						{
+							id: 3,
+							lapse: '/semana ($168.000 mensual)',
+							price: '14.000',
+							type: 'Pago cada tres meses',
+						},
 					],
 					expandCard: false,
-					recommended: true,
-					mode: 'week',
-					title: 'Lorem ipsum dolor sit amet, consec',
-					subtitle: 'Lorem ipsum dolor sit amet, consecte',
+					recommended: false,
+					price: '17.500',
+					mode: 'Semana',
+					title: 'Sesiones por videollamada',
+					subtitle: '4 sesiones en vivo/mensuales (50 min)',
+					image: 'img/gráfico-venta-de-plan-15.png',
 					description:
-						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
+						'Habla con un psicólogo por videollamada, sin tener que desplazarte.',
 				},
 				{
+					id: 2,
 					deals: [
-						{ time: '30 min', lapse: '1 mes', price: 20 },
-						{ time: '30 min', lapse: '2 meses', price: 40 },
-						{ time: '30 min', lapse: '3 meses', price: 80 },
+						{ id: 4, lapse: '/Semana', price: '14.000', type: 'Pago semanal' },
+						{
+							id: 5,
+							lapse: '/semana ($50.400 mensual)',
+							price: '12.600',
+							type: 'Pago mensual',
+						},
+						{
+							id: 6,
+							lapse: '/semana ($134.400 trimestral)',
+							price: '11.200',
+							type: 'Pago cada tres meses',
+						},
 					],
 					recommended: false,
 					expandCard: false,
-					price: 9,
-					mode: 'week',
-					title: 'Lorem ipsum dolor sit amet, consec',
-					subtitle: 'Lorem ipsum dolor sit amet, consecte',
-					description:
-						'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no-nummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper ',
+					price: '14.000',
+					mode: 'Semana',
+					title: 'Sesiones por mensajería',
+					subtitle: 'Mensajes de texto y audio.',
+					image: 'img/gráfico-venta-de-plan-16.png',
+					description: 'Respuestas diarias garantizadas 5 días a la semana.',
+				},
+				{
+					id: 3,
+					deals: [
+						{ id: 7, lapse: '/semana', price: '22.000', type: 'Pago semanal' },
+						{
+							id: 8,
+							lapse: '/semana ($79.200 mensual)',
+							price: '19.800',
+							type: 'Pago mensual',
+						},
+						{
+							id: 9,
+							lapse: '/semana ($211.200 trimestral)',
+							price: '17.600',
+							type: 'Pago cada tres meses',
+						},
+					],
+					recommended: true,
+					expandCard: false,
+					price: '22.000',
+					mode: 'Semana',
+					title: 'Mensajes de texto y audio',
+					subtitle: 'Mensajería + Sesiones por videollamada (30min)',
+					image: 'img/gráfico-venta-de-plan-17.png',
+					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
+			events: [
+				{
+					name: 'Jose',
+					start: 1620715500000,
+					end: 1620715500000,
+					timed: true,
+					disable: true,
+				},
+			],
+			dragEvent: null,
+			dragStart: null,
+			createEvent: null,
+			createStart: null,
+			extendOriginal: null,
+			newEvent: null,
 		};
 	},
-	mounted() {
-		setTimeout(() => {
-			this.showLoading = false;
-		}, 2000);
+	computed: {
+		viewDate() {
+			if (this.newEvent && this.picker)
+				return `Seleccionaste el dia
+					${moment(this.picker).format('ll')} 
+					desde las
+					${moment(this.newEvent.start).format('LT')}
+					a las 
+					${moment(this.newEvent.end).format('LT')}`;
+			else return '';
+		},
+		...mapGetters({ user: 'User/user' }),
+	},
+	methods: {
+		startDrag({ event, timed }) {
+			if (event && timed && !event.disable) {
+				this.dragEvent = event;
+				this.dragTime = null;
+				this.extendOriginal = null;
+			}
+		},
+		startTime(tms) {
+			const mouse = this.toTime(tms);
+
+			if (this.dragEvent && this.dragTime === null) {
+				const start = this.dragEvent.start;
+
+				this.dragTime = mouse - start;
+			} else {
+				this.createStart = this.roundTime(mouse);
+				this.createEvent = {
+					name: `Yo - ${this.user.name}`,
+					color: 'success',
+					start: this.createStart,
+					end: this.createStart + 1800000,
+					timed: true,
+					disable: false,
+				};
+				if (!this.newEvent) {
+					this.events.push(this.createEvent);
+					this.newEvent = this.createEvent;
+				}
+			}
+		},
+		extendBottom(event) {
+			if (event.disable) return;
+			this.createEvent = event;
+			this.createStart = event.start;
+			this.extendOriginal = event.end;
+		},
+		mouseMove(tms) {
+			const mouse = this.toTime(tms);
+
+			if (this.dragEvent && this.dragTime !== null) {
+				const start = this.dragEvent.start;
+				const end = this.dragEvent.end;
+				const duration = end - start;
+				const newStartTime = mouse - this.dragTime;
+				const newStart = this.roundTime(newStartTime);
+				const newEnd = newStart + duration;
+
+				this.dragEvent.start = newStart;
+				this.dragEvent.end = newEnd;
+			} else if (this.createEvent && this.createStart !== null) {
+				const mouseRounded = this.roundTime(mouse, false);
+				const min = Math.min(mouseRounded, this.createStart);
+				const max = Math.max(mouseRounded, this.createStart);
+
+				this.createEvent.start = min;
+				this.createEvent.end = max;
+			}
+		},
+		endDrag() {
+			this.dragTime = null;
+			this.dragEvent = null;
+			this.createEvent = null;
+			this.createStart = null;
+			this.extendOriginal = null;
+		},
+		cancelDrag() {
+			if (this.createEvent) {
+				if (this.extendOriginal) {
+					this.createEvent.end = this.extendOriginal;
+				} else {
+					const i = this.events.indexOf(this.createEvent);
+					if (i !== -1) {
+						this.events.splice(i, 1);
+					}
+				}
+			}
+
+			this.createEvent = null;
+			this.createStart = null;
+			this.dragTime = null;
+			this.dragEvent = null;
+		},
+		roundTime(time, down = true) {
+			const roundTo = 15; // minutes
+			const roundDownTime = roundTo * 60 * 1000;
+
+			return down
+				? time - (time % roundDownTime)
+				: time + (roundDownTime - (time % roundDownTime));
+		},
+		toTime(tms) {
+			return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime();
+		},
+		resetEvent() {
+			this.newEvent = null;
+			this.events = [
+				{
+					name: 'Jose',
+					start: 1620715500000,
+					end: 1620715500000,
+					timed: true,
+					disable: true,
+				},
+			];
+		},
 	},
 };
 </script>
@@ -485,6 +803,41 @@ $primary: #2070e5;
 		left: 100%;
 		border-color: transparent;
 		border-left-color: $info;
+	}
+}
+
+.v-event-draggable {
+	padding-left: 6px;
+}
+
+.v-event-timed {
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.v-event-drag-bottom {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 4px;
+	height: 4px;
+	cursor: ns-resize;
+
+	&::after {
+		display: none;
+		position: absolute;
+		left: 50%;
+		height: 4px;
+		border-top: 1px solid white;
+		border-bottom: 1px solid white;
+		width: 16px;
+		margin-left: -8px;
+		opacity: 0.8;
+		content: '';
+	}
+
+	&:hover::after {
+		display: block;
 	}
 }
 </style>

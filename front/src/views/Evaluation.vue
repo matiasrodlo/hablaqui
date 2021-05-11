@@ -1,11 +1,12 @@
 <template>
 	<div>
 		<!-- appbar -->
-		<div class="primary">
+		<div :class="inEvaluation ? 'primary' : 'trasnparent'">
 			<appbar />
 		</div>
 		<!-- content -->
 		<div
+			v-if="inEvaluation"
 			class="primary white--text text-center"
 			style="position: relative; padding: 100px 0; height: 400px"
 		>
@@ -27,7 +28,6 @@
 										<div class="primary--text font-weight-bold title">
 											¿Cuál es tu género?
 										</div>
-
 										<v-btn
 											:color="gender === 'female' ? 'primary' : '#BDBDBD'"
 											:outlined="gender !== 'female'"
@@ -591,7 +591,7 @@
 										<v-btn text color="primary" @click="step = 4">
 											Atras
 										</v-btn>
-										<v-btn text color="primary">
+										<v-btn text color="primary" @click="openPrecharge">
 											Buscar
 										</v-btn>
 									</v-stepper-content>
@@ -659,6 +659,14 @@
 				</v-container>
 			</div>
 		</div>
+		<v-dialog v-model="dialogPrecharge" transition="dialog-bottom-transition" max-width="600">
+			<v-card>
+				<v-card-text>
+					<Precharge />
+				</v-card-text>
+			</v-card>
+		</v-dialog>
+		<div v-if="inSelection"><Selection /></div>
 	</div>
 </template>
 
@@ -669,9 +677,14 @@ export default {
 	name: 'Evaluation',
 	components: {
 		Appbar,
+		Precharge: () => import('@/components/evaluation/Precharge'),
+		Selection: () => import('@/components/evaluation/Selection'),
 	},
 	data() {
 		return {
+			inEvaluation: true,
+			dialogPrecharge: false,
+			inSelection: false,
 			step: '0',
 			gender: '',
 			age: '',
@@ -689,6 +702,14 @@ export default {
 			} else {
 				if (this.themes.length < 3) this.themes.push(value);
 			}
+		},
+		openPrecharge() {
+			this.dialogPrecharge = true;
+			setTimeout(() => {
+				this.dialogPrecharge = false;
+				this.inEvaluation = false;
+				this.inSelection = true;
+			}, 2100);
 		},
 	},
 };
