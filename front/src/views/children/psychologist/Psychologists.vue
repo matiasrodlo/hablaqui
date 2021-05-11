@@ -491,6 +491,7 @@ export default {
 		...mapGetters({
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
+			loggedIn: 'User/loggedIn',
 		}),
 	},
 	mounted() {
@@ -515,7 +516,8 @@ export default {
 		},
 		toAuth(item) {
 			localStorage.setItem('psi', JSON.stringify(item));
-			this.$router.push({ path: '/auth/q=register' });
+			if (this.loggedIn) this.$router.push({ name: 'pagos-home' });
+			else this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
 			const panel = {

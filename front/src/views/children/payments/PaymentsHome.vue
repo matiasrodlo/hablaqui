@@ -278,7 +278,13 @@
 										<v-list-item-content>
 											<v-list-item-title class="subtitle-2">
 												Psicólogo
-												<v-btn text color="primary"> Cambiar</v-btn>
+												<v-btn
+													text
+													color="primary"
+													:to="{ name: 'all-psicologos' }"
+												>
+													Cambiar
+												</v-btn>
 											</v-list-item-title>
 											<v-list-item-subtitle class="title font-weight-bold">
 												{{ psi.name }}
@@ -290,7 +296,14 @@
 									</v-list-item>
 									<div class="caption">
 										Suscripción
-										<span class="primary--text">Cambiar</span>
+										<v-btn
+											text
+											color="primary"
+											small
+											@click="() => (breakCrumbs = 1)"
+										>
+											Cambiar
+										</v-btn>
 									</div>
 									<div class="title font-weight-bold">
 										Sesiones por videollamada
@@ -301,7 +314,12 @@
 									</div>
 								</v-col>
 								<v-col cols="5">
-									<v-btn color="primary" block style="border-radius: 10px">
+									<v-btn
+										color="primary"
+										block
+										style="border-radius: 10px"
+										@click="() => (breakCrumbs = 3)"
+									>
 										Continuar al pago
 									</v-btn>
 									<div class="caption my-4 text-center">
