@@ -2,7 +2,7 @@ import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import { okResponse } from '../utils/responses/functions';
+import { okResponse, restResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -17,6 +17,19 @@ const match = async body => {
 		specialties: { $all: payload.themes },
 	});
 	return okResponse('psicologos encontrados', { matchedPsychologists });
+};
+
+const createSession = async body => {
+	const { session } = body;
+	Psychologist.findOneAndUpdate(
+		{ _id: body.psychologistId },
+		{
+			$push: { session },
+		},
+		{ upsert: true }
+	);
+	logInfo('creo una nueva cita');
+	return okResponse('sesion creada');
 };
 
 const register = async (body, avatar) => {
@@ -43,7 +56,7 @@ const register = async (body, avatar) => {
 		psychologist,
 	};
 
-	const user = await User.create(newUser);
+	User.create(newUser);
 
 	return okResponse('psicologo creado');
 };
@@ -52,6 +65,7 @@ const psychologistsService = {
 	getAll,
 	match,
 	register,
+	createSession,
 };
 
 export default Object.freeze(psychologistsService);

@@ -1,5 +1,28 @@
-import uniqueValidator from 'mongoose-unique-validator';
 import { Schema, model } from 'mongoose';
+
+let session = new Schema({
+	date: {
+		type: Date,
+	},
+	start: {
+		type: String,
+	},
+	end: {
+		type: String,
+	},
+	user: {
+		type: String,
+	},
+	typeSession: {
+		type: String,
+	},
+	typePayments: {
+		type: String,
+	},
+	statePayments: {
+		type: String,
+	},
+});
 
 let psychologist = new Schema({
 	avatar: {
@@ -38,6 +61,7 @@ let psychologist = new Schema({
 	model: {
 		type: Array,
 	},
+	sessions: [session],
 });
 
 //psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
