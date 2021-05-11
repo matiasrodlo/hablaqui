@@ -361,7 +361,7 @@ export default {
 		return {
 			selectedItem: '',
 			picker: '',
-			breakCrumbs: 2,
+			breakCrumbs: 0,
 			plans: [
 				{
 					id: 1,
@@ -478,7 +478,6 @@ export default {
 		const psi = JSON.parse(localStorage.getItem('psi'));
 		if (psi) {
 			next();
-			console.log(psi);
 		} else {
 			next({ name: 'evaluacion' });
 		}
