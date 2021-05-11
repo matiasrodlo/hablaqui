@@ -33,6 +33,18 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
+	async createSession(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.createSession(
+				body,
+				res
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error creando una cita');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

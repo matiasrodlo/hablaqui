@@ -17,5 +17,10 @@ psychologistsRouter.post(
 	[multer.single('avatar'), storage],
 	psychologistsController.register
 );
+psychologistsRouter.post(
+	'/psychologists/session/create',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createSession
+);
 
 export default psychologistsRouter;
