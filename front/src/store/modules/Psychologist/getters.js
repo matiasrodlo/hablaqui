@@ -1,6 +1,9 @@
 export default {
 	psychologists: state => {
-		return state.psychologists.map(item => ({
+		const psy = state.psychologists.sort(function randOrd() {
+			return Math.round(Math.random()) - 0.5;
+		});
+		return psy.map(item => ({
 			...item,
 			specialties: item.specialties.map(specialties => specialties.toLowerCase()),
 		}));
