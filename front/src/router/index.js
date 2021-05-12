@@ -12,7 +12,7 @@ const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
-const PaymentsHome = () => import('@/views/children/payments/PaymentsHome');
+const Plan = () => import('@/views/children/payments/Plan');
 const PendingPay = () => import('@/views/children/payments/PendingPay');
 const RegisterPsi = () => import('@/views/RegisterPsi');
 const SuccessPay = () => import('@/views/children/payments/SuccessPay');
@@ -95,7 +95,7 @@ const routes = [
 			{
 				path: 'plan',
 				name: 'plan',
-				component: PaymentsHome,
+				component: Plan,
 				meta: { title: 'Planes y pagos' },
 			},
 			{

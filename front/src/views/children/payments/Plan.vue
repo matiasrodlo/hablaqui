@@ -197,7 +197,7 @@
 												:key="deal.id"
 												class="ma-2"
 												link
-												:value="deal"
+												:value="{ ...deal, plan: j }"
 											>
 												<v-list-item-content>
 													<v-list-item-title
@@ -235,7 +235,11 @@
 											v-if="el.deals.some(u => selectedItem.id === u.id)"
 											class="text-center"
 										>
-											<v-btn small color="primary">
+											<v-btn
+												small
+												color="primary"
+												@click="() => (breakCrumbs = 2)"
+											>
 												Continuar
 											</v-btn>
 										</div>
@@ -306,11 +310,11 @@
 										</v-btn>
 									</div>
 									<div class="title font-weight-bold">
-										Sesiones por videollamada
+										{{ plans[selectedItem.plan].title }}
 									</div>
 									<div class="subtitle-1 my-2">
-										4 sesiones en vivo/mensuales (50 min) Habla con un psicólogo
-										por videollamada, sin tener que desplazarte
+										{{ plans[selectedItem.plan].subtitle }}
+										{{ plans[selectedItem.plan].description }}
 									</div>
 								</v-col>
 								<v-col cols="5">
@@ -329,13 +333,13 @@
 										Resumen
 									</div>
 									<div>
-										Sesiones por videollamada
+										{{ plans[selectedItem.plan].title }}
 									</div>
 									<div
 										class="font-weight-bold text-h6 d-flex justify-space-between"
 									>
 										<span>Monto total</span>
-										<span>$17.500</span>
+										<span>${{ plans[selectedItem.plan].price }}</span>
 									</div>
 									<div class="caption my-4 text-left">
 										Realiza el pago de tu suscripción con tarjeta de débito y
