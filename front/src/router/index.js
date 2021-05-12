@@ -84,7 +84,7 @@ const routes = [
 		path: '/evaluacion',
 		name: 'evaluacion',
 		component: Evaluation,
-		meta: { title: 'Evaluacion' },
+		meta: { title: 'Evaluacion', requiresAuth: true },
 	},
 	{
 		path: '/pagos',
@@ -96,7 +96,7 @@ const routes = [
 				path: 'plan',
 				name: 'plan',
 				component: Plan,
-				meta: { title: 'Planes y pagos' },
+				meta: { title: 'Planes y pagos', requiresAuth: true },
 			},
 			{
 				path: 'pending-pay',
