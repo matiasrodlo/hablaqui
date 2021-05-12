@@ -20,4 +20,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async matchPsi({ commit }, payload) {
+		try {
+			await axios('/psychologists/match', {
+				method: 'POST',
+				data: payload,
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 };

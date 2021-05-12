@@ -148,25 +148,25 @@
 										</div>
 
 										<v-btn
-											:color="firstTherapy ? 'primary' : '#BDBDBD'"
-											:outlined="!firstTherapy"
+											:color="firstTherapy === 'si' ? 'primary' : '#BDBDBD'"
+											:outlined="firstTherapy != 'si'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="firstTherapy = true"
+											@click="firstTherapy = 'si'"
 										>
 											Si
 										</v-btn>
 
 										<v-btn
-											:color="!firstTherapy ? 'primary' : '#BDBDBD'"
-											:outlined="firstTherapy"
+											:color="firstTherapy == 'no' ? 'primary' : '#BDBDBD'"
+											:outlined="firstTherapy != 'no'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="firstTherapy = false"
+											@click="firstTherapy = 'no'"
 										>
 											No
 										</v-btn>
@@ -444,7 +444,7 @@
 									</v-stepper-content>
 									<v-stepper-content step="4">
 										<div class="primary--text font-weight-bold title">
-											. ¿Buscas algún enfoque terapéutico en específico?
+											¿Buscas algún enfoque terapéutico en específico?
 										</div>
 										<div
 											class="pa-2 my-4"
@@ -547,8 +547,8 @@
 											Mujer
 										</v-btn>
 										<v-btn
-											:color="gender === 'male' ? 'primary' : '#BDBDBD'"
-											:outlined="gender !== 'male'"
+											:color="genreConfort === 'male' ? 'primary' : '#BDBDBD'"
+											:outlined="genreConfort !== 'male'"
 											block
 											rounded
 											large
@@ -603,57 +603,52 @@
 						<v-col cols="12">
 							<v-divider style="border-width: 1px"></v-divider>
 						</v-col>
-						<v-col cols="5">
-							<v-card flat>
-								<v-card-text>
-									<v-row>
-										<v-col cols="3">
-											<v-avatar color="primary" size="80"></v-avatar>
-										</v-col>
-										<v-col class="text-left">
-											<div class="title primary--text">
-												Michael Martín
-											</div>
-											<div class="text--secondary">
-												Depresión, ansiedad, estrés, trastornos de
-												personalidad, duelo o pérdida, trastornos del ánimo;
-												cambio de hábito; fobia social.
-											</div>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col cols="2">
-							<v-divider vertical style="border-width: 1px"></v-divider>
-						</v-col>
-						<v-col cols="5">
-							<v-card flat>
-								<v-card-text>
-									<v-row>
-										<v-col cols="3">
-											<v-avatar color="primary" size="80"></v-avatar>
-										</v-col>
-										<v-col class="text-left">
-											<div class="title primary--text">
-												Michael Martín
-											</div>
-											<div class="text--secondary">
-												Depresión, ansiedad, estrés, trastornos de
-												personalidad, duelo o pérdida, trastornos del ánimo;
-												cambio de hábito; fobia social.
-											</div>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col cols="12" class="mb-10">
-							<v-badge color="cyan" class="mr-4"></v-badge>
-							<v-badge color="primary" class="ml-4 mr-4"></v-badge>
-							<v-badge color="purple" class="ml-4 mr-4"></v-badge>
-							<v-badge color="orange" class="ml-4 mr-4"></v-badge>
-							<v-badge color="yellow" class="ml-4 mr-4"></v-badge>
+						<v-col>
+							<v-carousel
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								hide-delimiter-background
+								height="270"
+								light
+							>
+								<v-carousel-item v-for="(element, i) in psi" :key="i">
+									<div class="text-center d-flex justify-center align-center">
+										<v-card
+											outlined
+											v-for="(item, l) in element"
+											:key="l"
+											class="ma-2"
+										>
+											<v-card-text>
+												<v-row>
+													<v-col cols="3">
+														<v-avatar size="80">
+															<v-img :src="item.avatar"></v-img>
+														</v-avatar>
+													</v-col>
+													<v-col class="text-left">
+														<div class="title primary--text">
+															{{ item.name }}
+														</div>
+														Especialidades:
+														<span
+															v-for="(tag, k) in item.specialties"
+															:key="k"
+														>
+															<v-chip class="ma-2" small>
+																<span class="text-capitalize">
+																	{{ tag }}
+																</span>
+															</v-chip>
+														</span>
+													</v-col>
+												</v-row>
+											</v-card-text>
+										</v-card>
+									</div>
+								</v-carousel-item>
+							</v-carousel>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -672,6 +667,7 @@
 
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	name: 'Evaluation',
@@ -694,6 +690,29 @@ export default {
 			genreConfort: '',
 		};
 	},
+	computed: {
+		psi() {
+			if (!this.psychologists) return [];
+			const items = this.psychologists;
+			const n = 3;
+			const result = [[], [], []];
+			const wordsPerLine = Math.ceil(items.length / 4);
+			for (let line = 0; line < n; line++) {
+				for (let i = 0; i < wordsPerLine; i++) {
+					const value = items[i + line * wordsPerLine];
+					if (!value) continue;
+					result[line].push(value);
+				}
+			}
+			return result;
+		},
+		...mapGetters({
+			psychologists: 'Psychologist/psychologists',
+		}),
+	},
+	mounted() {
+		this.getPsychologists();
+	},
 	methods: {
 		setTheme(value) {
 			if (this.themes.includes(value)) {
@@ -710,7 +729,21 @@ export default {
 				this.inEvaluation = false;
 				this.inSelection = true;
 			}, 2100);
+			// const payload = {
+			// 	gender: this.gender,
+			// 	age: this.age,
+			// 	firstTherapy: this.firstTherapy,
+			// 	themes: this.themes,
+			// 	genreConfort: this.genreConfort,
+			// 	focus: this.focus,
+			// };
+			// console.log(payload);
+			// this.matchPsi(payload);
 		},
+		...mapActions({
+			getPsychologists: 'Psychologist/getPsychologists',
+			matchPsi: 'Psychologist/matchPsi',
+		}),
 	},
 };
 </script>

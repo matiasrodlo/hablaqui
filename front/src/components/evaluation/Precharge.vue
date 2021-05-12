@@ -15,8 +15,8 @@
 			</v-col>
 			<v-col cols="12" md="8" class="text-center text-md-left">
 				<div
-					v-for="el in items"
-					:key="el"
+					v-for="(el, i) in items"
+					:key="i"
 					class="my-3 font-weight-bold d-flex align-center justify-space-between"
 				>
 					<span>{{ el.title }}</span>
