@@ -62,13 +62,13 @@
 								<v-col cols="6">
 									<v-date-picker
 										full-width
-										v-model="picker"
-										@change="() => resetEvent()"
+										@change="changePicker"
+										:value="picker"
 										locale="es"
 									></v-date-picker>
 								</v-col>
 								<v-col cols="6">
-									<v-sheet height="400">
+									<v-card flat height="400">
 										<v-calendar
 											ref="calendar"
 											v-model="picker"
@@ -110,7 +110,15 @@
 												></div>
 											</template>
 										</v-calendar>
-									</v-sheet>
+										<v-overlay absolute :value="!picker">
+											<div
+												class="title px-6 py-3"
+												style="border-radius: 10px; border: 1px solid white"
+											>
+												Seleccione un día primero
+											</div>
+										</v-overlay>
+									</v-card>
 								</v-col>
 							</v-row>
 						</v-card-text>
@@ -600,6 +608,10 @@ export default {
 		},
 		toTime(tms) {
 			return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime();
+		},
+		changePicker(e) {
+			if (e !== this.picker) this.resetEvent();
+			this.picker = e;
 		},
 		resetEvent() {
 			this.newEvent = null;
