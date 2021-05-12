@@ -10,7 +10,9 @@
 			</v-col>
 			<v-col cols="12" md="4" class="text-center text-md-right">
 				<v-progress-circular indeterminate color="primary" size="130" :width="15">
-					<div class="spinner"></div>
+					<div class="spinner">
+						<v-img width="120" :src="image"></v-img>
+					</div>
 				</v-progress-circular>
 			</v-col>
 			<v-col cols="12" md="8" class="text-center text-md-left">
@@ -31,29 +33,40 @@
 
 <script>
 export default {
+	props: {
+		avatar: {
+			type: Array,
+			default: () => [],
+		},
+	},
 	data() {
 		return {
+			image: '',
 			items: [
 				{ title: 'Calculando tu perfil', done: false },
 				{ title: 'Buscando especialistas para ti', done: false },
-				{ title: 'Analizando sugerencias', done: false },
+				{ title: 'Analizando sugerencias', avatar: '', done: false },
 				{ title: 'Seleccionando especialistas', done: false },
 			],
 		};
 	},
 	created() {
 		setTimeout(() => {
+			this.image = this.avatar[0];
 			this.items[0].done = true;
-		}, 200);
+		}, 400);
 		setTimeout(() => {
+			this.image = this.avatar[1];
 			this.items[1].done = true;
-		}, 500);
+		}, 800);
 		setTimeout(() => {
+			this.image = this.avatar[2];
 			this.items[2].done = true;
-		}, 1200);
+		}, 1500);
 		setTimeout(() => {
+			this.image = this.avatar[3];
 			this.items[3].done = true;
-		}, 2000);
+		}, 2300);
 	},
 };
 </script>

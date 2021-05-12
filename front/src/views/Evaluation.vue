@@ -453,7 +453,7 @@
 		<v-dialog v-model="dialogPrecharge" transition="dialog-bottom-transition" max-width="600">
 			<v-card>
 				<v-card-text>
-					<Precharge />
+					<Precharge :avatar="psychologists.map(el => el.avatar)" />
 				</v-card-text>
 			</v-card>
 		</v-dialog>
@@ -540,7 +540,7 @@ export default {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2100);
+			}, 2300);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
