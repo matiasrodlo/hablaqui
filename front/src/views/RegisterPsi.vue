@@ -5,231 +5,285 @@
 			fluid
 			class="login-image"
 		>
-			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
-				<v-col cols="12" sm="5">
-					<!-- formulario -->
-					<h1>Registro de Psicologos</h1>
-					<v-form @submit.prevent="onSubmit">
-						<v-text-field
-							v-model="form.code"
-							type="number"
-							label="Codigo"
-							outlined
-							autocomplete="off"
-						></v-text-field>
-						<v-text-field
-							v-model="form.name"
-							type="text"
-							label="Nombre completo"
-							outlined
-							autocomplete="off"
-							:error-messages="nameErrors"
-						></v-text-field>
-						<v-textarea
-							v-model="form.description"
-							type="text"
-							label="Descripcion"
-							outlined
-							autocomplete="off"
-						></v-textarea>
-						<v-text-field
-							v-model="form.email"
-							type="text"
-							label="Correo electronico"
-							outlined
-							:error-messages="emailErrors"
-							autocomplete="off"
-						></v-text-field>
-						<v-textarea
-							v-model="form.experience"
-							type="text"
-							label="Experiencia"
-							height="100px"
-							outlined
-							autocomplete="off"
-						></v-textarea>
-						<v-textarea
-							v-model="form.formation"
-							type="text"
-							label="Formacion"
-							height="100px"
-							outlined
-							autocomplete="off"
-						></v-textarea>
-						<v-text-field
-							v-model="form.password"
-							label="Contraseña"
-							outlined
-							:error-messages="passwordErrors"
-							:type="showPassword ? 'text' : 'password'"
-							:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-							@click:append="showPassword = !showPassword"
-						></v-text-field>
-						<v-text-field
-							v-model="form.repeatPassword"
-							label="Repite contraseña"
-							outlined
-							:error-messages="repeatPasswordErrors"
-							:type="showRepeatPassword ? 'text' : 'password'"
-							:append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
-							@click:append="showRepeatPassword = !showRepeatPassword"
-						></v-text-field>
-						<h3>Especialidades</h3>
-						<v-container fluid>
-							<v-checkbox
-								v-model="form.specialties"
-								label="Depresión"
-								value="Depresión"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Ansiedad o estrés"
-								value="Ansiedad o estrés"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Fobia social"
-								value="Fobia social"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Trastorno obsesivo compulsivo"
-								value="Trastorno obsesivo compulsivo"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Ansiedad generalizada"
-								value="Ansiedad generalizada"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Autoconocimiento"
-								value="Autoconocimiento"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Cambio de hábitos"
-								value="Cambio de hábitos"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Autoestima"
-								value="Autoestima"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Enfoque de género y diversidad"
-								value="Enfoque de género y diversidad"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Dificultades interpersonales"
-								value="Dificultades interpersonales"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Control de ira"
-								value="Control de ira"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Duelo o perdida"
-								value="Duelo o perdida"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Regulación emocional"
-								value="Regulación emocional"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Trastornos del sueño"
-								value="Trastornos del sueño"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Déficit atencional"
-								value="Déficit atencional"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Sexualidad"
-								value="Sexualidad"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Trastornos de la conducta alimentaria"
-								value="Trastornos de la conducta alimentaria"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Trastornos de personalidad"
-								value="Trastornos de personalidad"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.specialties"
-								label="Trastornos del animo (bipolaridad)"
-								value="Trastornos del animo (bipolaridad)"
-							></v-checkbox>
-						</v-container>
-						<h3>Modelos</h3>
-						<v-container fluid>
-							<v-checkbox
-								v-model="form.models"
-								label="Psicoanálisis"
-								value="Psicoanálisis"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.models"
-								label="Cognitivo-conductual"
-								value="Cognitivo-conductual"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.models"
-								label="Humanista"
-								value="Humanista"
-							></v-checkbox
-							><v-checkbox
-								v-model="form.models"
-								label="Sistémico"
-								value="Sistémico"
-							></v-checkbox>
-							<v-checkbox
-								v-model="form.models"
-								label="Contextual"
-								value="Contextual"
-							></v-checkbox>
-						</v-container>
-						<h3>Foto de Perfil</h3>
-						<p>
-							Para poder subir una foto, esta tiene que seguir una serie de reglas,
-							las puedes leer en
-							<a
-								href="https://drive.google.com/file/d/1Tmxd4XVcSs_t1-BrMoJB9NOY_N1fC_56/view?usp=sharing"
-								target="_blank"
-								>este documento</a
-							>
-						</p>
-						<v-file-input
-							v-model="form.avatar"
-							label="File input"
-							filled
-							prepend-icon="mdi-camera"
-						></v-file-input>
-						<v-radio-group v-model="form.gender" column>
-							<v-radio label="Hombre" value="male"></v-radio>
-							<v-radio label="Mujer" value="female"></v-radio>
-							<v-radio label="No binario" value="non-binary"></v-radio>
-							<v-radio label="Prefiero no decirlo" value="n/a"></v-radio>
-						</v-radio-group>
-
-						<span v-if="terminado">Te has registrado con exito :D</span>
-						<v-btn block rounded color="primary" type="submit">
-							Regístrate
-						</v-btn>
-					</v-form>
+			<v-row justify="center" align="center" style="height: 100vh">
+				<v-col cols="12" sm="6">
+					<div class="mb-10">
+						<div
+							class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+						>
+							Bienvenido al Regístro de psicologo
+						</div>
+						<div class="text-center text-h6 text-lg-h5 text--secondary">
+							¡Nos alegra que estés aquí!
+						</div>
+					</div>
+					<v-row justify="center" align="center" class="text-center">
+						<v-col cols="12" sm="10" lg="8">
+							<v-window v-model="step">
+								<v-window-item :value="1">
+									<label for="avatar">
+										<v-avatar
+											size="100"
+											style="border: 1px solid #2070E5; cursor: pointer;"
+										>
+											<v-img v-if="urlAvatar" :src="urlAvatar"></v-img>
+											<v-icon color="primary" size="100" v-else
+												>mdi-account</v-icon
+											>
+										</v-avatar>
+									</label>
+									<p>
+										Para subir una foto debe seguir esta serie de
+										<v-btn
+											text
+											color="primary"
+											class="py-0 my-0"
+											href="https://drive.google.com/file/d/1Tmxd4XVcSs_t1-BrMoJB9NOY_N1fC_56/view?usp=sharing"
+											target="_blank"
+										>
+											reglas
+										</v-btn>
+									</p>
+									<v-file-input
+										id="avatar"
+										label="File input"
+										filled
+										@change="setAvatar"
+										prepend-icon="mdi-camera"
+										class="d-none"
+									></v-file-input>
+									<div
+										class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									>
+										Datos personales
+									</div>
+									<v-text-field
+										v-model="form.name"
+										type="text"
+										label="Nombre completo"
+										outlined
+										autocomplete="off"
+										:error-messages="nameErrors"
+									></v-text-field>
+									<v-radio-group row v-model="form.gender" column>
+										<v-radio label="Hombre" value="male"></v-radio>
+										<v-radio label="Mujer" value="female"></v-radio>
+										<v-radio label="No binario" value="non-binary"></v-radio>
+									</v-radio-group>
+									<v-text-field
+										v-model="form.email"
+										type="text"
+										label="Correo electronico"
+										outlined
+										:error-messages="emailErrors"
+										autocomplete="off"
+									></v-text-field>
+									<v-text-field
+										v-model="form.code"
+										type="number"
+										label="Codigo"
+										outlined
+										autocomplete="off"
+									></v-text-field>
+									<v-text-field
+										v-model="form.password"
+										label="Contraseña"
+										outlined
+										:error-messages="passwordErrors"
+										:type="showPassword ? 'text' : 'password'"
+										:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+										@click:append="showPassword = !showPassword"
+									></v-text-field>
+									<v-text-field
+										v-model="form.repeatPassword"
+										label="Repite contraseña"
+										outlined
+										:error-messages="repeatPasswordErrors"
+										:type="showRepeatPassword ? 'text' : 'password'"
+										:append-icon="
+											showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'
+										"
+										@click:append="showRepeatPassword = !showRepeatPassword"
+									></v-text-field>
+									<v-btn outlined rounded color="primary" @click="step = 2">
+										Siguiente
+									</v-btn>
+								</v-window-item>
+								<v-window-item :value="2">
+									<div
+										class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									>
+										Tus clientes quieren saber de ti cuentales que eres el mejor
+									</div>
+									<v-textarea
+										v-model="form.description"
+										type="text"
+										label="Descripcion personal"
+										outlined
+										autocomplete="off"
+									></v-textarea>
+									<v-textarea
+										v-model="form.experience"
+										type="text"
+										label="Experiencia"
+										height="100px"
+										outlined
+										autocomplete="off"
+									></v-textarea>
+									<v-textarea
+										v-model="form.formation"
+										type="text"
+										label="Formacion"
+										height="100px"
+										outlined
+										autocomplete="off"
+									></v-textarea>
+									<v-btn
+										outlined
+										rounded
+										color="primary"
+										class="ma-2"
+										@click="step = 1"
+									>
+										Regresar
+									</v-btn>
+									<v-btn
+										outlined
+										rounded
+										color="primary"
+										class="ma-2"
+										@click="step = 3"
+									>
+										Siguiente
+									</v-btn>
+								</v-window-item>
+								<v-window-item :value="3">
+									<div
+										class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									>
+										Tus especialidades te ayudara a que puedan encontrarte mas
+										rapido
+									</div>
+									<v-row justify="center" align="center">
+										<v-col cols="6">
+											<template v-for="(item, i) in specialties">
+												<v-checkbox
+													:key="i"
+													v-if="i <= 9"
+													v-model="form.specialties"
+													:label="item"
+													:value="item"
+													hide-details
+												></v-checkbox>
+											</template>
+										</v-col>
+										<v-col cols="6">
+											<template v-for="(item, i) in specialties">
+												<v-checkbox
+													:key="i"
+													v-if="i > 9"
+													v-model="form.specialties"
+													:label="item"
+													:value="item"
+													hide-details
+												></v-checkbox>
+											</template>
+										</v-col>
+										<v-col
+											cols="12"
+											class="text-center text-h6 font-weight-bold text--secondary mb-2"
+										>
+											Modelos terapeuticos
+										</v-col>
+										<v-col cols="4">
+											<v-checkbox
+												v-model="form.models"
+												label="Psicoanálisis"
+												value="Psicoanálisis"
+												hide-details
+											></v-checkbox>
+										</v-col>
+										<v-col cols="4">
+											<v-checkbox
+												v-model="form.models"
+												label="Sistémico"
+												value="Sistémico"
+												hide-details
+											></v-checkbox>
+										</v-col>
+										<v-col cols="4">
+											<v-checkbox
+												v-model="form.models"
+												label="Humanista"
+												value="Humanista"
+												hide-details
+											>
+											</v-checkbox>
+										</v-col>
+										<v-col cols="6">
+											<v-checkbox
+												v-model="form.models"
+												label="Cognitivo-conductual"
+												value="Cognitivo-conductual"
+												hide-details
+											></v-checkbox>
+										</v-col>
+										<v-col cols="3">
+											<v-checkbox
+												v-model="form.models"
+												label="Contextual"
+												value="Contextual"
+												hide-details
+											></v-checkbox>
+										</v-col>
+									</v-row>
+									<v-btn
+										class="mt-10 mx-2"
+										outlined
+										rounded
+										color="primary"
+										@click="step = 2"
+									>
+										Regresar
+									</v-btn>
+									<v-btn
+										class="mt-10 mx-2"
+										rounded
+										color="primary"
+										@click="handleClick"
+									>
+										Regístrate
+									</v-btn>
+								</v-window-item>
+							</v-window>
+						</v-col>
+					</v-row>
 				</v-col>
-				<v-col class="12" sm="7"></v-col>
+				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
+					<v-window v-model="onboarding" class="login-circle-image">
+						<v-window-item v-for="n in length" :key="`card-${n.id}`">
+							<div class="text-center ">
+								<v-list-item-avatar size="400" class="ml-4">
+									<v-img :src="n.img"></v-img>
+								</v-list-item-avatar>
+							</div>
+							<div class="text-h6 text-center white--text py-4">
+								{{ n.text }}
+							</div>
+						</v-window-item>
+					</v-window>
+					<v-item-group v-model="onboarding" class="text-center" mandatory>
+						<v-item
+							v-for="n in length"
+							:key="`btn-${n.id}`"
+							v-slot="{ active, toggle }"
+						>
+							<v-btn :input-value="active" icon @click="toggle" color="#BDBDBD">
+								<v-icon>mdi-record</v-icon>
+							</v-btn>
+						</v-item>
+					</v-item-group>
+				</v-col>
 			</v-row>
 		</v-container>
 	</v-img>
@@ -238,17 +292,45 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
 	mixins: [validationMixin],
 	data() {
 		return {
+			step: 1,
+			onboarding: 0,
 			form: null,
 			repeatPassword: null,
 			showPassword: false,
 			showRepeatPassword: false,
 			loading: false,
 			terminado: false,
+			urlAvatar: '',
+			length: [
+				{
+					id: 1,
+					img: 'img/auth.png',
+					text:
+						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+				},
+				{
+					id: 2,
+					img: 'img/auth.png',
+					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+				},
+				{
+					id: 3,
+					img: 'img/auth.png',
+					text:
+						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
+				},
+				{
+					id: 4,
+					img: 'img/auth.png',
+					text:
+						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+				},
+			],
 		};
 	},
 	created() {
@@ -290,6 +372,12 @@ export default {
 				errors.push('Las contraseñas deben ser iguales');
 			return errors;
 		},
+		...mapGetters({
+			specialties: 'Appointments/specialties',
+		}),
+	},
+	mounted() {
+		this.getAppointments();
 	},
 	methods: {
 		defaultForm() {
@@ -324,15 +412,22 @@ export default {
 
 			return formData;
 		},
-		async onSubmit() {
-			//this.$v.$touch();
+		async handleClick() {
+			// this.$v.$touch();
 			const payload = this.setFormData();
 			this.loading = true;
 			await this.registerPsychologist(payload);
 			this.loading = false;
 			this.terminado = true;
 		},
-		...mapActions({ registerPsychologist: 'Psychologist/registerPsychologist' }),
+		setAvatar(file) {
+			this.urlAvatar = URL.createObjectURL(file);
+			this.form.avatar = file;
+		},
+		...mapActions({
+			getAppointments: 'Appointments/getAppointments',
+			registerPsychologist: 'Psychologist/registerPsychologist',
+		}),
 	},
 	validations: {
 		form: {
