@@ -12,10 +12,9 @@ const getAll = async () => {
 
 const match = async body => {
 	const { payload } = body;
-	console.log(payload);
 	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender,
-		specialties: { $all: payload.themes },
+		gender: payload.gender || { $in: ['male', 'female'] },
+		specialties: { $in: payload.themes },
 	});
 	return okResponse('psicologos encontrados', { matchedPsychologists });
 };
