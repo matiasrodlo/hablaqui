@@ -185,256 +185,19 @@
 												>Selecciona hasta 3 opciones.</span
 											>
 										</div>
-										<v-row>
-											<v-col cols="6">
-												<v-btn
-													:color="
-														themes.includes('Ansiedad')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Ansiedad')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Ansiedad')"
-												>
-													Ansiedad
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Sexualidad')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Sexualidad')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Sexualidad')"
-												>
-													Sexualidad
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Depresión')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Depresión')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Depresión')"
-												>
-													Depresión
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes(
-															'Enfoque de género y diversidad'
-														)
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes(
-															'Enfoque de género y diversidad'
-														)
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="
-														() =>
-															setTheme(
-																'Enfoque de género y diversidad'
-															)
-													"
-												>
-													Enfoque de género y diversidad
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes(
-															'Dificultades interpersonales'
-														)
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes(
-															'Dificultades interpersonales'
-														)
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="
-														() =>
-															setTheme('Dificultades interpersonales')
-													"
-												>
-													Dificultades interpersonales
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Problemas de parejas')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes('Problemas de parejas')
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Problemas de parejas')"
-												>
-													Problemas de parejas
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes(
-															'Trastornos de personalidad'
-														)
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes(
-															'Trastornos de personalidad'
-														)
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="
-														() => setTheme('Trastornos de personalidad')
-													"
-												>
-													Trastornos de personalidad
-												</v-btn>
-											</v-col>
-											<v-col cols="6">
-												<v-btn
-													:color="
-														themes.includes('Control de ira')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Control de ira')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Control de ira')"
-												>
-													Control de ira
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Autoconocimiento')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Autoconocimiento')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Autoconocimiento')"
-												>
-													Autoconocimiento
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Cambio de hábitos')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes('Cambio de hábitos')
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Cambio de hábitos')"
-												>
-													Cambio de hábitos
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Autoestima')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Autoestima')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Autoestima')"
-												>
-													Autoestima
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Duelo y pérdida')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Duelo y pérdida')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Duelo y pérdida')"
-												>
-													Duelo y pérdida
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Trastornos del sueño')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="
-														!themes.includes('Trastornos del sueño')
-													"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Trastornos del sueño')"
-												>
-													Trastornos del sueño
-												</v-btn>
-												<v-btn
-													:color="
-														themes.includes('Otros')
-															? 'primary'
-															: '#BDBDBD'
-													"
-													:outlined="!themes.includes('Otros')"
-													block
-													rounded
-													large
-													class="my-4"
-													@click="() => setTheme('Otros')"
-												>
-													Otros
-												</v-btn>
-											</v-col>
-										</v-row>
+										<v-btn
+											v-for="(item, i) in appointments"
+											:key="i"
+											:color="themes.includes(item) ? 'primary' : '#BDBDBD'"
+											:outlined="!themes.includes(item)"
+											block
+											rounded
+											large
+											class="my-4"
+											@click="() => setTheme(item)"
+										>
+											{{ item }}
+										</v-btn>
 										<v-btn text color="primary" @click="step = 2">
 											Atras
 										</v-btn>
@@ -708,11 +471,13 @@ export default {
 			return result;
 		},
 		...mapGetters({
+			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
 	mounted() {
 		this.getPsychologists();
+		this.getAppointments();
 	},
 	methods: {
 		setTheme(value) {
@@ -738,6 +503,7 @@ export default {
 			console.log(this.matchedPsychologists);
 		},
 		...mapActions({
+			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
 			matchPsi: 'Psychologist/matchPsi',
 		}),
