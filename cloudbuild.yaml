@@ -23,7 +23,7 @@ steps:
     id: "generate-landing"
     waitFor: ["envvars-landing", "install-landing"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--version=landing"]
+    args: ["app", "deploy", "--version=$TRIGGER_NAME"]
     dir: "landing"
     id: "deploy-landing"
     waitFor: ["envvars-landing", "install-landing", "generate-landing"]
@@ -55,7 +55,7 @@ steps:
       [
         "app",
         "deploy",
-        "--version=diego",
+        "--version=$TRIGGER_NAME",
         "--no-promote",
         "--no-stop-previous-version",
       ]
@@ -84,7 +84,7 @@ steps:
       [
         "app",
         "deploy",
-        "--version=diego",
+        "--version=$TRIGGER_NAME",
         "--no-promote",
         "--no-stop-previous-version",
       ]
