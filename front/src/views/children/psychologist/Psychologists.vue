@@ -424,7 +424,7 @@
 											</v-row>
 
 											<v-chip-group
-												:value="motive"
+												@change="e => (motive = e)"
 												active-class="primary--text"
 											>
 												<template v-for="(tag, i) in item.specialties">
@@ -433,7 +433,6 @@
 														class="ma-2"
 														small
 														:key="i"
-														@click="motive = tag"
 													>
 														<span class="text-capitalize">
 															{{ tag }}
