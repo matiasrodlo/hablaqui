@@ -90,11 +90,11 @@ const routes = [
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
-		redirect: { name: 'pagos-home' },
+		redirect: { name: 'plan' },
 		children: [
 			{
-				path: 'home',
-				name: 'pagos-home',
+				path: 'plan',
+				name: 'plan',
 				component: PaymentsHome,
 				meta: { title: 'Planes y pagos' },
 			},

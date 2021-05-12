@@ -16,7 +16,7 @@ export default {
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			// si no tiene plan y tiene psi pre-seleccionado
 			if (!data.user.myPlan && psi) {
-				router.push({ name: 'pagos-home', query: { psi } });
+				router.push({ name: 'plan', query: { psi } });
 				// si no tiene plan y no hay psi seleccionado
 			} else if (!data.user.myPlan) {
 				router.push({ name: 'evaluacion' });
@@ -43,7 +43,7 @@ export default {
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			// si no tiene plan y tiene psi pre-seleccionado
 			if (!data.user.myPlan && psi) {
-				router.push({ name: 'pagos-home', query: { psi } });
+				router.push({ name: 'plan', query: { psi } });
 				// si no tiene plan y no hay psi seleccionado
 			} else if (!data.user.myPlan) {
 				localStorage.removeItem('psi');

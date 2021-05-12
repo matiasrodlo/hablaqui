@@ -52,7 +52,7 @@
 						Agenda con total libertad cuando te resulte más conveniente.
 					</div>
 					<v-card
-						class="mt-10"
+						class="my-16"
 						elevation="10"
 						max-width="700"
 						style="border-radius: 25px"

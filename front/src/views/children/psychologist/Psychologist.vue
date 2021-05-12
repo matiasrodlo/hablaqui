@@ -44,7 +44,7 @@
 								{{ psychologist.name }}
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<v-btn block color="primary" rounded to="/auth">
+								<v-btn block color="primary" rounded @click="toAuth">
 									Agenda cita oline
 								</v-btn>
 							</v-col>
@@ -144,6 +144,13 @@ export default {
 			return this.psychologists.find(item => item._id === this.$route.params.id);
 		},
 		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
+	},
+	methods: {
+		toAuth(item) {
+			localStorage.setItem('psi', JSON.stringify(item));
+			if (this.loggedIn) this.$router.push({ name: 'plan' });
+			else this.$router.push({ path: '/auth/q=register' });
+		},
 	},
 };
 </script>
