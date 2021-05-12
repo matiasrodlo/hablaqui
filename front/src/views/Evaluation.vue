@@ -490,7 +490,7 @@ export default {
 	computed: {
 		psi() {
 			if (!this.psychologists) return [];
-			const items = this.psychologists;
+			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
 			const wordsPerLine = Math.ceil(items.length / 4);
@@ -517,6 +517,11 @@ export default {
 		this.getAppointments();
 	},
 	methods: {
+		random() {
+			return this.psychologists.sort(function randOrd() {
+				return Math.round(Math.random()) - 0.5;
+			});
+		},
 		resetMatch() {
 			this.matchedPsychologists = [];
 			this.step = '0';
