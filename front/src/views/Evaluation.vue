@@ -661,7 +661,7 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
-		<div v-if="inSelection"><Selection /></div>
+		<div v-if="inSelection"><Selection :match="matchedPsychologists" /></div>
 	</div>
 </template>
 
@@ -688,6 +688,7 @@ export default {
 			themes: [],
 			focus: 1,
 			genreConfort: '',
+			matchedPsychologists: [],
 		};
 	},
 	computed: {
@@ -722,23 +723,19 @@ export default {
 				if (this.themes.length < 3) this.themes.push(value);
 			}
 		},
-		openPrecharge() {
+		async openPrecharge() {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
 				this.inEvaluation = false;
 				this.inSelection = true;
 			}, 2100);
-			// const payload = {
-			// 	gender: this.gender,
-			// 	age: this.age,
-			// 	firstTherapy: this.firstTherapy,
-			// 	themes: this.themes,
-			// 	genreConfort: this.genreConfort,
-			// 	focus: this.focus,
-			// };
-			// console.log(payload);
-			// this.matchPsi(payload);
+			const payload = {
+				gender: this.gender,
+				themes: this.themes,
+			};
+			this.matchedPsychologists = await this.matchPsi(payload);
+			console.log(this.matchedPsychologists);
 		},
 		...mapActions({
 			getPsychologists: 'Psychologist/getPsychologists',

@@ -12,6 +12,7 @@ const getAll = async () => {
 
 const match = async body => {
 	const { payload } = body;
+	console.log(payload);
 	const matchedPsychologists = await Psychologist.find({
 		gender: payload.gender,
 		specialties: { $all: payload.themes },

@@ -9,7 +9,7 @@
 					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
 				</div>
 			</v-col>
-			<v-col cols="12" v-for="element in 3" :key="element" class="d-flex justify-center">
+			<v-col cols="12" v-for="element in match" :key="element" class="d-flex justify-center">
 				<v-card color="white" style="border-radius: 15px">
 					<v-card-text>
 						<v-row align="center" justify="center">
@@ -26,17 +26,24 @@
 										height="100"
 									></v-btn>
 								</v-list-item-avatar>
-								<div class="caption text--secondary">
-									cedula xxxxxx
-								</div>
-								<v-btn text color="primary">Mas información</v-btn>
+								<div class="caption text--secondary">code {{ item.code }}</div>
+								<v-btn
+									text
+									color="primary"
+									:to="{
+										name: 'psicologo',
+										params: { id: item._id },
+									}"
+								>
+									Mas información
+								</v-btn>
 							</v-col>
 							<v-col cols="12" sm="9">
 								<v-row justify="space-between">
 									<v-col
 										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
 									>
-										Fernanda Croffman
+										{{ item.name }}
 									</v-col>
 									<v-col cols="12" sm="6" class="text-right">
 										<v-btn color="primary" rounded>
@@ -44,18 +51,16 @@
 										</v-btn>
 									</v-col>
 								</v-row>
-								<v-chip v-for="el in [3, 1, 2]" :key="el" small class="my-4 mx-1">
-									Ansiedad
+								<v-chip
+									v-for="el in item.specialties"
+									:key="el"
+									small
+									class="my-4 mx-1"
+								>
+									el
 								</v-chip>
 								<div class="body-2 mt-2 text-capitalize">
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-									nostrud exerci tation ullamcorper suscipit loborm dolor sit
-									amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-									Ut wisi enim ad minim veniam, qum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy
+									{{ item.description }}
 								</div>
 							</v-col>
 						</v-row>
@@ -71,7 +76,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+	props: {
+		match: {
+			type: Array,
+			default: () => [],
+		},
+	},
+};
 </script>
 
 <style lang="scss" scoped></style>

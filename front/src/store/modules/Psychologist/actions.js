@@ -22,10 +22,11 @@ export default {
 	},
 	async matchPsi({ commit }, payload) {
 		try {
-			await axios('/psychologists/match', {
+			const { data } = await axios('/psychologists/match', {
 				method: 'POST',
-				data: payload,
+				data: { payload },
 			});
+			return data.matchedPsychologists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
