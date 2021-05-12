@@ -6,14 +6,6 @@
 			<v-row justify="center" align="center">
 				<v-col cols="12">
 					<div class="d-flex justify-center align-center">
-						<v-btn
-							:disabled="breakCrumbs == 0"
-							icon
-							color="primary"
-							@click="() => (breakCrumbs -= 1)"
-						>
-							<v-icon size="48">mdi-chevron-left</v-icon>
-						</v-btn>
 						<ul id="breadcrumb">
 							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
 								<span>Agendar</span>
@@ -34,14 +26,6 @@
 								<span>Pago</span>
 							</li>
 						</ul>
-						<v-btn
-							icon
-							:disabled="breakCrumbs == 3"
-							color="primary"
-							@click="() => (breakCrumbs += 1)"
-						>
-							<v-icon size="48">mdi-chevron-right</v-icon>
-						</v-btn>
 					</div>
 				</v-col>
 				<div v-if="breakCrumbs == 0">
