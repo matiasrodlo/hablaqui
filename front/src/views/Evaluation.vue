@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<!-- appbar -->
-		<div :class="inEvaluation ? 'primary' : 'trasnparent'">
+		<div :class="!matchedPsychologists.length ? 'primary' : 'trasnparent'">
 			<appbar />
 		</div>
 		<!-- content -->
 		<div
-			v-if="inEvaluation"
+			v-if="!matchedPsychologists.length"
 			class="primary white--text text-center"
 			style="position: relative; padding: 100px 0; height: 400px"
 		>
@@ -185,19 +185,50 @@
 												>Selecciona hasta 3 opciones.</span
 											>
 										</div>
-										<v-btn
-											v-for="(item, i) in appointments"
-											:key="i"
-											:color="themes.includes(item) ? 'primary' : '#BDBDBD'"
-											:outlined="!themes.includes(item)"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="() => setTheme(item)"
-										>
-											{{ item }}
-										</v-btn>
+										<v-row>
+											<v-col>
+												<template v-for="(item, i) in specialties">
+													<v-btn
+														v-if="i <= 9"
+														:key="i"
+														:color="
+															themes.includes(item)
+																? 'primary'
+																: '#BDBDBD'
+														"
+														:outlined="!themes.includes(item)"
+														block
+														rounded
+														large
+														class="my-4"
+														@click="() => setTheme(item)"
+													>
+														{{ item }}
+													</v-btn>
+												</template>
+											</v-col>
+											<v-col>
+												<template v-for="(item, i) in specialties">
+													<v-btn
+														v-if="i >= 10"
+														:key="i"
+														:color="
+															themes.includes(item)
+																? 'primary'
+																: '#BDBDBD'
+														"
+														:outlined="!themes.includes(item)"
+														block
+														rounded
+														large
+														class="my-4"
+														@click="() => setTheme(item)"
+													>
+														{{ item }}
+													</v-btn></template
+												>
+											</v-col>
+										</v-row>
 										<v-btn text color="primary" @click="step = 2">
 											Atras
 										</v-btn>
@@ -426,7 +457,9 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
-		<div v-if="inSelection"><Selection :match="matchedPsychologists" /></div>
+		<div v-if="matchedPsychologists.length">
+			<Selection :match="matchedPsychologists" :resetMatch="resetMatch" />
+		</div>
 	</div>
 </template>
 
@@ -443,9 +476,7 @@ export default {
 	},
 	data() {
 		return {
-			inEvaluation: true,
 			dialogPrecharge: false,
-			inSelection: false,
 			step: '0',
 			gender: '',
 			age: '',
@@ -473,15 +504,25 @@ export default {
 			return result;
 		},
 		...mapGetters({
-			appointments: 'Appointments/appointments',
+			specialties: 'Appointments/specialties',
 			psychologists: 'Psychologist/psychologists',
 		}),
+	},
+	created() {
+		const match = JSON.parse(localStorage.getItem('match'));
+		if (match) this.matchedPsychologists = match;
 	},
 	mounted() {
 		this.getPsychologists();
 		this.getAppointments();
 	},
 	methods: {
+		resetMatch() {
+			this.matchedPsychologists = [];
+			this.step = '0';
+			localStorage.removeItem('match');
+			localStorage.removeItem('psi');
+		},
 		setTheme(value) {
 			if (this.themes.includes(value)) {
 				const index = this.themes.findIndex(item => item == value);
@@ -494,16 +535,19 @@ export default {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-				this.inEvaluation = false;
-				this.inSelection = true;
 			}, 2100);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
 				themes: this.themes,
 			};
-			this.matchedPsychologists = await this.matchPsi(payload);
-			console.log(this.matchedPsychologists);
+			const response = await this.matchPsi(payload);
+			if (response.length) {
+				localStorage.setItem('match', JSON.stringify(response));
+				this.matchedPsychologists = response;
+			} else {
+				alert('no se encontraron coindencias, por favor reintenta de nuevo');
+			}
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

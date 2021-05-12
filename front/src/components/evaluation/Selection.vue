@@ -8,8 +8,13 @@
 				<div class="text-center">
 					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
 				</div>
+				<div class="text-center my-2">
+					<v-btn color="primary" rounded @click="resetMatch">
+						Realizar prueba de nuevo
+					</v-btn>
+				</div>
 			</v-col>
-			<v-col cols="12" v-for="element in match" :key="element" class="d-flex justify-center">
+			<v-col cols="12" v-for="(item, r) in match" :key="r" class="d-flex justify-center">
 				<v-card color="white" style="border-radius: 15px">
 					<v-card-text>
 						<v-row align="center" justify="center">
@@ -18,13 +23,7 @@
 									:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 									class="ml-4"
 								>
-									<v-btn
-										color="#9D9D9C"
-										class="elevation-0"
-										fab
-										width="100"
-										height="100"
-									></v-btn>
+									<v-img :src="item.avatar"></v-img>
 								</v-list-item-avatar>
 								<div class="caption text--secondary">code {{ item.code }}</div>
 								<v-btn
@@ -46,18 +45,22 @@
 										{{ item.name }}
 									</v-col>
 									<v-col cols="12" sm="6" class="text-right">
-										<v-btn color="primary" rounded>
+										<v-btn
+											color="primary"
+											rounded
+											@click="() => goToPlan(item)"
+										>
 											Agenda cita online
 										</v-btn>
 									</v-col>
 								</v-row>
 								<v-chip
-									v-for="el in item.specialties"
-									:key="el"
+									v-for="(specialties, s) in item.specialties"
+									:key="s"
 									small
 									class="my-4 mx-1"
 								>
-									el
+									{{ specialties }}
 								</v-chip>
 								<div class="body-2 mt-2 text-capitalize">
 									{{ item.description }}
@@ -76,11 +79,28 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
 	props: {
 		match: {
 			type: Array,
 			default: () => [],
+		},
+		resetMatch: {
+			type: Function,
+			require: true,
+		},
+	},
+	computed: {
+		...mapGetters({
+			loggedIn: 'User/loggedIn',
+		}),
+	},
+	methods: {
+		goToPlan(item) {
+			localStorage.setItem('psi', JSON.stringify(item));
+			if (this.loggedIn) this.$router.push({ name: 'plan' });
+			else this.$router.push({ path: '/auth/q=register' });
 		},
 	},
 };
