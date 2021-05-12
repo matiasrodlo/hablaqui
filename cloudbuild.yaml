@@ -55,7 +55,7 @@ steps:
       [
         "app",
         "deploy",
-        "--version=$BRANCH_NAME",
+        "--version=diego",
         "--no-promote",
         "--no-stop-previous-version",
       ]
@@ -84,7 +84,7 @@ steps:
       [
         "app",
         "deploy",
-        "--version=$BRANCH_NAME",
+        "--version=diego",
         "--no-promote",
         "--no-stop-previous-version",
       ]
