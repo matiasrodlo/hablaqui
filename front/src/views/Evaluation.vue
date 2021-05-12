@@ -298,55 +298,57 @@
 
 										<v-btn
 											:color="
-												genreConfort === 'female' ? 'primary' : '#BDBDBD'
+												genderConfort === 'female' ? 'primary' : '#BDBDBD'
 											"
-											:outlined="genreConfort !== 'female'"
+											:outlined="genderConfort !== 'female'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="genreConfort = 'female'"
+											@click="genderConfort = 'female'"
 										>
 											Mujer
 										</v-btn>
 										<v-btn
-											:color="genreConfort === 'male' ? 'primary' : '#BDBDBD'"
-											:outlined="genreConfort !== 'male'"
+											:color="
+												genderConfort === 'male' ? 'primary' : '#BDBDBD'
+											"
+											:outlined="genderConfort !== 'male'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="genreConfort = 'male'"
+											@click="genderConfort = 'male'"
 										>
 											Hombre
 										</v-btn>
 										<v-btn
 											:color="
-												genreConfort === 'No-binario'
+												genderConfort === 'No-binario'
 													? 'primary'
 													: '#BDBDBD'
 											"
-											:outlined="genreConfort !== 'No-binario'"
+											:outlined="genderConfort !== 'No-binario'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="genreConfort = 'No-binario'"
+											@click="genderConfort = 'No-binario'"
 										>
 											No-binario
 										</v-btn>
 										<v-btn
 											:color="
-												genreConfort === 'Me es indiferente'
+												genderConfort === 'Me es indiferente'
 													? 'primary'
 													: '#BDBDBD'
 											"
-											:outlined="genreConfort !== 'Me es indiferente'"
+											:outlined="genderConfort !== 'Me es indiferente'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="genreConfort = 'Me es indiferente'"
+											@click="genderConfort = 'Me es indiferente'"
 										>
 											Me es indiferente
 										</v-btn>
@@ -450,7 +452,7 @@ export default {
 			firstTherapy: null,
 			themes: [],
 			focus: 1,
-			genreConfort: '',
+			genderConfort: '',
 			matchedPsychologists: [],
 		};
 	},
@@ -495,8 +497,9 @@ export default {
 				this.inEvaluation = false;
 				this.inSelection = true;
 			}, 2100);
+			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
-				gender: this.gender,
+				gender,
 				themes: this.themes,
 			};
 			this.matchedPsychologists = await this.matchPsi(payload);
