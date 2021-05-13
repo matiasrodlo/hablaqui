@@ -243,12 +243,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 1
+												focus == 'Cognitivo conductual'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 1"
+											@click="focus = 'Cognitivo conductual'"
 										>
 											Quiero que las sesiones sean estructuradas definiendo
 											metas a cumplir. Me gustaría que mi psicólogo/a tome un
@@ -257,12 +257,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 2
+												focus == 'Psicoanalisis'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 2"
+											@click="focus = 'Psicoanalisis'"
 										>
 											Quiero que mi psicólogo conozca diferentes modelos de
 											intervención y de acuerdo a mis necesidades me brinde

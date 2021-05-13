@@ -338,9 +338,9 @@
 										crédito en cuotas.
 									</div>
 									<div class="d-flex justify-space-around">
-										<v-img width="80" src="/img/venta-de-plan-19.png"></v-img>
-										<v-img width="80" src="/img/venta-de-plan-20.png"></v-img>
-										<v-img width="80" src="/img/venta-de-plan-21.png"></v-img>
+										<v-img width="80" src="/img/plan19.png"></v-img>
+										<v-img width="80" src="/img/plan20.png"></v-img>
+										<v-img width="80" src="/img/plan21.png"></v-img>
 									</div>
 								</v-col>
 							</v-row>
@@ -391,7 +391,7 @@ export default {
 					mode: 'Semana',
 					title: 'Sesiones por videollamada',
 					subtitle: '4 sesiones en vivo/mensuales (50 min)',
-					image: '/img/venta-de-plan-15.png',
+					image: '/img/plan15.png',
 					description:
 						'Habla con un psicólogo por videollamada, sin tener que desplazarte.',
 				},
@@ -418,7 +418,7 @@ export default {
 					mode: 'Semana',
 					title: 'Sesiones por mensajería',
 					subtitle: 'Mensajes de texto y audio.',
-					image: '/img/venta-de-plan-16.png',
+					image: '/img/plan16.png',
 					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 				{
@@ -444,7 +444,7 @@ export default {
 					mode: 'Semana',
 					title: 'Mensajes de texto y audio',
 					subtitle: 'Mensajería + Sesiones por videollamada (30min)',
-					image: '/img/venta-de-plan-17.png',
+					image: '/img/plan17.png',
 					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
