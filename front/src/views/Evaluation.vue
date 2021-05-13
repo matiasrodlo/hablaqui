@@ -243,12 +243,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 'Cognitivo conductual'
+												focus == 'cognitivo'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'Cognitivo conductual'"
+											@click="focus = 'cognitivo'"
 										>
 											Quiero que las sesiones sean estructuradas definiendo
 											metas a cumplir. Me gustaría que mi psicólogo/a tome un
@@ -257,12 +257,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 'Psicoanalisis'
+												focus == 'integrativo'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'Psicoanalisis'"
+											@click="focus = 'integrativo'"
 										>
 											Quiero que mi psicólogo conozca diferentes modelos de
 											intervención y de acuerdo a mis necesidades me brinde
@@ -272,12 +272,27 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 3
+												focus == 'contextual'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 3"
+											@click="focus = 'contextual'"
+										>
+											Quiero que sea un proceso activo donde aprenda a
+											relacionarme con mis pensamientos, emociones y
+											sensaciones fisicas de una forma distinta en la cual no
+											me impida desarrollar la vida que quiero vivir.
+										</div>
+										<div
+											class="pa-2 my-4"
+											:class="
+												focus == 'psicoanalisis'
+													? 'primary white--text'
+													: 'text--disabled'
+											"
+											style="border-radius: 25px; border: 1px solid #E0E0E0"
+											@click="focus = 'psicoanalisis'"
 										>
 											Quiero que las sesiones sean conversacionales, donde
 											pueda platicar cómo me siento y que mi psicólogo me
@@ -287,12 +302,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 4
+												focus == 'humanista'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 4"
+											@click="focus = 'humanista'"
 										>
 											Quiero que a través de la reflexión, mi psicólogo me
 											ayude a conocer el origen de mis emociones y a encontrar
@@ -302,12 +317,12 @@
 										<div
 											class="pa-2 my-4"
 											:class="
-												focus == 5
+												focus == 'sistemico'
 													? 'primary white--text'
 													: 'text--disabled'
 											"
 											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 5"
+											@click="focus = 'sistemico'"
 										>
 											Quiero entender mi forma de interactuar con los demás
 											para mejorar mis relaciones interpersonales, conociendo
@@ -482,7 +497,7 @@ export default {
 			age: '',
 			firstTherapy: null,
 			themes: [],
-			focus: 1,
+			focus: '',
 			genderConfort: '',
 			matchedPsychologists: [],
 		};
@@ -545,6 +560,7 @@ export default {
 			const payload = {
 				gender,
 				themes: this.themes,
+				model: this.focus,
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
