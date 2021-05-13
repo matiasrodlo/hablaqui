@@ -58,7 +58,7 @@ let psychologist = new Schema({
 	description: {
 		type: String,
 	},
-	model: {
+	models: {
 		type: Array,
 	},
 	sessions: [session],
