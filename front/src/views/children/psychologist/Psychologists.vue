@@ -424,7 +424,7 @@
 											</v-row>
 
 											<v-chip-group
-												@change="e => (motive = e)"
+												v-model="motive"
 												active-class="primary--text"
 											>
 												<template v-for="(tag, i) in item.specialties">
