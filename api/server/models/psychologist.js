@@ -43,8 +43,8 @@ let psychologist = new Schema({
 	sessionType: {
 		type: String,
 	},
-	language: {
-		type: String,
+	languages: {
+		type: Array,
 	},
 	experience: {
 		type: String,
