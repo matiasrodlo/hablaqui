@@ -14,7 +14,16 @@ const match = async body => {
 	const { payload } = body;
 	console.log(payload);
 	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender || { $in: ['male', 'female'] },
+		gender: payload.gender || { $in: ['male', 'female', 'non-binary'] },
+		models: { $in: payload.model } || {
+			$in: [
+				'cognitivo',
+				'psicoanalisis',
+				'humanista',
+				'sistemico',
+				'contextual',
+			],
+		},
 		specialties: { $in: payload.themes },
 	});
 	return okResponse('psicologos encontrados', { matchedPsychologists });
