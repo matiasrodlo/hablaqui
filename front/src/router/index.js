@@ -19,6 +19,7 @@ const SuccessPay = () => import('@/views/children/payments/SuccessPay');
 const FailurePay = () => import('@/views/children/payments/FailurePay');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
+const NewArticle = () => import('@/views/children/blog/NewArticle');
 
 const routes = [
 	{
@@ -129,6 +130,12 @@ const routes = [
 		name: 'nuevo-psicologo',
 		component: RegisterPsi,
 		meta: { title: 'Nuevo psicologo' },
+	},
+	{
+		path: '/blog/nuevo-articulo',
+		name: 'nuevo-articulo',
+		component: NewArticle,
+		meta: { title: 'Nuevo articulo' },
 	},
 	{
 		path: '*',

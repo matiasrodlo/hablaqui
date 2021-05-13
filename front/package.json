@@ -19,7 +19,8 @@
 		"vuelidate": "^0.7.6",
 		"vuetify": "^2.4.0",
 		"vuex": "^3.4.0",
-		"vuex-persistedstate": "^4.0.0-beta.3"
+		"vuex-persistedstate": "^4.0.0-beta.3",
+		"vue2-editor": "^2.10.2"
 	},
 	"devDependencies": {
 		"@types/vuelidate": "^0.7.14",

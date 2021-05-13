@@ -4,6 +4,7 @@ import dataRouter from './data';
 import psychologistsRouter from './psychologist';
 import mercadopagoRouter from './mercadopago';
 import userRoutes from './user';
+import blogRouter from './blog';
 
 const apiVersion = '/api/v1';
 
@@ -14,4 +15,5 @@ export default app => {
 	app.use(apiVersion, appointmentsRouter);
 	app.use(apiVersion, dataRouter);
 	app.use(apiVersion, mercadopagoRouter);
+	app.use(apiVersion, blogRouter);
 };
