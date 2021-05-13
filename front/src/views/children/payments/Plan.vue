@@ -340,15 +340,15 @@
 									<div class="d-flex justify-space-around">
 										<v-img
 											width="80"
-											src="img/gráfico-venta-de-plan-19.png"
+											src="/img/gráfico-venta-de-plan-19.png"
 										></v-img>
 										<v-img
 											width="80"
-											src="img/gráfico-venta-de-plan-20.png"
+											src="/img/gráfico-venta-de-plan-20.png"
 										></v-img>
 										<v-img
 											width="80"
-											src="img/gráfico-venta-de-plan-21.png"
+											src="/img/gráfico-venta-de-plan-21.png"
 										></v-img>
 									</div>
 								</v-col>
