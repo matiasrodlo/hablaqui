@@ -420,16 +420,16 @@
 												</v-col>
 											</v-row>
 
-											<v-chip-group
-												v-model="motive"
-												active-class="primary--text"
-											>
+											<v-chip-group v-model="motive">
 												<template v-for="(tag, i) in item.specialties">
 													<v-chip
 														:value="tag"
 														class="ma-2"
 														small
 														:key="i"
+														:color="
+															motive == tag ? 'primary--text' : ''
+														"
 													>
 														<span class="text-capitalize">
 															{{ tag }}
