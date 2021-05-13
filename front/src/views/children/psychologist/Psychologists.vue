@@ -8,21 +8,23 @@
 		<v-row>
 			<v-col cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
-					<v-card-title class="text--secondary">
-						Filtrar por
-					</v-card-title>
-					<v-card-text>
-						<v-divider></v-divider>
-					</v-card-text>
-					<v-card-text style="height:70px" class="d-flex align-center">
-						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
-							<v-icon>mdi-menu</v-icon>
-						</v-btn>
-						<v-divider vertical class="mx-2"></v-divider>
-						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
-							<v-icon>mdi-view-grid-outline</v-icon>
-						</v-btn>
-					</v-card-text>
+					<template v-if="!this.$vuetify.breakpoint.smAndDown">
+						<v-card-title class="text--secondary">
+							Filtrar por
+						</v-card-title>
+						<v-card-text>
+							<v-divider></v-divider>
+						</v-card-text>
+						<v-card-text style="height:70px" class="d-flex align-center">
+							<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
+								<v-icon>mdi-menu</v-icon>
+							</v-btn>
+							<v-divider vertical class="mx-2"></v-divider>
+							<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
+								<v-icon>mdi-view-grid-outline</v-icon>
+							</v-btn>
+						</v-card-text>
+					</template>
 					<v-card-text>
 						<v-row>
 							<v-col cols="4" md="12">
