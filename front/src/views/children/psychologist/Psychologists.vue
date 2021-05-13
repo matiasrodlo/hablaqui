@@ -54,46 +54,25 @@
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Modelo terapéuticos</div>
-								<v-checkbox
-									v-model="sessionType"
-									value="Cognitivo conductual"
-									:disabled="loading"
-									label="Cognitivo conductual"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Psicoanalisis"
-									:disabled="loading"
-									label="Psicoanálisis"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Humanista"
-									:disabled="loading"
-									label="Humanista"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Sistemica"
-									:disabled="loading"
-									label="Sistémica"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
-								<v-checkbox
-									v-model="sessionType"
-									value="Contextual"
-									:disabled="loading"
-									label="Contextual"
-									hide-details
-									@change="filterPanel"
-								></v-checkbox>
+								<template
+									v-for="(item, i) in [
+										'cognitivo',
+										'integrativo',
+										'contextual',
+										'psicoanalisis',
+										'humanista',
+										'sistemico',
+									]"
+								>
+									<v-checkbox
+										:key="i"
+										v-model="models"
+										:label="item"
+										:disabled="loading"
+										hide-details
+										@change="filterPanel"
+									></v-checkbox>
+								</template>
 							</v-col>
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Idioma</div>
@@ -469,7 +448,7 @@ export default {
 			searchInput: '',
 			view: 2,
 			gender: [],
-			sessionType: [],
+			models: [],
 			language: [],
 		};
 	},
@@ -491,12 +470,13 @@ export default {
 			);
 		},
 		filterLevelOne() {
-			if (!this.gender.length && !this.sessionType.length && !this.language.length)
+			if (!this.gender.length && !this.models.length && !this.language.length)
 				return this.psychologists;
 			return this.psychologists.filter(
 				item =>
 					(this.gender.length && this.gender.includes(item.gender)) ||
-					(this.sessionType.length && this.sessionType.includes(item.sessionType)) ||
+					(this.models.length &&
+						item.models.some(el => this.models.some(model => model == el))) ||
 					(this.language.length && this.language.includes(item.language))
 			);
 		},
@@ -517,7 +497,7 @@ export default {
 		const panel = JSON.parse(localStorage.getItem('panel'));
 		if (panel) {
 			this.gender = panel.gender;
-			this.sessionType = panel.sessionType;
+			this.models = panel.models;
 			this.language = panel.language;
 		}
 	},
@@ -534,7 +514,7 @@ export default {
 		filterPanel() {
 			const panel = {
 				gender: this.gender,
-				sessionType: this.sessionType,
+				models: this.models,
 				language: this.language,
 			};
 			localStorage.setItem('panel', JSON.stringify(panel));
