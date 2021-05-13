@@ -480,7 +480,7 @@
 
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
 	name: 'Evaluation',
@@ -567,9 +567,16 @@ export default {
 				localStorage.setItem('match', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			} else {
-				alert('no se encontraron coindencias, por favor reintenta de nuevo');
+				this.snackbar({
+					content:
+						'no se encontraron coindencias, por favor modifica tus respuestas y reintenta de nuevo',
+					color: 'warning',
+				});
 			}
 		},
+		...mapMutations({
+			snackbar: 'Snackbar/showMessage',
+		}),
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
