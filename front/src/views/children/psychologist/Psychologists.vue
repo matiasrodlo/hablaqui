@@ -67,6 +67,7 @@
 									<v-checkbox
 										:key="i"
 										v-model="models"
+										:value="item"
 										:label="item"
 										:disabled="loading"
 										hide-details
@@ -77,7 +78,7 @@
 							<v-col cols="4" md="12">
 								<div class="title mt-2">Idioma</div>
 								<v-checkbox
-									v-model="language"
+									v-model="languages"
 									value="spanish"
 									:disabled="loading"
 									label="Español"
@@ -85,7 +86,7 @@
 									@change="filterPanel"
 								></v-checkbox>
 								<v-checkbox
-									v-model="language"
+									v-model="languages"
 									value="english"
 									:disabled="loading"
 									label="Ingles"
@@ -198,6 +199,13 @@
 									<v-spacer></v-spacer>
 								</v-card-actions>
 							</v-card>
+						</v-col>
+						<v-col
+							cols="12"
+							class="title primary--text"
+							v-if="!loading && !filterLevelThree.length"
+						>
+							No se encontraron coincidencias
 						</v-col>
 						<v-col
 							cols="12"
@@ -331,6 +339,13 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
+						<v-col
+							cols="12"
+							class="title primary--text"
+							v-if="!loading && !filterLevelThree.length"
+						>
+							No se encontraron coincidencias
+						</v-col>
 						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
 							<v-card style="border-radius:15px">
 								<v-card-text>
@@ -449,10 +464,13 @@ export default {
 			view: 2,
 			gender: [],
 			models: [],
-			language: [],
+			languages: [],
 		};
 	},
 	computed: {
+		/**
+		 * filter search box
+		 */
 		filterLevelThree() {
 			return this.filterLevelTwo.filter(item => {
 				let result = item;
@@ -463,22 +481,35 @@ export default {
 				return result;
 			});
 		},
+		/**
+		 * filter motive
+		 */
 		filterLevelTwo() {
 			if (!this.motive) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
 				item => item.specialties.length && item.specialties.includes(this.motive)
 			);
 		},
+		/**
+		 * filter panel checkbox
+		 */
 		filterLevelOne() {
-			if (!this.gender.length && !this.models.length && !this.language.length)
+			if (!this.gender.length && !this.models.length && !this.languages.length)
 				return this.psychologists;
-			return this.psychologists.filter(
-				item =>
-					(this.gender.length && this.gender.includes(item.gender)) ||
-					(this.models.length &&
-						item.models.some(el => this.models.some(model => model == el))) ||
-					(this.language.length && this.language.includes(item.language))
-			);
+			let result = this.psychologists;
+			if (this.gender.length)
+				result = result.filter(item => this.gender.includes(item.gender));
+			if (this.models.length)
+				result = result.filter(item =>
+					item.models.some(el => this.models.some(model => model == el))
+				);
+			if (this.languages.length)
+				result = result.filter(item =>
+					item.languages.some(el => this.languages.some(languages => languages == el))
+				);
+			if (this.motive) result = result.filter(item => item.specialties.includes(this.motive));
+
+			return result;
 		},
 		...mapGetters({
 			psychologists: 'Psychologist/psychologists',
@@ -486,7 +517,7 @@ export default {
 			loggedIn: 'User/loggedIn',
 		}),
 	},
-	mounted() {
+	created() {
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
@@ -498,7 +529,7 @@ export default {
 		if (panel) {
 			this.gender = panel.gender;
 			this.models = panel.models;
-			this.language = panel.language;
+			this.languages = panel.languages;
 		}
 	},
 	methods: {
@@ -515,7 +546,7 @@ export default {
 			const panel = {
 				gender: this.gender,
 				models: this.models,
-				language: this.language,
+				languages: this.languages,
 			};
 			localStorage.setItem('panel', JSON.stringify(panel));
 		},
