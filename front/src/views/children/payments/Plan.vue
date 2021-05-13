@@ -314,7 +314,7 @@
 										color="primary"
 										block
 										style="border-radius: 10px"
-										@click="() => (breakCrumbs = 3)"
+										@click="payButton"
 									>
 										Continuar al pago
 									</v-btn>
@@ -347,14 +347,16 @@
 						</v-card-text>
 					</v-card>
 				</div>
+				<div v-if="breakCrumbs == 3">
+					<p>Los robots estan haciendo su trabajo, no te vayas.</p>
+				</div>
 			</v-row>
 		</v-container>
 	</div>
 </template>
-
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 
 export default {
@@ -466,14 +468,15 @@ export default {
 			psi: null,
 		};
 	},
+	mounted() {},
 	computed: {
 		viewDate() {
 			if (this.newEvent && this.picker)
 				return `Seleccionaste el dia
-					${moment(this.picker).format('ll')} 
+					${moment(this.picker).format('ll')}
 					desde las
 					${moment(this.newEvent.start).format('LT')}
-					a las 
+					a las
 					${moment(this.newEvent.end).format('LT')}`;
 			else return '';
 		},
@@ -489,6 +492,9 @@ export default {
 	},
 	created() {
 		this.psi = JSON.parse(localStorage.getItem('psi'));
+		let mercadopagoScript = document.createElement('script');
+		mercadopagoScript.setAttribute('src', 'https://sdk.mercadopago.com/js/v2');
+		document.head.appendChild(mercadopagoScript);
 	},
 	methods: {
 		startDrag({ event, timed }) {
@@ -600,6 +606,39 @@ export default {
 				},
 			];
 		},
+		async payButton() {
+			this.breakCrumbs = 3;
+			let priceInt = Number(this.plans[this.selectedItem.plan].price.split('.').join(''));
+			const payload = {
+				price: priceInt,
+				title: this.plans[this.selectedItem.plan].title,
+				quantity: 1,
+			};
+			const preferenceData = await this.mercadopagoPay(payload);
+			console.log(preferenceData);
+
+			// eslint-disable-next-line no-undef
+			/*const mp = new MercadoPago('TEST-fe8f0a69-db4e-4496-910b-0abc87728b01', {
+				// HAY QUE CONVERTIRLO EN ENV-VAR
+				locale: 'es-CL',
+			});*/
+
+			/*mp.checkout({
+				preference: {
+					id: preferenceData.body.id,
+				},
+				autoOpen: true,
+				theme: {
+					elementsColor: '#2070e5',
+					headerColor: '#2070e5',
+				},
+			});*/
+			window.location.href = preferenceData.body.init_point;
+		},
+		...mapActions({
+			// HAY QUE HACER UN STORE DE MERCADOPAGO
+			mercadopagoPay: 'Psychologist/mercadopagoPay',
+		}),
 	},
 };
 </script>

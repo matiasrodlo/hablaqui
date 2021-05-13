@@ -3,7 +3,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+	mounted() {
+		// redirigir a api
+	},
+};
 </script>
 
 <style lang="scss" scoped></style>

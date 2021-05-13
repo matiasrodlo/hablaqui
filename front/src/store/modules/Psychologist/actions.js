@@ -31,4 +31,15 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async mercadopagoPay({ commit }, payload) {
+		try {
+			const { data } = await axios('/mercadopago/create-preference', {
+				method: 'POST',
+				data: payload,
+			});
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 };
