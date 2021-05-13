@@ -528,9 +528,9 @@ export default {
 		}
 		const panel = JSON.parse(localStorage.getItem('panel'));
 		if (panel) {
-			this.gender = panel.gender;
-			this.models = panel.models;
-			this.languages = panel.languages;
+			if (panel.gender.length) this.gender = panel.gender;
+			if (panel.models.length) this.models = panel.models;
+			if (panel.languages.length) this.languages = panel.languages;
 		}
 	},
 	methods: {
