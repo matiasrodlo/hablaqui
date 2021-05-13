@@ -51,13 +51,13 @@
 											Hombre
 										</v-btn>
 										<v-btn
-											:color="gender === 'No-binario' ? 'primary' : '#BDBDBD'"
-											:outlined="gender !== 'No-binario'"
+											:color="gender === 'non-binary' ? 'primary' : '#BDBDBD'"
+											:outlined="gender !== 'non-binary'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="gender = 'No-binario'"
+											@click="gender = 'non-binary'"
 										>
 											No-binario
 										</v-btn>
@@ -370,18 +370,18 @@
 										</v-btn>
 										<v-btn
 											:color="
-												genderConfort === 'No-binario'
+												genderConfort === 'non-binary'
 													? 'primary'
 													: '#BDBDBD'
 											"
-											:outlined="genderConfort !== 'No-binario'"
+											:outlined="genderConfort !== 'non-binary'"
 											block
 											rounded
 											large
 											class="my-4"
-											@click="genderConfort = 'No-binario'"
+											@click="genderConfort = 'non-binary'"
 										>
-											No-binario
+											No binario
 										</v-btn>
 										<v-btn
 											:color="

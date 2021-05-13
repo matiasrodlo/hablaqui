@@ -45,7 +45,7 @@
 								></v-checkbox>
 								<v-checkbox
 									v-model="gender"
-									value="No binario"
+									value="non-binary"
 									:disabled="loading"
 									label="No binario"
 									hide-details
@@ -70,6 +70,7 @@
 										:value="item"
 										:label="item"
 										:disabled="loading"
+										class="text-capitalize"
 										hide-details
 										@change="filterPanel"
 									></v-checkbox>
