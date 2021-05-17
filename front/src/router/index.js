@@ -99,19 +99,19 @@ const routes = [
 				meta: { title: 'Planes y pagos', requiresAuth: true },
 			},
 			{
-				path: 'pending-pay',
+				path: '/pago/pending-pay',
 				name: 'pending-pay',
 				component: PendingPay,
 				meta: { title: 'Pago pendiente' },
 			},
 			{
-				path: 'failure-pay',
+				path: '/pago/failure-pay',
 				name: 'failure-pay',
 				component: FailurePay,
 				meta: { title: 'Pago fallido' },
 			},
 			{
-				path: 'success-pay',
+				path: '/pago/success-pay',
 				name: 'success-home',
 				component: SuccessPay,
 				meta: { title: 'Pago exitoso' },

@@ -1,6 +1,6 @@
 import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
-import { okResponse } from '../utils/responses/functions';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
@@ -16,7 +16,7 @@ const createPreference = async (body, res) => {
 				title: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
-				quantity: Number(body.quantity),
+				quantity: 1,
 			},
 		],
 		back_urls: {
@@ -32,7 +32,7 @@ const createPreference = async (body, res) => {
 	await mercadopago.preferences
 		.create(newPreference)
 		.then(res => {
-			bodyId = res.body.id;
+			bodyId = res.body;
 		})
 		.catch(e => {
 			error = e;
@@ -41,7 +41,9 @@ const createPreference = async (body, res) => {
 	if (error != '') {
 		return errorCallback(error, res, 'error creando la preferencia');
 	}
-	return okResponse('preference created', { id: bodyId });
+	if (bodyId != '') return okResponse('preference created', { body: bodyId });
+
+	conflictResponse('Ha ocurrido un error :c');
 };
 
 const mercadopagoService = {
