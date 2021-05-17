@@ -183,11 +183,11 @@
 						Categoria Populares
 					</div>
 					<div class="text--secondary text-h6 text-center">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing
+						Ver las categorías más visitadas
 					</div>
 				</v-col>
 				<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
-					<v-card flat>
+					<v-card flat color="white">
 						<v-card-text class="text-center">
 							<v-list-item-avatar size="120" class="ml-4">
 								<v-btn
@@ -205,31 +205,29 @@
 			</v-row>
 		</v-container>
 		<div style="position: relative">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 500px; width: 100%" />
+			<img
+				:src="`${$config.LANDING_URL}/container-blue.png`"
+				style="height: 500px; width: 100%"
+			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container>
-					<v-row style="height: 200px">
+					<v-row align="center" style="height: 400px">
 						<v-col cols="12" sm="6" class="white--text">
 							<div class="title mt-8">Recibe contenido exclusivo periódicamente</div>
 							<div class="subtitle-1 mb-8">Suscríbete y alcanza tu mejor versión</div>
 							<v-text-field
 								outlined
-								label="Lorem ipsum dolor sit amet, consectetuer "
+								class="white"
+								hide-details
+								placeholder="Introduzca su correo electrónico aquí"
 							>
-								<template #[`append`]>
-									<v-btn rounded small color="primary">LOREM ITSUM</v-btn>
+								<template #append>
+									<v-btn small rounded color="info">Enviar</v-btn>
 								</template>
 							</v-text-field>
 						</v-col>
 						<v-col cols="12" sm="6">
-							<v-img
-								style="
-									background-color: gray;
-									border-radius: 5px;
-									width: 100%;
-									height: 100%;
-								"
-							></v-img>
+							<v-img :src="`${$config.LANDING_URL}/logo_white.png`"></v-img>
 						</v-col>
 					</v-row>
 				</v-container>
