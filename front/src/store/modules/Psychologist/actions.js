@@ -42,4 +42,29 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async createSession({ commit }, payload) {
+		try {
+			const { data } = await axios('/psychologists/session/create', {
+				method: 'POST',
+				data: { payload },
+			});
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async updateSession({ commit }, payload) {
+		try {
+			const { psyId, userId, sessionId } = payload;
+			const { data } = await axios(
+				`/mercadopago/success-pay/${psyId}/${userId}/${sessionId}`,
+				{
+					method: 'POST',
+				}
+			);
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 };

@@ -10,11 +10,18 @@ const mercadopagoController = {
 				body,
 				res
 			);
-			console.log(data, 'data');
 			return restResponse(data, code, res);
 		} catch (e) {
-			console.log(e);
 			errorCallback(e, res, 'error procesando el servicio');
+		}
+	},
+	async successPay(req, res) {
+		try {
+			const { params } = req;
+			const { data, code } = await mercadopagoService.successPay(params);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error aprovando el pago');
 		}
 	},
 };

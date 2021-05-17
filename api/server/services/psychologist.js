@@ -21,16 +21,24 @@ const match = async body => {
 };
 
 const createSession = async body => {
-	const { session } = body;
-	Psychologist.findOneAndUpdate(
-		{ _id: body.psychologistId },
+	const { payload } = body;
+	const sessions = {
+		start: payload.start,
+		end: payload.end,
+		user: payload.user._id,
+		statePayments: 'pending',
+	};
+	const savedSession = await Psychologist.findOneAndUpdate(
+		{ _id: payload.psychologist._id },
 		{
-			$push: { session },
+			$push: { sessions },
 		},
-		{ upsert: true }
+		{ upsert: true, returnOriginal: false }
 	);
 	logInfo('creo una nueva cita');
-	return okResponse('sesion creada');
+	return okResponse('sesion creada', {
+		id: savedSession.sessions[savedSession.sessions.length - 1]._id,
+	});
 };
 
 const register = async (body, avatar) => {
