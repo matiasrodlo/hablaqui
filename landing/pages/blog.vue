@@ -139,7 +139,7 @@
 							Para empresas
 						</div>
 						<div class="white--text text-h6 text-center">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+							Liderazgo y salud mental en el mercado laboral
 						</div>
 					</v-col>
 					<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
@@ -173,157 +173,76 @@
 				</v-row>
 			</v-container>
 		</v-img>
-		<!-- podcast -->
+		<!-- Categorias -->
 		<v-container>
-			<v-row justify="center">
-				<v-col cols="12" class="text-center py-8">
-					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3">
-						Hablaquí podcast
+			<v-row align="center" justify="center">
+				<v-col cols="12" class="py-8">
+					<div
+						class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+					>
+						Categoria Populares
 					</div>
-					<div class="text--secondary text-h6">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+					<div class="text--secondary text-h6 text-center">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing
 					</div>
 				</v-col>
 				<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
 					<v-card flat>
-						<v-img height="200" style="background-color: gray"> </v-img>
-
-						<v-card-title class="caption primary--text font-weight-bold">
-							Cafe Badilico
-							<v-spacer></v-spacer>
-							<v-btn depressed small fab color="primary">
-								<v-icon x-large>mdi-play</v-icon>
-							</v-btn>
-						</v-card-title>
-
-						<v-card-text class="font-weight-bold">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-						</v-card-text>
-						<v-card-text>
-							<span class="caption primary--text font-weight-bold">
-								por John Smith
-							</span>
-							<span>18 febrero 2021</span>
+						<v-card-text class="text-center">
+							<v-list-item-avatar size="120" class="ml-4">
+								<v-btn
+									depressed
+									color="#9D9D9C"
+									fab
+									width="120"
+									height="120"
+								></v-btn>
+							</v-list-item-avatar>
+							<div class="text-center caption font-weight-bold">Cafe Badilico</div>
 						</v-card-text>
 					</v-card>
 				</v-col>
 			</v-row>
-			<v-row justify="center">
-				<v-col cols="3">
-					<v-btn block color="primary" outlined rounded>Ver todos</v-btn>
-				</v-col>
-			</v-row>
 		</v-container>
-		<!-- Categories -->
-		<div class="primary">
-			<v-container>
-				<v-row justify="center">
-					<v-col cols="12" class="py-8">
-						<div
-							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
-						>
-							Categoria Populares
-						</div>
-						<div class="white--text text-h6 text-center">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing
-						</div>
-					</v-col>
-					<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
-						<v-card flat>
-							<v-card-text class="text-center">
-								<v-list-item-avatar size="120" class="ml-4">
-									<v-btn
-										depressed
-										color="#9D9D9C"
-										fab
-										width="120"
-										height="120"
-									></v-btn>
-								</v-list-item-avatar>
-								<div class="text-center caption font-weight-bold">
-									Cafe Badilico
-								</div>
-							</v-card-text>
-						</v-card>
-					</v-col>
-				</v-row>
-			</v-container>
+		<div style="position: relative">
+			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 500px; width: 100%" />
+			<div style="position: absolute; top: 0; width: 100%">
+				<v-container>
+					<v-row style="height: 200px">
+						<v-col cols="12" sm="6" class="white--text">
+							<div class="title mt-8">Recibe contenido exclusivo periódicamente</div>
+							<div class="subtitle-1 mb-8">Suscríbete y alcanza tu mejor versión</div>
+							<v-text-field
+								outlined
+								label="Lorem ipsum dolor sit amet, consectetuer "
+							>
+								<template #[`append`]>
+									<v-btn rounded small color="primary">LOREM ITSUM</v-btn>
+								</template>
+							</v-text-field>
+						</v-col>
+						<v-col cols="12" sm="6">
+							<v-img
+								style="
+									background-color: gray;
+									border-radius: 5px;
+									width: 100%;
+									height: 100%;
+								"
+							></v-img>
+						</v-col>
+					</v-row>
+				</v-container>
+			</div>
 		</div>
-		<v-container class="my-10">
-			<v-row>
-				<v-col cols="12" sm="6">
-					<div class="title mt-8">
-						Lorem ipsum <span class="primary--text">dolor sit amet</span> consecte
-					</div>
-					<div class="subtitle-1 mb-8 text--secondary">
-						Lorem ipsum dolor sit amet, consectetuer
-					</div>
-					<v-text-field outlined label="Lorem ipsum dolor sit amet, consectetuer ">
-						<template #[`append`]>
-							<v-btn rounded small color="primary">LOREM ITSUM</v-btn>
-						</template>
-					</v-text-field>
-				</v-col>
-				<v-col cols="12" sm="6">
-					<v-img
-						style="
-							background-color: gray;
-							border-radius: 5px;
-							width: 100%;
-							height: 100%;
-						"
-					></v-img>
-				</v-col>
-			</v-row>
-		</v-container>
-		<!-- Categories -->
-		<div class="primary white--text">
-			<v-container class="pb-10">
-				<v-row justify="center">
-					<v-col cols="12" sm="4" class="text-left">
-						<div class="title font-weight-bold">Lorem ipsum</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-					</v-col>
-					<v-col cols="12" sm="4" class="text-left">
-						<div class="title font-weight-bold">Lorem ipsum</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-					</v-col>
-					<v-col cols="12" sm="4" class="text-left">
-						<div class="title font-weight-bold">Lorem ipsum</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet</div>
-					</v-col>
-					<v-col cols="12">
-						<div class="title font-weight-bold">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
-						</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet,</div>
-					</v-col>
-					<v-col cols="12">
-						<div class="title font-weight-bold">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam no
-						</div>
-						<div class="subtitle-1">Lorem ipsum dolor sit amet,</div>
-						<div>
-							<v-icon color="white" x-large>mdi-facebook</v-icon>
-							<v-icon color="white" x-large>mdi-instagram</v-icon>
-							<v-icon color="white" x-large>mdi-linkedin</v-icon>
-						</div>
-					</v-col>
-				</v-row>
-			</v-container>
-		</div>
+		<Footer />
 	</div>
 </template>
 <script>
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
+		Footer: () => import('@/components/Footer'),
 	},
 };
 </script>
