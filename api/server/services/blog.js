@@ -7,7 +7,6 @@ const createArticle = async (body, thumbnail, user) => {
 	const newArticle = {
 		title,
 		HTMLbody,
-		date: now,
 		notOriginal,
 		originalAuthor,
 		originalLink,
@@ -21,8 +20,14 @@ const createArticle = async (body, thumbnail, user) => {
 	return okResponse('articulo creado');
 };
 
+const getAllArticles = async () => {
+	const articles = await Article.find({}).sort({ createdAt: -1 });
+	return okResponse('articulos obtenidos', { articles });
+};
+
 const blogService = {
 	createArticle,
+	getAllArticles,
 };
 
 export default Object.freeze(blogService);

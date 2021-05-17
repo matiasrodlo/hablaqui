@@ -16,4 +16,6 @@ blogRouter.post(
 	blogController.createArticle
 );
 
+blogRouter.get('/blog/all', blogController.getAllArticles);
+
 export default blogRouter;

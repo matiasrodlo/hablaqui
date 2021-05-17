@@ -19,6 +19,14 @@ const blogController = {
 			errorCallback(e, res, 'Error creando el articulo');
 		}
 	},
+	async getAllArticles(req, res) {
+		try {
+			const { data, code } = await blogService.getAllArticles();
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error consiguiendo los articulos');
+		}
+	},
 };
 
 export default Object.freeze(blogController);
