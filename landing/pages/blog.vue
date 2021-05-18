@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="background-color: #ebf2f3">
 		<client-only>
 			<Appbar />
 		</client-only>
@@ -16,7 +16,7 @@
 					<v-select
 						flat
 						solo
-						background-color="#E0E0E0"
+						class="white"
 						hide-details
 						:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
 						no-data-text="Vacio"
@@ -37,32 +37,76 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row justify="center">
+			<v-row justify="center" class="mb-16">
 				<v-col v-for="(article, i) in articles" :key="i" cols="12" :sm="i == 0 ? '8' : '4'">
 					<v-card height="400" width="100%" flat>
-						<v-img class="grey lighten-3" height="200" :src="article.thumbnail" contain>
-						</v-img>
-						<v-card-title class="caption primary--text font-weight-bold">
-							{{ article.title }}
-						</v-card-title>
-						<v-card-text v-html="article.shortDescription" />
-						<v-card-text>
-							<span class="caption primary--text font-weight-bold">
-								por {{ article.originalAuthor }}
-							</span>
-							<span v-if="article.notOriginal">
-								<a :href="article.originalLink" target="_blank">
-									ver articulo original
-								</a>
-							</span>
-							<span>
-								{{
-									`${new Date(article.createdAt).getDay()}/${new Date(
-										article.createdAt
-									).getMonth()}/${new Date(article.createdAt).getFullYear()}`
-								}}
-							</span>
-						</v-card-text>
+						<template v-if="i == 0">
+							<v-card-text>
+								<v-row>
+									<v-col cols="6">
+										<div class="caption primary--text font-weight-bold">
+											{{ article.title }}
+										</div>
+										<div v-html="article.shortDescription" />
+										<div>
+											<span class="caption primary--text font-weight-bold">
+												por {{ article.originalAuthor }}
+											</span>
+											<span v-if="article.notOriginal">
+												<a :href="article.originalLink" target="_blank">
+													ver articulo original
+												</a>
+											</span>
+											<span>
+												{{
+													`${new Date(
+														article.createdAt
+													).getDay()}/${new Date(
+														article.createdAt
+													).getMonth()}/${new Date(
+														article.createdAt
+													).getFullYear()}`
+												}}
+											</span>
+										</div>
+									</v-col>
+									<v-col cols="6">
+										<v-img
+											style="border-radius: 25px"
+											height="375"
+											class="grey lighten-3"
+											:src="article.thumbnail"
+										>
+										</v-img>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</template>
+						<template v-else>
+							<v-img class="grey lighten-3" height="200" :src="article.thumbnail">
+							</v-img>
+							<v-card-title class="caption primary--text font-weight-bold">
+								{{ article.title }}
+							</v-card-title>
+							<v-card-text v-html="article.shortDescription" />
+							<v-card-text>
+								<span class="caption primary--text font-weight-bold">
+									por {{ article.originalAuthor }}
+								</span>
+								<span v-if="article.notOriginal">
+									<a :href="article.originalLink" target="_blank">
+										ver articulo original
+									</a>
+								</span>
+								<span>
+									{{
+										`${new Date(article.createdAt).getDay()}/${new Date(
+											article.createdAt
+										).getMonth()}/${new Date(article.createdAt).getFullYear()}`
+									}}
+								</span>
+							</v-card-text>
+						</template>
 					</v-card>
 				</v-col>
 			</v-row>
@@ -74,7 +118,7 @@
 		</v-container>
 		<!-- for companies -->
 		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container>
+			<v-container class="my-16">
 				<v-row justify="center">
 					<v-col cols="12" class="py-16">
 						<div
@@ -122,12 +166,12 @@
 					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
 						Categoria Populares
 					</div>
-					<div class="text--secondary text-h6 text-center">
+					<div class="text--disabled text-h6 text-center">
 						Ver las categorías más visitadas
 					</div>
 				</v-col>
 				<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
-					<v-card elevation="1" color="white">
+					<v-card flat>
 						<v-card-text class="text-center">
 							<v-list-item-avatar size="120" class="ml-4">
 								<v-img :src="element.img"></v-img>
@@ -143,17 +187,17 @@
 		<div style="position: relative">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 500px; width: 100%"
+				style="height: 600px; width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container>
-					<v-row align="center" style="height: 500px">
+					<v-row align="center" style="height: 600px">
 						<v-col cols="12" sm="6" class="white--text d-flex align-center">
 							<div>
-								<div class="title mt-8">
+								<div class="title font-weight-bold mt-8">
 									Recibe contenido exclusivo periódicamente
 								</div>
-								<div class="subtitle-1 mb-8">
+								<div class="subtitle-1 font-weight-bold mb-8">
 									Suscríbete y alcanza tu mejor versión
 								</div>
 								<div style="position: relative">
