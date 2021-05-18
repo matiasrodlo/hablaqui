@@ -1,11 +1,10 @@
 import Article from '../models/article';
-import moment from 'moment';
 import { okResponse } from '../utils/responses/functions';
 const createArticle = async (body, thumbnail, user) => {
-	const { title, HTMLbody, notOriginal, originalAuthor, originalLink } = body;
-	const now = moment.now();
+	const { title, shortDescription, HTMLbody, notOriginal, originalAuthor, originalLink } = body;
 	const newArticle = {
 		title,
+		shortDescription,
 		HTMLbody,
 		notOriginal,
 		originalAuthor,

@@ -75,6 +75,7 @@ export default {
 			const formData = new FormData();
 			formData.append('HTMLbody', this.form.HTMLbody);
 			formData.append('title', this.form.title);
+			formData.append('shortDescription', this.form.shortDescription);
 			formData.append('notOriginal', this.form.notOriginal);
 			formData.append('originalAuthor', this.form.originalAuthor);
 			formData.append('originalLink', this.form.originalLink);

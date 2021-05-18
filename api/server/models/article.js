@@ -5,8 +5,8 @@ let article = new Schema(
 		title: {
 			type: String,
 		},
-		date: {
-			type: Date,
+		shortDescription: {
+			type: String,
 		},
 		rating: {
 			type: String,
