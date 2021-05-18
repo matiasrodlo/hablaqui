@@ -10,28 +10,27 @@
 					cols="12"
 					class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
 				>
-					BLOG HABLAQUÍ
+					Blog Hablaquí
 				</v-col>
 				<v-col cols="12">
 					<v-select
 						flat
 						solo
-						class="white"
 						hide-details
 						:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
 						no-data-text="Vacio"
 					>
-						<template #[`label`]>
-							<span class="primary--text"> Seleccione un asunto </span>
+						<template #label>
+							<span class="primary--text font-weight-bold">Seleccione un asunto</span>
 						</template>
-						<template #[`append`]>
+						<template #append>
 							<span class="primary--text subtitle-2">
 								Editar filtros
-								<v-icon color="primary"> mdi-chevron-down </v-icon>
+								<v-icon color="primary">mdi-chevron-down</v-icon>
 							</span>
 						</template>
-						<template #[`selection`]="{ item }">
-							<span class="primary--text"> {{ item }} </span>
+						<template #selection="{ item }">
+							<span class="primary--text">{{ item }}</span>
 						</template>
 					</v-select>
 				</v-col>
@@ -39,90 +38,111 @@
 			<!-- blogs -->
 			<v-row justify="center" class="mb-16">
 				<v-col v-for="(article, i) in articles" :key="i" cols="12" :sm="i == 0 ? '8' : '4'">
-					<v-card height="400" width="100%" flat>
-						<template v-if="i == 0">
-							<v-card-text>
-								<v-row>
-									<v-col
-										cols="6"
-										style="
-											height: 390px;
-											display: flex;
-											flex-direction: column !important;
-										"
-										class="justify-space-between"
-									>
-										<div>
-											<div class="title text--secondary font-weight-bold">
-												{{ article.title }}
-											</div>
-											<div v-html="article.shortDescription" />
-										</div>
-										<div>
-											<div class="caption font-weight-bold">
-												<span class="primary--text">
-													por {{ article.originalAuthor }}
-												</span>
-												|
-												<span class="text--disabled">
-													{{
-														`${new Date(
-															article.createdAt
-														).getDay()}/${new Date(
-															article.createdAt
-														).getMonth()}/${new Date(
-															article.createdAt
-														).getFullYear()}`
-													}}
-												</span>
-											</div>
-											<div v-if="article.notOriginal">
-												<a :href="article.originalLink" target="_blank">
-													ver articulo original
-												</a>
-											</div>
-											<div></div>
-										</div>
-									</v-col>
-									<v-col cols="6">
-										<v-img
-											style="border-radius: 25px"
-											height="375"
-											class="grey lighten-3"
-											:src="article.thumbnail"
+					<v-hover v-slot="{ hover }">
+						<v-card
+							style="transition: transform 0.4s"
+							:style="
+								hover
+									? 'transform: scale(1.05);'
+									: 'text-transform: none !important;'
+							"
+							:class="hover ? 'elevation-4' : 'elevation-0'"
+							height="400"
+							width="100%"
+							flat
+						>
+							<template v-if="i == 0">
+								<v-card-text>
+									<v-row>
+										<v-col
+											cols="6"
+											style="
+												height: 390px;
+												display: flex;
+												flex-direction: column !important;
+											"
+											class="justify-space-between"
 										>
-										</v-img>
-									</v-col>
-								</v-row>
-							</v-card-text>
-						</template>
-						<template v-else>
-							<v-img class="grey lighten-3" height="200" :src="article.thumbnail">
-							</v-img>
-
-							<v-card-text>
-								<div class="caption primary--text font-weight-bold">
-									{{ article.title }}
-								</div>
-								<div v-html="article.shortDescription" />
-								<span class="caption primary--text font-weight-bold">
-									por {{ article.originalAuthor }}
-								</span>
-								<span v-if="article.notOriginal">
-									<a :href="article.originalLink" target="_blank">
-										ver articulo original
-									</a>
-								</span>
-								<span>
-									{{
-										`${new Date(article.createdAt).getDay()}/${new Date(
-											article.createdAt
-										).getMonth()}/${new Date(article.createdAt).getFullYear()}`
-									}}
-								</span>
-							</v-card-text>
-						</template>
-					</v-card>
+											<div>
+												<div
+													class="subtitle-1 text--secondary font-weight-bold"
+												>
+													{{ article.title }}
+												</div>
+												<div
+													class="my-2 subtitle-1 primary--text font-weight-bold"
+												>
+													categoria
+												</div>
+												<div
+													class="subtitle-1"
+													v-html="
+														article.HTMLbody.toString()
+															.slice(0, 350)
+															.concat('...')
+													"
+												/>
+											</div>
+											<div>
+												<div class="subtitle-1 font-weight-bold">
+													<span
+														v-if="article.originalAuthor"
+														class="primary--text"
+													>
+														por {{ article.originalAuthor }}
+													</span>
+													<span v-if="article.originalAuthor">|</span>
+													<span class="text--disabled">
+														{{ dates(article.createdAt) }}
+													</span>
+												</div>
+											</div>
+										</v-col>
+										<v-col cols="6">
+											<v-img
+												style="border-radius: 10px"
+												height="365"
+												class="grey lighten-3"
+												:src="article.thumbnail"
+											>
+											</v-img>
+										</v-col>
+									</v-row>
+								</v-card-text>
+							</template>
+							<template v-else>
+								<v-img class="grey lighten-3" height="200" :src="article.thumbnail">
+								</v-img>
+								<v-card-text
+									class="d-flex justify-space-between"
+									style="flex-direction: column; height: 200px"
+								>
+									<div>
+										<div class="my-2 subtitle-1 primary--text font-weight-bold">
+											categoria
+										</div>
+										<div class="subtitle-1 text--secondary font-weight-bold">
+											{{ article.title }}
+										</div>
+									</div>
+									<div>
+										<div class="caption font-weight-bold">
+											<span
+												v-if="article.originalAuthor"
+												class="primary--text"
+											>
+												por {{ article.originalAuthor }}
+											</span>
+											<span v-if="article.originalAuthor">|</span>
+											<span class="text--disabled">
+												{{ dates(article.createdAt) }}
+											</span>
+										</div>
+									</div>
+								</v-card-text>
+							</template>
+						</v-card>
+					</v-hover>
 				</v-col>
 			</v-row>
 			<v-row justify="center">
@@ -254,6 +274,8 @@
 	</div>
 </template>
 <script>
+import moment from 'moment';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
@@ -273,12 +295,20 @@ export default {
 			],
 		};
 	},
+	created() {
+		moment.locale('es');
+	},
 	async mounted() {
 		let response = await fetch(`${this.$config.API_URL}/blog/all`);
 		response = await response.json();
 		this.articles = response.articles;
 		// eslint-disable-next-line no-console
 		console.log(this.articles);
+	},
+	methods: {
+		dates(date) {
+			return moment(date).format('DD MMMM YY');
+		},
 	},
 };
 </script>
