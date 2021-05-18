@@ -3,6 +3,15 @@
 		<v-container>
 			<h1 style="text-align: center;">Nueva entrada</h1>
 			<v-text-field v-model="form.title" label="Titulo" required></v-text-field>
+			<v-textarea
+				v-model="form.shortDescription"
+				label="Descripcion breve"
+				:rules="rules"
+				height="75px"
+				class="mt-5"
+				counter
+				required
+			></v-textarea>
 			<vue-editor v-model="form.HTMLbody"></vue-editor>
 			<v-file-input
 				accept="image/png, image/jpeg, image/bmp"
@@ -44,6 +53,7 @@ export default {
 		return {
 			form: null,
 			thumbnailUrl: '',
+			rules: [v => v.length <= 140 || 'Maximo de 140 caracteres'],
 		};
 	},
 	created() {
@@ -57,13 +67,13 @@ export default {
 				notOriginal: false,
 				originalAuthor: '',
 				originalLink: '',
+				shortDescription: '',
 				thumbnail: '',
 			};
 		},
 		setFormData() {
 			const formData = new FormData();
 			formData.append('HTMLbody', this.form.HTMLbody);
-			formData.append('asd', 'asd');
 			formData.append('title', this.form.title);
 			formData.append('notOriginal', this.form.notOriginal);
 			formData.append('originalAuthor', this.form.originalAuthor);
