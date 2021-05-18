@@ -43,31 +43,45 @@
 						<template v-if="i == 0">
 							<v-card-text>
 								<v-row>
-									<v-col cols="6">
-										<div class="caption primary--text font-weight-bold">
-											{{ article.title }}
-										</div>
-										<div v-html="article.shortDescription" />
+									<v-col
+										cols="6"
+										style="
+											height: 390px;
+											display: flex;
+											flex-direction: column !important;
+										"
+										class="justify-space-between"
+									>
 										<div>
-											<span class="caption primary--text font-weight-bold">
-												por {{ article.originalAuthor }}
-											</span>
-											<span v-if="article.notOriginal">
+											<div class="title text--secondary font-weight-bold">
+												{{ article.title }}
+											</div>
+											<div v-html="article.shortDescription" />
+										</div>
+										<div>
+											<div class="caption font-weight-bold">
+												<span class="primary--text">
+													por {{ article.originalAuthor }}
+												</span>
+												|
+												<span class="text--disabled">
+													{{
+														`${new Date(
+															article.createdAt
+														).getDay()}/${new Date(
+															article.createdAt
+														).getMonth()}/${new Date(
+															article.createdAt
+														).getFullYear()}`
+													}}
+												</span>
+											</div>
+											<div v-if="article.notOriginal">
 												<a :href="article.originalLink" target="_blank">
 													ver articulo original
 												</a>
-											</span>
-											<span>
-												{{
-													`${new Date(
-														article.createdAt
-													).getDay()}/${new Date(
-														article.createdAt
-													).getMonth()}/${new Date(
-														article.createdAt
-													).getFullYear()}`
-												}}
-											</span>
+											</div>
+											<div></div>
 										</div>
 									</v-col>
 									<v-col cols="6">
@@ -85,11 +99,12 @@
 						<template v-else>
 							<v-img class="grey lighten-3" height="200" :src="article.thumbnail">
 							</v-img>
-							<v-card-title class="caption primary--text font-weight-bold">
-								{{ article.title }}
-							</v-card-title>
-							<v-card-text v-html="article.shortDescription" />
+
 							<v-card-text>
+								<div class="caption primary--text font-weight-bold">
+									{{ article.title }}
+								</div>
+								<div v-html="article.shortDescription" />
 								<span class="caption primary--text font-weight-bold">
 									por {{ article.originalAuthor }}
 								</span>
