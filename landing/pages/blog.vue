@@ -45,7 +45,7 @@
 						<v-card-title class="caption primary--text font-weight-bold">
 							{{ article.title }}
 						</v-card-title>
-						<v-card-text v-html="article.HTMLbody.slice(0, 500)" />
+						<v-card-text v-html="article.shortDescription" />
 						<v-card-text>
 							<span class="caption primary--text font-weight-bold">
 								por {{ article.originalAuthor }}
@@ -88,12 +88,10 @@
 					</v-col>
 					<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
 						<v-card flat>
-							<v-img height="200" style="background-color: gray"> </v-img>
-
+							<v-img height="200" style="background-color: gray" />
 							<v-card-title class="caption primary--text font-weight-bold">
 								Cafe Badilico
 							</v-card-title>
-
 							<v-card-text class="font-weight-bold pb-0">
 								Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 							</v-card-text>
