@@ -38,86 +38,30 @@
 			</v-row>
 			<!-- blogs -->
 			<v-row justify="center">
-				<v-col cols="12" sm="8">
-					<v-card flat height="400">
-						<v-card-text>
-							<v-row>
-								<v-col cols="6" lg="7" style="height: 400px">
-									<div class="font-weight-bold">
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-									</div>
-									<v-card-title
-										class="px-0 caption primary--text font-weight-bold"
-									>
-										Cafe Badilico
-									</v-card-title>
-									<div class="caption" style="overflow-y: auto; height: 250px">
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-										quis nostrud exerci tation ullamcorper suscipit lobortis
-										nisl ut aliquip ex ea commodo consequat. Duis autem vel eum
-										iriure dolor in hendrerit in vulputate velit esse molestie
-										consequat, vel illum dolore eu.
-										<br />
-										<br />
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-										quis nostrud exerci tation ullamcorper suscipit lobortis
-										nisl ut aliquip ex ea commodo consequat. Duis autem vel eum
-										iriure dolor in hendrerit in vulputate velit esse molestie
-										consequat, vel illum dolore eu
-										<br />
-										<br />
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-										quis nostrud exerci tation ullamcorper suscipit lobortis
-										nisl ut aliquip ex ea commodo consequat. Duis autem vel eum
-										iriure dolor in hendrerit in vulputate velit esse molestie
-										consequat, vel illum dolore eu
-										<br />
-										<br />
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-										quis nostrud exerci tation ullamcorper suscipit lobortis
-										nisl ut aliquip ex ea commodo consequat. Duis autem vel eum
-										iriure dolor in hendrerit in vulputate velit esse molestie
-										consequat, vel illum dolore eu
-									</div>
-								</v-col>
-								<v-col cols="6" lg="5">
-									<v-img
-										style="
-											background-color: gray;
-											border-radius: 5px;
-											width: 100%;
-											height: 100%;
-										"
-									></v-img>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</v-col>
-				<v-col v-for="n in 7" :key="n" cols="12" sm="4">
-					<v-card height="400" flat>
-						<v-img height="200" style="background-color: gray"> </v-img>
-
+				<v-col v-for="(article, i) in articles" :key="i" cols="12" :sm="i == 0 ? '8' : '4'">
+					<v-card height="400" width="100%" flat>
+						<v-img class="grey lighten-3" height="200" :src="article.thumbnail" contain>
+						</v-img>
 						<v-card-title class="caption primary--text font-weight-bold">
-							Cafe Badilico
+							{{ article.title }}
 						</v-card-title>
-
-						<v-card-text class="font-weight-bold">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-						</v-card-text>
+						<v-card-text v-html="article.HTMLbody.slice(0, 500)" />
 						<v-card-text>
 							<span class="caption primary--text font-weight-bold">
-								por Valentina Simoneti
+								por {{ article.originalAuthor }}
 							</span>
-							<span>18 febrero 2021</span>
+							<span v-if="article.notOriginal">
+								<a :href="article.originalLink" target="_blank">
+									ver articulo original
+								</a>
+							</span>
+							<span>
+								{{
+									`${new Date(article.createdAt).getDay()}/${new Date(
+										article.createdAt
+									).getMonth()}/${new Date(article.createdAt).getFullYear()}`
+								}}
+							</span>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -174,31 +118,25 @@
 			</v-container>
 		</v-img>
 		<!-- Categorias -->
-		<v-container>
+		<v-container class="my-16">
 			<v-row align="center" justify="center">
 				<v-col cols="12" class="py-8">
-					<div
-						class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
-					>
+					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
 						Categoria Populares
 					</div>
 					<div class="text--secondary text-h6 text-center">
 						Ver las categorías más visitadas
 					</div>
 				</v-col>
-				<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
-					<v-card flat color="white">
+				<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
+					<v-card elevation="1" color="white">
 						<v-card-text class="text-center">
 							<v-list-item-avatar size="120" class="ml-4">
-								<v-btn
-									depressed
-									color="#9D9D9C"
-									fab
-									width="120"
-									height="120"
-								></v-btn>
+								<v-img :src="element.img"></v-img>
 							</v-list-item-avatar>
-							<div class="text-center caption font-weight-bold">Cafe Badilico</div>
+							<div class="text-center caption font-weight-bold">
+								{{ element.title }}
+							</div>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -211,23 +149,45 @@
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container>
-					<v-row align="center" style="height: 400px">
-						<v-col cols="12" sm="6" class="white--text">
-							<div class="title mt-8">Recibe contenido exclusivo periódicamente</div>
-							<div class="subtitle-1 mb-8">Suscríbete y alcanza tu mejor versión</div>
-							<v-text-field
-								outlined
-								class="white"
-								hide-details
-								placeholder="Introduzca su correo electrónico aquí"
-							>
-								<template #append>
-									<v-btn small rounded color="info">Enviar</v-btn>
-								</template>
-							</v-text-field>
+					<v-row align="center" style="height: 500px">
+						<v-col cols="12" sm="6" class="white--text d-flex align-center">
+							<div>
+								<div class="title mt-8">
+									Recibe contenido exclusivo periódicamente
+								</div>
+								<div class="subtitle-1 mb-8">
+									Suscríbete y alcanza tu mejor versión
+								</div>
+								<div style="position: relative">
+									<v-text-field
+										solo
+										flat
+										placeholder="Introduzca su correo electrónico aquí"
+										class="white pr-4"
+										hide-details
+									>
+									</v-text-field>
+									<v-btn
+										depressed
+										absolute
+										style="
+											height: 100%;
+											right: -60px;
+											top: 0;
+											border-radius: 0 25px 25px 0;
+										"
+										color="info"
+										>Enviar</v-btn
+									>
+								</div>
+							</div>
 						</v-col>
 						<v-col cols="12" sm="6">
-							<v-img :src="`${$config.LANDING_URL}/logo_white.png`"></v-img>
+							<v-img
+								max-height="350"
+								contain
+								:src="`${$config.LANDING_URL}/recursos-11.png`"
+							></v-img>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -242,11 +202,58 @@ export default {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
 	},
+	data() {
+		return {
+			articles: [],
+			categories: [
+				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/recursos-12.png` },
+				{
+					title: 'Conocimiento de sí mismo',
+					img: `${this.$config.LANDING_URL}/recursos-13.png`,
+				},
+				{ title: 'Salud y bienestar', img: `${this.$config.LANDING_URL}/recursos-14.png` },
+				{ title: 'Familia y amigos', img: `${this.$config.LANDING_URL}/recursos-15.png` },
+			],
+		};
+	},
+	async mounted() {
+		let response = await fetch(`${this.$config.API_URL}/blog/all`);
+		response = await response.json();
+		this.articles = response.articles;
+		// eslint-disable-next-line no-console
+		console.log(this.articles);
+	},
 };
 </script>
 <style lang="scss" scoped>
 .v-text-field.v-text-field--enclosed,
 .v-sheet.v-card {
 	border-radius: 25px !important;
+}
+
+.input-group {
+	display: table;
+	border-collapse: collapse;
+	border-radius: 25px;
+	width: 100%;
+}
+.input-group > div {
+	display: table-cell;
+	vertical-align: middle; /* needed for Safari */
+}
+.input-group-icon {
+	border-radius: 25px;
+	background: blue;
+	color: #777;
+	padding: 0 12px;
+}
+.input-group-area {
+	width: 100%;
+}
+.input-group input {
+	border: 0;
+	display: block;
+	width: 100%;
+	padding: 8px;
 }
 </style>
