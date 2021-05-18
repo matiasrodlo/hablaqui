@@ -38,116 +38,132 @@
 			<!-- blogs -->
 			<v-row justify="center" class="mb-16">
 				<v-col v-for="(article, i) in articles" :key="i" cols="12" :sm="i == 0 ? '8' : '4'">
-					<v-hover v-slot="{ hover }">
-						<v-card
-							style="transition: transform 0.4s"
-							:style="
-								hover
-									? 'transform: scale(1.05);'
-									: 'text-transform: none !important;'
-							"
-							:class="hover ? 'elevation-4' : 'elevation-0'"
-							height="400"
-							width="100%"
-							flat
-						>
-							<template v-if="i == 0">
-								<v-card-text>
-									<v-row>
-										<v-col
-											cols="6"
-											style="
-												height: 390px;
-												display: flex;
-												flex-direction: column !important;
-											"
-											class="justify-space-between"
-										>
-											<div>
-												<div
-													class="subtitle-1 text--secondary font-weight-bold"
-												>
-													{{ article.title }}
-												</div>
-												<div
-													class="my-2 subtitle-1 primary--text font-weight-bold"
-												>
-													categoria
-												</div>
-												<div
-													class="subtitle-1"
-													v-html="
-														article.HTMLbody.toString()
-															.slice(0, 350)
-															.concat('...')
-													"
-												/>
-											</div>
-											<div>
-												<div class="subtitle-1 font-weight-bold">
-													<span
-														v-if="article.originalAuthor"
-														class="primary--text"
+					<template v-if="length > i">
+						<v-hover v-slot="{ hover }">
+							<v-card
+								style="transition: transform 0.4s"
+								:style="
+									hover
+										? 'transform: scale(1.02);'
+										: 'text-transform: none !important;'
+								"
+								:class="hover ? 'elevation-4' : 'elevation-0'"
+								height="400"
+								width="100%"
+								flat
+							>
+								<template v-if="i == 0">
+									<v-card-text>
+										<v-row>
+											<v-col
+												cols="6"
+												style="
+													height: 390px;
+													display: flex;
+													flex-direction: column !important;
+												"
+												class="justify-space-between"
+											>
+												<div>
+													<div class="title black--text font-weight-bold">
+														{{ article.title }}
+													</div>
+													<div
+														class="my-2 title primary--text font-weight-bold"
 													>
-														por {{ article.originalAuthor }}
-													</span>
-													<span v-if="article.originalAuthor">|</span>
-													<span class="text--disabled">
-														{{ dates(article.createdAt) }}
-													</span>
+														categoria
+													</div>
+													<div
+														class="subtitle-1"
+														v-html="
+															article.HTMLbody.toString()
+																.slice(0, 250)
+																.concat('...')
+														"
+													/>
 												</div>
+												<div>
+													<div class="title font-weight-bold">
+														<span
+															v-if="article.originalAuthor"
+															class="primary--text"
+														>
+															por {{ article.originalAuthor }}
+														</span>
+														<span v-if="article.originalAuthor">|</span>
+														<span class="text--disabled">
+															{{ dates(article.createdAt) }}
+														</span>
+													</div>
+												</div>
+											</v-col>
+											<v-col cols="6">
+												<v-img
+													style="border-radius: 10px"
+													height="365"
+													class="grey lighten-3"
+													:src="article.thumbnail"
+												>
+												</v-img>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</template>
+								<template v-else>
+									<v-img
+										class="grey lighten-3"
+										height="200"
+										:src="article.thumbnail"
+									>
+									</v-img>
+									<v-card-text
+										class="d-flex justify-space-between"
+										style="flex-direction: column; height: 200px"
+									>
+										<div>
+											<div
+												class="my-2 subtitle-1 primary--text font-weight-bold"
+											>
+												categoria
 											</div>
-										</v-col>
-										<v-col cols="6">
-											<v-img
-												style="border-radius: 10px"
-												height="365"
-												class="grey lighten-3"
-												:src="article.thumbnail"
-											>
-											</v-img>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</template>
-							<template v-else>
-								<v-img class="grey lighten-3" height="200" :src="article.thumbnail">
-								</v-img>
-								<v-card-text
-									class="d-flex justify-space-between"
-									style="flex-direction: column; height: 200px"
-								>
-									<div>
-										<div class="my-2 subtitle-1 primary--text font-weight-bold">
-											categoria
+											<div class="subtitle-1 black--text font-weight-bold">
+												{{ article.title }}
+											</div>
 										</div>
-										<div class="subtitle-1 text--secondary font-weight-bold">
-											{{ article.title }}
+										<div>
+											<div class="subtitle-1 font-weight-bold">
+												<span
+													v-if="article.originalAuthor"
+													class="primary--text"
+												>
+													por {{ article.originalAuthor }}
+												</span>
+												<span v-if="article.originalAuthor">|</span>
+												<span class="text--disabled">
+													{{ dates(article.createdAt) }}
+												</span>
+											</div>
 										</div>
-									</div>
-									<div>
-										<div class="caption font-weight-bold">
-											<span
-												v-if="article.originalAuthor"
-												class="primary--text"
-											>
-												por {{ article.originalAuthor }}
-											</span>
-											<span v-if="article.originalAuthor">|</span>
-											<span class="text--disabled">
-												{{ dates(article.createdAt) }}
-											</span>
-										</div>
-									</div>
-								</v-card-text>
-							</template>
-						</v-card>
-					</v-hover>
+									</v-card-text>
+								</template>
+							</v-card>
+						</v-hover>
+					</template>
 				</v-col>
 			</v-row>
 			<v-row justify="center">
 				<v-col cols="3">
-					<v-btn block color="primary" outlined rounded>Ver todos</v-btn>
+					<v-hover v-slot="{ hover }">
+						<v-btn
+							v-if="length <= articles.length"
+							block
+							color="primary"
+							:outlined="!hover"
+							rounded
+							@click="length = length + 6"
+							>Ver todos</v-btn
+						>
+					</v-hover>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -283,6 +299,7 @@ export default {
 	},
 	data() {
 		return {
+			length: 5,
 			articles: [],
 			categories: [
 				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/recursos-12.png` },

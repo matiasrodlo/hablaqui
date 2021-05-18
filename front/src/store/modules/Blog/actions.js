@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios';
-import { snackBarError } from '@/utils/snackbar';
+import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
 	async createArticle({ commit }, payload) {
@@ -8,6 +8,7 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
+			snackBarSuccess('Articulo creado exitosamente')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
