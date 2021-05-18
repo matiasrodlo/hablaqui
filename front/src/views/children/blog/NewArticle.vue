@@ -34,6 +34,33 @@
 					v-model="form.originalLink"
 				></v-text-field>
 			</v-container>
+			<h3>Categorias</h3>
+			<v-checkbox
+				v-model="form.categories"
+				value="Para empresas"
+				label="Para empresas"
+			></v-checkbox>
+			<v-checkbox
+				v-model="form.categories"
+				value="Salud y bienestar"
+				label="Salud y bienestar"
+			></v-checkbox>
+			<v-checkbox
+				v-model="form.categories"
+				value="Familia y amigos"
+				label="Familia y amigos"
+			></v-checkbox>
+			<v-checkbox
+				v-model="form.categories"
+				value="Autoconocimiento"
+				label="Autoconocimiento"
+			></v-checkbox>
+			<v-checkbox
+				v-model="form.categories"
+				value="Pareja y sexo"
+				label="Pareja y sexo"
+			></v-checkbox>
+			<span v-if="submitted">Articulo creado</span>
 			<v-btn color="primary" class="mt-10 mx-2" rounded @click="submitForm"
 				>Crear entrada</v-btn
 			>
@@ -54,6 +81,7 @@ export default {
 			form: null,
 			thumbnailUrl: '',
 			rules: [v => v.length <= 140 || 'Maximo de 140 caracteres'],
+			submitted: false,
 		};
 	},
 	created() {
@@ -69,6 +97,7 @@ export default {
 				originalLink: '',
 				shortDescription: '',
 				thumbnail: '',
+				categories: [],
 			};
 		},
 		setFormData() {
@@ -80,6 +109,7 @@ export default {
 			formData.append('originalAuthor', this.form.originalAuthor);
 			formData.append('originalLink', this.form.originalLink);
 			formData.append('thumbnail', this.form.thumbnail);
+			formData.append('categories', JSON.stringify(this.form.categories));
 
 			return formData;
 		},

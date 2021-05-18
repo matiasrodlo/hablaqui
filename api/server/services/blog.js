@@ -1,7 +1,7 @@
 import Article from '../models/article';
 import { okResponse } from '../utils/responses/functions';
 const createArticle = async (body, thumbnail, user) => {
-	const { title, shortDescription, HTMLbody, notOriginal, originalAuthor, originalLink } = body;
+	const { title, shortDescription, HTMLbody, notOriginal, originalAuthor, originalLink, categories } = body;
 	const newArticle = {
 		title,
 		shortDescription,
@@ -10,6 +10,7 @@ const createArticle = async (body, thumbnail, user) => {
 		originalAuthor,
 		originalLink,
 		thumbnail,
+		categories: JSON.parse(categories),
 		author: user,
 		rating: '',
 	};
