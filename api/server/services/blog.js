@@ -1,17 +1,21 @@
 import Article from '../models/article';
 import { okResponse } from '../utils/responses/functions';
 const createArticle = async (body, thumbnail, user) => {
-	const { title, shortDescription, HTMLbody, notOriginal, originalAuthor, originalLink, categories } = body;
+	const {
+		title,
+		HTMLbody,
+		notOriginal,
+		originalAuthor,
+		originalLink,
+		categories,
+	} = body;
 
 	let slug = title
 		.toLowerCase()
-		.replace(/[^\w ]+/g,'')
-		.replace(/ +/g,'-')
-	;
-
+		.replace(/[^\w ]+/g, '')
+		.replace(/ +/g, '-');
 	const newArticle = {
 		title,
-		shortDescription,
 		HTMLbody,
 		notOriginal,
 		originalAuthor,

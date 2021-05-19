@@ -2,7 +2,7 @@ import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import { okResponse, restResponse } from '../utils/responses/functions';
+import { okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
