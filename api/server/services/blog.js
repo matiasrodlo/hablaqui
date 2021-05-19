@@ -38,7 +38,7 @@ const getAllArticles = async () => {
 };
 
 const getArticle = async slug => {
-	const article = await Article.find({ slug });
+	const article = await Article.findOne({ slug });
 	return okResponse(`articulo encontrado ${slug}`, { article });
 };
 
