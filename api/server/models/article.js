@@ -27,7 +27,7 @@ let article = new Schema(
 			type: String,
 		},
 		categories: {
-			type: Array,
+			type: String,
 		},
 		slug: {
 			type: String,

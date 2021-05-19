@@ -22,7 +22,7 @@ const createArticle = async (body, thumbnail, user) => {
 		originalLink,
 		thumbnail,
 		slug,
-		categories: JSON.parse(categories),
+		categories,
 		author: user,
 		rating: '',
 	};

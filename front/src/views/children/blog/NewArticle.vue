@@ -42,36 +42,33 @@
 				</v-col>
 				<v-col cols="12">
 					<h3>Categorias</h3>
-					<v-checkbox
-						class="d-inline-block ma-2"
-						v-model="form.categories"
-						value="Para empresas"
-						label="Para empresas"
-					></v-checkbox>
-					<v-checkbox
-						class="d-inline-block ma-2"
-						v-model="form.categories"
-						value="Salud y bienestar"
-						label="Salud y bienestar"
-					></v-checkbox>
-					<v-checkbox
-						class="d-inline-block ma-2"
-						v-model="form.categories"
-						value="Familia y amigos"
-						label="Familia y amigos"
-					></v-checkbox>
-					<v-checkbox
-						class="d-inline-block ma-2"
-						v-model="form.categories"
-						value="Autoconocimiento"
-						label="Autoconocimiento"
-					></v-checkbox>
-					<v-checkbox
-						class="d-inline-block ma-2"
-						v-model="form.categories"
-						value="Pareja y sexo"
-						label="Pareja y sexo"
-					></v-checkbox>
+					<v-radio-group v-model="form.categories" mandatory>
+						<v-radio
+							class="d-inline-block ma-2"
+							value="Para empresas"
+							label="Para empresas"
+						></v-radio>
+						<v-radio
+							class="d-inline-block ma-2"
+							value="Salud y bienestar"
+							label="Salud y bienestar"
+						></v-radio>
+						<v-radio
+							class="d-inline-block ma-2"
+							value="Familia y amigos"
+							label="Familia y amigos"
+						></v-radio>
+						<v-radio
+							class="d-inline-block ma-2"
+							value="Autoconocimiento"
+							label="Autoconocimiento"
+						></v-radio>
+						<v-radio
+							class="d-inline-block ma-2"
+							value="Pareja y sexo"
+							label="Pareja y sexo"
+						></v-radio>
+					</v-radio-group>
 				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn
@@ -111,7 +108,7 @@ export default {
 				originalAuthor: '',
 				originalLink: '',
 				thumbnail: '',
-				categories: [],
+				categories: '',
 			};
 		},
 		setFormData() {
@@ -122,7 +119,7 @@ export default {
 			formData.append('originalAuthor', this.form.originalAuthor);
 			formData.append('originalLink', this.form.originalLink);
 			formData.append('thumbnail', this.form.thumbnail);
-			formData.append('categories', JSON.stringify(this.form.categories));
+			formData.append('categories', this.form.categories);
 			return formData;
 		},
 
