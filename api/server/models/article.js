@@ -26,6 +26,12 @@ let article = new Schema(
 		originalLink: {
 			type: String,
 		},
+		categories: {
+			type: Array,
+		},
+		slug: {
+			type: String,
+		},
 		author: {
 			type: String,
 		},
