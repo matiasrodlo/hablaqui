@@ -41,6 +41,7 @@
 					<template v-if="length > i">
 						<v-hover v-slot="{ hover }">
 							<v-card
+								:to="{ path: `/blog/${article.slug}` }"
 								style="transition: transform 0.4s"
 								:style="
 									hover
