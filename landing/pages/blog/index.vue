@@ -3,16 +3,18 @@
 		<client-only>
 			<Appbar />
 		</client-only>
-		<v-container>
+		<v-container fluid>
 			<!-- header -->
-			<v-row>
+			<v-row justify="center">
 				<v-col
 					cols="12"
-					class="primary--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
+					sm="10"
+					xl="8"
+					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mt-16 mb-6"
 				>
 					Blog Hablaquí
 				</v-col>
-				<v-col cols="12">
+				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-select
 						flat
 						solo
@@ -36,55 +38,118 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row justify="center" class="mb-16">
-				<v-col v-for="(article, i) in articles" :key="i" cols="12" :sm="i == 0 ? '8' : '4'">
-					<template v-if="length > i">
-						<v-hover v-slot="{ hover }">
-							<v-card
-								:to="{ path: `/blog/${article.slug}` }"
-								style="transition: transform 0.4s"
-								:style="
-									hover
-										? 'transform: scale(1.02);'
-										: 'text-transform: none !important;'
-								"
-								:class="hover ? 'elevation-4' : 'elevation-0'"
-								height="400"
-								width="100%"
-								flat
-							>
-								<template v-if="i == 0">
-									<v-card-text>
-										<v-row>
-											<v-col
-												cols="6"
-												style="
-													height: 390px;
-													display: flex;
-													flex-direction: column !important;
-												"
-												class="justify-space-between"
+			<v-row v-if="articles.length" justify="center" class="mb-16">
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row>
+						<v-col
+							v-for="(article, i) in articles"
+							:key="i"
+							cols="12"
+							:md="i == 0 ? '12' : '6'"
+							:lg="i == 0 ? '8' : '4'"
+						>
+							<template v-if="length > i">
+								<v-hover v-slot="{ hover }">
+									<v-card
+										nuxt
+										:to="{ path: `/blog/${article.slug}` }"
+										style="transition: transform 0.4s"
+										:style="
+											hover
+												? 'transform: scale(1.02);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-4' : 'elevation-0'"
+										height="500"
+										width="100%"
+										flat
+									>
+										<template v-if="i == 0 && !$vuetify.breakpoint.smAndDown">
+											<v-card-text>
+												<v-row>
+													<v-col
+														cols="6"
+														style="
+															height: 490px;
+															display: flex;
+															flex-direction: column !important;
+														"
+														class="justify-space-between"
+													>
+														<div>
+															<h3 class="title black--text">
+																{{ article.title }}
+															</h3>
+															<v-btn
+																text
+																:to="`/blog/${article.categories}`"
+																class="px-0 my-3 text-h6"
+																color="primary"
+															>
+																{{ article.categories }}
+															</v-btn>
+															<div class="text-h6 font-weight-light">
+																{{
+																	strippedContent(
+																		article.HTMLbody
+																	)
+																}}
+															</div>
+														</div>
+														<div>
+															<div class="title font-weight-bold">
+																<span
+																	v-if="article.originalAuthor"
+																	class="primary--text"
+																>
+																	por {{ article.originalAuthor }}
+																</span>
+																<span v-if="article.originalAuthor"
+																	>|</span
+																>
+																<span class="text--disabled">
+																	{{ dates(article.createdAt) }}
+																</span>
+															</div>
+														</div>
+													</v-col>
+													<v-col cols="6">
+														<v-img
+															style="border-radius: 10px"
+															height="465"
+															class="grey lighten-3"
+															:src="article.thumbnail"
+														>
+														</v-img>
+													</v-col>
+												</v-row>
+											</v-card-text>
+										</template>
+										<template v-else>
+											<v-img
+												class="grey lighten-3"
+												height="250"
+												:src="article.thumbnail"
+											>
+											</v-img>
+											<v-card-text
+												class="d-flex justify-space-between"
+												style="flex-direction: column; height: 250px"
 											>
 												<div>
-													<div class="title black--text font-weight-bold">
+													<div
+														class="my-2 subtitle-1 primary--text font-weight-bold"
+													>
+														{{ article.categories }}
+													</div>
+													<div
+														class="subtitle-1 black--text font-weight-bold"
+													>
 														{{ article.title }}
 													</div>
-													<div
-														class="my-2 title primary--text font-weight-bold"
-													>
-														categoria
-													</div>
-													<div
-														class="subtitle-1"
-														v-html="
-															article.HTMLbody.toString()
-																.slice(0, 250)
-																.concat('...')
-														"
-													/>
 												</div>
 												<div>
-													<div class="title font-weight-bold">
+													<div class="subtitle-1 font-weight-bold">
 														<span
 															v-if="article.originalAuthor"
 															class="primary--text"
@@ -97,59 +162,50 @@
 														</span>
 													</div>
 												</div>
-											</v-col>
-											<v-col cols="6">
-												<v-img
-													style="border-radius: 10px"
-													height="365"
-													class="grey lighten-3"
-													:src="article.thumbnail"
-												>
-												</v-img>
-											</v-col>
-										</v-row>
-									</v-card-text>
-								</template>
-								<template v-else>
-									<v-img
-										class="grey lighten-3"
-										height="200"
-										:src="article.thumbnail"
-									>
-									</v-img>
-									<v-card-text
-										class="d-flex justify-space-between"
-										style="flex-direction: column; height: 200px"
-									>
-										<div>
-											<div
-												class="my-2 subtitle-1 primary--text font-weight-bold"
-											>
-												categoria
-											</div>
-											<div class="subtitle-1 black--text font-weight-bold">
-												{{ article.title }}
-											</div>
-										</div>
-										<div>
-											<div class="subtitle-1 font-weight-bold">
-												<span
-													v-if="article.originalAuthor"
-													class="primary--text"
-												>
-													por {{ article.originalAuthor }}
-												</span>
-												<span v-if="article.originalAuthor">|</span>
-												<span class="text--disabled">
-													{{ dates(article.createdAt) }}
-												</span>
-											</div>
-										</div>
-									</v-card-text>
-								</template>
-							</v-card>
-						</v-hover>
-					</template>
+											</v-card-text>
+										</template>
+									</v-card>
+								</v-hover>
+							</template>
+						</v-col>
+					</v-row>
+				</v-col>
+			</v-row>
+			<v-row v-else>
+				<v-col cols="8">
+					<v-skeleton-loader
+						light
+						class="mx-auto"
+						type="image, image"
+					></v-skeleton-loader>
+				</v-col>
+				<v-col cols="4">
+					<v-skeleton-loader
+						light
+						class="mx-auto"
+						type="image, image"
+					></v-skeleton-loader>
+				</v-col>
+				<v-col cols="4">
+					<v-skeleton-loader
+						light
+						class="mx-auto"
+						type="image, image"
+					></v-skeleton-loader>
+				</v-col>
+				<v-col cols="4">
+					<v-skeleton-loader
+						light
+						class="mx-auto"
+						type="image, image"
+					></v-skeleton-loader>
+				</v-col>
+				<v-col cols="4">
+					<v-skeleton-loader
+						light
+						class="mx-auto"
+						type="image, image"
+					></v-skeleton-loader>
 				</v-col>
 			</v-row>
 			<v-row justify="center">
@@ -313,17 +369,18 @@ export default {
 			],
 		};
 	},
-	created() {
-		moment.locale('es');
-	},
 	async mounted() {
 		let response = await fetch(`${this.$config.API_URL}/blog/all`);
 		response = await response.json();
-		this.articles = response.articles;
 		// eslint-disable-next-line no-console
-		console.log(this.articles);
+		console.log(response.articles);
+		this.articles = response.articles;
 	},
 	methods: {
+		strippedContent(text) {
+			const regex = /(<([^>]+)>)/gi;
+			return text.replace(regex, '').slice(0, 200).concat('...');
+		},
 		dates(date) {
 			return moment(date).format('DD MMMM YY');
 		},
