@@ -36,6 +36,18 @@ const blogController = {
 			errorCallback(e, res, 'Error consiguiendo el articulo');
 		}
 	},
+	async updateRating(req, res) {
+		try {
+			const { body, params } = req;
+			const { data, code } = await blogService.updateRating(
+				body.newRating,
+				params.slug
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando el rating');
+		}
+	},
 };
 
 export default Object.freeze(blogController);

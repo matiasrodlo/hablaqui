@@ -19,4 +19,6 @@ blogRouter.get('/blog/all', blogController.getAllArticles);
 
 blogRouter.get('/blog/:slug', blogController.getArticle);
 
+blogRouter.post('/blog/:slug/update-rating', blogController.updateRating);
+
 export default blogRouter;
