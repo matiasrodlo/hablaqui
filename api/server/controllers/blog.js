@@ -27,6 +27,15 @@ const blogController = {
 			errorCallback(e, res, 'Error consiguiendo los articulos');
 		}
 	},
+	async getArticle(req, res) {
+		try {
+			const { params } = req;
+			const { data, code } = await blogService.getArticle(params.slug);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error consiguiendo el articulo');
+		}
+	},
 };
 
 export default Object.freeze(blogController);

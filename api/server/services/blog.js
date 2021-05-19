@@ -27,7 +27,7 @@ const createArticle = async (body, thumbnail, user) => {
 		rating: '',
 	};
 
-	Article.create(newArticle);
+	await Article.create(newArticle);
 
 	return okResponse('articulo creado');
 };
@@ -37,9 +37,15 @@ const getAllArticles = async () => {
 	return okResponse('articulos obtenidos', { articles });
 };
 
+const getArticle = async slug => {
+	const article = await Article.find({ slug });
+	return okResponse(`articulo encontrado ${slug}`, { article });
+};
+
 const blogService = {
 	createArticle,
 	getAllArticles,
+	getArticle,
 };
 
 export default Object.freeze(blogService);

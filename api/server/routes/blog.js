@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import passport from 'passport';
 import multer from '../middleware/multer';
 import storage from '../middleware/storage';
 import blogController from '../controllers/blog';
@@ -17,5 +16,7 @@ blogRouter.post(
 );
 
 blogRouter.get('/blog/all', blogController.getAllArticles);
+
+blogRouter.get('/blog/:slug', blogController.getArticle);
 
 export default blogRouter;
