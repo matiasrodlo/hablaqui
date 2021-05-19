@@ -137,19 +137,20 @@
 												style="flex-direction: column; height: 250px"
 											>
 												<div>
-													<div
-														class="my-2 subtitle-1 primary--text font-weight-bold"
+													<v-btn
+														text
+														:to="`/blog/${article.categories}`"
+														class="px-0 my-3 text-h6"
+														color="primary"
 													>
 														{{ article.categories }}
-													</div>
-													<div
-														class="subtitle-1 black--text font-weight-bold"
-													>
+													</v-btn>
+													<h3 class="title black--text">
 														{{ article.title }}
-													</div>
+													</h3>
 												</div>
 												<div>
-													<div class="subtitle-1 font-weight-bold">
+													<div class="title black--text">
 														<span
 															v-if="article.originalAuthor"
 															class="primary--text"
@@ -171,36 +172,22 @@
 					</v-row>
 				</v-col>
 			</v-row>
-			<v-row v-else>
-				<v-col cols="8">
+			<v-row v-else justify="center">
+				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-skeleton-loader
 						light
 						class="mx-auto"
 						type="image, image"
 					></v-skeleton-loader>
 				</v-col>
-				<v-col cols="4">
+				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-skeleton-loader
 						light
 						class="mx-auto"
 						type="image, image"
 					></v-skeleton-loader>
 				</v-col>
-				<v-col cols="4">
-					<v-skeleton-loader
-						light
-						class="mx-auto"
-						type="image, image"
-					></v-skeleton-loader>
-				</v-col>
-				<v-col cols="4">
-					<v-skeleton-loader
-						light
-						class="mx-auto"
-						type="image, image"
-					></v-skeleton-loader>
-				</v-col>
-				<v-col cols="4">
+				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-skeleton-loader
 						light
 						class="mx-auto"
@@ -214,6 +201,7 @@
 						<v-btn
 							v-if="length <= articles.length"
 							block
+							x-large
 							color="primary"
 							:outlined="!hover"
 							rounded
