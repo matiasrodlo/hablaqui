@@ -26,6 +26,14 @@
 								hover
 								:size="$vuetify.breakpoint.mdAndUp ? '30' : '20'"
 							></v-rating>
+							<v-btn
+								v-if="rating !== article.rating.average"
+								text
+								color="primary"
+								@click="setRating"
+							>
+								Enviar rating
+							</v-btn>
 						</span>
 					</div>
 					<div>
@@ -83,7 +91,7 @@ export default {
 	data() {
 		return {
 			article: null,
-			rating: 5,
+			rating: 0,
 			breadcrumb: [],
 		};
 	},
@@ -92,7 +100,7 @@ export default {
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
 		response = await response.json();
 		this.article = response.article;
-		if (response.article.rating) this.rating = parseInt(response.article.rating);
+		this.rating = response.article.rating.average;
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -100,8 +108,8 @@ export default {
 				href: '/blog',
 			},
 			{
-				text: response.article.categories[0],
-				disabled: false,
+				text: response.article.categories,
+				disabled: true,
 				href: 'breadcrumbs_link_1',
 			},
 			{
@@ -114,6 +122,18 @@ export default {
 	methods: {
 		dates(date) {
 			return moment(date).format('DD MMMM YY');
+		},
+		async setRating() {
+			let response = await fetch(
+				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating`,
+				{
+					method: 'POST',
+					body: { newRating: this.rating + 1 },
+				}
+			);
+			response = await response.json();
+			// eslint-disable-next-line no-console
+			console.log('func', response);
 		},
 	},
 };

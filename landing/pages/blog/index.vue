@@ -15,7 +15,63 @@
 					Blog Hablaquí
 				</v-col>
 				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-select
+					<v-combobox
+						v-model="combobox"
+						item-color="primary"
+						hide-no-data
+						class="primary--text text-h6 my-6"
+						style="color: #2070e5; cursor: pointer"
+						flat
+						no-filter
+						solo
+						hide-details
+						:menu-props="{
+							closeOnClick: true,
+							closeOnContentClick: false,
+							disableKeys: false,
+							openOnClick: true,
+							maxHeight: 304,
+						}"
+						multiple
+						:prefix="!combobox.length && 'Seleccione un asunto'"
+						suffix="Editar filtros"
+						append-icon="mdi-chevron-down"
+					>
+						<template #no-data>
+							<v-row justify="center" style="min-height: 200px; margin-top: 16px">
+								<v-col cols="12">
+									<v-btn
+										v-for="item in items"
+										:key="item"
+										rounded
+										:outlined="!combobox.includes(item)"
+										color="primary"
+										class="ma-2 d-inline-block"
+										x-large
+										@click="addItemToCombobox(item)"
+									>
+										{{ item }}
+										<v-icon right>
+											{{ combobox.includes(item) ? 'mdi-close' : 'mdi-plus' }}
+										</v-icon>
+									</v-btn>
+								</v-col>
+								<v-col cols="12" class="text-center">
+									<div class="text-center align-self-end justify-content-center">
+										<v-btn color="primary" text large @click="combobox = []">
+											Limpiar filtros
+										</v-btn>
+									</div>
+								</v-col>
+							</v-row>
+						</template>
+						<template #selection="{ item }">
+							<div class="primary--text title mx-2">
+								{{ item }}
+							</div>
+						</template>
+					</v-combobox>
+					<!-- <v-select
 						flat
 						solo
 						hide-details
@@ -34,7 +90,7 @@
 						<template #selection="{ item }">
 							<span class="primary--text">{{ item }}</span>
 						</template>
-					</v-select>
+					</v-select> -->
 				</v-col>
 			</v-row>
 			<!-- blogs -->
@@ -82,7 +138,6 @@
 															</h3>
 															<v-btn
 																text
-																:to="`/blog/${article.categories}`"
 																class="px-0 my-3 text-h6"
 																color="primary"
 															>
@@ -139,7 +194,6 @@
 												<div>
 													<v-btn
 														text
-														:to="`/blog/${article.categories}`"
 														class="px-0 my-3 text-h6"
 														color="primary"
 													>
@@ -344,6 +398,15 @@ export default {
 	},
 	data() {
 		return {
+			items: [
+				'Autoconocimiento',
+				'Para empresas',
+				'Familia y amigos',
+				'Salud y bienestar',
+				'Conocimiento de sí mismo',
+				'Pareja y sexo',
+			],
+			combobox: [],
 			length: 5,
 			articles: [],
 			categories: [
@@ -371,6 +434,14 @@ export default {
 		},
 		dates(date) {
 			return moment(date).format('DD MMMM YY');
+		},
+		addItemToCombobox(item) {
+			if (this.combobox.includes(item)) {
+				const i = this.combobox.findIndex(el => el === item);
+				this.combobox.splice(i, 1);
+			} else {
+				this.combobox.push(item);
+			}
 		},
 	},
 };
@@ -405,5 +476,8 @@ export default {
 	display: block;
 	width: 100%;
 	padding: 8px;
+}
+.v-application .v-autocomplete__content.menuable__content__active {
+	border-radius: 100px !important;
 }
 </style>
