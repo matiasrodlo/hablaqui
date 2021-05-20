@@ -150,8 +150,7 @@ export default {
 				}
 			);
 			response = await response.json();
-			console.log(response.rating);
-			this.rating = response.rating.average;
+			this.rating = parseFloat(response.rating.average.toFixed(1));
 		},
 	},
 };
