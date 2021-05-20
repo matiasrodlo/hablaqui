@@ -95,7 +95,6 @@
 
 <script>
 import moment from 'moment';
-import axios from 'axios';
 
 export default {
 	components: {
@@ -111,9 +110,10 @@ export default {
 	},
 	async mounted() {
 		// eslint-disable-next-line no-console
-		const { data } = await axios.get(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
-		this.article = data.article;
-		if (data.article.rating.average) this.rating = data.article.rating.average;
+		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
+		response = await response.json();
+		this.article = response.article;
+		if (response.article.rating.average) this.rating = response.article.rating.average;
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -121,14 +121,14 @@ export default {
 				href: '/blog',
 			},
 			{
-				text: data.article.categories,
+				text: response.article.categories,
 				disabled: true,
 				href: 'breadcrumbs_link_1',
 			},
 			{
-				text: data.article.title,
+				text: response.article.title,
 				disabled: true,
-				href: `/blog/${data.article.slug}`,
+				href: `/blog/${response.article.slug}`,
 			},
 		];
 	},
@@ -137,16 +137,21 @@ export default {
 			return moment(date).format('DD MMMM YY');
 		},
 		async setRating() {
-			const { data } = await axios(
+			let response = await fetch(
 				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${
 					this.rating + 1
 				}`,
 				{
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
 					method: 'post',
 				}
 			);
-			console.log(data.rating);
-			this.rating = data.rating.average;
+			response = await response.json();
+			console.log(response.rating);
+			this.rating = response.rating.average;
 		},
 	},
 };
