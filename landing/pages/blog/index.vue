@@ -136,7 +136,8 @@
 															<div class="text-h6 font-weight-light">
 																{{
 																	strippedContent(
-																		article.HTMLbody
+																		article.HTMLbody,
+																		200
 																	)
 																}}
 															</div>
@@ -288,44 +289,69 @@
 							Liderazgo y salud mental en el mercado laboral
 						</div>
 					</v-col>
-					<v-col cols="12" sm="10">
-						<v-row>
+					<v-col cols="12" sm="8" md="10" xl="9">
+						<v-row v-if="forCompanies.length">
 							<template v-for="(item, n) in forCompanies">
 								<v-col :key="n" cols="12" sm="3">
-									<v-card v-if="n < 4" flat height="450">
-										<v-img
-											class="grey lighten-3"
-											height="200"
-											:src="item.thumbnail"
+									<v-hover v-slot="{ hover }">
+										<v-card
+											v-if="n < 4"
+											style="transition: transform 0.5s"
+											:style="
+												hover
+													? 'transform: translateY(1em)'
+													: 'transform: translateY(0)'
+											"
+											flat
+											height="500"
 										>
-										</v-img>
-										<v-card-text
-											style="height: 250px; flex-direction: column"
-											class="d-flex justify-space-between"
-										>
-											<div>
-												<div class="caption primary--text font-weight-bold">
-													{{ item.categories }}
+											<v-img
+												class="grey lighten-3"
+												height="200"
+												:src="item.thumbnail"
+											>
+											</v-img>
+											<v-card-text
+												style="height: 300px; flex-direction: column"
+												class="d-flex justify-space-between"
+											>
+												<div>
+													<div
+														class="title primary--text font-weight-bold"
+													>
+														{{ item.categories }}
+													</div>
+													<div class="title font-weight-bold pb-0">
+														{{ item.title }}
+													</div>
+													<div class="text-h6 font-weight-light">
+														{{ strippedContent(item.HTMLbody, 100) }}
+													</div>
 												</div>
-												<div class="font-weight-bold pb-0">
-													{{ item.title }}
+												<div>
+													<span
+														class="title primary--text font-weight-bold"
+													>
+														{{ item.originalAuthor }}
+													</span>
+													<span class="title text--disabled">
+														|{{ dates(item.createdAt) }}
+													</span>
 												</div>
-												<div class="caption">
-													{{ strippedContent(item.HTMLbody) }}
-												</div>
-											</div>
-											<div>
-												<span
-													class="caption primary--text font-weight-bold"
-												>
-													{{ item.originalAuthor }}
-												</span>
-												<span>{{ dates(item.createdAt) }}</span>
-											</div>
-										</v-card-text>
-									</v-card>
+											</v-card-text>
+										</v-card>
+									</v-hover>
 								</v-col>
 							</template>
+						</v-row>
+						<v-row v-else>
+							<v-col v-for="n in 4" :key="n" cols="3">
+								<v-skeleton-loader
+									light
+									class="mx-auto"
+									type="image, image"
+								></v-skeleton-loader>
+							</v-col>
 						</v-row>
 					</v-col>
 				</v-row>
@@ -348,7 +374,7 @@
 			</v-container>
 		</v-img>
 		<!-- Categorias -->
-		<v-container class="my-16">
+		<v-container fluid class="my-16">
 			<v-row align="center" justify="center">
 				<v-col cols="12" class="py-8">
 					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
@@ -358,17 +384,32 @@
 						Ver las categorías más visitadas
 					</div>
 				</v-col>
-				<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
-					<v-card flat>
-						<v-card-text class="text-center">
-							<v-list-item-avatar size="120" class="ml-4">
-								<v-img :src="element.img"></v-img>
-							</v-list-item-avatar>
-							<div class="text-center caption font-weight-bold">
-								{{ element.title }}
-							</div>
-						</v-card-text>
-					</v-card>
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row>
+						<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									style="transition: transform 0.5s"
+									:style="
+										hover
+											? 'transform: scale(1.02);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-4' : 'elevation-0'"
+									flat
+								>
+									<v-card-text class="text-center">
+										<v-list-item-avatar size="120" class="ml-4">
+											<v-img :src="element.img"></v-img>
+										</v-list-item-avatar>
+										<div class="text-center caption font-weight-bold">
+											{{ element.title }}
+										</div>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</v-col>
+					</v-row>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -378,52 +419,62 @@
 				style="height: 600px; width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
-				<v-container>
-					<v-row align="center" style="height: 600px">
-						<v-col cols="12" sm="6" class="white--text d-flex align-center">
-							<div>
-								<div class="title font-weight-bold mt-8">
-									Recibe contenido exclusivo periódicamente
-								</div>
-								<div class="subtitle-1 font-weight-bold mb-8">
-									Suscríbete y alcanza tu mejor versión
-								</div>
-								<div style="position: relative">
-									<v-text-field
-										solo
-										flat
-										placeholder="Introduzca su correo electrónico aquí"
-										class="white pr-4"
-										hide-details
-									>
-									</v-text-field>
-									<v-btn
-										depressed
-										absolute
-										style="
-											height: 100%;
-											right: -60px;
-											top: 0;
-											border-radius: 0 25px 25px 0;
-										"
-										color="info"
-										>Enviar</v-btn
-									>
-								</div>
-							</div>
-						</v-col>
-						<v-col cols="12" sm="6">
-							<v-img
-								max-height="350"
-								contain
-								:src="`${$config.LANDING_URL}/recursos-11.png`"
-							></v-img>
+				<v-container fluid>
+					<v-row align="center" justify="center" style="height: 600px">
+						<v-col cols="12" sm="8" md="10" xl="9">
+							<v-row justify="space-between">
+								<v-col cols="12" sm="5" class="white--text">
+									<div>
+										<div class="title font-weight-bold mt-8">
+											Recibe contenido exclusivo periódicamente
+										</div>
+										<div class="subtitle-1 font-weight-bold mb-8">
+											Suscríbete y alcanza tu mejor versión
+										</div>
+										<div style="position: relative">
+											<v-text-field
+												solo
+												flat
+												placeholder="Introduzca su correo electrónico aquí"
+												class="white pr-4"
+												hide-details
+											>
+											</v-text-field>
+											<v-btn
+												depressed
+												absolute
+												style="
+													height: 100%;
+													right: -60px;
+													top: 0;
+													border-radius: 0 25px 25px 0;
+												"
+												color="info"
+												>Enviar</v-btn
+											>
+										</div>
+									</div>
+								</v-col>
+								<v-col cols="12" sm="5" class="text-center">
+									<v-img
+										max-height="350"
+										contain
+										:src="`${$config.LANDING_URL}/recursos-11.png`"
+									></v-img>
+								</v-col>
+							</v-row>
 						</v-col>
 					</v-row>
 				</v-container>
 			</div>
 		</div>
-		<Footer />
+		<v-container fluid>
+			<v-row justify="center">
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<Footer />
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 <script>
@@ -470,6 +521,9 @@ export default {
 			return !result.length ? this.articles : result;
 		},
 	},
+	created() {
+		moment.locale('es');
+	},
 	async mounted() {
 		let response = await fetch(`${this.$config.API_URL}/blog/all`);
 		response = await response.json();
@@ -478,9 +532,9 @@ export default {
 		this.articles = response.articles;
 	},
 	methods: {
-		strippedContent(text) {
+		strippedContent(text, long) {
 			const regex = /(<([^>]+)>)/gi;
-			return text.replace(regex, '').slice(0, 200).concat('...');
+			return text.replace(regex, '').slice(0, long).concat('...');
 		},
 		dates(date) {
 			return moment(date).format('DD MMMM YY');
