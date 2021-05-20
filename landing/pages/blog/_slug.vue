@@ -68,6 +68,25 @@
 					<div class="font-weight-light text-h6" v-html="article.HTMLbody"></div>
 				</v-col>
 			</v-row>
+			<v-row>
+				<v-col cols="12">
+					<span>
+						¿Este artículo fue útil?
+						<span class="text--secondary mr-2"> {{ rating }} </span>
+						<v-rating
+							v-model="rating"
+							class="d-inline-block"
+							background-color="grey lighten-1"
+							color="grey lighten-1"
+							dense
+							half-increments
+							hover
+							:size="$vuetify.breakpoint.mdAndUp ? '30' : '20'"
+							@input="setRating"
+						></v-rating>
+					</span>
+				</v-col>
+			</v-row>
 			<Footer />
 		</v-container>
 	</div>
@@ -93,7 +112,7 @@ export default {
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
 		response = await response.json();
 		this.article = response.article;
-		this.rating = response.article.rating.average;
+		if (response.article.rating.average) this.rating = response.article.rating.average;
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -120,8 +139,11 @@ export default {
 			let response = await fetch(
 				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating`,
 				{
+					headers: {
+						'Content-Type': 'application/json;',
+					},
 					method: 'POST',
-					body: { newRating: this.rating + 1 },
+					body: JSON.stringify({ newRating: this.rating + 1 }),
 				}
 			);
 			response = await response.json();
