@@ -25,15 +25,8 @@
 								half-increments
 								hover
 								:size="$vuetify.breakpoint.mdAndUp ? '30' : '20'"
+								@input="setRating"
 							></v-rating>
-							<v-btn
-								v-if="rating !== article.rating.average"
-								text
-								color="primary"
-								@click="setRating"
-							>
-								Enviar rating
-							</v-btn>
 						</span>
 					</div>
 					<div>
@@ -132,8 +125,8 @@ export default {
 				}
 			);
 			response = await response.json();
-			// eslint-disable-next-line no-console
-			console.log('func', response);
+			console.log(response.rating);
+			this.rating = response.rating.average;
 		},
 	},
 };
