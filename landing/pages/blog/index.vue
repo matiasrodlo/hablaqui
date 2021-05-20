@@ -276,7 +276,7 @@
 		</v-container>
 		<!-- for companies -->
 		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container class="my-16">
+			<v-container fluid class="my-16">
 				<v-row justify="center">
 					<v-col cols="12" class="py-16">
 						<div
@@ -288,31 +288,61 @@
 							Liderazgo y salud mental en el mercado laboral
 						</div>
 					</v-col>
-					<v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
-						<v-card flat>
-							<v-img height="200" style="background-color: gray" />
-							<v-card-title class="caption primary--text font-weight-bold">
-								Cafe Badilico
-							</v-card-title>
-							<v-card-text class="font-weight-bold pb-0">
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-							</v-card-text>
-							<v-card-text class="caption">
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-								nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
-							</v-card-text>
-							<v-card-text>
-								<span class="caption primary--text font-weight-bold">
-									por Hablaquí
-								</span>
-								<span>18 febrero 2021</span>
-							</v-card-text>
-						</v-card>
+					<v-col cols="12" sm="10">
+						<v-row>
+							<template v-for="(item, n) in forCompanies">
+								<v-col :key="n" cols="12" sm="3">
+									<v-card v-if="n < 4" flat height="450">
+										<v-img
+											class="grey lighten-3"
+											height="200"
+											:src="item.thumbnail"
+										>
+										</v-img>
+										<v-card-text
+											style="height: 250px; flex-direction: column"
+											class="d-flex justify-space-between"
+										>
+											<div>
+												<div class="caption primary--text font-weight-bold">
+													{{ item.categories }}
+												</div>
+												<div class="font-weight-bold pb-0">
+													{{ item.title }}
+												</div>
+												<div class="caption">
+													{{ strippedContent(item.HTMLbody) }}
+												</div>
+											</div>
+											<div>
+												<span
+													class="caption primary--text font-weight-bold"
+												>
+													{{ item.originalAuthor }}
+												</span>
+												<span>{{ dates(item.createdAt) }}</span>
+											</div>
+										</v-card-text>
+									</v-card>
+								</v-col>
+							</template>
+						</v-row>
 					</v-col>
 				</v-row>
 				<v-row justify="center" class="py-8">
 					<v-col cols="3">
-						<v-btn block color="white" outlined rounded>Ver todos</v-btn>
+						<v-hover v-slot="{ hover }">
+							<v-btn
+								v-if="length <= articles.length"
+								block
+								x-large
+								color="white"
+								:outlined="!hover"
+								rounded
+								@click="length = length + 6"
+								>Ver todos</v-btn
+							>
+						</v-hover>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -429,6 +459,10 @@ export default {
 		};
 	},
 	computed: {
+		forCompanies() {
+			// return this.articles.filter(item => item.categories === 'Para empresas');
+			return this.articles;
+		},
 		filterItems() {
 			if (!this.articles.length) return [];
 			if (!this.combobox.length) return this.articles;
