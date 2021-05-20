@@ -38,9 +38,9 @@ const blogController = {
 	},
 	async updateRating(req, res) {
 		try {
-			const { body, params } = req;
+			const { params } = req;
 			const { data, code } = await blogService.updateRating(
-				body.newRating,
+				params.newRating,
 				params.slug
 			);
 			return restResponse(data, code, res);
