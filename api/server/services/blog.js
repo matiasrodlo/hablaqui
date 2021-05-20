@@ -56,8 +56,10 @@ const updateRating = async (newRating, slug) => {
 		return previousAverage + (newRating - previousAverage) / (elements + 1);
 	};
 
+	let updatedRating = null;
+
 	if (article.rating.quantity != 0) {
-		await Article.findOneAndUpdate(
+		updatedRating = await Article.findOneAndUpdate(
 			{ slug },
 			{
 				$set: {
@@ -68,21 +70,28 @@ const updateRating = async (newRating, slug) => {
 					),
 					'rating.quantity': article.rating.quantity + 1,
 				},
+			},
+			{
+				returnOriginal: false,
 			}
 		);
-		return okResponse(`rating actualizado para ${slug}`);
 	} else {
-		await Article.findOneAndUpdate(
+		updatedRating = await Article.findOneAndUpdate(
 			{ slug },
 			{
 				$set: {
 					'rating.average': newRating,
 					'rating.quantity': 1,
 				},
+			},
+			{
+				returnOriginal: false,
 			}
 		);
-		return okResponse(`rating creado para ${slug}`);
 	}
+	return okResponse(`rating actualizado para ${slug}`, {
+		rating: updatedRating.rating,
+	});
 };
 
 const blogService = {
