@@ -15,82 +15,72 @@
 					Blog Hablaquí
 				</v-col>
 				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-combobox
-						v-model="combobox"
-						item-color="primary"
-						hide-no-data
-						class="primary--text text-h6 my-6"
-						style="color: #2070e5; cursor: pointer"
+					<v-expansion-panels
 						flat
-						no-filter
-						solo
-						hide-details
-						:menu-props="{
-							closeOnClick: true,
-							closeOnContentClick: false,
-							disableKeys: false,
-							openOnClick: true,
-							maxHeight: 304,
-						}"
-						multiple
-						:prefix="!combobox.length && 'Seleccione un asunto'"
-						suffix="Editar filtros"
-						append-icon="mdi-chevron-down"
+						style="border-radius: 25px"
+						active-class="roundedExpand"
 					>
-						<template #no-data>
-							<v-row justify="center" style="min-height: 200px; margin-top: 16px">
-								<v-col cols="12">
-									<v-btn
-										v-for="item in items"
+						<v-expansion-panel>
+							<v-expansion-panel-header>
+								<div
+									v-if="!combobox.length"
+									class="title primary--text text-h6 my-1"
+								>
+									Seleccione un asunto
+								</div>
+								<div>
+									<span
+										v-for="item in combobox"
 										:key="item"
-										rounded
-										:outlined="!combobox.includes(item)"
-										color="primary"
-										class="ma-2 d-inline-block"
-										x-large
-										@click="addItemToCombobox(item)"
+										class="primary--text title mx-2"
 									>
 										{{ item }}
-										<v-icon right>
-											{{ combobox.includes(item) ? 'mdi-close' : 'mdi-plus' }}
-										</v-icon>
-									</v-btn>
-								</v-col>
-								<v-col cols="12" class="text-center">
-									<div class="text-center align-self-end justify-content-center">
-										<v-btn color="primary" text large @click="combobox = []">
-											Limpiar filtros
+									</span>
+								</div>
+								<div class="text-right primary--text title">Editar filtros</div>
+							</v-expansion-panel-header>
+							<v-expansion-panel-content style="border-radius: 25px">
+								<v-divider></v-divider>
+								<v-row justify="center" style="min-height: 200px; margin-top: 16px">
+									<v-col cols="12">
+										<v-btn
+											v-for="item in items"
+											:key="item"
+											rounded
+											:outlined="!combobox.includes(item)"
+											color="primary"
+											class="ma-2 d-inline-block"
+											x-large
+											@click="addItemToCombobox(item)"
+										>
+											{{ item }}
+											<v-icon right>
+												{{
+													combobox.includes(item)
+														? 'mdi-close'
+														: 'mdi-plus'
+												}}
+											</v-icon>
 										</v-btn>
-									</div>
-								</v-col>
-							</v-row>
-						</template>
-						<template #selection="{ item }">
-							<div class="primary--text title mx-2">
-								{{ item }}
-							</div>
-						</template>
-					</v-combobox>
-					<!-- <v-select
-						flat
-						solo
-						hide-details
-						:items="['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis']"
-						no-data-text="Vacio"
-					>
-						<template #label>
-							<span class="primary--text font-weight-bold">Seleccione un asunto</span>
-						</template>
-						<template #append>
-							<span class="primary--text subtitle-2">
-								Editar filtros
-								<v-icon color="primary">mdi-chevron-down</v-icon>
-							</span>
-						</template>
-						<template #selection="{ item }">
-							<span class="primary--text">{{ item }}</span>
-						</template>
-					</v-select> -->
+									</v-col>
+									<v-col cols="12" class="text-center">
+										<div
+											class="text-center align-self-end justify-content-center"
+										>
+											<v-btn
+												color="primary"
+												text
+												large
+												@click="combobox = []"
+											>
+												Limpiar filtros
+											</v-btn>
+										</div>
+									</v-col>
+								</v-row>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
 				</v-col>
 			</v-row>
 			<!-- blogs -->
@@ -477,7 +467,8 @@ export default {
 	width: 100%;
 	padding: 8px;
 }
-.v-application .v-autocomplete__content.menuable__content__active {
-	border-radius: 100px !important;
+
+.roundedExpand {
+	border-radius: 25px !important;
 }
 </style>
