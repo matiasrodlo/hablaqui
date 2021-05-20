@@ -84,11 +84,11 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row v-if="articles.length" justify="center" class="mb-16">
+			<v-row v-if="articles.length" id="blog" justify="center" class="mb-16">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row>
 						<v-col
-							v-for="(article, i) in articles"
+							v-for="(article, i) in filterItems"
 							:key="i"
 							cols="12"
 							:md="i == 0 ? '12' : '6'"
@@ -216,29 +216,47 @@
 					</v-row>
 				</v-col>
 			</v-row>
-			<v-row v-else justify="center">
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-skeleton-loader
-						light
-						class="mx-auto"
-						type="image, image"
-					></v-skeleton-loader>
-				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-skeleton-loader
-						light
-						class="mx-auto"
-						type="image, image"
-					></v-skeleton-loader>
-				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-skeleton-loader
-						light
-						class="mx-auto"
-						type="image, image"
-					></v-skeleton-loader>
-				</v-col>
-			</v-row>
+			<template v-else>
+				<v-row justify="center">
+					<v-col cols="12" sm="6">
+						<v-skeleton-loader
+							light
+							class="mx-auto"
+							type="image, image"
+						></v-skeleton-loader>
+					</v-col>
+					<v-col cols="12" sm="4">
+						<v-skeleton-loader
+							light
+							class="mx-auto"
+							type="image, image"
+						></v-skeleton-loader>
+					</v-col>
+				</v-row>
+				<v-row justify="center">
+					<v-col cols="12" sm="3">
+						<v-skeleton-loader
+							light
+							class="mx-auto"
+							type="image, image"
+						></v-skeleton-loader>
+					</v-col>
+					<v-col cols="12" sm="4">
+						<v-skeleton-loader
+							light
+							class="mx-auto"
+							type="image, image"
+						></v-skeleton-loader>
+					</v-col>
+					<v-col cols="12" sm="3">
+						<v-skeleton-loader
+							light
+							class="mx-auto"
+							type="image, image"
+						></v-skeleton-loader>
+					</v-col>
+				</v-row>
+			</template>
 			<v-row justify="center">
 				<v-col cols="3">
 					<v-hover v-slot="{ hover }">
@@ -409,6 +427,14 @@ export default {
 				{ title: 'Familia y amigos', img: `${this.$config.LANDING_URL}/recursos-15.png` },
 			],
 		};
+	},
+	computed: {
+		filterItems() {
+			if (!this.articles.length) return [];
+			if (!this.combobox.length) return this.articles;
+			const result = this.articles.filter(item => this.combobox.includes(item.categories));
+			return !result.length ? this.articles : result;
+		},
 	},
 	async mounted() {
 		let response = await fetch(`${this.$config.API_URL}/blog/all`);
