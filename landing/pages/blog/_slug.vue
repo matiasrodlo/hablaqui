@@ -71,7 +71,7 @@
 			<v-row>
 				<v-col cols="12">
 					<span>
-						¿Este artículo fue útil?
+						<span class="title black--text">¿Este artículo fue útil?</span>
 						<span class="text--secondary mr-2"> {{ rating }} </span>
 						<v-rating
 							v-model="rating"
@@ -87,6 +87,7 @@
 					</span>
 				</v-col>
 			</v-row>
+			<v-divider></v-divider>
 			<Footer />
 		</v-container>
 	</div>
@@ -94,6 +95,7 @@
 
 <script>
 import moment from 'moment';
+import axios from 'axios';
 
 export default {
 	components: {
@@ -109,10 +111,9 @@ export default {
 	},
 	async mounted() {
 		// eslint-disable-next-line no-console
-		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
-		response = await response.json();
-		this.article = response.article;
-		if (response.article.rating.average) this.rating = response.article.rating.average;
+		const { data } = await axios.get(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
+		this.article = data.article;
+		if (data.article.rating.average) this.rating = data.article.rating.average;
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -120,14 +121,14 @@ export default {
 				href: '/blog',
 			},
 			{
-				text: response.article.categories,
+				text: data.article.categories,
 				disabled: true,
 				href: 'breadcrumbs_link_1',
 			},
 			{
-				text: response.article.title,
+				text: data.article.title,
 				disabled: true,
-				href: `/blog/${response.article.slug}`,
+				href: `/blog/${data.article.slug}`,
 			},
 		];
 	},
@@ -136,19 +137,16 @@ export default {
 			return moment(date).format('DD MMMM YY');
 		},
 		async setRating() {
-			let response = await fetch(
-				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating`,
+			const { data } = await axios(
+				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${
+					this.rating + 1
+				}`,
 				{
-					headers: {
-						'Content-Type': 'application/json;',
-					},
-					method: 'POST',
-					body: JSON.stringify({ newRating: this.rating + 1 }),
+					method: 'post',
 				}
 			);
-			response = await response.json();
-			console.log(response.rating);
-			this.rating = response.rating.average;
+			console.log(data.rating);
+			this.rating = data.rating.average;
 		},
 	},
 };
