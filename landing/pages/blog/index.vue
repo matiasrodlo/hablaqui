@@ -10,7 +10,7 @@
 					cols="12"
 					sm="10"
 					xl="8"
-					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mt-16 mb-6"
+					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mt-md-16 mb-6"
 				>
 					Blog Hablaquí
 				</v-col>
