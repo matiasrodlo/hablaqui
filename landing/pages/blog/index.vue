@@ -37,7 +37,12 @@
 										{{ item }}
 									</span>
 								</div>
-								<div class="text-right primary--text title">Editar filtros</div>
+								<div
+									v-if="$vuetify.breakpoint.mdAndUp"
+									class="text-right primary--text title"
+								>
+									Editar filtros
+								</div>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content style="border-radius: 25px">
 								<v-divider></v-divider>
@@ -87,14 +92,14 @@
 			<v-row v-if="articles.length" id="blog" justify="center" class="mb-16">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row>
-						<v-col
-							v-for="(article, i) in filterItems"
-							:key="i"
-							cols="12"
-							:md="i == 0 ? '12' : '6'"
-							:lg="i == 0 ? '8' : '4'"
-						>
-							<template v-if="length > i">
+						<template v-for="(article, i) in filterItems">
+							<v-col
+								v-if="length > i"
+								:key="i"
+								cols="12"
+								:md="i == 0 ? '12' : '6'"
+								:lg="i == 0 ? '8' : '4'"
+							>
 								<v-hover v-slot="{ hover }">
 									<v-card
 										nuxt
@@ -106,7 +111,7 @@
 												: 'text-transform: none !important;'
 										"
 										:class="hover ? 'elevation-4' : 'elevation-0'"
-										height="500"
+										:height="$vuetify.breakpoint.mdAndUp ? '500' : '600'"
 										width="100%"
 										flat
 									>
@@ -180,7 +185,12 @@
 											</v-img>
 											<v-card-text
 												class="d-flex justify-space-between"
-												style="flex-direction: column; height: 250px"
+												style="flex-direction: column"
+												:style="
+													$vuetify.breakpoint.mdAndUp
+														? 'height: 250px'
+														: 'height: 350px'
+												"
 											>
 												<div>
 													<v-btn
@@ -193,6 +203,12 @@
 													<h3 class="title black--text">
 														{{ article.title }}
 													</h3>
+													<div
+														v-if="!$vuetify.breakpoint.mdAndUp"
+														class="text-h6 font-weight-light"
+													>
+														{{ strippedContent(article.HTMLbody, 140) }}
+													</div>
 												</div>
 												<div>
 													<div class="title black--text">
@@ -212,8 +228,8 @@
 										</template>
 									</v-card>
 								</v-hover>
-							</template>
-						</v-col>
+							</v-col>
+						</template>
 					</v-row>
 				</v-col>
 			</v-row>
@@ -259,11 +275,11 @@
 				</v-row>
 			</template>
 			<v-row justify="center">
-				<v-col cols="3">
+				<v-col cols="12" class="text-center">
 					<v-hover v-slot="{ hover }">
 						<v-btn
 							v-if="length <= articles.length"
-							block
+							class="px-10"
 							x-large
 							color="primary"
 							:outlined="!hover"
@@ -278,8 +294,8 @@
 		<!-- for companies -->
 		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
 			<v-container fluid class="my-16">
-				<v-row justify="center">
-					<v-col cols="12" class="py-16">
+				<v-row justify="center" class="my-16">
+					<v-col cols="12" class="my-16">
 						<div
 							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
 						>
@@ -292,7 +308,7 @@
 					<v-col cols="12" sm="8" md="10" xl="9">
 						<v-row v-if="forCompanies.length">
 							<template v-for="(item, n) in forCompanies">
-								<v-col :key="n" cols="12" sm="3">
+								<v-col :key="n" cols="12" md="3">
 									<v-hover v-slot="{ hover }">
 										<v-card
 											v-if="n < 4"
@@ -343,6 +359,20 @@
 									</v-hover>
 								</v-col>
 							</template>
+							<v-col cols="12" class="text-center">
+								<v-hover v-slot="{ hover }">
+									<v-btn
+										v-if="length <= articles.length"
+										x-large
+										class="px-10"
+										color="white"
+										:outlined="!hover"
+										rounded
+										@click="length = length + 6"
+										>Ver todos</v-btn
+									>
+								</v-hover>
+							</v-col>
 						</v-row>
 						<v-row v-else>
 							<v-col v-for="n in 4" :key="n" cols="3">
@@ -355,28 +385,12 @@
 						</v-row>
 					</v-col>
 				</v-row>
-				<v-row justify="center" class="py-8">
-					<v-col cols="3">
-						<v-hover v-slot="{ hover }">
-							<v-btn
-								v-if="length <= articles.length"
-								block
-								x-large
-								color="white"
-								:outlined="!hover"
-								rounded
-								@click="length = length + 6"
-								>Ver todos</v-btn
-							>
-						</v-hover>
-					</v-col>
-				</v-row>
 			</v-container>
 		</v-img>
 		<!-- Categorias -->
-		<v-container fluid class="my-16">
+		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
-				<v-col cols="12" class="py-8">
+				<v-col cols="12" class="pb-8">
 					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
 						Categoria Populares
 					</div>
@@ -421,9 +435,9 @@
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container fluid>
 					<v-row align="center" justify="center" style="height: 600px">
-						<v-col cols="12" sm="8" md="10" xl="9">
-							<v-row justify="space-between">
-								<v-col cols="12" sm="5" class="white--text">
+						<v-col cols="12" md="10" xl="9">
+							<v-row align="center" justify="space-between">
+								<v-col cols="10" sm="5" class="white--text">
 									<div>
 										<div class="title font-weight-bold mt-8">
 											Recibe contenido exclusivo periódicamente

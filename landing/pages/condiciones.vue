@@ -3,14 +3,11 @@
 		<client-only>
 			<div class="primary">
 				<Appbar />
+				<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
+					Terminos y condiciones de uso
+				</div>
 			</div>
 		</client-only>
-		<div
-			cols="12"
-			class="primary text-center font-weight-bold text-h5 text-lg-h3 white--text py-16"
-		>
-			Terminos y condiciones de uso
-		</div>
 		<v-container class="mt-16">
 			<v-row justify="center">
 				<v-col cols="12" md="10">

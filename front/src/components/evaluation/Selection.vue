@@ -9,7 +9,7 @@
 					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
 				</div>
 				<div class="text-center my-2">
-					<v-btn color="primary" rounded @click="resetMatch">
+					<v-btn text color="primary" rounded @click="resetMatch">
 						Realizar prueba de nuevo
 					</v-btn>
 				</div>
@@ -44,7 +44,7 @@
 									>
 										{{ item.name }}
 									</v-col>
-									<v-col cols="12" sm="6" class="text-right">
+									<v-col cols="12" sm="6" class="text-center text-md-right">
 										<v-btn
 											color="primary"
 											rounded
@@ -54,15 +54,17 @@
 										</v-btn>
 									</v-col>
 								</v-row>
-								<v-chip
-									v-for="(specialties, s) in item.specialties"
-									:key="s"
-									small
-									class="my-4 mx-1"
-								>
-									{{ specialties }}
-								</v-chip>
-								<div class="body-2 mt-2 text-capitalize">
+								<v-chip-group>
+									<v-chip
+										v-for="(specialties, s) in item.specialties"
+										:key="s"
+										small
+										class="my-4 mx-1"
+									>
+										{{ specialties }}
+									</v-chip>
+								</v-chip-group>
+								<div class="font-weight-light mt-2 text-capitalize">
 									{{ item.description }}
 								</div>
 							</v-col>
@@ -70,7 +72,7 @@
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" class="font-weight-bold mt-4 mb-16 d-flex justify-center align-center">
+			<v-col cols="12" class="font-weight-bold mt-4 mb-10 text-center">
 				¿No estás satisfecho con estas opciones?
 				<v-btn text class="primary--text" to="/psicologos/todos"> Buscar más </v-btn>
 			</v-col>

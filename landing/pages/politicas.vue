@@ -3,13 +3,13 @@
 		<client-only>
 			<div class="primary">
 				<Appbar />
+				<div
+					class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
+				>
+					Políticas de Privacidad
+				</div>
 			</div>
 		</client-only>
-		<div
-			class="primary white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
-		>
-			Políticas de Privacidad
-		</div>
 		<v-container class="mt-16">
 			<v-row justify="center">
 				<v-col cols="12" md="10">

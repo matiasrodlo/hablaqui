@@ -3,30 +3,30 @@
 		<client-only>
 			<div class="primary">
 				<Appbar />
+				<v-container>
+					<v-row justify="center" no-gutters>
+						<v-col
+							cols="12"
+							class="white--text text-center font-weight-bold text-h6 text-md-h5 text-lg-h3 py-10"
+						>
+							Bienvenido a nuestro portal de ayuda
+							<div class="text-h6 text-md-h5 text-lg-h3 font-weight-bold">
+								Estamos aquí para ayudar
+							</div>
+						</v-col>
+						<v-col cols="12">
+							<v-text-field
+								v-model="search"
+								class="white"
+								label="Busca por tema o pregunta"
+								outlined
+								hide-details
+							/>
+						</v-col>
+					</v-row>
+				</v-container>
 			</div>
 		</client-only>
-		<div class="primary">
-			<v-container>
-				<v-row justify="center" no-gutters>
-					<v-col
-						cols="12"
-						class="white--text text-center font-weight-bold text-h5 text-lg-h3 py-10"
-					>
-						Bienvenido a nuestro portal de ayuda
-						<div class="text-h3 font-weight-bold">Estamos aquí para ayudar</div>
-					</v-col>
-					<v-col cols="12">
-						<v-text-field
-							v-model="search"
-							class="white"
-							label="Busca por tema o pregunta"
-							outlined
-							hide-details
-						/>
-					</v-col>
-				</v-row>
-			</v-container>
-		</div>
 		<v-container v-if="items.length">
 			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">
@@ -49,7 +49,7 @@
 				</v-col>
 			</v-row>
 			<v-row v-else>
-				<v-col cols="2" sm="3">
+				<v-col cols="12" sm="3">
 					<v-list-item-group v-model="selectedItem" color="primary" mandatory>
 						<v-list-item v-for="(q, i) in items" :key="i" :value="q">
 							<v-list-item-content>
@@ -91,13 +91,13 @@
 				</v-col>
 			</v-row>
 			<v-row justify="center" align="center">
-				<v-col cols="6" class="text-center text-sm-left">
+				<v-col cols="12" md="6" class="text-center text-sm-left">
 					<div style="color: #bdbdbd">Aviso de privacidad Términos y Condiciones</div>
 					<div class="text--secondary">
 						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
 					</div>
 				</v-col>
-				<v-col cols="6" class="text-center text-sm-right text--secondary">
+				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">
 					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
 					<v-icon color="primary" size="60">mdi-facebook</v-icon>
 					<v-icon color="primary" size="60">mdi-instagram</v-icon>

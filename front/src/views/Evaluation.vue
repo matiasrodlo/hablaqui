@@ -3,466 +3,518 @@
 		<!-- appbar -->
 		<div :class="!matchedPsychologists.length ? 'primary' : 'trasnparent'">
 			<appbar />
-		</div>
-		<!-- content -->
-		<div
-			v-if="!matchedPsychologists.length"
-			class="primary white--text text-center"
-			style="position: relative; padding: 100px 0; height: 400px"
-		>
-			<div class="title text-h5 text-sm-h4 font-weight-bold">
-				Encuentra a tu especialista
-			</div>
-			<div class="d-flex justify-center text-h6 mb-10">
-				Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
-				preguntas. ¡Queremos conocerte!
-			</div>
-			<div>
-				<v-container>
-					<v-row justify="center">
-						<v-col cols="12" md="10" lg="8">
-							<v-stepper v-model="step" light style="border-radius: 25px">
-								<!-- items content -->
-								<v-stepper-items>
-									<v-stepper-content step="0">
-										<div class="primary--text font-weight-bold title">
-											¿Cuál es tu género?
-										</div>
-										<v-btn
-											:color="gender === 'female' ? 'primary' : '#BDBDBD'"
-											:outlined="gender !== 'female'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="gender = 'female'"
-										>
-											Mujer
-										</v-btn>
-										<v-btn
-											:color="gender === 'male' ? 'primary' : '#BDBDBD'"
-											:outlined="gender !== 'male'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="gender = 'male'"
-										>
-											Hombre
-										</v-btn>
-										<v-btn
-											:color="gender === 'non-binary' ? 'primary' : '#BDBDBD'"
-											:outlined="gender !== 'non-binary'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="gender = 'non-binary'"
-										>
-											No-binario
-										</v-btn>
-										<v-btn
-											:color="
-												gender === 'Prefiero no indicarlo'
-													? 'primary'
-													: '#BDBDBD'
-											"
-											:outlined="gender !== 'Prefiero no indicarlo'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="gender = 'Prefiero no indicarlo'"
-										>
-											Prefiero no indicarlo
-										</v-btn>
-
-										<v-btn text color="primary" @click="step = 1">
-											Siguiente
-										</v-btn>
-									</v-stepper-content>
-
-									<v-stepper-content step="1">
-										<div class="primary--text font-weight-bold title">
-											¿En qué rango de edad te encuentras?
-										</div>
-
-										<v-btn
-											:color="age === '18-25' ? 'primary' : '#BDBDBD'"
-											:outlined="age !== '18-25'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="age = '18-25'"
-										>
-											18 -25
-										</v-btn>
-
-										<v-btn
-											:color="age === '26-35' ? 'primary' : '#BDBDBD'"
-											:outlined="age !== '26-35'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="age = '26-35'"
-										>
-											26-35
-										</v-btn>
-
-										<v-btn
-											:color="age === '36-45' ? 'primary' : '#BDBDBD'"
-											:outlined="age !== '36-45'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="age = '36-45'"
-										>
-											36-45
-										</v-btn>
-
-										<v-btn
-											:color="age === '+45' ? 'primary' : '#BDBDBD'"
-											:outlined="age !== '+45'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="age = '+45'"
-										>
-											+45
-										</v-btn>
-										<v-btn text color="primary" @click="step = 0">
-											Atras
-										</v-btn>
-										<v-btn text color="primary" @click="step = 2">
-											Siguiente
-										</v-btn>
-									</v-stepper-content>
-
-									<v-stepper-content step="2">
-										<div class="primary--text font-weight-bold title">
-											¿Es tu primera vez en terapia?
-										</div>
-
-										<v-btn
-											:color="firstTherapy === 'si' ? 'primary' : '#BDBDBD'"
-											:outlined="firstTherapy != 'si'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="firstTherapy = 'si'"
-										>
-											Si
-										</v-btn>
-
-										<v-btn
-											:color="firstTherapy == 'no' ? 'primary' : '#BDBDBD'"
-											:outlined="firstTherapy != 'no'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="firstTherapy = 'no'"
-										>
-											No
-										</v-btn>
-										<v-btn text color="primary" @click="step = 1">
-											Atras
-										</v-btn>
-										<v-btn text color="primary" @click="step = 3">
-											Siguiente
-										</v-btn>
-									</v-stepper-content>
-
-									<v-stepper-content step="3">
-										<div class="primary--text font-weight-bold title">
-											¿En qué temas te gustaría trabajar? <br />
-											<span class="subtitle-2"
-												>Selecciona hasta 3 opciones.</span
+			<!-- content -->
+			<div
+				v-if="!matchedPsychologists.length"
+				class="primary white--text text-center"
+				style="position: relative; padding: 100px 0; height: 400px"
+			>
+				<div class="title text-h5 text-sm-h4 font-weight-bold">
+					Encuentra a tu especialista
+				</div>
+				<div class="d-flex justify-center text-h6 mb-10">
+					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
+					preguntas. ¡Queremos conocerte!
+				</div>
+				<div>
+					<v-container>
+						<v-row justify="center">
+							<v-col cols="12" md="10" lg="8">
+								<v-stepper v-model="step" light style="border-radius: 25px">
+									<!-- items content -->
+									<v-stepper-items>
+										<v-stepper-content step="0">
+											<div class="primary--text font-weight-bold title">
+												¿Cuál es tu género?
+											</div>
+											<v-btn
+												:color="gender === 'female' ? 'primary' : '#BDBDBD'"
+												:outlined="gender !== 'female'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="gender = 'female'"
 											>
-										</div>
-										<v-row>
-											<v-col>
-												<template v-for="(item, i) in specialties">
-													<v-btn
-														v-if="i <= 9"
-														:key="i"
-														:color="
-															themes.includes(item)
-																? 'primary'
-																: '#BDBDBD'
-														"
-														:outlined="!themes.includes(item)"
-														block
-														rounded
-														large
-														class="my-4"
-														@click="() => setTheme(item)"
-													>
-														{{ item }}
-													</v-btn>
-												</template>
-											</v-col>
-											<v-col>
-												<template v-for="(item, i) in specialties">
-													<v-btn
-														v-if="i >= 10"
-														:key="i"
-														:color="
-															themes.includes(item)
-																? 'primary'
-																: '#BDBDBD'
-														"
-														:outlined="!themes.includes(item)"
-														block
-														rounded
-														large
-														class="my-4"
-														@click="() => setTheme(item)"
-													>
-														{{ item }}
-													</v-btn></template
+												Mujer
+											</v-btn>
+											<v-btn
+												:color="gender === 'male' ? 'primary' : '#BDBDBD'"
+												:outlined="gender !== 'male'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="gender = 'male'"
+											>
+												Hombre
+											</v-btn>
+											<v-btn
+												:color="
+													gender === 'non-binary' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="gender !== 'non-binary'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="gender = 'non-binary'"
+											>
+												No-binario
+											</v-btn>
+											<v-btn
+												:color="
+													gender === 'Prefiero no indicarlo'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="gender !== 'Prefiero no indicarlo'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="gender = 'Prefiero no indicarlo'"
+											>
+												Prefiero no indicarlo
+											</v-btn>
+
+											<v-btn text color="primary" @click="step = 1">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="1">
+											<div class="primary--text font-weight-bold title">
+												¿En qué rango de edad te encuentras?
+											</div>
+
+											<v-btn
+												:color="age === '18-25' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '18-25'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="age = '18-25'"
+											>
+												18 -25
+											</v-btn>
+
+											<v-btn
+												:color="age === '26-35' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '26-35'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="age = '26-35'"
+											>
+												26-35
+											</v-btn>
+
+											<v-btn
+												:color="age === '36-45' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '36-45'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="age = '36-45'"
+											>
+												36-45
+											</v-btn>
+
+											<v-btn
+												:color="age === '+45' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '+45'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="age = '+45'"
+											>
+												+45
+											</v-btn>
+											<v-btn text color="primary" @click="step = 0">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="step = 2">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="2">
+											<div class="primary--text font-weight-bold title">
+												¿Es tu primera vez en terapia?
+											</div>
+
+											<v-btn
+												:color="
+													firstTherapy === 'si' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="firstTherapy != 'si'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="firstTherapy = 'si'"
+											>
+												Si
+											</v-btn>
+
+											<v-btn
+												:color="
+													firstTherapy == 'no' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="firstTherapy != 'no'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="firstTherapy = 'no'"
+											>
+												No
+											</v-btn>
+											<v-btn text color="primary" @click="step = 1">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="step = 3">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="3">
+											<div class="primary--text font-weight-bold title">
+												¿En qué temas te gustaría trabajar? <br />
+												<span class="subtitle-2"
+													>Selecciona hasta 3 opciones.</span
 												>
-											</v-col>
-										</v-row>
-										<v-btn text color="primary" @click="step = 2">
-											Atras
-										</v-btn>
-										<v-btn text color="primary" @click="step = 4">
-											Siguiente
-										</v-btn>
-									</v-stepper-content>
-									<v-stepper-content step="4">
-										<div class="primary--text font-weight-bold title">
-											¿Buscas algún enfoque terapéutico en específico?
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'cognitivo'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'cognitivo'"
-										>
-											Quiero que las sesiones sean estructuradas definiendo
-											metas a cumplir. Me gustaría que mi psicólogo/a tome un
-											rol activo y me deje tareas semanales.
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'integrativo'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'integrativo'"
-										>
-											Quiero que mi psicólogo conozca diferentes modelos de
-											intervención y de acuerdo a mis necesidades me brinde
-											diferentes actividades o herramientas para ponerlas en
-											práctica.
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'contextual'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'contextual'"
-										>
-											Quiero que sea un proceso activo donde aprenda a
-											relacionarme con mis pensamientos, emociones y
-											sensaciones fisicas de una forma distinta en la cual no
-											me impida desarrollar la vida que quiero vivir.
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'psicoanalisis'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'psicoanalisis'"
-										>
-											Quiero que las sesiones sean conversacionales, donde
-											pueda platicar cómo me siento y que mi psicólogo me
-											ayude a explorar cómo mis experiencias pasadas influyen
-											en mi presente.
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'humanista'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'humanista'"
-										>
-											Quiero que a través de la reflexión, mi psicólogo me
-											ayude a conocer el origen de mis emociones y a encontrar
-											un significado personal, contactando con aquellas áreas
-											que tengo que sanar.
-										</div>
-										<div
-											class="pa-2 my-4"
-											:class="
-												focus == 'sistemico'
-													? 'primary white--text'
-													: 'text--disabled'
-											"
-											style="border-radius: 25px; border: 1px solid #E0E0E0"
-											@click="focus = 'sistemico'"
-										>
-											Quiero entender mi forma de interactuar con los demás
-											para mejorar mis relaciones interpersonales, conociendo
-											cómo mi entorno influye en mi conducta y en las
-											distintas áreas de mi vida.
-										</div>
-										<v-btn text color="primary" @click="step = 3">
-											Atras
-										</v-btn>
-										<v-btn text color="primary" @click="step = 5">
-											Siguiente
-										</v-btn>
-									</v-stepper-content>
-									<v-stepper-content step="5">
-										<div class="primary--text font-weight-bold title">
-											¿Con qué género te sientes más cómodo compartiendo lo
-											que te sucede?
-										</div>
-
-										<v-btn
-											:color="
-												genderConfort === 'female' ? 'primary' : '#BDBDBD'
-											"
-											:outlined="genderConfort !== 'female'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="genderConfort = 'female'"
-										>
-											Mujer
-										</v-btn>
-										<v-btn
-											:color="
-												genderConfort === 'male' ? 'primary' : '#BDBDBD'
-											"
-											:outlined="genderConfort !== 'male'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="genderConfort = 'male'"
-										>
-											Hombre
-										</v-btn>
-										<v-btn
-											:color="
-												genderConfort === 'non-binary'
-													? 'primary'
-													: '#BDBDBD'
-											"
-											:outlined="genderConfort !== 'non-binary'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="genderConfort = 'non-binary'"
-										>
-											No binario
-										</v-btn>
-										<v-btn
-											:color="
-												genderConfort === 'Me es indiferente'
-													? 'primary'
-													: '#BDBDBD'
-											"
-											:outlined="genderConfort !== 'Me es indiferente'"
-											block
-											rounded
-											large
-											class="my-4"
-											@click="genderConfort = 'Me es indiferente'"
-										>
-											Me es indiferente
-										</v-btn>
-
-										<v-btn text color="primary" @click="step = 4">
-											Atras
-										</v-btn>
-										<v-btn text color="primary" @click="openPrecharge">
-											Buscar
-										</v-btn>
-									</v-stepper-content>
-								</v-stepper-items>
-							</v-stepper>
-						</v-col>
-					</v-row>
-					<v-row>
-						<v-col cols="12">
-							<v-divider style="border-width: 1px"></v-divider>
-						</v-col>
-						<v-col>
-							<v-carousel
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="270"
-								light
-							>
-								<v-carousel-item v-for="(element, i) in psi" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											outlined
-											v-for="(item, l) in element"
-											:key="l"
-											class="ma-2"
-										>
-											<v-card-text>
-												<v-row>
-													<v-col cols="3">
-														<v-avatar size="80">
-															<v-img :src="item.avatar"></v-img>
-														</v-avatar>
-													</v-col>
-													<v-col class="text-left">
-														<div class="title primary--text">
-															{{ item.name }}
-														</div>
-														Especialidades:
-														<span
-															v-for="(tag, k) in item.specialties"
-															:key="k"
+											</div>
+											<v-row>
+												<v-col>
+													<template v-for="(item, i) in specialties">
+														<v-btn
+															v-if="i <= 9"
+															:key="i"
+															:color="
+																themes.includes(item)
+																	? 'primary'
+																	: '#BDBDBD'
+															"
+															:outlined="!themes.includes(item)"
+															block
+															rounded
+															large
+															class="my-4"
+															@click="() => setTheme(item)"
 														>
-															<v-chip class="ma-2" small>
-																<span class="text-capitalize">
-																	{{ tag }}
-																</span>
-															</v-chip>
-														</span>
-													</v-col>
-												</v-row>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-						</v-col>
-					</v-row>
-				</v-container>
+															{{ item }}
+														</v-btn>
+													</template>
+												</v-col>
+												<v-col>
+													<template v-for="(item, i) in specialties">
+														<v-btn
+															v-if="i >= 10"
+															:key="i"
+															:color="
+																themes.includes(item)
+																	? 'primary'
+																	: '#BDBDBD'
+															"
+															:outlined="!themes.includes(item)"
+															block
+															rounded
+															large
+															class="my-4"
+															@click="() => setTheme(item)"
+														>
+															{{ item }}
+														</v-btn></template
+													>
+												</v-col>
+											</v-row>
+											<v-btn text color="primary" @click="step = 2">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="step = 4">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="4">
+											<div class="primary--text font-weight-bold title">
+												¿Buscas algún enfoque terapéutico en específico?
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'cognitivo'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'cognitivo'"
+											>
+												Quiero que las sesiones sean estructuradas
+												definiendo metas a cumplir. Me gustaría que mi
+												psicólogo/a tome un rol activo y me deje tareas
+												semanales.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'integrativo'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'integrativo'"
+											>
+												Quiero que mi psicólogo conozca diferentes modelos
+												de intervención y de acuerdo a mis necesidades me
+												brinde diferentes actividades o herramientas para
+												ponerlas en práctica.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'contextual'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'contextual'"
+											>
+												Quiero que sea un proceso activo donde aprenda a
+												relacionarme con mis pensamientos, emociones y
+												sensaciones fisicas de una forma distinta en la cual
+												no me impida desarrollar la vida que quiero vivir.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'psicoanalisis'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'psicoanalisis'"
+											>
+												Quiero que las sesiones sean conversacionales, donde
+												pueda platicar cómo me siento y que mi psicólogo me
+												ayude a explorar cómo mis experiencias pasadas
+												influyen en mi presente.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'humanista'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'humanista'"
+											>
+												Quiero que a través de la reflexión, mi psicólogo me
+												ayude a conocer el origen de mis emociones y a
+												encontrar un significado personal, contactando con
+												aquellas áreas que tengo que sanar.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'sistemico'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="border-radius: 25px; border: 1px solid #E0E0E0"
+												@click="focus = 'sistemico'"
+											>
+												Quiero entender mi forma de interactuar con los
+												demás para mejorar mis relaciones interpersonales,
+												conociendo cómo mi entorno influye en mi conducta y
+												en las distintas áreas de mi vida.
+											</div>
+											<v-btn text color="primary" @click="step = 3">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="step = 5">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="5">
+											<div class="primary--text font-weight-bold title">
+												¿Con qué género te sientes más cómodo compartiendo
+												lo que te sucede?
+											</div>
+
+											<v-btn
+												:color="
+													genderConfort === 'female'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'female'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="genderConfort = 'female'"
+											>
+												Mujer
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'male' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'male'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="genderConfort = 'male'"
+											>
+												Hombre
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'non-binary'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'non-binary'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="genderConfort = 'non-binary'"
+											>
+												No binario
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'Me es indiferente'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'Me es indiferente'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="genderConfort = 'Me es indiferente'"
+											>
+												Me es indiferente
+											</v-btn>
+
+											<v-btn text color="primary" @click="step = 4">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="openPrecharge">
+												Buscar
+											</v-btn>
+										</v-stepper-content>
+									</v-stepper-items>
+								</v-stepper>
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col cols="12">
+								<v-divider style="border-width: 1px"></v-divider>
+							</v-col>
+							<v-col cols="12">
+								<v-carousel
+									:show-arrows="false"
+									reverse-transition="fade-transition"
+									transition="fade-transition"
+									hide-delimiter-background
+									height="300"
+									light
+								>
+									<v-carousel-item v-for="(element, i) in psi" :key="i">
+										<div class="text-center d-flex justify-center align-center">
+											<template v-if="$vuetify.breakpoint.mdAndUp">
+												<v-card
+													outlined
+													v-for="(item, l) in element"
+													:key="l"
+													class="ma-2"
+												>
+													<v-card-text>
+														<v-row>
+															<v-col cols="3">
+																<v-avatar size="80">
+																	<v-img
+																		:src="item.avatar"
+																	></v-img>
+																</v-avatar>
+															</v-col>
+															<v-col class="text-left">
+																<div class="title primary--text">
+																	{{ item.name }}
+																</div>
+																Especialidades:
+																<template
+																	v-for="(tag,
+																	k) in item.specialties"
+																>
+																	<span v-if="k < 5" :key="k">
+																		<v-chip class="ma-2" small>
+																			<span
+																				class="text-capitalize"
+																			>
+																				{{ tag }}
+																			</span>
+																		</v-chip>
+																	</span>
+																</template>
+															</v-col>
+														</v-row>
+													</v-card-text>
+												</v-card>
+											</template>
+											<template v-else>
+												<v-card outlined class="ma-2">
+													<v-card-text>
+														<v-row>
+															<v-col cols="3">
+																<v-avatar size="80">
+																	<v-img
+																		:src="element.avatar"
+																	></v-img>
+																</v-avatar>
+															</v-col>
+															<v-col class="text-left">
+																<div class="title primary--text">
+																	{{ element.name }}
+																</div>
+																Especialidades:
+																<template
+																	v-for="(tag,
+																	k) in element.specialties"
+																>
+																	<span v-if="k < 3" :key="k">
+																		<v-chip class="ma-2" small>
+																			<span
+																				class="text-capitalize"
+																			>
+																				{{ tag }}
+																			</span>
+																		</v-chip>
+																	</span>
+																</template>
+															</v-col>
+														</v-row>
+													</v-card-text>
+												</v-card>
+											</template>
+										</div>
+									</v-carousel-item>
+								</v-carousel>
+							</v-col>
+						</v-row>
+					</v-container>
+				</div>
 			</div>
 		</div>
 		<v-dialog v-model="dialogPrecharge" transition="dialog-bottom-transition" max-width="600">
@@ -516,7 +568,7 @@ export default {
 					result[line].push(value);
 				}
 			}
-			return result;
+			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 		...mapGetters({
 			specialties: 'Appointments/specialties',

@@ -6,7 +6,7 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col cols="12" md="3">
+			<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
 					<template v-if="!this.$vuetify.breakpoint.smAndDown">
 						<v-card-title class="text--secondary">
@@ -27,7 +27,7 @@
 					</template>
 					<v-card-text>
 						<v-row>
-							<v-col cols="4" md="12">
+							<v-col cols="12" sm="4" md="12">
 								<div class="title mt-2">Género</div>
 								<v-checkbox
 									v-model="gender"
@@ -54,7 +54,7 @@
 									@change="filterPanel"
 								></v-checkbox>
 							</v-col>
-							<v-col cols="4" md="12">
+							<v-col cols="12" sm="4" md="12">
 								<div class="title mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
@@ -78,7 +78,7 @@
 									></v-checkbox>
 								</template>
 							</v-col>
-							<v-col cols="4" md="12">
+							<v-col cols="12" sm="4" md="12">
 								<div class="title mt-2">Idioma</div>
 								<v-checkbox
 									v-model="languages"
@@ -103,7 +103,7 @@
 			</v-col>
 			<v-col cols="12" md="9">
 				<v-row>
-					<v-col>
+					<v-col cols="12" md="6">
 						<v-combobox
 							class="white"
 							outlined
@@ -111,8 +111,12 @@
 							item-text="name"
 							:search-input.sync="motive"
 							label="Motivo de consulta"
+							append-icon="mdi-chevron-down"
 							hide-details
 							clearable
+							:menu-props="{
+								closeOnClick: true,
+							}"
 							:disabled="loading"
 						>
 							<template v-slot:no-data>
@@ -129,7 +133,7 @@
 							</template>
 						</v-combobox>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="6">
 						<v-combobox
 							class="white"
 							outlined
@@ -137,12 +141,143 @@
 							item-text="name"
 							:search-input.sync="searchInput"
 							label="Busca tu psicólogo"
+							append-icon="mdi-chevron-down"
 							hide-details
+							:menu-props="{
+								closeOnClick: true,
+							}"
 							clearable
 							:disabled="loading"
 							no-data-text="No hay psicologos en este momento"
 						>
 						</v-combobox>
+					</v-col>
+					<v-col v-if="!$vuetify.breakpoint.mdAndUp" cols="12">
+						<v-expansion-panels
+							flat
+							style="border-radius: 10px; border: 1px solid #E0E0E0"
+						>
+							<v-expansion-panel>
+								<v-expansion-panel-header
+									expand-icon="mdi-filter"
+									disable-icon-rotate
+									class="px-3"
+								>
+									<div class="subtitle-1 text--secondary">
+										Filtros
+									</div>
+								</v-expansion-panel-header>
+								<v-expansion-panel-content style="border-radius: 10px">
+									<v-divider></v-divider>
+									<v-card flat style="border-radius:10px">
+										<template v-if="!this.$vuetify.breakpoint.smAndDown">
+											<v-card-title class="text--secondary">
+												Filtrar por
+											</v-card-title>
+											<v-card-text>
+												<v-divider></v-divider>
+											</v-card-text>
+											<v-card-text
+												style="height:70px"
+												class="d-flex align-center"
+											>
+												<v-btn
+													icon
+													:class="{ 'primary--text': view == 2 }"
+													@click="setView(2)"
+												>
+													<v-icon>mdi-menu</v-icon>
+												</v-btn>
+												<v-divider vertical class="mx-2"></v-divider>
+												<v-btn
+													icon
+													:class="{ 'primary--text': view == 1 }"
+													@click="setView(1)"
+												>
+													<v-icon>mdi-view-grid-outline</v-icon>
+												</v-btn>
+											</v-card-text>
+										</template>
+										<v-card-text>
+											<v-row>
+												<v-col cols="12" sm="4" md="12">
+													<div class="title mt-2">Género</div>
+													<v-checkbox
+														v-model="gender"
+														value="male"
+														:disabled="loading"
+														label="Hombre"
+														hide-details
+														@change="filterPanel"
+													></v-checkbox>
+													<v-checkbox
+														v-model="gender"
+														value="female"
+														:disabled="loading"
+														label="Mujer"
+														hide-details
+														@change="filterPanel"
+													></v-checkbox>
+													<v-checkbox
+														v-model="gender"
+														value="non-binary"
+														:disabled="loading"
+														label="No binario"
+														hide-details
+														@change="filterPanel"
+													></v-checkbox>
+												</v-col>
+												<v-col cols="12" sm="4" md="12">
+													<div class="title mt-2">
+														Modelo terapéuticos
+													</div>
+													<template
+														v-for="(item, i) in [
+															'cognitivo',
+															'integrativo',
+															'contextual',
+															'psicoanalisis',
+															'humanista',
+															'sistemico',
+														]"
+													>
+														<v-checkbox
+															:key="i"
+															v-model="models"
+															:value="item"
+															:label="item"
+															:disabled="loading"
+															class="text-capitalize"
+															hide-details
+															@change="filterPanel"
+														></v-checkbox>
+													</template>
+												</v-col>
+												<v-col cols="12" sm="4" md="12">
+													<div class="title mt-2">Idioma</div>
+													<v-checkbox
+														v-model="languages"
+														value="spanish"
+														:disabled="loading"
+														label="Español"
+														hide-details
+														@change="filterPanel"
+													></v-checkbox>
+													<v-checkbox
+														v-model="languages"
+														value="english"
+														:disabled="loading"
+														label="Ingles"
+														hide-details
+														@change="filterPanel"
+													></v-checkbox>
+												</v-col>
+											</v-row>
+										</v-card-text>
+									</v-card>
+								</v-expansion-panel-content>
+							</v-expansion-panel>
+						</v-expansion-panels>
 					</v-col>
 				</v-row>
 				<v-row v-if="loading">
@@ -259,15 +394,22 @@
 										</div>
 									</div>
 									<v-divider></v-divider>
-									<div v-if="item.description" class="body-2 mt-2">
-										{{
-											item.description.length > 300
-												? item.description.slice(0, 300) + ' ...'
-												: item.description
-										}}
-									</div>
-									<div v-else class="text--secondary headline my-16">
-										Sin descripción
+									<template v-if="$vuetify.breakpoint.mdAndUp">
+										<div v-if="item.description" class="body-2 mt-2">
+											{{
+												item.description.length > 300
+													? item.description.slice(0, 300) + ' ...'
+													: item.description
+											}}
+										</div>
+										<div v-else class="text--secondary headline my-16">
+											Sin descripción
+										</div>
+									</template>
+									<div v-else class="body-2 mt-2">
+										<span v-for="(el, e) in item.specialties" :key="e">
+											{{ el }};
+										</span>
 									</div>
 								</v-card-text>
 								<v-card-actions class="text-center">

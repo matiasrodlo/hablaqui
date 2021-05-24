@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="background-color: #ebf2f3">
 		<client-only>
 			<div>
 				<Appbar />
@@ -91,8 +91,8 @@
 			<v-row>
 				<v-col cols="12">
 					<v-list-item>
-						<v-list-item-avatar size="120">
-							<v-img height="120" style="background-color: gray"></v-img>
+						<v-list-item-avatar>
+							<v-img style="background-color: gray"></v-img>
 						</v-list-item-avatar>
 
 						<v-list-item-content>
@@ -118,8 +118,8 @@
 				</v-col>
 				<!-- blogs -->
 				<template v-if="blogs.length">
-					<v-col v-for="(item, i) in blogs" :key="i" cols="12" md="3" class="mt-16">
-						<template v-if="length > i">
+					<template v-for="(item, i) in blogs">
+						<v-col v-if="length > i" :key="i" cols="12" md="3" class="mt-16">
 							<v-hover v-slot="{ hover }">
 								<v-card
 									nuxt
@@ -170,12 +170,12 @@
 									</v-card-text>
 								</v-card>
 							</v-hover>
-						</template>
-					</v-col>
+						</v-col>
+					</template>
 				</template>
 			</v-row>
 		</v-container>
-		<div style="position: relative" class="my-10">
+		<div style="position: relative" class="mb-10">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
 				style="height: 700px; width: 100%"
@@ -185,7 +185,7 @@
 					<v-row align="center" justify="center" style="height: 700px">
 						<v-col cols="12" sm="8" md="10" xl="9">
 							<v-row justify="space-between">
-								<v-col cols="12" sm="5" class="white--text">
+								<v-col cols="10" sm="5" class="white--text">
 									<div>
 										<div class="headline font-weight-bold mt-8">
 											Recibe contenido exclusivo periódicamente

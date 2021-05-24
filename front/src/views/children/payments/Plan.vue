@@ -4,7 +4,7 @@
 		<appbar />
 		<v-container>
 			<v-row justify="center" align="center">
-				<v-col cols="12">
+				<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12">
 					<div class="d-flex justify-center align-center">
 						<ul id="breadcrumb">
 							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
@@ -28,22 +28,30 @@
 						</ul>
 					</div>
 				</v-col>
-				<div v-if="breakCrumbs == 0">
-					<div class="text--secondary text-left font-weight-bold text-h4">
+				<v-col v-else cols="12">
+					<v-btn
+						icon
+						x-large
+						color="primary"
+						v-if="breakCrumbs !== 0"
+						@click="breakCrumbs = breakCrumbs - 1"
+					>
+						<v-icon size="64">mdi-chevron-left</v-icon>
+					</v-btn>
+				</v-col>
+				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 0">
+					<div
+						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-sm-h4"
+					>
 						Agenda la hora y día de tu consulta
 					</div>
-					<div class="text--secondary text-left text-h6">
+					<div class="text--secondary text-center text-md-left text-h6">
 						Agenda con total libertad cuando te resulte más conveniente.
 					</div>
-					<v-card
-						class="my-16"
-						elevation="10"
-						max-width="700"
-						style="border-radius: 25px"
-					>
+					<v-card class="my-16" elevation="10" style="border-radius: 25px">
 						<v-card-text>
 							<v-row>
-								<v-col cols="6">
+								<v-col cols="12" sm="6">
 									<v-date-picker
 										full-width
 										@change="changePicker"
@@ -51,8 +59,11 @@
 										locale="es"
 									></v-date-picker>
 								</v-col>
-								<v-col cols="6">
-									<v-card flat height="400">
+								<v-col cols="12" sm="6">
+									<v-card
+										flat
+										:height="$vuetify.breakpoint.smAndUp ? '400' : '200'"
+									>
 										<v-calendar
 											ref="calendar"
 											v-model="picker"
@@ -126,15 +137,17 @@
 							</v-btn>
 						</v-card-actions>
 					</v-card>
-				</div>
-				<div v-if="breakCrumbs == 1">
-					<div class="text--secondary text-left font-weight-bold text-h4">
+				</v-col>
+				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 1">
+					<div
+						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4"
+					>
 						El mejor plan para ti
 					</div>
-					<div class="text--secondary text-left text-h6 mb-6">
+					<div class="text--secondary text-center text-md-left text-h6 mb-6">
 						Puedes cambiar de plan o cancelar tu suscripción cuando desees.
 					</div>
-					<v-card max-width="700" v-for="(el, j) in plans" :key="j" class="my-6">
+					<v-card v-for="(el, j) in plans" :key="j" class="my-6">
 						<div v-if="el.recommended" class="d-flex align-center justify-end">
 							<span
 								class="pa-2 primary white--text font-weight-bold"
@@ -145,20 +158,22 @@
 						</div>
 						<v-card-text>
 							<v-row justify="space-between" align="center">
-								<v-col cols="9">
-									<span class="text-h4 font-weight-bold"> ${{ el.price }} </span>
+								<v-col cols="7" sm="8" md="9">
+									<span class="text-h6 text-sm-h5 text-md-h4 font-weight-bold">
+										${{ el.price }}
+									</span>
 									<span class="text-h6 text--secondary"> /{{ el.mode }} </span>
-									<div class="text-h6 primary--text font-weight-bold">
+									<div class="text-sm-h6 primary--text font-weight-bold">
 										{{ el.title }}
 									</div>
 									<div class="my-2 font-weight-bold">
 										{{ el.subtitle }}
 									</div>
-									<div class="body-1 mt-2">
+									<div class="mt-2">
 										{{ el.description }}
 									</div>
 								</v-col>
-								<v-col cols="3" class="text-center mt-6">
+								<v-col cols="5" sm="4" md="3" class="text-center mt-6 pl-0">
 									<v-avatar color="grey" size="100">
 										<v-img
 											:src="el.image"
@@ -177,7 +192,7 @@
 									</v-btn>
 								</v-col>
 								<v-expand-transition>
-									<v-col v-if="el.expandCard" cols="12">
+									<v-col v-if="el.expandCard" cols="12" class="pa-0">
 										<v-list-item-group
 											flat
 											style="max-width: 500px"
@@ -187,7 +202,6 @@
 											<v-list-item
 												v-for="deal in el.deals"
 												:key="deal.id"
-												class="ma-2"
 												link
 												:value="{ ...deal, plan: j }"
 											>
@@ -225,7 +239,7 @@
 										</v-list-item-group>
 										<div
 											v-if="el.deals.some(u => selectedItem.id === u.id)"
-											class="text-center"
+											class="text-center mb-2"
 										>
 											<v-btn
 												small
@@ -240,18 +254,20 @@
 							</v-row>
 						</v-card-text>
 					</v-card>
-				</div>
-				<div v-if="breakCrumbs == 2">
-					<div class="text--secondary text-left font-weight-bold text-h3">
+				</v-col>
+				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 2">
+					<div
+						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4"
+					>
 						Revisa tu plan
 					</div>
-					<div class="text--secondary text-left text-h6">
+					<div class="text--secondary text-center text-md-left text-h6">
 						¡Es momento de comenzar la terapia!
 					</div>
-					<v-card max-width="700" flat>
+					<v-card flat>
 						<v-card-text>
 							<v-row align="center" justify="center">
-								<v-col cols="7">
+								<v-col cols="12" md="7">
 									<div class="my-3 subtitle-2">Aplicar un cupón</div>
 									<v-text-field
 										label="Introduzca el codigo"
@@ -309,7 +325,7 @@
 										{{ plans[selectedItem.plan].description }}
 									</div>
 								</v-col>
-								<v-col cols="5">
+								<v-col cols="12" md="5">
 									<v-btn
 										color="primary"
 										block
@@ -346,7 +362,7 @@
 							</v-row>
 						</v-card-text>
 					</v-card>
-				</div>
+				</v-col>
 				<div v-if="breakCrumbs == 3">
 					<p>Los robots estan haciendo su trabajo, no te vayas.</p>
 				</div>

@@ -3,45 +3,49 @@
 		<client-only>
 			<div class="primary">
 				<Appbar />
+				<!-- SECTION 1 / heading -->
+				<div style="position: relative" class="white">
+					<img
+						class="white"
+						:src="`${$config.LANDING_URL}/GH1.png`"
+						style="height: 700px; width: 100%"
+					/>
+					<div style="position: absolute; top: 0; width: 100%">
+						<v-container class="white--text" style="height: 700px">
+							<v-row justify="center" align="center">
+								<v-col cols="12" sm="6" class="text-center text-sm-left">
+									<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
+										Tu psicólogo Online
+									</div>
+									<div class="title my-4">
+										Demos juntos el primer paso hacia el bienestar emocional.
+										Habla de forma segura y privada con un psicólogo online
+										cuando lo necesites.
+									</div>
+									<v-btn
+										style="border-radius: 15px"
+										color="white"
+										x-large
+										class="font-weight-bold pa-8"
+										depressed
+										:href="`${$config.FRONTEND_URL}/auth`"
+									>
+										QUIERO COMENZAR
+									</v-btn>
+									<div class="title my-4">Desde $15.500CLP a la semana</div>
+								</v-col>
+								<v-col cols="12" sm="6">
+									<v-img
+										:height="heightPhone"
+										:src="`${$config.LANDING_URL}/tel.png`"
+									></v-img>
+								</v-col>
+							</v-row>
+						</v-container>
+					</div>
+				</div>
 			</div>
 		</client-only>
-		<!-- SECTION 1 / heading -->
-		<div style="position: relative">
-			<img :src="`${$config.LANDING_URL}/GH1.png`" style="height: 700px; width: 100%" />
-			<div style="position: absolute; top: 0; width: 100%">
-				<div class="primary" style="height: 5px"></div>
-				<v-container class="white--text" style="height: 700px">
-					<v-row justify="center" align="center">
-						<v-col cols="12" sm="6" class="text-center text-sm-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
-								Tu psicólogo Online
-							</div>
-							<div class="title my-4">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8"
-								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
-							>
-								QUIERO COMENZAR
-							</v-btn>
-							<div class="title my-4">Desde $15.500CLP a la semana</div>
-						</v-col>
-						<v-col cols="12" sm="6">
-							<v-img
-								:height="heightPhone"
-								:src="`${$config.LANDING_URL}/tel.png`"
-							></v-img>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</div>
 		<!-- SETION 2 / como funciona -->
 		<v-container class="pt-10">
 			<v-row justify="center">
@@ -111,10 +115,9 @@
 				<v-container
 					class="white--text"
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
-					style="height: 700px"
 				>
 					<v-row justify="space-between" align="center" style="height: 700px">
-						<v-col cols="12" md="6" class="pt-16 text-center text-md-left">
+						<v-col cols="12" md="6" class="pt-10 text-center text-md-left">
 							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
 								Nuestros psicólogos
 							</div>
@@ -145,7 +148,7 @@
 									show-arrows-on-hover
 									reverse-transition="fade-transition"
 									transition="fade-transition"
-									height="400"
+									:height="$vuetify.breakpoint.mdAndUp ? '400' : '285'"
 									style="
 										box-shadow: 12px 12px 0px 0px #03dfd8;
 										border-radius: 25px;
@@ -155,7 +158,7 @@
 										<v-img
 											:src="item.image"
 											contain
-											max-width="350"
+											:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
 											class="d-flex justify-end"
 										>
 											<div
@@ -170,13 +173,27 @@
 												"
 												class="white--text"
 											>
-												<div class="title pt-1 pl-1">
+												<div
+													class="pt-1 pl-1"
+													:class="
+														$vuetify.breakpoint.mdAndUp
+															? 'title'
+															: 'body-1'
+													"
+												>
 													{{ item.title }}
 												</div>
-												<div class="headline pl-1">
+												<div
+													class="pl-1"
+													:class="
+														$vuetify.breakpoint.mdAndUp
+															? 'title'
+															: 'body-1'
+													"
+												>
 													{{ item.name }}
 												</div>
-												<div class="caption pl-1 py-2">
+												<div class="caption pl-1">
 													<v-icon color="primary">mdi-check</v-icon
 													>{{ item.subtitle }}
 												</div>
@@ -251,6 +268,7 @@
 					<v-row justify="center" align="center">
 						<v-col cols="12">
 							<v-carousel
+								v-if="$vuetify.breakpoint.mdAndUp"
 								:show-arrows="false"
 								reverse-transition="fade-transition"
 								transition="fade-transition"
@@ -262,7 +280,7 @@
 										<v-card
 											v-for="el in item"
 											:key="el.id"
-											width="330"
+											height="300"
 											class="mx-4 d-inline-block"
 											style="border-radius: 25px"
 											light
@@ -271,9 +289,51 @@
 											<v-card-text>
 												<img height="60" :src="el.img" />
 											</v-card-text>
-											<v-card-text>
+											<v-card-text
+												style="flex-direction: column; height: 240px"
+												class="d-flex justify-content-end"
+											>
 												<div>{{ el.text }}</div>
-												<v-btn link text color="blue" :href="el.href">
+												<v-btn block link text color="blue" :href="el.href">
+													Leer estudio completo
+												</v-btn>
+											</v-card-text>
+										</v-card>
+									</div>
+								</v-carousel-item>
+							</v-carousel>
+							<v-carousel
+								v-else
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								hide-delimiter-background
+								height="400"
+							>
+								<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
+									<div class="text-center d-flex justify-center align-center">
+										<v-card
+											height="300"
+											class="mx-4 d-inline-block"
+											style="border-radius: 25px"
+											light
+											flat
+										>
+											<v-card-text>
+												<img height="60" :src="tag.img" />
+											</v-card-text>
+											<v-card-text
+												style="flex-direction: column; height: 240px"
+												class="d-flex justify-content-end"
+											>
+												<div>{{ tag.text }}</div>
+												<v-btn
+													block
+													link
+													text
+													color="blue"
+													:href="tag.href"
+												>
 													Leer estudio completo
 												</v-btn>
 											</v-card-text>
@@ -363,7 +423,7 @@
 		<!-- SECTION 7 / faq -->
 		<v-container>
 			<v-row>
-				<v-col class="mt-16 text-left text-h3 text--secondary">
+				<v-col class="my-6 text-center text-md-left text-h3 text--secondary">
 					Preguntas frecuentes
 				</v-col>
 				<v-col cols="12" class="text-left">
@@ -396,42 +456,42 @@
 		</v-container>
 		<v-container>
 			<v-row align="center">
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						height="100"
 						:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
 					></v-img>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						max-height="100"
 						:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
 					></v-img>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						max-height="100"
 						:src="`${$config.LANDING_URL}/fonasa.jpg`"
 					></v-img>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						max-height="100"
 						:src="`${$config.LANDING_URL}/banmedica.png`"
 					></v-img>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						max-height="100"
 						:src="`${$config.LANDING_URL}/colmena.png`"
 					></v-img>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
 					<v-img
 						contain
 						max-height="100"
@@ -597,6 +657,45 @@ export default {
 							'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 					},
 				],
+			],
+			efectividadMobile: [
+				{
+					id: 1,
+					img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
+					text:
+						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+				},
+				{
+					id: 3,
+					img: `${this.$config.LANDING_URL}/New York University.png`,
+					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
+					text:
+						'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
+				},
+				{
+					id: 5,
+					img: `${this.$config.LANDING_URL}/Columbia University.png`,
+					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
+					text:
+						'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
+				},
+
+				{
+					id: 2,
+					img: ``,
+					href: 'https://mhealth.jmir.org/2019/1/e10948/',
+					text:
+						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+				},
+				{
+					id: 4,
+					img: ``,
+					href:
+						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
+					text:
+						'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+				},
 			],
 			mainImageSrc: null,
 			corousel: [

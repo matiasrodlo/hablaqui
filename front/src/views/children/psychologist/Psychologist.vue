@@ -32,16 +32,25 @@
 								{{ psychologist.name.substr(0, 1) }}
 							</span>
 						</v-list-item-avatar>
-						<div v-if="psychologist.code" class="caption text--secondary">
+						<div
+							v-if="$vuetify.breakpoint.mdAndUp && psychologist.code"
+							class="caption text--secondary"
+						>
 							Codigo {{ psychologist.code }}
 						</div>
 					</v-col>
 					<v-col cols="12" sm="9">
 						<v-row justify="space-between">
 							<v-col
-								class="text-center text-sm-left font-weight-bold text-h3 text--secondary"
+								class="text-center text-sm-left font-weight-bold text-h6 text-md-h4 text-xl-h3 text--secondary"
 							>
 								{{ psychologist.name }}
+								<div
+									v-if="!$vuetify.breakpoint.mdAndUp && psychologist.code"
+									class="caption text--secondary"
+								>
+									Codigo {{ psychologist.code }}
+								</div>
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
 								<v-btn block color="primary" rounded @click="toAuth">
@@ -66,7 +75,7 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">EXPERIENCIA</v-col>
+					<v-col cols="12" md="3" class="subtitle-1 primary--text">EXPERIENCIA</v-col>
 					<v-col class="body-1 text-left text-capitalize text-capitalize">
 						{{ psychologist.experience ? psychologist.experience : 'Vacío' }}
 					</v-col>
@@ -75,7 +84,7 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">ESPECIALIDADES</v-col>
+					<v-col cols="12" md="3" class="subtitle-1 primary--text">ESPECIALIDADES</v-col>
 					<v-col
 						v-if="psychologist.specialties.length"
 						class="body-1 text-left text-capitalize"
@@ -94,28 +103,25 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text text-uppercase">
+					<v-col cols="12" md="3" class="subtitle-1 primary--text text-uppercase">
 						Modelos de trabajo terapéutico
 					</v-col>
-					<v-col
-						v-if="psychologist.specialties.length"
-						class="body-1 text-left text-capitalize"
-					>
-						<ul>
-							<li v-for="(model, i) in psychologist.model" :key="i">
+					<v-col class="body-1 text-left text-capitalize">
+						<ul v-if="psychologist.models.length">
+							<li v-for="(model, i) in psychologist.models" :key="i">
 								{{ model }}
 							</li>
 						</ul>
-					</v-col>
-					<v-col v-else class="body-1 text-left text-capitalize">
-						Vacío
+						<div v-else>
+							Vacío
+						</div>
 					</v-col>
 				</v-row>
 			</v-card-text>
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">FORMACIÓN</v-col>
+					<v-col cols="12" md="3" class="subtitle-1 primary--text">FORMACIÓN</v-col>
 					<v-col class="body-1 text-left text-capitalize">
 						{{ psychologist.formation ? psychologist.formation : 'Vacío' }}
 					</v-col>
@@ -124,7 +130,9 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="3" class="subtitle-1 primary--text">DESCRIPCIÓN PERSONAL</v-col>
+					<v-col cols="12" md="3" class="subtitle-1 primary--text">
+						DESCRIPCIÓN PERSONAL
+					</v-col>
 					<v-col class="body-1 text-left text-capitalize">
 						{{
 							psychologist.description ? psychologist.description : 'Sin descripcion'
