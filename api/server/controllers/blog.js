@@ -1,4 +1,3 @@
-import { logInfo } from '../config/pino';
 import blogService from '../services/blog';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
@@ -13,7 +12,6 @@ const blogController = {
 				thumbnail,
 				user
 			);
-			logInfo('articulo creado');
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error creando el articulo');

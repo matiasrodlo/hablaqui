@@ -71,13 +71,6 @@
 						></v-radio>
 					</v-radio-group>
 				</v-col>
-				<v-col cols="12">
-					<v-text-field v-model="form.author" label="Ingrese su nombre"></v-text-field>
-					<v-textarea
-						v-model="form.shortDescription"
-						label="Ingrese una breve descripcion suya"
-					></v-textarea>
-				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn
 						class="px-10 py-6"
@@ -117,8 +110,6 @@ export default {
 				originalLink: '',
 				thumbnail: '',
 				categories: '',
-				author: '',
-				authorDescription: '',
 			};
 		},
 		setFormData() {
@@ -130,8 +121,6 @@ export default {
 			formData.append('originalLink', this.form.originalLink);
 			formData.append('thumbnail', this.form.thumbnail);
 			formData.append('categories', this.form.categories);
-			formData.append('author', this.form.author);
-			formData.append('authorDescription', this.form.authorDescription);
 			return formData;
 		},
 

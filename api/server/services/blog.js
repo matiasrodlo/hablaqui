@@ -1,6 +1,7 @@
+import { logInfo } from '../config/pino';
 import Article from '../models/article';
-import { okResponse } from '../utils/responses/functions';
-const createArticle = async (body, thumbnail) => {
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+const createArticle = async (body, thumbnail, user) => {
 	const {
 		title,
 		HTMLbody,
@@ -8,9 +9,16 @@ const createArticle = async (body, thumbnail) => {
 		originalAuthor,
 		originalLink,
 		categories,
-		author,
-		authorDescription,
 	} = body;
+
+	if (user.role != 'psychologist') {
+		logInfo('Error de roles al crear un articulo');
+		return conflictResponse('Lo siento, pero no eres un psicologo');
+	}
+
+	const author = user.psychologist.name;
+	const authorDescription = user.psychologist.description;
+	const authorAvatar = user.psychologist.avatar;
 
 	let slug = title
 		.toLowerCase()
@@ -32,11 +40,13 @@ const createArticle = async (body, thumbnail) => {
 		categories,
 		author,
 		authorDescription,
+		authorAvatar,
 		rating,
 	};
 
 	await Article.create(newArticle);
 
+	logInfo('articulo creado');
 	return okResponse('articulo creado');
 };
 
