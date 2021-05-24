@@ -95,20 +95,20 @@
 					Blog
 				</v-btn>
 				<v-spacer></v-spacer>
+				<div>
+					<v-list-item
+						active-class="transparent"
+						class="text-h6 mr-2"
+						:href="`${$config.FRONTEND_URL}/auth`"
+					>
+						<span class="text--secondary">Iniciar sesión</span>
+					</v-list-item>
+				</div>
 				<v-btn
-					class="text-h6 text--secondary"
 					rounded
-					text
-					:href="`${$config.FRONTEND_URL}/auth`"
-				>
-					Iniciar sesión
-				</v-btn>
-				<v-btn
-					rounded
-					class="mx-2 text-h6"
+					class="mx-2 text-h6 py-0 px-6"
 					color="primary"
 					depressed
-					x-large
 					:href="`${$config.FRONTEND_URL}/auth/q=register`"
 				>
 					Comenzar

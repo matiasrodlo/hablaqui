@@ -3,46 +3,48 @@
 		<client-only>
 			<div class="primary">
 				<Appbar />
-				<!-- SECTION 1 / heading -->
-				<div style="position: relative" class="white">
-					<img
-						class="white"
-						:src="`${$config.LANDING_URL}/GH1.png`"
-						style="height: 700px; width: 100%"
-					/>
-					<div style="position: absolute; top: 0; width: 100%">
-						<v-container class="white--text" style="height: 700px">
-							<v-row justify="center" align="center">
-								<v-col cols="12" sm="6" class="text-center text-sm-left">
-									<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
-										Tu psicólogo Online
-									</div>
-									<div class="title my-4">
-										Demos juntos el primer paso hacia el bienestar emocional.
-										Habla de forma segura y privada con un psicólogo online
-										cuando lo necesites.
-									</div>
-									<v-btn
-										style="border-radius: 15px"
-										color="white"
-										x-large
-										class="font-weight-bold pa-8"
-										depressed
-										:href="`${$config.FRONTEND_URL}/auth`"
-									>
-										QUIERO COMENZAR
-									</v-btn>
-									<div class="title my-4">Desde $15.500CLP a la semana</div>
-								</v-col>
-								<v-col cols="12" sm="6">
-									<v-img
-										:height="heightPhone"
-										:src="`${$config.LANDING_URL}/tel.png`"
-									></v-img>
-								</v-col>
-							</v-row>
-						</v-container>
-					</div>
+			</div>
+			<!-- SECTION 1 / heading -->
+			<div style="position: relative" class="white">
+				<img
+					class="white"
+					:src="`${$config.LANDING_URL}/GH1.png`"
+					style="height: 700px; width: 100%"
+				/>
+				<div style="position: absolute; top: 0; width: 100%">
+					<v-container class="white--text" style="height: 700px">
+						<v-row justify="center" align="center">
+							<v-col cols="12" sm="6" class="text-center text-sm-left">
+								<div
+									class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-md-10"
+								>
+									Tu psicólogo Online
+								</div>
+								<div class="title my-5 my-md-10">
+									Demos juntos el primer paso hacia el bienestar emocional. Habla
+									de forma segura y privada con un psicólogo online cuando lo
+									necesites.
+								</div>
+								<v-btn
+									style="border-radius: 15px"
+									color="white"
+									x-large
+									class="font-weight-bold pa-8 text-capitalize"
+									depressed
+									:href="`${$config.FRONTEND_URL}/auth`"
+								>
+									Quiero comenzar
+								</v-btn>
+								<div class="title mt-5 mt-md-10">Desde $15.500CLP a la semana</div>
+							</v-col>
+							<v-col cols="12" sm="6">
+								<v-img
+									:height="heightPhone"
+									:src="`${$config.LANDING_URL}/tel.png`"
+								></v-img>
+							</v-col>
+						</v-row>
+					</v-container>
 				</div>
 			</div>
 		</client-only>
@@ -51,14 +53,14 @@
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					Cómo funciona
-					<div class="text-h6">
-						Es fácil y seguro realizar terapia con un psicólogo online y continuar con
-						tu estilo de vida con Hablaquí.
-					</div>
 				</v-col>
+				<div class="text-h6 mb-6 text--secondary">
+					Es fácil y seguro realizar terapia con un psicólogo online y continuar con tu
+					estilo de vida con Hablaquí.
+				</div>
 			</v-row>
 			<v-row>
 				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4">
@@ -90,7 +92,7 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -100,7 +102,7 @@
 						depressed
 						:href="`${$config.FRONTEND_URL}/auth`"
 					>
-						QUIERO COMENZAR
+						Quiero comenzar
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -117,11 +119,11 @@
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
 				>
 					<v-row justify="space-between" align="center" style="height: 700px">
-						<v-col cols="12" md="6" class="pt-10 text-center text-md-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
+						<v-col cols="12" md="6" class="text-center text-md-left">
+							<div class="text-lg-h3 text-md-h4 text-h6 font-weight-bold my-10">
 								Nuestros psicólogos
 							</div>
-							<div class="my-4 subtitle-1">
+							<div class="my-10 subtitle-1">
 								Contamos con un amplio equipo de psicólogos enfocados a potenciar el
 								área que busques desarrollar. Todos nuestros profesionales son
 								rigurosamente seleccionados, certificados, y cuentan con un alto
@@ -145,10 +147,10 @@
 									cycle
 									hide-delimiter-background
 									hide-delimiters
-									show-arrows-on-hover
+									:show-arrows="false"
 									reverse-transition="fade-transition"
 									transition="fade-transition"
-									:height="$vuetify.breakpoint.mdAndUp ? '400' : '285'"
+									:height="$vuetify.breakpoint.mdAndUp ? '395' : '285'"
 									style="
 										box-shadow: 12px 12px 0px 0px #03dfd8;
 										border-radius: 25px;
@@ -163,28 +165,21 @@
 										>
 											<div
 												style="
-													background-color: black;
+													background-color: #616161;
 													position: absolute;
 													bottom: 0;
-													height: 120px;
+													height: 100px;
 													opacity: 0.6;
 													width: 100%;
 													border-radius: 0 0 20px 20px;
 												"
 												class="white--text"
 											>
-												<div
-													class="pt-1 pl-1"
-													:class="
-														$vuetify.breakpoint.mdAndUp
-															? 'title'
-															: 'body-1'
-													"
-												>
+												<div class="pt-1 pl-2 font weight-regular">
 													{{ item.title }}
 												</div>
 												<div
-													class="pl-1"
+													class="pl-2"
 													:class="
 														$vuetify.breakpoint.mdAndUp
 															? 'title'
@@ -193,7 +188,7 @@
 												>
 													{{ item.name }}
 												</div>
-												<div class="caption pl-1">
+												<div class="caption pl-2 font-weight-bold">
 													<v-icon color="primary">mdi-check</v-icon
 													>{{ item.subtitle }}
 												</div>
@@ -212,7 +207,7 @@
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					class="text-left text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Ventajas
 				</v-col>
@@ -233,7 +228,7 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -249,8 +244,8 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<div style="position: relative">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 600px; width: 100%" />
+		<div style="position: relative" class="my-10">
+			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
 			<div style="position: absolute; top: 0">
 				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</div>
@@ -286,17 +281,24 @@
 											light
 											flat
 										>
-											<v-card-text>
+											<v-card-text class="mt-3">
 												<img height="60" :src="el.img" />
 											</v-card-text>
 											<v-card-text
-												style="flex-direction: column; height: 240px"
-												class="d-flex justify-content-end"
+												style="flex-direction: column; height: 180px"
+												class="d-flex justify-space-between"
 											>
-												<div>{{ el.text }}</div>
-												<v-btn block link text color="blue" :href="el.href">
-													Leer estudio completo
-												</v-btn>
+												<div style="height: 120px; overflow-y: auto">
+													{{ el.text }}
+												</div>
+												<div class="pt-2">
+													<a
+														class="primary--text"
+														style="text-decoration: none"
+														:href="el.href"
+														>Leer estudio completo</a
+													>
+												</div>
 											</v-card-text>
 										</v-card>
 									</div>
@@ -346,62 +348,13 @@
 				</v-container>
 			</div>
 		</div>
-		<!-- <div style="position: relative">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
-			<div style="position: absolute; top: 0">
-				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
-			</div>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container class="white--text" style="height: 700px">
-					<v-row justify="center" align="center" style="height: 600px">
-						<v-col cols="12" class="mt-16 text-center text-sm-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
-								Reseñas
-							</div>
-						</v-col>
-						<v-col cols="12">
-							<v-slide-group center-active show-arrows>
-								<template #prev>
-									<v-icon
-										color="white"
-										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
-										>mdi-chevron-left</v-icon
-									>
-								</template>
-								<template #next>
-									<v-icon
-										color="white"
-										:size="$vuetify.breakpoint.smAndUp ? '70' : '30'"
-										>mdi-chevron-right</v-icon
-									>
-								</template>
-								<v-slide-item
-									v-for="item in reseñas"
-									:key="item.id"
-									v-slot="{ toggle }"
-								>
-									<v-card
-										:height="$vuetify.breakpoint.smAndUp ? '250' : '310'"
-										:width="$vuetify.breakpoint.smAndUp ? '300' : '220'"
-										class="ma-4 text-center"
-										style="border-radius: 25px"
-										flat
-										@click="toggle"
-									>
-										<v-card-text class="title">{{ item.title }}</v-card-text>
-										<v-card-text>{{ item.desc }}</v-card-text>
-									</v-card>
-								</v-slide-item>
-							</v-slide-group>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</div> -->
 		<!-- SECTION 6 / download app -->
 		<v-container>
 			<v-row>
-				<v-col cols="12" class="text-center text-h3 text--secondary">
+				<v-col
+					cols="12"
+					class="my-10 text-center text-lg-h4 font-weight-bold text--secondary"
+				>
 					Descarga nuestra aplicación
 				</v-col>
 				<v-col cols="12" class="my-16 d-flex align-center justify-center">
@@ -423,16 +376,32 @@
 		<!-- SECTION 7 / faq -->
 		<v-container>
 			<v-row>
-				<v-col class="my-6 text-center text-md-left text-h3 text--secondary">
+				<v-col
+					class="my-10 text-center text-md-left text-lg-h3 text-md-h4 text-h6 text--secondary font-weight-bold"
+				>
 					Preguntas frecuentes
 				</v-col>
 				<v-col cols="12" class="text-left">
-					<div v-for="item in faq" :key="item.id">
+					<!-- <div>
 						<div class="primary title pa-1 white--text" style="border-radius: 10px">
 							{{ item.title }}
 						</div>
 						<div class="subtitle-2 my-6 text--secondary">{{ item.desc }}</div>
-					</div>
+					</div> -->
+					<v-expansion-panels v-model="panel" flat dark multiple>
+						<v-expansion-panel v-for="item in faq" :key="item.id" class="pa-0">
+							<v-expansion-panel-header
+								color="primary"
+								class="white--text pa-1"
+								light
+							>
+								{{ item.title }}
+							</v-expansion-panel-header>
+							<v-expansion-panel-content class="white text--secondary pt-5">
+								{{ item.desc }}
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
 				</v-col>
 				<v-col
 					cols="12"
@@ -500,7 +469,10 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<Footer />
+		<v-container>
+			<Footer />
+		</v-container>
+		<div class="primary" style="height: 30px"></div>
 	</div>
 </template>
 
@@ -512,6 +484,7 @@ export default {
 	},
 	data() {
 		return {
+			panel: [0],
 			firstbox: [
 				{
 					id: 1,
@@ -739,3 +712,13 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.v-expansion-panel--active > .v-expansion-panel-header {
+	min-height: 32px !important;
+}
+
+.v-expansion-panel-header {
+	min-height: 32px !important;
+}
+</style>
