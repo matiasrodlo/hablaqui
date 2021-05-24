@@ -26,14 +26,15 @@
 					/>
 				</v-col>
 				<v-col cols="12">
-					<v-text-field
-						label="Ingresa el nombre del autor"
-						v-model="form.originalAuthor"
-					></v-text-field>
 					<v-checkbox
 						v-model="form.notOriginal"
 						label="Este blog fue extraido de otro articulo?"
 					></v-checkbox>
+					<v-text-field
+						v-if="form.notOriginal"
+						label="Ingresa el nombre del autor del articulo original"
+						v-model="form.originalAuthor"
+					></v-text-field>
 					<v-text-field
 						v-if="form.notOriginal"
 						label="Ingresa un link de referencia"
@@ -69,6 +70,13 @@
 							label="Pareja y sexo"
 						></v-radio>
 					</v-radio-group>
+				</v-col>
+				<v-col cols="12">
+					<v-text-field v-model="form.author" label="Ingrese su nombre"></v-text-field>
+					<v-textarea
+						v-model="form.shortDescription"
+						label="Ingrese una breve descripcion suya"
+					></v-textarea>
 				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn
@@ -109,6 +117,8 @@ export default {
 				originalLink: '',
 				thumbnail: '',
 				categories: '',
+				author: '',
+				authorDescription: '',
 			};
 		},
 		setFormData() {
@@ -120,6 +130,8 @@ export default {
 			formData.append('originalLink', this.form.originalLink);
 			formData.append('thumbnail', this.form.thumbnail);
 			formData.append('categories', this.form.categories);
+			formData.append('author', this.form.author);
+			formData.append('authorDescription', this.form.authorDescription);
 			return formData;
 		},
 

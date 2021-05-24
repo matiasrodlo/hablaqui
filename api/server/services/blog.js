@@ -1,6 +1,6 @@
 import Article from '../models/article';
 import { okResponse } from '../utils/responses/functions';
-const createArticle = async (body, thumbnail, user) => {
+const createArticle = async (body, thumbnail) => {
 	const {
 		title,
 		HTMLbody,
@@ -8,6 +8,8 @@ const createArticle = async (body, thumbnail, user) => {
 		originalAuthor,
 		originalLink,
 		categories,
+		author,
+		authorDescription,
 	} = body;
 
 	let slug = title
@@ -28,7 +30,8 @@ const createArticle = async (body, thumbnail, user) => {
 		thumbnail,
 		slug,
 		categories,
-		author: user,
+		author,
+		authorDescription,
 		rating,
 	};
 

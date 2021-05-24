@@ -35,6 +35,9 @@ let article = new Schema(
 		author: {
 			type: String,
 		},
+		authorDescription: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );
