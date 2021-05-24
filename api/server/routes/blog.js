@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import multer from '../middleware/multer';
+import passport from 'passport';
 import storage from '../middleware/storage';
 import blogController from '../controllers/blog';
 
@@ -8,7 +9,7 @@ const blogRouter = Router();
 blogRouter.post(
 	'/blog/new-article',
 	[
-		//passport.authenticate('jwt', { session: true }),
+		passport.authenticate('jwt', { session: true }),
 		multer.single('thumbnail'),
 		storage,
 	],

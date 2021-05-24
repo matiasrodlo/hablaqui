@@ -38,6 +38,9 @@ let article = new Schema(
 		authorDescription: {
 			type: String,
 		},
+		authorAvatar: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );
