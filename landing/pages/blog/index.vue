@@ -150,12 +150,23 @@
 														<div>
 															<div class="title font-weight-bold">
 																<span
-																	v-if="article.originalAuthor"
+																	v-if="
+																		article.author ||
+																		article.originalAuthor
+																	"
 																	class="primary--text"
 																>
-																	por {{ article.originalAuthor }}
+																	por
+																	{{
+																		article.author ||
+																		article.originalAuthor
+																	}}
 																</span>
-																<span v-if="article.originalAuthor"
+																<span
+																	v-if="
+																		article.author ||
+																		article.originalAuthor
+																	"
 																	>|</span
 																>
 																<span class="text--disabled">

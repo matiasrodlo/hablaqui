@@ -96,17 +96,14 @@
 						</v-list-item-avatar>
 
 						<v-list-item-content>
-							<v-list-item-title>
+							<v-list-item-title class="title">
 								Transcrito y revisado clínicamente por:
-								{{ article.originalAuthor }}
+								<span class="primary--text">{{
+									article.author || article.originalAuthor
+								}}</span>
 							</v-list-item-title>
 							<v-list-item-subtitle>
-								Jessica DuBois-Maahs is a Chicago-based writer whose work has
-								appeared in USA Today, Verily Magazine, The Chicago Sun-Times, and
-								The Florida Times-Union, put- ting her MSJ degree from Northwestern
-								University to good use. When she is not writing, she enjoys
-								traveling to new places and hanging out with her cat, Buster. nulla
-								facilisis at vero eros et accumsan et iusto odio
+								{{ authorDescription }}
 							</v-list-item-subtitle>
 						</v-list-item-content>
 					</v-list-item>
