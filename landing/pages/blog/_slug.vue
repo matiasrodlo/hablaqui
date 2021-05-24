@@ -68,11 +68,11 @@
 					<div class="font-weight-light text-h6" v-html="article.HTMLbody"></div>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row class="my-10">
 				<v-col cols="12">
 					<span>
 						<span class="title black--text">¿Este artículo fue útil?</span>
-						<span class="text--secondary mr-2"> {{ rating }} </span>
+						<span class="title text--secondary mr-2"> {{ rating }} </span>
 						<v-rating
 							v-model="rating"
 							class="d-inline-block"
@@ -88,6 +88,149 @@
 				</v-col>
 			</v-row>
 			<v-divider></v-divider>
+			<v-row>
+				<v-col cols="12">
+					<v-list-item>
+						<v-list-item-avatar size="120">
+							<v-img height="120" style="background-color: gray"></v-img>
+						</v-list-item-avatar>
+
+						<v-list-item-content>
+							<v-list-item-title>
+								Transcrito y revisado clínicamente por:
+								{{ article.originalAuthor }}
+							</v-list-item-title>
+							<v-list-item-subtitle>
+								Jessica DuBois-Maahs is a Chicago-based writer whose work has
+								appeared in USA Today, Verily Magazine, The Chicago Sun-Times, and
+								The Florida Times-Union, put- ting her MSJ degree from Northwestern
+								University to good use. When she is not writing, she enjoys
+								traveling to new places and hanging out with her cat, Buster. nulla
+								facilisis at vero eros et accumsan et iusto odio
+							</v-list-item-subtitle>
+						</v-list-item-content>
+					</v-list-item>
+				</v-col>
+				<v-col cols="12" class="text-center">
+					<v-btn x-large color="primary" text exact :to="{ name: 'blog' }">
+						<span class="headline font-weight-bold">Ver más</span>
+					</v-btn>
+				</v-col>
+				<!-- blogs -->
+				<template v-if="blogs.length">
+					<v-col v-for="(item, i) in blogs" :key="i" cols="12" md="3" class="mt-16">
+						<template v-if="length > i">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									nuxt
+									:to="{ path: `/blog/${item.slug}` }"
+									style="transition: transform 0.4s"
+									:style="
+										hover
+											? 'transform: scale(1.02);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-4' : 'elevation-0'"
+									height="500"
+									width="100%"
+									flat
+								>
+									<v-img
+										class="grey lighten-3"
+										height="250"
+										:src="item.thumbnail"
+									>
+									</v-img>
+									<v-card-text
+										class="d-flex justify-space-between"
+										style="flex-direction: column; height: 250px"
+									>
+										<div>
+											<v-btn text class="px-0 my-3 text-h6" color="primary">
+												{{ item.categories }}
+											</v-btn>
+											<h3 class="title black--text">
+												{{ item.title }}
+											</h3>
+										</div>
+										<div>
+											<div class="title black--text">
+												<span
+													v-if="item.originalAuthor"
+													class="primary--text"
+												>
+													por {{ item.originalAuthor }}
+												</span>
+												<span v-if="item.originalAuthor">|</span>
+												<span class="text--disabled">
+													{{ dates(item.createdAt) }}
+												</span>
+											</div>
+										</div>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</template>
+					</v-col>
+				</template>
+			</v-row>
+		</v-container>
+		<div style="position: relative" class="my-10">
+			<img
+				:src="`${$config.LANDING_URL}/container-blue.png`"
+				style="height: 700px; width: 100%"
+			/>
+			<div style="position: absolute; top: 0; width: 100%">
+				<v-container fluid>
+					<v-row align="center" justify="center" style="height: 700px">
+						<v-col cols="12" sm="8" md="10" xl="9">
+							<v-row justify="space-between">
+								<v-col cols="12" sm="5" class="white--text">
+									<div>
+										<div class="headline font-weight-bold mt-8">
+											Recibe contenido exclusivo periódicamente
+										</div>
+										<div class="subtitle-1 font-weight-bold mb-8">
+											Suscríbete y alcanza tu mejor versión
+										</div>
+										<div style="position: relative">
+											<v-text-field
+												solo
+												flat
+												placeholder="Introduzca su correo electrónico aquí"
+												class="white pr-4"
+												hide-details
+											>
+											</v-text-field>
+											<v-btn
+												depressed
+												absolute
+												style="
+													height: 100%;
+													right: -60px;
+													top: 0;
+													border-radius: 0 25px 25px 0;
+												"
+												color="info"
+												>Enviar</v-btn
+											>
+										</div>
+									</div>
+								</v-col>
+								<v-col cols="12" sm="5" class="text-center">
+									<v-img
+										max-height="350"
+										contain
+										:src="`${$config.LANDING_URL}/recursos-11.png`"
+									></v-img>
+								</v-col>
+							</v-row>
+						</v-col>
+					</v-row>
+				</v-container>
+			</div>
+		</div>
+		<v-container>
 			<Footer />
 		</v-container>
 	</div>
@@ -103,7 +246,9 @@ export default {
 	},
 	data() {
 		return {
+			length: 4,
 			article: null,
+			blogs: [],
 			rating: 0,
 			breadcrumb: [],
 		};
@@ -113,7 +258,8 @@ export default {
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
 		response = await response.json();
 		this.article = response.article;
-		if (response.article.rating.average) this.rating = response.article.rating.average;
+		if (response.article.rating.average)
+			this.rating = parseFloat(response.article.rating.average.toFixed(1));
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -131,16 +277,14 @@ export default {
 				href: `/blog/${response.article.slug}`,
 			},
 		];
+		let res = await fetch(`${this.$config.API_URL}/blog/all`);
+		res = await res.json();
+		this.blogs = res.articles;
 	},
 	methods: {
-		dates(date) {
-			return moment(date).format('DD MMMM YY');
-		},
 		async setRating() {
 			let response = await fetch(
-				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${
-					this.rating + 1
-				}`,
+				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -151,6 +295,13 @@ export default {
 			);
 			response = await response.json();
 			this.rating = parseFloat(response.rating.average.toFixed(1));
+		},
+		dates(date) {
+			return moment(date).format('DD MMMM YY');
+		},
+		strippedContent(text, long) {
+			const regex = /(<([^>]+)>)/gi;
+			return text.replace(regex, '').slice(0, long).concat('...');
 		},
 	},
 };

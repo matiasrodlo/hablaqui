@@ -527,8 +527,6 @@ export default {
 	async mounted() {
 		let response = await fetch(`${this.$config.API_URL}/blog/all`);
 		response = await response.json();
-		// eslint-disable-next-line no-console
-		console.log(response.articles);
 		this.articles = response.articles;
 	},
 	methods: {
