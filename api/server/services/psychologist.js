@@ -13,7 +13,7 @@ const getAll = async () => {
 const match = async body => {
 	const { payload } = body;
 	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender || { $in: ['male', 'female', 'non-binary'] },
+		gender: payload.gender || { $in: ['male', 'female', 'transgender'] },
 		models: payload.model,
 		specialties: { $in: payload.themes },
 	});
