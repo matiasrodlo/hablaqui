@@ -34,37 +34,20 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		message: content,
 	};
 
-	if (user.role == 'psychologist') {
-		const updatedChat = await Chat.findOneAndUpdate(
-			{
-				user: userId,
-				psychologist: psychologistId,
+	const updatedChat = await Chat.findOneAndUpdate(
+		{
+			user: userId,
+			psychologist: psychologistId,
+		},
+		{
+			$push: {
+				messages: newMessage,
 			},
-			{
-				$push: {
-					messages: newMessage,
-				},
-			},
-			{ new: true }
-		);
+		},
+		{ new: true }
+	);
 
-		return okResponse('Mensaje enviado', { chat: updatedChat });
-	}
-	if (user.role == 'user') {
-		const updatedChat = await Chat.findOneAndUpdate(
-			{ user: userId, psychologist: psychologistId },
-			{
-				$push: {
-					messages: newMessage,
-				},
-			},
-			{ new: true }
-		);
-
-		return okResponse('Mensaje enviado', { chat: updatedChat });
-	}
-
-	return conflictResponse('Ha ocurrido un error al enviar un mensaje');
+	return okResponse('Mensaje enviado', { chat: updatedChat });
 };
 
 const chatService = {
