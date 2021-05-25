@@ -124,18 +124,18 @@ export default {
 				},
 				{
 					id: 2,
-					img: 'img/auth.png',
+					img: 'img/auth-2.png',
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: 'img/auth.png',
+					img: 'img/auth-3.png',
 					text:
 						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: 'img/auth.png',
+					img: 'img/auth-4.png',
 					text:
 						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
