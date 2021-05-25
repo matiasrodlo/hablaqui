@@ -449,14 +449,14 @@
 							<v-card style="border-radius:15px" dark color="primary">
 								<v-card-text>
 									<v-row align="center" justify="center">
-										<v-col cols="3" lg="2" class="text-center">
-											<v-list-item-avatar size="100" class="ml-4">
+										<v-col cols="3" class="text-center">
+											<v-list-item-avatar size="140" class="ml-4">
 												<v-btn
 													fab
 													light
 													depressed
-													width="100"
-													height="100"
+													width="140"
+													height="140"
 													style="border: 8px solid #5EB3E4;"
 												>
 													<v-icon color="primary" size="60"
@@ -465,7 +465,7 @@
 												</v-btn>
 											</v-list-item-avatar>
 										</v-col>
-										<v-col cols="9" lg="10">
+										<v-col cols="9">
 											<v-row justify="space-between">
 												<v-col
 													class="headline font-weight-bold white--text"
@@ -474,8 +474,8 @@
 												</v-col>
 											</v-row>
 											<div class="body-2 mt-2">
-												Lorempsum dolor sit amet, consectetupsum dolor sit
-												amet, consectetu ipsum
+												Encuentra al psicólogo que necesitas, solo responde
+												las siguientes preguntas.
 											</div>
 											<v-btn
 												light
@@ -498,20 +498,20 @@
 							No se encontraron coincidencias
 						</v-col>
 						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
-							<v-card style="border-radius:15px">
-								<v-card-text>
-									<v-row align="center" justify="center">
-										<v-col cols="3" lg="2" class="text-center">
+							<v-card height="270" style="border-radius:15px">
+								<v-card-text class="my-2">
+									<v-row align="center" justify="center" style="height: 270px">
+										<v-col cols="3" class="text-center">
 											<v-avatar
-												size="100"
+												size="140"
 												:color="item.avatar ? 'trasnparent' : 'primary'"
 											>
 												<v-img
 													v-if="item.avatar"
 													:src="item.avatar"
 													:lazy-src="item.avatar"
-													width="100"
-													height="100"
+													width="140"
+													height="140"
 												>
 													<template #placeholder>
 														<v-row
@@ -549,14 +549,14 @@
 												Más información
 											</v-btn>
 										</v-col>
-										<v-col cols="9" lg="10">
+										<v-col cols="9">
 											<v-row justify="space-between">
 												<v-col
 													class="headline font-weight-bold text--secondary"
 												>
 													{{ item.name }}
 												</v-col>
-												<v-col cols="4" lg="3" class="text-right">
+												<v-col cols="5" class="text-right">
 													<v-btn
 														color="primary"
 														rounded
@@ -567,8 +567,7 @@
 													</v-btn>
 												</v-col>
 											</v-row>
-
-											<v-chip-group v-model="motive">
+											<v-chip-group show-arrows v-model="motive">
 												<template v-for="(tag, i) in item.specialties">
 													<v-chip
 														:value="tag"
@@ -585,7 +584,9 @@
 													</v-chip>
 												</template>
 											</v-chip-group>
-											<div class="body-2 mt-2">{{ item.description }}</div>
+											<div class="body-2 mt-2">
+												{{ item.description }}
+											</div>
 										</v-col>
 									</v-row>
 								</v-card-text>
@@ -612,7 +613,7 @@ export default {
 		return {
 			motive: '',
 			searchInput: '',
-			view: 2,
+			view: 1,
 			gender: [],
 			models: [],
 			languages: [],

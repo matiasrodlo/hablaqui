@@ -1,7 +1,7 @@
 <template>
 	<div style="background-color: #ebf2f3">
 		<client-only>
-			<div>
+			<div class="mt-3">
 				<Appbar />
 			</div>
 		</client-only>

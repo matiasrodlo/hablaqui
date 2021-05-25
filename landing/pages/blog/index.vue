@@ -1,7 +1,9 @@
 <template>
 	<div style="background-color: #ebf2f3">
 		<client-only>
-			<Appbar />
+			<div>
+				<Appbar />
+			</div>
 		</client-only>
 		<v-container fluid>
 			<!-- header -->

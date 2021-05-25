@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary">
+			<div class="primary mt-3">
 				<Appbar />
 			</div>
 		</client-only>

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary">
+			<div class="primary mt-3 pb-16">
 				<Appbar />
 				<v-container>
 					<v-row justify="center" no-gutters>
@@ -27,7 +27,7 @@
 				</v-container>
 			</div>
 		</client-only>
-		<v-container v-if="items.length">
+		<v-container v-if="items.length" class="mt-16">
 			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">
 					<div v-for="(item, g) in itemsFilter" :key="g">
@@ -59,8 +59,10 @@
 					</v-list-item-group>
 				</v-col>
 				<v-col v-if="selectedItem" cols="12" sm="9">
-					<div class="primary--text headline">{{ selectedItem.title }}</div>
-					<v-expansion-panels>
+					<div class="primary--text headline font-weight-bold">
+						{{ selectedItem.title }}
+					</div>
+					<v-expansion-panels flat>
 						<v-expansion-panel v-for="(el, i) in selectedItem.faq" :key="i">
 							<v-expansion-panel-header
 								disable-icon-rotate
@@ -86,13 +88,39 @@
 									</div>
 								</template>
 							</v-expansion-panel-content>
+							<v-divider style="border-width: 1px"></v-divider>
 						</v-expansion-panel>
 					</v-expansion-panels>
 				</v-col>
 			</v-row>
+		</v-container>
+		<div style="background-color: #0f3860; margin-top: 120px">
+			<v-container class="white--text py-16">
+				<v-row>
+					<v-col>
+						Importante: Los servicios disponibles a través de Hablaquí son
+						proporcionados de forma independiente por profesionales en salud mental
+						certificados. Hablaquí no proporciona ningún servicio de salud mental u
+						otros de atención médica. Los profesionales en salud mental no pre-escriben
+						medicamentos a través de Hablaquí. Si estás experimentando una crisis o
+						emergencia, por favor comunícate a los servicios de emergencia más cercanos
+						a tu localidad.
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
+		<v-container>
 			<v-row justify="center" align="center">
 				<v-col cols="12" md="6" class="text-center text-sm-left">
-					<div style="color: #bdbdbd">Aviso de privacidad Términos y Condiciones</div>
+					<div style="color: #bdbdbd">
+						<v-btn text class="text--disabled" :to="{ name: 'politicas' }"
+							>Aviso de privacidad</v-btn
+						>
+						y
+						<v-btn text class="text--disabled" :to="{ name: 'condiciones' }"
+							>Términos y Condiciones</v-btn
+						>
+					</div>
 					<div class="text--secondary">
 						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
 					</div>
