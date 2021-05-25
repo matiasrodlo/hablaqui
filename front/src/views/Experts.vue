@@ -5,7 +5,7 @@
 		<!-- routing for child -->
 		<router-view :loading="loading" />
 		<!-- footer -->
-		<div class="primary">
+		<div style="background-color: #0f3860">
 			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>

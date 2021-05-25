@@ -296,13 +296,13 @@
 					<template v-if="view == 1">
 						<v-col cols="12" sm="6" lg="4">
 							<v-card
-								height="400px"
+								height="380"
 								style="border-radius:15px"
 								class="text-center"
 								color="primary"
 								dark
 							>
-								<v-card-text style="height: 85%">
+								<v-card-text style="height: 310px">
 									<v-btn
 										fab
 										light
@@ -310,14 +310,14 @@
 										width="100"
 										height="100"
 										style="border: 8px solid #5EB3E4;"
-										class="mb-10"
+										class="mb-5 mt-3"
 									>
 										<v-icon color="primary" size="60">mdi-magnify</v-icon>
 									</v-btn>
 									<div class="title font-weight-bold">
 										Te ayudamos a encontrar a tu psicólogo
 									</div>
-									<div class="subtitle-1 mt-2">
+									<div class="body-1 mt-2 mx-auto" style="max-width: 250px">
 										Encuentra al psicólogo que necesitas, solo responde las
 										siguientes preguntas.
 									</div>
@@ -352,8 +352,8 @@
 							v-for="(item, i) in filterLevelThree"
 							:key="i"
 						>
-							<v-card min-height="400" style="border-radius:15px" class="text-center">
-								<v-card-text style="height: 85%">
+							<v-card height="380" style="border-radius:15px" class="text-center">
+								<v-card-text style="height: 280px">
 									<div>
 										<v-avatar
 											size="100"
@@ -396,16 +396,18 @@
 													: item.name
 											}}
 										</div>
-										<div v-if="item.code" class="caption primary--text">
-											Codigo {{ item.code }}
-										</div>
+										<span v-if="item.code" class="caption primary--text">
+											<span> Codigo {{ item.code }} </span>
+											<v-divider
+												style="margin-left: 90px; margin-right: 90px"
+											></v-divider>
+										</span>
 									</div>
-									<v-divider></v-divider>
 									<template v-if="$vuetify.breakpoint.mdAndUp">
 										<div v-if="item.description" class="body-2 mt-2">
 											{{
-												item.description.length > 140
-													? item.description.slice(0, 140).concat('...')
+												item.description.length > 160
+													? item.description.slice(0, 160).concat('...')
 													: item.description
 											}}
 										</div>
@@ -419,29 +421,26 @@
 										</span>
 									</div>
 								</v-card-text>
-								<v-card-actions class="text-center">
-									<v-spacer></v-spacer>
-									<v-btn
-										color="primary"
-										depressed
-										style="border-radius:10px"
-										@click="toAuth(item)"
-									>
-										Agenda cita oline
-									</v-btn>
-									<v-spacer></v-spacer>
-								</v-card-actions>
-								<v-card-actions class="text-center">
-									<v-spacer></v-spacer>
-									<v-btn
-										text
-										color="#9D9D9C"
-										:to="{ name: 'psicologo', params: { id: item._id } }"
-									>
-										Más información
-									</v-btn>
-									<v-spacer></v-spacer>
-								</v-card-actions>
+								<v-card-text>
+									<div>
+										<v-btn
+											color="primary"
+											depressed
+											style="border-radius:10px"
+											@click="toAuth(item)"
+										>
+											Agenda cita oline
+										</v-btn>
+									</div>
+									<div>
+										<v-btn
+											text
+											:to="{ name: 'psicologo', params: { id: item._id } }"
+										>
+											Más información
+										</v-btn>
+									</div>
+								</v-card-text>
 							</v-card>
 						</v-col>
 					</template>

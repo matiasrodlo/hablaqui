@@ -36,7 +36,7 @@ const routes = [
 				name: 'all-psicologos',
 				component: Psychologists,
 				meta: {
-					title: 'Elige a tu psicólogo online',
+					title: 'Encuentra a tu psicólogo online',
 				},
 			},
 			{

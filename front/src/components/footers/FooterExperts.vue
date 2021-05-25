@@ -17,10 +17,10 @@
 			</v-col>
 			<v-col cols="12" sm="3">
 				<v-img contain max-height="60" src="/img/Startup .png"></v-img>
-				<v-img contain max-height="60" src="/img//Adolfo Ibañez .png"></v-img>
+				<v-img contain max-height="60" src="/img/Adolfo Ibañez .png"></v-img>
 			</v-col>
 			<v-col cols="12" sm="3">
-				<v-img src="/img//Web Pay .png"></v-img>
+				<v-img src="/img/WebPay.png"></v-img>
 			</v-col>
 		</v-row>
 	</v-container>
