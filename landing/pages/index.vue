@@ -5,62 +5,102 @@
 				<Appbar />
 			</div>
 			<!-- SECTION 1 / heading -->
-			<div style="position: relative" class="white">
-				<img
-					class="white"
-					:src="`${$config.LANDING_URL}/GH1.png`"
-					style="height: 700px; width: 100%"
-				/>
-				<div style="position: absolute; top: 0; width: 100%">
-					<v-container class="white--text" style="height: 700px">
-						<v-row justify="center" align="center">
-							<v-col cols="12" sm="6" class="text-center text-sm-left">
-								<div
-									class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-md-10"
-								>
-									Tu psicólogo Online
-								</div>
-								<div class="title my-5 my-md-10">
-									Demos juntos el primer paso hacia el bienestar emocional. Habla
-									de forma segura y privada con un psicólogo online cuando lo
-									necesites.
-								</div>
-								<v-btn
-									style="border-radius: 15px"
-									color="white"
-									x-large
-									class="font-weight-bold pa-8 text-capitalize"
-									depressed
-									:href="`${$config.FRONTEND_URL}/auth`"
-								>
-									Quiero comenzar
-								</v-btn>
-								<div class="title mt-5 mt-md-10">Desde $15.500CLP a la semana</div>
-							</v-col>
-							<v-col cols="12" sm="6">
-								<v-img
-									:height="heightPhone"
-									:src="`${$config.LANDING_URL}/tel.png`"
-								></v-img>
-							</v-col>
-						</v-row>
-					</v-container>
-				</div>
-			</div>
+			<v-img
+				v-if="$vuetify.breakpoint.mdAndUp"
+				class="white"
+				:src="`${$config.LANDING_URL}/GH1.png`"
+				style="height: 700px; width: 100%"
+			>
+				<v-container class="white--text">
+					<v-row
+						justify="center"
+						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+					>
+						<v-col cols="12" md="6" class="primary text-center text-md-left">
+							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+								Tu psicólogo Online
+							</div>
+							<div class="title my-10">
+								Demos juntos el primer paso hacia el bienestar emocional. Habla de
+								forma segura y privada con un psicólogo online cuando lo necesites.
+							</div>
+							<v-btn
+								style="border-radius: 15px"
+								color="white"
+								x-large
+								class="font-weight-bold pa-8 text-capitalize"
+								depressed
+								:href="`${$config.FRONTEND_URL}/auth`"
+							>
+								Quiero comenzar
+							</v-btn>
+							<div class="title mt-10">Desde $15.500CLP a la semana</div>
+							<div class="title mt-5">Convenios con Isapres y Fonasa.</div>
+						</v-col>
+						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
+							<v-img
+								:height="heightPhone"
+								:src="`${$config.LANDING_URL}/tel.png`"
+							></v-img>
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-img>
+			<v-img
+				v-else
+				:src="`${$config.LANDING_URL}/grafico-landing-movil-01.png`"
+				contain
+				min-height="950"
+				style="position: relative"
+			>
+				<v-container class="white--text">
+					<v-row
+						justify="center"
+						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+					>
+						<v-col cols="12" md="6" class="primary text-center text-md-left">
+							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+								Tu psicólogo Online
+							</div>
+							<div class="title my-10">
+								Demos juntos el primer paso hacia el bienestar emocional. Habla de
+								forma segura y privada con un psicólogo online cuando lo necesites.
+							</div>
+							<v-btn
+								style="border-radius: 15px"
+								color="white"
+								x-large
+								class="font-weight-bold pa-8 text-capitalize"
+								depressed
+								:href="`${$config.FRONTEND_URL}/auth`"
+							>
+								Quiero comenzar
+							</v-btn>
+							<div class="title mt-10">Desde $15.500CLP a la semana</div>
+						</v-col>
+						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
+							<v-img
+								:height="heightPhone"
+								:src="`${$config.LANDING_URL}/tel.png`"
+							></v-img>
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-img>
 		</client-only>
 		<!-- SETION 2 / como funciona -->
-		<v-container class="pt-10">
+		<v-container class="pt-md-10">
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					Cómo funciona
 				</v-col>
-				<div class="text-h6 mb-6 text--secondary">
+				<v-col cols="12" class="text-h6 mb-6 text--secondary text-center">
 					Es fácil y seguro realizar terapia con un psicólogo online y continuar con tu
 					estilo de vida con Hablaquí.
-				</div>
+				</v-col>
 			</v-row>
 			<v-row>
 				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4">
@@ -83,8 +123,10 @@
 							</v-btn>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<div class="title font-weight-bold">{{ item.title }}</div>
-							<div class="body-1">
+							<div class="title font-weight-bold mx-auto" style="max-width: 220px">
+								{{ item.title }}
+							</div>
+							<div class="body-1 mt-5 mx-auto" style="max-width: 250px">
 								{{ item.desc }}
 							</div>
 						</v-card-text>
@@ -92,7 +134,7 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -111,16 +153,16 @@
 		<div style="position: relative">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 800px; width: 100%"
+				style="height: 900px; width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container
 					class="white--text"
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
 				>
-					<v-row justify="space-between" align="center" style="height: 700px">
+					<v-row justify="space-between" align="center" style="height: 900px">
 						<v-col cols="12" md="6" class="text-center text-md-left">
-							<div class="text-lg-h3 text-md-h4 text-h6 font-weight-bold my-10">
+							<div class="text-md-h3 text-h4 font-weight-bold my-10">
 								Nuestros psicólogos
 							</div>
 							<div class="my-10 subtitle-1">
@@ -131,6 +173,7 @@
 								efectiva y experta, pero también cálida y humana.
 							</div>
 							<v-btn
+								v-if="$vuetify.breakpoint.mdAndUp"
 								style="border-radius: 15px"
 								color="white"
 								x-large
@@ -198,6 +241,22 @@
 								</v-carousel>
 							</div>
 						</v-col>
+						<v-col
+							v-if="!$vuetify.breakpoint.mdAndUp"
+							cols="12"
+							class="my-10 text-center"
+						>
+							<v-btn
+								style="border-radius: 15px"
+								color="white"
+								x-large
+								class="font-weight-bold pa-4"
+								depressed
+								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							>
+								Ver más psicólogos
+							</v-btn>
+						</v-col>
 					</v-row>
 				</v-container>
 			</div>
@@ -207,7 +266,7 @@
 			<v-row justify="center">
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Ventajas
 				</v-col>
@@ -221,7 +280,7 @@
 						<v-card-text class="text-center title font-weight-bold">
 							{{ item.title }}
 						</v-card-text>
-						<v-card-text class="text-center body-1">
+						<v-card-text class="text-center body-1 mx-auto" style="max-width: 300px">
 							{{ item.desc }}
 						</v-card-text>
 					</v-card>
@@ -252,10 +311,8 @@
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container>
 					<v-row>
-						<v-col cols="12" class="white--text mt-16 text-center text-sm-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold">
-								Efectividad
-							</div>
+						<v-col cols="12" class="white--text my-16 text-left">
+							<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -276,6 +333,7 @@
 											v-for="el in item"
 											:key="el.id"
 											height="300"
+											width="350"
 											class="mx-4 d-inline-block"
 											style="border-radius: 25px"
 											light
@@ -353,11 +411,11 @@
 			<v-row>
 				<v-col
 					cols="12"
-					class="my-10 text-center text-lg-h4 font-weight-bold text--secondary"
+					class="my-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
 				>
 					Descarga nuestra aplicación
 				</v-col>
-				<v-col cols="12" class="my-16 d-flex align-center justify-center">
+				<v-col cols="12" class="my-5 d-flex align-center justify-center">
 					<img
 						style="cursor: pointer"
 						height="75px"
@@ -377,22 +435,16 @@
 		<v-container>
 			<v-row>
 				<v-col
-					class="my-10 text-center text-md-left text-lg-h3 text-md-h4 text-h6 text--secondary font-weight-bold"
+					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Preguntas frecuentes
 				</v-col>
 				<v-col cols="12" class="text-left">
-					<!-- <div>
-						<div class="primary title pa-1 white--text" style="border-radius: 10px">
-							{{ item.title }}
-						</div>
-						<div class="subtitle-2 my-6 text--secondary">{{ item.desc }}</div>
-					</div> -->
-					<v-expansion-panels v-model="panel" flat dark multiple>
+					<v-expansion-panels v-model="panel" accordion flat dark multiple>
 						<v-expansion-panel v-for="item in faq" :key="item.id" class="pa-0">
 							<v-expansion-panel-header
 								color="primary"
-								class="white--text pa-1"
+								class="white--text py-1 pl-2 font-weight-bold"
 								light
 							>
 								{{ item.title }}
@@ -405,7 +457,7 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -423,52 +475,54 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container>
-			<v-row align="center">
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						height="100"
-						:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
-					></v-img>
-				</v-col>
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						max-height="100"
-						:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
-					></v-img>
-				</v-col>
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						max-height="100"
-						:src="`${$config.LANDING_URL}/fonasa.jpg`"
-					></v-img>
-				</v-col>
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						max-height="100"
-						:src="`${$config.LANDING_URL}/banmedica.png`"
-					></v-img>
-				</v-col>
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						max-height="100"
-						:src="`${$config.LANDING_URL}/colmena.png`"
-					></v-img>
-				</v-col>
-				<v-col cols="6" md="2">
-					<v-img
-						contain
-						max-height="100"
-						:src="`${$config.LANDING_URL}/consalud.png`"
-					></v-img>
-				</v-col>
-			</v-row>
-		</v-container>
+		<div :style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''">
+			<v-container>
+				<v-row align="center">
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							height="100"
+							:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
+						></v-img>
+					</v-col>
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							max-height="100"
+							:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
+						></v-img>
+					</v-col>
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							max-height="100"
+							:src="`${$config.LANDING_URL}/fonasa.jpg`"
+						></v-img>
+					</v-col>
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							max-height="100"
+							:src="`${$config.LANDING_URL}/banmedica.png`"
+						></v-img>
+					</v-col>
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							max-height="100"
+							:src="`${$config.LANDING_URL}/colmena.png`"
+						></v-img>
+					</v-col>
+					<v-col cols="6" sm="2">
+						<v-img
+							contain
+							max-height="100"
+							:src="`${$config.LANDING_URL}/consalud.png`"
+						></v-img>
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
 		<v-container>
 			<Footer />
 		</v-container>
@@ -616,18 +670,25 @@ export default {
 				[
 					{
 						id: 2,
-						img: ``,
+						img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
 						text:
-							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
-						img: ``,
+						img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
 						href:
 							'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 						text:
 							'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+					},
+					{
+						id: 6,
+						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
+						text:
+							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 				],
 			],
@@ -683,14 +744,14 @@ export default {
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
-					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					subtitle: 'Autoconocimiento, autoestima, fobia social.',
 					image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
-					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
+					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
 					image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
 				},
 				{

@@ -44,7 +44,7 @@
 		<div style="height: 150px; overflow: hidden">
 			<svg
 				class="shadow"
-				viewBox="0 0 500 150"
+				viewBox="0 0 500 125"
 				preserveAspectRatio="none"
 				style="height: 100%; width: 100%"
 			>
@@ -54,7 +54,7 @@
 				></path>
 			</svg>
 		</div>
-		<v-app-bar absolute flat height="100" color="transparent">
+		<v-app-bar absolute flat height="115" color="transparent">
 			<router-link to="/" exact>
 				<img
 					style="max-width: 180px"

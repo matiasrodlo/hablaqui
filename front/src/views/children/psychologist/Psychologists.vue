@@ -47,9 +47,9 @@
 								></v-checkbox>
 								<v-checkbox
 									v-model="gender"
-									value="non-binary"
+									value="transgender"
 									:disabled="loading"
-									label="No binario"
+									label="Transgénero"
 									hide-details
 									@change="filterPanel"
 								></v-checkbox>
@@ -220,9 +220,9 @@
 													></v-checkbox>
 													<v-checkbox
 														v-model="gender"
-														value="non-binary"
+														value="transgender"
 														:disabled="loading"
-														label="No binario"
+														label="Transgénero"
 														hide-details
 														@change="filterPanel"
 													></v-checkbox>
@@ -294,7 +294,7 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col v-if="!loggedIn" cols="12" sm="6" lg="4">
+						<v-col cols="12" sm="6" lg="4">
 							<v-card
 								height="400px"
 								style="border-radius:15px"
@@ -386,8 +386,15 @@
 												{{ item.name.substr(0, 1) }}
 											</span>
 										</v-avatar>
-										<div class="subtitle-1 font-weight-bold text--secondary">
-											{{ item.name }}
+										<div
+											v-if="item.name"
+											class="subtitle-1 font-weight-bold text--secondary"
+										>
+											{{
+												item.name.length > 25
+													? item.name.slice(0, 25).concat('...')
+													: item.name
+											}}
 										</div>
 										<div v-if="item.code" class="caption primary--text">
 											Codigo {{ item.code }}
@@ -397,8 +404,8 @@
 									<template v-if="$vuetify.breakpoint.mdAndUp">
 										<div v-if="item.description" class="body-2 mt-2">
 											{{
-												item.description.length > 300
-													? item.description.slice(0, 300) + ' ...'
+												item.description.length > 140
+													? item.description.slice(0, 140).concat('...')
 													: item.description
 											}}
 										</div>
