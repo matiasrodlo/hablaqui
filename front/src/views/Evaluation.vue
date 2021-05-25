@@ -51,16 +51,16 @@
 											</v-btn>
 											<v-btn
 												:color="
-													gender === 'non-binary' ? 'primary' : '#BDBDBD'
+													gender === 'transgender' ? 'primary' : '#BDBDBD'
 												"
-												:outlined="gender !== 'non-binary'"
+												:outlined="gender !== 'transgender'"
 												block
 												rounded
 												large
 												class="my-4"
-												@click="gender = 'non-binary'"
+												@click="gender = 'transgender'"
 											>
-												No-binario
+												Transgénero
 											</v-btn>
 											<v-btn
 												:color="
@@ -423,25 +423,21 @@
 								<v-divider style="border-width: 1px"></v-divider>
 							</v-col>
 							<v-col cols="12">
-								<v-carousel
-									:show-arrows="false"
-									reverse-transition="fade-transition"
-									transition="fade-transition"
-									hide-delimiter-background
-									height="300"
-									light
-								>
-									<v-carousel-item v-for="(element, i) in psi" :key="i">
+								<v-window v-model="onboarding">
+									<v-window-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
+													flat
+													max-width="400"
+													height="190"
 													outlined
 													v-for="(item, l) in element"
 													:key="l"
 													class="ma-2"
 												>
 													<v-card-text>
-														<v-row>
+														<v-row align="center">
 															<v-col cols="3">
 																<v-avatar size="80">
 																	<v-img
@@ -453,19 +449,16 @@
 																<div class="title primary--text">
 																	{{ item.name }}
 																</div>
-																Especialidades:
 																<template
 																	v-for="(tag,
 																	k) in item.specialties"
 																>
-																	<span v-if="k < 5" :key="k">
-																		<v-chip class="ma-2" small>
-																			<span
-																				class="text-capitalize"
-																			>
-																				{{ tag }}
-																			</span>
-																		</v-chip>
+																	<span :key="k">
+																		<span
+																			class="ma-1 caption text-capitalize"
+																		>
+																			{{ tag }};
+																		</span>
 																	</span>
 																</template>
 															</v-col>
@@ -474,7 +467,12 @@
 												</v-card>
 											</template>
 											<template v-else>
-												<v-card outlined class="ma-2">
+												<v-card
+													width="400"
+													height="220"
+													outlined
+													class="ma-2"
+												>
 													<v-card-text>
 														<v-row>
 															<v-col cols="3">
@@ -493,14 +491,12 @@
 																	v-for="(tag,
 																	k) in element.specialties"
 																>
-																	<span v-if="k < 3" :key="k">
-																		<v-chip class="ma-2" small>
-																			<span
-																				class="text-capitalize"
-																			>
-																				{{ tag }}
-																			</span>
-																		</v-chip>
+																	<span :key="k">
+																		<span
+																			class="ma-1 text-capitalize"
+																		>
+																			{{ tag }};
+																		</span>
 																	</span>
 																</template>
 															</v-col>
@@ -509,8 +505,21 @@
 												</v-card>
 											</template>
 										</div>
-									</v-carousel-item>
-								</v-carousel>
+									</v-window-item>
+								</v-window>
+								<v-item-group v-model="onboarding" class="text-center" mandatory>
+									<v-item
+										v-for="(n, e) in psi"
+										:key="`btn-${e}`"
+										v-slot="{ active, toggle }"
+									>
+										<v-btn icon @click="toggle" color="#BDBDBD">
+											<v-icon :color="active ? 'primary' : 'info'"
+												>mdi-record</v-icon
+											>
+										</v-btn>
+									</v-item>
+								</v-item-group>
 							</v-col>
 						</v-row>
 					</v-container>
@@ -543,6 +552,7 @@ export default {
 	},
 	data() {
 		return {
+			onboarding: 0,
 			dialogPrecharge: false,
 			step: '0',
 			gender: '',
@@ -584,6 +594,12 @@ export default {
 		this.getAppointments();
 	},
 	methods: {
+		next() {
+			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+		},
+		prev() {
+			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+		},
 		random() {
 			return this.psychologists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;

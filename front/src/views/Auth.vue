@@ -27,7 +27,7 @@
 							cols="12"
 							sm="10"
 							lg="8"
-							class="text-center text-h6 text-lg-h5 text--secondary"
+							class="text-center subtitle-1 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
@@ -51,22 +51,24 @@
 							<v-btn outlined block rounded color="primary" @click="setStep">
 								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
 							</v-btn>
-							<v-btn
-								class="px-0"
-								text
-								color="primary"
-								:href="`${landingUrl}/politicas`"
-								>Aviso de privacidad</v-btn
-							>
-							y
-							<v-btn
-								class="px-0"
-								text
-								color="primary"
-								:href="`${landingUrl}/condiciones`"
-							>
-								Términos y Condiciones</v-btn
-							>
+							<div class="mt-16">
+								<v-btn
+									class="px-0"
+									text
+									color="primary"
+									:href="`${landingUrl}/politicas`"
+									>Aviso de privacidad</v-btn
+								>
+								y
+								<v-btn
+									class="px-0"
+									text
+									color="primary"
+									:href="`${landingUrl}/condiciones`"
+								>
+									Términos y Condiciones</v-btn
+								>
+							</div>
 							<div class="font-weight-bold caption secondary--text">
 								2021 Hablaqui
 							</div>
@@ -81,7 +83,7 @@
 									<v-img :src="n.img"></v-img>
 								</v-list-item-avatar>
 							</div>
-							<div class="text-h6 text-center white--text py-4">
+							<div class="text-h6 text-center white--text py-4 px-10">
 								{{ n.text }}
 							</div>
 						</v-window-item>
@@ -92,8 +94,8 @@
 							:key="`btn-${n.id}`"
 							v-slot="{ active, toggle }"
 						>
-							<v-btn :input-value="active" icon @click="toggle" color="#BDBDBD">
-								<v-icon>mdi-record</v-icon>
+							<v-btn icon @click="toggle" color="#BDBDBD">
+								<v-icon :color="active ? 'info' : ''">mdi-record</v-icon>
 							</v-btn>
 						</v-item>
 					</v-item-group>
