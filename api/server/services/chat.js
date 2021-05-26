@@ -1,6 +1,8 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
 import { logInfo } from '../config/pino';
+import pusher from '../config/pusher';
+import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const startConversation = async (psychologistId, user) => {
 	let newChat = await Chat.create({
@@ -46,6 +48,14 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		},
 		{ new: true }
 	);
+
+	const data = {
+		userId,
+		psychologistId,
+		content: newMessage,
+	};
+
+	pusher.trigger('chat', 'update', data, pusherCallback);
 
 	return okResponse('Mensaje enviado', { chat: updatedChat });
 };
