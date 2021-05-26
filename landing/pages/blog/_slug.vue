@@ -89,22 +89,21 @@
 			</v-row>
 			<v-divider></v-divider>
 			<v-row>
-				<v-col cols="12">
+				<v-col cols="12" class="my-10">
 					<v-list-item>
-						<v-list-item-avatar>
-							<v-img style="background-color: gray"></v-img>
+						<v-list-item-avatar size="120">
+							<v-img size="120" :src="article.authorAvatar"></v-img>
 						</v-list-item-avatar>
-
 						<v-list-item-content>
 							<v-list-item-title class="title">
 								Transcrito y revisado clínicamente por:
-								<span class="primary--text">{{
-									article.author || article.originalAuthor
-								}}</span>
+								<span class="primary--text">
+									{{ article.author || article.originalAuthor }}
+								</span>
 							</v-list-item-title>
-							<v-list-item-subtitle>
-								{{ authorDescription }}
-							</v-list-item-subtitle>
+							<div class="font-weight-light body-1">
+								{{ article.authorDescription }}
+							</div>
 						</v-list-item-content>
 					</v-list-item>
 				</v-col>
