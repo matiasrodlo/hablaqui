@@ -50,13 +50,15 @@
 			</v-row>
 			<v-row v-else>
 				<v-col cols="12" sm="3">
-					<v-list-item-group v-model="selectedItem" color="primary" mandatory>
-						<v-list-item v-for="(q, i) in items" :key="i" :value="q">
-							<v-list-item-content>
-								<v-list-item-title v-text="q.title"></v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list-item-group>
+					<v-list flat>
+						<v-list-item-group v-model="selectedItem" color="primary" mandatory>
+							<v-list-item v-for="(q, i) in items" :key="i" :value="q">
+								<v-list-item-content>
+									<v-list-item-title v-text="q.title"></v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list-item-group>
+					</v-list>
 				</v-col>
 				<v-col v-if="selectedItem" cols="12" sm="9">
 					<div class="primary--text headline font-weight-bold">

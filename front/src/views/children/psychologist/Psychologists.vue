@@ -108,7 +108,6 @@
 							class="white"
 							outlined
 							:items="appointments"
-							item-text="name"
 							:search-input.sync="motive"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
@@ -119,7 +118,7 @@
 							}"
 							:disabled="loading"
 						>
-							<template v-slot:no-data>
+							<template #no-data>
 								<v-list-item>
 									<v-list-item-content>
 										<v-list-item-title>
@@ -639,7 +638,9 @@ export default {
 		filterLevelTwo() {
 			if (!this.motive) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
-				item => item.specialties.length && item.specialties.includes(this.motive)
+				item =>
+					item.specialties.length &&
+					item.specialties.includes(this.motive.toLowerCase().trim())
 			);
 		},
 		/**
