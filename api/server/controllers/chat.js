@@ -33,6 +33,20 @@ const chatController = {
 
 		return restResponse(data, code, res);
 	},
+	async createReport(req, res) {
+		const { psychologistId, userId } = req.params;
+		const { reportType, issue } = req.body;
+		const { user } = req;
+		const { data, code } = await chatService.createReport(
+			user,
+			psychologistId,
+			userId,
+			reportType,
+			issue
+		);
+
+		return restResponse(data, code, res);
+	},
 };
 
 export default Object.freeze(chatController);

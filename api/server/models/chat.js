@@ -11,6 +11,23 @@ let messageSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+
+let reportSchema = new Schema(
+	{
+		reportedBy: {
+			type: String,
+		},
+		reportType: {
+			type: String,
+			enum: ['inappropiate', 'no-answer', 'too-late', 'other'],
+		},
+		issue: {
+			type: String,
+		},
+	},
+	{ timestamps: true }
+);
+
 let chatSchema = new Schema(
 	{
 		user: {
@@ -20,6 +37,7 @@ let chatSchema = new Schema(
 			type: String,
 		},
 		messages: [messageSchema],
+		reports: [reportSchema],
 	},
 	{ timestamps: true }
 );

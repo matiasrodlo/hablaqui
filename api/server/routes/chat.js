@@ -22,4 +22,10 @@ chatRouter.post(
 	chatController.sendMessage
 );
 
+chatRouter.post(
+	'/chat/create-report/:psychologistId/:userId',
+	[passport.authenticate('jwt', { session: true })],
+	chatController.createReport
+);
+
 export default Object.freeze(chatRouter);

@@ -60,10 +60,43 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 	return okResponse('Mensaje enviado', { chat: updatedChat });
 };
 
+const createReport = async (
+	user,
+	psychologistId,
+	userId,
+	reportType,
+	issue
+) => {
+	const newReport = {
+		reportedBy: user._id,
+		reportType,
+		issue,
+	};
+
+	const updatedChat = await Chat.findOneAndUpdate(
+		{
+			user: userId,
+			psychologist: psychologistId,
+		},
+		{
+			$push: {
+				reports: newReport,
+			},
+		},
+		{ new: true }
+	);
+
+	logInfo(
+		`El usuario ${user.email} de tipo ${user.role} ha hecho un reporte`
+	);
+	return okResponse('Reporte creado', { chat: updatedChat });
+};
+
 const chatService = {
 	startConversation,
 	getMessages,
 	sendMessage,
+	createReport,
 };
 
 export default Object.freeze(chatService);
