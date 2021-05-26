@@ -2,8 +2,10 @@
 	<v-container>
 		<v-row align="center" justify="center">
 			<v-col cols="12">
-				<div class="text-center text-h4 font-weight-bold">¡Ya está todo casi listo!</div>
-				<div class="text-center caption font-weight-bold">
+				<div class="text-center text-h4 font-weight-bold mt-4">
+					¡Ya está todo casi listo!
+				</div>
+				<div class="text-center text-h6 font-weight-bold mt-4">
 					Espera un momento mientras encontramos los mejores especialistas según tus
 					preferencias
 				</div>

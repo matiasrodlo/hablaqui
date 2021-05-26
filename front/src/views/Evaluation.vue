@@ -12,7 +12,7 @@
 				<div class="title text-h5 text-sm-h4 font-weight-bold">
 					Encuentra a tu especialista
 				</div>
-				<div class="d-flex justify-center text-h6 mb-10">
+				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
 					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
 					preguntas. ¡Queremos conocerte!
 				</div>
@@ -34,7 +34,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="gender = 'female'"
+												@click="
+													() => {
+														step = 1;
+														gender = 'female';
+													}
+												"
 											>
 												Mujer
 											</v-btn>
@@ -45,7 +50,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="gender = 'male'"
+												@click="
+													() => {
+														step = 1;
+														gender = 'male';
+													}
+												"
 											>
 												Hombre
 											</v-btn>
@@ -58,7 +68,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="gender = 'transgender'"
+												@click="
+													() => {
+														step = 1;
+														gender = 'transgender';
+													}
+												"
 											>
 												Transgénero
 											</v-btn>
@@ -73,19 +88,21 @@
 												rounded
 												large
 												class="my-4"
-												@click="gender = 'Prefiero no indicarlo'"
+												@click="
+													() => {
+														step = 1;
+														gender = 'Prefiero no indicarlo';
+													}
+												"
 											>
 												Prefiero no indicarlo
-											</v-btn>
-
-											<v-btn text color="primary" @click="step = 1">
-												Siguiente
 											</v-btn>
 										</v-stepper-content>
 
 										<v-stepper-content step="1">
 											<div class="primary--text font-weight-bold title">
-												¿En qué rango de edad te encuentras?
+												¿En qué rango de edad <br />
+												<span>te encuentras?</span>
 											</div>
 
 											<v-btn
@@ -95,7 +112,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="age = '18-25'"
+												@click="
+													() => {
+														step = 2;
+														age = '18-25';
+													}
+												"
 											>
 												18 -25
 											</v-btn>
@@ -107,7 +129,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="age = '26-35'"
+												@click="
+													() => {
+														step = 2;
+														age = '26-35';
+													}
+												"
 											>
 												26-35
 											</v-btn>
@@ -119,7 +146,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="age = '36-45'"
+												@click="
+													() => {
+														step = 2;
+														age = '36-45';
+													}
+												"
 											>
 												36-45
 											</v-btn>
@@ -131,15 +163,17 @@
 												rounded
 												large
 												class="my-4"
-												@click="age = '+45'"
+												@click="
+													() => {
+														step = 2;
+														age = '+45';
+													}
+												"
 											>
 												+45
 											</v-btn>
 											<v-btn text color="primary" @click="step = 0">
 												Atras
-											</v-btn>
-											<v-btn text color="primary" @click="step = 2">
-												Siguiente
 											</v-btn>
 										</v-stepper-content>
 
@@ -157,7 +191,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="firstTherapy = 'si'"
+												@click="
+													() => {
+														step = 3;
+														firstTherapy = 'si';
+													}
+												"
 											>
 												Si
 											</v-btn>
@@ -171,22 +210,24 @@
 												rounded
 												large
 												class="my-4"
-												@click="firstTherapy = 'no'"
+												@click="
+													() => {
+														step = 3;
+														firstTherapy = 'no';
+													}
+												"
 											>
 												No
 											</v-btn>
 											<v-btn text color="primary" @click="step = 1">
 												Atras
 											</v-btn>
-											<v-btn text color="primary" @click="step = 3">
-												Siguiente
-											</v-btn>
 										</v-stepper-content>
 
 										<v-stepper-content step="3">
 											<div class="primary--text font-weight-bold title">
 												¿En qué temas te gustaría trabajar? <br />
-												<span class="subtitle-2"
+												<span class="title font-weight-bold"
 													>Selecciona hasta 3 opciones.</span
 												>
 											</div>
@@ -243,7 +284,8 @@
 										</v-stepper-content>
 										<v-stepper-content step="4">
 											<div class="primary--text font-weight-bold title">
-												¿Buscas algún enfoque terapéutico en específico?
+												¿Buscas algún enfoque terapéutico <br />
+												<span>en específico?</span>
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -253,7 +295,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'cognitivo'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'cognitivo';
+													}
+												"
 											>
 												Quiero que las sesiones sean estructuradas
 												definiendo metas a cumplir. Me gustaría que mi
@@ -268,7 +315,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'integrativo'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'integrativo';
+													}
+												"
 											>
 												Quiero que mi psicólogo conozca diferentes modelos
 												de intervención y de acuerdo a mis necesidades me
@@ -283,7 +335,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'contextual'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'contextual';
+													}
+												"
 											>
 												Quiero que sea un proceso activo donde aprenda a
 												relacionarme con mis pensamientos, emociones y
@@ -298,7 +355,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'psicoanalisis'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'psicoanalisis';
+													}
+												"
 											>
 												Quiero que las sesiones sean conversacionales, donde
 												pueda platicar cómo me siento y que mi psicólogo me
@@ -313,7 +375,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'humanista'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'humanista';
+													}
+												"
 											>
 												Quiero que a través de la reflexión, mi psicólogo me
 												ayude a conocer el origen de mis emociones y a
@@ -328,7 +395,12 @@
 														: 'text--disabled'
 												"
 												style="border-radius: 25px; border: 1px solid #E0E0E0"
-												@click="focus = 'sistemico'"
+												@click="
+													() => {
+														step = 5;
+														focus = 'sistemico';
+													}
+												"
 											>
 												Quiero entender mi forma de interactuar con los
 												demás para mejorar mis relaciones interpersonales,
@@ -338,14 +410,11 @@
 											<v-btn text color="primary" @click="step = 3">
 												Atras
 											</v-btn>
-											<v-btn text color="primary" @click="step = 5">
-												Siguiente
-											</v-btn>
 										</v-stepper-content>
 										<v-stepper-content step="5">
 											<div class="primary--text font-weight-bold title">
-												¿Con qué género te sientes más cómodo compartiendo
-												lo que te sucede?
+												¿Con qué género te sientes más cómodo <br />
+												<span>compartiendo lo que te sucede?</span>
 											</div>
 
 											<v-btn
@@ -359,7 +428,12 @@
 												rounded
 												large
 												class="my-4"
-												@click="genderConfort = 'female'"
+												@click="
+													() => {
+														genderConfort = 'female';
+														openPrecharge();
+													}
+												"
 											>
 												Mujer
 											</v-btn>
@@ -372,24 +446,34 @@
 												rounded
 												large
 												class="my-4"
-												@click="genderConfort = 'male'"
+												@click="
+													() => {
+														genderConfort = 'male';
+														openPrecharge();
+													}
+												"
 											>
 												Hombre
 											</v-btn>
 											<v-btn
 												:color="
-													genderConfort === 'non-binary'
+													genderConfort === 'transgender'
 														? 'primary'
 														: '#BDBDBD'
 												"
-												:outlined="genderConfort !== 'non-binary'"
+												:outlined="genderConfort !== 'transgender'"
 												block
 												rounded
 												large
 												class="my-4"
-												@click="genderConfort = 'non-binary'"
+												@click="
+													() => {
+														genderConfort = 'transgender';
+														openPrecharge();
+													}
+												"
 											>
-												No binario
+												Transgenero
 											</v-btn>
 											<v-btn
 												:color="
@@ -402,16 +486,18 @@
 												rounded
 												large
 												class="my-4"
-												@click="genderConfort = 'Me es indiferente'"
+												@click="
+													() => {
+														genderConfort = 'Me es indiferente';
+														openPrecharge();
+													}
+												"
 											>
 												Me es indiferente
 											</v-btn>
 
 											<v-btn text color="primary" @click="step = 4">
 												Atras
-											</v-btn>
-											<v-btn text color="primary" @click="openPrecharge">
-												Buscar
 											</v-btn>
 										</v-stepper-content>
 									</v-stepper-items>
@@ -541,7 +627,7 @@
 
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	name: 'Evaluation',
@@ -634,17 +720,8 @@ export default {
 			if (response.length) {
 				localStorage.setItem('match', JSON.stringify(response));
 				this.matchedPsychologists = response;
-			} else {
-				this.snackbar({
-					content:
-						'no se encontraron coindencias, por favor modifica tus respuestas y reintenta de nuevo',
-					color: 'warning',
-				});
 			}
 		},
-		...mapMutations({
-			snackbar: 'Snackbar/showMessage',
-		}),
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
