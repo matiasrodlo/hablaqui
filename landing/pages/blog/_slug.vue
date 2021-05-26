@@ -171,7 +171,7 @@
 				</template>
 			</v-row>
 		</v-container>
-		<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<v-container fluid class="primary">
 			<v-row align="center" justify="center" class="py-16">
 				<v-col cols="12" sm="8" md="10" xl="9">
@@ -219,7 +219,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
 		<v-container>
 			<Footer />
 		</v-container>

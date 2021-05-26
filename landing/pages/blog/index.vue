@@ -305,10 +305,10 @@
 			</v-row>
 		</v-container>
 		<!-- for companies -->
-		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
-		<v-container fluid class="primary">
+		<img :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<v-container fluid class="primary py-0">
 			<v-row justify="center">
-				<v-col cols="12" class="my-16">
+				<v-col cols="12" class="py-16">
 					<div
 						class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
 					>
@@ -395,7 +395,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
@@ -436,7 +436,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<v-container fluid class="primary">
 			<v-row align="center" justify="center" class="py-16">
 				<v-col cols="12" sm="8" md="10" xl="9">
@@ -484,7 +484,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
 		<v-container fluid>
 			<v-row justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
