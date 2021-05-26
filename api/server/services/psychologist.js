@@ -17,7 +17,24 @@ const match = async body => {
 		models: payload.model,
 		specialties: { $in: payload.themes },
 	});
-	return okResponse('psicologos encontrados', { matchedPsychologists });
+	if (matchedPsychologists.length == 0) {
+		let newMatchedPsychologists = await Psychologist.find({
+			gender: payload.gender || {
+				$in: ['male', 'female', 'transgender'],
+			},
+			specialties: { $in: payload.themes },
+		});
+
+		return okResponse('Psicologos encontrados', {
+			matchedPsychologists: newMatchedPsychologists,
+			perfectMatch: false,
+		});
+	} else {
+		return okResponse('psicologos encontrados', {
+			matchedPsychologists,
+			perfectMatch: true,
+		});
+	}
 };
 
 const createSession = async body => {
