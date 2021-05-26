@@ -345,22 +345,27 @@
 											class="d-flex justify-space-between"
 										>
 											<div>
-												<div class="title primary--text font-weight-bold">
+												<div
+													class="subtitle-1 primary--text font-weight-bold"
+												>
 													{{ item.categories }}
 												</div>
-												<div class="title font-weight-bold pb-0">
+												<div class="subtitle-1 font-weight-bold pb-0">
 													{{ item.title }}
 												</div>
-												<div class="text-h6 font-weight-light">
-													{{ strippedContent(item.HTMLbody, 100) }}
+												<div class="subttitle-1 font-weight-light">
+													{{ strippedContent(item.HTMLbody, 150) }}
 												</div>
 											</div>
 											<div>
-												<span class="title primary--text font-weight-bold">
+												<span
+													class="caption primary--text font-weight-bold"
+												>
 													{{ item.originalAuthor }}
 												</span>
-												<span class="title text--disabled">
-													|{{ dates(item.createdAt) }}
+												<span v-if="item.originalAuthor">|</span>
+												<span class="caption text--disabled">
+													{{ dates(item.createdAt) }}
 												</span>
 											</div>
 										</v-card-text>
