@@ -54,7 +54,7 @@
 										</v-btn>
 									</v-col>
 								</v-row>
-								<v-chip-group>
+								<v-chip-group show-arrows>
 									<v-chip
 										v-for="(specialties, s) in item.specialties"
 										:key="s"

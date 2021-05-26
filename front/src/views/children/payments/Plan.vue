@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="background-color: #FFF">
 		<!-- appbar -->
 		<appbar />
 		<v-container>
@@ -39,7 +39,7 @@
 						<v-icon size="64">mdi-chevron-left</v-icon>
 					</v-btn>
 				</v-col>
-				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 0">
+				<v-col cols="12" sm="10" md="9" lg="7" v-if="breakCrumbs == 0">
 					<div
 						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-sm-h4"
 					>
@@ -48,21 +48,28 @@
 					<div class="text--secondary text-center text-md-left text-h6">
 						Agenda con total libertad cuando te resulte más conveniente.
 					</div>
-					<v-card class="my-16" elevation="10" style="border-radius: 25px">
+					<v-card
+						max-width="600"
+						class="my-16 mx-auto"
+						elevation="10"
+						style="border-radius: 25px"
+					>
 						<v-card-text>
 							<v-row>
 								<v-col cols="12" sm="6">
 									<v-date-picker
+										no-title
 										full-width
 										@change="changePicker"
 										:value="picker"
 										locale="es"
-									></v-date-picker>
+									>
+									</v-date-picker>
 								</v-col>
 								<v-col cols="12" sm="6">
 									<v-card
 										flat
-										:height="$vuetify.breakpoint.smAndUp ? '400' : '200'"
+										:height="$vuetify.breakpoint.smAndUp ? '280' : '200'"
 									>
 										<v-calendar
 											ref="calendar"
@@ -120,11 +127,13 @@
 						<v-card-actions>
 							<div
 								v-if="newEvent && picker"
-								class="primary--text font-weight-bold subtitle-1"
+								class="primary--text font-weight-bold caption"
 							>
 								{{ viewDate }}
 							</div>
-							<div v-else>Seleccione un dia y la hora para continuar</div>
+							<div v-else class="caption text--disabled">
+								Seleccione un dia y la hora para continuar
+							</div>
 							<v-spacer></v-spacer>
 							<v-btn
 								v-if="newEvent && picker"
@@ -138,13 +147,15 @@
 						</v-card-actions>
 					</v-card>
 				</v-col>
-				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 1">
+				<v-col cols="12" sm="10" md="9" lg="7" v-if="breakCrumbs == 1">
 					<div
-						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4"
+						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4 mt-4"
 					>
 						El mejor plan para ti
 					</div>
-					<div class="text--secondary text-center text-md-left text-h6 mb-6">
+					<div
+						class="text--secondary text-center text-md-left mb-6 font-weight-bold mt-2"
+					>
 						Puedes cambiar de plan o cancelar tu suscripción cuando desees.
 					</div>
 					<v-card v-for="(el, j) in plans" :key="j" class="my-6">
@@ -159,7 +170,9 @@
 						<v-card-text>
 							<v-row justify="space-between" align="center">
 								<v-col cols="7" sm="8" md="9">
-									<span class="text-h6 text-sm-h5 text-md-h4 font-weight-bold">
+									<span
+										class="text-h6 text-sm-h5 text-md-h4 font-weight-bold black--text"
+									>
 										${{ el.price }}
 									</span>
 									<span class="text-h6 text--secondary"> /{{ el.mode }} </span>
@@ -174,28 +187,29 @@
 									</div>
 								</v-col>
 								<v-col cols="5" sm="4" md="3" class="text-center mt-6 pl-0">
-									<v-avatar color="grey" size="100">
+									<v-avatar color="grey" size="70">
 										<v-img
 											:src="el.image"
 											:alt="el.title"
-											width="140"
-											height="140"
+											width="100"
+											height="100"
 										/>
 									</v-avatar>
-									<v-btn
-										class="mt-3"
-										color="primary"
-										text
-										@click="() => (el.expandCard = !el.expandCard)"
-									>
-										Seleccionar plan
-									</v-btn>
+									<div class="mt-3">
+										<v-btn
+											class="pa-0"
+											color="primary"
+											text
+											@click="() => (el.expandCard = !el.expandCard)"
+										>
+											Seleccionar plan
+										</v-btn>
+									</div>
 								</v-col>
 								<v-expand-transition>
 									<v-col v-if="el.expandCard" cols="12" class="pa-0">
 										<v-list-item-group
 											flat
-											style="max-width: 500px"
 											v-model="selectedItem"
 											color="primary"
 										>
@@ -225,7 +239,8 @@
 												<v-list-item-action>
 													<v-btn
 														fab
-														x-small
+														class="mx-16"
+														style="width:20px; height: 20px"
 														depressed
 														:color="
 															deal.id == selectedItem.id
@@ -255,13 +270,13 @@
 						</v-card-text>
 					</v-card>
 				</v-col>
-				<v-col cols="12" sm="10" md="8" lg="6" v-if="breakCrumbs == 2">
+				<v-col cols="12" sm="10" md="9" lg="8" v-if="breakCrumbs == 2">
 					<div
-						class="text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4"
+						class="mt-3 text--secondary text-center text-md-left font-weight-bold text-h5 text-md-h4"
 					>
 						Revisa tu plan
 					</div>
-					<div class="text--secondary text-center text-md-left text-h6">
+					<div class="text--secondary text-center text-md-left text-h6 mb-3">
 						¡Es momento de comenzar la terapia!
 					</div>
 					<v-card flat>
@@ -286,16 +301,19 @@
 											</v-btn>
 										</template>
 									</v-text-field>
-									<v-list-item class="px-0 my-10">
+									<v-list-item class="px-0 mt-3 mb-2">
 										<v-list-item-content>
-											<v-list-item-title class="subtitle-2">
-												Psicólogo
+											<v-list-item-title>
+												<span class="caption font-weight-light"
+													>Psicólogo -
+												</span>
 												<v-btn
 													text
+													class="px-0"
+													small
 													color="primary"
 													:to="{ name: 'all-psicologos' }"
-												>
-													Cambiar
+													>Cambiar
 												</v-btn>
 											</v-list-item-title>
 											<v-list-item-subtitle class="title font-weight-bold">
@@ -307,20 +325,20 @@
 										</v-list-item-avatar>
 									</v-list-item>
 									<div class="caption">
-										Suscripción
+										Suscripción -
 										<v-btn
 											text
 											color="primary"
+											class="px-0"
 											small
 											@click="() => (breakCrumbs = 1)"
-										>
-											Cambiar
+											>Cambiar
 										</v-btn>
 									</div>
-									<div class="title font-weight-bold">
+									<div class="subtitle-1 font-weight-bold">
 										{{ plans[selectedItem.plan].title }}
 									</div>
-									<div class="subtitle-1 my-2">
+									<div class="subtitle-1 my-2" style="max-width: 250px">
 										{{ plans[selectedItem.plan].subtitle }}
 										{{ plans[selectedItem.plan].description }}
 									</div>
@@ -343,11 +361,12 @@
 									<div>
 										{{ plans[selectedItem.plan].title }}
 									</div>
-									<div
-										class="font-weight-bold text-h6 d-flex justify-space-between"
-									>
-										<span>Monto total</span>
-										<span>${{ plans[selectedItem.plan].price }}</span>
+									<v-divider class="my-4"></v-divider>
+									<div class=" d-flex justify-space-between">
+										<span class="font-weight-bold subtitle-1">Monto total</span>
+										<span class="font-weight-bold text-h6 black--text"
+											>${{ plans[selectedItem.plan].price }}</span
+										>
 									</div>
 									<div class="caption my-4 text-left">
 										Realiza el pago de tu suscripción con tarjeta de débito y
@@ -363,9 +382,15 @@
 						</v-card-text>
 					</v-card>
 				</v-col>
-				<div v-if="breakCrumbs == 3">
-					<p>Los robots estan haciendo su trabajo, no te vayas.</p>
-				</div>
+				<v-col v-if="breakCrumbs == 3">
+					<v-row justify="center" align="center" style="height: 60vh">
+						<v-col class="text-center">
+							<v-alert type="info">
+								Los robots estan haciendo su trabajo, no te vayas...
+							</v-alert>
+						</v-col>
+					</v-row>
+				</v-col>
 			</v-row>
 		</v-container>
 	</div>
@@ -383,7 +408,7 @@ export default {
 	data() {
 		return {
 			selectedItem: '',
-			picker: '',
+			picker: moment().format('YYYY-MM-DD'),
 			breakCrumbs: 0,
 			plans: [
 				{
@@ -530,7 +555,7 @@ export default {
 			} else {
 				this.createStart = this.roundTime(mouse);
 				this.createEvent = {
-					name: `Yo - ${this.user.name}`,
+					name: 'Yo ',
 					color: 'success',
 					start: this.createStart,
 					end: this.createStart + 1800000,
