@@ -1,16 +1,11 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3">
+			<div class="primary">
 				<Appbar />
 			</div>
 			<!-- SECTION 1 / heading -->
-			<v-img
-				v-if="$vuetify.breakpoint.mdAndUp"
-				class="white"
-				:src="`${$config.LANDING_URL}/GH1.png`"
-				style="height: 700px; width: 100%"
-			>
+			<div class="primary">
 				<v-container class="white--text">
 					<v-row
 						justify="center"
@@ -39,54 +34,19 @@
 						</v-col>
 						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
 							<v-img
+								aspect-ratio="1"
 								:height="heightPhone"
 								:src="`${$config.LANDING_URL}/tel.png`"
 							></v-img>
 						</v-col>
 					</v-row>
 				</v-container>
-			</v-img>
+			</div>
 			<v-img
-				v-else
-				:src="`${$config.LANDING_URL}/grafico-landing-movil-01.png`"
-				:contain="$vuetify.breakpoint.smAndUp"
-				min-height="950"
-				style="position: relative"
-			>
-				<v-container class="white--text">
-					<v-row
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
-					>
-						<v-col cols="12" md="6" class="primary text-center text-md-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</div>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8 text-capitalize"
-								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
-							>
-								Quiero comenzar
-							</v-btn>
-							<div class="title mt-10">Desde $15.500CLP a la semana</div>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
-							<v-img
-								:height="heightPhone"
-								:src="`${$config.LANDING_URL}/tel.png`"
-							></v-img>
-						</v-col>
-					</v-row>
-				</v-container>
-			</v-img>
+				v-if="$vuetify.breakpoint.mdAndUp"
+				:src="`${$config.LANDING_URL}/wave1.png`"
+			></v-img>
+			<v-img v-else :src="`${$config.LANDING_URL}/wave1-movil.png`" width="100%"></v-img>
 		</client-only>
 		<!-- SETION 2 / como funciona -->
 		<v-container class="pt-md-10">
@@ -102,8 +62,8 @@
 					estilo de vida con Hablaquí.
 				</v-col>
 			</v-row>
-			<v-row>
-				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4">
+			<v-row justify="center">
+				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4" xl="4">
 					<v-card flat>
 						<v-card-text class="text-center">
 							<v-btn
@@ -150,22 +110,11 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				:style="$vuetify.breakpoint.mdAndUp ? 'min-height: 800px' : 'min-height: 950px'"
-				style="width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container
-					class="white--text"
-					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
-				>
-					<v-row
-						justify="space-between"
-						align="center"
-						:style="$vuetify.breakpoint.mdAndUp ? 'height: 800px' : 'height: 950px'"
-					>
+		<div>
+			<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+			<div class="primary py-16">
+				<v-container class="white--text">
+					<v-row justify="space-between" align="center">
 						<v-col cols="12" md="6" class="text-center text-md-left">
 							<div class="text-md-h3 text-h4 font-weight-bold my-16">
 								Nuestros psicólogos
@@ -265,6 +214,7 @@
 					</v-row>
 				</v-container>
 			</div>
+			<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		</div>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container class="pt-10">
@@ -308,109 +258,102 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<div style="position: relative" class="my-10">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
-			<div style="position: absolute; top: 0">
-				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+		<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`"> </v-img>
+		<div style="position: relative" class="primary">
+			<div style="position: absolute; top: -10px">
+				<v-img width="100" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</div>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container>
-					<v-row>
-						<v-col cols="12" class="white--text my-16 text-left">
-							<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
-						</v-col>
-					</v-row>
-				</v-container>
-				<v-container class="white--text">
-					<v-row justify="center" align="center">
-						<v-col cols="12">
-							<v-carousel
-								v-if="$vuetify.breakpoint.mdAndUp"
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
-							>
-								<v-carousel-item v-for="(item, i) in efectividad" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											v-for="el in item"
-											:key="el.id"
-											height="300"
-											width="350"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
+			<v-container>
+				<v-row>
+					<v-col cols="12" class="white--text py-16 text-center text-md-left">
+						<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
+					</v-col>
+				</v-row>
+			</v-container>
+			<v-container class="white--text">
+				<v-row justify="center" align="center">
+					<v-col cols="12">
+						<v-carousel
+							v-if="$vuetify.breakpoint.mdAndUp"
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item v-for="(item, i) in efectividad" :key="i">
+								<div class="text-center d-flex justify-center align-center">
+									<v-card
+										v-for="el in item"
+										:key="el.id"
+										height="300"
+										width="350"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text class="mt-3">
+											<img height="60" :src="el.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column; height: 180px"
+											class="d-flex justify-space-between"
 										>
-											<v-card-text class="mt-3">
-												<img height="60" :src="el.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 180px"
-												class="d-flex justify-space-between"
-											>
-												<div style="height: 120px; overflow-y: auto">
-													{{ el.text }}
-												</div>
-												<div class="pt-2">
-													<a
-														class="primary--text"
-														style="text-decoration: none"
-														:href="el.href"
-														>Leer estudio completo</a
-													>
-												</div>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-							<v-carousel
-								v-else
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
-							>
-								<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											height="300"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
-										>
-											<v-card-text>
-												<img height="60" :src="tag.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 240px"
-												class="d-flex justify-content-end"
-											>
-												<div>{{ tag.text }}</div>
-												<v-btn
-													block
-													link
-													text
-													color="blue"
-													:href="tag.href"
+											<div style="height: 120px; overflow-y: auto">
+												{{ el.text }}
+											</div>
+											<div class="pt-2">
+												<a
+													class="primary--text"
+													style="text-decoration: none"
+													:href="el.href"
+													>Leer estudio completo</a
 												>
-													Leer estudio completo
-												</v-btn>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
+											</div>
+										</v-card-text>
+									</v-card>
+								</div>
+							</v-carousel-item>
+						</v-carousel>
+						<v-carousel
+							v-else
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
+								<div class="text-center d-flex justify-center align-center">
+									<v-card
+										height="300"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text>
+											<img height="60" :src="tag.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column; height: 240px"
+											class="d-flex justify-content-end"
+										>
+											<div>{{ tag.text }}</div>
+											<v-btn block link text color="blue" :href="tag.href">
+												Leer estudio completo
+											</v-btn>
+										</v-card-text>
+									</v-card>
+								</div>
+							</v-carousel-item>
+						</v-carousel>
+					</v-col>
+				</v-row>
+			</v-container>
 		</div>
+		<v-img :src="`${$config.LANDING_URL}/wave-part2.png`" />
 		<!-- SECTION 6 / download app -->
 		<v-container>
 			<v-row>

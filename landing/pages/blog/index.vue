@@ -305,101 +305,97 @@
 			</v-row>
 		</v-container>
 		<!-- for companies -->
-		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container fluid class="my-16">
-				<v-row justify="center" class="my-16">
-					<v-col cols="12" class="my-16">
-						<div
-							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
-						>
-							Para empresas
-						</div>
-						<div class="white--text text-h6 text-center">
-							Liderazgo y salud mental en el mercado laboral
-						</div>
-					</v-col>
-					<v-col cols="12" sm="8" md="10" xl="9">
-						<v-row v-if="forCompanies.length">
-							<template v-for="(item, n) in forCompanies">
-								<v-col :key="n" cols="12" md="3">
-									<v-hover v-slot="{ hover }">
-										<v-card
-											v-if="n < 4"
-											style="transition: transform 0.5s"
-											:style="
-												hover
-													? 'transform: translateY(1em)'
-													: 'transform: translateY(0)'
-											"
-											flat
-											height="500"
-										>
-											<v-img
-												class="grey lighten-3"
-												height="200"
-												:src="item.thumbnail"
-											>
-											</v-img>
-											<v-card-text
-												style="height: 300px; flex-direction: column"
-												class="d-flex justify-space-between"
-											>
-												<div>
-													<div
-														class="title primary--text font-weight-bold"
-													>
-														{{ item.categories }}
-													</div>
-													<div class="title font-weight-bold pb-0">
-														{{ item.title }}
-													</div>
-													<div class="text-h6 font-weight-light">
-														{{ strippedContent(item.HTMLbody, 100) }}
-													</div>
-												</div>
-												<div>
-													<span
-														class="title primary--text font-weight-bold"
-													>
-														{{ item.originalAuthor }}
-													</span>
-													<span class="title text--disabled">
-														|{{ dates(item.createdAt) }}
-													</span>
-												</div>
-											</v-card-text>
-										</v-card>
-									</v-hover>
-								</v-col>
-							</template>
-							<v-col cols="12" class="text-center">
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<v-container fluid class="primary">
+			<v-row justify="center">
+				<v-col cols="12" class="my-16">
+					<div
+						class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+					>
+						Para empresas
+					</div>
+					<div class="white--text text-h6 text-center">
+						Liderazgo y salud mental en el mercado laboral
+					</div>
+				</v-col>
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row v-if="forCompanies.length">
+						<template v-for="(item, n) in forCompanies">
+							<v-col :key="n" cols="12" md="3">
 								<v-hover v-slot="{ hover }">
-									<v-btn
-										v-if="length <= articles.length"
-										x-large
-										class="px-10"
-										color="white"
-										:outlined="!hover"
-										rounded
-										@click="length = length + 6"
-										>Ver todos</v-btn
+									<v-card
+										v-if="n < 4"
+										style="transition: transform 0.5s"
+										:style="
+											hover
+												? 'transform: translateY(1em)'
+												: 'transform: translateY(0)'
+										"
+										flat
+										height="500"
 									>
+										<v-img
+											class="grey lighten-3"
+											height="200"
+											:src="item.thumbnail"
+										>
+										</v-img>
+										<v-card-text
+											style="height: 300px; flex-direction: column"
+											class="d-flex justify-space-between"
+										>
+											<div>
+												<div class="title primary--text font-weight-bold">
+													{{ item.categories }}
+												</div>
+												<div class="title font-weight-bold pb-0">
+													{{ item.title }}
+												</div>
+												<div class="text-h6 font-weight-light">
+													{{ strippedContent(item.HTMLbody, 100) }}
+												</div>
+											</div>
+											<div>
+												<span class="title primary--text font-weight-bold">
+													{{ item.originalAuthor }}
+												</span>
+												<span class="title text--disabled">
+													|{{ dates(item.createdAt) }}
+												</span>
+											</div>
+										</v-card-text>
+									</v-card>
 								</v-hover>
 							</v-col>
-						</v-row>
-						<v-row v-else>
-							<v-col v-for="n in 4" :key="n" cols="3">
-								<v-skeleton-loader
-									light
-									class="mx-auto"
-									type="image, image"
-								></v-skeleton-loader>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-			</v-container>
-		</v-img>
+						</template>
+						<v-col cols="12" class="text-center">
+							<v-hover v-slot="{ hover }">
+								<v-btn
+									v-if="length <= articles.length"
+									x-large
+									class="px-10"
+									color="white"
+									:outlined="!hover"
+									rounded
+									@click="length = length + 6"
+									>Ver todos</v-btn
+								>
+							</v-hover>
+						</v-col>
+					</v-row>
+					<v-row v-else>
+						<v-col v-for="n in 4" :key="n" cols="3">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+					</v-row>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
@@ -440,61 +436,55 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 600px; width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container fluid>
-					<v-row align="center" justify="center" style="height: 600px">
-						<v-col cols="12" md="10" xl="9">
-							<v-row align="center" justify="space-between">
-								<v-col cols="10" sm="5" class="white--text">
-									<div>
-										<div class="title font-weight-bold mt-8">
-											Recibe contenido exclusivo periódicamente
-										</div>
-										<div class="subtitle-1 font-weight-bold mb-8">
-											Suscríbete y alcanza tu mejor versión
-										</div>
-										<div style="position: relative">
-											<v-text-field
-												solo
-												flat
-												placeholder="Introduzca su correo electrónico aquí"
-												class="white pr-4"
-												hide-details
-											>
-											</v-text-field>
-											<v-btn
-												depressed
-												absolute
-												style="
-													height: 100%;
-													right: -60px;
-													top: 0;
-													border-radius: 0 25px 25px 0;
-												"
-												color="info"
-												>Enviar</v-btn
-											>
-										</div>
-									</div>
-								</v-col>
-								<v-col cols="12" sm="5" class="text-center">
-									<v-img
-										max-height="350"
-										contain
-										:src="`${$config.LANDING_URL}/recursos-11.png`"
-									></v-img>
-								</v-col>
-							</v-row>
+		<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<v-container fluid class="primary">
+			<v-row align="center" justify="center" class="py-16">
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row justify="space-between">
+						<v-col cols="10" sm="5" class="white--text">
+							<div>
+								<div class="headline font-weight-bold mt-8">
+									Recibe contenido exclusivo periódicamente
+								</div>
+								<div class="subtitle-1 font-weight-bold mb-8">
+									Suscríbete y alcanza tu mejor versión
+								</div>
+								<div style="position: relative">
+									<v-text-field
+										solo
+										flat
+										placeholder="Introduzca su correo electrónico aquí"
+										class="white pr-4"
+										hide-details
+									>
+									</v-text-field>
+									<v-btn
+										depressed
+										absolute
+										style="
+											height: 100%;
+											right: -60px;
+											top: 0;
+											border-radius: 0 25px 25px 0;
+										"
+										color="info"
+										>Enviar</v-btn
+									>
+								</div>
+							</div>
+						</v-col>
+						<v-col cols="12" sm="5" class="text-center">
+							<v-img
+								max-height="350"
+								contain
+								:src="`${$config.LANDING_URL}/recursos-11.png`"
+							></v-img>
 						</v-col>
 					</v-row>
-				</v-container>
-			</div>
-		</div>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<v-container fluid>
 			<v-row justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">

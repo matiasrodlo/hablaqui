@@ -1,7 +1,7 @@
 <template>
 	<div style="background-color: #ebf2f3">
 		<client-only>
-			<div class="mt-3">
+			<div>
 				<Appbar />
 			</div>
 		</client-only>
@@ -171,61 +171,55 @@
 				</template>
 			</v-row>
 		</v-container>
-		<div style="position: relative" class="mb-10">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 700px; width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container fluid>
-					<v-row align="center" justify="center" style="height: 700px">
-						<v-col cols="12" sm="8" md="10" xl="9">
-							<v-row justify="space-between">
-								<v-col cols="10" sm="5" class="white--text">
-									<div>
-										<div class="headline font-weight-bold mt-8">
-											Recibe contenido exclusivo periódicamente
-										</div>
-										<div class="subtitle-1 font-weight-bold mb-8">
-											Suscríbete y alcanza tu mejor versión
-										</div>
-										<div style="position: relative">
-											<v-text-field
-												solo
-												flat
-												placeholder="Introduzca su correo electrónico aquí"
-												class="white pr-4"
-												hide-details
-											>
-											</v-text-field>
-											<v-btn
-												depressed
-												absolute
-												style="
-													height: 100%;
-													right: -60px;
-													top: 0;
-													border-radius: 0 25px 25px 0;
-												"
-												color="info"
-												>Enviar</v-btn
-											>
-										</div>
-									</div>
-								</v-col>
-								<v-col cols="12" sm="5" class="text-center">
-									<v-img
-										max-height="350"
-										contain
-										:src="`${$config.LANDING_URL}/recursos-11.png`"
-									></v-img>
-								</v-col>
-							</v-row>
+		<v-img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<v-container fluid class="primary">
+			<v-row align="center" justify="center" class="py-16">
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row justify="space-between">
+						<v-col cols="10" sm="5" class="white--text">
+							<div>
+								<div class="headline font-weight-bold mt-8">
+									Recibe contenido exclusivo periódicamente
+								</div>
+								<div class="subtitle-1 font-weight-bold mb-8">
+									Suscríbete y alcanza tu mejor versión
+								</div>
+								<div style="position: relative">
+									<v-text-field
+										solo
+										flat
+										placeholder="Introduzca su correo electrónico aquí"
+										class="white pr-4"
+										hide-details
+									>
+									</v-text-field>
+									<v-btn
+										depressed
+										absolute
+										style="
+											height: 100%;
+											right: -60px;
+											top: 0;
+											border-radius: 0 25px 25px 0;
+										"
+										color="info"
+										>Enviar</v-btn
+									>
+								</div>
+							</div>
+						</v-col>
+						<v-col cols="12" sm="5" class="text-center">
+							<v-img
+								max-height="350"
+								contain
+								:src="`${$config.LANDING_URL}/recursos-11.png`"
+							></v-img>
 						</v-col>
 					</v-row>
-				</v-container>
-			</div>
-		</div>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<v-container>
 			<Footer />
 		</v-container>

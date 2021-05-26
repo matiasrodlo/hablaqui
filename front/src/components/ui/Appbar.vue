@@ -55,7 +55,7 @@
 				/>
 			</svg>
 		</div>
-		<v-app-bar absolute flat height="100" color="transparent">
+		<v-app-bar absolute flat height="115" color="transparent">
 			<a :href="`${landing_page}`">
 				<v-img style="max-width: 180px" alt="hablaqui Logo" src="/img/logo.png" contain />
 			</a>

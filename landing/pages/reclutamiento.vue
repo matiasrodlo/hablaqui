@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3">
+			<div class="primary">
 				<Appbar />
 			</div>
 		</client-only>
@@ -162,8 +162,9 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container class="my-16">
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<div class="primary">
+			<v-container class="py-16">
 				<v-row justify="center" class="my-10">
 					<v-col cols="3" class="text-right">
 						<v-avatar color="white" size="100" class="mt-10"></v-avatar>
@@ -186,7 +187,8 @@
 					</v-col>
 				</v-row>
 			</v-container>
-		</v-img>
+		</div>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<v-container>
 			<v-row justify="center">
 				<v-col cols="12">
@@ -218,8 +220,9 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container class="my-16">
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<div class="primary">
+			<v-container class="py-16">
 				<v-row align="center" justify="center" class="my-10">
 					<v-col cols="12">
 						<div
@@ -257,7 +260,8 @@
 					</v-col>
 				</v-row>
 			</v-container>
-		</v-img>
+		</div>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<Footer />
 	</div>
 </template>
