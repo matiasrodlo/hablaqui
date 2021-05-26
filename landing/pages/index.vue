@@ -49,7 +49,7 @@
 			<v-img
 				v-else
 				:src="`${$config.LANDING_URL}/grafico-landing-movil-01.png`"
-				contain
+				:contain="$vuetify.breakpoint.smAndUp"
 				min-height="950"
 				style="position: relative"
 			>
@@ -153,16 +153,21 @@
 		<div style="position: relative">
 			<img
 				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 900px; width: 100%"
+				:style="$vuetify.breakpoint.mdAndUp ? 'min-height: 800px' : 'min-height: 950px'"
+				style="width: 100%"
 			/>
 			<div style="position: absolute; top: 0; width: 100%">
 				<v-container
 					class="white--text"
 					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
 				>
-					<v-row justify="space-between" align="center" style="height: 900px">
+					<v-row
+						justify="space-between"
+						align="center"
+						:style="$vuetify.breakpoint.mdAndUp ? 'height: 800px' : 'height: 950px'"
+					>
 						<v-col cols="12" md="6" class="text-center text-md-left">
-							<div class="text-md-h3 text-h4 font-weight-bold my-10">
+							<div class="text-md-h3 text-h4 font-weight-bold my-16">
 								Nuestros psicólogos
 							</div>
 							<div class="my-10 subtitle-1">
@@ -275,7 +280,7 @@
 				<v-col v-for="item in ventajas" :key="item.id" cols="12" sm="4" class="my-16">
 					<v-card flat>
 						<v-card-text class="text-center">
-							<img style="height: 120px" :src="item.img" />
+							<img style="height: 90px" :src="item.img" />
 						</v-card-text>
 						<v-card-text class="text-center title font-weight-bold">
 							{{ item.title }}
