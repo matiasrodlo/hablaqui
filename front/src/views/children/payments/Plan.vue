@@ -625,7 +625,6 @@ export default {
 				psychologistToUpdate: this.psi._id,
 			};
 			const preferenceData = await this.mercadopagoPay(payload);
-			console.log(preferenceData);
 			window.location.href = preferenceData.body.init_point;
 		},
 		...mapActions({
