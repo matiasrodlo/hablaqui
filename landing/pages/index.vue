@@ -1,17 +1,12 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3">
+			<div class="primary">
 				<Appbar />
 			</div>
 			<!-- SECTION 1 / heading -->
-			<v-img
-				v-if="$vuetify.breakpoint.mdAndUp"
-				class="white"
-				:src="`${$config.LANDING_URL}/GH1.png`"
-				style="height: 700px; width: 100%"
-			>
-				<v-container class="white--text">
+			<div class="primary">
+				<v-container class="white--text py-0">
 					<v-row
 						justify="center"
 						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
@@ -39,54 +34,20 @@
 						</v-col>
 						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
 							<v-img
+								aspect-ratio="1"
 								:height="heightPhone"
 								:src="`${$config.LANDING_URL}/tel.png`"
 							></v-img>
 						</v-col>
 					</v-row>
 				</v-container>
-			</v-img>
-			<v-img
-				v-else
-				:src="`${$config.LANDING_URL}/grafico-landing-movil-01.png`"
-				contain
-				min-height="950"
-				style="position: relative"
-			>
-				<v-container class="white--text">
-					<v-row
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
-					>
-						<v-col cols="12" md="6" class="primary text-center text-md-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</div>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8 text-capitalize"
-								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
-							>
-								Quiero comenzar
-							</v-btn>
-							<div class="title mt-10">Desde $15.500CLP a la semana</div>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
-							<v-img
-								:height="heightPhone"
-								:src="`${$config.LANDING_URL}/tel.png`"
-							></v-img>
-						</v-col>
-					</v-row>
-				</v-container>
-			</v-img>
+			</div>
+			<img
+				v-if="$vuetify.breakpoint.mdAndUp"
+				:src="`${$config.LANDING_URL}/wave1.png`"
+				style="width: 100%"
+			/>
+			<img v-else :src="`${$config.LANDING_URL}/wave1-movil.png`" style="width: 100%" />
 		</client-only>
 		<!-- SETION 2 / como funciona -->
 		<v-container class="pt-md-10">
@@ -102,8 +63,8 @@
 					estilo de vida con Hablaquí.
 				</v-col>
 			</v-row>
-			<v-row>
-				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4">
+			<v-row justify="center">
+				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4" xl="4">
 					<v-card flat>
 						<v-card-text class="text-center">
 							<v-btn
@@ -150,117 +111,103 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 900px; width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container
-					class="white--text"
-					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
-				>
-					<v-row justify="space-between" align="center" style="height: 900px">
-						<v-col cols="12" md="6" class="text-center text-md-left">
-							<div class="text-md-h3 text-h4 font-weight-bold my-10">
-								Nuestros psicólogos
-							</div>
-							<div class="my-10 subtitle-1">
-								Contamos con un amplio equipo de psicólogos enfocados a potenciar el
-								área que busques desarrollar. Todos nuestros profesionales son
-								rigurosamente seleccionados, certificados, y cuentan con un alto
-								nivel de formación y experiencia. Te garantizamos una atención
-								efectiva y experta, pero también cálida y humana.
-							</div>
-							<v-btn
-								v-if="$vuetify.breakpoint.mdAndUp"
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8"
-								depressed
-								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
-							>
-								Ver más psicólogos
-							</v-btn>
-						</v-col>
-						<v-col cols="12" md="6" class="d-flex justify-center">
-							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
-								<v-carousel
-									cycle
-									hide-delimiter-background
-									hide-delimiters
-									:show-arrows="false"
-									reverse-transition="fade-transition"
-									transition="fade-transition"
-									:height="$vuetify.breakpoint.mdAndUp ? '395' : '285'"
-									style="
-										box-shadow: 12px 12px 0px 0px #03dfd8;
-										border-radius: 25px;
-									"
-								>
-									<v-carousel-item v-for="item in corousel" :key="item.id">
-										<v-img
-											:src="item.image"
-											contain
-											:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
-											class="d-flex justify-end"
-										>
-											<div
-												style="
-													background-color: #616161;
-													position: absolute;
-													bottom: 0;
-													height: 100px;
-													opacity: 0.6;
-													width: 100%;
-													border-radius: 0 0 20px 20px;
-												"
-												class="white--text"
-											>
-												<div class="pt-1 pl-2 font weight-regular">
-													{{ item.title }}
-												</div>
-												<div
-													class="pl-2"
-													:class="
-														$vuetify.breakpoint.mdAndUp
-															? 'title'
-															: 'body-1'
-													"
-												>
-													{{ item.name }}
-												</div>
-												<div class="caption pl-2 font-weight-bold">
-													<v-icon color="primary">mdi-check</v-icon
-													>{{ item.subtitle }}
-												</div>
-											</div>
-										</v-img>
-									</v-carousel-item>
-								</v-carousel>
-							</div>
-						</v-col>
-						<v-col
-							v-if="!$vuetify.breakpoint.mdAndUp"
-							cols="12"
-							class="my-10 text-center"
+
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<div class="primary">
+			<v-container class="white--text py-0">
+				<v-row justify="space-between" align="center" class="py-16">
+					<v-col cols="12" md="6" class="text-center text-md-left">
+						<div class="text-md-h3 text-h4 font-weight-bold my-16">
+							Nuestros psicólogos
+						</div>
+						<div class="my-10 subtitle-1">
+							Contamos con un amplio equipo de psicólogos enfocados a potenciar el
+							área que busques desarrollar. Todos nuestros profesionales son
+							rigurosamente seleccionados, certificados, y cuentan con un alto nivel
+							de formación y experiencia. Te garantizamos una atención efectiva y
+							experta, pero también cálida y humana.
+						</div>
+						<v-btn
+							v-if="$vuetify.breakpoint.mdAndUp"
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="font-weight-bold pa-8"
+							depressed
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-4"
-								depressed
-								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							Ver más psicólogos
+						</v-btn>
+					</v-col>
+					<v-col cols="12" md="6" class="d-flex justify-center">
+						<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
+							<v-carousel
+								cycle
+								hide-delimiter-background
+								hide-delimiters
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								:height="$vuetify.breakpoint.mdAndUp ? '395' : '285'"
+								style="box-shadow: 12px 12px 0px 0px #03dfd8; border-radius: 25px"
 							>
-								Ver más psicólogos
-							</v-btn>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
+								<v-carousel-item v-for="item in corousel" :key="item.id">
+									<v-img
+										:src="item.image"
+										contain
+										:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
+										class="d-flex justify-end"
+									>
+										<div
+											style="
+												background-color: #616161;
+												position: absolute;
+												bottom: 0;
+												height: 100px;
+												opacity: 0.6;
+												width: 100%;
+												border-radius: 0 0 20px 20px;
+											"
+											class="white--text"
+										>
+											<div class="pt-1 pl-2 font weight-regular">
+												{{ item.title }}
+											</div>
+											<div
+												class="pl-2"
+												:class="
+													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
+												"
+											>
+												{{ item.name }}
+											</div>
+											<div class="caption pl-2 font-weight-bold">
+												<v-icon color="primary">mdi-check</v-icon
+												>{{ item.subtitle }}
+											</div>
+										</div>
+									</v-img>
+								</v-carousel-item>
+							</v-carousel>
+						</div>
+					</v-col>
+					<v-col v-if="!$vuetify.breakpoint.mdAndUp" cols="12" class="my-10 text-center">
+						<v-btn
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="font-weight-bold pa-4"
+							depressed
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+						>
+							Ver más psicólogos
+						</v-btn>
+					</v-col>
+				</v-row>
+			</v-container>
 		</div>
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container class="pt-10">
 			<v-row justify="center">
@@ -275,7 +222,7 @@
 				<v-col v-for="item in ventajas" :key="item.id" cols="12" sm="4" class="my-16">
 					<v-card flat>
 						<v-card-text class="text-center">
-							<img style="height: 120px" :src="item.img" />
+							<img style="height: 90px" :src="item.img" />
 						</v-card-text>
 						<v-card-text class="text-center title font-weight-bold">
 							{{ item.title }}
@@ -303,109 +250,102 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<div style="position: relative" class="my-10">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
-			<div style="position: absolute; top: 0">
-				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
+		<div style="position: relative" class="primary">
+			<div style="position: absolute; top: -10px">
+				<v-img width="100" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</div>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container>
-					<v-row>
-						<v-col cols="12" class="white--text my-16 text-left">
-							<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
-						</v-col>
-					</v-row>
-				</v-container>
-				<v-container class="white--text">
-					<v-row justify="center" align="center">
-						<v-col cols="12">
-							<v-carousel
-								v-if="$vuetify.breakpoint.mdAndUp"
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
-							>
-								<v-carousel-item v-for="(item, i) in efectividad" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											v-for="el in item"
-											:key="el.id"
-											height="300"
-											width="350"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
+			<v-container class="py-0">
+				<v-row>
+					<v-col cols="12" class="white--text py-16 text-center text-md-left">
+						<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
+					</v-col>
+				</v-row>
+			</v-container>
+			<v-container class="white--text py-0">
+				<v-row justify="center" align="center">
+					<v-col cols="12">
+						<v-carousel
+							v-if="$vuetify.breakpoint.mdAndUp"
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item v-for="(item, i) in efectividad" :key="i">
+								<div class="text-center d-flex justify-center align-center">
+									<v-card
+										v-for="el in item"
+										:key="el.id"
+										height="300"
+										width="350"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text class="mt-3">
+											<img height="60" :src="el.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column; height: 180px"
+											class="d-flex justify-space-between"
 										>
-											<v-card-text class="mt-3">
-												<img height="60" :src="el.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 180px"
-												class="d-flex justify-space-between"
-											>
-												<div style="height: 120px; overflow-y: auto">
-													{{ el.text }}
-												</div>
-												<div class="pt-2">
-													<a
-														class="primary--text"
-														style="text-decoration: none"
-														:href="el.href"
-														>Leer estudio completo</a
-													>
-												</div>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-							<v-carousel
-								v-else
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
-							>
-								<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											height="300"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
-										>
-											<v-card-text>
-												<img height="60" :src="tag.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 240px"
-												class="d-flex justify-content-end"
-											>
-												<div>{{ tag.text }}</div>
-												<v-btn
-													block
-													link
-													text
-													color="blue"
-													:href="tag.href"
+											<div style="height: 120px; overflow-y: auto">
+												{{ el.text }}
+											</div>
+											<div class="pt-2">
+												<a
+													class="primary--text"
+													style="text-decoration: none"
+													:href="el.href"
+													>Leer estudio completo</a
 												>
-													Leer estudio completo
-												</v-btn>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
+											</div>
+										</v-card-text>
+									</v-card>
+								</div>
+							</v-carousel-item>
+						</v-carousel>
+						<v-carousel
+							v-else
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
+								<div class="text-center d-flex justify-center align-center">
+									<v-card
+										height="300"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text>
+											<img height="60" :src="tag.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column; height: 240px"
+											class="d-flex justify-content-end"
+										>
+											<div>{{ tag.text }}</div>
+											<v-btn block link text color="blue" :href="tag.href">
+												Leer estudio completo
+											</v-btn>
+										</v-card-text>
+									</v-card>
+								</div>
+							</v-carousel-item>
+						</v-carousel>
+					</v-col>
+				</v-row>
+			</v-container>
 		</div>
+		<img :src="`${$config.LANDING_URL}/wave-part2.png`" style="width: 100%" />
 		<!-- SECTION 6 / download app -->
 		<v-container>
 			<v-row>
