@@ -31,7 +31,8 @@
 								x-large
 								class="font-weight-bold pa-8 text-capitalize"
 								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
+								nuxt
+								:to="{ name: 'comenzar' }"
 							>
 								Quiero comenzar
 							</v-btn>
@@ -118,7 +119,8 @@
 						x-large
 						class="font-weight-bold pa-8"
 						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						nuxt
+						:to="{ name: 'comenzar' }"
 					>
 						Quiero comenzar
 					</v-btn>
@@ -271,7 +273,8 @@
 						x-large
 						class="font-weight-bold pa-8"
 						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						nuxt
+						:to="{ name: 'comenzar' }"
 					>
 						Quiero empezar
 					</v-btn>
@@ -449,7 +452,8 @@
 						x-large
 						class="font-weight-bold pa-8"
 						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						nuxt
+						:to="{ name: 'comenzar' }"
 					>
 						Quiero empezar
 					</v-btn>
