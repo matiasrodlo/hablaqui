@@ -44,6 +44,7 @@
     "passport-local": "^1.0.0",
     "pino": "^5.16.0",
     "pino-pretty": "^3.6.1",
+    "pusher": "^5.0.0",
     "twilio": "^3.43.0",
     "underscore": "^1.9.1",
     "winston": "^3.3.3"
