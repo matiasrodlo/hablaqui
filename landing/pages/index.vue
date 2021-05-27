@@ -111,7 +111,6 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<div class="primary">
 			<v-container class="white--text py-0">
@@ -154,7 +153,9 @@
 								<v-carousel-item v-for="item in corousel" :key="item.id">
 									<v-img
 										:src="item.image"
+										:alt="item.name"
 										contain
+										eager
 										:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
 										class="d-flex justify-end"
 									>
@@ -207,7 +208,6 @@
 			</v-container>
 		</div>
 		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
-
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container class="pt-10">
 			<v-row justify="center">
@@ -420,21 +420,24 @@
 				<v-row align="center">
 					<v-col cols="6" sm="2">
 						<v-img
+							alt="Vida Tres Isapre"
 							contain
 							height="100"
-							:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
+							:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
 						></v-img>
 					</v-col>
 					<v-col cols="6" sm="2">
 						<v-img
 							contain
 							max-height="100"
-							:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
+							alt="nueva masvida"
+							:src="`${$config.LANDING_URL}/nueva-masvida.png`"
 						></v-img>
 					</v-col>
 					<v-col cols="6" sm="2">
 						<v-img
 							contain
+							alt="fonasa"
 							max-height="100"
 							:src="`${$config.LANDING_URL}/fonasa.jpg`"
 						></v-img>
@@ -443,6 +446,7 @@
 						<v-img
 							contain
 							max-height="100"
+							alt="ban medica"
 							:src="`${$config.LANDING_URL}/banmedica.png`"
 						></v-img>
 					</v-col>
@@ -450,6 +454,7 @@
 						<v-img
 							contain
 							max-height="100"
+							alt="colmena"
 							:src="`${$config.LANDING_URL}/colmena.png`"
 						></v-img>
 					</v-col>
@@ -457,6 +462,7 @@
 						<v-img
 							contain
 							max-height="100"
+							alt="consalud"
 							:src="`${$config.LANDING_URL}/consalud.png`"
 						></v-img>
 					</v-col>
@@ -587,21 +593,21 @@ export default {
 				[
 					{
 						id: 1,
-						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text:
 							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 					{
 						id: 3,
-						img: `${this.$config.LANDING_URL}/New York University.png`,
+						img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text:
 							'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 					},
 					{
 						id: 5,
-						img: `${this.$config.LANDING_URL}/Columbia University.png`,
+						img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text:
 							'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
@@ -625,7 +631,7 @@ export default {
 					},
 					{
 						id: 6,
-						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text:
 							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
@@ -678,28 +684,28 @@ export default {
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Aihnoa Con',
-					image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
+					image: `${this.$config.LANDING_URL}/Aihnoa_Con.png`,
 				},
 				{
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
+					image: `${this.$config.LANDING_URL}/Joaquín_Bustos.png`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
-					image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
+					image: `${this.$config.LANDING_URL}/Jorge_Calderon.png`,
 				},
 				{
 					id: 4,
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Tamara Stein',
-					image: `${this.$config.LANDING_URL}/Tamara Stein.png`,
+					image: `${this.$config.LANDING_URL}/Tamara_Stein.png`,
 				},
 			],
 		};
