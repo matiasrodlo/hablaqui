@@ -30,9 +30,10 @@ const getMessages = async user => {
 	);
 };
 
-const sendMessage = async (user, content, userId, psychologistId) => {
+const sendMessage = async (user, content, psychologistId, userId) => {
 	const newMessage = {
 		sentByUser: user.role == 'user' ? true : false,
+		messageType: 'text',
 		message: content,
 	};
 
@@ -92,11 +93,44 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
+const sendFile = async (user, file, psychologistId, userId) => {
+	const newMessage = {
+		sentByUser: user.role == 'user' ? true : false,
+		messageType: 'file',
+		fileType: file.mimetype,
+		fileUrl: file.cloudStoragePublicUrl,
+	};
+
+	const updatedChat = await Chat.findOneAndUpdate(
+		{
+			user: userId,
+			psychologist: psychologistId,
+		},
+		{
+			$push: {
+				messages: newMessage,
+			},
+		},
+		{ new: true }
+	);
+
+	const data = {
+		userId,
+		psychologistId,
+		content: newMessage,
+	};
+
+	pusher.trigger('chat', 'update', data, pusherCallback);
+
+	return okResponse('Mensaje enviado', { chat: updatedChat });
+};
+
 const chatService = {
 	startConversation,
 	getMessages,
 	sendMessage,
 	createReport,
+	sendFile,
 };
 
 export default Object.freeze(chatService);

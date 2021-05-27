@@ -1,3 +1,4 @@
+import { send_lodging_confirmation_sms_service_url } from '../config/dotenv';
 import chatService from '../services/chat';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
@@ -27,8 +28,8 @@ const chatController = {
 		const { data, code } = await chatService.sendMessage(
 			user,
 			content,
-			userId,
-			psychologistId
+			psychologistId,
+			userId
 		);
 
 		return restResponse(data, code, res);
@@ -43,6 +44,18 @@ const chatController = {
 			userId,
 			reportType,
 			issue
+		);
+
+		return restResponse(data, code, res);
+	},
+	async sendFile(req, res) {
+		const { psychologistId, userId } = req.params;
+		const { user, file } = req;
+		const { data, code } = await chatService.sendFile(
+			user,
+			file,
+			psychologistId,
+			userId
 		);
 
 		return restResponse(data, code, res);

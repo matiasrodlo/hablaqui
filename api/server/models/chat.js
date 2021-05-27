@@ -5,6 +5,17 @@ let messageSchema = new Schema(
 		sentByUser: {
 			type: Boolean,
 		},
+		messageType: {
+			type: String,
+			enum: ['text', 'file'],
+			default: 'text',
+		},
+		fileType: {
+			type: String,
+		},
+		fileUrl: {
+			type: String,
+		},
 		message: {
 			type: String,
 		},

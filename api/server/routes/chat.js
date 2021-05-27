@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
+import multer from '../middleware/multer';
+import storage from '../middleware/storage';
 import chatController from '../controllers/chat';
 
 const chatRouter = Router();
@@ -20,6 +22,16 @@ chatRouter.post(
 	'/chat/send-message/:psychologistId/:userId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.sendMessage
+);
+
+chatRouter.post(
+	'/chat/send-file/:psychologistId/:userId',
+	[
+		passport.authenticate('jwt', { session: true }),
+		multer.single('file'),
+		storage,
+	],
+	chatController.sendFile
 );
 
 chatRouter.post(
