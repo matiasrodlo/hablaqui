@@ -1,6 +1,8 @@
 import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Psychologist from '../models/psychologist';
+import { logInfo } from '../config/pino';
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
@@ -20,7 +22,7 @@ const createPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${FRONTEND_URL}/pago/success-pay`,
+			success: `${FRONTEND_URL}/pago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
 			failure: `${FRONTEND_URL}/pago/failure-pay`,
 			pending: `${FRONTEND_URL}/pago/pending-pay`,
 		},
@@ -43,11 +45,24 @@ const createPreference = async (body, res) => {
 	}
 	if (bodyId != '') return okResponse('preference created', { body: bodyId });
 
-	conflictResponse('Ha ocurrido un error :c');
+	return conflictResponse('Ha ocurrido un error');
 };
 
+const successPay = async params => {
+	const { psyId, userId, sessionId } = params;
+	const foundPsychologist = await Psychologist.updateOne(
+		{
+			_id: psyId,
+			sessions: { $elemMatch: { _id: sessionId } },
+		},
+		{ $set: { 'sessions.$.statePayments': 'successful' } }
+	);
+	logInfo('Se ha actualizado una sesion');
+	return okResponse('sesion actualizada');
+};
 const mercadopagoService = {
 	createPreference,
+	successPay,
 };
 
 export default Object.freeze(mercadopagoService);
