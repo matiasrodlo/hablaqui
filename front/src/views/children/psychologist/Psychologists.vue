@@ -104,17 +104,24 @@
 			<v-col cols="12" md="9">
 				<v-row>
 					<v-col cols="12" md="6">
-						<v-combobox
+						<v-autocomplete
 							class="white"
 							outlined
-							:items="appointments"
-							:search-input.sync="motive"
+							:items="
+								appointments.map((item, i) => ({
+									text: item,
+									value: item,
+									index: i,
+								}))
+							"
+							v-model="motive"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
 							hide-details
 							clearable
 							:menu-props="{
 								closeOnClick: true,
+								closeOnContentClick: true,
 							}"
 							:disabled="loading"
 						>
@@ -130,15 +137,37 @@
 									</v-list-item-content>
 								</v-list-item>
 							</template>
-						</v-combobox>
+							<template #item="{item}">
+								<div style="width: 100%">
+									<v-list-item class="px-0" @click="motive = item">
+										<v-list-item-content>
+											<v-list-item-title
+												class="subtitle-2 font-weight-regular"
+											>
+												{{ item.text }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-divider
+										v-if="item.index < appointments.length - 1"
+										:key="item.index"
+									></v-divider>
+								</div>
+							</template>
+						</v-autocomplete>
 					</v-col>
 					<v-col cols="12" md="6">
-						<v-combobox
+						<v-autocomplete
 							class="white"
 							outlined
-							:items="filterLevelThree"
-							item-text="name"
-							:search-input.sync="searchInput"
+							:items="
+								filterLevelThree.map((item, i) => ({
+									text: item.name,
+									value: item.name,
+									index: i,
+								}))
+							"
+							v-model="searchInput"
 							label="Busca tu psicólogo"
 							append-icon="mdi-chevron-down"
 							hide-details
@@ -147,9 +176,37 @@
 							}"
 							clearable
 							:disabled="loading"
-							no-data-text="No hay psicologos en este momento"
 						>
-						</v-combobox>
+							<template #no-data>
+								<v-list-item>
+									<v-list-item-content>
+										<v-list-item-title>
+											No se encontraron resultados que coincidan con "<strong>
+												{{ searchInput }}
+											</strong>
+											" .
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</template>
+							<template #item="{item}">
+								<div style="width: 100%">
+									<v-list-item class="px-0" @click="searchInput = item.value">
+										<v-list-item-content>
+											<v-list-item-title
+												class="subtitle-2 font-weight-regular"
+											>
+												{{ item.text }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-divider
+										v-if="item.index < filterLevelThree.length - 1"
+										:key="item.index"
+									></v-divider>
+								</div>
+							</template>
+						</v-autocomplete>
 					</v-col>
 					<v-col v-if="!$vuetify.breakpoint.mdAndUp" cols="12">
 						<v-expansion-panels
