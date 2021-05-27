@@ -18,9 +18,9 @@
 							md="6"
 							class="primary text-center text-md-left"
 						>
-							<h2 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+							<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
 								Tu psicólogo Online
-							</h2>
+							</h1>
 							<h3 class="title my-10">
 								Demos juntos el primer paso hacia el bienestar emocional. Habla de
 								forma segura y privada con un psicólogo online cuando lo necesites.
