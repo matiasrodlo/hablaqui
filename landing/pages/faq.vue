@@ -151,6 +151,18 @@ export default {
 			search: '',
 		};
 	},
+	head() {
+		return {
+			title: 'Preguntas frecuentes',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Preguntas frecuentes hablaqui',
+				},
+			],
+		};
+	},
 	computed: {
 		itemsFilter() {
 			if (this.search.length) {

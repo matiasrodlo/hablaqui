@@ -5,7 +5,7 @@
 				<v-img
 					style="max-width: 150px"
 					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui Logo"
+					alt="hablaqui"
 				/>
 			</v-list-item>
 			<v-divider></v-divider>
@@ -58,7 +58,7 @@
 			<router-link to="/" exact>
 				<img
 					style="max-width: 180px"
-					alt="hablaqui Logo"
+					alt="hablaqui"
 					:src="`${$config.LANDING_URL}/logo.png`"
 					contain
 				/>

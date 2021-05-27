@@ -243,6 +243,18 @@ export default {
 			breadcrumb: [],
 		};
 	},
+	head() {
+		return {
+			title: 'Blog - hablaqui',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Los articulos más actualizados de nuestros psicologos',
+				},
+			],
+		};
+	},
 	async mounted() {
 		// eslint-disable-next-line no-console
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);

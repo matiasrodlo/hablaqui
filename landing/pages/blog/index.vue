@@ -1,14 +1,15 @@
 <template>
 	<div style="background-color: #ebf2f3">
 		<client-only>
-			<div>
+			<nav>
 				<Appbar />
-			</div>
+			</nav>
 		</client-only>
-		<v-container fluid>
-			<!-- header -->
+		<v-container tag="section" fluid>
+			<!-- title / search -->
 			<v-row justify="center">
 				<v-col
+					tag="h1"
 					cols="12"
 					sm="10"
 					xl="8"
@@ -91,19 +92,22 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row v-if="articles.length" id="blog" justify="center" class="mb-16">
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row>
+			<v-row v-if="articles.length" id="blog" tag="section" justify="center" class="mb-16">
+				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
+					<v-row tag="section">
 						<template v-for="(article, i) in filterItems">
 							<v-col
 								v-if="length > i"
 								:key="i"
+								tag="section"
 								cols="12"
 								:md="i == 0 ? '12' : '6'"
 								:lg="i == 0 ? '8' : '4'"
 							>
 								<v-hover v-slot="{ hover }">
 									<v-card
+										tag="section
+                                    "
 										nuxt
 										:to="{ path: `/blog/${article.slug}` }"
 										style="transition: transform 0.4s"
@@ -122,6 +126,7 @@
 												<v-row>
 													<v-col
 														cols="6"
+														tag="section"
 														style="
 															height: 490px;
 															display: flex;
@@ -129,7 +134,7 @@
 														"
 														class="justify-space-between"
 													>
-														<div>
+														<article>
 															<h3 class="title black--text">
 																{{ article.title }}
 															</h3>
@@ -140,17 +145,17 @@
 															>
 																{{ article.categories }}
 															</v-btn>
-															<div class="text-h6 font-weight-light">
+															<h4 class="text-h6 font-weight-light">
 																{{
 																	strippedContent(
 																		article.HTMLbody,
 																		200
 																	)
 																}}
-															</div>
-														</div>
-														<div>
-															<div class="title font-weight-bold">
+															</h4>
+														</article>
+														<aside>
+															<h3 class="title font-weight-bold">
 																<span
 																	v-if="
 																		article.author ||
@@ -174,10 +179,10 @@
 																<span class="text--disabled">
 																	{{ dates(article.createdAt) }}
 																</span>
-															</div>
-														</div>
+															</h3>
+														</aside>
 													</v-col>
-													<v-col cols="6">
+													<v-col tag="section" cols="6">
 														<v-img
 															style="border-radius: 10px"
 															height="465"
@@ -205,7 +210,7 @@
 														: 'height: 350px'
 												"
 											>
-												<div>
+												<article>
 													<v-btn
 														text
 														class="px-0 my-3 text-h6"
@@ -216,14 +221,14 @@
 													<h3 class="title black--text">
 														{{ article.title }}
 													</h3>
-													<div
+													<h4
 														v-if="!$vuetify.breakpoint.mdAndUp"
 														class="text-h6 font-weight-light"
 													>
 														{{ strippedContent(article.HTMLbody, 140) }}
-													</div>
-												</div>
-												<div>
+													</h4>
+												</article>
+												<aside>
 													<div class="title black--text">
 														<span
 															v-if="article.originalAuthor"
@@ -236,7 +241,7 @@
 															{{ dates(article.createdAt) }}
 														</span>
 													</div>
-												</div>
+												</aside>
 											</v-card-text>
 										</template>
 									</v-card>
@@ -308,20 +313,20 @@
 		<img :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
 			<v-row justify="center">
-				<v-col cols="12" class="py-16">
-					<div
+				<v-col tag="section" cols="12" class="py-16">
+					<h2
 						class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
 					>
 						Para empresas
-					</div>
-					<div class="white--text text-h6 text-center">
+					</h2>
+					<h3 class="white--text text-h6 text-center">
 						Liderazgo y salud mental en el mercado laboral
-					</div>
+					</h3>
 				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row v-if="forCompanies.length">
+				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
+					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" cols="12" md="3">
+							<v-col :key="n" tag="section" cols="12" md="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
 										v-if="n < 4"
@@ -344,20 +349,20 @@
 											style="height: 300px; flex-direction: column"
 											class="d-flex justify-space-between"
 										>
-											<div>
-												<div
+											<article>
+												<h3
 													class="subtitle-1 primary--text font-weight-bold"
 												>
 													{{ item.categories }}
-												</div>
-												<div class="subtitle-1 font-weight-bold pb-0">
+												</h3>
+												<h2 class="subtitle-1 font-weight-bold pb-0">
 													{{ item.title }}
-												</div>
-												<div class="subttitle-1 font-weight-light">
+												</h2>
+												<h4 class="subttitle-1 font-weight-light">
 													{{ strippedContent(item.HTMLbody, 150) }}
-												</div>
-											</div>
-											<div>
+												</h4>
+											</article>
+											<aside>
 												<span
 													class="caption primary--text font-weight-bold"
 												>
@@ -367,7 +372,7 @@
 												<span class="caption text--disabled">
 													{{ dates(item.createdAt) }}
 												</span>
-											</div>
+											</aside>
 										</v-card-text>
 									</v-card>
 								</v-hover>
@@ -404,15 +409,15 @@
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
-				<v-col cols="12" class="pb-8">
-					<div class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
+				<v-col tag="section" cols="12" class="pb-8">
+					<h2 class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
 						Categoria Populares
-					</div>
-					<div class="text--disabled text-h6 text-center">
+					</h2>
+					<h3 class="text--disabled text-h6 text-center">
 						Ver las categorías más visitadas
-					</div>
+					</h3>
 				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9">
+				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
 					<v-row>
 						<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
 							<v-hover v-slot="{ hover }">
@@ -430,9 +435,9 @@
 										<v-list-item-avatar size="120" class="ml-4">
 											<v-img :src="element.img"></v-img>
 										</v-list-item-avatar>
-										<div class="text-center caption font-weight-bold">
+										<h2 class="text-center caption font-weight-bold">
 											{{ element.title }}
-										</div>
+										</h2>
 									</v-card-text>
 								</v-card>
 							</v-hover>
@@ -448,12 +453,12 @@
 					<v-row justify="space-between">
 						<v-col cols="10" sm="5" class="white--text">
 							<div>
-								<div class="headline font-weight-bold mt-8">
+								<h3 class="headline font-weight-bold mt-8">
 									Recibe contenido exclusivo periódicamente
-								</div>
-								<div class="subtitle-1 font-weight-bold mb-8">
+								</h3>
+								<h3 class="subtitle-1 font-weight-bold mb-8">
 									Suscríbete y alcanza tu mejor versión
-								</div>
+								</h3>
 								<div style="position: relative">
 									<v-text-field
 										solo
@@ -473,8 +478,9 @@
 											border-radius: 0 25px 25px 0;
 										"
 										color="info"
-										>Enviar</v-btn
 									>
+										Enviar
+									</v-btn>
 								</div>
 							</div>
 						</v-col>
@@ -531,8 +537,21 @@ export default {
 			],
 		};
 	},
+	head() {
+		return {
+			title: 'Blog - hablaqui',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Los articulos más actualizados de nuestros psicologos',
+				},
+			],
+		};
+	},
 	computed: {
 		forCompanies() {
+			// TODO: cambiar cuando tengamos mas de 4 articulos de empresas category
 			// return this.articles.filter(item => item.categories === 'Para empresas');
 			return this.articles;
 		},

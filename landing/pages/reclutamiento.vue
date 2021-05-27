@@ -272,6 +272,18 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Appbar: () => import('@/components/AppbarWhite'),
 	},
+	head() {
+		return {
+			title: 'Reclutamiento - hablaqui',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Unete a nuestro equipo de psicologos',
+				},
+			],
+		};
+	},
 };
 </script>
 
