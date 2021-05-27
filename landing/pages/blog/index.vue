@@ -539,7 +539,7 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Blog - hablaqui',
+			title: 'Blog Hablaquí',
 			meta: [
 				{
 					hid: 'descripción',

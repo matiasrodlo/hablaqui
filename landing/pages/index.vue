@@ -331,9 +331,9 @@
 											style="flex-direction: column; height: 180px"
 											class="d-flex justify-space-between"
 										>
-											<h2 style="height: 120px; overflow-y: auto">
+											<article style="height: 120px; overflow-y: auto">
 												{{ el.text }}
-											</h2>
+											</article>
 											<h3 class="pt-2">
 												<a
 													class="primary--text"
