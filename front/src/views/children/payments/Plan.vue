@@ -669,35 +669,28 @@ export default {
 		async payButton() {
 			this.breakCrumbs = 3;
 			let priceInt = Number(this.plans[this.selectedItem.plan].price.split('.').join(''));
+			const sessionPayload = {
+				start: this.newEvent.start,
+				end: this.newEvent.end,
+				user: this.user,
+				psychologist: this.psi,
+			};
+			const createdSession = await this.createSession(sessionPayload);
 			const payload = {
 				price: priceInt,
 				title: this.plans[this.selectedItem.plan].title,
 				quantity: 1,
+				sessionToUpdate: createdSession.id,
+				userToUpdate: this.user._id,
+				psychologistToUpdate: this.psi._id,
 			};
 			const preferenceData = await this.mercadopagoPay(payload);
-			console.log(preferenceData);
-
-			// eslint-disable-next-line no-undef
-			/*const mp = new MercadoPago('TEST-fe8f0a69-db4e-4496-910b-0abc87728b01', {
-				// HAY QUE CONVERTIRLO EN ENV-VAR
-				locale: 'es-CL',
-			});*/
-
-			/*mp.checkout({
-				preference: {
-					id: preferenceData.body.id,
-				},
-				autoOpen: true,
-				theme: {
-					elementsColor: '#2070e5',
-					headerColor: '#2070e5',
-				},
-			});*/
 			window.location.href = preferenceData.body.init_point;
 		},
 		...mapActions({
 			// HAY QUE HACER UN STORE DE MERCADOPAGO
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
+			createSession: 'Psychologist/createSession',
 		}),
 	},
 };

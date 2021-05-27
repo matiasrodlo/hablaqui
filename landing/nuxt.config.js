@@ -19,11 +19,19 @@ export default {
 	},
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
-		titleTemplate: '%s',
+		titleTemplate: '%s - Hablaqui - Psicología online',
 		title: 'Hablaqui',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+			{
+				name: 'robots',
+				content: 'index',
+			},
+			{
+				'http-equiv': 'Content-language',
+				content: 'es',
+			},
 			{
 				hid: 'description',
 				name: 'description',
@@ -55,19 +63,10 @@ export default {
 	modules: [
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
-		// https://go.nuxtjs.dev/pwa
-		'@nuxtjs/pwa',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {},
-
-	// PWA module configuration: https://go.nuxtjs.dev/pwa
-	pwa: {
-		manifest: {
-			lang: 'es',
-		},
-	},
 
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
 	vuetify: {
