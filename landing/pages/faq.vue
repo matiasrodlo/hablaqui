@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3 pb-16">
+			<div class="primary pb-16">
 				<Appbar />
 				<v-container>
 					<v-row justify="center" no-gutters>

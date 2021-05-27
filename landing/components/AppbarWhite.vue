@@ -44,14 +44,14 @@
 		<div style="height: 150px; overflow: hidden">
 			<svg
 				class="shadow"
-				viewBox="0 0 500 125"
 				preserveAspectRatio="none"
+				viewBox="0 0 1080 216.49"
 				style="height: 100%; width: 100%"
 			>
 				<path
-					d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
 					style="fill: white"
-				></path>
+					d="M.16-18.79V122.75c6.88,1,20.8,2.92,38.31,5.1,0,0,215.57,25.78,403,14.18,18.33-1.13,40.69-2.8,83.59-5.21,129.36-7.25,216.16-14.1,298.68-8.34a1547.37,1547.37,0,0,1,256.14,39.69v-187Z"
+				/>
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
