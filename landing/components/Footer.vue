@@ -20,15 +20,15 @@
 			<div>09:00am - 18:30pm</div>
 		</v-col>
 		<v-col cols="12" sm="6" md="3" class="headline text--secondary">
-			<v-img contain max-height="60" :src="`${$config.LANDING_URL}/Startup .png`"></v-img>
+			<v-img contain max-height="60" :src="`${$config.LANDING_URL}/Startup.png`"></v-img>
 			<v-img
 				contain
 				max-height="60"
-				:src="`${$config.LANDING_URL}/Adolfo Ibañez .png`"
+				:src="`${$config.LANDING_URL}/Adolfo_Ibañez.png`"
 			></v-img>
 		</v-col>
 		<v-col cols="6" sm="6" md="3" class="headline text--secondary">
-			<v-img max-width="350" :src="`${$config.LANDING_URL}/Web Pay .png`"></v-img>
+			<img style="max-width: 350px" :src="`${$config.LANDING_URL}/Web_Pay.png`" />
 		</v-col>
 	</v-row>
 </template>

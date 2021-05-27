@@ -158,5 +158,17 @@ export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
 	},
+	head() {
+		return {
+			title: 'Politicas de privacidad',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Politicas de privacidad hablaqui',
+				},
+			],
+		};
+	},
 };
 </script>

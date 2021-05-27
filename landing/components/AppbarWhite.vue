@@ -5,7 +5,7 @@
 				<v-img
 					style="max-width: 150px"
 					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui Logo"
+					alt="hablaqui"
 				/>
 			</v-list-item>
 			<v-divider></v-divider>
@@ -13,7 +13,8 @@
 				<v-list-item
 					link
 					active-class="primary white--text"
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					nuxt
+					:to="{ name: 'psicologos' }"
 				>
 					<v-list-item-content>
 						<v-list-item-title>Psicólogos</v-list-item-title>
@@ -29,12 +30,12 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth`">
+				<v-list-item link nuxt :to="{ name: 'entrar' }">
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth/q=register`">
+				<v-list-item link nuxt :to="{ name: 'comenzar' }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -58,14 +59,15 @@
 			<router-link to="/" exact>
 				<img
 					style="max-width: 180px"
-					alt="hablaqui Logo"
+					alt="hablaqui"
 					:src="`${$config.LANDING_URL}/logo.png`"
 					contain
 				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-btn
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					nuxt
+					:to="{ name: 'psicologos' }"
 					light
 					rounded
 					text
@@ -99,7 +101,7 @@
 					<v-list-item
 						active-class="transparent"
 						class="text-h6 mr-2"
-						:href="`${$config.FRONTEND_URL}/auth`"
+						:to="{ name: 'entrar' }"
 					>
 						<span class="text--secondary">Iniciar sesión</span>
 					</v-list-item>
@@ -109,7 +111,8 @@
 					class="mx-2 text-h6 py-0 px-6"
 					color="primary"
 					depressed
-					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					nuxt
+					:to="{ name: 'comenzar' }"
 				>
 					Comenzar
 				</v-btn>

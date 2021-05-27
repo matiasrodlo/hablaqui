@@ -307,5 +307,17 @@ export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
 	},
+	head() {
+		return {
+			title: 'Terminos y condiciones',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Terminos y condiciones hablaqui',
+				},
+			],
+		};
+	},
 };
 </script>

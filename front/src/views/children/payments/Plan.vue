@@ -7,10 +7,21 @@
 				<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12">
 					<div class="d-flex justify-center align-center">
 						<ul id="breadcrumb">
-							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
+							<li
+								:class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'"
+								@click="breakCrumbs = 0"
+								style="cursor: pointer"
+							>
 								<span>Agendar</span>
 							</li>
-							<li>
+							<li
+								@click="
+									() => {
+										if (newEvent && breakCrumbs != 1) breakCrumbs = 1;
+									}
+								"
+								:style="newEvent && 'cursor: pointer'"
+							>
 								<span
 									:class="
 										breakCrumbs == 1 ? 'child-selected' : 'child-un-selected'
@@ -19,7 +30,15 @@
 									Escoger Plan
 								</span>
 							</li>
-							<li :class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'">
+							<li
+								@click="
+									() => {
+										if (selectedItem && breakCrumbs != 2) breakCrumbs = 2;
+									}
+								"
+								:style="selectedItem && 'cursor: pointer'"
+								:class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'"
+							>
 								<span>Detalles</span>
 							</li>
 							<li :class="breakCrumbs == 3 ? 'child-selected' : 'child-un-selected'">
