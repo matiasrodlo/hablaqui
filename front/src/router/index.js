@@ -112,7 +112,7 @@ const routes = [
 				meta: { title: 'Pago fallido' },
 			},
 			{
-				path: '/pago/success-pay',
+				path: '/pago/success-pay/:psyId/:userId/:sessionId',
 				name: 'success-home',
 				component: SuccessPay,
 				meta: { title: 'Pago exitoso' },

@@ -8,4 +8,9 @@ mercadopagoRouter.post(
 	mercadopagoController.createPreference
 );
 
+mercadopagoRouter.post(
+	'/mercadopago/success-pay/:psyId/:userId/:sessionId',
+	mercadopagoController.successPay
+);
+
 export default mercadopagoRouter;
