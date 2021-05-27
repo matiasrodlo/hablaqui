@@ -763,22 +763,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped>
-.v-list-item {
-	padding: 0 !important;
-}
-
-#application::-webkit-scrollbar {
-	width: 20px;
-}
-
-#application::-webkit-scrollbar-track {
-	background-color: black;
-}
-
-#application::-webkit-scrollbar-thumb {
-	background: #4e4e4e;
-	border-radius: 25px;
-}
-</style>
