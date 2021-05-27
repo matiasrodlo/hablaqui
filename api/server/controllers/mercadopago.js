@@ -21,7 +21,7 @@ const mercadopagoController = {
 			const { data, code } = await mercadopagoService.successPay(params);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error aprovando el pago');
+			errorCallback(e, res, 'Error al aprobar pago.');
 		}
 	},
 };

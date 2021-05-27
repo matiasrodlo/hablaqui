@@ -45,7 +45,7 @@ const createPreference = async (body, res) => {
 	}
 	if (bodyId != '') return okResponse('preference created', { body: bodyId });
 
-	conflictResponse('Ha ocurrido un error :c');
+	return conflictResponse('Ha ocurrido un error');
 };
 
 const successPay = async params => {
