@@ -24,8 +24,8 @@ const createPreference = async (body, res) => {
 		],
 		back_urls: {
 			success: `${api_url}api/v1/mercadopago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
-			failure: FRONTEND_URL,
-			pending: FRONTEND_URL,
+			failure: `${FRONTEND_URL}/pago/failure-pay`,
+			pending: `${FRONTEND_URL}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
 	};
