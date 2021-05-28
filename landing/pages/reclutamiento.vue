@@ -8,9 +8,9 @@
 		<v-container fluid class="primary py-16">
 			<v-row justify="center" align="center">
 				<v-col cols="12" md="5" lg="6">
-					<div class="text-left white--text text-h4 text-lg-h3 font-weight-bold">
+					<h2 class="text-left white--text text-h4 text-lg-h3 font-weight-bold">
 						Tenga un consultorio sin salir de casa
-					</div>
+					</h2>
 					<div class="mt-3 text-left white--text text-h6 font-weight-bold">
 						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
 						nibh
@@ -271,6 +271,18 @@ export default {
 	components: {
 		Footer: () => import('@/components/Footer'),
 		Appbar: () => import('@/components/AppbarWhite'),
+	},
+	head() {
+		return {
+			title: 'Forma parte',
+			meta: [
+				{
+					hid: 'descripción',
+					nombre: 'descripción',
+					contenido: 'Tenga un consultorio sin salir de casa',
+				},
+			],
+		};
 	},
 };
 </script>

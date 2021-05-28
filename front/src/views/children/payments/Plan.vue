@@ -7,10 +7,21 @@
 				<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12">
 					<div class="d-flex justify-center align-center">
 						<ul id="breadcrumb">
-							<li :class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'">
+							<li
+								:class="breakCrumbs == 0 ? 'child-selected' : 'child-un-selected'"
+								@click="breakCrumbs = 0"
+								style="cursor: pointer"
+							>
 								<span>Agendar</span>
 							</li>
-							<li>
+							<li
+								@click="
+									() => {
+										if (newEvent && breakCrumbs != 1) breakCrumbs = 1;
+									}
+								"
+								:style="newEvent && 'cursor: pointer'"
+							>
 								<span
 									:class="
 										breakCrumbs == 1 ? 'child-selected' : 'child-un-selected'
@@ -19,7 +30,15 @@
 									Escoger Plan
 								</span>
 							</li>
-							<li :class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'">
+							<li
+								@click="
+									() => {
+										if (selectedItem && breakCrumbs != 2) breakCrumbs = 2;
+									}
+								"
+								:style="selectedItem && 'cursor: pointer'"
+								:class="breakCrumbs == 2 ? 'child-selected' : 'child-un-selected'"
+							>
 								<span>Detalles</span>
 							</li>
 							<li :class="breakCrumbs == 3 ? 'child-selected' : 'child-un-selected'">
@@ -491,15 +510,7 @@ export default {
 					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
-			events: [
-				{
-					name: 'Jose',
-					start: 1620715500000,
-					end: 1620715500000,
-					timed: true,
-					disable: true,
-				},
-			],
+			events: [],
 			dragEvent: null,
 			dragStart: null,
 			createEvent: null,
@@ -533,9 +544,14 @@ export default {
 	},
 	created() {
 		this.psi = JSON.parse(localStorage.getItem('psi'));
-		let mercadopagoScript = document.createElement('script');
-		mercadopagoScript.setAttribute('src', 'https://sdk.mercadopago.com/js/v2');
-		document.head.appendChild(mercadopagoScript);
+		// TODO: example de evento, asi debe ser el objeto para crear agregar los eventos a la vista de calendario
+		// {
+		//  name: 'Jose',
+		//  start: 1620715500000,
+		//  end: 1620715500000,
+		//  timed: true,
+		//  disable: true,
+		//  },
 	},
 	methods: {
 		startDrag({ event, timed }) {
@@ -637,15 +653,6 @@ export default {
 		},
 		resetEvent() {
 			this.newEvent = null;
-			this.events = [
-				{
-					name: 'Jose',
-					start: 1620715500000,
-					end: 1620715500000,
-					timed: true,
-					disable: true,
-				},
-			];
 		},
 		async payButton() {
 			this.breakCrumbs = 3;
@@ -669,7 +676,6 @@ export default {
 			window.location.href = preferenceData.body.init_point;
 		},
 		...mapActions({
-			// HAY QUE HACER UN STORE DE MERCADOPAGO
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
 			createSession: 'Psychologist/createSession',
 		}),
