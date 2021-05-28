@@ -746,7 +746,7 @@ export default {
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquín_Bustos.png`,
+					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.png`,
 				},
 				{
 					id: 3,
