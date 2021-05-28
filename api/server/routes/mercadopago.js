@@ -8,7 +8,7 @@ mercadopagoRouter.post(
 	mercadopagoController.createPreference
 );
 
-mercadopagoRouter.post(
+mercadopagoRouter.get(
 	'/mercadopago/success-pay/:psyId/:userId/:sessionId',
 	mercadopagoController.successPay
 );
