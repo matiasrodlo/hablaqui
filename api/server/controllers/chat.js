@@ -16,36 +16,48 @@ const chatController = {
 		}
 	},
 	async getMessages(req, res) {
-		const { user } = req;
-		const { data, code } = await chatService.getMessages(user);
-		return restResponse(data, code, res);
+		try {
+			const { user } = req;
+			const { data, code } = await chatService.getMessages(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error consiguiendo los mensajes');
+		}
 	},
 	async sendMessage(req, res) {
-		const { psychologistId, userId } = req.params;
-		const { content } = req.body;
-		const { user } = req;
-		const { data, code } = await chatService.sendMessage(
-			user,
-			content,
-			userId,
-			psychologistId
-		);
+		try {
+			const { psychologistId, userId } = req.params;
+			const { content } = req.body;
+			const { user } = req;
+			const { data, code } = await chatService.sendMessage(
+				user,
+				content,
+				userId,
+				psychologistId
+			);
 
-		return restResponse(data, code, res);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error enviando el mensaje');
+		}
 	},
 	async createReport(req, res) {
-		const { psychologistId, userId } = req.params;
-		const { reportType, issue } = req.body;
-		const { user } = req;
-		const { data, code } = await chatService.createReport(
-			user,
-			psychologistId,
-			userId,
-			reportType,
-			issue
-		);
+		try {
+			const { psychologistId, userId } = req.params;
+			const { reportType, issue } = req.body;
+			const { user } = req;
+			const { data, code } = await chatService.createReport(
+				user,
+				psychologistId,
+				userId,
+				reportType,
+				issue
+			);
 
-		return restResponse(data, code, res);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error creando el reporte');
+		}
 	},
 };
 
