@@ -89,23 +89,32 @@
 			</v-row>
 			<v-divider></v-divider>
 			<v-row>
-				<v-col cols="12" class="my-10">
+				<v-col cols="12" class="mt-5 mt-md-10 mb-10">
 					<v-list-item>
-						<v-list-item-avatar size="120">
-							<v-img size="120" :src="article.authorAvatar"></v-img>
+						<v-list-item-avatar :size="$vuetify.breakpoint.mdAndUp ? '120' : '50'">
+							<v-img
+								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
+								:src="article.authorAvatar"
+							></v-img>
 						</v-list-item-avatar>
 						<v-list-item-content>
-							<v-list-item-title class="title">
+							<v-list-item-title class="caption text-sm-h6">
 								Transcrito y revisado clínicamente por:
-								<span class="primary--text">
-									{{ article.author || article.originalAuthor }}
-								</span>
 							</v-list-item-title>
-							<div class="font-weight-light body-1">
+							<div class="primary--text">
+								{{ article.author || article.originalAuthor }}
+							</div>
+							<div
+								v-if="$vuetify.breakpoint.mdAndUp"
+								class="font-weight-light body-1"
+							>
 								{{ article.authorDescription }}
 							</div>
 						</v-list-item-content>
 					</v-list-item>
+					<div v-if="!$vuetify.breakpoint.mdAndUp" class="font-weight-light body-1">
+						{{ article.authorDescription }}
+					</div>
 				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn x-large color="primary" text exact :to="{ name: 'blog' }">
