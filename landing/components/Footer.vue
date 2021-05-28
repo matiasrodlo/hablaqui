@@ -2,12 +2,16 @@
 	<v-row align="start" justify="center" class="white--text py-16">
 		<v-col cols="12" sm="3" md="3" class="text-center text-sm-left">
 			<div class="body-1 text-md-h6 text--secondary font-weight-bold">Acuerdos</div>
-			<v-btn block class="px-0 body-1 text--secondary" text link to="/politicas">
-				Políticas de Privacidad
-			</v-btn>
-			<v-btn block class="px-0 body-1 text--secondary" text link to="/condiciones">
-				Terminos y Condiciones
-			</v-btn>
+			<div>
+				<v-btn class="px-0 body-1 text--secondary" text link to="/politicas">
+					Políticas de Privacidad
+				</v-btn>
+			</div>
+			<div>
+				<v-btn class="px-0 text-left body-1 text--secondary" text link to="/condiciones">
+					Terminos y Condiciones
+				</v-btn>
+			</div>
 		</v-col>
 		<v-col cols="12" sm="3" md="3" class="text-center text-sm-left text--secondary">
 			<div class="font-weight-bold body-1 text-md-h6">Soporte Técnico</div>
