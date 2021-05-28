@@ -56,13 +56,13 @@ const routes = [
 				path: 'perfil',
 				name: 'perfil',
 				component: MyProfile,
-				meta: { title: 'Mi Perfil', requiresAuth: true },
+				meta: { title: 'Mi cuenta', requiresAuth: true },
 			},
 			{
-				path: 'espacio',
-				name: 'espacio',
+				path: 'chat',
+				name: 'chat',
 				component: MySpace,
-				meta: { title: 'Mi espacio', requiresAuth: true },
+				meta: { title: 'Chat', requiresAuth: true },
 			},
 			{
 				path: 'agenda',
