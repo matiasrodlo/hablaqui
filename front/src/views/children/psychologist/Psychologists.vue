@@ -729,7 +729,8 @@ export default {
 	},
 	created() {
 		//  Limpia la query url cuando viene desde mercadopago
-		this.$router.replace({ query: null });
+		if (JSON.stringify(this.$route.params) !== JSON.stringify({}))
+			this.$router.replace({ query: null });
 
 		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
