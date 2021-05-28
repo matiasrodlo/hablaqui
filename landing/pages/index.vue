@@ -72,14 +72,7 @@
 				</v-col>
 			</v-row>
 			<v-row tag="section" justify="center">
-				<v-col
-					v-for="item in firstbox"
-					:key="item.id"
-					tag="section"
-					cols="12"
-					sm="4"
-					xl="4"
-				>
+				<v-col v-for="item in firstbox" :key="item.id" tag="section" cols="12" md="4">
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-btn
@@ -253,7 +246,7 @@
 					:key="item.id"
 					tag="section"
 					cols="12"
-					sm="4"
+					md="4"
 					class="my-16"
 				>
 					<v-card tag="section" flat>
@@ -366,7 +359,7 @@
 							height="400"
 						>
 							<v-carousel-item
-								v-for="(tag, i) in efectividadMobile"
+								v-for="(el, i) in efectividadMobile"
 								:key="i"
 								tag="section"
 							>
@@ -374,22 +367,30 @@
 									<v-card
 										tag="section"
 										height="300"
+										width="350"
 										class="mx-4 d-inline-block"
 										style="border-radius: 25px"
 										light
 										flat
 									>
-										<v-card-text>
-											<img height="60" :src="tag.img" />
+										<v-card-text class="mt-3">
+											<img height="60" :src="el.img" />
 										</v-card-text>
 										<v-card-text
-											style="flex-direction: column; height: 240px"
-											class="d-flex justify-content-end"
+											style="flex-direction: column; height: 180px"
+											class="d-flex justify-space-between"
 										>
-											<h2>{{ tag.text }}</h2>
-											<v-btn block link text color="blue" :href="tag.href">
-												Leer estudio completo
-											</v-btn>
+											<article style="height: 120px; overflow-y: auto">
+												{{ el.text }}
+											</article>
+											<h3 class="pt-2">
+												<a
+													class="primary--text"
+													style="text-decoration: none"
+													:href="el.href"
+													>Leer estudio completo</a
+												>
+											</h3>
 										</v-card-text>
 									</v-card>
 								</section>
@@ -402,26 +403,40 @@
 		<img :src="`${$config.LANDING_URL}/wave-part2.png`" style="width: 100%" />
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
-			<v-row tag="section">
+			<v-row tag="section" no-gutters justify="center">
 				<v-col
 					tag="h2"
 					cols="12"
-					class="my-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
+					class="mt-10 mb-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
 				>
 					Descarga nuestra aplicación
 				</v-col>
-				<v-col tag="aside" cols="12" class="my-5 d-flex align-center justify-center">
+				<v-col
+					cols="12"
+					md="3"
+					lg="2"
+					tag="aside"
+					class="my-md-10 d-flex align-center justify-center"
+				>
 					<img
 						style="cursor: pointer"
 						height="75px"
 						:src="`${$config.LANDING_URL}/google-play-badge.png`"
-						alt="descarcar nuestra aplicaion"
+						alt="descarcar nuestra aplicacion para android"
 					/>
+				</v-col>
+				<v-col
+					cols="12"
+					md="3"
+					lg="2"
+					tag="aside"
+					class="my-md-10 d-flex align-center justify-center"
+				>
 					<img
 						style="cursor: pointer"
 						height="50px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
-						alt="descarcar nuestra aplicaion"
+						alt="descargar aplicacion para ios"
 					/>
 				</v-col>
 			</v-row>
@@ -448,6 +463,7 @@
 					</v-expansion-panels>
 				</v-col>
 				<v-col
+					v-if="$vuetify.breakpoint.mdAndUp"
 					tag="section"
 					cols="12"
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
@@ -464,12 +480,19 @@
 						Quiero empezar
 					</v-btn>
 				</v-col>
-				<v-col cols="12" class="text-center headline my-6 text--secondary">
+				<v-col
+					v-if="$vuetify.breakpoint.mdAndUp"
+					cols="12"
+					class="text-center headline mt-6 text--secondary"
+				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<section :style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''">
+		<section
+			class="mt-16"
+			:style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''"
+		>
 			<v-container tag="section">
 				<v-row tag="section" align="center">
 					<v-col tag="section" cols="6" sm="2">
