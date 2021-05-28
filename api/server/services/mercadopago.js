@@ -3,6 +3,7 @@ import mercadopago from 'mercadopago';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
+import { api_url } from '../config/dotenv';
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
@@ -22,7 +23,7 @@ const createPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${FRONTEND_URL}/pago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
+			success: `${api_url}api/v1/mercadopago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
 			failure: `${FRONTEND_URL}/pago/failure-pay`,
 			pending: `${FRONTEND_URL}/pago/pending-pay`,
 		},

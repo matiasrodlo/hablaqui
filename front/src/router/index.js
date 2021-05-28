@@ -106,11 +106,6 @@ const routes = [
 				name: 'failure-pay',
 				redirect: { name: 'all-psicologos' },
 			},
-			{
-				path: '/pago/success-pay/:psyId/:userId/:sessionId',
-				name: 'success-home',
-				redirect: { name: 'agenda' },
-			},
 		],
 	},
 	{
