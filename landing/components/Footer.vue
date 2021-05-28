@@ -19,7 +19,7 @@
 			<v-img
 				contain
 				max-height="60"
-				:src="`${$config.LANDING_URL}/Adolfo_Ibañez.png`"
+				:src="`${$config.LANDING_URL}/Adolfo_Ibanez.png`"
 			></v-img>
 		</v-col>
 		<v-col cols="6" sm="3" md="3" class="headline text--secondary">
