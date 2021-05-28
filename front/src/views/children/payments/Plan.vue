@@ -510,15 +510,7 @@ export default {
 					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
-			events: [
-				{
-					name: 'Jose',
-					start: 1620715500000,
-					end: 1620715500000,
-					timed: true,
-					disable: true,
-				},
-			],
+			events: [],
 			dragEvent: null,
 			dragStart: null,
 			createEvent: null,
@@ -552,9 +544,14 @@ export default {
 	},
 	created() {
 		this.psi = JSON.parse(localStorage.getItem('psi'));
-		let mercadopagoScript = document.createElement('script');
-		mercadopagoScript.setAttribute('src', 'https://sdk.mercadopago.com/js/v2');
-		document.head.appendChild(mercadopagoScript);
+		// TODO: example de evento, asi debe ser el objeto para crear agregar los eventos a la vista de calendario
+		// {
+		//  name: 'Jose',
+		//  start: 1620715500000,
+		//  end: 1620715500000,
+		//  timed: true,
+		//  disable: true,
+		//  },
 	},
 	methods: {
 		startDrag({ event, timed }) {
@@ -656,15 +653,6 @@ export default {
 		},
 		resetEvent() {
 			this.newEvent = null;
-			this.events = [
-				{
-					name: 'Jose',
-					start: 1620715500000,
-					end: 1620715500000,
-					timed: true,
-					disable: true,
-				},
-			];
 		},
 		async payButton() {
 			this.breakCrumbs = 3;
@@ -688,7 +676,6 @@ export default {
 			window.location.href = preferenceData.body.init_point;
 		},
 		...mapActions({
-			// HAY QUE HACER UN STORE DE MERCADOPAGO
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
 			createSession: 'Psychologist/createSession',
 		}),

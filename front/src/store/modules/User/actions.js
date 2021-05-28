@@ -12,18 +12,22 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			// Psi seleccionado en boton agenda cita online
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			// si no tiene plan y tiene psi pre-seleccionado
-			if (!data.user.myPlan && psi) {
-				router.push({ name: 'plan' });
-				// si no tiene plan y no hay psi seleccionado
-			} else if (!data.user.myPlan) {
-				router.push({ name: 'evaluacion' });
-				// o entonces enviamos a perfil
-			} else {
-				localStorage.removeItem('psi');
+			if (data.user.role == 'psychologist') {
 				router.push({ name: 'perfil' });
+			} else {
+				// Psi seleccionado en boton agenda cita online
+				const psi = JSON.parse(localStorage.getItem('psi'));
+				// si no tiene plan y tiene psi pre-seleccionado
+				if (!data.user.myPlan && psi) {
+					router.push({ name: 'plan' });
+					// si no tiene plan y no hay psi seleccionado
+				} else if (!data.user.myPlan) {
+					router.push({ name: 'evaluacion' });
+					// o entonces enviamos a perfil
+				} else {
+					localStorage.removeItem('psi');
+					router.push({ name: 'perfil' });
+				}
 			}
 		} catch (e) {
 			snackBarError(e)(commit);

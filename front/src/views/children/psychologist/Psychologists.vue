@@ -728,6 +728,10 @@ export default {
 		}),
 	},
 	created() {
+		//  Limpia la query url cuando viene desde mercadopago
+		this.$router.replace({ query: null });
+
+		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
@@ -735,6 +739,8 @@ export default {
 				this.view = view;
 			}
 		}
+
+		// Establece los filtros guardados en localstorage
 		const panel = JSON.parse(localStorage.getItem('panel'));
 		if (panel) {
 			if (panel.gender.length) this.gender = panel.gender;

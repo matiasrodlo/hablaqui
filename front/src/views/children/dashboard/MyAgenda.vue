@@ -116,6 +116,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	data: () => ({
 		date: '2018-03-02',
@@ -135,6 +137,7 @@ export default {
 		names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
 	}),
 	mounted() {
+		this.successPayment();
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
@@ -202,6 +205,28 @@ export default {
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
 		},
+		async successPayment() {
+			if (
+				this.$route.params.psyId &&
+				this.$route.params.userId &&
+				this.$route.params.sessionId
+			) {
+				const payload = {
+					psyId: this.$route.params.psyId,
+					userId: this.$route.params.userId,
+					sessionId: this.$route.params.sessionId,
+				};
+				await this.updateSession(payload);
+				//  Limpia la query url cuando viene desde mercadopago
+				this.$router.replace({ query: null });
+				// limpiamos el LC "match o psi"
+				localStorage.removeItem('match');
+				localStorage.removeItem('psi');
+			}
+		},
+		...mapActions({
+			updateSession: 'Psychologist/updateSession',
+		}),
 	},
 };
 </script>

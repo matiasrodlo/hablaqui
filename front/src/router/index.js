@@ -13,10 +13,7 @@ const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
 const Plan = () => import('@/views/children/payments/Plan');
-const PendingPay = () => import('@/views/children/payments/PendingPay');
 const RegisterPsi = () => import('@/views/RegisterPsi');
-const SuccessPay = () => import('@/views/children/payments/SuccessPay');
-const FailurePay = () => import('@/views/children/payments/FailurePay');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
@@ -102,20 +99,17 @@ const routes = [
 			{
 				path: '/pago/pending-pay',
 				name: 'pending-pay',
-				component: PendingPay,
-				meta: { title: 'Pago pendiente' },
+				redirect: { name: 'all-psicologos' },
 			},
 			{
 				path: '/pago/failure-pay',
 				name: 'failure-pay',
-				component: FailurePay,
-				meta: { title: 'Pago fallido' },
+				redirect: { name: 'all-psicologos' },
 			},
 			{
 				path: '/pago/success-pay/:psyId/:userId/:sessionId',
 				name: 'success-home',
-				component: SuccessPay,
-				meta: { title: 'Pago exitoso' },
+				redirect: { name: 'agenda' },
 			},
 		],
 	},
