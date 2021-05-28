@@ -1,6 +1,7 @@
 <template>
-	<v-container fluid style="height: calc(100vh - 110px)">
-		<v-row justify="center">
+	<v-container fluid style="height: 100vh">
+		<appbar />
+		<v-row justify="center" style="height: calc(100vh - 110px)">
 			<v-col cols="12" sm="3" md="4" lg="3">
 				<div class="text-center">
 					<v-date-picker
@@ -119,6 +120,9 @@
 import { mapActions } from 'vuex';
 
 export default {
+	components: {
+		appbar: () => import('@/components/ui/AppbarProfile'),
+	},
 	data: () => ({
 		date: '2018-03-02',
 		focus: '',

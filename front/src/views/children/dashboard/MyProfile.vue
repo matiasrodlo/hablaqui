@@ -1,6 +1,7 @@
 <template>
-	<v-container>
-		<v-row>
+	<v-container fluid style="height: 100vh">
+		<appbar />
+		<v-row style="height: calc(100vh - 110px); overflow-y: auto">
 			<v-col>
 				<v-list three-line style="border-radius:15px">
 					<v-list-item style="position: relative">
@@ -118,6 +119,7 @@
 import { mapActions, mapGetters } from 'vuex';
 export default {
 	components: {
+		appbar: () => import('@/components/ui/AppbarProfile'),
 		GeneralInformation: () => import('@/components/dashboard/General'),
 		MyPlans: () => import('@/components/dashboard/MyPlans'),
 		MySesions: () => import('@/components/dashboard/MySesions'),

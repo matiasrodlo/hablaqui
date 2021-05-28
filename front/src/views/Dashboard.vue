@@ -1,6 +1,6 @@
 <template>
-	<div class="primary">
-		<v-navigation-drawer dark color="primary" permanent app>
+	<v-row class="primary" style="height: 100vh;" no-gutters>
+		<v-col cols="2">
 			<div style="height: 310px" class="d-flex align-center justify-center">
 				<img
 					@click="() => $router.push({ name: 'all-psicologos' })"
@@ -8,7 +8,7 @@
 					src="img/logo_tiny_white.png"
 				/>
 			</div>
-			<v-list class="pt-0" left shaped top>
+			<v-list dark color="primary" class="pt-0" left shaped top>
 				<v-list-item
 					class="my-4"
 					link
@@ -26,28 +26,13 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
-		</v-navigation-drawer>
-		<div style="border-radius: 50px" class="white">
-			<v-app-bar style="border-radius: 50px" light height="110" flat>
-				<h1 class="primary--text">{{ $route.meta.title }}</h1>
-				<v-spacer></v-spacer>
-				<div class="mx-5 text-h5 primary--text">
-					<router-link style="text-decoration:none" :to="{ name: 'all-psicologos' }">
-						Psicólogos
-					</router-link>
-				</div>
-				<div class="mx-5 text-h5 primary--text">
-					<a style="text-decoration:none" :href="`${landing_page}/faq`">
-						Centro de ayuda
-					</a>
-				</div>
-				<div class="mx-5" @click="logout">
-					<v-img height="65" width="65" src="img/down.png" alt="salir" />
-				</div>
-			</v-app-bar>
-			<router-view />
-		</div>
-	</div>
+		</v-col>
+		<v-col cols="10">
+			<div style="border-radius: 50px" class="white">
+				<router-view />
+			</div>
+		</v-col>
+	</v-row>
 </template>
 
 <script>

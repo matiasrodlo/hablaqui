@@ -1,7 +1,8 @@
 <template>
-	<v-container fluid>
-		<v-row style="height: calc(100vh - 110px); overflow-y: hidden">
-			<v-col cols="12" sm="6" md="8" style="height: calc(100vh - 110px);">
+	<v-container fluid style="height: 100vh">
+		<appbar />
+		<v-row>
+			<v-col cols="12" sm="6" md="8">
 				<v-card height="100%" flat style="display: flex; flex-direction: column;">
 					<v-card-text>
 						<div class="text-center text-h5 font-weight-bold py-2">
@@ -116,6 +117,9 @@
 
 <script>
 export default {
+	components: {
+		appbar: () => import('@/components/ui/AppbarProfile'),
+	},
 	data() {
 		return {
 			items: [
