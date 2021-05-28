@@ -181,28 +181,34 @@
 												background-color: #616161;
 												position: absolute;
 												bottom: 0;
-												height: 100px;
+												height: 120px;
 												opacity: 0.6;
 												width: 100%;
 												border-radius: 0 0 20px 20px;
 											"
 											class="white--text"
 										>
-											<h2 class="pt-1 pl-2 font weight-regular">
+											<h4 class="pt-1 pl-2 font weight-regular">
 												{{ item.title }}
-											</h2>
-											<h3
-												class="pl-2"
+											</h4>
+											<h2
+												class="pl-2 pt-3"
 												:class="
 													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
 												"
 											>
 												{{ item.name }}
-											</h3>
-											<h4 class="caption pl-2 font-weight-bold">
-												<v-icon color="primary">mdi-check</v-icon
-												>{{ item.subtitle }}
-											</h4>
+											</h2>
+											<div>
+												<v-row>
+													<v-col cols="1" class="ml-2">
+														<v-icon color="primary">mdi-check</v-icon>
+													</v-col>
+													<v-col class="body-2 pl-3 font-weight-bold"
+														>{{ item.subtitle }}
+													</v-col>
+												</v-row>
+											</div>
 										</aside>
 									</v-img>
 								</v-carousel-item>
