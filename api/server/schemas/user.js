@@ -14,6 +14,7 @@ const userSchema = {
 		psychologist: Joi.object().allow(''),
 		avatar: Joi.string().allow(''),
 		adminNotifyTime: Joi.string().allow(''),
+		finishedSessions: Joi.string().allow(''),
 		__v: Joi.number(),
 	}).min(1),
 	updatePassword: Joi.object({
