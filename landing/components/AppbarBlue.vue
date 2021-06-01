@@ -37,7 +37,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
 				preserveAspectRatio="none"
@@ -50,10 +50,10 @@
 				></path>
 			</svg>
 		</div>
-		<v-app-bar absolute flat height="100" color="transparent">
+		<v-app-bar absolute flat height="115" color="transparent">
 			<router-link to="/" exact>
 				<img
-					style="max-width: 180px"
+					style="max-width: 160px"
 					alt="hablaqui Logo"
 					:src="`${$config.LANDING_URL}/logo_white.png`"
 					contain
@@ -65,11 +65,11 @@
 					:href="`${$config.FRONTEND_URL}/auth/q=register`"
 					large
 					rounded
-					class="mx-2 primary--text font-weight-bold"
+					class="mx-4 px-8"
 					color="white"
 					depressed
 				>
-					Comience su terapia ahora
+					<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
 				</v-btn>
 				<v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
 				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon>

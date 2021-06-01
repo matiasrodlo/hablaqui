@@ -42,7 +42,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
 				preserveAspectRatio="none"
@@ -57,7 +57,7 @@
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
 			<a :href="`${landing_page}`">
-				<v-img style="max-width: 180px" alt="hablaqui Logo" src="/img/logo.png" contain />
+				<v-img style="max-width: 160px" alt="hablaqui Logo" src="/img/logo.png" contain />
 			</a>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-btn
@@ -65,8 +65,8 @@
 					light
 					rounded
 					text
-					active-class="info--text"
-					class="ml-4 text-h6 text--secondary"
+					link
+					class="mx-6 body-1 font-weight-bold text--secondary"
 				>
 					Psicólogos
 				</v-btn>
@@ -74,8 +74,7 @@
 					light
 					rounded
 					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
+					class="body-1 font-weight-bold text--secondary"
 					:href="`${landing_page}/faq`"
 				>
 					Preguntas frecuentes
@@ -85,7 +84,7 @@
 					rounded
 					text
 					active-class="info--text"
-					class="text-h6 text--secondary"
+					class="body-1 font-weight-bold text--secondary"
 					:href="`${landing_page}/blog`"
 				>
 					Blog
@@ -131,13 +130,19 @@
 						</v-card>
 					</v-menu>
 				</div>
-				<v-btn v-else class="text-h6 text--secondary" rounded text :to="{ name: 'auth' }">
+				<v-btn
+					v-else
+					class="body-1 font-weight-bold text--secondary"
+					rounded
+					text
+					:to="{ name: 'auth' }"
+				>
 					Iniciar sesión
 				</v-btn>
 				<v-btn
 					v-if="!loggedIn"
 					rounded
-					class="mx-2 text-h6"
+					class="mx-2 body-1 font-weight-bold"
 					color="primary"
 					depressed
 					x-large

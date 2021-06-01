@@ -60,7 +60,15 @@
 									<v-text-field
 										v-model="form.name"
 										type="text"
-										label="Nombre completo"
+										label="Nombre completo (Jose Pedro Perez Soto)"
+										outlined
+										autocomplete="off"
+										:error-messages="nameErrors"
+									></v-text-field>
+									<v-text-field
+										v-model="form.shortName"
+										type="text"
+										label="Nombre y apellido (Jose Perez)"
 										outlined
 										autocomplete="off"
 										:error-messages="nameErrors"
@@ -385,6 +393,7 @@ export default {
 			this.form = {
 				code: '',
 				name: '',
+				shortName: '',
 				description: '',
 				email: '',
 				experience: '',
@@ -400,6 +409,7 @@ export default {
 			const formData = new FormData();
 			formData.append('code', this.form.code);
 			formData.append('name', this.form.name);
+			formData.append('shortName', this.form.shortName);
 			formData.append('description', this.form.description);
 			formData.append('email', this.form.email);
 			formData.append('experience', this.form.experience);

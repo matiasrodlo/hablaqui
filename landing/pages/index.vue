@@ -29,19 +29,23 @@
 								style="border-radius: 15px"
 								color="white"
 								x-large
-								class="font-weight-bold pa-8 text-capitalize"
+								class="font-weight-bold body-1 py-8 px-10 text-capitalize"
 								depressed
 								nuxt
-								:to="{ name: 'comenzar' }"
+								:to="{ name: 'psicologos' }"
 							>
-								Quiero comenzar
+								Quiero empezar
 							</v-btn>
-							<h3 class="title mt-10">Desde $15.500CLP a la semana</h3>
-							<h3 class="title mt-5">Convenios con Isapres y Fonasa.</h3>
+							<h3 class="body-1 font-weight-bold mt-10">
+								Desde $15.500CLP a la semana
+							</h3>
+							<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
 						</v-col>
 						<v-col v-if="$vuetify.breakpoint.mdAndUp" tag="section" cols="12" md="6">
 							<v-img
-								:style="{ height: heightPhone }"
+								:style="
+									$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'
+								"
 								:src="`${$config.LANDING_URL}/tel.png`"
 								alt="habla aqui"
 							/>
@@ -62,11 +66,15 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-2"
 				>
 					Cómo funciona
 				</v-col>
-				<v-col tag="h3" cols="12" class="text-h6 mb-6 text--secondary text-center">
+				<v-col
+					tag="h3"
+					cols="12"
+					class="body-1 mb-6 font-weight-bold text--secondary text-center"
+				>
 					Es fácil y seguro realizar terapia con un psicólogo online y continuar con tu
 					estilo de vida con Hablaquí.
 				</v-col>
@@ -113,9 +121,9 @@
 						class="font-weight-bold pa-8"
 						depressed
 						nuxt
-						:to="{ name: 'comenzar' }"
+						:to="{ name: 'psicologos' }"
 					>
-						Quiero comenzar
+						Quiero empezar
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -124,12 +132,12 @@
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<section class="primary">
 			<v-container tag="section" class="white--text py-0">
-				<v-row tag="section" justify="space-between" align="center" class="py-16">
+				<v-row tag="section" justify="space-between" align="center">
 					<v-col tag="section" cols="12" md="6" class="text-center text-md-left">
 						<h2 class="text-md-h3 text-h4 font-weight-bold my-16">
 							Nuestros psicólogos
 						</h2>
-						<article class="my-10 subtitle-1">
+						<article class="my-10 body-1">
 							Contamos con un amplio equipo de psicólogos enfocados a potenciar el
 							área que busques desarrollar. Todos nuestros profesionales son
 							rigurosamente seleccionados, certificados, y cuentan con un alto nivel
@@ -141,9 +149,9 @@
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="font-weight-bold pa-8"
+							class="font-weight-bold body-1 py-8 px-10 ml-md-16 mt-10 mb-5"
 							depressed
-							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							:to="{ name: 'psicologos' }"
 						>
 							Ver más psicólogos
 						</v-btn>
@@ -157,7 +165,7 @@
 								:show-arrows="false"
 								reverse-transition="fade-transition"
 								transition="fade-transition"
-								:height="$vuetify.breakpoint.mdAndUp ? '395' : '285'"
+								:height="$vuetify.breakpoint.mdAndUp ? '375' : '285'"
 								style="box-shadow: 12px 12px 0px 0px #03dfd8; border-radius: 25px"
 							>
 								<v-carousel-item v-for="item in corousel" :key="item.id">
@@ -174,7 +182,7 @@
 												background-color: #616161;
 												position: absolute;
 												bottom: 0;
-												height: 120px;
+												height: 135px;
 												opacity: 0.6;
 												width: 100%;
 												border-radius: 0 0 20px 20px;
@@ -235,7 +243,7 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold mt-10"
 				>
 					Ventajas
 				</v-col>
@@ -247,17 +255,17 @@
 					tag="section"
 					cols="12"
 					md="4"
-					class="my-16"
+					class="mt-16 mb-10"
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img style="height: 90px" :src="item.img" />
+							<img style="height: 80px" :src="item.img" />
 						</v-card-text>
-						<v-card-text class="text-center">
+						<v-card-text class="text-center pt-0">
 							<h2 class="title font-weight-bold">{{ item.title }}</h2>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<h3 class="body-1 mx-auto" style="max-width: 300px">{{ item.desc }}</h3>
+							<h3 class="body-1 mx-auto" style="max-width: 250px">{{ item.desc }}</h3>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -319,7 +327,7 @@
 										v-for="el in item"
 										:key="el.id"
 										tag="section"
-										height="300"
+										:height="$vuetify.breakpoint.lgAndUp ? '300' : '330'"
 										width="350"
 										class="mx-4 d-inline-block"
 										style="border-radius: 25px"
@@ -330,15 +338,28 @@
 											<img height="60" :src="el.img" />
 										</v-card-text>
 										<v-card-text
-											style="flex-direction: column; height: 180px"
+											style="flex-direction: column"
+											:style="
+												$vuetify.breakpoint.lgAndUp
+													? 'height: 180px'
+													: 'height: 210px'
+											"
 											class="d-flex justify-space-between"
 										>
-											<article style="height: 120px; overflow-y: auto">
+											<article
+												style="overflow-y: auto"
+												:style="
+													$vuetify.breakpoint.lgAndUp
+														? 'height: 120px'
+														: 'height: 150px'
+												"
+												class="body-2"
+											>
 												{{ el.text }}
 											</article>
-											<h3 class="pt-2">
+											<h3>
 												<a
-													class="primary--text"
+													class="primary--text caption font-weight-bold"
 													style="text-decoration: none"
 													:href="el.href"
 													>Leer estudio completo</a
@@ -384,12 +405,11 @@
 												{{ el.text }}
 											</article>
 											<h3 class="pt-2">
-												<a
-													class="primary--text"
-													style="text-decoration: none"
-													:href="el.href"
-													>Leer estudio completo</a
-												>
+												<a style="text-decoration: none" :href="el.href">
+													<span class="primary--text caption">
+														Leer estudio completo
+													</span>
+												</a>
 											</h3>
 										</v-card-text>
 									</v-card>
@@ -453,7 +473,7 @@
 				<v-col tag="section" cols="12" class="text-left">
 					<v-expansion-panels v-model="panel" tag="section" accordion flat dark multiple>
 						<v-expansion-panel v-for="item in faq" :key="item.id" class="pa-0">
-							<v-expansion-panel-header color="primary" class="py-1 pl-2" light>
+							<v-expansion-panel-header color="primary" class="py-3 pl-3" light>
 								<h4 class="white--textfont-weight-bold">{{ item.title }}</h4>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content class="white text--secondary pt-5">
@@ -472,7 +492,7 @@
 						style="border-radius: 15px"
 						color="primary"
 						x-large
-						class="font-weight-bold pa-8"
+						class="font-weight-bold body-1 py-8 px-10"
 						depressed
 						nuxt
 						:to="{ name: 'comenzar' }"
@@ -483,7 +503,7 @@
 				<v-col
 					v-if="$vuetify.breakpoint.mdAndUp"
 					cols="12"
-					class="text-center headline mt-6 text--secondary"
+					class="text-center body-1 font-weight-bold mt-6 text--secondary"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
@@ -806,13 +826,6 @@ export default {
 				},
 			],
 		};
-	},
-	computed: {
-		heightPhone() {
-			if (this.$vuetify.breakpoint.xs) return '300px';
-			else if (this.$vuetify.breakpoint.smAndDown) return '500px';
-			else return '600px';
-		},
 	},
 };
 </script>
