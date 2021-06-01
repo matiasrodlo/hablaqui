@@ -47,14 +47,14 @@
 		<v-col cols="12" sm="3" md="3" class="headline text--secondary">
 			<v-img
 				contain
-				width="230"
+				width="240"
 				class="mx-auto"
 				:src="`${$config.LANDING_URL}/Startup.png`"
 			></v-img>
 			<v-img
 				contain
 				height="60"
-				width="170"
+				width="220"
 				class="mt-3 mx-auto"
 				:src="`${$config.LANDING_URL}/Adolfo_Ibanez.png`"
 			></v-img>
