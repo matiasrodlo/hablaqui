@@ -66,7 +66,7 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-2"
 				>
 					Cómo funciona
 				</v-col>
@@ -149,7 +149,7 @@
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="font-weight-bold body-1 py-8 px-10"
+							class="font-weight-bold body-1 py-8 px-10 ml-md-16 mt-10 mb-5"
 							depressed
 							:to="{ name: 'psicologos' }"
 						>
