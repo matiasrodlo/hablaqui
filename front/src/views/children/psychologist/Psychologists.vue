@@ -9,7 +9,7 @@
 			<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
 					<template v-if="!this.$vuetify.breakpoint.smAndDown">
-						<v-card-title class="text--secondary">
+						<v-card-title class="body-1 font-weight-bold text--secondary">
 							Filtrar por
 						</v-card-title>
 						<v-card-text>
@@ -28,34 +28,42 @@
 					<v-card-text>
 						<v-row>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Género</div>
+								<div class="body-1 font-weight-bold mt-2">Género</div>
 								<v-checkbox
 									v-model="gender"
 									value="male"
 									:disabled="loading"
-									label="Hombre"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+									><template #label>
+										<span class="body-2 text-capitalize">Hombre</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="female"
 									:disabled="loading"
-									label="Mujer"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Mujer</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="transgender"
 									:disabled="loading"
-									label="Transgénero"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Transgénero</span>
+									</template>
+								</v-checkbox>
 							</v-col>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Modelo terapéuticos</div>
+								<div class="body-1 font-weight-bold mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
 										'cognitivo',
@@ -70,32 +78,40 @@
 										:key="i"
 										v-model="models"
 										:value="item"
-										:label="item"
 										:disabled="loading"
-										class="text-capitalize"
 										hide-details
 										@change="filterPanel"
-									></v-checkbox>
+									>
+										<template #label>
+											<span class="body-2 text-capitalize">{{ item }}</span>
+										</template>
+									</v-checkbox>
 								</template>
 							</v-col>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Idioma</div>
+								<div class="body-1 font-weight-bold mt-2">Idioma</div>
 								<v-checkbox
 									v-model="languages"
 									value="spanish"
 									:disabled="loading"
-									label="Español"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Español</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="languages"
 									value="english"
 									:disabled="loading"
-									label="Ingles"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Ingles</span>
+									</template>
+								</v-checkbox>
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -359,18 +375,13 @@
 								dark
 							>
 								<v-card-text style="height: 310px">
-									<v-btn
-										fab
-										light
-										depressed
-										width="100"
+									<v-img
 										height="100"
-										style="border: 8px solid #5EB3E4;"
-										class="mb-5 mt-3"
-									>
-										<v-icon color="primary" size="60">mdi-magnify</v-icon>
-									</v-btn>
-									<div class="title font-weight-bold">
+										width="100"
+										class="mx-auto"
+										src="/img/Lupa.png"
+									></v-img>
+									<div class="mt-4 title font-weight-bold">
 										Te ayudamos a encontrar a tu psicólogo
 									</div>
 									<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
@@ -497,20 +508,12 @@
 								<v-card-text>
 									<v-row align="center" justify="center">
 										<v-col cols="3" class="text-center">
-											<v-list-item-avatar size="140" class="ml-4">
-												<v-btn
-													fab
-													light
-													depressed
-													width="140"
-													height="140"
-													style="border: 8px solid #5EB3E4;"
-												>
-													<v-icon color="primary" size="60"
-														>mdi-magnify</v-icon
-													>
-												</v-btn>
-											</v-list-item-avatar>
+											<v-img
+												height="140"
+												width="140"
+												class="mx-auto"
+												src="/img/Lupa.png"
+											></v-img>
 										</v-col>
 										<v-col cols="9">
 											<v-row justify="space-between">
