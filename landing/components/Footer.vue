@@ -35,7 +35,7 @@
 				class="font-weight-bold"
 				:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
 			>
-				Soporte Técnico
+				Atención a clientes
 			</div>
 			<div class="py-2" :class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'">
 				c@hablaqui.com

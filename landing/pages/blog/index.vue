@@ -13,11 +13,11 @@
 					cols="12"
 					sm="10"
 					xl="8"
-					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mt-md-16 mb-6"
+					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mb-6"
 				>
 					Blog Hablaquí
 				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9">
+				<v-col cols="12" sm="8" md="10" xl="9" class="mb-5">
 					<v-expansion-panels
 						flat
 						style="border-radius: 25px"
@@ -27,7 +27,7 @@
 							<v-expansion-panel-header>
 								<div
 									v-if="!combobox.length"
-									class="title primary--text text-h6 my-1"
+									class="body-1 font-weight-bold primary--text my-1"
 								>
 									Seleccione un asunto
 								</div>
@@ -42,7 +42,7 @@
 								</div>
 								<div
 									v-if="$vuetify.breakpoint.mdAndUp"
-									class="text-right primary--text title"
+									class="text-right font-weight-bold primary--text body-1"
 								>
 									Editar filtros
 								</div>
@@ -117,7 +117,7 @@
 												: 'text-transform: none !important;'
 										"
 										:class="hover ? 'elevation-4' : 'elevation-0'"
-										:height="$vuetify.breakpoint.mdAndUp ? '500' : '600'"
+										:height="$vuetify.breakpoint.mdAndUp ? '400' : '500'"
 										width="100%"
 										flat
 									>
@@ -128,40 +128,42 @@
 														cols="6"
 														tag="section"
 														style="
-															height: 490px;
+															height: 390px;
 															display: flex;
 															flex-direction: column !important;
 														"
 														class="justify-space-between"
 													>
 														<article>
-															<h3 class="title black--text">
+															<h3
+																class="body-1 font-weight-bold black--text"
+															>
 																{{ article.title }}
 															</h3>
 															<v-btn
 																text
-																class="px-0 my-3 text-h6"
+																class="body-1 px-0 my-3"
 																color="primary"
 															>
 																{{ article.categories }}
 															</v-btn>
-															<h4 class="text-h6 font-weight-light">
+															<h4 class="body-2 font-weight-light">
 																{{
 																	strippedContent(
 																		article.HTMLbody,
-																		200
+																		400
 																	)
 																}}
 															</h4>
 														</article>
 														<aside>
-															<h3 class="title font-weight-bold">
+															<h3 class="body-1">
 																<span
 																	v-if="
 																		article.author ||
 																		article.originalAuthor
 																	"
-																	class="primary--text"
+																	class="font-weight-bold primary--text"
 																>
 																	por
 																	{{
@@ -185,7 +187,7 @@
 													<v-col tag="section" cols="6">
 														<v-img
 															style="border-radius: 10px"
-															height="465"
+															height="365"
 															class="grey lighten-3"
 															:src="article.thumbnail"
 														>
@@ -197,7 +199,7 @@
 										<template v-else>
 											<v-img
 												class="grey lighten-3"
-												height="250"
+												height="150"
 												:src="article.thumbnail"
 											>
 											</v-img>
@@ -213,26 +215,26 @@
 												<article>
 													<v-btn
 														text
-														class="px-0 my-3 text-h6"
+														class="px-0 my-3 body-1"
 														color="primary"
 													>
 														{{ article.categories }}
 													</v-btn>
-													<h3 class="title black--text">
+													<h3 class="body-1 font-weight-bold black--text">
 														{{ article.title }}
 													</h3>
 													<h4
 														v-if="!$vuetify.breakpoint.mdAndUp"
-														class="text-h6 font-weight-light"
+														class="body-2 font-weight-light"
 													>
-														{{ strippedContent(article.HTMLbody, 140) }}
+														{{ strippedContent(article.HTMLbody, 350) }}
 													</h4>
 												</article>
 												<aside>
-													<div class="title black--text">
+													<div class="body-1 black--text">
 														<span
 															v-if="article.originalAuthor"
-															class="primary--text"
+															class="font-weight-bold primary--text"
 														>
 															por {{ article.originalAuthor }}
 														</span>
@@ -297,7 +299,7 @@
 					<v-hover v-slot="{ hover }">
 						<v-btn
 							v-if="length <= articles.length"
-							class="px-10"
+							class="px-10 mb-16"
 							x-large
 							color="primary"
 							:outlined="!hover"
@@ -313,7 +315,7 @@
 		<img :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
 			<v-row justify="center">
-				<v-col tag="section" cols="12">
+				<v-col tag="section" cols="12" class="mb-5">
 					<h2
 						class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
 					>
@@ -323,10 +325,10 @@
 						Liderazgo y salud mental en el mercado laboral
 					</h3>
 				</v-col>
-				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
+				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
 					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" tag="section" cols="12" md="3">
+							<v-col :key="n" tag="section" cols="12" sm="6" lg="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
 										v-if="n < 4"
@@ -337,7 +339,7 @@
 												: 'transform: translateY(0)'
 										"
 										flat
-										height="500"
+										height="450"
 									>
 										<v-img
 											class="grey lighten-3"
@@ -346,30 +348,26 @@
 										>
 										</v-img>
 										<v-card-text
-											style="height: 300px; flex-direction: column"
+											style="height: 250px; flex-direction: column"
 											class="d-flex justify-space-between"
 										>
 											<article>
-												<h3
-													class="subtitle-1 primary--text font-weight-bold"
-												>
+												<h3 class="body-1 primary--text font-weight-bold">
 													{{ item.categories }}
 												</h3>
-												<h2 class="subtitle-1 font-weight-bold pb-0">
+												<h2 class="body-1 font-weight-bold pb-0">
 													{{ item.title }}
 												</h2>
-												<h4 class="subttitle-1 font-weight-light">
-													{{ strippedContent(item.HTMLbody, 150) }}
+												<h4 class="body-2 font-weight-light mt-4">
+													{{ strippedContent(item.HTMLbody, 135) }}
 												</h4>
 											</article>
 											<aside>
-												<span
-													class="caption primary--text font-weight-bold"
-												>
+												<span class="body-1 primary--text font-weight-bold">
 													{{ item.originalAuthor }}
 												</span>
 												<span v-if="item.originalAuthor">|</span>
-												<span class="caption text--disabled">
+												<span class="body-1 text--disabled">
 													{{ dates(item.createdAt) }}
 												</span>
 											</aside>
@@ -378,16 +376,14 @@
 								</v-hover>
 							</v-col>
 						</template>
-						<v-col cols="12" class="text-center">
+						<v-col cols="12" class="text-center mt-10">
 							<v-hover v-slot="{ hover }">
 								<v-btn
-									v-if="length <= articles.length"
 									x-large
 									class="px-10"
 									color="white"
 									:outlined="!hover"
 									rounded
-									@click="length = length + 6"
 									>Ver todos</v-btn
 								>
 							</v-hover>
@@ -409,11 +405,11 @@
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
-				<v-col tag="section" cols="12" class="pb-8">
+				<v-col tag="section" cols="12" class="pt-16 pb-8">
 					<h2 class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
 						Categoria Populares
 					</h2>
-					<h3 class="text--disabled text-h6 text-center">
+					<h3 class="text--secondary text-h6 mt-2 text-center">
 						Ver las categorías más visitadas
 					</h3>
 				</v-col>
@@ -435,7 +431,9 @@
 										<v-list-item-avatar size="120" class="ml-4">
 											<v-img :src="element.img"></v-img>
 										</v-list-item-avatar>
-										<h2 class="text-center caption font-weight-bold">
+										<h2
+											class="text-center body-2 font-weight-bold secondary--text"
+										>
 											{{ element.title }}
 										</h2>
 									</v-card-text>
@@ -450,13 +448,13 @@
 		<v-container fluid class="primary py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row justify="space-between">
-						<v-col cols="10" sm="5" class="white--text">
+					<v-row justify="center" align="center">
+						<v-col cols="10" md="7" class="white--text">
 							<div>
 								<h3 class="headline font-weight-bold mt-8">
 									Recibe contenido exclusivo periódicamente
 								</h3>
-								<h3 class="subtitle-1 font-weight-bold mb-8">
+								<h3 class="body-1 font-weight-bold mb-8 mt-2">
 									Suscríbete y alcanza tu mejor versión
 								</h3>
 								<div style="position: relative">
@@ -464,30 +462,37 @@
 										solo
 										flat
 										placeholder="Introduzca su correo electrónico aquí"
-										class="white pr-4"
+										style="max-width: 415px"
+										class="white pr-10"
 										hide-details
 									>
 									</v-text-field>
 									<v-btn
 										depressed
 										absolute
+										:style="
+											$vuetify.breakpoint.mdAndUp
+												? 'right: 90px;'
+												: 'right: -5px;'
+										"
 										style="
 											height: 100%;
-											right: -60px;
+
 											top: 0;
 											border-radius: 0 25px 25px 0;
 										"
 										color="info"
 									>
-										Enviar
+										<span class="px-5 px-md-10">Enviar</span>
 									</v-btn>
 								</div>
 							</div>
 						</v-col>
-						<v-col cols="12" sm="5" class="text-center">
+						<v-col cols="12" md="5" class="text-center">
 							<v-img
 								max-height="350"
-								contain
+								max-width="400"
+								class="mx-auto"
 								:src="`${$config.LANDING_URL}/recursos-11.png`"
 							></v-img>
 						</v-col>
@@ -496,12 +501,8 @@
 			</v-row>
 		</v-container>
 		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
-		<v-container fluid>
-			<v-row justify="center">
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<Footer />
-				</v-col>
-			</v-row>
+		<v-container tag="footer">
+			<Footer />
 		</v-container>
 	</div>
 </template>

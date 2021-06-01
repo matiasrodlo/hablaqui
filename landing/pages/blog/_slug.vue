@@ -98,12 +98,12 @@
 							></v-img>
 						</v-list-item-avatar>
 						<v-list-item-content>
-							<v-list-item-title class="caption text-sm-h6">
+							<v-list-item-title class="caption text-sm-h6 text--secondary">
 								Transcrito y revisado clínicamente por:
+								<span class="primary--text">
+									{{ article.author || article.originalAuthor }}
+								</span>
 							</v-list-item-title>
-							<div class="primary--text">
-								{{ article.author || article.originalAuthor }}
-							</div>
 							<div
 								v-if="$vuetify.breakpoint.mdAndUp"
 								class="font-weight-light body-1"
@@ -124,7 +124,7 @@
 				<!-- blogs -->
 				<template v-if="blogs.length">
 					<template v-for="(item, i) in blogs">
-						<v-col v-if="length > i" :key="i" cols="12" md="3" class="mt-16">
+						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4" class="mt-16">
 							<v-hover v-slot="{ hover }">
 								<v-card
 									nuxt
@@ -136,7 +136,7 @@
 											: 'text-transform: none !important;'
 									"
 									:class="hover ? 'elevation-4' : 'elevation-0'"
-									height="500"
+									height="450"
 									width="100%"
 									flat
 								>
@@ -148,18 +148,18 @@
 									</v-img>
 									<v-card-text
 										class="d-flex justify-space-between"
-										style="flex-direction: column; height: 250px"
+										style="flex-direction: column; height: 200px"
 									>
 										<div>
-											<v-btn text class="px-0 my-3 text-h6" color="primary">
+											<v-btn text class="px-0 my-3 body-1" color="primary">
 												{{ item.categories }}
 											</v-btn>
-											<h3 class="title black--text">
+											<h3 class="body-1 font-weight-bold black--text">
 												{{ item.title }}
 											</h3>
 										</div>
 										<div>
-											<div class="title black--text">
+											<div class="body-1 black--text">
 												<span
 													v-if="item.originalAuthor"
 													class="primary--text"
@@ -184,43 +184,51 @@
 		<v-container fluid class="primary py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row justify="space-between">
-						<v-col cols="10" sm="5" class="white--text">
+					<v-row justify="center" align="center">
+						<v-col cols="10" md="7" class="white--text">
 							<div>
-								<div class="headline font-weight-bold mt-8">
+								<h3 class="headline font-weight-bold mt-8">
 									Recibe contenido exclusivo periódicamente
-								</div>
-								<div class="subtitle-1 font-weight-bold mb-8">
+								</h3>
+								<h3 class="body-1 font-weight-bold mb-8 mt-2">
 									Suscríbete y alcanza tu mejor versión
-								</div>
+								</h3>
 								<div style="position: relative">
 									<v-text-field
 										solo
 										flat
 										placeholder="Introduzca su correo electrónico aquí"
-										class="white pr-4"
+										style="max-width: 415px"
+										class="white pr-10"
 										hide-details
 									>
 									</v-text-field>
 									<v-btn
 										depressed
 										absolute
+										:style="
+											$vuetify.breakpoint.mdAndUp
+												? 'right: 90px;'
+												: 'right: -5px;'
+										"
 										style="
 											height: 100%;
-											right: -60px;
+
 											top: 0;
 											border-radius: 0 25px 25px 0;
 										"
 										color="info"
-										>Enviar</v-btn
 									>
+										<span class="px-5 px-md-10">Enviar</span>
+									</v-btn>
 								</div>
 							</div>
 						</v-col>
-						<v-col cols="12" sm="5" class="text-center">
+						<v-col cols="12" md="5" class="text-center">
 							<v-img
 								max-height="350"
-								contain
+								max-width="400"
+								class="mx-auto"
 								:src="`${$config.LANDING_URL}/recursos-11.png`"
 							></v-img>
 						</v-col>
@@ -245,7 +253,7 @@ export default {
 	},
 	data() {
 		return {
-			length: 4,
+			length: 3,
 			article: null,
 			blogs: [],
 			rating: 0,
