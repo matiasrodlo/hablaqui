@@ -113,13 +113,23 @@
 					</v-card-text>
 					<v-card-text>
 						<v-form>
-							<v-textarea
-								rows="1"
-								no-resize
-								prepend-inner-icon="mdi-plus-circle-outline"
-								append-icon="mdi-microphone"
-								label="Mensaje a Juan"
-							></v-textarea>
+							<v-textarea outlined rows="1" dense no-resize label="Mensaje a Juan">
+								<template #prepend-inner>
+									<v-img src="/img/adjuntar.png" height="25" width="25"></v-img>
+								</template>
+								<template #append>
+									<v-btn depressed icon>
+										<v-img src="/img/voz.png" height="30" width="30"></v-img>
+									</v-btn>
+									<v-btn class="ml-2 mr-2" depressed icon>
+										<v-img
+											src="/img/message.png"
+											height="30"
+											width="30"
+										></v-img>
+									</v-btn>
+								</template>
+							</v-textarea>
 						</v-form>
 					</v-card-text>
 				</v-card>
