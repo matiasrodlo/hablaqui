@@ -17,3 +17,24 @@
 		</div>
 	</v-app-bar>
 </template>
+
+<script>
+import { landing } from '@/config';
+import { mapMutations } from 'vuex';
+
+export default {
+	computed: {
+		landing_page() {
+			return landing;
+		},
+	},
+	methods: {
+		logout() {
+			this.resetUser();
+			localStorage.removeItem('vuex');
+			this.$router.push({ name: 'auth' });
+		},
+		...mapMutations({ resetUser: 'User/reset' }),
+	},
+};
+</script>

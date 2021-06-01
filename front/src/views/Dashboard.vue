@@ -28,7 +28,7 @@
 			</v-list>
 		</v-col>
 		<v-col cols="10">
-			<div style="border-radius: 50px" class="white">
+			<div style="border-radius: 50px 0 0 0" class="white">
 				<router-view />
 			</div>
 		</v-col>
