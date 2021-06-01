@@ -1,30 +1,36 @@
 <template>
 	<v-container fluid style="height: 100vh">
 		<appbar />
-		<v-row style="height: calc(100vh - 110px)">
-			<v-col cols="12" md="3">
-				<div v-if="loading" style="height: 300px" class="text-center">
+		<v-row>
+			<v-col cols="12" md="4" lg="3">
+				<div v-if="loading" style="height: 10%" class="text-center">
 					<v-progress-circular indeterminate color="primary"></v-progress-circular>
 				</div>
-				<div v-else style="height: 100%">
+				<div v-else style="height: calc(100vh - 135px)">
 					<v-text-field
-						style="border-radius: 25px"
+						height="10%"
+						style="border-radius: 25px; flex: 1+"
 						hide-details
 						filled
+						dense
 						outlined
 						single-line
 						append-icon="mdi-magnify"
 						label="Buscar"
 					/>
-					<div class="primary--text subtitle-1 mt-10 mb-3">Mi Psicólogo</div>
-					<v-divider style="border-color: #5EB3E4"></v-divider>
-					<v-list two-line>
+					<div>
+						<v-subheader class="primary--text body-1 mt-5 px-0">
+							Mi Psicólogo
+						</v-subheader>
+						<v-divider style="border-color: #5EB3E4"></v-divider>
+					</div>
+					<v-list two-line style="height: 15%">
 						<v-list-item>
 							<v-list-item-avatar
 								style="border: 3px solid #2070E5; border-radius: 40px; "
-								size="80"
+								size="60"
 							>
-								<avatar :url="user.avatar" :name="user.name" size="80" />
+								<avatar :url="user.avatar" :name="user.name" size="60" />
 							</v-list-item-avatar>
 
 							<v-list-item-content>
@@ -35,35 +41,35 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
-					<div class="primary--text subtitle-1 mt-10 mb-3">General</div>
-					<v-divider style="border-color: #5EB3E4"></v-divider>
-					<div style="max-height: 400px; overflow-y: auto">
-						<v-list two-line v-for="n in 5" :key="n">
-							<v-list-item>
-								<v-list-item-avatar
-									style="border: 3px solid #2070E5; border-radius: 40px; "
-									size="80"
-								>
-									<avatar :url="user.avatar" :name="user.name" size="80" />
-								</v-list-item-avatar>
-
-								<v-list-item-content>
-									<v-list-item-title v-html="user.name"></v-list-item-title>
-									<v-list-item-subtitle>
-										Psicólogo · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
+					<div>
+						<v-subheader class="primary--text body-1 px-0">General</v-subheader>
+						<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
 					</div>
+					<v-list two-line style="height: 57%; overflow-y: auto">
+						<v-list-item v-for="n in 5" :key="n">
+							<v-list-item-avatar
+								style="border: 3px solid #2070E5; border-radius: 40px; "
+								size="60"
+							>
+								<avatar :url="user.avatar" :name="user.name" size="60" />
+							</v-list-item-avatar>
+
+							<v-list-item-content>
+								<v-list-item-title v-html="user.name"></v-list-item-title>
+								<v-list-item-subtitle>
+									Psicólogo · Activo(a)
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
 				</div>
 			</v-col>
-			<v-col cols="12" md="9">
-				<v-card height="100%" style="border-radius: 15px">
-					<v-card-text>
+			<v-col cols="12" md="8" lg="9">
+				<v-card style="height: calc(100vh - 135px); border-radius: 15px">
+					<v-card-text style="height: 19%">
 						<v-list-item>
-							<v-list-item-avatar size="80">
-								<v-img height="80" width="80" :src="user.avatar"></v-img>
+							<v-list-item-avatar size="60">
+								<v-img height="60" width="60" :src="user.avatar"></v-img>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
 								<span>
@@ -91,14 +97,16 @@
 						</v-list-item>
 					</v-card-text>
 					<v-divider></v-divider>
-					<v-card-text style="height: 75%;display: flex; flex-direction: column;">
+					<v-card-text
+						style="height: 65%; display: flex; flex-direction: column; overflow-y: auto;"
+					>
 						<div
 							v-for="(item, i) in messages"
 							:key="i"
 							class="talkbubble"
 							:class="item.sender == 'yo' ? 'talkbubble__one' : 'talkbubble__two'"
 						>
-							<p style="max-height: 75px;overflow-y: auto">
+							<p style="max-height: 75px; overflow-y: auto">
 								{{ item.msj }}
 							</p>
 						</div>

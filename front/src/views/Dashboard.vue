@@ -1,7 +1,7 @@
 <template>
 	<v-row class="primary" style="height: 100vh;" no-gutters>
 		<v-col cols="2">
-			<div style="height: 310px" class="d-flex align-center justify-center">
+			<div style="height: 260px" class="d-flex align-center justify-center">
 				<img
 					@click="() => $router.push({ name: 'all-psicologos' })"
 					style="width: 70px; cursor: pointer;"
@@ -20,7 +20,7 @@
 						<v-img :src="item.img" :alt="item.name" />
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold subtitle-1">
+						<v-list-item-title class="font-weight-bold body-2">
 							{{ item.name }}
 						</v-list-item-title>
 					</v-list-item-content>
