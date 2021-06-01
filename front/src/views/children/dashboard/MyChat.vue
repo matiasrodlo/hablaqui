@@ -65,17 +65,29 @@
 							<v-list-item-avatar size="80">
 								<v-img height="80" width="80" :src="user.avatar"></v-img>
 							</v-list-item-avatar>
-							<v-list-item-title class="title">
+							<v-list-item-title class="title d-flex">
 								<span>
 									{{ user.name }}
 								</span>
 								<span v-if="user.lastName">
 									{{ user.lastName }}
 								</span>
-								<v-img height="35" width="35" src="/img/agregar.png"></v-img>
-								<v-img height="35" width="35" src="/img/camara.png"></v-img>
-								<v-img height="35" width="35" src="/img/adjuntar.png"></v-img>
 							</v-list-item-title>
+							<v-list-item-action>
+								<v-btn icon>
+									<v-img height="35" width="40" src="/img/llamada.png"></v-img>
+								</v-btn>
+							</v-list-item-action>
+							<v-list-item-action>
+								<v-btn icon class="ml-8">
+									<v-img height="35" width="60" src="/img/camara.png"></v-img>
+								</v-btn>
+							</v-list-item-action>
+							<v-list-item-action>
+								<v-btn icon class="ml-6">
+									<v-img height="35" width="40" src="/img/agregar.png"></v-img>
+								</v-btn>
+							</v-list-item-action>
 						</v-list-item>
 					</v-card-text>
 					<v-divider></v-divider>
