@@ -37,6 +37,9 @@ let psychologist = new Schema({
 	name: {
 		type: String,
 	},
+	shortName: {
+		type: String,
+	},
 	gender: {
 		type: String,
 	},
