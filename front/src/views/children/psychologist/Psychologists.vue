@@ -373,7 +373,7 @@
 									<div class="title font-weight-bold">
 										Te ayudamos a encontrar a tu psicólogo
 									</div>
-									<div class="body-1 mt-2 mx-auto" style="max-width: 250px">
+									<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
 										Encuentra al psicólogo que necesitas, solo responde las
 										siguientes preguntas.
 									</div>
@@ -384,7 +384,7 @@
 										class="px-10"
 										light
 										color="#F0F8FF"
-										style="border-radius:10px"
+										style="border-radius: 5px"
 										depressed
 										:to="{ name: 'auth', params: { q: 'register' } }"
 									>
@@ -444,7 +444,7 @@
 										</v-avatar>
 										<div
 											v-if="item.name"
-											class="subtitle-1 font-weight-bold text--secondary"
+											class="body-2 font-weight-bold secondary--text"
 										>
 											{{
 												item.name.length > 25
@@ -452,26 +452,15 @@
 													: item.name
 											}}
 										</div>
-										<span v-if="item.code" class="caption primary--text">
+										<span
+											v-if="item.code"
+											class="caption primary--text pb-2"
+											style="border-bottom: 1px solid #BDBDBD"
+										>
 											<span> Codigo {{ item.code }} </span>
-											<v-divider
-												style="margin-left: 90px; margin-right: 90px"
-											></v-divider>
 										</span>
 									</div>
-									<template v-if="$vuetify.breakpoint.mdAndUp">
-										<div v-if="item.description" class="body-2 mt-2">
-											{{
-												item.description.length > 160
-													? item.description.slice(0, 160).concat('...')
-													: item.description
-											}}
-										</div>
-										<div v-else class="text--secondary headline my-16">
-											Sin descripción
-										</div>
-									</template>
-									<div v-else class="body-2 mt-2">
+									<div class="body-2 mt-4 text-capitalize">
 										<span v-for="(el, e) in item.specialties" :key="e">
 											{{ el }};
 										</span>
@@ -480,16 +469,18 @@
 								<v-card-text>
 									<div>
 										<v-btn
+											class="body-2 px-6"
 											color="primary"
 											depressed
-											style="border-radius:10px"
+											style="border-radius: 5px"
 											@click="toAuth(item)"
 										>
 											Agenda cita oline
 										</v-btn>
 									</div>
-									<div>
+									<div class="mt-1">
 										<v-btn
+											class="body-2"
 											text
 											:to="{ name: 'psicologo', params: { id: item._id } }"
 										>
@@ -596,7 +587,7 @@
 												text
 												color="primary"
 												depressed
-												class="pa-0 font-weight-bold"
+												class="pa-0 body-2 font-weight-bold"
 												:to="{
 													name: 'psicologo',
 													params: { id: item._id },
