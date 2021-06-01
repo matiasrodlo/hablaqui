@@ -97,7 +97,7 @@
 						open-on-hover
 						offset-y
 						:close-on-content-click="false"
-						:nudge-width="250"
+						:nudge-width="200"
 					>
 						<template v-slot:activator="{ on, attrs }">
 							<div class="d-inline-block" v-bind="attrs" v-on="on">
@@ -112,11 +112,17 @@
 									v-for="(item, i) in menu"
 									:key="i"
 								>
-									<v-list-item-avatar size="50" color="primary">
-										<img :src="item.img" :alt="item.name" />
+									<v-list-item-avatar size="40" color="primary">
+										<v-img
+											contain
+											height="30"
+											:src="item.img"
+											:alt="item.name"
+										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title class="secondary--text title"
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
 											>{{ item.name }}
 										</v-list-item-title>
 									</v-list-item-content>
@@ -124,7 +130,7 @@
 							</v-list>
 							<v-card-actions class="primary">
 								<v-spacer></v-spacer>
-								<div class="white--text py-2">Hablaquí</div>
+								<div class="white--text py-1">Hablaquí</div>
 								<v-spacer></v-spacer>
 							</v-card-actions>
 						</v-card>
