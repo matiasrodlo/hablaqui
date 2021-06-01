@@ -182,7 +182,7 @@
 		</v-container>
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
-			<v-row align="center" justify="center" class="py-16">
+			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="space-between">
 						<v-col cols="10" sm="5" class="white--text">

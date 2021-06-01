@@ -35,14 +35,14 @@
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :to="{ name: 'comenzar' }">
+				<v-list-item link nuxt :to="{ name: 'psicologos' }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
 				preserveAspectRatio="none"
@@ -58,63 +58,40 @@
 		<v-app-bar absolute flat height="115" color="transparent">
 			<router-link to="/" exact>
 				<img
-					style="max-width: 180px"
+					style="max-width: 160px"
 					alt="hablaqui"
 					:src="`${$config.LANDING_URL}/logo.png`"
 					contain
 				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn
-					nuxt
-					:to="{ name: 'psicologos' }"
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="ml-4 text-h6 text--secondary"
-				>
-					Psicólogos
+				<v-btn nuxt :to="{ name: 'psicologos' }" light rounded text class="mx-6">
+					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
 				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					to="/faq"
-				>
-					Preguntas frecuentes
+				<v-btn light rounded text to="/faq">
+					<span class="text--secondary body-1 font-weight-bold">
+						Preguntas frecuentes
+					</span>
 				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					to="/blog"
-				>
-					Blog
+				<v-btn light rounded text active-class="info--text" to="/blog">
+					<span class="body-1 text--secondary font-weight-bold">Blog</span>
 				</v-btn>
 				<v-spacer></v-spacer>
 				<div>
-					<v-list-item
-						active-class="transparent"
-						class="text-h6 mr-2"
-						:to="{ name: 'entrar' }"
-					>
-						<span class="text--secondary">Iniciar sesión</span>
+					<v-list-item active-class="transparent" class="mr-2" :to="{ name: 'entrar' }">
+						<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
 					</v-list-item>
 				</div>
 				<v-btn
 					rounded
-					class="mx-2 text-h6 py-0 px-6"
+					x-large
+					class="mx-2 py-0 px-10"
 					color="primary"
 					depressed
 					nuxt
-					:to="{ name: 'comenzar' }"
+					:to="{ name: 'psicologos' }"
 				>
-					Comenzar
+					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
 			</template>
 			<template v-else>
