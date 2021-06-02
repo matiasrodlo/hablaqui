@@ -13,9 +13,10 @@ export default {
 	},
 	async getMessages({ commit }) {
 		try {
-			await axios('/chat/get-messages', {
+			const { data } = await axios('/chat/get-chats', {
 				method: 'GET',
 			});
+			console.log(data);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

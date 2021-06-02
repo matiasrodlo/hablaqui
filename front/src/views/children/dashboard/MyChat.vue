@@ -27,59 +27,8 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<template v-if="user && user.psychologist">
-						<v-card-text>
-							<v-subheader class="primary--text body-1 px-0">
-								Mi Psicólogo
-							</v-subheader>
-							<v-divider style="border-color: #5EB3E4"></v-divider>
-						</v-card-text>
-						<v-list two-line class="py-0">
-							<v-list-item>
-								<v-list-item-avatar
-									style="border: 3px solid #2070E5; border-radius: 40px; "
-									size="60"
-								>
-									<avatar :url="user.avatar" :name="user.name" size="60" />
-								</v-list-item-avatar>
-
-								<v-list-item-content>
-									<v-list-item-title v-html="user.name"></v-list-item-title>
-									<v-list-item-subtitle>
-										Psicólogo · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
-					</template>
-					<template v-if="psychologists.length">
-						<v-card-text class="py-0">
-							<v-subheader class="primary--text body-1 px-0">General</v-subheader>
-							<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
-						</v-card-text>
-						<v-list two-line style="overflow-y: auto">
-							<v-list-item
-								v-for="psy in psychologists"
-								:key="psy._id"
-								@click="setSelected(psy)"
-							>
-								<v-list-item-avatar
-									style="border: 3px solid #2070E5; border-radius: 40px; "
-									size="60"
-								>
-									<avatar :url="psy.avatar" :name="psy.name" size="60" />
-								</v-list-item-avatar>
-
-								<v-list-item-content>
-									<v-list-item-title v-html="psy.name"></v-list-item-title>
-									<v-list-item-subtitle>
-										Psicólogo · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
-					</template>
-					<template v-else>
+					<!-- chats psychologist -->
+					<template v-if="user && user.role == 'psychologist'">
 						<div style="flex: 1" class="d-flex justify-center align-center">
 							<div class="text-center">
 								<span class=" body-1 primary--text font-weight-bold">
@@ -99,6 +48,83 @@
 								</v-btn>
 							</div>
 						</div>
+					</template>
+					<!-- chats user -->
+					<template v-else>
+						<template v-if="user && user.psychologist">
+							<v-card-text>
+								<v-subheader class="primary--text body-1 px-0">
+									Mi Psicólogo
+								</v-subheader>
+								<v-divider style="border-color: #5EB3E4"></v-divider>
+							</v-card-text>
+							<v-list two-line class="py-0">
+								<v-list-item>
+									<v-list-item-avatar
+										style="border: 3px solid #2070E5; border-radius: 40px; "
+										size="60"
+									>
+										<avatar :url="user.avatar" :name="user.name" size="60" />
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-subtitle>
+											Psicólogo · Activo(a)
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</template>
+						<template v-if="psychologists.length">
+							<v-card-text class="py-0">
+								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
+								<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
+							</v-card-text>
+							<v-list two-line style="overflow-y: auto">
+								<v-list-item
+									v-for="psy in psychologists"
+									:key="psy._id"
+									@click="setSelected(psy)"
+								>
+									<v-list-item-avatar
+										style="border: 3px solid #2070E5; border-radius: 40px; "
+										size="60"
+									>
+										<avatar :url="psy.avatar" :name="psy.name" size="60" />
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title v-html="psy.name"></v-list-item-title>
+										<v-list-item-subtitle>
+											Psicólogo · Activo(a)
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</template>
+						<template v-else>
+							<div style="flex: 1" class="d-flex justify-center align-center">
+								<div class="text-center">
+									<span class=" body-1 primary--text font-weight-bold">
+										Comienza a hablar con nuestros psicólogos
+									</span>
+									<div class="mt-10 body-2">
+										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+										magna
+									</div>
+									<v-btn
+										class="mt-10 px-8 py-6"
+										color="primary"
+										rounded
+										@click="getPsy"
+									>
+										Buscar ahora
+									</v-btn>
+								</div>
+							</div>
+						</template>
 					</template>
 				</v-card>
 			</v-col>
@@ -319,6 +345,9 @@ export default {
 	},
 	mounted() {
 		moment.locale('es');
+		if (this.user.role == 'psychologist') {
+			this.getMessages();
+		}
 	},
 	methods: {
 		async onSubmit() {
@@ -349,6 +378,7 @@ export default {
 		...mapActions({
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',
+			getMessages: 'Chat/getMessages',
 			startConversation: 'Chat/startConversation',
 			getPsychologists: 'Psychologist/getMessages',
 		}),
