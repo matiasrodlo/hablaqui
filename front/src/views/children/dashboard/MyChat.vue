@@ -32,20 +32,12 @@
 						<div style="flex: 1" class="d-flex justify-center align-center">
 							<div class="text-center">
 								<span class=" body-1 primary--text font-weight-bold">
-									Comienza a hablar con nuestros psicólogos
+									Los usuarios te comenzarán a contactar
 								</span>
 								<div class="mt-10 body-2">
 									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
 									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
 								</div>
-								<v-btn
-									class="mt-10 px-8 py-6"
-									color="primary"
-									rounded
-									@click="getPsy"
-								>
-									Buscar ahora
-								</v-btn>
 							</div>
 						</div>
 					</template>
