@@ -18,7 +18,7 @@ const getMessages = async (user, receiver) => {
 			messages: await Chat.findOne({
 				psychologist: user._id,
 				user: receiver,
-			}),
+			}).populate('user psychologist'),
 		});
 	}
 	if (user.role == 'user') {
@@ -35,13 +35,17 @@ const getChats = async user => {
 	if (user.role == 'psychologist') {
 		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);
 		return okResponse('Chats conseguidos', {
-			chats: await Chat.find({ psychologist: user.psychologist._id }),
+			chats: await Chat.find({
+				psychologist: user.psychologist._id,
+			}).populate('user psychologist'),
 		});
 	}
 	if (user.role == 'user') {
 		logInfo(`El usuario ${user.email} ha conseguido sus chats`);
 		return okResponse('Chat conseguidos', {
-			chats: await Chat.find({ user: user._id }),
+			chats: await Chat.find({ user: user._id }).populate(
+				'user psychologist'
+			),
 		});
 	}
 	return conflictResponse(
