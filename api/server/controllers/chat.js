@@ -15,10 +15,23 @@ const chatController = {
 			errorCallback(e, res, 'Error iniciando el chat');
 		}
 	},
+	async getChats(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await chatService.getChats(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error consiguiendo los chats');
+		}
+	},
 	async getMessages(req, res) {
 		try {
 			const { user } = req;
-			const { data, code } = await chatService.getMessages(user);
+			const { receiver } = req.params;
+			const { data, code } = await chatService.getMessages(
+				user,
+				receiver
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error consiguiendo los mensajes');
