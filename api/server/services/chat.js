@@ -12,7 +12,26 @@ const startConversation = async (psychologistId, user) => {
 	return okResponse('chat inicializado', { newChat });
 };
 
-const getMessages = async user => {
+const getMessages = async (user, receiver) => {
+	if (user.role == 'psychologist') {
+		return okResponse('Mensajes conseguidos', {
+			messages: await Chat.findOne({
+				psychologist: user._id,
+				user: receiver,
+			}),
+		});
+	}
+	if (user.role == 'user') {
+		return okResponse('Mensajes conseguidos', {
+			messages: await Chat.findOne({
+				psychologist: receiver,
+				user: user._id,
+			}),
+		});
+	}
+	return conflictResponse('Ha ocurrido un error');
+};
+const getChats = async user => {
 	if (user.role == 'psychologist') {
 		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);
 		return okResponse('Chats conseguidos', {
@@ -95,6 +114,7 @@ const createReport = async (
 const chatService = {
 	startConversation,
 	getMessages,
+	getChats,
 	sendMessage,
 	createReport,
 };

@@ -25,12 +25,12 @@
 						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'auth' }">
 					<v-list-item-content>
 						<v-list-item-title>Entrar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'psicologos' }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -62,7 +62,7 @@
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-spacer></v-spacer>
 				<v-btn
-					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					:to="{ name: 'psicologos' }"
 					large
 					rounded
 					class="mx-4 px-8"

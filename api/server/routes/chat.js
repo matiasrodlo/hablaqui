@@ -11,7 +11,13 @@ chatRouter.post(
 );
 
 chatRouter.get(
-	'/chat/get-messages',
+	'/chat/get-chats',
+	[passport.authenticate('jwt', { session: true })],
+	chatController.getChats
+);
+
+chatRouter.get(
+	'/chat/get-messages/:receiver',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.getMessages
 );
