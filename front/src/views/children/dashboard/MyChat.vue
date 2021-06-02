@@ -151,10 +151,12 @@
 						</v-list-item>
 						<v-divider></v-divider>
 					</v-card-text>
-					<v-card-text v-if="loadingChat" style="flex: 1">
-						<div style="height: 400px;" class="d-flex justify-center align-center">
-							<v-progress-circular indeterminate color="primary" />
-						</div>
+					<v-card-text
+						v-if="loadingChat"
+						style="flex: 1"
+						class="d-flex justify-center align-center"
+					>
+						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
 					<v-card-text
 						v-else
