@@ -71,7 +71,7 @@
 				<v-card
 					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
 				>
-					<v-card-text>
+					<v-card-text style="flex: 0">
 						<v-list-item>
 							<v-list-item-avatar size="50">
 								<v-img height="50" width="50" :src="user.avatar"></v-img>
@@ -100,10 +100,10 @@
 								</v-btn>
 							</v-list-item-action>
 						</v-list-item>
+						<v-divider></v-divider>
 					</v-card-text>
-					<v-divider></v-divider>
 					<v-card-text
-						style="height: calc(100vh - 300px); display: flex; flex-direction: column; overflow-y: auto;"
+						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;"
 					>
 						<div
 							v-for="(item, i) in messages"
@@ -116,7 +116,7 @@
 							</p>
 						</div>
 					</v-card-text>
-					<v-card-text>
+					<v-card-text style="flex: 0">
 						<v-form>
 							<v-textarea
 								outlined
