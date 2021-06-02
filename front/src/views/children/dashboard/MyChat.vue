@@ -3,28 +3,31 @@
 		<appbar />
 		<v-row>
 			<v-col cols="12" md="4" lg="3">
-				<div v-if="loading" style="height: 10%" class="text-center">
+				<div v-if="loading" class="text-center">
 					<v-progress-circular indeterminate color="primary"></v-progress-circular>
 				</div>
-				<div v-else style="height: calc(100vh - 135px)">
-					<v-text-field
-						height="10%"
-						style="border-radius: 25px; flex: 1+"
-						hide-details
-						filled
-						dense
-						outlined
-						single-line
-						append-icon="mdi-magnify"
-						label="Buscar"
-					/>
-					<div>
-						<v-subheader class="primary--text body-1 mt-5 px-0">
+				<v-card
+					v-else
+					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
+					flat
+				>
+					<v-card-text class="py-0">
+						<v-text-field
+							style="border-radius: 25px;"
+							hide-details
+							filled
+							dense
+							outlined
+							single-line
+							append-icon="mdi-magnify"
+							label="Buscar"
+						/>
+						<v-subheader class="primary--text body-1 px-0">
 							Mi Psicólogo
 						</v-subheader>
 						<v-divider style="border-color: #5EB3E4"></v-divider>
-					</div>
-					<v-list two-line style="height: 15%">
+					</v-card-text>
+					<v-list two-line class="py-0">
 						<v-list-item>
 							<v-list-item-avatar
 								style="border: 3px solid #2070E5; border-radius: 40px; "
@@ -41,11 +44,11 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
-					<div>
+					<v-card-text class="py-0">
 						<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 						<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
-					</div>
-					<v-list two-line style="height: 57%; overflow-y: auto">
+					</v-card-text>
+					<v-list two-line style="overflow-y: auto">
 						<v-list-item v-for="n in 5" :key="n">
 							<v-list-item-avatar
 								style="border: 3px solid #2070E5; border-radius: 40px; "
@@ -62,14 +65,16 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
-				</div>
+				</v-card>
 			</v-col>
 			<v-col cols="12" md="8" lg="9">
-				<v-card style="height: calc(100vh - 135px); border-radius: 15px">
-					<v-card-text style="height: 19%">
+				<v-card
+					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
+				>
+					<v-card-text>
 						<v-list-item>
-							<v-list-item-avatar size="60">
-								<v-img height="60" width="60" :src="user.avatar"></v-img>
+							<v-list-item-avatar size="50">
+								<v-img height="50" width="50" :src="user.avatar"></v-img>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
 								<span>
@@ -86,7 +91,7 @@
 							</v-list-item-action>
 							<v-list-item-action>
 								<v-btn icon class="ml-8">
-									<v-img height="35" width="60" src="/img/camara.png"></v-img>
+									<v-img height="35" width="50" src="/img/camara.png"></v-img>
 								</v-btn>
 							</v-list-item-action>
 							<v-list-item-action>
@@ -98,7 +103,7 @@
 					</v-card-text>
 					<v-divider></v-divider>
 					<v-card-text
-						style="height: 65%; display: flex; flex-direction: column; overflow-y: auto;"
+						style="height: calc(100vh - 300px); display: flex; flex-direction: column; overflow-y: auto;"
 					>
 						<div
 							v-for="(item, i) in messages"
@@ -113,7 +118,14 @@
 					</v-card-text>
 					<v-card-text>
 						<v-form>
-							<v-textarea outlined rows="1" dense no-resize label="Mensaje a Juan">
+							<v-textarea
+								outlined
+								rows="1"
+								dense
+								no-resize
+								label="Mensaje a Juan"
+								hide-details
+							>
 								<template #prepend-inner>
 									<v-img src="/img/adjuntar.png" height="25" width="25"></v-img>
 								</template>

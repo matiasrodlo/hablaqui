@@ -1,14 +1,14 @@
 <template>
 	<v-row class="primary" style="height: 100vh;" no-gutters>
-		<v-col cols="2">
-			<div style="height: 260px" class="d-flex align-center justify-center">
+		<v-col cols="2" class="d-flex" style="flex-direction: column">
+			<div style="flex:1; height: 230px" class="d-flex align-center justify-center">
 				<img
 					@click="() => $router.push({ name: 'all-psicologos' })"
 					style="width: 70px; cursor: pointer;"
 					src="img/logo_tiny_white.png"
 				/>
 			</div>
-			<v-list dark color="primary" class="pt-0" left shaped top>
+			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
 				<v-list-item
 					class="my-4"
 					link
@@ -26,6 +26,9 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<v-list-item style="flex: 1">
+				Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum
+			</v-list-item>
 		</v-col>
 		<v-col cols="10">
 			<div style="border-radius: 50px 0 0 0" class="white">
