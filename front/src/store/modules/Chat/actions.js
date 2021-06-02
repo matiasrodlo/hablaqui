@@ -2,12 +2,11 @@ import axios from '@/plugins/axios';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
-	async startConversation({ commit }, { idPsychologist }) {
+	async startConversation({ commit }, idPsychologist) {
 		try {
 			await axios(`/chat/start-conversation/${idPsychologist}`, {
 				method: 'POST',
 			});
-			snackBarSuccess('Articulo creado exitosamente')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -15,9 +14,8 @@ export default {
 	async getMessages({ commit }) {
 		try {
 			await axios('/chat/get-messages', {
-				method: 'get',
+				method: 'GET',
 			});
-			snackBarSuccess('Articulo creado exitosamente')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -26,9 +24,18 @@ export default {
 		try {
 			await axios(`/chat/send-message/${psychologistId}/${userId}`, {
 				method: 'POST',
-				data: payload,
+				data: { content: payload },
 			});
-			snackBarSuccess('Articulo creado exitosamente')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getChat({ commit }, receiver) {
+		try {
+			const { data } = await axios(`/chat/get-messages/${receiver}`, {
+				method: 'GET',
+			});
+			commit('setChat', data.messages);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -39,7 +46,7 @@ export default {
 				method: 'POST',
 				data: { reportType, issue },
 			});
-			snackBarSuccess('Articulo creado exitosamente')(commit);
+			snackBarSuccess('Reporte enviado')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

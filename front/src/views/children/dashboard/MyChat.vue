@@ -61,7 +61,7 @@
 							<v-list-item
 								v-for="psy in psychologists"
 								:key="psy._id"
-								@click="selected = psy"
+								@click="setSelected(psy)"
 							>
 								<v-list-item-avatar
 									style="border: 3px solid #2070E5; border-radius: 40px; "
@@ -113,17 +113,24 @@
 									:to="{ name: 'perfil' }"
 									style="text-decoration: none; height: 50px; height: 50px"
 								>
-									<v-img height="50" width="50" :src="user.avatar"></v-img>
+									<avatar
+										:url="selected.avatar"
+										size="50"
+										:name="selected.name"
+									/>
 								</router-link>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
 								<router-link :to="{ name: 'perfil' }" style="text-decoration: none">
 									<span class="secondary--text">
-										{{ user.name }}
+										{{ selected.name }}
 									</span>
-									<span class="secondary--text" v-if="user.lastName">
-										{{ user.lastName }}
+									<span class="secondary--text" v-if="selected.lastName">
+										{{ selected.lastName }}
 									</span>
+									<div class="secondary--text caption text--disabled">
+										{{ subHeader }}
+									</div>
 								</router-link>
 							</v-list-item-title>
 							<v-list-item-action>
@@ -144,22 +151,83 @@
 						</v-list-item>
 						<v-divider></v-divider>
 					</v-card-text>
-					<v-card-text
-						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;"
-					>
-						<div
-							v-for="(item, i) in messages"
-							:key="i"
-							class="talkbubble"
-							:class="item.sender == 'yo' ? 'talkbubble__one' : 'talkbubble__two'"
-						>
-							<p style="max-height: 75px; overflow-y: auto">
-								{{ item.msj }}
-							</p>
+					<v-card-text v-if="loadingChat" style="flex: 1">
+						<div style="height: 400px;" class="d-flex justify-center align-center">
+							<v-progress-circular indeterminate color="primary" />
 						</div>
 					</v-card-text>
-					<v-card-text style="flex: 0">
-						<v-form>
+					<v-card-text
+						v-else
+						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;"
+					>
+						<template v-if="selected.assitant">
+							<div class="text-center">
+								hablaquí
+							</div>
+							<div
+								class="mx-auto text-center headline font-weight-bold primary--text my-4"
+								style="max-width: 320px"
+							>
+								Bienvenido al chat confidencial con el psicólogo
+							</div>
+							<v-divider
+								class="mx-auto"
+								style="width: 100px; border-color: #2070E5"
+							></v-divider>
+							<div class="my-10 mx-auto text-center body-2" style="max-width: 400px">
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+								nonummy nibh euismod tincidunt ut laoreet dolore magna
+							</div>
+							<v-divider class="mx-auto" style="width: 300px;"></v-divider>
+							<div
+								class="my-5 mx-auto text-center body-2 text--disabled"
+								style="max-width: 400px"
+							>
+								{{ setDate() }}
+							</div>
+							<div style="width: 50%; display: flex; justify-content: space-between">
+								<span class="text--disabled">{{ selected.name }}</span>
+								<span class="text--disabled">{{ setDate() }}</span>
+							</div>
+							<div class="talkbubble talkbubble__two" style="margin-top: 2px">
+								<p style="body-2 max-height: 75px; overflow-y: auto">
+									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+								</p>
+							</div>
+						</template>
+						<template v-else>
+							<template v-for="(item, i) in chat.messages">
+								<div
+									:key="i"
+									class="d-flex mt-3"
+									:class="item.sentByUser ? 'justify-end' : 'justify-start'"
+								>
+									<div
+										style="width: 50%; display: flex; justify-content: space-between"
+									>
+										<span class="text--disabled body-2">
+											{{ item.sentByUser ? user.name : selected.name }}
+										</span>
+										<span class="text--disabled body-2">
+											{{ setDate(item.createdAt) }}
+										</span>
+									</div>
+								</div>
+								<div
+									:key="i"
+									class="talkbubble"
+									:class="item.sentByUser ? 'talkbubble__one' : 'talkbubble__two'"
+								>
+									<div style="max-height: 75px; overflow-y: auto body-2">
+										{{ item.message }}
+									</div>
+								</div>
+							</template>
+						</template>
+					</v-card-text>
+					<v-card-text v-if="!selected.assitant" style="flex: 0">
+						<v-form @submit.prevent="onSubmit">
 							<v-textarea
 								outlined
 								rows="1"
@@ -167,6 +235,7 @@
 								no-resize
 								label="Mensaje a Juan"
 								hide-details
+								v-model="message"
 							>
 								<template #prepend-inner>
 									<v-img src="/img/adjuntar.png" height="25" width="25"></v-img>
@@ -175,7 +244,7 @@
 									<v-btn depressed icon>
 										<v-img src="/img/voz.png" height="30" width="30"></v-img>
 									</v-btn>
-									<v-btn class="ml-2 mr-2" depressed icon>
+									<v-btn class="ml-2 mr-2" depressed icon type="submit">
 										<v-img
 											src="/img/message.png"
 											height="30"
@@ -186,6 +255,17 @@
 							</v-textarea>
 						</v-form>
 					</v-card-text>
+					<v-card-text v-else>
+						<div class="text-center body-2">
+							Lorem ipsum dolor sit amet, consectetuer adiVer terminos y condiciones
+							de Chat
+						</div>
+						<div class="primary--text body-2 text-center">
+							<a :href="`${landingUrl}/condiciones`" style="text-decoration: none">
+								Ver terminos y condiciones de Chat
+							</a>
+						</div>
+					</v-card-text>
 				</v-card>
 			</v-col>
 		</v-row>
@@ -194,6 +274,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
+import { landing } from '@/config';
+
 export default {
 	components: {
 		appbar: () => import('@/components/ui/AppbarProfile'),
@@ -202,34 +285,59 @@ export default {
 	data() {
 		return {
 			loading: false,
-			items: [
-				{
-					color: 'primary',
-					icon: 'mdi-calendar-month',
-					title: 'Lorem ipsum dolor sit amet',
-					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
-				},
-				{
-					icon: 'mdi-calendar-month',
-					title: 'Lorem ipsum dolor sit amet',
-					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
-				},
-				{
-					icon: 'mdi-calendar-month',
-					title: 'Lorem ipsum dolor sit amet',
-					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
-				},
-			],
-			messages: [],
+			loadingChat: false,
 			selected: null,
+			message: '',
 		};
 	},
 	computed: {
-		...mapGetters({ user: 'User/user', psychologists: 'Psychologist/psychologists' }),
+		subHeader() {
+			if (this.selected.assitant) return 'Asistente virtual';
+			if (!this.selected.assitant && this.selected._id == this.user.psychologist)
+				return 'Mi psicólogo';
+			if (!this.selected.assitant && this.selected._id != this.user.psychologist)
+				return 'Terapeuta de Hablaquí con licencia';
+			return '';
+		},
+		landingUrl() {
+			return landing;
+		},
+		...mapGetters({
+			chat: 'Chat/chat',
+			user: 'User/user',
+			psychologists: 'Psychologist/psychologists',
+		}),
+	},
+	created() {
+		this.selected = {
+			name: 'Habi',
+			assitant: true,
+			avatar: '',
+		};
+	},
+	mounted() {
+		moment.locale('es');
 	},
 	methods: {
+		async onSubmit() {
+			await this.sendMessage({
+				payload: this.message,
+				psychologistId: this.selected._id,
+				userId: this.user._id,
+			});
+			await this.getChat(this.selected._id);
+			this.message = '';
+		},
+		setDate(time) {
+			if (time) return moment(time).format('llll');
+			return moment().format('llll');
+		},
 		async setSelected(psy) {
 			this.selected = psy;
+			this.loadingChat = true;
+			await this.getChat(psy._id);
+			this.loadingChat = false;
+			if (!this.chat) this.startConversation(psy._id);
 		},
 		async getPsy() {
 			this.loading = true;
@@ -237,6 +345,9 @@ export default {
 			this.loading = false;
 		},
 		...mapActions({
+			getChat: 'Chat/getChat',
+			sendMessage: 'Chat/sendMessage',
+			startConversation: 'Chat/startConversation',
 			getPsychologists: 'Psychologist/getMessages',
 		}),
 	},
@@ -252,8 +363,8 @@ $font__color_two: #ffffff;
 .v-text-field--filled:not {
 	margin-top: 0 !important;
 }
+
 .talkbubble {
-	margin-top: 15px;
 	margin-bottom: 15px;
 	position: relative;
 	width: 50%;
@@ -261,43 +372,17 @@ $font__color_two: #ffffff;
 	border-radius: 15px;
 
 	&__one {
-		color: $font__color_one;
-		align-self: flex-end;
-		border: solid $color__one;
-		background: $color__one;
-	}
-
-	&__one:before {
-		content: '';
-		position: absolute;
-		right: 10%;
-		top: 100%;
-		width: 0;
-		height: 0;
-
-		border-left: 13px solid transparent;
-		border-right: 13px solid transparent;
-		border-top: 26px solid $color__one;
-	}
-
-	&__two {
 		color: $font__color_two;
-		align-self: flex-start;
+		align-self: flex-end;
 		border: solid $color__two;
 		background: $color__two;
 	}
 
-	&__two:before {
-		content: '';
-		position: absolute;
-		right: 90%;
-		top: 100%;
-		width: 0;
-		height: 0;
-
-		border-left: 13px solid transparent;
-		border-right: 13px solid transparent;
-		border-top: 26px solid $color__two;
+	&__two {
+		color: $font__color_one;
+		align-self: flex-start;
+		border: solid $color__one;
+		background: $color__one;
 	}
 }
 </style>
