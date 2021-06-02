@@ -26,7 +26,7 @@ const getMessages = async (user, receiver) => {
 			messages: await Chat.findOne({
 				psychologist: receiver,
 				user: user._id,
-			}),
+			}).populate('user psychologist'),
 		});
 	}
 	return conflictResponse('Ha ocurrido un error');

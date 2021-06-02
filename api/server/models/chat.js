@@ -31,10 +31,12 @@ let reportSchema = new Schema(
 let chatSchema = new Schema(
 	{
 		user: {
-			type: String,
+			type: Schema.Types.ObjectId,
+			ref: 'User',
 		},
 		psychologist: {
-			type: String,
+			type: Schema.Types.ObjectId,
+			ref: 'psychologist',
 		},
 		messages: [messageSchema],
 		reports: [reportSchema],
