@@ -6,14 +6,15 @@ import Psychologist from '@/store/modules/Psychologist';
 import Appointments from '@/store/modules/Appointments';
 import User from '@/store/modules/User';
 import Blog from '@/store/modules/Blog';
+import Chat from '@/store/modules/Chat';
 
 Vue.use(Vuex);
 
 const dataPerssist = createPersistedState({
-	paths: ['User'],
+	paths: ['User', 'Psychologist', 'Chat'],
 });
 
 export default new Vuex.Store({
-	modules: { Appointments, Psychologist, Snackbar, User, Blog },
+	modules: { Appointments, Blog, Chat, Psychologist, Snackbar, User },
 	plugins: [dataPerssist],
 });

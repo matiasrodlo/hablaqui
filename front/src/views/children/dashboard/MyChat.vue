@@ -3,7 +3,11 @@
 		<appbar />
 		<v-row>
 			<v-col cols="12" md="4" lg="3">
-				<div v-if="loading" class="text-center">
+				<div
+					style="height: calc(100vh - 135px);"
+					v-if="loading"
+					class="d-flex justify-center align-center"
+				>
 					<v-progress-circular indeterminate color="primary"></v-progress-circular>
 				</div>
 				<v-card
@@ -22,49 +26,80 @@
 							append-icon="mdi-magnify"
 							label="Buscar"
 						/>
-						<v-subheader class="primary--text body-1 px-0">
-							Mi Psicólogo
-						</v-subheader>
-						<v-divider style="border-color: #5EB3E4"></v-divider>
 					</v-card-text>
-					<v-list two-line class="py-0">
-						<v-list-item>
-							<v-list-item-avatar
-								style="border: 3px solid #2070E5; border-radius: 40px; "
-								size="60"
-							>
-								<avatar :url="user.avatar" :name="user.name" size="60" />
-							</v-list-item-avatar>
+					<template v-if="user && user.psychologist">
+						<v-card-text>
+							<v-subheader class="primary--text body-1 px-0">
+								Mi Psicólogo
+							</v-subheader>
+							<v-divider style="border-color: #5EB3E4"></v-divider>
+						</v-card-text>
+						<v-list two-line class="py-0">
+							<v-list-item>
+								<v-list-item-avatar
+									style="border: 3px solid #2070E5; border-radius: 40px; "
+									size="60"
+								>
+									<avatar :url="user.avatar" :name="user.name" size="60" />
+								</v-list-item-avatar>
 
-							<v-list-item-content>
-								<v-list-item-title v-html="user.name"></v-list-item-title>
-								<v-list-item-subtitle>
-									Psicólogo · Activo(a)
-								</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-					<v-card-text class="py-0">
-						<v-subheader class="primary--text body-1 px-0">General</v-subheader>
-						<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
-					</v-card-text>
-					<v-list two-line style="overflow-y: auto">
-						<v-list-item v-for="n in 5" :key="n">
-							<v-list-item-avatar
-								style="border: 3px solid #2070E5; border-radius: 40px; "
-								size="60"
+								<v-list-item-content>
+									<v-list-item-title v-html="user.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Psicólogo · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+					</template>
+					<template v-if="psychologists.length">
+						<v-card-text class="py-0">
+							<v-subheader class="primary--text body-1 px-0">General</v-subheader>
+							<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
+						</v-card-text>
+						<v-list two-line style="overflow-y: auto">
+							<v-list-item
+								v-for="psy in psychologists"
+								:key="psy._id"
+								@click="selected = psy"
 							>
-								<avatar :url="user.avatar" :name="user.name" size="60" />
-							</v-list-item-avatar>
+								<v-list-item-avatar
+									style="border: 3px solid #2070E5; border-radius: 40px; "
+									size="60"
+								>
+									<avatar :url="psy.avatar" :name="psy.name" size="60" />
+								</v-list-item-avatar>
 
-							<v-list-item-content>
-								<v-list-item-title v-html="user.name"></v-list-item-title>
-								<v-list-item-subtitle>
-									Psicólogo · Activo(a)
-								</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
+								<v-list-item-content>
+									<v-list-item-title v-html="psy.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Psicólogo · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+					</template>
+					<template v-else>
+						<div style="flex: 1" class="d-flex justify-center align-center">
+							<div class="text-center">
+								<span class=" body-1 primary--text font-weight-bold">
+									Comienza a hablar con nuestros psicólogos
+								</span>
+								<div class="mt-10 body-2">
+									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+								</div>
+								<v-btn
+									class="mt-10 px-8 py-6"
+									color="primary"
+									rounded
+									@click="getPsy"
+								>
+									Buscar ahora
+								</v-btn>
+							</div>
+						</div>
+					</template>
 				</v-card>
 			</v-col>
 			<v-col cols="12" md="8" lg="9">
@@ -74,15 +109,22 @@
 					<v-card-text style="flex: 0">
 						<v-list-item>
 							<v-list-item-avatar size="50">
-								<v-img height="50" width="50" :src="user.avatar"></v-img>
+								<router-link
+									:to="{ name: 'perfil' }"
+									style="text-decoration: none; height: 50px; height: 50px"
+								>
+									<v-img height="50" width="50" :src="user.avatar"></v-img>
+								</router-link>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
-								<span>
-									{{ user.name }}
-								</span>
-								<span v-if="user.lastName">
-									{{ user.lastName }}
-								</span>
+								<router-link :to="{ name: 'perfil' }" style="text-decoration: none">
+									<span class="secondary--text">
+										{{ user.name }}
+									</span>
+									<span class="secondary--text" v-if="user.lastName">
+										{{ user.lastName }}
+									</span>
+								</router-link>
 							</v-list-item-title>
 							<v-list-item-action>
 								<v-btn icon>
@@ -178,39 +220,24 @@ export default {
 					subtitle: 'consectetuer adipiscing elit, sed diam nonummy nibh euismod',
 				},
 			],
-			messages: [
-				{
-					sender: 'yo',
-					msj:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla  tristique diam vel tristique diam vel tristique diam vel',
-				},
-				{
-					sender: 'el',
-					msj:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla  tristique diam vel tristique diam vel tristique diam vel',
-				},
-				{
-					sender: 'yo',
-					msj: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-				},
-				{
-					sender: 'yo',
-					msj: 'Nulla  tristique diam vel tristique diam vel tristique diam vel',
-				},
-			],
+			messages: [],
+			selected: null,
 		};
 	},
 	computed: {
 		...mapGetters({ user: 'User/user', psychologists: 'Psychologist/psychologists' }),
 	},
-	async mounted() {
-		this.loading = true;
-		await this.getPsychologists();
-		this.loading = false;
-	},
 	methods: {
+		async setSelected(psy) {
+			this.selected = psy;
+		},
+		async getPsy() {
+			this.loading = true;
+			await this.getPsychologists();
+			this.loading = false;
+		},
 		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
+			getPsychologists: 'Psychologist/getMessages',
 		}),
 	},
 };

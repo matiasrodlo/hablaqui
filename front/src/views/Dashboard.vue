@@ -27,7 +27,9 @@
 				</v-list-item>
 			</v-list>
 			<v-list-item style="flex: 1">
-				Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum
+				<div class="white--text">
+					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum
+				</div>
 			</v-list-item>
 		</v-col>
 		<v-col cols="10">
