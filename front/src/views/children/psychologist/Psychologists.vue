@@ -453,16 +453,22 @@
 												{{ item.name.substr(0, 1) }}
 											</span>
 										</v-avatar>
-										<div
+										<router-link
 											v-if="item.name"
-											class="body-2 font-weight-bold secondary--text"
+											style="text-decoration: none; display: block"
+											:to="{
+												name: 'psicologo',
+												params: { id: item._id },
+											}"
 										>
-											{{
-												item.name.length > 25
-													? item.name.slice(0, 25).concat('...')
-													: item.name
-											}}
-										</div>
+											<span class="body-2 font-weight-bold secondary--text">
+												{{
+													item.name.length > 25
+														? item.name.slice(0, 25).concat('...')
+														: item.name
+												}}
+											</span>
+										</router-link>
 										<span
 											v-if="item.code"
 											class="caption primary--text pb-2"
@@ -601,10 +607,20 @@
 										</v-col>
 										<v-col cols="9">
 											<v-row justify="space-between">
-												<v-col
-													class="headline font-weight-bold text--secondary"
-												>
-													{{ item.name }}
+												<v-col>
+													<router-link
+														style="text-decoration: none"
+														:to="{
+															name: 'psicologo',
+															params: { id: item._id },
+														}"
+													>
+														<span
+															class="headline font-weight-bold text--secondary"
+														>
+															{{ item.name }}
+														</span>
+													</router-link>
 												</v-col>
 												<v-col cols="5" class="text-right">
 													<v-btn
