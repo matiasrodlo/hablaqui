@@ -60,35 +60,21 @@
 				<v-img style="max-width: 160px" alt="hablaqui Logo" src="/img/logo.png" contain />
 			</a>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn
+				<router-link
 					:to="{ name: 'all-psicologos' }"
-					light
-					rounded
-					text
-					link
-					class="mx-6 body-1 font-weight-bold text--secondary"
+					style="text-decoration: none"
+					class="mx-12"
 				>
-					Psicólogos
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					class="body-1 font-weight-bold text--secondary"
-					:href="`${landing_page}/faq`"
-				>
-					Preguntas frecuentes
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="body-1 font-weight-bold text--secondary"
-					:href="`${landing_page}/blog`"
-				>
-					Blog
-				</v-btn>
+					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+				</router-link>
+				<a style="text-decoration: none" class="mx-5" :href="`${landing_page}/faq`">
+					<span class="text--secondary body-1 font-weight-bold">
+						Preguntas frecuentes
+					</span>
+				</a>
+				<a style="text-decoration: none" class="mx-5" :href="`${landing_page}/blog`">
+					<span class="body-1 text--secondary font-weight-bold">Blog</span>
+				</a>
 				<v-spacer></v-spacer>
 				<div v-if="loggedIn" class="text-h6 text--secondary mr-16" rounded text>
 					<h3 class="mr-6 secondary--text d-inline-block">Hola {{ user.name }}</h3>
@@ -136,25 +122,23 @@
 						</v-card>
 					</v-menu>
 				</div>
-				<v-btn
+				<router-link
 					v-else
-					class="body-1 font-weight-bold text--secondary"
-					rounded
-					text
+					style="text-decoration: none"
+					class="mr-5"
 					:to="{ name: 'auth' }"
 				>
-					Iniciar sesión
-				</v-btn>
+					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+				</router-link>
 				<v-btn
 					v-if="!loggedIn"
 					rounded
-					class="mx-2 body-1 font-weight-bold"
+					class="mx-2 py-6 px-10"
 					color="primary"
 					depressed
-					x-large
 					:to="{ name: 'auth', params: { q: 'register' } }"
 				>
-					Comenzar
+					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
 			</template>
 			<template v-else>
