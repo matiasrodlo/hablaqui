@@ -2,8 +2,9 @@ import { Schema, model } from 'mongoose';
 
 let messageSchema = new Schema(
 	{
-		sentByUser: {
-			type: Boolean,
+		sentBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
 		},
 		message: {
 			type: String,

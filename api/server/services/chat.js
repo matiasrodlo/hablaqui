@@ -55,7 +55,7 @@ const getChats = async user => {
 
 const sendMessage = async (user, content, userId, psychologistId) => {
 	const newMessage = {
-		sentByUser: user.role == 'user' ? true : false,
+		sentBy: user._id,
 		message: content,
 	};
 
