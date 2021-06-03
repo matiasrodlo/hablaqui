@@ -21,10 +21,10 @@
 							<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
 								Tu psicólogo Online
 							</h1>
-							<h3 class="title my-10">
+							<div class="title my-10">
 								Demos juntos el primer paso hacia el bienestar emocional. Habla de
 								forma segura y privada con un psicólogo online cuando lo necesites.
-							</h3>
+							</div>
 							<v-btn
 								style="border-radius: 15px"
 								color="white"
@@ -36,9 +36,9 @@
 							>
 								Quiero empezar
 							</v-btn>
-							<h3 class="body-1 font-weight-bold mt-10">
+							<div class="body-1 font-weight-bold mt-10">
 								Desde $15.500CLP a la semana
-							</h3>
+							</div>
 							<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
 						</v-col>
 						<v-col v-if="$vuetify.breakpoint.mdAndUp" tag="section" cols="12" md="6">
@@ -265,12 +265,12 @@
 							<img style="height: 80px" :src="item.img" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
-							<h2 class="title font-weight-bold">{{ item.title }}</h2>
+							<h3 class="title font-weight-bold">{{ item.title }}</h3>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<h3 class="body-1 mx-auto" :style="`max-width: ${item.maxWidth}`">
+							<article class="body-1 mx-auto" :style="`max-width: ${item.maxWidth}`">
 								{{ item.desc }}
-							</h3>
+							</article>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -470,7 +470,7 @@
 		<v-container tag="section">
 			<v-row tag="section">
 				<v-col
-					tag="h3"
+					tag="h2"
 					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Preguntas frecuentes
@@ -824,13 +824,13 @@ export default {
 	},
 	head() {
 		return {
-			title: 'hablaqui',
+			title: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido:
-						'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
+					hid: 'description',
+					name: 'description',
+					content:
+						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
 				},
 			],
 		};

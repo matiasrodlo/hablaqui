@@ -161,12 +161,12 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Preguntas frecuentes',
+			title: 'Preguntas frecuentes | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Preguntas frecuentes hablaqui',
+					hid: 'description',
+					name: 'description',
+					content: 'Preguntas frecuentes Hablaquí',
 				},
 			],
 		};

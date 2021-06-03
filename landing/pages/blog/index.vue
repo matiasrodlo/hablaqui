@@ -540,12 +540,12 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Blog Hablaquí',
+			title: 'Blog | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Los articulos más actualizados de nuestros psicologos',
+					hid: 'description',
+					name: 'description',
+					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
 			],
 		};

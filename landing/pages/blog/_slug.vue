@@ -258,16 +258,17 @@ export default {
 			blogs: [],
 			rating: 0,
 			breadcrumb: [],
+			title: '',
 		};
 	},
 	head() {
 		return {
-			title: 'Blog - hablaqui',
+			title: `${this.title} | Hablaquí`,
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Los articulos más actualizados de nuestros psicologos',
+					hid: 'description',
+					name: 'description',
+					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
 			],
 		};
@@ -277,6 +278,7 @@ export default {
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
 		response = await response.json();
 		this.article = response.article;
+		this.title = this.article.title;
 		if (response.article.rating.average)
 			this.rating = parseFloat(response.article.rating.average.toFixed(1));
 		this.breadcrumb = [

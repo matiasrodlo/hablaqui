@@ -274,12 +274,12 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Forma parte',
+			title: 'Forma parte | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Tenga un consultorio sin salir de casa',
+					hid: 'description',
+					name: 'description',
+					content: 'Tenga un consultorio sin salir de casa',
 				},
 			],
 		};

@@ -6,12 +6,12 @@
 export default {
 	head() {
 		return {
-			title: 'Quiero comenzar',
+			title: 'Quiero comenzar | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Registrate y ¡Empezar ahora!',
+					hid: 'description',
+					name: 'description',
+					content: 'Registrate y ¡Empezar ahora!',
 				},
 			],
 		};
