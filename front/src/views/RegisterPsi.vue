@@ -60,15 +60,15 @@
 									<v-text-field
 										v-model="form.name"
 										type="text"
-										label="Nombre completo (Jose Pedro Perez Soto)"
+										label="Nombre/s"
 										outlined
 										autocomplete="off"
 										:error-messages="nameErrors"
 									></v-text-field>
 									<v-text-field
-										v-model="form.shortName"
+										v-model="form.lastName"
 										type="text"
-										label="Nombre y apellido (Jose Perez)"
+										label="Apellido/s"
 										outlined
 										autocomplete="off"
 										:error-messages="nameErrors"
@@ -124,9 +124,16 @@
 										Tus clientes quieren saber de ti cuentales que eres el mejor
 									</div>
 									<v-textarea
-										v-model="form.description"
+										v-model="form.personalDescription"
 										type="text"
 										label="Descripcion personal"
+										outlined
+										autocomplete="off"
+									></v-textarea>
+									<v-textarea
+										v-model="form.professionalDescription"
+										type="text"
+										label="Descripcion profesional"
 										outlined
 										autocomplete="off"
 									></v-textarea>
@@ -393,8 +400,9 @@ export default {
 			this.form = {
 				code: '',
 				name: '',
-				shortName: '',
-				description: '',
+				lastName: '',
+				personalDescription: '',
+				professionalDescription: '',
 				email: '',
 				experience: '',
 				formation: '',
@@ -409,8 +417,9 @@ export default {
 			const formData = new FormData();
 			formData.append('code', this.form.code);
 			formData.append('name', this.form.name);
-			formData.append('shortName', this.form.shortName);
-			formData.append('description', this.form.description);
+			formData.append('lastName', this.form.lastName);
+			formData.append('personalDescription', this.form.personalDescription);
+			formData.append('professionalDescription', this.form.professionalDescription);
 			formData.append('email', this.form.email);
 			formData.append('experience', this.form.experience);
 			formData.append('formation', this.form.formation);

@@ -37,7 +37,7 @@ let psychologist = new Schema({
 	name: {
 		type: String,
 	},
-	shortName: {
+	lastName: {
 		type: String,
 	},
 	gender: {
@@ -58,7 +58,10 @@ let psychologist = new Schema({
 	formation: {
 		type: String,
 	},
-	description: {
+	personalDescription: {
+		type: String,
+	},
+	professionalDescription: {
 		type: String,
 	},
 	models: {

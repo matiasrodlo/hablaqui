@@ -61,9 +61,10 @@ const createSession = async body => {
 const register = async (body, avatar) => {
 	const newPsychologist = {
 		name: body.name,
-		shortName: body.shortName,
+		lastName: body.lastName,
 		code: body.code,
-		description: body.description,
+		personalDescription: body.personalDescription,
+		professionalDescription: body.professionalDescription,
 		email: body.email,
 		experience: body.experience,
 		formation: body.formation,
