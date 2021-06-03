@@ -213,6 +213,7 @@
 					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
 				>
 					<v-card-text style="flex: 0">
+						<!-- cabecera -->
 						<v-list-item>
 							<v-list-item-avatar size="50">
 								<router-link
@@ -257,6 +258,7 @@
 						</v-list-item>
 						<v-divider></v-divider>
 					</v-card-text>
+					<!-- loader -->
 					<v-card-text
 						v-if="loadingChat"
 						style="flex: 1"
@@ -265,9 +267,11 @@
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
 					<v-card-text
+						class="scroll"
 						v-else
 						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;"
 					>
+						<!-- burbujas asistente -->
 						<template v-if="selected.assitant">
 							<div class="text-center">
 								hablaquí
@@ -306,47 +310,69 @@
 								</p>
 							</div>
 						</template>
-						<!-- bubbles -->
+						<!-- Burbujas de chat -->
 						<template v-else>
 							<div v-for="item in chat.messages" :key="item._id">
 								<div
 									class="d-flex mt-3"
 									:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
 								>
-									<div
-										style="width: 50%; display: flex; justify-content: space-between"
-									>
-										<span class="text--disabled body-2">
-											{{ selected.shortName || selected.name }}
-										</span>
-										<span class="text--disabled body-2">
-											{{ setDate(item.createdAt) }}
-										</span>
-									</div>
-								</div>
-								<div
-									class="talkbubble"
-									:class="
-										sentBy(item.sentBy) ? 'talkbubble__one' : 'talkbubble__two'
-									"
-								>
-									<div style="max-height: 75px; overflow-y: auto body-2">
-										{{ item.message }}
+									<div style="width: 50%">
+										<div style="display: flex; justify-content: space-between">
+											<span
+												v-if="sentBy(item.sentBy)"
+												class="text--disabled body-2"
+											>
+												{{ user.name }}
+											</span>
+											<span v-else class="text--disabled body-2">
+												{{ selected.shortName || selected.name }}
+											</span>
+											<span class="text--disabled body-2">
+												{{ setDate(item.createdAt) }}
+											</span>
+										</div>
+										<div
+											style="width: 100%"
+											class="talkbubble"
+											:class="
+												sentBy(item.sentBy)
+													? 'talkbubble__one'
+													: 'talkbubble__two'
+											"
+										>
+											<div style="max-height: 75px; overflow-y: auto body-2">
+												{{ item.message }}
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</template>
 					</v-card-text>
-					<v-card-text v-if="!selected.assitant" style="flex: 0">
+					<!-- Zona para escribir -->
+					<v-card-text v-if="selected.assitant">
+						<div class="text-center body-2">
+							Lorem ipsum dolor sit amet, consectetuer adiVer terminos y condiciones
+							de Chat
+						</div>
+						<div class="primary--text body-2 text-center">
+							<a :href="`${landingUrl}/condiciones`" style="text-decoration: none">
+								Ver terminos y condiciones de Chat
+							</a>
+						</div>
+					</v-card-text>
+					<v-card-text v-else style="flex: 0">
 						<v-form @submit.prevent="onSubmit">
-							<v-textarea
+							<v-text-field
 								outlined
-								rows="1"
 								dense
-								no-resize
 								:label="`Mensaje a ${selected.name}`"
 								hide-details
 								v-model="message"
+								:disabled="loadingMessage"
+								:loader-height="3"
+								:loading="loadingMessage"
 							>
 								<template #prepend-inner>
 									<v-img src="/img/adjuntar.png" height="25" width="25"></v-img>
@@ -363,19 +389,8 @@
 										></v-img>
 									</v-btn>
 								</template>
-							</v-textarea>
+							</v-text-field>
 						</v-form>
-					</v-card-text>
-					<v-card-text v-else>
-						<div class="text-center body-2">
-							Lorem ipsum dolor sit amet, consectetuer adiVer terminos y condiciones
-							de Chat
-						</div>
-						<div class="primary--text body-2 text-center">
-							<a :href="`${landingUrl}/condiciones`" style="text-decoration: none">
-								Ver terminos y condiciones de Chat
-							</a>
-						</div>
 					</v-card-text>
 				</v-card>
 			</v-col>
@@ -396,6 +411,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			loadingMessage: false,
 			loadingChat: false,
 			selected: null,
 			message: '',
@@ -438,6 +454,8 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
+			this.loadingMessage = true;
+			if (!this.message) return;
 			const payload = {
 				payload: this.message,
 				psychologistId:
@@ -450,11 +468,20 @@ export default {
 			await this.getChat(
 				this.user.role == 'psychologist' ? this.user._id : this.selected._id
 			);
+			this.scrollToElement();
 			this.message = '';
+			this.loadingMessage = false;
 		},
 		setDate(time) {
 			if (time) return moment(time).calendar();
 			return moment().format('llll');
+		},
+		scrollToElement() {
+			console.log('scroll');
+			const el = this.$el.getElementsByClassName('scroll')[0];
+			if (el) {
+				el.scrollTop = el.scrollHeight;
+			}
 		},
 		setSelectedUser(user) {
 			this.selected = {
@@ -464,6 +491,7 @@ export default {
 				_id: user._id,
 			};
 			this.setChat(this.chats.find(item => item.user._id == user._id));
+			this.scrollToElement();
 		},
 		sentBy(sentBy) {
 			return sentBy == this.user._id;
@@ -472,6 +500,7 @@ export default {
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
+			this.scrollToElement();
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
 		},
