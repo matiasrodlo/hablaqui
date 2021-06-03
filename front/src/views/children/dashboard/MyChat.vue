@@ -29,7 +29,59 @@
 					</v-card-text>
 					<!-- chats psychologist -->
 					<template v-if="user && user.role == 'psychologist'">
-						<div style="flex: 1" class="d-flex justify-center align-center">
+						<template>
+							<v-card-text>
+								<v-subheader class="primary--text body-1 px-0">
+									Mis consultantes
+								</v-subheader>
+								<v-divider style="border-color: #5EB3E4"></v-divider>
+							</v-card-text>
+							<v-list two-line class="py-0">
+								<v-list-item>
+									<v-list-item-avatar
+										style="border: 3px solid #2070E5; border-radius: 40px; "
+										size="60"
+									>
+										<avatar :url="user.avatar" :name="user.name" size="60" />
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-subtitle>
+											Psicólogo · Activo(a)
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</template>
+						<template v-if="usersFromChats.length">
+							<v-card-text class="py-0">
+								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
+								<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
+							</v-card-text>
+							<v-list two-line style="overflow-y: auto">
+								<v-list-item
+									v-for="(user, w) in usersFromChats"
+									:key="w"
+									@click="setSelectedUser(user)"
+								>
+									<v-list-item-avatar
+										style="border: 3px solid #2070E5; border-radius: 40px; "
+										size="60"
+									>
+										<avatar :url="user.avatar" :name="user.name" size="60" />
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-subtitle>
+											Psicólogo · Activo(a)
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</template>
+						<div v-else style="flex: 1" class="d-flex justify-center align-center">
 							<div class="text-center">
 								<span class=" body-1 primary--text font-weight-bold">
 									Los usuarios te comenzarán a contactar
@@ -75,9 +127,9 @@
 							</v-card-text>
 							<v-list two-line style="overflow-y: auto">
 								<v-list-item
-									v-for="psy in psychologists"
-									:key="psy._id"
-									@click="setSelected(psy)"
+									v-for="(psy, e) in psychologists"
+									:key="e"
+									@click="setSelectedPsy(psy)"
 								>
 									<v-list-item-avatar
 										style="border: 3px solid #2070E5; border-radius: 40px; "
@@ -217,17 +269,20 @@
 							</div>
 						</template>
 						<template v-else>
-							<template v-for="(item, i) in chat.messages">
+							<div v-for="item in chat.messages" :key="item._id">
 								<div
-									:key="i"
 									class="d-flex mt-3"
-									:class="item.sentByUser ? 'justify-end' : 'justify-start'"
+									:class="
+										item.sentByUser && user.role == 'user'
+											? 'justify-end'
+											: 'justify-start'
+									"
 								>
 									<div
 										style="width: 50%; display: flex; justify-content: space-between"
 									>
 										<span class="text--disabled body-2">
-											{{ item.sentByUser ? user.name : selected.name }}
+											{{ selected.name }}
 										</span>
 										<span class="text--disabled body-2">
 											{{ setDate(item.createdAt) }}
@@ -235,15 +290,18 @@
 									</div>
 								</div>
 								<div
-									:key="i"
 									class="talkbubble"
-									:class="item.sentByUser ? 'talkbubble__one' : 'talkbubble__two'"
+									:class="
+										item.sentByUser && user.role == 'user'
+											? 'talkbubble__one'
+											: 'talkbubble__two'
+									"
 								>
 									<div style="max-height: 75px; overflow-y: auto body-2">
 										{{ item.message }}
 									</div>
 								</div>
-							</template>
+							</div>
 						</template>
 					</v-card-text>
 					<v-card-text v-if="!selected.assitant" style="flex: 0">
@@ -253,7 +311,7 @@
 								rows="1"
 								dense
 								no-resize
-								label="Mensaje a Juan"
+								:label="`Mensaje a ${selected.name}`"
 								hide-details
 								v-model="message"
 							>
@@ -293,7 +351,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import { landing } from '@/config';
 
@@ -319,11 +377,15 @@ export default {
 				return 'Terapeuta de Hablaquí con licencia';
 			return '';
 		},
+		usersFromChats() {
+			return this.chats.map(item => item.user);
+		},
 		landingUrl() {
 			return landing;
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
+			chats: 'Chat/chats',
 			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 		}),
@@ -343,19 +405,34 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
-			await this.sendMessage({
+			const payload = {
 				payload: this.message,
-				psychologistId: this.selected._id,
-				userId: this.user._id,
-			});
-			await this.getChat(this.selected._id);
+				psychologistId:
+					this.user.role == 'psychologist'
+						? this.user.psychologist._id
+						: this.selected._id,
+				userId: this.user.role == 'psychologist' ? this.selected._id : this.user._id,
+			};
+			await this.sendMessage(payload);
+			await this.getChat(
+				this.user.role == 'psychologist' ? this.user._id : this.selected._id
+			);
 			this.message = '';
 		},
 		setDate(time) {
 			if (time) return moment(time).format('llll');
 			return moment().format('llll');
 		},
-		async setSelected(psy) {
+		setSelectedUser(user) {
+			this.selected = {
+				name: user.name,
+				lastName: user.lastName,
+				avatar: user.avatar,
+				_id: user._id,
+			};
+			this.setChat(this.chats.find(item => item.user._id == user._id));
+		},
+		async setSelectedPsy(psy) {
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
@@ -374,6 +451,7 @@ export default {
 			startConversation: 'Chat/startConversation',
 			getPsychologists: 'Psychologist/getMessages',
 		}),
+		...mapMutations({ setChat: 'Chat/setChat' }),
 	},
 };
 </script>

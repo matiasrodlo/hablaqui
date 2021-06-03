@@ -16,7 +16,7 @@ export default {
 			const { data } = await axios('/chat/get-chats', {
 				method: 'GET',
 			});
-			console.log(data);
+			commit('setChats', data.chats);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
