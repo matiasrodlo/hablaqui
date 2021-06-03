@@ -7,9 +7,9 @@
 			<div
 				v-if="!matchedPsychologists.length"
 				class="primary white--text text-center"
-				style="position: relative; padding: 100px 0; height: 400px"
+				style="position: relative; padding: 100px 0; height: 500px"
 			>
-				<div class="title text-h5 text-sm-h4 font-weight-bold">
+				<div class="title text-h5 text-sm-h4 font-weight-bold my-10">
 					Encuentra a tu especialista
 				</div>
 				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
@@ -19,7 +19,7 @@
 				<div>
 					<v-container>
 						<v-row justify="center">
-							<v-col cols="12" md="10" lg="8">
+							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
 								<v-stepper v-model="step" light style="border-radius: 25px">
 									<!-- items content -->
 									<v-stepper-items>
@@ -227,9 +227,9 @@
 										<v-stepper-content step="3">
 											<div class="primary--text font-weight-bold title">
 												¿En qué temas te gustaría trabajar? <br />
-												<span class="title font-weight-bold"
-													>Selecciona hasta 3 opciones.</span
-												>
+												<span class="title font-weight-bold">
+													Selecciona hasta 3 opciones.
+												</span>
 											</div>
 											<v-row>
 												<v-col>
@@ -515,8 +515,8 @@
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
 													flat
-													max-width="400"
-													height="190"
+													max-width="600"
+													max-height="190"
 													outlined
 													v-for="(item, l) in element"
 													:key="l"
@@ -525,7 +525,7 @@
 													<v-card-text>
 														<v-row align="center">
 															<v-col cols="3">
-																<v-avatar size="80">
+																<v-avatar size="100">
 																	<v-img
 																		:src="item.avatar"
 																	></v-img>

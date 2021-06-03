@@ -65,27 +65,26 @@
 				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn nuxt :to="{ name: 'psicologos' }" light rounded text class="mx-6">
+				<nuxt-link :to="{ name: 'psicologos' }" style="text-decoration: none" class="mx-12">
 					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
-				</v-btn>
-				<v-btn light rounded text to="/faq">
+				</nuxt-link>
+				<nuxt-link class="mx-2" style="text-decoration: none" to="/faq">
 					<span class="text--secondary body-1 font-weight-bold">
 						Preguntas frecuentes
 					</span>
-				</v-btn>
-				<v-btn light rounded text active-class="info--text" to="/blog">
+				</nuxt-link>
+				<nuxt-link class="mx-5" style="text-decoration: none" to="/blog">
 					<span class="body-1 text--secondary font-weight-bold">Blog</span>
-				</v-btn>
+				</nuxt-link>
 				<v-spacer></v-spacer>
 				<div>
-					<v-list-item active-class="transparent" class="mr-2" :to="{ name: 'entrar' }">
+					<nuxt-link class="mr-5" style="text-decoration: none" :to="{ name: 'entrar' }">
 						<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
-					</v-list-item>
+					</nuxt-link>
 				</div>
 				<v-btn
 					rounded
-					x-large
-					class="mx-2 py-0 px-10"
+					class="mx-2 py-6 px-10"
 					color="primary"
 					depressed
 					nuxt

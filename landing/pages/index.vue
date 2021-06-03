@@ -175,7 +175,7 @@
 										:alt="item.name"
 										contain
 										eager
-										:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
+										:max-width="$vuetify.breakpoint.mdAndUp ? '340' : '250'"
 										class="d-flex justify-end"
 									>
 										<aside
@@ -190,11 +190,11 @@
 											"
 											class="white--text"
 										>
-											<h4 class="pt-1 pl-2 font weight-regular">
+											<h4 class="pt-1 pl-4 font-weight-regular">
 												{{ item.title }}
 											</h4>
 											<h2
-												class="pl-2 pt-3"
+												class="pl-4 pt-3 font-weight-bold"
 												:class="
 													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
 												"
@@ -203,8 +203,10 @@
 											</h2>
 											<div>
 												<v-row>
-													<v-col cols="1" class="ml-2">
-														<v-icon color="primary">mdi-check</v-icon>
+													<v-col cols="1" class="ml-4">
+														<v-icon color="indigo darken-3">
+															mdi-check
+														</v-icon>
 													</v-col>
 													<v-col class="body-2 pl-3 font-weight-bold"
 														>{{ item.subtitle }}
@@ -266,7 +268,9 @@
 							<h2 class="title font-weight-bold">{{ item.title }}</h2>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<h3 class="body-1 mx-auto" style="max-width: 250px">{{ item.desc }}</h3>
+							<h3 class="body-1 mx-auto" :style="`max-width: ${item.maxWidth}`">
+								{{ item.desc }}
+							</h3>
 						</v-card-text>
 					</v-card>
 				</v-col>
@@ -607,6 +611,7 @@ export default {
 					desc:
 						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 					img: `${this.$config.LANDING_URL}/ico1.png`,
+					maxWidth: '250px',
 				},
 				{
 					id: 2,
@@ -614,6 +619,7 @@ export default {
 					desc:
 						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
 					img: `${this.$config.LANDING_URL}/ico2.png`,
+					maxWidth: '214px',
 				},
 				{
 					id: 3,
@@ -621,6 +627,7 @@ export default {
 					desc:
 						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
 					img: `${this.$config.LANDING_URL}/ico3.png`,
+					maxWidth: '250px',
 				},
 			],
 			reseñas: [

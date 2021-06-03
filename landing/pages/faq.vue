@@ -50,17 +50,25 @@
 			</v-row>
 			<v-row v-else>
 				<v-col cols="12" sm="3">
-					<v-list flat>
-						<v-list-item-group v-model="selectedItem" color="primary" mandatory>
+					<v-list flat dense>
+						<v-list-item-group v-model="selectedItem" mandatory>
 							<v-list-item v-for="(q, i) in items" :key="i" :value="q">
 								<v-list-item-content>
-									<v-list-item-title v-text="q.title"></v-list-item-title>
+									<v-list-item-title
+										class="body-2"
+										:class="
+											selectedItem.id == q.id
+												? 'primary--text'
+												: 'text--secondary'
+										"
+										v-text="q.title"
+									></v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
 						</v-list-item-group>
 					</v-list>
 				</v-col>
-				<v-col v-if="selectedItem" cols="12" sm="9">
+				<v-col v-if="selectedItem" cols="12" sm="9" class="pt-6">
 					<div class="primary--text headline font-weight-bold">
 						{{ selectedItem.title }}
 					</div>
