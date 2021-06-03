@@ -160,12 +160,12 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Politicas de privacidad',
+			title: 'Politicas de privacidad | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Politicas de privacidad hablaqui',
+					hid: 'description',
+					name: 'description',
+					content: 'Politicas de privacidad hablaqui',
 				},
 			],
 		};

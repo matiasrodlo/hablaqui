@@ -309,12 +309,12 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Terminos y condiciones',
+			title: 'Terminos y condiciones | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
-					contenido: 'Terminos y condiciones hablaqui',
+					hid: 'description',
+					name: 'description',
+					content: 'Terminos y condiciones hablaqui',
 				},
 			],
 		};

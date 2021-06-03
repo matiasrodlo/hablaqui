@@ -6,11 +6,11 @@
 export default {
 	head() {
 		return {
-			title: 'Psicologos',
+			title: 'Psicologos | Hablaquí',
 			meta: [
 				{
-					hid: 'descripción',
-					nombre: 'descripción',
+					hid: 'description',
+					name: 'description',
 					contenido:
 						'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
 				},
