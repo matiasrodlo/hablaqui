@@ -149,7 +149,10 @@
 
 									<v-list-item-content>
 										<v-list-item-title class="caption">
-											Encuentra tu psicólogo ideal
+											Aun no tienes psicólogo
+										</v-list-item-title>
+										<v-list-item-title class="caption">
+											Encuentra uno aquí
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
