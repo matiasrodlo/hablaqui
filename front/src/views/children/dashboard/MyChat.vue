@@ -368,6 +368,7 @@
 					<v-card-text v-else style="flex: 0">
 						<v-form @submit.prevent="onSubmit">
 							<v-text-field
+								ref="textField"
 								outlined
 								dense
 								:label="`Mensaje a ${selected.name}`"
@@ -468,9 +469,6 @@ export default {
 				userId: this.user.role == 'psychologist' ? this.selected._id : this.user._id,
 			};
 			await this.sendMessage(payload);
-			await this.getChat(
-				this.user.role == 'psychologist' ? this.user._id : this.selected._id
-			);
 			this.message = '';
 			this.loadingMessage = false;
 			this.scrollToElement();
@@ -485,6 +483,9 @@ export default {
 				el.scrollTop = el.scrollHeight;
 			}
 		},
+		sentBy(sentBy) {
+			return sentBy == this.user._id;
+		},
 		setSelectedUser(user) {
 			this.selected = {
 				name: user.name,
@@ -493,10 +494,9 @@ export default {
 				_id: user._id,
 			};
 			this.setChat(this.chats.find(item => item.user._id == user._id));
-			this.scrollToElement();
-		},
-		sentBy(sentBy) {
-			return sentBy == this.user._id;
+			setTimeout(() => {
+				this.scrollToElement();
+			}, 10);
 		},
 		async setSelectedPsy(psy) {
 			this.selected = psy;

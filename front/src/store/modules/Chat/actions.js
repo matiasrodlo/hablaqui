@@ -23,10 +23,11 @@ export default {
 	},
 	async sendMessage({ commit }, { payload, psychologistId, userId }) {
 		try {
-			await axios(`/chat/send-message/${psychologistId}/${userId}`, {
+			const { data } = await axios(`/chat/send-message/${psychologistId}/${userId}`, {
 				method: 'POST',
 				data: { content: payload },
 			});
+			commit('setChat', data.chat);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
