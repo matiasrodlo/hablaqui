@@ -468,16 +468,15 @@ export default {
 			await this.getChat(
 				this.user.role == 'psychologist' ? this.user._id : this.selected._id
 			);
-			this.scrollToElement();
 			this.message = '';
 			this.loadingMessage = false;
+			this.scrollToElement();
 		},
 		setDate(time) {
 			if (time) return moment(time).calendar();
 			return moment().format('llll');
 		},
 		scrollToElement() {
-			console.log('scroll');
 			const el = this.$el.getElementsByClassName('scroll')[0];
 			if (el) {
 				el.scrollTop = el.scrollHeight;
@@ -500,9 +499,11 @@ export default {
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
-			this.scrollToElement();
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
+			setTimeout(() => {
+				this.scrollToElement();
+			}, 10);
 		},
 		async getPsy() {
 			this.loading = true;
