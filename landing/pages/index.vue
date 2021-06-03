@@ -46,7 +46,8 @@
 								:style="
 									$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'
 								"
-								:src="`${$config.LANDING_URL}/tel.png`"
+								contain
+								:src="`${$config.LANDING_URL}/Recurso-02.png`"
 								alt="habla aqui"
 							/>
 						</v-col>
