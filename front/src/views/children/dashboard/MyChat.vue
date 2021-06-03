@@ -27,7 +27,7 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<!-- chats psychologist -->
+					<!-- barra lateral psychologist -->
 					<template v-if="user && user.role == 'psychologist'">
 						<template>
 							<v-card-text>
@@ -93,7 +93,7 @@
 							</div>
 						</div>
 					</template>
-					<!-- chats user -->
+					<!-- barra lateral user -->
 					<template v-else>
 						<template v-if="user && user.psychologist">
 							<v-card-text>
@@ -116,6 +116,41 @@
 										<v-list-item-subtitle>
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</template>
+						<template v-else>
+							<v-card-text>
+								<v-subheader class="primary--text body-1 px-0">
+									Mi Psicólogo
+								</v-subheader>
+								<v-divider style="border-color: #5EB3E4"></v-divider>
+							</v-card-text>
+							<v-list
+								link
+								one-line
+								class="py-0 primary"
+								dark
+								style="border-radius: 10px"
+							>
+								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
+									<v-list-item-avatar
+										style="border: 3px solid #2070E5; border-radius: 40px; "
+										size="60"
+									>
+										<v-img
+											height="50"
+											width="50"
+											class="mx-auto"
+											src="/img/Lupa.png"
+										></v-img>
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title class="caption">
+											Encuentra tu psicólogo ideal
+										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
 							</v-list>
@@ -172,6 +207,7 @@
 					</template>
 				</v-card>
 			</v-col>
+			<!-- CHAT USER/PSY -->
 			<v-col cols="12" md="8" lg="9">
 				<v-card
 					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
@@ -193,7 +229,7 @@
 							<v-list-item-title class="title d-flex">
 								<router-link :to="{ name: 'perfil' }" style="text-decoration: none">
 									<span class="secondary--text">
-										{{ selected.name }}
+										{{ selected.shortName || selected.name }}
 									</span>
 									<span class="secondary--text" v-if="selected.lastName">
 										{{ selected.lastName }}
@@ -205,17 +241,17 @@
 							</v-list-item-title>
 							<v-list-item-action>
 								<v-btn icon>
-									<v-img height="35" width="40" src="/img/llamada.png"></v-img>
+									<v-img contain height="25" src="/img/llamada.png"></v-img>
 								</v-btn>
 							</v-list-item-action>
 							<v-list-item-action>
-								<v-btn icon class="ml-8">
-									<v-img height="35" width="50" src="/img/camara.png"></v-img>
+								<v-btn icon class="ml-4">
+									<v-img contain height="25" src="/img/camara.png"></v-img>
 								</v-btn>
 							</v-list-item-action>
 							<v-list-item-action>
-								<v-btn icon class="ml-6">
-									<v-img height="35" width="40" src="/img/agregar.png"></v-img>
+								<v-btn icon class="ml-1">
+									<v-img contain height="25" src="/img/agregar.png"></v-img>
 								</v-btn>
 							</v-list-item-action>
 						</v-list-item>
@@ -258,7 +294,9 @@
 								{{ setDate() }}
 							</div>
 							<div style="width: 50%; display: flex; justify-content: space-between">
-								<span class="text--disabled">{{ selected.name }}</span>
+								<span class="text--disabled">
+									{{ selected.name }}
+								</span>
 								<span class="text--disabled">{{ setDate() }}</span>
 							</div>
 							<div class="talkbubble talkbubble__two" style="margin-top: 2px">
@@ -268,21 +306,18 @@
 								</p>
 							</div>
 						</template>
+						<!-- bubbles -->
 						<template v-else>
 							<div v-for="item in chat.messages" :key="item._id">
 								<div
 									class="d-flex mt-3"
-									:class="
-										item.sentByUser && user.role == 'user'
-											? 'justify-end'
-											: 'justify-start'
-									"
+									:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
 								>
 									<div
 										style="width: 50%; display: flex; justify-content: space-between"
 									>
 										<span class="text--disabled body-2">
-											{{ selected.name }}
+											{{ selected.shortName || selected.name }}
 										</span>
 										<span class="text--disabled body-2">
 											{{ setDate(item.createdAt) }}
@@ -292,9 +327,7 @@
 								<div
 									class="talkbubble"
 									:class="
-										item.sentByUser && user.role == 'user'
-											? 'talkbubble__one'
-											: 'talkbubble__two'
+										sentBy(item.sentBy) ? 'talkbubble__one' : 'talkbubble__two'
 									"
 								>
 									<div style="max-height: 75px; overflow-y: auto body-2">
@@ -420,7 +453,7 @@ export default {
 			this.message = '';
 		},
 		setDate(time) {
-			if (time) return moment(time).format('llll');
+			if (time) return moment(time).calendar();
 			return moment().format('llll');
 		},
 		setSelectedUser(user) {
@@ -431,6 +464,9 @@ export default {
 				_id: user._id,
 			};
 			this.setChat(this.chats.find(item => item.user._id == user._id));
+		},
+		sentBy(sentBy) {
+			return sentBy == this.user._id;
 		},
 		async setSelectedPsy(psy) {
 			this.selected = psy;
