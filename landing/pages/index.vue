@@ -521,10 +521,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<section
-			class="mt-16"
-			:style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''"
-		>
+		<section v-if="$vuetify.breakpoint.smAndUp" class="mt-16">
 			<v-container tag="section">
 				<v-row justify="center">
 					<v-col cols="12" md="10" xl="8">
@@ -581,6 +578,29 @@
 					</v-col>
 				</v-row>
 			</v-container>
+		</section>
+		<section v-else class="mt-16" style="background-color: #e3f2fd">
+			<v-carousel
+				cycle
+				height="250"
+				:show-arrows="false"
+				reverse-transition="fade-transition"
+				transition="fade-transition"
+			>
+				<v-carousel-item
+					v-for="item in [
+						`${$config.LANDING_URL}/VidaTresIsapre.png`,
+						`${$config.LANDING_URL}/nueva-masvida.png`,
+						`${$config.LANDING_URL}/fonasa.png`,
+						`${$config.LANDING_URL}/banmedica.png`,
+						`${$config.LANDING_URL}/colmena.png`,
+						`${$config.LANDING_URL}/consalud.png`,
+					]"
+					:key="item.id"
+				>
+					<v-img height="200" :src="item" contain />
+				</v-carousel-item>
+			</v-carousel>
 		</section>
 		<v-container tag="footer">
 			<Footer />
