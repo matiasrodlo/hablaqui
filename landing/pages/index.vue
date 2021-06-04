@@ -29,12 +29,15 @@
 								style="border-radius: 15px"
 								color="white"
 								x-large
-								class="font-weight-bold body-1 py-8 px-10 text-capitalize"
-								depressed
+								class="py-8 px-10"
 								nuxt
 								:to="{ name: 'psicologos' }"
 							>
-								Quiero empezar
+								<span
+									class="text-capitalize body-1 text--secondary font-weight-bold"
+								>
+									Quiero empezar
+								</span>
 							</v-btn>
 							<div class="body-1 font-weight-bold mt-10">
 								Desde $15.500CLP a la semana
@@ -101,10 +104,13 @@
 							</v-btn>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<h3 class="title font-weight-bold mx-auto" style="max-width: 220px">
+							<h3
+								class="title font-weight-bold mx-auto"
+								style="max-width: 220px; line-height: 1.2"
+							>
 								{{ item.title }}
 							</h3>
-							<article class="body-1 mt-5 mx-auto" style="max-width: 250px">
+							<article class="body-1 mt-8 mx-auto" style="max-width: 250px">
 								{{ item.desc }}
 							</article>
 						</v-card-text>
@@ -120,7 +126,6 @@
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
-						depressed
 						nuxt
 						:to="{ name: 'psicologos' }"
 					>
@@ -150,11 +155,12 @@
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="font-weight-bold body-1 py-8 px-10 ml-md-16 mt-10 mb-5"
-							depressed
+							class="py-8 px-10 ml-md-16 mt-10 mb-5"
 							:to="{ name: 'psicologos' }"
 						>
-							Ver más psicólogos
+							<span class="body-1 text--secondary font-weight-bold">
+								Ver más psicólogos
+							</span>
 						</v-btn>
 					</v-col>
 					<v-col tag="section" cols="12" md="6" class="d-flex justify-center">
@@ -180,7 +186,7 @@
 									>
 										<aside
 											style="
-												background-color: #616161;
+												background-color: #424242;
 												position: absolute;
 												bottom: 0;
 												height: 135px;
@@ -188,9 +194,8 @@
 												width: 100%;
 												border-radius: 0 0 20px 20px;
 											"
-											class="white--text"
 										>
-											<h4 class="pt-1 pl-4 font-weight-regular">
+											<h4 class="white--text pt-1 pl-4 font-weight-regular">
 												{{ item.title }}
 											</h4>
 											<h2
@@ -204,9 +209,7 @@
 											<div>
 												<v-row>
 													<v-col cols="1" class="ml-4">
-														<v-icon color="indigo darken-3">
-															mdi-check
-														</v-icon>
+														<v-icon color="primary">mdi-check</v-icon>
 													</v-col>
 													<v-col class="body-2 pl-3 font-weight-bold"
 														>{{ item.subtitle }}
@@ -229,11 +232,12 @@
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="font-weight-bold pa-4"
-							depressed
+							class="pa-4"
 							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
-							Ver más psicólogos
+							<span class="body-1 text--secondary font-weight-bold">
+								Ver más psicólogos
+							</span>
 						</v-btn>
 					</v-col>
 				</v-row>
@@ -284,9 +288,8 @@
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
-						depressed
 						nuxt
-						:to="{ name: 'comenzar' }"
+						:to="{ name: 'psicologos' }"
 					>
 						Quiero empezar
 					</v-btn>
@@ -296,8 +299,8 @@
 		<!-- SECTION 5 / Efectividad -->
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
 		<section style="position: relative" class="primary">
-			<aside style="position: absolute; top: -10px">
-				<v-img width="100" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+			<aside style="position: absolute; top: -100px; z-index: 0">
+				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
@@ -306,7 +309,12 @@
 						cols="12"
 						class="white--text py-16 text-center text-md-left"
 					>
-						<h2 class="text-md-h3 text-h4 font-weight-bold">Efectividad</h2>
+						<h2
+							style="position: absolute; top: 0px; z-index: 0"
+							class="text-md-h3 text-h4 font-weight-bold"
+						>
+							Efectividad
+						</h2>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -498,9 +506,8 @@
 						color="primary"
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
-						depressed
 						nuxt
-						:to="{ name: 'comenzar' }"
+						:to="{ name: 'psicologos' }"
 					>
 						Quiero empezar
 					</v-btn>
@@ -519,54 +526,58 @@
 			:style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''"
 		>
 			<v-container tag="section">
-				<v-row tag="section" align="center">
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							alt="Vida Tres Isapre"
-							contain
-							height="100"
-							:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
-						></v-img>
-					</v-col>
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							alt="nueva masvida"
-							:src="`${$config.LANDING_URL}/nueva-masvida.png`"
-						></v-img>
-					</v-col>
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							contain
-							alt="fonasa"
-							max-height="100"
-							:src="`${$config.LANDING_URL}/fonasa.jpg`"
-						></v-img>
-					</v-col>
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							alt="ban medica"
-							:src="`${$config.LANDING_URL}/banmedica.png`"
-						></v-img>
-					</v-col>
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							alt="colmena"
-							:src="`${$config.LANDING_URL}/colmena.png`"
-						></v-img>
-					</v-col>
-					<v-col tag="section" cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							alt="consalud"
-							:src="`${$config.LANDING_URL}/consalud.png`"
-						></v-img>
+				<v-row justify="center">
+					<v-col cols="12" md="10" xl="8">
+						<v-row tag="section" align="center">
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									alt="Vida Tres Isapre"
+									contain
+									height="100"
+									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="nueva masvida"
+									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									alt="fonasa"
+									max-height="100"
+									:src="`${$config.LANDING_URL}/fonasa.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="ban medica"
+									:src="`${$config.LANDING_URL}/banmedica.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="colmena"
+									:src="`${$config.LANDING_URL}/colmena.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="consalud"
+									:src="`${$config.LANDING_URL}/consalud.png`"
+								></v-img>
+							</v-col>
+						</v-row>
 					</v-col>
 				</v-row>
 			</v-container>

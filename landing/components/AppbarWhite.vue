@@ -88,7 +88,7 @@
 					color="primary"
 					depressed
 					nuxt
-					:to="{ name: 'psicologos' }"
+					:to="{ name: 'comenzar' }"
 				>
 					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>

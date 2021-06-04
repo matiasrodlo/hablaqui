@@ -53,13 +53,13 @@
 			</v-col>
 			<v-col cols="12" class="d-flex align-center">
 				<v-checkbox class="d-inline-block" v-model="accept"></v-checkbox>
-				<span class="caption">
-					He leído y acepto los
-					<a :href="`${landingUrl}/condiciones`">
+				<span class="body-2 text-left" style="max-width: 300px">
+					<span class="text--secondary">He leído y acepto los</span>
+					<a style="text-decoration: none" :href="`${landingUrl}/condiciones`">
 						Términos y condiciones
 					</a>
-					y
-					<a :href="`${landingUrl}/politicas`">
+					<span class="primary--text">y</span>
+					<a style="text-decoration: none" :href="`${landingUrl}/politicas`">
 						la Política de privacidad.
 					</a>
 				</span>
@@ -74,7 +74,8 @@
 			<v-sheet style="width: 300px; height: 100px">
 				<v-alert dense outlined type="error" width="300" height="100">
 					Debes aceptar los
-					<strong>terminos y condiciones</strong> y
+					<strong>terminos y condiciones</strong>
+					<span class="primary--text">y</span>
 					<strong>politicas de privacidad</strong>
 				</v-alert>
 			</v-sheet>

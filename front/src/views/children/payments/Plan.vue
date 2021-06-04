@@ -336,7 +336,7 @@
 												</v-btn>
 											</v-list-item-title>
 											<v-list-item-subtitle class="title font-weight-bold">
-												{{ psi.name }}
+												{{ psi.name }} {{ psi.lastName && psi.lastName }}
 											</v-list-item-subtitle>
 										</v-list-item-content>
 										<v-list-item-avatar size="70" class="ml-4">

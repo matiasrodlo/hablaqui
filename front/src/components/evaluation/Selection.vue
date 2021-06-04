@@ -42,7 +42,7 @@
 									<v-col
 										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
 									>
-										{{ item.name }}
+										{{ item.name }} {{ item.lastName && item.lastName }}
 									</v-col>
 									<v-col cols="12" sm="6" class="text-center text-md-right">
 										<v-btn
@@ -65,7 +65,7 @@
 									</v-chip>
 								</v-chip-group>
 								<div class="font-weight-light mt-2 text-capitalize">
-									{{ item.description }}
+									{{ item.professionalDescription }}
 								</div>
 							</v-col>
 						</v-row>

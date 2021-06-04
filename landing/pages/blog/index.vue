@@ -312,7 +312,7 @@
 			</v-row>
 		</v-container>
 		<!-- for companies -->
-		<img :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
 			<v-row justify="center">
 				<v-col tag="section" cols="12" class="mb-5">
@@ -401,7 +401,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/Blog-bottom.png`" style="width: 100%" />
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
@@ -444,54 +444,37 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<img class="mt-10" :src="`${$config.LANDING_URL}/Blog-05-top.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="center" align="center">
 						<v-col cols="10" md="7" class="white--text">
-							<div>
-								<h3 class="headline font-weight-bold mt-8">
-									Recibe contenido exclusivo periódicamente
-								</h3>
-								<h3 class="body-1 font-weight-bold mb-8 mt-2">
-									Suscríbete y alcanza tu mejor versión
-								</h3>
-								<div style="position: relative">
-									<v-text-field
-										solo
-										flat
-										placeholder="Introduzca su correo electrónico aquí"
-										style="max-width: 415px"
-										class="white pr-10"
-										hide-details
-									>
-									</v-text-field>
-									<v-btn
-										depressed
-										absolute
-										:style="
-											$vuetify.breakpoint.mdAndUp
-												? 'right: 90px;'
-												: 'right: -5px;'
-										"
-										style="
-											height: 100%;
+							<h3 class="headline font-weight-bold">
+								Recibe contenido exclusivo periódicamente
+							</h3>
+							<h3 class="body-1 font-weight-bold mb-8 mt-2">
+								Suscríbete y alcanza tu mejor versión
+							</h3>
 
-											top: 0;
-											border-radius: 0 25px 25px 0;
-										"
-										color="info"
-									>
-										<span class="px-5 px-md-10">Enviar</span>
-									</v-btn>
-								</div>
-							</div>
+							<v-btn-toggle rounded class="mb-10 mb-md-0">
+								<v-text-field
+									solo
+									flat
+									style="width: 400px"
+									placeholder="Introduzca su correo electrónico aquí"
+									class="white"
+									hide-details
+									dense
+								/>
+								<v-btn depressed color="info">
+									<span class="px-5 px-md-10">Enviar</span>
+								</v-btn>
+							</v-btn-toggle>
 						</v-col>
 						<v-col cols="12" md="5" class="text-center">
 							<v-img
-								max-height="350"
-								max-width="400"
+								contain
 								class="mx-auto"
 								:src="`${$config.LANDING_URL}/recursos-11.png`"
 							></v-img>
@@ -500,7 +483,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
 		<v-container tag="footer">
 			<Footer />
 		</v-container>

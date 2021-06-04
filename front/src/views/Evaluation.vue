@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<!-- appbar -->
-		<div :class="!matchedPsychologists.length ? 'primary' : 'trasnparent'">
+		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
 			<appbar />
 			<!-- content -->
 			<div
-				v-if="!matchedPsychologists.length"
+				v-if="!matchedPsychologists.length && !dialogPrecharge"
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
@@ -534,6 +534,10 @@
 															<v-col class="text-left">
 																<div class="title primary--text">
 																	{{ item.name }}
+																	{{
+																		item.lastName &&
+																			item.lastName
+																	}}
 																</div>
 																<template
 																	v-for="(tag,
@@ -541,6 +545,7 @@
 																>
 																	<span :key="k">
 																		<span
+																			v-if="k < 5"
 																			class="ma-1 caption text-capitalize"
 																		>
 																			{{ tag }};
@@ -555,7 +560,7 @@
 											<template v-else>
 												<v-card
 													width="400"
-													height="220"
+													height="180"
 													outlined
 													class="ma-2"
 												>
@@ -571,6 +576,10 @@
 															<v-col class="text-left">
 																<div class="title primary--text">
 																	{{ element.name }}
+																	{{
+																		element.lastName &&
+																			element.lastName
+																	}}
 																</div>
 																Especialidades:
 																<template
@@ -580,6 +589,7 @@
 																	<span :key="k">
 																		<span
 																			class="ma-1 text-capitalize"
+																			v-if="k < 5"
 																		>
 																			{{ tag }};
 																		</span>
@@ -612,14 +622,14 @@
 				</div>
 			</div>
 		</div>
-		<v-dialog v-model="dialogPrecharge" transition="dialog-bottom-transition" max-width="600">
-			<v-card>
+		<div v-if="dialogPrecharge">
+			<v-card flat color="transparent">
 				<v-card-text>
 					<Precharge :avatar="psychologists.map(el => el.avatar)" />
 				</v-card-text>
 			</v-card>
-		</v-dialog>
-		<div v-if="matchedPsychologists.length">
+		</div>
+		<div v-if="!dialogPrecharge && matchedPsychologists.length">
 			<Selection :match="matchedPsychologists" :resetMatch="resetMatch" />
 		</div>
 	</div>

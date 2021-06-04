@@ -71,12 +71,12 @@
 				>
 					<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
 				</v-btn>
-				<v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
-				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon>
+				<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
+				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
 			</template>
 			<template v-else>
 				<v-spacer></v-spacer>
-				<v-btn icon @click="drawer = !drawer">
+				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
 			</template>
