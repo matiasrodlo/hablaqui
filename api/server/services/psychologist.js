@@ -81,7 +81,7 @@ const register = async (body, avatar) => {
 		email: body.email,
 		password: bcrypt.hashSync(body.password, 10),
 		avatar,
-		psychologist,
+		psychologist: psychologist._id,
 	};
 
 	User.create(newUser);
