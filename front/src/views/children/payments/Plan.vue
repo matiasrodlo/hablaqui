@@ -69,101 +69,22 @@
 					</div>
 					<v-card
 						max-width="600"
+						min-height="272"
 						class="my-16 mx-auto"
 						elevation="10"
 						style="border-radius: 25px"
 					>
 						<v-card-text>
-							<v-row>
-								<v-col cols="12" sm="6">
-									<v-date-picker
-										no-title
-										full-width
-										@change="changePicker"
-										:value="picker"
-										locale="es"
-									>
-									</v-date-picker>
-								</v-col>
-								<v-col cols="12" sm="6">
-									<v-card
-										flat
-										:height="$vuetify.breakpoint.smAndUp ? '280' : '200'"
-									>
-										<v-calendar
-											ref="calendar"
-											v-model="picker"
-											type="day"
-											hide-header
-											:events="events"
-											:event-ripple="false"
-											@mousedown:event="startDrag"
-											@mousedown:time="startTime"
-											@mousemove:time="mouseMove"
-											@mouseup:time="endDrag"
-											@mouseleave.native="cancelDrag"
-										>
-											<template v-slot:event="{ event, eventSummary }">
-												<div class="d-flex justify-space-between">
-													<div
-														:class="
-															!event.disable
-																? 'v-event-draggable'
-																: ''
-														"
-														v-html="eventSummary()"
-													></div>
-													<v-btn
-														v-if="!event.disable"
-														@click="resetEvent"
-														x-small
-														icon
-														color="error"
-													>
-														<v-icon>mdi-close</v-icon>
-													</v-btn>
-												</div>
-												<div
-													:class="
-														!event.disable ? 'v-event-drag-bottom' : ''
-													"
-													@mousedown.stop="extendBottom(event)"
-												></div>
-											</template>
-										</v-calendar>
-										<v-overlay absolute :value="!picker">
-											<div
-												class="title px-6 py-3"
-												style="border-radius: 10px; border: 1px solid white"
-											>
-												Seleccione un día primero
-											</div>
-										</v-overlay>
-									</v-card>
-								</v-col>
-							</v-row>
+							<Calendar
+								:setDate="
+									item => {
+										newEvent = item;
+										breakCrumbs = 1;
+									}
+								"
+								titleButton="Seleccionar fecha"
+							/>
 						</v-card-text>
-						<v-card-actions>
-							<div
-								v-if="newEvent && picker"
-								class="primary--text font-weight-bold caption"
-							>
-								{{ viewDate }}
-							</div>
-							<div v-else class="caption text--disabled">
-								Seleccione un dia y la hora para continuar
-							</div>
-							<v-spacer></v-spacer>
-							<v-btn
-								v-if="newEvent && picker"
-								x-large
-								text
-								color="primary"
-								@click="breakCrumbs = 1"
-							>
-								Continuar
-							</v-btn>
-						</v-card-actions>
 					</v-card>
 				</v-col>
 				<v-col cols="12" sm="10" md="9" lg="7" v-if="breakCrumbs == 1">
@@ -417,17 +338,16 @@
 <script>
 import Appbar from '@/components/ui/Appbar.vue';
 import { mapActions, mapGetters } from 'vuex';
-import moment from 'moment';
 
 export default {
 	name: 'PaymentsHome',
 	components: {
 		Appbar,
+		Calendar: () => import('@/components/ui/Calendar'),
 	},
 	data() {
 		return {
 			selectedItem: '',
-			picker: moment().format('YYYY-MM-DD'),
 			breakCrumbs: 0,
 			plans: [
 				{
@@ -510,28 +430,11 @@ export default {
 					description: 'Respuestas diarias garantizadas 5 días a la semana.',
 				},
 			],
-			events: [],
-			dragEvent: null,
-			dragStart: null,
-			createEvent: null,
-			createStart: null,
-			extendOriginal: null,
 			newEvent: null,
 			psi: null,
 		};
 	},
-	mounted() {},
 	computed: {
-		viewDate() {
-			if (this.newEvent && this.picker)
-				return `Seleccionaste el dia
-					${moment(this.picker).format('ll')}
-					desde las
-					${moment(this.newEvent.start).format('LT')}
-					a las
-					${moment(this.newEvent.end).format('LT')}`;
-			else return '';
-		},
 		...mapGetters({ user: 'User/user' }),
 	},
 	beforeRouteEnter(to, from, next) {
@@ -544,116 +447,8 @@ export default {
 	},
 	created() {
 		this.psi = JSON.parse(localStorage.getItem('psi'));
-		// TODO: example de evento, asi debe ser el objeto para crear agregar los eventos a la vista de calendario
-		// {
-		//  name: 'Jose',
-		//  start: 1620715500000,
-		//  end: 1620715500000,
-		//  timed: true,
-		//  disable: true,
-		//  },
 	},
 	methods: {
-		startDrag({ event, timed }) {
-			if (event && timed && !event.disable) {
-				this.dragEvent = event;
-				this.dragTime = null;
-				this.extendOriginal = null;
-			}
-		},
-		startTime(tms) {
-			const mouse = this.toTime(tms);
-
-			if (this.dragEvent && this.dragTime === null) {
-				const start = this.dragEvent.start;
-
-				this.dragTime = mouse - start;
-			} else {
-				this.createStart = this.roundTime(mouse);
-				this.createEvent = {
-					name: 'Yo ',
-					color: 'success',
-					start: this.createStart,
-					end: this.createStart + 1800000,
-					timed: true,
-					disable: false,
-				};
-				if (!this.newEvent) {
-					this.events.push(this.createEvent);
-					this.newEvent = this.createEvent;
-				}
-			}
-		},
-		extendBottom(event) {
-			if (event.disable) return;
-			this.createEvent = event;
-			this.createStart = event.start;
-			this.extendOriginal = event.end;
-		},
-		mouseMove(tms) {
-			const mouse = this.toTime(tms);
-
-			if (this.dragEvent && this.dragTime !== null) {
-				const start = this.dragEvent.start;
-				const end = this.dragEvent.end;
-				const duration = end - start;
-				const newStartTime = mouse - this.dragTime;
-				const newStart = this.roundTime(newStartTime);
-				const newEnd = newStart + duration;
-
-				this.dragEvent.start = newStart;
-				this.dragEvent.end = newEnd;
-			} else if (this.createEvent && this.createStart !== null) {
-				const mouseRounded = this.roundTime(mouse, false);
-				const min = Math.min(mouseRounded, this.createStart);
-				const max = Math.max(mouseRounded, this.createStart);
-
-				this.createEvent.start = min;
-				this.createEvent.end = max;
-			}
-		},
-		endDrag() {
-			this.dragTime = null;
-			this.dragEvent = null;
-			this.createEvent = null;
-			this.createStart = null;
-			this.extendOriginal = null;
-		},
-		cancelDrag() {
-			if (this.createEvent) {
-				if (this.extendOriginal) {
-					this.createEvent.end = this.extendOriginal;
-				} else {
-					const i = this.events.indexOf(this.createEvent);
-					if (i !== -1) {
-						this.events.splice(i, 1);
-					}
-				}
-			}
-
-			this.createEvent = null;
-			this.createStart = null;
-			this.dragTime = null;
-			this.dragEvent = null;
-		},
-		roundTime(time, down = true) {
-			const roundTo = 15; // minutes
-			const roundDownTime = roundTo * 60 * 1000;
-
-			return down
-				? time - (time % roundDownTime)
-				: time + (roundDownTime - (time % roundDownTime));
-		},
-		toTime(tms) {
-			return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime();
-		},
-		changePicker(e) {
-			if (e !== this.picker) this.resetEvent();
-			this.picker = e;
-		},
-		resetEvent() {
-			this.newEvent = null;
-		},
 		async payButton() {
 			this.breakCrumbs = 3;
 			let priceInt = Number(this.plans[this.selectedItem.plan].price.split('.').join(''));
