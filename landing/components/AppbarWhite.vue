@@ -5,7 +5,7 @@
 				<v-img
 					style="max-width: 150px"
 					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui Logo"
+					alt="hablaqui"
 				/>
 			</v-list-item>
 			<v-divider></v-divider>
@@ -13,7 +13,8 @@
 				<v-list-item
 					link
 					active-class="primary white--text"
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+					nuxt
+					:to="{ name: 'psicologos' }"
 				>
 					<v-list-item-content>
 						<v-list-item-title>Psicólogos</v-list-item-title>
@@ -29,89 +30,67 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth`">
+				<v-list-item link nuxt :to="{ name: 'entrar' }">
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/auth/q=register`">
+				<v-list-item link nuxt :to="{ name: 'psicologos' }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
-				viewBox="0 0 500 125"
 				preserveAspectRatio="none"
+				viewBox="0 0 1080 216.49"
 				style="height: 100%; width: 100%"
 			>
 				<path
-					d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
 					style="fill: white"
-				></path>
+					d="M.16-18.79V122.75c6.88,1,20.8,2.92,38.31,5.1,0,0,215.57,25.78,403,14.18,18.33-1.13,40.69-2.8,83.59-5.21,129.36-7.25,216.16-14.1,298.68-8.34a1547.37,1547.37,0,0,1,256.14,39.69v-187Z"
+				/>
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
 			<router-link to="/" exact>
 				<img
-					style="max-width: 180px"
-					alt="hablaqui Logo"
+					style="max-width: 160px"
+					alt="hablaqui"
 					:src="`${$config.LANDING_URL}/logo.png`"
 					contain
 				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn
-					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="ml-4 text-h6 text--secondary"
-				>
-					Psicólogos
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					to="/faq"
-				>
-					Preguntas frecuentes
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					to="/blog"
-				>
-					Blog
-				</v-btn>
+				<nuxt-link :to="{ name: 'psicologos' }" style="text-decoration: none" class="mx-12">
+					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+				</nuxt-link>
+				<nuxt-link class="mx-2" style="text-decoration: none" to="/faq">
+					<span class="text--secondary body-1 font-weight-bold">
+						Preguntas frecuentes
+					</span>
+				</nuxt-link>
+				<nuxt-link class="mx-5" style="text-decoration: none" to="/blog">
+					<span class="body-1 text--secondary font-weight-bold">Blog</span>
+				</nuxt-link>
 				<v-spacer></v-spacer>
 				<div>
-					<v-list-item
-						active-class="transparent"
-						class="text-h6 mr-2"
-						:href="`${$config.FRONTEND_URL}/auth`"
-					>
-						<span class="text--secondary">Iniciar sesión</span>
-					</v-list-item>
+					<nuxt-link class="mr-5" style="text-decoration: none" :to="{ name: 'entrar' }">
+						<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+					</nuxt-link>
 				</div>
 				<v-btn
 					rounded
-					class="mx-2 text-h6 py-0 px-6"
+					class="mx-2 py-6 px-10"
 					color="primary"
 					depressed
-					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					nuxt
+					:to="{ name: 'comenzar' }"
 				>
-					Comenzar
+					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
 			</template>
 			<template v-else>

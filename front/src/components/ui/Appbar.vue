@@ -42,71 +42,60 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
-				viewBox="0 0 500 150"
 				preserveAspectRatio="none"
+				viewBox="0 0 1080 216.49"
 				style="height: 100%; width: 100%"
 			>
 				<path
-					d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
 					style="fill: white"
-				></path>
+					d="M.16-18.79V122.75c6.88,1,20.8,2.92,38.31,5.1,0,0,215.57,25.78,403,14.18,18.33-1.13,40.69-2.8,83.59-5.21,129.36-7.25,216.16-14.1,298.68-8.34a1547.37,1547.37,0,0,1,256.14,39.69v-187Z"
+				/>
 			</svg>
 		</div>
-		<v-app-bar absolute flat height="100" color="transparent">
+		<v-app-bar absolute flat height="115" color="transparent">
 			<a :href="`${landing_page}`">
-				<v-img style="max-width: 180px" alt="hablaqui Logo" src="/img/logo.png" contain />
+				<v-img style="max-width: 160px" alt="hablaqui Logo" src="/img/logo.png" contain />
 			</a>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-btn
+				<router-link
 					:to="{ name: 'all-psicologos' }"
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="ml-4 text-h6 text--secondary"
+					style="text-decoration: none"
+					class="mx-12"
 				>
-					Psicólogos
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					:href="`${landing_page}/faq`"
-				>
-					Preguntas frecuentes
-				</v-btn>
-				<v-btn
-					light
-					rounded
-					text
-					active-class="info--text"
-					class="text-h6 text--secondary"
-					:href="`${landing_page}/blog`"
-				>
-					Blog
-				</v-btn>
+					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+				</router-link>
+				<a style="text-decoration: none" class="mx-5" :href="`${landing_page}/faq`">
+					<span class="text--secondary body-1 font-weight-bold">
+						Preguntas frecuentes
+					</span>
+				</a>
+				<a style="text-decoration: none" class="mx-5" :href="`${landing_page}/blog`">
+					<span class="body-1 text--secondary font-weight-bold">Blog</span>
+				</a>
 				<v-spacer></v-spacer>
-				<v-btn v-if="loggedIn" class="text-h6 text--secondary" rounded text @click="logout">
-					Cerrar sesión
-				</v-btn>
-				<v-btn v-else class="text-h6 text--secondary" rounded text :to="{ name: 'auth' }">
-					Iniciar sesión
-				</v-btn>
+				<span v-if="loggedIn" @click="logout" class="mr-3" style="cursor: pointer">
+					<span class="body-1 font-weight-bold text--secondary"> Cerrar sesión</span>
+				</span>
+				<router-link
+					v-else
+					style="text-decoration: none"
+					class="mr-5"
+					:to="{ name: 'auth' }"
+				>
+					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+				</router-link>
 				<v-btn
 					v-if="!loggedIn"
 					rounded
-					class="mx-2 text-h6"
+					class="mx-2 py-6 px-10"
 					color="primary"
 					depressed
-					x-large
 					:to="{ name: 'auth', params: { q: 'register' } }"
 				>
-					Comenzar
+					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
 			</template>
 			<template v-else>

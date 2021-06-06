@@ -25,35 +25,35 @@
 						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'auth' }">
 					<v-list-item-content>
 						<v-list-item-title>Entrar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link>
+				<v-list-item link :to="{ name: 'psicologos' }">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 150px; overflow: hidden">
+		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
-				viewBox="0 0 500 150"
 				preserveAspectRatio="none"
+				viewBox="0 0 1080 216.49"
 				style="height: 100%; width: 100%"
 			>
 				<path
-					d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
+					d="M.16-18.79V122.75c6.88,1,20.8,2.92,38.31,5.1,0,0,215.57,25.78,403,14.18,18.33-1.13,40.69-2.8,83.59-5.21,129.36-7.25,216.16-14.1,298.68-8.34a1547.37,1547.37,0,0,1,256.14,39.69v-187Z"
 					style="fill: #2070e5"
 				></path>
 			</svg>
 		</div>
-		<v-app-bar absolute flat height="100" color="transparent">
+		<v-app-bar absolute flat height="115" color="transparent">
 			<router-link to="/" exact>
 				<img
-					style="max-width: 180px"
+					style="max-width: 160px"
 					alt="hablaqui Logo"
 					:src="`${$config.LANDING_URL}/logo_white.png`"
 					contain
@@ -62,21 +62,21 @@
 			<template v-if="$vuetify.breakpoint.mdAndUp">
 				<v-spacer></v-spacer>
 				<v-btn
-					:href="`${$config.FRONTEND_URL}/auth/q=register`"
+					:to="{ name: 'psicologos' }"
 					large
 					rounded
-					class="mx-2 primary--text font-weight-bold"
+					class="mx-4 px-8"
 					color="white"
 					depressed
 				>
-					Comience su terapia ahora
+					<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
 				</v-btn>
-				<v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
-				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon>
+				<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
+				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
 			</template>
 			<template v-else>
 				<v-spacer></v-spacer>
-				<v-btn icon @click="drawer = !drawer">
+				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
 			</template>

@@ -3,6 +3,7 @@
 		<v-row no-gutters>
 			<v-col cols="12">
 				<v-text-field
+					class="mt-2"
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"

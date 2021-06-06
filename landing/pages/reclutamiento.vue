@@ -1,16 +1,16 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3">
+			<div class="primary">
 				<Appbar />
 			</div>
 		</client-only>
 		<v-container fluid class="primary py-16">
 			<v-row justify="center" align="center">
 				<v-col cols="12" md="5" lg="6">
-					<div class="text-left white--text text-h4 text-lg-h3 font-weight-bold">
+					<h2 class="text-left white--text text-h4 text-lg-h3 font-weight-bold">
 						Tenga un consultorio sin salir de casa
-					</div>
+					</h2>
 					<div class="mt-3 text-left white--text text-h6 font-weight-bold">
 						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
 						nibh
@@ -162,8 +162,9 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container class="my-16">
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<div class="primary">
+			<v-container class="py-16">
 				<v-row justify="center" class="my-10">
 					<v-col cols="3" class="text-right">
 						<v-avatar color="white" size="100" class="mt-10"></v-avatar>
@@ -186,7 +187,8 @@
 					</v-col>
 				</v-row>
 			</v-container>
-		</v-img>
+		</div>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<v-container>
 			<v-row justify="center">
 				<v-col cols="12">
@@ -218,8 +220,9 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-img :src="`${$config.LANDING_URL}/container-blue.png`">
-			<v-container class="my-16">
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-1.png`" />
+		<div class="primary">
+			<v-container class="py-16">
 				<v-row align="center" justify="center" class="my-10">
 					<v-col cols="12">
 						<div
@@ -257,7 +260,8 @@
 					</v-col>
 				</v-row>
 			</v-container>
-		</v-img>
+		</div>
+		<v-img :src="`${$config.LANDING_URL}/wave-blue-2.png`" />
 		<Footer />
 	</div>
 </template>
@@ -267,6 +271,18 @@ export default {
 	components: {
 		Footer: () => import('@/components/Footer'),
 		Appbar: () => import('@/components/AppbarWhite'),
+	},
+	head() {
+		return {
+			title: 'Forma parte | Hablaquí',
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content: 'Tenga un consultorio sin salir de casa',
+				},
+			],
+		};
 	},
 };
 </script>

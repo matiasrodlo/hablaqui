@@ -1,110 +1,91 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3">
+			<nav class="primary">
 				<Appbar />
-			</div>
+			</nav>
 			<!-- SECTION 1 / heading -->
-			<v-img
+			<section class="primary">
+				<v-container class="white--text py-0">
+					<v-row
+						tag="section"
+						justify="center"
+						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+					>
+						<v-col
+							tag="section"
+							cols="12"
+							md="6"
+							class="primary text-center text-md-left"
+						>
+							<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+								Tu psicólogo Online
+							</h1>
+							<div class="title my-10">
+								Demos juntos el primer paso hacia el bienestar emocional. Habla de
+								forma segura y privada con un psicólogo online cuando lo necesites.
+							</div>
+							<v-btn
+								style="border-radius: 15px"
+								color="white"
+								x-large
+								class="py-8 px-10"
+								nuxt
+								:to="{ name: 'psicologos' }"
+							>
+								<span
+									class="text-capitalize body-1 text--secondary font-weight-bold"
+								>
+									Quiero empezar
+								</span>
+							</v-btn>
+							<div class="body-1 font-weight-bold mt-10">
+								Desde $15.500CLP a la semana
+							</div>
+							<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
+						</v-col>
+						<v-col v-if="$vuetify.breakpoint.mdAndUp" tag="section" cols="12" md="6">
+							<v-img
+								:style="
+									$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'
+								"
+								contain
+								:src="`${$config.LANDING_URL}/phone.png`"
+								alt="habla aqui videollamada"
+							/>
+						</v-col>
+					</v-row>
+				</v-container>
+			</section>
+			<img
 				v-if="$vuetify.breakpoint.mdAndUp"
-				class="white"
-				:src="`${$config.LANDING_URL}/GH1.png`"
-				style="height: 700px; width: 100%"
-			>
-				<v-container class="white--text">
-					<v-row
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
-					>
-						<v-col cols="12" md="6" class="primary text-center text-md-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</div>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8 text-capitalize"
-								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
-							>
-								Quiero comenzar
-							</v-btn>
-							<div class="title mt-10">Desde $15.500CLP a la semana</div>
-							<div class="title mt-5">Convenios con Isapres y Fonasa.</div>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
-							<v-img
-								:height="heightPhone"
-								:src="`${$config.LANDING_URL}/tel.png`"
-							></v-img>
-						</v-col>
-					</v-row>
-				</v-container>
-			</v-img>
-			<v-img
-				v-else
-				:src="`${$config.LANDING_URL}/grafico-landing-movil-01.png`"
-				contain
-				min-height="950"
-				style="position: relative"
-			>
-				<v-container class="white--text">
-					<v-row
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
-					>
-						<v-col cols="12" md="6" class="primary text-center text-md-left">
-							<div class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</div>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8 text-capitalize"
-								depressed
-								:href="`${$config.FRONTEND_URL}/auth`"
-							>
-								Quiero comenzar
-							</v-btn>
-							<div class="title mt-10">Desde $15.500CLP a la semana</div>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6">
-							<v-img
-								:height="heightPhone"
-								:src="`${$config.LANDING_URL}/tel.png`"
-							></v-img>
-						</v-col>
-					</v-row>
-				</v-container>
-			</v-img>
+				:src="`${$config.LANDING_URL}/wave1.png`"
+				style="width: 100%"
+			/>
+			<img v-else :src="`${$config.LANDING_URL}/wave1-movil.png`" style="width: 100%" />
 		</client-only>
 		<!-- SETION 2 / como funciona -->
-		<v-container class="pt-md-10">
-			<v-row justify="center">
+		<v-container tag="section" class="pt-md-10">
+			<v-row tag="section" justify="center">
 				<v-col
+					tag="h2"
 					cols="12"
-					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold my-2"
 				>
 					Cómo funciona
 				</v-col>
-				<v-col cols="12" class="text-h6 mb-6 text--secondary text-center">
+				<v-col
+					tag="h3"
+					cols="12"
+					class="body-1 mb-6 font-weight-bold text--secondary text-center"
+				>
 					Es fácil y seguro realizar terapia con un psicólogo online y continuar con tu
 					estilo de vida con Hablaquí.
 				</v-col>
 			</v-row>
-			<v-row>
-				<v-col v-for="item in firstbox" :key="item.id" cols="12" sm="4">
-					<v-card flat>
+			<v-row tag="section" justify="center">
+				<v-col v-for="item in firstbox" :key="item.id" tag="section" cols="12" md="4">
+					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-btn
 								style="border: 8px solid #2070e5; cursor: initial"
@@ -123,17 +104,21 @@
 							</v-btn>
 						</v-card-text>
 						<v-card-text class="text-center">
-							<div class="title font-weight-bold mx-auto" style="max-width: 220px">
+							<h3
+								class="title font-weight-bold mx-auto"
+								style="max-width: 220px; line-height: 1.2"
+							>
 								{{ item.title }}
-							</div>
-							<div class="body-1 mt-5 mx-auto" style="max-width: 250px">
+							</h3>
+							<article class="body-1 mt-8 mx-auto" style="max-width: 250px">
 								{{ item.desc }}
-							</div>
+							</article>
 						</v-card-text>
 					</v-card>
 				</v-col>
 				<v-col
 					cols="12"
+					tag="section"
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
@@ -141,151 +126,160 @@
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
-						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						nuxt
+						:to="{ name: 'psicologos' }"
 					>
-						Quiero comenzar
+						Quiero empezar
 					</v-btn>
 				</v-col>
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<div style="position: relative">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 900px; width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container
-					class="white--text"
-					:class="$vuetify.breakpoint.smAndUp ? '' : 'primary'"
-				>
-					<v-row justify="space-between" align="center" style="height: 900px">
-						<v-col cols="12" md="6" class="text-center text-md-left">
-							<div class="text-md-h3 text-h4 font-weight-bold my-10">
-								Nuestros psicólogos
-							</div>
-							<div class="my-10 subtitle-1">
-								Contamos con un amplio equipo de psicólogos enfocados a potenciar el
-								área que busques desarrollar. Todos nuestros profesionales son
-								rigurosamente seleccionados, certificados, y cuentan con un alto
-								nivel de formación y experiencia. Te garantizamos una atención
-								efectiva y experta, pero también cálida y humana.
-							</div>
-							<v-btn
-								v-if="$vuetify.breakpoint.mdAndUp"
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-8"
-								depressed
-								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
-							>
-								Ver más psicólogos
-							</v-btn>
-						</v-col>
-						<v-col cols="12" md="6" class="d-flex justify-center">
-							<div style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
-								<v-carousel
-									cycle
-									hide-delimiter-background
-									hide-delimiters
-									:show-arrows="false"
-									reverse-transition="fade-transition"
-									transition="fade-transition"
-									:height="$vuetify.breakpoint.mdAndUp ? '395' : '285'"
-									style="
-										box-shadow: 12px 12px 0px 0px #03dfd8;
-										border-radius: 25px;
-									"
-								>
-									<v-carousel-item v-for="item in corousel" :key="item.id">
-										<v-img
-											:src="item.image"
-											contain
-											:max-width="$vuetify.breakpoint.mdAndUp ? '350' : '250'"
-											class="d-flex justify-end"
-										>
-											<div
-												style="
-													background-color: #616161;
-													position: absolute;
-													bottom: 0;
-													height: 100px;
-													opacity: 0.6;
-													width: 100%;
-													border-radius: 0 0 20px 20px;
-												"
-												class="white--text"
-											>
-												<div class="pt-1 pl-2 font weight-regular">
-													{{ item.title }}
-												</div>
-												<div
-													class="pl-2"
-													:class="
-														$vuetify.breakpoint.mdAndUp
-															? 'title'
-															: 'body-1'
-													"
-												>
-													{{ item.name }}
-												</div>
-												<div class="caption pl-2 font-weight-bold">
-													<v-icon color="primary">mdi-check</v-icon
-													>{{ item.subtitle }}
-												</div>
-											</div>
-										</v-img>
-									</v-carousel-item>
-								</v-carousel>
-							</div>
-						</v-col>
-						<v-col
-							v-if="!$vuetify.breakpoint.mdAndUp"
-							cols="12"
-							class="my-10 text-center"
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<section class="primary">
+			<v-container tag="section" class="white--text py-0">
+				<v-row tag="section" justify="space-between" align="center">
+					<v-col tag="section" cols="12" md="6" class="text-center text-md-left">
+						<h2 class="text-md-h3 text-h4 font-weight-bold my-16">
+							Nuestros psicólogos
+						</h2>
+						<article class="my-10 body-1">
+							Contamos con un amplio equipo de psicólogos enfocados a potenciar el
+							área que busques desarrollar. Todos nuestros profesionales son
+							rigurosamente seleccionados, certificados, y cuentan con un alto nivel
+							de formación y experiencia. Te garantizamos una atención efectiva y
+							experta, pero también cálida y humana.
+						</article>
+						<v-btn
+							v-if="$vuetify.breakpoint.mdAndUp"
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="py-8 px-10 ml-md-16 mt-10 mb-5"
+							:to="{ name: 'psicologos' }"
 						>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="font-weight-bold pa-4"
-								depressed
-								:href="`${$config.FRONTEND_URL}/psicologos/todos`"
-							>
+							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
-							</v-btn>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</div>
+							</span>
+						</v-btn>
+					</v-col>
+					<v-col tag="section" cols="12" md="6" class="d-flex justify-center">
+						<section style="box-shadow: 22px 22px 0px 0px #b2eceb; border-radius: 25px">
+							<v-carousel
+								cycle
+								hide-delimiter-background
+								hide-delimiters
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								:height="$vuetify.breakpoint.mdAndUp ? '375' : '285'"
+								style="box-shadow: 12px 12px 0px 0px #03dfd8; border-radius: 25px"
+							>
+								<v-carousel-item v-for="item in corousel" :key="item.id">
+									<v-img
+										:src="item.image"
+										:alt="item.name"
+										contain
+										eager
+										:max-width="$vuetify.breakpoint.mdAndUp ? '340' : '250'"
+										class="d-flex justify-end"
+									>
+										<aside
+											style="
+												background-color: #424242;
+												position: absolute;
+												bottom: 0;
+												height: 135px;
+												opacity: 0.6;
+												width: 100%;
+												border-radius: 0 0 20px 20px;
+											"
+										>
+											<h4 class="white--text pt-1 pl-4 font-weight-regular">
+												{{ item.title }}
+											</h4>
+											<h2
+												class="pl-4 pt-3 font-weight-bold"
+												:class="
+													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
+												"
+											>
+												{{ item.name }}
+											</h2>
+											<div>
+												<v-row>
+													<v-col cols="1" class="ml-4">
+														<v-icon color="primary">mdi-check</v-icon>
+													</v-col>
+													<v-col class="body-2 pl-3 font-weight-bold"
+														>{{ item.subtitle }}
+													</v-col>
+												</v-row>
+											</div>
+										</aside>
+									</v-img>
+								</v-carousel-item>
+							</v-carousel>
+						</section>
+					</v-col>
+					<v-col
+						v-if="!$vuetify.breakpoint.mdAndUp"
+						tag="section"
+						cols="12"
+						class="my-10 text-center"
+					>
+						<v-btn
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="pa-4"
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+						>
+							<span class="body-1 text--secondary font-weight-bold">
+								Ver más psicólogos
+							</span>
+						</v-btn>
+					</v-col>
+				</v-row>
+			</v-container>
+		</section>
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
 		<!-- SECTION 4 / VENTAJAS  -->
-		<v-container class="pt-10">
-			<v-row justify="center">
+		<v-container tag="section" class="pt-10">
+			<v-row tag="section" justify="center">
 				<v-col
+					tag="h2"
 					cols="12"
-					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold"
+					class="text-center text-h4 text-md-h3 text--secondary font-weight-bold mt-10"
 				>
 					Ventajas
 				</v-col>
 			</v-row>
-			<v-row>
-				<v-col v-for="item in ventajas" :key="item.id" cols="12" sm="4" class="my-16">
-					<v-card flat>
+			<v-row tag="section">
+				<v-col
+					v-for="item in ventajas"
+					:key="item.id"
+					tag="section"
+					cols="12"
+					md="4"
+					class="mt-16 mb-10"
+				>
+					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img style="height: 120px" :src="item.img" />
+							<img style="height: 80px" :src="item.img" />
 						</v-card-text>
-						<v-card-text class="text-center title font-weight-bold">
-							{{ item.title }}
+						<v-card-text class="text-center pt-0">
+							<h3 class="title font-weight-bold">{{ item.title }}</h3>
 						</v-card-text>
-						<v-card-text class="text-center body-1 mx-auto" style="max-width: 300px">
-							{{ item.desc }}
+						<v-card-text class="text-center">
+							<article class="body-1 mx-auto" :style="`max-width: ${item.maxWidth}`">
+								{{ item.desc }}
+							</article>
 						</v-card-text>
 					</v-card>
 				</v-col>
 				<v-col
+					tag="section"
 					cols="12"
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
 				>
@@ -294,8 +288,8 @@
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
-						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						nuxt
+						:to="{ name: 'psicologos' }"
 					>
 						Quiero empezar
 					</v-btn>
@@ -303,151 +297,197 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<div style="position: relative" class="my-10">
-			<img :src="`${$config.LANDING_URL}/blue2.png`" style="height: 700px; width: 100%" />
-			<div style="position: absolute; top: 0">
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
+		<section style="position: relative" class="primary">
+			<aside style="position: absolute; top: -100px; z-index: 0">
 				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
-			</div>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container>
-					<v-row>
-						<v-col cols="12" class="white--text my-16 text-left">
-							<div class="text-md-h3 text-h4 font-weight-bold">Efectividad</div>
-						</v-col>
-					</v-row>
-				</v-container>
-				<v-container class="white--text">
-					<v-row justify="center" align="center">
-						<v-col cols="12">
-							<v-carousel
-								v-if="$vuetify.breakpoint.mdAndUp"
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
+			</aside>
+			<v-container tag="aside" class="py-0">
+				<v-row tag="aside">
+					<v-col
+						tag="section"
+						cols="12"
+						class="white--text py-16 text-center text-md-left"
+					>
+						<h2
+							style="position: absolute; top: 0px; z-index: 0"
+							class="text-md-h3 text-h4 font-weight-bold"
+						>
+							Efectividad
+						</h2>
+					</v-col>
+				</v-row>
+			</v-container>
+			<v-container tag="section" class="white--text py-0">
+				<v-row tag="section" justify="center" align="center">
+					<v-col tag="section" cols="12">
+						<v-carousel
+							v-if="$vuetify.breakpoint.mdAndUp"
+							tag="article"
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item
+								v-for="(item, i) in efectividad"
+								:key="i"
+								tag="section"
 							>
-								<v-carousel-item v-for="(item, i) in efectividad" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											v-for="el in item"
-											:key="el.id"
-											height="300"
-											width="350"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
+								<section class="text-center d-flex justify-center align-center">
+									<v-card
+										v-for="el in item"
+										:key="el.id"
+										tag="section"
+										:height="$vuetify.breakpoint.lgAndUp ? '300' : '330'"
+										width="350"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text class="mt-3">
+											<img height="60" :src="el.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column"
+											:style="
+												$vuetify.breakpoint.lgAndUp
+													? 'height: 180px'
+													: 'height: 210px'
+											"
+											class="d-flex justify-space-between"
 										>
-											<v-card-text class="mt-3">
-												<img height="60" :src="el.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 180px"
-												class="d-flex justify-space-between"
+											<article
+												style="overflow-y: auto"
+												:style="
+													$vuetify.breakpoint.lgAndUp
+														? 'height: 120px'
+														: 'height: 150px'
+												"
+												class="body-2"
 											>
-												<div style="height: 120px; overflow-y: auto">
-													{{ el.text }}
-												</div>
-												<div class="pt-2">
-													<a
-														class="primary--text"
-														style="text-decoration: none"
-														:href="el.href"
-														>Leer estudio completo</a
-													>
-												</div>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-							<v-carousel
-								v-else
-								:show-arrows="false"
-								reverse-transition="fade-transition"
-								transition="fade-transition"
-								hide-delimiter-background
-								height="400"
-							>
-								<v-carousel-item v-for="(tag, i) in efectividadMobile" :key="i">
-									<div class="text-center d-flex justify-center align-center">
-										<v-card
-											height="300"
-											class="mx-4 d-inline-block"
-											style="border-radius: 25px"
-											light
-											flat
-										>
-											<v-card-text>
-												<img height="60" :src="tag.img" />
-											</v-card-text>
-											<v-card-text
-												style="flex-direction: column; height: 240px"
-												class="d-flex justify-content-end"
-											>
-												<div>{{ tag.text }}</div>
-												<v-btn
-													block
-													link
-													text
-													color="blue"
-													:href="tag.href"
+												{{ el.text }}
+											</article>
+											<h3>
+												<a
+													class="primary--text caption font-weight-bold"
+													style="text-decoration: none"
+													:href="el.href"
+													>Leer estudio completo</a
 												>
-													Leer estudio completo
-												</v-btn>
-											</v-card-text>
-										</v-card>
-									</div>
-								</v-carousel-item>
-							</v-carousel>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</div>
+											</h3>
+										</v-card-text>
+									</v-card>
+								</section>
+							</v-carousel-item>
+						</v-carousel>
+						<v-carousel
+							v-else
+							tag="article"
+							:show-arrows="false"
+							reverse-transition="fade-transition"
+							transition="fade-transition"
+							hide-delimiter-background
+							height="400"
+						>
+							<v-carousel-item
+								v-for="(el, i) in efectividadMobile"
+								:key="i"
+								tag="section"
+							>
+								<section class="text-center d-flex justify-center align-center">
+									<v-card
+										tag="section"
+										height="300"
+										width="350"
+										class="mx-4 d-inline-block"
+										style="border-radius: 25px"
+										light
+										flat
+									>
+										<v-card-text class="mt-3">
+											<img height="60" :src="el.img" />
+										</v-card-text>
+										<v-card-text
+											style="flex-direction: column; height: 180px"
+											class="d-flex justify-space-between"
+										>
+											<article style="height: 120px; overflow-y: auto">
+												{{ el.text }}
+											</article>
+											<h3 class="pt-2">
+												<a style="text-decoration: none" :href="el.href">
+													<span class="primary--text caption">
+														Leer estudio completo
+													</span>
+												</a>
+											</h3>
+										</v-card-text>
+									</v-card>
+								</section>
+							</v-carousel-item>
+						</v-carousel>
+					</v-col>
+				</v-row>
+			</v-container>
+		</section>
+		<img :src="`${$config.LANDING_URL}/wave-part2.png`" style="width: 100%" />
 		<!-- SECTION 6 / download app -->
-		<v-container>
-			<v-row>
+		<v-container tag="section">
+			<v-row tag="section" no-gutters justify="center">
 				<v-col
+					tag="h2"
 					cols="12"
-					class="my-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
+					class="mt-10 mb-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
 				>
 					Descarga nuestra aplicación
 				</v-col>
-				<v-col cols="12" class="my-5 d-flex align-center justify-center">
+				<v-col
+					cols="12"
+					md="3"
+					lg="2"
+					tag="aside"
+					class="my-md-10 d-flex align-center justify-center"
+				>
 					<img
 						style="cursor: pointer"
 						height="75px"
 						:src="`${$config.LANDING_URL}/google-play-badge.png`"
-						alt="descarcar nuestra aplicaion"
+						alt="descarcar nuestra aplicacion para android"
 					/>
+				</v-col>
+				<v-col
+					cols="12"
+					md="3"
+					lg="2"
+					tag="aside"
+					class="my-md-10 d-flex align-center justify-center"
+				>
 					<img
 						style="cursor: pointer"
 						height="50px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
-						alt="descarcar nuestra aplicaion"
+						alt="descargar aplicacion para ios"
 					/>
 				</v-col>
 			</v-row>
 		</v-container>
 		<!-- SECTION 7 / faq -->
-		<v-container>
-			<v-row>
+		<v-container tag="section">
+			<v-row tag="section">
 				<v-col
+					tag="h2"
 					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Preguntas frecuentes
 				</v-col>
-				<v-col cols="12" class="text-left">
-					<v-expansion-panels v-model="panel" accordion flat dark multiple>
+				<v-col tag="section" cols="12" class="text-left">
+					<v-expansion-panels v-model="panel" tag="section" accordion flat dark multiple>
 						<v-expansion-panel v-for="item in faq" :key="item.id" class="pa-0">
-							<v-expansion-panel-header
-								color="primary"
-								class="white--text py-1 pl-2 font-weight-bold"
-								light
-							>
-								{{ item.title }}
+							<v-expansion-panel-header color="primary" class="py-3 pl-3" light>
+								<h4 class="white--textfont-weight-bold">{{ item.title }}</h4>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content class="white text--secondary pt-5">
 								{{ item.desc }}
@@ -456,6 +496,8 @@
 					</v-expansion-panels>
 				</v-col>
 				<v-col
+					v-if="$vuetify.breakpoint.mdAndUp"
+					tag="section"
 					cols="12"
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
 				>
@@ -463,67 +505,104 @@
 						style="border-radius: 15px"
 						color="primary"
 						x-large
-						class="font-weight-bold pa-8"
-						depressed
-						:href="`${$config.FRONTEND_URL}/auth`"
+						class="font-weight-bold body-1 py-8 px-10"
+						nuxt
+						:to="{ name: 'psicologos' }"
 					>
 						Quiero empezar
 					</v-btn>
 				</v-col>
-				<v-col cols="12" class="text-center headline my-6 text--secondary">
+				<v-col
+					v-if="$vuetify.breakpoint.mdAndUp"
+					cols="12"
+					class="text-center body-1 font-weight-bold mt-6 text--secondary"
+				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<div :style="!$vuetify.breakpoint.mdAndUp ? 'background-color: #e3f2fd' : ''">
-			<v-container>
-				<v-row align="center">
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							height="100"
-							:src="`${$config.LANDING_URL}/Grafico Vida Tres Isapre.png`"
-						></v-img>
-					</v-col>
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							:src="`${$config.LANDING_URL}/logo_nmv_5cm.png`"
-						></v-img>
-					</v-col>
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							:src="`${$config.LANDING_URL}/fonasa.jpg`"
-						></v-img>
-					</v-col>
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							:src="`${$config.LANDING_URL}/banmedica.png`"
-						></v-img>
-					</v-col>
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							:src="`${$config.LANDING_URL}/colmena.png`"
-						></v-img>
-					</v-col>
-					<v-col cols="6" sm="2">
-						<v-img
-							contain
-							max-height="100"
-							:src="`${$config.LANDING_URL}/consalud.png`"
-						></v-img>
+		<section v-if="$vuetify.breakpoint.smAndUp" class="mt-16">
+			<v-container tag="section">
+				<v-row justify="center">
+					<v-col cols="12" md="10" xl="8">
+						<v-row tag="section" align="center">
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									alt="Vida Tres Isapre"
+									contain
+									height="100"
+									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="nueva masvida"
+									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									alt="fonasa"
+									max-height="100"
+									:src="`${$config.LANDING_URL}/fonasa.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="ban medica"
+									:src="`${$config.LANDING_URL}/banmedica.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="colmena"
+									:src="`${$config.LANDING_URL}/colmena.png`"
+								></v-img>
+							</v-col>
+							<v-col tag="section" cols="6" sm="2">
+								<v-img
+									contain
+									max-height="100"
+									alt="consalud"
+									:src="`${$config.LANDING_URL}/consalud.png`"
+								></v-img>
+							</v-col>
+						</v-row>
 					</v-col>
 				</v-row>
 			</v-container>
-		</div>
-		<v-container>
+		</section>
+		<section v-else class="mt-16" style="background-color: #e3f2fd">
+			<v-carousel
+				cycle
+				height="250"
+				:show-arrows="false"
+				reverse-transition="fade-transition"
+				transition="fade-transition"
+			>
+				<v-carousel-item
+					v-for="item in [
+						`${$config.LANDING_URL}/VidaTresIsapre.png`,
+						`${$config.LANDING_URL}/nueva-masvida.png`,
+						`${$config.LANDING_URL}/fonasa.png`,
+						`${$config.LANDING_URL}/banmedica.png`,
+						`${$config.LANDING_URL}/colmena.png`,
+						`${$config.LANDING_URL}/consalud.png`,
+					]"
+					:key="item.id"
+				>
+					<v-img height="200" :src="item" contain />
+				</v-carousel-item>
+			</v-carousel>
+		</section>
+		<v-container tag="footer">
 			<Footer />
 		</v-container>
 		<div class="primary" style="height: 30px"></div>
@@ -563,6 +642,7 @@ export default {
 					desc:
 						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 					img: `${this.$config.LANDING_URL}/ico1.png`,
+					maxWidth: '250px',
 				},
 				{
 					id: 2,
@@ -570,6 +650,7 @@ export default {
 					desc:
 						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
 					img: `${this.$config.LANDING_URL}/ico2.png`,
+					maxWidth: '214px',
 				},
 				{
 					id: 3,
@@ -577,6 +658,7 @@ export default {
 					desc:
 						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
 					img: `${this.$config.LANDING_URL}/ico3.png`,
+					maxWidth: '250px',
 				},
 			],
 			reseñas: [
@@ -647,21 +729,21 @@ export default {
 				[
 					{
 						id: 1,
-						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text:
 							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 					{
 						id: 3,
-						img: `${this.$config.LANDING_URL}/New York University.png`,
+						img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text:
 							'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 					},
 					{
 						id: 5,
-						img: `${this.$config.LANDING_URL}/Columbia University.png`,
+						img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text:
 							'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
@@ -685,7 +767,7 @@ export default {
 					},
 					{
 						id: 6,
-						img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text:
 							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
@@ -695,21 +777,21 @@ export default {
 			efectividadMobile: [
 				{
 					id: 1,
-					img: `${this.$config.LANDING_URL}/Baylor College Of Medicine.png`,
+					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 					text:
 						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
 				{
 					id: 3,
-					img: `${this.$config.LANDING_URL}/New York University.png`,
+					img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 					text:
 						'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 				},
 				{
 					id: 5,
-					img: `${this.$config.LANDING_URL}/Columbia University.png`,
+					img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 					text:
 						'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
@@ -717,18 +799,25 @@ export default {
 
 				{
 					id: 2,
-					img: ``,
+					img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
 					text:
 						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 				},
 				{
 					id: 4,
-					img: ``,
+					img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
 					href:
 						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 					text:
 						'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+				},
+				{
+					id: 6,
+					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
+					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
+					text:
+						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
 			],
 			mainImageSrc: null,
@@ -738,38 +827,44 @@ export default {
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Aihnoa Con',
-					image: `${this.$config.LANDING_URL}/Aihnoa Con.png`,
+					image: `${this.$config.LANDING_URL}/Aihnoa_Con.png`,
 				},
 				{
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquín Bustos.png`,
+					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.png`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
-					image: `${this.$config.LANDING_URL}/Jorge Calderon.png`,
+					image: `${this.$config.LANDING_URL}/Jorge_Calderon.png`,
 				},
 				{
 					id: 4,
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Tamara Stein',
-					image: `${this.$config.LANDING_URL}/Tamara Stein.png`,
+					image: `${this.$config.LANDING_URL}/Tamara_Stein.png`,
 				},
 			],
 		};
 	},
-	computed: {
-		heightPhone() {
-			if (this.$vuetify.breakpoint.xs) return '300px';
-			else if (this.$vuetify.breakpoint.smAndDown) return '500px';
-			else return '600px';
-		},
+	head() {
+		return {
+			title: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content:
+						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+				},
+			],
+		};
 	},
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<div style="background-color: #ebf2f3">
 		<client-only>
-			<div class="mt-3">
+			<div>
 				<Appbar />
 			</div>
 		</client-only>
@@ -89,24 +89,32 @@
 			</v-row>
 			<v-divider></v-divider>
 			<v-row>
-				<v-col cols="12">
+				<v-col cols="12" class="mt-5 mt-md-10 mb-10">
 					<v-list-item>
-						<v-list-item-avatar>
-							<v-img style="background-color: gray"></v-img>
+						<v-list-item-avatar :size="$vuetify.breakpoint.mdAndUp ? '120' : '50'">
+							<v-img
+								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
+								:src="article.authorAvatar"
+							></v-img>
 						</v-list-item-avatar>
-
 						<v-list-item-content>
-							<v-list-item-title class="title">
+							<v-list-item-title class="caption text-sm-h6 text--secondary">
 								Transcrito y revisado clínicamente por:
-								<span class="primary--text">{{
-									article.author || article.originalAuthor
-								}}</span>
+								<span class="primary--text">
+									{{ article.author || article.originalAuthor }}
+								</span>
 							</v-list-item-title>
-							<v-list-item-subtitle>
-								{{ authorDescription }}
-							</v-list-item-subtitle>
+							<div
+								v-if="$vuetify.breakpoint.mdAndUp"
+								class="font-weight-light body-1"
+							>
+								{{ article.authorDescription }}
+							</div>
 						</v-list-item-content>
 					</v-list-item>
+					<div v-if="!$vuetify.breakpoint.mdAndUp" class="font-weight-light body-1">
+						{{ article.authorDescription }}
+					</div>
 				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn x-large color="primary" text exact :to="{ name: 'blog' }">
@@ -116,7 +124,7 @@
 				<!-- blogs -->
 				<template v-if="blogs.length">
 					<template v-for="(item, i) in blogs">
-						<v-col v-if="length > i" :key="i" cols="12" md="3" class="mt-16">
+						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4" class="mt-16">
 							<v-hover v-slot="{ hover }">
 								<v-card
 									nuxt
@@ -128,7 +136,7 @@
 											: 'text-transform: none !important;'
 									"
 									:class="hover ? 'elevation-4' : 'elevation-0'"
-									height="500"
+									height="450"
 									width="100%"
 									flat
 								>
@@ -140,18 +148,18 @@
 									</v-img>
 									<v-card-text
 										class="d-flex justify-space-between"
-										style="flex-direction: column; height: 250px"
+										style="flex-direction: column; height: 200px"
 									>
 										<div>
-											<v-btn text class="px-0 my-3 text-h6" color="primary">
+											<v-btn text class="px-0 my-3 body-1" color="primary">
 												{{ item.categories }}
 											</v-btn>
-											<h3 class="title black--text">
+											<h3 class="body-1 font-weight-bold black--text">
 												{{ item.title }}
 											</h3>
 										</div>
 										<div>
-											<div class="title black--text">
+											<div class="body-1 black--text">
 												<span
 													v-if="item.originalAuthor"
 													class="primary--text"
@@ -172,61 +180,46 @@
 				</template>
 			</v-row>
 		</v-container>
-		<div style="position: relative" class="mb-10">
-			<img
-				:src="`${$config.LANDING_URL}/container-blue.png`"
-				style="height: 700px; width: 100%"
-			/>
-			<div style="position: absolute; top: 0; width: 100%">
-				<v-container fluid>
-					<v-row align="center" justify="center" style="height: 700px">
-						<v-col cols="12" sm="8" md="10" xl="9">
-							<v-row justify="space-between">
-								<v-col cols="10" sm="5" class="white--text">
-									<div>
-										<div class="headline font-weight-bold mt-8">
-											Recibe contenido exclusivo periódicamente
-										</div>
-										<div class="subtitle-1 font-weight-bold mb-8">
-											Suscríbete y alcanza tu mejor versión
-										</div>
-										<div style="position: relative">
-											<v-text-field
-												solo
-												flat
-												placeholder="Introduzca su correo electrónico aquí"
-												class="white pr-4"
-												hide-details
-											>
-											</v-text-field>
-											<v-btn
-												depressed
-												absolute
-												style="
-													height: 100%;
-													right: -60px;
-													top: 0;
-													border-radius: 0 25px 25px 0;
-												"
-												color="info"
-												>Enviar</v-btn
-											>
-										</div>
-									</div>
-								</v-col>
-								<v-col cols="12" sm="5" class="text-center">
-									<v-img
-										max-height="350"
-										contain
-										:src="`${$config.LANDING_URL}/recursos-11.png`"
-									></v-img>
-								</v-col>
-							</v-row>
+		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<v-container fluid class="primary py-0">
+			<v-row align="center" justify="center">
+				<v-col cols="12" sm="8" md="10" xl="9">
+					<v-row justify="center" align="center">
+						<v-col cols="10" md="7" class="white--text">
+							<h3 class="headline font-weight-bold">
+								Recibe contenido exclusivo periódicamente
+							</h3>
+							<h3 class="body-1 font-weight-bold mb-8 mt-2">
+								Suscríbete y alcanza tu mejor versión
+							</h3>
+
+							<v-btn-toggle rounded class="mb-10 mb-md-0">
+								<v-text-field
+									solo
+									flat
+									style="width: 400px"
+									placeholder="Introduzca su correo electrónico aquí"
+									class="white"
+									hide-details
+									dense
+								/>
+								<v-btn depressed color="info">
+									<span class="px-5 px-md-10">Enviar</span>
+								</v-btn>
+							</v-btn-toggle>
+						</v-col>
+						<v-col cols="12" md="5" class="text-center">
+							<v-img
+								contain
+								class="mx-auto"
+								:src="`${$config.LANDING_URL}/recursos-11.png`"
+							></v-img>
 						</v-col>
 					</v-row>
-				</v-container>
-			</div>
-		</div>
+				</v-col>
+			</v-row>
+		</v-container>
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
 		<v-container>
 			<Footer />
 		</v-container>
@@ -243,11 +236,24 @@ export default {
 	},
 	data() {
 		return {
-			length: 4,
+			length: 3,
 			article: null,
 			blogs: [],
 			rating: 0,
 			breadcrumb: [],
+			title: '',
+		};
+	},
+	head() {
+		return {
+			title: `${this.title} | Hablaquí`,
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content: 'Los articulos más actualizados de nuestros psicologos',
+				},
+			],
 		};
 	},
 	async mounted() {
@@ -255,6 +261,7 @@ export default {
 		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
 		response = await response.json();
 		this.article = response.article;
+		this.title = this.article.title;
 		if (response.article.rating.average)
 			this.rating = parseFloat(response.article.rating.average.toFixed(1));
 		this.breadcrumb = [

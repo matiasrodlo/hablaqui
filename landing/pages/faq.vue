@@ -1,16 +1,15 @@
 <template>
 	<div>
 		<client-only>
-			<div class="primary mt-3 pb-16">
+			<div class="primary pb-16">
 				<Appbar />
 				<v-container>
 					<v-row justify="center" no-gutters>
-						<v-col
-							cols="12"
-							class="white--text text-center font-weight-bold text-h6 text-md-h5 text-lg-h3 py-10"
-						>
-							Bienvenido a nuestro portal de ayuda
-							<div class="text-h6 text-md-h5 text-lg-h3 font-weight-bold">
+						<v-col cols="12" class="white--text text-center py-10">
+							<span class="font-weight-bold my-5" style="font-size: 30px">
+								Bienvenido a nuestro portal de ayuda
+							</span>
+							<div class="font-weight-bold" style="font-size: 55px">
 								Estamos aquí para ayudar
 							</div>
 						</v-col>
@@ -18,7 +17,7 @@
 							<v-text-field
 								v-model="search"
 								class="white"
-								label="Busca por tema o pregunta"
+								placeholder="Busca por tema o pregunta"
 								outlined
 								hide-details
 							/>
@@ -31,7 +30,7 @@
 			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">
 					<div v-for="(item, g) in itemsFilter" :key="g">
-						<div class="text-center text--secondary font-weight-bold title mt-10">
+						<div class="text-left text--secondary font-weight-bold title mt-10">
 							{{ item.title }}
 						</div>
 						<div class="caption">
@@ -50,17 +49,25 @@
 			</v-row>
 			<v-row v-else>
 				<v-col cols="12" sm="3">
-					<v-list flat>
-						<v-list-item-group v-model="selectedItem" color="primary" mandatory>
+					<v-list flat dense>
+						<v-list-item-group v-model="selectedItem" mandatory>
 							<v-list-item v-for="(q, i) in items" :key="i" :value="q">
 								<v-list-item-content>
-									<v-list-item-title v-text="q.title"></v-list-item-title>
+									<v-list-item-title
+										class="body-2"
+										:class="
+											selectedItem.id == q.id
+												? 'primary--text'
+												: 'text--secondary'
+										"
+										v-text="q.title"
+									></v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
 						</v-list-item-group>
 					</v-list>
 				</v-col>
-				<v-col v-if="selectedItem" cols="12" sm="9">
+				<v-col v-if="selectedItem" cols="12" sm="9" class="pt-6">
 					<div class="primary--text headline font-weight-bold">
 						{{ selectedItem.title }}
 					</div>
@@ -96,7 +103,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<div style="background-color: #0f3860; margin-top: 120px">
+		<div style="background-color: #0f3860; margin-top: 120px; margin-bottom: 100px">
 			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
@@ -112,27 +119,40 @@
 			</v-container>
 		</div>
 		<v-container>
-			<v-row justify="center" align="center">
+			<v-row justify="center" align="center" class="mb-8">
 				<v-col cols="12" md="6" class="text-center text-sm-left">
 					<div style="color: #bdbdbd">
-						<v-btn text class="text--disabled" :to="{ name: 'politicas' }"
-							>Aviso de privacidad</v-btn
-						>
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'politicas' }"
+							>Aviso de privacidad
+						</nuxt-link>
 						y
-						<v-btn text class="text--disabled" :to="{ name: 'condiciones' }"
-							>Términos y Condiciones</v-btn
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'condiciones' }"
 						>
+							Términos y Condiciones
+						</nuxt-link>
 					</div>
 					<div class="text--secondary">
 						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">
-					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
-					<v-icon color="primary" size="60">mdi-facebook</v-icon>
-					<v-icon color="primary" size="60">mdi-instagram</v-icon>
-					<div>Atención a clientes: clientes@hablaqui.com</div>
-					<div>Soporte técnico: soporte@hablaaqui.com</div>
+					<div class="text-right">
+						<img
+							style="height: 40px"
+							:src="`${$config.LANDING_URL}/redes_sociales.png`"
+							alt="redes sociales"
+						/>
+					</div>
+					<div>Atención a clientes: c@hablaqui.com</div>
+					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -149,6 +169,18 @@ export default {
 			selectedItem: null,
 			items: [],
 			search: '',
+		};
+	},
+	head() {
+		return {
+			title: 'Preguntas frecuentes | Hablaquí',
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content: 'Preguntas frecuentes Hablaquí',
+				},
+			],
 		};
 	},
 	computed: {

@@ -20,19 +20,19 @@
 							{{
 								this.step == 1
 									? '¡Qué gusto verte nuevamente!'
-									: '¡Nos alegra que estés aquí!'
+									: '¡Tu bienestar comienza aquí!'
 							}}
 						</v-col>
 						<v-col
 							cols="12"
-							sm="10"
-							lg="8"
+							sm="9"
+							lg="6"
 							class="text-center subtitle-1 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
 									? 'Ingresa y continúa tu viaje de desarrollo personal ahora mismo.'
-									: 'Regístrate y comienza tu viaje de desarrollo personal ahora mismo.'
+									: 'Regístrate para iniciar tu camino de desarrollo personal'
 							}}
 						</v-col>
 					</v-row>
@@ -59,7 +59,7 @@
 									:href="`${landingUrl}/politicas`"
 									>Aviso de privacidad</v-btn
 								>
-								y
+								<span class="primary--text mx-1">y</span>
 								<v-btn
 									class="px-0"
 									text

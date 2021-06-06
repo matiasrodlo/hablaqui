@@ -20,11 +20,24 @@ export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
 		titleTemplate: '%s',
-		title: 'Hablaqui',
+		title: 'Psicología online | Hablaquí',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
-			{ hid: 'description', name: 'description', content: '' },
+			{
+				name: 'robots',
+				content: 'index',
+			},
+			{
+				'http-equiv': 'Content-language',
+				content: 'es',
+			},
+			{
+				hid: 'description',
+				name: 'description',
+				content:
+					'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
+			},
 		],
 		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 	},
@@ -34,6 +47,11 @@ export default {
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [],
+
+	// google tagManager
+	gtm: {
+		id: 'G-BNF1BXZGS4', // Used as fallback if no runtime config is provided
+	},
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -48,21 +66,19 @@ export default {
 
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: [
+		[
+			'@netsells/nuxt-hotjar',
+			{
+				id: '2428019',
+				sv: '6',
+			},
+		],
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
-		// https://go.nuxtjs.dev/pwa
-		'@nuxtjs/pwa',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {},
-
-	// PWA module configuration: https://go.nuxtjs.dev/pwa
-	pwa: {
-		manifest: {
-			lang: 'es',
-		},
-	},
 
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
 	vuetify: {

@@ -13,6 +13,13 @@ steps:
       - "VUE_APP_URL=${_VUE_APP_URL}"
       - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
+      - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
@@ -23,7 +30,7 @@ steps:
     id: "generate-landing"
     waitFor: ["envvars-landing", "install-landing"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--version=$TRIGGER_NAME"]
+    args: ["app", "deploy", "--no-stop-previous-version"]
     dir: "landing"
     id: "deploy-landing"
     waitFor: ["envvars-landing", "install-landing", "generate-landing"]
@@ -41,6 +48,13 @@ steps:
       - "VUE_APP_URL=${_VUE_APP_URL}"
       - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
+      - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
     dir: "front"
     id: "envvars-front"
     waitFor: ["install-front"]
@@ -51,14 +65,7 @@ steps:
     id: "build-front"
     waitFor: ["envvars-front", "install-front"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args:
-      [
-        "app",
-        "deploy",
-        "--version=$TRIGGER_NAME",
-        "--no-promote",
-        "--no-stop-previous-version",
-      ]
+    args: ["app", "deploy", "--no-stop-previous-version"]
     dir: "front"
     id: "deploy-front"
     waitFor: ["envvars-front", "install-front", "build-front"]
@@ -76,18 +83,18 @@ steps:
       - "VUE_APP_URL=${_VUE_APP_URL}"
       - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
+      - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args:
-      [
-        "app",
-        "deploy",
-        "--version=$TRIGGER_NAME",
-        "--no-promote",
-        "--no-stop-previous-version",
-      ]
+    args: ["app", "deploy", "--no-stop-previous-version"]
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
 

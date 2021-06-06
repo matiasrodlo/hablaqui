@@ -9,7 +9,7 @@
 			<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="3">
 				<v-card style="border-radius:15px" outlined>
 					<template v-if="!this.$vuetify.breakpoint.smAndDown">
-						<v-card-title class="text--secondary">
+						<v-card-title class="body-1 font-weight-bold text--secondary">
 							Filtrar por
 						</v-card-title>
 						<v-card-text>
@@ -28,34 +28,42 @@
 					<v-card-text>
 						<v-row>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Género</div>
+								<div class="body-1 font-weight-bold mt-2">Género</div>
 								<v-checkbox
 									v-model="gender"
 									value="male"
 									:disabled="loading"
-									label="Hombre"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+									><template #label>
+										<span class="body-2 text-capitalize">Hombre</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="female"
 									:disabled="loading"
-									label="Mujer"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Mujer</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="transgender"
 									:disabled="loading"
-									label="Transgénero"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Transgénero</span>
+									</template>
+								</v-checkbox>
 							</v-col>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Modelo terapéuticos</div>
+								<div class="body-1 font-weight-bold mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
 										'cognitivo',
@@ -70,32 +78,40 @@
 										:key="i"
 										v-model="models"
 										:value="item"
-										:label="item"
 										:disabled="loading"
-										class="text-capitalize"
 										hide-details
 										@change="filterPanel"
-									></v-checkbox>
+									>
+										<template #label>
+											<span class="body-2 text-capitalize">{{ item }}</span>
+										</template>
+									</v-checkbox>
 								</template>
 							</v-col>
 							<v-col cols="12" sm="4" md="12">
-								<div class="title mt-2">Idioma</div>
+								<div class="body-1 font-weight-bold mt-2">Idioma</div>
 								<v-checkbox
 									v-model="languages"
 									value="spanish"
 									:disabled="loading"
-									label="Español"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Español</span>
+									</template>
+								</v-checkbox>
 								<v-checkbox
 									v-model="languages"
 									value="english"
 									:disabled="loading"
-									label="Ingles"
 									hide-details
 									@change="filterPanel"
-								></v-checkbox>
+								>
+									<template #label>
+										<span class="body-2 text-capitalize">Ingles</span>
+									</template>
+								</v-checkbox>
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -104,17 +120,24 @@
 			<v-col cols="12" md="9">
 				<v-row>
 					<v-col cols="12" md="6">
-						<v-combobox
+						<v-autocomplete
 							class="white"
 							outlined
-							:items="appointments"
-							:search-input.sync="motive"
+							:items="
+								appointments.map((item, i) => ({
+									text: item,
+									value: item,
+									index: i,
+								}))
+							"
+							v-model="motive"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
 							hide-details
 							clearable
 							:menu-props="{
 								closeOnClick: true,
+								closeOnContentClick: true,
 							}"
 							:disabled="loading"
 						>
@@ -130,15 +153,37 @@
 									</v-list-item-content>
 								</v-list-item>
 							</template>
-						</v-combobox>
+							<template #item="{item}">
+								<div style="width: 100%">
+									<v-list-item class="px-0" @click="motive = item">
+										<v-list-item-content>
+											<v-list-item-title
+												class="subtitle-2 font-weight-regular"
+											>
+												{{ item.text }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-divider
+										v-if="item.index < appointments.length - 1"
+										:key="item.index"
+									></v-divider>
+								</div>
+							</template>
+						</v-autocomplete>
 					</v-col>
 					<v-col cols="12" md="6">
-						<v-combobox
+						<v-autocomplete
 							class="white"
 							outlined
-							:items="filterLevelThree"
-							item-text="name"
-							:search-input.sync="searchInput"
+							:items="
+								filterLevelThree.map((item, i) => ({
+									text: `${item.name} ${item.lastName && item.lastName}`,
+									value: item.name,
+									index: i,
+								}))
+							"
+							v-model="searchInput"
 							label="Busca tu psicólogo"
 							append-icon="mdi-chevron-down"
 							hide-details
@@ -147,9 +192,37 @@
 							}"
 							clearable
 							:disabled="loading"
-							no-data-text="No hay psicologos en este momento"
 						>
-						</v-combobox>
+							<template #no-data>
+								<v-list-item>
+									<v-list-item-content>
+										<v-list-item-title>
+											No se encontraron resultados que coincidan con "<strong>
+												{{ searchInput }}
+											</strong>
+											" .
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</template>
+							<template #item="{item}">
+								<div style="width: 100%">
+									<v-list-item class="px-0" @click="searchInput = item.value">
+										<v-list-item-content>
+											<v-list-item-title
+												class="subtitle-2 font-weight-regular"
+											>
+												{{ item.text }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-divider
+										v-if="item.index < filterLevelThree.length - 1"
+										:key="item.index"
+									></v-divider>
+								</div>
+							</template>
+						</v-autocomplete>
 					</v-col>
 					<v-col v-if="!$vuetify.breakpoint.mdAndUp" cols="12">
 						<v-expansion-panels
@@ -293,49 +366,50 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" lg="4">
-							<v-card
-								height="380"
-								style="border-radius:15px"
-								class="text-center"
-								color="primary"
-								dark
-							>
-								<v-card-text style="height: 310px">
-									<v-btn
-										fab
-										light
-										depressed
-										width="100"
-										height="100"
-										style="border: 8px solid #5EB3E4;"
-										class="mb-5 mt-3"
-									>
-										<v-icon color="primary" size="60">mdi-magnify</v-icon>
-									</v-btn>
-									<div class="title font-weight-bold">
-										Te ayudamos a encontrar a tu psicólogo
-									</div>
-									<div class="body-1 mt-2 mx-auto" style="max-width: 250px">
-										Encuentra al psicólogo que necesitas, solo responde las
-										siguientes preguntas.
-									</div>
-								</v-card-text>
-								<v-card-actions>
-									<v-spacer></v-spacer>
-									<v-btn
-										class="px-10"
-										light
-										color="#F0F8FF"
-										style="border-radius:10px"
-										depressed
-										:to="{ name: 'auth', params: { q: 'register' } }"
-									>
-										Comenzar
-									</v-btn>
-									<v-spacer></v-spacer>
-								</v-card-actions>
-							</v-card>
+						<v-col cols="12" sm="6" lg="4" xl="3"
+							><v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-6' : 'elevation-3'"
+									height="350"
+									style="border-radius:15px; transition: transform 0.7s"
+									class="text-center"
+									color="primary"
+									dark
+								>
+									<v-card-text style="height: 280px">
+										<v-img
+											height="100"
+											width="100"
+											class="mx-auto"
+											src="/img/Lupa.png"
+										></v-img>
+										<div class="mt-4 title font-weight-bold">
+											Te ayudamos a encontrar a tu psicólogo
+										</div>
+										<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
+											Encuentra al psicólogo que necesitas, solo responde las
+											siguientes preguntas.
+										</div>
+									</v-card-text>
+									<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn
+											class="px-10"
+											light
+											color="#F0F8FF"
+											style="border-radius: 5px"
+											:to="{ name: 'auth', params: { q: 'register' } }"
+										>
+											<span class="text--secondary">Comenzar</span>
+										</v-btn>
+										<v-spacer></v-spacer>
+									</v-card-actions> </v-card
+							></v-hover>
 						</v-col>
 						<v-col
 							cols="12"
@@ -348,169 +422,34 @@
 							cols="12"
 							sm="6"
 							lg="4"
+							xl="3"
 							v-for="(item, i) in filterLevelThree"
 							:key="i"
 						>
-							<v-card height="380" style="border-radius:15px" class="text-center">
-								<v-card-text style="height: 280px">
-									<div>
-										<v-avatar
-											size="100"
-											:color="item.avatar ? 'trasnparent' : 'primary'"
-										>
-											<v-img
-												v-if="item.avatar"
-												:src="item.avatar"
-												:lazy-src="item.avatar"
-												width="100"
-												height="100"
-											>
-												<template #placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="primary"
-														/>
-													</v-row>
-												</template>
-											</v-img>
-											<span
-												v-else
-												class="white--text headline font-weight-bold"
-											>
-												{{ item.name.substr(0, 1) }}
-											</span>
-										</v-avatar>
-										<div
-											v-if="item.name"
-											class="subtitle-1 font-weight-bold text--secondary"
-										>
-											{{
-												item.name.length > 25
-													? item.name.slice(0, 25).concat('...')
-													: item.name
-											}}
-										</div>
-										<span v-if="item.code" class="caption primary--text">
-											<span> Codigo {{ item.code }} </span>
-											<v-divider
-												style="margin-left: 90px; margin-right: 90px"
-											></v-divider>
-										</span>
-									</div>
-									<template v-if="$vuetify.breakpoint.mdAndUp">
-										<div v-if="item.description" class="body-2 mt-2">
-											{{
-												item.description.length > 160
-													? item.description.slice(0, 160).concat('...')
-													: item.description
-											}}
-										</div>
-										<div v-else class="text--secondary headline my-16">
-											Sin descripción
-										</div>
-									</template>
-									<div v-else class="body-2 mt-2">
-										<span v-for="(el, e) in item.specialties" :key="e">
-											{{ el }};
-										</span>
-									</div>
-								</v-card-text>
-								<v-card-text>
-									<div>
-										<v-btn
-											color="primary"
-											depressed
-											style="border-radius:10px"
-											@click="toAuth(item)"
-										>
-											Agenda cita oline
-										</v-btn>
-									</div>
-									<div>
-										<v-btn
-											text
-											:to="{ name: 'psicologo', params: { id: item._id } }"
-										>
-											Más información
-										</v-btn>
-									</div>
-								</v-card-text>
-							</v-card>
-						</v-col>
-					</template>
-					<template v-if="view == 2">
-						<v-col v-if="!loggedIn" cols="12">
-							<v-card style="border-radius:15px" dark color="primary">
-								<v-card-text>
-									<v-row align="center" justify="center">
-										<v-col cols="3" class="text-center">
-											<v-list-item-avatar size="140" class="ml-4">
-												<v-btn
-													fab
-													light
-													depressed
-													width="140"
-													height="140"
-													style="border: 8px solid #5EB3E4;"
-												>
-													<v-icon color="primary" size="60"
-														>mdi-magnify</v-icon
-													>
-												</v-btn>
-											</v-list-item-avatar>
-										</v-col>
-										<v-col cols="9">
-											<v-row justify="space-between">
-												<v-col
-													class="headline font-weight-bold white--text"
-												>
-													Encuentra a tu psicólogo ideal
-												</v-col>
-											</v-row>
-											<div class="body-2 mt-2">
-												Encuentra al psicólogo que necesitas, solo responde
-												las siguientes preguntas.
-											</div>
-											<v-btn
-												light
-												class="px-10 mt-4"
-												depressed
-												:to="{ name: 'auth', params: { q: 'register' } }"
-											>
-												Comenzar
-											</v-btn>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col
-							cols="12"
-							class="title primary--text"
-							v-if="!loading && !filterLevelThree.length"
-						>
-							No se encontraron coincidencias
-						</v-col>
-						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
-							<v-card height="270" style="border-radius:15px">
-								<v-card-text class="my-2">
-									<v-row align="center" justify="center" style="height: 270px">
-										<v-col cols="3" class="text-center">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+									height="350"
+									class="text-center"
+								>
+									<v-card-text style="height: 250px">
+										<div>
 											<v-avatar
-												size="140"
+												size="100"
 												:color="item.avatar ? 'trasnparent' : 'primary'"
 											>
 												<v-img
 													v-if="item.avatar"
 													:src="item.avatar"
 													:lazy-src="item.avatar"
-													width="140"
-													height="140"
+													width="100"
+													height="100"
 												>
 													<template #placeholder>
 														<v-row
@@ -532,14 +471,51 @@
 													{{ item.name.substr(0, 1) }}
 												</span>
 											</v-avatar>
-											<div class="text-center caption text--secondary">
-												Codigo {{ item.code }}
-											</div>
+											<router-link
+												v-if="item.name"
+												style="text-decoration: none; display: block"
+												:to="{
+													name: 'psicologo',
+													params: { id: item._id },
+												}"
+											>
+												<span
+													class="body-2 font-weight-bold secondary--text"
+												>
+													{{ item.name }}
+													{{ item.lastName && item.lastName }}
+												</span>
+											</router-link>
+											<span
+												v-if="item.code"
+												class="caption primary--text pb-2"
+												style="border-bottom: 1px solid #BDBDBD"
+											>
+												<span> Codigo {{ item.code }} </span>
+											</span>
+										</div>
+										<div class="body-2 mt-4">
+											<template v-for="(el, e) in item.specialties">
+												<span v-if="e < 4" :key="e"> {{ el }}; </span>
+											</template>
+										</div>
+									</v-card-text>
+									<v-card-text>
+										<div>
 											<v-btn
-												text
+												class="body-2 px-6"
 												color="primary"
 												depressed
-												class="pa-0 font-weight-bold"
+												style="border-radius: 5px"
+												@click="toAuth(item)"
+											>
+												Agenda cita oline
+											</v-btn>
+										</div>
+										<div class="mt-1">
+											<v-btn
+												class="body-2"
+												text
 												:to="{
 													name: 'psicologo',
 													params: { id: item._id },
@@ -547,49 +523,190 @@
 											>
 												Más información
 											</v-btn>
-										</v-col>
-										<v-col cols="9">
-											<v-row justify="space-between">
-												<v-col
-													class="headline font-weight-bold text--secondary"
+										</div>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</v-col>
+					</template>
+					<template v-if="view == 2">
+						<v-col cols="12">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+									dark
+									color="primary"
+								>
+									<v-card-text>
+										<v-row align="center" justify="center">
+											<v-col cols="3" class="text-center">
+												<v-img
+													height="160"
+													width="160"
+													class="mx-auto"
+													src="/img/Lupa.png"
+												></v-img>
+											</v-col>
+											<v-col cols="9">
+												<v-row justify="space-between">
+													<v-col
+														class="headline font-weight-bold white--text"
+													>
+														Encuentra a tu psicólogo ideal
+													</v-col>
+												</v-row>
+												<div class="body-2 mt-2">
+													Encuentra al psicólogo que necesitas, solo
+													responde las siguientes preguntas.
+												</div>
+												<v-btn
+													light
+													class="px-10 mt-4"
+													:to="{
+														name: 'auth',
+														params: { q: 'register' },
+													}"
 												>
-													{{ item.name }}
-												</v-col>
-												<v-col cols="5" class="text-right">
-													<v-btn
-														color="primary"
-														rounded
-														depressed
-														@click="toAuth(item)"
+													<span class="text--secondary">Comenzar</span>
+												</v-btn>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</v-col>
+						<v-col
+							cols="12"
+							class="title primary--text"
+							v-if="!loading && !filterLevelThree.length"
+						>
+							No se encontraron coincidencias
+						</v-col>
+						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									height="300"
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+								>
+									<v-card-text class="my-2">
+										<v-row
+											align="center"
+											justify="center"
+											style="height: 270px"
+										>
+											<v-col cols="3" class="text-center">
+												<v-avatar
+													size="200"
+													:color="item.avatar ? 'trasnparent' : 'primary'"
+												>
+													<v-img
+														v-if="item.avatar"
+														:src="item.avatar"
+														:lazy-src="item.avatar"
+														width="200"
+														height="200"
 													>
-														Agenda cita oline
-													</v-btn>
-												</v-col>
-											</v-row>
-											<v-chip-group show-arrows v-model="motive">
-												<template v-for="(tag, i) in item.specialties">
-													<v-chip
-														:value="tag"
-														class="ma-2"
-														small
-														:key="i"
-														:color="
-															motive == tag ? 'primary--text' : ''
-														"
+														<template #placeholder>
+															<v-row
+																class="fill-height ma-0"
+																align="center"
+																justify="center"
+															>
+																<v-progress-circular
+																	indeterminate
+																	color="primary"
+																/>
+															</v-row>
+														</template>
+													</v-img>
+													<span
+														v-else
+														class="white--text headline font-weight-bold"
 													>
-														<span class="text-capitalize">
-															{{ tag }}
-														</span>
-													</v-chip>
-												</template>
-											</v-chip-group>
-											<div class="body-2 mt-2">
-												{{ item.description }}
-											</div>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
+														{{ item.name.substr(0, 1) }}
+													</span>
+												</v-avatar>
+												<div class="text-center caption text--secondary">
+													Codigo {{ item.code }}
+												</div>
+												<v-btn
+													text
+													color="primary"
+													depressed
+													class="pa-0 body-2 font-weight-bold"
+													:to="{
+														name: 'psicologo',
+														params: { id: item._id },
+													}"
+												>
+													Más información
+												</v-btn>
+											</v-col>
+											<v-col cols="9">
+												<v-row justify="space-between">
+													<v-col>
+														<router-link
+															style="text-decoration: none"
+															:to="{
+																name: 'psicologo',
+																params: { id: item._id },
+															}"
+														>
+															<span
+																class="headline font-weight-bold text--secondary"
+															>
+																{{ item.name }}
+															</span>
+														</router-link>
+													</v-col>
+													<v-col cols="5" class="text-right">
+														<v-btn
+															color="primary"
+															rounded
+															depressed
+															@click="toAuth(item)"
+														>
+															Agenda cita oline
+														</v-btn>
+													</v-col>
+												</v-row>
+												<v-chip-group show-arrows v-model="motive">
+													<template v-for="(tag, i) in item.specialties">
+														<v-chip
+															:value="tag"
+															class="ma-2"
+															small
+															:key="i"
+															:color="
+																motive == tag ? 'primary--text' : ''
+															"
+														>
+															<span class="text-capitalize">
+																{{ tag }}
+															</span>
+														</v-chip>
+													</template>
+												</v-chip-group>
+												<div class="body-2 mt-2">
+													{{ item.professionalDescription }}
+												</div>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</v-card>
+							</v-hover>
 						</v-col>
 					</template>
 				</v-row>
@@ -671,6 +788,11 @@ export default {
 		}),
 	},
 	created() {
+		//  Limpia la query url cuando viene desde mercadopago
+		if (JSON.stringify(this.$route.params) !== JSON.stringify({}))
+			this.$router.replace({ query: null });
+
+		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
 		if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
 		else {
 			const view = localStorage.getItem('view');
@@ -678,6 +800,8 @@ export default {
 				this.view = view;
 			}
 		}
+
+		// Establece los filtros guardados en localstorage
 		const panel = JSON.parse(localStorage.getItem('panel'));
 		if (panel) {
 			if (panel.gender.length) this.gender = panel.gender;
