@@ -45,8 +45,8 @@
 						<v-img
 							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
 							contain
-							:lazy-src="`${$config.LANDING_URL}/phone.png`"
-							:src="`${$config.LANDING_URL}/phone.png`"
+							:lazy-src="`${$config.LANDING_URL}/phone.webp`"
+							:src="`${$config.LANDING_URL}/phone.webp`"
 							alt="habla aqui videollamada"
 						>
 							<template #placeholder>
@@ -69,7 +69,8 @@
 		/>
 		<img
 			class="hidden-md-and-up"
-			:src="`${$config.LANDING_URL}/wave1-movil.png`"
+			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
+			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
 			style="width: 100%"
 			alt="Tu psicólogo Online"
 		/>
@@ -767,7 +768,7 @@ export default {
 				[
 					{
 						id: 2,
-						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.png`,
+						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
 						text:
 							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
@@ -814,7 +815,7 @@ export default {
 
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
+					img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
 					text:
 						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
@@ -842,28 +843,28 @@ export default {
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Aihnoa Con',
-					image: `${this.$config.LANDING_URL}/Aihnoa_Con.png`,
+					image: `${this.$config.LANDING_URL}/Aihnoa_Con.webp`,
 				},
 				{
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.png`,
+					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.webp`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
-					image: `${this.$config.LANDING_URL}/Jorge_Calderon.png`,
+					image: `${this.$config.LANDING_URL}/Jorge_Calderon.webp`,
 				},
 				{
 					id: 4,
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Tamara Stein',
-					image: `${this.$config.LANDING_URL}/Tamara_Stein.png`,
+					image: `${this.$config.LANDING_URL}/Tamara_Stein.webp`,
 				},
 			],
 		};

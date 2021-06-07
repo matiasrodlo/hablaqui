@@ -534,8 +534,8 @@
 								contain
 								class="mx-auto"
 								alt="Recibe contenido exclusivo periódicamente"
-								:src="`${$config.LANDING_URL}/suscribete.png`"
-								:lazy-src="`${$config.LANDING_URL}/suscribete.png`"
+								:src="`${$config.LANDING_URL}/suscribete.webp`"
+								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
 							>
 								<template #placeholder>
 									<v-row class="fill-height ma-0" align="center" justify="center">
