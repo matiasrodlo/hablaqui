@@ -4,7 +4,7 @@
 			<Appbar />
 		</nav>
 		<!-- SECTION 1 / heading -->
-		<section class="primary">
+		<section style="background-color: #2070e5">
 			<v-container class="white--text py-0">
 				<v-row
 					tag="section"
