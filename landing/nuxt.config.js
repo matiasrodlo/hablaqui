@@ -46,7 +46,7 @@ export default {
 	css: [
 		'vuetify/dist/vuetify.min.css',
 		'~/assets/global.scss',
-		// '@mdi/font/css/materialdesignicons.min.css',
+		'@mdi/font/css/materialdesignicons.min.css',
 	],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -106,7 +106,7 @@ export default {
 		},
 		defaultAssets: {
 			font: false,
-			// icons: false,
+			icons: false,
 		},
 	},
 
