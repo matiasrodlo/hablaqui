@@ -50,6 +50,7 @@
 					<v-img
 						style="border-radius: 5px"
 						max-height="600"
+						:alt="article.title"
 						:src="article.thumbnail"
 					></v-img>
 				</v-col>
@@ -94,7 +95,8 @@
 						<v-list-item-avatar :size="$vuetify.breakpoint.mdAndUp ? '120' : '50'">
 							<v-img
 								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
-								:src="article.authorAvatar"
+								:src="article.article"
+								:alt="article.author"
 							></v-img>
 						</v-list-item-avatar>
 						<v-list-item-content>
@@ -144,6 +146,7 @@
 										class="grey lighten-3"
 										height="250"
 										:src="item.thumbnail"
+										:alt="item.title"
 									>
 									</v-img>
 									<v-card-text
@@ -211,8 +214,9 @@
 						<v-col cols="12" md="5" class="text-center">
 							<v-img
 								contain
+								alt="Recibe contenido exclusivo periódicamente"
 								class="mx-auto"
-								:src="`${$config.LANDING_URL}/recursos-11.png`"
+								:src="`${$config.LANDING_URL}/suscribete.png`"
 							></v-img>
 						</v-col>
 					</v-row>

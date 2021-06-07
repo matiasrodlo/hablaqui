@@ -61,8 +61,14 @@
 				v-if="$vuetify.breakpoint.mdAndUp"
 				:src="`${$config.LANDING_URL}/wave1.png`"
 				style="width: 100%"
+				alt="Tu psicólogo Online"
 			/>
-			<img v-else :src="`${$config.LANDING_URL}/wave1-movil.png`" style="width: 100%" />
+			<img
+				v-else
+				:src="`${$config.LANDING_URL}/wave1-movil.png`"
+				style="width: 100%"
+				alt="Tu psicólogo Online"
+			/>
 		</client-only>
 		<!-- SETION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
@@ -243,7 +249,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" alt="Ventajas" />
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
 			<v-row tag="section" justify="center">
@@ -266,7 +272,7 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img style="height: 80px" :src="item.img" />
+							<img style="height: 80px" :src="item.img" :alt="item.title" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -348,7 +354,7 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" />
+											<img height="60" :src="el.img" :alt="el.text" />
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column"
@@ -408,7 +414,7 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" />
+											<img height="60" :src="el.img" :alt="el.text" />
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column; height: 180px"
@@ -454,7 +460,7 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
-						:src="`${$config.LANDING_URL}/google-play-badge.png`"
+						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
 				</v-col>
@@ -588,7 +594,7 @@
 				transition="fade-transition"
 			>
 				<v-carousel-item
-					v-for="item in [
+					v-for="(item, e) in [
 						`${$config.LANDING_URL}/VidaTresIsapre.png`,
 						`${$config.LANDING_URL}/nueva-masvida.png`,
 						`${$config.LANDING_URL}/fonasa.png`,
@@ -596,9 +602,9 @@
 						`${$config.LANDING_URL}/colmena.png`,
 						`${$config.LANDING_URL}/consalud.png`,
 					]"
-					:key="item.id"
+					:key="e"
 				>
-					<v-img height="200" :src="item" contain />
+					<v-img height="200" :src="item" :alt="item" contain />
 				</v-carousel-item>
 			</v-carousel>
 		</section>
@@ -641,7 +647,7 @@ export default {
 					title: 'Comodidad',
 					desc:
 						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
-					img: `${this.$config.LANDING_URL}/ico1.png`,
+					img: `${this.$config.LANDING_URL}/comodidad.png`,
 					maxWidth: '250px',
 				},
 				{
@@ -649,7 +655,7 @@ export default {
 					title: 'Privacidad',
 					desc:
 						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
-					img: `${this.$config.LANDING_URL}/ico2.png`,
+					img: `${this.$config.LANDING_URL}/privacidad.png`,
 					maxWidth: '214px',
 				},
 				{
@@ -657,7 +663,7 @@ export default {
 					title: 'Personalización',
 					desc:
 						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
-					img: `${this.$config.LANDING_URL}/ico3.png`,
+					img: `${this.$config.LANDING_URL}/personalizacion.png`,
 					maxWidth: '250px',
 				},
 			],
@@ -752,14 +758,14 @@ export default {
 				[
 					{
 						id: 2,
-						img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
+						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.png`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
 						text:
 							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
-						img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
+						img: `${this.$config.LANDING_URL}/TheLancet.png`,
 						href:
 							'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 						text:

@@ -189,6 +189,7 @@
 															style="border-radius: 10px"
 															height="365"
 															class="grey lighten-3"
+															:alt="article.title"
 															:src="article.thumbnail"
 														>
 														</v-img>
@@ -200,6 +201,7 @@
 											<v-img
 												class="grey lighten-3"
 												height="150"
+												:alt="article.title"
 												:src="article.thumbnail"
 											>
 											</v-img>
@@ -344,6 +346,7 @@
 										<v-img
 											class="grey lighten-3"
 											height="200"
+											:alt="item.title"
 											:src="item.thumbnail"
 										>
 										</v-img>
@@ -429,7 +432,7 @@
 								>
 									<v-card-text class="text-center">
 										<v-list-item-avatar size="120" class="ml-4">
-											<v-img :src="element.img"></v-img>
+											<v-img :src="element.img" :alt="element.title"></v-img>
 										</v-list-item-avatar>
 										<h2
 											class="text-center body-2 font-weight-bold secondary--text"
@@ -476,7 +479,8 @@
 							<v-img
 								contain
 								class="mx-auto"
-								:src="`${$config.LANDING_URL}/recursos-11.png`"
+								alt="Recibe contenido exclusivo periódicamente"
+								:src="`${$config.LANDING_URL}/suscribete.png`"
 							></v-img>
 						</v-col>
 					</v-row>
@@ -511,13 +515,19 @@ export default {
 			length: 5,
 			articles: [],
 			categories: [
-				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/recursos-12.png` },
+				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/pareja_y_sexo.png` },
 				{
 					title: 'Conocimiento de sí mismo',
-					img: `${this.$config.LANDING_URL}/recursos-13.png`,
+					img: `${this.$config.LANDING_URL}/conocimiento_de_si_mismo.png`,
 				},
-				{ title: 'Salud y bienestar', img: `${this.$config.LANDING_URL}/recursos-14.png` },
-				{ title: 'Familia y amigos', img: `${this.$config.LANDING_URL}/recursos-15.png` },
+				{
+					title: 'Salud y bienestar',
+					img: `${this.$config.LANDING_URL}/salud_y_bienestar.png`,
+				},
+				{
+					title: 'Familia y amigos',
+					img: `${this.$config.LANDING_URL}/familia_y_amigos.png`,
+				},
 			],
 		};
 	},
