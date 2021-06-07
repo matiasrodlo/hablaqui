@@ -398,15 +398,10 @@
 									</v-card-text>
 									<v-card-actions>
 										<v-spacer></v-spacer>
-										<v-btn
-											class="px-10"
-											light
-											color="#F0F8FF"
-											style="border-radius: 5px"
-											:to="{ name: 'auth', params: { q: 'register' } }"
-										>
-											<span class="text--secondary">Comenzar</span>
-										</v-btn>
+										<dialog-match
+											:setMatch="payload => filterMatch(payload)"
+											:mode="view"
+										/>
 										<v-spacer></v-spacer>
 									</v-card-actions> </v-card
 							></v-hover>
@@ -502,15 +497,7 @@
 									</v-card-text>
 									<v-card-text>
 										<div>
-											<v-btn
-												class="body-2 px-6"
-												color="primary"
-												depressed
-												style="border-radius: 5px"
-												@click="toAuth(item)"
-											>
-												Agenda cita oline
-											</v-btn>
+											<dialog-agenda-cita-online :psy="item" :mode="view" />
 										</div>
 										<div class="mt-1">
 											<v-btn
@@ -565,16 +552,10 @@
 													Encuentra al psicólogo que necesitas, solo
 													responde las siguientes preguntas.
 												</div>
-												<v-btn
-													light
-													class="px-10 mt-4"
-													:to="{
-														name: 'auth',
-														params: { q: 'register' },
-													}"
-												>
-													<span class="text--secondary">Comenzar</span>
-												</v-btn>
+												<dialog-match
+													:setMatch="payload => filterMatch(payload)"
+													:mode="view"
+												/>
 											</v-col>
 										</v-row>
 									</v-card-text>
@@ -672,14 +653,10 @@
 														</router-link>
 													</v-col>
 													<v-col cols="5" class="text-right">
-														<v-btn
-															color="primary"
-															rounded
-															depressed
-															@click="toAuth(item)"
-														>
-															Agenda cita oline
-														</v-btn>
+														<dialog-agenda-cita-online
+															:psy="item"
+															:mode="view"
+														/>
 													</v-col>
 												</v-row>
 												<v-chip-group show-arrows v-model="motive">
@@ -718,6 +695,10 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+		DialogMatch: () => import('@/components/psy/DialogMatch'),
+	},
 	name: 'psychologists',
 	props: {
 		loading: {
@@ -727,9 +708,9 @@ export default {
 	},
 	data() {
 		return {
+			view: 1,
 			motive: '',
 			searchInput: '',
-			view: 1,
 			gender: [],
 			models: [],
 			languages: [],
@@ -784,7 +765,6 @@ export default {
 		...mapGetters({
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
-			loggedIn: 'User/loggedIn',
 		}),
 	},
 	created() {
@@ -814,11 +794,6 @@ export default {
 			localStorage.setItem('view', type);
 			this.view = type;
 		},
-		toAuth(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
-		},
 		filterPanel() {
 			const panel = {
 				gender: this.gender,
@@ -827,6 +802,27 @@ export default {
 			};
 			localStorage.setItem('panel', JSON.stringify(panel));
 		},
+		filterMatch(payload) {
+			this.languages = [];
+			this.searchInput = '';
+			this.gender = payload.gender;
+			this.models = [payload.model];
+			this.motive = payload.themes;
+		},
 	},
 };
 </script>
+
+<style scoped>
+.item {
+	white-space: nowrap;
+	transition: transform 0.3s ease 0s, border 0.2s ease 0s, box-shadow 0.2s ease 0s;
+	text-align: center;
+	cursor: pointer;
+	color: #565656;
+	padding: 8px 5px;
+	border: 1px solid #0085ff80;
+	box-sizing: border-box;
+	border-radius: 2px;
+}
+</style>
