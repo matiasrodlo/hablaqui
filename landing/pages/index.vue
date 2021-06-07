@@ -64,7 +64,8 @@
 		<img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave1.png`"
-			style="width: 100%"
+			width="100%"
+			height="auto"
 			alt="Tu psicólogo Online"
 		/>
 		<img
@@ -146,7 +147,12 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<img
+			class="mt-10"
+			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
+			width="100%"
+			height="auto"
+		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
 				<v-row tag="section" justify="space-between" align="center">
@@ -261,7 +267,12 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" alt="Ventajas" />
+		<img
+			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
+			width="100%"
+			height="auto"
+			alt="Ventajas"
+		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
 			<v-row tag="section" justify="center">
@@ -284,7 +295,7 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img style="height: 80px" :src="item.img" :alt="item.title" />
+							<img height="80px" width="auto" :src="item.img" :alt="item.title" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -315,7 +326,12 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
+		<img
+			class="mt-10"
+			:src="`${$config.LANDING_URL}/wave-part1.png`"
+			width="100%"
+			height="auto"
+		/>
 		<section style="position: relative" class="primary-color">
 			<aside style="position: absolute; top: -100px; z-index: 0">
 				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
@@ -366,7 +382,12 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" :alt="el.text" />
+											<img
+												height="60"
+												width="auto"
+												:src="el.img"
+												:alt="el.text"
+											/>
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column"
@@ -426,7 +447,12 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" :alt="el.text" />
+											<img
+												height="60"
+												width="auto"
+												:src="el.img"
+												:alt="el.text"
+											/>
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column; height: 180px"
@@ -451,7 +477,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-part2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/wave-part2.png`" width="100%" height="auto" />
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
 			<v-row tag="section" no-gutters justify="center">
@@ -472,6 +498,7 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
+						width="auto"
 						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
@@ -486,6 +513,7 @@
 					<img
 						style="cursor: pointer"
 						height="50px"
+						width="auto"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
