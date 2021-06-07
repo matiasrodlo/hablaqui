@@ -65,7 +65,11 @@
 				/>
 			</router-link>
 			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<nuxt-link :to="{ name: 'psicologos' }" style="text-decoration: none" class="mx-12">
+				<nuxt-link
+					:to="{ name: 'psicologos' }"
+					style="text-decoration: none"
+					class="mx-6 mx-lg-12"
+				>
 					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
 				</nuxt-link>
 				<nuxt-link class="mx-2" style="text-decoration: none" to="/faq">

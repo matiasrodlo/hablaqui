@@ -63,7 +63,7 @@
 				<router-link
 					:to="{ name: 'all-psicologos' }"
 					style="text-decoration: none"
-					class="mx-12"
+					class="mx-5 mx-lg-12"
 				>
 					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
 				</router-link>
@@ -82,7 +82,7 @@
 				<router-link
 					v-else
 					style="text-decoration: none"
-					class="mr-5"
+					class="mr-4 mr-lg-5"
 					:to="{ name: 'auth' }"
 				>
 					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
@@ -90,7 +90,7 @@
 				<v-btn
 					v-if="!loggedIn"
 					rounded
-					class="mx-2 py-6 px-10"
+					class="mx-2 py-6 px-lg-10"
 					color="primary"
 					depressed
 					:to="{ name: 'auth', params: { q: 'register' } }"
