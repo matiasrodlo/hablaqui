@@ -1,75 +1,74 @@
 <template>
 	<div>
-		<client-only>
-			<nav class="primary">
-				<Appbar />
-			</nav>
-			<!-- SECTION 1 / heading -->
-			<section class="primary">
-				<v-container class="white--text py-0">
-					<v-row
-						tag="section"
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
-					>
-						<v-col
-							tag="section"
-							cols="12"
-							md="6"
-							class="primary text-center text-md-left"
+		<nav class="primary">
+			<Appbar />
+		</nav>
+		<!-- SECTION 1 / heading -->
+		<section class="primary">
+			<v-container class="white--text py-0">
+				<v-row
+					tag="section"
+					justify="center"
+					:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+				>
+					<v-col tag="section" cols="12" md="6" class="primary text-center text-md-left">
+						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+							Tu psicólogo Online
+						</h1>
+						<div class="title my-10">
+							Demos juntos el primer paso hacia el bienestar emocional. Habla de forma
+							segura y privada con un psicólogo online cuando lo necesites.
+						</div>
+						<v-btn
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="py-8 px-10"
+							nuxt
+							:to="{ name: 'psicologos' }"
 						>
-							<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</h1>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="py-8 px-10"
-								nuxt
-								:to="{ name: 'psicologos' }"
-							>
-								<span
-									class="text-capitalize body-1 text--secondary font-weight-bold"
-								>
-									Quiero empezar
-								</span>
-							</v-btn>
-							<div class="body-1 font-weight-bold mt-10">
-								Desde $15.500CLP a la semana
-							</div>
-							<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" tag="section" cols="12" md="6">
-							<v-img
-								:style="
-									$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'
-								"
-								contain
-								:src="`${$config.LANDING_URL}/phone.png`"
-								alt="habla aqui videollamada"
-							/>
-						</v-col>
-					</v-row>
-				</v-container>
-			</section>
-			<img
-				v-if="$vuetify.breakpoint.mdAndUp"
-				:src="`${$config.LANDING_URL}/wave1.png`"
-				style="width: 100%"
-				alt="Tu psicólogo Online"
-			/>
-			<img
-				v-else
-				:src="`${$config.LANDING_URL}/wave1-movil.png`"
-				style="width: 100%"
-				alt="Tu psicólogo Online"
-			/>
-		</client-only>
+							<span class="text-capitalize body-1 text--secondary font-weight-bold">
+								Quiero empezar
+							</span>
+						</v-btn>
+						<div class="body-1 font-weight-bold mt-10">
+							Desde $15.500CLP a la semana
+						</div>
+						<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
+					</v-col>
+					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
+						<v-img
+							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
+							contain
+							:lazy-src="`${$config.LANDING_URL}/phone.png`"
+							:src="`${$config.LANDING_URL}/phone.png`"
+							alt="habla aqui videollamada"
+						>
+							<template #placeholder>
+								<v-row class="fill-height ma-0" align="center" justify="center">
+									<v-progress-circular
+										indeterminate
+										color="grey lighten-5"
+									></v-progress-circular>
+								</v-row> </template
+						></v-img>
+					</v-col>
+				</v-row>
+			</v-container>
+		</section>
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave1.png`"
+			style="width: 100%"
+			alt="Tu psicólogo Online"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/wave1-movil.png`"
+			style="width: 100%"
+			alt="Tu psicólogo Online"
+		/>
+
 		<!-- SETION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
 			<v-row tag="section" justify="center">
@@ -157,11 +156,10 @@
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
-							v-if="$vuetify.breakpoint.mdAndUp"
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="py-8 px-10 ml-md-16 mt-10 mb-5"
+							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
 							:to="{ name: 'psicologos' }"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
@@ -185,11 +183,24 @@
 									<v-img
 										:src="item.image"
 										:alt="item.name"
+										:lazy-src="item.image"
 										contain
 										eager
 										:max-width="$vuetify.breakpoint.mdAndUp ? '340' : '250'"
 										class="d-flex justify-end"
 									>
+										<template #placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
 										<aside
 											style="
 												background-color: #424242;
@@ -228,12 +239,7 @@
 							</v-carousel>
 						</section>
 					</v-col>
-					<v-col
-						v-if="!$vuetify.breakpoint.mdAndUp"
-						tag="section"
-						cols="12"
-						class="my-10 text-center"
-					>
+					<v-col tag="section" cols="12" class="hidden-md-and-up my-10 text-center">
 						<v-btn
 							style="border-radius: 15px"
 							color="white"
@@ -502,10 +508,9 @@
 					</v-expansion-panels>
 				</v-col>
 				<v-col
-					v-if="$vuetify.breakpoint.mdAndUp"
 					tag="section"
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
+					class="hidden-sm-and-down text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -519,15 +524,14 @@
 					</v-btn>
 				</v-col>
 				<v-col
-					v-if="$vuetify.breakpoint.mdAndUp"
 					cols="12"
-					class="text-center body-1 font-weight-bold mt-6 text--secondary"
+					class="hidden-sm-and-down text-center body-1 font-weight-bold mt-6 text--secondary"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<section v-if="$vuetify.breakpoint.smAndUp" class="mt-16">
+		<section class="hidden-sm-and-down mt-16">
 			<v-container tag="section">
 				<v-row justify="center">
 					<v-col cols="12" md="10" xl="8">
@@ -585,7 +589,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<section v-else class="mt-16" style="background-color: #e3f2fd">
+		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
 				height="250"

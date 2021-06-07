@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
+		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
 				<img
 					style="max-width: 150px"
@@ -59,27 +59,26 @@
 					contain
 				/>
 			</router-link>
-			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<v-spacer></v-spacer>
-				<v-btn
-					:to="{ name: 'psicologos' }"
-					large
-					rounded
-					class="mx-4 px-8"
-					color="white"
-					depressed
-				>
-					<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
-				</v-btn>
-				<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
+
+			<v-spacer></v-spacer>
+			<v-btn
+				:to="{ name: 'psicologos' }"
+				large
+				rounded
+				class="hidden-sm-and-down mx-4 px-8"
+				color="white"
+				depressed
+			>
+				<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
+			</v-btn>
+			<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
 				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
-			</template>
-			<template v-else>
+			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
 				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-			</template>
+			</div>
 		</v-app-bar>
 	</div>
 </template>

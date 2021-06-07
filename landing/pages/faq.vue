@@ -1,31 +1,29 @@
 <template>
 	<div>
-		<client-only>
-			<div class="primary pb-16">
-				<Appbar />
-				<v-container>
-					<v-row justify="center" no-gutters>
-						<v-col cols="12" class="white--text text-center py-10">
-							<span class="font-weight-bold my-5" style="font-size: 30px">
-								Bienvenido a nuestro portal de ayuda
-							</span>
-							<div class="font-weight-bold" style="font-size: 55px">
-								Estamos aquí para ayudar
-							</div>
-						</v-col>
-						<v-col cols="12">
-							<v-text-field
-								v-model="search"
-								class="white"
-								placeholder="Busca por tema o pregunta"
-								outlined
-								hide-details
-							/>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</client-only>
+		<div class="primary pb-16">
+			<Appbar />
+			<v-container>
+				<v-row justify="center" no-gutters>
+					<v-col cols="12" class="white--text text-center py-10">
+						<span class="font-weight-bold my-5" style="font-size: 30px">
+							Bienvenido a nuestro portal de ayuda
+						</span>
+						<div class="font-weight-bold" style="font-size: 55px">
+							Estamos aquí para ayudar
+						</div>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							v-model="search"
+							class="white"
+							placeholder="Busca por tema o pregunta"
+							outlined
+							hide-details
+						/>
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
 		<v-container v-if="items.length" class="mt-16">
 			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">

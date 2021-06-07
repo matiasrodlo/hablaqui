@@ -1,10 +1,8 @@
 <template>
 	<div style="background-color: #ebf2f3">
-		<client-only>
-			<div>
-				<Appbar />
-			</div>
-		</client-only>
+		<div>
+			<Appbar />
+		</div>
 		<v-container v-if="article">
 			<v-row>
 				<v-col cols="12">
@@ -52,7 +50,17 @@
 						max-height="600"
 						:alt="article.title"
 						:src="article.thumbnail"
-					></v-img>
+						:lazy-src="article.thumbnail"
+					>
+						<template #placeholder>
+							<v-row class="fill-height ma-0" align="center" justify="center">
+								<v-progress-circular
+									indeterminate
+									color="grey lighten-5"
+								></v-progress-circular>
+							</v-row>
+						</template>
+					</v-img>
 				</v-col>
 				<v-col class="text-center" cols="12" sm="1">
 					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
@@ -96,8 +104,18 @@
 							<v-img
 								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
 								:src="article.article"
+								:lazy-src="article.article"
 								:alt="article.author"
-							></v-img>
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title class="caption text-sm-h6 text--secondary">
@@ -146,8 +164,21 @@
 										class="grey lighten-3"
 										height="250"
 										:src="item.thumbnail"
+										:lazy-src="item.thumbnail"
 										:alt="item.title"
 									>
+										<template #placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
 									</v-img>
 									<v-card-text
 										class="d-flex justify-space-between"
@@ -217,7 +248,17 @@
 								alt="Recibe contenido exclusivo periódicamente"
 								class="mx-auto"
 								:src="`${$config.LANDING_URL}/suscribete.png`"
-							></v-img>
+								:lazy-src="`${$config.LANDING_URL}/suscribete.png`"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-col>
 					</v-row>
 				</v-col>

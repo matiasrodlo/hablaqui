@@ -1,15 +1,13 @@
 <template>
 	<div>
-		<client-only>
-			<div class="primary">
-				<Appbar />
-				<div
-					class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
-				>
-					Políticas de Privacidad
-				</div>
+		<div class="primary">
+			<Appbar />
+			<div
+				class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
+			>
+				Políticas de Privacidad
 			</div>
-		</client-only>
+		</div>
 		<v-container class="mt-16">
 			<v-row justify="center" class="mb-16">
 				<v-col cols="12" md="10">

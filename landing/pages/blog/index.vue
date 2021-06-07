@@ -1,10 +1,8 @@
 <template>
 	<div style="background-color: #ebf2f3">
-		<client-only>
-			<nav>
-				<Appbar />
-			</nav>
-		</client-only>
+		<nav>
+			<Appbar />
+		</nav>
 		<v-container tag="section" fluid>
 			<!-- title / search -->
 			<v-row justify="center">
@@ -191,7 +189,20 @@
 															class="grey lighten-3"
 															:alt="article.title"
 															:src="article.thumbnail"
+															:lazy-src="article.thumbnail"
 														>
+															<template #placeholder>
+																<v-row
+																	class="fill-height ma-0"
+																	align="center"
+																	justify="center"
+																>
+																	<v-progress-circular
+																		indeterminate
+																		color="grey lighten-5"
+																	></v-progress-circular>
+																</v-row>
+															</template>
 														</v-img>
 													</v-col>
 												</v-row>
@@ -203,7 +214,20 @@
 												height="150"
 												:alt="article.title"
 												:src="article.thumbnail"
+												:lazy-src="article.thumbnail"
 											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
 											</v-img>
 											<v-card-text
 												class="d-flex justify-space-between"
@@ -348,7 +372,20 @@
 											height="200"
 											:alt="item.title"
 											:src="item.thumbnail"
+											:lazy-src="item.thumbnail"
 										>
+											<template #placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
 										</v-img>
 										<v-card-text
 											style="height: 250px; flex-direction: column"
@@ -432,7 +469,24 @@
 								>
 									<v-card-text class="text-center">
 										<v-list-item-avatar size="120" class="ml-4">
-											<v-img :src="element.img" :alt="element.title"></v-img>
+											<v-img
+												:src="element.img"
+												:lazy-src="element.img"
+												:alt="element.title"
+											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
+											</v-img>
 										</v-list-item-avatar>
 										<h2
 											class="text-center body-2 font-weight-bold secondary--text"
@@ -481,7 +535,17 @@
 								class="mx-auto"
 								alt="Recibe contenido exclusivo periódicamente"
 								:src="`${$config.LANDING_URL}/suscribete.png`"
-							></v-img>
+								:lazy-src="`${$config.LANDING_URL}/suscribete.png`"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-col>
 					</v-row>
 				</v-col>
