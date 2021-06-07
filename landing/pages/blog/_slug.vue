@@ -215,7 +215,7 @@
 			</v-row>
 		</v-container>
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
-		<v-container fluid class="primary py-0">
+		<v-container fluid class="primary-color py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="center" align="center">

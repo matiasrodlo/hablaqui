@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary">
+		<div class="primary-color">
 			<Appbar />
 			<div
 				class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"

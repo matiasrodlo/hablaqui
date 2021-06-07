@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary">
+		<div class="primary-color">
 			<Appbar />
 		</div>
 		<v-container fluid class="primary py-16">

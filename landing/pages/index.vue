@@ -1,17 +1,22 @@
 <template>
 	<div>
-		<nav class="primary">
+		<nav class="primary-color">
 			<Appbar />
 		</nav>
 		<!-- SECTION 1 / heading -->
-		<section style="background-color: #2070e5">
+		<section class="primary-color">
 			<v-container class="white--text py-0">
 				<v-row
 					tag="section"
 					justify="center"
 					:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
 				>
-					<v-col tag="section" cols="12" md="6" class="primary text-center text-md-left">
+					<v-col
+						tag="section"
+						cols="12"
+						md="6"
+						class="primary-color text-center text-md-left"
+					>
 						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
 							Tu psicólogo Online
 						</h1>
@@ -69,7 +74,7 @@
 			alt="Tu psicólogo Online"
 		/>
 
-		<!-- SETION 2 / como funciona -->
+		<!-- SECTION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
 			<v-row tag="section" justify="center">
 				<v-col
@@ -127,8 +132,8 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
-						style="border-radius: 15px"
 						color="primary"
+						style="border-radius: 15px"
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
@@ -141,7 +146,7 @@
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
-		<section class="primary">
+		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
 				<v-row tag="section" justify="space-between" align="center">
 					<v-col tag="section" cols="12" md="6" class="text-center text-md-left">
@@ -310,7 +315,7 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
-		<section style="position: relative" class="primary">
+		<section style="position: relative" class="primary-color">
 			<aside style="position: absolute; top: -100px; z-index: 0">
 				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
@@ -615,7 +620,7 @@
 		<v-container tag="footer">
 			<Footer />
 		</v-container>
-		<div class="primary" style="height: 30px"></div>
+		<div class="primary-color" style="height: 30px"></div>
 	</div>
 </template>
 
@@ -879,7 +884,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-expansion-panel--active > .v-expansion-panel-header {
 	min-height: 32px !important;
 }

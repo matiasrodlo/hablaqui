@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary">
+		<div class="primary-color">
 			<Appbar />
 			<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
 				Terminos y condiciones de uso

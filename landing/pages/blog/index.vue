@@ -54,7 +54,7 @@
 											:key="item"
 											rounded
 											:outlined="!combobox.includes(item)"
-											color="primary"
+											color="primary-color"
 											class="ma-2 d-inline-block"
 											x-large
 											@click="addItemToCombobox(item)"

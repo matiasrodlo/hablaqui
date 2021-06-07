@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary pb-16">
+		<div class="primary-color pb-16">
 			<Appbar />
 			<v-container>
 				<v-row justify="center" no-gutters>
