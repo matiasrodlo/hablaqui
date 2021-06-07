@@ -66,12 +66,11 @@
 								<div class="body-1 font-weight-bold mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
-										'cognitivo',
-										'integrativo',
-										'contextual',
-										'psicoanalisis',
-										'humanista',
-										'sistemico',
+										'Cognitivo-conductual',
+										'Contextual',
+										'Psicoanalisis',
+										'Humanista',
+										'Sistémico',
 									]"
 								>
 									<v-checkbox
@@ -126,10 +125,11 @@
 							:items="
 								appointments.map((item, i) => ({
 									text: item,
-									value: item,
+									value: item.toLowerCase(),
 									index: i,
 								}))
 							"
+							item-value="value"
 							v-model="motive"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
@@ -155,7 +155,7 @@
 							</template>
 							<template #item="{item}">
 								<div style="width: 100%">
-									<v-list-item class="px-0" @click="motive = item">
+									<v-list-item class="px-0" @click="motive = item.value">
 										<v-list-item-content>
 											<v-list-item-title
 												class="subtitle-2 font-weight-regular"
@@ -305,12 +305,11 @@
 													</div>
 													<template
 														v-for="(item, i) in [
-															'cognitivo',
-															'integrativo',
-															'contextual',
-															'psicoanalisis',
-															'humanista',
-															'sistemico',
+															'Cognitivo-conductual',
+															'Contextual',
+															'Psicoanalisis',
+															'Humanista',
+															'Sistémico',
 														]"
 													>
 														<v-checkbox
@@ -668,6 +667,7 @@
 																class="headline font-weight-bold text--secondary"
 															>
 																{{ item.name }}
+																{{ item.lastName && item.lastName }}
 															</span>
 														</router-link>
 													</v-col>
@@ -755,9 +755,7 @@ export default {
 		filterLevelTwo() {
 			if (!this.motive) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
-				item =>
-					item.specialties.length &&
-					item.specialties.includes(this.motive.toLowerCase().trim())
+				item => item.specialties.length && item.specialties.includes(this.motive)
 			);
 		},
 		/**
@@ -770,9 +768,7 @@ export default {
 			if (this.gender.length)
 				result = result.filter(item => this.gender.includes(item.gender));
 			if (this.models.length)
-				result = result.filter(item =>
-					item.models.some(el => this.models.some(model => model == el))
-				);
+				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages == el))
