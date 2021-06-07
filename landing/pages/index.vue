@@ -65,7 +65,7 @@
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave1.png`"
 			width="100%"
-			height="auto"
+			height="100px"
 			alt="Tu psicólogo Online"
 		/>
 		<img
@@ -151,7 +151,7 @@
 			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			width="100%"
-			height="auto"
+			height="100px"
 		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
@@ -270,7 +270,7 @@
 		<img
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
 			width="100%"
-			height="auto"
+			height="150px"
 			alt="Ventajas"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
@@ -295,7 +295,7 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img height="80px" width="auto" :src="item.img" :alt="item.title" />
+							<img height="80px" width="80px" :src="item.img" :alt="item.title" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -329,8 +329,8 @@
 		<img
 			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			width="100%"
-			height="auto"
+			width="150%"
+			height="150px"
 		/>
 		<section style="position: relative" class="primary-color">
 			<aside style="position: absolute; top: -100px; z-index: 0">
@@ -383,8 +383,8 @@
 									>
 										<v-card-text class="mt-3">
 											<img
-												height="60"
-												width="auto"
+												height="60px"
+												width="120px"
 												:src="el.img"
 												:alt="el.text"
 											/>
@@ -447,9 +447,9 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img
+											<v-img
+												width="100"
 												height="60"
-												width="auto"
 												:src="el.img"
 												:alt="el.text"
 											/>
@@ -477,7 +477,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-part2.png`" width="100%" height="auto" />
+		<img :src="`${$config.LANDING_URL}/wave-part2.png`" width="100%" height="150px" />
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
 			<v-row tag="section" no-gutters justify="center">
