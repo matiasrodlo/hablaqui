@@ -1,49 +1,47 @@
 <template>
 	<div>
-		<client-only>
-			<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
-				<v-list-item>
-					<v-img
-						style="max-width: 150px"
-						:src="`${$config.LANDING_URL}/logo.png`"
-						alt="hablaqui"
-					/>
+		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
+			<v-list-item>
+				<v-img
+					style="max-width: 150px"
+					:src="`${$config.LANDING_URL}/logo.png`"
+					alt="hablaqui"
+				/>
+			</v-list-item>
+			<v-divider></v-divider>
+			<v-list dense>
+				<v-list-item
+					link
+					active-class="primary white--text"
+					nuxt
+					:to="{ name: 'psicologos' }"
+				>
+					<v-list-item-content>
+						<v-list-item-title>Psicólogos</v-list-item-title>
+					</v-list-item-content>
 				</v-list-item>
-				<v-divider></v-divider>
-				<v-list dense>
-					<v-list-item
-						link
-						active-class="primary white--text"
-						nuxt
-						:to="{ name: 'psicologos' }"
-					>
-						<v-list-item-content>
-							<v-list-item-title>Psicólogos</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item link to="/faq">
-						<v-list-item-content>
-							<v-list-item-title>Preguntas frecuentes</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item link to="/blog">
-						<v-list-item-content>
-							<v-list-item-title>Blog</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item link nuxt :to="{ name: 'entrar' }">
-						<v-list-item-content>
-							<v-list-item-title>Iniciar sesión</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item link nuxt :to="{ name: 'psicologos' }">
-						<v-list-item-content>
-							<v-list-item-title>Comenzar</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-				</v-list>
-			</v-navigation-drawer>
-		</client-only>
+				<v-list-item link to="/faq">
+					<v-list-item-content>
+						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item link to="/blog">
+					<v-list-item-content>
+						<v-list-item-title>Blog</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item link nuxt :to="{ name: 'entrar' }">
+					<v-list-item-content>
+						<v-list-item-title>Iniciar sesión</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item link nuxt :to="{ name: 'psicologos' }">
+					<v-list-item-content>
+						<v-list-item-title>Comenzar</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
+		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"

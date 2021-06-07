@@ -43,7 +43,7 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ['~/assets/global.scss'],
+	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [],
