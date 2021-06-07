@@ -65,7 +65,7 @@
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave1.png`"
 			width="100%"
-			height="auto"
+			height="100px"
 			alt="Tu psicólogo Online"
 		/>
 		<img
@@ -498,7 +498,7 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
-						width="auto"
+						width="200px"
 						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
@@ -512,8 +512,8 @@
 				>
 					<img
 						style="cursor: pointer"
-						height="50px"
-						width="auto"
+						height="53px"
+						width="200px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
