@@ -766,7 +766,9 @@ export default {
 				return this.psychologists;
 			let result = this.psychologists;
 			if (this.gender.length)
-				result = result.filter(item => this.gender.includes(item.gender));
+				result = result.filter(item => {
+					return this.gender.includes(item.gender) || item.isTrans;
+				});
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			if (this.languages.length)
