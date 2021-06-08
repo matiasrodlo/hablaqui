@@ -101,6 +101,16 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<v-container v-else style="height: 200px">
+			<v-row class="fill-height ma-0" align="center" justify="center">
+				<v-progress-circular
+					width="6"
+					size="50"
+					indeterminate
+					color="primary"
+				></v-progress-circular>
+			</v-row>
+		</v-container>
 		<div style="background-color: #0f3860; margin-top: 120px; margin-bottom: 100px">
 			<v-container class="white--text py-16">
 				<v-row>
@@ -167,6 +177,7 @@ export default {
 			selectedItem: null,
 			items: [],
 			search: '',
+			loading: false,
 		};
 	},
 	head() {
@@ -201,10 +212,12 @@ export default {
 		},
 	},
 	async mounted() {
+		this.loading = true;
 		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
 		response = await response.json();
 		this.selectedItem = response[0];
 		this.items = response;
+		this.loading = false;
 	},
 };
 </script>
