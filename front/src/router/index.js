@@ -12,7 +12,6 @@ const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MySpace = () => import('@/views/children/dashboard/MySpace');
 const Payments = () => import('@/views/Payments');
-const Plan = () => import('@/views/children/payments/Plan');
 const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
@@ -88,14 +87,7 @@ const routes = [
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
-		redirect: { name: 'plan' },
 		children: [
-			{
-				path: 'plan',
-				name: 'plan',
-				component: Plan,
-				meta: { title: 'Planes y pagos', requiresAuth: true },
-			},
 			{
 				path: '/pago/pending-pay',
 				name: 'pending-pay',

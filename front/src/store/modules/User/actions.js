@@ -11,6 +11,9 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
+			// clear old data
+			localStorage.removeItem('match');
+			localStorage.removeItem('psi');
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
