@@ -40,6 +40,7 @@ const match = async body => {
 const createSession = async body => {
 	const { payload } = body;
 	const sessions = {
+		date: payload.date,
 		start: payload.start,
 		end: payload.end,
 		user: payload.user._id,

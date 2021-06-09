@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 let session = new Schema({
 	date: {
-		type: Date,
+		type: String,
 	},
 	start: {
 		type: String,
