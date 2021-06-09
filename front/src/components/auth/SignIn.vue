@@ -39,7 +39,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	name: 'SignIn',
@@ -76,12 +76,17 @@ export default {
 				this.loading = true;
 				await this.login(this.form);
 				this.loading = false;
+				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+				else if (this.$route.name !== 'all-psicologos')
+					this.$router.push({ name: 'perfil' });
+				else if (this.$route.name == 'all-psicologos') this.setResumeView(true);
 			}
 		},
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
 		...mapActions({ login: 'User/login' }),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
 		form: {
