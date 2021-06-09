@@ -8,4 +8,5 @@ export default {
 			specialties: item.specialties.map(specialties => specialties.toLowerCase()),
 		}));
 	},
+	resumeView: state => state.resumeView,
 };

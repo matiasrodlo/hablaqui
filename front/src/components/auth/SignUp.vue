@@ -86,7 +86,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { landing } from '@/config';
 
 export default {
@@ -161,9 +161,11 @@ export default {
 				await this.register(this.form);
 				this.loading = false;
 				if (this.$route.name !== 'all-psicologos') this.$router.push({ name: 'perfil' });
+				if (this.$route.name == 'all-psicologos') this.setResumeView(true);
 			}
 		},
 		...mapActions({ register: 'User/register' }),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
 		form: {

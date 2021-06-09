@@ -1,5 +1,5 @@
 <template>
-	<v-dialog v-model="dialog" max-width="600">
+	<v-dialog v-model="dialog" max-width="700">
 		<template v-slot:activator="{ on, attrs }">
 			<v-btn
 				v-bind="attrs"
@@ -16,7 +16,7 @@
 				Agenda cita oline
 			</v-btn>
 		</template>
-		<v-card>
+		<v-card rounded="xl">
 			<v-card-title class="text-h5">
 				<v-btn icon v-if="step != 0" @click="() => (step -= 1)">
 					<v-icon x-large>mdi-chevron-left</v-icon>
@@ -27,7 +27,9 @@
 				<div v-if="step == 2" class="body-1 font-weight-bold">
 					Para continuar
 				</div>
-				<v-spacer></v-spacer>
+				<div v-if="step == 3" class="body-1 font-weight-bold">
+					Revisa tu plan
+				</div>
 			</v-card-title>
 			<v-card-text v-if="step == 0">
 				<calendar :setDate="date => setDate(date)" />
@@ -53,6 +55,15 @@
 					</v-tab-item>
 				</v-tabs-items>
 			</v-card-text>
+			<v-card-text v-if="step == 3">
+				<resume-plan
+					:close="() => (dialog = false)"
+					:goBack="() => (step = 1)"
+					:plan="plan"
+					:psy="psy"
+					:event="newEvent"
+				/>
+			</v-card-text>
 		</v-card>
 	</v-dialog>
 </template>
@@ -66,12 +77,17 @@ export default {
 			type: String,
 			default: '1',
 		},
+		psy: {
+			type: Object,
+			require: true,
+		},
 	},
 	components: {
 		signin: () => import('@/components/auth/SignIn'),
 		signup: () => import('@/components/auth/SignUp'),
 		calendar: () => import('@/components/ui/Calendar'),
 		SelectPlan: () => import('@/components/plan/SelectPlan'),
+		ResumePlan: () => import('@/components/plan/ResumePlan'),
 	},
 	data() {
 		return {
@@ -83,7 +99,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ loggedIn: 'User/loggedIn' }),
+		...mapGetters({ loggedIn: 'User/loggedIn', resumeView: 'Psychologist/resumeView' }),
 	},
 	methods: {
 		setDate(item) {
@@ -92,10 +108,14 @@ export default {
 		},
 		setPlan(plan) {
 			this.plan = plan;
-			if (this.loggedIn) this.setConfirm();
+			if (this.loggedIn) this.step = 3;
 			else this.step = 2;
 		},
-		setConfirm() {},
+	},
+	watch: {
+		resumeView(newValue) {
+			if (newValue) this.step = 3;
+		},
 	},
 };
 </script>
