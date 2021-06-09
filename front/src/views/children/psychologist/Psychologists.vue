@@ -398,10 +398,16 @@
 									</v-card-text>
 									<v-card-actions>
 										<v-spacer></v-spacer>
-										<dialog-match
-											:setMatch="payload => filterMatch(payload)"
-											:mode="view"
-										/>
+										<v-btn
+											class="px-10"
+											light
+											color="#F0F8FF"
+											style="border-radius: 5px"
+											@click="start"
+										>
+											<span class="text--secondary">Comenzar</span>
+										</v-btn>
+
 										<v-spacer></v-spacer>
 									</v-card-actions> </v-card
 							></v-hover>
@@ -552,10 +558,9 @@
 													Encuentra al psicólogo que necesitas, solo
 													responde las siguientes preguntas.
 												</div>
-												<dialog-match
-													:setMatch="payload => filterMatch(payload)"
-													:mode="view"
-												/>
+												<v-btn light class="px-10 mt-4" @click="start">
+													<span class="text--secondary">Comenzar</span>
+												</v-btn>
 											</v-col>
 										</v-row>
 									</v-card-text>
@@ -697,7 +702,6 @@ import { mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
-		DialogMatch: () => import('@/components/psy/DialogMatch'),
 	},
 	name: 'psychologists',
 	props: {
@@ -763,6 +767,7 @@ export default {
 			return result;
 		},
 		...mapGetters({
+			loggedIn: 'User/loggedIn',
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
 		}),
@@ -790,6 +795,15 @@ export default {
 		}
 	},
 	methods: {
+		start() {
+			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			else
+				this.$router.push({
+					name: 'auth',
+					params: { q: 'register' },
+					query: { from: 'psy' },
+				});
+		},
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;

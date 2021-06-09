@@ -18,7 +18,7 @@
 		</template>
 		<v-card rounded="xl">
 			<v-card-title class="text-h5">
-				<v-btn icon v-if="step != 0" @click="() => (step -= 1)">
+				<v-btn icon v-if="step != 0 && step != 3" @click="() => (step -= 1)">
 					<v-icon x-large>mdi-chevron-left</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>

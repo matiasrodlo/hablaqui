@@ -39,8 +39,12 @@
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
 							<v-window v-model="step">
-								<v-window-item :value="1"><sign-in /></v-window-item>
-								<v-window-item :value="2"><sign-up /></v-window-item>
+								<v-window-item :value="1">
+									<sign-in />
+								</v-window-item>
+								<v-window-item :value="2">
+									<sign-up />
+								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1">
@@ -143,6 +147,7 @@ export default {
 			onboarding: 0,
 			menu: false,
 			step: 1,
+			fromRoute: '',
 		};
 	},
 	created() {

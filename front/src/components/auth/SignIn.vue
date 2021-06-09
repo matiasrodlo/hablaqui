@@ -76,8 +76,10 @@ export default {
 				this.loading = true;
 				await this.login(this.form);
 				this.loading = false;
-				if (this.$route.name !== 'all-psicologos') this.$router.push({ name: 'perfil' });
-				if (this.$route.name == 'all-psicologos') this.setResumeView(true);
+				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+				else if (this.$route.name !== 'all-psicologos')
+					this.$router.push({ name: 'perfil' });
+				else if (this.$route.name == 'all-psicologos') this.setResumeView(true);
 			}
 		},
 		defaultData() {
