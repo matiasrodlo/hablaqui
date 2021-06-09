@@ -76,6 +76,7 @@ export default {
 				this.loading = true;
 				await this.login(this.form);
 				this.loading = false;
+				if (this.$route.name !== 'all-psicologos') this.$router.push({ name: 'perfil' });
 			}
 		},
 		defaultData() {

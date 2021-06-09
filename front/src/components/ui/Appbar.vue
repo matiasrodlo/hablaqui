@@ -127,7 +127,7 @@ export default {
 		logout() {
 			this.resetUser();
 			localStorage.removeItem('vuex');
-			this.$router.push({ name: 'auth' });
+			if (this.$route.meta.requiresAuth) this.$router.push({ name: 'auth' });
 		},
 		...mapMutations({ resetUser: 'User/reset' }),
 	},

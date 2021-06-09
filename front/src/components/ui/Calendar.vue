@@ -102,7 +102,7 @@ export default {
 				'11:00pm',
 			],
 			items: [],
-			length: Array.from(Array(90), (_, x) => x),
+			length: Array.from(Array(31), (_, x) => x),
 		};
 	},
 	created() {

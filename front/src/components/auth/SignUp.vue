@@ -160,6 +160,7 @@ export default {
 				this.loading = true;
 				await this.register(this.form);
 				this.loading = false;
+				if (this.$route.name !== 'all-psicologos') this.$router.push({ name: 'perfil' });
 			}
 		},
 		...mapActions({ register: 'User/register' }),
