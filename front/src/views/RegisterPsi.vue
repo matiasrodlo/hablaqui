@@ -76,7 +76,10 @@
 									<v-radio-group row v-model="form.gender" column>
 										<v-radio label="Hombre" value="male"></v-radio>
 										<v-radio label="Mujer" value="female"></v-radio>
-										<v-radio label="No binario" value="non-binary"></v-radio>
+										<v-checkbox
+											v-model="form.isTrans"
+											label="Transgenero"
+										></v-checkbox>
 									</v-radio-group>
 									<v-text-field
 										v-model="form.email"
@@ -411,6 +414,7 @@ export default {
 				models: [],
 				gender: '',
 				avatar: '',
+				isTrans: false,
 			};
 		},
 		setFormData() {
@@ -427,6 +431,7 @@ export default {
 			formData.append('specialties', JSON.stringify(this.form.specialties));
 			formData.append('models', JSON.stringify(this.form.models));
 			formData.append('gender', this.form.gender);
+			formData.append('isTrans', this.form.isTrans);
 			formData.append('avatar', this.form.avatar);
 
 			return formData;

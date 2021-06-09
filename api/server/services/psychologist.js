@@ -71,6 +71,7 @@ const register = async (body, avatar) => {
 		specialties: JSON.parse(body.specialties),
 		models: JSON.parse(body.models),
 		gender: body.gender,
+		isTrans: body.isTrans,
 		avatar,
 	};
 	const psychologist = await Psychologist.create(newPsychologist);
