@@ -15,6 +15,9 @@
 			<v-btn v-bind="attrs" v-on="on" v-if="mode == '2'" color="primary" rounded depressed>
 				Agenda cita oline
 			</v-btn>
+			<v-btn v-if="mode == '3'" v-bind="attrs" v-on="on" color="primary" rounded>
+				Agenda cita online
+			</v-btn>
 		</template>
 		<v-card rounded="xl">
 			<v-card-title class="text-h5">

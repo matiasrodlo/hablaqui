@@ -45,13 +45,7 @@
 										{{ item.name }} {{ item.lastName && item.lastName }}
 									</v-col>
 									<v-col cols="12" sm="6" class="text-center text-md-right">
-										<v-btn
-											color="primary"
-											rounded
-											@click="() => goToPlan(item)"
-										>
-											Agenda cita online
-										</v-btn>
+										<dialog-agenda-cita-online :psy="item" :mode="'3'" />
 									</v-col>
 								</v-row>
 								<v-chip-group show-arrows>
@@ -83,6 +77,9 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+	},
 	props: {
 		match: {
 			type: Array,
