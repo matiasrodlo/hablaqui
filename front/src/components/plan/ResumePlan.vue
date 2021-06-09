@@ -114,6 +114,7 @@ export default {
 			this.loading = true;
 			let priceInt = Number(this.plan.price.split('.').join(''));
 			const sessionPayload = {
+				date: this.event.date,
 				start: this.event.start,
 				end: this.event.end,
 				user: this.user,
