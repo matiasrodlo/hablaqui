@@ -60,6 +60,12 @@ const createSession = async body => {
 };
 
 const register = async (body, avatar) => {
+	let splittedExperience = body.experience.split(';');
+	splittedExperience = splittedExperience.map(i => i.trim());
+
+	let splittedFormation = body.formation.split(';');
+	splittedFormation = splittedFormation.map(i => i.trim());
+
 	const newPsychologist = {
 		name: body.name,
 		lastName: body.lastName,
@@ -67,10 +73,11 @@ const register = async (body, avatar) => {
 		personalDescription: body.personalDescription,
 		professionalDescription: body.professionalDescription,
 		email: body.email,
-		experience: body.experience,
-		formation: body.formation,
+		experience: splittedExperience,
+		formation: splittedFormation,
 		specialties: JSON.parse(body.specialties),
 		models: JSON.parse(body.models),
+		languages: JSON.parse(body.languages),
 		gender: body.gender,
 		isTrans: body.isTrans,
 		avatar,

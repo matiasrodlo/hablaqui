@@ -50,13 +50,13 @@ let psychologist = new Schema({
 		type: Array,
 	},
 	experience: {
-		type: String,
+		type: Array,
 	},
 	specialties: {
 		type: Array,
 	},
 	formation: {
-		type: String,
+		type: Array,
 	},
 	personalDescription: {
 		type: String,

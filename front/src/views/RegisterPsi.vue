@@ -1,9 +1,17 @@
+<!--
+ESTE FORMULARIO NO PUEDE SALIR A PRODUCCION
+SIN ANTES HACER QUE LA RUTA Y LOS ENDPOINTS SEAN SEGUROS
+YA QUE POR AHORA CUALQUIER USUARIO CON EL LINK PUEDE REGISTRAR
+CUALQUIER PERSONA
+-->
+
 <template>
 	<v-img :src="backgroundImg" height="100vh">
 		<v-container
 			:class="$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
 			fluid
 			class="login-image"
+			style="overflow: auto;"
 		>
 			<v-row justify="center" align="center" style="height: 100vh">
 				<v-col cols="12" sm="6">
@@ -57,23 +65,29 @@
 									>
 										Datos personales
 									</div>
-									<v-text-field
-										v-model="form.name"
-										type="text"
-										label="Nombre/s"
-										outlined
-										autocomplete="off"
-										:error-messages="nameErrors"
-									></v-text-field>
-									<v-text-field
-										v-model="form.lastName"
-										type="text"
-										label="Apellido/s"
-										outlined
-										autocomplete="off"
-										:error-messages="nameErrors"
-									></v-text-field>
-									<v-radio-group row v-model="form.gender" column>
+									<v-row cols-12>
+										<v-col cols-6>
+											<v-text-field
+												v-model="form.name"
+												type="text"
+												label="Nombre/s"
+												outlined
+												autocomplete="off"
+												:error-messages="nameErrors"
+											></v-text-field>
+										</v-col>
+										<v-col cols-6>
+											<v-text-field
+												v-model="form.lastName"
+												type="text"
+												label="Apellido/s"
+												outlined
+												autocomplete="off"
+												:error-messages="nameErrors"
+											></v-text-field>
+										</v-col>
+									</v-row>
+									<v-radio-group row v-model="form.gender">
 										<v-radio label="Hombre" value="male"></v-radio>
 										<v-radio label="Mujer" value="female"></v-radio>
 										<v-checkbox
@@ -143,7 +157,7 @@
 									<v-textarea
 										v-model="form.experience"
 										type="text"
-										label="Experiencia"
+										label="Experiencia (separar cada una por punto y coma)"
 										height="100px"
 										outlined
 										autocomplete="off"
@@ -151,11 +165,32 @@
 									<v-textarea
 										v-model="form.formation"
 										type="text"
-										label="Formacion"
+										label="Formacion (separar cada una por punto y coma)"
 										height="100px"
 										outlined
 										autocomplete="off"
 									></v-textarea>
+									<div
+										class="text-center text-h8 font-weight-bold text--secondary mb-2"
+									>
+										Lenguajes
+									</div>
+									<v-row>
+										<v-col cols="12" md="4">
+											<v-checkbox
+												v-model="form.languages"
+												label="English"
+												value="english"
+											></v-checkbox>
+										</v-col>
+										<v-col cols="12" md="4">
+											<v-checkbox
+												v-model="form.languages"
+												label="Español"
+												value="spanish"
+											></v-checkbox>
+										</v-col>
+									</v-row>
 									<v-btn
 										outlined
 										rounded
@@ -412,6 +447,7 @@ export default {
 				password: '',
 				specialties: [],
 				models: [],
+				languages: [],
 				gender: '',
 				avatar: '',
 				isTrans: false,
@@ -430,6 +466,7 @@ export default {
 			formData.append('password', this.form.password);
 			formData.append('specialties', JSON.stringify(this.form.specialties));
 			formData.append('models', JSON.stringify(this.form.models));
+			formData.append('languages', JSON.stringify(this.form.languages));
 			formData.append('gender', this.form.gender);
 			formData.append('isTrans', this.form.isTrans);
 			formData.append('avatar', this.form.avatar);
@@ -443,6 +480,10 @@ export default {
 			await this.registerPsychologist(payload);
 			this.loading = false;
 			this.terminado = true;
+
+			// Se devuelve todo a la normalidad para otro registro
+			this.defaultForm();
+			this.step = 1;
 		},
 		setAvatar(file) {
 			this.urlAvatar = URL.createObjectURL(file);
