@@ -63,7 +63,7 @@
 				<router-link
 					:to="{ name: 'all-psicologos' }"
 					style="text-decoration: none"
-					class="mx-5 mx-lg-12"
+					class="ml-7 mr-3"
 				>
 					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
 				</router-link>

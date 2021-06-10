@@ -70,11 +70,11 @@
 			<nuxt-link
 				:to="{ name: 'psicologos' }"
 				style="text-decoration: none"
-				class="hidden-sm-and-down mx-lg-12"
+				class="hidden-sm-and-down ml-7 mr-3"
 			>
 				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
 			</nuxt-link>
-			<nuxt-link class="hidden-sm-and-down" style="text-decoration: none" to="/faq">
+			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/faq">
 				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
 			</nuxt-link>
 			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/blog">
