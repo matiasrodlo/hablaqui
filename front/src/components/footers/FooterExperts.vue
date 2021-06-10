@@ -10,28 +10,20 @@
 						>
 							Acuerdos
 						</div>
-						<div>
-							<v-btn
-								class="px-0 text--secondary"
-								text
-								link
-								to="/politicas"
-								:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-							>
-								Políticas de Privacidad
-							</v-btn>
-						</div>
-						<div>
-							<v-btn
-								class="px-0 text-left text--secondary"
-								text
-								link
-								to="/condiciones"
-								:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-							>
-								Terminos y Condiciones
-							</v-btn>
-						</div>
+						<a
+							class="d-block body-1 text--secondary"
+							style="text-decoration: none"
+							:href="`${landingUrl}/politicas`"
+						>
+							Políticas de Privacidad
+						</a>
+						<a
+							class="d-block body-1 text--secondary"
+							style="text-decoration: none"
+							:href="`${landingUrl}/condiciones`"
+						>
+							Terminos y Condiciones
+						</a>
 					</v-col>
 					<v-col cols="12" sm="3" md="3" class="text-center text-sm-left text--secondary">
 						<div
@@ -40,16 +32,10 @@
 						>
 							Atención a clientes
 						</div>
-						<div
-							class="py-2"
-							:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-						>
+						<div class="body-1">
 							c@hablaqui.com
 						</div>
-						<div
-							class="py-2"
-							:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-						>
+						<div class="body-1">
 							09:00am - 18:30pm
 						</div>
 					</v-col>
@@ -71,3 +57,14 @@
 		</v-row>
 	</v-container>
 </template>
+<script>
+import { landing } from '@/config';
+
+export default {
+	computed: {
+		landingUrl() {
+			return landing;
+		},
+	},
+};
+</script>
