@@ -3,7 +3,17 @@
 		<div>
 			<Appbar />
 		</div>
-		<v-container v-if="article">
+		<v-container v-if="loading">
+			<v-row>
+				<v-col cols="12">
+					<v-skeleton-loader
+						class="mx-auto"
+						type="card-heading, image, paragraph, paragraph, paragraph ,paragraph"
+					></v-skeleton-loader>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-container v-if="article && !loading">
 			<v-row>
 				<v-col cols="12">
 					<div class="text-h5 text-sm-h4 text-md-h3 font-weight-bold">
@@ -238,7 +248,7 @@
 									dense
 								/>
 								<v-btn depressed color="info">
-									<span class="px-5 px-md-10">Enviar</span>
+									<span class="px-5 px-md-10 text-h5">Enviar</span>
 								</v-btn>
 							</v-btn-toggle>
 						</v-col>
@@ -288,7 +298,7 @@ export default {
 			breadcrumb: [],
 			title: '',
 			isYellow: false,
-			loading: false,
+			loading: true,
 		};
 	},
 	head() {
@@ -304,7 +314,6 @@ export default {
 		};
 	},
 	async mounted() {
-		this.loading = true;
 		let res = await fetch(`${this.$config.API_URL}/blog/all`);
 		res = await res.json();
 		this.blogs = res.articles;

@@ -54,7 +54,7 @@
 											:key="item"
 											rounded
 											:outlined="!combobox.includes(item)"
-											color="primary-color"
+											color="primary"
 											class="ma-2 d-inline-block"
 											x-large
 											@click="addItemToCombobox(item)"
@@ -403,11 +403,13 @@
 												</h4>
 											</article>
 											<aside>
-												<span class="body-1 primary--text font-weight-bold">
+												<span
+													class="caption primary--text font-weight-bold"
+												>
 													{{ item.originalAuthor }}
 												</span>
 												<span v-if="item.originalAuthor">|</span>
-												<span class="body-1 text--disabled">
+												<span class="caption text--disabled">
 													{{ dates(item.createdAt) }}
 												</span>
 											</aside>
@@ -525,7 +527,7 @@
 									dense
 								/>
 								<v-btn depressed color="info">
-									<span class="px-5 px-md-10">Enviar</span>
+									<span class="px-5 px-md-10 text-h5">Enviar</span>
 								</v-btn>
 							</v-btn-toggle>
 						</v-col>
