@@ -82,7 +82,11 @@
 						>EXPERIENCIA</v-col
 					>
 					<v-col class="body-1 text-left">
-						{{ psychologist.experience ? psychologist.experience : 'Vacío' }}
+						<ul v-if="psychologist.experience.length">
+							<li v-for="(experience, i) in psychologist.experience" :key="i">
+								{{ experience }}
+							</li>
+						</ul>
 					</v-col>
 				</v-row>
 			</v-card-text>
@@ -91,9 +95,9 @@
 			</v-card-text>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text"
-						>ESPECIALIDADES</v-col
-					>
+					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
+						ESPECIALIDADES
+					</v-col>
 					<v-col v-if="psychologist.specialties.length" class="body-1 text-left">
 						<ul>
 							<li v-for="(item, i) in psychologist.specialties" :key="i">
@@ -118,7 +122,7 @@
 					>
 						Modelos de trabajo terapéutico
 					</v-col>
-					<v-col class="body-1 text-left text-capitalize">
+					<v-col class="body-1 text-left">
 						<ul v-if="psychologist.models.length">
 							<li v-for="(model, i) in psychologist.models" :key="i">
 								{{ model }}
@@ -139,7 +143,11 @@
 						>FORMACIÓN</v-col
 					>
 					<v-col class="body-1 text-left">
-						{{ psychologist.formation ? psychologist.formation : 'Vacío' }}
+						<ul v-if="psychologist.formation.length">
+							<li v-for="(formation, i) in psychologist.formation" :key="i">
+								{{ formation }}
+							</li>
+						</ul>
 					</v-col>
 				</v-row>
 			</v-card-text>
