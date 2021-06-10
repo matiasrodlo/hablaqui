@@ -2,7 +2,7 @@ import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import { okResponse } from '../utils/responses/functions';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -60,6 +60,10 @@ const createSession = async body => {
 };
 
 const register = async (body, avatar) => {
+	if (await User.exists({ email: body.email })) {
+		return conflictResponse('Este correo ya esta registrado');
+	}
+
 	let splittedExperience = body.experience.split(';');
 	splittedExperience = splittedExperience.map(i => i.trim());
 
