@@ -79,20 +79,52 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
-					<v-window v-model="onboarding" class="login-circle-image">
-						<v-window-item v-for="n in length" :key="`card-${n.id}`">
-							<div class="text-center ">
+				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6">
+					<v-carousel
+						hide-delimiter-background
+						hide-delimiters
+						cycle
+						interval="3000"
+						:show-arrows="false"
+						v-model="carousel"
+						height="600"
+					>
+						<v-carousel-item
+							v-for="n in length"
+							:key="`card-${n.id}`"
+							class="align-items-center"
+							style="position: relative;"
+						>
+							<div class="text-center mt-10">
+								<v-img
+									style="z-index:1; position: absolute; top: 30px; right: 30%"
+									width="80"
+									src="/img/plus-login.png"
+								></v-img>
+								<v-img
+									style="position: absolute; bottom: 30%; right: 17%"
+									width="220"
+									src="/img/circle-login.png"
+								>
+								</v-img>
 								<v-list-item-avatar size="400" class="ml-4">
-									<v-img :src="n.img"></v-img>
+									<v-img
+										height="400"
+										width="400"
+										:lazy-src="n.img"
+										:src="n.img"
+									></v-img>
 								</v-list-item-avatar>
+								<div
+									style="max-width: 500px;"
+									class="text-h6 mx-auto white--text py-5 px-10"
+								>
+									{{ n.text }}
+								</div>
 							</div>
-							<div class="text-h6 text-center white--text py-4 px-10">
-								{{ n.text }}
-							</div>
-						</v-window-item>
-					</v-window>
-					<v-item-group v-model="onboarding" class="text-center" mandatory>
+						</v-carousel-item>
+					</v-carousel>
+					<v-item-group v-model="carousel" class="text-center" mandatory>
 						<v-item
 							v-for="n in length"
 							:key="`btn-${n.id}`"
@@ -144,7 +176,7 @@ export default {
 						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
-			onboarding: 0,
+			carousel: 0,
 			menu: false,
 			step: 1,
 			fromRoute: '',
@@ -168,10 +200,10 @@ export default {
 			else this.step = 1;
 		},
 		next() {
-			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
 		},
 		prev() {
-			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+			this.carousel = this.carousel - 1 < 0 ? this.length - 1 : this.carousel - 1;
 		},
 	},
 };

@@ -68,7 +68,7 @@
 									v-for="(item, i) in [
 										'Cognitivo-conductual',
 										'Contextual',
-										'Psicoanalisis',
+										'Psicoanálisis',
 										'Humanista',
 										'Sistémico',
 									]"
@@ -125,12 +125,12 @@
 							:items="
 								appointments.map((item, i) => ({
 									text: item,
-									value: item.toLowerCase(),
+									value: item,
 									index: i,
 								}))
 							"
 							item-value="value"
-							v-model="motive"
+							v-model="specialties"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
 							hide-details
@@ -146,7 +146,7 @@
 									<v-list-item-content>
 										<v-list-item-title>
 											No se encontraron resultados que coincidan con "<strong>
-												{{ motive }}
+												{{ specialties }}
 											</strong>
 											" .
 										</v-list-item-title>
@@ -155,7 +155,7 @@
 							</template>
 							<template #item="{item}">
 								<div style="width: 100%">
-									<v-list-item class="px-0" @click="motive = item.value">
+									<v-list-item class="px-0" @click="specialties = item.value">
 										<v-list-item-content>
 											<v-list-item-title
 												class="subtitle-2 font-weight-regular"
@@ -307,7 +307,7 @@
 														v-for="(item, i) in [
 															'Cognitivo-conductual',
 															'Contextual',
-															'Psicoanalisis',
+															'Psicoanálisis',
 															'Humanista',
 															'Sistémico',
 														]"
@@ -397,16 +397,9 @@
 									</v-card-text>
 									<v-card-actions>
 										<v-spacer></v-spacer>
-										<v-btn
-											class="px-10"
-											light
-											color="#F0F8FF"
-											style="border-radius: 5px"
-											@click="start"
-										>
+										<v-btn class="px-10" color="white" @click="start">
 											<span class="text--secondary">Comenzar</span>
 										</v-btn>
-
 										<v-spacer></v-spacer>
 									</v-card-actions> </v-card
 							></v-hover>
@@ -502,7 +495,10 @@
 									</v-card-text>
 									<v-card-text>
 										<div>
-											<dialog-agenda-cita-online :psy="item" :mode="view" />
+											<dialog-agenda-cita-online
+												:psy="item"
+												:mode="view.toString()"
+											/>
 										</div>
 										<div class="mt-1">
 											<v-btn
@@ -539,8 +535,12 @@
 										<v-row align="center" justify="center">
 											<v-col cols="3" class="text-center">
 												<v-img
-													height="160"
-													width="160"
+													:height="
+														$vuetify.breakpoint.mdOnly ? '120' : '180'
+													"
+													:width="
+														$vuetify.breakpoint.mdOnly ? '120' : '180'
+													"
 													class="mx-auto"
 													src="/img/Lupa.png"
 												></v-img>
@@ -557,7 +557,11 @@
 													Encuentra al psicólogo que necesitas, solo
 													responde las siguientes preguntas.
 												</div>
-												<v-btn light class="px-10 mt-4" @click="start">
+												<v-btn
+													color="white"
+													class="px-10 mt-4"
+													@click="start"
+												>
 													<span class="text--secondary">Comenzar</span>
 												</v-btn>
 											</v-col>
@@ -585,7 +589,7 @@
 									:class="hover ? 'elevation-3' : 'elevation-1'"
 									style="border-radius:15px; transition: transform 0.6s"
 								>
-									<v-card-text class="my-2">
+									<v-card-text class="pa-2">
 										<v-row
 											align="center"
 											justify="center"
@@ -593,15 +597,25 @@
 										>
 											<v-col cols="3" class="text-center">
 												<v-avatar
-													size="200"
+													:size="
+														$vuetify.breakpoint.mdOnly ? '140' : '200'
+													"
 													:color="item.avatar ? 'trasnparent' : 'primary'"
 												>
 													<v-img
 														v-if="item.avatar"
 														:src="item.avatar"
 														:lazy-src="item.avatar"
-														width="200"
-														height="200"
+														:width="
+															$vuetify.breakpoint.mdOnly
+																? '140'
+																: '200'
+														"
+														:height="
+															$vuetify.breakpoint.mdOnly
+																? '140'
+																: '200'
+														"
 													>
 														<template #placeholder>
 															<v-row
@@ -623,25 +637,25 @@
 														{{ item.name.substr(0, 1) }}
 													</span>
 												</v-avatar>
-												<div class="text-center caption text--secondary">
+												<div
+													class="text-center body-2 text--secondary my-2"
+												>
 													Codigo {{ item.code }}
 												</div>
-												<v-btn
-													text
-													color="primary"
-													depressed
-													class="pa-0 body-2 font-weight-bold"
+												<router-link
+													class="primary--text body-2 font-weight-bold"
+													style="text-decoration: none"
 													:to="{
 														name: 'psicologo',
 														params: { id: item._id },
 													}"
 												>
 													Más información
-												</v-btn>
+												</router-link>
 											</v-col>
 											<v-col cols="9">
 												<v-row justify="space-between">
-													<v-col>
+													<v-col cols="6">
 														<router-link
 															style="text-decoration: none"
 															:to="{
@@ -657,14 +671,14 @@
 															</span>
 														</router-link>
 													</v-col>
-													<v-col cols="5" class="text-right">
+													<v-col class="text-right mr-4">
 														<dialog-agenda-cita-online
 															:psy="item"
-															:mode="view"
+															:mode="view.toString()"
 														/>
 													</v-col>
 												</v-row>
-												<v-chip-group show-arrows v-model="motive">
+												<v-chip-group show-arrows v-model="specialties">
 													<template v-for="(tag, i) in item.specialties">
 														<v-chip
 															:value="tag"
@@ -672,16 +686,18 @@
 															small
 															:key="i"
 															:color="
-																motive == tag ? 'primary--text' : ''
+																specialties == tag
+																	? 'primary--text'
+																	: ''
 															"
 														>
-															<span class="text-capitalize">
+															<span>
 																{{ tag }}
 															</span>
 														</v-chip>
 													</template>
 												</v-chip-group>
-												<div class="body-2 mt-2">
+												<div class="body-2 mt:-2 mr-4">
 													{{ item.professionalDescription }}
 												</div>
 											</v-col>
@@ -713,7 +729,7 @@ export default {
 	data() {
 		return {
 			view: 1,
-			motive: '',
+			specialties: '',
 			searchInput: '',
 			gender: [],
 			models: [],
@@ -735,12 +751,12 @@ export default {
 			});
 		},
 		/**
-		 * filter motive
+		 * filter specialties
 		 */
 		filterLevelTwo() {
-			if (!this.motive) return this.filterLevelOne;
+			if (!this.specialties) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
-				item => item.specialties.length && item.specialties.includes(this.motive)
+				item => item.specialties.length && item.specialties.includes(this.specialties)
 			);
 		},
 		/**
@@ -752,7 +768,10 @@ export default {
 			let result = this.psychologists;
 			if (this.gender.length)
 				result = result.filter(item => {
-					return this.gender.includes(item.gender) || item.isTrans;
+					const trans = item.isTrans && 'transgender';
+					const gender = [item.gender];
+					trans && gender.push(trans);
+					return gender.some(el => this.gender.some(g => g == el));
 				});
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
@@ -760,7 +779,8 @@ export default {
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages == el))
 				);
-			if (this.motive) result = result.filter(item => item.specialties.includes(this.motive));
+			if (this.specialties)
+				result = result.filter(item => item.specialties.includes(this.specialties));
 
 			return result;
 		},
@@ -819,7 +839,7 @@ export default {
 			this.searchInput = '';
 			this.gender = payload.gender;
 			this.models = [payload.model];
-			this.motive = payload.themes;
+			this.specialties = payload.themes;
 		},
 	},
 };

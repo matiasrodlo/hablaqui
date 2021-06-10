@@ -10,10 +10,10 @@
 				depressed
 				style="border-radius: 5px"
 			>
-				Agenda cita oline
+				Agenda cita online
 			</v-btn>
 			<v-btn v-bind="attrs" v-on="on" v-if="mode == '2'" color="primary" rounded depressed>
-				Agenda cita oline
+				Agenda cita online
 			</v-btn>
 			<v-btn v-if="mode == '3'" v-bind="attrs" v-on="on" color="primary" rounded>
 				Agenda cita online
