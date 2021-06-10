@@ -28,7 +28,7 @@
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="py-8 px-10"
+							class="ml-2 py-8 px-10"
 							nuxt
 							:to="{ name: 'psicologos' }"
 						>
@@ -39,7 +39,7 @@
 						<div class="body-1 font-weight-bold mt-10">
 							Desde $15.500CLP a la semana
 						</div>
-						<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
+						<h3 class="body-1 mt-4">Convenios con Isapres y Fonasa.</h3>
 					</v-col>
 					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
 						<v-img
@@ -213,38 +213,38 @@
 												></v-progress-circular>
 											</v-row>
 										</template>
-										<aside
-											style="
-												background-color: #424242;
-												position: absolute;
-												bottom: 0;
-												height: 135px;
-												opacity: 0.6;
-												width: 100%;
-												border-radius: 0 0 20px 20px;
-											"
-										>
-											<h4 class="white--text pt-1 pl-4 font-weight-regular">
-												{{ item.title }}
-											</h4>
-											<h2
-												class="pl-4 pt-3 font-weight-bold"
-												:class="
-													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
-												"
+										<aside style="position: absolute; bottom: 0; width: 100%">
+											<v-img
+												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
 											>
-												{{ item.name }}
-											</h2>
-											<div>
-												<v-row>
-													<v-col cols="1" class="ml-4">
-														<v-icon color="primary">mdi-check</v-icon>
-													</v-col>
-													<v-col class="body-2 pl-3 font-weight-bold"
-														>{{ item.subtitle }}
-													</v-col>
-												</v-row>
-											</div>
+												<h4
+													class="white--text pt-1 pl-4 font-weight-regular"
+												>
+													{{ item.title }}
+												</h4>
+												<h2
+													class="pl-4 pt-3 font-weight-bold"
+													:class="
+														$vuetify.breakpoint.mdAndUp
+															? 'title'
+															: 'body-1'
+													"
+												>
+													{{ item.name }}
+												</h2>
+												<div>
+													<v-row>
+														<v-col cols="1" class="ml-4">
+															<v-icon color="primary"
+																>mdi-check</v-icon
+															>
+														</v-col>
+														<v-col class="body-2 pl-3 font-weight-bold"
+															>{{ item.subtitle }}
+														</v-col>
+													</v-row>
+												</div>
+											</v-img>
 										</aside>
 									</v-img>
 								</v-carousel-item>
@@ -333,8 +333,8 @@
 			height="150px"
 		/>
 		<section style="position: relative" class="primary-color">
-			<aside style="position: absolute; top: -100px; z-index: 0">
-				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
+				<v-img width="220" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
@@ -382,9 +382,11 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img
+											<v-img
 												height="60px"
 												width="120px"
+												contain
+												class="mx-auto"
 												:src="el.img"
 												:alt="el.text"
 											/>
@@ -448,8 +450,10 @@
 									>
 										<v-card-text class="mt-3">
 											<v-img
-												width="100"
+												contain
+												width="120"
 												height="60"
+												class="mx-auto"
 												:src="el.img"
 												:alt="el.text"
 											/>
@@ -754,7 +758,7 @@ export default {
 					id: 2,
 					title: '¿Puedo iniciar terapia?',
 					desc:
-						'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con Ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
+						'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
 				},
 				{
 					id: 3,
@@ -850,7 +854,7 @@ export default {
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
+					img: `${this.$config.LANDING_URL}/TheLancet.png`,
 					href:
 						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 					text:

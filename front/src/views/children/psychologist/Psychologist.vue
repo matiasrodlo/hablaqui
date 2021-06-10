@@ -94,13 +94,10 @@
 					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text"
 						>ESPECIALIDADES</v-col
 					>
-					<v-col
-						v-if="psychologist.specialties.length"
-						class="body-1 text-left text-capitalize"
-					>
+					<v-col v-if="psychologist.specialties.length" class="body-1 text-left">
 						<ul>
-							<li v-for="(specialties, i) in psychologist.specialties" :key="i">
-								{{ specialties }}
+							<li v-for="(item, i) in psychologist.specialties" :key="i">
+								{{ item }}
 							</li>
 						</ul>
 					</v-col>

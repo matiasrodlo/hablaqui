@@ -10,15 +10,15 @@
 						{{ article.title }}
 					</div>
 					<div class="text-sm-h6">
-						<span class="text--secondary">{{ dates(article.createdAt) }}</span>
-						<span class="text-disabled">|</span>
+						<span class="secondary--text">{{ dates(article.createdAt) }}</span>
+						<span class="secondary--text">|</span>
 						<span>
-							<span class="text--secondary mr-2"> {{ rating }} </span>
+							<span class="secondary--text mr-2"> {{ rating }} </span>
 							<v-rating
 								v-model="rating"
 								class="d-inline-block"
-								background-color="grey lighten-1"
-								color="grey lighten-1"
+								:background-color="isYellow ? 'orange lighten-1' : 'grey lighten-2'"
+								:color="isYellow ? 'orange lighten-1' : 'grey lighten-2'"
 								dense
 								half-increments
 								hover
@@ -80,13 +80,13 @@
 			<v-row class="my-10">
 				<v-col cols="12">
 					<span>
-						<span class="title black--text">¿Este artículo fue útil?</span>
-						<span class="title text--secondary mr-2"> {{ rating }} </span>
+						<span class="title secondary--text">¿Este artículo fue útil?</span>
+						<span class="title secondary--text mr-2"> {{ rating }} </span>
 						<v-rating
 							v-model="rating"
 							class="d-inline-block"
-							background-color="grey lighten-1"
-							color="grey lighten-1"
+							:background-color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
+							:color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
 							dense
 							half-increments
 							hover
@@ -144,7 +144,7 @@
 				<!-- blogs -->
 				<template v-if="blogs.length">
 					<template v-for="(item, i) in blogs">
-						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4" class="mt-16">
+						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4">
 							<v-hover v-slot="{ hover }">
 								<v-card
 									nuxt
@@ -214,8 +214,8 @@
 				</template>
 			</v-row>
 		</v-container>
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
-		<v-container fluid class="primary-color py-0">
+		<img class="mt-16" :src="`${$config.LANDING_URL}/Blog-05-top.png`" style="width: 100%" />
+		<v-container fluid class="primary py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="center" align="center">
@@ -245,8 +245,8 @@
 						<v-col cols="12" md="5" class="text-center">
 							<v-img
 								contain
-								alt="Recibe contenido exclusivo periódicamente"
 								class="mx-auto"
+								alt="Recibe contenido exclusivo periódicamente"
 								:src="`${$config.LANDING_URL}/suscribete.webp`"
 								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
 							>
@@ -264,7 +264,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
 		<v-container>
 			<Footer />
 		</v-container>
@@ -287,6 +287,8 @@ export default {
 			rating: 0,
 			breadcrumb: [],
 			title: '',
+			isYellow: false,
+			loading: false,
 		};
 	},
 	head() {
@@ -302,13 +304,14 @@ export default {
 		};
 	},
 	async mounted() {
-		// eslint-disable-next-line no-console
-		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
-		response = await response.json();
-		this.article = response.article;
+		this.loading = true;
+		let res = await fetch(`${this.$config.API_URL}/blog/all`);
+		res = await res.json();
+		this.blogs = res.articles;
+		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
 		this.title = this.article.title;
-		if (response.article.rating.average)
-			this.rating = parseFloat(response.article.rating.average.toFixed(1));
+		if (this.article.rating.average)
+			this.rating = parseFloat(this.article.rating.average.toFixed(1));
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -316,19 +319,17 @@ export default {
 				href: '/blog',
 			},
 			{
-				text: response.article.categories,
+				text: this.article.categories,
 				disabled: true,
 				href: 'breadcrumbs_link_1',
 			},
 			{
-				text: response.article.title,
+				text: this.article.title,
 				disabled: true,
-				href: `/blog/${response.article.slug}`,
+				href: `/blog/${this.article.slug}`,
 			},
 		];
-		let res = await fetch(`${this.$config.API_URL}/blog/all`);
-		res = await res.json();
-		this.blogs = res.articles;
+		this.loading = false;
 	},
 	methods: {
 		async setRating() {
@@ -343,6 +344,7 @@ export default {
 				}
 			);
 			response = await response.json();
+			this.isYellow = true;
 			this.rating = parseFloat(response.rating.average.toFixed(1));
 		},
 		dates(date) {
