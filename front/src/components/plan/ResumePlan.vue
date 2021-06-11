@@ -54,13 +54,12 @@
 				<div class=" font-weight-bold">
 					Resumen
 				</div>
-				<div>
-					{{ plan.title }}
-				</div>
+				<div>{{ plan.title }}</div>
+				<div>{{ plan.deal.price }} {{ plan.deal.lapse }}</div>
 				<v-divider class="my-4"></v-divider>
 				<div class=" d-flex justify-space-between">
 					<span class="font-weight-bold subtitle-1">Monto total</span>
-					<span class="font-weight-bold text-h6 black--text">${{ plan.price }}</span>
+					<span class="font-weight-bold text-h6 black--text">${{ plan.deal.total }}</span>
 				</div>
 				<div class="caption my-4 text-left">
 					Realiza el pago de tu suscripción con tarjeta de débito y crédito en cuotas.
@@ -72,6 +71,7 @@
 				<v-img width="80" src="/img/planSix.png"></v-img>
 			</div>
 		</v-col>
+		<pre>{{ plan }}</pre>
 	</v-row>
 </template>
 

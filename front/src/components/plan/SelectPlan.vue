@@ -129,17 +129,25 @@ export default {
 				{
 					id: 1,
 					deals: [
-						{ id: 1, lapse: '/semana', price: '17.500', type: 'Pago semanal' },
+						{
+							id: 1,
+							lapse: '/semana',
+							total: '17.500',
+							price: '17.500',
+							type: 'Pago semanal',
+						},
 						{
 							id: 2,
 							lapse: '/semana ($63.000 mensual)',
 							price: '15.750',
 							type: 'Pago mensual',
+							total: '63.000',
 						},
 						{
 							id: 3,
 							lapse: '/semana ($168.000 mensual)',
 							price: '14.000',
+							total: '168.000',
 							type: 'Pago cada tres meses',
 						},
 					],
@@ -156,16 +164,24 @@ export default {
 				{
 					id: 2,
 					deals: [
-						{ id: 4, lapse: '/Semana', price: '14.000', type: 'Pago semanal' },
+						{
+							id: 4,
+							lapse: '/Semana',
+							price: '14.000',
+							total: '14.000',
+							type: 'Pago semanal',
+						},
 						{
 							id: 5,
 							lapse: '/semana ($50.400 mensual)',
+							total: '50.400',
 							price: '12.600',
 							type: 'Pago mensual',
 						},
 						{
 							id: 6,
 							lapse: '/semana ($134.400 trimestral)',
+							total: '134.400',
 							price: '11.200',
 							type: 'Pago cada tres meses',
 						},
@@ -182,16 +198,24 @@ export default {
 				{
 					id: 3,
 					deals: [
-						{ id: 7, lapse: '/semana', price: '22.000', type: 'Pago semanal' },
+						{
+							id: 7,
+							lapse: '/semana',
+							price: '22.000',
+							total: '22.000',
+							type: 'Pago semanal',
+						},
 						{
 							id: 8,
 							lapse: '/semana ($79.200 mensual)',
+							total: '79.200',
 							price: '19.800',
 							type: 'Pago mensual',
 						},
 						{
 							id: 9,
 							lapse: '/semana ($211.200 trimestral)',
+							total: '211.200',
 							price: '17.600',
 							type: 'Pago cada tres meses',
 						},
