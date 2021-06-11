@@ -71,7 +71,6 @@
 				<v-img width="80" src="/img/planSix.png"></v-img>
 			</div>
 		</v-col>
-		<pre>{{ plan }}</pre>
 	</v-row>
 </template>
 
