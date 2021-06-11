@@ -122,13 +122,7 @@
 						<v-autocomplete
 							class="white"
 							outlined
-							:items="
-								appointments.map((item, i) => ({
-									text: item,
-									value: item,
-									index: i,
-								}))
-							"
+							:items="appointments"
 							item-value="value"
 							v-model="specialties"
 							label="Motivo de consulta"
@@ -153,23 +147,6 @@
 									</v-list-item-content>
 								</v-list-item>
 							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="specialties = item.value">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < appointments.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
-							</template>
 						</v-autocomplete>
 					</v-col>
 					<v-col cols="12" md="6">
@@ -179,7 +156,7 @@
 							:items="
 								filterLevelThree.map((item, i) => ({
 									text: `${item.name} ${item.lastName && item.lastName}`,
-									value: item.name,
+									value: item._id,
 									index: i,
 								}))
 							"
@@ -204,23 +181,6 @@
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="searchInput = item.value">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < filterLevelThree.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
 							</template>
 						</v-autocomplete>
 					</v-col>
@@ -744,9 +704,7 @@ export default {
 			return this.filterLevelTwo.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
-					result =
-						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
-						result;
+					result = result._id.indexOf(this.searchInput) > -1 && result;
 				return result;
 			});
 		},
