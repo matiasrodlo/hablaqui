@@ -39,7 +39,7 @@
 					</div>
 					<div
 						:style="el.expandCard ? 'height: 5%' : 'height: 15%'"
-						class="mt-4 body-1 text-center primary--text font-weight-bold"
+						class="mt-4 body-1 text-center primary--text font-weight-bold pointer"
 						@click="() => (el.expandCard = !el.expandCard)"
 					>
 						Seleccionar plan
