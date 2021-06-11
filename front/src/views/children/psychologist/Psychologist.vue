@@ -54,9 +54,7 @@
 								</div>
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<v-btn block color="primary" rounded @click="toAuth">
-									Agenda cita oline
-								</v-btn>
+								<dialog-agenda-cita-online :psy="item" mode="3" />
 							</v-col>
 						</v-row>
 						<template v-for="(tag, i) in psychologist.specialties">
@@ -173,6 +171,9 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+	},
 	computed: {
 		psychologist() {
 			return this.psychologists.find(item => item._id === this.$route.params.id);

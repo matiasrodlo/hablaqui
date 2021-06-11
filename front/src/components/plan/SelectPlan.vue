@@ -10,7 +10,7 @@
 					<div :style="el.expandCard ? '50%' : 'height: 80%'">
 						<div
 							style="max-width: 160px"
-							class="text-center body-1 mx-auto primary--text font-weight-bold"
+							class="pt-2 text-center body-1 mx-auto primary--text font-weight-bold"
 						>
 							{{ el.title }}
 						</div>
@@ -38,7 +38,7 @@
 						</div>
 					</div>
 					<div
-						:style="el.expandCard ? 'height: 5%' : 'height: 10%'"
+						:style="el.expandCard ? 'height: 5%' : 'height: 15%'"
 						class="mt-4 body-1 text-center primary--text font-weight-bold"
 						@click="() => (el.expandCard = !el.expandCard)"
 					>

@@ -34,7 +34,7 @@
 				</div>
 				<div v-if="step == 1" class="body-1 font-weight-bold">El mejor plan para ti</div>
 				<div v-if="step == 2" class="body-1 font-weight-bold">
-					Para continuar
+					{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">
 					Revisa tu plan
@@ -48,19 +48,94 @@
 				<select-plan :setPlan="plan => setPlan(plan)" />
 			</v-card-text>
 			<v-card-text v-if="step == 2">
-				<v-tabs v-model="tab">
-					<v-tab>Ingresar</v-tab>
-					<v-tab>Registrate</v-tab>
-				</v-tabs>
 				<v-tabs-items v-model="tab">
 					<v-tab-item>
-						<v-card flat>
+						<v-card flat max-width="500" class="mx-auto">
+							<v-img
+								width="80"
+								height="80"
+								class="mx-auto mt-8"
+								src="/img/logo_tiny.png"
+							></v-img>
 							<v-card-text><signin /></v-card-text>
+							<v-card-text class="pt-0">
+								<div
+									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+								>
+									<small>
+										¿No eres parte de Hablaquí?
+									</small>
+								</div>
+								<v-btn outlined block rounded color="primary" @click="tab = 1">
+									Crea una cuenta
+								</v-btn>
+								<div class="text-center mt-10">
+									<v-btn
+										class="px-0"
+										text
+										color="primary"
+										:href="`${landingUrl}/politicas`"
+									>
+										Aviso de privacidad
+									</v-btn>
+									<span class="primary--text mx-1">y</span>
+									<v-btn
+										class="px-0"
+										text
+										color="primary"
+										:href="`${landingUrl}/condiciones`"
+									>
+										Términos y Condiciones</v-btn
+									>
+								</div>
+								<div class="text-center font-weight-bold caption secondary--text">
+									2021 Hablaqui
+								</div>
+							</v-card-text>
 						</v-card>
 					</v-tab-item>
 					<v-tab-item>
-						<v-card flat>
+						<v-card flat max-width="500" class="mx-auto">
+							<v-img
+								width="80"
+								height="80"
+								class="mx-auto mt-8"
+								src="/img/logo_tiny.png"
+							></v-img>
 							<v-card-text><signup /></v-card-text>
+							<v-card-text class="pt-0">
+								<div
+									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+								>
+									<small>
+										¿Ya tienes cuenta Hablaquí?
+									</small>
+								</div>
+								<v-btn outlined block rounded color="primary" @click="tab = 0">
+									Entrar
+								</v-btn>
+								<div class="text-center mt-10">
+									<v-btn
+										class="px-0"
+										text
+										color="primary"
+										:href="`${landingUrl}/politicas`"
+										>Aviso de privacidad</v-btn
+									>
+									<span class="primary--text mx-1">y</span>
+									<v-btn
+										class="px-0"
+										text
+										color="primary"
+										:href="`${landingUrl}/condiciones`"
+									>
+										Términos y Condiciones</v-btn
+									>
+								</div>
+								<div class="text-center font-weight-bold caption secondary--text">
+									2021 Hablaqui
+								</div>
+							</v-card-text>
 						</v-card>
 					</v-tab-item>
 				</v-tabs-items>
@@ -80,6 +155,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { landing } from '@/config';
 
 export default {
 	props: {
@@ -109,6 +185,9 @@ export default {
 		};
 	},
 	computed: {
+		landingUrl() {
+			return landing;
+		},
 		...mapGetters({ loggedIn: 'User/loggedIn', resumeView: 'Psychologist/resumeView' }),
 	},
 	methods: {
