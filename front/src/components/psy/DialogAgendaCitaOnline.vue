@@ -1,7 +1,7 @@
 <template>
 	<v-dialog
 		v-model="dialog"
-		:max-width="step == 0 ? '700' : '900'"
+		:max-width="maxWidth"
 		transition="dialog-top-transition"
 		@click:outside="close"
 	>
@@ -197,6 +197,11 @@ export default {
 	computed: {
 		landingUrl() {
 			return landing;
+		},
+		maxWidth() {
+			if (this.step == 0) return '700';
+			else if (this.step == 3) return '800';
+			return '900';
 		},
 		...mapGetters({ loggedIn: 'User/loggedIn', resumeView: 'Psychologist/resumeView' }),
 	},

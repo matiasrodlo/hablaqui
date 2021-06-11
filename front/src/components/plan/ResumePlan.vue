@@ -2,37 +2,43 @@
 	<v-row align="start" justify="space-around" class="my-5">
 		<v-col cols="12" md="6" class="elevation-2 px-4">
 			<div class="my-3 subtitle-2">Aplicar un cupón</div>
-			<v-text-field label="Introduzca el codigo" dense outlined hide-details>
-				<template v-slot:append-outer>
-					<v-btn small color="primary" class="px-10" style="border-radius: 10px">
-						Solicitar
-					</v-btn>
-				</template>
-			</v-text-field>
-			<v-list-item class="px-0 mt-3 mb-2">
-				<v-list-item-content>
-					<v-list-item-title>
-						<span class="caption font-weight-light">Psicólogo - </span>
-						<v-btn text class="px-0" small color="primary" @click="close">
-							Cambiar
-						</v-btn>
-					</v-list-item-title>
-					<v-list-item-subtitle class="title font-weight-bold">
-						{{ psy.name }} {{ psy.lastName && psy.lastName }}
-					</v-list-item-subtitle>
-				</v-list-item-content>
-				<v-list-item-avatar size="70" class="ml-4">
-					<v-img :src="psy.avatar"></v-img>
-				</v-list-item-avatar>
-			</v-list-item>
+			<div class="d-flex">
+				<v-text-field label="Introduzca el codigo" dense outlined hide-details>
+				</v-text-field>
+				<v-btn
+					color="primary"
+					class="px-10"
+					style="border-radius: 10px; width: 45%; margin-top: 3px"
+				>
+					Solicitar
+				</v-btn>
+			</div>
+			<v-list two-line>
+				<v-list-item class="px-0 mt-3 mb-2">
+					<v-list-item-avatar size="100">
+						<v-img contain :src="psy.avatar"></v-img>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title>
+							<span class="caption font-weight-light">Psicólogo - </span>
+							<v-btn text class="px-0" small color="primary" @click="close">
+								Cambiar
+							</v-btn>
+						</v-list-item-title>
+						<v-list-item-subtitle class="title font-weight-bold">
+							{{ psy.name }} {{ psy.lastName && psy.lastName }}
+						</v-list-item-subtitle>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
+			<div class="secondary--text subtitle-1 font-weight-bold">
+				{{ plan.title }}
+			</div>
 			<div class="caption">
 				Suscripción -
 				<v-btn text color="primary" class="px-0" small @click="goBack">Cambiar </v-btn>
 			</div>
-			<div class="subtitle-1 font-weight-bold">
-				{{ plan.title }}
-			</div>
-			<div class="subtitle-1 my-2" style="max-width: 250px">
+			<div class="subtitle-1 my-2" style="max-width: 320px">
 				{{ plan.subtitle }}
 				{{ plan.description }}
 			</div>
