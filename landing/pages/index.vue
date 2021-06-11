@@ -329,8 +329,7 @@
 		<img
 			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			width="150%"
-			height="150px"
+			style="width: 100%; height: 150px"
 		/>
 		<section style="position: relative" class="primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">

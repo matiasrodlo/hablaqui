@@ -39,7 +39,7 @@
 							09:00am - 18:30pm
 						</div>
 					</v-col>
-					<v-col cols="12" sm="3" md="3" class="headline text--secondary">
+					<v-col cols="12" sm="3" md="3">
 						<v-img contain width="240" class="mx-auto" src="/img/Startup.png"></v-img>
 						<v-img
 							contain
@@ -49,8 +49,8 @@
 							src="/img/Adolfo_Ibanez.png"
 						></v-img>
 					</v-col>
-					<v-col cols="6" sm="3" md="3" class="headline text--secondary">
-						<v-img contain height="90" src="/img/WebPay.png" />
+					<v-col>
+						<v-img contain height="120" class="mx-auto" src="/img/WebPay.png" />
 					</v-col>
 				</v-row>
 			</v-col>
