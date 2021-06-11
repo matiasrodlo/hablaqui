@@ -1,6 +1,6 @@
 <template>
-	<v-row align="center" justify="center">
-		<v-col cols="12" md="7">
+	<v-row align="start" justify="space-around" class="my-5">
+		<v-col cols="12" md="6" class="elevation-2 px-4">
 			<div class="my-3 subtitle-2">Aplicar un cupón</div>
 			<v-text-field label="Introduzca el codigo" dense outlined hide-details>
 				<template v-slot:append-outer>
@@ -37,34 +37,36 @@
 				{{ plan.description }}
 			</div>
 		</v-col>
-		<v-col cols="12" md="5">
-			<v-btn
-				:loading="loading"
-				color="primary"
-				block
-				style="border-radius: 10px"
-				@click="payButton"
-			>
-				Continuar al pago
-			</v-btn>
-			<div class="caption my-4 text-center">
-				Este es un pago seguro con encriptado SSL.
+		<v-col cols="12" md="5" class="pa-0">
+			<div class="elevation-2 pa-4">
+				<v-btn
+					:loading="loading"
+					color="primary"
+					block
+					style="border-radius: 10px"
+					@click="payButton"
+				>
+					Continuar al pago
+				</v-btn>
+				<div class="caption my-4 text-center">
+					Este es un pago seguro con encriptado SSL.
+				</div>
+				<div class=" font-weight-bold">
+					Resumen
+				</div>
+				<div>
+					{{ plan.title }}
+				</div>
+				<v-divider class="my-4"></v-divider>
+				<div class=" d-flex justify-space-between">
+					<span class="font-weight-bold subtitle-1">Monto total</span>
+					<span class="font-weight-bold text-h6 black--text">${{ plan.price }}</span>
+				</div>
+				<div class="caption my-4 text-left">
+					Realiza el pago de tu suscripción con tarjeta de débito y crédito en cuotas.
+				</div>
 			</div>
-			<div class=" font-weight-bold">
-				Resumen
-			</div>
-			<div>
-				{{ plan.title }}
-			</div>
-			<v-divider class="my-4"></v-divider>
-			<div class=" d-flex justify-space-between">
-				<span class="font-weight-bold subtitle-1">Monto total</span>
-				<span class="font-weight-bold text-h6 black--text">${{ plan.price }}</span>
-			</div>
-			<div class="caption my-4 text-left">
-				Realiza el pago de tu suscripción con tarjeta de débito y crédito en cuotas.
-			</div>
-			<div class="d-flex justify-space-around">
+			<div class="mt-6 d-flex justify-space-around">
 				<v-img width="80" src="/img/planFour.png"></v-img>
 				<v-img width="80" src="/img/planFive.png"></v-img>
 				<v-img width="80" src="/img/planSix.png"></v-img>

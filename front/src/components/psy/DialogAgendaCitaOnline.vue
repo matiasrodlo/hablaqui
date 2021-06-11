@@ -26,7 +26,16 @@
 		</template>
 		<v-card rounded="xl">
 			<v-card-title class="primary white--text text-h5 py-5">
-				<v-btn icon v-if="step != 0 && step != 3" @click="() => (step -= 1)">
+				<v-btn
+					icon
+					v-if="step != 0"
+					@click="
+						() => {
+							if (step == 3) step = 1;
+							else step -= 1;
+						}
+					"
+				>
 					<v-icon color="white" x-large>mdi-chevron-left</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
@@ -38,7 +47,7 @@
 					{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">
-					Revisa tu plan
+					Detalles
 				</div>
 				<v-spacer></v-spacer>
 			</v-card-title>
