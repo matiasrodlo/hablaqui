@@ -3,6 +3,7 @@
 		v-model="dialog"
 		:max-width="step == 0 ? '700' : '900'"
 		transition="dialog-top-transition"
+		@click:outside="close"
 	>
 		<template v-slot:activator="{ on, attrs }">
 			<v-btn
@@ -191,6 +192,15 @@ export default {
 		...mapGetters({ loggedIn: 'User/loggedIn', resumeView: 'Psychologist/resumeView' }),
 	},
 	methods: {
+		close() {
+			this.dialog = false;
+			setTimeout(() => {
+				this.step = 0;
+				this.tab = 0;
+				this.plan = null;
+				this.newEvent = null;
+			}, 300);
+		},
 		setDate(item) {
 			this.newEvent = item;
 			this.step = 1;
