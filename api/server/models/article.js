@@ -23,7 +23,7 @@ let article = new Schema(
 		originalAuthor: {
 			type: String,
 		},
-		originalLink: {
+		originalSource: {
 			type: String,
 		},
 		categories: {

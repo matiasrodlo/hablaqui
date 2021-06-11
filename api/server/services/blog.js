@@ -7,7 +7,7 @@ const createArticle = async (body, thumbnail, user) => {
 		HTMLbody,
 		notOriginal,
 		originalAuthor,
-		originalLink,
+		originalSource,
 		categories,
 	} = body;
 
@@ -17,7 +17,7 @@ const createArticle = async (body, thumbnail, user) => {
 	}
 
 	const author = user.psychologist.name;
-	const authorDescription = user.psychologist.description;
+	const authorDescription = user.psychologist.professionalDescription;
 	const authorAvatar = user.psychologist.avatar;
 
 	let slug = title
@@ -34,7 +34,7 @@ const createArticle = async (body, thumbnail, user) => {
 		HTMLbody,
 		notOriginal,
 		originalAuthor,
-		originalLink,
+		originalSource,
 		thumbnail,
 		slug,
 		categories,
