@@ -105,6 +105,7 @@
 						subtitle: plans[selectedItem.plan].subtitle,
 						description: plans[selectedItem.plan].description,
 						price: plans[selectedItem.plan].price,
+						deal: selectedItem,
 					})
 				"
 				>Continuar</v-btn
