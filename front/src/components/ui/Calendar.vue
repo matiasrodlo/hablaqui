@@ -12,13 +12,14 @@
 				</div>
 			</template>
 			<v-slide-item v-for="(item, k) in items" :key="k" v-slot="{ toggle }">
-				<v-container class="pb-0" @click="toggle">
-					<div class="text-center">
+				<v-container class="pb-0 px-2 px-sm-4">
+					<div class="text-center" @click="toggle">
 						<div class="primary--text font-weight-bold">{{ item.text }}</div>
 						<div class="text--secondary">{{ item.day }}</div>
 					</div>
 					<div
 						class="mt-3"
+						v-dragscroll
 						style="overscroll-behavior: contain; max-height: 272px; overflow: hidden auto;"
 					>
 						<v-sheet
@@ -29,7 +30,7 @@
 								selected = { date: item.date, start: n, end: item.available[r + 1] }
 							"
 							class="item text-center my-3 pa-2"
-							style="width: 100%; height: fit-content; cursor: pointer;"
+							style="width: 100%; height: fit-content;"
 							:class="
 								selected && selected.start == n && selected.date == item.date
 									? 'itemSelected'
@@ -45,8 +46,8 @@
 		<div class="text-center">
 			<v-btn
 				:disabled="!selected"
+				rounded
 				color="primary"
-				text
 				class="mt-5"
 				@click="setDate(selected)"
 			>
@@ -58,7 +59,12 @@
 
 <script>
 import moment from 'moment';
+import { dragscroll } from 'vue-dragscroll';
+
 export default {
+	directives: {
+		dragscroll,
+	},
 	props: {
 		sessions: {
 			type: Array,
@@ -76,30 +82,15 @@ export default {
 			today: moment(),
 			selected: null,
 			hours: [
-				'00:00',
-				'1:00',
-				'2:00',
-				'3:00',
-				'4:00',
-				'5:00',
-				'6:00',
-				'7:00',
-				'8:00',
-				'9:00',
 				'10:00',
 				'11:00',
 				'12:00',
-				'13:00',
 				'14:00',
 				'15:00',
 				'16:00',
 				'17:00',
 				'18:00',
 				'19:00',
-				'20:00',
-				'21:00',
-				'22:00',
-				'23:00',
 			],
 			items: [],
 			length: Array.from(Array(31), (_, x) => x),

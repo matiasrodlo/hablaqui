@@ -1,5 +1,9 @@
 <template>
-	<v-dialog v-model="dialog" max-width="700">
+	<v-dialog
+		v-model="dialog"
+		:max-width="step == 0 ? '700' : '900'"
+		transition="dialog-top-transition"
+	>
 		<template v-slot:activator="{ on, attrs }">
 			<v-btn
 				v-bind="attrs"
@@ -20,22 +24,25 @@
 			</v-btn>
 		</template>
 		<v-card rounded="xl">
-			<v-card-title class="text-h5">
+			<v-card-title class="primary white--text text-h5 py-5">
 				<v-btn icon v-if="step != 0 && step != 3" @click="() => (step -= 1)">
-					<v-icon x-large>mdi-chevron-left</v-icon>
+					<v-icon color="white" x-large>mdi-chevron-left</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
-				<div v-if="step == 0" class="body-1 font-weight-bold">Elige un horario</div>
-				<div v-if="step == 1" class="body-1 font-weight-bold">Elige un plan</div>
+				<div v-if="step == 0" class="body-1 font-weight-bold">
+					Agenda tu hora
+				</div>
+				<div v-if="step == 1" class="body-1 font-weight-bold">El mejor plan para ti</div>
 				<div v-if="step == 2" class="body-1 font-weight-bold">
 					Para continuar
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">
 					Revisa tu plan
 				</div>
+				<v-spacer></v-spacer>
 			</v-card-title>
-			<v-card-text v-if="step == 0">
-				<calendar :setDate="date => setDate(date)" />
+			<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
+				<calendar :setDate="date => setDate(date)" titleButton="Agendar cita Online" />
 			</v-card-text>
 			<v-card-text v-if="step == 1">
 				<select-plan :setPlan="plan => setPlan(plan)" />
@@ -123,4 +130,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.v-list-item {
+	padding: 0 !important;
+}
+</style>

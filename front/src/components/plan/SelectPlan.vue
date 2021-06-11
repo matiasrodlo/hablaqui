@@ -1,48 +1,51 @@
 <template>
 	<div>
-		<v-card v-for="(el, j) in plans" :key="j" class="my-6">
-			<div v-if="el.recommended" class="d-flex align-center justify-end">
-				<span
-					class="pa-2 primary white--text font-weight-bold"
-					style="border-radius: 0 0 0 15px"
+		<v-row class="my-6">
+			<v-col cols="12" md="4" v-for="(el, j) in plans" :key="j">
+				<v-sheet
+					class="pa-y elevation-3"
+					:height="el.expandCard ? '550' : '330'"
+					style="border-radius: 15px"
 				>
-					Recomendado
-				</span>
-			</div>
-			<v-card-text>
-				<v-row justify="space-between" align="center">
-					<v-col cols="7" sm="8" md="9">
-						<span class="text-h6 text-sm-h5 text-md-h4 font-weight-bold black--text">
-							${{ el.price }}
-						</span>
-						<span class="text-h6 text--secondary"> /{{ el.mode }} </span>
-						<div class="text-sm-h6 primary--text font-weight-bold">
+					<div :style="el.expandCard ? '50%' : 'height: 80%'">
+						<div
+							style="max-width: 160px"
+							class="text-center body-1 mx-auto primary--text font-weight-bold"
+						>
 							{{ el.title }}
 						</div>
-						<div class="my-2 font-weight-bold">
+						<v-img
+							:src="el.image"
+							:alt="el.title"
+							class="mx-auto mt-3"
+							width="60"
+							height="60"
+						/>
+						<div class="text-center mt-3 mb-2">
+							<span class="body-1 font-weight-bold black--text">
+								${{ el.price }}
+							</span>
+							<span class="body-2 text--secondary font-weight-bold">
+								/{{ el.mode }}
+							</span>
+						</div>
+						<v-divider></v-divider>
+						<div class="caption text--secondary font-weight-bold mt-4 px-4">
 							{{ el.subtitle }}
 						</div>
-						<div class="mt-2">
+						<div class="caption text--secondary mt-4 px-4">
 							{{ el.description }}
 						</div>
-					</v-col>
-					<v-col cols="5" sm="4" md="3" class="text-center mt-6 pl-0">
-						<v-avatar color="grey" size="70">
-							<v-img :src="el.image" :alt="el.title" width="100" height="100" />
-						</v-avatar>
-						<div class="mt-3">
-							<v-btn
-								class="pa-0"
-								color="primary"
-								text
-								@click="() => (el.expandCard = !el.expandCard)"
-							>
-								Seleccionar plan
-							</v-btn>
-						</div>
-					</v-col>
+					</div>
+					<div
+						:style="el.expandCard ? 'height: 5%' : 'height: 10%'"
+						class="mt-4 body-1 text-center primary--text font-weight-bold"
+						@click="() => (el.expandCard = !el.expandCard)"
+					>
+						Seleccionar plan
+					</div>
 					<v-expand-transition>
-						<v-col v-if="el.expandCard" cols="12" class="pa-0">
+						<template v-if="el.expandCard">
 							<v-list-item-group flat v-model="selectedItem" color="primary">
 								<v-list-item
 									v-for="deal in el.deals"
@@ -51,56 +54,62 @@
 									:value="{ ...deal, plan: j }"
 								>
 									<v-list-item-content>
-										<v-list-item-title class="font-weight-bold text--secondary">
-											{{ deal.type }}
+										<v-list-item-title>
+											<div class="d-flex justify-space-between">
+												<div
+													class="caption font-weight-bold secondary--text"
+												>
+													{{ deal.type }}
+												</div>
+												<div>
+													<v-btn
+														fab
+														style="width:20px; height: 20px"
+														depressed
+														:color="
+															deal.id == selectedItem.id
+																? 'primary'
+																: '#E1F5FE'
+														"
+													>
+													</v-btn>
+												</div>
+											</div>
 										</v-list-item-title>
 										<v-list-item-subtitle>
-											<span class="font-weight-bold text--secondary">
+											<span class=" caption font-weight-bold secondary--text">
 												${{ deal.price }}
 											</span>
-											<span class="primary--text">
+											<span class=" caption primary--text">
 												{{ deal.lapse }}
 											</span>
 										</v-list-item-subtitle>
 									</v-list-item-content>
-									<v-list-item-action>
-										<v-btn
-											fab
-											class="mx-16"
-											style="width:20px; height: 20px"
-											depressed
-											:color="
-												deal.id == selectedItem.id ? 'primary' : '#E1F5FE'
-											"
-										>
-										</v-btn>
-									</v-list-item-action>
 								</v-list-item>
 							</v-list-item-group>
-							<div
-								v-if="el.deals.some(u => selectedItem.id === u.id)"
-								class="text-center mb-2"
-							>
-								<v-btn
-									small
-									color="primary"
-									@click="
-										setPlan({
-											title: plans[selectedItem.plan].title,
-											subtitle: plans[selectedItem.plan].subtitle,
-											description: plans[selectedItem.plan].description,
-											price: plans[selectedItem.plan].price,
-										})
-									"
-								>
-									Continuar
-								</v-btn>
-							</div>
-						</v-col>
+						</template>
 					</v-expand-transition>
-				</v-row>
-			</v-card-text>
-		</v-card>
+				</v-sheet>
+			</v-col>
+		</v-row>
+		<div class="text-center">
+			<v-btn
+				rounded
+				class="px-10
+                "
+				v-show="selectedItem"
+				color="primary"
+				@click="
+					setPlan({
+						title: plans[selectedItem.plan].title,
+						subtitle: plans[selectedItem.plan].subtitle,
+						description: plans[selectedItem.plan].description,
+						price: plans[selectedItem.plan].price,
+					})
+				"
+				>Continuar</v-btn
+			>
+		</div>
 	</div>
 </template>
 
