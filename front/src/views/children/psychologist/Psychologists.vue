@@ -598,7 +598,7 @@
 													</span>
 												</v-avatar>
 												<div
-													class="text-center body-2 text--secondary my-2"
+													class="text-center body-2 text--secondary mt-3 mb-2"
 												>
 													Codigo {{ item.code }}
 												</div>
