@@ -433,11 +433,8 @@
 					</v-row>
 					<v-row v-else>
 						<v-col v-for="n in 4" :key="n" cols="3">
-							<v-skeleton-loader
-								light
-								class="mx-auto"
-								type="image, image"
-							></v-skeleton-loader>
+							<v-skeleton-loader light class="mx-auto" type="image, image">
+							</v-skeleton-loader>
 						</v-col>
 					</v-row>
 				</v-col>
