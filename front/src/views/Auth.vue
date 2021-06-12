@@ -154,24 +154,24 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: 'img/auth.png',
+					img: 'img/auth.webp',
 					text:
 						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: 'img/auth-2.png',
+					img: 'img/auth-2.webp',
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: 'img/auth-3.png',
+					img: 'img/auth-3.webp',
 					text:
 						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: 'img/auth-4.png',
+					img: 'img/auth-4.webp',
 					text:
 						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
