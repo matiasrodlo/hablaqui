@@ -12,18 +12,37 @@ const getAll = async () => {
 
 const match = async body => {
 	const { payload } = body;
-	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender || { $in: ['male', 'female', 'transgender'] },
-		models: payload.model,
-		specialties: { $in: payload.themes },
-	});
-	if (matchedPsychologists.length == 0) {
-		let newMatchedPsychologists = await Psychologist.find({
+	let matchedPsychologists = [];
+	if (payload.gender == 'transgender') {
+		matchedPsychologists = await Psychologist.find({
+			models: payload.model,
+			isTrans: true,
+			specialties: { $in: payload.themes },
+		});
+	} else {
+		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
+			models: payload.model,
 			specialties: { $in: payload.themes },
 		});
+	}
+	if (matchedPsychologists.length == 0) {
+		let newMatchedPsychologists = [];
+		if (payload.gender == 'transgender') {
+			newMatchedPsychologists = await Psychologist.find({
+				isTrans: true,
+				specialties: { $in: payload.themes },
+			});
+		} else {
+			newMatchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					$in: ['male', 'female', 'transgender'],
+				},
+				specialties: { $in: payload.themes },
+			});
+		}
 
 		return okResponse('Psicologos encontrados', {
 			matchedPsychologists: newMatchedPsychologists,
