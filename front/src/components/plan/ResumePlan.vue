@@ -119,7 +119,7 @@ export default {
 	methods: {
 		async payButton() {
 			this.loading = true;
-			let priceInt = Number(this.plan.price.split('.').join(''));
+			let priceInt = Number(this.plan.deal.total.split('.').join(''));
 			const sessionPayload = {
 				date: this.event.date,
 				start: this.event.start,

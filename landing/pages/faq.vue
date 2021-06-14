@@ -148,7 +148,7 @@
 						</nuxt-link>
 					</div>
 					<div class="text--secondary">
-						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">

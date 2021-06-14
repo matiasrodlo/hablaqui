@@ -73,28 +73,51 @@
 					</v-img>
 				</v-col>
 				<v-col class="text-center" cols="12" sm="1">
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-facebook</v-icon
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-instagram</v-icon
+						<v-img :src="`${$config.LANDING_URL}/instagram.png`"></v-img>
+					</v-avatar>
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-whatsapp</v-icon
+						<v-img :src="`${$config.LANDING_URL}/facebook.png`"></v-img>
+					</v-avatar>
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
+						<v-img :src="`${$config.LANDING_URL}/tiktop.png`"></v-img>
+					</v-avatar>
 				</v-col>
-				<v-col cols="12" sm="11" class="body-2">
-					<div class="font-weight-light text-h6" v-html="article.HTMLbody"></div>
+				<v-col cols="12" sm="11">
+					<div class="font-weight-light text-h5" v-html="article.HTMLbody"></div>
+				</v-col>
+				<v-col cols="12" offset-sm="1" sm="11">
+					<div
+						v-if="article.notOriginal"
+						cols="12"
+						sm="11"
+						class="text--secondary body-1"
+					>
+						Escrito por
+						<span class="primary--text">{{ article.originalAuthor }}</span> para
+						<a :href="article.originalLink">{{
+							extractHostname(article.originalLink)
+						}}</a>
+					</div>
 				</v-col>
 			</v-row>
-			<v-row class="my-10">
+			<v-row class="my-10" align="center">
 				<v-col cols="12">
-					<span>
+					<span class="d-flex align-center">
 						<span class="title secondary--text">¿Este artículo fue útil?</span>
-						<span class="title secondary--text mr-2"> {{ rating }} </span>
+						<span class="title secondary--text ml-4"> {{ rating }} </span>
 						<v-rating
 							v-model="rating"
-							class="d-inline-block"
+							class="ml-4"
 							:background-color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
 							:color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
 							dense
@@ -113,8 +136,8 @@
 						<v-list-item-avatar :size="$vuetify.breakpoint.mdAndUp ? '120' : '50'">
 							<v-img
 								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
-								:src="article.article"
-								:lazy-src="article.article"
+								:src="article.authorAvatar"
+								:lazy-src="article.authorAvatar"
 								:alt="article.author"
 							>
 								<template #placeholder>
@@ -341,6 +364,24 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		extractHostname(url) {
+			let hostname;
+
+			// find & remove protocol (http, ftp, etc.) and get hostname
+			if (url.includes('://')) {
+				hostname = url.split('/')[2];
+			} else {
+				hostname = url.split('/')[0];
+			}
+
+			// find & remove port number
+			hostname = hostname.split(':')[0];
+
+			// find & remove "?"
+			hostname = hostname.split('?')[0];
+
+			return hostname;
+		},
 		async setRating() {
 			let response = await fetch(
 				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${this.rating}`,

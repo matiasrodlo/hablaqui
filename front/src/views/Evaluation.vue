@@ -702,10 +702,14 @@ export default {
 			});
 		},
 		resetMatch() {
+			this.gender = '';
+			this.age = '';
+			this.firstTherapy = null;
+			this.themes = [];
+			this.focus = '';
+			this.genderConfort = '';
 			this.matchedPsychologists = [];
 			this.step = '0';
-			localStorage.removeItem('match');
-			localStorage.removeItem('psi');
 		},
 		setTheme(value) {
 			if (this.themes.includes(value)) {
@@ -719,7 +723,7 @@ export default {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2300);
+			}, 2500);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
