@@ -290,7 +290,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'cognitivo'
+													focus == 'Cognitivo-conductual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -298,7 +298,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'cognitivo';
+														focus = 'Cognitivo-conductual';
 													}
 												"
 											>
@@ -310,7 +310,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'integrativo'
+													focus == 'Integrativo'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -318,7 +318,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'integrativo';
+														focus = 'Integrativo';
 													}
 												"
 											>
@@ -330,7 +330,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'contextual'
+													focus == 'Contextual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -338,7 +338,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'contextual';
+														focus = 'Contextual';
 													}
 												"
 											>
@@ -350,7 +350,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'psicoanalisis'
+													focus == 'Psicoanálisis'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -358,7 +358,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'psicoanalisis';
+														focus = 'Psicoanálisis';
 													}
 												"
 											>
@@ -370,7 +370,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'humanista'
+													focus == 'Humanista'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -378,7 +378,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'humanista';
+														focus = 'Humanista';
 													}
 												"
 											>
@@ -390,7 +390,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'sistemico'
+													focus == 'Sistémico'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -398,7 +398,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'sistemico';
+														focus = 'Sistémico';
 													}
 												"
 											>

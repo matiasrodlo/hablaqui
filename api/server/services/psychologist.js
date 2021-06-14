@@ -12,11 +12,24 @@ const getAll = async () => {
 
 const match = async body => {
 	const { payload } = body;
-	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender || { $in: ['male', 'female', 'transgender'] },
-		models: payload.model,
-		specialties: { $in: payload.themes },
-	});
+	let matchedPsychologists = [];
+	if (payload.gender == 'transgender') {
+		console.log('trasn');
+		matchedPsychologists = await Psychologist.find({
+			models: payload.model,
+			isTrans: true,
+			specialties: { $in: payload.themes },
+		});
+	} else {
+		console.log('notrans');
+		matchedPsychologists = await Psychologist.find({
+			gender: payload.gender || {
+				$in: ['male', 'female', 'transgender'],
+			},
+			models: payload.model,
+			specialties: { $in: payload.themes },
+		});
+	}
 	if (matchedPsychologists.length == 0) {
 		let newMatchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
