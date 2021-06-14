@@ -1,11 +1,12 @@
 import nodemailer from 'nodemailer';
 import { logError } from '../config/pino';
+import { no_reply_email, no_reply_password } from '../config/dotenv';
 
 const transportConfig = {
 	service: 'gmail',
 	auth: {
-		user: 'pruebanodemailersochamar@gmail.com',
-		pass: 'prueba12345',
+		user: no_reply_email,
+		pass: no_reply_password,
 	},
 };
 
