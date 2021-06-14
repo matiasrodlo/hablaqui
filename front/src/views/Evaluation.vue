@@ -16,7 +16,7 @@
 					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
 					preguntas. ¡Queremos conocerte!
 				</div>
-				<div>
+				<div style="background-color: #F0F8FF">
 					<v-container>
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
@@ -509,18 +509,31 @@
 								<v-divider style="border-width: 1px"></v-divider>
 							</v-col>
 							<v-col cols="12">
-								<v-window v-model="onboarding">
-									<v-window-item v-for="(element, i) in psi" :key="i">
+								<v-carousel
+									v-model="onboarding"
+									cycle
+									interval="3000"
+									hide-delimiter-background
+									hide-delimiters
+									:show-arrows="false"
+									light
+									height="200"
+								>
+									<v-carousel-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
 													flat
+													color="transparent"
 													max-width="600"
 													max-height="190"
-													outlined
 													v-for="(item, l) in element"
 													:key="l"
 													class="ma-2"
+													:to="{
+														name: 'psicologo',
+														params: { id: item._id },
+													}"
 												>
 													<v-card-text>
 														<v-row align="center">
@@ -601,8 +614,8 @@
 												</v-card>
 											</template>
 										</div>
-									</v-window-item>
-								</v-window>
+									</v-carousel-item>
+								</v-carousel>
 								<v-item-group v-model="onboarding" class="text-center" mandatory>
 									<v-item
 										v-for="(n, e) in psi"
@@ -681,10 +694,6 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
-	created() {
-		const match = JSON.parse(localStorage.getItem('match'));
-		if (match) this.matchedPsychologists = match;
-	},
 	mounted() {
 		this.getPsychologists();
 		this.getAppointments();
@@ -732,7 +741,6 @@ export default {
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
-				localStorage.setItem('match', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			}
 		},
