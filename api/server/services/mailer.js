@@ -2,23 +2,26 @@ import '../config/dotenv.js';
 import sender from '../mailer/index';
 import { frontend_url, no_reply_email } from '../config/dotenv';
 import { logInfo } from '../config/winston';
+import ejs from 'ejs';
+import path from 'path';
+
 const from = no_reply_email;
 
 const mailerService = {
 	createPasswordRecoveryHtml(token, url) {
-		const recoveryUrl = url + '/passwordReset?token=' + token;
-		return `
-<p>Usted ha enviado una solicitud de cambio de contraseña. Presione aqui para recuperar contraseña.</p>
-<a href="${recoveryUrl}" target="_blank">Recuperar Contraseña</a>
-`;
+		return url + '/passwordReset?token=' + token;
 	},
-	createPasswordRecoverMessage(email, html) {
+	async createPasswordRecoverMessage(email, recover_url) {
+		let ejsTemplate = await ejs.renderFile(
+			path.join(__dirname, '../templates/passwordRecover.ejs'),
+			{ recover_url: recover_url }
+		);
 		return {
 			from: from,
 			to: email,
 			subject: 'Recuperación de contraseña',
 			text: '',
-			html: html,
+			html: ejsTemplate,
 		};
 	},
 	createNewAccountMessage(email) {
@@ -56,10 +59,16 @@ const mailerService = {
 		logInfo('Email enviado');
 		sender.sendMail(message);
 	},
-	sendPasswordRecover(email, token) {
-		const html = this.createPasswordRecoveryHtml(token, frontend_url);
-		const message = this.createPasswordRecoverMessage(email, html);
-		sender.sendMail(message);
+	async sendPasswordRecover(email, token) {
+		const recover_url = this.createPasswordRecoveryHtml(
+			token,
+			frontend_url
+		);
+		const message = await this.createPasswordRecoverMessage(
+			email,
+			recover_url
+		);
+		this.sendEmail(message);
 	},
 	sendNewAccountMessage(email) {
 		const message = this.createNewAccountMessage(email);
