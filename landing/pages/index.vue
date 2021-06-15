@@ -350,17 +350,20 @@
 		/>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
-				<v-img width="220" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
 					<v-col
 						tag="section"
-						cols="12"
+						cols="10"
+						offset="2"
+						md="12"
+						offset-md="0"
 						class="white--text py-16 text-center text-md-left"
 					>
 						<h2
-							style="position: absolute; top: 0px; z-index: 0"
+							style="position: absolute; top: 30px; z-index: 0"
 							class="text-md-h3 text-h4 font-weight-bold"
 						>
 							Efectividad
