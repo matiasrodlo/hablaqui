@@ -27,7 +27,7 @@ long_line_behaviour=1
 long_line_column=120
 
 [files]
-current_page=5
+current_page=16
 FILE_NAME_0=324;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Flib%2Fmain.dart;0;4
 FILE_NAME_1=1040;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Flib%2Fpages%2Fhome.dart;0;4
 FILE_NAME_2=156;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Flib%2Froutes.dart;0;4
@@ -40,6 +40,11 @@ FILE_NAME_8=782;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil
 FILE_NAME_9=4342;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fmonobusiness%2Flib%2FServices%2FServiceUsers.dart;0;4
 FILE_NAME_10=0;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Faprovechalo%2Flib%2FWidgets%2FWidgetSideDrawer.dart;0;4
 FILE_NAME_11=1690;Dart;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Faprovechalo%2Flib%2FWidgets%2FWidgetUserHome.dart;0;4
+FILE_NAME_12=0;XML;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Fandroid%2Fapp%2Fsrc%2Fmain%2FAndroidManifest.xml;0;4
+FILE_NAME_13=340;XML;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Fandroid%2Fapp%2Fsrc%2Fmain%2Fres%2Fdrawable%2Flaunch_background.xml;0;4
+FILE_NAME_14=0;XML;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Faprovechalo%2Fandroid%2Fapp%2Fsrc%2Fmain%2Fres%2Fdrawable%2Flaunch_background.xml;0;4
+FILE_NAME_15=0;XML;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Fandroid%2Fapp%2Fsrc%2Fmain%2Fres%2Fvalues%2Fstyles.xml;0;4
+FILE_NAME_16=451;XML;0;EUTF-8;1;1;0;%2FUsers%2Fmac%2FProjects%2Fhablaqui%2Fmovil%2Fandroid%2Fapp%2Fsrc%2Fmain%2Fres%2Fdrawable-v21%2Flaunch_background.xml;0;4
 
 [VTE]
 last_dir=/Users/mac
