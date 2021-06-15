@@ -152,7 +152,7 @@
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">
-					<div class="text-right">
+					<div class="text-md-right">
 						<img
 							style="height: 40px"
 							:src="`${$config.LANDING_URL}/redes_sociales.png`"
