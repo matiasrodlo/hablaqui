@@ -148,10 +148,16 @@
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<img
-			class="mt-10"
+			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			width="100%"
 			height="100px"
+		/>
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_1.png`"
+			width="100%"
+			height="40px"
 		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
@@ -268,10 +274,16 @@
 			</v-container>
 		</section>
 		<img
+			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
 			width="100%"
 			height="150px"
-			alt="Ventajas"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_2.png`"
+			width="100%"
+			height="40px"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
@@ -327,11 +339,16 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<img
-			class="mt-10"
+			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: 150px"
 		/>
-		<section style="position: relative" class="primary-color">
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+			style="width: 100%; height: 40px"
+		/>
+		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
 				<v-img width="220" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
@@ -480,7 +497,16 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-part2.png`" width="100%" height="150px" />
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-part2.png`"
+			style="width: 100%; height: 150px"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
+			style="width: 100%"
+		/>
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
 			<v-row tag="section" no-gutters justify="center">
@@ -629,8 +655,10 @@
 		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
-				height="250"
+				height="140"
 				:show-arrows="false"
+				hide-delimiter-background
+				hide-delimiters
 				reverse-transition="fade-transition"
 				transition="fade-transition"
 			>
@@ -645,7 +673,7 @@
 					]"
 					:key="e"
 				>
-					<v-img height="200" :src="item" :alt="item" contain />
+					<v-img height="70" class="mt-8" :src="item" :alt="item" contain />
 				</v-carousel-item>
 			</v-carousel>
 		</section>

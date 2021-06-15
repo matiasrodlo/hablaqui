@@ -727,6 +727,7 @@ export default {
 			} else {
 				if (this.themes.length < 3) this.themes.push(value);
 			}
+			if (this.themes.length == 3) this.step = 4;
 		},
 		async openPrecharge() {
 			this.dialogPrecharge = true;
