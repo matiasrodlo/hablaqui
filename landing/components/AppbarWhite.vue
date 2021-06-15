@@ -47,7 +47,7 @@
 				class="shadow"
 				preserveAspectRatio="none"
 				viewBox="0 0 1080 216.49"
-				style="height: 80%; width: 100%"
+				style="height: 100%; width: 100%"
 			>
 				<path
 					style="fill: white"
