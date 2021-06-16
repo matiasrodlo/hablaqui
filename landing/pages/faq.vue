@@ -152,13 +152,18 @@
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
-					<div class="text-md-right">
-						<img
-							style="height: 40px"
-							:src="`${$config.LANDING_URL}/redes_sociales.png`"
-							alt="redes sociales"
-						/>
-					</div>
+					<img
+						style="height: 40px"
+						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						alt="redes sociales"
+					/>
+				</v-col>
+				<v-col
+					cols="12"
+					offset-md="6"
+					md="6"
+					class="text-center text-md-right text--secondary"
+				>
 					<div>Atención a clientes: c@hablaqui.com</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
