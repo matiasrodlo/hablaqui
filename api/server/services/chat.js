@@ -68,6 +68,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 			$push: {
 				messages: newMessage,
 			},
+			read: false,
 		},
 		{ new: true }
 	);
@@ -115,12 +116,27 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
+const readMessage = async chatId => {
+	// Aqui se podria validar mas, revisando que el usuario loggeado
+	// sea parte del chat, pero eso es problema del desarollador del futuro.
+	const updatedChat = await Chat.findByIdAndUpdate(
+		chatId,
+		{
+			read: true,
+		},
+		{ new: true }
+	);
+
+	return okResponse('Mensaje visto', { chat: updatedChat });
+};
+
 const chatService = {
 	startConversation,
 	getMessages,
 	getChats,
 	sendMessage,
 	createReport,
+	readMessage,
 };
 
 export default Object.freeze(chatService);

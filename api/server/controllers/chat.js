@@ -72,6 +72,16 @@ const chatController = {
 			return errorCallback(e, res, 'Error creando el reporte');
 		}
 	},
+	async readMessage(req, res) {
+		try {
+			const { chatId } = req.params;
+			const { data, code } = await chatService.readMessage(chatId);
+
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando el chat');
+		}
+	},
 };
 
 export default Object.freeze(chatController);
