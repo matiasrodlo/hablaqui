@@ -1,9 +1,16 @@
-{
-    "name": "hablaqui",
-    "short_name": "hablaqui",
-    "theme_color": "#2070E5",
-    "background_color": "#2070E5",
-    "display": "standalone",
+{"name":"hablaqui",
     "orientation": "portrait",
+    "short_name":"hablaqui",
+    "icons":[
+    {   "src":"/android-chrome-192x192.png",
+        "sizes":"192x192","type":"image/png"
+    },
+    {
+        "src":"/android-chrome-512x512.png",
+        "sizes":"512x512","type":"image/png"
+    }
+    ],
+    "theme_color":"#2070E5","background_color":"#2070E5",
+    "display":"standalone",  
     "scope": "/"
-  }
+}
