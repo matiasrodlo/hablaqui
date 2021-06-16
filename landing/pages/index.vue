@@ -222,18 +222,11 @@
 												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
 											>
 												<h4
-													class="white--text pt-1 pl-4 font-weight-regular"
+													class="body-1 white--text pt-1 pl-4 font-weight-regular"
 												>
 													{{ item.title }}
 												</h4>
-												<h2
-													class="pl-4 pt-3 font-weight-bold"
-													:class="
-														$vuetify.breakpoint.mdAndUp
-															? 'title'
-															: 'body-1'
-													"
-												>
+												<h2 class="body-2 pl-4 pt-3 pb-2 font-weight-bold">
 													{{ item.name }}
 												</h2>
 												<div>
@@ -243,7 +236,7 @@
 																>mdi-check</v-icon
 															>
 														</v-col>
-														<v-col class="body-2 pl-3 font-weight-bold"
+														<v-col style="font-size: 14px" class="pl-3"
 															>{{ item.subtitle }}
 														</v-col>
 													</v-row>
