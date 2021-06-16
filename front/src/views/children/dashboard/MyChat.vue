@@ -315,42 +315,50 @@
 						</template>
 						<!-- Burbujas de chat -->
 						<template v-else>
-							<div v-for="item in chat.messages" :key="item._id">
-								<div
-									class="d-flex mt-3"
-									:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
-								>
-									<div style="width: 50%">
-										<div style="display: flex; justify-content: space-between">
-											<span
-												v-if="sentBy(item.sentBy)"
-												class="text--disabled body-2"
+							<template v-if="chat && chat.messages.length">
+								<div v-for="item in chat.messages" :key="item._id">
+									<div
+										class="d-flex mt-3"
+										:class="
+											sentBy(item.sentBy) ? 'justify-end' : 'justify-start'
+										"
+									>
+										<div style="width: 50%">
+											<div
+												style="display: flex; justify-content: space-between"
 											>
-												{{ user.name }}
-											</span>
-											<span v-else class="text--disabled body-2">
-												{{ selected.shortName || selected.name }}
-											</span>
-											<span class="text--disabled body-2">
-												{{ setDate(item.createdAt) }}
-											</span>
-										</div>
-										<div
-											style="width: 100%"
-											class="talkbubble"
-											:class="
-												sentBy(item.sentBy)
-													? 'talkbubble__one'
-													: 'talkbubble__two'
-											"
-										>
-											<div style="max-height: 75px; overflow-y: auto body-2">
-												{{ item.message }}
+												<span
+													v-if="sentBy(item.sentBy)"
+													class="text--disabled body-2"
+												>
+													{{ user.name }}
+												</span>
+												<span v-else class="text--disabled body-2">
+													{{ selected.shortName || selected.name }}
+												</span>
+												<span class="text--disabled body-2">
+													{{ setDate(item.createdAt) }}
+												</span>
+											</div>
+											<div
+												style="width: 100%"
+												class="talkbubble"
+												:class="
+													sentBy(item.sentBy)
+														? 'talkbubble__one'
+														: 'talkbubble__two'
+												"
+											>
+												<div
+													style="max-height: 75px; overflow-y: auto body-2"
+												>
+													{{ item.message }}
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							</template>
 						</template>
 					</v-card-text>
 					<!-- Zona para escribir -->
@@ -463,9 +471,7 @@ export default {
 			const payload = {
 				payload: this.message,
 				psychologistId:
-					this.user.role == 'psychologist'
-						? this.user.psychologist._id
-						: this.selected._id,
+					this.user.role == 'psychologist' ? this.user.psychologist : this.selected._id,
 				userId: this.user.role == 'psychologist' ? this.selected._id : this.user._id,
 			};
 			await this.sendMessage(payload);
