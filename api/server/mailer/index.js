@@ -1,11 +1,16 @@
 import nodemailer from 'nodemailer';
 import { logError } from '../config/pino';
+import { no_reply_email, no_reply_password } from '../config/dotenv';
 
+// Ojala cambiarlo de vuelta a gmail
 const transportConfig = {
-	service: 'gmail',
+	name: 'hablaqui.com',
+	host: 'mail.hablaqui.com',
+	port: 465,
+	secure: true,
 	auth: {
-		user: 'pruebanodemailersochamar@gmail.com',
-		pass: 'prueba12345',
+		user: no_reply_email,
+		pass: no_reply_password,
 	},
 };
 
