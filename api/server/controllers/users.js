@@ -25,21 +25,32 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando perfil');
 		}
 	},
-	async updatePassword(req, res) {
+	async passwordRecovery(req, res) {
 		try {
 			const { user } = req;
-			const { oldPassword, newPassword } = req.body;
-			const { data, code } = await userService.updatePassword(
+			const { password } = req.body;
+			const { data, code } = await userService.passwordRecovery(
 				user,
-				oldPassword,
-				newPassword
+				password
 			);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando contraseña');
 		}
 	},
-
+	async updatePassword(req, res) {
+		try {
+			const { user } = req;
+			const { password } = req.body;
+			const { data, code } = await userService.updatePassword(
+				user,
+				password
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando contraseña');
+		}
+	},
 	async updatePlan(req, res) {
 		try {
 			const { user } = req;
