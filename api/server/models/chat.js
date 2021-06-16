@@ -9,6 +9,10 @@ let messageSchema = new Schema(
 		message: {
 			type: String,
 		},
+		read: {
+			type: Boolean,
+			default: 'false',
+		},
 	},
 	{ timestamps: true }
 );

@@ -112,7 +112,7 @@ export default {
 				this.$v.$touch();
 				if (!this.$v.$invalid) {
 					this.loading = !this.loading;
-					await axios(`${baseURL}/user/password`, {
+					await axios(`${baseURL}/user/reset-password`, {
 						method: 'patch',
 						data: { password: this.formData.newPassword },
 						headers: {
