@@ -111,7 +111,8 @@
 								height="80"
 								class="mx-auto mt-8"
 								src="/img/logo_tiny.png"
-							></v-img>
+							>
+							</v-img>
 							<v-card-text><signup :isDialog="true"/></v-card-text>
 							<v-card-text class="pt-0">
 								<div
