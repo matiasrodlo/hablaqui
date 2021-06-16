@@ -4,6 +4,8 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url } from '../config/dotenv';
+import mailer from './mailer';
+import User from '../models/user';
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const MERCADOPAGO_KEY = process.env.MERCADOPAGO_KEY;
@@ -59,6 +61,8 @@ const successPay = async params => {
 		{ $set: { 'sessions.$.statePayments': 'successful' } }
 	);
 	logInfo('Se ha actualizado una sesion');
+	const foundUser = await User.findById(userId);
+	mailer.sendPurchaseInformation(foundUser.email);
 	return okResponse('sesion actualizada');
 };
 const mercadopagoService = {
