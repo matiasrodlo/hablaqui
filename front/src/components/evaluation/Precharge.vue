@@ -10,14 +10,14 @@
 					preferencias
 				</div>
 			</v-col>
-			<v-col cols="12" md="4" class="text-center text-md-right">
+			<v-col cols="12" md="2" class="text-center text-md-right">
 				<v-progress-circular indeterminate color="primary" size="130" :width="15">
 					<div class="spinner">
 						<v-img width="120" :src="image"></v-img>
 					</div>
 				</v-progress-circular>
 			</v-col>
-			<v-col cols="12" md="8" class="text-center text-md-left">
+			<v-col cols="12" md="4" lg="3" class="text-center text-md-left">
 				<div
 					v-for="(el, i) in items"
 					:key="i"

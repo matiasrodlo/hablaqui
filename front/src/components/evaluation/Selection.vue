@@ -42,16 +42,10 @@
 									<v-col
 										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
 									>
-										{{ item.name }}
+										{{ item.name }} {{ item.lastName && item.lastName }}
 									</v-col>
 									<v-col cols="12" sm="6" class="text-center text-md-right">
-										<v-btn
-											color="primary"
-											rounded
-											@click="() => goToPlan(item)"
-										>
-											Agenda cita online
-										</v-btn>
+										<dialog-agenda-cita-online :psy="item" :mode="'3'" />
 									</v-col>
 								</v-row>
 								<v-chip-group show-arrows>
@@ -65,7 +59,7 @@
 									</v-chip>
 								</v-chip-group>
 								<div class="font-weight-light mt-2 text-capitalize">
-									{{ item.description }}
+									{{ item.professionalDescription }}
 								</div>
 							</v-col>
 						</v-row>
@@ -83,6 +77,9 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+	},
 	props: {
 		match: {
 			type: Array,
@@ -97,13 +94,6 @@ export default {
 		...mapGetters({
 			loggedIn: 'User/loggedIn',
 		}),
-	},
-	methods: {
-		goToPlan(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
-		},
 	},
 };
 </script>

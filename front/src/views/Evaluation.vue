@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<!-- appbar -->
-		<div :class="!matchedPsychologists.length ? 'primary' : 'trasnparent'">
+		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
 			<appbar />
 			<!-- content -->
 			<div
-				v-if="!matchedPsychologists.length"
+				v-if="!matchedPsychologists.length && !dialogPrecharge"
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
@@ -16,7 +16,7 @@
 					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
 					preguntas. ¡Queremos conocerte!
 				</div>
-				<div>
+				<div style="background-color: #F0F8FF">
 					<v-container>
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
@@ -290,7 +290,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'cognitivo'
+													focus == 'Cognitivo-conductual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -298,7 +298,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'cognitivo';
+														focus = 'Cognitivo-conductual';
 													}
 												"
 											>
@@ -310,7 +310,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'integrativo'
+													focus == 'Integrativo'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -318,7 +318,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'integrativo';
+														focus = 'Integrativo';
 													}
 												"
 											>
@@ -330,7 +330,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'contextual'
+													focus == 'Contextual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -338,7 +338,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'contextual';
+														focus = 'Contextual';
 													}
 												"
 											>
@@ -350,7 +350,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'psicoanalisis'
+													focus == 'Psicoanálisis'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -358,7 +358,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'psicoanalisis';
+														focus = 'Psicoanálisis';
 													}
 												"
 											>
@@ -370,7 +370,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'humanista'
+													focus == 'Humanista'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -378,7 +378,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'humanista';
+														focus = 'Humanista';
 													}
 												"
 											>
@@ -390,7 +390,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'sistemico'
+													focus == 'Sistémico'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -398,7 +398,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'sistemico';
+														focus = 'Sistémico';
 													}
 												"
 											>
@@ -509,18 +509,31 @@
 								<v-divider style="border-width: 1px"></v-divider>
 							</v-col>
 							<v-col cols="12">
-								<v-window v-model="onboarding">
-									<v-window-item v-for="(element, i) in psi" :key="i">
+								<v-carousel
+									v-model="onboarding"
+									cycle
+									interval="3000"
+									hide-delimiter-background
+									hide-delimiters
+									:show-arrows="false"
+									light
+									height="200"
+								>
+									<v-carousel-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
 													flat
+													color="transparent"
 													max-width="600"
 													max-height="190"
-													outlined
 													v-for="(item, l) in element"
 													:key="l"
 													class="ma-2"
+													:to="{
+														name: 'psicologo',
+														params: { id: item._id },
+													}"
 												>
 													<v-card-text>
 														<v-row align="center">
@@ -534,6 +547,10 @@
 															<v-col class="text-left">
 																<div class="title primary--text">
 																	{{ item.name }}
+																	{{
+																		item.lastName &&
+																			item.lastName
+																	}}
 																</div>
 																<template
 																	v-for="(tag,
@@ -541,6 +558,7 @@
 																>
 																	<span :key="k">
 																		<span
+																			v-if="k < 5"
 																			class="ma-1 caption text-capitalize"
 																		>
 																			{{ tag }};
@@ -555,7 +573,7 @@
 											<template v-else>
 												<v-card
 													width="400"
-													height="220"
+													height="180"
 													outlined
 													class="ma-2"
 												>
@@ -571,6 +589,10 @@
 															<v-col class="text-left">
 																<div class="title primary--text">
 																	{{ element.name }}
+																	{{
+																		element.lastName &&
+																			element.lastName
+																	}}
 																</div>
 																Especialidades:
 																<template
@@ -580,6 +602,7 @@
 																	<span :key="k">
 																		<span
 																			class="ma-1 text-capitalize"
+																			v-if="k < 5"
 																		>
 																			{{ tag }};
 																		</span>
@@ -591,8 +614,8 @@
 												</v-card>
 											</template>
 										</div>
-									</v-window-item>
-								</v-window>
+									</v-carousel-item>
+								</v-carousel>
 								<v-item-group v-model="onboarding" class="text-center" mandatory>
 									<v-item
 										v-for="(n, e) in psi"
@@ -612,14 +635,14 @@
 				</div>
 			</div>
 		</div>
-		<v-dialog v-model="dialogPrecharge" transition="dialog-bottom-transition" max-width="600">
-			<v-card>
+		<div v-if="dialogPrecharge">
+			<v-card flat color="transparent">
 				<v-card-text>
 					<Precharge :avatar="psychologists.map(el => el.avatar)" />
 				</v-card-text>
 			</v-card>
-		</v-dialog>
-		<div v-if="matchedPsychologists.length">
+		</div>
+		<div v-if="!dialogPrecharge && matchedPsychologists.length">
 			<Selection :match="matchedPsychologists" :resetMatch="resetMatch" />
 		</div>
 	</div>
@@ -671,10 +694,6 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
-	created() {
-		const match = JSON.parse(localStorage.getItem('match'));
-		if (match) this.matchedPsychologists = match;
-	},
 	mounted() {
 		this.getPsychologists();
 		this.getAppointments();
@@ -692,10 +711,14 @@ export default {
 			});
 		},
 		resetMatch() {
+			this.gender = '';
+			this.age = '';
+			this.firstTherapy = null;
+			this.themes = [];
+			this.focus = '';
+			this.genderConfort = '';
 			this.matchedPsychologists = [];
 			this.step = '0';
-			localStorage.removeItem('match');
-			localStorage.removeItem('psi');
 		},
 		setTheme(value) {
 			if (this.themes.includes(value)) {
@@ -704,12 +727,13 @@ export default {
 			} else {
 				if (this.themes.length < 3) this.themes.push(value);
 			}
+			if (this.themes.length == 3) this.step = 4;
 		},
 		async openPrecharge() {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2300);
+			}, 2500);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
@@ -718,7 +742,6 @@ export default {
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
-				localStorage.setItem('match', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			}
 		},

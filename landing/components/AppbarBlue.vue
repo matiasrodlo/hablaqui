@@ -1,38 +1,21 @@
 <template>
 	<div>
-		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
+		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
-				<img
-					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui logo"
-				/>
+				<nuxt-link to="/" style="width: 100%">
+					<v-img
+						style="max-width: 150px"
+						class="mx-auto my-5"
+						:src="`${$config.LANDING_URL}/logo.png`"
+						alt="hablaqui logo"
+					/>
+				</nuxt-link>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link active-class="primary white--text">
-					<v-list-item-content>
-						<v-list-item-title>Nuestros especialistas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link>
-					<v-list-item-content>
-						<v-list-item-title>Para empresas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link>
-					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link :to="{ name: 'auth' }">
-					<v-list-item-content>
-						<v-list-item-title>Entrar</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
 				<v-list-item link :to="{ name: 'psicologos' }">
 					<v-list-item-content>
-						<v-list-item-title>Comenzar</v-list-item-title>
+						<v-list-item-title>Quiero comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -59,27 +42,26 @@
 					contain
 				/>
 			</router-link>
-			<template v-if="$vuetify.breakpoint.mdAndUp">
+
+			<v-spacer></v-spacer>
+			<v-btn
+				:to="{ name: 'psicologos' }"
+				large
+				rounded
+				class="hidden-sm-and-down mx-4 px-8"
+				color="white"
+				depressed
+			>
+				<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
+			</v-btn>
+			<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
+				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
+			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
-				<v-btn
-					:to="{ name: 'psicologos' }"
-					large
-					rounded
-					class="mx-4 px-8"
-					color="white"
-					depressed
-				>
-					<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
-				</v-btn>
-				<v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
-				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon>
-			</template>
-			<template v-else>
-				<v-spacer></v-spacer>
-				<v-btn icon @click="drawer = !drawer">
+				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-			</template>
+			</div>
 		</v-app-bar>
 	</div>
 </template>

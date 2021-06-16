@@ -1,46 +1,54 @@
 <template>
 	<v-img :src="backgroundImg" height="100vh">
 		<v-container
-			:class="$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
+			:class="$vuetify.breakpoint.mdAndUp ? '' : 'white--text'"
 			fluid
 			class="login-image"
 		>
 			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
-				<v-col cols="12" sm="6">
+				<v-col cols="12" md="6">
 					<v-row justify="center">
-						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
-							<a :href="landingUrl">
-								<v-img max-width="200" src="img/logo.png"></v-img>
+						<v-col cols="6" sm="5" md="4" lg="3">
+							<a :href="landingUrl" class="tex-center">
+								<v-img
+									class="mx-auto"
+									style="max-width: 200px"
+									src="img/logo.png"
+								/>
 							</a>
 						</v-col>
 						<v-col
 							cols="12"
-							class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
 									? '¡Qué gusto verte nuevamente!'
-									: '¡Nos alegra que estés aquí!'
+									: '¡Tu bienestar comienza aquí!'
 							}}
 						</v-col>
 						<v-col
 							cols="12"
-							sm="10"
-							lg="8"
-							class="text-center subtitle-1 font-weight-bold text--secondary"
+							sm="9"
+							lg="6"
+							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
 									? 'Ingresa y continúa tu viaje de desarrollo personal ahora mismo.'
-									: 'Regístrate y comienza tu viaje de desarrollo personal ahora mismo.'
+									: 'Regístrate para iniciar tu camino de desarrollo personal'
 							}}
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
 							<v-window v-model="step">
-								<v-window-item :value="1"><sign-in /></v-window-item>
-								<v-window-item :value="2"><sign-up /></v-window-item>
+								<v-window-item :value="1">
+									<sign-in />
+								</v-window-item>
+								<v-window-item :value="2">
+									<sign-up />
+								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1">
@@ -59,7 +67,7 @@
 									:href="`${landingUrl}/politicas`"
 									>Aviso de privacidad</v-btn
 								>
-								y
+								<span class="primary--text mx-1">y</span>
 								<v-btn
 									class="px-0"
 									text
@@ -75,20 +83,52 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6" class="login-plus-image">
-					<v-window v-model="onboarding" class="login-circle-image">
-						<v-window-item v-for="n in length" :key="`card-${n.id}`">
-							<div class="text-center ">
+				<v-col v-if="$vuetify.breakpoint.mdAndUp" md="6">
+					<v-carousel
+						hide-delimiter-background
+						hide-delimiters
+						cycle
+						interval="3000"
+						:show-arrows="false"
+						v-model="carousel"
+						height="600"
+					>
+						<v-carousel-item
+							v-for="n in length"
+							:key="`card-${n.id}`"
+							class="align-items-center"
+							style="position: relative;"
+						>
+							<div class="text-center mt-10">
+								<v-img
+									style="z-index:1; position: absolute; top: 30px; right: 30%"
+									width="80"
+									src="/img/plus-login.png"
+								></v-img>
+								<v-img
+									style="position: absolute; bottom: 30%; right: 17%"
+									width="220"
+									src="/img/circle-login.png"
+								>
+								</v-img>
 								<v-list-item-avatar size="400" class="ml-4">
-									<v-img :src="n.img"></v-img>
+									<v-img
+										height="400"
+										width="400"
+										:lazy-src="n.img"
+										:src="n.img"
+									></v-img>
 								</v-list-item-avatar>
+								<div
+									style="max-width: 500px;"
+									class="text-h6 mx-auto white--text py-5 px-10"
+								>
+									{{ n.text }}
+								</div>
 							</div>
-							<div class="text-h6 text-center white--text py-4 px-10">
-								{{ n.text }}
-							</div>
-						</v-window-item>
-					</v-window>
-					<v-item-group v-model="onboarding" class="text-center" mandatory>
+						</v-carousel-item>
+					</v-carousel>
+					<v-item-group v-model="carousel" class="text-center" mandatory>
 						<v-item
 							v-for="n in length"
 							:key="`btn-${n.id}`"
@@ -118,31 +158,32 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: 'img/auth.png',
+					img: 'img/auth.webp',
 					text:
 						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: 'img/auth-2.png',
+					img: 'img/auth-2.webp',
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: 'img/auth-3.png',
+					img: 'img/auth-3.webp',
 					text:
 						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: 'img/auth-4.png',
+					img: 'img/auth-4.webp',
 					text:
 						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
-			onboarding: 0,
+			carousel: 0,
 			menu: false,
 			step: 1,
+			fromRoute: '',
 		};
 	},
 	created() {
@@ -153,7 +194,7 @@ export default {
 			return landing;
 		},
 		backgroundImg() {
-			if (this.$vuetify.breakpoint.smAndUp) return 'img/login.png';
+			if (this.$vuetify.breakpoint.mdAndUp) return 'img/login.png';
 			return null;
 		},
 	},
@@ -163,10 +204,10 @@ export default {
 			else this.step = 1;
 		},
 		next() {
-			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
 		},
 		prev() {
-			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+			this.carousel = this.carousel - 1 < 0 ? this.length - 1 : this.carousel - 1;
 		},
 	},
 };

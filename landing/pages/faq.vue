@@ -1,37 +1,34 @@
 <template>
 	<div>
-		<client-only>
-			<div class="primary pb-16">
-				<Appbar />
-				<v-container>
-					<v-row justify="center" no-gutters>
-						<v-col
-							cols="12"
-							class="white--text text-center font-weight-bold text-h6 text-md-h5 text-lg-h3 py-10"
-						>
+		<div class="primary-color pb-16">
+			<Appbar />
+			<v-container>
+				<v-row justify="center" no-gutters>
+					<v-col cols="12" class="white--text text-center py-10">
+						<span class="font-weight-bold my-5" style="font-size: 30px">
 							Bienvenido a nuestro portal de ayuda
-							<div class="text-h6 text-md-h5 text-lg-h3 font-weight-bold">
-								Estamos aquí para ayudar
-							</div>
-						</v-col>
-						<v-col cols="12">
-							<v-text-field
-								v-model="search"
-								class="white"
-								label="Busca por tema o pregunta"
-								outlined
-								hide-details
-							/>
-						</v-col>
-					</v-row>
-				</v-container>
-			</div>
-		</client-only>
+						</span>
+						<div class="font-weight-bold" style="font-size: 55px">
+							Estamos aquí para ayudar
+						</div>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							v-model="search"
+							class="white"
+							placeholder="Busca por tema o pregunta"
+							outlined
+							hide-details
+						/>
+					</v-col>
+				</v-row>
+			</v-container>
+		</div>
 		<v-container v-if="items.length" class="mt-16">
 			<v-row v-if="itemsFilter.length">
 				<v-col cols="12">
 					<div v-for="(item, g) in itemsFilter" :key="g">
-						<div class="text-center text--secondary font-weight-bold title mt-10">
+						<div class="text-left text--secondary font-weight-bold title mt-10">
 							{{ item.title }}
 						</div>
 						<div class="caption">
@@ -104,7 +101,17 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<div style="background-color: #0f3860; margin-top: 120px">
+		<v-container v-else style="height: 200px">
+			<v-row class="fill-height ma-0" align="center" justify="center">
+				<v-progress-circular
+					width="6"
+					size="50"
+					indeterminate
+					color="primary"
+				></v-progress-circular>
+			</v-row>
+		</v-container>
+		<div style="background-color: #0f3860; margin-top: 120px; margin-bottom: 100px">
 			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
@@ -120,27 +127,45 @@
 			</v-container>
 		</div>
 		<v-container>
-			<v-row justify="center" align="center">
-				<v-col cols="12" md="6" class="text-center text-sm-left">
+			<v-row justify="center" align="center" class="mb-8">
+				<v-col cols="12" md="6" class="text-center text-md-left">
 					<div style="color: #bdbdbd">
-						<v-btn text class="text--disabled" :to="{ name: 'politicas' }"
-							>Aviso de privacidad</v-btn
-						>
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'politicas' }"
+							>Aviso de privacidad
+						</nuxt-link>
 						y
-						<v-btn text class="text--disabled" :to="{ name: 'condiciones' }"
-							>Términos y Condiciones</v-btn
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'condiciones' }"
 						>
+							Términos y Condiciones
+						</nuxt-link>
 					</div>
 					<div class="text--secondary">
-						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">
-					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
-					<v-icon color="primary" size="60">mdi-facebook</v-icon>
-					<v-icon color="primary" size="60">mdi-instagram</v-icon>
-					<div>Atención a clientes: clientes@hablaqui.com</div>
-					<div>Soporte técnico: soporte@hablaaqui.com</div>
+				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
+					<img
+						style="height: 40px"
+						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						alt="redes sociales"
+					/>
+				</v-col>
+				<v-col
+					cols="12"
+					offset-md="6"
+					md="6"
+					class="text-center text-md-right text--secondary"
+				>
+					<div>Atención a clientes: c@hablaqui.com</div>
+					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -157,6 +182,7 @@ export default {
 			selectedItem: null,
 			items: [],
 			search: '',
+			loading: false,
 		};
 	},
 	head() {
@@ -191,10 +217,12 @@ export default {
 		},
 	},
 	async mounted() {
+		this.loading = true;
 		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
 		response = await response.json();
 		this.selectedItem = response[0];
 		this.items = response;
+		this.loading = false;
 	},
 };
 </script>

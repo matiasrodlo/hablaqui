@@ -17,7 +17,7 @@ export default {
 		};
 	},
 	mounted() {
-		window.location.href = `${this.$config.FRONTEND_URL}/auth/q=register`;
+		window.location.href = `${this.$config.FRONTEND_URL}/auth`;
 	},
 };
 </script>

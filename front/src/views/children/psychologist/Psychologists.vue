@@ -66,12 +66,11 @@
 								<div class="body-1 font-weight-bold mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
-										'cognitivo',
-										'integrativo',
-										'contextual',
-										'psicoanalisis',
-										'humanista',
-										'sistemico',
+										'Cognitivo-conductual',
+										'Contextual',
+										'Psicoanálisis',
+										'Humanista',
+										'Sistémico',
 									]"
 								>
 									<v-checkbox
@@ -123,14 +122,9 @@
 						<v-autocomplete
 							class="white"
 							outlined
-							:items="
-								appointments.map((item, i) => ({
-									text: item,
-									value: item,
-									index: i,
-								}))
-							"
-							v-model="motive"
+							:items="appointments"
+							item-value="value"
+							v-model="specialties"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
 							hide-details
@@ -146,29 +140,12 @@
 									<v-list-item-content>
 										<v-list-item-title>
 											No se encontraron resultados que coincidan con "<strong>
-												{{ motive }}
+												{{ specialties }}
 											</strong>
 											" .
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="motive = item">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < appointments.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
 							</template>
 						</v-autocomplete>
 					</v-col>
@@ -178,8 +155,8 @@
 							outlined
 							:items="
 								filterLevelThree.map((item, i) => ({
-									text: item.name,
-									value: item.name,
+									text: `${item.name} ${item.lastName && item.lastName}`,
+									value: item._id,
 									index: i,
 								}))
 							"
@@ -204,23 +181,6 @@
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="searchInput = item.value">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < filterLevelThree.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
 							</template>
 						</v-autocomplete>
 					</v-col>
@@ -305,12 +265,11 @@
 													</div>
 													<template
 														v-for="(item, i) in [
-															'cognitivo',
-															'integrativo',
-															'contextual',
-															'psicoanalisis',
-															'humanista',
-															'sistemico',
+															'Cognitivo-conductual',
+															'Contextual',
+															'Psicoanálisis',
+															'Humanista',
+															'Sistémico',
 														]"
 													>
 														<v-checkbox
@@ -366,44 +325,44 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" lg="4">
-							<v-card
-								height="380"
-								style="border-radius:15px"
-								class="text-center"
-								color="primary"
-								dark
-							>
-								<v-card-text style="height: 310px">
-									<v-img
-										height="100"
-										width="100"
-										class="mx-auto"
-										src="/img/Lupa.png"
-									></v-img>
-									<div class="mt-4 title font-weight-bold">
-										Te ayudamos a encontrar a tu psicólogo
-									</div>
-									<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
-										Encuentra al psicólogo que necesitas, solo responde las
-										siguientes preguntas.
-									</div>
-								</v-card-text>
-								<v-card-actions>
-									<v-spacer></v-spacer>
-									<v-btn
-										class="px-10"
-										light
-										color="#F0F8FF"
-										style="border-radius: 5px"
-										depressed
-										:to="{ name: 'auth', params: { q: 'register' } }"
-									>
-										Comenzar
-									</v-btn>
-									<v-spacer></v-spacer>
-								</v-card-actions>
-							</v-card>
+						<v-col cols="12" sm="6" lg="4" xl="3"
+							><v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-6' : 'elevation-3'"
+									height="350"
+									style="border-radius:15px; transition: transform 0.7s"
+									class="text-center"
+									color="primary"
+									dark
+								>
+									<v-card-text style="height: 280px">
+										<v-img
+											height="100"
+											width="100"
+											class="mx-auto"
+											src="/img/Lupa.png"
+										></v-img>
+										<div class="mt-4 title font-weight-bold">
+											Te ayudamos a encontrar a tu psicólogo
+										</div>
+										<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
+											Encuentra al psicólogo que necesitas, solo responde las
+											siguientes preguntas.
+										</div>
+									</v-card-text>
+									<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn class="px-10" color="white" @click="start">
+											<span class="text--secondary">Comenzar</span>
+										</v-btn>
+										<v-spacer></v-spacer>
+									</v-card-actions> </v-card
+							></v-hover>
 						</v-col>
 						<v-col
 							cols="12"
@@ -416,152 +375,34 @@
 							cols="12"
 							sm="6"
 							lg="4"
+							xl="3"
 							v-for="(item, i) in filterLevelThree"
 							:key="i"
 						>
-							<v-card height="380" style="border-radius:15px" class="text-center">
-								<v-card-text style="height: 280px">
-									<div>
-										<v-avatar
-											size="100"
-											:color="item.avatar ? 'trasnparent' : 'primary'"
-										>
-											<v-img
-												v-if="item.avatar"
-												:src="item.avatar"
-												:lazy-src="item.avatar"
-												width="100"
-												height="100"
-											>
-												<template #placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="primary"
-														/>
-													</v-row>
-												</template>
-											</v-img>
-											<span
-												v-else
-												class="white--text headline font-weight-bold"
-											>
-												{{ item.name.substr(0, 1) }}
-											</span>
-										</v-avatar>
-										<div
-											v-if="item.name"
-											class="body-2 font-weight-bold secondary--text"
-										>
-											{{
-												item.name.length > 25
-													? item.name.slice(0, 25).concat('...')
-													: item.name
-											}}
-										</div>
-										<span
-											v-if="item.code"
-											class="caption primary--text pb-2"
-											style="border-bottom: 1px solid #BDBDBD"
-										>
-											<span> Codigo {{ item.code }} </span>
-										</span>
-									</div>
-									<div class="body-2 mt-4 text-capitalize">
-										<span v-for="(el, e) in item.specialties" :key="e">
-											{{ el }};
-										</span>
-									</div>
-								</v-card-text>
-								<v-card-text>
-									<div>
-										<v-btn
-											class="body-2 px-6"
-											color="primary"
-											depressed
-											style="border-radius: 5px"
-											@click="toAuth(item)"
-										>
-											Agenda cita oline
-										</v-btn>
-									</div>
-									<div class="mt-1">
-										<v-btn
-											class="body-2"
-											text
-											:to="{ name: 'psicologo', params: { id: item._id } }"
-										>
-											Más información
-										</v-btn>
-									</div>
-								</v-card-text>
-							</v-card>
-						</v-col>
-					</template>
-					<template v-if="view == 2">
-						<v-col cols="12">
-							<v-card style="border-radius:15px" dark color="primary">
-								<v-card-text>
-									<v-row align="center" justify="center">
-										<v-col cols="3" class="text-center">
-											<v-img
-												height="140"
-												width="140"
-												class="mx-auto"
-												src="/img/Lupa.png"
-											></v-img>
-										</v-col>
-										<v-col cols="9">
-											<v-row justify="space-between">
-												<v-col
-													class="headline font-weight-bold white--text"
-												>
-													Encuentra a tu psicólogo ideal
-												</v-col>
-											</v-row>
-											<div class="body-2 mt-2">
-												Encuentra al psicólogo que necesitas, solo responde
-												las siguientes preguntas.
-											</div>
-											<v-btn
-												light
-												class="px-10 mt-4"
-												depressed
-												:to="{ name: 'auth', params: { q: 'register' } }"
-											>
-												Comenzar
-											</v-btn>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col
-							cols="12"
-							class="title primary--text"
-							v-if="!loading && !filterLevelThree.length"
-						>
-							No se encontraron coincidencias
-						</v-col>
-						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
-							<v-card height="270" style="border-radius:15px">
-								<v-card-text class="my-2">
-									<v-row align="center" justify="center" style="height: 270px">
-										<v-col cols="3" class="text-center">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+									height="350"
+									class="text-center"
+								>
+									<v-card-text style="height: 250px">
+										<div>
 											<v-avatar
-												size="140"
+												size="100"
 												:color="item.avatar ? 'trasnparent' : 'primary'"
 											>
 												<v-img
 													v-if="item.avatar"
 													:src="item.avatar"
 													:lazy-src="item.avatar"
-													width="140"
-													height="140"
+													width="100"
+													height="100"
 												>
 													<template #placeholder>
 														<v-row
@@ -583,14 +424,46 @@
 													{{ item.name.substr(0, 1) }}
 												</span>
 											</v-avatar>
-											<div class="text-center caption text--secondary">
-												Codigo {{ item.code }}
-											</div>
+											<router-link
+												v-if="item.name"
+												style="text-decoration: none; display: block"
+												:to="{
+													name: 'psicologo',
+													params: { id: item._id },
+												}"
+											>
+												<span
+													class="body-2 font-weight-bold secondary--text"
+												>
+													{{ item.name }}
+													{{ item.lastName && item.lastName }}
+												</span>
+											</router-link>
+											<span
+												v-if="item.code"
+												class="caption primary--text pb-2"
+												style="border-bottom: 1px solid #BDBDBD"
+											>
+												<span> Codigo {{ item.code }} </span>
+											</span>
+										</div>
+										<div class="body-2 mt-4">
+											<template v-for="(el, e) in item.specialties">
+												<span v-if="e < 4" :key="e"> {{ el }}; </span>
+											</template>
+										</div>
+									</v-card-text>
+									<v-card-text>
+										<div>
+											<dialog-agenda-cita-online
+												:psy="item"
+												:mode="view.toString()"
+											/>
+										</div>
+										<div class="mt-1">
 											<v-btn
+												class="body-2"
 												text
-												color="primary"
-												depressed
-												class="pa-0 body-2 font-weight-bold"
 												:to="{
 													name: 'psicologo',
 													params: { id: item._id },
@@ -598,49 +471,200 @@
 											>
 												Más información
 											</v-btn>
-										</v-col>
-										<v-col cols="9">
-											<v-row justify="space-between">
-												<v-col
-													class="headline font-weight-bold text--secondary"
-												>
-													{{ item.name }}
-												</v-col>
-												<v-col cols="5" class="text-right">
-													<v-btn
-														color="primary"
-														rounded
-														depressed
-														@click="toAuth(item)"
+										</div>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</v-col>
+					</template>
+					<template v-if="view == 2">
+						<v-col cols="12">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+									dark
+									color="primary"
+								>
+									<v-card-text>
+										<v-row align="center" justify="center">
+											<v-col cols="3" class="text-center">
+												<v-img
+													:height="
+														$vuetify.breakpoint.mdOnly ? '120' : '180'
+													"
+													:width="
+														$vuetify.breakpoint.mdOnly ? '120' : '180'
+													"
+													class="mx-auto"
+													src="/img/Lupa.png"
+												></v-img>
+											</v-col>
+											<v-col cols="9">
+												<v-row justify="space-between">
+													<v-col
+														class="headline font-weight-bold white--text"
 													>
-														Agenda cita oline
-													</v-btn>
-												</v-col>
-											</v-row>
-											<v-chip-group show-arrows v-model="motive">
-												<template v-for="(tag, i) in item.specialties">
-													<v-chip
-														:value="tag"
-														class="ma-2"
-														small
-														:key="i"
-														:color="
-															motive == tag ? 'primary--text' : ''
+														Encuentra a tu psicólogo ideal
+													</v-col>
+												</v-row>
+												<div class="body-2 mt-2">
+													Encuentra al psicólogo que necesitas, solo
+													responde las siguientes preguntas.
+												</div>
+												<v-btn
+													color="white"
+													class="px-10 mt-4"
+													@click="start"
+												>
+													<span class="text--secondary">Comenzar</span>
+												</v-btn>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</v-card>
+							</v-hover>
+						</v-col>
+						<v-col
+							cols="12"
+							class="title primary--text"
+							v-if="!loading && !filterLevelThree.length"
+						>
+							No se encontraron coincidencias
+						</v-col>
+						<v-col cols="12" v-for="item in filterLevelThree" :key="item._id">
+							<v-hover v-slot="{ hover }">
+								<v-card
+									height="300"
+									:style="
+										hover
+											? 'transform: scale(1.01);'
+											: 'text-transform: none !important;'
+									"
+									:class="hover ? 'elevation-3' : 'elevation-1'"
+									style="border-radius:15px; transition: transform 0.6s"
+								>
+									<v-card-text class="pa-2">
+										<v-row
+											align="center"
+											justify="center"
+											style="height: 270px"
+										>
+											<v-col cols="3" class="text-center">
+												<v-avatar
+													:size="
+														$vuetify.breakpoint.mdOnly ? '140' : '200'
+													"
+													:color="item.avatar ? 'trasnparent' : 'primary'"
+												>
+													<v-img
+														v-if="item.avatar"
+														:src="item.avatar"
+														:lazy-src="item.avatar"
+														:width="
+															$vuetify.breakpoint.mdOnly
+																? '140'
+																: '200'
+														"
+														:height="
+															$vuetify.breakpoint.mdOnly
+																? '140'
+																: '200'
 														"
 													>
-														<span class="text-capitalize">
-															{{ tag }}
-														</span>
-													</v-chip>
-												</template>
-											</v-chip-group>
-											<div class="body-2 mt-2">
-												{{ item.description }}
-											</div>
-										</v-col>
-									</v-row>
-								</v-card-text>
-							</v-card>
+														<template #placeholder>
+															<v-row
+																class="fill-height ma-0"
+																align="center"
+																justify="center"
+															>
+																<v-progress-circular
+																	indeterminate
+																	color="primary"
+																/>
+															</v-row>
+														</template>
+													</v-img>
+													<span
+														v-else
+														class="white--text headline font-weight-bold"
+													>
+														{{ item.name.substr(0, 1) }}
+													</span>
+												</v-avatar>
+												<div
+													class="text-center body-2 text--secondary mt-3 mb-2"
+												>
+													Codigo {{ item.code }}
+												</div>
+												<router-link
+													class="primary--text body-2 font-weight-bold"
+													style="text-decoration: none"
+													:to="{
+														name: 'psicologo',
+														params: { id: item._id },
+													}"
+												>
+													Más información
+												</router-link>
+											</v-col>
+											<v-col cols="9">
+												<v-row justify="space-between">
+													<v-col cols="6">
+														<router-link
+															style="text-decoration: none"
+															:to="{
+																name: 'psicologo',
+																params: { id: item._id },
+															}"
+														>
+															<span
+																class="headline font-weight-bold text--secondary"
+															>
+																{{ item.name }}
+																{{ item.lastName && item.lastName }}
+															</span>
+														</router-link>
+													</v-col>
+													<v-col class="text-right mr-4">
+														<dialog-agenda-cita-online
+															:psy="item"
+															:mode="view.toString()"
+														/>
+													</v-col>
+												</v-row>
+												<v-chip-group show-arrows v-model="specialties">
+													<template v-for="(tag, i) in item.specialties">
+														<v-chip
+															:value="tag"
+															class="ma-2"
+															small
+															:key="i"
+															:color="
+																specialties == tag
+																	? 'primary--text'
+																	: ''
+															"
+														>
+															<span>
+																{{ tag }}
+															</span>
+														</v-chip>
+													</template>
+												</v-chip-group>
+												<div class="body-2 mt:-2 mr-4">
+													{{ item.professionalDescription }}
+												</div>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</v-card>
+							</v-hover>
 						</v-col>
 					</template>
 				</v-row>
@@ -652,6 +676,9 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+	},
 	name: 'psychologists',
 	props: {
 		loading: {
@@ -661,9 +688,9 @@ export default {
 	},
 	data() {
 		return {
-			motive: '',
-			searchInput: '',
 			view: 1,
+			specialties: '',
+			searchInput: '',
 			gender: [],
 			models: [],
 			languages: [],
@@ -677,21 +704,17 @@ export default {
 			return this.filterLevelTwo.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
-					result =
-						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
-						result;
+					result = result._id.indexOf(this.searchInput) > -1 && result;
 				return result;
 			});
 		},
 		/**
-		 * filter motive
+		 * filter specialties
 		 */
 		filterLevelTwo() {
-			if (!this.motive) return this.filterLevelOne;
+			if (!this.specialties) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
-				item =>
-					item.specialties.length &&
-					item.specialties.includes(this.motive.toLowerCase().trim())
+				item => item.specialties.length && item.specialties.includes(this.specialties)
 			);
 		},
 		/**
@@ -702,23 +725,27 @@ export default {
 				return this.psychologists;
 			let result = this.psychologists;
 			if (this.gender.length)
-				result = result.filter(item => this.gender.includes(item.gender));
+				result = result.filter(item => {
+					const trans = item.isTrans && 'transgender';
+					const gender = [item.gender];
+					trans && gender.push(trans);
+					return gender.some(el => this.gender.some(g => g == el));
+				});
 			if (this.models.length)
-				result = result.filter(item =>
-					item.models.some(el => this.models.some(model => model == el))
-				);
+				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages == el))
 				);
-			if (this.motive) result = result.filter(item => item.specialties.includes(this.motive));
+			if (this.specialties)
+				result = result.filter(item => item.specialties.includes(this.specialties));
 
 			return result;
 		},
 		...mapGetters({
+			loggedIn: 'User/loggedIn',
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
-			loggedIn: 'User/loggedIn',
 		}),
 	},
 	created() {
@@ -744,14 +771,18 @@ export default {
 		}
 	},
 	methods: {
+		start() {
+			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			else
+				this.$router.push({
+					name: 'auth',
+					params: { q: 'register' },
+					query: { from: 'psy' },
+				});
+		},
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
-		},
-		toAuth(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
 			const panel = {
@@ -761,6 +792,27 @@ export default {
 			};
 			localStorage.setItem('panel', JSON.stringify(panel));
 		},
+		filterMatch(payload) {
+			this.languages = [];
+			this.searchInput = '';
+			this.gender = payload.gender;
+			this.models = [payload.model];
+			this.specialties = payload.themes;
+		},
 	},
 };
 </script>
+
+<style scoped>
+.item {
+	white-space: nowrap;
+	transition: transform 0.3s ease 0s, border 0.2s ease 0s, box-shadow 0.2s ease 0s;
+	text-align: center;
+	cursor: pointer;
+	color: #565656;
+	padding: 8px 5px;
+	border: 1px solid #0085ff80;
+	box-sizing: border-box;
+	border-radius: 2px;
+}
+</style>

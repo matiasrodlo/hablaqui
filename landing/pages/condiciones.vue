@@ -1,13 +1,11 @@
 <template>
 	<div>
-		<client-only>
-			<div class="primary">
-				<Appbar />
-				<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
-					Terminos y condiciones de uso
-				</div>
+		<div class="primary-color">
+			<Appbar />
+			<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
+				Terminos y condiciones de uso
 			</div>
-		</client-only>
+		</div>
 		<v-container class="mt-16">
 			<v-row justify="center">
 				<v-col cols="12" md="10">
@@ -283,19 +281,39 @@
 					clientes@hablaqui.com
 				</v-col>
 			</v-row>
-			<v-row justify="center" class="py-16">
-				<v-col cols="12" sm="6" md="5" class="text-center text-sm-left">
-					<div style="color: #bdbdbd">Aviso de privacidad Términos y Condiciones</div>
+			<v-row justify="center" class="mt-16 mb-8">
+				<v-col cols="12" md="5" class="text-center text-md-left">
+					<div style="color: #bdbdbd">
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'politicas' }"
+							>Aviso de privacidad
+						</nuxt-link>
+						y
+						<nuxt-link
+							text
+							class="text--disabled"
+							style="text-decoration: none"
+							:to="{ name: 'condiciones' }"
+						>
+							Términos y Condiciones
+						</nuxt-link>
+					</div>
 					<div class="text--secondary">
-						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" sm="6" md="5" class="text-center text-sm-right text--secondary">
-					<v-icon color="primary" size="60">mdi-whatsapp</v-icon>
-					<v-icon color="primary" size="60">mdi-facebook</v-icon>
-					<v-icon color="primary" size="60">mdi-instagram</v-icon>
-					<div>Atención a clientes: clientes@hablaqui.com</div>
-					<div>Soporte técnico: soporte@hablaaqui.com</div>
+				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
+					<img
+						style="height: 40px"
+						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						alt="redes sociales"
+						class="mb-4 mb-md-0"
+					/>
+					<div>Atención a clientes: c@hablaqui.com</div>
+					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>

@@ -43,7 +43,7 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ['~/assets/global.scss'],
+	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [],
@@ -83,6 +83,9 @@ export default {
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
 	vuetify: {
 		customVariables: ['~/assets/variables.scss'],
+		breakpoint: {
+			scrollBarWidth: 24,
+		},
 		theme: {
 			themes: {
 				light: {
@@ -96,6 +99,9 @@ export default {
 					info: '#5EB3E4',
 				},
 			},
+		},
+		defaultAssets: {
+			font: false,
 		},
 	},
 

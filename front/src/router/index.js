@@ -12,11 +12,11 @@ const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MyChat = () => import('@/views/children/dashboard/MyChat');
 const Payments = () => import('@/views/Payments');
-const Plan = () => import('@/views/children/payments/Plan');
 const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
+const PasswordReset = () => import('@/views/PasswordReset');
 
 const routes = [
 	{
@@ -88,14 +88,7 @@ const routes = [
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
-		redirect: { name: 'plan' },
 		children: [
-			{
-				path: 'plan',
-				name: 'plan',
-				component: Plan,
-				meta: { title: 'Planes y pagos', requiresAuth: true },
-			},
 			{
 				path: '/pago/pending-pay',
 				name: 'pending-pay',
@@ -125,6 +118,12 @@ const routes = [
 		name: 'nuevo-articulo',
 		component: NewArticle,
 		meta: { title: 'Nuevo articulo' },
+	},
+	{
+		path: '/passwordReset',
+		name: 'passwordReset',
+		component: PasswordReset,
+		meta: { title: 'Recuperar contraseña', layout: 'simple' },
 	},
 	{
 		path: '*',

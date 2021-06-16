@@ -3,6 +3,7 @@
 		<v-row no-gutters>
 			<v-col cols="12">
 				<v-text-field
+					class="mt-2"
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"
@@ -38,11 +39,17 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	name: 'SignIn',
 	mixins: [validationMixin],
+	props: {
+		isDialog: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			showPassword: false,
@@ -75,12 +82,17 @@ export default {
 				this.loading = true;
 				await this.login(this.form);
 				this.loading = false;
+				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+				else if (this.$route.name !== 'all-psicologos')
+					this.$router.push({ name: 'perfil' });
+				else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
 		...mapActions({ login: 'User/login' }),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
 		form: {
