@@ -20,7 +20,7 @@
 						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
 							Tu psicólogo Online
 						</h1>
-						<div class="title my-10">
+						<div class="title mt-10 mb-7">
 							Demos juntos el primer paso hacia el bienestar emocional. Habla de forma
 							segura y privada con un psicólogo online cuando lo necesites.
 						</div>
@@ -36,10 +36,8 @@
 								Quiero empezar
 							</span>
 						</v-btn>
-						<div class="body-1 font-weight-bold mt-10">
-							Desde $15.500CLP a la semana
-						</div>
-						<h3 class="body-1 mt-4">Convenios con Isapres y Fonasa.</h3>
+						<div class="body-1 font-weight-bold mt-7">Desde $15.500CLP a la semana</div>
+						<h3 class="body-1 mt-3">Convenios con Isapres y Fonasa.</h3>
 					</v-col>
 					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
 						<v-img
