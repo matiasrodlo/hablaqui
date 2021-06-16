@@ -282,7 +282,7 @@
 				</v-col>
 			</v-row>
 			<v-row justify="center" class="mt-16 mb-8">
-				<v-col cols="12" md="5" class="text-center text-sm-left">
+				<v-col cols="12" md="5" class="text-center text-md-left">
 					<div style="color: #bdbdbd">
 						<nuxt-link
 							text
@@ -305,7 +305,7 @@
 						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="5" class="text-center text-sm-right text--secondary">
+				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
 					<div class="text-md-right">
 						<img
 							style="height: 40px"
