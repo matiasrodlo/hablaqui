@@ -53,4 +53,13 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async updateMessage({ commit }, chatId) {
+		try {
+			await axios(`/chat/read-message/${chatId}`, {
+				method: 'PATCH',
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 };

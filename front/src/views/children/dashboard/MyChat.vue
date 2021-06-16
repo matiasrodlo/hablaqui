@@ -170,7 +170,8 @@
 									@click="setSelectedPsy(psy)"
 								>
 									<v-list-item-avatar
-										style="border: 3px solid #2070E5; border-radius: 40px; "
+										style="border-radius: 40px;"
+										:style="setReadPsy(psy) ? 'border: 3px solid #2070E5' : ''"
 										size="60"
 									>
 										<avatar :url="psy.avatar" :name="psy.name" size="60" />
@@ -458,11 +459,9 @@ export default {
 			avatar: '',
 		};
 	},
-	mounted() {
+	async mounted() {
 		moment.locale('es');
-		if (this.user.role == 'psychologist') {
-			this.getMessages();
-		}
+		await this.getMessages();
 	},
 	methods: {
 		async onSubmit() {
@@ -505,9 +504,11 @@ export default {
 			}, 10);
 		},
 		async setSelectedPsy(psy) {
+			console.log('chat selected psi');
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
+			this.updateMessage(this.chat.messages[this.chat.messages.length - 1]._id);
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
 			setTimeout(() => {
@@ -519,10 +520,18 @@ export default {
 			await this.getPsychologists();
 			this.loading = false;
 		},
+		setReadPsy(psy) {
+			let temp = {
+				...this.chats.find(item => item.psychologist && item.psychologist._id == psy._id),
+			};
+			temp = temp.messages[temp.messages.length - 1];
+			return temp && !temp.read;
+		},
 		...mapActions({
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',
 			getMessages: 'Chat/getMessages',
+			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
 			getPsychologists: 'Psychologist/getMessages',
 		}),
