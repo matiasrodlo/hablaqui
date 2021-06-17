@@ -78,7 +78,7 @@
 					>
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
-					<v-card-text v-else class="scroll" style="height: 400px; overflow-y: auto;">
+					<v-card-text v-else ref="scrollToMe" style="height: 400px; overflow-y: auto;">
 						<!-- Burbujas de chat -->
 						<template v-if="chat && chat.messages && chat.messages.length">
 							<div v-for="item in chat.messages" :key="item._id">
@@ -270,7 +270,6 @@ export default {
 			return sentBy == this.user._id;
 		},
 		async selectedPsy(psy) {
-			console.log('chat selected psi');
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
@@ -278,7 +277,6 @@ export default {
 			if (!this.chat) this.startConversation(psy._id);
 			if (this.chat.messages.length) {
 				const message = this.chat.messages[this.chat.messages.length - 1];
-				console.log(message);
 				if (message && !message.read) this.updateMessage(message._id);
 			}
 			setTimeout(() => {
@@ -286,7 +284,7 @@ export default {
 			}, 10);
 		},
 		scrollToElement() {
-			const el = this.$el.getElementsByClassName('scroll')[0];
+			const el = this.$refs.scrollToMe;
 			if (el) {
 				el.scrollTop = el.scrollHeight;
 			}

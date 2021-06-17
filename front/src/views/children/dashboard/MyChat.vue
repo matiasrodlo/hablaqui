@@ -271,8 +271,8 @@
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
 					<v-card-text
-						class="scroll"
 						v-else
+						class="scroll"
 						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;"
 					>
 						<!-- burbujas asistente -->
@@ -318,7 +318,6 @@
 						<template v-else>
 							<template v-if="chat && chat.messages.length">
 								<div v-for="item in chat.messages" :key="item._id">
-									{{ item }}
 									<div
 										class="d-flex mt-3"
 										:class="
