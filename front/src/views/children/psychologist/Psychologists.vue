@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container style="position: relative">
 		<v-row justify="space-between" align="center">
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				{{ $route.meta.title }}
@@ -670,6 +670,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
+		<FloatingChat />
 	</v-container>
 </template>
 
@@ -678,6 +679,7 @@ import { mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	name: 'psychologists',
 	props: {

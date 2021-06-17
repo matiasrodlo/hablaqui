@@ -318,6 +318,7 @@
 						<template v-else>
 							<template v-if="chat && chat.messages.length">
 								<div v-for="item in chat.messages" :key="item._id">
+									{{ item }}
 									<div
 										class="d-flex mt-3"
 										:class="
@@ -508,9 +509,13 @@ export default {
 			this.selected = psy;
 			this.loadingChat = true;
 			await this.getChat(psy._id);
-			this.updateMessage(this.chat.messages[this.chat.messages.length - 1]._id);
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
+			if (this.chat.messages.length) {
+				const message = this.chat.messages[this.chat.messages.length - 1];
+				console.log(message);
+				if (message && !message.read) this.updateMessage(message._id);
+			}
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
@@ -524,8 +529,12 @@ export default {
 			let temp = {
 				...this.chats.find(item => item.psychologist && item.psychologist._id == psy._id),
 			};
-			temp = temp.messages[temp.messages.length - 1];
-			return temp && !temp.read;
+			// console.log(temp);
+			if (temp && temp.messages && temp.messages.length) {
+				temp = temp.messages[temp.messages.length - 1];
+				console.log(temp);
+				return temp && !temp.read && temp.sentBy !== this.user._id;
+			}
 		},
 		...mapActions({
 			getChat: 'Chat/getChat',
