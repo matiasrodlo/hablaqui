@@ -9,6 +9,10 @@ let messageSchema = new Schema(
 		message: {
 			type: String,
 		},
+		read: {
+			type: Boolean,
+			default: 'false',
+		},
 	},
 	{ timestamps: true }
 );
@@ -41,10 +45,6 @@ let chatSchema = new Schema(
 		},
 		messages: [messageSchema],
 		reports: [reportSchema],
-		read: {
-			type: Boolean,
-			default: 'false',
-		},
 	},
 	{ timestamps: true }
 );

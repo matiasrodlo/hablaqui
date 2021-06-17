@@ -116,13 +116,13 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
-const readMessage = async chatId => {
-	// Aqui se podria validar mas, revisando que el usuario loggeado
-	// sea parte del chat, pero eso es problema del desarollador del futuro.
-	const updatedChat = await Chat.findByIdAndUpdate(
-		chatId,
+const readMessage = async messageId => {
+	const updatedChat = await Chat.findOneAndUpdate(
+		{ 'messages._id': messageId },
 		{
-			read: true,
+			$set: {
+				'messages.$.read': true,
+			},
 		},
 		{ new: true }
 	);
