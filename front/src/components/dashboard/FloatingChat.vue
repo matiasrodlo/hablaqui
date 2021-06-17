@@ -29,10 +29,8 @@
 				<template v-if="selected">
 					<v-card-text>
 						<!-- cabecera -->
-						<v-list-item>
-							<v-btn x-large icon @click="selected = null">
-								<v-icon>mdi-chevron-left</v-icon>
-							</v-btn>
+						<v-list-item class="px-0">
+							<v-icon @click="selected = null" left>mdi-chevron-left</v-icon>
 							<v-list-item-avatar size="50">
 								<router-link
 									:to="{ name: 'perfil' }"
@@ -73,11 +71,17 @@
 						</v-list-item>
 						<v-divider></v-divider>
 					</v-card-text>
-					<v-card-text style="height: 400px; overflow-y: auto;">
+					<v-card-text
+						v-if="loadingChat"
+						style="height: 400px; overflow-y: auto;"
+						class="d-flex justify-center align-center"
+					>
+						<v-progress-circular indeterminate color="primary" />
+					</v-card-text>
+					<v-card-text v-else class="scroll" style="height: 400px; overflow-y: auto;">
 						<!-- Burbujas de chat -->
 						<template v-if="chat && chat.messages && chat.messages.length">
 							<div v-for="item in chat.messages" :key="item._id">
-								{{ item }}
 								<div
 									class="d-flex mt-3"
 									:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
@@ -220,7 +224,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import moment from 'moment';
+
 export default {
 	components: {
 		avatar: () => import('@/components/ui/Avatar'),
@@ -232,6 +238,7 @@ export default {
 			selected: null,
 			loadingMessage: false,
 			message: '',
+			loadingChat: false,
 		};
 	},
 	computed: {
@@ -242,6 +249,10 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
+	async mounted() {
+		moment.locale('es');
+		await this.getMessages();
+	},
 	methods: {
 		open() {
 			this.showChat = true;
@@ -251,9 +262,58 @@ export default {
 				if (this.selected) this.selected = null;
 			}, 200);
 		},
-		selectedPsy(psy) {
-			this.selected = psy;
+		setDate(time) {
+			if (time) return moment(time).calendar();
+			return moment().format('llll');
 		},
+		sentBy(sentBy) {
+			return sentBy == this.user._id;
+		},
+		async selectedPsy(psy) {
+			console.log('chat selected psi');
+			this.selected = psy;
+			this.loadingChat = true;
+			await this.getChat(psy._id);
+			this.loadingChat = false;
+			if (!this.chat) this.startConversation(psy._id);
+			if (this.chat.messages.length) {
+				const message = this.chat.messages[this.chat.messages.length - 1];
+				console.log(message);
+				if (message && !message.read) this.updateMessage(message._id);
+			}
+			setTimeout(() => {
+				this.scrollToElement();
+			}, 10);
+		},
+		scrollToElement() {
+			const el = this.$el.getElementsByClassName('scroll')[0];
+			if (el) {
+				el.scrollTop = el.scrollHeight;
+			}
+		},
+		async onSubmit() {
+			this.loadingMessage = true;
+			if (!this.message) return;
+			const payload = {
+				payload: this.message,
+				psychologistId:
+					this.user.role == 'psychologist' ? this.user.psychologist : this.selected._id,
+				userId: this.user.role == 'psychologist' ? this.selected._id : this.user._id,
+			};
+			await this.sendMessage(payload);
+			this.message = '';
+			this.loadingMessage = false;
+			this.scrollToElement();
+		},
+		...mapActions({
+			getChat: 'Chat/getChat',
+			sendMessage: 'Chat/sendMessage',
+			getMessages: 'Chat/getMessages',
+			updateMessage: 'Chat/updateMessage',
+			startConversation: 'Chat/startConversation',
+			getPsychologists: 'Psychologist/getMessages',
+		}),
+		...mapMutations({ setChat: 'Chat/setChat' }),
 	},
 };
 </script>
@@ -277,5 +337,36 @@ export default {
 }
 .open-button:hover {
 	opacity: 1;
+}
+
+$color__one: #bdbdbd;
+$color__two: #2070e5;
+$font__color_one: #424242;
+$font__color_two: #ffffff;
+
+.v-text-field--filled:not {
+	margin-top: 0 !important;
+}
+
+.talkbubble {
+	margin-bottom: 15px;
+	position: relative;
+	width: 50%;
+	padding: 10px;
+	border-radius: 15px;
+
+	&__one {
+		color: $font__color_two;
+		align-self: flex-end;
+		border: solid $color__two;
+		background: $color__two;
+	}
+
+	&__two {
+		color: $font__color_one;
+		align-self: flex-start;
+		border: solid $color__one;
+		background: $color__one;
+	}
 }
 </style>
