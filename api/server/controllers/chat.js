@@ -74,8 +74,8 @@ const chatController = {
 	},
 	async readMessage(req, res) {
 		try {
-			const { chatId } = req.params;
-			const { data, code } = await chatService.readMessage(chatId);
+			const { messageId } = req.params;
+			const { data, code } = await chatService.readMessage(messageId);
 
 			return restResponse(data, code, res);
 		} catch (e) {

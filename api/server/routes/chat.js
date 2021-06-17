@@ -35,7 +35,7 @@ chatRouter.post(
 );
 
 chatRouter.patch(
-	'/chat/read-message/:chatId',
+	'/chat/read-message/:messageId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.readMessage
 );
