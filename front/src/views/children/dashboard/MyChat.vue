@@ -524,11 +524,10 @@ export default {
 			await this.getPsychologists();
 			this.loading = false;
 		},
-		setReadPsy(psy) {
+		hasMessage(psy) {
 			let temp = {
 				...this.chats.find(item => item.psychologist && item.psychologist._id == psy._id),
 			};
-			// console.log(temp);
 			if (temp && temp.messages && temp.messages.length) {
 				temp = temp.messages[temp.messages.length - 1];
 				console.log(temp);
