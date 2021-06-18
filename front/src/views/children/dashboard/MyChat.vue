@@ -477,7 +477,7 @@ export default {
 				data.content.sentBy !== this.user._id &&
 				(this.user._id == data.userId || this.user.psychologist == data.psychologistId)
 			) {
-				console.log(data.content);
+				this.pusherCallback(data);
 			}
 		});
 
@@ -490,9 +490,15 @@ export default {
 	},
 	async mounted() {
 		moment.locale('es');
+
 		await this.getMessages();
 	},
 	methods: {
+		async pusherCallback(data) {
+			await this.getChat(data.psychologistId);
+			this.scrollToElement();
+			await this.getMessages();
+		},
 		async onSubmit() {
 			this.loadingMessage = true;
 			if (!this.message) return;
@@ -538,19 +544,19 @@ export default {
 			this.selected = psy;
 			// obeteners chat del seleccciona
 			await this.getChat(psy._id);
-			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
-			if (!this.chat) await this.startConversation(psy._id);
-			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			if (psy.hasMessage) {
-				await this.updateMessage(psy.hasMessage);
-				await this.getMessages();
-			}
 			// scroll hasta el final para ver los ultimos mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
+			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			if (!this.chat) await this.startConversation(psy._id);
+			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
+			if (psy.hasMessage) {
+				await this.updateMessage(psy.hasMessage);
+				await this.getMessages();
+			}
 		},
 		async getAllPsy() {
 			this.loading = true;
