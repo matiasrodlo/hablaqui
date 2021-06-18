@@ -66,7 +66,8 @@
 									@click="setSelectedUser(user)"
 								>
 									<v-list-item-avatar
-										style="border: 3px solid #2070E5; border-radius: 40px; "
+										style="border-radius: 40px;"
+										:style="user.hasMessage ? 'border: 3px solid #2070E5' : ''"
 										size="60"
 									>
 										<avatar :url="user.avatar" :name="user.name" size="60" />
@@ -75,7 +76,7 @@
 									<v-list-item-content>
 										<v-list-item-title v-html="user.name"></v-list-item-title>
 										<v-list-item-subtitle>
-											Psicólogo · Activo(a)
+											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
 								</v-list-item>
@@ -135,10 +136,7 @@
 								style="border-radius: 10px"
 							>
 								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
-									<v-list-item-avatar
-										style="border: 3px solid #2070E5; border-radius: 40px; "
-										size="60"
-									>
+									<v-list-item-avatar style="border-radius: 40px; " size="60">
 										<v-img
 											height="50"
 											width="50"
@@ -171,7 +169,7 @@
 								>
 									<v-list-item-avatar
 										style="border-radius: 40px;"
-										:style="setReadPsy(psy) ? 'border: 3px solid #2070E5' : ''"
+										:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
 										size="60"
 									>
 										<avatar :url="psy.avatar" :name="psy.name" size="60" />
@@ -201,7 +199,7 @@
 										class="mt-10 px-8 py-6"
 										color="primary"
 										rounded
-										@click="getPsy"
+										@click="getAllPsy"
 									>
 										Buscar ahora
 									</v-btn>
@@ -431,6 +429,12 @@ export default {
 		};
 	},
 	computed: {
+		psychologists() {
+			return this.allPsychologists.map(item => ({
+				...item,
+				hasMessage: this.hasMessage(item),
+			}));
+		},
 		subHeader() {
 			if (this.selected.assitant) return 'Asistente virtual';
 			if (!this.selected.assitant && this.selected._id == this.user.psychologist)
@@ -440,7 +444,10 @@ export default {
 			return '';
 		},
 		usersFromChats() {
-			return this.chats.map(item => item.user);
+			return this.chats.map(item => ({
+				...item.user,
+				hasMessage: this.hasMessageUser(item.user),
+			}));
 		},
 		landingUrl() {
 			return landing;
@@ -449,7 +456,7 @@ export default {
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
 			user: 'User/user',
-			psychologists: 'Psychologist/psychologists',
+			allPsychologists: 'Psychologist/psychologists',
 		}),
 	},
 	created() {
@@ -504,22 +511,26 @@ export default {
 			}, 10);
 		},
 		async setSelectedPsy(psy) {
-			console.log('chat selected psi');
-			this.selected = psy;
+			// inicamos carga del seleccionado
 			this.loadingChat = true;
+			this.selected = psy;
+			// obeteners chat del seleccciona
 			await this.getChat(psy._id);
+			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			if (!this.chat) await this.startConversation(psy._id);
+			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
+			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			if (!this.chat) this.startConversation(psy._id);
-			if (this.chat.messages.length) {
-				const message = this.chat.messages[this.chat.messages.length - 1];
-				console.log(message);
-				if (message && !message.read) this.updateMessage(message._id);
+			if (psy.hasMessage) {
+				await this.updateMessage(psy.hasMessage);
+				await this.getMessages();
 			}
+			// scroll hasta el final para ver los ultimos mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
 		},
-		async getPsy() {
+		async getAllPsy() {
 			this.loading = true;
 			await this.getPsychologists();
 			this.loading = false;
@@ -530,9 +541,20 @@ export default {
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				temp = temp.messages[temp.messages.length - 1];
-				console.log(temp);
-				return temp && !temp.read && temp.sentBy !== this.user._id;
+				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
 			}
+		},
+		hasMessageUser(user) {
+			let temp = {
+				...this.chats.find(item => item.user && item.user._id == user._id),
+			};
+			if (temp && temp.messages && temp.messages.length) {
+				temp = temp.messages[temp.messages.length - 1];
+				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
+			}
+		},
+		getPsy(id) {
+			return this.psychologists.find(item => item._id == id);
 		},
 		...mapActions({
 			getChat: 'Chat/getChat',
@@ -540,7 +562,7 @@ export default {
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
-			getPsychologists: 'Psychologist/getMessages',
+			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 		...mapMutations({ setChat: 'Chat/setChat' }),
 	},
