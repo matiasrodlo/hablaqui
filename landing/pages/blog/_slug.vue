@@ -103,10 +103,13 @@
 						class="text--secondary body-1"
 					>
 						Escrito por
-						<span class="primary--text">{{ article.originalAuthor }}</span> para
-						<a :href="article.originalLink">{{
-							extractHostname(article.originalLink)
-						}}</a>
+						<span class="primary--text">{{ article.originalAuthor }}</span>
+						<span v-if="article.originalLink">
+							para
+							<a :href="article.originalLink">{{
+								extractHostname(article.originalLink)
+							}}</a>
+						</span>
 					</div>
 				</v-col>
 			</v-row>
