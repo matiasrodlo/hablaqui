@@ -38,7 +38,7 @@
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/psicologos/todos`">
+				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/auth/q=register`">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
