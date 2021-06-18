@@ -47,7 +47,7 @@
 					{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">
-					Detalles
+					Revise su plan
 				</div>
 				<v-spacer></v-spacer>
 			</v-card-title>
