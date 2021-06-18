@@ -413,6 +413,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import { landing } from '@/config';
+import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -426,6 +427,8 @@ export default {
 			loadingChat: false,
 			selected: null,
 			message: '',
+			pusher: null,
+			channel: null,
 		};
 	},
 	computed: {
@@ -460,6 +463,25 @@ export default {
 		}),
 	},
 	created() {
+		// PUSHER
+		this.pusher = new Pusher(process.env.VUE_APP_PUSHER_KEY, {
+			cluster: process.env.VUE_APP_PUSHER_CLUSTER,
+		});
+		this.pusher.connection.bind('update', function(err) {
+			console.error(err);
+		});
+		this.channel = this.pusher.subscribe('chat');
+		this.channel.bind('update', data => this.$emit('updateChat', data));
+		this.$on('updateChat', async data => {
+			if (
+				data.content.sentBy !== this.user._id &&
+				(this.user._id == data.userId || this.user.psychologist == data.psychologistId)
+			) {
+				console.log(data.content);
+			}
+		});
+
+		// SELECT DEFAULT
 		this.selected = {
 			name: 'Habi',
 			assitant: true,
