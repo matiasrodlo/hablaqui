@@ -7,6 +7,7 @@
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"
+					:dense="isDialog"
 					outlined
 					:error-messages="emailErrors"
 				></v-text-field>
@@ -16,6 +17,7 @@
 					v-model="form.password"
 					label="Contraseña"
 					outlined
+					:dense="isDialog"
 					:type="showPassword ? 'text' : 'password'"
 					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					:error-messages="passwordErrors"
