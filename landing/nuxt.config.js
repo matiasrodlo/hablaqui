@@ -48,11 +48,6 @@ export default {
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [],
 
-	// google tagManager
-	gtm: {
-		id: 'G-BNF1BXZGS4', // Used as fallback if no runtime config is provided
-	},
-
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
 
@@ -71,6 +66,12 @@ export default {
 			{
 				id: '2428019',
 				sv: '6',
+			},
+		],
+		[
+			'@nuxtjs/google-gtag',
+			{
+				id: 'UA-185893751-1',
 			},
 		],
 		// https://go.nuxtjs.dev/axios
