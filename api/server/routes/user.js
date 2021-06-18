@@ -28,15 +28,15 @@ userRouter.put(
 	userController.updateProfile
 );
 
+// Pasword recovery
 userRouter.patch(
 	'/user/reset-password',
 	[passport.authenticate('jwt', { session: true })],
 	userController.passwordRecovery
 );
 
-// Pasword recovery
 userRouter.patch(
-	'/user/password',
+	'/user/update/password',
 	[
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.updatePassword, 'body'),
