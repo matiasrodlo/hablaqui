@@ -128,7 +128,7 @@
 		</div>
 		<v-container>
 			<v-row justify="center" align="center" class="mb-8">
-				<v-col cols="12" md="6" class="text-center text-sm-left">
+				<v-col cols="12" md="6" class="text-center text-md-left">
 					<div style="color: #bdbdbd">
 						<nuxt-link
 							text
@@ -148,17 +148,22 @@
 						</nuxt-link>
 					</div>
 					<div class="text--secondary">
-						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-center text-sm-right text--secondary">
-					<div class="text-right">
-						<img
-							style="height: 40px"
-							:src="`${$config.LANDING_URL}/redes_sociales.png`"
-							alt="redes sociales"
-						/>
-					</div>
+				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
+					<img
+						style="height: 40px"
+						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						alt="redes sociales"
+					/>
+				</v-col>
+				<v-col
+					cols="12"
+					offset-md="6"
+					md="6"
+					class="text-center text-md-right text--secondary"
+				>
 					<div>Atención a clientes: c@hablaqui.com</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>

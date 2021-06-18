@@ -16,6 +16,7 @@ const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
+const PasswordReset = () => import('@/views/PasswordReset');
 
 const routes = [
 	{
@@ -117,6 +118,12 @@ const routes = [
 		name: 'nuevo-articulo',
 		component: NewArticle,
 		meta: { title: 'Nuevo articulo' },
+	},
+	{
+		path: '/passwordReset',
+		name: 'passwordReset',
+		component: PasswordReset,
+		meta: { title: 'Recuperar contraseña', layout: 'simple' },
 	},
 	{
 		path: '*',

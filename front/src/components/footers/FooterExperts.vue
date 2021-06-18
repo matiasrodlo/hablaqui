@@ -1,9 +1,9 @@
 <template>
 	<v-container>
 		<v-row justify="center">
-			<v-col cols="12" md="10" xl="8">
+			<v-col cols="12" md="11" lg="10" xl="8">
 				<v-row align="center" class="white--text py-16">
-					<v-col cols="12" sm="3" md="3" class="text-center text-sm-left">
+					<v-col cols="12" sm="12" md="3" class="text-center text-md-left">
 						<div
 							class="text--secondary font-weight-bold"
 							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
@@ -25,7 +25,12 @@
 							Terminos y Condiciones
 						</a>
 					</v-col>
-					<v-col cols="12" sm="3" md="3" class="text-center text-sm-left text--secondary">
+					<v-col
+						cols="12"
+						sm="12"
+						md="3"
+						class="text-center text-md-left text--secondary"
+					>
 						<div
 							class="font-weight-bold"
 							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
@@ -39,7 +44,7 @@
 							09:00am - 18:30pm
 						</div>
 					</v-col>
-					<v-col cols="12" sm="3" md="3">
+					<v-col cols="12" sm="12" md="3">
 						<v-img contain width="240" class="mx-auto" src="/img/Startup.png"></v-img>
 						<v-img
 							contain
@@ -49,8 +54,8 @@
 							src="/img/Adolfo_Ibanez.png"
 						></v-img>
 					</v-col>
-					<v-col>
-						<v-img contain height="120" class="mx-auto" src="/img/WebPay.png" />
+					<v-col cols="12" sm="12" md="3">
+						<v-img contain height="90" class="mx-auto" src="/img/WebPay.png" />
 					</v-col>
 				</v-row>
 			</v-col>

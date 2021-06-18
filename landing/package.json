@@ -14,7 +14,7 @@
     "dependencies": {
         "@netsells/nuxt-hotjar": "^0.1.3",
         "@nuxtjs/axios": "^5.12.5",
-        "@nuxtjs/gtm": "^2.4.0",
+        "@nuxtjs/google-gtag": "^1.0.4",
         "@nuxtjs/pwa": "^3.3.5",
         "core-js": "^3.8.3",
         "moment": "^2.29.1",

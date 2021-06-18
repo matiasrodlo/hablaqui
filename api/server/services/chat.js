@@ -68,6 +68,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 			$push: {
 				messages: newMessage,
 			},
+			read: false,
 		},
 		{ new: true }
 	);
@@ -115,12 +116,27 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
+const readMessage = async messageId => {
+	const updatedChat = await Chat.findOneAndUpdate(
+		{ 'messages._id': messageId },
+		{
+			$set: {
+				'messages.$.read': true,
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('Mensaje visto', { chat: updatedChat });
+};
+
 const chatService = {
 	startConversation,
 	getMessages,
 	getChats,
 	sendMessage,
 	createReport,
+	readMessage,
 };
 
 export default Object.freeze(chatService);

@@ -34,4 +34,10 @@ chatRouter.post(
 	chatController.createReport
 );
 
+chatRouter.patch(
+	'/chat/read-message/:messageId',
+	[passport.authenticate('jwt', { session: true })],
+	chatController.readMessage
+);
+
 export default Object.freeze(chatRouter);

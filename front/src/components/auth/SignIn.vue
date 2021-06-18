@@ -44,6 +44,12 @@ import { mapActions, mapMutations } from 'vuex';
 export default {
 	name: 'SignIn',
 	mixins: [validationMixin],
+	props: {
+		isDialog: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			showPassword: false,
@@ -79,7 +85,7 @@ export default {
 				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
 				else if (this.$route.name !== 'all-psicologos')
 					this.$router.push({ name: 'perfil' });
-				else if (this.$route.name == 'all-psicologos') this.setResumeView(true);
+				else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		defaultData() {

@@ -4,7 +4,8 @@
 			<v-col cols="12" md="4" v-for="(el, j) in plans" :key="j">
 				<v-sheet
 					class="pa-y elevation-3"
-					:height="el.expandCard ? '550' : '330'"
+					v-if="!el.expandCard"
+					height="330"
 					style="border-radius: 15px"
 				>
 					<div :style="el.expandCard ? '50%' : 'height: 80%'">
@@ -44,73 +45,91 @@
 					>
 						Seleccionar plan
 					</div>
-					<v-expand-transition>
-						<template v-if="el.expandCard">
-							<v-list-item-group flat v-model="selectedItem" color="primary">
-								<v-list-item
-									v-for="deal in el.deals"
-									:key="deal.id"
-									link
-									:value="{ ...deal, plan: j }"
-								>
-									<v-list-item-content>
-										<v-list-item-title>
-											<div class="d-flex justify-space-between">
-												<div
-													class="caption font-weight-bold secondary--text"
-												>
-													{{ deal.type }}
-												</div>
-												<div>
-													<v-btn
-														fab
-														style="width:20px; height: 20px"
-														depressed
-														:color="
-															deal.id == selectedItem.id
-																? 'primary'
-																: '#E1F5FE'
-														"
-													>
-													</v-btn>
-												</div>
-											</div>
-										</v-list-item-title>
-										<v-list-item-subtitle>
-											<span class=" caption font-weight-bold secondary--text">
-												${{ deal.price }}
-											</span>
-											<span class=" caption primary--text">
-												{{ deal.lapse }}
-											</span>
-										</v-list-item-subtitle>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list-item-group>
-						</template>
-					</v-expand-transition>
+				</v-sheet>
+				<v-sheet
+					height="330"
+					class="pa-y"
+					style="border-radius: 15px"
+					:class="selectedItem.plan == j ? 'shadow-selected' : 'shadow'"
+					v-if="el.expandCard"
+				>
+					<div style="position: relative" class="pt-4">
+						<v-btn
+							icon
+							absolute
+							style="top: 20px; left: 10px"
+							@click="el.expandCard = false"
+						>
+							<v-icon large>mdi-chevron-left</v-icon>
+						</v-btn>
+						<div
+							style="max-width: 160px"
+							class="text-center body-1 mx-auto primary--text font-weight-bold"
+						>
+							{{ el.title }}
+						</div>
+					</div>
+					<v-list-item-group flat v-model="selectedItem" color="primary" class="pt-4">
+						<v-list-item
+							v-for="deal in el.deals"
+							:key="deal.id"
+							link
+							:value="{ ...deal, plan: j }"
+						>
+							<v-list-item-content>
+								<v-list-item-title>
+									<div class="d-flex justify-space-between">
+										<div class="caption font-weight-bold secondary--text">
+											{{ deal.type }}
+										</div>
+										<div>
+											<v-btn
+												fab
+												style="width:20px; height: 20px"
+												depressed
+												:color="
+													deal.id == selectedItem.id
+														? 'primary'
+														: '#E1F5FE'
+												"
+											>
+											</v-btn>
+										</div>
+									</div>
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									<span class=" caption font-weight-bold secondary--text">
+										${{ deal.price }}
+									</span>
+									<span class=" caption primary--text">
+										{{ deal.lapse }}
+									</span>
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list-item-group>
+					<div class="text-center">
+						<v-btn
+							rounded
+							class="px-10 mt-2"
+							v-if="selectedItem.plan == j"
+							color="primary"
+							@click="
+								setPlan({
+									title: plans[selectedItem.plan].title,
+									subtitle: plans[selectedItem.plan].subtitle,
+									description: plans[selectedItem.plan].description,
+									price: plans[selectedItem.plan].price,
+									deal: selectedItem,
+								})
+							"
+						>
+							Continuar
+						</v-btn>
+					</div>
 				</v-sheet>
 			</v-col>
 		</v-row>
-		<div class="text-center">
-			<v-btn
-				rounded
-				class="px-10
-                "
-				v-show="selectedItem"
-				color="primary"
-				@click="
-					setPlan({
-						title: plans[selectedItem.plan].title,
-						subtitle: plans[selectedItem.plan].subtitle,
-						description: plans[selectedItem.plan].description,
-						price: plans[selectedItem.plan].price,
-						deal: selectedItem,
-					})
-				"
-				>Continuar</v-btn
-			>
-		</div>
 	</div>
 </template>
 
@@ -235,4 +254,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.shadow {
+	box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%),
+		0px 1px 8px 0px rgb(0 0 0 / 12%) !important;
+}
+.shadow-selected {
+	box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 4px rgb(225 245 254 / 100%),
+		0px 1px 18px 4px rgb(225 245 254 / 100%) !important;
+}
+</style>

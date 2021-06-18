@@ -20,7 +20,7 @@
 						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
 							Tu psicólogo Online
 						</h1>
-						<div class="title my-10">
+						<div class="title mt-10 mb-7">
 							Demos juntos el primer paso hacia el bienestar emocional. Habla de forma
 							segura y privada con un psicólogo online cuando lo necesites.
 						</div>
@@ -36,10 +36,8 @@
 								Quiero empezar
 							</span>
 						</v-btn>
-						<div class="body-1 font-weight-bold mt-10">
-							Desde $15.500CLP a la semana
-						</div>
-						<h3 class="body-1 mt-4">Convenios con Isapres y Fonasa.</h3>
+						<div class="body-1 font-weight-bold mt-7">Desde $15.500CLP a la semana</div>
+						<h3 class="body-1 mt-3">Convenios con Isapres y Fonasa.</h3>
 					</v-col>
 					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
 						<v-img
@@ -148,10 +146,16 @@
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<img
-			class="mt-10"
+			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			width="100%"
 			height="100px"
+		/>
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_1.png`"
+			width="100%"
+			height="40px"
 		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
@@ -218,18 +222,11 @@
 												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
 											>
 												<h4
-													class="white--text pt-1 pl-4 font-weight-regular"
+													class="body-1 white--text pt-1 pl-4 font-weight-regular"
 												>
 													{{ item.title }}
 												</h4>
-												<h2
-													class="pl-4 pt-3 font-weight-bold"
-													:class="
-														$vuetify.breakpoint.mdAndUp
-															? 'title'
-															: 'body-1'
-													"
-												>
+												<h2 class="body-2 pl-4 pt-3 pb-2 font-weight-bold">
 													{{ item.name }}
 												</h2>
 												<div>
@@ -239,7 +236,7 @@
 																>mdi-check</v-icon
 															>
 														</v-col>
-														<v-col class="body-2 pl-3 font-weight-bold"
+														<v-col style="font-size: 14px" class="pl-3"
 															>{{ item.subtitle }}
 														</v-col>
 													</v-row>
@@ -268,10 +265,16 @@
 			</v-container>
 		</section>
 		<img
+			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
 			width="100%"
 			height="150px"
-			alt="Ventajas"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_2.png`"
+			width="100%"
+			height="40px"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
@@ -327,23 +330,31 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<img
-			class="mt-10"
+			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: 150px"
 		/>
-		<section style="position: relative" class="primary-color">
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+			style="width: 100%; height: 40px"
+		/>
+		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
-				<v-img width="220" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
 					<v-col
 						tag="section"
-						cols="12"
+						cols="10"
+						offset="2"
+						md="12"
+						offset-md="0"
 						class="white--text py-16 text-center text-md-left"
 					>
 						<h2
-							style="position: absolute; top: 0px; z-index: 0"
+							style="position: absolute; top: 30px; z-index: 0"
 							class="text-md-h3 text-h4 font-weight-bold"
 						>
 							Efectividad
@@ -480,7 +491,16 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-part2.png`" width="100%" height="150px" />
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-part2.png`"
+			style="width: 100%; height: 150px"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
+			style="width: 100%"
+		/>
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
 			<v-row tag="section" no-gutters justify="center">
@@ -629,8 +649,10 @@
 		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
-				height="250"
+				height="140"
 				:show-arrows="false"
+				hide-delimiter-background
+				hide-delimiters
 				reverse-transition="fade-transition"
 				transition="fade-transition"
 			>
@@ -645,7 +667,7 @@
 					]"
 					:key="e"
 				>
-					<v-img height="200" :src="item" :alt="item" contain />
+					<v-img height="70" class="mt-8" :src="item" :alt="item" contain />
 				</v-carousel-item>
 			</v-carousel>
 		</section>

@@ -54,7 +54,7 @@
 								</div>
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<dialog-agenda-cita-online :psy="item" mode="3" />
+								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
 							</v-col>
 						</v-row>
 						<template v-for="(tag, i) in psychologist.specialties">
@@ -76,9 +76,9 @@
 			</v-card-text>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text"
-						>EXPERIENCIA</v-col
-					>
+					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
+						Experiencia
+					</v-col>
 					<v-col class="body-1 text-left">
 						<ul v-if="psychologist.experience.length">
 							<li v-for="(experience, i) in psychologist.experience" :key="i">
@@ -94,7 +94,7 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
-						ESPECIALIDADES
+						Especialidades
 					</v-col>
 					<v-col v-if="psychologist.specialties.length" class="body-1 text-left">
 						<ul>
@@ -113,11 +113,7 @@
 			</v-card-text>
 			<v-card-text>
 				<v-row align="center">
-					<v-col
-						cols="12"
-						md="3"
-						class="align-self-start subtitle-1 primary--text text-uppercase"
-					>
+					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
 						Modelos de trabajo terapéutico
 					</v-col>
 					<v-col class="body-1 text-left">
@@ -137,9 +133,9 @@
 			</v-card-text>
 			<v-card-text>
 				<v-row align="center">
-					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text"
-						>FORMACIÓN</v-col
-					>
+					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
+						Formación
+					</v-col>
 					<v-col class="body-1 text-left">
 						<ul v-if="psychologist.formation.length">
 							<li v-for="(formation, i) in psychologist.formation" :key="i">
@@ -153,7 +149,7 @@
 			<v-card-text>
 				<v-row align="center">
 					<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
-						DESCRIPCIÓN PERSONAL
+						Descripción personal
 					</v-col>
 					<v-col class="body-1 text-left">
 						{{
