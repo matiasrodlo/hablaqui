@@ -10,7 +10,6 @@
 				>
 					<v-progress-circular indeterminate color="primary"></v-progress-circular>
 				</div>
-
 				<v-card
 					v-else
 					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
