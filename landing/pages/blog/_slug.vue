@@ -16,9 +16,9 @@
 		<v-container v-if="article && !loading">
 			<v-row>
 				<v-col cols="12">
-					<div class="text-h5 text-sm-h4 text-md-h3 font-weight-bold">
+					<h1 class="text-h5 text-sm-h4 font-weight-bold">
 						{{ article.title }}
-					</div>
+					</h1>
 					<div class="text-sm-h6">
 						<span class="secondary--text">{{ dates(article.createdAt) }}</span>
 						<span class="secondary--text">|</span>
@@ -93,7 +93,7 @@
 					</v-avatar>
 				</v-col>
 				<v-col cols="12" sm="11">
-					<div class="font-weight-light text-h5" v-html="article.HTMLbody"></div>
+					<div class="font-weight-light" v-html="article.HTMLbody"></div>
 				</v-col>
 				<v-col cols="12" offset-sm="1" sm="11">
 					<div
@@ -103,10 +103,13 @@
 						class="text--secondary body-1"
 					>
 						Escrito por
-						<span class="primary--text">{{ article.originalAuthor }}</span> para
-						<a :href="article.originalLink">{{
-							extractHostname(article.originalLink)
-						}}</a>
+						<span class="primary--text">{{ article.originalAuthor }}</span>
+						<span v-if="article.originalLink">
+							para
+							<a :href="article.originalLink">
+								{{ extractHostname(article.originalLink) }}
+							</a>
+						</span>
 					</div>
 				</v-col>
 			</v-row>

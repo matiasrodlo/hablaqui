@@ -54,7 +54,7 @@
 								</div>
 							</v-col>
 							<v-col cols="12" sm="4" lg="3" class="text-right">
-								<dialog-agenda-cita-online :psy="item" mode="3" />
+								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
 							</v-col>
 						</v-row>
 						<template v-for="(tag, i) in psychologist.specialties">
