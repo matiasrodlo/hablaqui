@@ -169,12 +169,13 @@ export default {
 			}
 			if (!this.$v.$invalid && this.accept) {
 				this.loading = true;
-				await this.register(this.form);
+				const loggedIn = await this.register(this.form);
 				this.loading = false;
-				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
-				else if (this.$route.name !== 'all-psicologos')
-					this.$router.push({ name: 'perfil' });
-				else if (this.isDialog) this.setResumeView(true);
+				if (loggedIn)
+					if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+					else if (this.$route.name !== 'all-psicologos')
+						this.$router.push({ name: 'perfil' });
+					else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		...mapActions({ register: 'User/register' }),

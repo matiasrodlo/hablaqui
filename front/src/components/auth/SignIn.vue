@@ -82,12 +82,13 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				await this.login(this.form);
+				const loggedIn = await this.login(this.form);
 				this.loading = false;
-				if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
-				else if (this.$route.name !== 'all-psicologos')
-					this.$router.push({ name: 'perfil' });
-				else if (this.isDialog) this.setResumeView(true);
+				if (loggedIn)
+					if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+					else if (this.$route.name !== 'all-psicologos')
+						this.$router.push({ name: 'perfil' });
+					else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		defaultData() {
