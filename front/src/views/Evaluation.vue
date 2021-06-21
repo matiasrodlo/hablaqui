@@ -506,7 +506,7 @@
 						</v-row>
 						<v-row>
 							<v-col cols="12">
-								<v-divider style="border-width: 1px"></v-divider>
+								<v-divider style="border-width: 1px" />
 							</v-col>
 							<v-col cols="12">
 								<v-carousel
