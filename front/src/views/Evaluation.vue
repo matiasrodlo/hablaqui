@@ -9,7 +9,7 @@
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
-				<div class="title text-h5 text-sm-h4 font-weight-bold my-10">
+				<div class="title text-h5 text-sm-h4 font-weight-bold mb-10">
 					Encuentra a tu especialista
 				</div>
 				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
@@ -17,7 +17,7 @@
 					preguntas. ¡Queremos conocerte!
 				</div>
 				<div style="background-color: #F0F8FF">
-					<v-container>
+					<v-container class="centerCard">
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
 								<v-stepper v-model="step" light style="border-radius: 25px">
@@ -694,6 +694,12 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
+	created() {
+		const psi = JSON.parse(localStorage.getItem('psi'));
+		if (psi && psi.length) {
+			this.matchedPsychologists = psi;
+		}
+	},
 	mounted() {
 		this.getPsychologists();
 		this.getAppointments();
@@ -711,6 +717,7 @@ export default {
 			});
 		},
 		resetMatch() {
+			localStorage.removeItem('psi');
 			this.gender = '';
 			this.age = '';
 			this.firstTherapy = null;
@@ -742,6 +749,7 @@ export default {
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
+				localStorage.setItem('psi', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			}
 		},
@@ -756,7 +764,6 @@ export default {
 
 <style lang="scss" scoped>
 .centerCard {
-	max-width: 700px;
 	position: absolute;
 	margin-left: auto;
 	margin-right: auto;
