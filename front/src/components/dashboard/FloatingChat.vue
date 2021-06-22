@@ -287,7 +287,8 @@ export default {
 		this.$on('updateChat', async data => {
 			if (
 				data.content.sentBy !== this.user._id &&
-				(this.user._id == data.userId || this.user.psychologist == data.psychologistId)
+				(this.user._id == data.userId || this.user.psychologist == data.psychologistId) &&
+				this.showChat
 			) {
 				this.pusherCallback(data);
 			}
