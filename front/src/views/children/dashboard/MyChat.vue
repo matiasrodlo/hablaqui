@@ -17,6 +17,7 @@
 				>
 					<v-card-text class="py-0">
 						<v-text-field
+							v-model="search"
 							style="border-radius: 25px;"
 							hide-details
 							filled
@@ -431,6 +432,7 @@ export default {
 	},
 	data() {
 		return {
+			search: '',
 			loading: false,
 			loadingMessage: false,
 			loadingChat: false,
@@ -456,13 +458,21 @@ export default {
 			return '';
 		},
 		usersFromChats() {
-			return this.chats.map(item => ({
+			let filterArray = this.chats.filter(
+				el => el.user.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+			);
+			if (!filterArray.length) filterArray = this.chats;
+			return filterArray.map(item => ({
 				...item.user,
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
 		psyFromChats() {
-			return this.chats.map(item => ({
+			let filterArray = this.chats.filter(
+				el => el.psychologist.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+			);
+			if (!filterArray.length) filterArray = this.chats;
+			return filterArray.map(item => ({
 				...item.psychologist,
 				hasMessage: this.hasMessage(item),
 			}));
