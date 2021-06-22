@@ -193,14 +193,14 @@
 							</v-list-item>
 						</v-list>
 					</template>
-					<template v-if="psychologists.length">
+					<template v-if="psyFromChats.length">
 						<v-card-text class="py-0">
 							<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 							<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
 						</v-card-text>
 						<v-list two-line style="height: 400px; overflow: auto">
 							<v-list-item
-								v-for="(psy, e) in psychologists"
+								v-for="(psy, e) in psyFromChats"
 								:key="e"
 								@click="selectedPsy(psy)"
 							>
@@ -217,6 +217,22 @@
 							</v-list-item>
 						</v-list>
 					</template>
+					<template v-else>
+						<div class="d-flex justify-center align-center" style="height: 400px">
+							<div class="text-center pa-4" style="max-width: 300px">
+								<span class=" body-1 primary--text font-weight-bold">
+									Comienza a hablar con nuestros psicólogos
+								</span>
+								<div class="mt-10 body-2">
+									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+								</div>
+								<v-btn class="mt-10 px-8 py-6" color="primary" rounded>
+									Buscar ahora
+								</v-btn>
+							</div>
+						</div>
+					</template>
 				</template>
 			</v-card>
 		</v-menu>
@@ -226,6 +242,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
+import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -239,9 +256,17 @@ export default {
 			loadingMessage: false,
 			message: '',
 			loadingChat: false,
+			pusher: null,
+			channel: null,
 		};
 	},
 	computed: {
+		psyFromChats() {
+			return this.chats.map(item => ({
+				...item.psychologist,
+				hasMessage: this.hasMessage(item),
+			}));
+		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
@@ -249,11 +274,38 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
+	created() {
+		// PUSHER
+		this.pusher = new Pusher(process.env.VUE_APP_PUSHER_KEY, {
+			cluster: process.env.VUE_APP_PUSHER_CLUSTER,
+		});
+		this.pusher.connection.bind('update', function(err) {
+			console.error(err);
+		});
+		this.channel = this.pusher.subscribe('chat');
+		this.channel.bind('update', data => this.$emit('updateChat', data));
+		this.$on('updateChat', async data => {
+			if (
+				data.content.sentBy !== this.user._id &&
+				(this.user._id == data.userId || this.user.psychologist == data.psychologistId)
+			) {
+				this.pusherCallback(data);
+			}
+		});
+	},
 	async mounted() {
 		moment.locale('es');
 		await this.getMessages();
 	},
 	methods: {
+		async pusherCallback(data) {
+			if (this.selected._id == data.psychologistId || this.selected._id == data.userId) {
+				await this.getChat({ psy: data.psychologistId, user: data.userId });
+				this.scrollToElement();
+				await this.updateMessage(data.content._id);
+			}
+			await this.getMessages();
+		},
 		open() {
 			this.showChat = true;
 		},
@@ -302,6 +354,15 @@ export default {
 			this.message = '';
 			this.loadingMessage = false;
 			this.scrollToElement();
+		},
+		hasMessage(psy) {
+			let temp = {
+				...this.chats.find(item => item.psychologist && item.psychologist._id == psy._id),
+			};
+			if (temp && temp.messages && temp.messages.length) {
+				temp = temp.messages[temp.messages.length - 1];
+				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
+			}
 		},
 		...mapActions({
 			getChat: 'Chat/getChat',
