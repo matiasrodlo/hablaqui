@@ -5,11 +5,18 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const startConversation = async (psychologistId, user) => {
-	let newChat = await Chat.create({
-		user: user._id,
+	const hasChats = await Chat.findOne({
 		psychologist: psychologistId,
+		user: user,
 	});
-	return okResponse('chat inicializado', { newChat });
+	if (!hasChats) {
+		const newChat = await Chat.create({
+			user: user._id,
+			psychologist: psychologistId,
+		});
+		return okResponse('chat inicializado', { newChat });
+	}
+	return okResponse('chat inicializado anteriormente');
 };
 
 const getMessages = async (user, psy) => {

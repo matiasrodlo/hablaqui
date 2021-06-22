@@ -36,7 +36,14 @@
 								</v-subheader>
 								<v-divider style="border-color: #5EB3E4"></v-divider>
 							</v-card-text>
-							<v-list two-line class="py-0">
+							<v-sheet
+								class="primary white--text pa-4 mx-4"
+								style="border-radius:20px"
+							>
+								Aun no tienes consultantes
+							</v-sheet>
+
+							<!-- <v-list two-line class="py-0">
 								<v-list-item>
 									<v-list-item-avatar
 										style="border: 3px solid #2070E5; border-radius: 40px; "
@@ -52,7 +59,7 @@
 										</v-list-item-subtitle>
 									</v-list-item-content>
 								</v-list-item>
-							</v-list>
+							</v-list> -->
 						</template>
 						<template v-if="usersFromChats.length">
 							<v-card-text class="py-0">
@@ -158,14 +165,14 @@
 								</v-list-item>
 							</v-list>
 						</template>
-						<template v-if="psychologists.length">
+						<template v-if="psyFromChats.length">
 							<v-card-text class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5EB3E4" class="mb-2"></v-divider>
 							</v-card-text>
 							<v-list two-line style="overflow-y: auto">
 								<v-list-item
-									v-for="(psy, e) in psychologists"
+									v-for="(psy, e) in psyFromChats"
 									:key="e"
 									@click="setSelectedPsy(psy)"
 								>
@@ -201,7 +208,7 @@
 										class="mt-10 px-8 py-6"
 										color="primary"
 										rounded
-										@click="getAllPsy"
+										:to="{ name: 'all-psicologos' }"
 									>
 										Buscar ahora
 									</v-btn>
@@ -212,7 +219,7 @@
 				</v-card>
 			</v-col>
 			<!-- CHAT USER/PSY -->
-			<v-col cols="12" md="8" lg="9">
+			<v-col cols="12" md="8" lg="9" v-if="selected">
 				<v-card
 					style="height: calc(100vh - 135px); display: flex; flex-direction: column; border-radius: 15px"
 				>
@@ -454,6 +461,12 @@ export default {
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
+		psyFromChats() {
+			return this.chats.map(item => ({
+				...item.psychologist,
+				hasMessage: this.hasMessage(item),
+			}));
+		},
 		landingUrl() {
 			return landing;
 		},
@@ -482,17 +495,21 @@ export default {
 				this.pusherCallback(data);
 			}
 		});
-
-		// SELECT DEFAULT
-		this.selected = {
-			name: 'Habi',
-			assitant: true,
-			avatar: '',
-		};
 	},
 	async mounted() {
 		moment.locale('es');
 		await this.getMessages();
+		if (this.$route.params.psy) {
+			const psychologist = this.getPsy(this.$route.params.psy);
+			this.setSelectedPsy(psychologist);
+		} else {
+			// SELECT DEFAULT
+			this.selected = {
+				name: 'Habi',
+				assitant: true,
+				avatar: '',
+			};
+		}
 	},
 	methods: {
 		async onSubmit() {
@@ -547,6 +564,7 @@ export default {
 			}
 		},
 		async setSelectedPsy(psy) {
+			if (this.selected && this.selected._id == psy._id) return;
 			// inicamos carga del seleccionado
 			this.loadingChat = true;
 			this.selected = psy;
@@ -565,11 +583,6 @@ export default {
 				await this.updateMessage(psy.hasMessage);
 				await this.getMessages();
 			}
-		},
-		async getAllPsy() {
-			this.loading = true;
-			await this.getPsychologists();
-			this.loading = false;
 		},
 		hasMessage(psy) {
 			let temp = {
@@ -598,7 +611,6 @@ export default {
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
-			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 		...mapMutations({ setChat: 'Chat/setChat' }),
 	},

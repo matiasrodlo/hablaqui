@@ -20,7 +20,14 @@
 			<v-btn v-bind="attrs" v-on="on" v-if="mode == '2'" color="primary" rounded depressed>
 				Agenda cita online
 			</v-btn>
-			<v-btn v-if="mode == '3'" v-bind="attrs" v-on="on" color="primary" rounded>
+			<v-btn
+				v-if="mode == '3'"
+				v-bind="attrs"
+				v-on="on"
+				color="primary"
+				rounded
+				class="px-10 mx-1"
+			>
 				Agenda cita online
 			</v-btn>
 		</template>

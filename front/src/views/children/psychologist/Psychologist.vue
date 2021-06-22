@@ -11,7 +11,7 @@
 		<v-card v-else>
 			<v-card-text>
 				<v-row align="center" justify="center">
-					<v-col cols="12" sm="3" class="text-center">
+					<v-col cols="12" md="3" class="text-center">
 						<v-list-item-avatar
 							:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 							:color="psychologist.avatar ? 'trasnparent' : 'primary'"
@@ -39,10 +39,10 @@
 							Codigo {{ psychologist.code }}
 						</div>
 					</v-col>
-					<v-col cols="12" sm="9">
+					<v-col cols="12" md="9">
 						<v-row justify="space-between">
 							<v-col
-								class="text-center text-sm-left font-weight-bold text-h6 text-md-h4 text-xl-h3 text--secondary"
+								class="text-center text-md-left font-weight-bold text-h6 text-md-h4 text-xl-h3 text--secondary"
 							>
 								{{ psychologist.name }}
 								{{ psychologist.lastName && psychologist.lastName }}
@@ -53,8 +53,16 @@
 									Codigo {{ psychologist.code }}
 								</div>
 							</v-col>
-							<v-col cols="12" sm="4" lg="3" class="text-right">
+							<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
 								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
+								<v-btn
+									:loading="loadingChat"
+									rounded
+									class="info mx-1 my-2"
+									@click="goChat"
+								>
+									Chatear con especialista
+								</v-btn>
 							</v-col>
 						</v-row>
 						<template v-for="(tag, i) in psychologist.specialties">
@@ -161,20 +169,27 @@
 				</v-row>
 			</v-card-text>
 		</v-card>
+		<FloatingChat v-if="loggedIn" />
 	</v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+	},
+	data() {
+		return {
+			loadingChat: false,
+		};
 	},
 	computed: {
 		psychologist() {
 			return this.psychologists.find(item => item._id === this.$route.params.id);
 		},
-		...mapGetters({ psychologists: 'Psychologist/psychologists' }),
+		...mapGetters({ loggedIn: 'User/loggedIn', psychologists: 'Psychologist/psychologists' }),
 	},
 	methods: {
 		toAuth(item) {
@@ -182,6 +197,15 @@ export default {
 			if (this.loggedIn) this.$router.push({ name: 'plan' });
 			else this.$router.push({ path: '/auth/q=register' });
 		},
+		async goChat() {
+			this.loadingChat = true;
+			await this.startConversation(this.psychologist._id);
+			this.loadingChat = false;
+			this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+		},
+		...mapActions({
+			startConversation: 'Chat/startConversation',
+		}),
 	},
 };
 </script>
