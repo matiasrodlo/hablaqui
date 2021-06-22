@@ -76,9 +76,52 @@
 					<span class="body-1 text--secondary font-weight-bold">Blog</span>
 				</a>
 				<v-spacer></v-spacer>
-				<span v-if="loggedIn" @click="logout" class="mr-3" style="cursor: pointer">
-					<span class="body-1 font-weight-bold text--secondary"> Cerrar sesión</span>
-				</span>
+				<div v-if="loggedIn" class="text-h6 text--secondary mr-16" rounded text>
+					<h3 class="mr-6 secondary--text d-inline-block">Hola {{ user.name }}</h3>
+					<v-menu
+						rounded="xl"
+						open-on-hover
+						offset-y
+						:close-on-content-click="false"
+						:nudge-width="200"
+					>
+						<template v-slot:activator="{ on, attrs }">
+							<div class="d-inline-block" v-bind="attrs" v-on="on">
+								<avatar size="80" :name="user.name" :url="user.avatar" />
+							</div>
+						</template>
+						<v-card>
+							<v-list>
+								<v-list-item
+									link
+									:to="{ name: item.link }"
+									v-for="(item, i) in menu"
+									:key="i"
+								>
+									<v-list-item-avatar size="40" color="primary">
+										<v-img
+											contain
+											height="30"
+											:src="item.img"
+											:alt="item.name"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+											>{{ item.name }}
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+							<v-card-actions class="primary">
+								<v-spacer></v-spacer>
+								<div class="white--text py-1">Hablaquí</div>
+								<v-spacer></v-spacer>
+							</v-card-actions>
+						</v-card>
+					</v-menu>
+				</div>
 				<router-link
 					v-else
 					style="text-decoration: none"
@@ -112,8 +155,17 @@
 import { landing } from '@/config';
 import { mapGetters, mapMutations } from 'vuex';
 export default {
+	components: {
+		Avatar: () => import('@/components/ui/Avatar'),
+	},
 	data() {
 		return {
+			menu: [
+				{ name: 'Chat', link: 'chat', img: '/img/chat.png' },
+				{ name: 'Mis sesiones', link: 'agenda', img: '/img/sesiones.png' },
+				{ name: 'Diario de bienestar', link: 'diario', img: '/img/notas.png' },
+				{ name: 'Mi cuenta', link: 'perfil', img: '/img/home.png' },
+			],
 			drawer: false,
 		};
 	},
@@ -121,7 +173,7 @@ export default {
 		landing_page() {
 			return landing;
 		},
-		...mapGetters({ loggedIn: 'User/loggedIn' }),
+		...mapGetters({ loggedIn: 'User/loggedIn', user: 'User/user' }),
 	},
 	methods: {
 		logout() {

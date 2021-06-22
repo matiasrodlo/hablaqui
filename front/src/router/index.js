@@ -10,7 +10,7 @@ const Experts = () => import('@/views/Experts');
 const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
-const MySpace = () => import('@/views/children/dashboard/MySpace');
+const MyChat = () => import('@/views/children/dashboard/MyChat');
 const Payments = () => import('@/views/Payments');
 const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
@@ -56,13 +56,13 @@ const routes = [
 				path: 'perfil',
 				name: 'perfil',
 				component: MyProfile,
-				meta: { title: 'Mi Perfil', requiresAuth: true },
+				meta: { title: 'Mi cuenta', requiresAuth: true },
 			},
 			{
-				path: 'espacio',
-				name: 'espacio',
-				component: MySpace,
-				meta: { title: 'Mi espacio', requiresAuth: true },
+				path: 'chat',
+				name: 'chat',
+				component: MyChat,
+				meta: { title: 'Chat', requiresAuth: true },
 			},
 			{
 				path: 'agenda',
