@@ -130,7 +130,7 @@
 								</v-list-item>
 							</v-list>
 						</template>
-						<template v-else>
+						<!-- <template v-else>
 							<v-card-text>
 								<v-subheader class="primary--text body-1 px-0">
 									Mi Psicólogo
@@ -139,13 +139,13 @@
 							</v-card-text>
 							<v-list
 								link
-								one-line
+								two-line
 								class="py-0 primary"
 								dark
 								style="border-radius: 10px"
 							>
 								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
-									<v-list-item-avatar style="border-radius: 40px; " size="60">
+									<v-list-item-avatar style="border-radius: 40px; " size="50">
 										<v-img
 											height="50"
 											width="50"
@@ -164,7 +164,7 @@
 									</v-list-item-content>
 								</v-list-item>
 							</v-list>
-						</template>
+						</template> -->
 						<template v-if="psyFromChats.length">
 							<v-card-text class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
