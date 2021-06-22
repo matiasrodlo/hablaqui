@@ -72,11 +72,10 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		},
 		{ new: true }
 	);
-
 	const data = {
 		userId,
 		psychologistId,
-		content: newMessage,
+		content: updatedChat.messages.pop(),
 	};
 
 	pusher.trigger('chat', 'update', data, pusherCallback);
