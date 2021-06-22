@@ -670,7 +670,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<FloatingChat v-if="loggedIn" />
+		<FloatingChat v-if="loggedIn && user.role == 'user'" />
 	</v-container>
 </template>
 
@@ -746,6 +746,7 @@ export default {
 		},
 		...mapGetters({
 			loggedIn: 'User/loggedIn',
+			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
 		}),
