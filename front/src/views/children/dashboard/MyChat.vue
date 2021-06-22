@@ -495,8 +495,12 @@ export default {
 	},
 	methods: {
 		async pusherCallback(data) {
-			await this.getChat(data.psychologistId);
-			this.scrollToElement();
+			if (this.selected._id == data.psychologistId) {
+				await this.getChat(data.psychologistId);
+				this.scrollToElement();
+				await this.updateMessage(data.content._id);
+				await this.getMessages();
+			}
 			await this.getMessages();
 		},
 		async onSubmit() {
