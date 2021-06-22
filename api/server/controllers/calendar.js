@@ -6,7 +6,8 @@ const calendarController = {
 	async getEvents(req, res) {
 		try {
 			const { user } = req;
-			const { data, code } = await calendarService.getEvents(user);
+			const { token } = req.params;
+			const { data, code } = await calendarService.getEvents(user, token);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res);
