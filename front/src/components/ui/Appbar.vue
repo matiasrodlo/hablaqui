@@ -113,6 +113,18 @@
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
+								<v-list-item @click="logout">
+									<v-list-item-avatar size="40" color="primary">
+										<v-icon color="white">mdi-logout</v-icon>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+										>
+											Cerrar sesion
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
 							</v-list>
 							<v-card-actions class="primary">
 								<v-spacer></v-spacer>

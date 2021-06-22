@@ -37,6 +37,7 @@ export default {
 	},
 	async updateUser({ commit }, payload) {
 		try {
+			delete payload.finishedSessions;
 			const { data } = await axios('/user/update/profile', {
 				method: 'put',
 				data: payload,
