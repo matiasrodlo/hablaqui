@@ -2,17 +2,13 @@ import axios from '@/plugins/axios';
 import { snackBarError } from '@/utils/snackbar';
 
 export default {
-	async get_events({ commit }) {
+	async saveToken({ commit }, code) {
 		try {
-			const { data } = await axios('/calendar/get-events/:token');
-			return data.events;
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
-	async save_token({ commit }, token) {
-		try {
-			localStorage.setItem('calendarToken', token);
+			const { data } = await axios('/calendar/success', {
+				method: 'POST',
+				data: { code },
+			});
+			localStorage.setItem('calendarToken', JSON.stringify(data.token));
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

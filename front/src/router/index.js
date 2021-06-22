@@ -16,6 +16,7 @@ const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
+const CalendarSuccess = () => import('@/views/CalendarSuccess');
 
 const routes = [
 	{
@@ -119,6 +120,12 @@ const routes = [
 		meta: { title: 'Nuevo articulo' },
 	},
 	{
+		path: '/google-calendar/success',
+		name: 'google-calendar-success',
+		component: CalendarSuccess,
+		meta: { title: 'Permiso otorgado' },
+	},
+	{
 		path: '*',
 		name: 'Error',
 		component: require('@/views/404').default, // load sync
@@ -126,6 +133,7 @@ const routes = [
 	},
 ];
 
+// Si se quita el mode: 'history' se rompe la API de calendario.
 const router = new VueRouter({
 	mode: 'history',
 	routes,

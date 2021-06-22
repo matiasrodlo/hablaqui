@@ -1,5 +1,5 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import { api_url } from '../config/dotenv';
+import { frontend_url } from '../config/dotenv';
 import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
@@ -7,7 +7,7 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const oAuth2Client = new google.auth.OAuth2(
 	'1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com',
 	'Jw1CJ__C-XKfJnmnf7GuVBrn',
-	`${api_url}api/v1/calendar/success`
+	`${frontend_url.split('#')[0]}google-calendar/success`
 );
 
 /**
@@ -132,16 +132,10 @@ const getOauthUrl = () => {
 };
 
 const getToken = async google_code => {
-	const google_token = await oAuth2Client.getToken(
-		google_code,
-		(err, token) => {
-			if (err)
-				return conflictResponse('Error retrieving access token', err);
-			oAuth2Client.setCredentials(token);
-			return token;
-		}
-	);
-	return okResponse('Token generado exitosamente', { google_token });
+	const { tokens } = await oAuth2Client.getToken(google_code);
+	return okResponse('Token generado exitosamente', {
+		token: tokens,
+	});
 };
 
 const calendarService = {

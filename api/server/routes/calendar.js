@@ -9,6 +9,6 @@ calendarRouter.get(
 	calendarController.createEvent
 );
 calendarRouter.get('/calendar/auth-url', calendarController.getOauthUrl);
-calendarRouter.get('/calendar/success', calendarController.getToken);
+calendarRouter.post('/calendar/success', calendarController.getToken);
 
 export default Object.freeze(calendarRouter);

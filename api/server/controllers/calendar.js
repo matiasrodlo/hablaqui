@@ -6,8 +6,6 @@ const calendarController = {
 	async getEvents(req, res) {
 		try {
 			const { token } = req.body;
-			console.log(req.body);
-			console.log(token);
 			const { data, code } = await calendarService.getEvents(token);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -34,7 +32,7 @@ const calendarController = {
 	},
 	async getToken(req, res) {
 		try {
-			const google_code = req.query.code;
+			const google_code = req.body.code;
 			const { data, code } = await calendarService.getToken(google_code);
 			return restResponse(data, code, res);
 		} catch (e) {
