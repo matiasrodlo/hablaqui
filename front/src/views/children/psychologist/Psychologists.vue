@@ -670,7 +670,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<FloatingChat />
+		<FloatingChat v-if="loggedIn" />
 	</v-container>
 </template>
 
