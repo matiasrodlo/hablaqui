@@ -490,19 +490,9 @@ export default {
 	},
 	async mounted() {
 		moment.locale('es');
-
 		await this.getMessages();
 	},
 	methods: {
-		async pusherCallback(data) {
-			if (this.selected._id == data.psychologistId) {
-				await this.getChat(data.psychologistId);
-				this.scrollToElement();
-				await this.updateMessage(data.content._id);
-				await this.getMessages();
-			}
-			await this.getMessages();
-		},
 		async onSubmit() {
 			this.loadingMessage = true;
 			if (!this.message) return;
@@ -516,6 +506,15 @@ export default {
 			this.message = '';
 			this.loadingMessage = false;
 			this.scrollToElement();
+		},
+		async pusherCallback(data) {
+			if (this.selected._id == data.psychologistId) {
+				await this.getChat(data.psychologistId);
+				this.scrollToElement();
+				await this.updateMessage(data.content._id);
+				await this.getMessages();
+			}
+			await this.getMessages();
 		},
 		setDate(time) {
 			if (time) return moment(time).calendar();
