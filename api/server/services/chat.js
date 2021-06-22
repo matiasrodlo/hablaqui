@@ -12,25 +12,15 @@ const startConversation = async (psychologistId, user) => {
 	return okResponse('chat inicializado', { newChat });
 };
 
-const getMessages = async (user, receiver) => {
-	if (user.role == 'psychologist') {
-		return okResponse('Mensajes conseguidos', {
-			messages: await Chat.findOne({
-				psychologist: user._id,
-				user: receiver,
-			}).populate('user psychologist'),
-		});
-	}
-	if (user.role == 'user') {
-		return okResponse('Mensajes conseguidos', {
-			messages: await Chat.findOne({
-				psychologist: receiver,
-				user: user._id,
-			}).populate('user psychologist'),
-		});
-	}
-	return conflictResponse('Ha ocurrido un error');
+const getMessages = async (user, psy) => {
+	return okResponse('Mensajes conseguidos', {
+		messages: await Chat.findOne({
+			psychologist: psy,
+			user: user,
+		}).populate('user psychologist'),
+	});
 };
+
 const getChats = async user => {
 	if (user.role == 'psychologist') {
 		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);

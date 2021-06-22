@@ -272,7 +272,7 @@ export default {
 		async selectedPsy(psy) {
 			this.selected = psy;
 			this.loadingChat = true;
-			await this.getChat(psy._id);
+			await this.getChat({ psy: psy._id, user: this.user._id });
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
 			if (this.chat.messages.length) {

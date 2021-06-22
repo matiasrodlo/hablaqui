@@ -17,7 +17,7 @@ chatRouter.get(
 );
 
 chatRouter.get(
-	'/chat/get-messages/:receiver',
+	'/chat/get-messages/:psy/:user',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.getMessages
 );

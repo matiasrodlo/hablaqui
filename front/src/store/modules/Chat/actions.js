@@ -32,9 +32,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getChat({ commit }, receiver) {
+	async getChat({ commit }, { psy, user }) {
 		try {
-			const { data } = await axios(`/chat/get-messages/${receiver}`, {
+			const { data } = await axios(`/chat/get-messages/${psy}/${user}`, {
 				method: 'GET',
 			});
 			commit('setChat', data.messages);

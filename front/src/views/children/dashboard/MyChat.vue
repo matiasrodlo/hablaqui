@@ -67,7 +67,9 @@
 								>
 									<v-list-item-avatar
 										style="border-radius: 40px;"
-										:style="user.hasMessage ? 'border: 3px solid #2070E5' : ''"
+										:style="
+											user.hasMessageUser ? 'border: 3px solid #2070E5' : ''
+										"
 										size="60"
 									>
 										<avatar :url="user.avatar" :name="user.name" size="60" />
@@ -449,7 +451,7 @@ export default {
 		usersFromChats() {
 			return this.chats.map(item => ({
 				...item.user,
-				hasMessage: this.hasMessageUser(item.user),
+				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
 		landingUrl() {
@@ -508,11 +510,10 @@ export default {
 			this.scrollToElement();
 		},
 		async pusherCallback(data) {
-			if (this.selected._id == data.psychologistId) {
-				await this.getChat(data.psychologistId);
+			if (this.selected._id == data.psychologistId || this.selected._id == data.userId) {
+				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
 				await this.updateMessage(data.content._id);
-				await this.getMessages();
 			}
 			await this.getMessages();
 		},
@@ -529,7 +530,7 @@ export default {
 		sentBy(sentBy) {
 			return sentBy == this.user._id;
 		},
-		setSelectedUser(user) {
+		async setSelectedUser(user) {
 			this.selected = {
 				name: user.name,
 				lastName: user.lastName,
@@ -540,13 +541,17 @@ export default {
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
+			if (user.hasMessageUser) {
+				await this.updateMessage(user.hasMessageUser);
+				await this.getMessages();
+			}
 		},
 		async setSelectedPsy(psy) {
 			// inicamos carga del seleccionado
 			this.loadingChat = true;
 			this.selected = psy;
 			// obeteners chat del seleccciona
-			await this.getChat(psy._id);
+			await this.getChat({ psy: psy._id, user: this.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
 			// scroll hasta el final para ver los ultimos mensajes
