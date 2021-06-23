@@ -7,6 +7,7 @@
 					v-model="formUser.name"
 					filled
 					outlined
+					readonly
 					dense
 					hide-details
 					label="Nombre"
