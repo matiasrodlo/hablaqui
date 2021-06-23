@@ -329,7 +329,7 @@ export default {
 	},
 	watch: {
 		async resumeView(newValue) {
-			if (newValue) {
+			if (newValue && this.dialog) {
 				this.loadingChat = true;
 				await this.startConversation(this.psychologist._id);
 				this.setResumeView(false);
