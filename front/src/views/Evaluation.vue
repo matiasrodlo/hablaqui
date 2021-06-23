@@ -679,7 +679,7 @@ export default {
 			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
-			const wordsPerLine = Math.ceil(items.length / 4);
+			const wordsPerLine = 2;
 			for (let line = 0; line < n; line++) {
 				for (let i = 0; i < wordsPerLine; i++) {
 					const value = items[i + line * wordsPerLine];
