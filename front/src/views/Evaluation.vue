@@ -745,7 +745,7 @@ export default {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2500);
+			}, 3000);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
