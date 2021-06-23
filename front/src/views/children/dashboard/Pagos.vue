@@ -10,7 +10,7 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title class="headline font-weight-bold">
-								{{ card.value }}
+								{{ user._id == '60c26d38f12991000bca3bba' ? card.value : '0' }}
 							</v-list-item-title>
 							<v-list-item-subtitle class="body-1">
 								{{ card.title }}
@@ -31,16 +31,16 @@
 					<span class="white--text body-1 text-center">Pagado</span>
 					<span class="white--text body-1 text-center">Deuda</span>
 				</div>
-				<v-expansion-panels>
+				<v-expansion-panels v-if="user._id == '60c26d38f12991000bca3bba'">
 					<v-expansion-panel v-for="(item, i) in payments" :key="i">
 						<v-expansion-panel-header>
 							<div class="d-flex justify-space-around">
-								<span class="body-1 text-center" style="width:150px">{{
-									item.code
-								}}</span>
-								<span class="body-1 text-center" style="width:150px">{{
-									item.name
-								}}</span>
+								<span class="body-1 text-center" style="width:150px">
+									{{ item.code }}
+								</span>
+								<span class="body-1 text-center" style="width:150px">
+									{{ item.name }}
+								</span>
 								<span class="body-1 text-center" style="width:150px">
 									{{ item.plan }}
 								</span>
@@ -73,12 +73,20 @@
 						</v-expansion-panel-content>
 					</v-expansion-panel>
 				</v-expansion-panels>
+				<v-card v-if="user._id != '60c26d38f12991000bca3bba'" flat>
+					<v-card-text class="text-center">
+						<div class="body-1 my-3 mx-auto">
+							Paciencia. Aún nadie ha reservado una sesión
+						</div>
+					</v-card-text>
+				</v-card>
 			</v-col>
 		</div>
 	</v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
 	name: 'Pagos',
 	components: {
@@ -145,6 +153,9 @@ export default {
 				},
 			],
 		};
+	},
+	computed: {
+		...mapGetters({ user: 'User/user' }),
 	},
 };
 </script>

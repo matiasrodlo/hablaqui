@@ -41,7 +41,7 @@
 								class="primary white--text pa-4 mx-4"
 								style="border-radius:20px"
 							>
-								Aun no tienes consultantes
+								Aún no tienes consultantes
 							</v-sheet>
 
 							<!-- <v-list two-line class="py-0">

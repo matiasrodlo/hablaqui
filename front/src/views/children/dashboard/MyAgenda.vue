@@ -19,13 +19,20 @@
 						"
 					/>
 				</div>
-				<v-card
-					v-if="
-						user._id != '60a0e168fd8c0f000ace3b71' &&
-							user._id != '60c26d38f12991000bca3bba'
-					"
-					flat
-				>
+				<v-card v-if="user.role != 'user' && user._id != '60c26d38f12991000bca3bba'" flat>
+					<v-card-text class="text-center">
+						<div
+							class="mt-10 text-h6 font-weight-bold primary--text mx-auto"
+							style="max-width: 340px"
+						>
+							Próximas sesiones
+						</div>
+						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
+							Paciencia. Aún nadie ha reservado una sesión
+						</div>
+					</v-card-text>
+				</v-card>
+				<v-card v-if="user.role == 'user' && user._id != '60a0e168fd8c0f000ace3b71'" flat>
 					<v-card-text class="text-center">
 						<div
 							class="text-h6 font-weight-bold primary--text mx-auto"
