@@ -19,22 +19,23 @@
 						"
 					/>
 				</div>
-				<div>
-					<div class="body-1 secondary--text font-weight-bold">
-						Próxima sesión
-					</div>
+				<div
+					v-if="user._id == '60a0e168fd8c0f000ace3b71'"
+					class="body-1 secondary--text font-weight-bold"
+				>
+					Próxima sesión
 				</div>
-				<v-card v-if="user._id !== '60a0e168fd8c0f000ace3b71'" flat>
+				<v-card v-else flat>
 					<v-card-text class="text-center">
 						<div
-							class="text-h6 font-weight-bold primary--text my-10 mx-auto"
+							class="text-h6 font-weight-bold primary--text mx-auto"
 							style="max-width: 340px"
 						>
-							Agenda con un espacialista e inicia tu viaje hacia el bienestar
+							Agenda con un especialista
 						</div>
-						<div class="body-1 my-10 mx-auto" style="max-width: 280px">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-							nonummy nibh eu- ismod tincidunt ut laoreet dolore magna
+						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
+							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
+							tu vida hoy.
 						</div>
 						<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
 							Buscar ahora

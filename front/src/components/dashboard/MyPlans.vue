@@ -25,14 +25,14 @@
 			<v-card>
 				<v-card-text class="text-center">
 					<div
-						class="headline font-weight-bold primary--text my-10 mx-auto"
+						class="headline font-weight-bold primary--text my-5 mx-auto"
 						style="max-width: 295px"
 					>
 						Adquiere nuestros planes y agenda con un espacialista
 					</div>
-					<div class="body-1 my-10 mx-auto" style="max-width: 280px">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh eu- ismod tincidunt ut laoreet dolore magna
+					<div class="body-1 my-5 mx-auto" style="max-width: 280px">
+						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
+						vida hoy.
 					</div>
 					<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
 						Buscar ahora

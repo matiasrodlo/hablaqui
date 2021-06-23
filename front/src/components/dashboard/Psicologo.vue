@@ -58,7 +58,7 @@
 							{{ el }}
 						</v-chip>
 					</span>
-					<div class="body-2 mt-2 text-capitalize">
+					<div class="caption mt-2 text-capitalize">
 						Te acompañare en el proceso en el proceso de conocerte más, exploraremos
 						juntos aquello que te causa malestar, comprendiendolo y aceptandolo. En este
 						proceso aprenderas a relacionarte con tus pensamientos y emociones de una
@@ -73,14 +73,14 @@
 			<v-card>
 				<v-card-text class="text-center">
 					<div
-						class="headline font-weight-bold primary--text my-10 mx-auto"
+						class="headline font-weight-bold primary--text my-5 mx-auto"
 						style="max-width: 340px"
 					>
 						Agenda con un espacialista e inicia tu viaje hacia el bienestar
 					</div>
-					<div class="body-1 my-10 mx-auto" style="max-width: 280px">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh eu- ismod tincidunt ut laoreet dolore magna
+					<div class="body-1 my-5 mx-auto" style="max-width: 280px">
+						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
+						vida hoy.
 					</div>
 					<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
 						Buscar ahora

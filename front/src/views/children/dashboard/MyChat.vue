@@ -197,16 +197,18 @@
 						<template v-else>
 							<div style="flex: 1" class="d-flex justify-center align-center">
 								<div class="text-center">
-									<span class=" body-1 primary--text font-weight-bold">
+									<span
+										class="body-1 primary--text font-weight-bold"
+										style="max-width: 220px"
+									>
 										Comienza a hablar con nuestros psicólogos
 									</span>
-									<div class="mt-10 body-2">
-										Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-										sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-										magna
+									<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
+										Orientación psicológica en cualquier momento y lugar.
+										Comienza a mejorar tu vida hoy.
 									</div>
 									<v-btn
-										class="mt-10 px-8 py-6"
+										class="mt-5 px-8"
 										color="primary"
 										rounded
 										:to="{ name: 'all-psicologos' }"
@@ -377,7 +379,11 @@
 							de Chat
 						</div>
 						<div class="primary--text body-2 text-center">
-							<a :href="`${landingUrl}/condiciones`" style="text-decoration: none">
+							<a
+								target="_blank"
+								:href="`${landingUrl}/condiciones`"
+								style="text-decoration: none"
+							>
 								Ver terminos y condiciones de Chat
 							</a>
 						</div>
