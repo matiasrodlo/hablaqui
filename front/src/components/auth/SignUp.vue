@@ -173,7 +173,10 @@ export default {
 				this.loading = false;
 				if (loggedIn)
 					if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
-					else if (this.$route.name !== 'all-psicologos')
+					else if (
+						this.$route.name !== 'all-psicologos' &&
+						this.$route.name !== 'psicologo'
+					)
 						this.$router.push({ name: 'perfil' });
 					else if (this.isDialog) this.setResumeView(true);
 			}

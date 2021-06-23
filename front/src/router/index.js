@@ -25,7 +25,8 @@ const routes = [
 	},
 	{
 		path: '/psicologos',
-		redirect: { name: 'psicologos' },
+		name: 'psicologos',
+		redirect: { name: 'all-psicologos' },
 		component: Experts,
 		children: [
 			{
