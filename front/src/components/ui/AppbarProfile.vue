@@ -3,7 +3,11 @@
 		<h1 class="primary--text">{{ $route.meta.title }}</h1>
 		<v-spacer></v-spacer>
 		<div class="mx-5 body-1 primary--text">
-			<router-link style="text-decoration:none" :to="{ name: 'all-psicologos' }">
+			<router-link
+				v-if="user.role == 'user'"
+				style="text-decoration:none"
+				:to="{ name: 'all-psicologos' }"
+			>
 				Psicólogos
 			</router-link>
 		</div>
@@ -22,13 +26,14 @@
 
 <script>
 import { landing } from '@/config';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	computed: {
 		landing_page() {
 			return landing;
 		},
+		...mapGetters({ user: 'User/user' }),
 	},
 	methods: {
 		logout() {
