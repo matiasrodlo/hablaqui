@@ -345,7 +345,8 @@
 												"
 											>
 												<div
-													style="max-height: 75px; overflow-y: auto body-2"
+													class="body-2"
+													style="max-height: 75px; overflow-y: auto"
 												>
 													{{ item.message }}
 												</div>
