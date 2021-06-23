@@ -230,19 +230,10 @@
 						<!-- cabecera -->
 						<v-list-item>
 							<v-list-item-avatar size="50">
-								<router-link
-									:to="{ name: 'perfil' }"
-									style="text-decoration: none; height: 50px; height: 50px"
-								>
-									<avatar
-										:url="selected.avatar"
-										size="50"
-										:name="selected.name"
-									/>
-								</router-link>
+								<avatar :url="selected.avatar" size="50" :name="selected.name" />
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
-								<router-link :to="{ name: 'perfil' }" style="text-decoration: none">
+								<div>
 									<span class="secondary--text">
 										{{ selected.shortName || selected.name }}
 									</span>
@@ -252,7 +243,7 @@
 									<div class="secondary--text caption text--disabled">
 										{{ subHeader }}
 									</div>
-								</router-link>
+								</div>
 							</v-list-item-title>
 							<v-list-item-action>
 								<v-btn icon>
@@ -295,7 +286,7 @@
 								style="max-width: 320px"
 							>
 								Bienvenido al chat confidencial
-								{{ user.role == 'user' && 'con el psicólogo' }}
+								{{ user.role == 'user' ? 'con el psicólogo' : '' }}
 							</div>
 							<v-divider
 								class="mx-auto mb-10"
