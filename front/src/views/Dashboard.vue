@@ -26,11 +26,6 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
-			<v-list-item style="flex: 1">
-				<div class="white--text">
-					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonum
-				</div>
-			</v-list-item>
 		</v-col>
 		<v-col cols="10">
 			<div style="border-radius: 50px 0 0 0" class="white">

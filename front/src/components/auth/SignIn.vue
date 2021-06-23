@@ -63,14 +63,14 @@ export default {
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
-			!this.$v.form.email.required && errors.push('El Correo electronico es querido');
-			!this.$v.form.email.email && errors.push('Escriba un email valido');
+			!this.$v.form.email.required && errors.push('Se requiere correo electrónico');
+			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
 			return errors;
 		},
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
-			!this.$v.form.password.required && errors.push('La contraseña es querida');
+			!this.$v.form.password.required && errors.push('Se requiere contraseña');
 			return errors;
 		},
 	},

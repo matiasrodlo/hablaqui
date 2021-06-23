@@ -27,12 +27,11 @@
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content>
-					<v-list-item-title class="text-uppercase font-weight-bold title">
-						{{ user.name }}
+					<v-list-item-title class="text-capitalize font-weight-bold title">
+						{{ user.name }} {{ user.lastName }}
 					</v-list-item-title>
 					<v-list-item-subtitle class="body-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem et
-						cupiditate natus est odit .
+						Bienvenido a Hablaquí
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>

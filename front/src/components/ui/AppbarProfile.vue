@@ -12,9 +12,11 @@
 				Centro de ayuda
 			</a>
 		</div>
-		<div class="mx-5" @click="logout">
-			<v-img height="65" width="65" src="img/down.png" alt="salir" />
-		</div>
+		<v-btn class="ml-2" fab color="white" @click="logout">
+			<v-icon large color="primary">
+				mdi-logout
+			</v-icon>
+		</v-btn>
 	</v-app-bar>
 </template>
 
