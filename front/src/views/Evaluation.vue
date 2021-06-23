@@ -616,7 +616,12 @@
 										</div>
 									</v-carousel-item>
 								</v-carousel>
-								<v-item-group v-model="onboarding" class="text-center" mandatory>
+								<v-item-group
+									v-if="$vuetify.breakpoint.mdAndUp"
+									v-model="onboarding"
+									class="text-center"
+									mandatory
+								>
 									<v-item
 										v-for="(n, e) in psi"
 										:key="`btn-${e}`"
