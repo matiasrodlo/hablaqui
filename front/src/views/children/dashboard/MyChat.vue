@@ -392,7 +392,13 @@
 									<v-btn depressed icon>
 										<v-img src="/img/voz.png" height="30" width="30"></v-img>
 									</v-btn>
-									<v-btn class="ml-2 mr-2" depressed icon type="submit">
+									<v-btn
+										class="ml-2 mr-2"
+										depressed
+										icon
+										type="submit"
+										:disabled="!message"
+									>
 										<v-img
 											src="/img/message.png"
 											height="30"

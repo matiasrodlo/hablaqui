@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="user._id != '60a0e168fd8c0f000ace3b71'">
+		<template v-if="user._id == '60a0e168fd8c0f000ace3b71'">
 			<v-card flat>
 				<v-card-text>
 					<div>
