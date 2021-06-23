@@ -41,7 +41,7 @@
 				Suscripción -
 				<v-btn text color="primary" class="px-0" small @click="goBack">Cambiar </v-btn>
 			</div>
-			<div class="subtitle-1 my-2" style="max-width: 320px">
+			<div class="caption my-2" style="max-width: 320px">
 				{{ plan.subtitle }}
 				{{ plan.description }}
 			</div>

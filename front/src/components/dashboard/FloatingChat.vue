@@ -18,11 +18,11 @@
 					color="primary"
 					absolute
 					class="open-button"
-					width="80"
-					height="80"
+					width="65"
+					height="65"
 					@click="open"
 				>
-					<v-img width="80" height="80" src="/img/chat.png" contain></v-img>
+					<v-img width="65" height="65" src="/img/chat.png" contain></v-img>
 				</v-btn>
 			</template>
 			<v-card width="400">

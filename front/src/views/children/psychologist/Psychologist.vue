@@ -56,6 +56,7 @@
 							<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
 								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
 								<v-btn
+									v-if="loggedIn && user.role == 'user'"
 									:loading="loadingChat"
 									rounded
 									class="info mx-1 my-2"
@@ -169,7 +170,7 @@
 				</v-row>
 			</v-card-text>
 		</v-card>
-		<FloatingChat v-if="loggedIn" />
+		<FloatingChat v-if="loggedIn && user.role == 'user'" />
 		<v-dialog v-model="dialog" transition="dialog-top-transition" width="450">
 			<v-card rounded="xl">
 				<v-card-text>
@@ -302,6 +303,7 @@ export default {
 		},
 		...mapGetters({
 			loggedIn: 'User/loggedIn',
+			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 			resumeView: 'Psychologist/resumeView',
 		}),

@@ -21,7 +21,7 @@
 			</v-col>
 		</v-row>
 		<div style="height: calc(100vh - 300px); overflow-y: auto" class="d-flex">
-			<v-col cols="12">
+			<v-col cols="12" class="px-0">
 				<div class="grey darken-1 d-flex justify-space-around pa-4 mt-10 mb-2 rounded-lg">
 					<span class="white--text body-1 text-center">Codigo</span>
 					<span class="white--text body-1 text-center">Nombre</span>
@@ -95,15 +95,15 @@ export default {
 	data() {
 		return {
 			cards: [
-				{ value: '128', title: 'Usuarios', subtitle: '', img: '/img/sesiones.png' },
+				{ value: '128', title: 'Usuarios', subtitle: '', img: '/img/accoun.png' },
 				{
 					value: '200',
 					title: 'Planes contratados',
 					subtitle: '',
-					img: '/img/sesiones.png',
+					img: '/img/brain.png',
 				},
-				{ value: '$400.000', title: 'Pagado', subtitle: '', img: '/img/sesiones.png' },
-				{ value: '$300.000', title: 'Por pagar', subtitle: '', img: '/img/sesiones.png' },
+				{ value: '$400.000', title: 'Pagado', subtitle: '', img: '/img/pay.png' },
+				{ value: '$300.000', title: 'Por pagar', subtitle: '', img: '/img/pagos.png' },
 			],
 			payments: [
 				{

@@ -56,7 +56,7 @@ export default {
 				{
 					name: 'Pagos',
 					link: 'pagos',
-					img: '/img/home.png',
+					img: '/img/pagos.png',
 					visible: this.user.role == 'psychologist',
 				},
 				{ name: 'Mi cuenta', link: 'perfil', img: '/img/home.png', visible: true },
