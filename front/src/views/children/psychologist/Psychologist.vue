@@ -170,26 +170,141 @@
 			</v-card-text>
 		</v-card>
 		<FloatingChat v-if="loggedIn" />
+		<v-dialog v-model="dialog" transition="dialog-top-transition" width="450">
+			<v-card rounded="xl">
+				<v-card-text>
+					<v-tabs-items v-model="tab">
+						<v-tab-item>
+							<v-card flat max-width="500" class="mx-auto">
+								<v-img
+									width="80"
+									height="80"
+									class="mx-auto mt-8"
+									src="/img/logo_tiny.png"
+								></v-img>
+								<v-card-text><signin :isDialog="true"/></v-card-text>
+								<v-card-text class="pt-0">
+									<div
+										class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									>
+										<small>
+											¿No eres parte de Hablaquí?
+										</small>
+									</div>
+									<v-btn outlined block rounded color="primary" @click="tab = 1">
+										Crea una cuenta
+									</v-btn>
+									<div class="text-center mt-10">
+										<v-btn
+											class="px-0"
+											text
+											color="primary"
+											:href="`${landingUrl}/politicas`"
+										>
+											Aviso de privacidad
+										</v-btn>
+										<span class="primary--text mx-1">y</span>
+										<v-btn
+											class="px-0"
+											text
+											color="primary"
+											:href="`${landingUrl}/condiciones`"
+										>
+											Términos y Condiciones</v-btn
+										>
+									</div>
+									<div
+										class="text-center font-weight-bold caption secondary--text"
+									>
+										2021 Hablaqui
+									</div>
+								</v-card-text>
+							</v-card>
+						</v-tab-item>
+						<v-tab-item>
+							<v-card flat max-width="500" class="mx-auto">
+								<v-img
+									width="80"
+									height="80"
+									class="mx-auto mt-8"
+									src="/img/logo_tiny.png"
+								>
+								</v-img>
+								<v-card-text><signup :isDialog="true"/></v-card-text>
+								<v-card-text class="pt-0">
+									<div
+										class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									>
+										<small>
+											¿Ya tienes cuenta Hablaquí?
+										</small>
+									</div>
+									<v-btn outlined block rounded color="primary" @click="tab = 0">
+										Entrar
+									</v-btn>
+									<div class="text-center mt-2">
+										<v-btn
+											class="pa-0"
+											text
+											color="primary"
+											:href="`${landingUrl}/politicas`"
+											>Aviso de privacidad</v-btn
+										>
+										<span class="primary--text mx-1">y</span>
+										<v-btn
+											class="pa-0"
+											text
+											color="primary"
+											:href="`${landingUrl}/condiciones`"
+										>
+											Términos y Condiciones</v-btn
+										>
+									</div>
+									<div
+										class="text-center font-weight-bold caption secondary--text"
+									>
+										2021 Hablaqui
+									</div>
+								</v-card-text>
+							</v-card>
+						</v-tab-item>
+					</v-tabs-items>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { landing } from '@/config';
+
 export default {
 	components: {
+		signin: () => import('@/components/auth/SignIn'),
+		signup: () => import('@/components/auth/SignUp'),
 		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
 			loadingChat: false,
+			dialog: false,
+			tab: 1,
 		};
 	},
 	computed: {
+		landingUrl() {
+			return landing;
+		},
 		psychologist() {
 			return this.psychologists.find(item => item._id === this.$route.params.id);
 		},
-		...mapGetters({ loggedIn: 'User/loggedIn', psychologists: 'Psychologist/psychologists' }),
+		...mapGetters({
+			loggedIn: 'User/loggedIn',
+			psychologists: 'Psychologist/psychologists',
+			resumeView: 'Psychologist/resumeView',
+		}),
 	},
 	methods: {
 		toAuth(item) {
@@ -198,16 +313,30 @@ export default {
 			else this.$router.push({ path: '/auth/q=register' });
 		},
 		async goChat() {
-			this.loadingChat = true;
-			await this.startConversation(this.psychologist._id);
-			this.loadingChat = false;
-			this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+			if (!this.loggedIn) {
+				this.dialog = true;
+			} else {
+				this.loadingChat = true;
+				await this.startConversation(this.psychologist._id);
+				this.loadingChat = false;
+				this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+			}
 		},
 		...mapActions({
 			startConversation: 'Chat/startConversation',
 		}),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
+	},
+	watch: {
+		async resumeView(newValue) {
+			if (newValue) {
+				this.loadingChat = true;
+				await this.startConversation(this.psychologist._id);
+				this.setResumeView(false);
+				this.loadingChat = false;
+				this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+			}
+		},
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>
