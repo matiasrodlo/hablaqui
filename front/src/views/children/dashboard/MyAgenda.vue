@@ -5,19 +5,23 @@
 			<v-col cols="12" sm="3" md="4" lg="3">
 				<div class="text-center">
 					<v-date-picker
-						v-model="date"
+						v-model="today"
+						locale="es"
 						full-width
+						no-title
 						:allowed-dates="allowedDates"
-						min="2016-06-15"
-						max="2018-03-20"
+						min="2021-06-01"
+						@change="
+							e => {
+								focus = e;
+								type = 'day';
+							}
+						"
 					/>
 				</div>
 				<div>
-					<v-checkbox id="sesion" class="d-inline-block" />
-					<label for="sesion" class="font-weight-bold">Sesiones</label>
-					<div class="caption font-weight-bold">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh euismod
+					<div class="body-1 font-weight-bold">
+						Próxima sesión
 					</div>
 				</div>
 			</v-col>
@@ -73,7 +77,8 @@
 						locale="es"
 						v-model="focus"
 						color="primary"
-						:event-color="getEventColor"
+						:now="today"
+						:events="events"
 						:type="type"
 						@click:event="showEvent"
 						@click:more="viewDay"
@@ -87,25 +92,24 @@
 						offset-x
 					>
 						<v-card color="grey lighten-4" min-width="350px" flat>
-							<v-toolbar :color="selectedEvent.color" dark>
-								<v-btn icon>
-									<v-icon>mdi-pencil</v-icon>
-								</v-btn>
-								<v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-								<v-spacer></v-spacer>
-								<v-btn icon>
-									<v-icon>mdi-heart</v-icon>
-								</v-btn>
-								<v-btn icon>
-									<v-icon>mdi-dots-vertical</v-icon>
-								</v-btn>
+							<v-toolbar flat>
+								<v-toolbar-title
+									class="secondary--text"
+									v-html="selectedEvent.name"
+								></v-toolbar-title>
 							</v-toolbar>
 							<v-card-text>
-								<span v-html="selectedEvent.details"></span>
+								<v-icon left>mdi-clock-outline</v-icon>
+								<span>{{ setSubtitle(selectedEvent.start) }}</span>
 							</v-card-text>
+							<v-divider></v-divider>
 							<v-card-actions>
+								<v-btn text color="primary" @click="selectedOpen = false">
+									Reprogramar
+								</v-btn>
+								<v-spacer></v-spacer>
 								<v-btn text color="secondary" @click="selectedOpen = false">
-									Cancel
+									Cancelar sesion
 								</v-btn>
 							</v-card-actions>
 						</v-card>
@@ -117,6 +121,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import { mapActions } from 'vuex';
 
 export default {
@@ -136,16 +141,20 @@ export default {
 		selectedEvent: {},
 		selectedElement: null,
 		selectedOpen: false,
+		today: moment().format('YYYY-MM-DD'),
 		events: [],
-		colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-		names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+		names: ['Sescion con', 'ocupado'],
 	}),
 	mounted() {
+		moment.locale('es');
 		this.successPayment();
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
-		allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+		allowedDates(val) {
+			if (val == '2021-06-25' || val == '2021-06-30') return false;
+			return true;
+		},
 		viewDay({ date }) {
 			this.focus = date;
 			this.type = 'day';
@@ -154,7 +163,7 @@ export default {
 			return event.color;
 		},
 		setToday() {
-			this.focus = '';
+			this.focus = moment().format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();
@@ -180,29 +189,61 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange({ start, end }) {
-			const events = [];
-
-			const min = new Date(`${start.date}T00:00:00`);
-			const max = new Date(`${end.date}T23:59:59`);
-			const days = (max.getTime() - min.getTime()) / 86400000;
-			const eventCount = this.rnd(days, days + 20);
-
-			for (let i = 0; i < eventCount; i++) {
-				const allDay = this.rnd(0, 3) === 0;
-				const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-				const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-				const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-				const second = new Date(first.getTime() + secondTimestamp);
-
-				events.push({
-					name: this.names[this.rnd(0, this.names.length - 1)],
-					start: first,
-					end: second,
-					color: this.colors[this.rnd(0, this.colors.length - 1)],
-					timed: !allDay,
-				});
-			}
+		updateRange() {
+			const events = [
+				{
+					name: 'Sesion con Marcelo',
+					start: '2021-06-24 09:00',
+					end: '2021-06-24 10:00',
+					details: 'Sesion con marcelo',
+				},
+				{
+					name: 'Sesion con Adrian',
+					start: '2021-06-24 10:00',
+					end: '2021-06-24 11:00',
+					details: 'Sesion con Adrian',
+				},
+				{
+					name: 'Ocupado',
+					start: '2021-06-29 14:30',
+					end: '2021-06-29 15:30',
+					details: 'Ocupado, desde las 14:30 hasta  las 15:30',
+				},
+				{
+					name: `Cumpleaños Nina`,
+					start: '2021-06-25',
+					details: 'Cumpleaños de Nina este dia, todo el dia',
+				},
+				{
+					name: `Cumpleaños Nina`,
+					start: '2021-06-30',
+					details: 'Cumpleaños de Javiera este dia, todo el dia',
+				},
+				{
+					name: 'Ocupado',
+					start: '2021-06-26 12:30',
+					end: '2021-06-26 15:30',
+					details: 'Ocupado, desde las 12:30 hasta  las 15:30',
+				},
+				{
+					name: 'Sesion con Marcelo',
+					start: '2021-06-28 09:00',
+					end: '2021-06-28 10:00',
+					details: 'Sesion con marcelo',
+				},
+				{
+					name: 'Sesion con Adrian',
+					start: '2021-06-28 10:00',
+					end: '2021-06-28 11:00',
+					details: 'Sesion con Adrian',
+				},
+				{
+					name: 'Sesion con Adrian',
+					start: '2021-07-04 10:00',
+					end: '2021-07-04 11:00',
+					details: 'Sesion con Adrian',
+				},
+			];
 
 			this.events = events;
 		},
@@ -227,6 +268,9 @@ export default {
 				localStorage.removeItem('match');
 				localStorage.removeItem('psi');
 			}
+		},
+		setSubtitle(date) {
+			return moment(date).format('LLL');
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
