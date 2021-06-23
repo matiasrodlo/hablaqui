@@ -90,7 +90,7 @@ export default {
 						this.$route.name !== 'all-psicologos' &&
 						this.$route.name !== 'psicologo'
 					)
-						this.$router.push({ name: 'perfil' });
+						this.$router.push({ name: 'chat' });
 					else if (this.isDialog) this.setResumeView(true);
 			}
 		},

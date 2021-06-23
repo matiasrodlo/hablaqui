@@ -294,23 +294,13 @@
 								class="mx-auto text-center headline font-weight-bold primary--text my-4"
 								style="max-width: 320px"
 							>
-								Bienvenido al chat confidencial con el psicólogo
+								Bienvenido al chat confidencial
+								{{ user.role == 'user' && 'con el psicólogo' }}
 							</div>
 							<v-divider
-								class="mx-auto"
+								class="mx-auto mb-10"
 								style="width: 100px; border-color: #2070E5"
 							></v-divider>
-							<div class="my-10 mx-auto text-center body-2" style="max-width: 400px">
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-								nonummy nibh euismod tincidunt ut laoreet dolore magna
-							</div>
-							<v-divider class="mx-auto" style="width: 300px;"></v-divider>
-							<div
-								class="my-5 mx-auto text-center body-2 text--disabled"
-								style="max-width: 400px"
-							>
-								{{ setDate() }}
-							</div>
 							<div style="width: 50%; display: flex; justify-content: space-between">
 								<span class="text--disabled">
 									{{ selected.name }}
@@ -319,8 +309,11 @@
 							</div>
 							<div class="talkbubble talkbubble__two" style="margin-top: 2px">
 								<p style="body-2 max-height: 75px; overflow-y: auto">
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+									{{
+										user.role == 'user'
+											? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+											: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+									}}
 								</p>
 							</div>
 						</template>
@@ -375,8 +368,8 @@
 					<!-- Zona para escribir -->
 					<v-card-text v-if="selected.assitant">
 						<div class="text-center body-2">
-							Lorem ipsum dolor sit amet, consectetuer adiVer terminos y condiciones
-							de Chat
+							Hablaquí valora la privacidad. No compartiremos tus mensajes, ni tampoco
+							ningún dato personal.
 						</div>
 						<div class="primary--text body-2 text-center">
 							<a
@@ -523,7 +516,8 @@ export default {
 			this.selected = {
 				name: 'Habi',
 				assitant: true,
-				avatar: '',
+				avatar:
+					'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			};
 		}
 	},
