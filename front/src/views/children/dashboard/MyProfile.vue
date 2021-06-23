@@ -42,11 +42,11 @@
 				Información General
 			</v-tab>
 
-			<v-tab class="primary--text text-capitalize">
+			<v-tab v-if="user.role == 'user'" class="primary--text text-capitalize">
 				Mis planes
 			</v-tab>
 
-			<v-tab class="primary--text text-capitalize">
+			<v-tab v-if="user.role == 'user'" class="primary--text text-capitalize">
 				Mi psicologo
 			</v-tab>
 		</v-tabs>
