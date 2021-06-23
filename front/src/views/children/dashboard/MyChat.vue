@@ -92,17 +92,6 @@
 								</v-list-item>
 							</v-list>
 						</template>
-						<div v-else style="flex: 1" class="d-flex justify-center align-center">
-							<div class="text-center">
-								<span class=" body-1 primary--text font-weight-bold">
-									Los usuarios te comenzarán a contactar
-								</span>
-								<div class="mt-10 body-2">
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-								</div>
-							</div>
-						</div>
 					</template>
 					<!-- barra lateral user -->
 					<template v-else>
