@@ -20,10 +20,27 @@
 					/>
 				</div>
 				<div>
-					<div class="body-1 font-weight-bold">
+					<div class="body-1 secondary--text font-weight-bold">
 						Próxima sesión
 					</div>
 				</div>
+				<v-card v-if="user._id !== '60a0e168fd8c0f000ace3b71'" flat>
+					<v-card-text class="text-center">
+						<div
+							class="text-h6 font-weight-bold primary--text my-10 mx-auto"
+							style="max-width: 340px"
+						>
+							Agenda con un espacialista e inicia tu viaje hacia el bienestar
+						</div>
+						<div class="body-1 my-10 mx-auto" style="max-width: 280px">
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+							nonummy nibh eu- ismod tincidunt ut laoreet dolore magna
+						</div>
+						<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
+							Buscar ahora
+						</v-btn>
+					</v-card-text>
+				</v-card>
 			</v-col>
 			<v-col cols="12" sm="9" md="8" lg="8" class="heightCalendar">
 				<v-sheet>
@@ -122,7 +139,7 @@
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	components: {
@@ -145,6 +162,9 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 	}),
+	computed: {
+		...mapGetters({ user: 'User/user' }),
+	},
 	mounted() {
 		moment.locale('es');
 		this.successPayment();
@@ -244,8 +264,7 @@ export default {
 					details: 'Sesion con Adrian',
 				},
 			];
-
-			this.events = events;
+			if (this.user._id == '60a0e168fd8c0f000ace3b71') this.events = events;
 		},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
