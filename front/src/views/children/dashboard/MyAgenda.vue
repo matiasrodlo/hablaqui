@@ -19,13 +19,13 @@
 						"
 					/>
 				</div>
-				<div
-					v-if="user._id == '60a0e168fd8c0f000ace3b71'"
-					class="body-1 secondary--text font-weight-bold"
+				<v-card
+					v-if="
+						user._id != '60a0e168fd8c0f000ace3b71' &&
+							user._id != '60c26d38f12991000bca3bba'
+					"
+					flat
 				>
-					Próxima sesión
-				</div>
-				<v-card v-else flat>
 					<v-card-text class="text-center">
 						<div
 							class="text-h6 font-weight-bold primary--text mx-auto"
@@ -211,61 +211,122 @@ export default {
 			nativeEvent.stopPropagation();
 		},
 		updateRange() {
-			const events = [
-				{
-					name: 'Sesion con Marcelo',
-					start: '2021-06-24 09:00',
-					end: '2021-06-24 10:00',
-					details: 'Sesion con marcelo',
-				},
-				{
-					name: 'Sesion con Adrian',
-					start: '2021-06-24 10:00',
-					end: '2021-06-24 11:00',
-					details: 'Sesion con Adrian',
-				},
-				{
-					name: 'Ocupado',
-					start: '2021-06-29 14:30',
-					end: '2021-06-29 15:30',
-					details: 'Ocupado, desde las 14:30 hasta  las 15:30',
-				},
-				{
-					name: `Cumpleaños Nina`,
-					start: '2021-06-25',
-					details: 'Cumpleaños de Nina este dia, todo el dia',
-				},
-				{
-					name: `Cumpleaños Nina`,
-					start: '2021-06-30',
-					details: 'Cumpleaños de Javiera este dia, todo el dia',
-				},
-				{
-					name: 'Ocupado',
-					start: '2021-06-26 12:30',
-					end: '2021-06-26 15:30',
-					details: 'Ocupado, desde las 12:30 hasta  las 15:30',
-				},
-				{
-					name: 'Sesion con Marcelo',
-					start: '2021-06-28 09:00',
-					end: '2021-06-28 10:00',
-					details: 'Sesion con marcelo',
-				},
-				{
-					name: 'Sesion con Adrian',
-					start: '2021-06-28 10:00',
-					end: '2021-06-28 11:00',
-					details: 'Sesion con Adrian',
-				},
-				{
-					name: 'Sesion con Adrian',
-					start: '2021-07-04 10:00',
-					end: '2021-07-04 11:00',
-					details: 'Sesion con Adrian',
-				},
-			];
-			if (this.user._id == '60a0e168fd8c0f000ace3b71') this.events = events;
+			if (this.user._id == '60a0e168fd8c0f000ace3b71')
+				this.events = [
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-06-24 09:00',
+						end: '2021-06-24 10:00',
+						details: 'Sesion con Joaquin',
+					},
+
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-06-28 09:00',
+						end: '2021-06-28 10:00',
+						details: 'Sesion con Joaquin',
+					},
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-07-04 10:00',
+						end: '2021-07-04 11:00',
+						details: 'Sesion con Joaquin',
+					},
+				];
+			if (this.user._id == '60c26d38f12991000bca3bba') {
+				this.events = [
+					{
+						name: 'Sesion con Matias',
+						start: '2021-06-24 09:00',
+						end: '2021-06-24 10:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-06-24 10:00',
+						end: '2021-06-24 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-06-24 12:00',
+						end: '2021-06-24 13:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-06-28 09:00',
+						end: '2021-06-28 10:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-06-28 10:00',
+						end: '2021-06-28 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-06-28 12:00',
+						end: '2021-06-28 13:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Daniel',
+					},
+				];
+			}
 		},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
