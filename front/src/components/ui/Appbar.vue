@@ -175,7 +175,7 @@ export default {
 			menu: [
 				{ name: 'Chat', link: 'chat', img: '/img/chat.png' },
 				{ name: 'Mis sesiones', link: 'agenda', img: '/img/sesiones.png' },
-				{ name: 'Diario de bienestar', link: 'diario', img: '/img/notas.png' },
+				// { name: 'Diario de bienestar', link: 'diario', img: '/img/notas.png' },
 				{ name: 'Mi cuenta', link: 'perfil', img: '/img/home.png' },
 			],
 			drawer: false,

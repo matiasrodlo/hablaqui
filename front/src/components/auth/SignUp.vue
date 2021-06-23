@@ -26,7 +26,7 @@
 				<v-text-field
 					autocomplete="off"
 					v-model="form.inviteCode"
-					label="Códico de Invitación"
+					label="Código de Invitación(opcional)"
 					type="text"
 					:dense="isDialog"
 					outlined
