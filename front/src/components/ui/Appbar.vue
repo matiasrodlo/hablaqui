@@ -2,9 +2,13 @@
 	<div>
 		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
 			<v-list-item link :href="`${landing_page}`">
-				<v-img style="max-width: 150px" src="/img/logo.png" alt="hablaqui Logo" />
+				<v-img
+					class="mx-auto my-5"
+					style="max-width: 150px"
+					src="/img/logo.png"
+					alt="hablaqui Logo"
+				/>
 			</v-list-item>
-			<v-divider></v-divider>
 			<v-list dense>
 				<v-list-item
 					link
@@ -35,7 +39,7 @@
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-if="loggedIn" link :to="{ name: 'auth', params: { q: 'register' } }">
+				<v-list-item v-if="!loggedIn" link @click="start">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -148,7 +152,7 @@
 					class="mx-2 py-6 px-lg-10"
 					color="primary"
 					depressed
-					:to="{ name: 'auth', params: { q: 'register' } }"
+					@click="start"
 				>
 					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
@@ -192,6 +196,15 @@ export default {
 			this.resetUser();
 			localStorage.removeItem('vuex');
 			if (this.$route.meta.requiresAuth) this.$router.push({ name: 'auth' });
+		},
+		start() {
+			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			else
+				this.$router.push({
+					name: 'auth',
+					params: { q: 'register' },
+					query: { from: 'psy' },
+				});
 		},
 		...mapMutations({ resetUser: 'User/reset' }),
 	},
