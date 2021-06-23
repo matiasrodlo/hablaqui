@@ -449,7 +449,7 @@
 										</div>
 										<div class="body-2 mt-4">
 											<template v-for="(el, e) in item.specialties">
-												<span v-if="e < 7" :key="e"> {{ el }}; </span>
+												<span v-if="e < 6" :key="e"> {{ el }}; </span>
 											</template>
 										</div>
 									</v-card-text>

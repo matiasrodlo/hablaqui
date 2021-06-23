@@ -221,14 +221,14 @@
 					<template v-else>
 						<div class="d-flex justify-center align-center" style="height: 400px">
 							<div class="text-center pa-4" style="max-width: 300px">
-								<span class=" body-1 primary--text font-weight-bold">
+								<span class="body-1 primary--text font-weight-bold">
 									Comienza a hablar con nuestros psicólogos
 								</span>
-								<div class="mt-10 body-2">
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+								<div class="mt-5 body-2">
+									Orientación psicológica en cualquier momento y lugar. Comienza a
+									mejorar tu vida hoy.
 								</div>
-								<v-btn class="mt-10 px-8 py-6" color="primary" rounded>
+								<v-btn class="mt-5 px-8 py-6" color="primary" rounded>
 									Buscar ahora
 								</v-btn>
 							</div>
