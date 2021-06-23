@@ -58,7 +58,7 @@
 										{{ specialties }}
 									</v-chip>
 								</v-chip-group>
-								<div class="font-weight-light mt-2 text-capitalize">
+								<div class="font-weight-light mt-2">
 									{{ item.professionalDescription }}
 								</div>
 							</v-col>

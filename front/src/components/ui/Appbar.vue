@@ -76,7 +76,7 @@
 					<span class="body-1 text--secondary font-weight-bold">Blog</span>
 				</a>
 				<v-spacer></v-spacer>
-				<div v-if="loggedIn" class="text-h6 text--secondary mr-16" rounded text>
+				<div v-if="loggedIn" class="body-1 text--secondary mr-16" rounded text>
 					<h3 class="mr-6 secondary--text d-inline-block">Hola {{ user.name }}</h3>
 					<v-menu
 						rounded="xl"
@@ -87,7 +87,7 @@
 					>
 						<template v-slot:activator="{ on, attrs }">
 							<div class="d-inline-block" v-bind="attrs" v-on="on">
-								<avatar size="80" :name="user.name" :url="user.avatar" />
+								<avatar size="50" :name="user.name" :url="user.avatar" />
 							</div>
 						</template>
 						<v-card>
