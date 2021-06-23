@@ -8,6 +8,7 @@ const Dashboard = () => import('@/views/Dashboard');
 const Evaluation = () => import('@/views/Evaluation');
 const Experts = () => import('@/views/Experts');
 const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
+const Pagos = () => import('@/views/children/dashboard/Pagos');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
 const MyChat = () => import('@/views/children/dashboard/MyChat');
@@ -70,6 +71,12 @@ const routes = [
 				name: 'agenda',
 				component: MyAgenda,
 				meta: { title: 'Mi agenda', requiresAuth: true },
+			},
+			{
+				path: 'pagos',
+				name: 'pagos',
+				component: Pagos,
+				meta: { title: 'Pagos', requiresAuth: true },
 			},
 			{
 				path: 'diario',
