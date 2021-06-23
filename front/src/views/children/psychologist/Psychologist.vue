@@ -56,7 +56,7 @@
 							<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
 								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
 								<v-btn
-									v-if="loggedIn && user.role == 'user'"
+									v-if="!loggedIn || user.role == 'user'"
 									:loading="loadingChat"
 									rounded
 									class="info mx-1 my-2"
