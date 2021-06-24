@@ -35,11 +35,10 @@ export default {
 	},
 	data() {
 		return {
-			loading: false,
+			loading: true,
 		};
 	},
 	async mounted() {
-		this.loading = true;
 		await this.getPsychologists();
 		await this.getAppointments();
 		this.loading = false;

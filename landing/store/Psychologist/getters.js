@@ -1,6 +1,9 @@
+import { cloneDeep } from 'lodash';
+
 export default {
 	psychologists: state => {
-		return state.psychologists.sort(function randOrd() {
+		const psy = cloneDeep(state.psychologists);
+		return psy.sort(function randOrd() {
 			return Math.round(Math.random()) - 0.5;
 		});
 	},

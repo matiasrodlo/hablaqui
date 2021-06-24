@@ -74,9 +74,9 @@
 				</div>
 			</div>
 			<div class="mt-6 d-flex justify-space-around">
-				<v-img width="80" src="/img/planFour.png"></v-img>
-				<v-img width="80" src="/img/planFive.png"></v-img>
-				<v-img width="80" src="/img/planSix.png"></v-img>
+				<v-img width="80" :src="`${$config.LANDING_URL}/planFour.png`"></v-img>
+				<v-img width="80" :src="`${$config.LANDING_URL}/planFive.png`"></v-img>
+				<v-img width="80" :src="`${$config.LANDING_URL}/planSix.png`"></v-img>
 			</div>
 		</v-col>
 	</v-row>

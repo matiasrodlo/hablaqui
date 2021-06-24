@@ -1,30 +1,43 @@
 <template>
 	<v-container style="position: relative">
 		<v-row justify="space-between" align="center">
-			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
-				{{ $route.meta.title }}
+			<v-col tag="h1" class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
+				Encuentra a tu psicólogo online
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="3">
-				<v-card style="border-radius: 15px" outlined>
-					<template v-if="!$vuetify.breakpoint.smAndDown">
-						<v-card-title class="body-1 font-weight-bold text--secondary">
-							Filtrar por
-						</v-card-title>
-						<v-card-text>
-							<v-divider></v-divider>
-						</v-card-text>
-						<v-card-text style="height: 70px" class="d-flex align-center">
-							<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
-								<v-icon>mdi-menu</v-icon>
-							</v-btn>
-							<v-divider vertical class="mx-2"></v-divider>
-							<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
-								<v-icon>mdi-view-grid-outline</v-icon>
-							</v-btn>
-						</v-card-text>
-					</template>
+			<v-col class="hidden-sm-and-down" cols="12" md="3">
+				<v-card v-if="loading" style="border-radius: 15px" outlined>
+					<v-card-text>
+						<v-row>
+							<v-col
+								v-for="key in 10"
+								:key="'skeleton' + key"
+								cols="12"
+								sm="4"
+								md="12"
+							>
+								<v-skeleton-loader type="list-item" />
+							</v-col>
+						</v-row>
+					</v-card-text>
+				</v-card>
+				<v-card v-if="!loading" style="border-radius: 15px" outlined>
+					<v-card-title class="body-1 font-weight-bold text--secondary">
+						Filtrar por
+					</v-card-title>
+					<v-card-text>
+						<v-divider></v-divider>
+					</v-card-text>
+					<v-card-text style="height: 70px" class="d-flex align-center">
+						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
+							<v-icon>mdi-menu</v-icon>
+						</v-btn>
+						<v-divider vertical class="mx-2"></v-divider>
+						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
+							<v-icon>mdi-view-grid-outline</v-icon>
+						</v-btn>
+					</v-card-text>
 					<v-card-text>
 						<v-row>
 							<v-col cols="12" sm="4" md="12">
@@ -36,7 +49,7 @@
 									hide-details
 									@change="filterPanel"
 									><template #label>
-										<span class="body-2 text-capitalize">Hombre</span>
+										<span class="body-2">Hombre</span>
 									</template>
 								</v-checkbox>
 								<v-checkbox
@@ -47,7 +60,7 @@
 									@change="filterPanel"
 								>
 									<template #label>
-										<span class="body-2 text-capitalize">Mujer</span>
+										<span class="body-2">Mujer</span>
 									</template>
 								</v-checkbox>
 								<v-checkbox
@@ -58,7 +71,7 @@
 									@change="filterPanel"
 								>
 									<template #label>
-										<span class="body-2 text-capitalize">Transgénero</span>
+										<span class="body-2">Transgénero</span>
 									</template>
 								</v-checkbox>
 							</v-col>
@@ -82,7 +95,7 @@
 										@change="filterPanel"
 									>
 										<template #label>
-											<span class="body-2 text-capitalize">{{ item }}</span>
+											<span class="body-2">{{ item }}</span>
 										</template>
 									</v-checkbox>
 								</template>
@@ -97,7 +110,7 @@
 									@change="filterPanel"
 								>
 									<template #label>
-										<span class="body-2 text-capitalize">Español</span>
+										<span class="body-2">Español</span>
 									</template>
 								</v-checkbox>
 								<v-checkbox
@@ -108,7 +121,7 @@
 									@change="filterPanel"
 								>
 									<template #label>
-										<span class="body-2 text-capitalize">Ingles</span>
+										<span class="body-2">Ingles</span>
 									</template>
 								</v-checkbox>
 							</v-col>
@@ -117,7 +130,7 @@
 				</v-card>
 			</v-col>
 			<v-col cols="12" md="9">
-				<v-row>
+				<v-row v-if="!loading">
 					<v-col cols="12" md="6">
 						<v-autocomplete
 							v-model="specialties"
@@ -270,7 +283,6 @@
 															:value="item"
 															:label="item"
 															:disabled="loading"
-															class="text-capitalize"
 															hide-details
 															@change="filterPanel"
 														></v-checkbox>
@@ -303,6 +315,17 @@
 						</v-expansion-panels>
 					</v-col>
 				</v-row>
+				<v-row v-else>
+					<v-col cols="12" md="6">
+						<v-skeleton-loader type="list-item" />
+					</v-col>
+					<v-col cols="12" md="6">
+						<v-skeleton-loader type="list-item" />
+					</v-col>
+					<v-col class="hidden-md-and-up" cols="12" md="6">
+						<v-skeleton-loader type="list-item" />
+					</v-col>
+				</v-row>
 				<v-row v-if="loading">
 					<template v-if="view == 1">
 						<v-col v-for="i in 8" :key="i" cols="12" sm="6" md="4">
@@ -317,8 +340,8 @@
 				</v-row>
 				<v-row v-else>
 					<template v-if="view == 1">
-						<v-col cols="12" sm="6" lg="4" xl="3"
-							><v-hover v-slot="{ hover }">
+						<v-col cols="12" sm="6" lg="4" xl="3">
+							<v-hover v-slot="{ hover }">
 								<v-card
 									:style="
 										hover
@@ -339,7 +362,20 @@
 											class="mx-auto"
 											:src="`${$config.LANDING_URL}/Lupa.png`"
 											:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
-										></v-img>
+										>
+											<template #placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
+										</v-img>
 										<div class="mt-4 title font-weight-bold">
 											Te ayudamos a encontrar a tu psicólogo
 										</div>
@@ -487,7 +523,20 @@
 													class="mx-auto"
 													:src="`${$config.LANDING_URL}/Lupa.png`"
 													:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
-												></v-img>
+												>
+													<template #placeholder>
+														<v-row
+															class="fill-height ma-0"
+															align="center"
+															justify="center"
+														>
+															<v-progress-circular
+																indeterminate
+																color="grey lighten-5"
+															></v-progress-circular>
+														</v-row>
+													</template>
+												</v-img>
 											</v-col>
 											<v-col cols="9">
 												<v-row justify="space-between">
@@ -656,7 +705,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { cloneDeep } from 'lodash';
 
 export default {
 	name: 'Psicologos',
@@ -681,19 +729,15 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * items for search box
+		 */
 		itemsSearch() {
-			const items = [];
-			for (const index in this.filterLevelThree) {
-				items.push({
-					text: `${this.filterLevelThree[index].name} ${
-						this.filterLevelThree[index].lastName &&
-						this.filterLevelThree[index].lastName
-					}`,
-					value: this.filterLevelThree[index]._id,
-					index,
-				});
-			}
-			return items;
+			return this.filterLevelThree.map((item, index) => ({
+				text: `${item.name} ${item.lastName && item.lastName}`,
+				value: item._id,
+				index,
+			}));
 		},
 		/**
 		 * filter search box
@@ -720,8 +764,8 @@ export default {
 		 */
 		filterLevelOne() {
 			if (!this.gender.length && !this.models.length && !this.languages.length)
-				return cloneDeep(this.psychologists);
-			let result = cloneDeep(this.psychologists);
+				return this.psychologists;
+			let result = this.psychologists;
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';

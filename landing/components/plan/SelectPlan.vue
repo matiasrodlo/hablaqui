@@ -176,7 +176,7 @@ export default {
 					mode: 'Semana',
 					title: 'Sesiones por videollamada',
 					subtitle: 'Sesiones por videollamada (50 min)',
-					image: '/img/planOne.png',
+					image: `${this.$config.LANDING_URL}/planOne.png`,
 					description:
 						'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.',
 				},
@@ -211,7 +211,7 @@ export default {
 					mode: 'Semana',
 					title: 'Acompañamiento vía mensajería',
 					subtitle: 'Terapia vía mensajes de texto',
-					image: '/img/planTwo.png',
+					image: `${this.$config.LANDING_URL}/planTwo.png`,
 					description:
 						'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
@@ -246,7 +246,7 @@ export default {
 					mode: 'Semana',
 					title: 'Mensajería y videollamada',
 					subtitle: 'Mensajería + Videollamada (30min)',
-					image: '/img/planThree.png',
+					image: `${this.$config.LANDING_URL}/planThree.png`,
 					description:
 						'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
