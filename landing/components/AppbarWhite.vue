@@ -70,13 +70,13 @@
 				</v-img>
 			</nuxt-link>
 
-			<a
-				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+			<nuxt-link
+				to="/psicologos"
 				style="text-decoration: none"
 				class="hidden-sm-and-down ml-7 mr-3"
 			>
 				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
-			</a>
+			</nuxt-link>
 			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/faq">
 				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
 			</nuxt-link>
@@ -85,13 +85,9 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<div class="hidden-sm-and-down">
-				<a
-					class="mr-5"
-					style="text-decoration: none"
-					:href="`${$config.FRONTEND_URL}/auth`"
-				>
+				<nuxt-link class="mr-5" style="text-decoration: none" to="/auth">
 					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
-				</a>
+				</nuxt-link>
 			</div>
 			<v-btn
 				rounded
@@ -99,7 +95,7 @@
 				color="primary"
 				depressed
 				nuxt
-				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+				:to="`/psicologos`"
 			>
 				<span class="font-weight-bold body-1">Comenzar</span>
 			</v-btn>
