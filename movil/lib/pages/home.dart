@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/service-user.dart';
 import '../classes/SB_Settings.dart';
+import '../colors.dart' as appColors;
+import '../widgets/button.dart';
 
 class Home extends StatefulWidget
 {
@@ -45,8 +47,25 @@ class _HomeState extends State<Home>
 				)
 			),
 			body: Container(
-				child: ListView(
-					children:[
+				padding: EdgeInsets.all(10),
+				child: Column(
+					mainAxisAlignment: MainAxisAlignment.center,
+					crossAxisAlignment: CrossAxisAlignment.stretch,
+					children: [
+						Text('Comienza a hablar con nuestros psicólogos', 
+							textAlign: TextAlign.center,
+							style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])
+						),
+						SizedBox(height: 20),
+						Text('Lorem ipsum dolor sit amet, consectetuer adipscing elit, sed diam nonumy nibh euismod tincidunt ut laoreet',
+							textAlign: TextAlign.center,
+						),
+						SizedBox(height: 20),
+						WidgetButton(
+							text: 'Buscar ahora',
+							callback: this._searchPsychologists,
+							color: appColors.mainColors['blue'],
+						),
 					]
 				)
 			)
@@ -56,5 +75,9 @@ class _HomeState extends State<Home>
 	{
 		await ServiceUsers().closeSession();
 		Navigator.of(this.context).pushNamedAndRemoveUntil('/', (_) => false);
+	}
+	void _searchPsychologists()
+	{
+		Navigator.of(this.context).pushNamed('/psychologists/search');
 	}
 }
