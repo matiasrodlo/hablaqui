@@ -9,15 +9,15 @@
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
-				<div class="title text-h5 text-sm-h4 font-weight-bold my-10">
+				<div class="title text-h5 text-sm-h4 font-weight-bold mb-10">
 					Encuentra a tu especialista
 				</div>
 				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
 					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
 					preguntas. ¡Queremos conocerte!
 				</div>
-				<div>
-					<v-container>
+				<div style="background-color: #F0F8FF">
+					<v-container class="centerCard">
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
 								<v-stepper v-model="step" light style="border-radius: 25px">
@@ -290,7 +290,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'cognitivo'
+													focus == 'Cognitivo-conductual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -298,7 +298,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'cognitivo';
+														focus = 'Cognitivo-conductual';
 													}
 												"
 											>
@@ -310,7 +310,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'integrativo'
+													focus == 'Integrativo'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -318,7 +318,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'integrativo';
+														focus = 'Integrativo';
 													}
 												"
 											>
@@ -330,7 +330,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'contextual'
+													focus == 'Contextual'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -338,7 +338,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'contextual';
+														focus = 'Contextual';
 													}
 												"
 											>
@@ -350,7 +350,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'psicoanalisis'
+													focus == 'Psicoanálisis'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -358,7 +358,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'psicoanalisis';
+														focus = 'Psicoanálisis';
 													}
 												"
 											>
@@ -370,7 +370,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'humanista'
+													focus == 'Humanista'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -378,7 +378,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'humanista';
+														focus = 'Humanista';
 													}
 												"
 											>
@@ -390,7 +390,7 @@
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'sistemico'
+													focus == 'Sistémico'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -398,7 +398,7 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'sistemico';
+														focus = 'Sistémico';
 													}
 												"
 											>
@@ -506,21 +506,34 @@
 						</v-row>
 						<v-row>
 							<v-col cols="12">
-								<v-divider style="border-width: 1px"></v-divider>
+								<v-divider style="border-width: 1px" />
 							</v-col>
 							<v-col cols="12">
-								<v-window v-model="onboarding">
-									<v-window-item v-for="(element, i) in psi" :key="i">
+								<v-carousel
+									v-model="onboarding"
+									cycle
+									interval="3000"
+									hide-delimiter-background
+									hide-delimiters
+									:show-arrows="false"
+									light
+									height="200"
+								>
+									<v-carousel-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
 													flat
+													color="transparent"
 													max-width="600"
 													max-height="190"
-													outlined
 													v-for="(item, l) in element"
 													:key="l"
 													class="ma-2"
+													:to="{
+														name: 'psicologo',
+														params: { id: item._id },
+													}"
 												>
 													<v-card-text>
 														<v-row align="center">
@@ -601,9 +614,14 @@
 												</v-card>
 											</template>
 										</div>
-									</v-window-item>
-								</v-window>
-								<v-item-group v-model="onboarding" class="text-center" mandatory>
+									</v-carousel-item>
+								</v-carousel>
+								<v-item-group
+									v-if="$vuetify.breakpoint.mdAndUp"
+									v-model="onboarding"
+									class="text-center"
+									mandatory
+								>
 									<v-item
 										v-for="(n, e) in psi"
 										:key="`btn-${e}`"
@@ -666,7 +684,7 @@ export default {
 			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
-			const wordsPerLine = Math.ceil(items.length / 4);
+			const wordsPerLine = 2;
 			for (let line = 0; line < n; line++) {
 				for (let i = 0; i < wordsPerLine; i++) {
 					const value = items[i + line * wordsPerLine];
@@ -682,8 +700,10 @@ export default {
 		}),
 	},
 	created() {
-		const match = JSON.parse(localStorage.getItem('match'));
-		if (match) this.matchedPsychologists = match;
+		const psi = JSON.parse(localStorage.getItem('psi'));
+		if (psi && psi.length) {
+			this.matchedPsychologists = psi;
+		}
 	},
 	mounted() {
 		this.getPsychologists();
@@ -702,10 +722,15 @@ export default {
 			});
 		},
 		resetMatch() {
+			localStorage.removeItem('psi');
+			this.gender = '';
+			this.age = '';
+			this.firstTherapy = null;
+			this.themes = [];
+			this.focus = '';
+			this.genderConfort = '';
 			this.matchedPsychologists = [];
 			this.step = '0';
-			localStorage.removeItem('match');
-			localStorage.removeItem('psi');
 		},
 		setTheme(value) {
 			if (this.themes.includes(value)) {
@@ -714,12 +739,13 @@ export default {
 			} else {
 				if (this.themes.length < 3) this.themes.push(value);
 			}
+			if (this.themes.length == 3) this.step = 4;
 		},
 		async openPrecharge() {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2300);
+			}, 3000);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
@@ -728,7 +754,7 @@ export default {
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
-				localStorage.setItem('match', JSON.stringify(response));
+				localStorage.setItem('psi', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			}
 		},
@@ -743,7 +769,6 @@ export default {
 
 <style lang="scss" scoped>
 .centerCard {
-	max-width: 700px;
 	position: absolute;
 	margin-left: auto;
 	margin-right: auto;

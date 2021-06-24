@@ -1,12 +1,15 @@
 <template>
 	<div>
-		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
+		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
-				<v-img
-					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui"
-				/>
+				<nuxt-link to="/" style="width: 100%">
+					<v-img
+						style="max-width: 150px"
+						class="mx-auto"
+						:src="`${$config.LANDING_URL}/logo.png`"
+						alt="hablaqui"
+					/>
+				</nuxt-link>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
@@ -14,7 +17,7 @@
 					link
 					active-class="primary white--text"
 					nuxt
-					:to="{ name: 'psicologos' }"
+					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 				>
 					<v-list-item-content>
 						<v-list-item-title>Psicólogos</v-list-item-title>
@@ -30,12 +33,12 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :to="{ name: 'entrar' }">
+				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/auth`">
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :to="{ name: 'psicologos' }">
+				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/psicologos/todos`">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -56,49 +59,57 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<router-link to="/" exact>
-				<img
+			<nuxt-link to="/" exact>
+				<v-img
 					style="max-width: 160px"
 					alt="hablaqui"
 					:src="`${$config.LANDING_URL}/logo.png`"
+					:lazy-src="`${$config.LANDING_URL}/logo.png`"
 					contain
-				/>
-			</router-link>
-			<template v-if="$vuetify.breakpoint.mdAndUp">
-				<nuxt-link :to="{ name: 'psicologos' }" style="text-decoration: none" class="mx-12">
-					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
-				</nuxt-link>
-				<nuxt-link class="mx-2" style="text-decoration: none" to="/faq">
-					<span class="text--secondary body-1 font-weight-bold">
-						Preguntas frecuentes
-					</span>
-				</nuxt-link>
-				<nuxt-link class="mx-5" style="text-decoration: none" to="/blog">
-					<span class="body-1 text--secondary font-weight-bold">Blog</span>
-				</nuxt-link>
-				<v-spacer></v-spacer>
-				<div>
-					<nuxt-link class="mr-5" style="text-decoration: none" :to="{ name: 'entrar' }">
-						<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
-					</nuxt-link>
-				</div>
-				<v-btn
-					rounded
-					class="mx-2 py-6 px-10"
-					color="primary"
-					depressed
-					nuxt
-					:to="{ name: 'comenzar' }"
 				>
-					<span class="font-weight-bold body-1">Comenzar</span>
-				</v-btn>
-			</template>
-			<template v-else>
+				</v-img>
+			</nuxt-link>
+
+			<a
+				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+				style="text-decoration: none"
+				class="hidden-sm-and-down ml-7 mr-3"
+			>
+				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+			</a>
+			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/faq">
+				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
+			</nuxt-link>
+			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/blog">
+				<span class="body-1 text--secondary font-weight-bold">Blog</span>
+			</nuxt-link>
+			<v-spacer></v-spacer>
+			<div class="hidden-sm-and-down">
+				<a
+					class="mr-5"
+					style="text-decoration: none"
+					:href="`${$config.FRONTEND_URL}/auth`"
+				>
+					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+				</a>
+			</div>
+			<v-btn
+				rounded
+				class="hidden-sm-and-down py-6 px-10"
+				color="primary"
+				depressed
+				nuxt
+				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+			>
+				<span class="font-weight-bold body-1">Comenzar</span>
+			</v-btn>
+
+			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
 				<v-btn icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-			</template>
+			</div>
 		</v-app-bar>
 	</div>
 </template>

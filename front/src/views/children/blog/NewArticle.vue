@@ -37,8 +37,8 @@
 					></v-text-field>
 					<v-text-field
 						v-if="form.notOriginal"
-						label="Ingresa un link de referencia"
-						v-model="form.originalLink"
+						label="Ingresa la fuente original (nombre del blog o revista)"
+						v-model="form.originalSource"
 					></v-text-field>
 				</v-col>
 				<v-col cols="12">
@@ -107,7 +107,7 @@ export default {
 				title: '',
 				notOriginal: false,
 				originalAuthor: '',
-				originalLink: '',
+				originalBlog: '',
 				thumbnail: '',
 				categories: '',
 			};
@@ -118,7 +118,7 @@ export default {
 			formData.append('title', this.form.title);
 			formData.append('notOriginal', this.form.notOriginal);
 			formData.append('originalAuthor', this.form.originalAuthor);
-			formData.append('originalLink', this.form.originalLink);
+			formData.append('originalSource', this.form.originalSource);
 			formData.append('thumbnail', this.form.thumbnail);
 			formData.append('categories', this.form.categories);
 			return formData;

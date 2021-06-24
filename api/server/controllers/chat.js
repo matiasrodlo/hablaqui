@@ -26,12 +26,8 @@ const chatController = {
 	},
 	async getMessages(req, res) {
 		try {
-			const { user } = req;
-			const { receiver } = req.params;
-			const { data, code } = await chatService.getMessages(
-				user,
-				receiver
-			);
+			const { user, psy } = req.params;
+			const { data, code } = await chatService.getMessages(user, psy);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error consiguiendo los mensajes');
@@ -70,6 +66,16 @@ const chatController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error creando el reporte');
+		}
+	},
+	async readMessage(req, res) {
+		try {
+			const { messageId } = req.params;
+			const { data, code } = await chatService.readMessage(messageId);
+
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando el chat');
 		}
 	},
 };

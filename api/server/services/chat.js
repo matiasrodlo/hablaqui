@@ -5,32 +5,29 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const startConversation = async (psychologistId, user) => {
-	let newChat = await Chat.create({
-		user: user._id,
+	const hasChats = await Chat.findOne({
 		psychologist: psychologistId,
+		user: user,
 	});
-	return okResponse('chat inicializado', { newChat });
+	if (!hasChats) {
+		const newChat = await Chat.create({
+			user: user._id,
+			psychologist: psychologistId,
+		});
+		return okResponse('chat inicializado', { newChat });
+	}
+	return okResponse('chat inicializado anteriormente');
 };
 
-const getMessages = async (user, receiver) => {
-	if (user.role == 'psychologist') {
-		return okResponse('Mensajes conseguidos', {
-			messages: await Chat.findOne({
-				psychologist: user._id,
-				user: receiver,
-			}).populate('user psychologist'),
-		});
-	}
-	if (user.role == 'user') {
-		return okResponse('Mensajes conseguidos', {
-			messages: await Chat.findOne({
-				psychologist: receiver,
-				user: user._id,
-			}).populate('user psychologist'),
-		});
-	}
-	return conflictResponse('Ha ocurrido un error');
+const getMessages = async (user, psy) => {
+	return okResponse('Mensajes conseguidos', {
+		messages: await Chat.findOne({
+			psychologist: psy,
+			user: user,
+		}).populate('user psychologist'),
+	});
 };
+
 const getChats = async user => {
 	if (user.role == 'psychologist') {
 		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);
@@ -68,18 +65,17 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 			$push: {
 				messages: newMessage,
 			},
+			read: false,
 		},
 		{ new: true }
 	);
-
 	const data = {
 		userId,
 		psychologistId,
-		content: newMessage,
+		content: [...updatedChat.messages].pop(),
 	};
 
 	pusher.trigger('chat', 'update', data, pusherCallback);
-
 	return okResponse('Mensaje enviado', { chat: updatedChat });
 };
 
@@ -115,12 +111,27 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
+const readMessage = async messageId => {
+	const updatedChat = await Chat.findOneAndUpdate(
+		{ 'messages._id': messageId },
+		{
+			$set: {
+				'messages.$.read': true,
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('Mensaje visto', { chat: updatedChat });
+};
+
 const chatService = {
 	startConversation,
 	getMessages,
 	getChats,
 	sendMessage,
 	createReport,
+	readMessage,
 };
 
 export default Object.freeze(chatService);

@@ -28,7 +28,7 @@ const psychologistsController = {
 				body,
 				avatar
 			);
-			return restResponse('', 200, res);
+			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}

@@ -1,10 +1,8 @@
 <template>
 	<div style="background-color: #ebf2f3">
-		<client-only>
-			<nav>
-				<Appbar />
-			</nav>
-		</client-only>
+		<nav>
+			<Appbar />
+		</nav>
 		<v-container tag="section" fluid>
 			<!-- title / search -->
 			<v-row justify="center">
@@ -189,8 +187,22 @@
 															style="border-radius: 10px"
 															height="365"
 															class="grey lighten-3"
+															:alt="article.title"
 															:src="article.thumbnail"
+															:lazy-src="article.thumbnail"
 														>
+															<template #placeholder>
+																<v-row
+																	class="fill-height ma-0"
+																	align="center"
+																	justify="center"
+																>
+																	<v-progress-circular
+																		indeterminate
+																		color="grey lighten-5"
+																	></v-progress-circular>
+																</v-row>
+															</template>
 														</v-img>
 													</v-col>
 												</v-row>
@@ -200,8 +212,22 @@
 											<v-img
 												class="grey lighten-3"
 												height="150"
+												:alt="article.title"
 												:src="article.thumbnail"
+												:lazy-src="article.thumbnail"
 											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
 											</v-img>
 											<v-card-text
 												class="d-flex justify-space-between"
@@ -328,7 +354,7 @@
 				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
 					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" tag="section" cols="12" sm="6" lg="3">
+							<v-col :key="n" tag="section" cols="12" md="6" lg="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
 										v-if="n < 4"
@@ -344,8 +370,22 @@
 										<v-img
 											class="grey lighten-3"
 											height="200"
+											:alt="item.title"
 											:src="item.thumbnail"
+											:lazy-src="item.thumbnail"
 										>
+											<template #placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
 										</v-img>
 										<v-card-text
 											style="height: 250px; flex-direction: column"
@@ -363,11 +403,13 @@
 												</h4>
 											</article>
 											<aside>
-												<span class="body-1 primary--text font-weight-bold">
+												<span
+													class="caption primary--text font-weight-bold"
+												>
 													{{ item.originalAuthor }}
 												</span>
 												<span v-if="item.originalAuthor">|</span>
-												<span class="body-1 text--disabled">
+												<span class="caption text--disabled">
 													{{ dates(item.createdAt) }}
 												</span>
 											</aside>
@@ -391,11 +433,8 @@
 					</v-row>
 					<v-row v-else>
 						<v-col v-for="n in 4" :key="n" cols="3">
-							<v-skeleton-loader
-								light
-								class="mx-auto"
-								type="image, image"
-							></v-skeleton-loader>
+							<v-skeleton-loader light class="mx-auto" type="image, image">
+							</v-skeleton-loader>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -429,7 +468,24 @@
 								>
 									<v-card-text class="text-center">
 										<v-list-item-avatar size="120" class="ml-4">
-											<v-img :src="element.img"></v-img>
+											<v-img
+												:src="element.img"
+												:lazy-src="element.img"
+												:alt="element.title"
+											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
+											</v-img>
 										</v-list-item-avatar>
 										<h2
 											class="text-center body-2 font-weight-bold secondary--text"
@@ -449,14 +505,13 @@
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="center" align="center">
-						<v-col cols="10" md="7" class="white--text">
-							<h3 class="headline font-weight-bold">
+						<v-col cols="12" md="7" class="white--text">
+							<h3 class="body-1 text-md-h5 font-weight-bold">
 								Recibe contenido exclusivo periódicamente
 							</h3>
-							<h3 class="body-1 font-weight-bold mb-8 mt-2">
+							<h3 class="body-2 text-md-h6 font-weight-bold mb-8 mt-2">
 								Suscríbete y alcanza tu mejor versión
 							</h3>
-
 							<v-btn-toggle rounded class="mb-10 mb-md-0">
 								<v-text-field
 									solo
@@ -468,7 +523,7 @@
 									dense
 								/>
 								<v-btn depressed color="info">
-									<span class="px-5 px-md-10">Enviar</span>
+									<span class="px-md-6 text-h6">Enviar</span>
 								</v-btn>
 							</v-btn-toggle>
 						</v-col>
@@ -476,8 +531,19 @@
 							<v-img
 								contain
 								class="mx-auto"
-								:src="`${$config.LANDING_URL}/recursos-11.png`"
-							></v-img>
+								alt="Recibe contenido exclusivo periódicamente"
+								:src="`${$config.LANDING_URL}/suscribete.webp`"
+								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -511,13 +577,19 @@ export default {
 			length: 5,
 			articles: [],
 			categories: [
-				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/recursos-12.png` },
+				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/pareja_y_sexo.png` },
 				{
 					title: 'Conocimiento de sí mismo',
-					img: `${this.$config.LANDING_URL}/recursos-13.png`,
+					img: `${this.$config.LANDING_URL}/conocimiento_de_si_mismo.png`,
 				},
-				{ title: 'Salud y bienestar', img: `${this.$config.LANDING_URL}/recursos-14.png` },
-				{ title: 'Familia y amigos', img: `${this.$config.LANDING_URL}/recursos-15.png` },
+				{
+					title: 'Salud y bienestar',
+					img: `${this.$config.LANDING_URL}/salud_y_bienestar.png`,
+				},
+				{
+					title: 'Familia y amigos',
+					img: `${this.$config.LANDING_URL}/familia_y_amigos.png`,
+				},
 			],
 		};
 	},

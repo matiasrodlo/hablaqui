@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 let session = new Schema({
 	date: {
-		type: Date,
+		type: String,
 	},
 	start: {
 		type: String,
@@ -50,13 +50,13 @@ let psychologist = new Schema({
 		type: Array,
 	},
 	experience: {
-		type: String,
+		type: Array,
 	},
 	specialties: {
 		type: Array,
 	},
 	formation: {
-		type: String,
+		type: Array,
 	},
 	personalDescription: {
 		type: String,

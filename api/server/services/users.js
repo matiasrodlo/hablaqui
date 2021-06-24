@@ -3,6 +3,7 @@ import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { password_recovery_jwt_expiration } from '../config/dotenv';
 
 const usersService = {
 	async getProfile(id) {
@@ -28,6 +29,14 @@ const usersService = {
 		//if the password doesn't match, we cancel the update
 		if (!isEqual)
 			return conflictResponse('la contraseña anterior no es correcta');
+		else return await this.changeActualPassword(foundUser, newPassword);
+	},
+	async passwordRecovery(user, newPassword) {
+		const foundUser = await User.findById(user._id);
+		const isEqual = bcrypt.compareSync(newPassword, foundUser.password);
+		//if the password is the same, we cancel the update with this
+		if (isEqual)
+			return conflictResponse('no puede ser la misma contraseña');
 		else return await this.changeActualPassword(foundUser, newPassword);
 	},
 	async updateProfile(user, profile) {

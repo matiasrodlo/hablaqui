@@ -17,7 +17,7 @@ chatRouter.get(
 );
 
 chatRouter.get(
-	'/chat/get-messages/:receiver',
+	'/chat/get-messages/:psy/:user',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.getMessages
 );
@@ -32,6 +32,12 @@ chatRouter.post(
 	'/chat/create-report/:psychologistId/:userId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.createReport
+);
+
+chatRouter.patch(
+	'/chat/read-message/:messageId',
+	[passport.authenticate('jwt', { session: true })],
+	chatController.readMessage
 );
 
 export default Object.freeze(chatRouter);

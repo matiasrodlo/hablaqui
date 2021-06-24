@@ -1,57 +1,51 @@
 <template>
-	<v-row justify="center" align="center">
-		<v-col cols="5">
+	<div>
+		<template v-if="user._id == '60a0e168fd8c0f000ace3b71'">
 			<v-card flat>
 				<v-card-text>
 					<div>
-						<span class="text-h4 font-weight-bold">14 $</span>
-						<span class="text-h6 text--secondary">/week</span>
+						<span class="text-h6 font-weight-bold">$22.000</span>
+						<span class="body-1 text--secondary">/semanal</span>
 					</div>
-					<div class="primary--text text-h6 font-weight-bold">
-						Lorem ipsum dolor sit amet
+					<div class="primary--text body-2 font-weight-bold">
+						Mensajería y Videollamada
 					</div>
-					<div class="body-1">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-					</div>
-					<div class="font-weight-bold body-1 mt-3">
-						<span>1 mes de terapia (30 min) +</span>
-						<span class="primary--text">$20</span>
+					<div class="body-2 mt-1">
+						Chatea y habla por videollamada (30min) con un psicólogo. Respuestas vía
+						texto garantizadas 5 días a la semana.
 					</div>
 				</v-card-text>
 			</v-card>
-		</v-col>
-		<v-col cols="5">
-			<v-card flat>
-				<v-card-text>
-					<div>
-						<span class="text-h4 font-weight-bold">14 $</span>
-						<span class="text-h6 text--secondary">/week</span>
+		</template>
+		<template v-else>
+			<v-card>
+				<v-card-text class="text-center">
+					<div
+						class="headline font-weight-bold primary--text my-5 mx-auto"
+						style="max-width: 295px"
+					>
+						Adquiere nuestros planes y agenda con un espacialista
 					</div>
-					<div class="primary--text text-h6 font-weight-bold">
-						Lorem ipsum dolor sit amet
+					<div class="body-1 my-5 mx-auto" style="max-width: 280px">
+						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
+						vida hoy.
 					</div>
-					<div class="body-1">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-					</div>
-					<div class="font-weight-bold body-1 mt-3">
-						<span>1 mes de terapia (30 min) +</span>
-						<span class="primary--text">$20</span>
-					</div>
+					<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
+						Buscar ahora
+					</v-btn>
 				</v-card-text>
 			</v-card>
-		</v-col>
-		<v-col cols="2">
-			<div class="text-right">
-				<v-icon style="font-size: 80pt" color="primary">mdi-chevron-right</v-icon>
-			</div>
-		</v-col>
-	</v-row>
+		</template>
+	</div>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from 'vuex';
+export default {
+	computed: {
+		...mapGetters({ user: 'User/user' }),
+	},
+};
 </script>
 
 <style lang="scss" scoped></style>

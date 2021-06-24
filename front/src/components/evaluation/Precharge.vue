@@ -10,14 +10,16 @@
 					preferencias
 				</div>
 			</v-col>
-			<v-col cols="12" md="4" class="text-center text-md-right">
+			<v-col cols="12" md="2" class="text-center text-md-right">
 				<v-progress-circular indeterminate color="primary" size="130" :width="15">
 					<div class="spinner">
-						<v-img width="120" :src="image"></v-img>
+						<v-avatar size="120">
+							<v-img :src="image" :lazy-src="image"></v-img>
+						</v-avatar>
 					</div>
 				</v-progress-circular>
 			</v-col>
-			<v-col cols="12" md="8" class="text-center text-md-left">
+			<v-col cols="12" md="4" lg="3" class="text-center text-md-left">
 				<div
 					v-for="(el, i) in items"
 					:key="i"
@@ -56,19 +58,19 @@ export default {
 		setTimeout(() => {
 			this.image = this.avatar[0];
 			this.items[0].done = true;
-		}, 400);
+		}, 800);
 		setTimeout(() => {
 			this.image = this.avatar[1];
 			this.items[1].done = true;
-		}, 800);
+		}, 1600);
 		setTimeout(() => {
 			this.image = this.avatar[2];
 			this.items[2].done = true;
-		}, 1500);
+		}, 2500);
 		setTimeout(() => {
 			this.image = this.avatar[3];
 			this.items[3].done = true;
-		}, 2300);
+		}, 3500);
 	},
 };
 </script>

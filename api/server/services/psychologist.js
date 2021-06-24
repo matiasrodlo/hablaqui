@@ -2,7 +2,7 @@ import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import { okResponse } from '../utils/responses/functions';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -12,18 +12,37 @@ const getAll = async () => {
 
 const match = async body => {
 	const { payload } = body;
-	const matchedPsychologists = await Psychologist.find({
-		gender: payload.gender || { $in: ['male', 'female', 'transgender'] },
-		models: payload.model,
-		specialties: { $in: payload.themes },
-	});
-	if (matchedPsychologists.length == 0) {
-		let newMatchedPsychologists = await Psychologist.find({
+	let matchedPsychologists = [];
+	if (payload.gender == 'transgender') {
+		matchedPsychologists = await Psychologist.find({
+			models: payload.model,
+			isTrans: true,
+			specialties: { $in: payload.themes },
+		});
+	} else {
+		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
+			models: payload.model,
 			specialties: { $in: payload.themes },
 		});
+	}
+	if (matchedPsychologists.length == 0) {
+		let newMatchedPsychologists = [];
+		if (payload.gender == 'transgender') {
+			newMatchedPsychologists = await Psychologist.find({
+				isTrans: true,
+				specialties: { $in: payload.themes },
+			});
+		} else {
+			newMatchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					$in: ['male', 'female', 'transgender'],
+				},
+				specialties: { $in: payload.themes },
+			});
+		}
 
 		return okResponse('Psicologos encontrados', {
 			matchedPsychologists: newMatchedPsychologists,
@@ -40,6 +59,7 @@ const match = async body => {
 const createSession = async body => {
 	const { payload } = body;
 	const sessions = {
+		date: payload.date,
 		start: payload.start,
 		end: payload.end,
 		user: payload.user._id,
@@ -59,6 +79,16 @@ const createSession = async body => {
 };
 
 const register = async (body, avatar) => {
+	if (await User.exists({ email: body.email })) {
+		return conflictResponse('Este correo ya esta registrado');
+	}
+
+	let splittedExperience = body.experience.split(';');
+	splittedExperience = splittedExperience.map(i => i.trim());
+
+	let splittedFormation = body.formation.split(';');
+	splittedFormation = splittedFormation.map(i => i.trim());
+
 	const newPsychologist = {
 		name: body.name,
 		lastName: body.lastName,
@@ -66,11 +96,13 @@ const register = async (body, avatar) => {
 		personalDescription: body.personalDescription,
 		professionalDescription: body.professionalDescription,
 		email: body.email,
-		experience: body.experience,
-		formation: body.formation,
+		experience: splittedExperience,
+		formation: splittedFormation,
 		specialties: JSON.parse(body.specialties),
 		models: JSON.parse(body.models),
+		languages: JSON.parse(body.languages),
 		gender: body.gender,
+		isTrans: body.isTrans,
 		avatar,
 	};
 	const psychologist = await Psychologist.create(newPsychologist);

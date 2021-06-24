@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container style="position: relative">
 		<v-row justify="space-between" align="center">
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				{{ $route.meta.title }}
@@ -66,12 +66,11 @@
 								<div class="body-1 font-weight-bold mt-2">Modelo terapéuticos</div>
 								<template
 									v-for="(item, i) in [
-										'cognitivo',
-										'integrativo',
-										'contextual',
-										'psicoanalisis',
-										'humanista',
-										'sistemico',
+										'Cognitivo-conductual',
+										'Contextual',
+										'Psicoanálisis',
+										'Humanista',
+										'Sistémico',
 									]"
 								>
 									<v-checkbox
@@ -123,14 +122,9 @@
 						<v-autocomplete
 							class="white"
 							outlined
-							:items="
-								appointments.map((item, i) => ({
-									text: item,
-									value: item,
-									index: i,
-								}))
-							"
-							v-model="motive"
+							:items="appointments"
+							item-value="value"
+							v-model="specialties"
 							label="Motivo de consulta"
 							append-icon="mdi-chevron-down"
 							hide-details
@@ -146,29 +140,12 @@
 									<v-list-item-content>
 										<v-list-item-title>
 											No se encontraron resultados que coincidan con "<strong>
-												{{ motive }}
+												{{ specialties }}
 											</strong>
 											" .
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="motive = item">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < appointments.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
 							</template>
 						</v-autocomplete>
 					</v-col>
@@ -179,7 +156,7 @@
 							:items="
 								filterLevelThree.map((item, i) => ({
 									text: `${item.name} ${item.lastName && item.lastName}`,
-									value: item.name,
+									value: item._id,
 									index: i,
 								}))
 							"
@@ -204,23 +181,6 @@
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-							</template>
-							<template #item="{item}">
-								<div style="width: 100%">
-									<v-list-item class="px-0" @click="searchInput = item.value">
-										<v-list-item-content>
-											<v-list-item-title
-												class="subtitle-2 font-weight-regular"
-											>
-												{{ item.text }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-									<v-divider
-										v-if="item.index < filterLevelThree.length - 1"
-										:key="item.index"
-									></v-divider>
-								</div>
 							</template>
 						</v-autocomplete>
 					</v-col>
@@ -305,12 +265,11 @@
 													</div>
 													<template
 														v-for="(item, i) in [
-															'cognitivo',
-															'integrativo',
-															'contextual',
-															'psicoanalisis',
-															'humanista',
-															'sistemico',
+															'Cognitivo-conductual',
+															'Contextual',
+															'Psicoanálisis',
+															'Humanista',
+															'Sistémico',
 														]"
 													>
 														<v-checkbox
@@ -398,13 +357,7 @@
 									</v-card-text>
 									<v-card-actions>
 										<v-spacer></v-spacer>
-										<v-btn
-											class="px-10"
-											light
-											color="#F0F8FF"
-											style="border-radius: 5px"
-											:to="{ name: 'auth', params: { q: 'register' } }"
-										>
+										<v-btn class="px-10" color="white" @click="start">
 											<span class="text--secondary">Comenzar</span>
 										</v-btn>
 										<v-spacer></v-spacer>
@@ -496,21 +449,16 @@
 										</div>
 										<div class="body-2 mt-4">
 											<template v-for="(el, e) in item.specialties">
-												<span v-if="e < 4" :key="e"> {{ el }}; </span>
+												<span v-if="e < 6" :key="e"> {{ el }}; </span>
 											</template>
 										</div>
 									</v-card-text>
 									<v-card-text>
 										<div>
-											<v-btn
-												class="body-2 px-6"
-												color="primary"
-												depressed
-												style="border-radius: 5px"
-												@click="toAuth(item)"
-											>
-												Agenda cita oline
-											</v-btn>
+											<dialog-agenda-cita-online
+												:psy="item"
+												:mode="view.toString()"
+											/>
 										</div>
 										<div class="mt-1">
 											<v-btn
@@ -547,8 +495,8 @@
 										<v-row align="center" justify="center">
 											<v-col cols="3" class="text-center">
 												<v-img
-													height="160"
-													width="160"
+													height="140"
+													width="140"
 													class="mx-auto"
 													src="/img/Lupa.png"
 												></v-img>
@@ -566,12 +514,9 @@
 													responde las siguientes preguntas.
 												</div>
 												<v-btn
-													light
+													color="white"
 													class="px-10 mt-4"
-													:to="{
-														name: 'auth',
-														params: { q: 'register' },
-													}"
+													@click="start"
 												>
 													<span class="text--secondary">Comenzar</span>
 												</v-btn>
@@ -600,7 +545,7 @@
 									:class="hover ? 'elevation-3' : 'elevation-1'"
 									style="border-radius:15px; transition: transform 0.6s"
 								>
-									<v-card-text class="my-2">
+									<v-card-text class="pa-2">
 										<v-row
 											align="center"
 											justify="center"
@@ -608,15 +553,25 @@
 										>
 											<v-col cols="3" class="text-center">
 												<v-avatar
-													size="200"
+													:size="
+														$vuetify.breakpoint.lgAndUp ? '200' : '140'
+													"
 													:color="item.avatar ? 'trasnparent' : 'primary'"
 												>
 													<v-img
 														v-if="item.avatar"
 														:src="item.avatar"
 														:lazy-src="item.avatar"
-														width="200"
-														height="200"
+														:width="
+															$vuetify.breakpoint.lgAndUp
+																? '200'
+																: '140'
+														"
+														:height="
+															$vuetify.breakpoint.lgAndUp
+																? '200'
+																: '140'
+														"
 													>
 														<template #placeholder>
 															<v-row
@@ -638,25 +593,25 @@
 														{{ item.name.substr(0, 1) }}
 													</span>
 												</v-avatar>
-												<div class="text-center caption text--secondary">
+												<div
+													class="text-center body-2 text--secondary mt-3 mb-2"
+												>
 													Codigo {{ item.code }}
 												</div>
-												<v-btn
-													text
-													color="primary"
-													depressed
-													class="pa-0 body-2 font-weight-bold"
+												<router-link
+													class="primary--text body-2 font-weight-bold"
+													style="text-decoration: none"
 													:to="{
 														name: 'psicologo',
 														params: { id: item._id },
 													}"
 												>
 													Más información
-												</v-btn>
+												</router-link>
 											</v-col>
 											<v-col cols="9">
 												<v-row justify="space-between">
-													<v-col>
+													<v-col cols="6">
 														<router-link
 															style="text-decoration: none"
 															:to="{
@@ -668,21 +623,18 @@
 																class="headline font-weight-bold text--secondary"
 															>
 																{{ item.name }}
+																{{ item.lastName && item.lastName }}
 															</span>
 														</router-link>
 													</v-col>
-													<v-col cols="5" class="text-right">
-														<v-btn
-															color="primary"
-															rounded
-															depressed
-															@click="toAuth(item)"
-														>
-															Agenda cita oline
-														</v-btn>
+													<v-col class="text-right mr-4">
+														<dialog-agenda-cita-online
+															:psy="item"
+															:mode="view.toString()"
+														/>
 													</v-col>
 												</v-row>
-												<v-chip-group show-arrows v-model="motive">
+												<v-chip-group show-arrows v-model="specialties">
 													<template v-for="(tag, i) in item.specialties">
 														<v-chip
 															:value="tag"
@@ -690,16 +642,18 @@
 															small
 															:key="i"
 															:color="
-																motive == tag ? 'primary--text' : ''
+																specialties == tag
+																	? 'primary--text'
+																	: ''
 															"
 														>
-															<span class="text-capitalize">
+															<span>
 																{{ tag }}
 															</span>
 														</v-chip>
 													</template>
 												</v-chip-group>
-												<div class="body-2 mt-2">
+												<div class="body-2 mt:-2 mr-4">
 													{{ item.professionalDescription }}
 												</div>
 											</v-col>
@@ -712,12 +666,17 @@
 				</v-row>
 			</v-col>
 		</v-row>
+		<FloatingChat v-if="loggedIn && user.role == 'user'" />
 	</v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 export default {
+	components: {
+		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+	},
 	name: 'psychologists',
 	props: {
 		loading: {
@@ -727,9 +686,9 @@ export default {
 	},
 	data() {
 		return {
-			motive: '',
-			searchInput: '',
 			view: 1,
+			specialties: '',
+			searchInput: '',
 			gender: [],
 			models: [],
 			languages: [],
@@ -743,21 +702,17 @@ export default {
 			return this.filterLevelTwo.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
-					result =
-						result.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1 &&
-						result;
+					result = result._id.indexOf(this.searchInput) > -1 && result;
 				return result;
 			});
 		},
 		/**
-		 * filter motive
+		 * filter specialties
 		 */
 		filterLevelTwo() {
-			if (!this.motive) return this.filterLevelOne;
+			if (!this.specialties) return this.filterLevelOne;
 			return this.filterLevelOne.filter(
-				item =>
-					item.specialties.length &&
-					item.specialties.includes(this.motive.toLowerCase().trim())
+				item => item.specialties.length && item.specialties.includes(this.specialties)
 			);
 		},
 		/**
@@ -768,23 +723,28 @@ export default {
 				return this.psychologists;
 			let result = this.psychologists;
 			if (this.gender.length)
-				result = result.filter(item => this.gender.includes(item.gender));
+				result = result.filter(item => {
+					const trans = item.isTrans && 'transgender';
+					const gender = [item.gender];
+					trans && gender.push(trans);
+					return gender.some(el => this.gender.some(g => g == el));
+				});
 			if (this.models.length)
-				result = result.filter(item =>
-					item.models.some(el => this.models.some(model => model == el))
-				);
+				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages == el))
 				);
-			if (this.motive) result = result.filter(item => item.specialties.includes(this.motive));
+			if (this.specialties)
+				result = result.filter(item => item.specialties.includes(this.specialties));
 
 			return result;
 		},
 		...mapGetters({
+			loggedIn: 'User/loggedIn',
+			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
-			loggedIn: 'User/loggedIn',
 		}),
 	},
 	created() {
@@ -810,14 +770,18 @@ export default {
 		}
 	},
 	methods: {
+		start() {
+			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			else
+				this.$router.push({
+					name: 'auth',
+					params: { q: 'register' },
+					query: { from: 'psy' },
+				});
+		},
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
-		},
-		toAuth(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
 		},
 		filterPanel() {
 			const panel = {
@@ -827,6 +791,32 @@ export default {
 			};
 			localStorage.setItem('panel', JSON.stringify(panel));
 		},
+		filterMatch(payload) {
+			this.languages = [];
+			this.searchInput = '';
+			this.gender = payload.gender;
+			this.models = [payload.model];
+			this.specialties = payload.themes;
+		},
+	},
+	watch: {
+		'$vuetify.breakpoint.mdAndUp': newVal => {
+			if (!newVal) this.view = 0;
+		},
 	},
 };
 </script>
+
+<style scoped>
+.item {
+	white-space: nowrap;
+	transition: transform 0.3s ease 0s, border 0.2s ease 0s, box-shadow 0.2s ease 0s;
+	text-align: center;
+	cursor: pointer;
+	color: #565656;
+	padding: 8px 5px;
+	border: 1px solid #0085ff80;
+	box-sizing: border-box;
+	border-radius: 2px;
+}
+</style>

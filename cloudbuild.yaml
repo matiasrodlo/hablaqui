@@ -30,7 +30,7 @@ steps:
     id: "generate-landing"
     waitFor: ["envvars-landing", "install-landing"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--no-stop-previous-version"]
+    args: ["app", "deploy"]
     dir: "landing"
     id: "deploy-landing"
     waitFor: ["envvars-landing", "install-landing", "generate-landing"]
@@ -65,7 +65,7 @@ steps:
     id: "build-front"
     waitFor: ["envvars-front", "install-front"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--no-stop-previous-version"]
+    args: ["app", "deploy"]
     dir: "front"
     id: "deploy-front"
     waitFor: ["envvars-front", "install-front", "build-front"]
@@ -94,7 +94,7 @@ steps:
     id: "envvars-api"
     waitFor: ["install-api"]
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--no-stop-previous-version"]
+    args: ["app", "deploy"]
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
 

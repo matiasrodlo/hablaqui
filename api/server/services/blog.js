@@ -1,5 +1,6 @@
 import { logInfo } from '../config/pino';
 import Article from '../models/article';
+import Psychologist from '../models/psychologist';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 const createArticle = async (body, thumbnail, user) => {
 	const {
@@ -7,7 +8,7 @@ const createArticle = async (body, thumbnail, user) => {
 		HTMLbody,
 		notOriginal,
 		originalAuthor,
-		originalLink,
+		originalSource,
 		categories,
 	} = body;
 
@@ -16,12 +17,16 @@ const createArticle = async (body, thumbnail, user) => {
 		return conflictResponse('Lo siento, pero no eres un psicologo');
 	}
 
-	const author = user.psychologist.name;
-	const authorDescription = user.psychologist.description;
-	const authorAvatar = user.psychologist.avatar;
+	const foundPsychologist = await Psychologist.findById(user.psychologist);
+
+	const author = `${foundPsychologist.name} ${foundPsychologist.lastName}`;
+	const authorDescription = foundPsychologist.professionalDescription;
+	const authorAvatar = foundPsychologist.avatar;
 
 	let slug = title
 		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
 		.replace(/[^\w ]+/g, '')
 		.replace(/ +/g, '-');
 
@@ -34,7 +39,7 @@ const createArticle = async (body, thumbnail, user) => {
 		HTMLbody,
 		notOriginal,
 		originalAuthor,
-		originalLink,
+		originalSource,
 		thumbnail,
 		slug,
 		categories,

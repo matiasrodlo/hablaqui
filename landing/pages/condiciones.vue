@@ -1,13 +1,11 @@
 <template>
 	<div>
-		<client-only>
-			<div class="primary">
-				<Appbar />
-				<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
-					Terminos y condiciones de uso
-				</div>
+		<div class="primary-color">
+			<Appbar />
+			<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
+				Terminos y condiciones de uso
 			</div>
-		</client-only>
+		</div>
 		<v-container class="mt-16">
 			<v-row justify="center">
 				<v-col cols="12" md="10">
@@ -283,8 +281,8 @@
 					clientes@hablaqui.com
 				</v-col>
 			</v-row>
-			<v-row justify="center" class="mt-16 mb-8">
-				<v-col cols="12" md="5" class="text-center text-sm-left">
+			<v-row justify="center" align="center" class="mt-16 mb-8">
+				<v-col cols="12" md="5" class="text-center text-md-left">
 					<div style="color: #bdbdbd">
 						<nuxt-link
 							text
@@ -304,17 +302,16 @@
 						</nuxt-link>
 					</div>
 					<div class="text--secondary">
-						© 2019 Terapify Network, S.A.P.I. de C.V. Todos los derechos reservados.
+						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="5" class="text-center text-sm-right text--secondary">
-					<div class="text-right">
-						<img
-							style="height: 40px"
-							:src="`${$config.LANDING_URL}/redes_sociales.png`"
-							alt="redes sociales"
-						/>
-					</div>
+				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
+					<img
+						style="height: 40px"
+						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						alt="redes sociales"
+						class="mb-4 mb-md-0"
+					/>
 					<div>Atención a clientes: c@hablaqui.com</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>

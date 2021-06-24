@@ -1,59 +1,50 @@
 <template>
 	<v-container>
 		<v-row justify="center">
-			<v-col cols="12" md="10" xl="8">
+			<v-col cols="12" md="11" lg="10" xl="8">
 				<v-row align="center" class="white--text py-16">
-					<v-col cols="12" sm="3" md="3" class="text-center text-sm-left">
+					<v-col cols="12" sm="12" md="3" class="text-center text-md-left">
 						<div
 							class="text--secondary font-weight-bold"
 							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
 						>
 							Acuerdos
 						</div>
-						<div>
-							<v-btn
-								class="px-0 text--secondary"
-								text
-								link
-								to="/politicas"
-								:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-							>
-								Políticas de Privacidad
-							</v-btn>
-						</div>
-						<div>
-							<v-btn
-								class="px-0 text-left text--secondary"
-								text
-								link
-								to="/condiciones"
-								:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-							>
-								Terminos y Condiciones
-							</v-btn>
-						</div>
+						<a
+							class="d-block body-1 text--secondary"
+							style="text-decoration: none"
+							:href="`${landingUrl}/politicas`"
+						>
+							Políticas de Privacidad
+						</a>
+						<a
+							class="d-block body-1 text--secondary"
+							style="text-decoration: none"
+							:href="`${landingUrl}/condiciones`"
+						>
+							Terminos y Condiciones
+						</a>
 					</v-col>
-					<v-col cols="12" sm="3" md="3" class="text-center text-sm-left text--secondary">
+					<v-col
+						cols="12"
+						sm="12"
+						md="3"
+						class="text-center text-md-left text--secondary"
+					>
 						<div
 							class="font-weight-bold"
 							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
 						>
 							Atención a clientes
 						</div>
-						<div
-							class="py-2"
-							:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-						>
+						<div class="body-1">
 							c@hablaqui.com
 						</div>
-						<div
-							class="py-2"
-							:class="$vuetify.breakpoint.smOnly ? 'caption' : 'body-1'"
-						>
+						<div class="body-1">
 							09:00am - 18:30pm
 						</div>
 					</v-col>
-					<v-col cols="12" sm="3" md="3" class="headline text--secondary">
+					<v-col cols="12" sm="12" md="3">
 						<v-img contain width="240" class="mx-auto" src="/img/Startup.png"></v-img>
 						<v-img
 							contain
@@ -63,11 +54,22 @@
 							src="/img/Adolfo_Ibanez.png"
 						></v-img>
 					</v-col>
-					<v-col cols="6" sm="3" md="3" class="headline text--secondary">
-						<v-img contain height="90" src="/img/WebPay.png" />
+					<v-col cols="12" sm="12" md="3">
+						<v-img contain height="90" class="mx-auto" src="/img/WebPay.png" />
 					</v-col>
 				</v-row>
 			</v-col>
 		</v-row>
 	</v-container>
 </template>
+<script>
+import { landing } from '@/config';
+
+export default {
+	computed: {
+		landingUrl() {
+			return landing;
+		},
+	},
+};
+</script>

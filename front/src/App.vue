@@ -47,4 +47,8 @@ html {
 .v-btn {
 	text-transform: none !important;
 }
+
+.pointer {
+	cursor: pointer;
+}
 </style>

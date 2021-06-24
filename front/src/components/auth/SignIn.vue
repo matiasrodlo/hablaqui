@@ -7,6 +7,7 @@
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"
+					:dense="isDialog"
 					outlined
 					:error-messages="emailErrors"
 				></v-text-field>
@@ -16,6 +17,7 @@
 					v-model="form.password"
 					label="Contraseña"
 					outlined
+					:dense="isDialog"
 					:type="showPassword ? 'text' : 'password'"
 					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					:error-messages="passwordErrors"
@@ -39,11 +41,17 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	name: 'SignIn',
 	mixins: [validationMixin],
+	props: {
+		isDialog: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			showPassword: false,
@@ -55,14 +63,14 @@ export default {
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
-			!this.$v.form.email.required && errors.push('El Correo electronico es querido');
-			!this.$v.form.email.email && errors.push('Escriba un email valido');
+			!this.$v.form.email.required && errors.push('Se requiere correo electrónico');
+			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
 			return errors;
 		},
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
-			!this.$v.form.password.required && errors.push('La contraseña es querida');
+			!this.$v.form.password.required && errors.push('Se requiere contraseña');
 			return errors;
 		},
 	},
@@ -74,14 +82,23 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				await this.login(this.form);
+				const loggedIn = await this.login(this.form);
 				this.loading = false;
+				if (loggedIn)
+					if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+					else if (
+						this.$route.name !== 'all-psicologos' &&
+						this.$route.name !== 'psicologo'
+					)
+						this.$router.push({ name: 'chat' });
+					else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
 		...mapActions({ login: 'User/login' }),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
 		form: {

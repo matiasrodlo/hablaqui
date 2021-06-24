@@ -1,26 +1,34 @@
 <template>
 	<div style="background-color: #ebf2f3">
-		<client-only>
-			<div>
-				<Appbar />
-			</div>
-		</client-only>
-		<v-container v-if="article">
+		<div>
+			<Appbar />
+		</div>
+		<v-container v-if="loading">
 			<v-row>
 				<v-col cols="12">
-					<div class="text-h5 text-sm-h4 text-md-h3 font-weight-bold">
+					<v-skeleton-loader
+						class="mx-auto"
+						type="card-heading, image, paragraph, paragraph, paragraph ,paragraph"
+					></v-skeleton-loader>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-container v-if="article && !loading">
+			<v-row>
+				<v-col cols="12">
+					<h1 class="text-h5 text-sm-h4 font-weight-bold">
 						{{ article.title }}
-					</div>
+					</h1>
 					<div class="text-sm-h6">
-						<span class="text--secondary">{{ dates(article.createdAt) }}</span>
-						<span class="text-disabled">|</span>
+						<span class="secondary--text">{{ dates(article.createdAt) }}</span>
+						<span class="secondary--text">|</span>
 						<span>
-							<span class="text--secondary mr-2"> {{ rating }} </span>
+							<span class="secondary--text mr-2"> {{ rating }} </span>
 							<v-rating
 								v-model="rating"
 								class="d-inline-block"
-								background-color="grey lighten-1"
-								color="grey lighten-1"
+								:background-color="isYellow ? 'orange lighten-1' : 'grey lighten-2'"
+								:color="isYellow ? 'orange lighten-1' : 'grey lighten-2'"
 								dense
 								half-increments
 								hover
@@ -50,34 +58,71 @@
 					<v-img
 						style="border-radius: 5px"
 						max-height="600"
+						:alt="article.title"
 						:src="article.thumbnail"
-					></v-img>
+						:lazy-src="article.thumbnail"
+					>
+						<template #placeholder>
+							<v-row class="fill-height ma-0" align="center" justify="center">
+								<v-progress-circular
+									indeterminate
+									color="grey lighten-5"
+								></v-progress-circular>
+							</v-row>
+						</template>
+					</v-img>
 				</v-col>
 				<v-col class="text-center" cols="12" sm="1">
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-facebook</v-icon
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-instagram</v-icon
+						<v-img :src="`${$config.LANDING_URL}/instagram.png`"></v-img>
+					</v-avatar>
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
-					<v-icon :size="$vuetify.breakpoint.mdAndUp ? '90' : '40'" color="primary"
-						>mdi-whatsapp</v-icon
+						<v-img :src="`${$config.LANDING_URL}/facebook.png`"></v-img>
+					</v-avatar>
+					<v-avatar
+						class="my-3 d-block"
+						:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 					>
+						<v-img :src="`${$config.LANDING_URL}/tiktop.png`"></v-img>
+					</v-avatar>
 				</v-col>
-				<v-col cols="12" sm="11" class="body-2">
-					<div class="font-weight-light text-h6" v-html="article.HTMLbody"></div>
+				<v-col cols="12" sm="11">
+					<div class="font-weight-light" v-html="article.HTMLbody"></div>
+				</v-col>
+				<v-col cols="12" offset-sm="1" sm="11">
+					<div
+						v-if="article.notOriginal"
+						cols="12"
+						sm="11"
+						class="text--secondary body-1"
+					>
+						Escrito por
+						<span class="primary--text">{{ article.originalAuthor }}</span>
+						<span v-if="article.originalLink">
+							para
+							<a :href="article.originalLink">
+								{{ extractHostname(article.originalLink) }}
+							</a>
+						</span>
+					</div>
 				</v-col>
 			</v-row>
-			<v-row class="my-10">
+			<v-row class="my-10" align="center">
 				<v-col cols="12">
-					<span>
-						<span class="title black--text">¿Este artículo fue útil?</span>
-						<span class="title text--secondary mr-2"> {{ rating }} </span>
+					<span class="d-flex align-center">
+						<span class="title secondary--text">¿Este artículo fue útil?</span>
+						<span class="title secondary--text ml-4"> {{ rating }} </span>
 						<v-rating
 							v-model="rating"
-							class="d-inline-block"
-							background-color="grey lighten-1"
-							color="grey lighten-1"
+							class="ml-4"
+							:background-color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
+							:color="isYellow ? 'orange lighten-1' : 'grey lighten-1'"
 							dense
 							half-increments
 							hover
@@ -95,7 +140,18 @@
 							<v-img
 								:size="$vuetify.breakpoint.mdAndUp ? '120' : '50'"
 								:src="article.authorAvatar"
-							></v-img>
+								:lazy-src="article.authorAvatar"
+								:alt="article.author"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title class="caption text-sm-h6 text--secondary">
@@ -124,7 +180,7 @@
 				<!-- blogs -->
 				<template v-if="blogs.length">
 					<template v-for="(item, i) in blogs">
-						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4" class="mt-16">
+						<v-col v-if="length > i" :key="i" cols="12" sm="6" lg="4">
 							<v-hover v-slot="{ hover }">
 								<v-card
 									nuxt
@@ -144,7 +200,21 @@
 										class="grey lighten-3"
 										height="250"
 										:src="item.thumbnail"
+										:lazy-src="item.thumbnail"
+										:alt="item.title"
 									>
+										<template #placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
 									</v-img>
 									<v-card-text
 										class="d-flex justify-space-between"
@@ -180,7 +250,7 @@
 				</template>
 			</v-row>
 		</v-container>
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
+		<img class="mt-16" :src="`${$config.LANDING_URL}/Blog-05-top.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
@@ -204,7 +274,7 @@
 									dense
 								/>
 								<v-btn depressed color="info">
-									<span class="px-5 px-md-10">Enviar</span>
+									<span class="px-5 px-md-10 text-h5">Enviar</span>
 								</v-btn>
 							</v-btn-toggle>
 						</v-col>
@@ -212,14 +282,25 @@
 							<v-img
 								contain
 								class="mx-auto"
-								:src="`${$config.LANDING_URL}/recursos-11.png`"
-							></v-img>
+								alt="Recibe contenido exclusivo periódicamente"
+								:src="`${$config.LANDING_URL}/suscribete.webp`"
+								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+							>
+								<template #placeholder>
+									<v-row class="fill-height ma-0" align="center" justify="center">
+										<v-progress-circular
+											indeterminate
+											color="grey lighten-5"
+										></v-progress-circular>
+									</v-row>
+								</template>
+							</v-img>
 						</v-col>
 					</v-row>
 				</v-col>
 			</v-row>
 		</v-container>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
 		<v-container>
 			<Footer />
 		</v-container>
@@ -242,6 +323,8 @@ export default {
 			rating: 0,
 			breadcrumb: [],
 			title: '',
+			isYellow: false,
+			loading: true,
 		};
 	},
 	head() {
@@ -257,13 +340,13 @@ export default {
 		};
 	},
 	async mounted() {
-		// eslint-disable-next-line no-console
-		let response = await fetch(`${this.$config.API_URL}/blog/${this.$route.params.slug}`);
-		response = await response.json();
-		this.article = response.article;
+		let res = await fetch(`${this.$config.API_URL}/blog/all`);
+		res = await res.json();
+		this.blogs = res.articles;
+		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
 		this.title = this.article.title;
-		if (response.article.rating.average)
-			this.rating = parseFloat(response.article.rating.average.toFixed(1));
+		if (this.article.rating.average)
+			this.rating = parseFloat(this.article.rating.average.toFixed(1));
 		this.breadcrumb = [
 			{
 				text: 'Inicio',
@@ -271,21 +354,37 @@ export default {
 				href: '/blog',
 			},
 			{
-				text: response.article.categories,
+				text: this.article.categories,
 				disabled: true,
 				href: 'breadcrumbs_link_1',
 			},
 			{
-				text: response.article.title,
+				text: this.article.title,
 				disabled: true,
-				href: `/blog/${response.article.slug}`,
+				href: `/blog/${this.article.slug}`,
 			},
 		];
-		let res = await fetch(`${this.$config.API_URL}/blog/all`);
-		res = await res.json();
-		this.blogs = res.articles;
+		this.loading = false;
 	},
 	methods: {
+		extractHostname(url) {
+			let hostname;
+
+			// find & remove protocol (http, ftp, etc.) and get hostname
+			if (url.includes('://')) {
+				hostname = url.split('/')[2];
+			} else {
+				hostname = url.split('/')[0];
+			}
+
+			// find & remove port number
+			hostname = hostname.split(':')[0];
+
+			// find & remove "?"
+			hostname = hostname.split('?')[0];
+
+			return hostname;
+		},
 		async setRating() {
 			let response = await fetch(
 				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
@@ -298,6 +397,7 @@ export default {
 				}
 			);
 			response = await response.json();
+			this.isYellow = true;
 			this.rating = parseFloat(response.rating.average.toFixed(1));
 		},
 		dates(date) {

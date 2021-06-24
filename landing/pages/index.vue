@@ -1,70 +1,80 @@
 <template>
 	<div>
-		<client-only>
-			<nav class="primary">
-				<Appbar />
-			</nav>
-			<!-- SECTION 1 / heading -->
-			<section class="primary">
-				<v-container class="white--text py-0">
-					<v-row
+		<nav class="primary-color">
+			<Appbar />
+		</nav>
+		<!-- SECTION 1 / heading -->
+		<section class="primary-color">
+			<v-container class="white--text py-0">
+				<v-row
+					tag="section"
+					justify="center"
+					:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+				>
+					<v-col
 						tag="section"
-						justify="center"
-						:align="$vuetify.breakpoint.mdAndUp ? 'center' : 'start'"
+						cols="12"
+						md="6"
+						class="primary-color text-center text-md-left"
 					>
-						<v-col
-							tag="section"
-							cols="12"
-							md="6"
-							class="primary text-center text-md-left"
+						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
+							Tu psicólogo Online
+						</h1>
+						<div class="title mt-10 mb-7">
+							Demos juntos el primer paso hacia el bienestar emocional. Habla de forma
+							segura y privada con un psicólogo online cuando lo necesites.
+						</div>
+						<v-btn
+							style="border-radius: 15px"
+							color="white"
+							x-large
+							class="ml-2 py-8 px-10"
+							nuxt
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
-							<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-								Tu psicólogo Online
-							</h1>
-							<div class="title my-10">
-								Demos juntos el primer paso hacia el bienestar emocional. Habla de
-								forma segura y privada con un psicólogo online cuando lo necesites.
-							</div>
-							<v-btn
-								style="border-radius: 15px"
-								color="white"
-								x-large
-								class="py-8 px-10"
-								nuxt
-								:to="{ name: 'psicologos' }"
-							>
-								<span
-									class="text-capitalize body-1 text--secondary font-weight-bold"
-								>
-									Quiero empezar
-								</span>
-							</v-btn>
-							<div class="body-1 font-weight-bold mt-10">
-								Desde $15.500CLP a la semana
-							</div>
-							<h3 class="body-1 mt-5">Convenios con Isapres y Fonasa.</h3>
-						</v-col>
-						<v-col v-if="$vuetify.breakpoint.mdAndUp" tag="section" cols="12" md="6">
-							<v-img
-								:style="
-									$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'
-								"
-								contain
-								:src="`${$config.LANDING_URL}/phone.png`"
-								alt="habla aqui videollamada"
-							/>
-						</v-col>
-					</v-row>
-				</v-container>
-			</section>
-			<img
-				v-if="$vuetify.breakpoint.mdAndUp"
-				:src="`${$config.LANDING_URL}/wave1.png`"
-				style="width: 100%"
-			/>
-			<img v-else :src="`${$config.LANDING_URL}/wave1-movil.png`" style="width: 100%" />
-		</client-only>
-		<!-- SETION 2 / como funciona -->
+							<span class="text-capitalize body-1 text--secondary font-weight-bold">
+								Quiero empezar
+							</span>
+						</v-btn>
+						<div class="body-1 font-weight-bold mt-7">Desde $15.500CLP a la semana</div>
+						<h3 class="body-1 mt-3">Convenios con Isapres y Fonasa.</h3>
+					</v-col>
+					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
+						<v-img
+							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
+							contain
+							:lazy-src="`${$config.LANDING_URL}/phone.webp`"
+							:src="`${$config.LANDING_URL}/phone.webp`"
+							alt="habla aqui videollamada"
+						>
+							<template #placeholder>
+								<v-row class="fill-height ma-0" align="center" justify="center">
+									<v-progress-circular
+										indeterminate
+										color="grey lighten-5"
+									></v-progress-circular>
+								</v-row> </template
+						></v-img>
+					</v-col>
+				</v-row>
+			</v-container>
+		</section>
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave1.png`"
+			width="100%"
+			height="100px"
+			alt="Tu psicólogo Online"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
+			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
+			style="width: 100%"
+			alt="Tu psicólogo Online"
+		/>
+
+		<!-- SECTION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
 			<v-row tag="section" justify="center">
 				<v-col
@@ -122,12 +132,12 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
-						style="border-radius: 15px"
 						color="primary"
+						style="border-radius: 15px"
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
@@ -135,8 +145,19 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-blue-1.png`" style="width: 100%" />
-		<section class="primary">
+		<img
+			class="mt-10 hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
+			width="100%"
+			height="100px"
+		/>
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_1.png`"
+			width="100%"
+			height="40px"
+		/>
+		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
 				<v-row tag="section" justify="space-between" align="center">
 					<v-col tag="section" cols="12" md="6" class="text-center text-md-left">
@@ -151,12 +172,11 @@
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
-							v-if="$vuetify.breakpoint.mdAndUp"
 							style="border-radius: 15px"
 							color="white"
 							x-large
-							class="py-8 px-10 ml-md-16 mt-10 mb-5"
-							:to="{ name: 'psicologos' }"
+							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -179,55 +199,56 @@
 									<v-img
 										:src="item.image"
 										:alt="item.name"
+										:lazy-src="item.image"
 										contain
 										eager
 										:max-width="$vuetify.breakpoint.mdAndUp ? '340' : '250'"
 										class="d-flex justify-end"
 									>
-										<aside
-											style="
-												background-color: #424242;
-												position: absolute;
-												bottom: 0;
-												height: 135px;
-												opacity: 0.6;
-												width: 100%;
-												border-radius: 0 0 20px 20px;
-											"
-										>
-											<h4 class="white--text pt-1 pl-4 font-weight-regular">
-												{{ item.title }}
-											</h4>
-											<h2
-												class="pl-4 pt-3 font-weight-bold"
-												:class="
-													$vuetify.breakpoint.mdAndUp ? 'title' : 'body-1'
-												"
+										<template #placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
 											>
-												{{ item.name }}
-											</h2>
-											<div>
-												<v-row>
-													<v-col cols="1" class="ml-4">
-														<v-icon color="primary">mdi-check</v-icon>
-													</v-col>
-													<v-col class="body-2 pl-3 font-weight-bold"
-														>{{ item.subtitle }}
-													</v-col>
-												</v-row>
-											</div>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
+										<aside style="position: absolute; bottom: 0; width: 100%">
+											<v-img
+												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
+											>
+												<h4
+													class="body-1 white--text pt-1 pl-4 font-weight-regular"
+												>
+													{{ item.title }}
+												</h4>
+												<h2 class="body-2 pl-4 pt-3 pb-2 font-weight-bold">
+													{{ item.name }}
+												</h2>
+												<div>
+													<v-row>
+														<v-col cols="1" class="ml-4">
+															<v-icon color="primary"
+																>mdi-check</v-icon
+															>
+														</v-col>
+														<v-col style="font-size: 14px" class="pl-3"
+															>{{ item.subtitle }}
+														</v-col>
+													</v-row>
+												</div>
+											</v-img>
 										</aside>
 									</v-img>
 								</v-carousel-item>
 							</v-carousel>
 						</section>
 					</v-col>
-					<v-col
-						v-if="!$vuetify.breakpoint.mdAndUp"
-						tag="section"
-						cols="12"
-						class="my-10 text-center"
-					>
+					<v-col tag="section" cols="12" class="hidden-md-and-up my-10 text-center">
 						<v-btn
 							style="border-radius: 15px"
 							color="white"
@@ -243,7 +264,18 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-blue-2.png`" style="width: 100%" />
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
+			width="100%"
+			height="150px"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/responsive_2.png`"
+			width="100%"
+			height="40px"
+		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
 			<v-row tag="section" justify="center">
@@ -266,7 +298,7 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img style="height: 80px" :src="item.img" />
+							<img height="80px" width="80px" :src="item.img" :alt="item.title" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -289,7 +321,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
@@ -297,20 +329,32 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<img class="mt-10" :src="`${$config.LANDING_URL}/wave-part1.png`" style="width: 100%" />
-		<section style="position: relative" class="primary">
-			<aside style="position: absolute; top: -100px; z-index: 0">
-				<v-img width="180" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+		<img
+			class="mt-10 hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-part1.png`"
+			style="width: 100%; height: 150px"
+		/>
+		<img
+			class="mt-10 hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+			style="width: 100%; height: 40px"
+		/>
+		<section style="position: relative" class="mb-2 primary-color">
+			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
+				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
 					<v-col
 						tag="section"
-						cols="12"
+						cols="10"
+						offset="2"
+						md="12"
+						offset-md="0"
 						class="white--text py-16 text-center text-md-left"
 					>
 						<h2
-							style="position: absolute; top: 0px; z-index: 0"
+							style="position: absolute; top: 30px; z-index: 0"
 							class="text-md-h3 text-h4 font-weight-bold"
 						>
 							Efectividad
@@ -348,7 +392,14 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" />
+											<v-img
+												height="60px"
+												width="120px"
+												contain
+												class="mx-auto"
+												:src="el.img"
+												:alt="el.text"
+											/>
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column"
@@ -408,7 +459,14 @@
 										flat
 									>
 										<v-card-text class="mt-3">
-											<img height="60" :src="el.img" />
+											<v-img
+												contain
+												width="120"
+												height="60"
+												class="mx-auto"
+												:src="el.img"
+												:alt="el.text"
+											/>
 										</v-card-text>
 										<v-card-text
 											style="flex-direction: column; height: 180px"
@@ -433,7 +491,16 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img :src="`${$config.LANDING_URL}/wave-part2.png`" style="width: 100%" />
+		<img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/wave-part2.png`"
+			style="width: 100%; height: 150px"
+		/>
+		<img
+			class="hidden-md-and-up"
+			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
+			style="width: 100%"
+		/>
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
 			<v-row tag="section" no-gutters justify="center">
@@ -454,7 +521,8 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
-						:src="`${$config.LANDING_URL}/google-play-badge.png`"
+						width="200px"
+						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
 				</v-col>
@@ -467,7 +535,8 @@
 				>
 					<img
 						style="cursor: pointer"
-						height="50px"
+						height="53px"
+						width="200px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
@@ -496,10 +565,9 @@
 					</v-expansion-panels>
 				</v-col>
 				<v-col
-					v-if="$vuetify.breakpoint.mdAndUp"
 					tag="section"
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
+					class="hidden-sm-and-down text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
 				>
 					<v-btn
 						style="border-radius: 15px"
@@ -507,21 +575,20 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
 				</v-col>
 				<v-col
-					v-if="$vuetify.breakpoint.mdAndUp"
 					cols="12"
-					class="text-center body-1 font-weight-bold mt-6 text--secondary"
+					class="hidden-sm-and-down text-center body-1 font-weight-bold mt-6 text--secondary"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<section v-if="$vuetify.breakpoint.smAndUp" class="mt-16">
+		<section class="hidden-sm-and-down mt-16">
 			<v-container tag="section">
 				<v-row justify="center">
 					<v-col cols="12" md="10" xl="8">
@@ -579,16 +646,18 @@
 				</v-row>
 			</v-container>
 		</section>
-		<section v-else class="mt-16" style="background-color: #e3f2fd">
+		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
-				height="250"
+				height="140"
 				:show-arrows="false"
+				hide-delimiter-background
+				hide-delimiters
 				reverse-transition="fade-transition"
 				transition="fade-transition"
 			>
 				<v-carousel-item
-					v-for="item in [
+					v-for="(item, e) in [
 						`${$config.LANDING_URL}/VidaTresIsapre.png`,
 						`${$config.LANDING_URL}/nueva-masvida.png`,
 						`${$config.LANDING_URL}/fonasa.png`,
@@ -596,16 +665,16 @@
 						`${$config.LANDING_URL}/colmena.png`,
 						`${$config.LANDING_URL}/consalud.png`,
 					]"
-					:key="item.id"
+					:key="e"
 				>
-					<v-img height="200" :src="item" contain />
+					<v-img height="70" class="mt-8" :src="item" :alt="item" contain />
 				</v-carousel-item>
 			</v-carousel>
 		</section>
 		<v-container tag="footer">
 			<Footer />
 		</v-container>
-		<div class="primary" style="height: 30px"></div>
+		<div class="primary-color" style="height: 30px"></div>
 	</div>
 </template>
 
@@ -641,7 +710,7 @@ export default {
 					title: 'Comodidad',
 					desc:
 						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
-					img: `${this.$config.LANDING_URL}/ico1.png`,
+					img: `${this.$config.LANDING_URL}/comodidad.png`,
 					maxWidth: '250px',
 				},
 				{
@@ -649,7 +718,7 @@ export default {
 					title: 'Privacidad',
 					desc:
 						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
-					img: `${this.$config.LANDING_URL}/ico2.png`,
+					img: `${this.$config.LANDING_URL}/privacidad.png`,
 					maxWidth: '214px',
 				},
 				{
@@ -657,7 +726,7 @@ export default {
 					title: 'Personalización',
 					desc:
 						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
-					img: `${this.$config.LANDING_URL}/ico3.png`,
+					img: `${this.$config.LANDING_URL}/personalizacion.png`,
 					maxWidth: '250px',
 				},
 			],
@@ -710,7 +779,7 @@ export default {
 					id: 2,
 					title: '¿Puedo iniciar terapia?',
 					desc:
-						'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con Ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
+						'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
 				},
 				{
 					id: 3,
@@ -752,14 +821,14 @@ export default {
 				[
 					{
 						id: 2,
-						img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
+						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
 						text:
 							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
-						img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
+						img: `${this.$config.LANDING_URL}/TheLancet.png`,
 						href:
 							'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 						text:
@@ -799,14 +868,14 @@ export default {
 
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/Logo-UniversityofCaliforniaBerkeley.png`,
+					img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
 					text:
 						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/Logo-TheLancet.png`,
+					img: `${this.$config.LANDING_URL}/TheLancet.png`,
 					href:
 						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 					text:
@@ -827,28 +896,28 @@ export default {
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Aihnoa Con',
-					image: `${this.$config.LANDING_URL}/Aihnoa_Con.png`,
+					image: `${this.$config.LANDING_URL}/Aihnoa_Con.webp`,
 				},
 				{
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.png`,
+					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.webp`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
-					image: `${this.$config.LANDING_URL}/Jorge_Calderon.png`,
+					image: `${this.$config.LANDING_URL}/Jorge_Calderon.webp`,
 				},
 				{
 					id: 4,
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Tamara Stein',
-					image: `${this.$config.LANDING_URL}/Tamara_Stein.png`,
+					image: `${this.$config.LANDING_URL}/Tamara_Stein.webp`,
 				},
 			],
 		};
@@ -869,7 +938,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-expansion-panel--active > .v-expansion-panel-header {
 	min-height: 32px !important;
 }

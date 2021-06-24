@@ -8,15 +8,16 @@ const Dashboard = () => import('@/views/Dashboard');
 const Evaluation = () => import('@/views/Evaluation');
 const Experts = () => import('@/views/Experts');
 const MyAgenda = () => import('@/views/children/dashboard/MyAgenda');
+const Pagos = () => import('@/views/children/dashboard/Pagos');
 const MyDaily = () => import('@/views/children/dashboard/MyDaily');
 const MyProfile = () => import('@/views/children/dashboard/MyProfile');
-const MySpace = () => import('@/views/children/dashboard/MySpace');
+const MyChat = () => import('@/views/children/dashboard/MyChat');
 const Payments = () => import('@/views/Payments');
-const Plan = () => import('@/views/children/payments/Plan');
 const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
+const PasswordReset = () => import('@/views/PasswordReset');
 
 const routes = [
 	{
@@ -25,7 +26,8 @@ const routes = [
 	},
 	{
 		path: '/psicologos',
-		redirect: { name: 'psicologos' },
+		name: 'psicologos',
+		redirect: { name: 'all-psicologos' },
 		component: Experts,
 		children: [
 			{
@@ -56,19 +58,25 @@ const routes = [
 				path: 'perfil',
 				name: 'perfil',
 				component: MyProfile,
-				meta: { title: 'Mi Perfil', requiresAuth: true },
+				meta: { title: 'Mi cuenta', requiresAuth: true },
 			},
 			{
-				path: 'espacio',
-				name: 'espacio',
-				component: MySpace,
-				meta: { title: 'Mi espacio', requiresAuth: true },
+				path: 'chat',
+				name: 'chat',
+				component: MyChat,
+				meta: { title: 'Chat', requiresAuth: true },
 			},
 			{
 				path: 'agenda',
 				name: 'agenda',
 				component: MyAgenda,
 				meta: { title: 'Mi agenda', requiresAuth: true },
+			},
+			{
+				path: 'pagos',
+				name: 'pagos',
+				component: Pagos,
+				meta: { title: 'Pagos', requiresAuth: true },
 			},
 			{
 				path: 'diario',
@@ -88,14 +96,7 @@ const routes = [
 		path: '/pagos',
 		name: 'pagos',
 		component: Payments,
-		redirect: { name: 'plan' },
 		children: [
-			{
-				path: 'plan',
-				name: 'plan',
-				component: Plan,
-				meta: { title: 'Planes y pagos', requiresAuth: true },
-			},
 			{
 				path: '/pago/pending-pay',
 				name: 'pending-pay',
@@ -125,6 +126,12 @@ const routes = [
 		name: 'nuevo-articulo',
 		component: NewArticle,
 		meta: { title: 'Nuevo articulo' },
+	},
+	{
+		path: '/passwordReset',
+		name: 'passwordReset',
+		component: PasswordReset,
+		meta: { title: 'Recuperar contraseña', layout: 'simple' },
 	},
 	{
 		path: '*',

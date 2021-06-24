@@ -7,6 +7,7 @@
 					type="text"
 					label="Nombre"
 					outlined
+					:dense="isDialog"
 					autocomplete="off"
 					:error-messages="nameErrors"
 				></v-text-field>
@@ -16,6 +17,7 @@
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"
+					:dense="isDialog"
 					outlined
 					:error-messages="emailErrors"
 				></v-text-field>
@@ -24,8 +26,9 @@
 				<v-text-field
 					autocomplete="off"
 					v-model="form.inviteCode"
-					label="Códico de Invitación"
+					label="Código de Invitación(opcional)"
 					type="text"
+					:dense="isDialog"
 					outlined
 				></v-text-field>
 			</v-col>
@@ -34,6 +37,7 @@
 					v-model="form.password"
 					label="Contraseña"
 					outlined
+					:dense="isDialog"
 					:type="showPassword ? 'text' : 'password'"
 					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					:error-messages="passwordErrors"
@@ -45,6 +49,7 @@
 					v-model="form.repeatPassword"
 					label="Repite contraseña"
 					outlined
+					:dense="isDialog"
 					:error-messages="repeatPasswordErrors"
 					:type="showRepeatPassword ? 'text' : 'password'"
 					:append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -86,12 +91,18 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { landing } from '@/config';
 
 export default {
 	name: 'SignUp',
 	mixins: [validationMixin],
+	props: {
+		isDialog: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			form: null,
@@ -158,11 +169,20 @@ export default {
 			}
 			if (!this.$v.$invalid && this.accept) {
 				this.loading = true;
-				await this.register(this.form);
+				const loggedIn = await this.register(this.form);
 				this.loading = false;
+				if (loggedIn)
+					if (this.$route.query.from == 'psy') this.$router.push({ name: 'evaluacion' });
+					else if (
+						this.$route.name !== 'all-psicologos' &&
+						this.$route.name !== 'psicologo'
+					)
+						this.$router.push({ name: 'chat' });
+					else if (this.isDialog) this.setResumeView(true);
 			}
 		},
 		...mapActions({ register: 'User/register' }),
+		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
 		form: {

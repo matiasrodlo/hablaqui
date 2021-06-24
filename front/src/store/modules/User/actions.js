@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
-import router from '@/router';
 
 export default {
 	async login({ commit }, payload) {
@@ -12,23 +11,10 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			if (data.user.role == 'psychologist') {
-				router.push({ name: 'perfil' });
-			} else {
-				// Psi seleccionado en boton agenda cita online
-				const psi = JSON.parse(localStorage.getItem('psi'));
-				// si no tiene plan y tiene psi pre-seleccionado
-				if (!data.user.myPlan && psi) {
-					router.push({ name: 'plan' });
-					// si no tiene plan y no hay psi seleccionado
-				} else if (!data.user.myPlan) {
-					router.push({ name: 'evaluacion' });
-					// o entonces enviamos a perfil
-				} else {
-					localStorage.removeItem('psi');
-					router.push({ name: 'perfil' });
-				}
-			}
+			// clear old data
+			localStorage.removeItem('match');
+			localStorage.removeItem('psi');
+			return !!data.user && !!data.token;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -43,27 +29,15 @@ export default {
 			commit('setUser', data.user);
 			commit('setToken', data.token);
 			commit('setLoggedIn');
-			// Psi seleccionado en boton agenda cita online
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			// si no tiene plan y tiene psi pre-seleccionado
-			if (!data.user.myPlan && psi) {
-				router.push({ name: 'plan' });
-				// si no tiene plan y no hay psi seleccionado
-			} else if (!data.user.myPlan) {
-				localStorage.removeItem('psi');
-				router.push({ name: 'evaluacion' });
-				// o entonces enviamos a perfil
-			} else {
-				localStorage.removeItem('psi');
-				router.push({ name: 'perfil' });
-			}
 			snackBarSuccess(data.message)(commit);
+			return !!data.user && !!data.token;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
 	},
 	async updateUser({ commit }, payload) {
 		try {
+			delete payload.finishedSessions;
 			const { data } = await axios('/user/update/profile', {
 				method: 'put',
 				data: payload,
