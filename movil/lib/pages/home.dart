@@ -3,6 +3,7 @@ import '../services/service-user.dart';
 import '../classes/SB_Settings.dart';
 import '../colors.dart' as appColors;
 import '../widgets/button.dart';
+import '../widgets/chat/conversations.dart';
 
 class Home extends StatefulWidget
 {
@@ -12,6 +13,7 @@ class Home extends StatefulWidget
 class _HomeState extends State<Home>
 {
 	String 		_title;
+	bool	_loaded	= false;
 	
 	@override
 	void initState()
@@ -25,11 +27,12 @@ class _HomeState extends State<Home>
 		print(user);
 		if( user != null )
 		{
-			this.setState(()
-			{
-				this._title = 'Hola ' + user.name;
-			});
+			this._title = 'Hola ' + user.name;
 		}
+		this.setState(()
+		{
+			this._loaded = true;
+		});
 	}
 	@override
 	Widget build(BuildContext context)
@@ -48,26 +51,7 @@ class _HomeState extends State<Home>
 			),
 			body: Container(
 				padding: EdgeInsets.all(10),
-				child: Column(
-					mainAxisAlignment: MainAxisAlignment.center,
-					crossAxisAlignment: CrossAxisAlignment.stretch,
-					children: [
-						Text('Comienza a hablar con nuestros psicólogos', 
-							textAlign: TextAlign.center,
-							style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])
-						),
-						SizedBox(height: 20),
-						Text('Lorem ipsum dolor sit amet, consectetuer adipscing elit, sed diam nonumy nibh euismod tincidunt ut laoreet',
-							textAlign: TextAlign.center,
-						),
-						SizedBox(height: 20),
-						WidgetButton(
-							text: 'Buscar ahora',
-							callback: this._searchPsychologists,
-							color: appColors.mainColors['blue'],
-						),
-					]
-				)
+				child: this._loaded ? ChatConversations() : SizedBox(height: 0),
 			)
 		);
 	}
@@ -75,9 +59,5 @@ class _HomeState extends State<Home>
 	{
 		await ServiceUsers().closeSession();
 		Navigator.of(this.context).pushNamedAndRemoveUntil('/', (_) => false);
-	}
-	void _searchPsychologists()
-	{
-		Navigator.of(this.context).pushNamed('/psychologists/search');
 	}
 }
