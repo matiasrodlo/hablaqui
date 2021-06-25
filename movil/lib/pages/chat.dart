@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pusher/pusher.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'dart:async';
 
 import '../classes/Psychologist.dart';
 import '../classes/Chat.dart';
@@ -24,9 +26,10 @@ class ChatPage extends StatefulWidget
 }
 class _ChatPageState extends State<ChatPage>
 {
+	ScrollController 		_scrollController 	= new ScrollController();
 	TextEditingController	_ctrlMessage 		= TextEditingController();
-	TextEditingController	channelController	= TextEditingController(text: 'my-channel');
-	TextEditingController	eventController 	= TextEditingController(text: "my-event");
+	TextEditingController	channelController	= TextEditingController(text: 'chat');
+	TextEditingController	eventController 	= TextEditingController(text: "update");
 	TextEditingController	triggerController 	= TextEditingController(text: "client-trigger");
   
 	FocusNode				_focusNode		= FocusNode();
@@ -58,7 +61,11 @@ class _ChatPageState extends State<ChatPage>
 		this._user = new User.fromMap( await SB_Settings.getObject('user')) ;
 		var items = await ServiceHablaqui().getChatMessages(this.widget.psycho.id, this._user.id);
 		this._messages.addAll( items );
-		this.setState((){});
+		
+		this.setState((){
+			this._scrollDown();
+			
+		});
 	}
 	Future<void> initPusher() async 
 	{
@@ -87,6 +94,7 @@ class _ChatPageState extends State<ChatPage>
 				await this.channel.bind(this.eventController.text, (x) 
 				{
 					print('lastEvent: $x');
+					this._onPusherEvent(x);
 				});
 				
 			}, onError: (x) {
@@ -96,7 +104,7 @@ class _ChatPageState extends State<ChatPage>
 		on PlatformException catch (e) 
 		{
 			print('ERROR');
-		  print(e.message);
+			print(e.message);
 		}
 	}
 	@override
@@ -200,6 +208,7 @@ class _ChatPageState extends State<ChatPage>
 	Widget _getListView()
 	{
 		return ListView.builder(
+			controller: this._scrollController,
 			itemCount: this._messages.length,
 			itemBuilder: (_, index)
 			{
@@ -222,5 +231,24 @@ class _ChatPageState extends State<ChatPage>
 		this._ctrlMessage.text = '';
 		this._focusNode.unfocus();
 		this.setState((){});
+	}
+	void _onPusherEvent(event)
+	{
+		print('onPusherEvent');
+		print(event.data);
+		var obj = json.decode(event.data);
+		
+		this.setState(()
+		{
+			this._messages.add( new ChatMessage.fromMap(obj['content']) );
+			this._scrollDown();
+		});
+	}
+	void _scrollDown()
+	{
+		Timer(
+			Duration(seconds: 1),
+			() => this._scrollController.jumpTo(this._scrollController.position.maxScrollExtent),
+		);
 	}
 }
