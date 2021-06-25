@@ -227,10 +227,10 @@ class _ChatPageState extends State<ChatPage>
 			return;
 			
 		var message = await ServiceHablaqui().sendChatMessage(this.widget.psycho.id, this._user.id, this._ctrlMessage.text.trim());
-		this._messages.add( message );
+		//this._messages.add( message );
 		this._ctrlMessage.text = '';
 		this._focusNode.unfocus();
-		this.setState((){});
+		//this.setState((){});
 	}
 	void _onPusherEvent(event)
 	{
