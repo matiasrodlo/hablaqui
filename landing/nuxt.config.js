@@ -13,6 +13,12 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
+		API_ABSOLUTE:
+			process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_URL_ABSOLUTE
+				: 'http://localhost:3000/',
+		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
+		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
@@ -46,7 +52,7 @@ export default {
 	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: [],
+	plugins: ['~/plugins/local-storage.js', '~/plugins/axios.js'],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -79,7 +85,9 @@ export default {
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
-	axios: {},
+	axios: {
+		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+	},
 
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
 	vuetify: {

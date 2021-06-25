@@ -1,44 +1,60 @@
-import axios from 'axios';
+// plugins/axios.js
 
-export const api = axios.create({
-	baseURL: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
-});
-
-/**
- * Performs api calls sending the required authentication headers
- * @param {String} url
- * @param {Object} options
- */
-const fetch = async (url, options) => {
-	const headers = {};
-	const vuex = JSON.parse(localStorage.getItem('vuex'));
-	if (vuex)
-		if (vuex.User !== null && vuex.User.token) {
-			headers.Authorization = `Bearer ${vuex.User.token}`;
+// expose the store, axios client and redirect method from the Nuxt context
+// https://nuxtjs.org/api/context/
+export default function ({ store, app: { $axios }, redirect }) {
+	$axios.onRequest(config => {
+		// check if the user is authenticated
+		console.log(store.state);
+		if (store.state.User.token) {
+			// set the Authorization header using the access token
+			config.headers.Authorization = `Bearer ${store.state.User.token}`;
 		}
-
-	const response = await api(url, {
-		headers,
-		...options,
+		return config;
 	});
-	const res = await _checkStatus(response);
-	return res;
-};
+}
 
-/**
- * checkstatus of the api response
- * @param {Object} response
- * @return {Object} response || error
- * @private
- */
-const _checkStatus = response => {
-	// raises an error in case response status is not a success
-	if (response.status >= 200 && response.status < 300) {
-		// Success status lies between 200 to 300
-		return response;
-	} else {
-		throw response;
-	}
-};
+// import axios from 'axios';
 
-export default fetch;
+// export const api = axios.create({
+// 	baseURL: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+// });
+
+// /**
+//  * Performs api calls sending the required authentication headers
+//  * @param {String} url
+//  * @param {Object} options
+//  */
+// const fetch = async (url, options) => {
+// 	const headers = {};
+// 	const vuex = JSON.parse(localStorage.getItem('vuex'));
+// 	if (vuex)
+// 		if (vuex.User !== null && vuex.User.token) {
+// 			headers.Authorization = `Bearer ${vuex.User.token}`;
+// 		}
+
+// 	const response = await api(url, {
+// 		headers,
+// 		...options,
+// 	});
+// 	const res = await _checkStatus(response);
+// 	return res;
+// };
+
+// /**
+//  * checkstatus of the api response
+//  * @param {Object} response
+//  * @return {Object} response || error
+//  * @private
+//  */
+// const _checkStatus = response => {
+// 	// raises an error in case response status is not a success
+// 	if (response.status >= 200 && response.status < 300) {
+// 		// Success status lies between 200 to 300
+// 		return response;
+// 	} else {
+// 		throw response;
+// 	}
+// };
+
+// export default fetch;

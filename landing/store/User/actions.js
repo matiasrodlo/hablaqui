@@ -4,7 +4,7 @@ import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 export default {
 	async login({ commit }, payload) {
 		try {
-			const { data } = await axios('/auth/login', {
+			const { data } = await this.$axios('/auth/login', {
 				method: 'post',
 				data: payload,
 			});

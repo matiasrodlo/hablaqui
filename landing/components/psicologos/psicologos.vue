@@ -707,7 +707,6 @@
 import { mapGetters } from 'vuex';
 
 export default {
-	name: 'Psicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
 		// FloatingChat: () => import('@/components/dashboard/FloatingChat'),

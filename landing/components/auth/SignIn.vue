@@ -84,11 +84,8 @@ export default {
 				this.loading = false;
 				if (loggedIn)
 					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
-					else if (
-						this.$route.name !== 'all-psicologos' &&
-						this.$route.name !== 'psicologo'
-					)
-						this.$router.push({ name: 'chat' });
+					else if (this.$route.name !== 'psicologos' && this.$route.name !== 'psicologo')
+						this.$router.push({ name: 'dashboard-chat' });
 					else if (this.isDialog) this.setResumeView(true);
 			}
 		},
