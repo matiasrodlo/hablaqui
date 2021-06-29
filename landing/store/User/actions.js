@@ -22,15 +22,11 @@ export default {
 	async register({ commit }, payload) {
 		try {
 			delete payload.repeatPassword;
-			const { data } = await axios('/auth/register', {
+			const { data } = await this.$axios('/auth/register', {
 				method: 'post',
 				data: payload,
 			});
-			commit('setUser', data.user);
-			commit('setToken', data.token);
-			commit('setLoggedIn');
 			snackBarSuccess(data.message)(commit);
-			return !!data.user && !!data.token;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}

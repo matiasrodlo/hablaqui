@@ -165,12 +165,15 @@ export default {
 			}
 			if (!this.$v.$invalid && this.accept) {
 				this.loading = true;
-				const loggedIn = await this.register(this.form);
+				await this.register(this.form);
+				await this.$auth.loginWith('local', {
+					data: { email: this.form.email, password: this.form.password },
+				});
 				this.loading = false;
-				if (loggedIn)
+				if (this.$auth.$state.loggedIn)
 					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
 					else if (this.$route.name !== 'psicologos' && this.$route.name !== 'psicologo')
-						this.$router.push({ name: 'chat' });
+						this.$router.push({ name: 'dashboard-chat' });
 					else if (this.isDialog) this.setResumeView(true);
 			}
 		},

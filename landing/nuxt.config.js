@@ -91,14 +91,22 @@ export default {
 	},
 
 	auth: {
-		localStorage: { prefix: 'auth.' },
+		localStorage: {
+			// prefijo auth example auth._token
+			prefix: 'auth.',
+		},
 		redirect: {
+			// ruta a la que se redirecciona desde una ruta privada
 			login: '/auth',
+			// ruta a la que vamos cuando cerramos sesion
 			logout: false,
+			// ruta a la que nos redirige al logearnos
 			home: false,
 		},
 		strategies: {
+			// login with api
 			local: {
+				// token config
 				token: {
 					property: 'token',
 					global: true,
@@ -106,8 +114,11 @@ export default {
 					type: 'Bearer',
 				},
 				endpoints: {
+					// login endpoint
 					login: { url: '/auth/login', method: 'post' },
+					// get user endpoint
 					user: { url: '/user/profile', method: 'get' },
+					// logout endpoint
 					logout: false,
 				},
 			},

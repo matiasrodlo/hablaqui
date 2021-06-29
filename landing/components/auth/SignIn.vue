@@ -39,7 +39,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
 	name: 'SignIn',
@@ -92,7 +92,6 @@ export default {
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
-		...mapActions({ login: 'User/login' }),
 		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
 	},
 	validations: {
