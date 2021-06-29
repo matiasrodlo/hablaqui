@@ -16,11 +16,8 @@ const RegisterPsi = () => import('@/views/RegisterPsi');
 const Psychologist = () => import('@/views/children/psychologist/Psychologist');
 const Psychologists = () => import('@/views/children/psychologist/Psychologists');
 const NewArticle = () => import('@/views/children/blog/NewArticle');
-<<<<<<< HEAD
 const CalendarSuccess = () => import('@/views/CalendarSuccess');
-=======
 const PasswordReset = () => import('@/views/PasswordReset');
->>>>>>> ff2fd20dba8d445a48c3f9dd546b9d3bca44c56a
 
 const routes = [
 	{
@@ -124,17 +121,16 @@ const routes = [
 		meta: { title: 'Nuevo articulo' },
 	},
 	{
-<<<<<<< HEAD
 		path: '/google-calendar/success',
 		name: 'google-calendar-success',
 		component: CalendarSuccess,
 		meta: { title: 'Permiso otorgado' },
-=======
+	},
+	{
 		path: '/passwordReset',
 		name: 'passwordReset',
 		component: PasswordReset,
 		meta: { title: 'Recuperar contraseña', layout: 'simple' },
->>>>>>> ff2fd20dba8d445a48c3f9dd546b9d3bca44c56a
 	},
 	{
 		path: '*',
