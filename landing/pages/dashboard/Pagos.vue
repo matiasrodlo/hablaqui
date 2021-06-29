@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh">
-		<appbar />
+		<appbar title="Pagos" />
 		<v-row>
 			<v-col v-for="(card, i) in cards" :key="i" cols="3">
 				<v-card dark color="primary" class="pa-4 rounded-lg">

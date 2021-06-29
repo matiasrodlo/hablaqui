@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar />
+		<appbar title="Mi agenda" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
 			<v-col cols="12" sm="3" md="4" lg="3">
 				<div class="text-center">

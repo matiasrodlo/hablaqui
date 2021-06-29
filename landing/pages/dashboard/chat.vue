@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar />
+		<appbar title="Chat" />
 		<v-row>
 			<v-col cols="12" md="4" lg="3">
 				<div

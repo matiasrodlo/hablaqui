@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh">
-		<appbar />
+		<appbar title="Mi cuenta" />
 		<v-list two-line style="border-radius: 15px; height: 150px">
 			<v-list-item style="position: relative">
 				<v-file-input

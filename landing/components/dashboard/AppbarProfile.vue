@@ -1,6 +1,6 @@
 <template>
 	<v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
-		<h1 class="primary--text">{{ $route.meta.title }}</h1>
+		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
 		<div class="mx-5 body-1 primary--text">
 			<router-link
@@ -24,6 +24,12 @@
 import { mapMutations } from 'vuex';
 
 export default {
+	props: {
+		title: {
+			type: String,
+			default: '',
+		},
+	},
 	methods: {
 		logout() {
 			this.$auth.logout();

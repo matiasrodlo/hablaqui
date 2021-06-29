@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar />
+		<appbar title="Mi diario" />
 		<v-row
 			justify="center"
 			align="center"
