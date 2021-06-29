@@ -26,7 +26,7 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-if="loggedIn" @click="logout">
+				<v-list-item v-if="$auth.$state.loggedIn" @click="logout">
 					<v-list-item-content>
 						<v-list-item-title>Cerrar sesión</v-list-item-title>
 					</v-list-item-content>
@@ -36,7 +36,7 @@
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-if="!loggedIn" link @click="start">
+				<v-list-item v-if="!$auth.$state.loggedIn" link @click="start">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -81,12 +81,14 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<div
-				v-if="loggedIn"
+				v-if="$auth.$state.loggedIn"
 				class="hidden-sm-and-down body-1 text--secondary mr-16"
 				rounded
 				text
 			>
-				<h3 class="mr-6 secondary--text d-inline-block">Hola {{ user.name }}</h3>
+				<h3 class="mr-6 secondary--text d-inline-block">
+					Hola {{ $auth.$state.user.name }}
+				</h3>
 				<v-menu
 					rounded="xl"
 					open-on-hover
@@ -96,7 +98,11 @@
 				>
 					<template #activator="{ on, attrs }">
 						<div class="d-inline-block" v-bind="attrs" v-on="on">
-							<avatar size="50" :name="user.name" :url="user.avatar" />
+							<avatar
+								size="50"
+								:name="$auth.$state.user.name"
+								:url="$auth.$state.user.avatar"
+							/>
 						</div>
 					</template>
 					<v-card>
@@ -142,7 +148,7 @@
 				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
 			</router-link>
 			<v-btn
-				v-if="!loggedIn"
+				v-if="!$auth.$state.loggedIn"
 				rounded
 				class="mx-2 py-6 px-lg-10"
 				color="primary"
@@ -162,7 +168,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),
@@ -190,13 +195,10 @@ export default {
 			drawer: false,
 		};
 	},
-	computed: {
-		...mapGetters({ loggedIn: 'User/loggedIn', user: 'User/user' }),
-	},
 	methods: {
 		logout() {
-			this.logoutUser();
-			if (this.$route.meta.requiresAuth) this.$router.push({ name: 'auth' });
+			this.$auth.logout();
+			this.$router.push('/auth');
 		},
 		start() {
 			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
@@ -207,7 +209,6 @@ export default {
 					query: { from: 'psy' },
 				});
 		},
-		...mapMutations({ logoutUser: 'User/logoutUser' }),
 	},
 };
 </script>

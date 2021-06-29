@@ -191,7 +191,7 @@
 							</template>
 						</v-autocomplete>
 					</v-col>
-					<v-col v-if="!$vuetify.breakpoint.mdAndUp" cols="12">
+					<v-col class="hidden-md-and-up" cols="12">
 						<v-expansion-panels
 							flat
 							style="border-radius: 10px; border: 1px solid #e0e0e0"

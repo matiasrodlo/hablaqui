@@ -21,14 +21,19 @@
 					></v-avatar>
 					<label v-else for="upload" style="cursor: pointer">
 						<v-avatar size="100" color="#EEE">
-							<v-img v-if="user.avatar" :src="user.avatar" :alt="user.name" contain />
+							<v-img
+								v-if="$auth.$state.user.avatar"
+								:src="$auth.$state.user.avatar"
+								:alt="$auth.$state.user.name"
+								contain
+							/>
 							<v-icon v-else x-large>mdi-camera</v-icon>
 						</v-avatar>
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content>
 					<v-list-item-title class="text-capitalize font-weight-bold title">
-						{{ user.name }} {{ user.lastName }}
+						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>
 					<v-list-item-subtitle class="body-1">
 						Bienvenido a Hablaquí
@@ -40,11 +45,11 @@
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
-			<v-tab v-if="user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
 				Mis planes
 			</v-tab>
 
-			<v-tab v-if="user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
 				Mi psicologo
 			</v-tab>
 		</v-tabs>
@@ -67,7 +72,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -84,13 +89,11 @@ export default {
 			sidebar: 0,
 		};
 	},
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
 	methods: {
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
-			await this.upateAvatar(this.setAvatarObject(file));
+			const user = await this.upateAvatar(this.setAvatarObject(file));
+			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 		},
 		setAvatarObject(file) {

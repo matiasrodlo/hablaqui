@@ -1,4 +1,3 @@
-import axios from '@/plugins/axios';
 import { snackBarError } from '@/utils/snackbar';
 
 export default {
@@ -12,7 +11,7 @@ export default {
 	},
 	async registerPsychologist({ commit }, payload) {
 		try {
-			await axios('/psychologists/register', {
+			await this.$axios('/psychologists/register', {
 				method: 'POST',
 				data: payload,
 			});
@@ -33,7 +32,7 @@ export default {
 	},
 	async mercadopagoPay({ commit }, payload) {
 		try {
-			const { data } = await axios('/mercadopago/create-preference', {
+			const { data } = await this.$axios('/mercadopago/create-preference', {
 				method: 'POST',
 				data: payload,
 			});
@@ -44,7 +43,7 @@ export default {
 	},
 	async createSession({ commit }, payload) {
 		try {
-			const { data } = await axios('/psychologists/session/create', {
+			const { data } = await this.$axios('/psychologists/session/create', {
 				method: 'POST',
 				data: { payload },
 			});
@@ -56,7 +55,7 @@ export default {
 	async updateSession({ commit }, payload) {
 		try {
 			const { psyId, userId, sessionId } = payload;
-			const { data } = await axios(
+			const { data } = await this.$axios(
 				`/mercadopago/success-pay/${psyId}/${userId}/${sessionId}`,
 				{
 					method: 'POST',

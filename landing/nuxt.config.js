@@ -23,6 +23,10 @@ export default {
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
 	},
+	loading: {
+		color: '#2070E5',
+		height: '3px',
+	},
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
 		titleTemplate: '%s',

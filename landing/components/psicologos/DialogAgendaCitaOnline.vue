@@ -183,7 +183,7 @@ export default {
 			else if (this.step === 3) return '800';
 			return '900';
 		},
-		...mapGetters({ loggedIn: 'User/loggedIn', resumeView: 'Psychologist/resumeView' }),
+		...mapGetters({ resumeView: 'Psychologist/resumeView' }),
 	},
 	watch: {
 		resumeView(newValue) {
@@ -206,7 +206,7 @@ export default {
 		},
 		setPlan(plan) {
 			this.plan = plan;
-			if (this.loggedIn) this.step = 3;
+			if (this.$auth.$state.loggedIn) this.step = 3;
 			else this.step = 2;
 		},
 	},

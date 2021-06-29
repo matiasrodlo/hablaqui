@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	props: {
@@ -113,9 +113,6 @@ export default {
 			loading: false,
 		};
 	},
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
 	mounted() {
 		this.setResumeView(false);
 	},
@@ -127,7 +124,7 @@ export default {
 				date: this.event.date,
 				start: this.event.start,
 				end: this.event.end,
-				user: this.user,
+				user: this.$auth.$state.user,
 				psychologist: this.psy,
 			};
 			const createdSession = await this.createSession(sessionPayload);
@@ -136,7 +133,7 @@ export default {
 				title: this.plan.title,
 				quantity: 1,
 				sessionToUpdate: createdSession.id,
-				userToUpdate: this.user._id,
+				userToUpdate: this.$auth.$state.user._id,
 				psychologistToUpdate: this.psy._id,
 			};
 			const preferenceData = await this.mercadopagoPay(payload);

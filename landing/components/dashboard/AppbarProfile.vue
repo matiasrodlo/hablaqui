@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
 export default {
 	props: {
 		title: {
@@ -35,7 +33,6 @@ export default {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
-		...mapMutations({ resetUser: 'User/reset' }),
 	},
 };
 </script>

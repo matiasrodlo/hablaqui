@@ -1,5 +1,5 @@
 <template>
-	<div v-if="user">
+	<div v-if="$auth.$state.user">
 		<v-row>
 			<v-col cols="12" class="title">Configuración personal</v-col>
 			<v-col cols="6">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import axios from 'axios';
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -108,7 +108,6 @@ export default {
 				email: '',
 				timeZone: '',
 			},
-
 			timezone: [],
 			loadingUser: false,
 		};
@@ -122,10 +121,9 @@ export default {
 			!this.$v.formUser.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
-		...mapGetters({ user: 'User/user' }),
 	},
 	async mounted() {
-		this.formUser = { ...this.user };
+		this.formUser = { ...this.$auth.$state.user };
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
@@ -134,17 +132,18 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid && this.hasChanges()) {
 				this.loadingUser = true;
-				await this.updateUser(this.formUser);
+				const user = await this.updateUser(this.formUser);
+				this.$auth.setUser(user);
 				this.$v.$reset();
 				this.loadingUser = false;
 			}
 		},
 		hasChanges() {
 			return (
-				this.formUser.name !== this.user.name ||
-				this.formUser.lastName !== this.user.lastName ||
-				this.formUser.phone !== this.user.phone ||
-				this.formUser.timeZone !== this.user.timeZone
+				this.formUser.name !== this.$auth.$state.user.name ||
+				this.formUser.lastName !== this.$auth.$state.user.lastName ||
+				this.formUser.phone !== this.$auth.$state.user.phone ||
+				this.formUser.timeZone !== this.$auth.$state.user.timeZone
 			);
 		},
 		...mapActions({ updateUser: 'User/updateUser' }),

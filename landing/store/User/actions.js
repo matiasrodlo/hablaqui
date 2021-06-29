@@ -1,4 +1,3 @@
-import axios from '@/plugins/axios';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
@@ -34,24 +33,24 @@ export default {
 	async updateUser({ commit }, payload) {
 		try {
 			delete payload.finishedSessions;
-			const { data } = await axios('/user/update/profile', {
+			const { data } = await this.$axios('/user/update/profile', {
 				method: 'put',
 				data: payload,
 			});
-			commit('setUser', data.user);
 			snackBarSuccess(data.message)(commit);
+			return data.user;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
 	},
 	async upateAvatar({ commit }, payload) {
 		try {
-			const { data } = await axios('/user/update/avatar', {
+			const { data } = await this.$axios('/user/update/avatar', {
 				method: 'put',
 				data: payload,
 			});
-			commit('setUser', data.user);
 			snackBarSuccess(data.message)(commit);
+			return data.user;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
@@ -59,7 +58,7 @@ export default {
 	async upatePassword({ commit }, payload) {
 		try {
 			delete payload.repeatNewPassword;
-			const { data } = await axios('/user/update/password', {
+			const { data } = await this.$axios('/user/update/password', {
 				method: 'patch',
 				data: payload,
 			});
