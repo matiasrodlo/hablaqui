@@ -441,6 +441,7 @@ export default {
 		avatar: () => import('~/components/Avatar'),
 	},
 	layout: 'dashboard',
+	middleware: ['auth'],
 	data() {
 		return {
 			search: '',

@@ -1,11 +1,10 @@
-import axios from '~/plugins/axios';
 import { snackBarError } from '~/utils/snackbar';
 
 export default {
 	async getAppointments({ commit }) {
 		try {
-			const { data } = await axios('/appointments/all');
-			commit('setAppointments', data.appointments);
+			const { appointments } = await this.$axios.$get('/appointments/all');
+			commit('setAppointments', appointments);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

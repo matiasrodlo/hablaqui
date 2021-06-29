@@ -80,9 +80,10 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				const loggedIn = await this.login(this.form);
+				const { data } = await this.$auth.loginWith('local', { data: this.form });
+				this.$auth.setUser(data.user);
 				this.loading = false;
-				if (loggedIn)
+				if (this.$auth.$state.loggedIn)
 					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
 					else if (this.$route.name !== 'psicologos' && this.$route.name !== 'psicologo')
 						this.$router.push({ name: 'dashboard-chat' });

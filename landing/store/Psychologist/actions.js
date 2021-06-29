@@ -22,7 +22,7 @@ export default {
 	},
 	async matchPsi({ commit }, payload) {
 		try {
-			const { data } = await axios('/psychologists/match', {
+			const { data } = await this.$axios('/psychologists/match', {
 				method: 'POST',
 				data: { payload },
 			});

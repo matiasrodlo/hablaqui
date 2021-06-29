@@ -52,7 +52,7 @@ export default {
 	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ['~/plugins/local-storage.js', '~/plugins/axios.js'],
+	plugins: [],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -82,11 +82,38 @@ export default {
 		],
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
+		'@nuxtjs/auth-next',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
 		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+	},
+
+	auth: {
+		localStorage: { prefix: 'auth.' },
+		strategies: {
+			local: {
+				token: {
+					property: 'token',
+					global: true,
+					required: true,
+					type: 'Bearer',
+				},
+
+				endpoints: {
+					login: { url: '/auth/login', method: 'post' },
+					user: false,
+					logout: false,
+				},
+				redirect: {
+					login: '/auth',
+					logout: '/',
+					callback: '/auth',
+					home: false,
+				},
+			},
+		},
 	},
 
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)

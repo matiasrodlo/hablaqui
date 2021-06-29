@@ -4,7 +4,7 @@
 		<v-spacer></v-spacer>
 		<div class="mx-5 body-1 primary--text">
 			<router-link
-				v-if="user.role == 'user'"
+				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
 				style="text-decoration: none"
 				:to="{ name: 'psicologos' }"
 			>
@@ -12,9 +12,7 @@
 			</router-link>
 		</div>
 		<div class="mx-5 body-1 primary--text">
-			<a style="text-decoration: none" :href="`${$config.LANDING_URL}/faq`">
-				Centro de ayuda
-			</a>
+			<a style="text-decoration: none" to="/faq"> Centro de ayuda </a>
 		</div>
 		<v-btn class="ml-2" small fab color="white" @click="logout">
 			<v-icon color="primary"> mdi-logout </v-icon>
@@ -23,12 +21,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
 	methods: {
 		logout() {
 			this.resetUser();

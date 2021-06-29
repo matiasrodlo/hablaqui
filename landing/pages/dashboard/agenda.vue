@@ -148,6 +148,7 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
 	layout: 'dashboard',
+	middleware: ['auth'],
 	data: () => ({
 		date: '2018-03-02',
 		focus: '',

@@ -1,4 +1,4 @@
-// plugins/local-storage.js
+// // plugins/local-storage.js
 import createPersistedState from 'vuex-persistedstate';
 import * as Cookies from 'js-cookie';
 import cookie from 'cookie';
@@ -6,6 +6,7 @@ import cookie from 'cookie';
 // access the store, http request and environment from the Nuxt context
 // https://nuxtjs.org/api/context/
 export default ({ store, req, isDev }) => {
+	console.log('persisted');
 	createPersistedState({
 		key: 'authentication-cookie', // choose any name for your cookie
 		paths: ['User', 'Psychologist', 'Chat'],

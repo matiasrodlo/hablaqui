@@ -76,6 +76,7 @@ export default {
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
 	},
 	layout: 'dashboard',
+	middleware: ['auth'],
 	data() {
 		return {
 			tabs: 0,

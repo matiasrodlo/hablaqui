@@ -548,10 +548,7 @@
 													max-width="600"
 													max-height="190"
 													class="ma-2"
-													:to="{
-														name: 'psicologo',
-														params: { id: item._id },
-													}"
+													:to="{ path: `/psicologos/${item._id}` }"
 												>
 													<v-card-text>
 														<v-row align="center">
@@ -684,6 +681,7 @@ export default {
 		Precharge: () => import('~/components/evaluation/Precharge'),
 		Selection: () => import('~/components/evaluation/Selection'),
 	},
+	middleware: ['auth'],
 	data() {
 		return {
 			onboarding: 0,
@@ -720,9 +718,11 @@ export default {
 		}),
 	},
 	created() {
-		const psi = JSON.parse(localStorage.getItem('psi'));
-		if (psi && psi.length) {
-			this.matchedPsychologists = psi;
+		if (process.browser) {
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			if (psi && psi.length) {
+				this.matchedPsychologists = psi;
+			}
 		}
 	},
 	mounted() {
@@ -759,7 +759,7 @@ export default {
 			} else if (this.themes.length < 3) this.themes.push(value);
 			if (this.themes.length === 3) this.step = 4;
 		},
-		async openPrecharge() {
+		openPrecharge() {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
@@ -770,11 +770,13 @@ export default {
 				themes: this.themes,
 				model: this.focus,
 			};
-			const response = await this.matchPsi(payload);
-			if (response.length) {
-				localStorage.setItem('psi', JSON.stringify(response));
-				this.matchedPsychologists = response;
-			}
+			this.matchPsi(payload).then(response => {
+				console.log(response);
+				if (response && response.length) {
+					localStorage.setItem('psi', JSON.stringify(response));
+					this.matchedPsychologists = response;
+				}
+			});
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

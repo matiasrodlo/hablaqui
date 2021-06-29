@@ -91,6 +91,7 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
 	layout: 'dashboard',
+	middleware: ['auth'],
 	data() {
 		return {
 			cards: [
