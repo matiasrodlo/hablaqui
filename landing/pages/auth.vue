@@ -1,9 +1,15 @@
 <template>
-	<v-img :src="backgroundImg" height="100vh">
+	<div style="position: relative">
+		<v-img
+			class="hidden-sm-and-down"
+			:src="`${$config.LANDING_URL}/login.png`"
+			:lazy-src="`${$config.LANDING_URL}/login.png`"
+			style="height: 100vh"
+		></v-img>
 		<v-container
 			:class="$vuetify.breakpoint.mdAndUp ? '' : 'white--text'"
 			fluid
-			class="login-image"
+			style="position: absolute; top: 0; height: 100vh"
 		>
 			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
 				<v-col cols="12" md="6">
@@ -14,6 +20,7 @@
 									class="mx-auto"
 									style="max-width: 200px"
 									:src="`${$config.LANDING_URL}/logo.png`"
+									:lazy-src="`${$config.LANDING_URL}/logo.png`"
 								/>
 							</nuxt-link>
 						</v-col>
@@ -77,7 +84,7 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.mdAndUp" md="6">
+				<v-col class="hidden-sm-and-down" md="6">
 					<v-carousel
 						v-model="carousel"
 						hide-delimiter-background
@@ -144,7 +151,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-	</v-img>
+	</div>
 </template>
 
 <script>
@@ -185,12 +192,6 @@ export default {
 			step: 1,
 			fromRoute: '',
 		};
-	},
-	computed: {
-		backgroundImg() {
-			if (this.$vuetify.breakpoint.mdAndUp) return `${this.$config.LANDING_URL}/login.png`;
-			return null;
-		},
 	},
 	created() {
 		if (this.$route.params.q) this.step = 2;
