@@ -7,13 +7,13 @@ class WidgetHelper
 	{
 		return TextStyle(color: appColors.mainColors['blue']);
 	}
-	static InputDecoration getTextFieldDecoration(String hint)
+	static InputDecoration getTextFieldDecoration(String hint, [Color bgColor = Colors.transparent])
 	{
 		return InputDecoration(
 			labelText: hint,
 			contentPadding: EdgeInsets.only(top:4, right: 10, bottom: 4, left: 10),
 			filled: true,
-			fillColor: Colors.transparent,
+			fillColor: bgColor,
 			//icon: Icon(Icons.supervisor_account, color: Colors.white),
 			hintText: hint,	
 			hintStyle: TextStyle(color: Colors.white),

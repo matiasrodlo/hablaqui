@@ -9,7 +9,7 @@
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
-				<div class="title text-h5 text-sm-h4 font-weight-bold my-10">
+				<div class="title text-h5 text-sm-h4 font-weight-bold mb-10">
 					Encuentra a tu especialista
 				</div>
 				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
@@ -17,7 +17,7 @@
 					preguntas. ¡Queremos conocerte!
 				</div>
 				<div style="background-color: #F0F8FF">
-					<v-container>
+					<v-container class="centerCard">
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
 								<v-stepper v-model="step" light style="border-radius: 25px">
@@ -506,7 +506,7 @@
 						</v-row>
 						<v-row>
 							<v-col cols="12">
-								<v-divider style="border-width: 1px"></v-divider>
+								<v-divider style="border-width: 1px" />
 							</v-col>
 							<v-col cols="12">
 								<v-carousel
@@ -616,7 +616,12 @@
 										</div>
 									</v-carousel-item>
 								</v-carousel>
-								<v-item-group v-model="onboarding" class="text-center" mandatory>
+								<v-item-group
+									v-if="$vuetify.breakpoint.mdAndUp"
+									v-model="onboarding"
+									class="text-center"
+									mandatory
+								>
 									<v-item
 										v-for="(n, e) in psi"
 										:key="`btn-${e}`"
@@ -679,7 +684,7 @@ export default {
 			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
-			const wordsPerLine = Math.ceil(items.length / 4);
+			const wordsPerLine = 2;
 			for (let line = 0; line < n; line++) {
 				for (let i = 0; i < wordsPerLine; i++) {
 					const value = items[i + line * wordsPerLine];
@@ -693,6 +698,12 @@ export default {
 			specialties: 'Appointments/specialties',
 			psychologists: 'Psychologist/psychologists',
 		}),
+	},
+	created() {
+		const psi = JSON.parse(localStorage.getItem('psi'));
+		if (psi && psi.length) {
+			this.matchedPsychologists = psi;
+		}
 	},
 	mounted() {
 		this.getPsychologists();
@@ -711,6 +722,7 @@ export default {
 			});
 		},
 		resetMatch() {
+			localStorage.removeItem('psi');
 			this.gender = '';
 			this.age = '';
 			this.firstTherapy = null;
@@ -733,7 +745,7 @@ export default {
 			this.dialogPrecharge = true;
 			setTimeout(() => {
 				this.dialogPrecharge = false;
-			}, 2500);
+			}, 3000);
 			const gender = this.genderConfort == 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
@@ -742,6 +754,7 @@ export default {
 			};
 			const response = await this.matchPsi(payload);
 			if (response.length) {
+				localStorage.setItem('psi', JSON.stringify(response));
 				this.matchedPsychologists = response;
 			}
 		},
@@ -756,7 +769,6 @@ export default {
 
 <style lang="scss" scoped>
 .centerCard {
-	max-width: 700px;
 	position: absolute;
 	margin-left: auto;
 	margin-right: auto;

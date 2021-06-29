@@ -1,30 +1,55 @@
 <template>
 	<div v-if="user">
 		<v-row>
-			<v-col cols="12" class="title">Información General</v-col>
-			<v-col cols="12">
+			<v-col cols="12" class="title">Configuración personal</v-col>
+			<v-col cols="6">
 				<v-text-field
 					v-model="formUser.name"
 					filled
 					outlined
+					readonly
 					dense
+					hide-details
 					label="Nombre"
 					:error-messages="nameErrors"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12">
+			<v-col cols="6">
+				<v-text-field
+					v-model="formUser.email"
+					readonly
+					filled
+					hide-details
+					outlined
+					dense
+					label="Correo electronico"
+				></v-text-field>
+			</v-col>
+			<v-col cols="6">
 				<v-text-field
 					v-model="formUser.lastName"
 					filled
 					outlined
 					dense
+					hide-details
 					label="Apellido"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12">
+			<v-col cols="6">
+				<v-text-field
+					v-model="formUser.phone"
+					filled
+					outlined
+					hide-details
+					dense
+					label="Numero de telefono"
+				></v-text-field>
+			</v-col>
+			<v-col cols="6">
 				<v-combobox
 					dense
 					filled
+					hide-details
 					label="Zona horaria"
 					v-model="formUser.timeZone"
 					:items="timezone"
@@ -44,25 +69,6 @@
 						</v-list-item>
 					</template>
 				</v-combobox>
-			</v-col>
-			<v-col cols="12">
-				<v-text-field
-					v-model="formUser.email"
-					readonly
-					filled
-					outlined
-					dense
-					label="Correo electronico"
-				></v-text-field>
-			</v-col>
-			<v-col cols="12">
-				<v-text-field
-					v-model="formUser.phone"
-					filled
-					outlined
-					dense
-					label="Numero de telefono"
-				></v-text-field>
 			</v-col>
 			<v-col cols="12" class="text-center">
 				<v-btn

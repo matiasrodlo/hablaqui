@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container style="position: relative">
 		<v-row justify="space-between" align="center">
 			<v-col class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				{{ $route.meta.title }}
@@ -449,7 +449,7 @@
 										</div>
 										<div class="body-2 mt-4">
 											<template v-for="(el, e) in item.specialties">
-												<span v-if="e < 4" :key="e"> {{ el }}; </span>
+												<span v-if="e < 6" :key="e"> {{ el }}; </span>
 											</template>
 										</div>
 									</v-card-text>
@@ -495,12 +495,8 @@
 										<v-row align="center" justify="center">
 											<v-col cols="3" class="text-center">
 												<v-img
-													:height="
-														$vuetify.breakpoint.mdOnly ? '120' : '180'
-													"
-													:width="
-														$vuetify.breakpoint.mdOnly ? '120' : '180'
-													"
+													height="140"
+													width="140"
 													class="mx-auto"
 													src="/img/Lupa.png"
 												></v-img>
@@ -558,7 +554,7 @@
 											<v-col cols="3" class="text-center">
 												<v-avatar
 													:size="
-														$vuetify.breakpoint.mdOnly ? '140' : '200'
+														$vuetify.breakpoint.lgAndUp ? '200' : '140'
 													"
 													:color="item.avatar ? 'trasnparent' : 'primary'"
 												>
@@ -567,14 +563,14 @@
 														:src="item.avatar"
 														:lazy-src="item.avatar"
 														:width="
-															$vuetify.breakpoint.mdOnly
-																? '140'
-																: '200'
+															$vuetify.breakpoint.lgAndUp
+																? '200'
+																: '140'
 														"
 														:height="
-															$vuetify.breakpoint.mdOnly
-																? '140'
-																: '200'
+															$vuetify.breakpoint.lgAndUp
+																? '200'
+																: '140'
 														"
 													>
 														<template #placeholder>
@@ -670,6 +666,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
+		<FloatingChat v-if="loggedIn && user.role == 'user'" />
 	</v-container>
 </template>
 
@@ -678,6 +675,7 @@ import { mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	name: 'psychologists',
 	props: {
@@ -744,6 +742,7 @@ export default {
 		},
 		...mapGetters({
 			loggedIn: 'User/loggedIn',
+			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
 		}),
@@ -798,6 +797,11 @@ export default {
 			this.gender = payload.gender;
 			this.models = [payload.model];
 			this.specialties = payload.themes;
+		},
+	},
+	watch: {
+		'$vuetify.breakpoint.mdAndUp': newVal => {
+			if (!newVal) this.view = 0;
 		},
 	},
 };

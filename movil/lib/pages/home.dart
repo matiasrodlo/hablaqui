@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/service-user.dart';
 import '../classes/SB_Settings.dart';
+import '../colors.dart' as appColors;
+import '../widgets/button.dart';
+import '../widgets/chat/conversations.dart';
 
 class Home extends StatefulWidget
 {
@@ -10,6 +13,7 @@ class Home extends StatefulWidget
 class _HomeState extends State<Home>
 {
 	String 		_title;
+	bool	_loaded	= false;
 	
 	@override
 	void initState()
@@ -23,11 +27,12 @@ class _HomeState extends State<Home>
 		print(user);
 		if( user != null )
 		{
-			this.setState(()
-			{
-				this._title = 'Hola ' + user.name;
-			});
+			this._title = 'Hola ' + user.name;
 		}
+		this.setState(()
+		{
+			this._loaded = true;
+		});
 	}
 	@override
 	Widget build(BuildContext context)
@@ -45,10 +50,8 @@ class _HomeState extends State<Home>
 				)
 			),
 			body: Container(
-				child: ListView(
-					children:[
-					]
-				)
+				padding: EdgeInsets.all(10),
+				child: this._loaded ? ChatConversations() : SizedBox(height: 0),
 			)
 		);
 	}

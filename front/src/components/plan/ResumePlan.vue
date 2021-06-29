@@ -16,8 +16,8 @@
 					<span class="white--text">Solicitar</span>
 				</button>
 			</div>
-			<v-list two-line>
-				<v-list-item class="px-0 mt-3 mb-2">
+			<v-list dense two-line>
+				<v-list-item class="px-0">
 					<v-list-item-avatar size="100">
 						<v-img contain :src="psy.avatar"></v-img>
 					</v-list-item-avatar>
@@ -41,7 +41,7 @@
 				Suscripción -
 				<v-btn text color="primary" class="px-0" small @click="goBack">Cambiar </v-btn>
 			</div>
-			<div class="subtitle-1 my-2" style="max-width: 320px">
+			<div class="caption my-2" style="max-width: 320px">
 				{{ plan.subtitle }}
 				{{ plan.description }}
 			</div>
@@ -63,8 +63,9 @@
 				<div class=" font-weight-bold">
 					Resumen
 				</div>
-				<div>{{ plan.title }}</div>
-				<div>{{ plan.deal.price }} {{ plan.deal.lapse }}</div>
+				<div class="caption">
+					{{ plan.title }} {{ plan.deal.price }} {{ plan.deal.lapse }}
+				</div>
 				<v-divider class="my-4"></v-divider>
 				<div class=" d-flex justify-space-between">
 					<span class="font-weight-bold subtitle-1">Monto total</span>

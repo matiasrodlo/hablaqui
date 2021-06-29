@@ -1,158 +1,71 @@
 <template>
-	<div>
-		<v-navigation-drawer mini-variant-width="110" mini-variant permanent app>
-			<v-list-item style="height: 110px">
-				<v-btn fab x-large text to="/">
-					<img style="width: 40px" src="img/logo_tiny.png" />
-				</v-btn>
-			</v-list-item>
-			<v-divider></v-divider>
-			<v-list class="pt-0">
-				<!-- espacio -->
-				<v-list-item class="my-4">
-					<v-tooltip color="primary" right>
-						<template v-slot:activator="{ on, attrs }">
-							<v-btn
-								link
-								color="primary"
-								fab
-								text
-								:to="{ name: 'espacio' }"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<v-icon x-large>
-									{{ $route.name == 'espacio' ? 'mdi-home' : 'mdi-home-outline' }}
-								</v-icon>
-							</v-btn>
-						</template>
-						<span>Mi espacio</span>
-					</v-tooltip>
-				</v-list-item>
-				<!-- perfil -->
-				<v-list-item class="my-4">
-					<v-tooltip color="primary" right>
-						<template v-slot:activator="{ on, attrs }">
-							<v-btn
-								link
-								color="primary"
-								fab
-								text
-								:to="{ name: 'perfil' }"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<v-icon x-large>
-									{{
-										$route.name == 'perfil'
-											? 'mdi-account'
-											: 'mdi-account-outline'
-									}}
-								</v-icon>
-							</v-btn>
-						</template>
-						<span>Mi perfil</span>
-					</v-tooltip>
-				</v-list-item>
-				<!-- agenda -->
-				<v-list-item class="my-4">
-					<v-tooltip color="primary" right>
-						<template v-slot:activator="{ on, attrs }">
-							<v-btn
-								link
-								color="primary"
-								fab
-								text
-								:to="{ name: 'agenda' }"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<v-icon x-large>
-									{{
-										$route.name == 'agenda'
-											? 'mdi-calendar-month'
-											: 'mdi-calendar-month-outline'
-									}}
-								</v-icon>
-							</v-btn>
-						</template>
-						<span>Mi agenda</span>
-					</v-tooltip>
-				</v-list-item>
-				<!-- diario -->
-				<v-list-item class="my-4">
-					<v-tooltip color="primary" right>
-						<template v-slot:activator="{ on, attrs }">
-							<v-btn
-								link
-								color="primary"
-								fab
-								text
-								:to="{ name: 'diario' }"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<v-icon x-large>
-									{{
-										$route.name == 'diario'
-											? 'mdi-file-document-edit'
-											: 'mdi-file-document-edit-outline'
-									}}
-								</v-icon>
-							</v-btn>
-						</template>
-						<span>Mi diario</span>
-					</v-tooltip>
-				</v-list-item>
-			</v-list>
-		</v-navigation-drawer>
-		<v-app-bar app dark height="110" color="primary" style="border-radius: 0 0 0 25px">
-			<div>
-				<div class="title">{{ $route.meta.title }}</div>
-				<small>
-					lorem ipsum dolor sit amet, consectetuer adipis-cing elit, sed diam nonummy nibh
-					euismo
-				</small>
+	<v-row class="primary" style="height: 100vh;" no-gutters>
+		<v-col cols="2" class="d-flex" style="flex-direction: column">
+			<div style="flex:1; height: 230px" class="d-flex align-center justify-center">
+				<img
+					@click="() => $router.push({ name: 'all-psicologos' })"
+					style="width: 70px; cursor: pointer;"
+					src="img/logo_tiny_white.png"
+				/>
 			</div>
-			<v-spacer></v-spacer>
-			<v-tooltip color="white" bottom>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn text :to="{ name: 'all-psicologos' }" v-bind="attrs" v-on="on">
-						Expertos
-					</v-btn>
+			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
+				<template v-for="(item, i) in links">
+					<v-list-item
+						v-if="item.visible"
+						class="my-4"
+						link
+						:to="{ name: item.link }"
+						:key="i"
+					>
+						<v-list-item-avatar size="35">
+							<v-img :src="item.img" :alt="item.name" />
+						</v-list-item-avatar>
+						<v-list-item-content>
+							<v-list-item-title class="font-weight-bold body-2">
+								{{ item.name }}
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
 				</template>
-				<span class="secondary--text">Nuestros psicologos</span>
-			</v-tooltip>
-			<v-tooltip color="white" bottom>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn text :href="`${landing_page}/faq`" v-bind="attrs" v-on="on">
-						Centro de ayuda
-					</v-btn>
-				</template>
-				<span class="secondary--text">Centro de ayuda</span>
-			</v-tooltip>
-			<v-tooltip color="white" bottom>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on" @click="logout">
-						<v-icon>mdi-logout-variant</v-icon>
-					</v-btn>
-				</template>
-				<span class="secondary--text">Salir</span>
-			</v-tooltip>
-		</v-app-bar>
-		<router-view />
-	</div>
+			</v-list>
+		</v-col>
+		<v-col cols="10">
+			<div style="border-radius: 50px 0 0 0" class="white">
+				<router-view />
+			</div>
+		</v-col>
+	</v-row>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { landing } from '@/config';
 
 export default {
 	computed: {
+		links() {
+			return [
+				{ name: 'Chat', link: 'chat', img: '/img/chat.png', visible: true },
+				{ name: 'Mis sesiones', link: 'agenda', img: '/img/sesiones.png', visible: true },
+				{
+					name: 'Diario de bienestar',
+					link: 'diario',
+					img: '/img/notas.png',
+					visible: false,
+				},
+				{
+					name: 'Pagos',
+					link: 'pagos',
+					img: '/img/pagos.png',
+					visible: this.user.role == 'psychologist',
+				},
+				{ name: 'Mi cuenta', link: 'perfil', img: '/img/home.png', visible: true },
+			];
+		},
 		landing_page() {
 			return landing;
 		},
+		...mapGetters({ user: 'User/user' }),
 	},
 	methods: {
 		logout() {

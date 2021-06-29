@@ -30,7 +30,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							:to="{ name: 'psicologos' }"
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -137,7 +137,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
@@ -176,7 +176,7 @@
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
-							:to="{ name: 'psicologos' }"
+							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -321,7 +321,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
@@ -575,7 +575,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						:to="{ name: 'psicologos' }"
+						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 					>
 						Quiero empezar
 					</v-btn>
