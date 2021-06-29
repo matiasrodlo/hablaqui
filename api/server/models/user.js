@@ -63,6 +63,10 @@ let userSchema = new Schema({
 		default: 'user',
 		enum: ['user', 'psychologist', 'admin'],
 	},
+	googleCalendar: {
+		type: Object,
+		required: false,
+	},
 });
 
 userSchema.methods.toJSON = function() {

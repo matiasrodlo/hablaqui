@@ -15,8 +15,16 @@ const calendarController = {
 
 	async createEvent(req, res) {
 		try {
-			const { user } = req;
-			const { data, code } = await calendarService.createEvent();
+			const { date, psychologist } = req;
+			const { token } = req.body;
+			const payload = {
+				date,
+				psychologist,
+			};
+			const { data, code } = await calendarService.createEvent(
+				token,
+				payload
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res);
@@ -33,7 +41,8 @@ const calendarController = {
 	async getToken(req, res) {
 		try {
 			const google_code = req.body.code;
-			const { data, code } = await calendarService.getToken(google_code);
+			const { user } = req;
+			const { data, code } = await calendarService.getToken(user, google_code);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res);
