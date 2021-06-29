@@ -3,18 +3,14 @@ import passport from 'passport';
 import userController from '../controllers/users';
 import userSchema from '../schemas/user';
 import validation from '../middleware/validation';
-import grantAccess from '../middleware/strategies/rbac';
 import multer from '../middleware/multer';
 import storage from '../middleware/storage';
 
 const userRouter = Router();
 
 userRouter.get(
-	'/user/profile/:id',
-	[
-		passport.authenticate('jwt', { session: true }),
-		grantAccess('readOwn', 'profile'),
-	],
+	'/user/profile',
+	[passport.authenticate('jwt', { session: true })],
 	userController.getUser
 );
 

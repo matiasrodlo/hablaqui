@@ -5,8 +5,8 @@ import { restResponse } from '../utils/responses/functions';
 const userController = {
 	async getUser(req, res) {
 		try {
-			const { id } = req.params;
-			const { data, code } = await userService.getProfile(id);
+			const { user } = req;
+			const { data, code } = await userService.getProfile(user._id);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res);
