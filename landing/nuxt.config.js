@@ -92,6 +92,11 @@ export default {
 
 	auth: {
 		localStorage: { prefix: 'auth.' },
+		redirect: {
+			login: '/auth',
+			logout: false,
+			home: false,
+		},
 		strategies: {
 			local: {
 				token: {
@@ -100,17 +105,10 @@ export default {
 					required: true,
 					type: 'Bearer',
 				},
-
 				endpoints: {
 					login: { url: '/auth/login', method: 'post' },
-					user: false,
+					user: { url: '/user/profile', method: 'get' },
 					logout: false,
-				},
-				redirect: {
-					login: '/auth',
-					logout: '/',
-					callback: '/auth',
-					home: false,
 				},
 			},
 		},

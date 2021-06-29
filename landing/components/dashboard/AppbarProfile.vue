@@ -26,9 +26,8 @@ import { mapMutations } from 'vuex';
 export default {
 	methods: {
 		logout() {
-			this.resetUser();
-			localStorage.removeItem('vuex');
-			this.$router.push({ name: 'auth' });
+			this.$auth.logout();
+			this.$router.push('/auth');
 		},
 		...mapMutations({ resetUser: 'User/reset' }),
 	},

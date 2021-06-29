@@ -80,8 +80,7 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				const { data } = await this.$auth.loginWith('local', { data: this.form });
-				this.$auth.setUser(data.user);
+				await this.$auth.loginWith('local', { data: this.form });
 				this.loading = false;
 				if (this.$auth.$state.loggedIn)
 					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
