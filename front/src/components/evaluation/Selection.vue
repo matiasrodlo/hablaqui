@@ -95,13 +95,6 @@ export default {
 			loggedIn: 'User/loggedIn',
 		}),
 	},
-	methods: {
-		goToPlan(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
-		},
-	},
 };
 </script>
 

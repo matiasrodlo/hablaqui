@@ -1,21 +1,25 @@
 <template>
 	<v-img :src="backgroundImg" height="100vh">
 		<v-container
-			:class="$vuetify.breakpoint.smAndUp ? '' : 'white--text'"
+			:class="$vuetify.breakpoint.mdAndUp ? '' : 'white--text'"
 			fluid
 			class="login-image"
 		>
 			<v-row justify="center" align="center" style="height: 100vh; overflow-y: auto">
-				<v-col cols="12" sm="6">
+				<v-col cols="12" md="6">
 					<v-row justify="center">
-						<v-col cols="6" sm="5" md="4" lg="3" class="text-center">
-							<a :href="landingUrl">
-								<v-img max-width="200" src="img/logo.png"></v-img>
+						<v-col cols="6" sm="5" md="4" lg="3">
+							<a :href="landingUrl" class="tex-center">
+								<v-img
+									class="mx-auto"
+									style="max-width: 200px"
+									src="img/logo.png"
+								/>
 							</a>
 						</v-col>
 						<v-col
 							cols="12"
-							class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
@@ -27,7 +31,7 @@
 							cols="12"
 							sm="9"
 							lg="6"
-							class="text-center subtitle-1 font-weight-bold text--secondary"
+							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
 						>
 							{{
 								this.step == 1
@@ -79,7 +83,7 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col v-if="$vuetify.breakpoint.smAndUp" sm="6">
+				<v-col v-if="$vuetify.breakpoint.mdAndUp" md="6">
 					<v-carousel
 						hide-delimiter-background
 						hide-delimiters
@@ -190,7 +194,7 @@ export default {
 			return landing;
 		},
 		backgroundImg() {
-			if (this.$vuetify.breakpoint.smAndUp) return 'img/login.png';
+			if (this.$vuetify.breakpoint.mdAndUp) return 'img/login.png';
 			return null;
 		},
 	},

@@ -354,7 +354,7 @@
 				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
 					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" tag="section" cols="12" sm="6" lg="3">
+							<v-col :key="n" tag="section" cols="12" md="6" lg="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
 										v-if="n < 4"
@@ -505,14 +505,13 @@
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="8" md="10" xl="9">
 					<v-row justify="center" align="center">
-						<v-col cols="10" md="7" class="white--text">
-							<h3 class="headline font-weight-bold">
+						<v-col cols="12" md="7" class="white--text">
+							<h3 class="body-1 text-md-h5 font-weight-bold">
 								Recibe contenido exclusivo periódicamente
 							</h3>
-							<h3 class="body-1 font-weight-bold mb-8 mt-2">
+							<h3 class="body-2 text-md-h6 font-weight-bold mb-8 mt-2">
 								Suscríbete y alcanza tu mejor versión
 							</h3>
-
 							<v-btn-toggle rounded class="mb-10 mb-md-0">
 								<v-text-field
 									solo
@@ -524,7 +523,7 @@
 									dense
 								/>
 								<v-btn depressed color="info">
-									<span class="px-5 px-md-10 text-h5">Enviar</span>
+									<span class="px-md-6 text-h6">Enviar</span>
 								</v-btn>
 							</v-btn-toggle>
 						</v-col>

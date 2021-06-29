@@ -3,15 +3,18 @@
 		<v-col cols="12" md="6" class="elevation-2 px-4">
 			<div class="my-3 subtitle-2">Aplicar un cupón</div>
 			<div class="d-flex">
-				<v-text-field label="Introduzca el codigo" dense outlined hide-details>
+				<v-text-field dense outlined hide-details>
+					<template #label>
+						<span class="caption py-0">Introduzca el codigo</span>
+					</template>
 				</v-text-field>
-				<v-btn
-					color="primary"
-					class="px-10"
-					style="border-radius: 10px; width: 45%; margin-top: 3px"
+				<button
+					type="button"
+					class="primary  px-10"
+					style="border-radius: 10px; width: 45%; height: 40px;"
 				>
-					Solicitar
-				</v-btn>
+					<span class="white--text">Solicitar</span>
+				</button>
 			</div>
 			<v-list two-line>
 				<v-list-item class="px-0 mt-3 mb-2">
@@ -119,7 +122,7 @@ export default {
 	methods: {
 		async payButton() {
 			this.loading = true;
-			let priceInt = Number(this.plan.price.split('.').join(''));
+			let priceInt = Number(this.plan.deal.total.split('.').join(''));
 			const sessionPayload = {
 				date: this.event.date,
 				start: this.event.start,

@@ -2,11 +2,14 @@
 	<div>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
-				<v-img
-					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui"
-				/>
+				<nuxt-link to="/" style="width: 100%">
+					<v-img
+						style="max-width: 150px"
+						class="mx-auto"
+						:src="`${$config.LANDING_URL}/logo.png`"
+						alt="hablaqui"
+					/>
+				</nuxt-link>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>

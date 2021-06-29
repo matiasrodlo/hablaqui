@@ -1,9 +1,9 @@
 {
-    "name": "hablaqui",
-    "short_name": "hablaqui",
-    "theme_color": "#2070E5",
-    "background_color": "#2070E5",
-    "display": "standalone",
+    "name":"hablaqui",
     "orientation": "portrait",
+    "short_name":"hablaqui",
+    "theme_color":"#2070E5",
+    "background_color":"#2070E5",
+    "display":"standalone",  
     "scope": "/"
-  }
+}

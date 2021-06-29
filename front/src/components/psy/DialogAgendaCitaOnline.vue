@@ -67,7 +67,7 @@
 								class="mx-auto mt-8"
 								src="/img/logo_tiny.png"
 							></v-img>
-							<v-card-text><signin /></v-card-text>
+							<v-card-text><signin :isDialog="true"/></v-card-text>
 							<v-card-text class="pt-0">
 								<div
 									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
@@ -111,8 +111,9 @@
 								height="80"
 								class="mx-auto mt-8"
 								src="/img/logo_tiny.png"
-							></v-img>
-							<v-card-text><signup /></v-card-text>
+							>
+							</v-img>
+							<v-card-text><signup :isDialog="true"/></v-card-text>
 							<v-card-text class="pt-0">
 								<div
 									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"

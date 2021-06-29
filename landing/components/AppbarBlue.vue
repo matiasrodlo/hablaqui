@@ -2,37 +2,20 @@
 	<div>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
-				<img
-					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					alt="hablaqui logo"
-				/>
+				<nuxt-link to="/" style="width: 100%">
+					<v-img
+						style="max-width: 150px"
+						class="mx-auto my-5"
+						:src="`${$config.LANDING_URL}/logo.png`"
+						alt="hablaqui logo"
+					/>
+				</nuxt-link>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link active-class="primary white--text">
-					<v-list-item-content>
-						<v-list-item-title>Nuestros especialistas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link>
-					<v-list-item-content>
-						<v-list-item-title>Para empresas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link>
-					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item link :to="{ name: 'auth' }">
-					<v-list-item-content>
-						<v-list-item-title>Entrar</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
 				<v-list-item link :to="{ name: 'psicologos' }">
 					<v-list-item-content>
-						<v-list-item-title>Comenzar</v-list-item-title>
+						<v-list-item-title>Quiero comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
