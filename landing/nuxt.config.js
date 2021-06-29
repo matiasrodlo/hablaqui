@@ -13,6 +13,12 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
+		API_ABSOLUTE:
+			process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_URL_ABSOLUTE
+				: 'http://localhost:3000/',
+		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
+		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
@@ -76,10 +82,39 @@ export default {
 		],
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
+		'@nuxtjs/auth-next',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
-	axios: {},
+	axios: {
+		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+	},
+
+	auth: {
+		localStorage: { prefix: 'auth.' },
+		strategies: {
+			local: {
+				token: {
+					property: 'token',
+					global: true,
+					required: true,
+					type: 'Bearer',
+				},
+
+				endpoints: {
+					login: { url: '/auth/login', method: 'post' },
+					user: false,
+					logout: false,
+				},
+				redirect: {
+					login: '/auth',
+					logout: '/',
+					callback: '/auth',
+					home: false,
+				},
+			},
+		},
+	},
 
 	// Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
 	vuetify: {

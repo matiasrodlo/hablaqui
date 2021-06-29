@@ -7,7 +7,7 @@ class Service
 	static	Service		_instance = Service();
 	
 	String	apiUrl = 'https://api-dot-hablaqui-staging-306619.rj.r.appspot.com/api/v1';
-	String	_token;
+	static	String	_token;
 	
 	Service();
 	
@@ -16,7 +16,7 @@ class Service
 	
 	String setToken(String t)
 	{
-		this._token = t;
+		_token = t;
 	}
 	dynamic _buildEndpoint(String path)
 	{
@@ -30,8 +30,8 @@ class Service
 		Map<String, String> headers = {
 			'Content-Type': 'application/json',
 		};
-		if( this._token != null && !this._token.isEmpty )
-			headers['Authorization'] = 'Bearer ${this._token}';
+		if( _token != null && !_token.isEmpty )
+			headers['Authorization'] = 'Bearer ${_token}';
 		if( cheaders != null )
 		{
 			cheaders.forEach( (k, v) 

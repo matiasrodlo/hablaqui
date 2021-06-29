@@ -20,7 +20,14 @@
 			<v-btn v-bind="attrs" v-on="on" v-if="mode == '2'" color="primary" rounded depressed>
 				Agenda cita online
 			</v-btn>
-			<v-btn v-if="mode == '3'" v-bind="attrs" v-on="on" color="primary" rounded>
+			<v-btn
+				v-if="mode == '3'"
+				v-bind="attrs"
+				v-on="on"
+				color="primary"
+				rounded
+				class="px-10 mx-1"
+			>
 				Agenda cita online
 			</v-btn>
 		</template>
@@ -47,7 +54,7 @@
 					{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">
-					Detalles
+					Revise su plan
 				</div>
 				<v-spacer></v-spacer>
 			</v-card-title>
@@ -125,9 +132,9 @@
 								<v-btn outlined block rounded color="primary" @click="tab = 0">
 									Entrar
 								</v-btn>
-								<div class="text-center mt-10">
+								<div class="text-center mt-2">
 									<v-btn
-										class="px-0"
+										class="pa-0"
 										text
 										color="primary"
 										:href="`${landingUrl}/politicas`"
@@ -135,7 +142,7 @@
 									>
 									<span class="primary--text mx-1">y</span>
 									<v-btn
-										class="px-0"
+										class="pa-0"
 										text
 										color="primary"
 										:href="`${landingUrl}/condiciones`"
@@ -189,7 +196,7 @@ export default {
 	data() {
 		return {
 			step: 0,
-			tab: 0,
+			tab: 1,
 			dialog: false,
 			plan: null,
 			newEvent: null,
@@ -201,6 +208,7 @@ export default {
 		},
 		maxWidth() {
 			if (this.step == 0) return '700';
+			if (this.step == 2) return '500';
 			else if (this.step == 3) return '800';
 			return '900';
 		},

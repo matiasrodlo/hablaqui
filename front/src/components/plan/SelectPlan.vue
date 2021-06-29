@@ -8,7 +8,7 @@
 					height="330"
 					style="border-radius: 15px"
 				>
-					<div :style="el.expandCard ? '50%' : 'height: 80%'">
+					<div :style="el.expandCard ? '50%' : 'height: 80%'" class="text-center">
 						<div
 							style="max-width: 160px"
 							class="pt-2 text-center body-1 mx-auto primary--text font-weight-bold"
@@ -34,13 +34,13 @@
 						<div class="caption text--secondary font-weight-bold mt-4 px-4">
 							{{ el.subtitle }}
 						</div>
-						<div class="caption text--secondary mt-4 px-4">
+						<div class="caption text--secondary mt-2 px-4">
 							{{ el.description }}
 						</div>
 					</div>
 					<div
 						:style="el.expandCard ? 'height: 5%' : 'height: 15%'"
-						class="mt-4 body-1 text-center primary--text font-weight-bold pointer"
+						class="mt-5 body-1 text-center primary--text font-weight-bold pointer"
 						@click="() => (el.expandCard = !el.expandCard)"
 					>
 						Seleccionar plan
@@ -175,10 +175,10 @@ export default {
 					price: '17.500',
 					mode: 'Semana',
 					title: 'Sesiones por videollamada',
-					subtitle: '4 sesiones en vivo/mensuales (50 min)',
+					subtitle: 'Sesiones por videollamada (50 min)',
 					image: '/img/planOne.png',
 					description:
-						'Habla con un psicólogo por videollamada, sin tener que desplazarte.',
+						'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.',
 				},
 				{
 					id: 2,
@@ -209,10 +209,11 @@ export default {
 					expandCard: false,
 					price: '14.000',
 					mode: 'Semana',
-					title: 'Sesiones por mensajería',
-					subtitle: 'Mensajes de texto y audio.',
+					title: 'Acompañamiento vía mensajería',
+					subtitle: 'Terapia vía mensajes de texto',
 					image: '/img/planTwo.png',
-					description: 'Respuestas diarias garantizadas 5 días a la semana.',
+					description:
+						'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
 				{
 					id: 3,
@@ -243,10 +244,11 @@ export default {
 					expandCard: false,
 					price: '22.000',
 					mode: 'Semana',
-					title: 'Mensajes de texto y audio',
-					subtitle: 'Mensajería + Sesiones por videollamada (30min)',
+					title: 'Mensajería y videollamada',
+					subtitle: 'Mensajería + Videollamada (30min)',
 					image: '/img/planThree.png',
-					description: 'Respuestas diarias garantizadas 5 días a la semana.',
+					description:
+						'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
 			],
 		};

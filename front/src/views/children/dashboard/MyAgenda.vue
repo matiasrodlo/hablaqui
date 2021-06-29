@@ -1,24 +1,54 @@
 <template>
-	<v-container fluid style="height: calc(100vh - 110px)">
-		<v-row justify="center">
+	<v-container fluid style="height: 100vh">
+		<appbar />
+		<v-row justify="center" style="height: calc(100vh - 110px)">
 			<v-col cols="12" sm="3" md="4" lg="3">
 				<div class="text-center">
 					<v-date-picker
-						v-model="date"
+						v-model="today"
+						locale="es"
 						full-width
+						no-title
 						:allowed-dates="allowedDates"
-						min="2016-06-15"
-						max="2018-03-20"
+						min="2021-06-01"
+						@change="
+							e => {
+								focus = e;
+								type = 'day';
+							}
+						"
 					/>
 				</div>
-				<div>
-					<v-checkbox id="sesion" class="d-inline-block" />
-					<label for="sesion" class="font-weight-bold">Sesiones</label>
-					<div class="caption font-weight-bold">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-						nibh euismod
-					</div>
-				</div>
+				<v-card v-if="user.role != 'user' && user._id != '60c26d38f12991000bca3bba'" flat>
+					<v-card-text class="text-center">
+						<div
+							class="mt-10 text-h6 font-weight-bold primary--text mx-auto"
+							style="max-width: 340px"
+						>
+							Próximas sesiones
+						</div>
+						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
+							Paciencia. Aún nadie ha reservado una sesión
+						</div>
+					</v-card-text>
+				</v-card>
+				<v-card v-if="user.role == 'user' && user._id != '60a0e168fd8c0f000ace3b71'" flat>
+					<v-card-text class="text-center">
+						<div
+							class="text-h6 font-weight-bold primary--text mx-auto"
+							style="max-width: 340px"
+						>
+							Agenda con un especialista
+						</div>
+						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
+							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
+							tu vida hoy.
+						</div>
+						<v-btn rounded color="primary" :to="{ name: 'all-psicologos' }">
+							Buscar ahora
+						</v-btn>
+					</v-card-text>
+				</v-card>
 			</v-col>
 			<v-col cols="12" sm="9" md="8" lg="8" class="heightCalendar">
 				<v-sheet>
@@ -72,7 +102,8 @@
 						locale="es"
 						v-model="focus"
 						color="primary"
-						:event-color="getEventColor"
+						:now="today"
+						:events="events"
 						:type="type"
 						@click:event="showEvent"
 						@click:more="viewDay"
@@ -86,25 +117,24 @@
 						offset-x
 					>
 						<v-card color="grey lighten-4" min-width="350px" flat>
-							<v-toolbar :color="selectedEvent.color" dark>
-								<v-btn icon>
-									<v-icon>mdi-pencil</v-icon>
-								</v-btn>
-								<v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-								<v-spacer></v-spacer>
-								<v-btn icon>
-									<v-icon>mdi-heart</v-icon>
-								</v-btn>
-								<v-btn icon>
-									<v-icon>mdi-dots-vertical</v-icon>
-								</v-btn>
+							<v-toolbar flat>
+								<v-toolbar-title
+									class="secondary--text"
+									v-html="selectedEvent.name"
+								></v-toolbar-title>
 							</v-toolbar>
 							<v-card-text>
-								<span v-html="selectedEvent.details"></span>
+								<v-icon left>mdi-clock-outline</v-icon>
+								<span>{{ setSubtitle(selectedEvent.start) }}</span>
 							</v-card-text>
+							<v-divider></v-divider>
 							<v-card-actions>
+								<v-btn text color="primary" @click="selectedOpen = false">
+									Reprogramar
+								</v-btn>
+								<v-spacer></v-spacer>
 								<v-btn text color="secondary" @click="selectedOpen = false">
-									Cancel
+									Cancelar sesion
 								</v-btn>
 							</v-card-actions>
 						</v-card>
@@ -116,9 +146,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
+	components: {
+		appbar: () => import('@/components/ui/AppbarProfile'),
+	},
 	data: () => ({
 		date: '2018-03-02',
 		focus: '',
@@ -132,16 +166,23 @@ export default {
 		selectedEvent: {},
 		selectedElement: null,
 		selectedOpen: false,
+		today: moment().format('YYYY-MM-DD'),
 		events: [],
-		colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-		names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+		names: ['Sescion con', 'ocupado'],
 	}),
+	computed: {
+		...mapGetters({ user: 'User/user' }),
+	},
 	mounted() {
+		moment.locale('es');
 		this.successPayment();
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
-		allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+		allowedDates(val) {
+			if (val == '2021-06-25' || val == '2021-06-30') return false;
+			return true;
+		},
 		viewDay({ date }) {
 			this.focus = date;
 			this.type = 'day';
@@ -150,7 +191,7 @@ export default {
 			return event.color;
 		},
 		setToday() {
-			this.focus = '';
+			this.focus = moment().format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();
@@ -176,31 +217,123 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange({ start, end }) {
-			const events = [];
+		updateRange() {
+			if (this.user._id == '60a0e168fd8c0f000ace3b71')
+				this.events = [
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-06-24 09:00',
+						end: '2021-06-24 10:00',
+						details: 'Sesion con Joaquin',
+					},
 
-			const min = new Date(`${start.date}T00:00:00`);
-			const max = new Date(`${end.date}T23:59:59`);
-			const days = (max.getTime() - min.getTime()) / 86400000;
-			const eventCount = this.rnd(days, days + 20);
-
-			for (let i = 0; i < eventCount; i++) {
-				const allDay = this.rnd(0, 3) === 0;
-				const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-				const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-				const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-				const second = new Date(first.getTime() + secondTimestamp);
-
-				events.push({
-					name: this.names[this.rnd(0, this.names.length - 1)],
-					start: first,
-					end: second,
-					color: this.colors[this.rnd(0, this.colors.length - 1)],
-					timed: !allDay,
-				});
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-06-28 09:00',
+						end: '2021-06-28 10:00',
+						details: 'Sesion con Joaquin',
+					},
+					{
+						name: 'Sesion con Joaquin',
+						start: '2021-07-04 10:00',
+						end: '2021-07-04 11:00',
+						details: 'Sesion con Joaquin',
+					},
+				];
+			if (this.user._id == '60c26d38f12991000bca3bba') {
+				this.events = [
+					{
+						name: 'Sesion con Matias',
+						start: '2021-06-24 09:00',
+						end: '2021-06-24 10:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-06-24 10:00',
+						end: '2021-06-24 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-06-24 12:00',
+						end: '2021-06-24 13:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-06-28 09:00',
+						end: '2021-06-28 10:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-06-28 10:00',
+						end: '2021-06-28 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-06-28 12:00',
+						end: '2021-06-28 13:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-01 10:00',
+						end: '2021-07-01 11:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-05 10:00',
+						end: '2021-07-05 11:00',
+						details: 'Sesion con Daniel',
+					},
+					{
+						name: 'Sesion con Matias',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Matias',
+					},
+					{
+						name: 'Sesion con Carlos',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Carlos',
+					},
+					{
+						name: 'Sesion con Daniel',
+						start: '2021-07-08 10:00',
+						end: '2021-07-08 11:00',
+						details: 'Sesion con Daniel',
+					},
+				];
 			}
-
-			this.events = events;
 		},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
@@ -223,6 +356,9 @@ export default {
 				localStorage.removeItem('match');
 				localStorage.removeItem('psi');
 			}
+		},
+		setSubtitle(date) {
+			return moment(date).format('LLL');
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',

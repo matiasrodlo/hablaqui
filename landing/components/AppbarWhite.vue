@@ -17,7 +17,7 @@
 					link
 					active-class="primary white--text"
 					nuxt
-					:to="{ name: 'psicologos' }"
+					:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 				>
 					<v-list-item-content>
 						<v-list-item-title>Psicólogos</v-list-item-title>
@@ -33,12 +33,12 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :to="{ name: 'entrar' }">
+				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/auth`">
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item link nuxt :to="{ name: 'psicologos' }">
+				<v-list-item link nuxt :href="`${$config.FRONTEND_URL}/psicologos/todos`">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -70,13 +70,13 @@
 				</v-img>
 			</nuxt-link>
 
-			<nuxt-link
-				:to="{ name: 'psicologos' }"
+			<a
+				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 				style="text-decoration: none"
 				class="hidden-sm-and-down ml-7 mr-3"
 			>
 				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
-			</nuxt-link>
+			</a>
 			<nuxt-link class="mx-5 hidden-sm-and-down" style="text-decoration: none" to="/faq">
 				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
 			</nuxt-link>
@@ -85,9 +85,13 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<div class="hidden-sm-and-down">
-				<nuxt-link class="mr-5" style="text-decoration: none" :to="{ name: 'entrar' }">
+				<a
+					class="mr-5"
+					style="text-decoration: none"
+					:href="`${$config.FRONTEND_URL}/auth`"
+				>
 					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
-				</nuxt-link>
+				</a>
 			</div>
 			<v-btn
 				rounded
@@ -95,7 +99,7 @@
 				color="primary"
 				depressed
 				nuxt
-				:to="{ name: 'comenzar' }"
+				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
 			>
 				<span class="font-weight-bold body-1">Comenzar</span>
 			</v-btn>

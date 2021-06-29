@@ -132,7 +132,7 @@
 					Usted que obtuvimos de manera indirecta.
 				</v-col>
 			</v-row>
-			<v-row justify="center" class="mb-8">
+			<v-row justify="center" align="center" class="mb-8">
 				<v-col cols="12" md="5" class="text-center text-md-left">
 					<div style="color: #bdbdbd">
 						<nuxt-link

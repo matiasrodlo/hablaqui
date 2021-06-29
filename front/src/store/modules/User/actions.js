@@ -14,6 +14,7 @@ export default {
 			// clear old data
 			localStorage.removeItem('match');
 			localStorage.removeItem('psi');
+			return !!data.user && !!data.token;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -29,12 +30,14 @@ export default {
 			commit('setToken', data.token);
 			commit('setLoggedIn');
 			snackBarSuccess(data.message)(commit);
+			return !!data.user && !!data.token;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
 	},
 	async updateUser({ commit }, payload) {
 		try {
+			delete payload.finishedSessions;
 			const { data } = await axios('/user/update/profile', {
 				method: 'put',
 				data: payload,

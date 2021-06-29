@@ -2,9 +2,13 @@
 	<div>
 		<v-navigation-drawer v-if="!$vuetify.breakpoint.mdAndUp" v-model="drawer" app>
 			<v-list-item link :href="`${landing_page}`">
-				<v-img style="max-width: 150px" src="/img/logo.png" alt="hablaqui Logo" />
+				<v-img
+					class="mx-auto my-5"
+					style="max-width: 150px"
+					src="/img/logo.png"
+					alt="hablaqui Logo"
+				/>
 			</v-list-item>
-			<v-divider></v-divider>
 			<v-list dense>
 				<v-list-item
 					link
@@ -35,7 +39,7 @@
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-if="loggedIn" link :to="{ name: 'auth', params: { q: 'register' } }">
+				<v-list-item v-if="!loggedIn" link @click="start">
 					<v-list-item-content>
 						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -76,9 +80,64 @@
 					<span class="body-1 text--secondary font-weight-bold">Blog</span>
 				</a>
 				<v-spacer></v-spacer>
-				<span v-if="loggedIn" @click="logout" class="mr-3" style="cursor: pointer">
-					<span class="body-1 font-weight-bold text--secondary"> Cerrar sesión</span>
-				</span>
+				<div v-if="loggedIn" class="body-1 text--secondary mr-16" rounded text>
+					<h3 class="mr-6 secondary--text d-inline-block">Hola {{ user.name }}</h3>
+					<v-menu
+						rounded="xl"
+						open-on-hover
+						offset-y
+						:close-on-content-click="false"
+						:nudge-width="200"
+					>
+						<template v-slot:activator="{ on, attrs }">
+							<div class="d-inline-block" v-bind="attrs" v-on="on">
+								<avatar size="50" :name="user.name" :url="user.avatar" />
+							</div>
+						</template>
+						<v-card>
+							<v-list>
+								<v-list-item
+									link
+									:to="{ name: item.link }"
+									v-for="(item, i) in menu"
+									:key="i"
+								>
+									<v-list-item-avatar size="40" color="primary">
+										<v-img
+											contain
+											height="30"
+											:src="item.img"
+											:alt="item.name"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+											>{{ item.name }}
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item @click="logout">
+									<v-list-item-avatar size="40" color="primary">
+										<v-icon color="white">mdi-logout</v-icon>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+										>
+											Cerrar sesion
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+							<v-card-actions class="primary">
+								<v-spacer></v-spacer>
+								<div class="white--text py-1">Hablaquí</div>
+								<v-spacer></v-spacer>
+							</v-card-actions>
+						</v-card>
+					</v-menu>
+				</div>
 				<router-link
 					v-else
 					style="text-decoration: none"
@@ -93,7 +152,7 @@
 					class="mx-2 py-6 px-lg-10"
 					color="primary"
 					depressed
-					:to="{ name: 'auth', params: { q: 'register' } }"
+					@click="start"
 				>
 					<span class="font-weight-bold body-1">Comenzar</span>
 				</v-btn>
@@ -112,8 +171,17 @@
 import { landing } from '@/config';
 import { mapGetters, mapMutations } from 'vuex';
 export default {
+	components: {
+		Avatar: () => import('@/components/ui/Avatar'),
+	},
 	data() {
 		return {
+			menu: [
+				{ name: 'Chat', link: 'chat', img: '/img/chat.png' },
+				{ name: 'Mis sesiones', link: 'agenda', img: '/img/sesiones.png' },
+				// { name: 'Diario de bienestar', link: 'diario', img: '/img/notas.png' },
+				{ name: 'Mi cuenta', link: 'perfil', img: '/img/home.png' },
+			],
 			drawer: false,
 		};
 	},
@@ -121,13 +189,22 @@ export default {
 		landing_page() {
 			return landing;
 		},
-		...mapGetters({ loggedIn: 'User/loggedIn' }),
+		...mapGetters({ loggedIn: 'User/loggedIn', user: 'User/user' }),
 	},
 	methods: {
 		logout() {
 			this.resetUser();
 			localStorage.removeItem('vuex');
 			if (this.$route.meta.requiresAuth) this.$router.push({ name: 'auth' });
+		},
+		start() {
+			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			else
+				this.$router.push({
+					name: 'auth',
+					params: { q: 'register' },
+					query: { from: 'psy' },
+				});
 		},
 		...mapMutations({ resetUser: 'User/reset' }),
 	},
