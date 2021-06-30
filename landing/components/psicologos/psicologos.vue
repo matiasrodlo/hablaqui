@@ -678,7 +678,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -763,6 +763,7 @@ export default {
 		}),
 	},
 	created() {
+		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (JSON.stringify(this.$route.params) !== JSON.stringify({}))
 			this.$router.replace({ query: null });
@@ -815,6 +816,9 @@ export default {
 			this.models = [payload.model];
 			this.specialties = payload.themes;
 		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

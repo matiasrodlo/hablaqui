@@ -162,13 +162,17 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -209,6 +213,9 @@ export default {
 			return [];
 		},
 	},
+	created() {
+		this.setFloatingChat(false);
+	},
 	async mounted() {
 		this.loading = true;
 		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
@@ -216,6 +223,11 @@ export default {
 		this.selectedItem = response[0];
 		this.items = response;
 		this.loading = false;
+	},
+	methods: {
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

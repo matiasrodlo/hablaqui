@@ -5,4 +5,7 @@ export default {
 	setChats(state, value) {
 		state.chats = value;
 	},
+	setFloatingChat(state, value) {
+		state.floatingChat = value;
+	},
 };
