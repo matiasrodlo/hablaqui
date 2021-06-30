@@ -1,14 +1,19 @@
 import { okResponse } from '../utils/responses/functions';
-import { frontend_url } from '../config/dotenv';
+import {
+	frontend_url,
+	google_client_id,
+	google_client_secret,
+} from '../config/dotenv';
 import { google } from 'googleapis';
 import User from '../models/user';
+import Psychologist from '../models/psychologist';
 import moment from 'moment';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 
 const oAuth2Client = new google.auth.OAuth2(
-	'1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com',
-	'Jw1CJ__C-XKfJnmnf7GuVBrn',
+	google_client_id,
+	google_client_secret,
 	`${frontend_url.split('#')[0]}google-calendar/success`
 );
 
@@ -77,11 +82,69 @@ const getToken = async (user, google_code) => {
 	});
 };
 
+const busyEvents = async token => {
+	oAuth2Client.setCredentials(token);
+	const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
+	let events = await calendar.events.list({
+		calendarId: 'primary',
+		timeMin: new Date().toISOString(),
+		maxResults: 10,
+		singleEvents: true,
+		orderBy: 'startTime',
+	});
+	events = events.data.items.filter(
+		event => !event.summary.startsWith('[Hablaquí]')
+	);
+
+	return events;
+};
+
+const addSession = async (_id, session) => {
+	const foundPsychologist = await Psychologist.findById(_id);
+	let validator = true;
+	foundPsychologist.sessions.forEach(async item => {
+		if (moment(item.date).isSame(session.date)) {
+			validator = false;
+		}
+	});
+	if (validator) {
+		await Psychologist.updateOne(
+			{ _id },
+			{
+				$push: {
+					sessions: session,
+				},
+			}
+		);
+	}
+};
+
+const checkBusyTask = async () => {
+	const psychologists = await User.find({ email: 'pruebadiego@gmail.com' });
+	psychologists.forEach(async psychologist => {
+		if (psychologist.googleCalendar) {
+			const events = await busyEvents(psychologist.googleCalendar);
+			if (events.length > 0) {
+				events.forEach(async event => {
+					let session = {
+						date: event.start.dateTime,
+						typeSession: 'personal',
+					};
+					await addSession(psychologist.psychologist, session);
+				});
+			}
+		}
+	});
+
+	return okResponse('Horarios actualizados');
+};
+
 const calendarService = {
 	getEvents,
 	createEvent,
 	getOauthUrl,
 	getToken,
+	checkBusyTask,
 };
 
 export default Object.freeze(calendarService);

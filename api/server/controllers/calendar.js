@@ -42,7 +42,18 @@ const calendarController = {
 		try {
 			const google_code = req.body.code;
 			const { user } = req;
-			const { data, code } = await calendarService.getToken(user, google_code);
+			const { data, code } = await calendarService.getToken(
+				user,
+				google_code
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res);
+		}
+	},
+	async checkBusyTask(req, res) {
+		try {
+			const { data, code } = await calendarService.checkBusyTask();
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res);

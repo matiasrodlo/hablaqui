@@ -53,7 +53,13 @@ const createPreference = async (body, res) => {
 
 const successPay = async params => {
 	const { psyId, userId, sessionId } = params;
-	const foundPsychologist = await Psychologist.updateOne(
+	await User.updateOne(
+		{ _id: userId },
+		{
+			psychologist: psyId,
+		}
+	);
+	await Psychologist.updateOne(
 		{
 			_id: psyId,
 			sessions: { $elemMatch: { _id: sessionId } },
@@ -62,7 +68,11 @@ const successPay = async params => {
 	);
 	logInfo('Se ha actualizado una sesion');
 	const foundUser = await User.findById(userId);
+	const foundPsy = await Psychologist.findById(psyId);
 	mailer.sendPurchaseInformation(foundUser.email);
+	mailer.sendPsyNewSession(foundPsy.email, {
+		session: foundPsy.sessions.filter(session => session._id == sessionId),
+	});
 	return okResponse('sesion actualizada');
 };
 const mercadopagoService = {

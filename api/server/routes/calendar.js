@@ -12,5 +12,6 @@ calendarRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	calendarController.getToken
 );
+calendarRouter.get('/calendar/check-busy', calendarController.checkBusyTask);
 
 export default Object.freeze(calendarRouter);

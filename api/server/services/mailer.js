@@ -55,6 +55,18 @@ const mailerService = {
 			html: htmlMessage,
 		};
 	},
+	createPsyNewSession(email, session) {
+		const { date, start, user } = session;
+		const textMessage = 'Te han agendado una nueva sesion!';
+		const htmlMessage = `<p>Te han agendado una sesion el dia ${date} a las ${start}.`;
+		return {
+			from: from,
+			to: email,
+			subject: 'Han agendado una sesion contigo',
+			text: textMessage,
+			html: htmlMessage,
+		};
+	},
 	sendEmail(message) {
 		logInfo('Email enviado');
 		sender.sendMail(message);
@@ -80,6 +92,10 @@ const mailerService = {
 	},
 	sendPurchaseInformation(email) {
 		const message = this.createPurchaseInformationMessage(email);
+		this.sendEmail(message);
+	},
+	sendPsyNewSession(email, session) {
+		const message = this.createPsyNewSession(email, session);
 		this.sendEmail(message);
 	},
 };
