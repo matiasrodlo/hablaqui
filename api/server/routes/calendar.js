@@ -4,8 +4,16 @@ import passport from 'passport';
 
 const calendarRouter = Router();
 
-calendarRouter.get('/calendar/get-events', calendarController.getEvents);
-calendarRouter.get('/calendar/create-event', calendarController.createEvent);
+calendarRouter.get(
+	'/calendar/get-events',
+	[passport.authenticate('jwt', { session: true })],
+	calendarController.getEvents
+);
+calendarRouter.get(
+	'/calendar/create-event',
+	[passport.authenticate('jwt', { session: true })],
+	calendarController.createEvent
+);
 calendarRouter.get('/calendar/auth-url', calendarController.getOauthUrl);
 calendarRouter.post(
 	'/calendar/success',
