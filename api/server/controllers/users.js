@@ -41,10 +41,11 @@ const userController = {
 	async updatePassword(req, res) {
 		try {
 			const { user } = req;
-			const { password } = req.body;
+			const { oldPassword, newPassword } = req.body;
 			const { data, code } = await userService.updatePassword(
 				user,
-				password
+				oldPassword,
+				newPassword
 			);
 			restResponse(data, code, res);
 		} catch (e) {
