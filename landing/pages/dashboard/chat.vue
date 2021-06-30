@@ -529,7 +529,11 @@ export default {
 	},
 	async mounted() {
 		moment.locale('es');
-		await this.getPsychologists();
+		if (process.browser) {
+			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
+			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
+		}
+		this.getPsychologists();
 		await this.getMessages();
 		if (this.$route.params.psy) {
 			const psychologist = this.getPsy(this.$route.params.psy);
@@ -654,7 +658,10 @@ export default {
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
 		}),
-		...mapMutations({ setChat: 'Chat/setChat' }),
+		...mapMutations({
+			setChat: 'Chat/setChat',
+			setPsychologists: 'Psychologist/setPsychologists',
+		}),
 	},
 };
 </script>

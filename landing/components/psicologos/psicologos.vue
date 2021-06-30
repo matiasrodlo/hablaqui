@@ -696,6 +696,10 @@ export default {
 		};
 	},
 	computed: {
+		loading() {
+			if (this.psychologists.length === 0) return true;
+			else return false;
+		},
 		/**
 		 * items for search box
 		 */
@@ -753,7 +757,6 @@ export default {
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			loading: 'Psychologist/loading',
 			loggedIn: 'User/loggedIn',
 			psychologists: 'Psychologist/psychologists',
 			user: 'User/user',

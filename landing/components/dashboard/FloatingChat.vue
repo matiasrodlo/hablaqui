@@ -37,7 +37,7 @@
 						<v-list-item class="px-0">
 							<v-icon left @click="selected = null">mdi-chevron-left</v-icon>
 							<v-list-item-avatar size="50">
-								<router-link
+								<nuxt-link
 									:to="{ name: 'dashboard-perfil' }"
 									style="text-decoration: none; height: 50px; height: 50px"
 								>
@@ -46,10 +46,10 @@
 										size="50"
 										:name="selected.name"
 									/>
-								</router-link>
+								</nuxt-link>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
-								<router-link
+								<nuxt-link
 									:to="{ name: 'dashboard-perfil' }"
 									style="text-decoration: none"
 								>
@@ -59,7 +59,7 @@
 									<span v-if="selected.lastName" class="secondary--text">
 										{{ selected.lastName }}
 									</span>
-								</router-link>
+								</nuxt-link>
 							</v-list-item-title>
 							<v-list-item-action>
 								<v-btn icon>
@@ -295,6 +295,12 @@ export default {
 		};
 	},
 	computed: {
+		psychologists() {
+			return this.allPsychologists.map(item => ({
+				...item,
+				hasMessage: this.hasMessage(item),
+			}));
+		},
 		psyFromChats() {
 			let filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
@@ -302,13 +308,13 @@ export default {
 			if (!filterArray.length) filterArray = this.chats;
 			return filterArray.map(item => ({
 				...item.psychologist,
-				hasMessage: this.hasMessage(item),
+				hasMessage: this.hasMessage(item.psychologist),
 			}));
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			psychologists: 'Psychologist/psychologists',
+			allPsychologists: 'Psychologist/psychologists',
 		}),
 	},
 	created() {
@@ -325,8 +331,7 @@ export default {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
-					this.$auth.$state.user.psychologist === data.psychologistId) &&
-				this.showChat
+					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
 				this.pusherCallback(data);
 			}
@@ -338,12 +343,15 @@ export default {
 	},
 	methods: {
 		async pusherCallback(data) {
-			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
+			if (
+				(this.selected && this.selected._id === data.psychologistId) ||
+				this.selected._id === data.userId
+			) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
 				await this.updateMessage(data.content._id);
+				await this.getMessages();
 			}
-			await this.getMessages();
 		},
 		open() {
 			this.showChat = true;
@@ -415,7 +423,6 @@ export default {
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
-			getPsychologists: 'Psychologist/getMessages',
 		}),
 		...mapMutations({ setChat: 'Chat/setChat' }),
 	},

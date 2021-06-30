@@ -8,13 +8,16 @@ import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	mounted() {
+		if (process.browser) {
+			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
+			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
+		}
 		this.initialFetch();
 	},
 	methods: {
 		async initialFetch() {
-			await this.getPsychologists();
 			await this.getAppointments();
-			this.setLoading();
+			this.getPsychologists();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
@@ -22,6 +25,7 @@ export default {
 		}),
 		...mapMutations({
 			setLoading: 'Psychologist/setLoading',
+			setPsychologists: 'Psychologist/setPsychologists',
 		}),
 	},
 };

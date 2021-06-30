@@ -8,5 +8,4 @@ export default {
 		});
 	},
 	resumeView: state => state.resumeView,
-	loading: state => state.loading,
 };
