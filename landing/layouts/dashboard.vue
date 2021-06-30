@@ -36,6 +36,7 @@
 			</v-col>
 			<v-col cols="10">
 				<div style="border-radius: 50px 0 0 0" class="white">
+					<snackbar />
 					<nuxt />
 				</div>
 			</v-col>
@@ -44,7 +45,11 @@
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar';
 export default {
+	components: {
+		Snackbar,
+	},
 	computed: {
 		links() {
 			return [
