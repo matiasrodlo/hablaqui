@@ -30,34 +30,26 @@
 								<v-checkbox
 									v-model="gender"
 									value="male"
-									:disabled="loading"
 									hide-details
+									label="Hombre"
 									@change="filterPanel"
-									><template #label>
-										<span class="body-2">Hombre</span>
-									</template>
+								>
 								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="female"
-									:disabled="loading"
 									hide-details
+									label="Mujer"
 									@change="filterPanel"
 								>
-									<template #label>
-										<span class="body-2">Mujer</span>
-									</template>
 								</v-checkbox>
 								<v-checkbox
 									v-model="gender"
 									value="transgender"
-									:disabled="loading"
 									hide-details
+									label="Transgénero"
 									@change="filterPanel"
 								>
-									<template #label>
-										<span class="body-2">Transgénero</span>
-									</template>
 								</v-checkbox>
 							</v-col>
 							<v-col cols="12" sm="4" md="12">
@@ -75,13 +67,10 @@
 										:key="`models-${i}`"
 										v-model="models"
 										:value="item"
-										:disabled="loading"
 										hide-details
+										:label="item"
 										@change="filterPanel"
 									>
-										<template #label>
-											<span class="body-2">{{ item }}</span>
-										</template>
 									</v-checkbox>
 								</template>
 							</v-col>
@@ -90,24 +79,18 @@
 								<v-checkbox
 									v-model="languages"
 									value="spanish"
-									:disabled="loading"
 									hide-details
+									label="Español"
 									@change="filterPanel"
 								>
-									<template #label>
-										<span class="body-2">Español</span>
-									</template>
 								</v-checkbox>
 								<v-checkbox
 									v-model="languages"
 									value="english"
-									:disabled="loading"
 									hide-details
+									label="Ingles"
 									@change="filterPanel"
 								>
-									<template #label>
-										<span class="body-2">Ingles</span>
-									</template>
 								</v-checkbox>
 							</v-col>
 						</v-row>

@@ -24,14 +24,7 @@
 									<v-img :src="item.avatar"></v-img>
 								</v-list-item-avatar>
 								<div class="caption text--secondary">code {{ item.code }}</div>
-								<v-btn
-									text
-									color="primary"
-									:to="{
-										name: 'psicologo',
-										params: { id: item._id },
-									}"
-								>
+								<v-btn text color="primary" :to="`/psicologos/${item._id}`">
 									Mas información
 								</v-btn>
 							</v-col>
