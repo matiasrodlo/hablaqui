@@ -237,7 +237,11 @@
 								:key="e"
 								@click="selectedPsy(psy)"
 							>
-								<v-list-item-avatar style="border-radius: 40px" size="60">
+								<v-list-item-avatar
+									style="border-radius: 40px"
+									:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+									size="60"
+								>
 									<avatar :url="psy.avatar" :name="psy.name" size="60" />
 								</v-list-item-avatar>
 
@@ -345,13 +349,13 @@ export default {
 		async pusherCallback(data) {
 			if (
 				(this.selected && this.selected._id === data.psychologistId) ||
-				this.selected._id === data.userId
+				(this.selected && this.selected._id === data.userId)
 			) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
 				await this.updateMessage(data.content._id);
-				await this.getMessages();
 			}
+			await this.getMessages();
 		},
 		open() {
 			this.showChat = true;
@@ -369,18 +373,25 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		async selectedPsy(psy) {
-			this.selected = psy;
+			if (this.selected && this.selected._id === psy._id) return;
+			// inicamos carga del seleccionado
 			this.loadingChat = true;
+			this.selected = psy;
+			// obeteners chat del seleccciona
 			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
+			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			if (!this.chat) this.startConversation(psy._id);
-			if (this.chat.messages.length) {
-				const message = this.chat.messages[this.chat.messages.length - 1];
-				if (message && !message.read) this.updateMessage(message._id);
-			}
+			// scroll hasta el final para ver los ultimos mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
+			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			if (!this.chat) await this.startConversation(psy._id);
+			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
+			if (psy.hasMessage) {
+				await this.updateMessage(psy.hasMessage);
+				await this.getMessages();
+			}
 		},
 		scrollToElement() {
 			const el = this.$refs.scrollToMe;
