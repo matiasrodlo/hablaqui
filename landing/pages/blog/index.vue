@@ -622,9 +622,8 @@ export default {
 		moment.locale('es');
 	},
 	async mounted() {
-		let response = await fetch(`${this.$config.API_URL}/blog/all`);
-		response = await response.json();
-		this.articles = response.articles;
+		const { articles } = await this.$axios.$get('/blog/all');
+		this.articles = articles;
 	},
 	methods: {
 		strippedContent(text, long) {

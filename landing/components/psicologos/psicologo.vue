@@ -54,9 +54,11 @@
 								</div>
 							</v-col>
 							<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
-								<!-- <dialog-agenda-cita-online :psy="psychologist" mode="3" /> -->
+								<dialog-agenda-cita-online :psy="psychologist" mode="3" />
 								<v-btn
-									v-if="!loggedIn || user.role == 'user'"
+									v-if="
+										!$auth.$state.loggedIn || $auth.$state.user.role == 'user'
+									"
 									:loading="loadingChat"
 									rounded
 									class="info mx-1 my-2"
@@ -166,7 +168,7 @@
 				</v-row>
 			</v-card-text>
 		</v-card>
-		<!-- <FloatingChat v-if="loggedIn && user.role == 'user'" />
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 		<v-dialog v-model="dialog" transition="dialog-top-transition" width="450">
 			<v-card rounded="xl">
 				<v-card-text>
@@ -264,7 +266,7 @@
 					</v-tabs-items>
 				</v-card-text>
 			</v-card>
-		</v-dialog> -->
+		</v-dialog>
 	</v-container>
 </template>
 
@@ -273,10 +275,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
-		// signin: () => import('@/components/auth/SignIn'),
-		// signup: () => import('@/components/auth/SignUp'),
-		// DialogAgendaCitaOnline: () => import('@/components/psy/DialogAgendaCitaOnline'),
-		// FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+		signin: () => import('@/components/auth/SignIn'),
+		signup: () => import('@/components/auth/SignUp'),
+		DialogAgendaCitaOnline: () => import('@/components/psicologos/DialogAgendaCitaOnline'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -290,8 +292,6 @@ export default {
 			return this.psychologists.find(item => item._id === this.$route.params.id);
 		},
 		...mapGetters({
-			loggedIn: 'User/loggedIn',
-			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 			resumeView: 'Psychologist/resumeView',
 		}),
@@ -310,17 +310,20 @@ export default {
 	methods: {
 		toAuth(item) {
 			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.loggedIn) this.$router.push({ name: 'plan' });
+			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
 			else this.$router.push({ path: '/auth/q=register' });
 		},
 		async goChat() {
-			if (!this.loggedIn) {
+			if (!this.$auth.$state.loggedIn) {
 				this.dialog = true;
 			} else {
 				this.loadingChat = true;
 				await this.startConversation(this.psychologist._id);
 				this.loadingChat = false;
-				this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+				this.$router.push({
+					name: 'dashboard-chat',
+					params: { psy: this.psychologist._id },
+				});
 			}
 		},
 		...mapActions({

@@ -340,9 +340,8 @@ export default {
 		};
 	},
 	async mounted() {
-		let res = await fetch(`${this.$config.API_URL}/blog/all`);
-		res = await res.json();
-		this.blogs = res.articles;
+		const { articles } = await this.$axios.$get('/blog/all');
+		this.blogs = articles;
 		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
 		this.title = this.article.title;
 		if (this.article.rating.average)
@@ -386,19 +385,14 @@ export default {
 			return hostname;
 		},
 		async setRating() {
-			let response = await fetch(
-				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
+			const { data } = await this.$axios(
+				`/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
 				{
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
 					method: 'post',
 				}
 			);
-			response = await response.json();
 			this.isYellow = true;
-			this.rating = parseFloat(response.rating.average.toFixed(1));
+			this.rating = parseFloat(data.rating.average.toFixed(1));
 		},
 		dates(date) {
 			return moment(date).format('DD MMMM YY');

@@ -699,7 +699,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<!-- <FloatingChat v-if="loggedIn && user.role == 'user'" /> -->
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</v-container>
 </template>
 
@@ -709,7 +709,7 @@ import { mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
-		// FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	props: {
 		loading: {

@@ -1,10 +1,9 @@
-import axios from '@/plugins/axios';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
 	async startConversation({ commit }, idPsychologist) {
 		try {
-			await axios(`/chat/start-conversation/${idPsychologist}`, {
+			await this.$axios(`/chat/start-conversation/${idPsychologist}`, {
 				method: 'POST',
 			});
 		} catch (e) {
@@ -13,7 +12,7 @@ export default {
 	},
 	async getMessages({ commit }) {
 		try {
-			const { data } = await axios('/chat/get-chats', {
+			const { data } = await this.$axios('/chat/get-chats', {
 				method: 'GET',
 			});
 			commit('setChats', data.chats);
@@ -23,7 +22,7 @@ export default {
 	},
 	async sendMessage({ commit }, { payload, psychologistId, userId }) {
 		try {
-			const { data } = await axios(`/chat/send-message/${psychologistId}/${userId}`, {
+			const { data } = await this.$axios(`/chat/send-message/${psychologistId}/${userId}`, {
 				method: 'POST',
 				data: { content: payload },
 			});
@@ -34,7 +33,7 @@ export default {
 	},
 	async getChat({ commit }, { psy, user }) {
 		try {
-			const { data } = await axios(`/chat/get-messages/${psy}/${user}`, {
+			const { data } = await this.$axios(`/chat/get-messages/${psy}/${user}`, {
 				method: 'GET',
 			});
 			commit('setChat', data.messages);
@@ -44,7 +43,7 @@ export default {
 	},
 	async createReport({ commit }, { reportType, issue, psychologistId, userId }) {
 		try {
-			await axios(`/chat/create-report/${psychologistId}/${userId}`, {
+			await this.$axios(`/chat/create-report/${psychologistId}/${userId}`, {
 				method: 'POST',
 				data: { reportType, issue },
 			});
@@ -55,7 +54,7 @@ export default {
 	},
 	async updateMessage({ commit }, chatId) {
 		try {
-			await axios(`/chat/read-message/${chatId}`, {
+			await this.$axios(`/chat/read-message/${chatId}`, {
 				method: 'PATCH',
 			});
 		} catch (e) {
