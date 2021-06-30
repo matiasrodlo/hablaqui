@@ -6,7 +6,7 @@
 				<v-card dark color="primary" class="pa-4 rounded-lg">
 					<v-list-item>
 						<v-list-item-avatar size="50">
-							<img :src="card.img" alt="" />
+							<v-img :src="card.img" :lazy-src="card.img" :alt="card.title" />
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title class="headline font-weight-bold">
@@ -95,15 +95,30 @@ export default {
 	data() {
 		return {
 			cards: [
-				{ value: '128', title: 'Usuarios', subtitle: '', img: '/img/accoun.png' },
+				{
+					value: '128',
+					title: 'Usuarios',
+					subtitle: '',
+					img: `${this.$config.LANDING_URL}/accoun.png`,
+				},
 				{
 					value: '200',
 					title: 'Planes contratados',
 					subtitle: '',
-					img: '/img/brain.png',
+					img: `${this.$config.LANDING_URL}/brain.png`,
 				},
-				{ value: '$400.000', title: 'Pagado', subtitle: '', img: '/img/pay.png' },
-				{ value: '$300.000', title: 'Por pagar', subtitle: '', img: '/img/pagos.png' },
+				{
+					value: '$400.000',
+					title: 'Pagado',
+					subtitle: '',
+					img: `${this.$config.LANDING_URL}/pay.png`,
+				},
+				{
+					value: '$300.000',
+					title: 'Por pagar',
+					subtitle: '',
+					img: `${this.$config.LANDING_URL}/pagos.png`,
+				},
 			],
 			payments: [
 				{

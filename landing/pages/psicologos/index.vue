@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologos :loading="loading" />
+		<psicologos />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -25,29 +25,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologos: () => import('~/components/psicologos/psicologos'),
-	},
-	data() {
-		return {
-			loading: true,
-		};
-	},
-	async mounted() {
-		await this.getPsychologists();
-		await this.getAppointments();
-		this.loading = false;
-	},
-	methods: {
-		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
-			getAppointments: 'Appointments/getAppointments',
-		}),
 	},
 };
 </script>

@@ -7,22 +7,7 @@
 		</v-row>
 		<v-row>
 			<v-col class="hidden-sm-and-down" cols="12" md="3">
-				<v-card v-if="loading" style="border-radius: 15px" outlined>
-					<v-card-text>
-						<v-row>
-							<v-col
-								v-for="key in 10"
-								:key="'skeleton' + key"
-								cols="12"
-								sm="4"
-								md="12"
-							>
-								<v-skeleton-loader type="list-item" />
-							</v-col>
-						</v-row>
-					</v-card-text>
-				</v-card>
-				<v-card v-if="!loading" style="border-radius: 15px" outlined>
+				<v-card style="border-radius: 15px" outlined>
 					<v-card-title class="body-1 font-weight-bold text--secondary">
 						Filtrar por
 					</v-card-title>
@@ -130,7 +115,7 @@
 				</v-card>
 			</v-col>
 			<v-col cols="12" md="9">
-				<v-row v-if="!loading">
+				<v-row>
 					<v-col cols="12" md="6">
 						<v-autocomplete
 							v-model="specialties"
@@ -313,17 +298,6 @@
 								</v-expansion-panel-content>
 							</v-expansion-panel>
 						</v-expansion-panels>
-					</v-col>
-				</v-row>
-				<v-row v-else>
-					<v-col cols="12" md="6">
-						<v-skeleton-loader type="list-item" />
-					</v-col>
-					<v-col cols="12" md="6">
-						<v-skeleton-loader type="list-item" />
-					</v-col>
-					<v-col class="hidden-md-and-up" cols="12" md="6">
-						<v-skeleton-loader type="list-item" />
 					</v-col>
 				</v-row>
 				<v-row v-if="loading">
@@ -711,12 +685,6 @@ export default {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
-	props: {
-		loading: {
-			type: Boolean,
-			default: true,
-		},
-	},
 	data() {
 		return {
 			view: 1,
@@ -784,10 +752,11 @@ export default {
 			return result;
 		},
 		...mapGetters({
-			loggedIn: 'User/loggedIn',
-			user: 'User/user',
-			psychologists: 'Psychologist/psychologists',
 			appointments: 'Appointments/appointments',
+			loading: 'Psychologist/loading',
+			loggedIn: 'User/loggedIn',
+			psychologists: 'Psychologist/psychologists',
+			user: 'User/user',
 		}),
 	},
 	created() {

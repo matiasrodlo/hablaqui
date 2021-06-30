@@ -1,17 +1,17 @@
 <template>
 	<v-container fluid style="height: 100vh">
 		<appbar title="Chat" />
-		<v-row>
+		<v-card
+			v-if="initLoading"
+			flat
+			style="height: calc(100vh - 135px)"
+			class="d-flex justify-center align-center"
+		>
+			<v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
+		</v-card>
+		<v-row v-else>
 			<v-col cols="12" md="4" lg="3">
-				<div
-					v-if="loading"
-					style="height: calc(100vh - 135px)"
-					class="d-flex justify-center align-center"
-				>
-					<v-progress-circular indeterminate color="primary"></v-progress-circular>
-				</div>
 				<v-card
-					v-else
 					style="
 						height: calc(100vh - 135px);
 						display: flex;
@@ -34,7 +34,7 @@
 						/>
 					</v-card-text>
 					<!-- barra lateral psychologist -->
-					<template v-if="user && user.role == 'psychologist'">
+					<template v-if="$auth.$state.user && $auth.$state.user.role == 'psychologist'">
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
 								Mis consultantes
@@ -94,7 +94,7 @@
 					</template>
 					<!-- barra lateral user -->
 					<template v-else>
-						<template v-if="user && user.psychologist">
+						<template v-if="$auth.$state.user && $auth.$state.user.psychologist">
 							<v-card-text>
 								<v-subheader class="primary--text body-1 px-0">
 									Mi Psicólogo
@@ -107,11 +107,17 @@
 										style="border: 3px solid #2070e5; border-radius: 40px"
 										size="60"
 									>
-										<avatar :url="user.avatar" :name="user.name" size="60" />
+										<avatar
+											:url="$auth.$state.user.avatar"
+											:name="$auth.$state.user.name"
+											size="60"
+										/>
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-title
+											v-html="$auth.$state.user.name"
+										></v-list-item-title>
 										<v-list-item-subtitle>
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
@@ -289,7 +295,7 @@
 								style="max-width: 320px"
 							>
 								Bienvenido al chat confidencial
-								{{ user.role == 'user' ? 'con el psicólogo' : '' }}
+								{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
 							</div>
 							<v-divider
 								class="mx-auto mb-10"
@@ -304,7 +310,7 @@
 							<div class="talkbubble talkbubble__two" style="margin-top: 2px">
 								<p style="body-2 max-height: 75px; overflow-y: auto">
 									{{
-										user.role == 'user'
+										$auth.$state.user.role == 'user'
 											? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 											: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 									}}
@@ -332,7 +338,7 @@
 													v-if="sentBy(item.sentBy)"
 													class="text--disabled body-2"
 												>
-													{{ user.name }}
+													{{ $auth.$state.user.name }}
 												</span>
 												<span v-else class="text--disabled body-2">
 													{{ selected.shortName || selected.name }}
@@ -445,13 +451,13 @@ export default {
 	data() {
 		return {
 			search: '',
-			loading: false,
 			loadingMessage: false,
 			loadingChat: false,
 			selected: null,
 			message: '',
 			pusher: null,
 			channel: null,
+			initLoading: true,
 		};
 	},
 	computed: {
@@ -463,9 +469,15 @@ export default {
 		},
 		subHeader() {
 			if (this.selected.assitant) return 'Asistente virtual';
-			if (!this.selected.assitant && this.selected._id === this.user.psychologist)
+			if (
+				!this.selected.assitant &&
+				this.selected._id === this.$auth.$state.user.psychologist
+			)
 				return 'Mi psicólogo';
-			if (!this.selected.assitant && this.selected._id !== this.user.psychologist)
+			if (
+				!this.selected.assitant &&
+				this.selected._id !== this.$auth.$state.user.psychologist
+			)
 				return 'Terapeuta de Hablaquí con licencia';
 			return '';
 		},
@@ -486,13 +498,12 @@ export default {
 			if (!filterArray.length) filterArray = this.chats;
 			return filterArray.map(item => ({
 				...item.psychologist,
-				hasMessage: this.hasMessage(item),
+				hasMessage: this.hasMessage(item.psychologist),
 			}));
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			user: 'User/user',
 			allPsychologists: 'Psychologist/psychologists',
 		}),
 	},
@@ -508,8 +519,9 @@ export default {
 		this.channel.bind('update', data => this.$emit('updateChat', data));
 		this.$on('updateChat', data => {
 			if (
-				data.content.sentBy !== this.user._id &&
-				(this.user._id === data.userId || this.user.psychologist === data.psychologistId)
+				data.content.sentBy !== this.$auth.$state.user._id &&
+				(this.$auth.$state.user._id === data.userId ||
+					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
 				this.pusherCallback(data);
 			}
@@ -517,6 +529,7 @@ export default {
 	},
 	async mounted() {
 		moment.locale('es');
+		await this.getPsychologists();
 		await this.getMessages();
 		if (this.$route.params.psy) {
 			const psychologist = this.getPsy(this.$route.params.psy);
@@ -530,6 +543,7 @@ export default {
 					'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			};
 		}
+		this.initLoading = false;
 	},
 	methods: {
 		async onSubmit() {
@@ -538,8 +552,13 @@ export default {
 			const payload = {
 				payload: this.message,
 				psychologistId:
-					this.user.role === 'psychologist' ? this.user.psychologist : this.selected._id,
-				userId: this.user.role === 'psychologist' ? this.selected._id : this.user._id,
+					this.$auth.$state.user.role === 'psychologist'
+						? this.$auth.$state.user.psychologist
+						: this.selected._id,
+				userId:
+					this.$auth.$state.user.role === 'psychologist'
+						? this.selected._id
+						: this.$auth.$state.user._id,
 			};
 			await this.sendMessage(payload);
 			this.message = '';
@@ -565,12 +584,12 @@ export default {
 			}
 		},
 		sentBy(sentBy) {
-			return sentBy === this.user._id;
+			return sentBy === this.$auth.$state.user._id;
 		},
 		async setSelectedUser(user) {
 			this.selected = {
 				name: user.name,
-				lastName: user.lastName,
+				lastName: this.lastName,
 				avatar: user.avatar,
 				_id: user._id,
 			};
@@ -589,7 +608,7 @@ export default {
 			this.loadingChat = true;
 			this.selected = psy;
 			// obeteners chat del seleccciona
-			await this.getChat({ psy: psy._id, user: this.user._id });
+			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
 			// scroll hasta el final para ver los ultimos mensajes
@@ -610,7 +629,8 @@ export default {
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
+				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
+					return temp._id;
 			}
 		},
 		hasMessageUser(user) {
@@ -619,13 +639,15 @@ export default {
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
+				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
+					return temp._id;
 			}
 		},
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
 		},
 		...mapActions({
+			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',
 			getMessages: 'Chat/getMessages',

@@ -5,4 +5,7 @@ export default {
 	setResumeView(state, value) {
 		state.resumeView = value;
 	},
+	setLoading(state) {
+		state.loading = !state.loading;
+	},
 };

@@ -38,7 +38,7 @@
 							<v-icon left @click="selected = null">mdi-chevron-left</v-icon>
 							<v-list-item-avatar size="50">
 								<router-link
-									:to="{ name: 'perfil' }"
+									:to="{ name: 'dashboard-perfil' }"
 									style="text-decoration: none; height: 50px; height: 50px"
 								>
 									<avatar
@@ -49,7 +49,10 @@
 								</router-link>
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
-								<router-link :to="{ name: 'perfil' }" style="text-decoration: none">
+								<router-link
+									:to="{ name: 'dashboard-perfil' }"
+									style="text-decoration: none"
+								>
 									<span class="secondary--text">
 										{{ selected.shortName || selected.name }}
 									</span>
@@ -109,7 +112,7 @@
 												v-if="sentBy(item.sentBy)"
 												class="text--disabled body-2"
 											>
-												{{ user.name }}
+												{{ $auth.$state.user.name }}
 											</span>
 											<span v-else class="text--disabled body-2">
 												{{ selected.shortName || selected.name }}
@@ -192,7 +195,7 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<template v-if="user && user.psychologist">
+					<template v-if="$auth.$state.user && $auth.$state.user.psychologist">
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
 								Mi Psicólogo
@@ -205,11 +208,17 @@
 									style="border: 3px solid #2070e5; border-radius: 40px"
 									size="60"
 								>
-									<avatar :url="user.avatar" :name="user.name" size="60" />
+									<avatar
+										:url="$auth.$state.user.avatar"
+										:name="$auth.$state.user.name"
+										size="60"
+									/>
 								</v-list-item-avatar>
 
 								<v-list-item-content>
-									<v-list-item-title v-html="user.name"></v-list-item-title>
+									<v-list-item-title
+										v-html="$auth.$state.user.name"
+									></v-list-item-title>
 									<v-list-item-subtitle>
 										Psicólogo · Activo(a)
 									</v-list-item-subtitle>
@@ -299,7 +308,6 @@ export default {
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			user: 'User/user',
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
@@ -315,8 +323,9 @@ export default {
 		this.channel.bind('update', data => this.$emit('updateChat', data));
 		this.$on('updateChat', data => {
 			if (
-				data.content.sentBy !== this.user._id &&
-				(this.user._id === data.userId || this.user.psychologist === data.psychologistId) &&
+				data.content.sentBy !== this.$auth.$state.user._id &&
+				(this.$auth.$state.user._id === data.userId ||
+					this.$auth.$state.user.psychologist === data.psychologistId) &&
 				this.showChat
 			) {
 				this.pusherCallback(data);
@@ -349,12 +358,12 @@ export default {
 			return moment().format('llll');
 		},
 		sentBy(sentBy) {
-			return sentBy === this.user._id;
+			return sentBy === this.$auth.$state.user._id;
 		},
 		async selectedPsy(psy) {
 			this.selected = psy;
 			this.loadingChat = true;
-			await this.getChat({ psy: psy._id, user: this.user._id });
+			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			this.loadingChat = false;
 			if (!this.chat) this.startConversation(psy._id);
 			if (this.chat.messages.length) {
@@ -377,8 +386,13 @@ export default {
 			const payload = {
 				payload: this.message,
 				psychologistId:
-					this.user.role === 'psychologist' ? this.user.psychologist : this.selected._id,
-				userId: this.user.role === 'psychologist' ? this.selected._id : this.user._id,
+					this.$auth.$state.user.role === 'psychologist'
+						? this.$auth.$state.user.psychologist
+						: this.selected._id,
+				userId:
+					this.$auth.$state.user.role === 'psychologist'
+						? this.selected._id
+						: this.$auth.$state.user._id,
 			};
 			await this.sendMessage(payload);
 			this.message = '';
@@ -391,7 +405,8 @@ export default {
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.user._id) return temp._id;
+				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
+					return temp._id;
 			}
 		},
 		...mapActions({

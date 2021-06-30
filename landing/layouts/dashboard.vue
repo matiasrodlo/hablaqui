@@ -3,9 +3,13 @@
 		<v-row class="primary" style="height: 100vh" no-gutters>
 			<v-col cols="2" class="d-flex" style="flex-direction: column">
 				<div style="flex: 1; height: 230px" class="d-flex align-center justify-center">
-					<img
-						style="width: 70px; cursor: pointer"
+					<v-img
+						height="100"
+						contain
+						style="cursor: pointer"
 						:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+						:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+						alt="logo hablaqui"
 						@click="() => $router.push({ name: 'psicologos' })"
 					/>
 				</div>
@@ -13,7 +17,13 @@
 					<template v-for="(item, i) in links">
 						<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
 							<v-list-item-avatar size="35">
-								<v-img :src="item.img" :alt="item.name" />
+								<v-img
+									height="35"
+									width="35"
+									:src="item.img"
+									:lazy-src="item.img"
+									:alt="item.name"
+								/>
 							</v-list-item-avatar>
 							<v-list-item-content>
 								<v-list-item-title class="font-weight-bold body-2">
@@ -34,8 +44,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-
 export default {
 	computed: {
 		links() {
@@ -62,7 +70,7 @@ export default {
 					name: 'Pagos',
 					link: 'pagos',
 					img: `${this.$config.LANDING_URL}/pagos.png`,
-					visible: this.user.role === 'psychologist',
+					visible: this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Mi cuenta',
@@ -72,15 +80,6 @@ export default {
 				},
 			];
 		},
-		...mapGetters({ user: 'User/user' }),
-	},
-	methods: {
-		logout() {
-			this.resetUser();
-			localStorage.removeItem('vuex');
-			this.$router.push({ name: 'auth' });
-		},
-		...mapMutations({ resetUser: 'User/reset' }),
 	},
 };
 </script>

@@ -192,21 +192,11 @@
 										Crea una cuenta
 									</v-btn>
 									<div class="text-center mt-10">
-										<v-btn
-											class="px-0"
-											text
-											color="primary"
-											:href="`${landingUrl}/politicas`"
-										>
+										<v-btn class="px-0" text color="primary" to="/politicas">
 											Aviso de privacidad
 										</v-btn>
 										<span class="primary--text mx-1">y</span>
-										<v-btn
-											class="px-0"
-											text
-											color="primary"
-											:href="`${landingUrl}/condiciones`"
-										>
+										<v-btn class="px-0" text color="primary" to="/condiciones">
 											Términos y Condiciones</v-btn
 										>
 									</div>
@@ -238,20 +228,11 @@
 										Entrar
 									</v-btn>
 									<div class="text-center mt-2">
-										<v-btn
-											class="pa-0"
-											text
-											color="primary"
-											:href="`${landingUrl}/politicas`"
+										<v-btn class="pa-0" text color="primary" to="/politicas"
 											>Aviso de privacidad</v-btn
 										>
 										<span class="primary--text mx-1">y</span>
-										<v-btn
-											class="pa-0"
-											text
-											color="primary"
-											:href="`${landingUrl}/condiciones`"
-										>
+										<v-btn class="pa-0" text color="primary" to="/condicione`">
 											Términos y Condiciones</v-btn
 										>
 									</div>
