@@ -12,15 +12,14 @@
 		>
 			<template #activator="{ on, attrs }">
 				<v-btn
-					v-bind="attrs"
 					fab
 					color="primary"
 					absolute
 					class="open-button"
 					width="65"
 					height="65"
+					v-bind="attrs"
 					v-on="on"
-					@click="open"
 				>
 					<v-img
 						width="65"
@@ -288,8 +287,6 @@ export default {
 	data() {
 		return {
 			search: '',
-			menu: false,
-			showChat: false,
 			selected: null,
 			loadingMessage: false,
 			message: '',
@@ -315,9 +312,18 @@ export default {
 				hasMessage: this.hasMessage(item.psychologist),
 			}));
 		},
+		menu: {
+			get() {
+				return this.floatingChat;
+			},
+			set(value) {
+				this.setFloatingChat(value);
+			},
+		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
+			floatingChat: 'Chat/floatingChat',
 			allPsychologists: 'Psychologist/psychologists',
 		}),
 	},
@@ -356,9 +362,6 @@ export default {
 				await this.updateMessage(data.content._id);
 			}
 			await this.getMessages();
-		},
-		open() {
-			this.showChat = true;
 		},
 		resetChat() {
 			setTimeout(() => {
@@ -435,7 +438,10 @@ export default {
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
 		}),
-		...mapMutations({ setChat: 'Chat/setChat' }),
+		...mapMutations({
+			setChat: 'Chat/setChat',
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

@@ -304,16 +304,19 @@
 		<v-container>
 			<Footer />
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -338,6 +341,9 @@ export default {
 				},
 			],
 		};
+	},
+	created() {
+		this.setFloatingChat(false);
 	},
 	async mounted() {
 		const { articles } = await this.$axios.$get('/blog/all');
@@ -401,6 +407,9 @@ export default {
 			const regex = /(<([^>]+)>)/gi;
 			return text.replace(regex, '').slice(0, long).concat('...');
 		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

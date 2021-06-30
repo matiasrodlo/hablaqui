@@ -288,6 +288,9 @@ export default {
 			}
 		},
 	},
+	created() {
+		this.setFloatingChat(false);
+	},
 	methods: {
 		toAuth(item) {
 			localStorage.setItem('psi', JSON.stringify(item));
@@ -310,7 +313,10 @@ export default {
 		...mapActions({
 			startConversation: 'Chat/startConversation',
 		}),
-		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
+		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

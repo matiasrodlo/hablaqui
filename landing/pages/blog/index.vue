@@ -553,15 +553,18 @@
 		<v-container tag="footer">
 			<Footer />
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 <script>
 import moment from 'moment';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -620,6 +623,7 @@ export default {
 	},
 	created() {
 		moment.locale('es');
+		this.setFloatingChat(false);
 	},
 	async mounted() {
 		const { articles } = await this.$axios.$get('/blog/all');
@@ -641,6 +645,9 @@ export default {
 				this.combobox.push(item);
 			}
 		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>
