@@ -1,5 +1,5 @@
 <template>
-	<div style="background-color: #ebf2f3">
+	<div style="background-color: #f0f8ff">
 		<div>
 			<Appbar />
 		</div>
