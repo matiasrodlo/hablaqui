@@ -87,7 +87,7 @@ export default {
 							this.$router.push({ name: 'evaluacion' });
 						else if (
 							this.$route.name !== 'psicologos' &&
-							this.$route.name !== 'psicologo'
+							this.$route.name !== 'psicologos-id'
 						)
 							this.$router.push({ name: 'dashboard-chat' });
 						else if (this.isDialog) this.setResumeView(true);

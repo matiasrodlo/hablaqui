@@ -254,7 +254,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -280,13 +280,10 @@ export default {
 		}),
 	},
 	watch: {
-		async resumeView(newValue) {
+		resumeView(newValue) {
 			if (newValue && this.dialog) {
-				this.loadingChat = true;
-				await this.startConversation(this.psychologist._id);
-				this.setResumeView(false);
-				this.loadingChat = false;
-				this.$router.push({ name: 'chat', params: { psy: this.psychologist._id } });
+				this.dialog = false;
+				this.setFloatingChat(true);
 			}
 		},
 	},
@@ -299,24 +296,14 @@ export default {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
 			else this.$router.push({ path: '/auth/q=register' });
 		},
-		async goChat() {
+		goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.dialog = true;
 			} else {
-				this.loadingChat = true;
-				await this.startConversation(this.psychologist._id);
-				this.loadingChat = false;
-				this.$router.push({
-					name: 'dashboard-chat',
-					params: { psy: this.psychologist._id },
-				});
+				this.setFloatingChat(true);
 			}
 		},
-		...mapActions({
-			startConversation: 'Chat/startConversation',
-		}),
 		...mapMutations({
-			setResumeView: 'Psychologist/setResumeView',
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
 	},

@@ -327,7 +327,22 @@ export default {
 			allPsychologists: 'Psychologist/psychologists',
 		}),
 	},
+	watch: {
+		async floatingChat(newValue) {
+			if (newValue) {
+				this.setResumeView(false);
+				if (this.$route.params.id) {
+					const psychologist = this.psychologists.find(
+						item => item._id === this.$route.params.id
+					);
+					await this.selectedPsy(psychologist);
+					await this.getMessages();
+				}
+			}
+		},
+	},
 	created() {
+		moment.locale('es');
 		// PUSHER
 		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
 			cluster: this.$config.PUSHER_CLUSTER,
@@ -348,8 +363,14 @@ export default {
 		});
 	},
 	async mounted() {
-		moment.locale('es');
-		await this.getMessages();
+		this.setResumeView(false);
+		if (this.$route.params.id) {
+			const psychologist = this.psychologists.find(
+				item => item._id === this.$route.params.id
+			);
+			await this.selectedPsy(psychologist);
+			await this.getMessages();
+		}
 	},
 	methods: {
 		async pusherCallback(data) {
@@ -439,6 +460,7 @@ export default {
 			startConversation: 'Chat/startConversation',
 		}),
 		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
 			setChat: 'Chat/setChat',
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
