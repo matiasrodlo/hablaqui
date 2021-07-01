@@ -5,8 +5,8 @@ import calendarService from '../services/calendar';
 const calendarController = {
 	async getEvents(req, res) {
 		try {
-			const { token } = req.body;
-			const { data, code } = await calendarService.getEvents(token);
+			const { user } = req;
+			const { data, code } = await calendarService.getEvents(user);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res);
@@ -15,14 +15,14 @@ const calendarController = {
 
 	async createEvent(req, res) {
 		try {
-			const { date, psychologist } = req;
-			const { token } = req.body;
+			const { user } = req;
+			const { date, psychologist } = req.body;
 			const payload = {
 				date,
 				psychologist,
 			};
 			const { data, code } = await calendarService.createEvent(
-				token,
+				user,
 				payload
 			);
 			return restResponse(data, code, res);

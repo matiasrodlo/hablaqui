@@ -17,8 +17,8 @@ const oAuth2Client = new google.auth.OAuth2(
 	google_client_redirect
 );
 
-const getEvents = async token => {
-	oAuth2Client.setCredentials(token);
+const getEvents = async user => {
+	oAuth2Client.setCredentials(user.googleCalendar);
 	const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 	const events = await calendar.events.list({
 		calendarId: 'primary',
@@ -30,11 +30,8 @@ const getEvents = async token => {
 	return okResponse('Eventos conseguidos', { events: events.data.items });
 };
 
-/*
- * @param {google.auth.OAuth2}
- */
-const createEvent = (token, payload) => {
-	oAuth2Client.setCredentials(token);
+const createEvent = (user, payload) => {
+	oAuth2Client.setCredentials(user.googleCalendar);
 	const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 	calendar.events.insert({
 		calendarId: 'primary',
