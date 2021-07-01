@@ -13,7 +13,7 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link :href="`${$config.FRONTEND_URL}/psicologos/todos`">
+				<v-list-item link nuxt to="/psicologos">
 					<v-list-item-content>
 						<v-list-item-title>Quiero comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -34,18 +34,18 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<router-link to="/" exact>
-				<img
+			<nuxt-link to="/" exact>
+				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
 					:src="`${$config.LANDING_URL}/logo_white.png`"
+					:lazy-src="`${$config.LANDING_URL}/logo_white.png`"
 					contain
 				/>
-			</router-link>
-
+			</nuxt-link>
 			<v-spacer></v-spacer>
 			<v-btn
-				:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+				to="/psicologos"
 				large
 				rounded
 				class="hidden-sm-and-down mx-4 px-8"

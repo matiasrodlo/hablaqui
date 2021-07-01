@@ -376,13 +376,13 @@
 							ningún dato personal.
 						</div>
 						<div class="primary--text body-2 text-center">
-							<a
+							<nuxt-link
 								target="_blank"
-								:href="`${$config.LANDING_URL}/condiciones`"
+								to="/condiciones"
 								style="text-decoration: none"
 							>
 								Ver terminos y condiciones de Chat
-							</a>
+							</nuxt-link>
 						</div>
 					</v-card-text>
 					<v-card-text v-else style="flex: 0">
