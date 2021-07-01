@@ -19,7 +19,13 @@
 						"
 					/>
 				</div>
-				<v-card v-if="user.role != 'user' && user._id != '60c26d38f12991000bca3bba'" flat>
+				<v-card
+					v-if="
+						$auth.$state.user.role != 'user' &&
+						$auth.$state.user._id != '60c26d38f12991000bca3bba'
+					"
+					flat
+				>
 					<v-card-text class="text-center">
 						<div
 							class="mt-10 text-h6 font-weight-bold primary--text mx-auto"
@@ -32,7 +38,13 @@
 						</div>
 					</v-card-text>
 				</v-card>
-				<v-card v-if="user.role == 'user' && user._id != '60a0e168fd8c0f000ace3b71'" flat>
+				<v-card
+					v-if="
+						$auth.$state.user.role == 'user' &&
+						$auth.$state.user._id != '60a0e168fd8c0f000ace3b71'
+					"
+					flat
+				>
 					<v-card-text class="text-center">
 						<div
 							class="text-h6 font-weight-bold primary--text mx-auto"
@@ -141,7 +153,7 @@
 
 <script>
 import moment from 'moment';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -166,9 +178,6 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 	}),
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
 	mounted() {
 		moment.locale('es');
 		this.successPayment();
@@ -214,7 +223,7 @@ export default {
 			nativeEvent.stopPropagation();
 		},
 		updateRange() {
-			if (this.user._id === '60a0e168fd8c0f000ace3b71')
+			if (this.$auth.$state.user._id === '60a0e168fd8c0f000ace3b71')
 				this.events = [
 					{
 						name: 'Sesion con Joaquin',
@@ -236,7 +245,7 @@ export default {
 						details: 'Sesion con Joaquin',
 					},
 				];
-			if (this.user._id === '60c26d38f12991000bca3bba') {
+			if (this.$auth.$state.user._id === '60c26d38f12991000bca3bba') {
 				this.events = [
 					{
 						name: 'Sesion con Matias',

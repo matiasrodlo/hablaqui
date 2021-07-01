@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 export default {
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
@@ -86,11 +85,6 @@ export default {
 			type: Function,
 			required: true,
 		},
-	},
-	computed: {
-		...mapGetters({
-			loggedIn: 'User/loggedIn',
-		}),
 	},
 };
 </script>

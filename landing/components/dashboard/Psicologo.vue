@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="user._id == '60a0e168fd8c0f000ace3b71'">
+		<template v-if="$auth.$state.user._id == '60a0e168fd8c0f000ace3b71'">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="3" class="text-center">
 					<v-list-item-avatar
@@ -90,13 +90,4 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
-export default {
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
-};
-</script>
-
-<style lang="scss" scoped></style>

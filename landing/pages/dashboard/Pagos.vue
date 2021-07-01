@@ -10,7 +10,11 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title class="headline font-weight-bold">
-								{{ user._id == '60c26d38f12991000bca3bba' ? card.value : '0' }}
+								{{
+									$auth.$state.user._id == '60c26d38f12991000bca3bba'
+										? card.value
+										: '0'
+								}}
 							</v-list-item-title>
 							<v-list-item-subtitle class="body-1">
 								{{ card.title }}
@@ -29,7 +33,7 @@
 					<span class="white--text body-1 text-center">Pagado</span>
 					<span class="white--text body-1 text-center">Deuda</span>
 				</div>
-				<v-expansion-panels v-if="user._id == '60c26d38f12991000bca3bba'">
+				<v-expansion-panels v-if="$auth.$state.user._id == '60c26d38f12991000bca3bba'">
 					<v-expansion-panel v-for="(item, i) in payments" :key="i">
 						<v-expansion-panel-header>
 							<div class="d-flex justify-space-around">
@@ -71,7 +75,7 @@
 						</v-expansion-panel-content>
 					</v-expansion-panel>
 				</v-expansion-panels>
-				<v-card v-if="user._id != '60c26d38f12991000bca3bba'" flat>
+				<v-card v-if="$auth.$state.user._id != '60c26d38f12991000bca3bba'" flat>
 					<v-card-text class="text-center">
 						<div class="body-1 my-3 mx-auto">
 							Paciencia. Aún nadie ha reservado una sesión
@@ -168,9 +172,6 @@ export default {
 				},
 			],
 		};
-	},
-	computed: {
-		...mapGetters({ user: 'User/user' }),
 	},
 };
 </script>

@@ -740,9 +740,7 @@ export default {
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			loggedIn: 'User/loggedIn',
 			psychologists: 'Psychologist/psychologists',
-			user: 'User/user',
 		}),
 	},
 	created() {
@@ -772,7 +770,7 @@ export default {
 	},
 	methods: {
 		start() {
-			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else
 				this.$router.push({
 					name: 'auth',

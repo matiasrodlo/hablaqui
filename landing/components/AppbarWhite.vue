@@ -200,7 +200,7 @@ export default {
 			this.$auth.logout();
 		},
 		start() {
-			if (this.loggedIn) this.$router.push({ name: 'evaluacion' });
+			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else
 				this.$router.push({
 					name: 'auth',

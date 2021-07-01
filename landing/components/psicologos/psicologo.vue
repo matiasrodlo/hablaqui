@@ -179,7 +179,8 @@
 									width="80"
 									height="80"
 									class="mx-auto mt-8"
-									src="/img/logo_tiny.png"
+									:src="`${$config.LANDING_URL}/logo_tiny.png`"
+									:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
 								></v-img>
 								<v-card-text><signin :is-dialog="true" /></v-card-text>
 								<v-card-text class="pt-0">
@@ -214,7 +215,8 @@
 									width="80"
 									height="80"
 									class="mx-auto mt-8"
-									src="/img/logo_tiny.png"
+									:src="`${$config.LANDING_URL}/logo_tiny.png`"
+									:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
 								>
 								</v-img>
 								<v-card-text><signup :is-dialog="true" /></v-card-text>

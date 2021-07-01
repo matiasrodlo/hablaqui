@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="user._id == '60a0e168fd8c0f000ace3b71'">
+		<template v-if="$auth.$state.user._id == '60a0e168fd8c0f000ace3b71'">
 			<v-card flat>
 				<v-card-text>
 					<div>
@@ -30,22 +30,9 @@
 						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
 						vida hoy.
 					</div>
-					<v-btn rounded color="primary" :to="{ name: 'psicologos' }">
-						Buscar ahora
-					</v-btn>
+					<v-btn rounded color="primary" to="/psicologos"> Buscar ahora </v-btn>
 				</v-card-text>
 			</v-card>
 		</template>
 	</div>
 </template>
-
-<script>
-import { mapGetters } from 'vuex';
-export default {
-	computed: {
-		...mapGetters({ user: 'User/user' }),
-	},
-};
-</script>
-
-<style lang="scss" scoped></style>
