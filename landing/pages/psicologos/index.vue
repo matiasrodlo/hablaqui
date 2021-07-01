@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="background-color: #ebf2f3">
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
