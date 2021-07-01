@@ -33,16 +33,13 @@
 									<v-col
 										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
 									>
-										<router-link
-											:to="{
-												name: 'psicologo',
-												params: { id: item._id },
-											}"
+										<nuxt-link
+											:to="`psicologo/${item._id}`"
 											style="text-decoration: none"
 										>
 											{{ item.name }}
 											{{ item.lastName && item.lastName }}
-										</router-link>
+										</nuxt-link>
 									</v-col>
 									<v-col cols="12" sm="6" class="text-center text-md-right">
 										<dialog-agenda-cita-online :psy="item" :mode="'3'" />

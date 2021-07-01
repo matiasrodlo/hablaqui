@@ -771,10 +771,9 @@ export default {
 				model: this.focus,
 			};
 			this.matchPsi(payload).then(response => {
-				console.log(response);
 				if (response && response.length) {
-					localStorage.setItem('psi', JSON.stringify(response));
-					this.matchedPsychologists = response;
+					localStorage.setItem('psi', JSON.stringify(response.filter((el, i) => i < 3)));
+					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
 		},

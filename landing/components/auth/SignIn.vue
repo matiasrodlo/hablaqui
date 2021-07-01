@@ -79,20 +79,32 @@ export default {
 		async onSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
-				this.loading = true;
-				await this.$auth.loginWith('local', { data: this.form });
-				this.loading = false;
-				if (this.$auth.$state.loggedIn)
-					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
-					else if (this.$route.name !== 'psicologos' && this.$route.name !== 'psicologo')
-						this.$router.push({ name: 'dashboard-chat' });
-					else if (this.isDialog) this.setResumeView(true);
+				try {
+					this.loading = true;
+					await this.$auth.loginWith('local', { data: this.form });
+					if (this.$auth.$state.loggedIn)
+						if (this.$route.query.from === 'psy')
+							this.$router.push({ name: 'evaluacion' });
+						else if (
+							this.$route.name !== 'psicologos' &&
+							this.$route.name !== 'psicologo'
+						)
+							this.$router.push({ name: 'dashboard-chat' });
+						else if (this.isDialog) this.setResumeView(true);
+				} catch (error) {
+					this.snackBar({ content: error.message, color: 'error' });
+				} finally {
+					this.loading = false;
+				}
 			}
 		},
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
-		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
+		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
+			snackBar: 'Snackbar/showMessage',
+		}),
 	},
 	validations: {
 		form: {
