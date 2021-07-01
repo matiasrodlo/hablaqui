@@ -142,7 +142,7 @@
 			<router-link
 				v-else
 				style="text-decoration: none"
-				class="mr-4 mr-lg-5"
+				class="mr-4 mr-lg-5 hidden-sm-and-down"
 				:to="{ name: 'auth' }"
 			>
 				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
@@ -150,7 +150,7 @@
 			<v-btn
 				v-if="!$auth.$state.loggedIn"
 				rounded
-				class="mx-2 py-6 px-lg-10"
+				class="mx-2 py-6 px-lg-10 hidden-sm-and-down"
 				color="primary"
 				depressed
 				@click="start"
