@@ -325,6 +325,7 @@ export default {
 			chats: 'Chat/chats',
 			floatingChat: 'Chat/floatingChat',
 			allPsychologists: 'Psychologist/psychologists',
+			resumeView: 'Psychologist/resumeView',
 		}),
 	},
 	watch: {
@@ -363,14 +364,16 @@ export default {
 		});
 	},
 	async mounted() {
-		this.setResumeView(false);
-		if (this.$route.params.id) {
-			const psychologist = this.psychologists.find(
-				item => item._id === this.$route.params.id
-			);
-			await this.selectedPsy(psychologist);
-			await this.getMessages();
+		if (this.resumeView) {
+			this.setResumeView(false);
+			if (this.$route.params.id) {
+				const psychologist = this.psychologists.find(
+					item => item._id === this.$route.params.id
+				);
+				await this.selectedPsy(psychologist);
+			}
 		}
+		await this.getMessages();
 	},
 	methods: {
 		async pusherCallback(data) {
