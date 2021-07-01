@@ -1,7 +1,7 @@
 import mercadopagoService from '../services/mercadopago';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
-import { frontend_url } from '../config/dotenv';
+import { landing_url } from '../config/dotenv';
 
 const mercadopagoController = {
 	async createPreference(req, res) {
@@ -20,7 +20,7 @@ const mercadopagoController = {
 		try {
 			const { params } = req;
 			await mercadopagoService.successPay(params);
-			return res.redirect(`${frontend_url}/dashboard/agenda`);
+			return res.redirect(`${landing_url}/psicologos`);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
