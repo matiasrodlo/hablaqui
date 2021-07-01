@@ -7,7 +7,7 @@
 					type="text"
 					label="Nombre"
 					outlined
-					:dense="isDialog"
+					dense
 					autocomplete="off"
 					:error-messages="nameErrors"
 				></v-text-field>
@@ -17,45 +17,45 @@
 					v-model="form.email"
 					label="Correo electronico"
 					type="email"
-					:dense="isDialog"
+					dense
 					outlined
 					:error-messages="emailErrors"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12">
+			<!-- <v-col cols="12">
 				<v-text-field
 					v-model="form.inviteCode"
 					autocomplete="off"
 					label="Código de Invitación(opcional)"
 					type="text"
-					:dense="isDialog"
+					dense
 					outlined
 				></v-text-field>
-			</v-col>
+			</v-col> -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.password"
 					label="Contraseña"
 					outlined
-					:dense="isDialog"
+					dense
 					:type="showPassword ? 'text' : 'password'"
 					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					:error-messages="passwordErrors"
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12">
+			<!-- <v-col cols="12">
 				<v-text-field
 					v-model="form.repeatPassword"
 					label="Repite contraseña"
 					outlined
-					:dense="isDialog"
+					dense
 					:error-messages="repeatPasswordErrors"
 					:type="showRepeatPassword ? 'text' : 'password'"
 					:append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
 					@click:append="showRepeatPassword = !showRepeatPassword"
 				></v-text-field>
-			</v-col>
+			</v-col> -->
 			<v-col cols="12" class="d-flex align-center">
 				<v-checkbox v-model="accept" class="d-inline-block"></v-checkbox>
 				<span class="body-2 text-left" style="max-width: 300px">
@@ -90,7 +90,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate';
-import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
+import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -107,7 +107,7 @@ export default {
 			form: null,
 			loading: false,
 			showPassword: false,
-			showRepeatPassword: false,
+			// showRepeatPassword: false,
 			accept: false,
 			dialog: false,
 		};
@@ -136,21 +136,20 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
-		repeatPasswordErrors() {
-			const errors = [];
-			if (!this.$v.form.password.$dirty) return errors;
-			!this.$v.form.repeatPassword.required && errors.push('Repetir contraseña es querido');
-			!this.$v.form.repeatPassword.sameAsPassword &&
-				errors.push('Las contraseñas deben ser iguales');
-			return errors;
-		},
+		// repeatPasswordErrors() {
+		// 	const errors = [];
+		// 	if (!this.$v.form.password.$dirty) return errors;
+		// 	!this.$v.form.repeatPassword.required && errors.push('Repetir contraseña es querido');
+		// 	!this.$v.form.repeatPassword.sameAsPassword &&
+		// 		errors.push('Las contraseñas deben ser iguales');
+		// 	return errors;
+		// },
 	},
 	created() {
 		this.defaultForm();
 	},
 	methods: {
 		defaultForm() {
-			this.repeatPassword = '';
 			this.form = {
 				name: '',
 				email: '',
@@ -166,11 +165,13 @@ export default {
 			if (!this.$v.$invalid && this.accept) {
 				try {
 					this.loading = true;
-					await this.register(this.form);
+					await this.$axios('/auth/register', {
+						method: 'post',
+						data: this.form,
+					});
 					await this.$auth.loginWith('local', {
 						data: { email: this.form.email, password: this.form.password },
 					});
-
 					if (this.$auth.$state.loggedIn)
 						if (this.$route.query.from === 'psy')
 							this.$router.push({ name: 'evaluacion' });
@@ -209,10 +210,10 @@ export default {
 				minLength: minLength(6),
 				maxLength: maxLength(99),
 			},
-			repeatPassword: {
-				required,
-				sameAsPassword: sameAs('password'),
-			},
+			// repeatPassword: {
+			// 	required,
+			// 	sameAsPassword: sameAs('password'),
+			// },
 		},
 	},
 };

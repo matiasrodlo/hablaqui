@@ -29,7 +29,7 @@
 		<v-row>
 			<v-col cols="12">
 				<v-btn :loading="loading" type="submit" block rounded color="primary">
-					Entra
+					Entrar
 				</v-btn>
 			</v-col>
 		</v-row>

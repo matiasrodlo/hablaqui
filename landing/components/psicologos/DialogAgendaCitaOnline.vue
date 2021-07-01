@@ -32,7 +32,7 @@
 			</v-btn>
 		</template>
 		<v-card rounded="xl">
-			<v-card-title class="primary white--text text-h5 py-5">
+			<v-card-title class="primary white--text text-h5 py-3">
 				<v-btn
 					v-if="step != 0"
 					icon
@@ -49,7 +49,9 @@
 				<div v-if="step == 0" class="body-1 font-weight-bold">Agenda tu hora</div>
 				<div v-if="step == 1" class="body-1 font-weight-bold">El mejor plan para ti</div>
 				<div v-if="step == 2" class="body-1 font-weight-bold">
-					{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
+					<div class="pr-11">
+						{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
+					</div>
 				</div>
 				<div v-if="step == 3" class="body-1 font-weight-bold">Revise su plan</div>
 				<v-spacer></v-spacer>
@@ -65,9 +67,9 @@
 					<v-tab-item>
 						<v-card flat max-width="500" class="mx-auto">
 							<v-img
-								width="80"
-								height="80"
-								class="mx-auto mt-8"
+								width="50"
+								height="50"
+								class="mx-auto mt-3"
 								:src="`${$config.LANDING_URL}/logo_tiny.png`"
 								:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
 							></v-img>
@@ -99,9 +101,9 @@
 					<v-tab-item>
 						<v-card flat max-width="500" class="mx-auto">
 							<v-img
-								width="80"
-								height="80"
-								class="mx-auto mt-8"
+								width="50"
+								height="50"
+								class="mx-auto mt-3"
 								:src="`${$config.LANDING_URL}/logo_tiny.png`"
 								:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
 							>
@@ -116,16 +118,9 @@
 								<v-btn outlined block rounded color="primary" @click="tab = 0">
 									Entrar
 								</v-btn>
-								<div class="text-center mt-2">
-									<v-btn class="pa-0" text color="primary" nuxt to="/politicas"
-										>Aviso de privacidad</v-btn
-									>
-									<span class="primary--text mx-1">y</span>
-									<v-btn class="pa-0" text color="primary" nuxt to="/condiciones">
-										Términos y Condiciones</v-btn
-									>
-								</div>
-								<div class="text-center font-weight-bold caption secondary--text">
+								<div
+									class="text-center font-weight-bold caption secondary--text pt-2"
+								>
 									2021 Hablaqui
 								</div>
 							</v-card-text>
