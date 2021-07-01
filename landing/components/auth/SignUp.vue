@@ -164,21 +164,34 @@ export default {
 				return (this.dialog = true);
 			}
 			if (!this.$v.$invalid && this.accept) {
-				this.loading = true;
-				await this.register(this.form);
-				await this.$auth.loginWith('local', {
-					data: { email: this.form.email, password: this.form.password },
-				});
-				this.loading = false;
-				if (this.$auth.$state.loggedIn)
-					if (this.$route.query.from === 'psy') this.$router.push({ name: 'evaluacion' });
-					else if (this.$route.name !== 'psicologos' && this.$route.name !== 'psicologo')
-						this.$router.push({ name: 'dashboard-chat' });
-					else if (this.isDialog) this.setResumeView(true);
+				try {
+					this.loading = true;
+					await this.register(this.form);
+					await this.$auth.loginWith('local', {
+						data: { email: this.form.email, password: this.form.password },
+					});
+
+					if (this.$auth.$state.loggedIn)
+						if (this.$route.query.from === 'psy')
+							this.$router.push({ name: 'evaluacion' });
+						else if (
+							this.$route.name !== 'psicologos' &&
+							this.$route.name !== 'psicologo'
+						)
+							this.$router.push({ name: 'dashboard-chat' });
+						else if (this.isDialog) this.setResumeView(true);
+				} catch (error) {
+					this.snackBar({ content: error.message, color: 'error' });
+				} finally {
+					this.loading = false;
+				}
 			}
 		},
 		...mapActions({ register: 'User/register' }),
-		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
+		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
+			snackBar: 'Snackbar/showMessage',
+		}),
 	},
 	validations: {
 		form: {
