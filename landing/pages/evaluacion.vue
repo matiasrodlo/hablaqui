@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
 			<appbar />
@@ -16,7 +16,7 @@
 					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
 					preguntas. ¡Queremos conocerte!
 				</div>
-				<div style="background-color: #f0f8ff">
+				<div>
 					<v-container class="centerCard">
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
@@ -657,7 +657,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="dialogPrecharge">
+		<div v-if="dialogPrecharge" style="height: 100vh">
 			<v-card flat color="transparent">
 				<v-card-text>
 					<Precharge :avatar="psychologists.map(el => el.avatar)" />

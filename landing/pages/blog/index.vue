@@ -426,13 +426,14 @@
 									color="white"
 									:outlined="!hover"
 									rounded
-									>Ver todos</v-btn
 								>
+									Ver todos
+								</v-btn>
 							</v-hover>
 						</v-col>
 					</v-row>
 					<v-row v-else>
-						<v-col v-for="n in 4" :key="n" cols="3">
+						<v-col v-for="n in 4" :key="n" cols="12" md="3">
 							<v-skeleton-loader light class="mx-auto" type="image, image">
 							</v-skeleton-loader>
 						</v-col>

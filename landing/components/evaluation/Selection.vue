@@ -2,7 +2,9 @@
 	<v-container>
 		<v-row align="center" justify="center">
 			<v-col cols="12">
-				<div class="text-h4 font-weight-bold text-center">Conoce a los especialistas</div>
+				<div class="text-h5 text-md-h4 font-weight-bold text-center">
+					Conoce a los especialistas
+				</div>
 				<div class="text-center">
 					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
 				</div>
