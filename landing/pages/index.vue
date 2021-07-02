@@ -40,12 +40,21 @@
 						<h3 class="body-1 mt-3">Convenios con Isapres y Fonasa.</h3>
 					</v-col>
 					<v-col class="hidden-sm-and-down" tag="section" cols="12" md="6">
-						<img
+						<v-img
 							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
 							contain
+							:lazy-src="`${$config.LANDING_URL}/phone.webp`"
 							:src="`${$config.LANDING_URL}/phone.webp`"
 							alt="habla aqui videollamada"
-						/>
+						>
+							<template #placeholder>
+								<v-row class="fill-height ma-0" align="center" justify="center">
+									<v-progress-circular
+										indeterminate
+										color="grey lighten-5"
+									></v-progress-circular>
+								</v-row> </template
+						></v-img>
 					</v-col>
 				</v-row>
 			</v-container>

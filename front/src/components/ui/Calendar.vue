@@ -47,11 +47,11 @@
 			<v-btn
 				:disabled="!selected"
 				rounded
-				color="primary white--text"
+				color="primary"
 				class="mt-5"
 				@click="setDate(selected)"
 			>
-				{{ titleButton }}
+				<span style="color: white">{{ titleButton }}</span>
 			</v-btn>
 		</div>
 	</div>
