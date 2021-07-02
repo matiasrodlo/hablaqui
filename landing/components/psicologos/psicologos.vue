@@ -477,7 +477,7 @@
 								>
 									<v-card-text>
 										<v-row align="center" justify="center">
-											<v-col cols="3" class="text-center">
+											<v-col cols="12" sm="3" class="text-center">
 												<v-img
 													height="140"
 													width="140"
@@ -499,7 +499,11 @@
 													</template>
 												</v-img>
 											</v-col>
-											<v-col cols="9">
+											<v-col
+												cols="12"
+												sm="9"
+												class="text-center text-sm-left"
+											>
 												<v-row justify="space-between">
 													<v-col
 														class="headline font-weight-bold white--text"
@@ -534,7 +538,6 @@
 						<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
 							<v-hover v-slot="{ hover }">
 								<v-card
-									height="300"
 									:style="
 										hover
 											? 'transform: scale(1.01);'
@@ -543,13 +546,9 @@
 									:class="hover ? 'elevation-3' : 'elevation-1'"
 									style="border-radius: 15px; transition: transform 0.6s"
 								>
-									<v-card-text class="pa-2">
-										<v-row
-											align="center"
-											justify="center"
-											style="height: 270px"
-										>
-											<v-col cols="3" class="text-center">
+									<v-card-text>
+										<v-row align="center" justify="center">
+											<v-col cols="12" sm="3" class="text-center">
 												<v-avatar
 													:size="
 														$vuetify.breakpoint.lgAndUp ? '200' : '140'
@@ -604,9 +603,9 @@
 													Más información
 												</nuxt-link>
 											</v-col>
-											<v-col cols="9">
+											<v-col cols="12" sm="9">
 												<v-row justify="space-between">
-													<v-col cols="6">
+													<v-col>
 														<nuxt-link
 															style="text-decoration: none"
 															:to="{
@@ -614,7 +613,7 @@
 															}"
 														>
 															<span
-																class="headline font-weight-bold text--secondary"
+																class="text-h6 text-lg-h5 font-weight-bold text--secondary"
 															>
 																{{ item.name }}
 																{{ item.lastName && item.lastName }}
