@@ -521,7 +521,7 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
-						width="200px"
+						width="186px"
 						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
@@ -536,7 +536,6 @@
 					<img
 						style="cursor: pointer"
 						height="53px"
-						width="200px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>

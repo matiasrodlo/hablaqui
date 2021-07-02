@@ -244,7 +244,7 @@
 									</div>
 								</div>
 							</v-list-item-title>
-							<v-list-item-action>
+							<!-- <v-list-item-action>
 								<v-btn icon>
 									<v-img
 										contain
@@ -261,7 +261,7 @@
 										:src="`${$config.LANDING_URL}/camara.png`"
 									></v-img>
 								</v-btn>
-							</v-list-item-action>
+							</v-list-item-action> -->
 							<v-list-item-action>
 								<v-btn icon class="ml-1">
 									<v-img
@@ -398,21 +398,21 @@
 								:loader-height="3"
 								:loading="loadingMessage"
 							>
-								<template #prepend-inner>
+								<!-- <template #prepend-inner>
 									<v-img
 										:src="`${$config.LANDING_URL}/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
-								</template>
+								</template> -->
 								<template #append>
-									<v-btn depressed icon>
+									<!-- <v-btn depressed icon>
 										<v-img
 											:src="`${$config.LANDING_URL}/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
-									</v-btn>
+									</v-btn> -->
 									<v-btn
 										class="ml-2 mr-2"
 										depressed
@@ -567,6 +567,7 @@ export default {
 			await this.sendMessage(payload);
 			this.message = '';
 			this.loadingMessage = false;
+			this.$nextTick(() => this.$refs.msj.focus());
 			this.scrollToElement();
 		},
 		async pusherCallback(data) {

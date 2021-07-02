@@ -49,7 +49,7 @@
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex">
 								<nuxt-link
-									:to="{ name: 'dashboard-perfil' }"
+									:to="`/psicologos/${selected._id}`"
 									style="text-decoration: none"
 								>
 									<span class="secondary--text">
@@ -60,7 +60,7 @@
 									</span>
 								</nuxt-link>
 							</v-list-item-title>
-							<v-list-item-action>
+							<!-- <v-list-item-action>
 								<v-btn icon>
 									<v-img
 										contain
@@ -77,7 +77,7 @@
 										:src="`${$config.LANDING_URL}/camara.png`"
 									></v-img>
 								</v-btn>
-							</v-list-item-action>
+							</v-list-item-action> -->
 							<v-list-item-action>
 								<v-btn icon class="ml-1">
 									<v-img
@@ -141,7 +141,7 @@
 					<v-card-text>
 						<v-form @submit.prevent="onSubmit">
 							<v-text-field
-								ref="textField"
+								ref="msj"
 								v-model="message"
 								outlined
 								dense
@@ -443,6 +443,7 @@ export default {
 			await this.sendMessage(payload);
 			this.message = '';
 			this.loadingMessage = false;
+			this.$nextTick(() => this.$refs.msj.focus());
 			this.scrollToElement();
 		},
 		hasMessage(psy) {

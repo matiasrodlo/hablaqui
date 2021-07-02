@@ -8,6 +8,7 @@
 		<template #activator="{ on, attrs }">
 			<v-btn
 				v-if="mode == '1'"
+				dark
 				v-bind="attrs"
 				class="body-2 px-6"
 				color="primary"
@@ -17,11 +18,20 @@
 			>
 				Agenda cita online
 			</v-btn>
-			<v-btn v-if="mode == '2'" v-bind="attrs" color="primary" rounded depressed v-on="on">
+			<v-btn
+				v-if="mode == '2'"
+				dark
+				v-bind="attrs"
+				color="primary"
+				rounded
+				depressed
+				v-on="on"
+			>
 				Agenda cita online
 			</v-btn>
 			<v-btn
 				v-if="mode == '3'"
+				dark
 				v-bind="attrs"
 				color="primary"
 				rounded

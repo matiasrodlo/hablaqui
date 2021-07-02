@@ -431,9 +431,13 @@
 											</span>
 										</div>
 										<div class="body-2 mt-4">
-											<template v-for="(el, e) in item.specialties">
-												<span v-if="e < 6" :key="e"> {{ el }}; </span>
-											</template>
+											{{
+												item.professionalDescription.length > 110
+													? item.professionalDescription
+															.slice(0, 110)
+															.concat('...')
+													: item.professionalDescription
+											}}
 										</div>
 									</v-card-text>
 									<v-card-text>
@@ -644,7 +648,13 @@
 													</template>
 												</v-chip-group>
 												<div class="body-2 mt:-2 mr-4">
-													{{ item.professionalDescription }}
+													{{
+														item.professionalDescription.length > 345
+															? item.professionalDescription
+																	.slice(0, 345)
+																	.concat('...')
+															: item.professionalDescription
+													}}
 												</div>
 											</v-col>
 										</v-row>

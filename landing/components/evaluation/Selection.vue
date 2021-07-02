@@ -8,11 +8,6 @@
 				<div class="text-center">
 					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
 				</div>
-				<div class="text-center my-2">
-					<v-btn text color="primary" rounded @click="resetMatch">
-						Realizar prueba de nuevo
-					</v-btn>
-				</div>
 			</v-col>
 			<v-col v-for="(item, r) in match" :key="r" cols="12" class="d-flex justify-center">
 				<v-card color="white" style="border-radius: 15px">
@@ -25,7 +20,7 @@
 								>
 									<v-img :src="item.avatar"></v-img>
 								</v-list-item-avatar>
-								<div class="caption text--secondary">code {{ item.code }}</div>
+								<div class="caption text--secondary">codigo {{ item.code }}</div>
 								<v-btn text color="primary" :to="`/psicologos/${item._id}`">
 									Mas información
 								</v-btn>
@@ -65,9 +60,15 @@
 					</v-card-text>
 				</v-card>
 			</v-col>
-			<v-col cols="12" class="font-weight-bold mt-4 mb-10 text-center">
+			<v-col cols="12" class="font-weight-regular mt-4 mb-10 text-center">
 				¿No estás satisfecho con estas opciones?
-				<v-btn text class="primary--text" to="/psicologos/todos"> Buscar más </v-btn>
+				<v-btn text class="primary--text px-0 mx-1" @click="resetMatch">
+					Buscar nuevamente.
+				</v-btn>
+				<div>
+					No puede volver a elegir a estos terapeutas si solicita nuevos partidos. ¿No
+					estás satisfecho con estas opciones?
+				</div>
 			</v-col>
 		</v-row>
 	</v-container>
