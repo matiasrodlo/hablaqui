@@ -173,14 +173,16 @@ export default {
 						data: { email: this.form.email, password: this.form.password },
 					});
 					if (this.$auth.$state.loggedIn)
-						if (this.$route.query.from === 'psy')
-							this.$router.push({ name: 'evaluacion' });
-						else if (
-							this.$route.name !== 'psicologos' &&
-							this.$route.name !== 'psicologos-id'
-						)
-							this.$router.push({ name: 'dashboard-chat' });
-						else if (this.isDialog) this.setResumeView(true);
+						if (!this.isDialog) {
+							if (this.$route.query.from === 'psy')
+								this.$router.push({ name: 'evaluacion' });
+							else if (
+								this.$route.name !== 'psicologos' &&
+								this.$route.name !== 'psicologos-id'
+							)
+								this.$router.push({ name: 'dashboard-chat' });
+							else this.$router.push({ name: 'psicologos' });
+						} else this.setResumeView(true);
 				} catch (error) {
 					this.snackBar({ content: error.message, color: 'error' });
 				} finally {

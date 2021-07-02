@@ -5,10 +5,10 @@
 			<v-container>
 				<v-row justify="center" no-gutters>
 					<v-col cols="12" class="white--text text-center py-10">
-						<span class="font-weight-bold my-5" style="font-size: 30px">
+						<span class="font-weight-bold my-5 text-h6 text-md-h6">
 							Bienvenido a nuestro portal de ayuda
 						</span>
-						<div class="font-weight-bold" style="font-size: 55px">
+						<div class="font-weight-bold text-h5 text-md-h2">
 							Estamos aquí para ayudar
 						</div>
 					</v-col>

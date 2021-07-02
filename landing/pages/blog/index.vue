@@ -354,10 +354,9 @@
 				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
 					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" tag="section" cols="12" md="6" lg="3">
+							<v-col v-if="n < 4" :key="n" tag="section" cols="12" md="6" lg="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
-										v-if="n < 4"
 										style="transition: transform 0.5s"
 										:style="
 											hover

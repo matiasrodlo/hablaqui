@@ -46,21 +46,25 @@
 					<v-icon color="white" x-large>mdi-chevron-left</v-icon>
 				</v-btn>
 				<v-spacer></v-spacer>
-				<div v-if="step == 0" class="body-1 font-weight-bold">Agenda tu hora</div>
-				<div v-if="step == 1" class="body-1 font-weight-bold">El mejor plan para ti</div>
+				<!-- plan -->
+				<div v-if="step == 0" class="body-1 font-weight-bold">El mejor plan para ti</div>
+				<!-- calendario -->
+				<div v-if="step == 1" class="body-1 font-weight-bold">Agenda tu hora</div>
+				<!-- auth -->
 				<div v-if="step == 2" class="body-1 font-weight-bold">
 					<div class="pr-11">
 						{{ tab == 0 ? 'Iniciar sesión' : 'Registro' }}
 					</div>
 				</div>
+				<!-- resumen -->
 				<div v-if="step == 3" class="body-1 font-weight-bold">Revise su plan</div>
 				<v-spacer></v-spacer>
 			</v-card-title>
-			<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
-				<calendar :set-date="date => setDate(date)" title-button="Agendar cita Online" />
-			</v-card-text>
-			<v-card-text v-if="step == 1">
+			<v-card-text v-if="step == 0">
 				<select-plan :set-plan="plan => setPlan(plan)" />
+			</v-card-text>
+			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
+				<calendar :set-date="date => setDate(date)" title-button="Agendar cita Online" />
 			</v-card-text>
 			<v-card-text v-if="step == 2">
 				<v-tabs-items v-model="tab">
@@ -173,7 +177,7 @@ export default {
 	},
 	computed: {
 		maxWidth() {
-			if (this.step === 0) return '700';
+			if (this.step === 1) return '700';
 			if (this.step === 2) return '500';
 			else if (this.step === 3) return '800';
 			return '900';
@@ -197,12 +201,12 @@ export default {
 		},
 		setDate(item) {
 			this.newEvent = item;
-			this.step = 1;
+			if (this.$auth.$state.loggedIn) this.step = 3;
+			else this.step = 2;
 		},
 		setPlan(plan) {
 			this.plan = plan;
-			if (this.$auth.$state.loggedIn) this.step = 3;
-			else this.step = 2;
+			this.step = 1;
 		},
 	},
 };
