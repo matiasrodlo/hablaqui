@@ -388,7 +388,7 @@
 					<v-card-text v-else style="flex: 0">
 						<v-form @submit.prevent="onSubmit">
 							<v-text-field
-								ref="textField"
+								ref="messagechat"
 								v-model="message"
 								outlined
 								dense
@@ -567,7 +567,7 @@ export default {
 			await this.sendMessage(payload);
 			this.message = '';
 			this.loadingMessage = false;
-			this.$nextTick(() => this.$refs.msj.focus());
+			this.$nextTick(() => this.$refs.messagechat.focus());
 			this.scrollToElement();
 		},
 		async pusherCallback(data) {

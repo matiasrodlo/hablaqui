@@ -47,7 +47,7 @@
 									/>
 								</nuxt-link>
 							</v-list-item-avatar>
-							<v-list-item-title class="title d-flex">
+							<v-list-item-title class="title d-flex ml-2">
 								<nuxt-link
 									:to="`/psicologos/${selected._id}`"
 									style="text-decoration: none"
@@ -151,21 +151,21 @@
 								:loader-height="3"
 								:loading="loadingMessage"
 							>
-								<template #prepend-inner>
+								<!-- <template #prepend-inner>
 									<v-img
 										:src="`${$config.LANDING_URL}/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
-								</template>
+								</template> -->
 								<template #append>
-									<v-btn depressed icon>
+									<!-- <v-btn depressed icon>
 										<v-img
 											:src="`${$config.LANDING_URL}/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
-									</v-btn>
+									</v-btn> -->
 									<v-btn class="ml-2 mr-2" depressed icon type="submit">
 										<v-img
 											:src="`${$config.LANDING_URL}/message.png`"
