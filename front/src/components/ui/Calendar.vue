@@ -47,8 +47,7 @@
 			<v-btn
 				:disabled="!selected"
 				rounded
-				dark
-				color="primary"
+				color="primary white--text"
 				class="mt-5"
 				@click="setDate(selected)"
 			>
