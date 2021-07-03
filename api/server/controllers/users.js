@@ -5,8 +5,8 @@ import { restResponse } from '../utils/responses/functions';
 const userController = {
 	async getUser(req, res) {
 		try {
-			const { id } = req.params;
-			const { data, code } = await userService.getProfile(id);
+			const { user } = req;
+			const { data, code } = await userService.getProfile(user._id);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res);
@@ -41,10 +41,11 @@ const userController = {
 	async updatePassword(req, res) {
 		try {
 			const { user } = req;
-			const { password } = req.body;
+			const { oldPassword, newPassword } = req.body;
 			const { data, code } = await userService.updatePassword(
 				user,
-				password
+				oldPassword,
+				newPassword
 			);
 			restResponse(data, code, res);
 		} catch (e) {

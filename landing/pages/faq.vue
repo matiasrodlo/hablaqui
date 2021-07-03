@@ -1,14 +1,14 @@
 <template>
-	<div>
+	<div style="background-color: #f0f8ff">
 		<div class="primary-color pb-16">
 			<Appbar />
 			<v-container>
 				<v-row justify="center" no-gutters>
 					<v-col cols="12" class="white--text text-center py-10">
-						<span class="font-weight-bold my-5" style="font-size: 30px">
+						<span class="font-weight-bold my-5 text-h6 text-md-h6">
 							Bienvenido a nuestro portal de ayuda
 						</span>
-						<div class="font-weight-bold" style="font-size: 55px">
+						<div class="font-weight-bold text-h5 text-md-h2">
 							Estamos aquí para ayudar
 						</div>
 					</v-col>
@@ -162,13 +162,17 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -209,6 +213,9 @@ export default {
 			return [];
 		},
 	},
+	created() {
+		this.setFloatingChat(false);
+	},
 	async mounted() {
 		this.loading = true;
 		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
@@ -216,6 +223,11 @@ export default {
 		this.selectedItem = response[0];
 		this.items = response;
 		this.loading = false;
+	},
+	methods: {
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

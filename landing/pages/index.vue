@@ -30,7 +30,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							to="/psicologos"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -137,7 +137,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+						to="/psicologos"
 					>
 						Quiero empezar
 					</v-btn>
@@ -176,7 +176,7 @@
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
-							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							to="/psicologos"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -254,7 +254,7 @@
 							color="white"
 							x-large
 							class="pa-4"
-							:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+							to="/psicologos"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -321,7 +321,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+						to="/psicologos"
 					>
 						Quiero empezar
 					</v-btn>
@@ -521,7 +521,7 @@
 					<img
 						style="cursor: pointer"
 						height="75px"
-						width="200px"
+						width="186px"
 						:src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
@@ -536,7 +536,6 @@
 					<img
 						style="cursor: pointer"
 						height="53px"
-						width="200px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
@@ -575,7 +574,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						:href="`${$config.FRONTEND_URL}/psicologos/todos`"
+						to="/psicologos"
 					>
 						Quiero empezar
 					</v-btn>

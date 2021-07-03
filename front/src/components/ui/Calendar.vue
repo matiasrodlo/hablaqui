@@ -51,7 +51,7 @@
 				class="mt-5"
 				@click="setDate(selected)"
 			>
-				{{ titleButton }}
+				<span style="color: white">{{ titleButton }}</span>
 			</v-btn>
 		</div>
 	</div>
