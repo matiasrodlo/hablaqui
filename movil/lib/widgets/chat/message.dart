@@ -26,7 +26,7 @@ class WidgetChatMessage extends StatelessWidget
 							children: [
 								Expanded(
 									child: Text(
-										this.message.createdAt.toString(),
+										this.message.date,
 										style: TextStyle(
 											color: Colors.black.withOpacity(0.38),
 											fontSize: fontSize

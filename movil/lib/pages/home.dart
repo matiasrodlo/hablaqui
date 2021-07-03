@@ -4,6 +4,8 @@ import '../classes/SB_Settings.dart';
 import '../colors.dart' as appColors;
 import '../widgets/button.dart';
 import '../widgets/chat/conversations.dart';
+import '../widgets/BottomMenu.dart';
+import '../helpers/WidgetHelper.dart';
 
 class Home extends StatefulWidget
 {
@@ -38,10 +40,18 @@ class _HomeState extends State<Home>
 	Widget build(BuildContext context)
 	{
 		return Scaffold(
-			appBar: AppBar(title: Text(this._title)),
-			endDrawer: Drawer(
+			appBar: AppBar(title: Text(this._title), elevation: 0,),
+			drawer: Drawer(
 				child: ListView(
 					children: [
+						DrawerHeader(
+							decoration: BoxDecoration(
+								color: Colors.white,
+							),
+							child: Center(
+								child: Image.asset('images/logo-text.png', fit: BoxFit.cover,),
+							)
+						),
 						ListTile(
 							title: Text('Cerrar Sesion'),
 							onTap: this._closeSession
@@ -50,8 +60,63 @@ class _HomeState extends State<Home>
 				)
 			),
 			body: Container(
-				padding: EdgeInsets.all(10),
-				child: this._loaded ? ChatConversations() : SizedBox(height: 0),
+				color: appColors.mainColors['blue'],
+				child: Container(
+					//padding: EdgeInsets.all(10),
+					decoration: BoxDecoration(
+						
+						color: Colors.white,
+						borderRadius: BorderRadius.only(
+							topRight: Radius.circular(20),
+							topLeft: Radius.circular(20),
+						)
+					),
+					child: Column(
+						children: [
+							Container(
+								padding: EdgeInsets.all(15),
+								child: TextFormField(
+									
+									decoration: WidgetHelper.getTextFieldDecoration('', appColors.mainColors['lightGray']).copyWith(
+										hintText: 'Buscar',
+										hintStyle: TextStyle(color: Color(0xffafafaf)),
+										prefixIcon: Icon(Icons.search, color: Color(0xffafafaf)),
+										focusedBorder: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(10),
+											borderSide: BorderSide(
+												style: BorderStyle.solid,
+												color: appColors.mainColors['lightGray'],
+												//width: 0,
+											)
+										),
+										enabledBorder: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(10),
+											borderSide: BorderSide(
+												style: BorderStyle.solid,
+												color: appColors.mainColors['lightGray'],
+											)
+										),
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(10),
+											borderSide: BorderSide(
+												style: BorderStyle.solid,
+												color: appColors.mainColors['lightGray'],
+											)
+										)
+									),
+								)
+							),
+							SizedBox(height: 10),
+							Expanded(
+								child: Container(
+									padding: EdgeInsets.all(10),
+									child: this._loaded ? ChatConversations() : SizedBox(height: 0),
+								)
+							),
+							BottomMenu(),
+						]
+					)
+				)
 			)
 		);
 	}
