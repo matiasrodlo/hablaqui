@@ -22,5 +22,9 @@ psychologistsRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
-
+psychologistsRouter.post(
+	'/psychologists/reschedule/:id',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.reschedule
+);
 export default psychologistsRouter;

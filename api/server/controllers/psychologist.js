@@ -45,6 +45,21 @@ const psychologistsController = {
 			errorCallback(e, res, 'error creando una cita');
 		}
 	},
+	async reschedule(req, res) {
+		try {
+			const { id } = req.params;
+			const { user } = req;
+			const { newDate } = req.body;
+			const { data, code } = await psychologistsService.reschedule(
+				user,
+				id,
+				newDate
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando la cita');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
