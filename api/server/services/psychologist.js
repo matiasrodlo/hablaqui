@@ -93,6 +93,10 @@ const register = async (body, avatar) => {
 		return conflictResponse('Este correo ya esta registrado');
 	}
 
+	if (await Psychologist.exists({ username: body.username })) {
+		return conflictResponse('Este nombre de usuario ya esta ocupado');
+	}
+
 	let splittedExperience = body.experience.split(';');
 	splittedExperience = splittedExperience.map(i => i.trim());
 
@@ -106,6 +110,7 @@ const register = async (body, avatar) => {
 		personalDescription: body.personalDescription,
 		professionalDescription: body.professionalDescription,
 		email: body.email,
+		username: body.username,
 		experience: splittedExperience,
 		formation: splittedFormation,
 		specialties: JSON.parse(body.specialties),
