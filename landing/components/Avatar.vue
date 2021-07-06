@@ -1,9 +1,9 @@
 <template>
-	<v-avatar X-small :color="randomColors" :size="size">
-		<v-img class="pa-1" v-if="Boolean(url)" :src="url" alt="avatar" contain />
+	<v-avatar x-small :color="randomColors" :size="size">
+		<v-img v-if="Boolean(url)" class="pa-1" :src="url" alt="avatar" contain />
 		<span
 			v-else
-			style="font-size: 8px;"
+			style="font-size: 8px"
 			class="white--text text-uppercase"
 			:class="headline ? 'headline' : 'subtitle-2'"
 		>
@@ -11,7 +11,7 @@
 		</span>
 		<v-progress-circular
 			v-if="loading"
-			style="position: absolute;"
+			style="position: absolute"
 			indeterminate
 			color="primary"
 		></v-progress-circular>
