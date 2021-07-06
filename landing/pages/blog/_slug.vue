@@ -1,5 +1,5 @@
 <template>
-	<div style="background-color: #ebf2f3">
+	<div style="background-color: #f0f8ff">
 		<div>
 			<Appbar />
 		</div>
@@ -304,16 +304,19 @@
 		<v-container>
 			<Footer />
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -339,10 +342,12 @@ export default {
 			],
 		};
 	},
+	created() {
+		this.setFloatingChat(false);
+	},
 	async mounted() {
-		let res = await fetch(`${this.$config.API_URL}/blog/all`);
-		res = await res.json();
-		this.blogs = res.articles;
+		const { articles } = await this.$axios.$get('/blog/all');
+		this.blogs = articles;
 		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
 		this.title = this.article.title;
 		if (this.article.rating.average)
@@ -386,19 +391,14 @@ export default {
 			return hostname;
 		},
 		async setRating() {
-			let response = await fetch(
-				`${this.$config.API_URL}/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
+			const { data } = await this.$axios(
+				`/blog/${this.$route.params.slug}/update-rating/${this.rating}`,
 				{
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
 					method: 'post',
 				}
 			);
-			response = await response.json();
 			this.isYellow = true;
-			this.rating = parseFloat(response.rating.average.toFixed(1));
+			this.rating = parseFloat(data.rating.average.toFixed(1));
 		},
 		dates(date) {
 			return moment(date).format('DD MMMM YY');
@@ -407,6 +407,9 @@ export default {
 			const regex = /(<([^>]+)>)/gi;
 			return text.replace(regex, '').slice(0, long).concat('...');
 		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

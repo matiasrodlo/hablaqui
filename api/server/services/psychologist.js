@@ -3,6 +3,7 @@ import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import moment from 'moment';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -60,11 +61,20 @@ const createSession = async body => {
 	const { payload } = body;
 	const sessions = {
 		date: payload.date,
-		start: payload.start,
-		end: payload.end,
 		user: payload.user._id,
 		statePayments: 'pending',
 	};
+	// Check if available
+	const foundPsychologist = await Psychologist.findById(
+		payload.psychologist._id
+	);
+	let dateConflict = false;
+	foundPsychologist.sessions.forEach(session => {
+		if (moment(session.date).isSame(payload.date)) {
+			dateConflict = true;
+		}
+	});
+	if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
 	const savedSession = await Psychologist.findOneAndUpdate(
 		{ _id: payload.psychologist._id },
 		{
@@ -121,11 +131,34 @@ const register = async (body, avatar) => {
 	return okResponse('psicologo creado');
 };
 
+const reschedule = async (user, id, newDate) => {
+	let foundPsychologist = await Psychologist.findById(user.psychologist);
+	let e = false;
+	foundPsychologist.sessions.forEach(session => {
+		if (session._id == id) {
+			if (
+				foundPsychologist.sessions.filter(item => item.date == newDate)
+					.length == 0
+			) {
+				session.date = newDate;
+			} else {
+				e = true;
+			}
+		}
+	});
+	if (!e) {
+		await foundPsychologist.save();
+		return okResponse('Hora actualizada');
+	}
+	return conflictResponse('Esa hora esta ocupada');
+};
+
 const psychologistsService = {
 	getAll,
 	match,
 	register,
 	createSession,
+	reschedule,
 };
 
 export default Object.freeze(psychologistsService);

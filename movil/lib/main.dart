@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'colors.dart' as appColors;
 import 'routes.dart' as routes;
 
 void main() {
-  runApp(MyApp());
+	Intl.defaultLocale = 'es_ES';
+	initializeDateFormatting();
+	runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget 

@@ -1,5 +1,5 @@
 <template>
-	<div style="background-color: #ebf2f3">
+	<div style="background-color: #f0f8ff">
 		<nav>
 			<Appbar />
 		</nav>
@@ -354,10 +354,9 @@
 				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
 					<v-row v-if="forCompanies.length" tag="section">
 						<template v-for="(item, n) in forCompanies">
-							<v-col :key="n" tag="section" cols="12" md="6" lg="3">
+							<v-col v-if="n < 4" :key="n" tag="section" cols="12" md="6" lg="3">
 								<v-hover v-slot="{ hover }">
 									<v-card
-										v-if="n < 4"
 										style="transition: transform 0.5s"
 										:style="
 											hover
@@ -426,13 +425,14 @@
 									color="white"
 									:outlined="!hover"
 									rounded
-									>Ver todos</v-btn
 								>
+									Ver todos
+								</v-btn>
 							</v-hover>
 						</v-col>
 					</v-row>
 					<v-row v-else>
-						<v-col v-for="n in 4" :key="n" cols="3">
+						<v-col v-for="n in 4" :key="n" cols="12" md="3">
 							<v-skeleton-loader light class="mx-auto" type="image, image">
 							</v-skeleton-loader>
 						</v-col>
@@ -553,15 +553,18 @@
 		<v-container tag="footer">
 			<Footer />
 		</v-container>
+		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</div>
 </template>
 <script>
 import moment from 'moment';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -620,11 +623,11 @@ export default {
 	},
 	created() {
 		moment.locale('es');
+		this.setFloatingChat(false);
 	},
 	async mounted() {
-		let response = await fetch(`${this.$config.API_URL}/blog/all`);
-		response = await response.json();
-		this.articles = response.articles;
+		const { articles } = await this.$axios.$get('/blog/all');
+		this.articles = articles;
 	},
 	methods: {
 		strippedContent(text, long) {
@@ -642,6 +645,9 @@ export default {
 				this.combobox.push(item);
 			}
 		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

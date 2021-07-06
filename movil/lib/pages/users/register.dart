@@ -4,6 +4,7 @@ import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
 import '../../helpers/WidgetHelper.dart';
 import '../../services/service-user.dart';
+import '../../classes/Exceptions/RequestException.dart';
 
 class Register extends StatefulWidget
 {
@@ -38,6 +39,7 @@ class _RegisterState extends State<Register>
 				)
 			),
 			body: Container(
+				color: Colors.white,
 				padding: EdgeInsets.all(10),
 				child: ListView(
 					children: [
@@ -74,7 +76,7 @@ class _RegisterState extends State<Register>
 					TextFormField(
 						controller: this._ctrlName,
 						keyboardType: TextInputType.text,
-						decoration: WidgetHelper.getTextFieldDecoration('Nombre'),
+						decoration: WidgetHelper.getTextFieldDecoration('Nombre y Apellido'),
 						validator:(v)
 						{
 							if( v.isEmpty )
@@ -156,6 +158,7 @@ class _RegisterState extends State<Register>
 							)
 						]
 					),
+					/*
 					TextButton(
 						child: Text('¿Olvido la contraseña?', textAlign: TextAlign.left),
 						style: ButtonStyle(
@@ -163,6 +166,7 @@ class _RegisterState extends State<Register>
 						),
 						onPressed: (){}
 					),
+					*/
 					SizedBox(height: 15),
 					WidgetButton(
 						text: 'Crear mi cuenta',
@@ -172,7 +176,7 @@ class _RegisterState extends State<Register>
 					SizedBox(height: 25),
 					
 					SizedBox(height: 10),
-					Text('2021 Hablaqui', textAlign: TextAlign.center),
+					Text('2021 Hablaquí', textAlign: TextAlign.center),
 				]
 			)
 		);
@@ -192,10 +196,17 @@ class _RegisterState extends State<Register>
 			});
 			this._showSuccess();
 		}
+		on RequestException catch(e)
+		{
+			var data = e.getErrorMap();
+			ScaffoldMessenger.of(this.context).showSnackBar(
+				SnackBar(content: Text(data['error'] ?? 'Ocurrio un error en el proceso de registro'))
+			);
+		}
 		catch(e)
 		{
 			print(e);
-			ScaffoldMessenger.of(this.context).showSnackBar(SnackBar(content: Text('Ocurrio un error en el proces de registro')));
+			ScaffoldMessenger.of(this.context).showSnackBar(SnackBar(content: Text('Ocurrio un error en el proceso de registro')));
 		}
 	}
 	void _showSuccess()

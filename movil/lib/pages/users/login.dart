@@ -37,10 +37,13 @@ class _LoginState extends State<Login>
 				)
 			),
 			body: Container(
+				color: Colors.white,
 				padding: EdgeInsets.all(10),
-				child: ListView(
+				child: Center(
+					child: ListView(
+					shrinkWrap: true,
 					children: [
-						SizedBox(height: 15),
+						//SizedBox(height: 15),
 						Center(
 							child: Image.asset('images/logo-text.png', fit: BoxFit.cover, height: 40),
 						),
@@ -58,7 +61,9 @@ class _LoginState extends State<Login>
 						),
 						SizedBox(height: 25),
 						this._getForm(),
+										
 					]
+				)
 				)
 			)
 		);

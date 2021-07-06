@@ -1,0 +1,38 @@
+<template>
+	<v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
+		<h1 class="primary--text">{{ title }}</h1>
+		<v-spacer></v-spacer>
+		<div class="mx-5 body-1 primary--text">
+			<router-link
+				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
+				style="text-decoration: none"
+				:to="{ name: 'psicologos' }"
+			>
+				Psicólogos
+			</router-link>
+		</div>
+		<div class="mx-5 body-1 primary--text">
+			<a style="text-decoration: none" to="/faq"> Centro de ayuda </a>
+		</div>
+		<v-btn class="ml-2" small fab color="white" @click="logout">
+			<v-icon color="primary"> mdi-logout </v-icon>
+		</v-btn>
+	</v-app-bar>
+</template>
+
+<script>
+export default {
+	props: {
+		title: {
+			type: String,
+			default: '',
+		},
+	},
+	methods: {
+		logout() {
+			this.$auth.logout();
+			this.$router.push('/auth');
+		},
+	},
+};
+</script>

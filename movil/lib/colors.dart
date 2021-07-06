@@ -7,6 +7,7 @@ final mainColors = {
 	'orange': 		Color(0xffe4891c),
 	'darkRedT': 	Color(0x77781510),
 	'gray': 		Color(0xff808080),
+	'lightGray':	Color(0xfff3f3f3),
 };
 var primaryColor = MaterialColor(0xff0079ff,
 	<int, Color>{
