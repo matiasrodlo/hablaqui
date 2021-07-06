@@ -158,12 +158,19 @@ const reschedule = async (user, id, newDate) => {
 	return conflictResponse('Esa hora esta ocupada');
 };
 
+const getByUsername = async username => {
+	return okResponse('Psicologo encontrado', {
+		psychologist: await Psychologist.findOne({ username }),
+	});
+};
+
 const psychologistsService = {
 	getAll,
 	match,
 	register,
 	createSession,
 	reschedule,
+	getByUsername,
 };
 
 export default Object.freeze(psychologistsService);
