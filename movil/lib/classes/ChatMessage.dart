@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 class ChatMessage
 {
 	String		id;
@@ -7,7 +10,11 @@ class ChatMessage
 	DateTime	updatedAt;
 	DateTime	createdAt;
 	
-	
+	String get date
+	{
+		var format = DateFormat('MMM d, K:m aaa');
+		return format.format(this.createdAt);
+	}
 	ChatMessage();
 	
 	ChatMessage.fromMap(Map data)

@@ -51,7 +51,7 @@ class _WelcomeState extends State<Welcome>
 							children: [
 								SizedBox(height: 15),
 								Center(
-									child: Image.asset('images/logo-icon.png', height: 60),
+									child: Image.asset('images/logo-text-white.png', height: 60),
 								),
 								SizedBox(height: 15),
 								CarouselSlider(

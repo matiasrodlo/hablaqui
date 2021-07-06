@@ -32,7 +32,7 @@ class _ChatPageState extends State<ChatPage>
 	TextEditingController	eventController 	= TextEditingController(text: "update");
 	TextEditingController	triggerController 	= TextEditingController(text: "client-trigger");
   
-	FocusNode				_focusNode		= FocusNode();
+	FocusNode				_focusNode;
 	User					_user;
 	
 	List<ChatMessage>		_messages = [];
@@ -40,11 +40,27 @@ class _ChatPageState extends State<ChatPage>
 	
 	Channel channel;
 	
+	double textHeight		= 50;
 	@override
 	void initState()
 	{
 		this.loadData();
 		super.initState();
+		this._focusNode		= FocusNode(
+			onKey: (node, event)
+			{
+				if (event.isKeyPressed(LogicalKeyboardKey.enter)) 
+				{
+					print('ENTER');
+					this.setState(()
+					{
+						this.textHeight = 100;
+					});
+				}
+				return false;
+			}
+		);
+		
 	}
 	@override
 	void dispose()
@@ -144,15 +160,23 @@ class _ChatPageState extends State<ChatPage>
 					child: Column(
 						children: [
 							Expanded(
+								flex: 11,
 								child: this._withListView(),
 							),
+							SizedBox(height: 1),
 							Container(
-								height: 55,
+								height: this.textHeight,
 								padding: EdgeInsets.only(top: 10),
 								child: TextFormField(
+									keyboardType: TextInputType.multiline,
+									//minLines: 1,
+									maxLines: 5,
+									//expands: true,
 									focusNode: this._focusNode,
 									controller: this._ctrlMessage,
 									decoration: WidgetHelper.getTextFieldDecoration('Mensaje a ${this.widget.psycho.name}').copyWith(
+										//isDense: true,
+										contentPadding: EdgeInsets.all(10),
 										suffixIcon: Container(
 											width: 100,
 											child: Row(
@@ -173,6 +197,7 @@ class _ChatPageState extends State<ChatPage>
 											)
 										)
 									),
+									
 								),
 							)
 						]
@@ -226,11 +251,12 @@ class _ChatPageState extends State<ChatPage>
 		if( this._ctrlMessage.text.trim().isEmpty )
 			return;
 			
-		var message = await ServiceHablaqui().sendChatMessage(this.widget.psycho.id, this._user.id, this._ctrlMessage.text.trim());
+		ServiceHablaqui().sendChatMessage(this.widget.psycho.id, this._user.id, this._ctrlMessage.text.trim());
 		//this._messages.add( message );
 		this._ctrlMessage.text = '';
 		this._focusNode.unfocus();
-		//this.setState((){});
+		this.textHeight = 50;
+		this.setState((){});
 	}
 	void _onPusherEvent(event)
 	{

@@ -18,17 +18,73 @@ class _ChatConversationsState extends State<ChatConversations>
 {
 	int		_requests = 0;
 	List<Chat>		_items = [];
+	List<Chat>		_myItems = [];
 	
 	@override
 	void initState()
 	{
 		this._items = [];
+		this._loadData();
 		super.initState();
+	}
+	void _loadData() async
+	{
+		this._items = await ServiceHablaqui().getChats();
+		this.setState((){});
+		
 	}
 	@override
 	Widget build(BuildContext context)
 	{
 		return Container(
+			child: ListView(
+				children: [
+					Column(
+						crossAxisAlignment: CrossAxisAlignment.stretch,
+						children: [
+							Text('Mis psicólogos', style: TextStyle(color: appColors.mainColors['blue']),),
+							SizedBox(height: 10),
+							Divider(color: appColors.mainColors['blue']),
+							SizedBox(height: 10),
+							for(var myItem in this._myItems)
+								Column(
+									children: [
+										this._buildItem(myItem),
+										SizedBox(height: 0),
+									]
+								),
+							Text('General'),
+							Divider(),
+							SizedBox(height: 10),
+							for(var item in this._items)
+								Column(
+									children: [
+										this._buildItem(item),
+										SizedBox(height: 0),
+									]
+								),
+							/*
+							Container(
+								child: Column(
+									children: [
+										
+										
+										this._items.length <= 0 ? this._noData() : ListView.builder(
+											itemCount: this._items.length,
+											itemBuilder: (_, index)
+											{
+												return ;
+											}
+										)
+									]
+								)
+							)
+							*/
+						]
+					)
+				]
+			),
+			/*
 			child: StreamBuilder(
 				stream: this._getConversations(),
 				builder: (ctx, snapshot)
@@ -48,6 +104,7 @@ class _ChatConversationsState extends State<ChatConversations>
 					);
 				}
 			)
+			*/
 		);
 	}
 	Widget _noData()
