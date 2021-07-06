@@ -120,7 +120,12 @@
 							</v-list-item>
 							<v-list-item @click="logout">
 								<v-list-item-avatar size="40" color="primary">
-									<v-icon color="white">mdi-logout</v-icon>
+									<v-img
+										contain
+										height="30"
+										:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+										alt="cerrar sesión"
+									/>
 								</v-list-item-avatar>
 								<v-list-item-content>
 									<v-list-item-title

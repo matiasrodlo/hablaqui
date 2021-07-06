@@ -88,6 +88,3 @@
 		</template>
 	</div>
 </template>
-
-<script>
-

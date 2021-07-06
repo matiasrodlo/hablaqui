@@ -1,5 +1,5 @@
 <template>
-	<div style="background-color: #f0f8ff">
+	<div>
 		<div class="primary-color pb-16">
 			<Appbar />
 			<v-container>

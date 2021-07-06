@@ -145,7 +145,7 @@
 			<v-card-text v-if="step == 3">
 				<resume-plan
 					:close="() => (dialog = false)"
-					:go-back="() => (step = 1)"
+					:go-back="() => (step = 0)"
 					:plan="plan"
 					:psy="psy"
 					:event="newEvent"

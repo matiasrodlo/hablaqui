@@ -47,16 +47,17 @@
 				</v-container>
 			</v-slide-item>
 		</v-slide-group>
-		<div class="text-center">
-			<v-btn
-				:disabled="!selected"
-				rounded
-				color="primary"
-				class="mt-5"
-				@click="setDate(selected)"
-			>
-				{{ titleButton }}
-			</v-btn>
+		<div
+			style="max-width: 200px"
+			:class="selected ? 'primary' : 'blue-grey lighten-3'"
+			class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl pointer white--text"
+			@click="
+				() => {
+					if (selected) setDate(selected);
+				}
+			"
+		>
+			{{ titleButton }}
 		</div>
 	</div>
 </template>

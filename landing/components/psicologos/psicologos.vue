@@ -604,8 +604,12 @@
 												</nuxt-link>
 											</v-col>
 											<v-col cols="12" sm="9">
-												<v-row justify="space-between">
-													<v-col>
+												<v-row justify-md="space-between" align="center">
+													<v-col
+														cols="12"
+														sm="6"
+														class="text-center text-sm-left"
+													>
 														<nuxt-link
 															style="text-decoration: none"
 															:to="{
@@ -613,14 +617,18 @@
 															}"
 														>
 															<span
-																class="text-h6 text-lg-h5 font-weight-bold text--secondary"
+																class="body-1 text-lg-h5 font-weight-bold text--secondary"
 															>
 																{{ item.name }}
 																{{ item.lastName && item.lastName }}
 															</span>
 														</nuxt-link>
 													</v-col>
-													<v-col class="text-right mr-4">
+													<v-col
+														cols="12"
+														sm="6"
+														class="text-center text-sm-right mb-4 mb-sm-0"
+													>
 														<dialog-agenda-cita-online
 															:psy="item"
 															:mode="view.toString()"
@@ -646,7 +654,9 @@
 														</v-chip>
 													</template>
 												</v-chip-group>
-												<div class="body-2 mt:-2 mr-4">
+												<div
+													class="body-2 mt-2 mr-4 text-center text-sm-left"
+												>
 													{{
 														item.professionalDescription.length > 345
 															? item.professionalDescription

@@ -11,23 +11,15 @@
 			@input="resetChat"
 		>
 			<template #activator="{ on, attrs }">
-				<v-btn
-					fab
-					color="primary"
-					absolute
-					class="open-button"
+				<v-img
+					class="open-button pointer"
+					v-bind="attrs"
 					width="65"
 					height="65"
-					v-bind="attrs"
+					:src="`${$config.LANDING_URL}/icono_chat.png`"
+					contain
 					v-on="on"
-				>
-					<v-img
-						width="65"
-						height="65"
-						:src="`${$config.LANDING_URL}/chat.png`"
-						contain
-					></v-img>
-				</v-btn>
+				></v-img>
 			</template>
 			<v-card width="400">
 				<template v-if="selected">
@@ -168,9 +160,9 @@
 									</v-btn> -->
 									<v-btn class="ml-2 mr-2" depressed icon type="submit">
 										<v-img
+											height="25"
+											contain
 											:src="`${$config.LANDING_URL}/message.png`"
-											height="30"
-											width="30"
 										></v-img>
 									</v-btn>
 								</template>
