@@ -49,8 +49,8 @@
 		</v-slide-group>
 		<div
 			style="max-width: 200px"
-			:class="selected ? 'primary' : 'blue-grey lighten-3'"
-			class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl pointer white--text"
+			:class="selected ? 'primary pointer' : 'blue-grey lighten-3'"
+			class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl white--text"
 			@click="
 				() => {
 					if (selected) setDate(selected);
