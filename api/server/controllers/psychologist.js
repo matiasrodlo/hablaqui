@@ -60,6 +60,17 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando la cita');
 		}
 	},
+	async getByUsername(req, res) {
+		try {
+			const { username } = req.params;
+			const { data, code } = await psychologistsService.getByUsername(
+				username
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error consiguiendo el psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
