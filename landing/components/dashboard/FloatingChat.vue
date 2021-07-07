@@ -41,7 +41,7 @@
 							</v-list-item-avatar>
 							<v-list-item-title class="title d-flex ml-2">
 								<nuxt-link
-									:to="`/psicologos/${selected._id}`"
+									:to="`/${selected.username}`"
 									style="text-decoration: none"
 								>
 									<span class="secondary--text">

@@ -1,6 +1,6 @@
 <template>
 	<v-container style="position: relative">
-		<v-row justify="space-between" align="center">
+		<v-row v-if="$route.name === 'psicologos'" justify="space-between" align="center">
 			<v-col tag="h1" class="text-left font-weight-bold text-h6 text-md-h3 text--secondary">
 				Encuentra a tu psicólogo online
 			</v-col>
@@ -413,7 +413,7 @@
 											<nuxt-link
 												v-if="item.name"
 												style="text-decoration: none; display: block"
-												:to="{ path: `/psicologos/${item._id}` }"
+												:to="{ path: `/${item.username}` }"
 											>
 												<span
 													class="body-2 font-weight-bold secondary--text"
@@ -451,7 +451,7 @@
 											<v-btn
 												class="body-2"
 												text
-												:to="{ path: `/psicologos/${item._id}` }"
+												:to="{ path: `/${item.username}` }"
 											>
 												Más información
 											</v-btn>
@@ -598,7 +598,7 @@
 												<nuxt-link
 													class="primary--text body-2 font-weight-bold"
 													style="text-decoration: none"
-													:to="{ path: `/psicologos/${item._id}` }"
+													:to="{ path: `/${item.username}` }"
 												>
 													Más información
 												</nuxt-link>
@@ -613,7 +613,7 @@
 														<nuxt-link
 															style="text-decoration: none"
 															:to="{
-																path: `/psicologos/${item._id}`,
+																path: `/${item.username}`,
 															}"
 														>
 															<span

@@ -272,7 +272,7 @@ export default {
 	},
 	computed: {
 		psychologist() {
-			return this.psychologists.find(item => item._id === this.$route.params.id);
+			return this.psychologists.find(item => item.username === this.$route.params.username);
 		},
 		...mapGetters({
 			psychologists: 'Psychologist/psychologists',
