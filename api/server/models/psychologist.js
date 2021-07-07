@@ -70,6 +70,16 @@ let psychologist = new Schema({
 	models: {
 		type: Array,
 	},
+	country: {
+		type: String,
+		default: 'Chile',
+	},
+	region: {
+		type: String,
+	},
+	comuna: {
+		type: String,
+	},
 	sessions: [session],
 });
 

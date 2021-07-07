@@ -112,6 +112,17 @@ CUALQUIER PERSONA
 									outlined
 									autocomplete="off"
 								></v-text-field>
+								<v-select
+									v-model="form.region"
+									:items="regiones"
+									label="Regiones"
+								></v-select>
+								<v-select
+									v-if="form.region"
+									v-model="form.comuna"
+									:items="comunas"
+									label="Comuna"
+								></v-select>
 								<v-text-field
 									v-model="form.code"
 									type="number"
@@ -362,6 +373,8 @@ export default {
 			loading: false,
 			terminado: false,
 			urlAvatar: '',
+			regiones: [],
+			comunasRegiones: [],
 			length: [
 				{
 					id: 1,
@@ -426,11 +439,26 @@ export default {
 			specialties: 'Appointments/specialties',
 		}),
 	},
+	watch: {
+		'form.region'(newVal) {
+			if (newVal) {
+				this.comunas = this.comunasRegiones.find(item => {
+					return item.region === this.form.region;
+				}).comunas;
+			}
+		},
+	},
 	created() {
 		this.defaultForm();
 	},
-	mounted() {
+	async mounted() {
 		this.getAppointments();
+		const response = await this.$axios.$get(
+			`${this.$config.LANDING_URL}/comunas-regiones.json`
+		);
+		this.comunasRegiones = response;
+		this.regiones = response.map(i => i.region);
+		console.log(this.regiones);
 	},
 	methods: {
 		defaultForm() {
@@ -463,6 +491,8 @@ export default {
 			formData.append('professionalDescription', this.form.professionalDescription);
 			formData.append('email', this.form.email);
 			formData.append('username', this.form.username);
+			formData.append('comuna', this.form.comuna);
+			formData.append('region', this.form.region);
 			formData.append('experience', this.form.experience);
 			formData.append('formation', this.form.formation);
 			formData.append('password', this.form.password);
