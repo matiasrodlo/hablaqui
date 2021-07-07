@@ -115,12 +115,14 @@ CUALQUIER PERSONA
 								<v-select
 									v-model="form.region"
 									:items="regiones"
-									label="Regiones"
+									label="Región"
+									outlined
 								></v-select>
 								<v-select
 									v-if="form.region"
 									v-model="form.comuna"
 									:items="comunas"
+									outlined
 									label="Comuna"
 								></v-select>
 								<v-text-field
