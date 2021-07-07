@@ -118,6 +118,8 @@ const register = async (body, avatar) => {
 		languages: JSON.parse(body.languages),
 		gender: body.gender,
 		isTrans: body.isTrans,
+		region: body.region,
+		comuna: body.comuna,
 		avatar,
 	};
 	const psychologist = await Psychologist.create(newPsychologist);
