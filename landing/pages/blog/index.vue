@@ -1,11 +1,10 @@
 <template>
 	<div style="background-color: #f0f8ff">
-		<nav>
-			<Appbar />
-		</nav>
-
-		<v-container tag="section" fluid>
-			<client-only>
+		<client-only>
+			<nav>
+				<Appbar />
+			</nav>
+			<v-container tag="section" fluid>
 				<!-- title / search -->
 				<v-row justify="center">
 					<v-col
@@ -362,10 +361,8 @@
 						</v-col>
 					</v-row>
 				</div>
-			</client-only>
-		</v-container>
-		<!-- for companies -->
-		<client-only>
+			</v-container>
+			<!-- for companies -->
 			<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
 			<v-container fluid class="primary py-0">
 				<v-row justify="center">
@@ -471,120 +468,135 @@
 				</v-row>
 			</v-container>
 			<img :src="`${$config.LANDING_URL}/Blog-bottom.png`" style="width: 100%" />
-		</client-only>
-		<!-- Categorias -->
-		<v-container fluid class="mb-16">
-			<v-row align="center" justify="center">
-				<v-col tag="section" cols="12" class="pt-16 pb-8">
-					<h2 class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
-						Categoria Populares
-					</h2>
-					<h3 class="text--secondary text-h6 mt-2 text-center">
-						Ver las categorías más visitadas
-					</h3>
-				</v-col>
-				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
-					<v-row>
-						<v-col v-for="(element, h) in categories" :key="h" cols="12" sm="6" md="3">
-							<v-hover v-slot="{ hover }">
-								<v-card
-									style="transition: transform 0.5s"
-									:style="
-										hover
-											? 'transform: scale(1.02);'
-											: 'text-transform: none !important;'
-									"
-									:class="hover ? 'elevation-4' : 'elevation-0'"
-									flat
-								>
-									<v-card-text class="text-center">
-										<v-list-item-avatar size="120" class="ml-4">
-											<v-img
-												:src="element.img"
-												:lazy-src="element.img"
-												:alt="element.title"
-											>
-												<template #placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="grey lighten-5"
-														></v-progress-circular>
-													</v-row>
-												</template>
-											</v-img>
-										</v-list-item-avatar>
-										<h2
-											class="text-center body-2 font-weight-bold secondary--text"
-										>
-											{{ element.title }}
-										</h2>
-									</v-card-text>
-								</v-card>
-							</v-hover>
-						</v-col>
-					</v-row>
-				</v-col>
-			</v-row>
-		</v-container>
-		<img class="mt-10" :src="`${$config.LANDING_URL}/Blog-05-top.png`" style="width: 100%" />
-		<v-container fluid class="primary py-0">
-			<v-row align="center" justify="center">
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row justify="center" align="center">
-						<v-col cols="12" md="7" class="white--text">
-							<h3 class="body-1 text-md-h5 font-weight-bold">
-								Recibe contenido exclusivo periódicamente
-							</h3>
-							<h3 class="body-2 text-md-h6 font-weight-bold mb-8 mt-2">
-								Suscríbete y alcanza tu mejor versión
-							</h3>
-							<v-btn-toggle rounded class="mb-10 mb-md-0">
-								<v-text-field
-									solo
-									flat
-									style="width: 400px"
-									placeholder="Introduzca su correo electrónico aquí"
-									class="white"
-									hide-details
-									dense
-								/>
-								<v-btn depressed color="info">
-									<span class="px-md-6 text-h6">Enviar</span>
-								</v-btn>
-							</v-btn-toggle>
-						</v-col>
-						<v-col cols="12" md="5" class="text-center">
-							<v-img
-								contain
-								class="mx-auto"
-								alt="Recibe contenido exclusivo periódicamente"
-								:src="`${$config.LANDING_URL}/suscribete.webp`"
-								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+
+			<!-- Categorias -->
+			<v-container fluid class="mb-16">
+				<v-row align="center" justify="center">
+					<v-col tag="section" cols="12" class="pt-16 pb-8">
+						<h2 class="primary--text font-weight-bold text-h5 text-md-h4 text-center">
+							Categoria Populares
+						</h2>
+						<h3 class="text--secondary text-h6 mt-2 text-center">
+							Ver las categorías más visitadas
+						</h3>
+					</v-col>
+					<v-col tag="section" cols="12" sm="8" md="10" xl="9">
+						<v-row>
+							<v-col
+								v-for="(element, h) in categories"
+								:key="h"
+								cols="12"
+								sm="6"
+								md="3"
 							>
-								<template #placeholder>
-									<v-row class="fill-height ma-0" align="center" justify="center">
-										<v-progress-circular
-											indeterminate
-											color="grey lighten-5"
-										></v-progress-circular>
-									</v-row>
-								</template>
-							</v-img>
-						</v-col>
-					</v-row>
-				</v-col>
-			</v-row>
-		</v-container>
-		<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
-		<v-container tag="footer">
-			<Footer />
-		</v-container>
-		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+								<v-hover v-slot="{ hover }">
+									<v-card
+										style="transition: transform 0.5s"
+										:style="
+											hover
+												? 'transform: scale(1.02);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-4' : 'elevation-0'"
+										flat
+									>
+										<v-card-text class="text-center">
+											<v-list-item-avatar size="120" class="ml-4">
+												<v-img
+													:src="element.img"
+													:lazy-src="element.img"
+													:alt="element.title"
+												>
+													<template #placeholder>
+														<v-row
+															class="fill-height ma-0"
+															align="center"
+															justify="center"
+														>
+															<v-progress-circular
+																indeterminate
+																color="grey lighten-5"
+															></v-progress-circular>
+														</v-row>
+													</template>
+												</v-img>
+											</v-list-item-avatar>
+											<h2
+												class="text-center body-2 font-weight-bold secondary--text"
+											>
+												{{ element.title }}
+											</h2>
+										</v-card-text>
+									</v-card>
+								</v-hover>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
+			</v-container>
+			<img
+				class="mt-10"
+				:src="`${$config.LANDING_URL}/Blog-05-top.png`"
+				style="width: 100%"
+			/>
+			<v-container fluid class="primary py-0">
+				<v-row align="center" justify="center">
+					<v-col cols="12" sm="8" md="10" xl="9">
+						<v-row justify="center" align="center">
+							<v-col cols="12" md="7" class="white--text">
+								<h3 class="body-1 text-md-h5 font-weight-bold">
+									Recibe contenido exclusivo periódicamente
+								</h3>
+								<h3 class="body-2 text-md-h6 font-weight-bold mb-8 mt-2">
+									Suscríbete y alcanza tu mejor versión
+								</h3>
+								<v-btn-toggle rounded class="mb-10 mb-md-0">
+									<v-text-field
+										solo
+										flat
+										style="width: 400px"
+										placeholder="Introduzca su correo electrónico aquí"
+										class="white"
+										hide-details
+										dense
+									/>
+									<v-btn depressed color="info">
+										<span class="px-md-6 text-h6">Enviar</span>
+									</v-btn>
+								</v-btn-toggle>
+							</v-col>
+							<v-col cols="12" md="5" class="text-center">
+								<v-img
+									contain
+									class="mx-auto"
+									alt="Recibe contenido exclusivo periódicamente"
+									:src="`${$config.LANDING_URL}/suscribete.webp`"
+									:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+								>
+									<template #placeholder>
+										<v-row
+											class="fill-height ma-0"
+											align="center"
+											justify="center"
+										>
+											<v-progress-circular
+												indeterminate
+												color="grey lighten-5"
+											></v-progress-circular>
+										</v-row>
+									</template>
+								</v-img>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
+			</v-container>
+			<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
+			<v-container tag="footer">
+				<Footer />
+			</v-container>
+			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+		</client-only>
 	</div>
 </template>
 <script>
