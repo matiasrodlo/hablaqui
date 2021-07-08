@@ -186,6 +186,16 @@ const setSchedule = async (user, payload) => {
 	});
 };
 
+const cancelSession = async (user, sessionId) => {
+	let foundPsychologist = await Psychologist.findById(user.psychologist);
+	foundPsychologist.sessions = foundPsychologist.sessions.filter(
+		item => item._id != sessionId
+	);
+	await foundPsychologist.save();
+
+	return okResponse('Sesion cancelada', { psychologist: foundPsychologist });
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -194,6 +204,7 @@ const psychologistsService = {
 	reschedule,
 	getByUsername,
 	setSchedule,
+	cancelSession,
 };
 
 export default Object.freeze(psychologistsService);

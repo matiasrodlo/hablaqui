@@ -84,6 +84,19 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando tus horarios');
 		}
 	},
+	async cancelSession(req, res) {
+		try {
+			const { user } = req;
+			const { sessionId } = req.body;
+			const { data, code } = await psychologistsService.cancelSession(
+				user,
+				sessionId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error cancelando la sesion');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
