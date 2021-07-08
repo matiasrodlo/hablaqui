@@ -3,6 +3,7 @@ import axios from 'axios';
 export default {
 	target: 'static',
 	generate: {
+		fallback: '404.html',
 		routes() {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL

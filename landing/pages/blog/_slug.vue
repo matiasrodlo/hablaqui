@@ -1,19 +1,19 @@
 <template>
 	<div style="background-color: #f0f8ff">
-		<div>
-			<Appbar />
-		</div>
-		<v-container v-show="loading">
-			<v-row>
-				<v-col cols="12">
-					<v-skeleton-loader
-						class="mx-auto"
-						type="card-heading, image, paragraph, paragraph, paragraph ,paragraph"
-					></v-skeleton-loader>
-				</v-col>
-			</v-row>
-		</v-container>
 		<client-only>
+			<div>
+				<Appbar />
+			</div>
+			<v-container v-show="loading">
+				<v-row>
+					<v-col cols="12">
+						<v-skeleton-loader
+							class="mx-auto"
+							type="card-heading, image, paragraph, paragraph, paragraph ,paragraph"
+						></v-skeleton-loader>
+					</v-col>
+				</v-row>
+			</v-container>
 			<v-container v-if="article && !loading">
 				<v-row>
 					<v-col cols="12">
@@ -261,62 +261,72 @@
 					</template>
 				</v-row>
 			</v-container>
-		</client-only>
-		<img class="mt-16" :src="`${$config.LANDING_URL}/Blog-05-top.png`" style="width: 100%" />
-		<v-container fluid class="primary py-0">
-			<v-row align="center" justify="center">
-				<v-col cols="12" sm="8" md="10" xl="9">
-					<v-row justify="center" align="center">
-						<v-col cols="10" md="7" class="white--text">
-							<h3 class="headline font-weight-bold">
-								Recibe contenido exclusivo periódicamente
-							</h3>
-							<h3 class="body-1 font-weight-bold mb-8 mt-2">
-								Suscríbete y alcanza tu mejor versión
-							</h3>
 
-							<v-btn-toggle rounded class="mb-10 mb-md-0">
-								<v-text-field
-									solo
-									flat
-									style="width: 400px"
-									placeholder="Introduzca su correo electrónico aquí"
-									class="white"
-									hide-details
-									dense
-								/>
-								<v-btn depressed color="info">
-									<span class="px-5 px-md-10 text-h5">Enviar</span>
-								</v-btn>
-							</v-btn-toggle>
-						</v-col>
-						<v-col cols="12" md="5" class="text-center">
-							<v-img
-								contain
-								class="mx-auto"
-								alt="Recibe contenido exclusivo periódicamente"
-								:src="`${$config.LANDING_URL}/suscribete.webp`"
-								:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
-							>
-								<template #placeholder>
-									<v-row class="fill-height ma-0" align="center" justify="center">
-										<v-progress-circular
-											indeterminate
-											color="grey lighten-5"
-										></v-progress-circular>
-									</v-row>
-								</template>
-							</v-img>
-						</v-col>
-					</v-row>
-				</v-col>
-			</v-row>
-		</v-container>
-		<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
-		<v-container>
-			<Footer />
-		</v-container>
-		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+			<img
+				class="mt-16"
+				:src="`${$config.LANDING_URL}/Blog-05-top.png`"
+				style="width: 100%"
+			/>
+			<v-container fluid class="primary py-0">
+				<v-row align="center" justify="center">
+					<v-col cols="12" sm="8" md="10" xl="9">
+						<v-row justify="center" align="center">
+							<v-col cols="10" md="7" class="white--text">
+								<h3 class="headline font-weight-bold">
+									Recibe contenido exclusivo periódicamente
+								</h3>
+								<h3 class="body-1 font-weight-bold mb-8 mt-2">
+									Suscríbete y alcanza tu mejor versión
+								</h3>
+
+								<v-btn-toggle rounded class="mb-10 mb-md-0">
+									<v-text-field
+										solo
+										flat
+										style="width: 400px"
+										placeholder="Introduzca su correo electrónico aquí"
+										class="white"
+										hide-details
+										dense
+									/>
+									<v-btn depressed color="info">
+										<span class="px-5 px-md-10 text-h5">Enviar</span>
+									</v-btn>
+								</v-btn-toggle>
+							</v-col>
+							<v-col cols="12" md="5" class="text-center">
+								<v-img
+									contain
+									class="mx-auto"
+									alt="Recibe contenido exclusivo periódicamente"
+									:src="`${$config.LANDING_URL}/suscribete.webp`"
+									:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+								>
+									<template #placeholder>
+										<v-row
+											class="fill-height ma-0"
+											align="center"
+											justify="center"
+										>
+											<v-progress-circular
+												indeterminate
+												color="grey lighten-5"
+											></v-progress-circular>
+										</v-row>
+									</template>
+								</v-img>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
+			</v-container>
+			<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
+
+			<v-container>
+				<Footer />
+			</v-container>
+			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+		</client-only>
 	</div>
 </template>
 
