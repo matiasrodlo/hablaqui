@@ -566,6 +566,12 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
+	async asyncData({ $axios }) {
+		const { articles } = await $axios.$get('/blog/all');
+		return {
+			articles,
+		};
+	},
 	data() {
 		return {
 			items: [
@@ -578,7 +584,6 @@ export default {
 			],
 			combobox: [],
 			length: 5,
-			articles: [],
 			categories: [
 				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/pareja_y_sexo.png` },
 				{
@@ -624,10 +629,6 @@ export default {
 	created() {
 		moment.locale('es');
 		this.setFloatingChat(false);
-	},
-	async mounted() {
-		const { articles } = await this.$axios.$get('/blog/all');
-		this.articles = articles;
 	},
 	methods: {
 		strippedContent(text, long) {

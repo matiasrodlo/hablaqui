@@ -318,11 +318,16 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
+	async asyncData({ $axios }) {
+		const { articles } = await $axios.$get('/blog/all');
+		return {
+			blogs: articles,
+		};
+	},
 	data() {
 		return {
 			length: 3,
 			article: null,
-			blogs: [],
 			rating: 0,
 			breadcrumb: [],
 			title: '',
@@ -337,7 +342,9 @@ export default {
 				{
 					hid: 'description',
 					name: 'description',
-					content: 'Los articulos más actualizados de nuestros psicologos',
+					content: this.strippedContent(
+						this.blogs.find(item => item.slug === this.$route.params.slug).HTMLbody
+					),
 				},
 			],
 		};
@@ -345,9 +352,7 @@ export default {
 	created() {
 		this.setFloatingChat(false);
 	},
-	async mounted() {
-		const { articles } = await this.$axios.$get('/blog/all');
-		this.blogs = articles;
+	mounted() {
 		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
 		this.title = this.article.title;
 		if (this.article.rating.average)
