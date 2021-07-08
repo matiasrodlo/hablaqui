@@ -94,6 +94,10 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultSchedule,
 	},
+	paymentMethod: {
+		type: Object,
+		required: false,
+	},
 	sessions: [session],
 });
 

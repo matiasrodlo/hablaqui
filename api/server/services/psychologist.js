@@ -196,6 +196,31 @@ const cancelSession = async (user, sessionId) => {
 	return okResponse('Sesion cancelada', { psychologist: foundPsychologist });
 };
 
+const updatePaymentMethod = async (user, payload) => {
+	if (user.role !== 'psychologist')
+		return conflictResponse('No eres un psicologo.');
+
+	let foundPsychologist = await Psychologist.findById(
+		foundPsychologist.psychologist
+	);
+	const newPaymentMethod = {
+		bank: payload.bank || foundPsychologist.paymentMethod.bank,
+		accountType:
+			payload.accountType || foundPsychologist.paymentMethod.accountType,
+		accountNumber:
+			payload.accountNumber ||
+			foundPsychologist.paymentMethod.accountNumber,
+		rut: payload.rut || foundPsychologist.paymentMethod.rut,
+		name: payload.name || foundPsychologist.paymentMethod.name,
+		email: payload.email || foundPsychologist.paymentMethod.email,
+	};
+	foundPsychologist.paymentMethod = newPaymentMethod;
+	await foundPsychologist.save();
+	return okResponse('Metodo actualizado', {
+		psychologist: foundPsychologist,
+	});
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -205,6 +230,7 @@ const psychologistsService = {
 	getByUsername,
 	setSchedule,
 	cancelSession,
+	updatePaymentMethod,
 };
 
 export default Object.freeze(psychologistsService);
