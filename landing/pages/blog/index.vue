@@ -3,6 +3,7 @@
 		<nav>
 			<Appbar />
 		</nav>
+
 		<v-container tag="section" fluid>
 			<!-- title / search -->
 			<v-row justify="center">
@@ -90,195 +91,218 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row v-show="articles.length" id="blog" tag="section" justify="center" class="mb-16">
-				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
-					<v-row tag="section">
-						<template v-for="(article, i) in filterItems">
-							<v-col
-								v-if="length > i"
-								:key="i"
-								tag="section"
-								cols="12"
-								:md="i == 0 ? '12' : '6'"
-								:lg="i == 0 ? '8' : '4'"
-							>
-								<v-hover v-slot="{ hover }">
-									<v-card
-										tag="section
+			<client-only>
+				<v-row
+					v-if="articles.length"
+					id="blog"
+					tag="section"
+					justify="center"
+					class="mb-16"
+				>
+					<v-col tag="section" cols="12" sm="8" md="10" xl="9">
+						<v-row tag="section">
+							<template v-for="(article, i) in filterItems">
+								<v-col
+									v-if="length > i"
+									:key="i"
+									tag="section"
+									cols="12"
+									:md="i == 0 ? '12' : '6'"
+									:lg="i == 0 ? '8' : '4'"
+								>
+									<v-hover v-slot="{ hover }">
+										<v-card
+											tag="section
                                     "
-										nuxt
-										:to="{ path: `/blog/${article.slug}` }"
-										style="transition: transform 0.4s"
-										:style="
-											hover
-												? 'transform: scale(1.02);'
-												: 'text-transform: none !important;'
-										"
-										:class="hover ? 'elevation-4' : 'elevation-0'"
-										:height="$vuetify.breakpoint.mdAndUp ? '400' : '500'"
-										width="100%"
-										flat
-									>
-										<template v-if="i == 0 && !$vuetify.breakpoint.smAndDown">
-											<v-card-text>
-												<v-row>
-													<v-col
-														cols="6"
-														tag="section"
-														style="
-															height: 390px;
-															display: flex;
-															flex-direction: column !important;
-														"
-														class="justify-space-between"
-													>
-														<article>
-															<h3
-																class="body-1 font-weight-bold black--text"
-															>
-																{{ article.title }}
-															</h3>
-															<v-btn
-																text
-																class="body-1 px-0 my-3"
-																color="primary"
-															>
-																{{ article.categories }}
-															</v-btn>
-															<h4 class="body-2 font-weight-light">
-																{{
-																	strippedContent(
-																		article.HTMLbody,
-																		400
-																	)
-																}}
-															</h4>
-														</article>
-														<aside>
-															<h3 class="body-1">
-																<span
-																	v-if="
-																		article.author ||
-																		article.originalAuthor
-																	"
-																	class="font-weight-bold primary--text"
+											nuxt
+											:to="{ path: `/blog/${article.slug}` }"
+											style="transition: transform 0.4s"
+											:style="
+												hover
+													? 'transform: scale(1.02);'
+													: 'text-transform: none !important;'
+											"
+											:class="hover ? 'elevation-4' : 'elevation-0'"
+											:height="$vuetify.breakpoint.mdAndUp ? '400' : '500'"
+											width="100%"
+											flat
+										>
+											<template
+												v-if="i == 0 && !$vuetify.breakpoint.smAndDown"
+											>
+												<v-card-text>
+													<v-row>
+														<v-col
+															cols="6"
+															tag="section"
+															style="
+																height: 390px;
+																display: flex;
+																flex-direction: column !important;
+															"
+															class="justify-space-between"
+														>
+															<article>
+																<h3
+																	class="body-1 font-weight-bold black--text"
 																>
-																	por
+																	{{ article.title }}
+																</h3>
+																<v-btn
+																	text
+																	class="body-1 px-0 my-3"
+																	color="primary"
+																>
+																	{{ article.categories }}
+																</v-btn>
+																<h4
+																	class="body-2 font-weight-light"
+																>
 																	{{
-																		article.author ||
-																		article.originalAuthor
+																		strippedContent(
+																			article.HTMLbody,
+																			400
+																		)
 																	}}
-																</span>
-																<span
-																	v-if="
-																		article.author ||
-																		article.originalAuthor
-																	"
-																	>|</span
-																>
-																<span class="text--disabled">
-																	{{ dates(article.createdAt) }}
-																</span>
-															</h3>
-														</aside>
-													</v-col>
-													<v-col tag="section" cols="6">
-														<v-img
-															style="border-radius: 10px"
-															height="365"
-															class="grey lighten-3"
-															:alt="article.title"
-															:src="article.thumbnail"
-															:lazy-src="article.thumbnail"
-														>
-															<template #placeholder>
-																<v-row
-																	class="fill-height ma-0"
-																	align="center"
-																	justify="center"
-																>
-																	<v-progress-circular
-																		indeterminate
-																		color="grey lighten-5"
-																	></v-progress-circular>
-																</v-row>
-															</template>
-														</v-img>
-													</v-col>
-												</v-row>
-											</v-card-text>
-										</template>
-										<template v-else>
-											<v-img
-												class="grey lighten-3"
-												height="150"
-												:alt="article.title"
-												:src="article.thumbnail"
-												:lazy-src="article.thumbnail"
-											>
-												<template #placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="grey lighten-5"
-														></v-progress-circular>
+																</h4>
+															</article>
+															<aside>
+																<h3 class="body-1">
+																	<span
+																		v-if="
+																			article.author ||
+																			article.originalAuthor
+																		"
+																		class="font-weight-bold primary--text"
+																	>
+																		por
+																		{{
+																			article.author ||
+																			article.originalAuthor
+																		}}
+																	</span>
+																	<span
+																		v-if="
+																			article.author ||
+																			article.originalAuthor
+																		"
+																		>|</span
+																	>
+																	<span class="text--disabled">
+																		{{
+																			dates(article.createdAt)
+																		}}
+																	</span>
+																</h3>
+															</aside>
+														</v-col>
+														<v-col tag="section" cols="6">
+															<v-img
+																style="border-radius: 10px"
+																height="365"
+																class="grey lighten-3"
+																:alt="article.title"
+																:src="article.thumbnail"
+																:lazy-src="article.thumbnail"
+															>
+																<template #placeholder>
+																	<v-row
+																		class="fill-height ma-0"
+																		align="center"
+																		justify="center"
+																	>
+																		<v-progress-circular
+																			indeterminate
+																			color="grey lighten-5"
+																		></v-progress-circular>
+																	</v-row>
+																</template>
+															</v-img>
+														</v-col>
 													</v-row>
-												</template>
-											</v-img>
-											<v-card-text
-												class="d-flex justify-space-between"
-												style="flex-direction: column"
-												:style="
-													$vuetify.breakpoint.mdAndUp
-														? 'height: 250px'
-														: 'height: 350px'
-												"
-											>
-												<article>
-													<v-btn
-														text
-														class="px-0 my-3 body-1"
-														color="primary"
-													>
-														{{ article.categories }}
-													</v-btn>
-													<h3 class="body-1 font-weight-bold black--text">
-														{{ article.title }}
-													</h3>
-													<h4
-														v-if="!$vuetify.breakpoint.mdAndUp"
-														class="body-2 font-weight-light"
-													>
-														{{ strippedContent(article.HTMLbody, 350) }}
-													</h4>
-												</article>
-												<aside>
-													<div class="body-1 black--text">
-														<span
-															v-if="article.originalAuthor"
-															class="font-weight-bold primary--text"
+												</v-card-text>
+											</template>
+											<template v-else>
+												<v-img
+													class="grey lighten-3"
+													height="150"
+													:alt="article.title"
+													:src="article.thumbnail"
+													:lazy-src="article.thumbnail"
+												>
+													<template #placeholder>
+														<v-row
+															class="fill-height ma-0"
+															align="center"
+															justify="center"
 														>
-															por {{ article.originalAuthor }}
-														</span>
-														<span v-if="article.originalAuthor">|</span>
-														<span class="text--disabled">
-															{{ dates(article.createdAt) }}
-														</span>
-													</div>
-												</aside>
-											</v-card-text>
-										</template>
-									</v-card>
-								</v-hover>
-							</v-col>
-						</template>
-					</v-row>
-				</v-col>
-			</v-row>
+															<v-progress-circular
+																indeterminate
+																color="grey lighten-5"
+															></v-progress-circular>
+														</v-row>
+													</template>
+												</v-img>
+												<v-card-text
+													class="d-flex justify-space-between"
+													style="flex-direction: column"
+													:style="
+														$vuetify.breakpoint.mdAndUp
+															? 'height: 250px'
+															: 'height: 350px'
+													"
+												>
+													<article>
+														<v-btn
+															text
+															class="px-0 my-3 body-1"
+															color="primary"
+														>
+															{{ article.categories }}
+														</v-btn>
+														<h3
+															class="body-1 font-weight-bold black--text"
+														>
+															{{ article.title }}
+														</h3>
+														<h4
+															v-if="!$vuetify.breakpoint.mdAndUp"
+															class="body-2 font-weight-light"
+														>
+															{{
+																strippedContent(
+																	article.HTMLbody,
+																	350
+																)
+															}}
+														</h4>
+													</article>
+													<aside>
+														<div class="body-1 black--text">
+															<span
+																v-if="article.originalAuthor"
+																class="font-weight-bold primary--text"
+															>
+																por {{ article.originalAuthor }}
+															</span>
+															<span v-if="article.originalAuthor"
+																>|</span
+															>
+															<span class="text--disabled">
+																{{ dates(article.createdAt) }}
+															</span>
+														</div>
+													</aside>
+												</v-card-text>
+											</template>
+										</v-card>
+									</v-hover>
+								</v-col>
+							</template>
+						</v-row>
+					</v-col>
+				</v-row>
+			</client-only>
 			<div v-show="!articles.length">
 				<v-row justify="center">
 					<v-col cols="12" sm="6">
@@ -337,6 +361,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
+
 		<!-- for companies -->
 		<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
 		<v-container fluid class="primary py-0">
