@@ -167,6 +167,35 @@ const getByUsername = async username => {
 	});
 };
 
+const setSchedule = async (user, payload) => {
+	let foundPsychologist = await Psychologist.findById(user._id);
+	const newSchedule = {
+		monday: payload.monday || foundPsychologist.schedule.monday,
+		tuesday: payload.tuesday || foundPsychologist.shcedule.tuesday,
+		wednesday: payload.wednesday || foundPsychologist.shcedule.wednesday,
+		thursday: payload.thursday || foundPsychologist.shcedule.thursday,
+		friday: payload.friday || foundPsychologist.shcedule.friday,
+		saturday: payload.saturday || foundPsychologist.shcedule.saturday,
+		sunday: payload.sunday || foundPsychologist.shcedule.sunday,
+	};
+	foundPsychologist.schedule = newSchedule;
+	await foundPsychologist.save();
+
+	return okResponse('Horario actualizado', {
+		psychologist: foundPsychologist,
+	});
+};
+
+const cancelSession = async (user, sessionId) => {
+	let foundPsychologist = await Psychologist.findById(user.psychologist);
+	foundPsychologist.sessions = foundPsychologist.sessions.filter(
+		item => item._id != sessionId
+	);
+	await foundPsychologist.save();
+
+	return okResponse('Sesion cancelada', { psychologist: foundPsychologist });
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -174,6 +203,8 @@ const psychologistsService = {
 	createSession,
 	reschedule,
 	getByUsername,
+	setSchedule,
+	cancelSession,
 };
 
 export default Object.freeze(psychologistsService);
