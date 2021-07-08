@@ -1,5 +1,20 @@
+import axios from 'axios';
+
 export default {
 	target: 'static',
+	generate: {
+		fallback: '404.html',
+		routes() {
+			const baseURL = process.env.VUE_APP_URL
+				? process.env.VUE_APP_URL
+				: 'http://localhost:3000/api/v1';
+			return axios.get(`${baseURL}/blog/all`).then(res => {
+				return res.data.articles.map(item => {
+					return { route: `/blog/${item.slug}`, payload: item };
+				});
+			});
+		},
+	},
 	publicRuntimeConfig: {
 		LANDING_URL:
 			process.env.NODE_ENV === 'production'
