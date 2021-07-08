@@ -71,6 +71,19 @@ const psychologistsController = {
 			errorCallback(e, res, 'error consiguiendo el psicologo');
 		}
 	},
+	async setSchedule(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const { data, code } = await psychologistsService.setSchedule(
+				user,
+				payload
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando tus horarios');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

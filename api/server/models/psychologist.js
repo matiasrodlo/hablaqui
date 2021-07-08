@@ -24,6 +24,16 @@ let session = new Schema({
 	},
 });
 
+let defaultSchedule = {
+	monday: ['09:00', '17:00'],
+	tuesday: ['09:00', '17:00'],
+	wednesday: ['09:00', '17:00'],
+	thursday: ['09:00', '17:00'],
+	friday: ['09:00', '17:00'],
+	saturday: ['free', 'free'],
+	sunday: ['free', 'free'],
+};
+
 let psychologist = new Schema({
 	avatar: {
 		type: String,
@@ -79,6 +89,10 @@ let psychologist = new Schema({
 	},
 	comuna: {
 		type: String,
+	},
+	schedule: {
+		type: Object,
+		default: defaultSchedule,
 	},
 	sessions: [session],
 });
