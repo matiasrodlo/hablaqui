@@ -71,6 +71,45 @@ const psychologistsController = {
 			errorCallback(e, res, 'error consiguiendo el psicologo');
 		}
 	},
+	async setSchedule(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const { data, code } = await psychologistsService.setSchedule(
+				user,
+				payload
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando tus horarios');
+		}
+	},
+	async cancelSession(req, res) {
+		try {
+			const { user } = req;
+			const { sessionId } = req.body;
+			const { data, code } = await psychologistsService.cancelSession(
+				user,
+				sessionId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error cancelando la sesion');
+		}
+	},
+	async updatePaymentMethod(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updatePaymentMethod(user, payload);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando el metodo de pago');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
