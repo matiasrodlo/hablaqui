@@ -22,6 +22,9 @@ let session = new Schema({
 	statePayments: {
 		type: String,
 	},
+	plan: {
+		type: String,
+	},
 });
 
 let defaultSchedule = {

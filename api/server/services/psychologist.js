@@ -62,6 +62,7 @@ const createSession = async body => {
 	const sessions = {
 		date: payload.date,
 		user: payload.user._id,
+		plan: payload.title,
 		statePayments: 'pending',
 	};
 	// Check if available
@@ -75,6 +76,8 @@ const createSession = async body => {
 		}
 	});
 	if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
+
+	// Save session
 	const savedSession = await Psychologist.findOneAndUpdate(
 		{ _id: payload.psychologist._id },
 		{
@@ -82,7 +85,14 @@ const createSession = async body => {
 		},
 		{ upsert: true, returnOriginal: false }
 	);
+
+	await User.findOneAndUpdate(
+		{ _id: payload.user._id },
+		{ myPlan: payload.title }
+	);
+
 	logInfo('creo una nueva cita');
+
 	return okResponse('sesion creada', {
 		id: savedSession.sessions[savedSession.sessions.length - 1]._id,
 	});
