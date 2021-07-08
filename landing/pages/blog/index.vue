@@ -5,93 +5,96 @@
 		</nav>
 
 		<v-container tag="section" fluid>
-			<!-- title / search -->
-			<v-row justify="center">
-				<v-col
-					tag="h1"
-					cols="12"
-					sm="10"
-					xl="8"
-					class="primary--text font-weight-bold text-h5 text-md-h3 text-center mb-6"
-				>
-					Blog Hablaquí
-				</v-col>
-				<v-col cols="12" sm="8" md="10" xl="9" class="mb-5">
-					<v-expansion-panels
-						flat
-						style="border-radius: 25px"
-						active-class="roundedExpand"
+			<client-only>
+				<!-- title / search -->
+				<v-row justify="center">
+					<v-col
+						tag="h1"
+						cols="12"
+						sm="10"
+						xl="8"
+						class="primary--text font-weight-bold text-h5 text-md-h3 text-center mb-6"
 					>
-						<v-expansion-panel>
-							<v-expansion-panel-header>
-								<div
-									v-show="!combobox.length"
-									class="body-1 font-weight-bold primary--text my-1"
-								>
-									Seleccione un asunto
-								</div>
-								<div>
-									<span
-										v-for="item in combobox"
-										:key="item"
-										class="primary--text title mx-2"
+						Blog Hablaquí
+					</v-col>
+					<v-col cols="12" sm="8" md="10" xl="9" class="mb-5">
+						<v-expansion-panels
+							flat
+							style="border-radius: 25px"
+							active-class="roundedExpand"
+						>
+							<v-expansion-panel>
+								<v-expansion-panel-header>
+									<div
+										v-show="!combobox.length"
+										class="body-1 font-weight-bold primary--text my-1"
 									>
-										{{ item }}
-									</span>
-								</div>
-								<div
-									v-show="$vuetify.breakpoint.mdAndUp"
-									class="text-right font-weight-bold primary--text body-1"
-								>
-									Editar filtros
-								</div>
-							</v-expansion-panel-header>
-							<v-expansion-panel-content style="border-radius: 25px">
-								<v-divider></v-divider>
-								<v-row justify="center" style="min-height: 200px; margin-top: 16px">
-									<v-col cols="12">
-										<v-btn
-											v-for="item in items"
+										Seleccione un asunto
+									</div>
+									<div>
+										<span
+											v-for="item in combobox"
 											:key="item"
-											rounded
-											:outlined="!combobox.includes(item)"
-											color="primary"
-											class="ma-2 d-inline-block"
-											x-large
-											@click="addItemToCombobox(item)"
+											class="primary--text title mx-2"
 										>
 											{{ item }}
-											<v-icon right>
-												{{
-													combobox.includes(item)
-														? 'mdi-close'
-														: 'mdi-plus'
-												}}
-											</v-icon>
-										</v-btn>
-									</v-col>
-									<v-col cols="12" class="text-center">
-										<div
-											class="text-center align-self-end justify-content-center"
-										>
+										</span>
+									</div>
+									<div
+										v-show="$vuetify.breakpoint.mdAndUp"
+										class="text-right font-weight-bold primary--text body-1"
+									>
+										Editar filtros
+									</div>
+								</v-expansion-panel-header>
+								<v-expansion-panel-content style="border-radius: 25px">
+									<v-divider></v-divider>
+									<v-row
+										justify="center"
+										style="min-height: 200px; margin-top: 16px"
+									>
+										<v-col cols="12">
 											<v-btn
+												v-for="item in items"
+												:key="item"
+												rounded
+												:outlined="!combobox.includes(item)"
 												color="primary"
-												text
-												large
-												@click="combobox = []"
+												class="ma-2 d-inline-block"
+												x-large
+												@click="addItemToCombobox(item)"
 											>
-												Limpiar filtros
+												{{ item }}
+												<v-icon right>
+													{{
+														combobox.includes(item)
+															? 'mdi-close'
+															: 'mdi-plus'
+													}}
+												</v-icon>
 											</v-btn>
-										</div>
-									</v-col>
-								</v-row>
-							</v-expansion-panel-content>
-						</v-expansion-panel>
-					</v-expansion-panels>
-				</v-col>
-			</v-row>
-			<!-- blogs -->
-			<client-only>
+										</v-col>
+										<v-col cols="12" class="text-center">
+											<div
+												class="text-center align-self-end justify-content-center"
+											>
+												<v-btn
+													color="primary"
+													text
+													large
+													@click="combobox = []"
+												>
+													Limpiar filtros
+												</v-btn>
+											</div>
+										</v-col>
+									</v-row>
+								</v-expansion-panel-content>
+							</v-expansion-panel>
+						</v-expansion-panels>
+					</v-col>
+				</v-row>
+				<!-- blogs -->
 				<v-row
 					v-if="articles.length"
 					id="blog"
@@ -302,170 +305,173 @@
 						</v-row>
 					</v-col>
 				</v-row>
+				<v-row justify="center">
+					<v-col cols="12" class="text-center">
+						<v-hover v-slot="{ hover }">
+							<v-btn
+								v-if="length <= articles.length"
+								class="px-10 mb-16"
+								x-large
+								color="primary"
+								:outlined="!hover"
+								rounded
+								@click="length = length + 6"
+								>Ver todos</v-btn
+							>
+						</v-hover>
+					</v-col>
+				</v-row>
+				<div v-show="!articles.length">
+					<v-row justify="center">
+						<v-col cols="12" sm="6">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+						<v-col cols="12" sm="4">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+					</v-row>
+					<v-row justify="center">
+						<v-col cols="12" sm="3">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+						<v-col cols="12" sm="4">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+						<v-col cols="12" sm="3">
+							<v-skeleton-loader
+								light
+								class="mx-auto"
+								type="image, image"
+							></v-skeleton-loader>
+						</v-col>
+					</v-row>
+				</div>
 			</client-only>
-			<div v-show="!articles.length">
-				<v-row justify="center">
-					<v-col cols="12" sm="6">
-						<v-skeleton-loader
-							light
-							class="mx-auto"
-							type="image, image"
-						></v-skeleton-loader>
-					</v-col>
-					<v-col cols="12" sm="4">
-						<v-skeleton-loader
-							light
-							class="mx-auto"
-							type="image, image"
-						></v-skeleton-loader>
-					</v-col>
-				</v-row>
-				<v-row justify="center">
-					<v-col cols="12" sm="3">
-						<v-skeleton-loader
-							light
-							class="mx-auto"
-							type="image, image"
-						></v-skeleton-loader>
-					</v-col>
-					<v-col cols="12" sm="4">
-						<v-skeleton-loader
-							light
-							class="mx-auto"
-							type="image, image"
-						></v-skeleton-loader>
-					</v-col>
-					<v-col cols="12" sm="3">
-						<v-skeleton-loader
-							light
-							class="mx-auto"
-							type="image, image"
-						></v-skeleton-loader>
-					</v-col>
-				</v-row>
-			</div>
-			<v-row justify="center">
-				<v-col cols="12" class="text-center">
-					<v-hover v-slot="{ hover }">
-						<v-btn
-							v-if="length <= articles.length"
-							class="px-10 mb-16"
-							x-large
-							color="primary"
-							:outlined="!hover"
-							rounded
-							@click="length = length + 6"
-							>Ver todos</v-btn
-						>
-					</v-hover>
-				</v-col>
-			</v-row>
 		</v-container>
-
 		<!-- for companies -->
-		<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
-		<v-container fluid class="primary py-0">
-			<v-row justify="center">
-				<v-col tag="section" cols="12" class="mb-5">
-					<h2
-						class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
-					>
-						Para empresas
-					</h2>
-					<h3 class="white--text text-h6 text-center">
-						Liderazgo y salud mental en el mercado laboral
-					</h3>
-				</v-col>
-				<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
-					<v-row v-if="forCompanies.length" tag="section">
-						<template v-for="(item, n) in forCompanies">
-							<v-col v-if="n < 4" :key="n" tag="section" cols="12" md="6" lg="3">
+		<client-only>
+			<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
+			<v-container fluid class="primary py-0">
+				<v-row justify="center">
+					<v-col tag="section" cols="12" class="mb-5">
+						<h2
+							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+						>
+							Para empresas
+						</h2>
+						<h3 class="white--text text-h6 text-center">
+							Liderazgo y salud mental en el mercado laboral
+						</h3>
+					</v-col>
+					<v-col tag="section" cols="12" sm="8" md="10" lg="10" xl="9">
+						<v-row v-if="forCompanies.length" tag="section">
+							<template v-for="(item, n) in forCompanies">
+								<v-col v-if="n < 4" :key="n" tag="section" cols="12" md="6" lg="3">
+									<v-hover v-slot="{ hover }">
+										<v-card
+											style="transition: transform 0.5s"
+											:style="
+												hover
+													? 'transform: translateY(1em)'
+													: 'transform: translateY(0)'
+											"
+											flat
+											height="450"
+										>
+											<v-img
+												class="grey lighten-3"
+												height="200"
+												:alt="item.title"
+												:src="item.thumbnail"
+												:lazy-src="item.thumbnail"
+											>
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
+													>
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
+											</v-img>
+											<v-card-text
+												style="height: 250px; flex-direction: column"
+												class="d-flex justify-space-between"
+											>
+												<article>
+													<h3
+														class="body-1 primary--text font-weight-bold"
+													>
+														{{ item.categories }}
+													</h3>
+													<h2 class="body-1 font-weight-bold pb-0">
+														{{ item.title }}
+													</h2>
+													<h4 class="body-2 font-weight-light mt-4">
+														{{ strippedContent(item.HTMLbody, 135) }}
+													</h4>
+												</article>
+												<aside>
+													<span
+														class="caption primary--text font-weight-bold"
+													>
+														{{ item.originalAuthor }}
+													</span>
+													<span v-if="item.originalAuthor">|</span>
+													<span class="caption text--disabled">
+														{{ dates(item.createdAt) }}
+													</span>
+												</aside>
+											</v-card-text>
+										</v-card>
+									</v-hover>
+								</v-col>
+							</template>
+							<v-col cols="12" class="text-center mt-10">
 								<v-hover v-slot="{ hover }">
-									<v-card
-										style="transition: transform 0.5s"
-										:style="
-											hover
-												? 'transform: translateY(1em)'
-												: 'transform: translateY(0)'
-										"
-										flat
-										height="450"
+									<v-btn
+										x-large
+										class="px-10"
+										color="white"
+										:outlined="!hover"
+										rounded
 									>
-										<v-img
-											class="grey lighten-3"
-											height="200"
-											:alt="item.title"
-											:src="item.thumbnail"
-											:lazy-src="item.thumbnail"
-										>
-											<template #placeholder>
-												<v-row
-													class="fill-height ma-0"
-													align="center"
-													justify="center"
-												>
-													<v-progress-circular
-														indeterminate
-														color="grey lighten-5"
-													></v-progress-circular>
-												</v-row>
-											</template>
-										</v-img>
-										<v-card-text
-											style="height: 250px; flex-direction: column"
-											class="d-flex justify-space-between"
-										>
-											<article>
-												<h3 class="body-1 primary--text font-weight-bold">
-													{{ item.categories }}
-												</h3>
-												<h2 class="body-1 font-weight-bold pb-0">
-													{{ item.title }}
-												</h2>
-												<h4 class="body-2 font-weight-light mt-4">
-													{{ strippedContent(item.HTMLbody, 135) }}
-												</h4>
-											</article>
-											<aside>
-												<span
-													class="caption primary--text font-weight-bold"
-												>
-													{{ item.originalAuthor }}
-												</span>
-												<span v-if="item.originalAuthor">|</span>
-												<span class="caption text--disabled">
-													{{ dates(item.createdAt) }}
-												</span>
-											</aside>
-										</v-card-text>
-									</v-card>
+										Ver todos
+									</v-btn>
 								</v-hover>
 							</v-col>
-						</template>
-						<v-col cols="12" class="text-center mt-10">
-							<v-hover v-slot="{ hover }">
-								<v-btn
-									x-large
-									class="px-10"
-									color="white"
-									:outlined="!hover"
-									rounded
-								>
-									Ver todos
-								</v-btn>
-							</v-hover>
-						</v-col>
-					</v-row>
-					<v-row v-else>
-						<v-col v-for="n in 4" :key="n" cols="12" md="3">
-							<v-skeleton-loader light class="mx-auto" type="image, image">
-							</v-skeleton-loader>
-						</v-col>
-					</v-row>
-				</v-col>
-			</v-row>
-		</v-container>
-		<img :src="`${$config.LANDING_URL}/Blog-bottom.png`" style="width: 100%" />
+						</v-row>
+						<v-row v-else>
+							<v-col v-for="n in 4" :key="n" cols="12" md="3">
+								<v-skeleton-loader light class="mx-auto" type="image, image">
+								</v-skeleton-loader>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
+			</v-container>
+			<img :src="`${$config.LANDING_URL}/Blog-bottom.png`" style="width: 100%" />
+		</client-only>
 		<!-- Categorias -->
 		<v-container fluid class="mb-16">
 			<v-row align="center" justify="center">
@@ -591,7 +597,7 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
-	async asyncData({ $axios }) {
+	async asyncData({ $axios, $app }) {
 		const { articles } = await $axios.$get('/blog/all');
 		return {
 			articles,
