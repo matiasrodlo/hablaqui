@@ -330,33 +330,34 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
-	async asyncData({ $axios }) {
-		const { articles } = await $axios.$get('/blog/all');
-		return {
-			blogs: articles,
-		};
+	async asyncData({ $axios, params, payload }) {
+		if (payload) return { article: payload };
+		else {
+			const { article } = await $axios.$get(`/blog/${params.slug}`);
+			return {
+				article,
+			};
+		}
 	},
 	data() {
 		return {
 			length: 3,
-			article: null,
 			rating: 0,
 			breadcrumb: [],
 			title: '',
 			isYellow: false,
 			loading: true,
+			blogs: [],
 		};
 	},
 	head() {
 		return {
-			title: `${this.title} | Hablaquí`,
+			title: `${this.title ? this.title : ''} | Hablaquí`,
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
-					content: this.strippedContent(
-						this.blogs.find(item => item.slug === this.$route.params.slug).HTMLbody
-					),
+					content: this.article ? this.strippedContent(this.article.HTMLbody) : '',
 				},
 			],
 		};
@@ -364,29 +365,32 @@ export default {
 	created() {
 		this.setFloatingChat(false);
 	},
-	mounted() {
-		this.article = this.blogs.find(item => item.slug === this.$route.params.slug);
-		this.title = this.article.title;
-		if (this.article.rating.average)
-			this.rating = parseFloat(this.article.rating.average.toFixed(1));
-		this.breadcrumb = [
-			{
-				text: 'Inicio',
-				disabled: false,
-				href: '/blog',
-			},
-			{
-				text: this.article.categories,
-				disabled: true,
-				href: 'breadcrumbs_link_1',
-			},
-			{
-				text: this.article.title,
-				disabled: true,
-				href: `/blog/${this.article.slug}`,
-			},
-		];
+	async mounted() {
+		if (this.article) {
+			this.title = this.article.title;
+			if (this.article.rating.average)
+				this.rating = parseFloat(this.article.rating.average.toFixed(1));
+			this.breadcrumb = [
+				{
+					text: 'Inicio',
+					disabled: false,
+					href: '/blog',
+				},
+				{
+					text: this.article.categories,
+					disabled: true,
+					href: 'breadcrumbs_link_1',
+				},
+				{
+					text: this.article.title,
+					disabled: true,
+					href: `/blog/${this.article.slug}`,
+				},
+			];
+		}
 		this.loading = false;
+		const { articles } = await this.$axios.$get('/blog/all');
+		this.blogs = articles;
 	},
 	methods: {
 		extractHostname(url) {
