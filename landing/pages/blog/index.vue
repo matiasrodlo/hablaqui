@@ -24,7 +24,7 @@
 						<v-expansion-panel>
 							<v-expansion-panel-header>
 								<div
-									v-if="!combobox.length"
+									v-show="!combobox.length"
 									class="body-1 font-weight-bold primary--text my-1"
 								>
 									Seleccione un asunto
@@ -39,7 +39,7 @@
 									</span>
 								</div>
 								<div
-									v-if="$vuetify.breakpoint.mdAndUp"
+									v-show="$vuetify.breakpoint.mdAndUp"
 									class="text-right font-weight-bold primary--text body-1"
 								>
 									Editar filtros
@@ -90,7 +90,7 @@
 				</v-col>
 			</v-row>
 			<!-- blogs -->
-			<v-row v-if="articles.length" id="blog" tag="section" justify="center" class="mb-16">
+			<v-row v-show="articles.length" id="blog" tag="section" justify="center" class="mb-16">
 				<v-col tag="section" cols="12" sm="8" md="10" xl="9">
 					<v-row tag="section">
 						<template v-for="(article, i) in filterItems">
@@ -279,7 +279,7 @@
 					</v-row>
 				</v-col>
 			</v-row>
-			<template v-else>
+			<div v-show="!articles.length">
 				<v-row justify="center">
 					<v-col cols="12" sm="6">
 						<v-skeleton-loader
@@ -319,7 +319,7 @@
 						></v-skeleton-loader>
 					</v-col>
 				</v-row>
-			</template>
+			</div>
 			<v-row justify="center">
 				<v-col cols="12" class="text-center">
 					<v-hover v-slot="{ hover }">
