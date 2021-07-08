@@ -34,6 +34,9 @@ let psychologist = new Schema({
 	email: {
 		type: String,
 	},
+	username: {
+		type: String,
+	},
 	name: {
 		type: String,
 	},
@@ -66,6 +69,16 @@ let psychologist = new Schema({
 	},
 	models: {
 		type: Array,
+	},
+	country: {
+		type: String,
+		default: 'Chile',
+	},
+	region: {
+		type: String,
+	},
+	comuna: {
+		type: String,
 	},
 	sessions: [session],
 });

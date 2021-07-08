@@ -21,7 +21,7 @@
 									<v-img :src="item.avatar"></v-img>
 								</v-list-item-avatar>
 								<div class="caption text--secondary">codigo {{ item.code }}</div>
-								<v-btn text color="primary" :to="`/psicologos/${item._id}`">
+								<v-btn text color="primary" :to="`/${item.username}`">
 									Mas información
 								</v-btn>
 							</v-col>

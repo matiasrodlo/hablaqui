@@ -93,6 +93,10 @@ const register = async (body, avatar) => {
 		return conflictResponse('Este correo ya esta registrado');
 	}
 
+	if (await Psychologist.exists({ username: body.username })) {
+		return conflictResponse('Este nombre de usuario ya esta ocupado');
+	}
+
 	let splittedExperience = body.experience.split(';');
 	splittedExperience = splittedExperience.map(i => i.trim());
 
@@ -106,6 +110,7 @@ const register = async (body, avatar) => {
 		personalDescription: body.personalDescription,
 		professionalDescription: body.professionalDescription,
 		email: body.email,
+		username: body.username,
 		experience: splittedExperience,
 		formation: splittedFormation,
 		specialties: JSON.parse(body.specialties),
@@ -113,6 +118,8 @@ const register = async (body, avatar) => {
 		languages: JSON.parse(body.languages),
 		gender: body.gender,
 		isTrans: body.isTrans,
+		region: body.region,
+		comuna: body.comuna,
 		avatar,
 	};
 	const psychologist = await Psychologist.create(newPsychologist);
@@ -138,7 +145,8 @@ const reschedule = async (user, id, newDate) => {
 		if (session._id == id) {
 			if (
 				foundPsychologist.sessions.filter(item => item.date == newDate)
-					.length == 0
+					.length == 0 &&
+				moment().isBefore(moment(session.date).subtract({ hours: 24 }))
 			) {
 				session.date = newDate;
 			} else {
@@ -153,12 +161,19 @@ const reschedule = async (user, id, newDate) => {
 	return conflictResponse('Esa hora esta ocupada');
 };
 
+const getByUsername = async username => {
+	return okResponse('Psicologo encontrado', {
+		psychologist: await Psychologist.findOne({ username }),
+	});
+};
+
 const psychologistsService = {
 	getAll,
 	match,
 	register,
 	createSession,
 	reschedule,
+	getByUsername,
 };
 
 export default Object.freeze(psychologistsService);

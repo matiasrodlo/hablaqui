@@ -7,6 +7,10 @@ import psychologistsController from '../controllers/psychologist';
 const psychologistsRouter = Router();
 
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
+psychologistsRouter.get(
+	'/psychologists/:username',
+	psychologistsController.getByUsername
+);
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],

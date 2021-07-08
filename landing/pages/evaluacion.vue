@@ -548,7 +548,7 @@
 													max-width="600"
 													max-height="190"
 													class="ma-2"
-													:to="{ path: `/psicologos/${item._id}` }"
+													:to="{ path: `/${item.username}` }"
 												>
 													<v-card-text>
 														<v-row align="center">
