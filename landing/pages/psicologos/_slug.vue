@@ -11,11 +11,11 @@ export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	async asyncData({ params, payload, app, $axios }) {
+	async asyncData({ params, payload, $config }) {
 		if (payload) return { comuna: payload };
 		else {
-			const response = await axios.get(`${app.$config.LANDING_URL}/comunas.json`);
-			const comuna = response.data.find(el => el.comuna.slug === params.slug);
+			const response = await axios.get(`${$config.LANDING_URL}/comunas.json`);
+			const comuna = response.data.find(el => el.comuna.slug === params.slug).comuna;
 			return { comuna };
 		}
 	},
