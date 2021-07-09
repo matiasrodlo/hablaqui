@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologo :loading="loading" />
+		<psicologo :psychologist="psychologist" :loading="loading" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -33,6 +33,16 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologo: () => import('~/components/psicologos/psicologo'),
 	},
+	async asyncData({ $axios, params, payload }) {
+		if (payload) {
+			return { psychologists: payload };
+		} else {
+			const { psychologist } = await $axios.$get(`/psychologists/${params.slug}`);
+			return {
+				psychologist,
+			};
+		}
+	},
 	data() {
 		return {
 			loading: false,
@@ -40,13 +50,11 @@ export default {
 	},
 	async mounted() {
 		this.loading = true;
-		await this.getPsychologists();
 		await this.getAppointments();
 		this.loading = false;
 	},
 	methods: {
 		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
 			getAppointments: 'Appointments/getAppointments',
 		}),
 	},

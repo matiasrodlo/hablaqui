@@ -119,6 +119,7 @@ export default {
 			? process.env.VUE_APP_LANDING
 			: 'http://localhost:9000/',
 		exclude: ['/dashboard/**', '/nuevo-psicologo'],
+		trailingSlash: true,
 	},
 
 	auth: {
