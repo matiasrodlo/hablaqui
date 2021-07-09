@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Comunas from './static/comunas.json';
 
 export default {
 	target: 'static',
@@ -32,6 +31,10 @@ export default {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
+			const baseLanding = process.env.VUE_APP_LANDING
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/';
+
 			const { data } = await axios.get(`${baseURL}/blog/all`);
 			const blogs = data.articles.map(item => {
 				return { route: `/blog/${item.slug}`, payload: item };
@@ -40,11 +43,9 @@ export default {
 			const psicologos = res.data.psychologists.map(psychologist => {
 				return { route: `/${psychologist.username}`, payload: psychologist };
 			});
-			const comunas = Comunas.map(item => {
-				return { route: `/psicologos/${item.comuna.slug}`, payload: item.comuna };
-			});
+			const response = await axios.get(`${baseLanding}comunas.json`);
 
-			return blogs.concat(psicologos).concat(comunas);
+			return blogs.concat(psicologos).concat(response.data.comunas);
 		},
 	},
 	loading: {
