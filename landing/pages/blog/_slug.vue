@@ -361,9 +361,6 @@ export default {
 		};
 	},
 	head() {
-		const { path } = this.$route;
-		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
-		const canonical = `${this.$config.LANDING_URL}/${pathWithSlash}`;
 		return {
 			title: `${this.title ? this.title : ''} | Hablaquí`,
 			meta: [
@@ -378,7 +375,12 @@ export default {
 					content: 'index,nofollow',
 				},
 			],
-			link: [{ rel: 'canonical', href: canonical }],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}blog/${this.$route.params.slug}`,
+				},
+			],
 		};
 	},
 	created() {

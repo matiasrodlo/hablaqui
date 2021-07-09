@@ -1,2089 +1,2089 @@
 [
     {   
         "comuna": {
-            "nombre": "Arica",
+            "name": "Arica",
             "slug": "arica"
         }
     },
     {   
         "comuna": {
-            "nombre": "Camarones",
+            "name": "Camarones",
             "slug": "camarones"
         }
     },
     {   
         "comuna": {
-            "nombre": "General Lagos",
+            "name": "General Lagos",
             "slug": "general-lagos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Putre",
+            "name": "Putre",
             "slug": "putre"
         }
     },
     {   
         "comuna": {
-            "nombre": "Alto Hospicio",
+            "name": "Alto Hospicio",
             "slug": "alto-hospicio"
         }
     },
     {   
         "comuna": {
-            "nombre": "Camiña",
+            "name": "Camiña",
             "slug": "camina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Colchane",
+            "name": "Colchane",
             "slug": "colchane"
         }
     },
     {   
         "comuna": {
-            "nombre": "Huara",
+            "name": "Huara",
             "slug": "huara"
         }
     },
     {   
         "comuna": {
-            "nombre": "Iquique",
+            "name": "Iquique",
             "slug": "iquique"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pica",
+            "name": "Pica",
             "slug": "Pica"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pozo Almonte",
+            "name": "Pozo Almonte",
             "slug": "pozo-almonte"
         }
     },
     {   
         "comuna": {
-            "nombre": "Antofagasta",
+            "name": "Antofagasta",
             "slug": "antofagasta"
         }
     },
     {   
         "comuna": {
-            "nombre": "Calama",
+            "name": "Calama",
             "slug": "calama"
         }
     },
     {   
         "comuna": {
-            "nombre": "María Elena",
+            "name": "María Elena",
             "slug": "maria-elena"
         }
     },
     {   
         "comuna": {
-            "nombre": "mejillones",
+            "name": "mejillones",
             "slug": "mejillones"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ollagüe",
+            "name": "Ollagüe",
             "slug": "ollague"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Pedro de Atacama",
+            "name": "San Pedro de Atacama",
             "slug": "san-pedro-de-atacama"
         }
     },
     {   
         "comuna": {
-            "nombre": "Sierra Gorda",
+            "name": "Sierra Gorda",
             "slug": "sierra-gorda"
         }
     },
     {   
         "comuna": {
-            "nombre": "Taltal",
+            "name": "Taltal",
             "slug": "taltal"
         }
     },
     {   
         "comuna": {
-            "nombre": "tocopilla",
+            "name": "tocopilla",
             "slug": "tocopilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Alto del Carmen",
+            "name": "Alto del Carmen",
             "slug": "alto-el-Carmen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Caldera",
+            "name": "Caldera",
             "slug": "caldera"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chañaral",
+            "name": "Chañaral",
             "slug": "chanaral"
         }
     },
     {   
         "comuna": {
-            "nombre": "Copiapó",
+            "name": "Copiapó",
             "slug": "copiapo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Diego de Almagro",
+            "name": "Diego de Almagro",
             "slug": "diego-de-almagro"
         }
     },
     {   
         "comuna": {
-            "nombre": "Freirina",
+            "name": "Freirina",
             "slug": "freirina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Tierra Amarilla",
+            "name": "Tierra Amarilla",
             "slug": "tierra-amarilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Huasco",
+            "name": "Huasco",
             "slug": "huasco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Vallenar",
+            "name": "Vallenar",
             "slug": "vallenar"
         }
     },
     {   
         "comuna": {
-            "nombre": "Andacollo",
+            "name": "Andacollo",
             "slug": "andacollo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Canela",
+            "name": "Canela",
             "slug": "canela"
         }
     },
     {   
         "comuna": {
-            "nombre": "Combarbalá",
+            "name": "Combarbalá",
             "slug": "combarbala"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coquimbo",
+            "name": "Coquimbo",
             "slug": "coquimbo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Illapel",
+            "name": "Illapel",
             "slug": "illapel"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Higuera",
+            "name": "La Higuera",
             "slug": "la-higuera"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Serena",
+            "name": "La Serena",
             "slug": "la-serena"
         }
     },
     {   
         "comuna": {
-            "nombre": "Monte Patria",
+            "name": "Monte Patria",
             "slug": "monte-patria"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Vilos",
+            "name": "Los Vilos",
             "slug": "los-vilos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ovalle",
+            "name": "Ovalle",
             "slug": "ovalle"
         }
     },
     {   
         "comuna": {
-            "nombre": "Paiguano",
+            "name": "Paiguano",
             "slug": "paiguano"
         }
     },
     {   
         "comuna": {
-            "nombre": "Punitaqui",
+            "name": "Punitaqui",
             "slug": "punitaqui"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Hurtado",
+            "name": "Río Hurtado",
             "slug": "rio-hurtado"
         }
     },
     {   
         "comuna": {
-            "nombre": "Salamanca",
+            "name": "Salamanca",
             "slug": "salamanca"
         }
     },
     {   
         "comuna": {
-            "nombre": "Vicuña",
+            "name": "Vicuña",
             "slug": "vicuna"
         }
     },
     {   
         "comuna": {
-            "nombre": "Algarrobo",
+            "name": "Algarrobo",
             "slug": "algarrobo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cabildo",
+            "name": "Cabildo",
             "slug": "cabildo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Calera",
+            "name": "Calera",
             "slug": "calera"
         }
     },
     {   
         "comuna": {
-            "nombre": "Calle Larga",
+            "name": "Calle Larga",
             "slug": "calle-larga"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cartagena",
+            "name": "Cartagena",
             "slug": "Cartagena"
         }
     },
     {   
         "comuna": {
-            "nombre": "Casablanca",
+            "name": "Casablanca",
             "slug": "casablanca"
         }
     },
     {   
         "comuna": {
-            "nombre": "Catemu",
+            "name": "Catemu",
             "slug": "catemu"
         }
     },
     {   
         "comuna": {
-            "nombre": "Concón",
+            "name": "Concón",
             "slug": "concon"
         }
     },
     {   
         "comuna": {
-            "nombre": "El Quisco",
+            "name": "El Quisco",
             "slug": "el-quisco"
         }
     },
     {   
         "comuna": {
-            "nombre": "El Tabo",
+            "name": "El Tabo",
             "slug": "el-tabo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Hijuelas",
+            "name": "Hijuelas",
             "slug": "hijuelas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Isla de Pascua",
+            "name": "Isla de Pascua",
             "slug": "isla-de-pascualas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Isla de Pascua",
+            "name": "Isla de Pascua",
             "slug": "isla-de-pascua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Juan Fernández",
+            "name": "Juan Fernández",
             "slug": "juan-fernandez"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Cruz",
+            "name": "La Cruz",
             "slug": "la-cruz"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Ligua",
+            "name": "La Ligua",
             "slug": "la-ligua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Limache",
+            "name": "Limache",
             "slug": "limache"
         }
     },
     {   
         "comuna": {
-            "nombre": "Llaillay",
+            "name": "Llaillay",
             "slug": "llaillay"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Andes",
+            "name": "Los Andes",
             "slug": "los-andes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Andes",
+            "name": "Los Andes",
             "slug": "los-andes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Nogales",
+            "name": "Nogales",
             "slug": "nogales"
         }
     },
     {   
         "comuna": {
-            "nombre": "olmue",
+            "name": "olmue",
             "slug": "Olmué"
         }
     },
     {   
         "comuna": {
-            "nombre": "Panquehue",
+            "name": "Panquehue",
             "slug": "panquehue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Papudo",
+            "name": "Papudo",
             "slug": "Papudo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Petorca",
+            "name": "Petorca",
             "slug": "petorca"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puchuncaví",
+            "name": "Puchuncaví",
             "slug": "puchuncavi"
         }
     },
     {   
         "comuna": {
-            "nombre": "Putaendo",
+            "name": "Putaendo",
             "slug": "putaendo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quillota",
+            "name": "Quillota",
             "slug": "quillota"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quilpué",
+            "name": "Quilpué",
             "slug": "quilpue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quintero",
+            "name": "Quintero",
             "slug": "quintero"
         }
     },
     {   
         "comuna": {
-            "nombre": "Rinconada",
+            "name": "Rinconada",
             "slug": "rinconada"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Antonio",
+            "name": "San Antonio",
             "slug": "san-antonio"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Esteban",
+            "name": "San Esteban",
             "slug": "san-esteban"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Felipe",
+            "name": "San Felipe",
             "slug": "san-felipe"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santa María",
+            "name": "Santa María",
             "slug": "santa-maria"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santo Domingo",
+            "name": "Santo Domingo",
             "slug": "santo-domingo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Valparaíso",
+            "name": "Valparaíso",
             "slug": "valparaiso"
         }
     },
     {   
         "comuna": {
-            "nombre": "Villa Alemana",
+            "name": "Villa Alemana",
             "slug": "villa-alemana"
         }
     },
     {   
         "comuna": {
-            "nombre": "Viña del Mar",
+            "name": "Viña del Mar",
             "slug": "vina-del-mar"
         }
     },
     {   
         "comuna": {
-            "nombre": "Viña del Mar",
+            "name": "Viña del Mar",
             "slug": "vina-del-mar"
         }
     },
     {   
         "comuna": {
-            "nombre": "Zapallar",
+            "name": "Zapallar",
             "slug": "zapallar"
         }
     },
     {   
         "comuna": {
-            "nombre": "lhué",
+            "name": "lhué",
             "slug": "alhue"
         }
     },
     {   
         "comuna": {
-            "nombre": "lhué",
+            "name": "lhué",
             "slug": "alhue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Alhué",
+            "name": "Alhué",
             "slug": "alhue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Buin",
+            "name": "Buin",
             "slug": "buin"
         }
     },
     {   
         "comuna": {
-            "nombre": "Calera de Tango",
+            "name": "Calera de Tango",
             "slug": "calera-de-tango"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cerrillos",
+            "name": "Cerrillos",
             "slug": "cerrillos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Colina",
+            "name": "Colina",
             "slug": "colina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cerro Navia",
+            "name": "Cerro Navia",
             "slug": "cerro-navia"
         }
     },
     {   
         "comuna": {
-            "nombre": "Conchalí",
+            "name": "Conchalí",
             "slug": "conchali"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curacaví",
+            "name": "Curacaví",
             "slug": "curacavi"
         }
     },
     {   
         "comuna": {
-            "nombre": "El Bosque",
+            "name": "El Bosque",
             "slug": "el-bosque"
         }
     },
     {   
         "comuna": {
-            "nombre": "El Monte",
+            "name": "El Monte",
             "slug": "el-monte"
         }
     },
     {   
         "comuna": {
-            "nombre": "Estación Central",
+            "name": "Estación Central",
             "slug": "estacion-central"
         }
     },
     {   
         "comuna": {
-            "nombre": "Huechuraba",
+            "name": "Huechuraba",
             "slug": "huechuraba"
         }
     },
     {   
         "comuna": {
-            "nombre": "Independencia",
+            "name": "Independencia",
             "slug": "independencia"
         }
     },
     {   
         "comuna": {
-            "nombre": "Isla de Maipo",
+            "name": "Isla de Maipo",
             "slug": "isla-de-maipo"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Cisterna",
+            "name": "La Cisterna",
             "slug": "la-cisterna"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Florida",
+            "name": "La Florida",
             "slug": "la-florida"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Granja",
+            "name": "La Granja",
             "slug": "la-granja"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Pintana",
+            "name": "La Pintana",
             "slug": "la-pintana"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Reina",
+            "name": "La Reina",
             "slug": "la-reina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lampa",
+            "name": "Lampa",
             "slug": "lampa"
         }
     },
     {   
         "comuna": {
-            "nombre": "Las Condes",
+            "name": "Las Condes",
             "slug": "las-condes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lo Barnechea",
+            "name": "Lo Barnechea",
             "slug": "lo-barnechea"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lo Espejo",
+            "name": "Lo Espejo",
             "slug": "lo-espejo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lo Prado",
+            "name": "Lo Prado",
             "slug": "lo-prado"
         }
     },
     {   
         "comuna": {
-            "nombre": "Macul",
+            "name": "Macul",
             "slug": "macul"
         }
     },
     {   
         "comuna": {
-            "nombre": "Maipú",
+            "name": "Maipú",
             "slug": "maipu"
         }
     },
     {   
         "comuna": {
-            "nombre": "María Pinto",
+            "name": "María Pinto",
             "slug": "maria-pinto"
         }
     },
     {   
         "comuna": {
-            "nombre": "Melipilla",
+            "name": "Melipilla",
             "slug": "melipilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ñuñoa",
+            "name": "Ñuñoa",
             "slug": "nunoa"
         }
     },
     {   
         "comuna": {
-            "nombre": "Padre Hurtado",
+            "name": "Padre Hurtado",
             "slug": "padre-hurtado"
         }
     },
     {   
         "comuna": {
-            "nombre": "Paine",
+            "name": "Paine",
             "slug": "paine"
         }
     },
     {   
         "comuna": {
-            "nombre": "Peñaflor",
+            "name": "Peñaflor",
             "slug": "penaflor"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pedro Aguirre Cerda",
+            "name": "Pedro Aguirre Cerda",
             "slug": "pedro-aguirre-cerda"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pirque",
+            "name": "Pirque",
             "slug": "pirque"
         }
     },
     {   
         "comuna": {
-            "nombre": "Providencia",
+            "name": "Providencia",
             "slug": "providencia"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pudahuel",
+            "name": "Pudahuel",
             "slug": "pudahuel"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puente Alto",
+            "name": "Puente Alto",
             "slug": "puente-alto"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quilicura",
+            "name": "Quilicura",
             "slug": "quilicura"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quinta Normal",
+            "name": "Quinta Normal",
             "slug": "Quinta-ormal"
         }
     },
     {   
         "comuna": {
-            "nombre": "Recoleta",
+            "name": "Recoleta",
             "slug": "recoleta"
         }
     },
     {   
         "comuna": {
-            "nombre": "Renca",
+            "name": "Renca",
             "slug": "renca"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Bernardo",
+            "name": "San Bernardo",
             "slug": "san-bernardo"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Joaquín",
+            "name": "San Joaquín",
             "slug": "san-joaquin"
         }
     },
     {   
         "comuna": {
-            "nombre": "San José de Maipo",
+            "name": "San José de Maipo",
             "slug": "san-jose-de-maipo"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Miguel",
+            "name": "San Miguel",
             "slug": "san-miguel"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Pedro",
+            "name": "San Pedro",
             "slug": "san-pedro"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Ramón",
+            "name": "San Ramón",
             "slug": "san-ramon"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santiago",
+            "name": "Santiago",
             "slug": "santiago"
         }
     },
     {   
         "comuna": {
-            "nombre": "Talagante",
+            "name": "Talagante",
             "slug": "talagante"
         }
     },
     {   
         "comuna": {
-            "nombre": "Tiltil",
+            "name": "Tiltil",
             "slug": "tiltil"
         }
     },
     {   
         "comuna": {
-            "nombre": "Vitacura",
+            "name": "Vitacura",
             "slug": "vitacura"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chimbarongo",
+            "name": "Chimbarongo",
             "slug": "chimbarongo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chépica",
+            "name": "Chépica",
             "slug": "chepica"
         }
     },
     {   
         "comuna": {
-            "nombre": "Codegua",
+            "name": "Codegua",
             "slug": "codegua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coinco",
+            "name": "Coinco",
             "slug": "coinco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coltauco",
+            "name": "Coltauco",
             "slug": "coltauco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Doñihue",
+            "name": "Doñihue",
             "slug": "donihue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Graneros",
+            "name": "Graneros",
             "slug": "graneros"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Estrella",
+            "name": "La Estrella",
             "slug": "la-estrella"
         }
     },
     {   
         "comuna": {
-            "nombre": "Las Cabras",
+            "name": "Las Cabras",
             "slug": "las-cabras"
         }
     },
     {   
         "comuna": {
-            "nombre": "Litueche",
+            "name": "Litueche",
             "slug": "litueche"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lolol",
+            "name": "Lolol",
             "slug": "lolol"
         }
     },
     {   
         "comuna": {
-            "nombre": "Machalí",
+            "name": "Machalí",
             "slug": "machali"
         }
     },
     {   
         "comuna": {
-            "nombre": "Malloa",
+            "name": "Malloa",
             "slug": "malloa"
         }
     },
     {   
         "comuna": {
-            "nombre": "Marchihue",
+            "name": "Marchihue",
             "slug": "marchihue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Nancagua",
+            "name": "Nancagua",
             "slug": "nancagua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Navidad",
+            "name": "Navidad",
             "slug": "navidad"
         }
     },
     {   
         "comuna": {
-            "nombre": "Olivar",
+            "name": "Olivar",
             "slug": "olivar"
         }
     },
     {   
         "comuna": {
-            "nombre": "Palmilla",
+            "name": "Palmilla",
             "slug": "palmilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Paredones",
+            "name": "Paredones",
             "slug": "paredones"
         }
     },
     {   
         "comuna": {
-            "nombre": "Peralillo",
+            "name": "Peralillo",
             "slug": "peralillo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Peumo",
+            "name": "Peumo",
             "slug": "peumo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pichidegua",
+            "name": "Pichidegua",
             "slug": "pichidegua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pichilemu",
+            "name": "Pichilemu",
             "slug": "pichilemu"
         }
     },
     {   
         "comuna": {
-            "nombre": "Placilla",
+            "name": "Placilla",
             "slug": "placilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pumanque",
+            "name": "Pumanque",
             "slug": "pumanque"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pumanque",
+            "name": "Pumanque",
             "slug": "pumanque"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quinta de Tilcoco",
+            "name": "Quinta de Tilcoco",
             "slug": "quinta-de-tilcoco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Rancagua",
+            "name": "Rancagua",
             "slug": "rancagua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Rengo",
+            "name": "Rengo",
             "slug": "rengo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Requínoa",
+            "name": "Requínoa",
             "slug": "requinoa"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Fernando",
+            "name": "San Fernando",
             "slug": "san-fernando"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Francisco de Mostazal",
+            "name": "San Francisco de Mostazal",
             "slug": "san-francisco-de-mostazal"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santa Cruz",
+            "name": "Santa Cruz",
             "slug": "santa-cruz"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cauquenes",
+            "name": "Cauquenes",
             "slug": "Cauquenes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chanco",
+            "name": "Chanco",
             "slug": "chanco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Colbún",
+            "name": "Colbún",
             "slug": "colbun"
         }
     },
     {   
         "comuna": {
-            "nombre": "Constitución",
+            "name": "Constitución",
             "slug": "constitucion"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curepto",
+            "name": "Curepto",
             "slug": "curepto"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curicó",
+            "name": "Curicó",
             "slug": "curico"
         }
     },
     {   
         "comuna": {
-            "nombre": "Empedrado",
+            "name": "Empedrado",
             "slug": "empedrado"
         }
     },
     {   
         "comuna": {
-            "nombre": "Hualañé",
+            "name": "Hualañé",
             "slug": "hualane"
         }
     },
     {   
         "comuna": {
-            "nombre": "Licantén",
+            "name": "Licantén",
             "slug": "licanten"
         }
     },
     {   
         "comuna": {
-            "nombre": "Linares",
+            "name": "Linares",
             "slug": "linares"
         }
     },
     {   
         "comuna": {
-            "nombre": "Longaví",
+            "name": "Longaví",
             "slug": "longavi"
         }
     },
     {   
         "comuna": {
-            "nombre": "Maule",
+            "name": "Maule",
             "slug": "maule"
         }
     },
     {   
         "comuna": {
-            "nombre": "Molina",
+            "name": "Molina",
             "slug": "molina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Parral",
+            "name": "Parral",
             "slug": "parral"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pelarco",
+            "name": "Pelarco",
             "slug": "pelarco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pelluhue",
+            "name": "Pelluhue",
             "slug": "pelluhue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pencahue",
+            "name": "Pencahue",
             "slug": "pencahue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Rauco",
+            "name": "Rauco",
             "slug": "rauco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Retiro",
+            "name": "Retiro",
             "slug": "retiro"
         }
     },
     {   
         "comuna": {
-            "nombre": "Romeral",
+            "name": "Romeral",
             "slug": "romeral"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Claro",
+            "name": "Río Claro",
             "slug": "rio-claro"
         }
     },
     {   
         "comuna": {
-            "nombre": "Sagrada Familia",
+            "name": "Sagrada Familia",
             "slug": "sagrada-familia"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Clemente",
+            "name": "San Clemente",
             "slug": "san-clemente"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Javier de Loncomilla",
+            "name": "San Javier de Loncomilla",
             "slug": "san-javier-de-loncomilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Rafael",
+            "name": "San Rafael",
             "slug": "san-rafael"
         }
     },
     {   
         "comuna": {
-            "nombre": "Talca",
+            "name": "Talca",
             "slug": "talca"
         }
     },
     {   
         "comuna": {
-            "nombre": "Teno",
+            "name": "Teno",
             "slug": "teno"
         }
     },
     {   
         "comuna": {
-            "nombre": "Vichuquén",
+            "name": "Vichuquén",
             "slug": "vichuquen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Villa Alegre",
+            "name": "Villa Alegre",
             "slug": "villa-alegre"
         }
     },
     {   
         "comuna": {
-            "nombre": "Yerbas Buenas",
+            "name": "Yerbas Buenas",
             "slug": "yerbas-buenas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Bulnes",
+            "name": "Bulnes",
             "slug": "bulnes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chillán Viejo",
+            "name": "Chillán Viejo",
             "slug": "chillan-viejo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chillan",
+            "name": "Chillan",
             "slug": "chillan"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cobquecura",
+            "name": "Cobquecura",
             "slug": "cobquecura"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coelemu",
+            "name": "Coelemu",
             "slug": "coelemu"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coihueco",
+            "name": "Coihueco",
             "slug": "coihueco"
         }
     },
     {   
         "comuna": {
-            "nombre": "El Carmen",
+            "name": "El Carmen",
             "slug": "el-carmen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ninhue",
+            "name": "Ninhue",
             "slug": "ninhue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ñiquén",
+            "name": "Ñiquén",
             "slug": "niquen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pemuco",
+            "name": "Pemuco",
             "slug": "pemuco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Portezuelo",
+            "name": "Portezuelo",
             "slug": "portezuelo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quillón",
+            "name": "Quillón",
             "slug": "quillon"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quirihue",
+            "name": "Quirihue",
             "slug": "quirihue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ránquil",
+            "name": "Ránquil",
             "slug": "ranquil"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Carlos",
+            "name": "San Carlos",
             "slug": "san-carlos"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Fabián",
+            "name": "San Fabián",
             "slug": "san-fabian"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Ignacio",
+            "name": "San Ignacio",
             "slug": "san-ignacio"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Nicolás",
+            "name": "San Nicolás",
             "slug": "san-nicolas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Treguaco",
+            "name": "Treguaco",
             "slug": "treguaco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Yungay",
+            "name": "Yungay",
             "slug": "yungay"
         }
     },
     {   
         "comuna": {
-            "nombre": "Alto Biobío",
+            "name": "Alto Biobío",
             "slug": "alto-biobio"
         }
     },
     {   
         "comuna": {
-            "nombre": "Antuco",
+            "name": "Antuco",
             "slug": "antuco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Arauco",
+            "name": "Arauco",
             "slug": "arauco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cabrero",
+            "name": "Cabrero",
             "slug": "cabrero"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cañete",
+            "name": "Cañete",
             "slug": "canete"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chiguayante",
+            "name": "Chiguayante",
             "slug": "chiguayante"
         }
     },
     {   
         "comuna": {
-            "nombre": "Concepción",
+            "name": "Concepción",
             "slug": "concepcion"
         }
     },
     {   
         "comuna": {
-            "nombre": "Contulmo",
+            "name": "Contulmo",
             "slug": "contulmo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coronel",
+            "name": "Coronel",
             "slug": "coronel"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curanilahue",
+            "name": "Curanilahue",
             "slug": "curanilahue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Florida",
+            "name": "Florida",
             "slug": "florida"
         }
     },
     {   
         "comuna": {
-            "nombre": "Hualpén",
+            "name": "Hualpén",
             "slug": "hualpen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Hualqui",
+            "name": "Hualqui",
             "slug": "hualqui"
         }
     },
     {   
         "comuna": {
-            "nombre": "Laja",
+            "name": "Laja",
             "slug": "laja"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lebu",
+            "name": "Lebu",
             "slug": "lebu"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Álamos",
+            "name": "Los Álamos",
             "slug": "los-alamos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Ángeles",
+            "name": "Los Ángeles",
             "slug": "los-angeles"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lota",
+            "name": "Lota",
             "slug": "lota"
         }
     },
     {   
         "comuna": {
-            "nombre": "Mulchén",
+            "name": "Mulchén",
             "slug": "mulchen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Nacimiento",
+            "name": "Nacimiento",
             "slug": "nacimiento"
         }
     },
     {   
         "comuna": {
-            "nombre": "Negrete",
+            "name": "Negrete",
             "slug": "negrete"
         }
     },
     {   
         "comuna": {
-            "nombre": "Penco",
+            "name": "Penco",
             "slug": "penco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quilaco",
+            "name": "Quilaco",
             "slug": "quilaco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quilleco",
+            "name": "Quilleco",
             "slug": "quilleco"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Pedro de la Paz",
+            "name": "San Pedro de la Paz",
             "slug": "san-pedro-de-la-paz"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Rosendo",
+            "name": "San Rosendo",
             "slug": "san-rosendo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santa Bárbara",
+            "name": "Santa Bárbara",
             "slug": "santa-barbara"
         }
     },
     {   
         "comuna": {
-            "nombre": "Santa Juana",
+            "name": "Santa Juana",
             "slug": "santa-juana"
         }
     },
     {   
         "comuna": {
-            "nombre": "Talcahuano",
+            "name": "Talcahuano",
             "slug": "talcahuano"
         }
     },
     {   
         "comuna": {
-            "nombre": "Tirúa",
+            "name": "Tirúa",
             "slug": "tirua"
         }
     },
     {   
         "comuna": {
-            "nombre": "Tomé",
+            "name": "Tomé",
             "slug": "tome"
         }
     },
     {   
         "comuna": {
-            "nombre": "Yumbel",
+            "name": "Yumbel",
             "slug": "yumbel"
         }
     },
     {   
         "comuna": {
-            "nombre": "Angol",
+            "name": "Angol",
             "slug": "angol"
         }
     },
     {   
         "comuna": {
-            "nombre": "Carahue",
+            "name": "Carahue",
             "slug": "carahue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cholchol",
+            "name": "Cholchol",
             "slug": "cholchol"
         }
     },
     {   
         "comuna": {
-            "nombre": "Collipulli",
+            "name": "Collipulli",
             "slug": "collipulli"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cunco",
+            "name": "Cunco",
             "slug": "cunco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curacautín",
+            "name": "Curacautín",
             "slug": "curacautin"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curarrehue",
+            "name": "Curarrehue",
             "slug": "curarrehue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ercilla",
+            "name": "Ercilla",
             "slug": "ercilla"
         }
     },
     {   
         "comuna": {
-            "nombre": "Freire",
+            "name": "Freire",
             "slug": "freire"
         }
     },
     {   
         "comuna": {
-            "nombre": "Galvarino",
+            "name": "Galvarino",
             "slug": "galvarino"
         }
     },
     {   
         "comuna": {
-            "nombre": "Gorbea",
+            "name": "Gorbea",
             "slug": "gorbea"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lautaro",
+            "name": "Lautaro",
             "slug": "lautaro"
         }
     },
     {   
         "comuna": {
-            "nombre": "Loncoche",
+            "name": "Loncoche",
             "slug": "loncoche"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lonquimay",
+            "name": "Lonquimay",
             "slug": "lonquimay"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Sauces",
+            "name": "Los Sauces",
             "slug": "los-sauces"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lumaco",
+            "name": "Lumaco",
             "slug": "lumaco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Melipeuco",
+            "name": "Melipeuco",
             "slug": "melipeuco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Nueva Imperial",
+            "name": "Nueva Imperial",
             "slug": "nueva-imperial"
         }
     },
     {   
         "comuna": {
-            "nombre": "Padre las Casas",
+            "name": "Padre las Casas",
             "slug": "padre-las-casas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Perquenco",
+            "name": "Perquenco",
             "slug": "perquenco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pitrufquén",
+            "name": "Pitrufquén",
             "slug": "pitrufquén"
         }
     },
     {   
         "comuna": {
-            "nombre": "Pucón",
+            "name": "Pucón",
             "slug": "pucon"
         }
     },
     {   
         "comuna": {
-            "nombre": "Purén",
+            "name": "Purén",
             "slug": "puren"
         }
     },
     {   
         "comuna": {
-            "nombre": "Renaico",
+            "name": "Renaico",
             "slug": "renaico"
         }
     },
     {   
         "comuna": {
-            "nombre": "Saavedra",
+            "name": "Saavedra",
             "slug": "saavedra"
         }
     },
     {   
         "comuna": {
-            "nombre": "Temuco",
+            "name": "Temuco",
             "slug": "temuco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Teodoro Schmidt",
+            "name": "Teodoro Schmidt",
             "slug": "teodoro-schmidt"
         }
     },
     {   
         "comuna": {
-            "nombre": "Toltén",
+            "name": "Toltén",
             "slug": "tolten"
         }
     },
     {   
         "comuna": {
-            "nombre": "Traiguén",
+            "name": "Traiguén",
             "slug": "traiguen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Victoria",
+            "name": "Victoria",
             "slug": "victoria"
         }
     },
     {   
         "comuna": {
-            "nombre": "Vilcún",
+            "name": "Vilcún",
             "slug": "vilcun"
         }
     },
     {   
         "comuna": {
-            "nombre": "Villarrica",
+            "name": "Villarrica",
             "slug": "villarrica"
         }
     },
     {   
         "comuna": {
-            "nombre": "Corral",
+            "name": "Corral",
             "slug": "corral"
         }
     },
     {   
         "comuna": {
-            "nombre": "Futrono",
+            "name": "Futrono",
             "slug": "futrono"
         }
     },
     {   
         "comuna": {
-            "nombre": "La Unión",
+            "name": "La Unión",
             "slug": "la-union"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lago Ranco",
+            "name": "Lago Ranco",
             "slug": "lago-ranco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lanco",
+            "name": "Lanco",
             "slug": "lanco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Lagos",
+            "name": "Los Lagos",
             "slug": "los-lagos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Mariquina",
+            "name": "Mariquina",
             "slug": "mariquina"
         }
     },
     {   
         "comuna": {
-            "nombre": "Máfil",
+            "name": "Máfil",
             "slug": "mafil"
         }
     },
     {   
         "comuna": {
-            "nombre": "Paillaco",
+            "name": "Paillaco",
             "slug": "paillaco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Panguipulli",
+            "name": "Panguipulli",
             "slug": "panguipulli"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Bueno",
+            "name": "Río Bueno",
             "slug": "rio-bueno"
         }
     },
     {   
         "comuna": {
-            "nombre": "Valdivia",
+            "name": "Valdivia",
             "slug": "valdivia"
         }
     },
     {   
         "comuna": {
-            "nombre": "Ancud",
+            "name": "Ancud",
             "slug": "ancud"
         }
     },
     {   
         "comuna": {
-            "nombre": "Calbuco",
+            "name": "Calbuco",
             "slug": "calbuco"
         }
     },
     {   
         "comuna": {
-            "nombre": "Castro",
+            "name": "Castro",
             "slug": "castro"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chaitén",
+            "name": "Chaitén",
             "slug": "chaiten"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chonchi",
+            "name": "Chonchi",
             "slug": "chonchi"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cochamó",
+            "name": "Cochamó",
             "slug": "cochamo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Curaco de Vélez",
+            "name": "Curaco de Vélez",
             "slug": "curaco-de-velez"
         }
     },
     {   
         "comuna": {
-            "nombre": "Dalcahue",
+            "name": "Dalcahue",
             "slug": "dalcahue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Fresia",
+            "name": "Fresia",
             "slug": "fresia"
         }
     },
     {   
         "comuna": {
-            "nombre": "Frutillar",
+            "name": "Frutillar",
             "slug": "frutillar"
         }
     },
     {   
         "comuna": {
-            "nombre": "Futaleufú",
+            "name": "Futaleufú",
             "slug": "futaleufu"
         }
     },
     {   
         "comuna": {
-            "nombre": "Hualaihué",
+            "name": "Hualaihué",
             "slug": "hualaihue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Llanquihue",
+            "name": "Llanquihue",
             "slug": "llanquihue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Los Muermos",
+            "name": "Los Muermos",
             "slug": "los-muermos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Maullín",
+            "name": "Maullín",
             "slug": "maullin"
         }
     },
     {   
         "comuna": {
-            "nombre": "Osorno",
+            "name": "Osorno",
             "slug": "osorno"
         }
     },
     {   
         "comuna": {
-            "nombre": "Palena",
+            "name": "Palena",
             "slug": "palena"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puerto Octay",
+            "name": "Puerto Octay",
             "slug": "puerto-octay"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puerto Montt",
+            "name": "Puerto Montt",
             "slug": "puerto-montt"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puerto Varas",
+            "name": "Puerto Varas",
             "slug": "puerto-varas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puqueldón",
+            "name": "Puqueldón",
             "slug": "puqueldon"
         }
     },
     {   
         "comuna": {
-            "nombre": "Purranque",
+            "name": "Purranque",
             "slug": "purranque"
         }
     },
     {   
         "comuna": {
-            "nombre": "Puyehue",
+            "name": "Puyehue",
             "slug": "puyehue"
         }
     },
     {   
         "comuna": {
-            "nombre": "Queilén",
+            "name": "Queilén",
             "slug": "queilen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quellón",
+            "name": "Quellón",
             "slug": "quellon"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quemchi",
+            "name": "Quemchi",
             "slug": "quemchi"
         }
     },
     {   
         "comuna": {
-            "nombre": "Quinchao",
+            "name": "Quinchao",
             "slug": "quinchao"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Negro",
+            "name": "Río Negro",
             "slug": "rio-negro"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Juan de la Costa",
+            "name": "San Juan de la Costa",
             "slug": "san-juan-de-la-costa"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Pablo",
+            "name": "San Pablo",
             "slug": "san-pablo"
         }
     },
     {   
         "comuna": {
-            "nombre": "Aisén",
+            "name": "Aisén",
             "slug": "aisen"
         }
     },
     {   
         "comuna": {
-            "nombre": "Chile Chico",
+            "name": "Chile Chico",
             "slug": "chile-chico"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cisnes",
+            "name": "Cisnes",
             "slug": "cisnes"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cochrane",
+            "name": "Cochrane",
             "slug": "cochrane"
         }
     },
     {   
         "comuna": {
-            "nombre": "Coihaique",
+            "name": "Coihaique",
             "slug": "coihaique"
         }
     },
     {   
         "comuna": {
-            "nombre": "Guaitecas",
+            "name": "Guaitecas",
             "slug": "guaitecas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Lago Verde",
+            "name": "Lago Verde",
             "slug": "lago-verde"
         }
     },
     {   
         "comuna": {
-            "nombre": "O’Higgins",
+            "name": "O’Higgins",
             "slug": "o-higgins"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Ibáñez",
+            "name": "Río Ibáñez",
             "slug": "rio-ibanez"
         }
     },
     {   
         "comuna": {
-            "nombre": "Tortel",
+            "name": "Tortel",
             "slug": "tortel"
         }
     },
     {   
         "comuna": {
-            "nombre": "Antártica",
+            "name": "Antártica",
             "slug": "antartica"
         }
     },
     {   
         "comuna": {
-            "nombre": "Cabo de Hornos",
+            "name": "Cabo de Hornos",
             "slug": "cabo-de-hornos"
         }
     },
     {   
         "comuna": {
-            "nombre": "Laguna Blanca",
+            "name": "Laguna Blanca",
             "slug": "laguna-blanca"
         }
     },
     {   
         "comuna": {
-            "nombre": "Natales",
+            "name": "Natales",
             "slug": "natales"
         }
     },
     {   
         "comuna": {
-            "nombre": "Porvenir",
+            "name": "Porvenir",
             "slug": "porvenir"
         }
     },
     {   
         "comuna": {
-            "nombre": "Primavera",
+            "name": "Primavera",
             "slug": "primavera"
         }
     },
     {   
         "comuna": {
-            "nombre": "Punta Arenas",
+            "name": "Punta Arenas",
             "slug": "punta-arenas"
         }
     },
     {   
         "comuna": {
-            "nombre": "Río Verde",
+            "name": "Río Verde",
             "slug": "rio-verde"
         }
     },
     {   
         "comuna": {
-            "nombre": "San Gregorio",
+            "name": "San Gregorio",
             "slug": "san-gregorio"
         }
     },
     {   
         "comuna": {
-            "nombre": "Timaukel",
+            "name": "Timaukel",
             "slug": "timaukel"
         }
     },
     {   
         "comuna": {
-            "nombre": "Torres del Paine",
+            "name": "Torres del Paine",
             "slug": "torres-del-paine"
         }
     }
