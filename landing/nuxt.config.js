@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Comunas from './static/comunas.json';
 
 export default {
 	target: 'static',
@@ -39,7 +40,11 @@ export default {
 			const psicologos = res.data.psychologists.map(psychologist => {
 				return { route: `/${psychologist.username}`, payload: psychologist };
 			});
-			return blogs.concat(psicologos);
+			const comunas = Comunas.map(item => {
+				return { route: `/psicologos/${item.comuna.slug}`, payload: item.comuna };
+			});
+
+			return blogs.concat(psicologos).concat(comunas);
 		},
 	},
 	loading: {
