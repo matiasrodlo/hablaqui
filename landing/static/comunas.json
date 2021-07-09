@@ -665,27 +665,133 @@
             "slug": "lo-prado"
         }
     },
-    "Macul",
-    "Maipú",
-    "María Pinto",
-    "Melipilla",
-    "Ñuñoa",
-    "Padre Hurtado",
-    "Paine",
-    "Pedro Aguirre Cerda",
-    "Peñaflor",
-    "Peñalolén",
-    "Pirque",
-    "Providencia",
-    "Pudahuel",
-    "Puente Alto",
-    "Quilicura",
-    "Quinta Normal",
-    "Recoleta",
-    "Renca",
-    "San Bernardo",
-    "San Joaquín",
-    "San José de Maipo",
+    {   
+        "comuna": {
+            "nombre": "Macul",
+            "slug": "macul"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Maipú",
+            "slug": "maipú"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Maipú",
+            "slug": "maipu"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "María Pinto",
+            "slug": "maria-pinto"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Melipilla",
+            "slug": "melipilla"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Ñuñoa",
+            "slug": "nunoa"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Padre Hurtado",
+            "slug": "padre-hurtado"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Paine",
+            "slug": "paine"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Peñaflor",
+            "slug": "penaflor"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Pedro Aguirre Cerda",
+            "slug": "pedro-aguirre-cerda"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Pirque",
+            "slug": "pirque"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Providencia",
+            "slug": "providencia"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Pudahuel",
+            "slug": "pudahuel"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Puente Alto",
+            "slug": "puente-alto"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Quilicura",
+            "slug": "quilicura"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Quinta Normal",
+            "slug": "Quinta-ormal"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Recoleta",
+            "slug": "recoleta"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Renca",
+            "slug": "renca"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "San Bernardo",
+            "slug": "san bernardo"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "San Joaquín",
+            "slug": "san-joaquin"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "San José de Maipo",
+            "slug": "san-jose-de-maipo"
+        }
+    },
+    "",
     "San Miguel",
     "San Pedro",
     "San Ramón",

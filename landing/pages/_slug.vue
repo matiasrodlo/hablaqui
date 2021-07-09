@@ -41,5 +41,30 @@ export default {
 			};
 		}
 	},
+	head() {
+		return {
+			title: `${
+				this.psychologist ? this.psychologist.name + ' ' + this.psychologist.lastName : ''
+			} | Hablaquí`,
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content: this.psychologist ? this.psychologist.professionalDescription : '',
+				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,nofollow',
+				},
+			],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}${this.psychologist.username}`,
+				},
+			],
+		};
+	},
 };
 </script>
