@@ -31,21 +31,29 @@ export default {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			const baseLanding = process.env.VUE_APP_LANDING
-				? process.env.VUE_APP_LANDING
-				: 'http://localhost:9000/';
+			const baseApi = process.env.VUE_APP_URL_ABSOLUTE
+				? process.env.VUE_APP_URL_ABSOLUTE
+				: 'http://localhost:3000/';
 
+			// generate routes blogs
 			const { data } = await axios.get(`${baseURL}/blog/all`);
-			const blogs = data.articles.map(item => {
-				return { route: `/blog/${item.slug}`, payload: item };
-			});
-			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists.map(psychologist => {
-				return { route: `/${psychologist.username}`, payload: psychologist };
-			});
-			const response = await axios.get(`${baseLanding}/comunas.json`);
+			const blogs = data.articles.map(item => ({
+				route: `/blog/${item.slug}`,
+				payload: item,
+			}));
 
-			return blogs.concat(psicologos).concat(response.data.comunas);
+			// generate routes psicologos
+			const res = await axios.get(`${baseURL}/psychologists/all`);
+			const psicologos = res.data.psychologists.map(psychologist => ({
+				route: `/${psychologist.username}`,
+				payload: psychologist,
+			}));
+
+			// generate routes comunas
+			const response = await axios.get(`${baseApi}/comunas.json`);
+			const comunas = response.data.map(el => ({ route: `/${el.slug}`, payload: el.comuna }));
+
+			return blogs.concat(psicologos).concat(comunas);
 		},
 	},
 	loading: {
