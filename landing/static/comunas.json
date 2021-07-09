@@ -541,34 +541,130 @@
     },
     {   
         "comuna": {
-            "nombre": "Calera de Tango",
-            "slug": "calera-de-tango"
+            "nombre": "Cerrillos",
+            "slug": "cerrillos"
         }
     },
-    "Alhué",
-    "Buin",
-    "Calera de Tango",
-    "Cerrillos",
-    "Cerro Navia",
-    "Colina",
-    "Conchalí",
-    "Curacaví",
-    "El Bosque",
-    "El Monte",
-    "Estación Central",
-    "Huechuraba",
-    "Independencia",
-    "Isla de Maipo",
-    "La Cisterna",
-    "La Florida",
-    "La Granja",
-    "La Pintana",
-    "La Reina",
-    "Lampa",
-    "Las Condes",
-    "Lo Barnechea",
-    "Lo Espejo",
-    "Lo Prado",
+    {   
+        "comuna": {
+            "nombre": "Colina",
+            "slug": "colina"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Cerro Navia",
+            "slug": "cerro-navia"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Conchalí",
+            "slug": "conchali"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Curacaví",
+            "slug": "curacavi"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "El Bosque",
+            "slug": "el-bosque"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "El Monte",
+            "slug": "el-monte"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Estación Central",
+            "slug": "estación-central"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Huechuraba",
+            "slug": "huechuraba"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Independencia",
+            "slug": "independencia"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Isla de Maipo",
+            "slug": "isla-de-maipo"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "La Cisterna",
+            "slug": "la-cisterna"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "La Florida",
+            "slug": "la-florida"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "La Granja",
+            "slug": "la-granja"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "La Pintana",
+            "slug": "la-pintana"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "La Reina",
+            "slug": "la-reina"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Lampa",
+            "slug": "lampa"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Las Condes",
+            "slug": "las-condes"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Lo Barnechea",
+            "slug": "lo-barnechea"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Lo Espejo",
+            "slug": "lo-espejo"
+        }
+    },
+    {   
+        "comuna": {
+            "nombre": "Lo Prado",
+            "slug": "lo-prado"
+        }
+    },
     "Macul",
     "Maipú",
     "María Pinto",

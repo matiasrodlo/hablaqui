@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologo :psychologist="psychologist" :loading="loading" />
+		<psicologo :psychologist="psychologist" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
@@ -35,28 +33,13 @@ export default {
 	},
 	async asyncData({ $axios, params, payload }) {
 		if (payload) {
-			return { psychologists: payload };
+			return { psychologist: payload };
 		} else {
 			const { psychologist } = await $axios.$get(`/psychologists/${params.slug}`);
 			return {
 				psychologist,
 			};
 		}
-	},
-	data() {
-		return {
-			loading: false,
-		};
-	},
-	async mounted() {
-		this.loading = true;
-		await this.getAppointments();
-		this.loading = false;
-	},
-	methods: {
-		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
-		}),
 	},
 };
 </script>

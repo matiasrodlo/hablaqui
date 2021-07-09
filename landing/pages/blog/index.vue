@@ -645,6 +645,9 @@ export default {
 		};
 	},
 	head() {
+		const { path } = this.$route;
+		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
+		const canonical = `${this.$config.LANDING_URL}/${pathWithSlash}`;
 		return {
 			title: 'Blog | Hablaquí',
 			meta: [
@@ -653,7 +656,13 @@ export default {
 					name: 'description',
 					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,nofollow',
+				},
 			],
+			link: [{ rel: 'canonical', href: canonical }],
 		};
 	},
 	computed: {

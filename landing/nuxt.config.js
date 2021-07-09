@@ -36,8 +36,8 @@ export default {
 				return { route: `/blog/${item.slug}`, payload: item };
 			});
 			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists.map(item => {
-				return { route: `/${item.username}`, payload: item };
+			const psicologos = res.data.psychologists.map(psychologist => {
+				return { route: `/${psychologist.username}`, payload: psychologist };
 			});
 			return blogs.concat(psicologos);
 		},
