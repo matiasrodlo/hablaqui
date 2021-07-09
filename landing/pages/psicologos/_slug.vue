@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Ubicacion />
+		<Ubicacion location="comuna" />
 	</div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
 				{
 					hid: 'description',
 					name: 'description',
-					content: 'Nuestros psicologos en santiago',
+					content: `Nuestros psicologos en ${this.comuna ? this.comuna.name : ''}`,
 				},
 				{
 					hid: 'robots',
@@ -35,7 +35,12 @@ export default {
 					content: 'index,nofollow',
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}blog` }],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}psicologos/${this.$route.params.slug}/`,
+				},
+			],
 		};
 	},
 };

@@ -31,5 +31,23 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologos: () => import('~/components/psicologos/psicologos'),
 	},
+	head() {
+		return {
+			title: `Psicologos online | Hablaquí`,
+			meta: [
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,nofollow',
+				},
+			],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}psicologos/`,
+				},
+			],
+		};
+	},
 };
 </script>
