@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Ubicacion location="comuna" />
+		<Ubicacion :location="comuna" />
 	</div>
 </template>
 
