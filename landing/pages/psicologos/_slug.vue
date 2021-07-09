@@ -5,19 +5,18 @@
 </template>
 
 <script>
-import Comunas from '~/static/comunas.json';
+import axios from 'axios';
 
 export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	asyncData({ params, payload }) {
+	async asyncData({ params, payload, app, $axios }) {
 		if (payload) return { comuna: payload };
 		else {
-			const { comuna } = Comunas.find(el => el.comuna.slug === params.slug);
-			return {
-				comuna,
-			};
+			const response = await axios.get(`${app.$config.LANDING_URL}/comunas.json`);
+			const comuna = response.data.find(el => el.comuna.slug === params.slug);
+			return { comuna };
 		}
 	},
 	head() {

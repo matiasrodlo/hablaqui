@@ -23,7 +23,7 @@
 							{
 								text: location ? location.name : '',
 								disabled: true,
-								href: `/psicologos/${location.slug}`,
+								href: `/psicologos/${location ? location.slug : ''}`,
 							},
 						]"
 					>
