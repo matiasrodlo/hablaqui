@@ -97,6 +97,19 @@ const psychologistsController = {
 			errorCallback(e, res, 'error cancelando la sesion');
 		}
 	},
+	async updatePaymentMethod(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updatePaymentMethod(user, payload);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando el metodo de pago');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

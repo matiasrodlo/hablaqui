@@ -62,6 +62,7 @@ const createSession = async body => {
 	const sessions = {
 		date: payload.date,
 		user: payload.user._id,
+		plan: payload.title,
 		statePayments: 'pending',
 	};
 	// Check if available
@@ -75,6 +76,8 @@ const createSession = async body => {
 		}
 	});
 	if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
+
+	// Save session
 	const savedSession = await Psychologist.findOneAndUpdate(
 		{ _id: payload.psychologist._id },
 		{
@@ -82,7 +85,14 @@ const createSession = async body => {
 		},
 		{ upsert: true, returnOriginal: false }
 	);
+
+	await User.findOneAndUpdate(
+		{ _id: payload.user._id },
+		{ myPlan: payload.title }
+	);
+
 	logInfo('creo una nueva cita');
+
 	return okResponse('sesion creada', {
 		id: savedSession.sessions[savedSession.sessions.length - 1]._id,
 	});
@@ -196,6 +206,31 @@ const cancelSession = async (user, sessionId) => {
 	return okResponse('Sesion cancelada', { psychologist: foundPsychologist });
 };
 
+const updatePaymentMethod = async (user, payload) => {
+	if (user.role !== 'psychologist')
+		return conflictResponse('No eres un psicologo.');
+
+	let foundPsychologist = await Psychologist.findById(
+		foundPsychologist.psychologist
+	);
+	const newPaymentMethod = {
+		bank: payload.bank || foundPsychologist.paymentMethod.bank,
+		accountType:
+			payload.accountType || foundPsychologist.paymentMethod.accountType,
+		accountNumber:
+			payload.accountNumber ||
+			foundPsychologist.paymentMethod.accountNumber,
+		rut: payload.rut || foundPsychologist.paymentMethod.rut,
+		name: payload.name || foundPsychologist.paymentMethod.name,
+		email: payload.email || foundPsychologist.paymentMethod.email,
+	};
+	foundPsychologist.paymentMethod = newPaymentMethod;
+	await foundPsychologist.save();
+	return okResponse('Metodo actualizado', {
+		psychologist: foundPsychologist,
+	});
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -205,6 +240,7 @@ const psychologistsService = {
 	getByUsername,
 	setSchedule,
 	cancelSession,
+	updatePaymentMethod,
 };
 
 export default Object.freeze(psychologistsService);

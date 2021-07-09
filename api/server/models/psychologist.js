@@ -22,6 +22,9 @@ let session = new Schema({
 	statePayments: {
 		type: String,
 	},
+	plan: {
+		type: String,
+	},
 });
 
 let defaultSchedule = {
@@ -93,6 +96,10 @@ let psychologist = new Schema({
 	schedule: {
 		type: Object,
 		default: defaultSchedule,
+	},
+	paymentMethod: {
+		type: Object,
+		required: false,
 	},
 	sessions: [session],
 });

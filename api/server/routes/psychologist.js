@@ -36,10 +36,14 @@ psychologistsRouter.patch(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.setSchedule
 );
-
 psychologistsRouter.delete(
 	'/psychologist/cancel-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.cancelSession
+);
+psychologistsRouter.patch(
+	'/psychologist/update-payment-method',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updatePaymentMethod
 );
 export default psychologistsRouter;
