@@ -43,7 +43,7 @@ export default {
 			const psicologos = res.data.psychologists.map(psychologist => {
 				return { route: `/${psychologist.username}`, payload: psychologist };
 			});
-			const response = await axios.get(`${baseLanding}comunas.json`);
+			const response = await axios.get(`${baseLanding}/comunas.json`);
 
 			return blogs.concat(psicologos).concat(response.data.comunas);
 		},
