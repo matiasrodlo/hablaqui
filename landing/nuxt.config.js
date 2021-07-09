@@ -27,15 +27,19 @@ export default {
 	},
 	generate: {
 		fallback: '404.html',
-		routes() {
+		async routes() {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			return axios.get(`${baseURL}/blog/all`).then(res => {
-				return res.data.articles.map(item => {
-					return { route: `/blog/${item.slug}`, payload: item };
-				});
+			const { data } = await axios.get(`${baseURL}/blog/all`);
+			const blogs = data.articles.map(item => {
+				return { route: `/blog/${item.slug}`, payload: item };
 			});
+			const res = await axios.get(`${baseURL}/psychologists/all`);
+			const psicologos = res.data.psychologists.map(item => {
+				return { route: `/${item.username}`, payload: item };
+			});
+			return blogs.concat(psicologos);
 		},
 	},
 	loading: {
