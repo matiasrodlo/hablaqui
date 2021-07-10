@@ -653,11 +653,6 @@ export default {
 					name: 'description',
 					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}blog/` }],
 		};

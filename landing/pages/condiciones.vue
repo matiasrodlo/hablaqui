@@ -334,11 +334,6 @@ export default {
 					name: 'description',
 					content: 'Terminos y condiciones hablaqui',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{

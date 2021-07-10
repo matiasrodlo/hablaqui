@@ -369,11 +369,6 @@ export default {
 					name: 'description',
 					content: this.article ? this.strippedContent(this.article.HTMLbody) : '',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{

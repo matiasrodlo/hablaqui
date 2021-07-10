@@ -97,7 +97,7 @@
 							Experiencia
 						</v-col>
 						<v-col class="body-1 text-left">
-							<ul v-if="psychologist.experience.length">
+							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li v-for="(experience, i) in psychologist.experience" :key="i">
 									{{ experience }}
 								</li>
@@ -113,7 +113,10 @@
 						<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
 							Especialidades
 						</v-col>
-						<v-col v-if="psychologist.specialties.length" class="body-1 text-left">
+						<v-col
+							v-if="psychologist.specialties && psychologist.specialties.length"
+							class="body-1 text-left"
+						>
 							<ul>
 								<li v-for="(item, i) in psychologist.specialties" :key="i">
 									{{ item }}
@@ -132,7 +135,7 @@
 							Modelos de trabajo terapéutico
 						</v-col>
 						<v-col class="body-1 text-left">
-							<ul v-if="psychologist.models.length">
+							<ul v-if="psychologist.models && psychologist.models.length">
 								<li v-for="(model, i) in psychologist.models" :key="i">
 									{{ model }}
 								</li>
@@ -150,7 +153,7 @@
 							Formación
 						</v-col>
 						<v-col class="body-1 text-left">
-							<ul v-if="psychologist.formation.length">
+							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li v-for="(formation, i) in psychologist.formation" :key="i">
 									{{ formation }}
 								</li>

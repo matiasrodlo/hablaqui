@@ -185,11 +185,6 @@ export default {
 					name: 'description',
 					content: 'Politicas de privacidad hablaqui',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{

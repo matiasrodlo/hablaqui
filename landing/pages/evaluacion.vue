@@ -698,13 +698,6 @@ export default {
 	},
 	head() {
 		return {
-			meta: [
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
-			],
 			link: [
 				{
 					rel: 'canonical',

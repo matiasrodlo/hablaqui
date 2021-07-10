@@ -52,11 +52,6 @@ export default {
 					name: 'description',
 					content: this.psychologist ? this.psychologist.professionalDescription : '',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{

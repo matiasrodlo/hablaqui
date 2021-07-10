@@ -191,11 +191,6 @@ export default {
 					name: 'description',
 					content: 'Preguntas frecuentes Hablaquí',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{

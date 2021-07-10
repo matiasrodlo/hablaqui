@@ -195,13 +195,6 @@ export default {
 	},
 	head() {
 		return {
-			meta: [
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
-			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}auth/` }],
 		};
 	},

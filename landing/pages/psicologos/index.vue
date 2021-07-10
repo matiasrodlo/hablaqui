@@ -33,14 +33,6 @@ export default {
 	},
 	head() {
 		return {
-			title: `Psicologos online | Hablaquí`,
-			meta: [
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
-			],
 			link: [
 				{
 					rel: 'canonical',

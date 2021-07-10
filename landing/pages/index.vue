@@ -931,11 +931,6 @@ export default {
 					content:
 						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [{ rel: 'canonical', href: this.$config.LANDING_URL }],
 		};

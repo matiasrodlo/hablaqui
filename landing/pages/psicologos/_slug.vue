@@ -27,11 +27,6 @@ export default {
 					name: 'description',
 					content: `Nuestros psicologos en ${this.comuna ? this.comuna.name : ''}`,
 				},
-				{
-					hid: 'robots',
-					name: 'robots',
-					content: 'index,nofollow',
-				},
 			],
 			link: [
 				{
