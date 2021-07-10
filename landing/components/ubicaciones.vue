@@ -139,7 +139,7 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 	},
 	async asyncData({ $config }) {
-		const response = await fetch(`${$config.LANDING_URL}/comunas.json`, { method: 'get' });
+		const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
 		const comunas = await response.json();
 		return { comunas };
 	},

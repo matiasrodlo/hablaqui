@@ -12,7 +12,7 @@ export default {
 	async asyncData({ params, payload, $config }) {
 		if (payload) return { comuna: payload };
 		else {
-			const response = await fetch(`${$config.LANDING_URL}/comunas.json`, { method: 'get' });
+			const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
 			const comunas = await response.json();
 			const item = comunas.find(el => el.comuna.slug === params.slug);
 			return { comuna: item.comuna };
