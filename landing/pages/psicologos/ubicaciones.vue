@@ -19,7 +19,19 @@
 					<v-card-title class="text-uppercase">{{ item.key }}</v-card-title>
 					<v-divider></v-divider>
 					<v-card-text class="primary--text body-1 font-weight-medium">
-						<v-row>
+						<v-row class="hidden-md-and-up">
+							<v-col>
+								<div v-for="(el, e) in item.comuna" :key="e">
+									<nuxt-link
+										:to="`/psicologos/${el.comuna.slug}`"
+										style="text-decoration: none"
+									>
+										Psicólogos en {{ el.comuna.name }}</nuxt-link
+									>
+								</div>
+							</v-col>
+						</v-row>
+						<v-row class="hidden-sm-and-down">
 							<template v-if="item.comuna.length > 1">
 								<v-col>
 									<div
