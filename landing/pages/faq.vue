@@ -187,12 +187,6 @@ export default {
 			items: [],
 		};
 	},
-	async fetch() {
-		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
-		response = await response.json();
-		this.selectedItem = response[0];
-		this.items = response;
-	},
 	head() {
 		return {
 			title: 'Preguntas frecuentes | Hablaquí',
@@ -229,6 +223,12 @@ export default {
 			}
 			return [];
 		},
+	},
+	async mounted() {
+		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
+		response = await response.json();
+		this.selectedItem = response[0];
+		this.items = response;
 	},
 	created() {
 		this.setFloatingChat(false);
