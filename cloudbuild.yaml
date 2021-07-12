@@ -34,7 +34,8 @@ steps:
     args: ["app", "deploy"]
     dir: "landing"
     id: "deploy-landing"
-    waitFor: ["envvars-landing", "install-landing", "generat  - name: node:10.15.1
+    waitFor: ["envvars-landing", "install-landing", "generate-landing"]
+  - name: node:10.15.1
     entrypoint: npm
     args: ["install"]
     dir: "api"
@@ -70,4 +71,3 @@ steps:
     waitFor: ["envvars-api", "install-api"]
 
 timeout: "2600s"
-e-landing"]
