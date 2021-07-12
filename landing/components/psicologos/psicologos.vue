@@ -695,7 +695,9 @@
 				</client-only>
 			</v-col>
 		</v-row>
-		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+		<client-only>
+			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
+		</client-only>
 	</v-container>
 </template>
 
