@@ -703,6 +703,7 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
+	name: 'AllPsicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
@@ -785,7 +786,10 @@ export default {
 	created() {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
-		if (JSON.stringify(this.$route.params) !== JSON.stringify({}))
+		if (
+			this.$route.name === 'psicologos' &&
+			JSON.stringify(this.$route.params) !== JSON.stringify({})
+		)
 			this.$router.replace({ query: null });
 
 		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage

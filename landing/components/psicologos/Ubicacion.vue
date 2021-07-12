@@ -2,9 +2,11 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<appbar />
+		<!-- geo psicologos -->
 		<geoPsicologos :location="location" />
 		<!-- routing for child -->
 		<psicologos />
+		<!-- breadcrubs -->
 		<v-container>
 			<v-row>
 				<v-col cols="12" offset-md="3" md="9">

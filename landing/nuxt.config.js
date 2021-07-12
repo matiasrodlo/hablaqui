@@ -53,7 +53,7 @@ export default {
 			// generate routes comunas
 			const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
-				route: `/${el.comuna.slug}`,
+				route: `/psicologos/${el.comuna.slug}`,
 				payload: el.comuna,
 			}));
 

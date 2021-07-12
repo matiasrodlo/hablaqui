@@ -6,6 +6,7 @@
 
 <script>
 export default {
+	name: 'UbicacionSlug',
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
@@ -14,7 +15,7 @@ export default {
 		else {
 			const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
 			const comunas = await response.json();
-			const item = comunas.find(el => el.comuna.slug === params.slug);
+			const item = comunas.find(el => el.comuna.slug === params.ubicacion);
 			return { comuna: item.comuna };
 		}
 	},
@@ -31,7 +32,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}psicologos/${this.$route.params.slug}/`,
+					href: `${this.$config.LANDING_URL}psicologos/${this.$route.params.ubicacion}/`,
 				},
 			],
 		};
