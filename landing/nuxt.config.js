@@ -16,7 +16,9 @@ export default {
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
 		API_ABSOLUTE:
-			process.env.NODE_ENV === 'production' ? process.env.API_URL : 'http://localhost:3000/',
+			process.env.NODE_ENV === 'production'
+				? process.env.API_ABSOLUTE
+				: 'http://localhost:3000/',
 		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
 		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
@@ -30,7 +32,9 @@ export default {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			const baseApi = process.env.API_URL ? process.env.API_URL : 'http://localhost:3000/';
+			const baseApi = process.env.API_ABSOLUTE
+				? process.env.API_ABSOLUTE
+				: 'http://localhost:3000/';
 
 			// generate routes blogs
 			const { data } = await axios.get(`${baseURL}/blog/all`);
@@ -49,7 +53,7 @@ export default {
 			// generate routes comunas
 			const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
-				route: `/${el.comuna.slug}`,
+				route: `/psicologos/${el.comuna.slug}`,
 				payload: el.comuna,
 			}));
 
