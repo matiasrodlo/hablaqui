@@ -47,8 +47,12 @@
 								</template>
 								<template #item="{ item }">
 									<v-breadcrumbs-item
+										exact
+										exact-path
 										nuxt
+										link
 										:href="item.href"
+										replace
 										:disabled="item.disabled"
 									>
 										{{ item.text }}
