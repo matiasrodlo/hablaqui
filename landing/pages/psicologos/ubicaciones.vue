@@ -138,13 +138,9 @@ export default {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
 	},
-	async asyncData({ $config }) {
-		const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
-		const comunas = await response.json();
-		return { comunas };
-	},
 	data() {
 		return {
+			comunas: [],
 			alphabet: [
 				'a',
 				'b',
@@ -174,6 +170,12 @@ export default {
 				'z',
 			],
 		};
+	},
+	async fetch() {
+		const response = await fetch(`${this.$config.API_ABSOLUTE}/comunas.json`, {
+			method: 'get',
+		});
+		this.comunas = await response.json();
 	},
 	head() {
 		return {

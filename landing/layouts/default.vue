@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<snackbar />
-		<nuxt />
+		<nuxt keep-alive />
 	</v-app>
 </template>
 <script>

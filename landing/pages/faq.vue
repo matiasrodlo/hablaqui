@@ -180,15 +180,18 @@ export default {
 		Appbar: () => import('@/components/AppbarWhite'),
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
-	async asyncData({ $config }) {
-		let response = await fetch(`${$config.LANDING_URL}/faq.json`);
-		response = await response.json();
-		return { selectedItem: response[0], items: response };
-	},
 	data() {
 		return {
 			search: '',
+			selectedItem: null,
+			items: [],
 		};
+	},
+	async fetch() {
+		let response = await fetch(`${this.$config.LANDING_URL}/faq.json`);
+		response = await response.json();
+		this.selectedItem = response[0];
+		this.items = response;
 	},
 	head() {
 		return {
