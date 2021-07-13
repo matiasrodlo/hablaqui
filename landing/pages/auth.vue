@@ -193,6 +193,11 @@ export default {
 			fromRoute: '',
 		};
 	},
+	head() {
+		return {
+			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}auth/` }],
+		};
+	},
 	created() {
 		if (this.$route.params.q) this.step = 2;
 	},

@@ -2,19 +2,6 @@ import axios from 'axios';
 
 export default {
 	target: 'static',
-	generate: {
-		fallback: '404.html',
-		routes() {
-			const baseURL = process.env.VUE_APP_URL
-				? process.env.VUE_APP_URL
-				: 'http://localhost:3000/api/v1';
-			return axios.get(`${baseURL}/blog/all`).then(res => {
-				return res.data.articles.map(item => {
-					return { route: `/blog/${item.slug}`, payload: item };
-				});
-			});
-		},
-	},
 	publicRuntimeConfig: {
 		LANDING_URL:
 			process.env.NODE_ENV === 'production'
@@ -30,13 +17,48 @@ export default {
 				: 'http://localhost:3000/api/v1',
 		API_ABSOLUTE:
 			process.env.NODE_ENV === 'production'
-				? process.env.VUE_APP_URL_ABSOLUTE
+				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/',
 		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
 		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
+	},
+	generate: {
+		fallback: '404.html',
+		// genera las rutas dinamicas
+		async routes() {
+			const baseURL = process.env.VUE_APP_URL
+				? process.env.VUE_APP_URL
+				: 'http://localhost:3000/api/v1';
+			const baseApi = process.env.API_ABSOLUTE
+				? process.env.API_ABSOLUTE
+				: 'http://localhost:3000/';
+
+			// generate routes blogs
+			const { data } = await axios.get(`${baseURL}/blog/all`);
+			const blogs = data.articles.map(item => ({
+				route: `/blog/${item.slug}`,
+				payload: item,
+			}));
+
+			// generate routes psicologos
+			const res = await axios.get(`${baseURL}/psychologists/all`);
+			const psicologos = res.data.psychologists.map(psychologist => ({
+				route: `/${psychologist.username}`,
+				payload: psychologist,
+			}));
+
+			// generate routes comunas
+			const response = await axios.get(`${baseApi}/comunas.json`);
+			const comunas = response.data.map(el => ({
+				route: `/psicologos/${el.comuna.slug}`,
+				payload: el.comuna,
+			}));
+
+			return blogs.concat(psicologos).concat(comunas);
+		},
 	},
 	loading: {
 		color: '#2070E5',
@@ -102,11 +124,20 @@ export default {
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',
+		'@nuxtjs/sitemap',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
 		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+	},
+
+	sitemap: {
+		hostname: process.env.VUE_APP_LANDING
+			? process.env.VUE_APP_LANDING
+			: 'http://localhost:9000/',
+		exclude: ['/dashboard/**', '/nuevo-psicologo'],
+		trailingSlash: true,
 	},
 
 	auth: {

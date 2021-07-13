@@ -696,6 +696,16 @@ export default {
 			matchedPsychologists: [],
 		};
 	},
+	head() {
+		return {
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}evaluacion/`,
+				},
+			],
+		};
+	},
 	computed: {
 		psi() {
 			if (!this.psychologists) return [];

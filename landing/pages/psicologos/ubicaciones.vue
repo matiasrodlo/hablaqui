@@ -2,6 +2,141 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<appbar />
+		<!-- routing for child -->
+		<v-container>
+			<v-row>
+				<v-col cols="12">
+					<h1 class="text-left font-weight-bold text-h6 text-md-h4 text--secondary">
+						Comunas
+					</h1>
+					<h2 class="text-h6 font-weight-medium text--secondary">
+						Psicólogos en Chile por comunas
+					</h2>
+				</v-col>
+			</v-row>
+			<template v-if="glossary.length">
+				<template v-for="(item, k) in glossary">
+					<v-card
+						v-if="item && item.comuna.length"
+						:key="k"
+						outlined
+						class="rounded-xl my-4"
+					>
+						<v-card-title class="text-uppercase">{{ item.key }}</v-card-title>
+						<v-divider></v-divider>
+						<v-card-text class="primary--text body-1 font-weight-medium">
+							<v-row class="hidden-md-and-up">
+								<v-col>
+									<div v-for="(el, e) in item.comuna" :key="e">
+										<nuxt-link
+											:to="`/psicologos/${el.comuna.slug}`"
+											style="text-decoration: none"
+										>
+											Psicólogos en {{ el.comuna.name }}</nuxt-link
+										>
+									</div>
+								</v-col>
+							</v-row>
+							<v-row class="hidden-sm-and-down">
+								<template v-if="item.comuna.length > 1">
+									<v-col>
+										<div
+											v-for="(el, i) in item.comuna.slice(
+												0,
+												item.comuna.length / 2
+											)"
+											:key="i"
+										>
+											<nuxt-link
+												:to="`/psicologos/${el.comuna.slug}`"
+												style="text-decoration: none"
+											>
+												Psicólogos en {{ el.comuna.name }}</nuxt-link
+											>
+										</div>
+									</v-col>
+									<v-col>
+										<div
+											v-for="(el, j) in item.comuna.splice(
+												item.comuna.length / 2,
+												item.comuna.length
+											)"
+											:key="j"
+										>
+											<nuxt-link
+												:to="`/psicologos/${el.comuna.slug}`"
+												style="text-decoration: none"
+											>
+												Psicólogos en {{ el.comuna.name }}</nuxt-link
+											>
+										</div>
+									</v-col>
+								</template>
+								<template v-else>
+									<v-col>
+										<div v-for="(el, e) in item.comuna" :key="e">
+											<nuxt-link
+												:to="`/psicologos/${el.comuna.slug}`"
+												style="text-decoration: none"
+											>
+												Psicólogos en {{ el.comuna.name }}</nuxt-link
+											>
+										</div>
+									</v-col>
+								</template>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</template>
+				<v-row>
+					<v-col>
+						<v-breadcrumbs
+							:items="[
+								{
+									text: 'Página de inicio',
+									disabled: false,
+									href: '/',
+								},
+								{
+									text: 'Psicólogos',
+									disabled: false,
+									href: '/psicologos',
+								},
+								{
+									text: 'Ubicación',
+									disabled: true,
+									href: '/psicologos/ubicacion',
+								},
+							]"
+						>
+							<template #item="{ item }">
+								<v-breadcrumbs-item
+									:to="item.href"
+									exact
+									exact-path
+									nuxt
+									link
+									replace
+									:disabled="item.disabled"
+								>
+									<span class="body-1 font-weight-medium">{{ item.text }}</span>
+								</v-breadcrumbs-item>
+							</template>
+						</v-breadcrumbs>
+					</v-col>
+				</v-row>
+			</template>
+			<div v-else style="height: 400px">
+				<v-row class="fill-height ma-0" align="center" justify="center">
+					<v-progress-circular
+						width="6"
+						size="50"
+						indeterminate
+						color="primary"
+					></v-progress-circular>
+				</v-row>
+			</div>
+		</v-container>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -30,10 +165,65 @@ export default {
 	},
 	data() {
 		return {
-			items: [],
+			comunas: [],
+			alphabet: [
+				'a',
+				'b',
+				'c',
+				'd',
+				'e',
+				'f',
+				'g',
+				'h',
+				'i',
+				'j',
+				'k',
+				'l',
+				'm',
+				'n',
+				'o',
+				'p',
+				'q',
+				'r',
+				's',
+				't',
+				'u',
+				'v',
+				'w',
+				'x',
+				'y',
+				'z',
+			],
 		};
+	},
+	head() {
+		return {
+			title: `Ubicaciones de nuestros psicologos | Hablaquí`,
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}psicologos/ubicaciones`,
+				},
+			],
+		};
+	},
+	computed: {
+		glossary() {
+			if (this.comunas.length)
+				return this.alphabet.map(key => {
+					return {
+						key,
+						comuna: this.comunas.filter(item => item.comuna.slug.slice(0, 1) === key),
+					};
+				});
+			else return [];
+		},
+	},
+	async mounted() {
+		const response = await fetch(`${this.$config.API_ABSOLUTE}/comunas.json`, {
+			method: 'get',
+		});
+		this.comunas = await response.json();
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>

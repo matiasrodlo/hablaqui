@@ -10,14 +10,14 @@
 						Acuerdos
 					</div>
 					<nuxt-link
-						class="d-block body-1 text--secondary"
+						class="d-block body-1 text--secondary my-4"
 						style="text-decoration: none"
 						to="/politicas"
 					>
 						Políticas de Privacidad
 					</nuxt-link>
 					<nuxt-link
-						class="d-block body-1 text--secondary"
+						class="d-block body-1 text--secondary my-4"
 						style="text-decoration: none"
 						to="/condiciones"
 					>
@@ -31,8 +31,8 @@
 					>
 						Atención a clientes
 					</div>
-					<div class="body-1">c@hablaqui.com</div>
-					<div class="body-1">09:00am - 18:30pm</div>
+					<div class="body-1 my-4">c@hablaqui.com</div>
+					<div class="body-1 my-4">09:00am - 18:30pm</div>
 				</v-col>
 				<v-col cols="12" sm="3" md="3" class="headline text--secondary">
 					<v-img

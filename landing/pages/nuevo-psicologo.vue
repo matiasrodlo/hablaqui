@@ -438,7 +438,6 @@ export default {
 		);
 		this.comunasRegiones = response;
 		this.regiones = response.map(i => i.region);
-		console.log(this.regiones);
 	},
 	methods: {
 		defaultForm() {

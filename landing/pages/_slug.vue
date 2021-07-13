@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologo :loading="loading" />
+		<psicologo :psychologist="psychologist" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -25,30 +25,41 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologo: () => import('~/components/psicologos/psicologo'),
 	},
-	data() {
+	async asyncData({ $axios, params, payload }) {
+		if (payload) {
+			return { psychologist: payload };
+		} else {
+			const { psychologist } = await $axios.$get(`/psychologists/${params.slug}`);
+			return {
+				psychologist,
+			};
+		}
+	},
+	head() {
 		return {
-			loading: false,
+			title: `${
+				this.psychologist ? this.psychologist.name + ' ' + this.psychologist.lastName : ''
+			} | Hablaquí`,
+			meta: [
+				{
+					hid: 'description',
+					name: 'description',
+					content: this.psychologist ? this.psychologist.professionalDescription : '',
+				},
+			],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}${this.psychologist.username}/`,
+				},
+			],
 		};
-	},
-	async mounted() {
-		this.loading = true;
-		await this.getPsychologists();
-		await this.getAppointments();
-		this.loading = false;
-	},
-	methods: {
-		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
-			getAppointments: 'Appointments/getAppointments',
-		}),
 	},
 };
 </script>

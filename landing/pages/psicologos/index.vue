@@ -31,5 +31,15 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologos: () => import('~/components/psicologos/psicologos'),
 	},
+	head() {
+		return {
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}psicologos/`,
+				},
+			],
+		};
+	},
 };
 </script>

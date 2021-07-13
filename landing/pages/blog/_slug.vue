@@ -47,8 +47,12 @@
 								</template>
 								<template #item="{ item }">
 									<v-breadcrumbs-item
+										exact
+										exact-path
 										nuxt
-										:href="item.href"
+										link
+										:to="item.to"
+										replace
 										:disabled="item.disabled"
 									>
 										{{ item.text }}
@@ -325,7 +329,6 @@
 			<v-container>
 				<Footer />
 			</v-container>
-			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 		</client-only>
 	</div>
 </template>
@@ -338,7 +341,6 @@ export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	async asyncData({ $axios, params, payload }) {
 		if (payload) return { article: payload };
@@ -370,6 +372,12 @@ export default {
 					content: this.article ? this.strippedContent(this.article.HTMLbody) : '',
 				},
 			],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}blog/${this.$route.params.slug}/`,
+				},
+			],
 		};
 	},
 	created() {
@@ -384,17 +392,17 @@ export default {
 				{
 					text: 'Inicio',
 					disabled: false,
-					href: '/blog',
+					to: '/blog',
 				},
 				{
 					text: this.article.categories,
 					disabled: true,
-					href: 'breadcrumbs_link_1',
+					to: '/blog/category',
 				},
 				{
 					text: this.article.title,
 					disabled: true,
-					href: `/blog/${this.article.slug}`,
+					to: `/blog/${this.article.slug}`,
 				},
 			];
 		}

@@ -283,23 +283,23 @@
 			</v-row>
 			<v-row justify="center" align="center" class="mt-16 mb-8">
 				<v-col cols="12" md="5" class="text-center text-md-left">
-					<div style="color: #bdbdbd">
-						<nuxt-link
+					<div style="color: #bdbdbd" class="my-4">
+						<v-btn
 							text
-							class="text--disabled"
+							class="pl-0 text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'politicas' }"
 							>Aviso de privacidad
-						</nuxt-link>
+						</v-btn>
 						y
-						<nuxt-link
+						<v-btn
 							text
 							class="text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'condiciones' }"
 						>
 							Términos y Condiciones
-						</nuxt-link>
+						</v-btn>
 					</div>
 					<div class="text--secondary">
 						© 2021 Hablaquí · Todos los derechos reservados
@@ -312,7 +312,7 @@
 						alt="redes sociales"
 						class="mb-4 mb-md-0"
 					/>
-					<div>Atención a clientes: c@hablaqui.com</div>
+					<div class="my-4">Atención a clientes: c@hablaqui.com</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
@@ -333,6 +333,12 @@ export default {
 					hid: 'description',
 					name: 'description',
 					content: 'Terminos y condiciones hablaqui',
+				},
+			],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}condiciones/`,
 				},
 			],
 		};

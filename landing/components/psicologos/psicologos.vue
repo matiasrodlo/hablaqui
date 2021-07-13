@@ -283,292 +283,116 @@
 						</v-expansion-panels>
 					</v-col>
 				</v-row>
-				<v-row v-if="loading">
-					<template v-if="view == 1">
-						<v-col v-for="i in 8" :key="i" cols="12" sm="6" md="4">
-							<v-skeleton-loader type="image, card-heading" />
-						</v-col>
-					</template>
-					<template v-else>
-						<v-col v-for="i in 3" :key="i" cols="12">
-							<v-skeleton-loader type="image" />
-						</v-col>
-					</template>
-				</v-row>
-				<v-row v-else>
-					<template v-if="view == 1">
-						<v-col cols="12" sm="6" lg="4" xl="3">
-							<v-hover v-slot="{ hover }">
-								<v-card
-									:style="
-										hover
-											? 'transform: scale(1.01);'
-											: 'text-transform: none !important;'
-									"
-									:class="hover ? 'elevation-6' : 'elevation-3'"
-									height="350"
-									style="border-radius: 15px; transition: transform 0.7s"
-									class="text-center"
-									color="primary"
-									dark
-								>
-									<v-card-text style="height: 280px">
-										<v-img
-											height="100"
-											width="100"
-											class="mx-auto"
-											:src="`${$config.LANDING_URL}/Lupa.png`"
-											:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
-										>
-											<template #placeholder>
-												<v-row
-													class="fill-height ma-0"
-													align="center"
-													justify="center"
-												>
-													<v-progress-circular
-														indeterminate
-														color="grey lighten-5"
-													></v-progress-circular>
-												</v-row>
-											</template>
-										</v-img>
-										<div class="mt-4 title font-weight-bold">
-											Te ayudamos a encontrar a tu psicólogo
-										</div>
-										<div class="body-2 mt-2 mx-auto" style="max-width: 250px">
-											Encuentra al psicólogo que necesitas, solo responde las
-											siguientes preguntas.
-										</div>
-									</v-card-text>
-									<v-card-actions>
-										<v-spacer></v-spacer>
-										<v-btn class="px-10" color="white" @click="start">
-											<span class="text--secondary">Comenzar</span>
-										</v-btn>
-										<v-spacer></v-spacer>
-									</v-card-actions> </v-card
-							></v-hover>
-						</v-col>
-						<v-col
-							v-if="!loading && !filterLevelThree.length"
-							cols="12"
-							class="title primary--text"
-						>
-							No se encontraron coincidencias
-						</v-col>
-						<v-col
-							v-for="(item, i) in filterLevelThree"
-							:key="i"
-							cols="12"
-							sm="6"
-							lg="4"
-							xl="3"
-						>
-							<v-hover v-slot="{ hover }">
-								<v-card
-									:style="
-										hover
-											? 'transform: scale(1.01);'
-											: 'text-transform: none !important;'
-									"
-									:class="hover ? 'elevation-3' : 'elevation-1'"
-									style="border-radius: 15px; transition: transform 0.6s"
-									height="350"
-									class="text-center"
-								>
-									<v-card-text style="height: 250px">
-										<div>
-											<v-avatar
-												size="100"
-												:color="item.avatar ? 'trasnparent' : 'primary'"
+				<client-only>
+					<v-row v-if="loading">
+						<template v-if="view == 1">
+							<v-col v-for="i in 8" :key="i" cols="12" sm="6" md="4">
+								<v-skeleton-loader type="image, card-heading" />
+							</v-col>
+						</template>
+						<template v-else>
+							<v-col v-for="i in 3" :key="i" cols="12">
+								<v-skeleton-loader type="image" />
+							</v-col>
+						</template>
+					</v-row>
+					<v-row v-else>
+						<template v-if="view == 1">
+							<v-col cols="12" sm="6" lg="4" xl="3">
+								<v-hover v-slot="{ hover }">
+									<v-card
+										:style="
+											hover
+												? 'transform: scale(1.01);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-6' : 'elevation-3'"
+										height="350"
+										style="border-radius: 15px; transition: transform 0.7s"
+										class="text-center"
+										color="primary"
+										dark
+									>
+										<v-card-text style="height: 280px">
+											<v-img
+												height="100"
+												width="100"
+												class="mx-auto"
+												:src="`${$config.LANDING_URL}/Lupa.png`"
+												:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
 											>
-												<v-img
-													v-if="item.avatar"
-													:src="item.avatar"
-													:lazy-src="item.avatar"
-													width="100"
-													height="100"
-												>
-													<template #placeholder>
-														<v-row
-															class="fill-height ma-0"
-															align="center"
-															justify="center"
-														>
-															<v-progress-circular
-																indeterminate
-																color="primary"
-															/>
-														</v-row>
-													</template>
-												</v-img>
-												<span
-													v-else
-													class="white--text headline font-weight-bold"
-												>
-													{{ item.name.substr(0, 1) }}
-												</span>
-											</v-avatar>
-											<nuxt-link
-												v-if="item.name"
-												style="text-decoration: none; display: block"
-												:to="{ path: `/${item.username}` }"
-											>
-												<span
-													class="body-2 font-weight-bold secondary--text"
-												>
-													{{ item.name }}
-													{{ item.lastName && item.lastName }}
-												</span>
-											</nuxt-link>
-											<span
-												v-if="item.code"
-												class="caption primary--text pb-2"
-												style="border-bottom: 1px solid #bdbdbd"
-											>
-												<span> Codigo {{ item.code }} </span>
-											</span>
-										</div>
-										<div class="body-2 mt-4">
-											{{
-												item.professionalDescription.length > 110
-													? item.professionalDescription
-															.slice(0, 110)
-															.concat('...')
-													: item.professionalDescription
-											}}
-										</div>
-									</v-card-text>
-									<v-card-text>
-										<div>
-											<dialog-agenda-cita-online
-												:psy="item"
-												:mode="view.toString()"
-											/>
-										</div>
-										<div class="mt-1">
-											<v-btn
-												class="body-2"
-												text
-												:to="{ path: `/${item.username}` }"
-											>
-												Más información
-											</v-btn>
-										</div>
-									</v-card-text>
-								</v-card>
-							</v-hover>
-						</v-col>
-					</template>
-					<template v-if="view == 2">
-						<v-col cols="12">
-							<v-hover v-slot="{ hover }">
-								<v-card
-									:style="
-										hover
-											? 'transform: scale(1.01);'
-											: 'text-transform: none !important;'
-									"
-									:class="hover ? 'elevation-3' : 'elevation-1'"
-									style="border-radius: 15px; transition: transform 0.6s"
-									dark
-									color="primary"
-								>
-									<v-card-text>
-										<v-row align="center" justify="center">
-											<v-col cols="12" sm="3" class="text-center">
-												<v-img
-													height="140"
-													width="140"
-													class="mx-auto"
-													:src="`${$config.LANDING_URL}/Lupa.png`"
-													:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
-												>
-													<template #placeholder>
-														<v-row
-															class="fill-height ma-0"
-															align="center"
-															justify="center"
-														>
-															<v-progress-circular
-																indeterminate
-																color="grey lighten-5"
-															></v-progress-circular>
-														</v-row>
-													</template>
-												</v-img>
-											</v-col>
-											<v-col
-												cols="12"
-												sm="9"
-												class="text-center text-sm-left"
-											>
-												<v-row justify="space-between">
-													<v-col
-														class="headline font-weight-bold white--text"
+												<template #placeholder>
+													<v-row
+														class="fill-height ma-0"
+														align="center"
+														justify="center"
 													>
-														Encuentra a tu psicólogo ideal
-													</v-col>
-												</v-row>
-												<div class="body-2 mt-2">
-													Encuentra al psicólogo que necesitas, solo
-													responde las siguientes preguntas.
-												</div>
-												<v-btn
-													color="white"
-													class="px-10 mt-4"
-													@click="start"
-												>
-													<span class="text--secondary">Comenzar</span>
-												</v-btn>
-											</v-col>
-										</v-row>
-									</v-card-text>
-								</v-card>
-							</v-hover>
-						</v-col>
-						<v-col
-							v-if="!loading && !filterLevelThree.length"
-							cols="12"
-							class="title primary--text"
-						>
-							No se encontraron coincidencias
-						</v-col>
-						<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
-							<v-hover v-slot="{ hover }">
-								<v-card
-									:style="
-										hover
-											? 'transform: scale(1.01);'
-											: 'text-transform: none !important;'
-									"
-									:class="hover ? 'elevation-3' : 'elevation-1'"
-									style="border-radius: 15px; transition: transform 0.6s"
-								>
-									<v-card-text>
-										<v-row align="center" justify="center">
-											<v-col cols="12" sm="3" class="text-center">
+														<v-progress-circular
+															indeterminate
+															color="grey lighten-5"
+														></v-progress-circular>
+													</v-row>
+												</template>
+											</v-img>
+											<div class="mt-4 title font-weight-bold">
+												Te ayudamos a encontrar a tu psicólogo
+											</div>
+											<div
+												class="body-2 mt-2 mx-auto"
+												style="max-width: 250px"
+											>
+												Encuentra al psicólogo que necesitas, solo responde
+												las siguientes preguntas.
+											</div>
+										</v-card-text>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn class="px-10" color="white" @click="start">
+												<span class="text--secondary">Comenzar</span>
+											</v-btn>
+											<v-spacer></v-spacer>
+										</v-card-actions> </v-card
+								></v-hover>
+							</v-col>
+							<v-col
+								v-if="!loading && !filterLevelThree.length"
+								cols="12"
+								class="title primary--text"
+							>
+								No se encontraron coincidencias
+							</v-col>
+							<v-col
+								v-for="(item, i) in filterLevelThree"
+								:key="i"
+								cols="12"
+								sm="6"
+								lg="4"
+								xl="3"
+							>
+								<v-hover v-slot="{ hover }">
+									<v-card
+										:style="
+											hover
+												? 'transform: scale(1.01);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-3' : 'elevation-1'"
+										style="border-radius: 15px; transition: transform 0.6s"
+										height="350"
+										class="text-center"
+									>
+										<v-card-text style="height: 250px">
+											<div>
 												<v-avatar
-													:size="
-														$vuetify.breakpoint.lgAndUp ? '200' : '140'
-													"
+													size="100"
 													:color="item.avatar ? 'trasnparent' : 'primary'"
 												>
 													<v-img
 														v-if="item.avatar"
 														:src="item.avatar"
 														:lazy-src="item.avatar"
-														:width="
-															$vuetify.breakpoint.lgAndUp
-																? '200'
-																: '140'
-														"
-														:height="
-															$vuetify.breakpoint.lgAndUp
-																? '200'
-																: '140'
-														"
+														width="100"
+														height="100"
 													>
 														<template #placeholder>
 															<v-row
@@ -590,92 +414,287 @@
 														{{ item.name.substr(0, 1) }}
 													</span>
 												</v-avatar>
-												<div
-													class="text-center body-2 text--secondary mt-3 mb-2"
-												>
-													Codigo {{ item.code }}
-												</div>
 												<nuxt-link
-													class="primary--text body-2 font-weight-bold"
-													style="text-decoration: none"
+													v-if="item.name"
+													style="text-decoration: none; display: block"
+													:to="{ path: `/${item.username}` }"
+												>
+													<span
+														class="body-2 font-weight-bold secondary--text"
+													>
+														{{ item.name }}
+														{{ item.lastName && item.lastName }}
+													</span>
+												</nuxt-link>
+												<span
+													v-if="item.code"
+													class="caption primary--text pb-2"
+													style="border-bottom: 1px solid #bdbdbd"
+												>
+													<span> Codigo {{ item.code }} </span>
+												</span>
+											</div>
+											<div class="body-2 mt-4">
+												{{
+													item.professionalDescription.length > 110
+														? item.professionalDescription
+																.slice(0, 110)
+																.concat('...')
+														: item.professionalDescription
+												}}
+											</div>
+										</v-card-text>
+										<v-card-text>
+											<div>
+												<dialog-agenda-cita-online
+													:psy="item"
+													:mode="view.toString()"
+												/>
+											</div>
+											<div class="mt-1">
+												<v-btn
+													class="body-2"
+													text
 													:to="{ path: `/${item.username}` }"
 												>
 													Más información
-												</nuxt-link>
-											</v-col>
-											<v-col cols="12" sm="9">
-												<v-row justify-md="space-between" align="center">
-													<v-col
-														cols="12"
-														sm="6"
-														class="text-center text-sm-left"
+												</v-btn>
+											</div>
+										</v-card-text>
+									</v-card>
+								</v-hover>
+							</v-col>
+						</template>
+						<template v-if="view == 2">
+							<v-col cols="12">
+								<v-hover v-slot="{ hover }">
+									<v-card
+										:style="
+											hover
+												? 'transform: scale(1.01);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-3' : 'elevation-1'"
+										style="border-radius: 15px; transition: transform 0.6s"
+										dark
+										color="primary"
+									>
+										<v-card-text>
+											<v-row align="center" justify="center">
+												<v-col cols="12" sm="3" class="text-center">
+													<v-img
+														height="140"
+														width="140"
+														class="mx-auto"
+														:src="`${$config.LANDING_URL}/Lupa.png`"
+														:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
 													>
-														<nuxt-link
-															style="text-decoration: none"
-															:to="{
-																path: `/${item.username}`,
-															}"
-														>
-															<span
-																class="body-1 text-lg-h5 font-weight-bold text--secondary"
+														<template #placeholder>
+															<v-row
+																class="fill-height ma-0"
+																align="center"
+																justify="center"
 															>
-																{{ item.name }}
-																{{ item.lastName && item.lastName }}
-															</span>
-														</nuxt-link>
-													</v-col>
-													<v-col
-														cols="12"
-														sm="6"
-														class="text-center text-sm-right mb-4 mb-sm-0"
+																<v-progress-circular
+																	indeterminate
+																	color="grey lighten-5"
+																></v-progress-circular>
+															</v-row>
+														</template>
+													</v-img>
+												</v-col>
+												<v-col
+													cols="12"
+													sm="9"
+													class="text-center text-sm-left"
+												>
+													<v-row justify="space-between">
+														<v-col
+															class="headline font-weight-bold white--text"
+														>
+															Encuentra a tu psicólogo ideal
+														</v-col>
+													</v-row>
+													<div class="body-2 mt-2">
+														Encuentra al psicólogo que necesitas, solo
+														responde las siguientes preguntas.
+													</div>
+													<v-btn
+														color="white"
+														class="px-10 mt-4"
+														@click="start"
 													>
-														<dialog-agenda-cita-online
-															:psy="item"
-															:mode="view.toString()"
-														/>
-													</v-col>
-												</v-row>
-												<v-chip-group v-model="specialties" show-arrows>
-													<template v-for="(tag, i) in item.specialties">
-														<v-chip
-															:key="i"
-															:value="tag"
-															class="ma-2"
-															small
-															:color="
-																specialties == tag
-																	? 'primary--text'
-																	: ''
+														<span class="text--secondary"
+															>Comenzar</span
+														>
+													</v-btn>
+												</v-col>
+											</v-row>
+										</v-card-text>
+									</v-card>
+								</v-hover>
+							</v-col>
+							<v-col
+								v-if="!loading && !filterLevelThree.length"
+								cols="12"
+								class="title primary--text"
+							>
+								No se encontraron coincidencias
+							</v-col>
+							<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
+								<v-hover v-slot="{ hover }">
+									<v-card
+										:style="
+											hover
+												? 'transform: scale(1.01);'
+												: 'text-transform: none !important;'
+										"
+										:class="hover ? 'elevation-3' : 'elevation-1'"
+										style="border-radius: 15px; transition: transform 0.6s"
+									>
+										<v-card-text>
+											<v-row align="center" justify="center">
+												<v-col cols="12" sm="3" class="text-center">
+													<v-avatar
+														:size="
+															$vuetify.breakpoint.lgAndUp
+																? '200'
+																: '140'
+														"
+														:color="
+															item.avatar ? 'trasnparent' : 'primary'
+														"
+													>
+														<v-img
+															v-if="item.avatar"
+															:src="item.avatar"
+															:lazy-src="item.avatar"
+															:width="
+																$vuetify.breakpoint.lgAndUp
+																	? '200'
+																	: '140'
+															"
+															:height="
+																$vuetify.breakpoint.lgAndUp
+																	? '200'
+																	: '140'
 															"
 														>
-															<span>
-																{{ tag }}
-															</span>
-														</v-chip>
-													</template>
-												</v-chip-group>
-												<div
-													class="body-2 mt-2 mr-4 text-center text-sm-left"
-												>
-													{{
-														item.professionalDescription.length > 345
-															? item.professionalDescription
-																	.slice(0, 345)
-																	.concat('...')
-															: item.professionalDescription
-													}}
-												</div>
-											</v-col>
-										</v-row>
-									</v-card-text>
-								</v-card>
-							</v-hover>
-						</v-col>
-					</template>
-				</v-row>
+															<template #placeholder>
+																<v-row
+																	class="fill-height ma-0"
+																	align="center"
+																	justify="center"
+																>
+																	<v-progress-circular
+																		indeterminate
+																		color="primary"
+																	/>
+																</v-row>
+															</template>
+														</v-img>
+														<span
+															v-else
+															class="white--text headline font-weight-bold"
+														>
+															{{ item.name.substr(0, 1) }}
+														</span>
+													</v-avatar>
+													<div
+														class="text-center body-2 text--secondary mt-3 mb-2"
+													>
+														Codigo {{ item.code }}
+													</div>
+													<nuxt-link
+														class="primary--text body-2 font-weight-bold"
+														style="text-decoration: none"
+														:to="{ path: `/${item.username}` }"
+													>
+														Más información
+													</nuxt-link>
+												</v-col>
+												<v-col cols="12" sm="9">
+													<v-row
+														justify-md="space-between"
+														align="center"
+													>
+														<v-col
+															cols="12"
+															sm="6"
+															class="text-center text-sm-left"
+														>
+															<nuxt-link
+																style="text-decoration: none"
+																:to="{
+																	path: `/${item.username}`,
+																}"
+															>
+																<span
+																	class="body-1 text-lg-h5 font-weight-bold text--secondary"
+																>
+																	{{ item.name }}
+																	{{
+																		item.lastName &&
+																		item.lastName
+																	}}
+																</span>
+															</nuxt-link>
+														</v-col>
+														<v-col
+															cols="12"
+															sm="6"
+															class="text-center text-sm-right mb-4 mb-sm-0"
+														>
+															<dialog-agenda-cita-online
+																:psy="item"
+																:mode="view.toString()"
+															/>
+														</v-col>
+													</v-row>
+													<v-chip-group v-model="specialties" show-arrows>
+														<template
+															v-for="(tag, i) in item.specialties"
+														>
+															<v-chip
+																:key="i"
+																:value="tag"
+																class="ma-2"
+																small
+																:color="
+																	specialties == tag
+																		? 'primary--text'
+																		: ''
+																"
+															>
+																<span>
+																	{{ tag }}
+																</span>
+															</v-chip>
+														</template>
+													</v-chip-group>
+													<div
+														class="body-2 mt-2 mr-4 text-center text-sm-left"
+													>
+														{{
+															item.professionalDescription.length >
+															345
+																? item.professionalDescription
+																		.slice(0, 345)
+																		.concat('...')
+																: item.professionalDescription
+														}}
+													</div>
+												</v-col>
+											</v-row>
+										</v-card-text>
+									</v-card>
+								</v-hover>
+							</v-col>
+						</template>
+					</v-row>
+				</client-only>
 			</v-col>
 		</v-row>
-		<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 	</v-container>
 </template>
 
@@ -683,9 +702,9 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
+	name: 'AllPsicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {
@@ -765,7 +784,10 @@ export default {
 	created() {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
-		if (JSON.stringify(this.$route.params) !== JSON.stringify({}))
+		if (
+			this.$route.name === 'psicologos' &&
+			JSON.stringify(this.$route.params) !== JSON.stringify({})
+		)
 			this.$router.replace({ query: null });
 
 		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
