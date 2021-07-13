@@ -75,7 +75,7 @@ export default {
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING,
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
 				},
 				{
 					hid: 'og:title',
