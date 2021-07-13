@@ -33,6 +33,18 @@ export default {
 	},
 	head() {
 		return {
+			meta: [
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos',
+				},
+			],
 			link: [
 				{
 					rel: 'canonical',

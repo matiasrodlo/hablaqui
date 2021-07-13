@@ -28,6 +28,26 @@ export default {
 					name: 'description',
 					content: `Nuestros psicologos en ${this.comuna ? this.comuna.name : ''}`,
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Nuestros psicologos en ${this.comuna.name}`,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Nuestros psicologos en ${this.comuna.name}`,
+				},
 			],
 			link: [
 				{

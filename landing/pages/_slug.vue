@@ -52,6 +52,56 @@ export default {
 					name: 'description',
 					content: this.psychologist ? this.psychologist.professionalDescription : '',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: this.psychologist.professionalDescription,
+				},
+				{
+					hid: 'twitter:image',
+					name: 'twitter:image',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: this.psychologist.professionalDescription,
+				},
+				{
+					hid: 'og:image',
+					property: 'og:image',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:image:secure_url',
+					property: 'og:image:secure_url',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:image:alt',
+					property: 'og:image:alt',
+					content: this.psychologist.name,
+				},
 			],
 			link: [
 				{
