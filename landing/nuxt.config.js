@@ -110,7 +110,7 @@ export default {
 			{
 				hid: 'twitter:image',
 				name: 'twitter:image',
-				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+				content: process.env.VUE_APP_LANDING + '/logo.png',
 			},
 
 			// Open Graph
@@ -136,12 +136,12 @@ export default {
 			{
 				hid: 'og:image',
 				property: 'og:image',
-				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+				content: process.env.VUE_APP_LANDING + '/logo.png',
 			},
 			{
 				hid: 'og:image:secure_url',
 				property: 'og:image:secure_url',
-				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+				content: process.env.VUE_APP_LANDING + '/logo.png',
 			},
 			{
 				hid: 'og:image:alt',
