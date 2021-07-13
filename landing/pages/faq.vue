@@ -133,23 +133,23 @@
 		<v-container>
 			<v-row justify="center" align="center" class="mb-8">
 				<v-col cols="12" md="6" class="text-center text-md-left">
-					<div style="color: #bdbdbd">
-						<nuxt-link
+					<div style="color: #bdbdbd" class="my-4">
+						<v-btn
 							text
-							class="text--disabled"
+							class="pl-0 text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'politicas' }"
 							>Aviso de privacidad
-						</nuxt-link>
+						</v-btn>
 						y
-						<nuxt-link
+						<v-btn
 							text
 							class="text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'condiciones' }"
 						>
 							Términos y Condiciones
-						</nuxt-link>
+						</v-btn>
 					</div>
 					<div class="text--secondary">
 						© 2021 Hablaquí · Todos los derechos reservados
@@ -161,7 +161,7 @@
 						:src="`${$config.LANDING_URL}/redes_sociales.png`"
 						alt="redes sociales"
 					/>
-					<div>Atención a clientes: c@hablaqui.com</div>
+					<div class="my-4">Atención a clientes: c@hablaqui.com</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
