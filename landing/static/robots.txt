@@ -1,2 +1,3 @@
+Sitemap: https://hablaqui.cl/sitemap.xml
 User-agent: *
 Disallow:
