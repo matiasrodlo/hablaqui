@@ -85,6 +85,69 @@ export default {
 				content:
 					'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
 			},
+			{
+				hid: 'twitter:card',
+				name: 'twitter:card',
+				content: 'summary_large_image',
+			},
+			{ hid: 'twitter:site', name: 'twitter:site', content: 'Hablaquí' },
+			{
+				hid: 'twitter:url',
+				name: 'twitter:url',
+				content: process.env.VUE_APP_LANDING,
+			},
+			{
+				hid: 'twitter:title',
+				name: 'twitter:title',
+				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			},
+			{
+				hid: 'twitter:description',
+				name: 'twitter:description',
+				content:
+					'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+			},
+			{
+				hid: 'twitter:image',
+				name: 'twitter:image',
+				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+			},
+
+			// Open Graph
+			// Test on: https://developers.facebook.com/tools/debug/
+			{ hid: 'og:site_name', property: 'og:site_name', content: 'Hablaquí' },
+			{ hid: 'og:type', property: 'og:type', content: 'website' },
+			{
+				hid: 'og:url',
+				property: 'og:url',
+				content: process.env.VUE_APP_LANDING,
+			},
+			{
+				hid: 'og:title',
+				property: 'og:title',
+				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			},
+			{
+				hid: 'og:description',
+				property: 'og:description',
+				content:
+					'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+			},
+			{
+				hid: 'og:image',
+				property: 'og:image',
+				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+			},
+			{
+				hid: 'og:image:secure_url',
+				property: 'og:image:secure_url',
+				content: process.env.VUE_APP_LANDING + '/favicon-32x32.png',
+			},
+			{
+				hid: 'og:image:alt',
+				property: 'og:image:alt',
+				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			},
 		],
 		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 	},
