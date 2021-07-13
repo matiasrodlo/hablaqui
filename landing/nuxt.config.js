@@ -79,6 +79,7 @@ export default {
 				'http-equiv': 'Content-language',
 				content: 'es',
 			},
+			{ 'http-equiv': 'cache-control', content: 'max-age=2592000' },
 			{
 				hid: 'description',
 				name: 'description',

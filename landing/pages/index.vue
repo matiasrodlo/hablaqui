@@ -61,7 +61,7 @@
 		</section>
 		<img
 			class="hidden-sm-and-down"
-			:src="`${$config.LANDING_URL}/wave1.png`"
+			src="/wave1.png"
 			width="100%"
 			height="100px"
 			alt="Tu psicólogo Online"
