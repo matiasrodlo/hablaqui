@@ -110,6 +110,20 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando el metodo de pago');
 		}
 	},
+
+	async updatePsychologist(req, res) {
+		try {
+			const { user } = req;
+			const { profile } = req.body;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updatePsychologist(user, profile);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error actualizando el psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

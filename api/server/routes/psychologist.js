@@ -46,4 +46,10 @@ psychologistsRouter.patch(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePaymentMethod
 );
+psychologistsController.patch(
+	'/psychologist/update-profile',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updatePsychologist
+);
+
 export default psychologistsRouter;
