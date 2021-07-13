@@ -125,7 +125,6 @@ export default {
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',
 		'@nuxtjs/sitemap',
-		'@nuxtjs/robots',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
