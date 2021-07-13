@@ -166,9 +166,6 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<client-only>
-			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
-		</client-only>
 	</div>
 </template>
 
@@ -178,7 +175,6 @@ import { mapMutations } from 'vuex';
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {

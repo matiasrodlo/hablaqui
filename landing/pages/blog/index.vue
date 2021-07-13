@@ -595,7 +595,6 @@
 			<v-container tag="footer">
 				<Footer />
 			</v-container>
-			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 		</client-only>
 	</div>
 </template>
@@ -607,7 +606,6 @@ export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	async asyncData({ $axios, $app }) {
 		const { articles } = await $axios.$get('/blog/all');

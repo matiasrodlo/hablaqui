@@ -695,9 +695,6 @@
 				</client-only>
 			</v-col>
 		</v-row>
-		<client-only>
-			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
-		</client-only>
 	</v-container>
 </template>
 
@@ -708,7 +705,6 @@ export default {
 	name: 'AllPsicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	data() {
 		return {

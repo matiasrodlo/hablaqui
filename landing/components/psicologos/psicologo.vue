@@ -177,7 +177,6 @@
 					</v-row>
 				</v-card-text>
 			</v-card>
-			<FloatingChat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
 			<v-dialog v-model="dialog" transition="dialog-top-transition" width="450">
 				<v-card rounded="xl">
 					<v-card-text>
@@ -298,7 +297,6 @@ export default {
 		signin: () => import('@/components/auth/SignIn'),
 		signup: () => import('@/components/auth/SignUp'),
 		DialogAgendaCitaOnline: () => import('@/components/psicologos/DialogAgendaCitaOnline'),
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	props: {
 		psychologist: {
