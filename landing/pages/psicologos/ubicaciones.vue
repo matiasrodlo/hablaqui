@@ -110,7 +110,15 @@
 							]"
 						>
 							<template #item="{ item }">
-								<v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
+								<v-breadcrumbs-item
+									:to="item.href"
+									exact
+									exact-path
+									nuxt
+									link
+									replace
+									:disabled="item.disabled"
+								>
 									<span class="body-1 font-weight-medium">{{ item.text }}</span>
 								</v-breadcrumbs-item>
 							</template>
