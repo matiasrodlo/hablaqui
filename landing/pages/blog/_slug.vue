@@ -51,7 +51,7 @@
 										exact-path
 										nuxt
 										link
-										:href="item.href"
+										:to="item.to"
 										replace
 										:disabled="item.disabled"
 									>
@@ -394,17 +394,17 @@ export default {
 				{
 					text: 'Inicio',
 					disabled: false,
-					href: '/blog',
+					to: '/blog',
 				},
 				{
 					text: this.article.categories,
 					disabled: true,
-					href: 'breadcrumbs_link_1',
+					to: '/blog/category',
 				},
 				{
 					text: this.article.title,
 					disabled: true,
-					href: `/blog/${this.article.slug}`,
+					to: `/blog/${this.article.slug}`,
 				},
 			];
 		}
