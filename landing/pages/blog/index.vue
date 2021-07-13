@@ -651,6 +651,36 @@ export default {
 					name: 'description',
 					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: `${process.env.VUE_APP_LANDING}/blog`,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Blog | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: 'Listado de articulos en hablaquí',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: `${process.env.VUE_APP_LANDING}/blog`,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Blog | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: 'Listado de articulos en hablaquí',
+				},
 			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}blog/` }],
 		};

@@ -195,6 +195,28 @@ export default {
 	},
 	head() {
 		return {
+			meta: [
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/auth',
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Ingresa o registrate | Hablaquí`,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/auth',
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Ingresa o registrate | Hablaquí`,
+				},
+			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}auth/` }],
 		};
 	},

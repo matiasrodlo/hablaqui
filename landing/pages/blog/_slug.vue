@@ -371,6 +371,56 @@ export default {
 					name: 'description',
 					content: this.article ? this.strippedContent(this.article.HTMLbody) : '',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: `${process.env.VUE_APP_LANDING}/blog/${this.$route.params.slug}`,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `${this.title} | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: this.strippedContent(this.article.HTMLbody),
+				},
+				{
+					hid: 'twitter:image',
+					name: 'twitter:image',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: `${process.env.VUE_APP_LANDING}/blog/${this.$route.params.slug}`,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `${this.title} | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: this.strippedContent(this.article.HTMLbody),
+				},
+				{
+					hid: 'og:image',
+					property: 'og:image',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:image:secure_url',
+					property: 'og:image:secure_url',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:image:alt',
+					property: 'og:image:alt',
+					content: this.title,
+				},
 			],
 			link: [
 				{
