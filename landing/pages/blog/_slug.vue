@@ -430,6 +430,29 @@ export default {
 			],
 		};
 	},
+	jsonld() {
+		return {
+			'@context': 'http://schema.org',
+			'@type': 'Article',
+			author: this.article.author,
+			datePublished: this.dates(this.article.createdAt),
+			headline: this.article.title,
+			image: {
+				'@type': 'imageObject',
+				url: this.article.thumbnail,
+				height: '600',
+				width: '800',
+			},
+			publisher: {
+				'@type': 'Organization',
+				name: this.article.originalAuthor,
+				logo: {
+					'@type': 'imageObject',
+					url: this.article.authorAvatar,
+				},
+			},
+		};
+	},
 	created() {
 		this.setFloatingChat(false);
 	},

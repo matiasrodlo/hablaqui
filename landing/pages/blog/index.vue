@@ -685,6 +685,19 @@ export default {
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}blog/` }],
 		};
 	},
+	jsonld() {
+		return {
+			'@context': 'http://schema.org',
+			'@type': 'Blog',
+			name: 'Blog Hablaquí',
+			url: 'https://hablaqui.cl/blog',
+			description: 'Listado de articulos en hablaquí',
+			publisher: {
+				'@type': 'Organization',
+				name: 'Blog hablaqui',
+			},
+		};
+	},
 	computed: {
 		forCompanies() {
 			// TODO: cambiar cuando tengamos mas de 4 articulos de empresas category

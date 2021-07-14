@@ -937,12 +937,22 @@ export default {
 	},
 	jsonld() {
 		return {
-			'@context': 'https://schema.org',
-			'@type': 'Organization',
-			leaglName: 'Hablaquí',
-			url: 'http://hablaqui.cl',
+			'@context': 'http://schema.org',
+			'@type': 'WebSite',
+			name: 'Hablaquí',
 			email: 'c@hablaqui.com',
+			url: 'https://hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
+			sameAs: [
+				'https://facebook.com/hablaqui',
+				'https://plus.google.com/hablaqui',
+				'https://twitter.com/hablaqui',
+			],
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'http://hablaqui.cl/psicologos/{params}',
+				'query-input': 'required name=params',
+			},
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 			brand: { '@type': 'brand', name: 'Hablaquí' },
 			sponsor: [
