@@ -944,11 +944,52 @@ export default {
 			email: 'c@hablaqui.com',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://hablaqui.cl/logo_tiny.png',
+			brand: { '@type': 'brand', name: 'Hablaquí' },
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'http://hablaqui.cl/psicologos/{query}',
+				query: 'required',
+			},
 			sponsor: [
 				{
 					'@type': 'Organization',
 					name: 'startupchile',
-					url: 'https://www.startupchile.org/',
+					url: 'https://www.startupchile.org',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Universidad adolfo ibañez',
+					url: 'https://www.uai.cl',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Vidatres',
+					url: 'https://www.vidatres.cl/',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Banmedica',
+					url: 'https://www.banmedica.cl',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Colmena',
+					url: 'https://www.colmena.cl',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Consalud',
+					url: 'https://www.consalud.cl',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Nueva mas vida',
+					url: 'https://www.nuevamasvida.cl/',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Vidatres',
+					url: 'https://www.vidatres.cl/',
 				},
 				{
 					'@type': 'Organization',
