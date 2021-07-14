@@ -72,6 +72,10 @@ export default {
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 			{
+				name: 'google-site-verification',
+				content: 'i6rcEEmyKQ04k5p5OJTGT3_8uEscgWNKme_lKpunAU4',
+			},
+			{
 				name: 'robots',
 				content: 'index',
 			},

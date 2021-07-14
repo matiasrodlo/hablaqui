@@ -945,11 +945,6 @@ export default {
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 			brand: { '@type': 'brand', name: 'Hablaquí' },
-			potentialAction: {
-				'@type': 'SearchAction',
-				target: 'http://hablaqui.cl/psicologos/{query}',
-				query: 'required',
-			},
 			sponsor: [
 				{
 					'@type': 'Organization',
