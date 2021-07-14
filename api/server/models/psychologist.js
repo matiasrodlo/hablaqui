@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Mongoose } from 'mongoose';
 
 let session = new Schema({
 	date: {
@@ -36,6 +36,22 @@ let defaultSchedule = {
 	saturday: ['free', 'free'],
 	sunday: ['free', 'free'],
 };
+
+let rating = new Schema(
+	{
+		author: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+		},
+		comment: {
+			type: String,
+		},
+		stars: {
+			type: Number,
+		},
+	},
+	{ timestamps: true }
+);
 
 let psychologist = new Schema({
 	avatar: {
@@ -101,6 +117,7 @@ let psychologist = new Schema({
 		type: Object,
 		required: false,
 	},
+	ratings: [rating],
 	sessions: [session],
 });
 
