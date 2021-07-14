@@ -940,9 +940,8 @@ export default {
 			'@context': 'http://schema.org',
 			'@type': 'WebSite',
 			name: 'Hablaquí',
-			email: 'c@hablaqui.com',
+			thumbnailUrl: 'https://hablaqui.cl/logo.png',
 			url: 'https://hablaqui.cl',
-			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			sameAs: [
 				'https://facebook.com/hablaqui',
 				'https://plus.google.com/hablaqui',
@@ -953,8 +952,6 @@ export default {
 				target: 'http://hablaqui.cl/psicologos/{params}',
 				'query-input': 'required name=params',
 			},
-			logo: 'https://hablaqui.cl/logo_tiny.png',
-			brand: { '@type': 'brand', name: 'Hablaquí' },
 			sponsor: [
 				{
 					'@type': 'Organization',
