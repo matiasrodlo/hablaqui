@@ -935,6 +935,29 @@ export default {
 			link: [{ rel: 'canonical', href: this.$config.LANDING_URL }],
 		};
 	},
+	jsonld() {
+		return {
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			leaglName: 'Hablaquí',
+			url: 'http://hablaqui.cl',
+			email: 'c@hablaqui.com',
+			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
+			logo: 'https://hablaqui.cl/logo_tiny.png',
+			sponsor: [
+				{
+					'@type': 'Organization',
+					name: 'startupchile',
+					url: 'https://www.startupchile.org/',
+				},
+				{
+					'@type': 'Organization',
+					name: 'Fonasa',
+					url: 'https://www.fonasa.cl',
+				},
+			],
+		};
+	},
 };
 </script>
 

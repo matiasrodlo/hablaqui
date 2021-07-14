@@ -24,6 +24,7 @@
         "lodash": "^4.17.21",
         "moment": "^2.29.1",
         "nuxt": "^2.15.7",
+        "nuxt-jsonld": "^1.5.1",
         "pusher-js": "^7.0.3",
         "vue-dragscroll": "^3.0.0",
         "vuelidate": "^0.7.6",
