@@ -307,6 +307,8 @@
 								eager
 								height="80px"
 								width="80px"
+								contain
+								class="mx-auto"
 								:src="item.img"
 								:alt="item.title"
 							/>
