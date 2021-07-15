@@ -171,8 +171,6 @@ export default {
 
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
 	buildModules: [
-		// https://google-fonts.nuxtjs.org
-		'@nuxtjs/google-fonts',
 		// https://go.nuxtjs.dev/vuetify
 		['@nuxtjs/vuetify', { iconfont: 'mdi' }],
 		// https://go.nuxtjs.dev/eslint
@@ -211,13 +209,6 @@ export default {
 			: 'http://localhost:9000/',
 		exclude: ['/dashboard/**', '/nuevo-psicologo'],
 		trailingSlash: true,
-	},
-
-	googleFonts: {
-		display: 'swap',
-		families: {
-			Roboto: [100, 300, 400, 500, 700],
-		},
 	},
 
 	auth: {
