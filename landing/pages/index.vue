@@ -43,6 +43,7 @@
 						<v-img
 							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
 							contain
+							eager
 							:lazy-src="`${$config.LANDING_URL}/phone.webp`"
 							:src="`${$config.LANDING_URL}/phone.webp`"
 							alt="habla aqui videollamada"
@@ -61,6 +62,7 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
+			eager
 			src="/wave1.png"
 			lazy-src="/wave1.png"
 			style="width: 100%; height: auto"
@@ -69,6 +71,7 @@
 		<v-img
 			class="hidden-md-and-up"
 			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
+			eager
 			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
 			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
@@ -146,12 +149,14 @@
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<v-img
 			class="mt-10 hidden-sm-and-down"
+			eager
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="mt-10 hidden-md-and-up"
+			eager
 			:src="`${$config.LANDING_URL}/responsive_1.png`"
 			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
 			style="width: 100%; height: auto"
@@ -218,6 +223,7 @@
 										</template>
 										<aside style="position: absolute; bottom: 0; width: 100%">
 											<v-img
+												eager
 												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
 											>
 												<h4
@@ -265,11 +271,13 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
+			eager
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
+			eager
 			:src="`${$config.LANDING_URL}/responsive_2.png`"
 			style="width: 100%; height: auto"
 		/>
@@ -295,7 +303,13 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<v-img height="80px" width="80px" :src="item.img" :alt="item.title" />
+							<v-img
+								eager
+								height="80px"
+								width="80px"
+								:src="item.img"
+								:alt="item.title"
+							/>
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -328,17 +342,19 @@
 		<!-- SECTION 5 / Efectividad -->
 		<v-img
 			class="mt-10 hidden-sm-and-down"
+			eager
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="mt-10 hidden-md-and-up"
+			eager
 			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
-				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+				<v-img eager width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
@@ -392,6 +408,7 @@
 											<v-img
 												height="60px"
 												width="120px"
+												eager
 												contain
 												class="mx-auto"
 												:src="el.img"
@@ -458,6 +475,7 @@
 										<v-card-text class="mt-3">
 											<v-img
 												contain
+												eager
 												width="120"
 												height="60"
 												class="mx-auto"
@@ -490,11 +508,13 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
+			eager
 			:src="`${$config.LANDING_URL}/wave-part2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
+			eager
 			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
 			style="width: 100%; height: auto"
 		/>
@@ -517,6 +537,7 @@
 				>
 					<v-img
 						style="cursor: pointer"
+						eager
 						height="75px"
 						width="186px"
 						:src="`${$config.LANDING_URL}/google-play.png`"
@@ -532,6 +553,7 @@
 				>
 					<v-img
 						style="cursor: pointer"
+						eager
 						height="53px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
@@ -592,6 +614,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									alt="Vida Tres Isapre"
+									eager
 									contain
 									height="100"
 									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
@@ -600,6 +623,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									contain
+									eager
 									max-height="100"
 									alt="nueva masvida"
 									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
@@ -608,6 +632,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									contain
+									eager
 									alt="fonasa"
 									max-height="100"
 									:src="`${$config.LANDING_URL}/fonasa.png`"
@@ -616,6 +641,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									contain
+									eager
 									max-height="100"
 									alt="ban medica"
 									:src="`${$config.LANDING_URL}/banmedica.png`"
@@ -624,6 +650,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									contain
+									eager
 									max-height="100"
 									alt="colmena"
 									:src="`${$config.LANDING_URL}/colmena.png`"
@@ -632,6 +659,7 @@
 							<v-col tag="section" cols="6" sm="2">
 								<v-img
 									contain
+									eager
 									max-height="100"
 									alt="consalud"
 									:src="`${$config.LANDING_URL}/consalud.png`"
@@ -663,7 +691,7 @@
 					]"
 					:key="e"
 				>
-					<v-img height="70" class="mt-8" :src="item" :alt="item" contain />
+					<v-img eager height="70" class="mt-8" :src="item" :alt="item" contain />
 				</v-carousel-item>
 			</v-carousel>
 		</section>
