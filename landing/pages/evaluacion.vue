@@ -701,7 +701,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}evaluacion/`,
+					href: `${this.$config.LANDING_URL}/evaluacion/`,
 				},
 			],
 		};

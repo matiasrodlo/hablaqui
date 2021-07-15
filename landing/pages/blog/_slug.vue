@@ -425,7 +425,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}blog/${this.$route.params.slug}/`,
+					href: `${this.$config.LANDING_URL}/blog/${this.$route.params.slug}/`,
 				},
 			],
 		};

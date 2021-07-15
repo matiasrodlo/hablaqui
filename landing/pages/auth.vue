@@ -217,7 +217,7 @@ export default {
 					content: `Ingresa o registrate | Hablaquí`,
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}auth/` }],
+			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/auth/` }],
 		};
 	},
 	created() {
