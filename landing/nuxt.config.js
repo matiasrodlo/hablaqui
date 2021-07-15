@@ -153,14 +153,7 @@ export default {
 				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 		],
-		link: [
-			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-			{
-				rel: 'stylesheet',
-				href:
-					'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
-			},
-		],
+		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
@@ -178,10 +171,12 @@ export default {
 
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
 	buildModules: [
-		// https://go.nuxtjs.dev/eslint
-		'@nuxtjs/eslint-module',
+		// https://google-fonts.nuxtjs.org
+		'@nuxtjs/google-fonts',
 		// https://go.nuxtjs.dev/vuetify
 		'@nuxtjs/vuetify',
+		// https://go.nuxtjs.dev/eslint
+		'@nuxtjs/eslint-module',
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
@@ -216,6 +211,13 @@ export default {
 			: 'http://localhost:9000/',
 		exclude: ['/dashboard/**', '/nuevo-psicologo'],
 		trailingSlash: true,
+	},
+
+	googleFonts: {
+		families: {
+			display: 'swap',
+			Roboto: [100, 300, 400, 500, 700],
+		},
 	},
 
 	auth: {
