@@ -682,7 +682,12 @@ export default {
 					content: 'Listado de articulos en hablaquí',
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/blog/` }],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}/blog/`,
+				},
+			],
 		};
 	},
 	jsonld() {
