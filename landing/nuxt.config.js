@@ -83,7 +83,6 @@ export default {
 				'http-equiv': 'Content-language',
 				content: 'es',
 			},
-			{ 'http-equiv': 'cache-control', content: 'max-age=2592000' },
 			{
 				hid: 'description',
 				name: 'description',
@@ -189,6 +188,7 @@ export default {
 				id: 'UA-185893751-1',
 			},
 		],
+		['@nuxtjs/component-cache', { maxAge: 2592000 }],
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',
