@@ -607,7 +607,7 @@ export default {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
 	},
-	async asyncData({ $axios, $app }) {
+	async asyncData({ $axios }) {
 		const { articles } = await $axios.$get('/blog/all');
 		return {
 			articles,
@@ -685,7 +685,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/blog`,
+					href: `${this.$config.LANDING_URL}/blog/`,
 				},
 			],
 		};
