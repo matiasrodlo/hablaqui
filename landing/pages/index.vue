@@ -943,9 +943,11 @@ export default {
 			thumbnailUrl: 'https://hablaqui.cl/logo.png',
 			url: 'https://hablaqui.cl',
 			sameAs: [
-				'https://facebook.com/hablaqui',
-				'https://plus.google.com/hablaqui',
+				'https://www.facebook.com/hablaquicom',
+				'https://www.instagram.com/hablaqui/',
+				'https://www.linkedin.com/company/hablaqui',
 				'https://twitter.com/hablaqui',
+				'https://www.tiktok.com/@hablaqui',
 			],
 			potentialAction: {
 				'@type': 'SearchAction',

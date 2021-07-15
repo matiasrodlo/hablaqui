@@ -686,16 +686,54 @@ export default {
 		};
 	},
 	jsonld() {
+		const items = this.articles.map(article => {
+			return {
+				'@type': 'blogPosting',
+				mainEntityOfPage: `https://hablaqui.cl/blog/${article.slug}`,
+				headline: article.title,
+				author: article.author,
+				datePublished: this.dates(article.createdAt),
+				dateModified: this.dates(article.createdAt),
+				image: {
+					'@type': 'imageObject',
+					url: this.article.thumbnail,
+					height: '200',
+					width: '400',
+				},
+				publisher: {
+					'@type': 'Organization',
+					name: 'Blog hablaqui',
+					logo: {
+						'@type': 'imageObject',
+						url: 'https://hablaqui.cl/logo_tiny.png',
+					},
+				},
+			};
+		});
+
 		return {
 			'@context': 'http://schema.org',
 			'@type': 'Blog',
-			name: 'Blog Hablaquí',
+			name: 'Blog hablaquí',
 			url: 'https://hablaqui.cl/blog',
 			description: 'Listado de articulos en hablaquí',
 			publisher: {
 				'@type': 'Organization',
-				name: 'Blog hablaqui',
+				name: 'Blog hablaquí',
 			},
+			sameAs: [
+				'https://www.facebook.com/hablaquicom',
+				'https://www.instagram.com/hablaqui/',
+				'https://www.linkedin.com/company/hablaqui',
+				'https://twitter.com/hablaqui',
+				'https://www.tiktok.com/@hablaqui',
+			],
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'https://hablaqui.cl/{article}',
+				'query-input': 'required name=article',
+			},
+			blogPosts: items,
 		};
 	},
 	computed: {
