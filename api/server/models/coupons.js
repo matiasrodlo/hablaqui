@@ -3,7 +3,6 @@ import { Schema, model } from 'mongoose';
 /* Restrictions example
 / firstTimeOnly: boolean,
 / maxUses: number,
-/ psychologistSpecific: objectId,
 */
 
 let coupon = new Schema({

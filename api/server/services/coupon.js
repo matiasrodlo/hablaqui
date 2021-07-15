@@ -6,7 +6,7 @@ import moment from 'moment';
 const newCoupon = async (user, payload) => {
 	if (user.role !== 'superuser')
 		return conflictResponse('No tienes poder aqui.');
-	if (Coupon.exists({ code: payload.code }))
+	if (await Coupon.exists({ code: payload.code }))
 		return conflictResponse('Ya hay un cupon con ese codigo');
 
 	const coupon = {
@@ -14,7 +14,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: payload.expiration,
+		expiration: moment(payload.expiration).toISOString(),
 	};
 
 	await Coupon.create(coupon);
@@ -23,10 +23,10 @@ const newCoupon = async (user, payload) => {
 };
 
 const checkCoupon = async code => {
-	const foundCoupon = Coupon.findOne({ code });
+	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (!moment().isBefore(foundCoupon.expiration))
+	if (moment().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
 
 	return okResponse('el cupon es valido', { coupon: foundCoupon });
