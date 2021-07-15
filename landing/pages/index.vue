@@ -62,18 +62,17 @@
 		<v-img
 			class="hidden-sm-and-down"
 			src="/wave1.png"
-			width="100%"
-			height="100px"
+			lazy-src="/wave1.png"
+			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
 			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
-			style="width: 100%"
+			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
-
 		<!-- SECTION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
 			<v-row tag="section" justify="center">
@@ -148,14 +147,14 @@
 		<v-img
 			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
-			width="100%"
-			height="100px"
+			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="mt-10 hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/responsive_1.png`"
-			width="100%"
-			height="40px"
+			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
@@ -267,14 +266,12 @@
 		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
-			width="100%"
-			height="150px"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/responsive_2.png`"
-			width="100%"
-			height="40px"
+			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
@@ -332,12 +329,12 @@
 		<v-img
 			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			style="width: 100%; height: 150px"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="mt-10 hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
-			style="width: 100%; height: 40px"
+			style="width: 100%; height: auto"
 		/>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
@@ -494,12 +491,12 @@
 		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part2.png`"
-			style="width: 100%; height: 150px"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
-			style="width: 100%"
+			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
