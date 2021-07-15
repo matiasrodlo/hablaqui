@@ -174,7 +174,7 @@ export default {
 		// https://google-fonts.nuxtjs.org
 		'@nuxtjs/google-fonts',
 		// https://go.nuxtjs.dev/vuetify
-		'@nuxtjs/vuetify',
+		['@nuxtjs/vuetify', { iconfont: 'mdi' }],
 		// https://go.nuxtjs.dev/eslint
 		'@nuxtjs/eslint-module',
 	],
@@ -214,8 +214,8 @@ export default {
 	},
 
 	googleFonts: {
+		display: 'swap',
 		families: {
-			display: 'swap',
 			Roboto: [100, 300, 400, 500, 700],
 		},
 	},
