@@ -46,4 +46,9 @@ psychologistsRouter.patch(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePaymentMethod
 );
+psychologistsRouter.delete(
+	'/psychologist/delete-one',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.deleteOne
+);
 export default psychologistsRouter;

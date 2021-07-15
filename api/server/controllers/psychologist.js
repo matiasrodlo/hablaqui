@@ -110,6 +110,19 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando el metodo de pago');
 		}
 	},
+	async deleteOne(req, res) {
+		try {
+			const { user } = req;
+			const { id } = req.body;
+			const { data, code } = await psychologistsService.deleteOne(
+				user,
+				id
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error eliminando el psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
