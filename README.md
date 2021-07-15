@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://hablaqui.cl/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://hablaqui.cl/logo_tiny.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">Hablaquí</h3>
