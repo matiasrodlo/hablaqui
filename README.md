@@ -188,9 +188,6 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 [issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
 [issues-url]: https://github.com/hablaqui/hablaqui-repository/issues
 
-[twitter-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[twitter-url]: /twitter/url?url=https%3A%2F%2Fshields.io
-
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/company/hablaqui
 [product-screenshot]: images/screenshot.png
