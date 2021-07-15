@@ -188,7 +188,6 @@ export default {
 				id: 'UA-185893751-1',
 			},
 		],
-		['@nuxtjs/component-cache', { maxAge: 2592000 }],
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',

@@ -59,14 +59,14 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img
+		<v-img
 			class="hidden-sm-and-down"
 			src="/wave1.png"
 			width="100%"
 			height="100px"
 			alt="Tu psicólogo Online"
 		/>
-		<img
+		<v-img
 			class="hidden-md-and-up"
 			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
 			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
@@ -145,13 +145,13 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<img
+		<v-img
 			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			width="100%"
 			height="100px"
 		/>
-		<img
+		<v-img
 			class="mt-10 hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/responsive_1.png`"
 			width="100%"
@@ -264,13 +264,13 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img
+		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
 			width="100%"
 			height="150px"
 		/>
-		<img
+		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/responsive_2.png`"
 			width="100%"
@@ -298,7 +298,7 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<img height="80px" width="80px" :src="item.img" :alt="item.title" />
+							<v-img height="80px" width="80px" :src="item.img" :alt="item.title" />
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -329,12 +329,12 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<img
+		<v-img
 			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: 150px"
 		/>
-		<img
+		<v-img
 			class="mt-10 hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
 			style="width: 100%; height: 40px"
@@ -491,12 +491,12 @@
 				</v-row>
 			</v-container>
 		</section>
-		<img
+		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part2.png`"
 			style="width: 100%; height: 150px"
 		/>
-		<img
+		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
 			style="width: 100%"
@@ -518,7 +518,7 @@
 					tag="aside"
 					class="my-md-10 d-flex align-center justify-center"
 				>
-					<img
+					<v-img
 						style="cursor: pointer"
 						height="75px"
 						width="186px"
@@ -533,7 +533,7 @@
 					tag="aside"
 					class="my-md-10 d-flex align-center justify-center"
 				>
-					<img
+					<v-img
 						style="cursor: pointer"
 						height="53px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
