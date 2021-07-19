@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
 import '../../helpers/WidgetHelper.dart';
@@ -28,6 +30,7 @@ class _RegisterState extends State<Register>
 	@override
 	Widget build(BuildContext context)
 	{
+		var size = MediaQuery.of(context).size;
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(''), backgroundColor: Colors.white, elevation: 0,
@@ -40,7 +43,7 @@ class _RegisterState extends State<Register>
 			),
 			body: Container(
 				color: Colors.white,
-				padding: EdgeInsets.all(10),
+				padding: EdgeInsets.all(size.width * 0.067),
 				child: ListView(
 					children: [
 						SizedBox(height: 15),
@@ -48,19 +51,31 @@ class _RegisterState extends State<Register>
 							child: Image.asset('images/logo-text.png', fit: BoxFit.cover, height: 40),
 						),
 						SizedBox(height: 15),
-						Text('¡Me alegra que estés aqui!', 
+						Text('¡Tu bienestar comienza aqui!', 
 							textAlign: TextAlign.center,
-							style: TextStyle(fontSize: 20, color: appColors.mainColors['blue'])
+							style: TextStyle(
+								fontSize: 20, 
+								fontWeight: FontWeight.bold,
+								color: Color(0xff3c3c3b), /*appColors.mainColors['blue']*/
+							)
 						),
 						SizedBox(height: 15),
-						Text('Ingresa y continua tu viaje de desarrollo personal ahora mismo',
+						Text('Registrate para iniciar tu camino de desarrollo personal',
 							textAlign: TextAlign.center,
 							style: TextStyle(
 								color: appColors.mainColors['gray'],
 							),
 						),
 						SizedBox(height: 25),
-						this._getForm(),
+						Container(
+							/*
+							padding: EdgeInsets.only(
+								right: size.width * 0.067,
+								left: size.width * 0.067,
+							),
+							*/
+							child: this._getForm()
+						),
 					]
 				)
 			)
@@ -127,33 +142,35 @@ class _RegisterState extends State<Register>
 							),
 							SizedBox(width: 10),
 							Expanded(
-								child: RichText(
-									text: TextSpan(
-										text: 'He leido y acepto los ',
-										style: TextStyle(color: appColors.mainColors['gray']),
-										children: [
-											TextSpan(
-												text: 'Terminos y Condiciones y ',
-												style: TextStyle(color: appColors.mainColors['blue']),
-												recognizer: TapGestureRecognizer()
-													..onTap = ()
-												{
+								child: InkWell(
+									child: RichText(
+										text: TextSpan(
+											text: 'He leido y acepto los ',
+											style: TextStyle(color: appColors.mainColors['gray']),
+											children: [
+												TextSpan(
+													text: 'Terminos y Condiciones y ',
+													style: TextStyle(color: appColors.mainColors['blue']),
+													recognizer: TapGestureRecognizer()..onTap = ()
+													{
+														this._openUrl('https://hablaqui.cl/condiciones');
+													}
 													
-												}
-												
-											),
-											TextSpan(
-												text: 'la Politica de privacidad',
-												style: TextStyle(color: appColors.mainColors['blue']),
-												recognizer: TapGestureRecognizer()
-													..onTap = ()
-												{
+												),
+												TextSpan(
+													text: 'la Politica de privacidad',
+													style: TextStyle(color: appColors.mainColors['blue']),
+													recognizer: TapGestureRecognizer()..onTap = ()
+													{
+														this._openUrl('https://hablaqui.cl/politicas');
+													}
 													
-												}
-												
-											)
-										]
+												)
+											]
+										),
 									),
+									//onTap: this._openConditions,
+									
 								)
 							)
 						]
@@ -169,12 +186,22 @@ class _RegisterState extends State<Register>
 					*/
 					SizedBox(height: 15),
 					WidgetButton(
-						text: 'Crear mi cuenta',
+						text: 'Registrar',
 						callback: this._doRegister,
 						color: appColors.mainColors['blue'],
 					),
 					SizedBox(height: 25),
-					
+					Text('¿Ya tienes cuenta Hablaqui?', textAlign: TextAlign.center),
+					SizedBox(height: 15),
+					WidgetButton(
+						text: 'Entrar',
+						bordered: true,
+						callback: ()
+						{
+							Navigator.of(this.context).pop();
+						},
+						color: appColors.mainColors['blue'],
+					),
 					SizedBox(height: 10),
 					Text('2021 Hablaquí', textAlign: TextAlign.center),
 				]
@@ -237,5 +264,17 @@ class _RegisterState extends State<Register>
 				);
 			}
 		);
+	}
+	void _openUrl(url) async
+	{
+		//String url = 'https://hablaqui.cl/condiciones';
+		if (await canLaunch(url)) 
+		{
+			await launch(url);
+		} 
+		else 
+		{
+			print('Could not launch $url');
+		}
 	}
 }

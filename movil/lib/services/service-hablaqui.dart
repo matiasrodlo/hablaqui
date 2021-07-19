@@ -25,7 +25,7 @@ class ServiceHablaqui extends Service
 	Future<List<Chat>> getChats() async
 	{
 		String _json	= await this.get('/chat/get-chats');
-		//print(_json);
+		print(_json);
 		var obj			= json.decode(_json);
 		var items		= <Chat>[];
 		obj['chats'].forEach( (c) => items.add( new Chat.fromMap(c) ) );
