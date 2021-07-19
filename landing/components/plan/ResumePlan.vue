@@ -126,6 +126,7 @@ export default {
 				end: this.event.end,
 				user: this.$auth.$state.user,
 				psychologist: this.psy,
+				paymentPeriod: this.plan.deal.type,
 			};
 			const createdSession = await this.createSession(sessionPayload);
 			const payload = {
