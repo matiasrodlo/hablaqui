@@ -59,8 +59,9 @@ const match = async body => {
 
 const createSession = async body => {
 	const { payload } = body;
+	const isoDate = moment(`${payload.date} ${payload.start}`, 'DD/MM/YYYY HH:mm').toISOString();
 	const sessions = {
-		date: payload.date,
+		date: isoDate,
 		user: payload.user._id,
 		plan: payload.title,
 		statePayments: 'pending',
@@ -88,7 +89,7 @@ const createSession = async body => {
 
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
-		{ myPlan: payload.title }
+		{ myPlan: payload.title, paymentPeriod: payload.paymentPeriod }
 	);
 
 	logInfo('creo una nueva cita');

@@ -49,6 +49,9 @@ let userSchema = new Schema({
 	myPlan: {
 		type: String,
 	},
+	paymentPeriod: {
+		type: String,
+	},
 	finishedSessions: {
 		type: Array,
 		required: false,
