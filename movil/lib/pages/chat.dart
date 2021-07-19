@@ -3,6 +3,7 @@ import 'package:flutter_pusher/pusher.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../classes/Psychologist.dart';
 import '../classes/Chat.dart';
@@ -143,64 +144,74 @@ class _ChatPageState extends State<ChatPage>
 						SizedBox(width: 10),
 						Text(this.widget.psycho.fullName)
 					],
-				)
+				),
+				actions: [
+					IconButton(
+						icon: Image.asset('images/info-icon.png', height: 20),
+						onPressed: this._openPsychoEmail
+					)
+				]
 			),
-			body: Container(
-				color: appColors.mainColors['blue'],
+			body: SafeArea(
 				child: Container(
-					padding: EdgeInsets.all(10),
-					decoration: BoxDecoration(
-						
-						color: Colors.white,
-						borderRadius: BorderRadius.only(
-							topRight: Radius.circular(20),
-							topLeft: Radius.circular(20),
-						)
-					),
-					child: Column(
-						children: [
-							Expanded(
-								flex: 11,
-								child: this._withListView(),
-							),
-							SizedBox(height: 1),
-							Container(
-								height: this.textHeight,
-								padding: EdgeInsets.only(top: 10),
-								child: TextFormField(
-									keyboardType: TextInputType.multiline,
-									//minLines: 1,
-									maxLines: 5,
-									//expands: true,
-									focusNode: this._focusNode,
-									controller: this._ctrlMessage,
-									decoration: WidgetHelper.getTextFieldDecoration('Mensaje a ${this.widget.psycho.name}').copyWith(
-										//isDense: true,
-										contentPadding: EdgeInsets.all(10),
-										suffixIcon: Container(
-											width: 100,
-											child: Row(
-												children: [
-													IconButton(
-														padding: EdgeInsets.all(8),
-														icon: Icon(Icons.mic_none, color: Colors.grey),
-														onPressed: ()
-														{
-														}
-													),
-													IconButton(
-														padding: EdgeInsets.all(8),
-														icon: Icon(Icons.send, color: appColors.mainColors['blue']),
-														onPressed: this._sendMessage,
-													)
-												]
-											)
-										)
-									),
-									
-								),
+					color: appColors.mainColors['blue'],
+					child: Container(
+						padding: EdgeInsets.all(10),
+						decoration: BoxDecoration(
+							
+							color: Colors.white,
+							borderRadius: BorderRadius.only(
+								topRight: Radius.circular(20),
+								topLeft: Radius.circular(20),
 							)
-						]
+						),
+						child: Column(
+							children: [
+								Expanded(
+									flex: 11,
+									child: this._withListView(),
+								),
+								SizedBox(height: 1),
+								Container(
+									height: this.textHeight,
+									padding: EdgeInsets.only(top: 10),
+									child: TextFormField(
+										keyboardType: TextInputType.multiline,
+										//minLines: 1,
+										maxLines: 5,
+										//expands: true,
+										focusNode: this._focusNode,
+										controller: this._ctrlMessage,
+										decoration: WidgetHelper.getTextFieldDecoration('Mensaje a ${this.widget.psycho.name}').copyWith(
+											//isDense: true,
+											contentPadding: EdgeInsets.all(10),
+											suffixIcon: Container(
+												width: 50,
+												child: Row(
+													children: [
+														/*
+														IconButton(
+															padding: EdgeInsets.all(8),
+															icon: Icon(Icons.mic_none, color: Colors.grey),
+															onPressed: ()
+															{
+															}
+														),
+														*/
+														IconButton(
+															padding: EdgeInsets.all(8),
+															icon: Image.asset('images/envelop.png', width: 20),
+															onPressed: this._sendMessage,
+														)
+													]
+												)
+											)
+										),
+										
+									),
+								)
+							]
+						)
 					)
 				)
 			)
@@ -276,5 +287,22 @@ class _ChatPageState extends State<ChatPage>
 			Duration(seconds: 1),
 			() => this._scrollController.jumpTo(this._scrollController.position.maxScrollExtent),
 		);
+	}
+	void _openPsychoEmail() async
+	{
+		String url = 'mailto:${this.widget.psycho.email}?subject=';
+		if (await canLaunch(url)) 
+		{
+			await launch(
+				url,
+				//forceSafariVC: false,
+				//forceWebView: false,
+				//headers: <String, String>{'my_header_key': 'my_header_value'},
+			);
+		} 
+		else 
+		{
+			print('Could not launch $url');
+		}
 	}
 }
