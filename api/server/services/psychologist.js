@@ -232,6 +232,19 @@ const updatePaymentMethod = async (user, payload) => {
 	});
 };
 
+const setPrice = async (user, newPrice) => {
+	newPrice = Number(newPrice);
+	if (user.role != 'psychologist') return conflictResponse('No tienes permisos');
+	let updatedPsychologist = await Psychologist.findByIdAndUpdate(user.psychologist, {
+		sessionPrices: {
+			text: newPrice*0.75,
+			video: newPrice,
+			full: newPrice*0.75,
+		}
+	}, { new: true })
+	return okResponse('Precios actualizados', { psychologist: updatedPsychologist });
+}
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -242,6 +255,7 @@ const psychologistsService = {
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,
+	setPrice,
 };
 
 export default Object.freeze(psychologistsService);
