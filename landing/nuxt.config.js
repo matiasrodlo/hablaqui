@@ -189,8 +189,6 @@ export default {
 	modules: [
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
-		// https://github.com/chungtran4078/nuxtjs-mdi-font
-		'nuxtjs-mdi-font',
 		'@nuxtjs/auth-next',
 		'@nuxtjs/sitemap',
 		[
