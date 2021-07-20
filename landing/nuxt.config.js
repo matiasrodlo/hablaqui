@@ -276,7 +276,7 @@ export default {
 		},
 		defaultAssets: {
 			font: false,
-			icons: true,
+			icons: 'mdi',
 		},
 		treeShake: true,
 	},
