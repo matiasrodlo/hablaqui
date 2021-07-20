@@ -278,10 +278,12 @@ export default {
 				},
 			},
 		},
-		icons: {
-			iconfont: 'mdi',
+		defaultAssets: {
+			font: {
+				family: 'Roboto',
+			},
+			icons: 'mdi',
 		},
-		defaultAssets: false,
 		treeShake: true,
 	},
 
