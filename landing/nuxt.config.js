@@ -274,7 +274,10 @@ export default {
 				},
 			},
 		},
-		defaultAssets: false,
+		defaultAssets: {
+			font: false,
+			icons: true,
+		},
 		treeShake: true,
 	},
 
