@@ -26,7 +26,12 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+							class="
+								py-1
+								text-center text-h6 text-lg-h4
+								font-weight-bold
+								text--secondary
+							"
 						>
 							{{
 								step == 1
@@ -166,8 +171,7 @@ export default {
 				{
 					id: 1,
 					img: `${this.$config.LANDING_URL}/auth.webp`,
-					text:
-						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
@@ -177,14 +181,12 @@ export default {
 				{
 					id: 3,
 					img: `${this.$config.LANDING_URL}/auth-3.webp`,
-					text:
-						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
+					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
 					img: `${this.$config.LANDING_URL}/auth-4.webp`,
-					text:
-						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
 			carousel: 0,
