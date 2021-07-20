@@ -276,13 +276,6 @@ export default {
 				},
 			},
 		},
-		defaultAssets: {
-			font: {
-				family: 'Roboto',
-			},
-			icons: 'mdi',
-		},
-		treeShake: true,
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
