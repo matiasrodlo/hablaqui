@@ -276,10 +276,10 @@ export default {
 				},
 			},
 		},
-		defaultAssets: {
-			font: false,
-			icons: 'mdi',
+		icons: {
+			iconfont: 'mdi',
 		},
+		defaultAssets: false,
 		treeShake: true,
 	},
 
