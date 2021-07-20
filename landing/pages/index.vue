@@ -149,13 +149,15 @@
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<v-img
-			class="mt-10 hidden-sm-and-down"
+			v-if="$vuetify.breakpoint.mdAndUp"
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
-			class="mt-10 hidden-md-and-up"
+			v-else
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/responsive_1.png`"
 			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
 			style="width: 100%; height: auto"
@@ -351,13 +353,14 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<v-img
+			v-if="$vuetify.breakpoint.mdAndUp"
 			class="mt-10 hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
-			class="mt-10 hidden-md-and-up"
+			v-else
 			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
 			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
 			style="width: 100%; height: auto"
@@ -642,7 +645,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<section class="hidden-sm-and-down mt-16">
+		<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-16">
 			<v-container tag="section">
 				<v-row justify="center">
 					<v-col cols="12" md="10" xl="8">
@@ -706,7 +709,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
+		<section v-else class="mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
 				height="140"
