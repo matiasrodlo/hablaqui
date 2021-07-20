@@ -274,17 +274,28 @@ export default {
 				},
 			},
 		},
-		defaultAssets: {
-			font: {
-				family: 'Roboto',
-			},
-			icons: 'mdi',
-		},
+		defaultAssets: false,
 		treeShake: true,
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	build: {
 		publicPath: process.env.VUE_APP_LANDING,
+		babel: {
+			presets({ isClient }, preset) {
+				if (isClient) {
+					preset[1].targets = {
+						browsers: [
+							'Chrome >= 60',
+							'Safari >= 10.1',
+							'iOS >= 10.3',
+							'Firefox >= 54',
+							'Edge >= 15',
+						],
+					};
+				}
+				return [preset];
+			},
+		},
 	},
 };
