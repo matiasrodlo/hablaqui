@@ -187,6 +187,12 @@ export default {
 
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: [
+		// https://go.nuxtjs.dev/axios
+		'@nuxtjs/axios',
+		// https://github.com/chungtran4078/nuxtjs-mdi-font
+		'nuxtjs-mdi-font',
+		'@nuxtjs/auth-next',
+		'@nuxtjs/sitemap',
 		[
 			'@netsells/nuxt-hotjar',
 			{
@@ -200,10 +206,6 @@ export default {
 				id: 'UA-185893751-1',
 			},
 		],
-		// https://go.nuxtjs.dev/axios
-		'@nuxtjs/axios',
-		'@nuxtjs/auth-next',
-		'@nuxtjs/sitemap',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -274,28 +276,15 @@ export default {
 				},
 			},
 		},
-		defaultAssets: false,
+		defaultAssets: {
+			font: false,
+			icons: 'mdi',
+		},
 		treeShake: true,
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	build: {
 		publicPath: process.env.VUE_APP_LANDING,
-		babel: {
-			presets({ isClient }, preset) {
-				if (isClient) {
-					preset[1].targets = {
-						browsers: [
-							'Chrome >= 60',
-							'Safari >= 10.1',
-							'iOS >= 10.3',
-							'Firefox >= 54',
-							'Edge >= 15',
-						],
-					};
-				}
-				return [preset];
-			},
-		},
 	},
 };
