@@ -169,7 +169,11 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
+	css: [
+		'vuetify/dist/vuetify.min.css',
+		'~/assets/global.scss',
+		'@mdi/font/css/materialdesignicons.min.css',
+	],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: ['~/plugins/jsonld'],
@@ -274,6 +278,11 @@ export default {
 				},
 			},
 		},
+		defaultAssets: {
+			font: false,
+			icons: false,
+		},
+		treeShake: true,
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
