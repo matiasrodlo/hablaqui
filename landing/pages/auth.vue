@@ -149,7 +149,7 @@
 							v-slot="{ active, toggle }"
 						>
 							<v-btn icon color="#BDBDBD" @click="toggle">
-								<v-icon :color="active ? 'info' : ''">mdi-record</v-icon>
+								<icon :color="active ? 'info' : ''" :icon="mdiRecord" />
 							</v-btn>
 						</v-item>
 					</v-item-group>
@@ -160,13 +160,17 @@
 </template>
 
 <script>
+import { mdiRecord } from '@mdi/js';
+
 export default {
 	components: {
 		SignIn: () => import('~/components/auth/SignIn'),
 		SignUp: () => import('~/components/auth/SignUp'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiRecord,
 			length: [
 				{
 					id: 1,

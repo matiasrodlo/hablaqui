@@ -26,7 +26,9 @@
 					<v-card-text>
 						<!-- cabecera -->
 						<v-list-item class="px-0">
-							<v-icon left @click="selected = null">mdi-chevron-left</v-icon>
+							<v-btn icon @click="selected = null">
+								<icon :icon="mdiChevronLeft" />
+							</v-btn>
 							<v-list-item-avatar size="50">
 								<nuxt-link
 									:to="{ name: 'dashboard-perfil' }"
@@ -271,13 +273,16 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import Pusher from 'pusher-js';
+import { mdiChevronLeft } from '@mdi/js';
 
 export default {
 	components: {
 		avatar: () => import('~/components/Avatar'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiChevronLeft,
 			search: '',
 			selected: null,
 			loadingMessage: false,

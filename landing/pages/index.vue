@@ -243,12 +243,13 @@
 												<div>
 													<v-row>
 														<v-col cols="1" class="ml-4">
-															<v-icon color="primary"
-																>mdi-check</v-icon
-															>
+															<icon
+																color="primary"
+																:icon="mdiCheck"
+															/>
 														</v-col>
-														<v-col style="font-size: 14px" class="pl-3"
-															>{{ item.subtitle }}
+														<v-col style="font-size: 14px" class="pl-3">
+															{{ item.subtitle }}
 														</v-col>
 													</v-row>
 												</div>
@@ -749,13 +750,17 @@
 </template>
 
 <script>
+import { mdiCheck } from '@mdi/js';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiCheck,
 			panel: [0],
 			firstbox: [
 				{

@@ -15,18 +15,28 @@
 			<a style="text-decoration: none" to="/faq"> Centro de ayuda </a>
 		</div>
 		<v-btn class="ml-2" small fab color="white" @click="logout">
-			<v-icon color="primary"> mdi-logout </v-icon>
+			<icon :icon="mdiLogout" />
 		</v-btn>
 	</v-app-bar>
 </template>
 
 <script>
+import { mdiLogout } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		title: {
 			type: String,
 			default: '',
 		},
+	},
+	data() {
+		return {
+			mdiLogout,
+		};
 	},
 	methods: {
 		logout() {

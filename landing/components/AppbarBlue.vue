@@ -54,12 +54,10 @@
 			>
 				<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
 			</v-btn>
-			<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
-				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
 			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
 				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
-					<v-icon>mdi-menu</v-icon>
+					<icon :icon="mdiMenu" />
 				</v-btn>
 			</div>
 		</v-app-bar>
@@ -67,9 +65,15 @@
 </template>
 
 <script>
+import { mdiMenu } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	data() {
 		return {
+			mdiMenu,
 			drawer: false,
 		};
 	},
