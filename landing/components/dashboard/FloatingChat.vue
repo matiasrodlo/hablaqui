@@ -13,6 +13,7 @@
 			<template #activator="{ on, attrs }">
 				<v-img
 					class="open-button pointer"
+					accesskey="b"
 					v-bind="attrs"
 					width="65"
 					height="65"
