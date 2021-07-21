@@ -165,7 +165,7 @@
 			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
 				<v-btn icon @click="drawer = !drawer">
-					<v-icon>mdi-menu</v-icon>
+					<icon :icon="mdiMenu" />
 				</v-btn>
 			</div>
 		</v-app-bar>
@@ -173,12 +173,16 @@
 </template>
 
 <script>
+import { mdiMenu } from '@mdi/js';
+
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiMenu,
 			menu: [
 				{
 					name: 'Chat',
