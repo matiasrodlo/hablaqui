@@ -278,10 +278,7 @@ export default {
 				},
 			},
 		},
-		defaultAssets: {
-			font: false,
-			icons: false,
-		},
+		defaultAssets: false,
 		treeShake: true,
 	},
 
