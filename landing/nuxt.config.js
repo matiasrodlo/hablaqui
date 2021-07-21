@@ -169,7 +169,11 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
+	css: [
+		'@mdi/font/css/materialdesignicons.min.css',
+		'vuetify/dist/vuetify.min.css',
+		'~/assets/global.scss',
+	],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: ['~/plugins/jsonld'],
@@ -180,7 +184,7 @@ export default {
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
 	buildModules: [
 		// https://go.nuxtjs.dev/vuetify
-		'@nuxtjs/vuetify',
+		['@nuxtjs/vuetify', { iconfont: 'mdi' }],
 		// https://go.nuxtjs.dev/eslint
 		'@nuxtjs/eslint-module',
 	],
@@ -276,7 +280,7 @@ export default {
 		},
 		defaultAssets: {
 			font: false,
-			icons: 'mdi',
+			icons: false,
 		},
 		treeShake: true,
 	},
