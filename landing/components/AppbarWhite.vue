@@ -4,6 +4,7 @@
 			<v-list-item link to="/">
 				<v-img
 					id="logo-drawer"
+					tabindex="0"
 					class="mx-auto my-5"
 					style="max-width: 150px"
 					:src="`${$config.LANDING_URL}/logo.png`"
@@ -76,7 +77,7 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<nuxt-link id="logo-appbar" to="/" exact accesskey="h">
+			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
