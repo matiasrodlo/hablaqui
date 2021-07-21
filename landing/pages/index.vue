@@ -354,7 +354,7 @@
 		<!-- SECTION 5 / Efectividad -->
 		<v-img
 			v-if="$vuetify.breakpoint.mdAndUp"
-			class="mt-10 hidden-sm-and-down"
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
 			:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
 			style="width: 100%; height: auto"
