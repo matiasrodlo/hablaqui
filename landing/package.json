@@ -4,9 +4,9 @@
     "private": true,
     "scripts": {
         "dev": "nuxt",
-        "build": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js build",
+        "build": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js build --modern=server",
         "start": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js start",
-        "generate": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js generate --modern",
+        "generate": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js generate -m",
         "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
         "lint": "npm run lint:js",
         "create-env": "printenv > .env && cat .env"
