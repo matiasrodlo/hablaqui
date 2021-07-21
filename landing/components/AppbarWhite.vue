@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-once>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item link to="/">
 				<v-img
