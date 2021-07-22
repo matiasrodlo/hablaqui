@@ -64,13 +64,12 @@
 												@click="addItemToCombobox(item)"
 											>
 												{{ item }}
-												<v-icon right>
-													{{
-														combobox.includes(item)
-															? 'mdi-close'
-															: 'mdi-plus'
-													}}
-												</v-icon>
+												<icon
+													:icon="
+														combobox.includes(item) ? mdiClose : mdiPlus
+													"
+													right
+												/>
 											</v-btn>
 										</v-col>
 										<v-col cols="12" class="text-center">
@@ -636,11 +635,13 @@
 <script>
 import moment from 'moment';
 import { mapMutations } from 'vuex';
+import { mdiClose, mdiPlus } from '@mdi/js';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	async asyncData({ $axios }) {
 		const { articles } = await $axios.$get('/blog/all');
@@ -650,6 +651,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiPlus,
+			mdiClose,
 			items: [
 				'Autoconocimiento',
 				'Para empresas',
