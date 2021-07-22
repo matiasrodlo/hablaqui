@@ -36,6 +36,6 @@ export const no_reply_password = process.env.NO_REPLY_PASSWORD;
 export const send_person_and_document_noti_url = process.env.SEND_PERSON_AND_DOCUMENT_NOTI_URL;
 export const send_person_and_document_noti_task_queue =
 	process.env.SEND_PERSON_AND_DOCUMENT_NOTI_TASK_QUEUE;
-export const google_calendar_client_id = process.env.GOOGLE_CALENDAR_CLIENT_ID;
-export const google_calendar_client_secret = process.env.GOOGLE_CALENDAR_CLIENT_SECRET;
-export const google_calendar_client_redirect = process.env.GOOGLE_CALENDAR_CLIENT_REDIRECT;
+export const google_client_id = process.env.GOOGLE_CLIENT_ID;
+export const google_client_secret = process.env.GOOGLE_CLIENT_SECRET;
+export const google_client_redirect = process.env.GOOGLE_CLIENT_REDIRECT;

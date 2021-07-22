@@ -1,9 +1,5 @@
 import { okResponse } from '../utils/responses/functions';
-import {
-	google_calendar_client_id,
-	google_calendar_client_secret,
-	google_calendar_client_redirect,
-} from '../config/dotenv';
+import { google_client_id, google_client_secret, google_client_redirect } from '../config/dotenv';
 import { google } from 'googleapis';
 import User from '../models/user';
 import moment from 'moment';
@@ -13,9 +9,9 @@ import moment from 'moment';
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 
 const oAuth2Client = new google.auth.OAuth2(
-	google_calendar_client_id,
-	google_calendar_client_secret,
-	google_calendar_client_redirect
+	google_client_id,
+	google_client_secret,
+	google_client_redirect
 );
 
 const getEvents = async user => {
