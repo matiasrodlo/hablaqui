@@ -1,5 +1,5 @@
 <template>
-	<v-row justify="center">
+	<v-row v-once justify="center">
 		<v-col cols="12" md="10" xl="8">
 			<v-row align="center" justify="center" class="white--text py-16">
 				<v-col cols="12" sm="3" md="3" class="text-center text-sm-left">

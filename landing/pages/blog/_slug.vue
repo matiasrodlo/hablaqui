@@ -43,7 +43,7 @@
 						<div>
 							<v-breadcrumbs class="px-0 font-weight-light" :items="breadcrumb" large>
 								<template #divider>
-									<v-icon>mdi-chevron-right</v-icon>
+									<icon :icon="mdiChevronRight" />
 								</template>
 								<template #item="{ item }">
 									<v-breadcrumbs-item
@@ -336,11 +336,13 @@
 <script>
 import moment from 'moment';
 import { mapMutations } from 'vuex';
+import { mdiChevronRight } from '@mdi/js';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	async asyncData({ $axios, params, payload }) {
 		if (payload) return { article: payload };
@@ -353,6 +355,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronRight,
 			length: 3,
 			rating: 0,
 			breadcrumb: [],

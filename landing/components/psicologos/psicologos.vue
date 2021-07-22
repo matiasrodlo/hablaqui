@@ -16,11 +16,11 @@
 					</v-card-text>
 					<v-card-text style="height: 70px" class="d-flex align-center">
 						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
-							<v-icon>mdi-menu</v-icon>
+							<icon :icon="mdiMenu" />
 						</v-btn>
 						<v-divider vertical class="mx-2"></v-divider>
 						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
-							<v-icon>mdi-view-grid-outline</v-icon>
+							<icon :icon="mdiViewGridOutline" />
 						</v-btn>
 					</v-card-text>
 					<v-card-text>
@@ -191,7 +191,7 @@
 													:class="{ 'primary--text': view == 2 }"
 													@click="setView(2)"
 												>
-													<v-icon>mdi-menu</v-icon>
+													<icon :icon="mdiMenu" />
 												</v-btn>
 												<v-divider vertical class="mx-2"></v-divider>
 												<v-btn
@@ -199,7 +199,7 @@
 													:class="{ 'primary--text': view == 1 }"
 													@click="setView(1)"
 												>
-													<v-icon>mdi-view-grid-outline</v-icon>
+													<icon :icon="mdiViewGridOutline" />
 												</v-btn>
 											</v-card-text>
 										</template>
@@ -739,14 +739,18 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import { mdiMenu, mdiViewGridOutline } from '@mdi/js';
 
 export default {
 	name: 'AllPsicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiMenu,
+			mdiViewGridOutline,
 			view: 1,
 			specialties: '',
 			searchInput: '',
