@@ -25,6 +25,9 @@ let session = new Schema({
 	plan: {
 		type: String,
 	},
+	invitedByPsychologist: {
+		type: Boolean,
+	},
 });
 
 let defaultSchedule = {
