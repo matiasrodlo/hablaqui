@@ -696,15 +696,18 @@ export default {
 			return this.psychologists.find(item => item._id === id);
 		},
 		setVideo() {
-			const psychologistId =
-				this.$auth.$state.user.role === 'psychologist'
-					? this.$auth.$state.user.psychologist
-					: this.selected._id;
-			const userId =
-				this.$auth.$state.user.role === 'psychologist'
-					? this.selected._id
-					: this.$auth.$state.user._id;
-			this.video = psychologistId + userId;
+			if (this.video) this.video = null;
+			else {
+				const psychologistId =
+					this.$auth.$state.user.role === 'psychologist'
+						? this.$auth.$state.user.psychologist
+						: this.selected._id;
+				const userId =
+					this.$auth.$state.user.role === 'psychologist'
+						? this.selected._id
+						: this.$auth.$state.user._id;
+				this.video = psychologistId + userId;
+			}
 		},
 		...mapActions({
 			getPsychologists: 'Psychologist/getPsychologists',
