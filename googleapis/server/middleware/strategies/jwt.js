@@ -6,9 +6,9 @@ const options = {};
 /*jwt extraction from request header*/
 options.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('Bearer');
 /*jwt key*/
-options.secretOrKey = jwt_secret;
+options.secretOrKey = 'hablaqui2021';
 
-const strategy = new JwtStrategy(options, function(jwt_payload, done) {
+const strategy = new JwtStrategy(options, function (jwt_payload, done) {
 	User.findOne({ _id: jwt_payload.sub })
 		.then(user => {
 			if (user) {
