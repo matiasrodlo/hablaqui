@@ -286,13 +286,31 @@
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
 					<template v-else>
-						<iframe
+						<div
 							v-if="video"
-							style="flex: 1; border-radius: 30px"
-							class="mx-8 mb-2"
-							:src="`https://brie.fi/ng/${video}?audio=1&video=1&fs=1&invite=0&prefs=0&share=0&chat=0`"
-							allow="camera; microphone; fullscreen; speaker; display-capture"
-						></iframe>
+							style="position: relative; border-radius: 30px; height: 100%"
+							class="px-8 pb-2"
+						>
+							<div
+								class="mx-auto text-center flex align-items-center"
+								style="
+									background-color: #272727;
+									position: absolute;
+									bottom: 20px;
+									left: 0;
+									right: 0;
+									z-index: 1;
+									width: 60px;
+									height: 60px;
+								"
+							/>
+							<iframe
+								style="width: 100%; height: 100%; border-radius: 30px"
+								:src="`https://brie.fi/ng/${video}?audio=1&video=1&fs=1&invite=0&prefs=0&share=0&chat=0`"
+								allow="camera; microphone; speaker; display-capture"
+							>
+							</iframe>
+						</div>
 						<template v-else>
 							<v-card-text
 								class="scroll"
