@@ -25,6 +25,8 @@
 							segura y privada con un psicólogo online cuando lo necesites.
 						</div>
 						<v-btn
+							id="quiero-comenzar-1"
+							accesskey="p"
 							style="border-radius: 15px"
 							color="white"
 							x-large
@@ -97,6 +99,7 @@
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-btn
+								:id="item.id"
 								style="border: 8px solid #2070e5; cursor: initial"
 								depressed
 								fab
@@ -135,6 +138,7 @@
 					"
 				>
 					<v-btn
+						id="psi-quiero-comenzar-index"
 						color="primary"
 						style="border-radius: 15px"
 						x-large
@@ -177,11 +181,13 @@
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
+							id="ver-mas-psi-index"
 							style="border-radius: 15px"
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
 							to="/psicologos"
+							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -243,12 +249,13 @@
 												<div>
 													<v-row>
 														<v-col cols="1" class="ml-4">
-															<v-icon color="primary"
-																>mdi-check</v-icon
-															>
+															<icon
+																color="primary"
+																:icon="mdiCheck"
+															/>
 														</v-col>
-														<v-col style="font-size: 14px" class="pl-3"
-															>{{ item.subtitle }}
+														<v-col style="font-size: 14px" class="pl-3">
+															{{ item.subtitle }}
 														</v-col>
 													</v-row>
 												</div>
@@ -261,11 +268,13 @@
 					</v-col>
 					<v-col tag="section" cols="12" class="hidden-md-and-up my-10 text-center">
 						<v-btn
+							id="ver-mar-2"
 							style="border-radius: 15px"
 							color="white"
 							x-large
 							class="pa-4"
 							to="/psicologos"
+							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -339,12 +348,14 @@
 					"
 				>
 					<v-btn
+						id="comenzar-3"
 						style="border-radius: 15px"
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
 						to="/psicologos"
+						accesskey="p"
 					>
 						Quiero empezar
 					</v-btn>
@@ -620,8 +631,10 @@
 					"
 				>
 					<v-btn
+						id="comenzar-4"
 						style="border-radius: 15px"
 						color="primary"
+						accesskey="p"
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
@@ -749,13 +762,17 @@
 </template>
 
 <script>
+import { mdiCheck } from '@mdi/js';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiCheck,
 			panel: [0],
 			firstbox: [
 				{

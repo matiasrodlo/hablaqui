@@ -3,12 +3,12 @@
 		<v-slide-group v-model="slide" class="content" center-active show-arrows>
 			<template #prev>
 				<div class="align-self-start mt-4">
-					<v-icon>mdi-chevron-left</v-icon>
+					<icon :icon="mdiChevronLeft" />
 				</div>
 			</template>
 			<template #next>
 				<div class="align-self-start mt-4">
-					<v-icon>mdi-chevron-right</v-icon>
+					<icon :icon="mdiChevronRight" />
 				</div>
 			</template>
 			<v-slide-item v-for="(item, k) in items" :key="k" v-slot="{ toggle }">
@@ -65,10 +65,14 @@
 <script>
 import moment from 'moment';
 import { dragscroll } from 'vue-dragscroll';
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
 export default {
 	directives: {
 		dragscroll,
+	},
+	components: {
+		Icon: () => import('~/components/Icon'),
 	},
 	props: {
 		sessions: {
@@ -83,6 +87,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronLeft,
+			mdiChevronRight,
 			slide: 0,
 			today: moment(),
 			selected: null,

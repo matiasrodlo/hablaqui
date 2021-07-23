@@ -69,10 +69,10 @@
 							Hoy
 						</v-btn>
 						<v-btn fab text small color="grey darken-2" @click="prev">
-							<v-icon small> mdi-chevron-left </v-icon>
+							<icon small :icon="mdiChevronLeft" />
 						</v-btn>
 						<v-btn fab text small color="grey darken-2" @click="next">
-							<v-icon small> mdi-chevron-right </v-icon>
+							<icon small :icon="mdiChevronRight" />
 						</v-btn>
 						<v-toolbar-title v-if="$refs.calendar">
 							{{ $refs.calendar.title }}
@@ -82,7 +82,7 @@
 							<template #activator="{ on, attrs }">
 								<v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
 									<span>{{ typeToLabel[type] }}</span>
-									<v-icon right> mdi-menu-down </v-icon>
+									<icon right :icon="mdiMenuDown" />
 								</v-btn>
 							</template>
 							<v-list>
@@ -130,7 +130,7 @@
 								></v-toolbar-title>
 							</v-toolbar>
 							<v-card-text>
-								<v-icon left>mdi-clock-outline</v-icon>
+								<icon left :icon="mdiClockOutline" />
 								<span>{{ setSubtitle(selectedEvent.start) }}</span>
 							</v-card-text>
 							<v-divider></v-divider>
@@ -154,14 +154,20 @@
 <script>
 import moment from 'moment';
 import { mapActions } from 'vuex';
+import { mdiChevronLeft, mdiChevronRight, mdiMenuDown, mdiClockOutline } from '@mdi/js';
 
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
+		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		mdiChevronLeft,
+		mdiChevronRight,
+		mdiMenuDown,
+		mdiClockOutline,
 		date: '2018-03-02',
 		focus: '',
 		type: 'month',

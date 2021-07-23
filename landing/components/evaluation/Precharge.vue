@@ -27,7 +27,7 @@
 				>
 					<span>{{ el.title }}</span>
 					<v-btn style="width: 32px" fab depressed color="primary" x-small>
-						<v-icon>{{ el.done ? 'mdi-check' : 'mdi-close' }}</v-icon>
+						<icon :icon="el.done ? mdiCheck : mdiClose" />
 					</v-btn>
 				</div>
 			</v-col>
@@ -36,7 +36,12 @@
 </template>
 
 <script>
+import { mdiCheck, mdiClose } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		avatar: {
 			type: Array,
@@ -45,6 +50,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiCheck,
+			mdiClose,
 			image: '',
 			items: [
 				{ title: 'Calculando tu perfil', done: false },
