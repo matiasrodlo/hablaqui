@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../services/service-hablaqui.dart';
 import '../../classes/Psychologist.dart';
 import '../../classes/Chat.dart';
@@ -130,9 +131,18 @@ class _ChatConversationsState extends State<ChatConversations>
 			]
 		);
 	}
-	void _searchPsychologists()
+	void _searchPsychologists() async
 	{
-		Navigator.of(this.context).pushNamed('/psychologists/search');
+		//Navigator.of(this.context).pushNamed('/psychologists/search');
+		String url = 'https://hablaqui.cl/psicologos';
+		if (await canLaunch(url)) 
+		{
+			await launch(url);
+		} 
+		else 
+		{
+			print('Could not launch $url');
+		}
 	}
 	Stream<List> _getConversations() async*
 	{

@@ -53,7 +53,7 @@
 						}
 					"
 				>
-					<v-icon color="white" x-large>mdi-chevron-left</v-icon>
+					<icon :icon="mdiChevronLeft" x-large color="white" />
 				</v-btn>
 				<v-spacer></v-spacer>
 				<!-- plan -->
@@ -90,7 +90,13 @@
 							<v-card-text><signin :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									class="
+										mb-2
+										text-center
+										subtitle-1
+										font-weight-bold
+										secondary--text
+									"
 								>
 									<small> ¿No eres parte de Hablaquí? </small>
 								</div>
@@ -125,7 +131,13 @@
 							<v-card-text><signup :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									class="
+										mb-2
+										text-center
+										subtitle-1
+										font-weight-bold
+										secondary--text
+									"
 								>
 									<small> ¿Ya tienes cuenta Hablaquí? </small>
 								</div>
@@ -133,7 +145,13 @@
 									Entrar
 								</v-btn>
 								<div
-									class="text-center font-weight-bold caption secondary--text pt-2"
+									class="
+										text-center
+										font-weight-bold
+										caption
+										secondary--text
+										pt-2
+									"
 								>
 									2021 Hablaqui
 								</div>
@@ -157,6 +175,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { mdiChevronLeft } from '@mdi/js';
 
 export default {
 	components: {
@@ -165,6 +184,7 @@ export default {
 		calendar: () => import('~/components/Calendar'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
+		Icon: () => import('~/components/Icon'),
 	},
 	props: {
 		mode: {
@@ -178,6 +198,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronLeft,
 			step: 0,
 			tab: 1,
 			dialog: false,
