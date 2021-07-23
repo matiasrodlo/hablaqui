@@ -112,6 +112,23 @@ const psychologistsController = {
 	},
 <<<<<<< HEAD
 <<<<<<< HEAD
+
+	async updatePsychologist(req, res) {
+		try {
+			const { user } = req;
+			const { profile } = req.body;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updatePsychologist(user, profile);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error actualizando el psicologo');
+		}
+	},
+
+=======
+<<<<<<< HEAD
 	async deleteOne(req, res) {
 		try {
 			const { user } = req;
@@ -124,6 +141,7 @@ const psychologistsController = {
 		} catch (e) {
 			return errorCallback(e, res, 'error eliminando el psicologo');
 =======
+>>>>>>> staging
 =======
 	async setPrice(req, res) {
 		try {

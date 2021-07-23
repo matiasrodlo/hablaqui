@@ -47,10 +47,19 @@ psychologistsRouter.patch(
 	psychologistsController.updatePaymentMethod
 );
 <<<<<<< HEAD
+<<<<<<< HEAD
+psychologistsController.patch(
+	'/psychologist/update-profile',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updatePsychologist
+);
+
+=======
 psychologistsRouter.delete(
 	'/psychologist/delete-one',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.deleteOne
+>>>>>>> staging
 =======
 psychologistsRouter.post(
 	'/psychologist/update-prices',
@@ -68,4 +77,5 @@ psychologistsRouter.get(
 	psychologistsController.getRating
 >>>>>>> staging
 );
+>>>>>>> staging
 export default psychologistsRouter;
