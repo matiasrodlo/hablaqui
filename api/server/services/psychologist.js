@@ -132,9 +132,9 @@ const createSession = async body => {
 					invitedByPsychologist:
 						payload.psychologist.username ==
 						payload.user.inviteCode,
+					usedCoupon: payload.discountCoupon ? payload.discountCoupon : 'not used',
 				},
 			},
-			usedCoupon: payload.discountCoupon ? payload.discountCoupon : 'not used',
 			psychologist: payload.psychologist._id,
 		}
 	);

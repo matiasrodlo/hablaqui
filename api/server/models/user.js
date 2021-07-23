@@ -32,6 +32,9 @@ let planSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		usedCoupon: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );
@@ -78,10 +81,6 @@ let userSchema = new Schema({
 	google: {
 		type: Boolean,
 		default: false,
-	},
-	usedCoupon: {
-		type: String,
-		required: false,
 	},
 	plan: [planSchema],
 	finishedSessions: {
