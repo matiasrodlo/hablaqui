@@ -46,8 +46,9 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	myPlan: {
+	usedCoupon: {
 		type: String,
+		required: false,
 	},
 	finishedSessions: {
 		type: Array,
