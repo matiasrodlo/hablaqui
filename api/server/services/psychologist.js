@@ -59,12 +59,27 @@ const match = async body => {
 
 const createSession = async body => {
 	const { payload } = body;
+
+	const isoDate = moment(
+		`${payload.date} ${payload.start}`,
+		'DD/MM/YYYY HH:mm'
+	).toISOString();
+
+	let sessionQuantity = 0;
+	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
+	if (payload.paymentPeriod == 'Pago mensual') sessionQuantity = 4;
+	if (payload.paymentPeriod == 'Pago cada tres meses') sessionQuantity = 12;
+
 	const sessions = {
-		date: payload.date,
+		date: isoDate,
 		user: payload.user._id,
 		plan: payload.title,
 		statePayments: 'pending',
+		price: payload.price / sessionQuantity,
+		invitedByPsychologist:
+			payload.psychologist.username == payload.user.inviteCode,
 	};
+
 	// Check if available
 	const foundPsychologist = await Psychologist.findById(
 		payload.psychologist._id
@@ -86,9 +101,40 @@ const createSession = async body => {
 		{ upsert: true, returnOriginal: false }
 	);
 
+	let expirationDate = '';
+	if (payload.paymentPeriod == 'Pago semanal')
+		expirationDate = moment()
+			.add({ weeks: 1 })
+			.toISOString();
+	if (payload.paymentPeriod == 'Pago mensual')
+		expirationDate = moment()
+			.add({ weeks: 4 })
+			.toISOString();
+	if (payload.paymentPeriod == 'Pago cada tres meses')
+		expirationDate = moment()
+			.add({ months: 3 })
+			.toISOString();
+
+	console.log(payload.psychologist.username == payload.user.inviteCode);
+
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
-		{ myPlan: payload.title }
+		{
+			$push: {
+				plan: {
+					title: payload.title,
+					period: payload.paymentPeriod,
+					price: payload.price,
+					sessionPrice: payload.price / sessionQuantity,
+					psychologist: payload.psychologist._id,
+					expiration: expirationDate,
+					invitedByPsychologist:
+						payload.psychologist.username ==
+						payload.user.inviteCode,
+				},
+			},
+			psychologist: payload.psychologist._id,
+		}
 	);
 
 	logInfo('creo una nueva cita');
@@ -231,18 +277,56 @@ const updatePaymentMethod = async (user, payload) => {
 	});
 };
 
-
 const updatePsychologist = async (user, profile) => {
-	if (user.role == 'user') return conflictResponse('No tienes poder.')
-	const updated = await Psychologist.findByIdAndUpdate(user.psychologist, profile, {
-		new: true,
-		runValidators: true,
-		context: 'query',
-	});
+	if (user.role == 'user') return conflictResponse('No tienes poder.');
+	const updated = await Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		profile,
+		{
+			new: true,
+			runValidators: true,
+			context: 'query',
+		}
+	);
 
 	logInfo(actionInfo(user.email, 'actualizo su perfil de psicologo'));
 	return okResponse('Actualizado exitosamente', { psychologist: updated });
-},
+};
+
+const addRating = async (user, newRating, comment, psychologist) => {
+	if (user.psychologist != psychologist)
+		return conflictResponse('Este no es tu psicologo');
+
+	const rating = {
+		author: user._id,
+		comment,
+		stars: newRating,
+	};
+
+	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
+		psychologist,
+		{ $push: { ratings: rating } },
+		{ new: true }
+	);
+
+	return okResponse('Rating actualizado', {
+		psychologist: updatedPsychologist,
+	});
+};
+const getRating = async psychologist => {
+	const foundPsychologist = await Psychologist.findById(psychologist);
+	if (!foundPsychologist.ratings || foundPsychologist.ratings.length == 0)
+		return okResponse('El psicologo no tiene evaluaciones aun.');
+
+	let total = 0;
+	for (let i = 0; i < foundPsychologist.ratings.length; i++) {
+		total += foundPsychologist.ratings[i].stars;
+	}
+
+	return okResponse('Rating conseguido', {
+		rating: total / foundPsychologist.ratings.length,
+	});
+};
 
 const psychologistsService = {
 	getAll,
@@ -255,6 +339,8 @@ const psychologistsService = {
 	cancelSession,
 	updatePaymentMethod,
 	updatePsychologist,
+	addRating,
+	getRating,
 };
 
 export default Object.freeze(psychologistsService);

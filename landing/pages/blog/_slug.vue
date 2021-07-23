@@ -43,7 +43,7 @@
 						<div>
 							<v-breadcrumbs class="px-0 font-weight-light" :items="breadcrumb" large>
 								<template #divider>
-									<v-icon>mdi-chevron-right</v-icon>
+									<icon :icon="mdiChevronRight" />
 								</template>
 								<template #item="{ item }">
 									<v-breadcrumbs-item
@@ -336,11 +336,13 @@
 <script>
 import moment from 'moment';
 import { mapMutations } from 'vuex';
+import { mdiChevronRight } from '@mdi/js';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	async asyncData({ $axios, params, payload }) {
 		if (payload) return { article: payload };
@@ -353,6 +355,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronRight,
 			length: 3,
 			rating: 0,
 			breadcrumb: [],
@@ -371,13 +374,86 @@ export default {
 					name: 'description',
 					content: this.article ? this.strippedContent(this.article.HTMLbody) : '',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: `${process.env.VUE_APP_LANDING}/blog/${this.$route.params.slug}`,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `${this.title} | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: this.strippedContent(this.article.HTMLbody),
+				},
+				{
+					hid: 'twitter:image',
+					name: 'twitter:image',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: `${process.env.VUE_APP_LANDING}/blog/${this.$route.params.slug}`,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `${this.title} | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: this.strippedContent(this.article.HTMLbody),
+				},
+				{
+					hid: 'og:image',
+					property: 'og:image',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:image:secure_url',
+					property: 'og:image:secure_url',
+					content: this.article.thumbnail,
+				},
+				{
+					hid: 'og:image:alt',
+					property: 'og:image:alt',
+					content: this.title,
+				},
 			],
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}blog/${this.$route.params.slug}/`,
+					href: `${this.$config.LANDING_URL}/blog/${this.$route.params.slug}/`,
 				},
 			],
+		};
+	},
+	jsonld() {
+		return {
+			'@context': 'http://schema.org',
+			'@type': 'Article',
+			author: this.article.author,
+			datePublished: this.dates(this.article.createdAt),
+			headline: this.article.title,
+			image: {
+				'@type': 'imageObject',
+				url: this.article.thumbnail,
+				height: '600',
+				width: '800',
+			},
+			publisher: {
+				'@type': 'Organization',
+				name: this.article.originalAuthor,
+				logo: {
+					'@type': 'imageObject',
+					url: this.article.authorAvatar,
+				},
+			},
 		};
 	},
 	created() {

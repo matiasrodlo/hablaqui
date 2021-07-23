@@ -32,9 +32,7 @@ CUALQUIER PERSONA
 										style="border: 1px solid #2070e5; cursor: pointer"
 									>
 										<v-img v-if="urlAvatar" :src="urlAvatar"></v-img>
-										<v-icon v-else color="primary" size="100"
-											>mdi-account</v-icon
-										>
+										<icon v-else color="primary" x-large :icon="mdiAccount" />
 									</v-avatar>
 								</label>
 								<p>
@@ -58,7 +56,12 @@ CUALQUIER PERSONA
 									@change="setAvatar"
 								></v-file-input>
 								<div
-									class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									class="
+										text-center text-h6
+										font-weight-bold
+										text--secondary
+										mb-2
+									"
 								>
 									Datos personales
 								</div>
@@ -151,7 +154,12 @@ CUALQUIER PERSONA
 							</v-window-item>
 							<v-window-item :value="2">
 								<div
-									class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									class="
+										text-center text-h6
+										font-weight-bold
+										text--secondary
+										mb-2
+									"
 								>
 									Tus clientes quieren saber de ti cuentales que eres el mejor
 								</div>
@@ -186,7 +194,12 @@ CUALQUIER PERSONA
 									autocomplete="off"
 								></v-textarea>
 								<div
-									class="text-center text-h8 font-weight-bold text--secondary mb-2"
+									class="
+										text-center text-h8
+										font-weight-bold
+										text--secondary
+										mb-2
+									"
 								>
 									Lenguajes
 								</div>
@@ -227,7 +240,12 @@ CUALQUIER PERSONA
 							</v-window-item>
 							<v-window-item :value="3">
 								<div
-									class="text-center text-h6 font-weight-bold text--secondary mb-2"
+									class="
+										text-center text-h6
+										font-weight-bold
+										text--secondary
+										mb-2
+									"
 								>
 									Tus especialidades te ayudara a que puedan encontrarte mas
 									rapido
@@ -259,7 +277,12 @@ CUALQUIER PERSONA
 									</v-col>
 									<v-col
 										cols="12"
-										class="text-center text-h6 font-weight-bold text--secondary mb-2"
+										class="
+											text-center text-h6
+											font-weight-bold
+											text--secondary
+											mb-2
+										"
 									>
 										Modelos terapeuticos
 									</v-col>
@@ -335,11 +358,16 @@ CUALQUIER PERSONA
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions, mapGetters } from 'vuex';
+import { mdiAccount } from '@mdi/js';
 
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	mixins: [validationMixin],
 	data() {
 		return {
+			mdiAccount,
 			carousel: 0,
 			step: 1,
 			onboarding: 0,
@@ -356,8 +384,7 @@ export default {
 				{
 					id: 1,
 					img: `${this.$config.LANDING_URL}/auth.webp`,
-					text:
-						'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
@@ -367,14 +394,12 @@ export default {
 				{
 					id: 3,
 					img: `${this.$config.LANDING_URL}/auth-3.webp`,
-					text:
-						' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
+					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
 					img: `${this.$config.LANDING_URL}/auth-4.webp`,
-					text:
-						'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
 		};

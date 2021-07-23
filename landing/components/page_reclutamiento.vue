@@ -15,9 +15,7 @@
 					</div>
 					<v-list color="primary" dark class="text-h6">
 						<v-list-item v-for="el in 3" :key="el">
-							<v-list-item-icon>
-								<v-icon>mdi-check</v-icon>
-							</v-list-item-icon>
+							<v-list-item-icon> </v-list-item-icon>
 							<v-list-item-content>
 								Lorem ipsum dolor sit amet, consectetuer adipis-
 							</v-list-item-content>
@@ -224,7 +222,12 @@
 				<v-row align="center" justify="center" class="my-10">
 					<v-col cols="12">
 						<div
-							class="mt-16 white--text text-center text-h4 text-lg-h3 font-weight-bold"
+							class="
+								mt-16
+								white--text
+								text-center text-h4 text-lg-h3
+								font-weight-bold
+							"
 						>
 							Tenga un consultorio sin salir de casa
 						</div>

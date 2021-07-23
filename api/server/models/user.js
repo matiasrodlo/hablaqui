@@ -3,6 +3,39 @@ import bcrypt from 'bcrypt';
 const mongoose = require('mongoose');
 const { Model, Schema } = mongoose;
 
+let planSchema = new Schema(
+	{
+		title: {
+			type: String,
+		},
+		period: {
+			type: String,
+		},
+		psychologist: {
+			type: Schema.Types.ObjectId,
+			ref: 'psychologist',
+		},
+		price: {
+			type: Number,
+		},
+		sessionPrice: {
+			type: Number,
+		},
+		paymentStatus: {
+			type: String,
+			default: 'pending',
+		},
+		expiration: {
+			type: String,
+		},
+		invitedByPsychologist: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	{ timestamps: true }
+);
+
 let userSchema = new Schema({
 	name: {
 		type: String,
@@ -46,9 +79,7 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	myPlan: {
-		type: String,
-	},
+	plan: [planSchema],
 	finishedSessions: {
 		type: Array,
 		required: false,
@@ -61,7 +92,7 @@ let userSchema = new Schema({
 	role: {
 		type: String,
 		default: 'user',
-		enum: ['user', 'psychologist', 'admin'],
+		enum: ['user', 'psychologist', 'superuser'],
 	},
 });
 

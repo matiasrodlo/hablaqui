@@ -46,10 +46,22 @@ psychologistsRouter.patch(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePaymentMethod
 );
+<<<<<<< HEAD
 psychologistsController.patch(
 	'/psychologist/update-profile',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePsychologist
 );
 
+=======
+psychologistsRouter.post(
+	'/psychologist/add-rating/:psychologist',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.addRating
+);
+psychologistsRouter.get(
+	'/psychologist/get-rating/:psychologist',
+	psychologistsController.getRating
+);
+>>>>>>> staging
 export default psychologistsRouter;

@@ -124,6 +124,35 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error actualizando el psicologo');
 		}
 	},
+
+	async addRating(req, res) {
+		try {
+			const { user } = req;
+			const { newRating, comment } = req.body;
+			const { psychologist } = req.params;
+			const { data, code } = await psychologistsService.addRating(
+				user,
+				Number(newRating),
+				comment,
+				psychologist
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error actualizando el rating');
+		}
+	},
+
+	async getRating(req, res) {
+		try {
+			const { psychologist } = req.params;
+			const { data, code } = await psychologistsService.getRating(
+				psychologist
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error consiguiendo el rating');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

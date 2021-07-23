@@ -4,6 +4,8 @@
 			<v-list-item>
 				<nuxt-link to="/" style="width: 100%">
 					<v-img
+						id="logo-blue-drawer"
+						accesskey="h"
 						style="max-width: 150px"
 						class="mx-auto my-5"
 						:src="`${$config.LANDING_URL}/logo.png`"
@@ -13,7 +15,7 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item link nuxt to="/psicologos">
+				<v-list-item id="comenzar-blue-drawer" accesskey="c" link nuxt to="/psicologos">
 					<v-list-item-content>
 						<v-list-item-title>Quiero comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -36,6 +38,8 @@
 		<v-app-bar absolute flat height="115" color="transparent">
 			<nuxt-link to="/" exact>
 				<v-img
+					id="logo-blue-appbar"
+					accesskey="h"
 					style="max-width: 160px"
 					alt="hablaqui Logo"
 					:src="`${$config.LANDING_URL}/logo_white.png`"
@@ -45,21 +49,28 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<v-btn
+				id="psi-appbar-blue"
 				to="/psicologos"
 				large
 				rounded
 				class="hidden-sm-and-down mx-4 px-8"
 				color="white"
 				depressed
+				accesskey="c"
 			>
 				<span class="body-1 font-weight-bold primary--text">Quiero comenzar</span>
 			</v-btn>
-			<!-- <v-icon x-large color="white" class="ma-2">mdi-magnify</v-icon>
-				<v-icon x-large color="white" class="ma-2">mdi-menu</v-icon> -->
 			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
-				<v-btn class="mr-2" dark icon @click="drawer = !drawer">
-					<v-icon>mdi-menu</v-icon>
+				<v-btn
+					id="appbar-blue-menu-drawer"
+					accesskey="m"
+					class="mr-2"
+					dark
+					icon
+					@click="drawer = !drawer"
+				>
+					<icon :icon="mdiMenu" />
 				</v-btn>
 			</div>
 		</v-app-bar>
@@ -67,9 +78,15 @@
 </template>
 
 <script>
+import { mdiMenu } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	data() {
 		return {
+			mdiMenu,
 			drawer: false,
 		};
 	},

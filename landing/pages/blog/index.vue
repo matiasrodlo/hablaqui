@@ -64,18 +64,21 @@
 												@click="addItemToCombobox(item)"
 											>
 												{{ item }}
-												<v-icon right>
-													{{
-														combobox.includes(item)
-															? 'mdi-close'
-															: 'mdi-plus'
-													}}
-												</v-icon>
+												<icon
+													:icon="
+														combobox.includes(item) ? mdiClose : mdiPlus
+													"
+													right
+												/>
 											</v-btn>
 										</v-col>
 										<v-col cols="12" class="text-center">
 											<div
-												class="text-center align-self-end justify-content-center"
+												class="
+													text-center
+													align-self-end
+													justify-content-center
+												"
 											>
 												<v-btn
 													color="primary"
@@ -146,7 +149,11 @@
 														>
 															<article>
 																<h3
-																	class="body-1 font-weight-bold black--text"
+																	class="
+																		body-1
+																		font-weight-bold
+																		black--text
+																	"
 																>
 																	{{ article.title }}
 																</h3>
@@ -175,7 +182,10 @@
 																			article.author ||
 																			article.originalAuthor
 																		"
-																		class="font-weight-bold primary--text"
+																		class="
+																			font-weight-bold
+																			primary--text
+																		"
 																	>
 																		por
 																		{{
@@ -263,7 +273,11 @@
 															{{ article.categories }}
 														</v-btn>
 														<h3
-															class="body-1 font-weight-bold black--text"
+															class="
+																body-1
+																font-weight-bold
+																black--text
+															"
 														>
 															{{ article.title }}
 														</h3>
@@ -283,7 +297,10 @@
 														<div class="body-1 black--text">
 															<span
 																v-if="article.originalAuthor"
-																class="font-weight-bold primary--text"
+																class="
+																	font-weight-bold
+																	primary--text
+																"
 															>
 																por {{ article.originalAuthor }}
 															</span>
@@ -368,7 +385,11 @@
 				<v-row justify="center">
 					<v-col tag="section" cols="12" class="mb-5">
 						<h2
-							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
+							class="
+								white--text
+								font-weight-bold
+								text-h5 text-md-h4 text-lg-h3 text-center
+							"
 						>
 							Para empresas
 						</h2>
@@ -417,7 +438,11 @@
 											>
 												<article>
 													<h3
-														class="body-1 primary--text font-weight-bold"
+														class="
+															body-1
+															primary--text
+															font-weight-bold
+														"
 													>
 														{{ item.categories }}
 													</h3>
@@ -430,7 +455,11 @@
 												</article>
 												<aside>
 													<span
-														class="caption primary--text font-weight-bold"
+														class="
+															caption
+															primary--text
+															font-weight-bold
+														"
 													>
 														{{ item.originalAuthor }}
 													</span>
@@ -522,7 +551,12 @@
 												</v-img>
 											</v-list-item-avatar>
 											<h2
-												class="text-center body-2 font-weight-bold secondary--text"
+												class="
+													text-center
+													body-2
+													font-weight-bold
+													secondary--text
+												"
 											>
 												{{ element.title }}
 											</h2>
@@ -601,13 +635,15 @@
 <script>
 import moment from 'moment';
 import { mapMutations } from 'vuex';
+import { mdiClose, mdiPlus } from '@mdi/js';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarBlue'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
-	async asyncData({ $axios, $app }) {
+	async asyncData({ $axios }) {
 		const { articles } = await $axios.$get('/blog/all');
 		return {
 			articles,
@@ -615,6 +651,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiPlus,
+			mdiClose,
 			items: [
 				'Autoconocimiento',
 				'Para empresas',
@@ -651,8 +689,93 @@ export default {
 					name: 'description',
 					content: 'Los articulos más actualizados de nuestros psicologos',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: `${process.env.VUE_APP_LANDING}/blog`,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Blog | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: 'Listado de articulos en hablaquí',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: `${process.env.VUE_APP_LANDING}/blog`,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Blog | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: 'Listado de articulos en hablaquí',
+				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}blog/` }],
+			link: [
+				{
+					rel: 'canonical',
+					href: `${this.$config.LANDING_URL}/blog/`,
+				},
+			],
+		};
+	},
+	jsonld() {
+		// const items = this.articles.map(article => {
+		// 	return {
+		// 		'@type': 'blogPosting',
+		// 		mainEntityOfPage: `https://hablaqui.cl/blog/${article.slug}`,
+		// 		headline: article.title,
+		// 		author: article.author,
+		// 		datePublished: this.dates(article.createdAt),
+		// 		dateModified: this.dates(article.createdAt),
+		// 		image: {
+		// 			'@type': 'imageObject',
+		// 			url: this.article.thumbnail,
+		// 			height: '200',
+		// 			width: '400',
+		// 		},
+		// 		publisher: {
+		// 			'@type': 'Organization',
+		// 			name: 'Blog hablaqui',
+		// 			logo: {
+		// 				'@type': 'imageObject',
+		// 				url: 'https://hablaqui.cl/logo_tiny.png',
+		// 			},
+		// 		},
+		// 	};
+		// });
+
+		return {
+			'@context': 'http://schema.org',
+			'@type': 'Blog',
+			name: 'Blog hablaquí',
+			url: 'https://hablaqui.cl/blog',
+			description: 'Listado de articulos en hablaquí',
+			publisher: {
+				'@type': 'Organization',
+				name: 'Blog hablaquí',
+			},
+			sameAs: [
+				'https://www.facebook.com/hablaquicom',
+				'https://www.instagram.com/hablaqui/',
+				'https://www.linkedin.com/company/hablaqui',
+				'https://twitter.com/hablaqui',
+				'https://www.tiktok.com/@hablaqui',
+			],
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'https://hablaqui.cl/{article}',
+				'query-input': 'required name=article',
+			},
 		};
 	},
 	computed: {
