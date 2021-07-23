@@ -4,6 +4,7 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
+import user from '../models/user';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -277,6 +278,12 @@ const updatePaymentMethod = async (user, payload) => {
 	});
 };
 
+const deleteOne = async (user, id) => {
+	if (user.role != 'superadmin') return conflictResponse('No tienes poder');
+	await Psychologist.deleteOne({ _id: id });
+	return okResponse('Psicologo eliminado');
+};
+
 const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
 	if (user.role != 'psychologist')
@@ -342,6 +349,7 @@ const psychologistsService = {
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,
+	deleteOne,
 	setPrice,
 	addRating,
 	getRating,
