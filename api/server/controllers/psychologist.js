@@ -110,8 +110,6 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando el metodo de pago');
 		}
 	},
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 	async updatePsychologist(req, res) {
 		try {
@@ -127,8 +125,6 @@ const psychologistsController = {
 		}
 	},
 
-=======
-<<<<<<< HEAD
 	async deleteOne(req, res) {
 		try {
 			const { user } = req;
@@ -140,9 +136,8 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'error eliminando el psicologo');
-=======
->>>>>>> staging
-=======
+		}
+	},
 	async setPrice(req, res) {
 		try {
 			const { user } = req;
@@ -156,7 +151,6 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error actualizando el precio');
 		}
 	},
->>>>>>> staging
 	async addRating(req, res) {
 		try {
 			const { user } = req;
@@ -183,7 +177,6 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'error consiguiendo el rating');
->>>>>>> staging
 		}
 	},
 };
