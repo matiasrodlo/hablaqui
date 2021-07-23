@@ -134,6 +134,7 @@ const createSession = async body => {
 						payload.user.inviteCode,
 				},
 			},
+			usedCoupon: payload.discountCoupon ? payload.discountCoupon : 'not used',
 			psychologist: payload.psychologist._id,
 		}
 	);
