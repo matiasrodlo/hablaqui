@@ -110,6 +110,7 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando el metodo de pago');
 		}
 	},
+<<<<<<< HEAD
 
 	async updatePsychologist(req, res) {
 		try {
@@ -125,6 +126,21 @@ const psychologistsController = {
 		}
 	},
 
+=======
+	async setPrice(req, res) {
+		try {
+			const { user } = req;
+			const { newPrice } = req.body;
+			const { data, code } = await psychologistsService.setPrice(
+				user,
+				newPrice
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error actualizando el precio');
+		}
+	},
+>>>>>>> staging
 	async addRating(req, res) {
 		try {
 			const { user } = req;
