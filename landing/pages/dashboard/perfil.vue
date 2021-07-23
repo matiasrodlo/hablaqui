@@ -27,7 +27,7 @@
 								:alt="$auth.$state.user.name"
 								contain
 							/>
-							<v-icon v-else x-large>mdi-camera</v-icon>
+							<icon v-else x-large :icon="mdiCamera" />
 						</v-avatar>
 					</label>
 				</v-list-item-avatar>
@@ -73,17 +73,21 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { mdiCamera } from '@mdi/js';
+
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		GeneralInformation: () => import('~/components/dashboard/General'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
+		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data() {
 		return {
+			mdiCamera,
 			tabs: 0,
 			loadingAvatar: false,
 			sidebar: 0,

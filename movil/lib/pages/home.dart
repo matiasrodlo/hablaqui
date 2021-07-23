@@ -113,7 +113,7 @@ class _HomeState extends State<Home>
 									child: this._loaded ? ChatConversations() : SizedBox(height: 0),
 								)
 							),
-							BottomMenu(),
+							//BottomMenu(),
 						]
 					)
 				)

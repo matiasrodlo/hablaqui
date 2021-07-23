@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
 import '../../helpers/WidgetHelper.dart';
@@ -26,6 +27,8 @@ class _LoginState extends State<Login>
 	@override
 	Widget build(BuildContext context)
 	{
+		var size = MediaQuery.of(context).size;
+		
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(''), backgroundColor: Colors.white, elevation: 0,
@@ -38,7 +41,7 @@ class _LoginState extends State<Login>
 			),
 			body: Container(
 				color: Colors.white,
-				padding: EdgeInsets.all(10),
+				padding: EdgeInsets.all(size.width * 0.078),
 				child: Center(
 					child: ListView(
 					shrinkWrap: true,
@@ -48,14 +51,18 @@ class _LoginState extends State<Login>
 							child: Image.asset('images/logo-text.png', fit: BoxFit.cover, height: 40),
 						),
 						SizedBox(height: 15),
-						Text('¡Me alegra que estés aqui!', 
+						Text('¡Que gusto verte nuevamente!', 
 							textAlign: TextAlign.center,
-							style: TextStyle(fontSize: 20, color: appColors.mainColors['blue'])
+							style: TextStyle(fontSize: 20,
+								fontWeight: FontWeight.bold,
+								color: Color(0xff3c3c3b), //appColors.mainColors['blue']
+							)
 						),
 						SizedBox(height: 15),
 						Text('Ingresa y continua tu viaje de desarrollo personal ahora mismo',
 							textAlign: TextAlign.center,
 							style: TextStyle(
+								fontSize: 12,
 								color: appColors.mainColors['gray'],
 							),
 						),
@@ -78,14 +85,14 @@ class _LoginState extends State<Login>
 					TextFormField(
 						controller: this._ctrlEmail,
 						keyboardType: TextInputType.emailAddress,
-						decoration: WidgetHelper.getTextFieldDecoration('Email'),
+						decoration: WidgetHelper.getTextFieldDecoration('Correo electrónico'),
 						validator:(v)
 						{
 							if( v.isEmpty )
 								return 'Debe ingresar su email';
 						}
 					),
-					SizedBox(height: 10),
+					SizedBox(height: 19),
 					TextFormField(
 						controller: this._ctrlPass,
 						keyboardType: TextInputType.text,
@@ -97,7 +104,7 @@ class _LoginState extends State<Login>
 								return 'Debe ingresar su contraseña';
 						}
 					),
-					SizedBox(height: 10),
+					SizedBox(height: 19),
 					TextButton(
 						child: Text('¿Olvido la contraseña?', textAlign: TextAlign.left),
 						style: ButtonStyle(
@@ -108,18 +115,42 @@ class _LoginState extends State<Login>
 					SizedBox(height: 15),
 					if( !this._processing )
 					WidgetButton(
-						text: 'Entra',
+						text: 'Entrar',
 						callback: this._doLogin,
 						color: appColors.mainColors['blue'],
 					),
 					if( this._processing )
 					Center(child: CircularProgressIndicator()),
 					SizedBox(height: 25),
-					TextButton(
-						child: Text('Política de privacidad y condiciones de uso', textAlign: TextAlign.left),
-						onPressed: (){}
-					),
+					
+					Text('¿No eres parte de Hablaqui?', textAlign: TextAlign.center),
 					SizedBox(height: 10),
+					WidgetButton(
+						text: 'Crear una cuenta',
+						bordered: true,
+						callback: ()
+						{
+							Navigator.of(this.context).pushNamed('/register');
+						},
+						color: appColors.mainColors['blue'],
+					),
+					SizedBox(height: 35),
+					TextButton(
+						child: Text('Aviso de privacidad y condiciones de uso', textAlign: TextAlign.left),
+						onPressed: () async
+						{
+							String url = 'https://hablaqui.cl/politicas';
+							if (await canLaunch(url)) 
+							{
+								await launch(url);
+							} 
+							else 
+							{
+								print('Could not launch $url');
+							}
+						}
+					),
+					SizedBox(height: 1),
 					Text('2021 Hablaqui', textAlign: TextAlign.center),
 				]
 			)

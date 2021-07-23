@@ -47,7 +47,11 @@
 						<v-col cols="12" md="9">
 							<v-row justify="space-between">
 								<v-col
-									class="text-center text-md-left font-weight-bold text-h6 text-md-h4 text-xl-h3 text--secondary"
+									class="
+										text-center text-md-left
+										font-weight-bold
+										text-h6 text-md-h4 text-xl-h3 text--secondary
+									"
 								>
 									{{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
@@ -193,7 +197,13 @@
 									<v-card-text><signin :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
 										<div
-											class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+											class="
+												mb-2
+												text-center
+												subtitle-1
+												font-weight-bold
+												secondary--text
+											"
 										>
 											<small> ¿No eres parte de Hablaquí? </small>
 										</div>
@@ -226,7 +236,12 @@
 											>
 										</div>
 										<div
-											class="text-center font-weight-bold caption secondary--text"
+											class="
+												text-center
+												font-weight-bold
+												caption
+												secondary--text
+											"
 										>
 											2021 Hablaqui
 										</div>
@@ -246,7 +261,13 @@
 									<v-card-text><signup :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
 										<div
-											class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+											class="
+												mb-2
+												text-center
+												subtitle-1
+												font-weight-bold
+												secondary--text
+											"
 										>
 											<small> ¿Ya tienes cuenta Hablaquí? </small>
 										</div>
@@ -274,7 +295,12 @@
 											>
 										</div>
 										<div
-											class="text-center font-weight-bold caption secondary--text"
+											class="
+												text-center
+												font-weight-bold
+												caption
+												secondary--text
+											"
 										>
 											2021 Hablaqui
 										</div>
