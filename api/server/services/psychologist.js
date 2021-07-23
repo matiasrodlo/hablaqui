@@ -277,6 +277,41 @@ const updatePaymentMethod = async (user, payload) => {
 	});
 };
 
+const addRating = async (user, newRating, comment, psychologist) => {
+	if (user.psychologist != psychologist)
+		return conflictResponse('Este no es tu psicologo');
+
+	const rating = {
+		author: user._id,
+		comment,
+		stars: newRating,
+	};
+
+	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
+		psychologist,
+		{ $push: { ratings: rating } },
+		{ new: true }
+	);
+
+	return okResponse('Rating actualizado', {
+		psychologist: updatedPsychologist,
+	});
+};
+const getRating = async psychologist => {
+	const foundPsychologist = await Psychologist.findById(psychologist);
+	if (!foundPsychologist.ratings || foundPsychologist.ratings.length == 0)
+		return okResponse('El psicologo no tiene evaluaciones aun.');
+
+	let total = 0;
+	for (let i = 0; i < foundPsychologist.ratings.length; i++) {
+		total += foundPsychologist.ratings[i].stars;
+	}
+
+	return okResponse('Rating conseguido', {
+		rating: total / foundPsychologist.ratings.length,
+	});
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -287,6 +322,8 @@ const psychologistsService = {
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,
+	addRating,
+	getRating,
 };
 
 export default Object.freeze(psychologistsService);
