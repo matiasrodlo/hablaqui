@@ -4,7 +4,6 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
-import user from '../models/user';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -291,7 +290,7 @@ const updatePsychologist = async (user, profile) => {
 		}
 	);
 
-	logInfo(actionInfo(user.email, 'actualizo su perfil de psicologo'));
+	logInfo(user.email, 'actualizo su perfil de psicologo');
 	return okResponse('Actualizado exitosamente', { psychologist: updated });
 };
 
