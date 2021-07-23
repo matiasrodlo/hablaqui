@@ -25,6 +25,8 @@
 							segura y privada con un psicólogo online cuando lo necesites.
 						</div>
 						<v-btn
+							id="quiero-comenzar-1"
+							accesskey="p"
 							style="border-radius: 15px"
 							color="white"
 							x-large
@@ -62,18 +64,17 @@
 		<v-img
 			class="hidden-sm-and-down"
 			src="/wave1.png"
-			width="100%"
-			height="100px"
+			lazy-src="/wave1.png"
+			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
 			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
-			style="width: 100%"
+			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
-
 		<!-- SECTION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10">
 			<v-row tag="section" justify="center">
@@ -98,6 +99,7 @@
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-btn
+								:id="item.id"
 								style="border: 8px solid #2070e5; cursor: initial"
 								depressed
 								fab
@@ -129,9 +131,14 @@
 				<v-col
 					cols="12"
 					tag="section"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						my-10
+					"
 				>
 					<v-btn
+						id="psi-quiero-comenzar-index"
 						color="primary"
 						style="border-radius: 15px"
 						x-large
@@ -146,16 +153,18 @@
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
 		<v-img
-			class="mt-10 hidden-sm-and-down"
+			v-if="$vuetify.breakpoint.mdAndUp"
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
-			width="100%"
-			height="100px"
+			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
-			class="mt-10 hidden-md-and-up"
+			v-else
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/responsive_1.png`"
-			width="100%"
-			height="40px"
+			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
@@ -172,11 +181,13 @@
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
+							id="ver-mas-psi-index"
 							style="border-radius: 15px"
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
 							to="/psicologos"
+							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -201,7 +212,6 @@
 										:alt="item.name"
 										:lazy-src="item.image"
 										contain
-										eager
 										:max-width="$vuetify.breakpoint.mdAndUp ? '340' : '250'"
 										class="d-flex justify-end"
 									>
@@ -220,9 +230,16 @@
 										<aside style="position: absolute; bottom: 0; width: 100%">
 											<v-img
 												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
+												:lazy-src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
 											>
 												<h4
-													class="body-1 white--text pt-1 pl-4 font-weight-regular"
+													class="
+														body-1
+														white--text
+														pt-1
+														pl-4
+														font-weight-regular
+													"
 												>
 													{{ item.title }}
 												</h4>
@@ -232,12 +249,13 @@
 												<div>
 													<v-row>
 														<v-col cols="1" class="ml-4">
-															<v-icon color="primary"
-																>mdi-check</v-icon
-															>
+															<icon
+																color="primary"
+																:icon="mdiCheck"
+															/>
 														</v-col>
-														<v-col style="font-size: 14px" class="pl-3"
-															>{{ item.subtitle }}
+														<v-col style="font-size: 14px" class="pl-3">
+															{{ item.subtitle }}
 														</v-col>
 													</v-row>
 												</div>
@@ -250,11 +268,13 @@
 					</v-col>
 					<v-col tag="section" cols="12" class="hidden-md-and-up my-10 text-center">
 						<v-btn
+							id="ver-mar-2"
 							style="border-radius: 15px"
 							color="white"
 							x-large
 							class="pa-4"
 							to="/psicologos"
+							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -267,14 +287,14 @@
 		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
-			width="100%"
-			height="150px"
+			:lazy-src="`${$config.LANDING_URL}/wave-blue-2.png`"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/responsive_2.png`"
-			width="100%"
-			height="40px"
+			:lazy-src="`${$config.LANDING_URL}/responsive_2.png`"
+			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
 		<v-container tag="section" class="pt-10">
@@ -298,7 +318,15 @@
 				>
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
-							<v-img height="80px" width="80px" :src="item.img" :alt="item.title" />
+							<v-img
+								height="80px"
+								width="80px"
+								contain
+								class="mx-auto"
+								:src="item.img"
+								:lazy-src="item.img"
+								:alt="item.title"
+							/>
 						</v-card-text>
 						<v-card-text class="text-center pt-0">
 							<h3 class="title font-weight-bold">{{ item.title }}</h3>
@@ -313,15 +341,21 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
+					class="
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						mb-10
+					"
 				>
 					<v-btn
+						id="comenzar-3"
 						style="border-radius: 15px"
 						color="primary"
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
 						to="/psicologos"
+						accesskey="p"
 					>
 						Quiero empezar
 					</v-btn>
@@ -330,18 +364,25 @@
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
 		<v-img
-			class="mt-10 hidden-sm-and-down"
+			v-if="$vuetify.breakpoint.mdAndUp"
+			class="mt-10"
 			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			style="width: 100%; height: 150px"
+			:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
-			class="mt-10 hidden-md-and-up"
+			v-else
 			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
-			style="width: 100%; height: 40px"
+			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+			style="width: 100%; height: auto"
 		/>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
-				<v-img width="200" :src="`${$config.LANDING_URL}/plus.png`"></v-img>
+				<v-img
+					width="200"
+					:src="`${$config.LANDING_URL}/plus.png`"
+					:lazy-src="`${$config.LANDING_URL}/plus.png`"
+				></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
 				<v-row tag="aside">
@@ -398,6 +439,7 @@
 												contain
 												class="mx-auto"
 												:src="el.img"
+												:lazy-src="el.img"
 												:alt="el.text"
 											/>
 										</v-card-text>
@@ -465,6 +507,7 @@
 												height="60"
 												class="mx-auto"
 												:src="el.img"
+												:lazy-src="el.img"
 												:alt="el.text"
 											/>
 										</v-card-text>
@@ -494,12 +537,14 @@
 		<v-img
 			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/wave-part2.png`"
-			style="width: 100%; height: 150px"
+			:lazy-src="`${$config.LANDING_URL}/wave-part2.png`"
+			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
-			style="width: 100%"
+			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
+			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 6 / download app -->
 		<v-container tag="section">
@@ -507,7 +552,13 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="mt-10 mb-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
+					class="
+						mt-10
+						mb-5
+						text-center text-h5 text-md-h4
+						font-weight-bold
+						text--secondary
+					"
 				>
 					Descarga nuestra aplicación
 				</v-col>
@@ -523,6 +574,7 @@
 						height="75px"
 						width="186px"
 						:src="`${$config.LANDING_URL}/google-play.png`"
+						:lazy-src="`${$config.LANDING_URL}/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
 				</v-col>
@@ -537,6 +589,7 @@
 						style="cursor: pointer"
 						height="53px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
+						:lazy-src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
 				</v-col>
@@ -547,7 +600,11 @@
 			<v-row tag="section">
 				<v-col
 					tag="h2"
-					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
+					class="
+						my-10
+						text-center text-md-left text-h4 text-md-h3 text--secondary
+						font-weight-bold
+					"
 				>
 					Preguntas frecuentes
 				</v-col>
@@ -566,11 +623,18 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="hidden-sm-and-down text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
+					class="
+						hidden-sm-and-down
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						mt-16
+					"
 				>
 					<v-btn
+						id="comenzar-4"
 						style="border-radius: 15px"
 						color="primary"
+						accesskey="p"
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
@@ -581,13 +645,20 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="hidden-sm-and-down text-center body-1 font-weight-bold mt-6 text--secondary"
+					class="
+						hidden-sm-and-down
+						text-center
+						body-1
+						font-weight-bold
+						mt-6
+						text--secondary
+					"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<section class="hidden-sm-and-down mt-16">
+		<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-16">
 			<v-container tag="section">
 				<v-row justify="center">
 					<v-col cols="12" md="10" xl="8">
@@ -598,6 +669,7 @@
 									contain
 									height="100"
 									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+									:lazy-src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -606,6 +678,7 @@
 									max-height="100"
 									alt="nueva masvida"
 									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
+									:lazy-src="`${$config.LANDING_URL}/nueva-masvida.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -614,6 +687,7 @@
 									alt="fonasa"
 									max-height="100"
 									:src="`${$config.LANDING_URL}/fonasa.png`"
+									:lazy-src="`${$config.LANDING_URL}/fonasa.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -622,6 +696,7 @@
 									max-height="100"
 									alt="ban medica"
 									:src="`${$config.LANDING_URL}/banmedica.png`"
+									:lazy-src="`${$config.LANDING_URL}/banmedica.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -630,6 +705,7 @@
 									max-height="100"
 									alt="colmena"
 									:src="`${$config.LANDING_URL}/colmena.png`"
+									:lazy-src="`${$config.LANDING_URL}/colmena.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -638,6 +714,7 @@
 									max-height="100"
 									alt="consalud"
 									:src="`${$config.LANDING_URL}/consalud.png`"
+									:lazy-src="`${$config.LANDING_URL}/consalud.png`"
 								></v-img>
 							</v-col>
 						</v-row>
@@ -645,7 +722,7 @@
 				</v-row>
 			</v-container>
 		</section>
-		<section class="hidden-md-and-up mt-16" style="background-color: #e3f2fd">
+		<section v-else class="mt-16" style="background-color: #e3f2fd">
 			<v-carousel
 				cycle
 				height="140"
@@ -666,7 +743,14 @@
 					]"
 					:key="e"
 				>
-					<v-img height="70" class="mt-8" :src="item" :alt="item" contain />
+					<v-img
+						height="70"
+						class="mt-8"
+						:src="item"
+						:lazy-src="item"
+						:alt="item"
+						contain
+					/>
 				</v-carousel-item>
 			</v-carousel>
 		</section>
@@ -678,13 +762,17 @@
 </template>
 
 <script>
+import { mdiCheck } from '@mdi/js';
+
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
 		Footer: () => import('@/components/Footer'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiCheck,
 			panel: [0],
 			firstbox: [
 				{
@@ -707,24 +795,21 @@ export default {
 				{
 					id: 1,
 					title: 'Comodidad',
-					desc:
-						'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					desc: 'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 					img: `${this.$config.LANDING_URL}/comodidad.png`,
 					maxWidth: '250px',
 				},
 				{
 					id: 2,
 					title: 'Privacidad',
-					desc:
-						'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
+					desc: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
 					img: `${this.$config.LANDING_URL}/privacidad.png`,
 					maxWidth: '214px',
 				},
 				{
 					id: 3,
 					title: 'Personalización',
-					desc:
-						'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
+					desc: 'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
 					img: `${this.$config.LANDING_URL}/personalizacion.png`,
 					maxWidth: '250px',
 				},
@@ -733,64 +818,54 @@ export default {
 				{
 					id: 1,
 					title: 'David T. G.',
-					desc:
-						'No imaginaba como podía ser hablar con alguien a través de una pantalla, pensaba que se perdería la calidez, pero no es así. Me encanta la libertad, el poder viajar o simplemente estar en casa y poder continuar con el proceso de acompañamiento.',
+					desc: 'No imaginaba como podía ser hablar con alguien a través de una pantalla, pensaba que se perdería la calidez, pero no es así. Me encanta la libertad, el poder viajar o simplemente estar en casa y poder continuar con el proceso de acompañamiento.',
 				},
 				{
 					id: 2,
 					title: 'Maria K. H.',
-					desc:
-						'Me gusta Hablaquí. Es bueno poder conversar sobre lo que siento y tener a alguien que se comunique conmigo todos los días para darme orientación. Me hace sentir segura y más decidida a hacer cosas.',
+					desc: 'Me gusta Hablaquí. Es bueno poder conversar sobre lo que siento y tener a alguien que se comunique conmigo todos los días para darme orientación. Me hace sentir segura y más decidida a hacer cosas.',
 				},
 				{
 					id: 3,
 					title: 'Francisca L. M.',
-					desc:
-						'Dado que no me acomoda asistir terapia en persona busque una opción por internet. Llevo solo una sesión y no podría estar más feliz con la experiencia. Si es que estás pasando por un momento difícil y tienes los medios, dale una oportunidad.',
+					desc: 'Dado que no me acomoda asistir terapia en persona busque una opción por internet. Llevo solo una sesión y no podría estar más feliz con la experiencia. Si es que estás pasando por un momento difícil y tienes los medios, dale una oportunidad.',
 				},
 				{
 					id: 4,
 					title: 'Verónica P. R.',
-					desc:
-						'Es muy especial la conexión con mi psicóloga y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
+					desc: 'Es muy especial la conexión con mi psicóloga y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
 				},
 				{
 					id: 5,
 					title: 'Alberto S. A.',
-					desc:
-						'Producto de la pandemia me comencé a sentir muy angustiado, poco a poco veía como mi vida entraba en crisis. Las sesiones me han ayudado a ir disminuyendo el malestar,  a conocerme mejor y tener más energía.',
+					desc: 'Producto de la pandemia me comencé a sentir muy angustiado, poco a poco veía como mi vida entraba en crisis. Las sesiones me han ayudado a ir disminuyendo el malestar,  a conocerme mejor y tener más energía.',
 				},
 				{
 					id: 6,
 					title: 'Renata F. T.',
-					desc:
-						'Me resultó fácil elegir a mi psicóloga, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
+					desc: 'Me resultó fácil elegir a mi psicóloga, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
 				},
 			],
 			faq: [
 				{
 					id: 1,
 					title: '¿Quién será mi psicólogo?',
-					desc:
-						'Te recomendamos un psicólogo online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir.',
+					desc: 'Te recomendamos un psicólogo online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir.',
 				},
 				{
 					id: 2,
 					title: '¿Puedo iniciar terapia?',
-					desc:
-						'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
+					desc: 'Estamos disponibles para personas mayores de 18 años que deseen aproximarse al bienestar emocional por medio de acompañamiento psicológico. Por otro lado, no es apto para personas con ideación suicida, problemas de abuso de sustancias o esquizofrenia.',
 				},
 				{
 					id: 3,
 					title: '¿Necesito un diagnóstico?',
-					desc:
-						'No. Nuestros psicólogos están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un psicólogo o psiquiatra, va a ser útil, pero no es necesario para comenzar.',
+					desc: 'No. Nuestros psicólogos están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un psicólogo o psiquiatra, va a ser útil, pero no es necesario para comenzar.',
 				},
 				{
 					id: 4,
 					title: '¿Puedo cambiarme de psicólogo?',
-					desc:
-						'Si te sientes insatisfecho con tu psicólogo, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción.',
+					desc: 'Si te sientes insatisfecho con tu psicólogo, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción.',
 				},
 			],
 			efectividad: [
@@ -799,22 +874,19 @@ export default {
 						id: 1,
 						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
-						text:
-							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+						text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 					{
 						id: 3,
 						img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-						text:
-							'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
+						text: '“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 					},
 					{
 						id: 5,
 						img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-						text:
-							'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
+						text: '“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
 					},
 				],
 				[
@@ -822,23 +894,19 @@ export default {
 						id: 2,
 						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
-						text:
-							'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+						text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
 						img: `${this.$config.LANDING_URL}/TheLancet.png`,
-						href:
-							'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
-						text:
-							'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+						href: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
+						text: '“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 					},
 					{
 						id: 6,
 						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
-						text:
-							'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+						text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 				],
 			],
@@ -847,45 +915,38 @@ export default {
 					id: 1,
 					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
-					text:
-						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+					text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
 				{
 					id: 3,
 					img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-					text:
-						'“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
+					text: '“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 				},
 				{
 					id: 5,
 					img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
-					text:
-						'“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
+					text: '“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
 				},
 
 				{
 					id: 2,
 					img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
-					text:
-						'“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+					text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 				},
 				{
 					id: 4,
 					img: `${this.$config.LANDING_URL}/TheLancet.png`,
-					href:
-						'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
-					text:
-						'“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
+					href: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
+					text: '“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 				},
 				{
 					id: 6,
 					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
-					text:
-						'“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
+					text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
 			],
 			mainImageSrc: null,

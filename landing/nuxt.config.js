@@ -153,7 +153,19 @@ export default {
 				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 		],
-		link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+		link: [
+			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+			{ rel: 'preconnect', href: 'https://fonts.gstatic.com' },
+			{
+				rel: 'preload',
+				as: 'style',
+				href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
+			},
+			{
+				rel: 'stylesheet',
+				href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap',
+			},
+		],
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
@@ -167,14 +179,18 @@ export default {
 
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
 	buildModules: [
-		// https://go.nuxtjs.dev/eslint
-		'@nuxtjs/eslint-module',
 		// https://go.nuxtjs.dev/vuetify
 		'@nuxtjs/vuetify',
+		// https://go.nuxtjs.dev/eslint
+		'@nuxtjs/eslint-module',
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: [
+		// https://go.nuxtjs.dev/axios
+		'@nuxtjs/axios',
+		'@nuxtjs/auth-next',
+		'@nuxtjs/sitemap',
 		[
 			'@netsells/nuxt-hotjar',
 			{
@@ -188,10 +204,6 @@ export default {
 				id: 'UA-185893751-1',
 			},
 		],
-		// https://go.nuxtjs.dev/axios
-		'@nuxtjs/axios',
-		'@nuxtjs/auth-next',
-		'@nuxtjs/sitemap',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -264,7 +276,9 @@ export default {
 		},
 		defaultAssets: {
 			font: false,
+			icons: 'mdiSvg',
 		},
+		treeShake: true,
 	},
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build

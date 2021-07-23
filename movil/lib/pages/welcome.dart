@@ -49,14 +49,14 @@ class _WelcomeState extends State<Welcome>
 						size: Size(size.width, size.height),
 						child: ListView(
 							children: [
-								SizedBox(height: 15),
+								SizedBox(height: 65),
 								Center(
-									child: Image.asset('images/logo-text-white.png', height: 60),
+									child: Image.asset('images/logo-white-01.png', height: 44),
 								),
 								SizedBox(height: 15),
 								CarouselSlider(
 									options: CarouselOptions(
-										height: size.height * 0.50,
+										height: size.height * 0.47,
 										viewportFraction: 1.0,
 										initialPage: 0,
 										enableInfiniteScroll: false,
@@ -90,7 +90,7 @@ class _WelcomeState extends State<Welcome>
 								),
 								SizedBox(height: 55),
 								Container(
-									padding: EdgeInsets.only(right: size.width * 0.1, left: size.width * 0.1,),
+									padding: EdgeInsets.only(right: size.width * 0.22, left: size.width * 0.22,),
 									child: Column(
 										children: [
 											WidgetButton(
@@ -124,8 +124,9 @@ class _WelcomeState extends State<Welcome>
 	}
 	Widget _buildSlide(Map slide)
 	{
+		double plr = MediaQuery.of(this.context).size.width * 0.17;
 		return Container(
-			padding: EdgeInsets.all(15),
+			padding: EdgeInsets.only(top: 0, right: plr, bottom: 0, left: plr),
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.center,
 				crossAxisAlignment: CrossAxisAlignment.stretch,

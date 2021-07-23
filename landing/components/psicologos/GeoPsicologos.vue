@@ -4,7 +4,7 @@
 			<h1
 				class="d-inline-block text-left font-weight-bold text-h6 text-md-h4 text--secondary"
 			>
-				<v-icon size="40" class="grey--text lighten-1">mdi-magnify</v-icon>
+				<icon x-large :icon="mdiMagnify" color="#BDBDBD" />
 				Psicólogos desde
 				<span class="text-capitalize">{{ location && location.name }}</span>
 			</h1>
@@ -27,12 +27,22 @@
 </template>
 
 <script>
+import { mdiMagnify } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		location: {
 			type: Object,
 			default: null,
 		},
+	},
+	data() {
+		return {
+			mdiMagnify,
+		};
 	},
 };
 </script>

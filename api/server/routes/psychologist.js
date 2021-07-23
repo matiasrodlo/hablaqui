@@ -46,4 +46,13 @@ psychologistsRouter.patch(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePaymentMethod
 );
+psychologistsRouter.post(
+	'/psychologist/add-rating/:psychologist',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.addRating
+);
+psychologistsRouter.get(
+	'/psychologist/get-rating/:psychologist',
+	psychologistsController.getRating
+);
 export default psychologistsRouter;
