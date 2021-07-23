@@ -111,6 +111,7 @@ const psychologistsController = {
 		}
 	},
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	async updatePsychologist(req, res) {
 		try {
@@ -126,6 +127,21 @@ const psychologistsController = {
 		}
 	},
 
+=======
+<<<<<<< HEAD
+	async deleteOne(req, res) {
+		try {
+			const { user } = req;
+			const { id } = req.body;
+			const { data, code } = await psychologistsService.deleteOne(
+				user,
+				id
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error eliminando el psicologo');
+=======
+>>>>>>> staging
 =======
 	async setPrice(req, res) {
 		try {
@@ -167,6 +183,7 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'error consiguiendo el rating');
+>>>>>>> staging
 		}
 	},
 };
