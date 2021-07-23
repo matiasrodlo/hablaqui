@@ -128,6 +128,7 @@ export default {
 				psychologist: this.psy,
 				paymentPeriod: this.plan.deal.type,
 				title: this.plan.title,
+				price: priceInt,
 			};
 			const createdSession = await this.createSession(sessionPayload);
 			const payload = {

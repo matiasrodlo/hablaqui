@@ -59,13 +59,27 @@ const match = async body => {
 
 const createSession = async body => {
 	const { payload } = body;
-	const isoDate = moment(`${payload.date} ${payload.start}`, 'DD/MM/YYYY HH:mm').toISOString();
+
+	const isoDate = moment(
+		`${payload.date} ${payload.start}`,
+		'DD/MM/YYYY HH:mm'
+	).toISOString();
+
+	let sessionQuantity = 0;
+	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
+	if (payload.paymentPeriod == 'Pago mensual') sessionQuantity = 4;
+	if (payload.paymentPeriod == 'Pago cada tres meses') sessionQuantity = 12;
+
 	const sessions = {
 		date: isoDate,
 		user: payload.user._id,
 		plan: payload.title,
 		statePayments: 'pending',
+		price: payload.price / sessionQuantity,
+		invitedByPsychologist:
+			payload.psychologist.username == payload.user.inviteCode,
 	};
+
 	// Check if available
 	const foundPsychologist = await Psychologist.findById(
 		payload.psychologist._id
@@ -87,9 +101,40 @@ const createSession = async body => {
 		{ upsert: true, returnOriginal: false }
 	);
 
+	let expirationDate = '';
+	if (payload.paymentPeriod == 'Pago semanal')
+		expirationDate = moment()
+			.add({ weeks: 1 })
+			.toISOString();
+	if (payload.paymentPeriod == 'Pago mensual')
+		expirationDate = moment()
+			.add({ weeks: 4 })
+			.toISOString();
+	if (payload.paymentPeriod == 'Pago cada tres meses')
+		expirationDate = moment()
+			.add({ months: 3 })
+			.toISOString();
+
+	console.log(payload.psychologist.username == payload.user.inviteCode);
+
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
-		{ myPlan: payload.title, paymentPeriod: payload.paymentPeriod }
+		{
+			$push: {
+				plan: {
+					title: payload.title,
+					period: payload.paymentPeriod,
+					price: payload.price,
+					sessionPrice: payload.price / sessionQuantity,
+					psychologist: payload.psychologist._id,
+					expiration: expirationDate,
+					invitedByPsychologist:
+						payload.psychologist.username ==
+						payload.user.inviteCode,
+				},
+			},
+			psychologist: payload.psychologist._id,
+		}
 	);
 
 	logInfo('creo una nueva cita');

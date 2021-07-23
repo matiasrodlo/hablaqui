@@ -11,7 +11,8 @@ let session = new Schema({
 		type: String,
 	},
 	user: {
-		type: String,
+		type: Schema.Types.ObjectId,
+		ref: 'User',
 	},
 	typeSession: {
 		type: String,
@@ -24,6 +25,9 @@ let session = new Schema({
 	},
 	plan: {
 		type: String,
+	},
+	invitedByPsychologist: {
+		type: Boolean,
 	},
 });
 
