@@ -10,6 +10,6 @@ couponRouter.post(
 	couponController.newCoupon
 );
 
-couponRouter.get('/coupons/check-coupon', couponController.checkCoupon);
+couponRouter.post('/coupons/check-coupon', couponController.checkCoupon);
 
 export default couponRouter;
