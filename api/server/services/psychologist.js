@@ -115,8 +115,6 @@ const createSession = async body => {
 			.add({ months: 3 })
 			.toISOString();
 
-	console.log(payload.psychologist.username == payload.user.inviteCode);
-
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
 		{
@@ -136,7 +134,6 @@ const createSession = async body => {
 						: 'not used',
 				},
 			},
-			psychologist: payload.psychologist._id,
 		}
 	);
 
