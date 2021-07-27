@@ -179,6 +179,16 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error consiguiendo el rating');
 		}
 	},
+
+	async getById(req, res) {
+		try {
+			const { id } = req.params;
+			const { data, code } = await psychologistsService.getByUsername(id);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error consiguiendo el psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

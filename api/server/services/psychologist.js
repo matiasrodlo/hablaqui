@@ -224,6 +224,12 @@ const getByUsername = async username => {
 	});
 };
 
+const getById = async id => {
+	return okResponse('Psicologo encontrado', {
+		psychologist: await Psychologist.findOne({ _id: id }),
+	});
+};
+
 const setSchedule = async (user, payload) => {
 	let foundPsychologist = await Psychologist.findById(user._id);
 	const newSchedule = {
@@ -362,6 +368,7 @@ const psychologistsService = {
 	createSession,
 	reschedule,
 	getByUsername,
+	getById,
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,

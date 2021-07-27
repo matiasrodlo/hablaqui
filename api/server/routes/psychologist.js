@@ -11,6 +11,7 @@ psychologistsRouter.get(
 	'/psychologists/:username',
 	psychologistsController.getByUsername
 );
+psychologistsRouter.get('/psychologists/:id', psychologistsController.getById);
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
