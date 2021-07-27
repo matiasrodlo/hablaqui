@@ -120,6 +120,7 @@ const createSession = async body => {
 		{
 			$push: {
 				plan: {
+					fullInfo: payload.fullInfo,
 					title: payload.title,
 					period: payload.paymentPeriod,
 					price: payload.price,

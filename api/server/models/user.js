@@ -8,6 +8,9 @@ let planSchema = new Schema(
 		title: {
 			type: String,
 		},
+		fullInfo: {
+			type: Object,
+		},
 		period: {
 			type: String,
 		},
