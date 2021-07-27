@@ -45,6 +45,14 @@ const calendarController = {
 			return errorCallback(e, res);
 		}
 	},
+	async checkBusyTask(req, res) {
+		try {
+			const { data, code } = await calendarService.checkBusyTask();
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res);
+		}
+	},
 };
 
 export default Object.freeze(calendarController);

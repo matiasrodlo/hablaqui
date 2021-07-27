@@ -79,11 +79,47 @@ const getToken = async (user, google_code) => {
 	});
 };
 
+const busyEvents = async token => {
+	oAuth2Client.setCredentials(token);
+	const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
+	let events = await calendar.events.list({
+		calendarId: 'primary',
+		timeMin: new Date().toISOString(),
+		maxResults: 10,
+		singleEvents: true,
+		orderBy: 'startTime',
+	});
+	events = events.data.items.filter(event => !event.summary.startsWith('[Hablaquí]'));
+
+	return events;
+};
+
+const checkBusyTask = async () => {
+	const psychologists = await User.find({ email: 'pruebadiego@gmail.com' });
+	psychologists.forEach(async psychologist => {
+		if (psychologist.googleCalendar) {
+			const events = await busyEvents(psychologist.googleCalendar);
+			if (events.length > 0) {
+				events.forEach(async event => {
+					let session = {
+						date: event.start.dateTime,
+						typeSession: 'personal',
+					};
+					await addSession(psychologist.psychologist, session);
+				});
+			}
+		}
+	});
+
+	return okResponse('Horarios actualizados');
+};
+
 const calendarService = {
 	getEvents,
 	createEvent,
 	getOauthUrl,
 	getToken,
+	checkBusyTask,
 };
 
 export default Object.freeze(calendarService);

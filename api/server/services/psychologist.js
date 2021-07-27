@@ -361,6 +361,22 @@ const getRating = async psychologist => {
 	});
 };
 
+const checkPlanTask = async () => {
+	let allUsers = await User.find();
+	let planUsers = allUsers.filter(user => user.plan.length > 0);
+	planUsers.forEach(async userWithPlan => {
+		let foundUser = await User.findById(userWithPlan._id);
+		foundUser.plan.forEach(plan => {
+			if (moment().isAfter(plan.expiration)) {
+				plan.paymentStatus = 'expired';
+			}
+		});
+		foundUser.save();
+	});
+
+	return okResponse('ok');
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -377,6 +393,7 @@ const psychologistsService = {
 	setPrice,
 	addRating,
 	getRating,
+	checkPlanTask,
 };
 
 export default Object.freeze(psychologistsService);

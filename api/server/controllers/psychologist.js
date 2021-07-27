@@ -189,6 +189,14 @@ const psychologistsController = {
 			errorCallback(e, res, 'error consiguiendo el psicologo');
 		}
 	},
+	async checkPlanTask(req, res) {
+		try {
+			const { data, code } = await psychologistsService.checkPlanTask();
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

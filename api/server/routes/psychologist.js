@@ -75,5 +75,9 @@ psychologistsRouter.get(
 	'/psychologist/get-rating/:psychologist',
 	psychologistsController.getRating
 );
+psychologistsRouter.get(
+	'/psychologist/plan-task',
+	psychologistsController.checkPlanTask
+);
 
 export default psychologistsRouter;
