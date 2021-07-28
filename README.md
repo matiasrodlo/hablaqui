@@ -12,7 +12,7 @@ Si bien nuestro propósito como organización es complejo y desafiante, nos apas
 
 **Metodología de trabajo**
 
-Todas las semanas hacemos reuniónes de avance, en la que se revisan las actividades asignadas. Esto es facilitado gracias a la plataforma Trello y Github, que organiza y optimiza nuestro tiempo y trabajo como colaboradores de este proyecto.
+Todas las semanas hacemos reuniónes de avances en la que se revisan las actividades asignadas. Esto es facilitado gracias a la plataforma Trello y Github, que organiza y optimiza nuestro tiempo y trabajo como colaboradores de este proyecto.
 
 **Comunicación**
 
