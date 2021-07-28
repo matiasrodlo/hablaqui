@@ -22,15 +22,22 @@
 </p>
 
 <!-- ABOUT THE PROJECT -->
-## Acerca del proyecto
+## Acerca del proyecto hablaquí
 
-There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+Hablaquí es un mercado de servicios de salud mental y bienestar. Una plataforma online en la que los clientes tienen acceso a psicólogos seleccionados, pudiendo programar, pagar y recibir acompañamiento psicológico vía audio, chat y videollamada. Además, para el profesional tenemos la infraestructura completa de oficina y escritorio virtual, siendo así su plataforma de marketing online.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should element DRY principles to the rest of your life :smile:
+Estamos creando un ecosistema que hace que las personas y los psicólogos interactúen. De este modo, cambiamos la mentalidad y actuamos de forma proactiva sobre la salud y el bienestar.
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have have contributed to expanding this template!
+### Cultura Interna
 
-A list of commonly used resources that I find helpful are listed in the acknowledgements.
+Ser colaborador de Hablaquí significa un compromiso con la salud mental y la facilitación de acceso a ella, en un ambiente laboral de respeto, amabilidad y contribución mutua.
+
+Si bien nuestro propósito como organización es complejo y desafiante, nos apasiona el contribuir al bienestar humano desde un trato amigable, profesional y justo, tanto para/con nuestros consultantes como colaboradores.
+
+### Metodología de trabajo
+
+Todas las semanas hacemos reuniónes de avances en la que se revisan las actividades asignadas. Esto es facilitado gracias a la plataforma Trello y Github, que organiza y optimiza nuestro tiempo y trabajo como colaboradores de este proyecto.
+
+### Comunicación
+
+Utilizamos Discord como nuestra principal plataforma de contacto, compartiendo directamente lo que hacemos o vamos pensando. Casi siempre en canales públicos, así nuestros colaboradores están siempre al tanto sobre qué está sucediendo con los equipos de cada área. Utilizamos la tecnología no solo para facilitar el acceso a la salud mental, sino que también como parte esencial del funcionamiento de nuestro equipo.
