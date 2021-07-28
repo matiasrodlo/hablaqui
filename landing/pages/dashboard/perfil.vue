@@ -41,15 +41,19 @@
 				</v-list-item-content>
 			</v-list-item>
 		</v-list>
-		<v-tabs v-model="tabs" grow style="height: 100px">
+		<v-tabs v-model="tabs" :grow="$auth.$state.user.role === 'user'" style="height: 100px">
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
-
-			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab
+				v-if="$auth.$state.user.role === 'psychologist'"
+				class="primary--text text-capitalize"
+			>
+				Horario
+			</v-tab>
+			<v-tab v-if="$auth.$state.user.role === 'user'" class="primary--text text-capitalize">
 				Mis planes
 			</v-tab>
-
-			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab v-if="$auth.$state.user.role === 'user'" class="primary--text text-capitalize">
 				Mi psicologo
 			</v-tab>
 		</v-tabs>
@@ -57,13 +61,14 @@
 			<v-col cols="12">
 				<v-tabs-items v-model="tabs">
 					<v-tab-item :transition="false">
-						<general-information v-if="tabs == 0" />
+						<general-information v-if="tabs === 0" />
 					</v-tab-item>
 					<v-tab-item :transition="false">
-						<my-plans v-if="tabs == 1" />
+						<my-plans v-if="tabs === 1 && $auth.$state.user.role === 'user'" />
+						<horario v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'" />
 					</v-tab-item>
 					<v-tab-item :transition="false">
-						<psicologo v-if="tabs == 2" />
+						<psicologo v-if="tabs === 2" />
 					</v-tab-item>
 				</v-tabs-items>
 			</v-col>
@@ -81,6 +86,7 @@ export default {
 		GeneralInformation: () => import('~/components/dashboard/General'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
+		Horario: () => import('~/components/dashboard/Horario'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
@@ -109,5 +115,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>

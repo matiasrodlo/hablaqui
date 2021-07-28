@@ -67,4 +67,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async setSchedule({ commit }, payload) {
+		try {
+			await this.$axios('/psychologist/set-schedule', {
+				method: 'PATCH',
+				data: { payload },
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 };
