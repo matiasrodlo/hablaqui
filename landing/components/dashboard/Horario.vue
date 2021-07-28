@@ -82,6 +82,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			psychologist: null,
 			items: [
 				{
 					title: 'monday',
@@ -168,8 +169,8 @@ export default {
 			],
 		};
 	},
-	mounted() {
-		console.log(this.$auth);
+	async mounted() {
+		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
 	},
 	methods: {
 		async schedule() {
@@ -186,7 +187,10 @@ export default {
 			await this.setSchedule(payload);
 			this.loading = false;
 		},
-		...mapActions({ setSchedule: 'Psychologist/setSchedule' }),
+		...mapActions({
+			getPsychologist: 'Psychologist/getPsychologist',
+			setSchedule: 'Psychologist/setSchedule',
+		}),
 	},
 };
 </script>
