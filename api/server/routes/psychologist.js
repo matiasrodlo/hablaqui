@@ -8,12 +8,8 @@ const psychologistsRouter = Router();
 
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 psychologistsRouter.get(
-	'/psychologists/:username',
-	psychologistsController.getByUsername
-);
-psychologistsRouter.get(
-	'/psychologists/one/:id',
-	psychologistsController.getById
+	'/psychologists/one/:info',
+	psychologistsController.getByData
 );
 psychologistsRouter.post(
 	'/psychologists/match',

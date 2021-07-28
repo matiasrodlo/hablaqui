@@ -180,10 +180,10 @@ const psychologistsController = {
 		}
 	},
 
-	async getById(req, res) {
+	async getByData(req, res) {
 		try {
-			const { id } = req.params;
-			const { data, code } = await psychologistsService.getByUsername(id);
+			const { info } = req.params;
+			const { data, code } = await psychologistsService.getByData(info);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error consiguiendo el psicologo');
