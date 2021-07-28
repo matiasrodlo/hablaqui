@@ -24,7 +24,7 @@ let planSchema = new Schema(
 		sessionPrice: {
 			type: Number,
 		},
-		paymentStatus: {
+		status: {
 			type: String,
 			default: 'pending',
 		},
