@@ -59,7 +59,7 @@ const successPay = async params => {
 	);
 
 	let foundUser = await User.findById(userId);
-	foundUser.plan[foundUser.plan.length - 1 || 0].paymentStatus = 'success';
+	foundUser.plan[foundUser.plan.length - 1 || 0].status = 'success';
 	foundUser.psychologist = psyId;
 	foundUser.save();
 
