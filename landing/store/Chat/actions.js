@@ -3,9 +3,7 @@ import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 export default {
 	async startConversation({ commit }, idPsychologist) {
 		try {
-			await this.$axios(`/chat/start-conversation/${idPsychologist}`, {
-				method: 'POST',
-			});
+			await this.$axios.$post(`/chat/start-conversation/${idPsychologist}`);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

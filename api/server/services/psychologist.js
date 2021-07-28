@@ -120,6 +120,7 @@ const createSession = async body => {
 		{
 			$push: {
 				plan: {
+					fullInfo: payload.fullInfo,
 					title: payload.title,
 					period: payload.paymentPeriod,
 					price: payload.price,
@@ -220,6 +221,12 @@ const reschedule = async (user, id, newDate) => {
 const getByUsername = async username => {
 	return okResponse('Psicologo encontrado', {
 		psychologist: await Psychologist.findOne({ username }),
+	});
+};
+
+const getById = async id => {
+	return okResponse('Psicologo encontrado', {
+		psychologist: await Psychologist.findOne({ _id: id }),
 	});
 };
 
@@ -354,6 +361,22 @@ const getRating = async psychologist => {
 	});
 };
 
+const checkPlanTask = async () => {
+	let allUsers = await User.find();
+	let planUsers = allUsers.filter(user => user.plan.length > 0);
+	planUsers.forEach(async userWithPlan => {
+		let foundUser = await User.findById(userWithPlan._id);
+		foundUser.plan.forEach(plan => {
+			if (moment().isAfter(plan.expiration)) {
+				plan.paymentStatus = 'expired';
+			}
+		});
+		foundUser.save();
+	});
+
+	return okResponse('ok');
+};
+
 const psychologistsService = {
 	getAll,
 	match,
@@ -361,6 +384,7 @@ const psychologistsService = {
 	createSession,
 	reschedule,
 	getByUsername,
+	getById,
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,
@@ -369,6 +393,7 @@ const psychologistsService = {
 	setPrice,
 	addRating,
 	getRating,
+	checkPlanTask,
 };
 
 export default Object.freeze(psychologistsService);

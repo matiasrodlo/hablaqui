@@ -316,7 +316,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -343,9 +343,12 @@ export default {
 		}),
 	},
 	watch: {
-		resumeView(newValue) {
+		async resumeView(newValue) {
 			if (newValue && this.dialog) {
-				this.dialog = false;
+				this.loadingChat = true;
+				await this.startConversation(this.psychologist._id);
+				this.setResumeView(false);
+				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
 		},
@@ -359,15 +362,20 @@ export default {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
 			else this.$router.push({ path: '/auth/q=register' });
 		},
-		goChat() {
+		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.dialog = true;
 			} else {
+				this.loadingChat = true;
+				await this.startConversation(this.psychologist._id);
+				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
 		},
+		...mapActions({ startConversation: 'Chat/startConversation' }),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
+			setResumeView: 'Psychologist/setResumeView',
 		}),
 	},
 };

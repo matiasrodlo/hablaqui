@@ -330,9 +330,9 @@ export default {
 		async floatingChat(newValue) {
 			if (newValue) {
 				this.setResumeView(false);
-				if (this.$route.params.id) {
+				if (this.$route.params.slug) {
 					const psychologist = this.psychologists.find(
-						item => item._id === this.$route.params.id
+						item => item.username === this.$route.params.slug
 					);
 					await this.selectedPsy(psychologist);
 					await this.getMessages();

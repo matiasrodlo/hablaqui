@@ -156,6 +156,7 @@ export default {
 				title: this.plan.title,
 				price: this.pay ? this.pay : this.priceInt,
 				discountCoupon: this.pay ? this.coupon : '',
+				fullInfo: this.plan,
 			};
 			const createdSession = await this.createSession(sessionPayload);
 			const payload = {
