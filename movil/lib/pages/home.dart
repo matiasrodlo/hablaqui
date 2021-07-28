@@ -53,7 +53,7 @@ class _HomeState extends State<Home>
 							)
 						),
 						ListTile(
-							title: Text('Cerrar Sesion'),
+							title: Text('Cerrar Sesión'),
 							onTap: this._closeSession
 						)
 					]
