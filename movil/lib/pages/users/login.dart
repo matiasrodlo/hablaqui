@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
 import '../../helpers/WidgetHelper.dart';
@@ -18,6 +19,7 @@ class _LoginState extends State<Login>
 	TextEditingController		_ctrlEmail		= TextEditingController();
 	TextEditingController		_ctrlPass		= TextEditingController();
 	bool						_processing		= false;
+	bool						_showPass		= false;
 	
 	@override
 	void initState()
@@ -96,8 +98,27 @@ class _LoginState extends State<Login>
 					TextFormField(
 						controller: this._ctrlPass,
 						keyboardType: TextInputType.text,
-						obscureText: true,
-						decoration: WidgetHelper.getTextFieldDecoration('Contraseña'),
+						obscureText: !this._showPass,
+						decoration: WidgetHelper.getTextFieldDecoration('Contraseña').copyWith(
+							suffixIcon: InkWell(
+								child: Container(
+									//color: Colors.red,
+									padding: EdgeInsets.all(10),
+									child: FaIcon(
+										this._showPass ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+										color: Colors.grey,
+										
+									)
+								),
+								onTap: ()
+								{
+									this.setState(()
+									{
+										this._showPass = !this._showPass;
+									});
+								}
+							),
+						),
 						validator:(v)
 						{
 							if( v.isEmpty )
@@ -106,7 +127,7 @@ class _LoginState extends State<Login>
 					),
 					SizedBox(height: 19),
 					TextButton(
-						child: Text('¿Olvido la contraseña?', textAlign: TextAlign.left),
+						child: Text('¿Olvidó la contraseña?', textAlign: TextAlign.left),
 						style: ButtonStyle(
 							alignment: Alignment.topLeft,
 						),
@@ -177,7 +198,7 @@ class _LoginState extends State<Login>
 				this._processing = false;
 			});
 			print(e);
-			ScaffoldMessenger.of(this.context).showSnackBar(SnackBar(content: Text('Credenciales invalidas')));
+			ScaffoldMessenger.of(this.context).showSnackBar(SnackBar(content: Text('Correo o contraeña incorrecta')));
 		}
 	}
 }

@@ -15,7 +15,7 @@ class _WelcomeState extends State<Welcome>
 {
 	int 	_index = 0;
 	List<Map>		_slides = [
-		{'image': 'images/slide-01.jpg', 'text': 'Habla con tu psicologo por videollamada, estés donde estés y sin tener que desplazarte.'},
+		{'image': 'images/slide-01.png', 'text': 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte.'},
 		{'image': 'images/auth-2.png', 'text': 'Disfruta de las sesiones con tu psicólogo de manera segura y privada.'},
 		{'image': 'images/auth-3.png', 'text': 'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios '},
 		{'image': 'images/auth-4.png', 'text': 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial'},
@@ -43,15 +43,15 @@ class _WelcomeState extends State<Welcome>
 				child: Container(
 					width: size.width,
 					height: size.height,
-					color: Colors.white,
+					color: appColors.mainColors['blue'],
 					child: CustomPaint(
-						painter: CustomBackground(),
+						//painter: CustomBackground(),
 						size: Size(size.width, size.height),
 						child: ListView(
 							children: [
 								SizedBox(height: 65),
 								Center(
-									child: Image.asset('images/logo-white-01.png', height: 44),
+									child: Image.asset('images/logo-white-01.png', height: 50),
 								),
 								SizedBox(height: 15),
 								CarouselSlider(
@@ -95,7 +95,9 @@ class _WelcomeState extends State<Welcome>
 										children: [
 											WidgetButton(
 												text: 'Entrar',
-												color: appColors.mainColors['blue'],
+												color: Colors.white,
+												bgColor: Colors.transparent,
+												bordered: true,
 												callback: ()
 												{
 													Navigator.pushNamed(context, '/login');
