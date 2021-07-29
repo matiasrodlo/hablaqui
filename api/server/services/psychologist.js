@@ -242,7 +242,8 @@ const setSchedule = async (user, payload) => {
 				saturday: payload.saturday,
 				sunday: payload.sunday,
 			},
-		}
+		},
+		{ new: true }
 	);
 
 	return okResponse('Horario actualizado', {

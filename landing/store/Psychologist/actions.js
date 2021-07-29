@@ -77,10 +77,11 @@ export default {
 	},
 	async setSchedule({ commit }, payload) {
 		try {
-			await this.$axios('/psychologist/set-schedule', {
+			const { data } = await this.$axios('/psychologist/set-schedule', {
 				method: 'PATCH',
 				data: { payload },
 			});
+			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

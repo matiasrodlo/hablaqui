@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-card outlined style="max-width: 640px">
+		<v-card v-if="psychologist" outlined style="max-width: 640px">
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
 					<div>
@@ -16,6 +16,7 @@
 					</div>
 					<div>
 						<v-btn
+							:disabled="hasChanges"
 							:loading="loading"
 							color="primary"
 							rounded
@@ -66,6 +67,7 @@
 							hide-details
 							dense
 							class="pb-4 d-inline-block"
+							@change="item.day = ['9:00', '18:00']"
 						></v-switch>
 					</v-col>
 				</v-row>
@@ -77,6 +79,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 export default {
 	data() {
@@ -169,15 +172,9 @@ export default {
 			],
 		};
 	},
-	async mounted() {
-		console.log(this.$auth.$state.user.psychologist);
-		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
-		console.log(this.psychologist);
-	},
-	methods: {
-		async schedule() {
-			this.loading = true;
-			const payload = {
+	computed: {
+		hasChanges() {
+			const days = {
 				monday: this.items[0].day,
 				tuesday: this.items[1].day,
 				wednesday: this.items[2].day,
@@ -186,7 +183,65 @@ export default {
 				saturday: this.items[5].day,
 				sunday: this.items[6].day,
 			};
-			await this.setSchedule(payload);
+			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
+		},
+	},
+	mounted() {
+		this.initFetch();
+	},
+	methods: {
+		async initFetch() {
+			this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
+			this.setDay(cloneDeep(this.psychologist.schedule));
+		},
+		setDay(payload) {
+			this.items = this.items.map((item, index) => {
+				let day = ['00:00', '00:00'];
+				let active = true;
+				if (index === 0) {
+					day = payload.monday === 'busy' ? ['9:00', '18:00'] : payload.monday;
+					active = payload.monday !== 'busy';
+				}
+				if (index === 1) {
+					day = payload.tuesday === 'busy' ? ['9:00', '18:00'] : payload.tuesday;
+					active = payload.tuesday !== 'busy';
+				}
+				if (index === 2) {
+					day = payload.wednesday === 'busy' ? ['9:00', '18:00'] : payload.wednesday;
+					active = payload.wednesday !== 'busy';
+				}
+				if (index === 3) {
+					day = payload.thursday === 'busy' ? ['9:00', '18:00'] : payload.thursday;
+					active = payload.thursday !== 'busy';
+				}
+				if (index === 4) {
+					day = payload.friday === 'busy' ? ['9:00', '18:00'] : payload.friday;
+					active = payload.friday !== 'busy';
+				}
+				if (index === 5) {
+					day = payload.saturday === 'busy' ? ['9:00', '18:00'] : payload.saturday;
+					active = payload.saturday !== 'busy';
+				}
+				if (index === 6) {
+					day = payload.sunday === 'busy' ? ['9:00', '18:00'] : payload.sunday;
+					active = payload.sunday !== 'busy';
+				}
+				return { ...item, day, active };
+			});
+		},
+		async schedule() {
+			this.loading = true;
+			const payload = {
+				monday: this.items[0].active ? this.items[0].day : 'busy',
+				tuesday: this.items[1].active ? this.items[1].day : 'busy',
+				wednesday: this.items[2].active ? this.items[2].day : 'busy',
+				thursday: this.items[3].active ? this.items[3].day : 'busy',
+				friday: this.items[4].active ? this.items[4].day : 'busy',
+				saturday: this.items[5].active ? this.items[5].day : 'busy',
+				sunday: this.items[6].active ? this.items[6].day : 'busy',
+			};
+			this.psychologist = await this.setSchedule(payload);
+			this.setDay(cloneDeep(this.psychologist.schedule));
 			this.loading = false;
 		},
 		...mapActions({
