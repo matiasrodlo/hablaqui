@@ -230,18 +230,21 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
-	let foundPsychologist = await Psychologist.findById(user._id);
-	const newSchedule = {
-		monday: payload.monday || foundPsychologist.schedule.monday,
-		tuesday: payload.tuesday || foundPsychologist.shcedule.tuesday,
-		wednesday: payload.wednesday || foundPsychologist.shcedule.wednesday,
-		thursday: payload.thursday || foundPsychologist.shcedule.thursday,
-		friday: payload.friday || foundPsychologist.shcedule.friday,
-		saturday: payload.saturday || foundPsychologist.shcedule.saturday,
-		sunday: payload.sunday || foundPsychologist.shcedule.sunday,
-	};
-	foundPsychologist.schedule = newSchedule;
-	await foundPsychologist.save();
+	let foundPsychologist = await Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		{
+			schedule: {
+				monday: payload.monday,
+				tuesday: payload.tuesday,
+				wednesday: payload.wednesday,
+				thursday: payload.thursday,
+				friday: payload.friday,
+				saturday: payload.saturday,
+				sunday: payload.sunday,
+			},
+		},
+		{ new: true }
+	);
 
 	return okResponse('Horario actualizado', {
 		psychologist: foundPsychologist,
