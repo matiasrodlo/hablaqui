@@ -125,8 +125,10 @@ export default {
 	methods: {
 		async initFetch() {
 			this.loading = true;
-			const item = this.$auth.$state.user.plan.find(el => el.paymentStatus === 'success');
-			this.psychologist = await this.getPsychologist(item.psychologist);
+			if (this.$auth.$state.user.plan.length) {
+				const item = this.$auth.$state.user.plan.find(el => el.paymentStatus === 'success');
+				this.psychologist = await this.getPsychologist(item.psychologist);
+			}
 			this.loading = false;
 		},
 		...mapActions({
