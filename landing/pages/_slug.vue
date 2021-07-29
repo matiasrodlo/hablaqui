@@ -35,7 +35,7 @@ export default {
 		if (payload) {
 			return { psychologist: payload };
 		} else {
-			const { psychologist } = await $axios.$get(`/psychologists/${params.slug}`);
+			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return {
 				psychologist,
 			};
