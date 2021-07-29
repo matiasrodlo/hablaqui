@@ -170,7 +170,9 @@ export default {
 		};
 	},
 	async mounted() {
+		console.log(this.$auth.$state.user.psychologist);
 		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
+		console.log(this.psychologist);
 	},
 	methods: {
 		async schedule() {

@@ -231,7 +231,6 @@ const getById = async id => {
 };
 
 const setSchedule = async (user, payload) => {
-	console.log(user._id);
 	let foundPsychologist = await Psychologist.findByIdAndUpdate(
 		user.psychologist,
 		{
