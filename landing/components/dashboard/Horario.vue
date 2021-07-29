@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-card v-if="psychologist" outlined style="max-width: 640px">
+		<v-card :loading="!psychologist" outlined style="max-width: 640px">
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
 					<div>
@@ -16,6 +16,7 @@
 					</div>
 					<div>
 						<v-btn
+							v-if="psychologist"
 							:disabled="hasChanges"
 							:loading="loading"
 							color="primary"
