@@ -218,16 +218,15 @@ const reschedule = async (user, id, newDate) => {
 	return conflictResponse('Esa hora esta ocupada');
 };
 
-const getByUsername = async username => {
-	return okResponse('Psicologo encontrado', {
-		psychologist: await Psychologist.findOne({ username }),
-	});
-};
-
-const getById = async id => {
-	return okResponse('Psicologo encontrado', {
-		psychologist: await Psychologist.findOne({ _id: id }),
-	});
+const getByData = async username => {
+	const usernameSearch = await Psychologist.findOne({ username });
+	if (!usernameSearch) {
+		const idSearch = await Psychologist.findOne({ _id: username });
+		return okResponse('Psicologo encontrado', {
+			psychologist: idSearch,
+		});
+	}
+	return okResponse('Psicologo encontrado', { psychologist: usernameSearch });
 };
 
 const setSchedule = async (user, payload) => {
@@ -385,8 +384,7 @@ const psychologistsService = {
 	register,
 	createSession,
 	reschedule,
-	getByUsername,
-	getById,
+	getByData,
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,

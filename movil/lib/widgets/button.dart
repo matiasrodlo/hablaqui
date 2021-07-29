@@ -8,8 +8,16 @@ class WidgetButton extends StatelessWidget
 	Widget			icon;
 	Color			color;
 	final bool			bordered;
+	final bgColor;
 	
-	WidgetButton({this.text, Function() this.callback, this.type = 'primary', this.icon = null, this.color = null, this.bordered = false});
+	WidgetButton({
+		this.text, Function() this.callback, 
+		this.type = 'primary', 
+		this.icon = null, 
+		this.color = null, 
+		this.bordered = false,
+		this.bgColor = Colors.white
+	});
 	
 	void _onTap()
 	{
@@ -40,7 +48,7 @@ class WidgetButton extends StatelessWidget
 				)
 				:
 				BoxDecoration(
-					color: Colors.white,
+					color: this.bgColor,
 					border: new Border.all(color: this.color ?? btn_color, width:1),
 					borderRadius: BorderRadius.circular(25),
 				),

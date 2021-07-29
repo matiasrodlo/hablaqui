@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
@@ -21,6 +22,8 @@ class _RegisterState extends State<Register>
 	TextEditingController		_ctrlName		= TextEditingController();
 	TextEditingController		_ctrlEmail		= TextEditingController();
 	TextEditingController		_ctrlPass		= TextEditingController();
+	bool						_showPass		= false;
+	
 	
 	@override
 	void initState()
@@ -113,8 +116,27 @@ class _RegisterState extends State<Register>
 					TextFormField(
 						controller: this._ctrlPass,
 						keyboardType: TextInputType.text,
-						obscureText: true,
-						decoration: WidgetHelper.getTextFieldDecoration('Contraseña'),
+						obscureText: !this._showPass,
+						decoration: WidgetHelper.getTextFieldDecoration('Contraseña').copyWith(
+							suffixIcon: InkWell(
+								child: Container(
+									//color: Colors.red,
+									padding: EdgeInsets.all(10),
+									child: FaIcon(
+										this._showPass ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+										color: Colors.grey,
+										
+									)
+								),
+								onTap: ()
+								{
+									this.setState(()
+									{
+										this._showPass = !this._showPass;
+									});
+								}
+							),
+						),
 						validator: (v)
 						{
 							if( v.isEmpty )
@@ -246,7 +268,7 @@ class _RegisterState extends State<Register>
 					content: SingleChildScrollView(
 						child: ListBody(
 							children: [
-								Text('Tu registro se ha completado correctamente, ahora puedes iniciar sesion'),
+								Text('Tu registro se ha completado correctamente, ahora puedes iniciar sesión'),
 								
 							],
 							
@@ -254,10 +276,12 @@ class _RegisterState extends State<Register>
 					),
 					actions: [
 						TextButton(
-							child: Text('Iniciar Sesion'),
-							onPressed: ()
+							child: Text('Iniciar Sesión'),
+							onPressed: () async
 							{
-								Navigator.of(this.context).pushNamedAndRemoveUntil('/login', (_) => false);
+								//Navigator.of(this.context).pushNamedAndRemoveUntil('/login', (_) => false);
+								var user = await ServiceUsers().login(this._ctrlEmail.text.trim(), this._ctrlPass.text.trim());
+								Navigator.of(this.context).pushNamedAndRemoveUntil('/home', (_) => false);
 							}
 						)
 					]
