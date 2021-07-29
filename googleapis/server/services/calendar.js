@@ -95,7 +95,7 @@ const busyEvents = async token => {
 };
 
 const checkBusyTask = async () => {
-	const psychologists = await User.find({ email: 'pruebadiego@gmail.com' });
+	const psychologists = await User.find({ role: 'psychologist' });
 	psychologists.forEach(async psychologist => {
 		if (psychologist.googleCalendar) {
 			const events = await busyEvents(psychologist.googleCalendar);

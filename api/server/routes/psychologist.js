@@ -8,10 +8,9 @@ const psychologistsRouter = Router();
 
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 psychologistsRouter.get(
-	'/psychologists/:username',
-	psychologistsController.getByUsername
+	'/psychologists/one/:info',
+	psychologistsController.getByData
 );
-psychologistsRouter.get('/psychologists/:id', psychologistsController.getById);
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],

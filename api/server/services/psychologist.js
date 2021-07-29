@@ -218,31 +218,33 @@ const reschedule = async (user, id, newDate) => {
 	return conflictResponse('Esa hora esta ocupada');
 };
 
-const getByUsername = async username => {
-	return okResponse('Psicologo encontrado', {
-		psychologist: await Psychologist.findOne({ username }),
-	});
-};
-
-const getById = async id => {
-	return okResponse('Psicologo encontrado', {
-		psychologist: await Psychologist.findOne({ _id: id }),
-	});
+const getByData = async username => {
+	const usernameSearch = await Psychologist.findOne({ username });
+	if (!usernameSearch) {
+		const idSearch = await Psychologist.findOne({ _id: username });
+		return okResponse('Psicologo encontrado', {
+			psychologist: idSearch,
+		});
+	}
+	return okResponse('Psicologo encontrado', { psychologist: usernameSearch });
 };
 
 const setSchedule = async (user, payload) => {
-	let foundPsychologist = await Psychologist.findById(user._id);
-	const newSchedule = {
-		monday: payload.monday || foundPsychologist.schedule.monday,
-		tuesday: payload.tuesday || foundPsychologist.shcedule.tuesday,
-		wednesday: payload.wednesday || foundPsychologist.shcedule.wednesday,
-		thursday: payload.thursday || foundPsychologist.shcedule.thursday,
-		friday: payload.friday || foundPsychologist.shcedule.friday,
-		saturday: payload.saturday || foundPsychologist.shcedule.saturday,
-		sunday: payload.sunday || foundPsychologist.shcedule.sunday,
-	};
-	foundPsychologist.schedule = newSchedule;
-	await foundPsychologist.save();
+	let foundPsychologist = await Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		{
+			schedule: {
+				monday: payload.monday,
+				tuesday: payload.tuesday,
+				wednesday: payload.wednesday,
+				thursday: payload.thursday,
+				friday: payload.friday,
+				saturday: payload.saturday,
+				sunday: payload.sunday,
+			},
+		},
+		{ new: true }
+	);
 
 	return okResponse('Horario actualizado', {
 		psychologist: foundPsychologist,
@@ -368,7 +370,7 @@ const checkPlanTask = async () => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
 			if (moment().isAfter(plan.expiration)) {
-				plan.paymentStatus = 'expired';
+				plan.stauts = 'expired';
 			}
 		});
 		foundUser.save();
@@ -383,8 +385,7 @@ const psychologistsService = {
 	register,
 	createSession,
 	reschedule,
-	getByUsername,
-	getById,
+	getByData,
 	setSchedule,
 	cancelSession,
 	updatePaymentMethod,

@@ -265,7 +265,7 @@ class _ChatPageState extends State<ChatPage>
 		ServiceHablaqui().sendChatMessage(this.widget.psycho.id, this._user.id, this._ctrlMessage.text.trim());
 		//this._messages.add( message );
 		this._ctrlMessage.text = '';
-		this._focusNode.unfocus();
+		//this._focusNode.unfocus();
 		this.textHeight = 50;
 		this.setState((){});
 	}
@@ -290,7 +290,7 @@ class _ChatPageState extends State<ChatPage>
 	}
 	void _openPsychoEmail() async
 	{
-		String url = 'mailto:${this.widget.psycho.email}?subject=';
+		String url = 'mailto:c@hablaqui.com?subject=';//'mailto:${this.widget.psycho.email}?subject=';
 		if (await canLaunch(url)) 
 		{
 			await launch(
