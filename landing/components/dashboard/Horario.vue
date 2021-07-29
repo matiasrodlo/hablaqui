@@ -175,13 +175,13 @@ export default {
 	computed: {
 		hasChanges() {
 			const days = {
-				monday: this.items[0].day,
-				tuesday: this.items[1].day,
-				wednesday: this.items[2].day,
-				thursday: this.items[3].day,
-				friday: this.items[4].day,
-				saturday: this.items[5].day,
-				sunday: this.items[6].day,
+				monday: this.items[0].active ? this.items[0].day : 'busy',
+				tuesday: this.items[1].active ? this.items[1].day : 'busy',
+				wednesday: this.items[2].active ? this.items[2].day : 'busy',
+				thursday: this.items[3].active ? this.items[3].day : 'busy',
+				friday: this.items[4].active ? this.items[4].day : 'busy',
+				saturday: this.items[5].active ? this.items[5].day : 'busy',
+				sunday: this.items[6].active ? this.items[6].day : 'busy',
 			};
 			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
 		},
