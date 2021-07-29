@@ -125,7 +125,8 @@ export default {
 	methods: {
 		async initFetch() {
 			this.loading = true;
-			this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
+			const item = this.$auth.$state.user.plan.find(el => el.paymentStatus === 'success');
+			this.psychologist = await this.getPsychologist(item.psychologist);
 			this.loading = false;
 		},
 		...mapActions({
