@@ -20,7 +20,7 @@ import Snackbar from '@/components/Snackbar';
 export default {
 	components: {
 		Snackbar,
-		// FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	mounted() {
 		if (process.browser) {

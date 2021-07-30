@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<nav class="primary-color">
-			<Appbar />
-		</nav>
 		<!-- SECTION 1 / heading -->
 		<section class="primary-color">
 			<v-container class="white--text py-0">
@@ -779,7 +776,7 @@ import { mdiCheck } from '@mdi/js';
 
 export default {
 	components: {
-		Appbar: () => import('@/components/AppbarWhite'),
+		// Appbar: () => import('@/components/AppbarWhite'),
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 	},
