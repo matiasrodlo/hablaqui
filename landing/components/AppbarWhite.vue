@@ -120,80 +120,87 @@
 				<span class="body-1 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
-			<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
-				<v-menu
-					v-if="$auth.$state.loggedIn"
-					id="menu-sesion"
-					v-model="activeMenu"
-					rounded="xl"
-					offset-y
-					offset-x
-					:close-on-content-click="false"
-					:nudge-width="100"
-				>
-					<template #activator="{ on, attrs }">
-						<div
-							id="link-sesion"
-							accesskey="j"
-							class="d-inline-block"
-							v-bind="attrs"
-							v-on="on"
-						>
-							<h3 class="mr-6 secondary--text d-inline-block">
-								Hola {{ $auth.$state.user.name }}
-							</h3>
-							<avatar
-								size="50"
-								:name="$auth.$state.user.name"
-								:url="$auth.$state.user.avatar"
-							/>
-						</div>
-					</template>
-					<v-card>
-						<v-list>
-							<v-list-item
-								v-for="(item, i) in menu"
-								id="i"
-								:key="i"
-								link
-								:to="item.link"
+			<client-only>
+				<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
+					<v-menu
+						v-if="$auth.$state.loggedIn"
+						id="menu-sesion"
+						v-model="activeMenu"
+						rounded="xl"
+						offset-y
+						offset-x
+						:close-on-content-click="false"
+						:nudge-width="100"
+					>
+						<template #activator="{ on, attrs }">
+							<div
+								id="link-sesion"
+								accesskey="j"
+								class="d-inline-block"
+								v-bind="attrs"
+								v-on="on"
 							>
-								<v-list-item-avatar size="40" color="primary">
-									<v-img contain height="30" :src="item.img" :alt="item.name" />
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title
-										class="secondary--text font-weight-bold body-2"
-										>{{ item.name }}
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
-							<v-list-item id="logout-appbar" @click="logout">
-								<v-list-item-avatar size="40" color="primary">
-									<v-img
-										contain
-										height="30"
-										:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
-										alt="cerrar sesión"
-									/>
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title
-										class="secondary--text font-weight-bold body-2"
-									>
-										Cerrar sesion
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
-						<v-card-actions class="primary">
-							<v-spacer></v-spacer>
-							<div class="white--text py-1">Hablaquí</div>
-							<v-spacer></v-spacer>
-						</v-card-actions>
-					</v-card>
-				</v-menu>
-			</div>
+								<h3 class="mr-6 secondary--text d-inline-block">
+									Hola {{ $auth.$state.user.name }}
+								</h3>
+								<avatar
+									size="50"
+									:name="$auth.$state.user.name"
+									:url="$auth.$state.user.avatar"
+								/>
+							</div>
+						</template>
+						<v-card>
+							<v-list>
+								<v-list-item
+									v-for="(item, i) in menu"
+									id="i"
+									:key="i"
+									link
+									:to="item.link"
+								>
+									<v-list-item-avatar size="40" color="primary">
+										<v-img
+											contain
+											height="30"
+											:src="item.img"
+											:alt="item.name"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+											>{{ item.name }}
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item id="logout-appbar" @click="logout">
+									<v-list-item-avatar size="40" color="primary">
+										<v-img
+											contain
+											height="30"
+											:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+											alt="cerrar sesión"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+										>
+											Cerrar sesion
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+							<v-card-actions class="primary">
+								<v-spacer></v-spacer>
+								<div class="white--text py-1">Hablaquí</div>
+								<v-spacer></v-spacer>
+							</v-card-actions>
+						</v-card>
+					</v-menu>
+				</div>
+			</client-only>
 			<router-link
 				v-show="!$auth.$state.loggedIn"
 				id="iniciar-sesion-appbar"
