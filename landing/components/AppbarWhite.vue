@@ -36,7 +36,7 @@
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
-					v-if="$auth.$state.loggedIn"
+					v-show="$auth.$state.loggedIn"
 					id="logout-drawer"
 					accesskey="x"
 					@click="logout"
@@ -45,13 +45,19 @@
 						<v-list-item-title>Cerrar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-else id="iniciar-sesion-drawer" accesskey="s" link to="/auth">
+				<v-list-item
+					v-show="!$auth.$state.loggedIn"
+					id="iniciar-sesion-drawer"
+					accesskey="s"
+					link
+					to="/auth"
+				>
 					<v-list-item-content>
 						<v-list-item-title>Iniciar sesión</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
-					v-if="!$auth.$state.loggedIn"
+					v-show="!$auth.$state.loggedIn"
 					id="comenzar-drawer"
 					accesskey="c"
 					link
@@ -114,13 +120,9 @@
 				<span class="body-1 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
-			<div
-				v-if="$auth.$state.loggedIn"
-				class="hidden-sm-and-down body-1 text--secondary mr-16"
-				rounded
-				text
-			>
+			<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
 				<v-menu
+					v-if="$auth.$state.loggedIn"
 					id="menu-sesion"
 					v-model="activeMenu"
 					rounded="xl"
@@ -193,7 +195,7 @@
 				</v-menu>
 			</div>
 			<router-link
-				v-else
+				v-show="!$auth.$state.loggedIn"
 				id="iniciar-sesion-appbar"
 				accesskey="s"
 				style="text-decoration: none"
@@ -203,7 +205,7 @@
 				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
 			</router-link>
 			<v-btn
-				v-if="!$auth.$state.loggedIn"
+				v-show="!$auth.$state.loggedIn"
 				id="comenzar-appbar"
 				rounded
 				accesskey="c"
