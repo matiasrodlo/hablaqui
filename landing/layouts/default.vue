@@ -2,13 +2,13 @@
 	<v-app>
 		<snackbar />
 		<nuxt keep-alive />
-		<client-only>
+		<!-- <client-only>
 			<floating-chat
 				v-if="
 					$route.path !== '/' && $auth.$state.loggedIn && $auth.$state.user.role == 'user'
 				"
 			/>
-		</client-only>
+		</client-only> -->
 	</v-app>
 </template>
 <script>
@@ -18,7 +18,7 @@ import Snackbar from '@/components/Snackbar';
 export default {
 	components: {
 		Snackbar,
-		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+		// FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	mounted() {
 		if (process.browser) {
