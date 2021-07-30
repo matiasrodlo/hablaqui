@@ -239,11 +239,21 @@
 														pt-1
 														pl-4
 														font-weight-regular
+														white--text
 													"
 												>
 													{{ item.title }}
 												</h4>
-												<h2 class="body-2 pl-4 pt-3 pb-2 font-weight-bold">
+												<h2
+													class="
+														body-2
+														pl-4
+														pt-3
+														pb-2
+														font-weight-bold
+														white--text
+													"
+												>
 													{{ item.name }}
 												</h2>
 												<div>
@@ -254,7 +264,10 @@
 																:icon="mdiCheck"
 															/>
 														</v-col>
-														<v-col style="font-size: 14px" class="pl-3">
+														<v-col
+															style="font-size: 14px"
+															class="pl-3 white--text"
+														>
 															{{ item.subtitle }}
 														</v-col>
 													</v-row>
@@ -563,7 +576,7 @@
 					Descarga nuestra aplicación
 				</v-col>
 				<v-col
-					cols="12"
+					cols="3"
 					md="3"
 					lg="2"
 					tag="aside"
@@ -579,15 +592,15 @@
 					/>
 				</v-col>
 				<v-col
-					cols="12"
+					cols="3"
 					md="3"
 					lg="2"
 					tag="aside"
 					class="my-md-10 d-flex align-center justify-center"
 				>
 					<v-img
-						style="cursor: pointer"
-						height="53px"
+						style="cursor: pointer; border-radius: 10px"
+						height="50px"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						:lazy-src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
