@@ -197,6 +197,17 @@ const psychologistsController = {
 			errorCallback(e, res, 'error');
 		}
 	},
+	async getClients(req, res) {
+		try {
+			const { psychologist } = req.params;
+			const { data, code } = await psychologistsService.getClients(
+				psychologist
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'error consiguiendo los clientes');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

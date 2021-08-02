@@ -78,5 +78,10 @@ psychologistsRouter.get(
 	'/psychologist/plan-task',
 	psychologistsController.checkPlanTask
 );
+psychologistsRouter.get(
+	'/psychologist/clients/:psychologist',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getClients
+);
 
 export default psychologistsRouter;
