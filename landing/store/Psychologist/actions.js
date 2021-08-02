@@ -10,6 +10,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async geClients({ commit }, id) {
+		try {
+			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
+			commit('setClients', users);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getPsychologist({ commit }, id) {
 		try {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${id}`);

@@ -2,6 +2,9 @@ export default {
 	setPsychologists(state, value) {
 		state.psychologists = value;
 	},
+	setClients(state, value) {
+		state.clients = value;
+	},
 	setResumeView(state, value) {
 		state.resumeView = value;
 	},

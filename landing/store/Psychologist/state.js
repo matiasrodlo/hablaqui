@@ -1,5 +1,6 @@
 const initialState = {
 	psychologists: [],
+	clients: [],
 	resumeView: false,
 	loading: true,
 };

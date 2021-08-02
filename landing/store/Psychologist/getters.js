@@ -7,5 +7,6 @@ export default {
 			return Math.round(Math.random()) - 0.5;
 		});
 	},
+	clients: state => state.clients,
 	resumeView: state => state.resumeView,
 };

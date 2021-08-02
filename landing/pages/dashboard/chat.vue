@@ -41,26 +41,35 @@
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
-						<v-sheet class="primary white--text pa-4 mx-4" style="border-radius: 20px">
+						<v-sheet
+							v-if="!clients.length"
+							class="primary white--text pa-4 mx-4"
+							style="border-radius: 20px"
+						>
 							Aún no tienes consultantes
 						</v-sheet>
-						<!-- <v-list two-line class="py-0">
-								<v-list-item>
-									<v-list-item-avatar
-										style="border: 3px solid #2070E5; border-radius: 40px; "
-										size="60"
-									>
-										<avatar :url="user.avatar" :name="user.name" size="60" />
-									</v-list-item-avatar>
+						<v-list v-else two-line style="overflow-y: auto">
+							<v-list-item
+								v-for="(user, e) in userFromClients"
+								:key="e"
+								@click="setSelectedUser(user)"
+							>
+								<v-list-item-avatar
+									style="border-radius: 40px"
+									:style="user.hasMessageUser ? 'border: 3px solid #2070E5' : ''"
+									size="60"
+								>
+									<avatar :url="user.avatar" :name="user.name" size="60" />
+								</v-list-item-avatar>
 
-									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
-											Psicólogo · Activo(a)
-										</v-list-item-subtitle>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list> -->
+								<v-list-item-content>
+									<v-list-item-title v-html="user.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Usuario · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
 						<template v-if="usersFromChats.length">
 							<v-card-text class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
@@ -542,11 +551,20 @@ export default {
 				return 'Terapeuta de Hablaquí con licencia';
 			return '';
 		},
+		userFromClients() {
+			return this.clients.map(item => ({
+				...item,
+				hasMessageUser: this.hasMessageUser(item),
+			}));
+		},
 		usersFromChats() {
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
 			);
 			if (!filterArray.length) filterArray = this.chats;
+			filterArray = filterArray.filter(
+				item => !this.clients.some(el => el._id === item.user._id)
+			);
 			return filterArray.map(item => ({
 				...item.user,
 				hasMessageUser: this.hasMessageUser(item.user),
@@ -566,6 +584,7 @@ export default {
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
+			clients: 'Psychologist/clients',
 		}),
 	},
 	created() {
@@ -594,7 +613,7 @@ export default {
 			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
 			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
 		}
-		this.getPsychologists();
+		await this.getPsychologists();
 		await this.getMessages();
 		if (this.$route.params.psy) {
 			const psychologist = this.getPsy(this.$route.params.psy);
@@ -606,6 +625,9 @@ export default {
 				assitant: true,
 				avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			};
+		}
+		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+			await this.geClients(this.$auth.$state.user.psychologist);
 		}
 		this.initLoading = false;
 	},
@@ -652,6 +674,7 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		async setSelectedUser(user) {
+			this.loadingChat = true;
 			this.video = null;
 			this.selected = {
 				name: user.name,
@@ -659,7 +682,8 @@ export default {
 				avatar: user.avatar,
 				_id: user._id,
 			};
-			this.setChat(this.chats.find(item => item.user._id === user._id));
+			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
+			this.loadingChat = false;
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
@@ -728,6 +752,7 @@ export default {
 			}
 		},
 		...mapActions({
+			geClients: 'Psychologist/geClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',
