@@ -126,7 +126,7 @@ export default {
 		async initFetch() {
 			this.loading = true;
 			if (this.$auth.$state.user.plan.length) {
-				const item = this.$auth.$state.user.plan.find(el => el.paymentStatus === 'success');
+				const item = this.$auth.$state.user.plan.find(el => el.status === 'success');
 				this.psychologist = await this.getPsychologist(item.psychologist);
 			}
 			this.loading = false;

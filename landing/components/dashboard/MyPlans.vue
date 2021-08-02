@@ -16,20 +16,20 @@
 									{{ item.fullInfo.title }}
 								</div>
 								<div class="caption">
-									<template v-if="item.paymentStatus === 'success'">
+									<template v-if="item.status === 'success'">
 										<span class="success--text">Tu plan actual</span>
 									</template>
-									<template v-if="item.paymentStatus === 'pending'">
+									<template v-if="item.status === 'pending'">
 										<span class="warning--text">Pendiente</span>
 									</template>
-									<template v-if="item.paymentStatus === 'expired'">
+									<template v-if="item.status === 'expired'">
 										<span class="error--text">Expirado</span>
 									</template>
 								</div>
 							</div>
 							<div
 								style="width: 20px; height: 20px"
-								:class="status(item.paymentStatus)"
+								:class="status(item.status)"
 							></div>
 						</v-card-title>
 						<v-card-text>
@@ -74,10 +74,10 @@ export default {
 		};
 	},
 	methods: {
-		status(paymentStatus) {
-			if (paymentStatus === 'success') return 'success rounded-xl';
-			if (paymentStatus === 'pending') return 'warning rounded-xl';
-			if (paymentStatus === 'expired') return 'error rounded-xl';
+		status(status) {
+			if (status === 'success') return 'success rounded-xl';
+			if (status === 'pending') return 'warning rounded-xl';
+			if (status === 'expired') return 'error rounded-xl';
 		},
 	},
 };
