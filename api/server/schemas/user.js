@@ -15,10 +15,14 @@ const userSchema = {
 		lastName: Joi.string().allow(''),
 		name: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
-		psychologist: Joi.object().allow(''),
+		psychologist: Joi.string().allow(''),
 		role: Joi.string().allow(''),
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
+		chats: Joi.array(),
+		plan: Joi.array(),
+		googleCalendar: Joi.object(),
+		myPlan: Joi.optional(),
 	}).min(1),
 	updatePassword: Joi.object({
 		oldPassword: Joi.string()

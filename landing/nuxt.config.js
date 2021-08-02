@@ -235,6 +235,9 @@ export default {
 		strategies: {
 			// login with api
 			local: {
+				user: {
+					autoFetch: false,
+				},
 				// token config
 				token: {
 					property: 'token',
