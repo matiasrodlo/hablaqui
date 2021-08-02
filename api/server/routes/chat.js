@@ -40,4 +40,7 @@ chatRouter.patch(
 	chatController.readMessage
 );
 
+chatRouterr.post('/chat/set-status/online', [passport.authenticate('jwt', { session: true })], chatController.setUserOnline)
+chatRouterr.post('/chat/set-status/offline', [passport.authenticate('jwt', { session: true })], chatController.setUserOffline)
+
 export default Object.freeze(chatRouter);
