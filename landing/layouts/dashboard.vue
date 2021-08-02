@@ -1,46 +1,45 @@
 <template>
 	<v-app>
-		<v-row class="primary" style="height: 100vh" no-gutters>
-			<v-col cols="2" class="d-flex" style="flex-direction: column">
-				<div style="flex: 1; height: 230px" class="d-flex align-center justify-center">
-					<v-img
-						height="100"
-						contain
-						style="cursor: pointer"
-						:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-						:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-						alt="logo hablaqui"
-						@click="() => $router.push({ name: 'psicologos' })"
-					/>
-				</div>
-				<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
-					<template v-for="(item, i) in links">
-						<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
-							<v-list-item-avatar size="35">
-								<v-img
-									height="35"
-									width="35"
-									:src="item.img"
-									:lazy-src="item.img"
-									:alt="item.name"
-								/>
-							</v-list-item-avatar>
-							<v-list-item-content>
-								<v-list-item-title class="font-weight-bold body-2">
-									{{ item.name }}
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</template>
-				</v-list>
-			</v-col>
-			<v-col cols="10">
-				<div style="border-radius: 50px 0 0 0" class="white">
-					<snackbar />
-					<nuxt />
-				</div>
-			</v-col>
-		</v-row>
+		<v-navigation-drawer permanent color="primary" app disable-resize-watcher>
+			<v-sheet color="primary" class="pa-4">
+				<v-img
+					height="100"
+					contain
+					style="cursor: pointer"
+					:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+					:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+					alt="logo hablaqui"
+					class="my-16"
+					@click="() => $router.push({ name: 'psicologos' })"
+				/>
+			</v-sheet>
+			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
+				<template v-for="(item, i) in links">
+					<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
+						<v-list-item-avatar size="35">
+							<v-img
+								height="35"
+								width="35"
+								:src="item.img"
+								:lazy-src="item.img"
+								:alt="item.name"
+							/>
+						</v-list-item-avatar>
+						<v-list-item-content>
+							<v-list-item-title class="font-weight-bold body-2">
+								{{ item.name }}
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</template>
+			</v-list>
+		</v-navigation-drawer>
+		<v-main class="primary">
+			<div style="border-radius: 50px 0 0 0" class="white">
+				<snackbar />
+				<nuxt />
+			</div>
+		</v-main>
 	</v-app>
 </template>
 

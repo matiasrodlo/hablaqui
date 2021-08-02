@@ -57,7 +57,7 @@
 				Mi psicologo
 			</v-tab>
 		</v-tabs>
-		<v-row style="height: calc(100vh - 360px); overflow-y: auto">
+		<v-row>
 			<v-col cols="12">
 				<v-tabs-items v-model="tabs">
 					<v-tab-item :transition="false">
