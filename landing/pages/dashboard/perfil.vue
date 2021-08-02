@@ -22,7 +22,7 @@
 					<label v-else for="upload" style="cursor: pointer">
 						<v-avatar size="100" color="#EEE">
 							<v-img
-								v-if="$auth.$state.user.avatar"
+								v-if="$auth.$state.user && $auth.$state.user.avatar"
 								:src="$auth.$state.user.avatar"
 								:alt="$auth.$state.user.name"
 								contain
@@ -31,7 +31,7 @@
 						</v-avatar>
 					</label>
 				</v-list-item-avatar>
-				<v-list-item-content>
+				<v-list-item-content v-if="$auth.$state.user">
 					<v-list-item-title class="text-capitalize font-weight-bold title">
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>
@@ -45,11 +45,17 @@
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
-			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab
+				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
+				class="primary--text text-capitalize"
+			>
 				Mis planes
 			</v-tab>
 
-			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
+			<v-tab
+				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
+				class="primary--text text-capitalize"
+			>
 				Mi psicologo
 			</v-tab>
 		</v-tabs>

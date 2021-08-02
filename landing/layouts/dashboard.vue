@@ -75,7 +75,8 @@ export default {
 					name: 'Pagos',
 					link: 'pagos',
 					img: `${this.$config.LANDING_URL}/pagos.png`,
-					visible: this.$auth.$state.user.role === 'psychologist',
+					visible:
+						this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Mi cuenta',
