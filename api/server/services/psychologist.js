@@ -2,6 +2,7 @@ import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
+import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 
@@ -139,6 +140,7 @@ const createSession = async body => {
 	);
 
 	logInfo('creo una nueva cita');
+	chat.startConversation(payload.psychologist._id, payload.user);
 
 	return okResponse('sesion creada', {
 		id: savedSession.sessions[savedSession.sessions.length - 1]._id,

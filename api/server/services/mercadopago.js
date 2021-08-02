@@ -5,7 +5,6 @@ import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import mailer from './mailer';
-import chat from './chat';
 import User from '../models/user';
 
 mercadopago.configure({
@@ -66,7 +65,6 @@ const successPay = async params => {
 
 	logInfo('Se ha realizado un pago');
 	mailer.sendPurchaseInformation(foundUser.email);
-	chat.startConversation(psyId, { _id: userId });
 	return okResponse('sesion actualizada');
 };
 const mercadopagoService = {
