@@ -381,14 +381,17 @@ const checkPlanTask = async () => {
 
 const getClients = async psychologist => {
 	const foundUsers = await User.find({ psychologist });
-	const mappedUsers = foundUsers.map(user => {
-		return {
-			name: user.name,
-			lastName: user.lastName,
-			avatar: user.avatar,
-			_id: user._id,
-		};
-	});
+	const mappedUsers = foundUsers
+		.map(user => {
+			return {
+				role: user.role,
+				name: user.name,
+				lastName: user.lastName,
+				avatar: user.avatar,
+				_id: user._id,
+			};
+		})
+		.filter(user => user.role != 'psychologist');
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
 
