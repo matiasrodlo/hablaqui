@@ -41,6 +41,13 @@ let defaultSchedule = {
 	sunday: ['busy', 'busy'],
 };
 
+let defaultPreferences = {
+	marketplaceVisibility: true,
+	minimumNewSession: 24,
+	minimumRescheduleSession: 24,
+	corporativeSessions: true,
+};
+
 let rating = new Schema(
 	{
 		author: {
@@ -116,6 +123,10 @@ let psychologist = new Schema({
 	schedule: {
 		type: Object,
 		default: defaultSchedule,
+	},
+	preferences: {
+		type: Object,
+		default: defaultPreferences,
 	},
 	paymentMethod: {
 		type: Object,
