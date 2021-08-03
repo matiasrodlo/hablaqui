@@ -33,8 +33,9 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<!-- barra lateral psychologist -->
+					<!-- barra lateral role psychologist -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role == 'psychologist'">
+						<!-- sin consultantes -->
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
 								Mis consultantes
@@ -48,9 +49,10 @@
 						>
 							Aún no tienes consultantes
 						</v-sheet>
+						<!-- consultantes -->
 						<v-list v-else two-line style="overflow-y: auto">
 							<v-list-item
-								v-for="(user, e) in userFromClients"
+								v-for="(user, e) in listClients"
 								:key="e"
 								@click="setSelectedUser(user)"
 							>
@@ -70,14 +72,16 @@
 								</v-list-item-content>
 							</v-list-item>
 						</v-list>
-						<template v-if="usersFromChats.length">
+						<!-- general lista usuarios -->
+						<template v-if="listUsers.length">
 							<v-card-text class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
+							<!-- usuarios -->
 							<v-list two-line style="overflow-y: auto">
 								<v-list-item
-									v-for="(user, w) in usersFromChats"
+									v-for="(user, w) in listUsers"
 									:key="w"
 									@click="setSelectedUser(user)"
 								>
@@ -101,82 +105,100 @@
 							</v-list>
 						</template>
 					</template>
-					<!-- barra lateral user -->
-					<template v-else>
-						<template v-if="$auth.$state.user && $auth.$state.user.psychologist">
-							<v-card-text>
-								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
-								</v-subheader>
-								<v-divider style="border-color: #5eb3e4"></v-divider>
-							</v-card-text>
-							<v-list two-line class="py-0">
-								<v-list-item>
-									<v-list-item-avatar
-										style="border: 3px solid #2070e5; border-radius: 40px"
+					<!-- barra lateral role user -->
+					<template v-if="$auth.$state.user && $auth.$state.user.role == 'user'">
+						<v-card-text
+							v-if="
+								$auth.$state.user &&
+								$auth.$state.user.plan.some(el => el.status === 'success')
+							"
+						>
+							<v-subheader class="primary--text body-1 px-0">
+								Mi Psicólogo
+							</v-subheader>
+							<v-divider style="border-color: #5eb3e4"></v-divider>
+						</v-card-text>
+						<!-- usuario mi psicologo -->
+						<v-list
+							v-if="
+								$auth.$state.user &&
+								$auth.$state.user.plan.some(el => el.status === 'success')
+							"
+							two-line
+							class="py-0"
+						>
+							<v-list-item @click="setSelectedPsy(getMyPsy)">
+								<v-list-item-avatar
+									style="border-radius: 40px"
+									:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+									size="60"
+								>
+									<avatar
+										:url="getMyPsy.avatar"
+										:name="getMyPsy.name"
 										size="60"
-									>
-										<avatar
-											:url="$auth.$state.user.avatar"
-											:name="$auth.$state.user.name"
-											size="60"
-										/>
-									</v-list-item-avatar>
+									/>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title v-html="getMyPsy.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Psicólogo · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+						<!-- usuario sin psicologo -->
+						<v-list
+							v-else-if="
+								!$auth.$state.user &&
+								!$auth.$state.user.plan.some(el => el.status === 'success') &&
+								listPsychologist.length
+							"
+							link
+							two-line
+							class="py-0 primary"
+							dark
+							style="border-radius: 10px"
+						>
+							<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
+								<v-list-item-avatar style="border-radius: 40px" size="50">
+									<v-img
+										height="50"
+										width="50"
+										class="mx-auto"
+										src="/img/Lupa.png"
+									></v-img>
+								</v-list-item-avatar>
 
-									<v-list-item-content>
-										<v-list-item-title
-											v-html="$auth.$state.user.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
-											Psicólogo · Activo(a)
-										</v-list-item-subtitle>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</template>
-						<!-- <template v-else>
-							<v-card-text>
-								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
-								</v-subheader>
-								<v-divider style="border-color: #5EB3E4"></v-divider>
-							</v-card-text>
-							<v-list
-								link
-								two-line
-								class="py-0 primary"
-								dark
-								style="border-radius: 10px"
-							>
-								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
-									<v-list-item-avatar style="border-radius: 40px; " size="50">
-										<v-img
-											height="50"
-											width="50"
-											class="mx-auto"
-											src="/img/Lupa.png"
-										></v-img>
-									</v-list-item-avatar>
-
-									<v-list-item-content>
-										<v-list-item-title class="caption">
-											Aun no tienes psicólogo
-										</v-list-item-title>
-										<v-list-item-title class="caption">
-											Encuentra uno aquí
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</template> -->
-						<template v-if="psyFromChats.length">
-							<v-card-text class="py-0">
+								<v-list-item-content>
+									<v-list-item-title class="caption">
+										Aun no tienes psicólogo
+									</v-list-item-title>
+									<v-list-item-title class="caption">
+										Encuentra uno aquí
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+						<!-- lista de psicologos "chat iniciado" -->
+						<template
+							v-if="
+								listPsychologist.length ||
+								($auth.$state.user &&
+									$auth.$state.user.plan.some(el => el.status === 'success'))
+							"
+						>
+							<v-card-text v-if="listPsychologist.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
-							<v-list two-line style="overflow-y: auto">
+							<v-list
+								v-if="listPsychologist.length"
+								two-line
+								style="overflow-y: auto"
+							>
 								<v-list-item
-									v-for="(psy, e) in psyFromChats"
+									v-for="(psy, e) in listPsychologist"
 									:key="e"
 									@click="setSelectedPsy(psy)"
 								>
@@ -197,6 +219,7 @@
 								</v-list-item>
 							</v-list>
 						</template>
+						<!-- lista de psicologos "sin chats iniciados" -->
 						<template v-else>
 							<div style="flex: 1" class="d-flex justify-center align-center">
 								<div class="text-center">
@@ -541,44 +564,68 @@ export default {
 			if (this.selected.assitant) return 'Asistente virtual';
 			if (
 				!this.selected.assitant &&
+				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.psychologist
 			)
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assitant &&
+				this.$auth.$state.user &&
 				this.selected._id !== this.$auth.$state.user.psychologist
 			)
 				return 'Terapeuta de Hablaquí con licencia';
 			return '';
 		},
-		userFromClients() {
+		listClients() {
 			return this.clients.map(item => ({
 				...item,
 				hasMessageUser: this.hasMessageUser(item),
 			}));
 		},
-		usersFromChats() {
+		// lista de usuarios/clientes con los que podria chatear el psicologo
+		listUsers() {
+			console.log(this.chats);
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
 			);
+
 			if (!filterArray.length) filterArray = this.chats;
-			filterArray = filterArray.filter(
-				item => !this.clients.some(el => el._id === item.user._id)
-			);
+
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+				filterArray = filterArray.filter(item => {
+					return this.clients.every(el => el._id !== item.user._id);
+				});
+
 			return filterArray.map(item => ({
 				...item.user,
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
-		psyFromChats() {
+		// lista de psicologos con los que podria chatear el usuario
+		listPsychologist() {
 			let filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
 			);
 			if (!filterArray.length) filterArray = this.chats;
+
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+				filterArray = filterArray.filter(item => {
+					return this.getMyPsy._id !== item.psychologist._id;
+				});
+
 			return filterArray.map(item => ({
 				...item.psychologist,
 				hasMessage: this.hasMessage(item.psychologist),
 			}));
+		},
+		getMyPsy() {
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user') {
+				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
+				if (user) return this.getPsy(user.psychologist);
+				else return null;
+			} else {
+				return null;
+			}
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
