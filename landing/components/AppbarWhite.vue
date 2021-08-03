@@ -125,10 +125,10 @@
 					<v-menu
 						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
-						v-model="activeMenu"
 						rounded="xl"
 						offset-y
 						offset-x
+						open-on-hover
 						:close-on-content-click="false"
 						:nudge-width="100"
 					>
@@ -244,7 +244,6 @@ export default {
 	data() {
 		return {
 			mdiMenu,
-			activeMenu: false,
 			menu: [
 				{
 					name: 'Chat',

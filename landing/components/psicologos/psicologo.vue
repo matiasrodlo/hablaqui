@@ -346,8 +346,8 @@ export default {
 		async resumeView(newValue) {
 			if (newValue && this.dialog) {
 				this.loadingChat = true;
+				this.dialog = false;
 				await this.startConversation(this.psychologist._id);
-				this.setResumeView(false);
 				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
@@ -375,7 +375,6 @@ export default {
 		...mapActions({ startConversation: 'Chat/startConversation' }),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
-			setResumeView: 'Psychologist/setResumeView',
 		}),
 	},
 };

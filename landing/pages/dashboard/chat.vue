@@ -584,7 +584,6 @@ export default {
 		},
 		// lista de usuarios/clientes con los que podria chatear el psicologo
 		listUsers() {
-			console.log(this.chats);
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
 			);

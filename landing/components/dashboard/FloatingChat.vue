@@ -363,7 +363,6 @@ export default {
 	},
 	async mounted() {
 		if (this.resumeView) {
-			this.setResumeView(false);
 			if (this.$route.params.id) {
 				const psychologist = this.psychologists.find(
 					item => item._id === this.$route.params.id
