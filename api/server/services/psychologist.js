@@ -85,6 +85,18 @@ const createSession = async body => {
 	const foundPsychologist = await Psychologist.findById(
 		payload.psychologist._id
 	);
+	if (
+		moment().isBefore(
+			moment().add({
+				hours: foundPsychologist.preferences.minimumNewSession,
+			})
+		)
+	) {
+		return conflictResponse(
+			`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
+		);
+	}
+
 	let dateConflict = false;
 	foundPsychologist.sessions.forEach(session => {
 		if (moment(session.date).isSame(payload.date)) {
@@ -205,7 +217,13 @@ const reschedule = async (user, id, newDate) => {
 			if (
 				foundPsychologist.sessions.filter(item => item.date == newDate)
 					.length == 0 &&
-				moment().isBefore(moment(session.date).subtract({ hours: 24 }))
+				moment().isBefore(
+					moment(session.date).subtract({
+						hours:
+							foundPsychologist.preferences
+								.minimumRescheduleSession,
+					})
+				)
 			) {
 				session.date = newDate;
 			} else {
