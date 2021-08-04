@@ -45,11 +45,8 @@
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
-			<v-tab
-				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
-				class="primary--text text-capitalize"
-			>
-				Mis planes
+			<v-tab v-if="$auth.$state.user" class="primary--text text-capitalize">
+				{{ $auth.$state.user.role == 'user' ? 'Mis planes' : 'Horario' }}
 			</v-tab>
 
 			<v-tab

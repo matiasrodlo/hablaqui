@@ -613,7 +613,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<!-- SECTION 7 / faq -->
+		<!-- SECTION 7 / faq -->.
 		<v-container tag="section">
 			<v-row tag="section">
 				<v-col
