@@ -212,6 +212,10 @@ const register = async (body, avatar) => {
 const reschedule = async (user, id, newDate) => {
 	let foundPsychologist = await Psychologist.findById(user.psychologist);
 	let e = false;
+	newDate = moment(
+		`${newDate.date} ${newDate.hour}`,
+		`DD/MM/YYYY HH:mm`
+	).toISOString();
 	foundPsychologist.sessions.forEach(session => {
 		if (session._id == id) {
 			if (
