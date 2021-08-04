@@ -221,7 +221,7 @@ const reschedule = async (user, id, newDate) => {
 			if (
 				foundPsychologist.sessions.filter(item => item.date == newDate)
 					.length == 0 &&
-				moment().isBefore(
+				moment().isAfter(
 					moment(session.date).subtract({
 						hours:
 							foundPsychologist.preferences
