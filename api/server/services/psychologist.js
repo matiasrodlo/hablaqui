@@ -212,6 +212,7 @@ const register = async (body, avatar) => {
 const reschedule = async (user, id, newDate) => {
 	let foundPsychologist = await Psychologist.findById(user.psychologist);
 	let e = false;
+	let error = '';
 	newDate = moment(
 		`${newDate.date} ${newDate.hour}`,
 		`DD/MM/YYYY HH:mm`
@@ -220,18 +221,25 @@ const reschedule = async (user, id, newDate) => {
 		if (session._id == id) {
 			if (
 				foundPsychologist.sessions.filter(item => item.date == newDate)
-					.length == 0 &&
-				moment().isBefore(
-					moment(session.date).subtract({
-						hours:
+					.length == 0
+			) {
+				if (
+					moment(newDate).isAfter(
+						moment().add(
 							foundPsychologist.preferences
 								.minimumRescheduleSession,
-					})
-				)
-			) {
-				session.date = newDate;
+							'hours'
+						)
+					)
+				) {
+					session.date = newDate;
+				} else {
+					e = true;
+					error = 'Esta hora esta muy encima';
+				}
 			} else {
 				e = true;
+				error = 'Esta hora ya esta ocupada';
 			}
 		}
 	});
@@ -241,7 +249,7 @@ const reschedule = async (user, id, newDate) => {
 			sessions: foundPsychologist.sessions,
 		});
 	}
-	return conflictResponse('Esa hora esta ocupada');
+	return conflictResponse(error);
 };
 
 const getByData = async username => {
