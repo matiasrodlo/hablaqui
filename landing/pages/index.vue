@@ -576,23 +576,8 @@
 					Descarga nuestra aplicación
 				</v-col>
 				<v-col
-					cols="3"
-					md="3"
-					lg="2"
-					tag="aside"
-					class="my-md-10 d-flex align-center justify-center"
-				>
-					<v-img
-						style="cursor: pointer"
-						height="75px"
-						width="186px"
-						:src="`${$config.LANDING_URL}/google-play.png`"
-						:lazy-src="`${$config.LANDING_URL}/google-play.png`"
-						alt="descarcar nuestra aplicacion para android"
-					/>
-				</v-col>
-				<v-col
-					cols="3"
+					cols="5"
+					sm="3"
 					md="3"
 					lg="2"
 					tag="aside"
@@ -601,6 +586,26 @@
 					<v-img
 						style="cursor: pointer; border-radius: 10px"
 						height="50px"
+						width="auto"
+						class="ma-1"
+						:src="`${$config.LANDING_URL}/google-play.png`"
+						:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+						alt="descarcar nuestra aplicacion para android"
+					/>
+				</v-col>
+				<v-col
+					cols="5"
+					sm="3"
+					md="3"
+					lg="2"
+					tag="aside"
+					class="my-md-10 d-flex align-center justify-center"
+				>
+					<v-img
+						style="cursor: pointer; border-radius: 10px"
+						height="50px"
+						width="auto"
+						class="ma-1"
 						:src="`${$config.LANDING_URL}/ios.svg`"
 						:lazy-src="`${$config.LANDING_URL}/ios.svg`"
 						alt="descargar aplicacion para ios"
