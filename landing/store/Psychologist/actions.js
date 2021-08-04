@@ -1,4 +1,4 @@
-import { snackBarError } from '@/utils/snackbar';
+import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
 	async getPsychologists({ commit }) {
@@ -42,6 +42,7 @@ export default {
 				method: 'POST',
 				data: { newDate },
 			});
+			snackBarSuccess('Sesión reprogramada')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

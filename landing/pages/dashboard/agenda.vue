@@ -205,7 +205,7 @@ export default {
 				}
 			}
 		},
-		reschedule(item) {
+		async reschedule(item) {
 			const newDate = { date: item.date, hour: item.start };
 			await this.setReschedule({
 				sessionId: this.event.sessionId,
