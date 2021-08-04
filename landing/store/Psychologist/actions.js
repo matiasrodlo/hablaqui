@@ -36,6 +36,16 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async setReschedule({ commit }, { sessionId, newDate }) {
+		try {
+			await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+				method: 'POST',
+				data: { newDate },
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async matchPsi({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/psychologists/match', {

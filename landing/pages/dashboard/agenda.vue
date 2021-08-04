@@ -86,9 +86,6 @@
 										<v-btn icon>
 											<icon color="grey lighten-1" :icon="mdiTrashCan" />
 										</v-btn>
-										<v-btn icon>
-											<icon color="grey lighten-1" :icon="mdiClose" />
-										</v-btn>
 									</v-col>
 								</v-row>
 							</v-card-text>
@@ -102,7 +99,11 @@
 									Ir a video llamada
 								</v-btn>
 								<v-spacer></v-spacer>
-								<v-btn text color="secondary" @click="selectedOpen = false">
+								<v-btn
+									text
+									color="secondary"
+									@click="() => openDialog(selectedEvent)"
+								>
 									Reprogramar
 								</v-btn>
 							</v-card-actions>
@@ -111,6 +112,19 @@
 				</v-sheet>
 			</v-col>
 		</v-row>
+		<v-dialog v-model="dialog" max-width="600" transition="dialog-top-transition">
+			<v-card rounded="xl">
+				<v-card-text class="text-center primary white--text text-h5 py-3">
+					<div class="body-1 font-weight-bold text-center">Reprogramar tu sesion</div>
+				</v-card-text>
+				<v-card-text class="px-0 px-sm-2 px-md-4">
+					<calendar
+						:set-date="date => reschedule(date)"
+						title-button="Reprogramar sesión"
+					/>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 
@@ -131,6 +145,7 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
+		Calendar: () => import('~/components/Calendar'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -142,6 +157,8 @@ export default {
 		mdiChevronRight,
 		mdiMenuDown,
 		mdiClockOutline,
+		dialog: false,
+		sessions: null,
 		date: '2018-03-02',
 		focus: '',
 		type: 'month',
@@ -157,13 +174,48 @@ export default {
 		today: moment().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
+		event: null,
 	}),
-	mounted() {
+	async mounted() {
+		await this.initFetch();
 		moment.locale('es');
 		this.successPayment();
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
+		async initFetch() {
+			const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
+			if (user) {
+				const response = await this.getPsychologist(user.psychologist);
+				if (this.$auth.$state.user.role === 'user') {
+					this.sessions = response.sessions.filter(
+						el => el.user === this.$auth.$state.user._id
+					);
+					this.events = this.sessions.map(item => {
+						const start = moment(item.date).format('YYYY-MM-DD hh:mm');
+						const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
+						return {
+							name: `${response.name} ${response.lastName}`,
+							details: `Sesion con ${response.name}`,
+							start,
+							end,
+							sessionId: item._id,
+						};
+					});
+				}
+			}
+		},
+		reschedule(item) {
+			const newDate = { date: item.date, hour: item.start };
+			await this.setReschedule({
+				sessionId: this.event.sessionId,
+				newDate,
+			});
+		},
+		openDialog(item) {
+			this.event = item;
+			this.dialog = true;
+		},
 		allowedDates(val) {
 			if (val === '2021-06-25' || val === '2021-06-30') return false;
 			return true;
@@ -202,124 +254,7 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange() {
-			if (this.$auth.$state.user._id === '609bf834f690df051673696a')
-				this.events = [
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-08-24 09:00',
-						end: '2021-08-24 10:00',
-						details: 'Sesion con Joaquin',
-					},
-
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-08-28 09:00',
-						end: '2021-08-28 10:00',
-						details: 'Sesion con Joaquin',
-					},
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-07-04 10:00',
-						end: '2021-07-04 11:00',
-						details: 'Sesion con Joaquin',
-					},
-				];
-			if (this.$auth.$state.user._id === '60c26d38f12991000bca3bba') {
-				this.events = [
-					{
-						name: 'Sesion con Matias',
-						start: '2021-06-24 09:00',
-						end: '2021-06-24 10:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-06-24 10:00',
-						end: '2021-06-24 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-06-24 12:00',
-						end: '2021-06-24 13:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-06-28 09:00',
-						end: '2021-06-28 10:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-06-28 10:00',
-						end: '2021-06-28 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-06-28 12:00',
-						end: '2021-06-28 13:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Daniel',
-					},
-				];
-			}
-		},
+		updateRange() {},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
 		},
@@ -343,10 +278,14 @@ export default {
 			}
 		},
 		setSubtitle(date) {
-			return moment(date).format('LLL');
+			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
+				.add(60, 'minutes')
+				.format('hh:mm')}`;
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
+			getPsychologist: 'Psychologist/getPsychologist',
+			setReschedule: 'Psychologist/setReschedule',
 		}),
 	},
 };
