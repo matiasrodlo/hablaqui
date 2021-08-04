@@ -65,7 +65,6 @@
 						@click:event="showEvent"
 						@click:more="viewDay"
 						@click:date="viewDay"
-						@change="updateRange"
 					></v-calendar>
 					<v-menu
 						v-model="selectedOpen"
@@ -166,7 +165,7 @@ export default {
 		mdiMenuDown,
 		mdiClockOutline,
 		dialog: false,
-		sessions: null,
+		sessions: [],
 		date: '2018-03-02',
 		focus: '',
 		type: 'month',
@@ -220,17 +219,7 @@ export default {
 				sessionId: this.event.sessionId,
 				newDate,
 			});
-			this.events = this.sessions.map(item => {
-				const start = moment(item.date).format('YYYY-MM-DD hh:mm');
-				const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
-				return {
-					name: `${this.myPsychologist.name} ${this.myPsychologist.lastName}`,
-					details: `Sesion con ${this.myPsychologist.name}`,
-					start,
-					end,
-					sessionId: item._id,
-				};
-			});
+			this.updateRange();
 			this.event = null;
 			this.dialog = false;
 		},
@@ -276,7 +265,20 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange() {},
+		updateRange() {
+			this.sessions = this.sessions.filter(el => el.user === this.$auth.$state.user._id);
+			this.events = this.sessions.map(item => {
+				const start = moment(item.date).format('YYYY-MM-DD hh:mm');
+				const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
+				return {
+					name: `${this.myPsychologist.name} ${this.myPsychologist.lastName}`,
+					details: `Sesion con ${this.myPsychologist.name}`,
+					start,
+					end,
+					sessionId: item._id,
+				};
+			});
+		},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
 		},
