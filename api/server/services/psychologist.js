@@ -237,7 +237,9 @@ const reschedule = async (user, id, newDate) => {
 	});
 	if (!e) {
 		await foundPsychologist.save();
-		return okResponse('Hora actualizada');
+		return okResponse('Hora actualizada', {
+			sessions: foundPsychologist.sessions,
+		});
 	}
 	return conflictResponse('Esa hora esta ocupada');
 };
