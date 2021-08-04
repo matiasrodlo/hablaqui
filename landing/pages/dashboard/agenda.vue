@@ -107,24 +107,32 @@
 									Reprogramar
 								</v-btn>
 							</v-card-actions>
+							<v-dialog
+								v-model="dialog"
+								max-width="600"
+								transition="dialog-top-transition"
+							>
+								<v-card rounded="xl">
+									<v-card-text
+										class="text-center primary white--text text-h5 py-3"
+									>
+										<div class="body-1 font-weight-bold text-center">
+											Reprogramar tu sesion
+										</div>
+									</v-card-text>
+									<v-card-text class="px-0 px-sm-2 px-md-4">
+										<calendar
+											:set-date="date => reschedule(date)"
+											title-button="Reprogramar sesión"
+										/>
+									</v-card-text>
+								</v-card>
+							</v-dialog>
 						</v-card>
 					</v-menu>
 				</v-sheet>
 			</v-col>
 		</v-row>
-		<v-dialog v-model="dialog" max-width="600" transition="dialog-top-transition">
-			<v-card rounded="xl">
-				<v-card-text class="text-center primary white--text text-h5 py-3">
-					<div class="body-1 font-weight-bold text-center">Reprogramar tu sesion</div>
-				</v-card-text>
-				<v-card-text class="px-0 px-sm-2 px-md-4">
-					<calendar
-						:set-date="date => reschedule(date)"
-						title-button="Reprogramar sesión"
-					/>
-				</v-card-text>
-			</v-card>
-		</v-dialog>
 	</v-container>
 </template>
 
@@ -145,7 +153,7 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
-		Calendar: () => import('~/components/Calendar'),
+		Calendar: () => import('../../components/Calendar.vue'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -175,6 +183,7 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
+		myPsychologist: null,
 	}),
 	async mounted() {
 		await this.initFetch();
@@ -186,17 +195,17 @@ export default {
 		async initFetch() {
 			const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
 			if (user) {
-				const response = await this.getPsychologist(user.psychologist);
+				this.myPsychologist = await this.getPsychologist(user.psychologist);
 				if (this.$auth.$state.user.role === 'user') {
-					this.sessions = response.sessions.filter(
+					this.sessions = this.myPsychologist.sessions.filter(
 						el => el.user === this.$auth.$state.user._id
 					);
 					this.events = this.sessions.map(item => {
 						const start = moment(item.date).format('YYYY-MM-DD hh:mm');
 						const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
 						return {
-							name: `${response.name} ${response.lastName}`,
-							details: `Sesion con ${response.name}`,
+							name: `${this.myPsychologist.name} ${this.myPsychologist.lastName}`,
+							details: `Sesion con ${this.myPsychologist.name}`,
 							start,
 							end,
 							sessionId: item._id,
@@ -207,10 +216,23 @@ export default {
 		},
 		async reschedule(item) {
 			const newDate = { date: item.date, hour: item.start };
-			await this.setReschedule({
+			this.sessions = await this.setReschedule({
 				sessionId: this.event.sessionId,
 				newDate,
 			});
+			this.events = this.sessions.map(item => {
+				const start = moment(item.date).format('YYYY-MM-DD hh:mm');
+				const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
+				return {
+					name: `${this.myPsychologist.name} ${this.myPsychologist.lastName}`,
+					details: `Sesion con ${this.myPsychologist.name}`,
+					start,
+					end,
+					sessionId: item._id,
+				};
+			});
+			this.event = null;
+			this.dialog = false;
 		},
 		openDialog(item) {
 			this.event = item;

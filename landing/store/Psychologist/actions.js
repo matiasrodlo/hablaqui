@@ -38,11 +38,12 @@ export default {
 	},
 	async setReschedule({ commit }, { sessionId, newDate }) {
 		try {
-			await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
 				method: 'POST',
 				data: { newDate },
 			});
 			snackBarSuccess('Sesión reprogramada')(commit);
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
