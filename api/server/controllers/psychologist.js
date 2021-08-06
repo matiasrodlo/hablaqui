@@ -208,6 +208,28 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error consiguiendo los clientes');
 		}
 	},
+	async miniRegister(req, res) {
+		try {
+			const { data, code } = await psychologistsService.miniRegister(
+				req.body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error creando el registro');
+		}
+	},
+	async approvePsychologist(req, res) {
+		try {
+			const { email } = req.body;
+			const {
+				data,
+				code,
+			} = await psychologistsService.approvePsychologist(email);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error autorizando al psicologo');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

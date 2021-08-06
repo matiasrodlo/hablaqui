@@ -83,5 +83,15 @@ psychologistsRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getClients
 );
+psychologistsRouter.post(
+	'/psychologist/mini-register',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.miniRegister
+);
+psychologistsRouter.get(
+	'/psychologist/approve-pscyhologist',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.approvePsychologist
+);
 
 export default psychologistsRouter;

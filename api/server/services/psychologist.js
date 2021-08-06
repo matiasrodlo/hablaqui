@@ -209,6 +209,43 @@ const register = async (body, avatar) => {
 	return okResponse('psicologo creado');
 };
 
+const miniRegister = async body => {
+	if (await Psychologist.exists({ code: body.code }))
+		return conflictResponse('Ya hay un psicologo con este codigo');
+	if (await User.exists({ email: body.email }))
+		return conflictResponse('Ya hay alguien usando este correo');
+
+	const newPsychologist = {
+		name: body.name,
+		lastName: body.lastName,
+		code: body.code,
+		email: body.email,
+		experience: splittedExperience,
+		gender: body.gender,
+		isTrans: body.isTrans,
+	};
+
+	const psychologist = await Psychologist.create(newPsychologist);
+
+	const newUser = {
+		name: body.name,
+		role: 'psychologist',
+		enabled: false,
+		email: body.email,
+		password: bcrypt.hashSync(body.password, 10),
+		psychologist: psychologist._id,
+	};
+
+	await User.create(newUser);
+	return okResponse('Psicologo creado');
+};
+
+const approvePsychologist = async email => {
+	await Psychologist.findOneAndUpdate({ email }, { approved: true });
+	await User.findOneAndUpdate({ email }, { enabled: true });
+	return okResponse('Psicologo aprobado');
+};
+
 const reschedule = async (user, id, newDate) => {
 	let foundPsychologist = await Psychologist.findById(user.psychologist);
 	let e = false;
@@ -432,6 +469,8 @@ const psychologistsService = {
 	getRating,
 	checkPlanTask,
 	getClients,
+	miniRegister,
+	approvePsychologist,
 };
 
 export default Object.freeze(psychologistsService);

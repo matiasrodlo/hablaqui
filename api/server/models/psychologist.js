@@ -65,6 +65,10 @@ let rating = new Schema(
 );
 
 let psychologist = new Schema({
+	approved: {
+		type: Boolean,
+		default: 'false',
+	},
 	avatar: {
 		type: String,
 	},
