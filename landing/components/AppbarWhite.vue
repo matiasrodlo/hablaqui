@@ -202,7 +202,7 @@
 				</div>
 			</client-only>
 			<router-link
-				v-show="!$auth.$state.loggedIn"
+				v-if="!$auth.$state.loggedIn"
 				id="iniciar-sesion-appbar"
 				accesskey="s"
 				style="text-decoration: none"
@@ -212,7 +212,7 @@
 				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
 			</router-link>
 			<v-btn
-				v-show="!$auth.$state.loggedIn"
+				v-if="!$auth.$state.loggedIn"
 				id="comenzar-appbar"
 				rounded
 				accesskey="c"
