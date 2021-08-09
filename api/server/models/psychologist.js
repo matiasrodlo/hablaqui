@@ -1,4 +1,4 @@
-import { Schema, model, Mongoose } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 let session = new Schema({
 	date: {

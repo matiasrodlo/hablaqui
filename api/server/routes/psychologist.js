@@ -7,6 +7,13 @@ import psychologistsController from '../controllers/psychologist';
 const psychologistsRouter = Router();
 
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
+
+psychologistsRouter.get(
+	'/psychologists/sessions/:idPsychologist',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getSessions
+);
+
 psychologistsRouter.get(
 	'/psychologists/one/:info',
 	psychologistsController.getByData

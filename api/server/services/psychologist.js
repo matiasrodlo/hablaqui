@@ -12,6 +12,42 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
+const getSessions = async (user, idPsy) => {
+	const psychologist = await Psychologist.findById(idPsy).populate();
+
+	let sessions = [];
+	sessions =
+		user.role === 'user'
+			? psychologist.sessions.filter(el => el.user === user._id)
+			: (sessions = psychologist.sessions);
+
+	sessions = sessions
+		.map(item => {
+			console.log(item.user);
+			let name =
+				user.role === 'user' ? psychologist.name : item.user.name;
+			let lastName =
+				user.role === 'user'
+					? psychologist.lastName
+					: item.user.lastName;
+			const start = moment(item.date).format('YYYY-MM-DD hh:mm');
+			const end = moment(item.date)
+				.add(60, 'minutes')
+				.format('YYYY-MM-DD hh:mm');
+			return {
+				name: `${name} ${lastName}`,
+				details: `Sesion con ${name}`,
+				start,
+				end,
+				sessionId: item._id,
+			};
+		})
+		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
+
+	logInfo('obtuvo todos las sesiones');
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
@@ -431,6 +467,7 @@ const getClients = async psychologist => {
 
 const psychologistsService = {
 	getAll,
+	getSessions,
 	match,
 	register,
 	createSession,

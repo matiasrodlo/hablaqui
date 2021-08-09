@@ -11,6 +11,19 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getSessions(req, res) {
+		try {
+			const { idPsychologist } = req.params;
+			const { user } = req;
+			const { data, code } = await psychologistsService.getSessions(
+				user,
+				idPsychologist
+			);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo las sesiones');
+		}
+	},
 	async match(req, res) {
 		try {
 			const { body } = req;

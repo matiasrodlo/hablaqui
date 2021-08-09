@@ -192,25 +192,16 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-			if (user) {
-				this.myPsychologist = await this.getPsychologist(user.psychologist);
-				if (this.$auth.$state.user.role === 'user') {
-					this.sessions = this.myPsychologist.sessions.filter(
-						el => el.user === this.$auth.$state.user._id
-					);
-					this.events = this.sessions.map(item => {
-						const start = moment(item.date).format('YYYY-MM-DD hh:mm');
-						const end = moment(item.date).add(60, 'minutes').format('YYYY-MM-DD hh:mm');
-						return {
-							name: `${this.myPsychologist.name} ${this.myPsychologist.lastName}`,
-							details: `Sesion con ${this.myPsychologist.name}`,
-							start,
-							end,
-							sessionId: item._id,
-						};
-					});
-				}
+			let idPsychologist = null;
+			if (this.$auth.$state.user.role === 'user') {
+				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
+				if (user) idPsychologist = user.psychologist;
+			}
+			if (this.$auth.$state.user.role === 'psychologist')
+				idPsychologist = this.$auth.$state.user.psychologist;
+			console.log(idPsychologist);
+			if (idPsychologist) {
+				this.events = await this.getSessions(idPsychologist);
 			}
 		},
 		async reschedule(item) {
@@ -308,7 +299,7 @@ export default {
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
-			getPsychologist: 'Psychologist/getPsychologist',
+			getSessions: 'Psychologist/getSessions',
 			setReschedule: 'Psychologist/setReschedule',
 		}),
 	},
