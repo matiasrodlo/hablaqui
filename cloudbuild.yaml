@@ -69,31 +69,5 @@ steps:
     args: ["app", "deploy"]
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
-  - name: node:10.15.1
-    entrypoint: npm
-    args: ["install"]
-    dir: "googleapis"
-    id: "install-googleapis"
-    waitFor: ["-"]
-  - name: node:10.15.1
-    entrypoint: npm
-    args: ["run", "create-env"]
-    env:
-      - "FRONTEND_URL=${_FRONTEND_URL}"
-      - "LANDING_URL=${_LANDING_URL}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "JWT_SECRET=${_JWT_SECRET}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
-      - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
-      - "GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}"
-      - "GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}"
-      - "GOOGLE_CLIENT_REDIRECT=${_GOOGLE_CLIENT_REDIRECT}"
-    dir: "googleapis"
-    id: "envvars-googleapis"
-    waitFor: ["install-googleapis"]
-  - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy"]
-    dir: "googleapis"
-    waitFor: ["envvars-googleapis", "install-googleapis"]
 
 timeout: "2600s"
