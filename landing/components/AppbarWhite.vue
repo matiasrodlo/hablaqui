@@ -35,6 +35,11 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+					<v-list-item-content>
+						<v-list-item-title>Para especialistas</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item
 					v-show="$auth.$state.loggedIn"
 					id="logout-drawer"
@@ -108,7 +113,7 @@
 				class="hidden-sm-and-down mx-5"
 				to="/faq"
 			>
-				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
+				<span class="text--secondary body-1 font-weight-bold">Preguntas frecuentes</span>
 			</nuxt-link>
 			<nuxt-link
 				id="blog-appabar"
@@ -118,6 +123,15 @@
 				to="/blog"
 			>
 				<span class="body-1 text--secondary font-weight-bold">Blog</span>
+			</nuxt-link>
+			<nuxt-link
+				id="especialistas-appabar"
+				accesskey="r"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-5"
+				to="/para-especialistas"
+			>
+				<span class="body-1 text--secondary font-weight-bold">Para especialistas</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
