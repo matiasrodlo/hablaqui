@@ -13,8 +13,11 @@ const getAll = async () => {
 };
 
 const getSessions = async (user, idPsy) => {
-	const psychologist = await Psychologist.findById(idPsy).populate();
-
+	const psychologist = await Psychologist.findById(idPsy).populate({
+		path: 'sessions.user',
+		model: 'User',
+		select: 'name lastName _id',
+	});
 	let sessions = [];
 	sessions =
 		user.role === 'user'
