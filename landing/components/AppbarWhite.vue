@@ -120,9 +120,8 @@
 				<span class="body-1 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
-
-			<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
-				<client-only>
+			<client-only>
+				<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
 					<v-menu
 						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
@@ -200,10 +199,10 @@
 							</v-card-actions>
 						</v-card>
 					</v-menu>
-				</client-only>
-			</div>
+				</div>
+			</client-only>
 			<router-link
-				v-if="!$auth.$state.loggedIn"
+				v-show="!$auth.$state.loggedIn"
 				id="iniciar-sesion-appbar"
 				accesskey="s"
 				style="text-decoration: none"
@@ -213,7 +212,7 @@
 				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
 			</router-link>
 			<v-btn
-				v-if="!$auth.$state.loggedIn"
+				v-show="!$auth.$state.loggedIn"
 				id="comenzar-appbar"
 				rounded
 				accesskey="c"
