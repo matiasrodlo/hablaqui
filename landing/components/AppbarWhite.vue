@@ -1,75 +1,73 @@
 <template>
 	<div>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
-			<client-only>
-				<v-list-item link to="/">
-					<v-img
-						id="logo-drawer"
-						tabindex="0"
-						class="mx-auto my-5"
-						style="max-width: 150px"
-						:src="`${$config.LANDING_URL}/logo.png`"
-						:lazy-src="`${$config.LANDING_URL}/logo.png`"
-						alt="hablaqui Logo"
-						accesskey="h"
-					/>
+			<v-list-item link to="/">
+				<v-img
+					id="logo-drawer"
+					tabindex="0"
+					class="mx-auto my-5"
+					style="max-width: 150px"
+					:src="`${$config.LANDING_URL}/logo.png`"
+					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					alt="hablaqui Logo"
+					accesskey="h"
+				/>
+			</v-list-item>
+			<v-list dense>
+				<v-list-item
+					id="link-psi-drawer"
+					accesskey="p"
+					link
+					active-class="primary white--text"
+					:to="{ name: 'psicologos' }"
+				>
+					<v-list-item-content>
+						<v-list-item-title>Psicólogos</v-list-item-title>
+					</v-list-item-content>
 				</v-list-item>
-				<v-list dense>
-					<v-list-item
-						id="link-psi-drawer"
-						accesskey="p"
-						link
-						active-class="primary white--text"
-						:to="{ name: 'psicologos' }"
-					>
-						<v-list-item-content>
-							<v-list-item-title>Psicólogos</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
-						<v-list-item-content>
-							<v-list-item-title>Preguntas frecuentes</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
-						<v-list-item-content>
-							<v-list-item-title>Blog</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item
-						v-show="$auth.$state.loggedIn"
-						id="logout-drawer"
-						accesskey="x"
-						@click="logout"
-					>
-						<v-list-item-content>
-							<v-list-item-title>Cerrar sesión</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item
-						v-show="!$auth.$state.loggedIn"
-						id="iniciar-sesion-drawer"
-						accesskey="s"
-						link
-						to="/auth"
-					>
-						<v-list-item-content>
-							<v-list-item-title>Iniciar sesión</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item
-						v-show="!$auth.$state.loggedIn"
-						id="comenzar-drawer"
-						accesskey="c"
-						link
-						@click="start"
-					>
-						<v-list-item-content>
-							<v-list-item-title>Comenzar</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
-				</v-list>
-			</client-only>
+				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
+					<v-list-item-content>
+						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
+					<v-list-item-content>
+						<v-list-item-title>Blog</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-show="$auth.$state.loggedIn"
+					id="logout-drawer"
+					accesskey="x"
+					@click="logout"
+				>
+					<v-list-item-content>
+						<v-list-item-title>Cerrar sesión</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-show="!$auth.$state.loggedIn"
+					id="iniciar-sesion-drawer"
+					accesskey="s"
+					link
+					to="/auth"
+				>
+					<v-list-item-content>
+						<v-list-item-title>Iniciar sesión</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-show="!$auth.$state.loggedIn"
+					id="comenzar-drawer"
+					accesskey="c"
+					link
+					@click="start"
+				>
+					<v-list-item-content>
+						<v-list-item-title>Comenzar</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
 		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
@@ -85,48 +83,46 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<client-only>
-				<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
-					<v-img
-						style="max-width: 160px"
-						alt="hablaqui Logo"
-						:src="`${$config.LANDING_URL}/logo.png`"
-						:lazy-src="`${$config.LANDING_URL}/logo.png`"
-						contain
-					/>
-				</nuxt-link>
-				<router-link
-					id="psicologo-appbar"
-					:to="{ name: 'psicologos' }"
-					style="text-decoration: none"
-					accesskey="p"
-					class="hidden-sm-and-down ml-7 mr-3"
-				>
-					<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
-				</router-link>
-				<nuxt-link
-					id="faq-appbar"
-					accesskey="f"
-					style="text-decoration: none"
-					class="hidden-sm-and-down mx-5"
-					to="/faq"
-				>
-					<span class="text--secondary body-1 font-weight-bold">
-						Preguntas frecuentes
-					</span>
-				</nuxt-link>
-				<nuxt-link
-					id="blog-appabar"
-					accesskey="b"
-					style="text-decoration: none"
-					class="hidden-sm-and-down mx-5"
-					to="/blog"
-				>
-					<span class="body-1 text--secondary font-weight-bold">Blog</span>
-				</nuxt-link>
-				<v-spacer></v-spacer>
+			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+				<v-img
+					style="max-width: 160px"
+					alt="hablaqui Logo"
+					:src="`${$config.LANDING_URL}/logo.png`"
+					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					contain
+				/>
+			</nuxt-link>
+			<router-link
+				id="psicologo-appbar"
+				:to="{ name: 'psicologos' }"
+				style="text-decoration: none"
+				accesskey="p"
+				class="hidden-sm-and-down ml-7 mr-3"
+			>
+				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+			</router-link>
+			<nuxt-link
+				id="faq-appbar"
+				accesskey="f"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-5"
+				to="/faq"
+			>
+				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
+			</nuxt-link>
+			<nuxt-link
+				id="blog-appabar"
+				accesskey="b"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-5"
+				to="/blog"
+			>
+				<span class="body-1 text--secondary font-weight-bold">Blog</span>
+			</nuxt-link>
+			<v-spacer></v-spacer>
 
-				<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
+			<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
+				<client-only>
 					<v-menu
 						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
@@ -204,37 +200,36 @@
 							</v-card-actions>
 						</v-card>
 					</v-menu>
-				</div>
-
-				<router-link
-					v-if="!$auth.$state.loggedIn"
-					id="iniciar-sesion-appbar"
-					accesskey="s"
-					style="text-decoration: none"
-					class="mr-4 mr-lg-5 hidden-sm-and-down"
-					:to="{ name: 'auth' }"
-				>
-					<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
-				</router-link>
-				<v-btn
-					v-if="!$auth.$state.loggedIn"
-					id="comenzar-appbar"
-					rounded
-					accesskey="c"
-					class="mx-2 py-6 px-lg-10 hidden-sm-and-down"
-					color="primary"
-					depressed
-					@click="start"
-				>
-					<span class="font-weight-bold body-1">Comenzar</span>
+				</client-only>
+			</div>
+			<router-link
+				v-if="!$auth.$state.loggedIn"
+				id="iniciar-sesion-appbar"
+				accesskey="s"
+				style="text-decoration: none"
+				class="mr-4 mr-lg-5 hidden-sm-and-down"
+				:to="{ name: 'auth' }"
+			>
+				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+			</router-link>
+			<v-btn
+				v-if="!$auth.$state.loggedIn"
+				id="comenzar-appbar"
+				rounded
+				accesskey="c"
+				class="mx-2 py-6 px-lg-10 hidden-sm-and-down"
+				color="primary"
+				depressed
+				@click="start"
+			>
+				<span class="font-weight-bold body-1">Comenzar</span>
+			</v-btn>
+			<div class="hidden-md-and-up">
+				<v-spacer></v-spacer>
+				<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
+					<icon :icon="mdiMenu" />
 				</v-btn>
-				<div class="hidden-md-and-up">
-					<v-spacer></v-spacer>
-					<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
-						<icon :icon="mdiMenu" />
-					</v-btn>
-				</div>
-			</client-only>
+			</div>
 		</v-app-bar>
 	</div>
 </template>
