@@ -18,11 +18,27 @@ const getSessions = async (user, idPsy) => {
 		model: 'User',
 		select: 'name lastName _id',
 	});
+
+	const sessions = setSession(user, psychologist);
+
+	logInfo('obtuvo todos las sesiones');
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
+const setSession = (user, psychologist) => {
 	let sessions = [];
-	sessions =
-		user.role === 'user'
-			? psychologist.sessions.filter(el => el.user === user._id)
-			: (sessions = psychologist.sessions);
+
+	if (user.role === 'user')
+		sessions = psychologist.sessions.filter(session => {
+			return (
+				session.user &&
+				!Array.isArray(session.user) &&
+				session.user._id.toString() === user._id.toString()
+			);
+		});
+
+	if (user.role === 'psychologist')
+		sessions = sessions = psychologist.sessions;
 
 	sessions = sessions
 		.map(item => {
@@ -53,9 +69,7 @@ const getSessions = async (user, idPsy) => {
 			};
 		})
 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
-
-	logInfo('obtuvo todos las sesiones');
-	return okResponse('sesiones obtenidas', { sessions });
+	return sessions;
 };
 
 const match = async body => {
@@ -256,7 +270,14 @@ const register = async (body, avatar) => {
 };
 
 const reschedule = async (user, id, newDate) => {
-	let foundPsychologist = await Psychologist.findById(user.psychologist);
+	let foundPsychologist = await Psychologist.findById(
+		user.psychologist
+	).populate({
+		path: 'sessions.user',
+		model: 'User',
+		select: 'name lastName _id',
+	});
+
 	let e = false;
 	let error = '';
 	newDate = moment(
@@ -292,7 +313,7 @@ const reschedule = async (user, id, newDate) => {
 	if (!e) {
 		const savePsychologist = await foundPsychologist.save();
 		return okResponse('Hora actualizada', {
-			sessions: savePsychologist.sessions,
+			sessions: setSession(user, savePsychologist),
 		});
 	}
 	return conflictResponse(error);
