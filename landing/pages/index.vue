@@ -152,20 +152,22 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 3 / Nuestros psicólogos -->
-		<v-img
-			v-if="$vuetify.breakpoint.mdAndUp"
-			class="mt-10"
-			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
-			style="width: 100%; height: auto"
-		/>
-		<v-img
-			v-else
-			class="mt-10"
-			:src="`${$config.LANDING_URL}/responsive_1.png`"
-			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
-			style="width: 100%; height: auto"
-		/>
+		<client-only>
+			<v-img
+				v-if="$vuetify.breakpoint.mdAndUp"
+				class="mt-10"
+				:src="`${$config.LANDING_URL}/wave-blue-1.png`"
+				:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
+				style="width: 100%; height: auto"
+			/>
+			<v-img
+				v-else
+				class="mt-10"
+				:src="`${$config.LANDING_URL}/responsive_1.png`"
+				:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
+				style="width: 100%; height: auto"
+			/>
+		</client-only>
 		<section class="primary-color">
 			<v-container tag="section" class="white--text py-0">
 				<v-row tag="section" justify="space-between" align="center">
@@ -376,19 +378,21 @@
 			</v-row>
 		</v-container>
 		<!-- SECTION 5 / Efectividad -->
-		<v-img
-			v-if="$vuetify.breakpoint.mdAndUp"
-			class="mt-10"
-			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
-			style="width: 100%; height: auto"
-		/>
-		<v-img
-			v-else
-			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
-			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
-			style="width: 100%; height: auto"
-		/>
+		<client-only>
+			<v-img
+				v-if="$vuetify.breakpoint.mdAndUp"
+				class="mt-10"
+				:src="`${$config.LANDING_URL}/wave-part1.png`"
+				:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
+				style="width: 100%; height: auto"
+			/>
+			<v-img
+				v-else
+				:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+				:lazy-src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+				style="width: 100%; height: auto"
+			/>
+		</client-only>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
 				<v-img
@@ -419,130 +423,139 @@
 			<v-container tag="section" class="white--text py-0">
 				<v-row tag="section" justify="center" align="center">
 					<v-col tag="section" cols="12">
-						<v-carousel
-							v-if="$vuetify.breakpoint.mdAndUp"
-							tag="article"
-							:show-arrows="false"
-							reverse-transition="fade-transition"
-							transition="fade-transition"
-							hide-delimiter-background
-							height="400"
-						>
-							<v-carousel-item
-								v-for="(item, i) in efectividad"
-								:key="i"
-								tag="section"
+						<client-only>
+							<v-carousel
+								v-if="$vuetify.breakpoint.mdAndUp"
+								tag="article"
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								hide-delimiter-background
+								height="400"
 							>
-								<section class="text-center d-flex justify-center align-center">
-									<v-card
-										v-for="el in item"
-										:key="el.id"
-										tag="section"
-										:height="$vuetify.breakpoint.lgAndUp ? '300' : '330'"
-										width="350"
-										class="mx-4 d-inline-block"
-										style="border-radius: 25px"
-										light
-										flat
-									>
-										<v-card-text class="mt-3">
-											<v-img
-												height="60px"
-												width="120px"
-												contain
-												class="mx-auto"
-												:src="el.img"
-												:lazy-src="el.img"
-												:alt="el.text"
-											/>
-										</v-card-text>
-										<v-card-text
-											style="flex-direction: column"
-											:style="
-												$vuetify.breakpoint.lgAndUp
-													? 'height: 180px'
-													: 'height: 210px'
-											"
-											class="d-flex justify-space-between"
+								<v-carousel-item
+									v-for="(item, i) in efectividad"
+									:key="i"
+									tag="section"
+								>
+									<section class="text-center d-flex justify-center align-center">
+										<v-card
+											v-for="el in item"
+											:key="el.id"
+											tag="section"
+											:height="$vuetify.breakpoint.lgAndUp ? '300' : '330'"
+											width="350"
+											class="mx-4 d-inline-block"
+											style="border-radius: 25px"
+											light
+											flat
 										>
-											<article
-												style="overflow-y: auto"
+											<v-card-text class="mt-3">
+												<v-img
+													height="60px"
+													width="120px"
+													contain
+													class="mx-auto"
+													:src="el.img"
+													:lazy-src="el.img"
+													:alt="el.text"
+												/>
+											</v-card-text>
+											<v-card-text
+												style="flex-direction: column"
 												:style="
 													$vuetify.breakpoint.lgAndUp
-														? 'height: 120px'
-														: 'height: 150px'
+														? 'height: 180px'
+														: 'height: 210px'
 												"
-												class="body-2"
+												class="d-flex justify-space-between"
 											>
-												{{ el.text }}
-											</article>
-											<h3>
-												<a
-													class="primary--text caption font-weight-bold"
-													style="text-decoration: none"
-													:href="el.href"
-													>Leer estudio completo</a
+												<article
+													style="overflow-y: auto"
+													:style="
+														$vuetify.breakpoint.lgAndUp
+															? 'height: 120px'
+															: 'height: 150px'
+													"
+													class="body-2"
 												>
-											</h3>
-										</v-card-text>
-									</v-card>
-								</section>
-							</v-carousel-item>
-						</v-carousel>
-						<v-carousel
-							v-else
-							tag="article"
-							:show-arrows="false"
-							reverse-transition="fade-transition"
-							transition="fade-transition"
-							hide-delimiter-background
-							height="400"
-						>
-							<v-carousel-item
-								v-for="(el, i) in efectividadMobile"
-								:key="i"
-								tag="section"
+													{{ el.text }}
+												</article>
+												<h3>
+													<a
+														class="
+															primary--text
+															caption
+															font-weight-bold
+														"
+														style="text-decoration: none"
+														:href="el.href"
+														>Leer estudio completo</a
+													>
+												</h3>
+											</v-card-text>
+										</v-card>
+									</section>
+								</v-carousel-item>
+							</v-carousel>
+							<v-carousel
+								v-else
+								tag="article"
+								:show-arrows="false"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+								hide-delimiter-background
+								height="400"
 							>
-								<section class="text-center d-flex justify-center align-center">
-									<v-card
-										tag="section"
-										height="300"
-										width="350"
-										class="mx-4 d-inline-block"
-										style="border-radius: 25px"
-										light
-										flat
-									>
-										<v-card-text class="mt-3">
-											<v-img
-												contain
-												width="120"
-												height="60"
-												class="mx-auto"
-												:src="el.img"
-												:lazy-src="el.img"
-												:alt="el.text"
-											/>
-										</v-card-text>
-										<v-card-text
-											style="flex-direction: column; height: 180px"
-											class="d-flex justify-space-between"
+								<v-carousel-item
+									v-for="(el, i) in efectividadMobile"
+									:key="i"
+									tag="section"
+								>
+									<section class="text-center d-flex justify-center align-center">
+										<v-card
+											tag="section"
+											height="300"
+											width="350"
+											class="mx-4 d-inline-block"
+											style="border-radius: 25px"
+											light
+											flat
 										>
-											<article style="height: 120px; overflow-y: auto">
-												{{ el.text }}
-											</article>
-											<h3 class="pt-2">
-												<a style="text-decoration: none" :href="el.href">
-													<span class="primary--text caption">
-														Leer estudio completo
-													</span>
-												</a>
-											</h3>
-										</v-card-text>
-									</v-card>
-								</section>
-							</v-carousel-item>
-						</v-carousel>
+											<v-card-text class="mt-3">
+												<v-img
+													contain
+													width="120"
+													height="60"
+													class="mx-auto"
+													:src="el.img"
+													:lazy-src="el.img"
+													:alt="el.text"
+												/>
+											</v-card-text>
+											<v-card-text
+												style="flex-direction: column; height: 180px"
+												class="d-flex justify-space-between"
+											>
+												<article style="height: 120px; overflow-y: auto">
+													{{ el.text }}
+												</article>
+												<h3 class="pt-2">
+													<a
+														style="text-decoration: none"
+														:href="el.href"
+													>
+														<span class="primary--text caption">
+															Leer estudio completo
+														</span>
+													</a>
+												</h3>
+											</v-card-text>
+										</v-card>
+									</section>
+								</v-carousel-item>
+							</v-carousel>
+						</client-only>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -676,102 +689,104 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-16">
-			<v-container tag="section">
-				<v-row justify="center">
-					<v-col cols="12" md="10" xl="8">
-						<v-row tag="section" align="center">
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									alt="Vida Tres Isapre"
-									contain
-									height="100"
-									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
-									:lazy-src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="nueva masvida"
-									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
-									:lazy-src="`${$config.LANDING_URL}/nueva-masvida.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									alt="fonasa"
-									max-height="100"
-									:src="`${$config.LANDING_URL}/fonasa.png`"
-									:lazy-src="`${$config.LANDING_URL}/fonasa.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="ban medica"
-									:src="`${$config.LANDING_URL}/banmedica.png`"
-									:lazy-src="`${$config.LANDING_URL}/banmedica.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="colmena"
-									:src="`${$config.LANDING_URL}/colmena.png`"
-									:lazy-src="`${$config.LANDING_URL}/colmena.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="consalud"
-									:src="`${$config.LANDING_URL}/consalud.png`"
-									:lazy-src="`${$config.LANDING_URL}/consalud.png`"
-								></v-img>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-			</v-container>
-		</section>
-		<section v-else class="mt-16" style="background-color: #e3f2fd">
-			<v-carousel
-				cycle
-				height="140"
-				:show-arrows="false"
-				hide-delimiter-background
-				hide-delimiters
-				reverse-transition="fade-transition"
-				transition="fade-transition"
-			>
-				<v-carousel-item
-					v-for="(item, e) in [
-						`${$config.LANDING_URL}/VidaTresIsapre.png`,
-						`${$config.LANDING_URL}/nueva-masvida.png`,
-						`${$config.LANDING_URL}/fonasa.png`,
-						`${$config.LANDING_URL}/banmedica.png`,
-						`${$config.LANDING_URL}/colmena.png`,
-						`${$config.LANDING_URL}/consalud.png`,
-					]"
-					:key="e"
+		<client-only>
+			<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-16">
+				<v-container tag="section">
+					<v-row justify="center">
+						<v-col cols="12" md="10" xl="8">
+							<v-row tag="section" align="center">
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										alt="Vida Tres Isapre"
+										contain
+										height="100"
+										:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+										:lazy-src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+									></v-img>
+								</v-col>
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										contain
+										max-height="100"
+										alt="nueva masvida"
+										:src="`${$config.LANDING_URL}/nueva-masvida.png`"
+										:lazy-src="`${$config.LANDING_URL}/nueva-masvida.png`"
+									></v-img>
+								</v-col>
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										contain
+										alt="fonasa"
+										max-height="100"
+										:src="`${$config.LANDING_URL}/fonasa.png`"
+										:lazy-src="`${$config.LANDING_URL}/fonasa.png`"
+									></v-img>
+								</v-col>
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										contain
+										max-height="100"
+										alt="ban medica"
+										:src="`${$config.LANDING_URL}/banmedica.png`"
+										:lazy-src="`${$config.LANDING_URL}/banmedica.png`"
+									></v-img>
+								</v-col>
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										contain
+										max-height="100"
+										alt="colmena"
+										:src="`${$config.LANDING_URL}/colmena.png`"
+										:lazy-src="`${$config.LANDING_URL}/colmena.png`"
+									></v-img>
+								</v-col>
+								<v-col tag="section" cols="6" sm="2">
+									<v-img
+										contain
+										max-height="100"
+										alt="consalud"
+										:src="`${$config.LANDING_URL}/consalud.png`"
+										:lazy-src="`${$config.LANDING_URL}/consalud.png`"
+									></v-img>
+								</v-col>
+							</v-row>
+						</v-col>
+					</v-row>
+				</v-container>
+			</section>
+			<section v-else class="mt-16" style="background-color: #e3f2fd">
+				<v-carousel
+					cycle
+					height="140"
+					:show-arrows="false"
+					hide-delimiter-background
+					hide-delimiters
+					reverse-transition="fade-transition"
+					transition="fade-transition"
 				>
-					<v-img
-						height="70"
-						class="mt-8"
-						:src="item"
-						:lazy-src="item"
-						:alt="item"
-						contain
-					/>
-				</v-carousel-item>
-			</v-carousel>
-		</section>
+					<v-carousel-item
+						v-for="(item, e) in [
+							`${$config.LANDING_URL}/VidaTresIsapre.png`,
+							`${$config.LANDING_URL}/nueva-masvida.png`,
+							`${$config.LANDING_URL}/fonasa.png`,
+							`${$config.LANDING_URL}/banmedica.png`,
+							`${$config.LANDING_URL}/colmena.png`,
+							`${$config.LANDING_URL}/consalud.png`,
+						]"
+						:key="e"
+					>
+						<v-img
+							height="70"
+							class="mt-8"
+							:src="item"
+							:lazy-src="item"
+							:alt="item"
+							contain
+						/>
+					</v-carousel-item>
+				</v-carousel>
+			</section>
+		</client-only>
 		<v-container tag="footer">
 			<Footer />
 		</v-container>
