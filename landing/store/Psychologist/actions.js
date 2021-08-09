@@ -15,7 +15,6 @@ export default {
 			const { sessions } = await this.$axios.$get(
 				`/psychologists/sessions/${idPsychologist}`
 			);
-			console.log(sessions);
 			commit('setSessions', sessions);
 		} catch (e) {
 			snackBarError(e)(commit);

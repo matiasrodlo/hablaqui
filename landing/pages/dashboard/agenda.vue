@@ -137,7 +137,7 @@
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import {
 	mdiChevronLeft,
 	mdiChevronRight,
@@ -165,7 +165,6 @@ export default {
 		mdiMenuDown,
 		mdiClockOutline,
 		dialog: false,
-		sessions: [],
 		date: '2018-03-02',
 		focus: '',
 		type: 'month',
@@ -184,6 +183,9 @@ export default {
 		event: null,
 		myPsychologist: null,
 	}),
+	computed: {
+		...mapGetters({ sessions: 'Psychologist/sessions' }),
+	},
 	async mounted() {
 		await this.initFetch();
 		moment.locale('es');
@@ -199,9 +201,10 @@ export default {
 			}
 			if (this.$auth.$state.user.role === 'psychologist')
 				idPsychologist = this.$auth.$state.user.psychologist;
-			console.log(idPsychologist);
+
 			if (idPsychologist) {
-				this.events = await this.getSessions(idPsychologist);
+				await this.getSessions(idPsychologist);
+				this.events = this.sessions;
 			}
 		},
 		async reschedule(item) {

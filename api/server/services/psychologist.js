@@ -26,13 +26,20 @@ const getSessions = async (user, idPsy) => {
 
 	sessions = sessions
 		.map(item => {
-			console.log(item.user);
-			let name =
-				user.role === 'user' ? psychologist.name : item.user.name;
-			let lastName =
-				user.role === 'user'
-					? psychologist.lastName
-					: item.user.lastName;
+			let name = '';
+			let lastName = '';
+			if (user.role === 'psychologist') {
+				if (item.user && !Array.isArray(item.user)) {
+					name = item.user.name;
+					lastName = item.user.lastName ? item.user.lastName : '';
+				}
+			}
+
+			if (user.role === 'user') {
+				name = psychologist.name;
+				lastName = psychologist.lastName;
+			}
+
 			const start = moment(item.date).format('YYYY-MM-DD hh:mm');
 			const end = moment(item.date)
 				.add(60, 'minutes')
