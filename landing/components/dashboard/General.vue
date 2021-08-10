@@ -75,6 +75,7 @@
 					:loading="loadingUser"
 					color="primary"
 					depressed
+					:disabled="hasChanges"
 					class="px-16"
 					style="border-radius: 10px"
 					@click="updateProfile"
@@ -96,6 +97,7 @@ import { mapActions } from 'vuex';
 import axios from 'axios';
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { cloneDeep } from 'lodash';
 
 export default {
 	components: {
@@ -126,30 +128,41 @@ export default {
 			!this.$v.formUser.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
+		hasChanges() {
+			console.log(this.$auth.$state.user.lastName, this.formUser.lastName);
+			return (
+				JSON.stringify({
+					name: this.formUser.name,
+					lastName: this.formUser.lastName,
+					phone: this.formUser.phone,
+					email: this.formUser.email,
+					timeZone: this.formUser.timeZone,
+				}) ===
+				JSON.stringify({
+					name: this.$auth.$state.user.name,
+					lastName: this.$auth.$state.user.lastName,
+					phone: this.$auth.$state.user.phone,
+					email: this.$auth.$state.user.email,
+					timeZone: this.$auth.$state.user.timeZone,
+				})
+			);
+		},
 	},
 	async mounted() {
-		this.formUser = { ...this.$auth.$state.user };
+		this.formUser = cloneDeep(this.$auth.$state.user);
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
 	methods: {
 		async updateProfile() {
 			this.$v.$touch();
-			if (!this.$v.$invalid && this.hasChanges()) {
+			if (!this.$v.$invalid) {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
 				this.$auth.setUser(user);
 				this.$v.$reset();
 				this.loadingUser = false;
 			}
-		},
-		hasChanges() {
-			return (
-				this.formUser.name !== this.$auth.$state.user.name ||
-				this.formUser.lastName !== this.$auth.$state.user.lastName ||
-				this.formUser.phone !== this.$auth.$state.user.phone ||
-				this.formUser.timeZone !== this.$auth.$state.user.timeZone
-			);
 		},
 		...mapActions({ updateUser: 'User/updateUser' }),
 	},
