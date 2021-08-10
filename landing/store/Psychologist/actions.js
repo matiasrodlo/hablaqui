@@ -50,11 +50,12 @@ export default {
 	},
 	async updatePaymentMethod({ commit }, payload) {
 		try {
-			await this.$axios(`/psychologist/update-payment-method`, {
+			const { data } = await this.$axios(`/psychologist/update-payment-method`, {
 				method: 'PATCH',
-				data: payload,
+				data: { payload },
 			});
 			snackBarSuccess('Metodo de pago actualizado')(commit);
+			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

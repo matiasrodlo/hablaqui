@@ -366,9 +366,7 @@ const updatePaymentMethod = async (user, payload) => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres un psicologo.');
 
-	let foundPsychologist = await Psychologist.findById(
-		foundPsychologist.psychologist
-	);
+	let foundPsychologist = await Psychologist.findById(user.psychologist);
 	const newPaymentMethod = {
 		bank: payload.bank || foundPsychologist.paymentMethod.bank,
 		accountType:
@@ -382,7 +380,7 @@ const updatePaymentMethod = async (user, payload) => {
 	};
 	foundPsychologist.paymentMethod = newPaymentMethod;
 	await foundPsychologist.save();
-	return okResponse('Metodo actualizado', {
+	return okResponse('Metodo de pago actualizado', {
 		psychologist: foundPsychologist,
 	});
 };

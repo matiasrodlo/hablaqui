@@ -189,6 +189,7 @@ export default {
 				email: '',
 			},
 			banks: [],
+			psychologist: null,
 		};
 	},
 	computed: {
@@ -231,20 +232,28 @@ export default {
 		},
 	},
 	async mounted() {
+		this.initFetch();
 		let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 		response = await response.json();
 		this.banks = response;
 	},
 	methods: {
-		handleSubmit() {
+		async initFetch() {
+			const { paymentMethod } = await this.getPsychologist(
+				this.$auth.$state.user.psychologist
+			);
+			this.bankData = paymentMethod;
+		},
+		async handleSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
-				const payload = this.bankData;
-				this.updatePaymentMethod(payload);
+				const { paymentMethod } = await this.updatePaymentMethod(this.bankData);
+				this.bankData = paymentMethod;
 			}
 		},
 		...mapActions({
 			updatePaymentMethod: 'Psychologist/updatePaymentMethod',
+			getPsychologist: 'Psychologist/getPsychologist',
 		}),
 	},
 	validations: {
