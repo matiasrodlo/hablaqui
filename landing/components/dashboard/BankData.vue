@@ -16,6 +16,7 @@
 				color="primary"
 				style="border-radius: 10px"
 				class="px-16"
+				:disabled="hasChanges"
 				@click="handleSubmit"
 			>
 				Guardar
@@ -175,6 +176,7 @@
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 export default {
 	mixins: [validationMixin],
@@ -189,7 +191,7 @@ export default {
 				email: '',
 			},
 			banks: [],
-			psychologist: null,
+			psychologist: { paymentMethod: null },
 		};
 	},
 	computed: {
@@ -230,6 +232,11 @@ export default {
 			!this.$v.bankData.email.required && errors.push('El correo electronico es querido');
 			return errors;
 		},
+		hasChanges() {
+			return (
+				JSON.stringify(this.bankData) === JSON.stringify(this.psychologist.paymentMethod)
+			);
+		},
 	},
 	async mounted() {
 		this.initFetch();
@@ -239,16 +246,14 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			const { paymentMethod } = await this.getPsychologist(
-				this.$auth.$state.user.psychologist
-			);
-			this.bankData = paymentMethod;
+			this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
+			this.bankData = cloneDeep(this.psychologist.paymentMethod);
 		},
 		async handleSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
-				const { paymentMethod } = await this.updatePaymentMethod(this.bankData);
-				this.bankData = paymentMethod;
+				this.psychologist = await this.updatePaymentMethod(this.bankData);
+				this.bankData = cloneDeep(this.psychologist.paymentMethod);
 			}
 		},
 		...mapActions({
