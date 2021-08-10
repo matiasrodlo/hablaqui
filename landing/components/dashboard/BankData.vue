@@ -37,7 +37,7 @@
 					width="10%"
 				></v-img>
 				<div style="width: 90%">
-					<v-select
+					<v-autocomplete
 						v-model="bankData.bank"
 						:error-messages="bankError"
 						filled
@@ -46,10 +46,11 @@
 						item-text="nombre"
 						item-value="nombre"
 						dense
-						type="password"
+						type="text"
+						clearable
 						:hide-details="!bankError.length"
 					>
-					</v-select>
+					</v-autocomplete>
 				</div>
 			</div>
 		</v-col>

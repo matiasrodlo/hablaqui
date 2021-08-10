@@ -84,8 +84,10 @@
 			</v-col>
 		</v-row>
 		<update-password />
-		<v-divider class="my-8"></v-divider>
-		<bank-data />
+		<template v-if="$auth.$state.user.role === 'psychologist'">
+			<v-divider class="my-8"></v-divider>
+			<bank-data />
+		</template>
 	</div>
 </template>
 
