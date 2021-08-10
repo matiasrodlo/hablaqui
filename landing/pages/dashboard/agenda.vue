@@ -94,7 +94,11 @@
 							</v-card-text>
 							<v-divider></v-divider>
 							<v-card-actions>
-								<v-btn text color="primary" @click="selectedOpen = false">
+								<v-btn
+									text
+									color="primary"
+									:to="`/video-llamada/${goToCall(selectedEvent)}`"
+								>
 									Ir a video llamada
 								</v-btn>
 								<v-spacer></v-spacer>
@@ -285,6 +289,9 @@ export default {
 			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
 				.add(60, 'minutes')
 				.format('hh:mm')}`;
+		},
+		goToCall(selectedEvent) {
+			return selectedEvent.idPsychologist + selectedEvent.idUser;
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',

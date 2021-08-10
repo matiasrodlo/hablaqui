@@ -44,14 +44,17 @@ const setSession = (user, psychologist) => {
 		.map(item => {
 			let name = '';
 			let lastName = '';
+			let idUser = '';
 			if (user.role === 'psychologist') {
 				if (item.user && !Array.isArray(item.user)) {
 					name = item.user.name;
 					lastName = item.user.lastName ? item.user.lastName : '';
+					idUser = item.user._id;
 				}
 			}
 
 			if (user.role === 'user') {
+				idUser = user._id;
 				name = psychologist.name;
 				lastName = psychologist.lastName;
 			}
@@ -66,6 +69,8 @@ const setSession = (user, psychologist) => {
 				start,
 				end,
 				sessionId: item._id,
+				idUser,
+				idPsychologist: psychologist._id,
 			};
 		})
 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');

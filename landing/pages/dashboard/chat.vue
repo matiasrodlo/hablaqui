@@ -289,7 +289,7 @@
 										:src="`${$config.LANDING_URL}/llamada.png`"
 									></v-img>
 								</v-btn> -->
-								<v-btn id="camheader" icon @click="setVideo">
+								<v-btn id="camheader" icon :to="`/video-llamada/${goToCall()}`">
 									<v-img
 										contain
 										height="25"
@@ -318,209 +318,168 @@
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
 					<template v-else>
-						<div
-							v-if="video"
-							style="position: relative; border-radius: 30px; height: 100%"
-							class="px-8 pb-2"
+						<v-card-text
+							class="scroll"
+							style="flex: 1; display: flex; flex-direction: column; overflow-y: auto"
 						>
-							<div
-								class="mx-auto text-center flex align-items-center"
-								style="
-									background-color: #272727;
-									position: absolute;
-									bottom: 20px;
-									left: 0;
-									right: 0;
-									z-index: 1;
-									width: 60px;
-									height: 60px;
-								"
-							/>
-							<iframe
-								style="width: 100%; height: 100%; border-radius: 30px"
-								:src="`https://brie.fi/ng/${video}?audio=1&video=1&fs=1&invite=0&prefs=0&share=0&chat=0`"
-								allow="camera; microphone; speaker; display-capture"
-							>
-							</iframe>
-						</div>
-						<template v-else>
-							<v-card-text
-								class="scroll"
-								style="
-									flex: 1;
-									display: flex;
-									flex-direction: column;
-									overflow-y: auto;
-								"
-							>
-								<!-- burbujas asistente -->
-								<template v-if="selected.assitant">
-									<div class="text-center">hablaquí</div>
-									<div
-										class="
-											mx-auto
-											text-center
-											headline
-											font-weight-bold
-											primary--text
-											my-4
-										"
-										style="max-width: 320px"
-									>
-										Bienvenido al chat confidencial
+							<!-- burbujas asistente -->
+							<template v-if="selected.assitant">
+								<div class="text-center">hablaquí</div>
+								<div
+									class="
+										mx-auto
+										text-center
+										headline
+										font-weight-bold
+										primary--text
+										my-4
+									"
+									style="max-width: 320px"
+								>
+									Bienvenido al chat confidencial
+									{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
+								</div>
+								<v-divider
+									class="mx-auto mb-10"
+									style="width: 100px; border-color: #2070e5"
+								></v-divider>
+								<div
+									style="
+										width: 50%;
+										display: flex;
+										justify-content: space-between;
+									"
+								>
+									<span class="text--disabled">
+										{{ selected.name }}
+									</span>
+									<span class="text--disabled">{{ setDate() }}</span>
+								</div>
+								<div class="talkbubble talkbubble__two" style="margin-top: 2px">
+									<p style="body-2 max-height: 75px; overflow-y: auto">
 										{{
 											$auth.$state.user.role == 'user'
-												? 'con el psicólogo'
-												: ''
+												? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+												: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 										}}
-									</div>
-									<v-divider
-										class="mx-auto mb-10"
-										style="width: 100px; border-color: #2070e5"
-									></v-divider>
-									<div
-										style="
-											width: 50%;
-											display: flex;
-											justify-content: space-between;
-										"
-									>
-										<span class="text--disabled">
-											{{ selected.name }}
-										</span>
-										<span class="text--disabled">{{ setDate() }}</span>
-									</div>
-									<div class="talkbubble talkbubble__two" style="margin-top: 2px">
-										<p style="body-2 max-height: 75px; overflow-y: auto">
-											{{
-												$auth.$state.user.role == 'user'
-													? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-													: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-											}}
-										</p>
-									</div>
-								</template>
-								<!-- Burbujas de chat -->
-								<template v-else>
-									<template v-if="chat && chat.messages.length">
-										<div v-for="item in chat.messages" :key="item._id">
-											<div
-												class="d-flex mt-3"
-												:class="
-													sentBy(item.sentBy)
-														? 'justify-end'
-														: 'justify-start'
-												"
-											>
-												<div style="width: 50%">
-													<div
-														style="
-															display: flex;
-															justify-content: space-between;
-														"
+									</p>
+								</div>
+							</template>
+							<!-- Burbujas de chat -->
+							<template v-else>
+								<template v-if="chat && chat.messages.length">
+									<div v-for="item in chat.messages" :key="item._id">
+										<div
+											class="d-flex mt-3"
+											:class="
+												sentBy(item.sentBy)
+													? 'justify-end'
+													: 'justify-start'
+											"
+										>
+											<div style="width: 50%">
+												<div
+													style="
+														display: flex;
+														justify-content: space-between;
+													"
+												>
+													<span
+														v-if="sentBy(item.sentBy)"
+														class="text--disabled body-2"
 													>
-														<span
-															v-if="sentBy(item.sentBy)"
-															class="text--disabled body-2"
-														>
-															{{ $auth.$state.user.name }}
-														</span>
-														<span v-else class="text--disabled body-2">
-															{{
-																selected.shortName || selected.name
-															}}
-														</span>
-														<span class="text--disabled body-2">
-															{{ setDate(item.createdAt) }}
-														</span>
-													</div>
+														{{ $auth.$state.user.name }}
+													</span>
+													<span v-else class="text--disabled body-2">
+														{{ selected.shortName || selected.name }}
+													</span>
+													<span class="text--disabled body-2">
+														{{ setDate(item.createdAt) }}
+													</span>
+												</div>
+												<div
+													style="width: 100%"
+													class="talkbubble"
+													:class="
+														sentBy(item.sentBy)
+															? 'talkbubble__one'
+															: 'talkbubble__two'
+													"
+												>
 													<div
-														style="width: 100%"
-														class="talkbubble"
-														:class="
-															sentBy(item.sentBy)
-																? 'talkbubble__one'
-																: 'talkbubble__two'
-														"
+														class="body-2"
+														style="max-height: 75px; overflow-y: auto"
 													>
-														<div
-															class="body-2"
-															style="
-																max-height: 75px;
-																overflow-y: auto;
-															"
-														>
-															{{ item.message }}
-														</div>
+														{{ item.message }}
 													</div>
 												</div>
 											</div>
 										</div>
-									</template>
+									</div>
 								</template>
-							</v-card-text>
-							<!-- Zona para escribir -->
-							<v-card-text v-if="selected.assitant">
-								<div class="text-center body-2">
-									Hablaquí valora la privacidad. No compartiremos tus mensajes, ni
-									tampoco ningún dato personal.
-								</div>
-								<div class="primary--text body-2 text-center">
-									<nuxt-link
-										target="_blank"
-										to="/condiciones"
-										style="text-decoration: none"
-									>
-										Ver terminos y condiciones de Chat
-									</nuxt-link>
-								</div>
-							</v-card-text>
-							<v-card-text v-else style="flex: 0">
-								<v-form @submit.prevent="onSubmit">
-									<v-text-field
-										ref="messagechat"
-										v-model="message"
-										outlined
-										dense
-										:label="`Mensaje a ${selected.name}`"
-										hide-details
-										:disabled="loadingMessage"
-										:loader-height="3"
-										:loading="loadingMessage"
-									>
-										<!-- <template #prepend-inner>
+							</template>
+						</v-card-text>
+						<!-- Zona para escribir -->
+						<v-card-text v-if="selected.assitant">
+							<div class="text-center body-2">
+								Hablaquí valora la privacidad. No compartiremos tus mensajes, ni
+								tampoco ningún dato personal.
+							</div>
+							<div class="primary--text body-2 text-center">
+								<nuxt-link
+									target="_blank"
+									to="/condiciones"
+									style="text-decoration: none"
+								>
+									Ver terminos y condiciones de Chat
+								</nuxt-link>
+							</div>
+						</v-card-text>
+						<v-card-text v-else style="flex: 0">
+							<v-form @submit.prevent="onSubmit">
+								<v-text-field
+									ref="messagechat"
+									v-model="message"
+									outlined
+									dense
+									:label="`Mensaje a ${selected.name}`"
+									hide-details
+									:disabled="loadingMessage"
+									:loader-height="3"
+									:loading="loadingMessage"
+								>
+									<!-- <template #prepend-inner>
 									<v-img
 										:src="`${$config.LANDING_URL}/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
 								</template> -->
-										<template #append>
-											<!-- <v-btn depressed icon>
+									<template #append>
+										<!-- <v-btn depressed icon>
 										<v-img
 											:src="`${$config.LANDING_URL}/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
 									</v-btn> -->
-											<v-btn
-												class="ml-2 mr-2"
-												depressed
-												icon
-												type="submit"
-												:disabled="!message"
-											>
-												<v-img
-													:src="`${$config.LANDING_URL}/message.png`"
-													height="30"
-													width="30"
-												></v-img>
-											</v-btn>
-										</template>
-									</v-text-field>
-								</v-form>
-							</v-card-text>
-						</template>
+										<v-btn
+											class="ml-2 mr-2"
+											depressed
+											icon
+											type="submit"
+											:disabled="!message"
+										>
+											<v-img
+												:src="`${$config.LANDING_URL}/message.png`"
+												height="30"
+												width="30"
+											></v-img>
+										</v-btn>
+									</template>
+								</v-text-field>
+							</v-form>
+						</v-card-text>
 					</template>
 				</v-card>
 			</v-col>
@@ -542,7 +501,6 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
-			video: null,
 			search: '',
 			loadingMessage: false,
 			loadingChat: false,
@@ -721,7 +679,6 @@ export default {
 		},
 		async setSelectedUser(user) {
 			this.loadingChat = true;
-			this.video = null;
 			this.selected = {
 				name: user.name,
 				lastName: this.lastName,
@@ -739,7 +696,6 @@ export default {
 			}
 		},
 		async setSelectedPsy(psy) {
-			this.video = null;
 			if (this.selected && this.selected._id === psy._id) return;
 			// inicamos carga del seleccionado
 			this.loadingChat = true;
@@ -783,19 +739,16 @@ export default {
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
 		},
-		setVideo() {
-			if (this.video) this.video = null;
-			else {
-				const psychologistId =
-					this.$auth.$state.user.role === 'psychologist'
-						? this.$auth.$state.user.psychologist
-						: this.selected._id;
-				const userId =
-					this.$auth.$state.user.role === 'psychologist'
-						? this.selected._id
-						: this.$auth.$state.user._id;
-				this.video = psychologistId + userId;
-			}
+		goToCall() {
+			const psychologistId =
+				this.$auth.$state.user.role === 'psychologist'
+					? this.$auth.$state.user.psychologist
+					: this.selected._id;
+			const userId =
+				this.$auth.$state.user.role === 'psychologist'
+					? this.selected._id
+					: this.$auth.$state.user._id;
+			return psychologistId + userId;
 		},
 		...mapActions({
 			geClients: 'Psychologist/geClients',
