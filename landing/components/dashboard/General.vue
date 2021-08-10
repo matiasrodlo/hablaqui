@@ -1,7 +1,7 @@
 <template>
 	<div v-if="$auth.$state.user">
 		<v-row>
-			<v-col cols="12" class="title">Configuración personal</v-col>
+			<v-col cols="12" class="text-h6" style="color: #3c3c3b">Configuración personal</v-col>
 			<v-col cols="6">
 				<v-text-field
 					v-model="formUser.name"
@@ -84,6 +84,8 @@
 			</v-col>
 		</v-row>
 		<update-password />
+		<v-divider class="my-8"></v-divider>
+		<bank-data />
 	</div>
 </template>
 
@@ -96,6 +98,7 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 export default {
 	components: {
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
+		BankData: () => import('~/components/dashboard/BankData'),
 	},
 	mixins: [validationMixin],
 	data() {

@@ -48,6 +48,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async updatePaymentMethod({ commit }, payload) {
+		try {
+			await this.$axios(`/psychologist/update-payment-method`, {
+				method: 'PATCH',
+				data: payload,
+			});
+			snackBarSuccess('Metodo de pago actualizado')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async setReschedule({ commit }, { sessionId, newDate }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
