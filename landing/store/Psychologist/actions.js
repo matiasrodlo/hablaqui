@@ -1,4 +1,4 @@
-import { snackBarError } from '@/utils/snackbar';
+import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
 	async getPsychologists({ commit }) {
@@ -6,6 +6,18 @@ export default {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			localStorage.setItem('psychologists', JSON.stringify(psychologists));
 			commit('setPsychologists', psychologists);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSessions({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get(
+				`/psychologists/sessions/${idPsychologist}`
+			);
+
+			commit('setSessions', sessions);
+			return sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -32,6 +44,18 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async setReschedule({ commit }, { sessionId, newDate }) {
+		try {
+			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+				method: 'POST',
+				data: { newDate },
+			});
+			snackBarSuccess('Sesión reprogramada')(commit);
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
