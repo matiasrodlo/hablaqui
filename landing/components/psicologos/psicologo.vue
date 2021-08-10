@@ -67,7 +67,7 @@
 									<v-btn
 										v-if="
 											!$auth.$state.loggedIn ||
-											$auth.$state.user.role == 'user'
+											$auth.$state.user.role === 'user'
 										"
 										:loading="loadingChat"
 										rounded
