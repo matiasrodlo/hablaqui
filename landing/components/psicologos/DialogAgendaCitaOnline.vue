@@ -74,7 +74,11 @@
 				<select-plan :set-plan="plan => setPlan(plan)" />
 			</v-card-text>
 			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
-				<calendar :set-date="date => setDate(date)" title-button="Agendar cita Online" />
+				<calendar
+					:sessions="psy.sessions"
+					:set-date="date => setDate(date)"
+					title-button="Agendar cita Online"
+				/>
 			</v-card-text>
 			<v-card-text v-if="step == 2">
 				<v-tabs-items v-model="tab">

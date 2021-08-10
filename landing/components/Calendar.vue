@@ -124,6 +124,12 @@ export default {
 	},
 	methods: {
 		addDays() {
+			const sessions = this.sessions
+				.filter(session => {
+					return session.statePayments === 'success';
+				})
+				.map(item => item.date);
+			console.log(sessions);
 			this.length.map(el => {
 				const day = moment(this.items[-1]).add(el, 'days');
 				if (el !== 0)
@@ -135,7 +141,7 @@ export default {
 							day: day.format('DD MMM'),
 							date: day.format('L'),
 							available: this.hours.filter(hour => {
-								return !this.sessions.some(u => {
+								return !sessions.some(u => {
 									return (
 										u.start === hour &&
 										moment(u).format('L') === day.format('L')
