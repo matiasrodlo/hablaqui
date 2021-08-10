@@ -129,7 +129,6 @@ export default {
 			return errors;
 		},
 		hasChanges() {
-			console.log(this.$auth.$state.user.lastName, this.formUser.lastName);
 			return (
 				JSON.stringify({
 					name: this.formUser.name,

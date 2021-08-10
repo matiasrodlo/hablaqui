@@ -37,6 +37,7 @@
 		<v-col cols="12" class="text-center">
 			<v-btn
 				:loading="loadingPassword"
+				:disabled="$v.$invalid"
 				color="primary"
 				depressed
 				class="px-16"
