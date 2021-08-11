@@ -50,7 +50,7 @@
 			</v-list>
 		</v-navigation-drawer>
 		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
-			<h1 class="white--text">Mi cuenta</h1>
+			<h1 class="white--text">{{ routeName }}</h1>
 			<v-spacer></v-spacer>
 			<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
 				<icon color="white" :icon="mdiMenu" />
@@ -121,6 +121,14 @@ export default {
 					visible: true,
 				},
 			];
+		},
+		routeName() {
+			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
+			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
+			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
+			return '';
 		},
 	},
 	methods: {

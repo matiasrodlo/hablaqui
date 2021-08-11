@@ -1,9 +1,9 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar title="Mi sesiones" />
+		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
 			<v-col cols="12" md="10" class="heightCalendar">
-				<v-sheet>
+				<v-sheet class="mt-4 mt-md-0">
 					<v-toolbar flat>
 						<v-btn class="mr-4" color="primary" depressed @click="setToday">
 							Hoy

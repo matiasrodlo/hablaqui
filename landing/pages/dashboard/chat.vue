@@ -1,11 +1,11 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar title="Chat" />
+		<appbar class="hidden-sm-and-down" title="Chat" />
 		<v-card
 			v-if="initLoading"
 			flat
 			style="height: calc(100vh - 135px)"
-			class="d-flex justify-center align-center"
+			class="mt-4 mt-md-0 d-flex justify-center align-center"
 		>
 			<v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
 		</v-card>
@@ -19,6 +19,7 @@
 						border-radius: 15px;
 					"
 					flat
+					class="mt-4 mt-md-0"
 				>
 					<v-card-text class="py-0">
 						<v-text-field

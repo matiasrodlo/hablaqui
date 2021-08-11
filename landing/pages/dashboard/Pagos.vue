@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh">
-		<appbar title="Pagos" />
-		<v-row>
+		<appbar class="hidden-sm-and-down" title="Pagos" />
+		<v-row class="mt-4 mt-md-0">
 			<v-col v-for="(card, i) in cards" :key="i" cols="3">
 				<v-card dark color="primary" class="pa-4 rounded-lg">
 					<v-list-item>
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 export default {
 	name: 'Pagos',
 	components: {
