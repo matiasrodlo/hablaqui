@@ -1,6 +1,6 @@
 <template>
 	<v-app>
-		<v-navigation-drawer permanent color="primary" app disable-resize-watcher>
+		<v-navigation-drawer v-model="drawer" color="primary" app mobile-breakpoint="960">
 			<v-sheet color="primary" class="pa-4">
 				<v-img
 					height="100"
@@ -32,10 +32,39 @@
 						</v-list-item-content>
 					</v-list-item>
 				</template>
+				<v-list-item v-if="$vuetify.breakpoint.mdAndDown" class="my-4" link @click="logout">
+					<v-list-item-avatar size="40">
+						<v-img
+							contain
+							height="60"
+							width="60"
+							:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+							alt="cerrar sesión"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Salir
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<v-main class="primary">
-			<div style="border-radius: 50px 0 0 0" class="white">
+		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
+			<h1 class="white--text">Mi cuenta</h1>
+			<v-spacer></v-spacer>
+			<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
+				<icon color="white" :icon="mdiMenu" />
+			</v-btn>
+		</v-app-bar>
+		<v-main
+			class="primary"
+			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '140px' }"
+		>
+			<div
+				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
+				class="white"
+			>
 				<snackbar />
 				<nuxt />
 			</div>
@@ -44,10 +73,19 @@
 </template>
 
 <script>
+import { mdiMenu } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
+
 export default {
 	components: {
 		Snackbar,
+		Icon: () => import('~/components/Icon'),
+	},
+	data() {
+		return {
+			mdiMenu,
+			drawer: true,
+		};
 	},
 	computed: {
 		links() {
@@ -86,5 +124,20 @@ export default {
 			];
 		},
 	},
+	methods: {
+		logout() {
+			this.$auth.logout();
+			this.$router.push('/auth');
+		},
+	},
 };
 </script>
+
+<style scoped>
+.border-desktop {
+	border-radius: 50px 0 0 0;
+}
+.border-mobile {
+	border-radius: 50px 50px 0 0;
+}
+</style>

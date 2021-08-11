@@ -23,7 +23,7 @@
 			</v-btn>
 		</v-col>
 		<!-- banco -->
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div
 				class="text-h6 secondary--text mb-2"
 				:class="bankError.length ? 'error--text' : ''"
@@ -56,7 +56,7 @@
 			</div>
 		</v-col>
 		<!-- rut del titular -->
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">RUT del titular</div>
 			<div class="d-flex align-center">
 				<v-img
@@ -79,7 +79,7 @@
 			</div>
 		</v-col>
 		<!-- tipo de cuenta -->
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">Tipo de cuenta</div>
 			<div class="d-flex align-center">
 				<v-img
@@ -102,7 +102,7 @@
 			</div>
 		</v-col>
 		<!-- nombre del titular -->
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">Nombre completo del titular</div>
 			<div class="d-flex align-center">
 				<v-img
@@ -125,7 +125,7 @@
 			</div>
 		</v-col>
 		<!-- numero de cuenta -->
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">Número de cuenta</div>
 			<div class="d-flex align-center">
 				<v-img
@@ -147,7 +147,7 @@
 				</div>
 			</div>
 		</v-col>
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">Email</div>
 			<div class="d-flex align-center">
 				<v-img

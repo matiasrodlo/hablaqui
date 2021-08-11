@@ -2,7 +2,7 @@
 	<div v-if="$auth.$state.user">
 		<v-row>
 			<v-col cols="12" class="text-h6" style="color: #3c3c3b">Configuración personal</v-col>
-			<v-col cols="6">
+			<v-col cols="12" md="6">
 				<v-text-field
 					v-model="formUser.name"
 					filled
@@ -14,7 +14,7 @@
 					:error-messages="nameErrors"
 				></v-text-field>
 			</v-col>
-			<v-col cols="6">
+			<v-col cols="12" md="6">
 				<v-text-field
 					v-model="formUser.email"
 					readonly
@@ -25,7 +25,7 @@
 					label="Correo electronico"
 				></v-text-field>
 			</v-col>
-			<v-col cols="6">
+			<v-col cols="12" md="6">
 				<v-text-field
 					v-model="formUser.lastName"
 					filled
@@ -35,7 +35,7 @@
 					label="Apellido"
 				></v-text-field>
 			</v-col>
-			<v-col cols="6">
+			<v-col cols="12" md="6">
 				<v-text-field
 					v-model="formUser.phone"
 					filled
@@ -45,7 +45,7 @@
 					label="Numero de telefono"
 				></v-text-field>
 			</v-col>
-			<v-col cols="6">
+			<v-col cols="12" md="6">
 				<v-combobox
 					v-model="formUser.timeZone"
 					dense

@@ -1,7 +1,7 @@
 <template>
 	<v-row>
 		<v-col cols="12" class="text-h6 py-0" style="color: #3c3c3b"> Contraseña </v-col>
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<v-text-field
 				v-model="formPassword.oldPassword"
 				filled
@@ -12,7 +12,7 @@
 				type="password"
 			></v-text-field>
 		</v-col>
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<v-text-field
 				v-model="formPassword.newPassword"
 				filled
@@ -23,7 +23,7 @@
 				type="password"
 			></v-text-field>
 		</v-col>
-		<v-col cols="6">
+		<v-col cols="12" md="6">
 			<v-text-field
 				v-model="formPassword.repeatNewPassword"
 				filled

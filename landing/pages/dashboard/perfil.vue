@@ -1,8 +1,8 @@
 <template>
 	<v-container style="height: 100vh">
-		<appbar title="Mi cuenta" />
-		<v-list two-line style="border-radius: 15px; height: 150px">
-			<v-list-item style="position: relative">
+		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
+		<v-list two-line color="transparent" style="height: 150px">
+			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
 					id="upload"
 					ref="avatar"
@@ -36,6 +36,35 @@
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>
 					<v-list-item-subtitle class="body-1">
+						Bienvenido a Hablaquí
+					</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+			<v-list-item class="hidden-md-and-up">
+				<div
+					style="position: absolute; top: -70px; left: 0; width: 100%"
+					class="text-center mx-auto"
+				>
+					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
+						<v-progress-circular indeterminate color="primary"></v-progress-circular
+					></v-avatar>
+					<label v-else for="upload" style="cursor: pointer">
+						<v-avatar size="100" color="#EEE">
+							<v-img
+								v-if="$auth.$state.user && $auth.$state.user.avatar"
+								:src="$auth.$state.user.avatar"
+								:alt="$auth.$state.user.name"
+								contain
+							/>
+							<icon v-else x-large :icon="mdiCamera" />
+						</v-avatar>
+					</label>
+				</div>
+				<v-list-item-content v-if="$auth.$state.user" class="mt-10">
+					<v-list-item-title class="text-capitalize font-weight-bold title text-center">
+						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
+					</v-list-item-title>
+					<v-list-item-subtitle class="body-1 text-center">
 						Bienvenido a Hablaquí
 					</v-list-item-subtitle>
 				</v-list-item-content>

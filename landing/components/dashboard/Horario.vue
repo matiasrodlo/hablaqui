@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<v-card :loading="!psychologist" outlined style="max-width: 640px">
+		<v-card
+			:loading="!psychologist"
+			outlined
+			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '640px' : '100%' }"
+		>
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
 					<div>
