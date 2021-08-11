@@ -32,7 +32,7 @@
 						</v-list-item-content>
 					</v-list-item>
 				</template>
-				<v-list-item v-if="$vuetify.breakpoint.mdAndDown" class="my-4" link @click="logout">
+				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
 					<v-list-item-avatar size="40">
 						<v-img
 							height="50"
