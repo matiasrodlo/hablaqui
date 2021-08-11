@@ -1,7 +1,13 @@
 <template>
 	<div>
 		<template v-if="$auth.$state.user.plan.length">
-			<v-slide-group v-model="plans" class="pa-4" center-active show-arrows>
+			<v-slide-group
+				v-if="$vuetify.breakpoint.mdAndUp"
+				v-model="plans"
+				class="pa-4"
+				center-active
+				show-arrows
+			>
 				<v-slide-item
 					v-for="(item, n) in $auth.$state.user.plan"
 					:key="n"
@@ -45,6 +51,46 @@
 					</v-card>
 				</v-slide-item>
 			</v-slide-group>
+			<template v-else>
+				<v-card
+					v-for="(item, n) in $auth.$state.user.plan"
+					:key="n"
+					class="my-4"
+					height="220"
+					width="100%"
+					@click="toggle"
+				>
+					<v-card-title class="d-flex justify-space-between body-1 font-weight-medium">
+						<div>
+							<div>
+								{{ item.fullInfo.title }}
+							</div>
+							<div class="caption">
+								<template v-if="item.status === 'success'">
+									<span class="success--text">Tu plan actual</span>
+								</template>
+								<template v-if="item.status === 'pending'">
+									<span class="warning--text">Pendiente</span>
+								</template>
+								<template v-if="item.status === 'expired'">
+									<span class="error--text">Expirado</span>
+								</template>
+							</div>
+						</div>
+						<div style="width: 20px; height: 20px" :class="status(item.status)"></div>
+					</v-card-title>
+					<v-card-text>
+						<div>
+							<span class="headline font-weight-bold">{{ item.price }}</span>
+							<span>/ {{ item.period }}</span>
+						</div>
+						{{ item.fullInfo.description }}
+					</v-card-text>
+					<v-card-text>
+						{{ item.fullInfo.subtitle }}
+					</v-card-text>
+				</v-card>
+			</template>
 		</template>
 		<template v-else>
 			<v-card>
