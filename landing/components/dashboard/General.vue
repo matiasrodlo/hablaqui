@@ -1,94 +1,119 @@
 <template>
 	<div v-if="$auth.$state.user">
-		<v-row>
-			<v-col cols="12" class="text-h6" style="color: #3c3c3b">Configuración personal</v-col>
-			<v-col cols="12" md="6">
-				<v-text-field
-					v-model="formUser.name"
-					filled
-					outlined
-					readonly
-					dense
-					hide-details
-					label="Nombre"
-					:error-messages="nameErrors"
-				></v-text-field>
-			</v-col>
-			<v-col cols="12" md="6">
-				<v-text-field
-					v-model="formUser.email"
-					readonly
-					filled
-					hide-details
-					outlined
-					dense
-					label="Correo electronico"
-				></v-text-field>
-			</v-col>
-			<v-col cols="12" md="6">
-				<v-text-field
-					v-model="formUser.lastName"
-					filled
-					outlined
-					dense
-					hide-details
-					label="Apellido"
-				></v-text-field>
-			</v-col>
-			<v-col cols="12" md="6">
-				<v-text-field
-					v-model="formUser.phone"
-					filled
-					outlined
-					hide-details
-					dense
-					label="Numero de telefono"
-				></v-text-field>
-			</v-col>
-			<v-col cols="12" md="6">
-				<v-combobox
-					v-model="formUser.timeZone"
-					dense
-					filled
-					hide-details
-					label="Zona horaria"
-					:items="timezone"
-					outlined
-					:search-input.sync="zone"
-				>
-					<template #no-data>
-						<v-list-item>
-							<v-list-item-content>
-								<v-list-item-title>
-									No se encontraron resultados que coincidan con "<strong>
-										{{ zone }}
-									</strong>
-									" .
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</template>
-				</v-combobox>
-			</v-col>
-			<v-col cols="12" class="text-center">
-				<v-btn
-					:loading="loadingUser"
-					color="primary"
-					depressed
-					:disabled="hasChanges"
-					class="px-16"
-					style="border-radius: 10px"
-					@click="updateProfile"
-				>
-					Editar
-				</v-btn>
-			</v-col>
-		</v-row>
-		<update-password />
-		<template v-if="$auth.$state.user.role === 'psychologist'">
-			<v-divider class="my-8"></v-divider>
-			<bank-data />
-		</template>
+		<v-expansion-panels v-model="panel" multiple class="mb-4">
+			<v-expansion-panel>
+				<v-expansion-panel-header>
+					<div>
+						<div class="text-h6" style="color: #3c3c3b">Configuración personal</div>
+						<div class="text--secondary">
+							Revisa aquí tu nombre, apellido, zona horaria, tu dirección web,
+							contraseña, entre otros.
+						</div>
+					</div>
+				</v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<v-row>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.name"
+								filled
+								outlined
+								readonly
+								dense
+								hide-details
+								label="Nombre"
+								:error-messages="nameErrors"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.email"
+								readonly
+								filled
+								hide-details
+								outlined
+								dense
+								label="Correo electronico"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.lastName"
+								filled
+								outlined
+								dense
+								hide-details
+								label="Apellido"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.phone"
+								filled
+								outlined
+								hide-details
+								dense
+								label="Numero de telefono"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-combobox
+								v-model="formUser.timeZone"
+								dense
+								filled
+								hide-details
+								label="Zona horaria"
+								:items="timezone"
+								outlined
+								:search-input.sync="zone"
+							>
+								<template #no-data>
+									<v-list-item>
+										<v-list-item-content>
+											<v-list-item-title>
+												No se encontraron resultados que coincidan con
+												"<strong>
+													{{ zone }}
+												</strong>
+												" .
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+								</template>
+							</v-combobox>
+						</v-col>
+						<v-col cols="12" class="text-center">
+							<v-btn
+								:loading="loadingUser"
+								color="primary"
+								depressed
+								:disabled="hasChanges"
+								class="px-16"
+								style="border-radius: 10px"
+								@click="updateProfile"
+							>
+								Editar
+							</v-btn>
+						</v-col>
+					</v-row>
+					<update-password />
+				</v-expansion-panel-content>
+			</v-expansion-panel>
+
+			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+				<v-expansion-panel-header>
+					<div>
+						<div class="text-h6" style="color: #3c3c3b">Datos bancarios</div>
+						<div class="text--secondary">
+							Tus datos de facturación en un solo lugar.
+						</div>
+					</div>
+				</v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<bank-data />
+				</v-expansion-panel-content>
+			</v-expansion-panel>
+		</v-expansion-panels>
 	</div>
 </template>
 
@@ -107,6 +132,7 @@ export default {
 	mixins: [validationMixin],
 	data() {
 		return {
+			panel: [],
 			zone: '',
 			formUser: {
 				name: '',

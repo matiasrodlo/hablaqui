@@ -2,7 +2,6 @@
 	<v-row class="mb-16">
 		<v-col cols="12" class="d-flex justify-space-between align-center">
 			<div>
-				<div class="text-h6 mb-2" style="color: #3c3c3b">Datos bancarios</div>
 				<div
 					class="font-weight-medium"
 					style="color: #3c3c3b; line-height: 1.32; font-size: 18px"
