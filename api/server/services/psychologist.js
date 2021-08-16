@@ -102,6 +102,7 @@ const getFormattedSessions = async idPsychologist => {
 			date: day.format('L'),
 			available: hours.filter(hour => {
 				return (
+					formattedSchedule(psychologist.schedule, day, hour) &&
 					moment(daySessions).isValid &&
 					!daySessions.some(
 						date =>
@@ -115,6 +116,78 @@ const getFormattedSessions = async idPsychologist => {
 	});
 
 	return okResponse('sesiones obtenidas', { sessions });
+};
+
+const formattedSchedule = (schedule, day, hour) => {
+	if (moment(day).format('dddd') === 'lunes') {
+		if (Array.isArray(schedule.monday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.monday[0], 'HH:mm'),
+				moment(schedule.monday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.monday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'martes') {
+		if (Array.isArray(schedule.tuesday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.tuesday[0], 'HH:mm'),
+				moment(schedule.tuesday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.tuesday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'miércoles') {
+		if (Array.isArray(schedule.wednesday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.wednesday[0], 'HH:mm'),
+				moment(schedule.wednesday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.wednesday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'jueves') {
+		if (Array.isArray(schedule.thursday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.thursday[0], 'HH:mm'),
+				moment(schedule.thursday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.thursday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'viernes') {
+		if (Array.isArray(schedule.friday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.friday[0], 'HH:mm'),
+				moment(schedule.friday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.friday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'sábado') {
+		if (Array.isArray(schedule.saturday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.saturday[0], 'HH:mm'),
+				moment(schedule.saturday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.saturday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'domingo') {
+		if (Array.isArray(schedule.sunday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.sunday[0], 'HH:mm'),
+				moment(schedule.sunday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+	} else if (schedule.sunday === 'busy') return false;
 };
 
 const match = async body => {

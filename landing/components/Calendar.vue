@@ -30,27 +30,34 @@
 								overflow: hidden auto;
 							"
 						>
-							<v-sheet
-								v-for="(n, r) in item.available"
-								:key="r"
-								rounded
-								class="item text-center my-3 pa-2"
-								style="width: 100%; height: fit-content"
-								:class="
-									selected && selected.start == n && selected.date == item.date
-										? 'itemSelected'
-										: ''
-								"
-								@click.stop="
-									selected = {
-										date: item.date,
-										start: n,
-										end: item.available[r + 1],
-									}
-								"
-							>
-								{{ n }}
-							</v-sheet>
+							<template v-if="item.available.length">
+								<v-sheet
+									v-for="(n, r) in item.available"
+									:key="r"
+									rounded
+									class="item text-center my-3 pa-2"
+									style="width: 100%; height: fit-content"
+									:class="
+										selected &&
+										selected.start == n &&
+										selected.date == item.date
+											? 'itemSelected'
+											: ''
+									"
+									@click.stop="
+										selected = {
+											date: item.date,
+											start: n,
+											end: item.available[r + 1],
+										}
+									"
+								>
+									{{ n }}
+								</v-sheet>
+							</template>
+							<template v-else>
+								<div>Ocupado</div>
+							</template>
 						</div>
 					</v-container>
 				</v-slide-item>
