@@ -142,7 +142,12 @@
 								</template>
 							</v-combobox>
 						</v-col>
-						<v-col cols="12" class="text-h6 py-0" style="color: #3c3c3b">
+						<v-col
+							v-if="$auth.$state.user.role === 'psychologist'"
+							cols="12"
+							class="text-h6 py-0"
+							style="color: #3c3c3b"
+						>
 							Mi dirección
 							<v-tooltip bottom>
 								<template #activator="{ on, attrs }">
@@ -153,13 +158,14 @@
 								<span>Para crear tu url personalizada </span>
 							</v-tooltip>
 						</v-col>
-						<v-col cols="12" md="6">
+						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
 							<v-text-field
 								v-model="formUser.username"
+								:loading="!psychologist"
 								filled
 								outlined
 								dense
-								hide-details
+								:hint="`https://hablaqui.cl/${formUser.username}`"
 								label="Dirección"
 								placeholder="daniel-cedeño"
 							>
@@ -268,6 +274,8 @@ export default {
 				city: '',
 				genre: '',
 			},
+			username: '',
+			psychologist: null,
 			timezone: [],
 			loadingUser: false,
 		};
@@ -313,7 +321,9 @@ export default {
 		},
 	},
 	async mounted() {
+		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
 		this.formUser = cloneDeep(this.$auth.$state.user);
+		this.formUser.username = this.psychologist.username;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
@@ -332,7 +342,10 @@ export default {
 		save(date) {
 			this.$refs.menu.save(date);
 		},
-		...mapActions({ updateUser: 'User/updateUser' }),
+		...mapActions({
+			updateUser: 'User/updateUser',
+			getPsychologist: 'Psychologist/getPsychologist',
+		}),
 	},
 	validations: {
 		formUser: {
