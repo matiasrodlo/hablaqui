@@ -55,9 +55,7 @@
 									{{ n }}
 								</v-sheet>
 							</template>
-							<template v-else>
-								<div>Ocupado</div>
-							</template>
+							<template v-else> </template>
 						</div>
 					</v-container>
 				</v-slide-item>
@@ -155,6 +153,13 @@ export default {
 	border: 1px solid #0085ff80;
 	box-sizing: border-box;
 	border-radius: 2px;
+}
+
+.busy {
+	font-size: 12px;
+	border-radius: 2px;
+	border: 1px solid #d6828280;
+	background-color: #daa4a480;
 }
 
 .itemSelected {

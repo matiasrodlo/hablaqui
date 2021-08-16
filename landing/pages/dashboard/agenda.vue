@@ -111,6 +111,7 @@
 								</v-btn>
 							</v-card-actions>
 							<v-dialog
+								v-if="dialog"
 								v-model="dialog"
 								max-width="600"
 								transition="dialog-top-transition"
@@ -125,6 +126,7 @@
 									</v-card-text>
 									<v-card-text class="px-0 px-sm-2 px-md-4">
 										<calendar
+											:id-psy="idPsychologist"
 											:set-date="date => reschedule(date)"
 											title-button="Reprogramar sesión"
 										/>
@@ -185,29 +187,28 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
-		myPsychologist: null,
+		idPsychologist: '',
 	}),
 	computed: {
 		...mapGetters({ sessions: 'Psychologist/sessions' }),
 	},
 	async mounted() {
-		await this.initFetch();
 		moment.locale('es');
+		await this.initFetch();
 		this.successPayment();
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
 		async initFetch() {
-			let idPsychologist = null;
 			if (this.$auth.$state.user.role === 'user') {
 				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-				if (user) idPsychologist = user.psychologist;
+				if (user) this.idPsychologist = user.psychologist;
 			}
 			if (this.$auth.$state.user.role === 'psychologist')
-				idPsychologist = this.$auth.$state.user.psychologist;
+				this.idPsychologist = this.$auth.$state.user.psychologist;
 
-			if (idPsychologist) {
-				await this.getSessions(idPsychologist);
+			if (this.idPsychologist) {
+				await this.getSessions(this.idPsychologist);
 				this.events = this.sessions;
 			}
 		},
