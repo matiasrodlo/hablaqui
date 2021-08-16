@@ -267,6 +267,9 @@ export default {
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
 					address: this.formUser.address,
+					birtdate: this.formUser.birtdate,
+					city: this.formUser.city,
+					genre: this.formUser.genre,
 				}) ===
 				JSON.stringify({
 					name: this.$auth.$state.user.name,
@@ -274,7 +277,9 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
-					address: this.$auth.$state.user.address,
+					birtdate: this.$auth.$state.user.birtdate,
+					city: this.$auth.$state.user.city,
+					genre: this.$auth.$state.user.genre,
 				})
 			);
 		},
