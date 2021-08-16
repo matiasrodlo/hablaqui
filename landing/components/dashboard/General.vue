@@ -57,6 +57,66 @@
 							></v-text-field>
 						</v-col>
 						<v-col cols="12" md="6">
+							<v-menu
+								ref="menu"
+								v-model="bmenu"
+								:close-on-content-click="false"
+								transition="scale-transition"
+								offset-y
+								min-width="auto"
+							>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										v-model="formUser.birtdate"
+										label="Fecha de nacimiento"
+										readonly
+										filled
+										outlined
+										hide-details
+										dense
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-date-picker
+									v-model="formUser.birtdate"
+									locale="es"
+									:active-picker.sync="activePicker"
+									:max="
+										new Date(
+											Date.now() - new Date().getTimezoneOffset() * 60000
+										)
+											.toISOString()
+											.substr(0, 10)
+									"
+									min="1950-01-01"
+									@change="save"
+								></v-date-picker>
+							</v-menu>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.city"
+								filled
+								outlined
+								hide-details
+								dense
+								label="Pais/Ciudad"
+								placeholder="Ejemplo: Chile, Santiago"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-select
+								v-model="formUser.genre"
+								:items="['Hombre', 'Mujer', 'Transgénero']"
+								filled
+								outlined
+								hide-details
+								dense
+								label="Genero"
+							></v-select>
+						</v-col>
+						<v-col cols="12" md="6">
 							<v-combobox
 								v-model="formUser.timeZone"
 								dense
@@ -81,6 +141,19 @@
 									</v-list-item>
 								</template>
 							</v-combobox>
+						</v-col>
+						<v-col cols="12" class="text-h6 py-0" style="color: #3c3c3b">
+							Mi dirección
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.address"
+								filled
+								outlined
+								dense
+								hide-details
+								label="Dirección"
+							></v-text-field>
 						</v-col>
 						<v-col cols="12" class="text-center">
 							<v-btn
@@ -113,6 +186,30 @@
 					<bank-data />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
+
+			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+				<v-expansion-panel-header>
+					<div>
+						<div class="text-h6" style="color: #3c3c3b">Información profesional</div>
+						<div class="text--secondary">
+							Datos profesionales, descripción personal y profesional
+						</div>
+					</div>
+				</v-expansion-panel-header>
+				<v-expansion-panel-content> </v-expansion-panel-content>
+			</v-expansion-panel>
+
+			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+				<v-expansion-panel-header>
+					<div>
+						<div class="text-h6" style="color: #3c3c3b">Experiencia y formación</div>
+						<div class="text--secondary">
+							Modelo terapéutico, especialidades, experiencia y formación
+						</div>
+					</div>
+				</v-expansion-panel-header>
+				<v-expansion-panel-content> </v-expansion-panel-content>
+			</v-expansion-panel>
 		</v-expansion-panels>
 	</div>
 </template>
@@ -132,6 +229,9 @@ export default {
 	mixins: [validationMixin],
 	data() {
 		return {
+			activePicker: null,
+			date: null,
+			bmenu: false,
 			panel: [],
 			zone: '',
 			formUser: {
@@ -140,6 +240,10 @@ export default {
 				phone: '',
 				email: '',
 				timeZone: '',
+				address: '',
+				birtdate: '',
+				city: '',
+				genre: '',
 			},
 			timezone: [],
 			loadingUser: false,
@@ -162,6 +266,7 @@ export default {
 					phone: this.formUser.phone,
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
+					address: this.formUser.address,
 				}) ===
 				JSON.stringify({
 					name: this.$auth.$state.user.name,
@@ -169,8 +274,14 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
+					address: this.$auth.$state.user.address,
 				})
 			);
+		},
+	},
+	watch: {
+		bmenu(val) {
+			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
 	},
 	async mounted() {
@@ -178,6 +289,7 @@ export default {
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
+
 	methods: {
 		async updateProfile() {
 			this.$v.$touch();
@@ -188,6 +300,9 @@ export default {
 				this.$v.$reset();
 				this.loadingUser = false;
 			}
+		},
+		save(date) {
+			this.$refs.menu.save(date);
 		},
 		...mapActions({ updateUser: 'User/updateUser' }),
 	},
