@@ -77,6 +77,46 @@ const setSession = (user, psychologist) => {
 	return sessions;
 };
 
+const getFormattedSessions = async idPsychologist => {
+	moment.locale('es');
+	let sessions = [];
+	const psychologist = await Psychologist.findById(idPsychologist);
+	const length = Array.from(Array(31), (_, x) => x);
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+
+	const daySessions = psychologist.sessions.map(session =>
+		moment(session.date).format('YYYY-MM-DD HH:mm')
+	);
+
+	sessions = length.map(el => {
+		const day = moment().add(el, 'days');
+		return {
+			id: el,
+			text: day.format('ddd'),
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			available: hours.filter(hour => {
+				return (
+					moment(daySessions).isValid &&
+					!daySessions.some(
+						date =>
+							moment(date).format('L') ===
+								moment(day).format('L') &&
+							hour === moment(date).format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
+
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
@@ -517,6 +557,7 @@ const psychologistsService = {
 	getRating,
 	checkPlanTask,
 	getClients,
+	getFormattedSessions,
 };
 
 export default Object.freeze(psychologistsService);

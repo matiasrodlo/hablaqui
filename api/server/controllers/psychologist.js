@@ -24,6 +24,22 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo las sesiones');
 		}
 	},
+	async getFormattedSessions(req, res) {
+		try {
+			const { idPsychologist } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.getFormattedSessions(idPsychologist);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
 	async match(req, res) {
 		try {
 			const { body } = req;

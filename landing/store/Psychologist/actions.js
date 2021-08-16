@@ -22,6 +22,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getFormattedSessions({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get(
+				`/psychologists/formattedSessions/${idPsychologist}`
+			);
+			commit('setSessionsFormatted', sessions);
+			return sessions;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async geClients({ commit }, id) {
 		try {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);

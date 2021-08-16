@@ -15,6 +15,11 @@ psychologistsRouter.get(
 );
 
 psychologistsRouter.get(
+	'/psychologists/formattedSessions/:idPsychologist',
+	psychologistsController.getFormattedSessions
+);
+
+psychologistsRouter.get(
 	'/psychologists/one/:info',
 	psychologistsController.getByData
 );

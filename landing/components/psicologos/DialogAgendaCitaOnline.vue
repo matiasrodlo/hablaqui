@@ -75,7 +75,7 @@
 			</v-card-text>
 			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
 				<calendar
-					:sessions="psy.sessions"
+					:id-psy="psy._id"
 					:set-date="date => setDate(date)"
 					title-button="Agendar cita Online"
 				/>
