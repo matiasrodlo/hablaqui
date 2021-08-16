@@ -273,8 +273,8 @@ export default {
 				birtdate: '',
 				city: '',
 				genre: '',
+				username: '',
 			},
-			username: '',
 			psychologist: null,
 			timezone: [],
 			loadingUser: false,
@@ -301,6 +301,7 @@ export default {
 					birtdate: this.formUser.birtdate,
 					city: this.formUser.city,
 					genre: this.formUser.genre,
+					username: this.formUser.username,
 				}) ===
 				JSON.stringify({
 					name: this.$auth.$state.user.name,
@@ -311,6 +312,7 @@ export default {
 					birtdate: this.$auth.$state.user.birtdate,
 					city: this.$auth.$state.user.city,
 					genre: this.$auth.$state.user.genre,
+					username: this.psychologist ? this.psychologist.username : '',
 				})
 			);
 		},
@@ -322,8 +324,10 @@ export default {
 	},
 	async mounted() {
 		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
-		this.formUser = cloneDeep(this.$auth.$state.user);
-		this.formUser.username = this.psychologist.username;
+		this.formUser = {
+			...cloneDeep(this.$auth.$state.user),
+			username: this.psychologist.username,
+		};
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
