@@ -144,16 +144,36 @@
 						</v-col>
 						<v-col cols="12" class="text-h6 py-0" style="color: #3c3c3b">
 							Mi dirección
+							<v-tooltip bottom>
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiInformationOutline" />
+									</v-btn>
+								</template>
+								<span>Para crear tu url personalizada </span>
+							</v-tooltip>
 						</v-col>
 						<v-col cols="12" md="6">
 							<v-text-field
-								v-model="formUser.address"
+								v-model="formUser.username"
 								filled
 								outlined
 								dense
 								hide-details
 								label="Dirección"
-							></v-text-field>
+								placeholder="daniel-cedeño"
+							>
+								<template #append>
+									<v-btn
+										:disabled="!formUser.username"
+										color="primary"
+										outlined
+										small
+									>
+										verificar
+									</v-btn>
+								</template>
+							</v-text-field>
 						</v-col>
 						<v-col cols="12" class="text-center">
 							<v-btn
@@ -220,15 +240,18 @@ import axios from 'axios';
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import { cloneDeep } from 'lodash';
+import { mdiInformationOutline } from '@mdi/js';
 
 export default {
 	components: {
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
+		Icon: () => import('~/components/Icon'),
 	},
 	mixins: [validationMixin],
 	data() {
 		return {
+			mdiInformationOutline,
 			activePicker: null,
 			date: null,
 			bmenu: false,
