@@ -93,15 +93,30 @@ export default {
 			today: moment(),
 			selected: null,
 			hours: [
+				'01:00',
+				'02:00',
+				'03:00',
+				'04:00',
+				'05:00',
+				'06:00',
+				'07:00',
+				'08:00',
+				'09:00',
 				'10:00',
 				'11:00',
 				'12:00',
+				'13:00',
 				'14:00',
 				'15:00',
 				'16:00',
 				'17:00',
 				'18:00',
 				'19:00',
+				'20:00',
+				'21:00',
+				'22:00',
+				'23:00',
+				'00:00',
 			],
 			items: [],
 			length: Array.from(Array(31), (_, x) => x),
@@ -109,42 +124,30 @@ export default {
 	},
 	created() {
 		moment.locale('es');
-		this.items = [
-			{
-				id: 1,
-				text: moment().format('ddd'),
-				day: moment().format('DD MMM'),
-				date: moment().format('L'),
-				available: this.hours,
-			},
-		];
 	},
 	mounted() {
 		this.addDays();
 	},
 	methods: {
 		addDays() {
-			this.length.map(el => {
-				const day = moment(this.items[-1]).add(el, 'days');
-				if (el !== 0)
-					return (this.items = [
-						...this.items,
-						{
-							id: el,
-							text: day.format('ddd'),
-							day: day.format('DD MMM'),
-							date: day.format('L'),
-							available: this.hours.filter(hour => {
-								return !this.sessions.some(u => {
-									return (
-										u.start === hour &&
-										moment(u).format('L') === day.format('L')
-									);
-								});
-							}),
-						},
-					]);
-				else return null;
+			const daySessions = this.sessions.map(session =>
+				moment(session.date).format('YYYY-MM-DD HH:mm')
+			);
+			this.items = this.length.map(el => {
+				const day = moment().add(el, 'days');
+				return {
+					id: el,
+					text: day.format('ddd'),
+					day: day.format('DD MMM'),
+					date: day.format('L'),
+					available: this.hours.filter(hour => {
+						return !daySessions.some(
+							date =>
+								moment(date).format('L') === moment(day).format('L') &&
+								hour === moment(date).format('HH:mm')
+						);
+					}),
+				};
 			});
 		},
 	},
