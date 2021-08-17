@@ -66,7 +66,7 @@
 		<v-col cols="12">
 			<template v-if="psychologist.formation.length">
 				<v-row v-for="(formation, i) in psychologist.formation" :key="i">
-					<v-col>
+					<v-col cols="12" md="3">
 						<v-select
 							filled
 							outlined
@@ -92,7 +92,7 @@
 							"
 						></v-select>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="3">
 						<v-text-field
 							label="Curso/Ubicación/Descripción"
 							filled
@@ -109,7 +109,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="2">
 						<v-text-field
 							label="Inicio"
 							filled
@@ -126,7 +126,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="2">
 						<v-text-field
 							label="Fin"
 							filled
@@ -143,10 +143,39 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
-						<v-btn small color="primary" fab depressed @click="newFormation">
+					<v-col cols="12" md="2" class="text-center text-md-left">
+						<v-btn
+							v-if="i === psychologist.formation.length - 1"
+							small
+							color="primary"
+							fab
+							depressed
+							@click="newFormation"
+						>
 							<h1>+</h1>
 						</v-btn>
+						<v-btn
+							v-if="
+								i === psychologist.formation.length - 1 &&
+								psychologist.formation.length - 1
+							"
+							small
+							color="error"
+							fab
+							depressed
+							@click="
+								() => {
+									let formation = psychologist.formation;
+									formation = formation.filter((el, index) => index !== i);
+									setPsychologist({ ...psychologist, formation });
+								}
+							"
+						>
+							<h1>-</h1>
+						</v-btn>
+					</v-col>
+					<v-col v-if="$vuetify.breakpoint.mdAndDown" cols="12">
+						<v-divider class="my-2"></v-divider>
 					</v-col>
 				</v-row>
 			</template>
@@ -158,7 +187,7 @@
 		<v-col cols="12">
 			<template v-if="psychologist.experience.length">
 				<v-row v-for="(experience, i) in psychologist.experience" :key="i">
-					<v-col>
+					<v-col cols="12" md="3">
 						<v-text-field
 							label="Lugar"
 							filled
@@ -175,7 +204,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="3">
 						<v-text-field
 							label="Lugar"
 							filled
@@ -192,7 +221,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="2">
 						<v-text-field
 							label="Inicio"
 							filled
@@ -209,7 +238,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="2">
 						<v-text-field
 							label="Fin"
 							filled
@@ -226,7 +255,7 @@
 							"
 						></v-text-field>
 					</v-col>
-					<v-col>
+					<v-col cols="12" md="2" class="text-center text-md-left">
 						<v-btn
 							v-if="i === psychologist.experience.length - 1"
 							small
@@ -237,6 +266,28 @@
 						>
 							<h1>+</h1>
 						</v-btn>
+						<v-btn
+							v-if="
+								i === psychologist.experience.length - 1 &&
+								psychologist.experience.length - 1
+							"
+							small
+							color="error"
+							fab
+							depressed
+							@click="
+								() => {
+									let experience = psychologist.experience;
+									experience = experience.filter((el, index) => index !== i);
+									setPsychologist({ ...psychologist, experience });
+								}
+							"
+						>
+							<h1>-</h1>
+						</v-btn>
+					</v-col>
+					<v-col v-if="$vuetify.breakpoint.mdAndDown" cols="12">
+						<v-divider class="my-2"></v-divider>
 					</v-col>
 				</v-row>
 			</template>
