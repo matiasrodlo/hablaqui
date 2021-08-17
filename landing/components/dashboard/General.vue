@@ -209,7 +209,7 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
-					<bank-data />
+					<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
@@ -255,6 +255,16 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	mixins: [validationMixin],
+	props: {
+		psychologist: {
+			type: Object,
+			default: null,
+		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			mdiInformationOutline,
@@ -275,7 +285,6 @@ export default {
 				genre: '',
 				username: '',
 			},
-			psychologist: null,
 			timezone: [],
 			loadingUser: false,
 		};
@@ -323,7 +332,6 @@ export default {
 		},
 	},
 	async mounted() {
-		this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
 			username: this.psychologist.username,
@@ -348,7 +356,6 @@ export default {
 		},
 		...mapActions({
 			updateUser: 'User/updateUser',
-			getPsychologist: 'Psychologist/getPsychologist',
 		}),
 	},
 	validations: {

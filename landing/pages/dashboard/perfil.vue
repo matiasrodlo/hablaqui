@@ -89,14 +89,26 @@
 			<v-col cols="12">
 				<v-tabs-items v-model="tabs">
 					<v-tab-item :transition="false">
-						<general-information v-if="tabs === 0" />
+						<general-information
+							v-if="tabs === 0"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
 						<my-plans v-if="tabs === 1 && $auth.$state.user.role === 'user'" />
-						<horario v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'" />
+						<horario
+							v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
-						<psicologo v-if="tabs === 2" />
+						<psicologo
+							v-if="tabs === 2"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 				</v-tabs-items>
 			</v-col>
@@ -119,6 +131,18 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	async asyncData({ $axios, $auth }) {
+		if ($auth.$state.user.role === 'user' && $auth.$state.user.plan.length) {
+			const item = $auth.$state.user.plan.find(el => el.status === 'success');
+			const { psychologist } = await $axios.$get(`/psychologists/one/${item.psychologist}`);
+			return { psychologist };
+		} else {
+			const { psychologist } = await $axios.$get(
+				`/psychologists/one/${$auth.$state.user.psychologist}`
+			);
+			return { psychologist };
+		}
+	},
 	data() {
 		return {
 			mdiCamera,
@@ -128,6 +152,9 @@ export default {
 		};
 	},
 	methods: {
+		setPsychologist(value) {
+			this.psychologist = value;
+		},
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const user = await this.upateAvatar(this.setAvatarObject(file));
@@ -139,7 +166,9 @@ export default {
 			avatar.append('avatar', file);
 			return avatar;
 		},
-		...mapActions({ upateAvatar: 'User/upateAvatar' }),
+		...mapActions({
+			upateAvatar: 'User/upateAvatar',
+		}),
 	},
 };
 </script>

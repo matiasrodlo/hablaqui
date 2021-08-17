@@ -109,31 +109,22 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
+	props: {
+		psychologist: {
+			type: Object,
+			default: null,
+		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			loading: false,
-			psychologist: null,
 			specialties: '',
 		};
-	},
-	mounted() {
-		this.initFetch();
-	},
-	methods: {
-		async initFetch() {
-			this.loading = true;
-			if (this.$auth.$state.user.plan.length) {
-				const item = this.$auth.$state.user.plan.find(el => el.status === 'success');
-				this.psychologist = await this.getPsychologist(item.psychologist);
-			}
-			this.loading = false;
-		},
-		...mapActions({
-			getPsychologist: 'Psychologist/getPsychologist',
-		}),
 	},
 };
 </script>

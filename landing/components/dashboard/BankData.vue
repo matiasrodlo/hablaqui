@@ -88,15 +88,15 @@
 					width="10%"
 				></v-img>
 				<div style="width: 90%">
-					<v-text-field
+					<v-select
 						v-model="bankData.accountType"
+						:items="['Cuenta vista', 'Cuenta ahorro', 'Cuenta corriente']"
 						filled
 						outlined
 						dense
-						type="text"
 						:error-messages="accountTypeError"
 						:hide-details="!accountTypeError.length"
-					></v-text-field>
+					></v-select>
 				</div>
 			</div>
 		</v-col>
@@ -179,6 +179,16 @@ import { cloneDeep } from 'lodash';
 
 export default {
 	mixins: [validationMixin],
+	props: {
+		psychologist: {
+			type: Object,
+			default: null,
+		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			bankData: {
@@ -190,7 +200,6 @@ export default {
 				email: '',
 			},
 			banks: [],
-			psychologist: { paymentMethod: null },
 		};
 	},
 	computed: {
@@ -238,26 +247,22 @@ export default {
 		},
 	},
 	async mounted() {
-		this.initFetch();
+		this.bankData = cloneDeep(this.psychologist.paymentMethod);
 		let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 		response = await response.json();
 		this.banks = response;
 	},
 	methods: {
-		async initFetch() {
-			this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
-			this.bankData = cloneDeep(this.psychologist.paymentMethod);
-		},
 		async handleSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
-				this.psychologist = await this.updatePaymentMethod(this.bankData);
-				this.bankData = cloneDeep(this.psychologist.paymentMethod);
+				const psychologist = await this.updatePaymentMethod(this.bankData);
+				this.setPsychologist(psychologist);
+				this.bankData = cloneDeep(psychologist.paymentMethod);
 			}
 		},
 		...mapActions({
 			updatePaymentMethod: 'Psychologist/updatePaymentMethod',
-			getPsychologist: 'Psychologist/getPsychologist',
 		}),
 	},
 	validations: {
