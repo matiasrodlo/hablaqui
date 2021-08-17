@@ -132,4 +132,28 @@ psychologistsRouter.get(
 	psychologistsController.getClients
 );
 
+/**
+ * @swagger
+ * /api/v1/psychologist/check-username:
+ *  post:
+ *    summary: Revisa disponibilidad de nombre
+ *    tags: [Psychologists]
+ *    consumes:
+ *      - application/x-www-form-urlencoded
+ *    parameters:
+ *      - in: formData
+ *        name: username
+ *        type: string
+ *        description: username a verificar
+ *    responses:
+ *      200:
+ *        description: Usuario disponible
+ *      409:
+ *        description: Usuario no disponible
+ */
+psychologistsRouter.post(
+	'/psychologist/check-username',
+	psychologistsController.usernameAvailable
+);
+
 export default psychologistsRouter;

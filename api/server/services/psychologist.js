@@ -612,6 +612,12 @@ const getClients = async psychologist => {
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
 
+const usernameAvailable = async username => {
+	if (Psychologist.exists({ username }))
+		return conflictResponse('Este usuario ya esta ocupado');
+	return okResponse('Usuario disponible');
+};
+
 const psychologistsService = {
 	getAll,
 	getSessions,
@@ -631,6 +637,7 @@ const psychologistsService = {
 	checkPlanTask,
 	getClients,
 	getFormattedSessions,
+	usernameAvailable,
 };
 
 export default Object.freeze(psychologistsService);
