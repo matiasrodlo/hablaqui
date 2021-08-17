@@ -74,6 +74,9 @@ let psychologist = new Schema({
 	email: {
 		type: String,
 	},
+	linkedin: {
+		type: String,
+	},
 	username: {
 		type: String,
 	},
