@@ -82,11 +82,11 @@
 								'Curso/especialización',
 								'Otro',
 							]"
-							:value="formation.type"
+							:value="formation.formationType"
 							@change="
 								e => {
 									const formation = psychologist.formation;
-									formation[i].type = e;
+									formation[i].formationType = e;
 									setPsychologist({ ...psychologist, formation });
 								}
 							"
@@ -227,12 +227,30 @@
 						></v-text-field>
 					</v-col>
 					<v-col>
-						<v-btn small color="primary" fab depressed @click="newExperience">
+						<v-btn
+							v-if="i === psychologist.experience.length - 1"
+							small
+							color="primary"
+							fab
+							depressed
+							@click="newExperience"
+						>
 							<h1>+</h1>
 						</v-btn>
 					</v-col>
 				</v-row>
 			</template>
+		</v-col>
+		<v-col cols="12" class="text-center">
+			<v-btn
+				color="primary"
+				depressed
+				class="px-16"
+				style="border-radius: 10px"
+				@click="onSubmite"
+			>
+				Guardar
+			</v-btn>
 		</v-col>
 	</v-row>
 </template>
@@ -270,7 +288,7 @@ export default {
 			this.setPsychologist(psychologist);
 		},
 		newFormation() {
-			const formation = { type: '', description: '', start: '', end: '' };
+			const formation = { formationType: '', description: '', start: '', end: '' };
 			this.setPsychologist({
 				...this.psychologist,
 				formation: [...this.psychologist.formation, formation],
