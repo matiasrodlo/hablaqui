@@ -613,9 +613,33 @@ const getClients = async psychologist => {
 };
 
 const usernameAvailable = async username => {
-	if (Psychologist.exists({ username }))
+	if (await Psychologist.exists({ username }))
 		return conflictResponse('Este usuario ya esta ocupado');
 	return okResponse('Usuario disponible');
+};
+
+const updateFormationExperience = async (user, payload) => {
+	if (user.role != 'psychologist') {
+		return conflictResponse('No eres psicologo');
+	}
+
+	/**
+	 * Payload schema:
+	 * 	models: array
+	 * 	specialties: array
+	 * 	languages: array
+	 * 	formation: array
+	 * 	experience: array
+	 */
+
+	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		payload,
+		{ new: true }
+	);
+	return okResponse('psicologo actualizado', {
+		psychologist: updatedPsychologist,
+	});
 };
 
 const psychologistsService = {
@@ -638,6 +662,7 @@ const psychologistsService = {
 	getClients,
 	getFormattedSessions,
 	usernameAvailable,
+	updateFormationExperience,
 };
 
 export default Object.freeze(psychologistsService);

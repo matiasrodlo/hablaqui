@@ -224,4 +224,30 @@ psychologistsRouter.post(
 	psychologistsController.usernameAvailable
 );
 
+/**
+ * @swagger
+ * /api/v1/psychologist/update-experience:
+ *  post:
+ *    summary: Actualiza formacion, experiencia, modelos, especialidades e idiomas.
+ *    tags: [Psychologists]
+ *    consumes:
+ *      - application/x-www-form-urlencoded
+ *    parameters:
+ *      - in: formData
+ *        name: payload
+ *        type: object
+ *        description: Contenido a actualizar
+ *    responses:
+ *      200:
+ *        description: Psicologo actualizado
+ *      401:
+ *        description: No hay ningun usuario loggeado
+ *      409:
+ *        description: No eres un psicologo
+ */
+psychologistsRouter.post(
+	'/psychologist/update-experience',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updateFormationExperience
+);
 export default psychologistsRouter;
