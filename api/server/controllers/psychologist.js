@@ -237,6 +237,33 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error consiguiendo los clientes');
 		}
 	},
+	async usernameAvailable(req, res) {
+		try {
+			const { username } = req.body;
+			const { data, code } = await psychologistsService.usernameAvailable(
+				username
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async updateFormationExperience(req, res) {
+		try {
+			const { payload } = req.body;
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updateFormationExperience(
+				user,
+				payload
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
