@@ -14,6 +14,25 @@
 				/>
 			</v-sheet>
 			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
+				<v-list-item class="my-4" link>
+					<v-list-item-avatar size="35">
+						<v-btn outlined fab color="white">
+							<icon v-if="online" size="35" color="#8BC34A" :icon="mdiAccount" />
+							<icon v-else size="35" color="red" :icon="mdiAccountOff" />
+						</v-btn>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							<v-switch v-model="online" dense>
+								<template #prepend>
+									<div class="pt-1 white--text">
+										{{ online ? 'En linea' : 'Desconectado' }}
+									</div>
+								</template>
+							</v-switch>
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<template v-for="(item, i) in links">
 					<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
 						<v-list-item-avatar size="35">
@@ -72,7 +91,7 @@
 </template>
 
 <script>
-import { mdiMenu } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 
 export default {
@@ -82,8 +101,11 @@ export default {
 	},
 	data() {
 		return {
+			mdiAccount,
+			mdiAccountOff,
 			mdiMenu,
 			drawer: true,
+			online: true,
 		};
 	},
 	computed: {
