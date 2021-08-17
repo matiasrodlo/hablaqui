@@ -156,7 +156,6 @@
 			<div class="body-1 font-weight-bold secondary--text mb-2">Experiencia laboral</div>
 		</v-col>
 		<v-col cols="12">
-			<pre>{{ psychologist.experience }}</pre>
 			<template v-if="psychologist.experience.length">
 				<v-row v-for="(experience, i) in psychologist.experience" :key="i">
 					<v-col>
@@ -232,8 +231,8 @@
 							<h1>+</h1>
 						</v-btn>
 					</v-col>
-				</v-row></template
-			>
+				</v-row>
+			</template>
 		</v-col>
 	</v-row>
 </template>
