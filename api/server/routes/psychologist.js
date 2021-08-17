@@ -95,6 +95,56 @@ psychologistsRouter.patch(
 	psychologistsController.updatePaymentMethod
 );
 
+/**
+ * @swagger
+ * /api/v1/psychologists/update-profile:
+ *  post:
+ *    summary: Actualiza el perfil del psicologo
+ *    tags: [Psychologists]
+ *    consumes:
+ *      - application/x-www-form-urlencoded
+ *    parameters:
+ *      - in: formData
+ *        name: profile
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          username:
+ *            type: string
+ *          languages:
+ *            type: array
+ *          experience:
+ *            type: array
+ *          specialties:
+ *            type: array
+ *          formation:
+ *            type: array
+ *          personalDescription:
+ *            type: string
+ *          professionalDescription:
+ *            type: string
+ *          models:
+ *            type: array
+ *          country:
+ *            type: string
+ *          region:
+ *            type: string
+ *          preferences:
+ *            type: object
+ *            properties:
+ *              marketplaceVisibility:
+ *                type: boolean
+ *              minimumNewSession:
+ *                type: integer
+ *              minimumRescheduleSession:
+ *                type: integer
+ *              corporativeSessions:
+ *                type: boolean
+ *        description: Objeto con la informacion a actualizar (funciona igual que el user)
+ *    responses:
+ *      200: Actualizado correctamente
+ */
 psychologistsRouter.patch(
 	'/psychologist/update-profile',
 	[passport.authenticate('jwt', { session: true })],
@@ -107,6 +157,24 @@ psychologistsRouter.delete(
 	psychologistsController.deleteOne
 );
 
+/**
+ * @swagger
+ * /api/v1/psychologist/update-prices:
+ *  post:
+ *    summary: Actualiza los precios de las sesiones
+ *    tags: [Psychologists]
+ *    consumes:
+ *      - application/x-www-form-urlencoded
+ *    parameters:
+ *      - in: formData
+ *        name: newPrice
+ *        type: integer
+ *        required: true
+ *        description: El nuevo precio
+ *    responses:
+ *      200:
+ *        description: Actualizado correctamente
+ */
 psychologistsRouter.post(
 	'/psychologist/update-prices',
 	[passport.authenticate('jwt', { session: true })],
@@ -136,7 +204,7 @@ psychologistsRouter.get(
  * @swagger
  * /api/v1/psychologist/check-username:
  *  post:
- *    summary: Revisa disponibilidad de nombre
+ *    summary: Revisa disponibilidad de nombre. El psicologo debe estar logeado (se modifica el user logeado)
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
