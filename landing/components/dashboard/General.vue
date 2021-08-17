@@ -222,7 +222,12 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content> </v-expansion-panel-content>
+				<v-expansion-panel-content>
+					<information-general-psi
+						:psychologist="psychologist"
+						:set-psychologist="setPsychologist"
+					/>
+				</v-expansion-panel-content>
 			</v-expansion-panel>
 
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
@@ -252,6 +257,7 @@ export default {
 	components: {
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
+		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
 		Icon: () => import('~/components/Icon'),
 	},
 	mixins: [validationMixin],
