@@ -60,7 +60,13 @@
 			></v-textarea>
 		</v-col>
 		<v-col cols="12" class="text-center">
-			<v-btn color="primary" depressed class="px-16" style="border-radius: 10px">
+			<v-btn
+				color="primary"
+				depressed
+				class="px-16"
+				style="border-radius: 10px"
+				@click="onSubmite"
+			>
 				Guardar
 			</v-btn>
 		</v-col>
@@ -68,6 +74,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	props: {
 		psychologist: {
@@ -84,7 +92,14 @@ export default {
 			rules: [v => v.length <= 300 || 'Maximo 300 caracteres'],
 		};
 	},
+	methods: {
+		async onSubmite() {
+			const psychologist = await this.updatePsychologist(this.psychologist);
+			this.setPsychologist(psychologist);
+		},
+		...mapActions({
+			updatePsychologist: 'Psychologist/updatePsychologist',
+		}),
+	},
 };
 </script>
-
-<style lang="scss" scoped></style>

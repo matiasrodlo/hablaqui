@@ -140,6 +140,12 @@ export default {
 			const { psychologist } = await $axios.$get(
 				`/psychologists/one/${$auth.$state.user.psychologist}`
 			);
+			if (!psychologist.formation.length) {
+				psychologist.formation.push({ type: '', description: '', start: '', end: '' });
+			}
+			if (!psychologist.experience.length) {
+				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			}
 			return { psychologist };
 		}
 	},

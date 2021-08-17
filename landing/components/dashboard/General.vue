@@ -239,7 +239,12 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content> </v-expansion-panel-content>
+				<v-expansion-panel-content>
+					<experiencia-formacion
+						:psychologist="psychologist"
+						:set-psychologist="setPsychologist"
+					/>
+				</v-expansion-panel-content>
 			</v-expansion-panel>
 		</v-expansion-panels>
 	</div>
@@ -258,6 +263,7 @@ export default {
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
 		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
+		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 		Icon: () => import('~/components/Icon'),
 	},
 	mixins: [validationMixin],

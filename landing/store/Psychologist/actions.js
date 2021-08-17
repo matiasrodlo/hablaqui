@@ -71,6 +71,18 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async updatePsychologist({ commit }, profile) {
+		try {
+			const { data } = await this.$axios('/psychologist/update-profile', {
+				method: 'PUT',
+				data: { profile },
+			});
+			snackBarSuccess('Actualizado exitosamente')(commit);
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async setReschedule({ commit }, { sessionId, newDate }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {

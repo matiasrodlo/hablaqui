@@ -59,7 +59,7 @@ psychologistsRouter.patch(
 	psychologistsController.updatePaymentMethod
 );
 
-psychologistsRouter.patch(
+psychologistsRouter.put(
 	'/psychologist/update-profile',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePsychologist
