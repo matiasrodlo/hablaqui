@@ -6,8 +6,44 @@ import psychologistsController from '../controllers/psychologist';
 
 const psychologistsRouter = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Psychologists
+ */
+
+/**
+ * @swagger
+ * /api/v1/psychologists/all:
+ *   get:
+ *     summary: Devuelve todos los psicologos de la base de datos
+ *     tags: [Psychologists]
+ *     responses:
+ *       200:
+ *         description: Todos los psicologos
+ *
+ */
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 
+/**
+ * @swagger
+ * /api/v1/psychologists/sesssions/{id}:
+ *  get:
+ *    summary: Devuelve todas las sesiones del psicologo
+ *    tags: [Psychologists]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        descritpion: Id del psicologo
+ *    repsonses:
+ *      200:
+ *        despcription: Las sesiones segun el id
+ *      400:
+ *        description: Psicologo no encontrado
+ */
 psychologistsRouter.get(
 	'/psychologists/sessions/:idPsychologist',
 	[passport.authenticate('jwt', { session: true })],
