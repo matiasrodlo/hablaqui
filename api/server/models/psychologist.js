@@ -119,6 +119,9 @@ let psychologist = new Schema({
 	gender: {
 		type: String,
 	},
+	birthDate: {
+		type: String,
+	},
 	sessionType: {
 		type: String,
 	},
