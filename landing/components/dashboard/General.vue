@@ -67,7 +67,7 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
-										v-model="formUser.birthDate"
+										v-model="birthDate"
 										label="Fecha de nacimiento"
 										readonly
 										filled
@@ -79,7 +79,7 @@
 									></v-text-field>
 								</template>
 								<v-date-picker
-									v-model="formUser.birthDate"
+									v-model="birthDate"
 									locale="es"
 									:active-picker.sync="activePicker"
 									:max="
@@ -295,11 +295,11 @@ export default {
 				email: '',
 				timeZone: '',
 				address: '',
-				birthDate: '',
 				city: '',
 				genre: '',
 			},
 			available: false,
+			birthDate: '',
 			username: '',
 			timezone: [],
 			loadingUser: false,
@@ -323,9 +323,9 @@ export default {
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
 					address: this.formUser.address,
-					birthDate: this.formUser.birthDate,
 					city: this.formUser.city,
 					genre: this.formUser.genre,
+					birthDate: this.birthDate,
 					username: this.username,
 				}) ===
 				JSON.stringify({
@@ -334,9 +334,9 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
-					birthDate: this.$auth.$state.user.birthDate,
 					city: this.$auth.$state.user.city,
 					genre: this.$auth.$state.user.genre,
+					birthDate: this.psychologist.birthDate,
 					username: this.psychologist ? this.psychologist.username : '',
 				})
 			);
@@ -352,6 +352,7 @@ export default {
 			...cloneDeep(this.$auth.$state.user),
 		};
 		this.username = this.psychologist.username;
+		this.birthDate = this.psychologist.birthDate;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
@@ -376,8 +377,10 @@ export default {
 						genre: this.formUser.genre,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
-						birthDate: this.formUser.birthDate,
+						birthDate: this.birthDate,
 					});
+					this.username = psychologist.username;
+					this.birthDate = psychologist.birthDate;
 					this.setPsychologist(psychologist);
 				}
 				this.$auth.setUser(user);
