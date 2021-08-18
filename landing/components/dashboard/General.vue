@@ -107,7 +107,7 @@
 						</v-col>
 						<v-col cols="12" md="6">
 							<v-select
-								v-model="formUser.genre"
+								v-model="genre"
 								:items="['Hombre', 'Mujer', 'Transgénero']"
 								filled
 								outlined
@@ -296,8 +296,8 @@ export default {
 				timeZone: '',
 				address: '',
 				city: '',
-				genre: '',
 			},
+			genre: '',
 			available: false,
 			birthDate: '',
 			username: '',
@@ -351,6 +351,7 @@ export default {
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
 		};
+		this.genre = this.psychologist.genre;
 		this.username = this.psychologist.username;
 		this.birthDate = this.psychologist.birthDate;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
@@ -374,11 +375,12 @@ export default {
 					}
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
-						genre: this.formUser.genre,
+						genre: this.genre,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
 						birthDate: this.birthDate,
 					});
+					this.genre = psychologist.genre;
 					this.username = psychologist.username;
 					this.birthDate = psychologist.birthDate;
 					this.setPsychologist(psychologist);
