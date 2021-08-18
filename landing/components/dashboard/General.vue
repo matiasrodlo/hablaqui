@@ -363,6 +363,14 @@ export default {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
 				if (this.$auth.$state.user.role === 'psychologist') {
+					if (!this.available && this.username) {
+						const available = await this.checkUsername(this.username);
+						if (available)
+							this.setPsychologist({
+								...this.psychologist,
+								username: this.username,
+							});
+					}
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
 						genre: this.formUser.genre,
@@ -370,10 +378,6 @@ export default {
 						lastName: this.formUser.lastName,
 						birthDate: this.formUser.birthDate,
 					});
-					if (!this.available && this.username) {
-						const available = await this.checkUsername(this.username);
-						psychologist.username = available ? this.username : psychologist.username;
-					}
 					this.setPsychologist(psychologist);
 				}
 				this.$auth.setUser(user);

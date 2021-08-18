@@ -77,7 +77,7 @@ export default {
 				method: 'POST',
 				data: { username },
 			});
-			return data.status;
+			return data.available;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

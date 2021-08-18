@@ -613,9 +613,12 @@ const getClients = async psychologist => {
 };
 
 const usernameAvailable = async username => {
-	if (await Psychologist.exists({ username }))
-		return conflictResponse('Este usuario ya esta ocupado');
-	return okResponse('Usuario disponible');
+	let available = true;
+	if (await Psychologist.exists({ username })) available = false;
+	return okResponse(
+		available ? 'Usuario disponible' : 'Usuario ya esta ocupado',
+		{ available }
+	);
 };
 
 const updateFormationExperience = async (user, payload) => {
