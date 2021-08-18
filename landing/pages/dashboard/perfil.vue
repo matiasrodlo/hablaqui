@@ -70,7 +70,7 @@
 				</v-list-item-content>
 			</v-list-item>
 		</v-list>
-		<v-tabs v-model="tabs" :grow="$auth.$state.user.role === 'user'" style="height: 100px">
+		<v-tabs v-model="tabs" grow style="height: 100px">
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
@@ -78,11 +78,8 @@
 				{{ $auth.$state.user.role == 'user' ? 'Mis planes' : 'Horario' }}
 			</v-tab>
 
-			<v-tab
-				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
-				class="primary--text text-capitalize"
-			>
-				Mi psicologo
+			<v-tab class="primary--text text-capitalize">
+				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
 			</v-tab>
 		</v-tabs>
 		<v-row>
@@ -105,7 +102,12 @@
 					</v-tab-item>
 					<v-tab-item :transition="false">
 						<psicologo
-							v-if="tabs === 2"
+							v-if="tabs === 2 && $auth.$state.user.role === 'user'"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
+						<services
+							v-if="tabs === 2 && $auth.$state.user.role === 'psychologist'"
 							:psychologist="psychologist"
 							:set-psychologist="setPsychologist"
 						/>
@@ -126,6 +128,7 @@ export default {
 		GeneralInformation: () => import('~/components/dashboard/General'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
+		Services: () => import('~/components/dashboard/Services'),
 		Horario: () => import('~/components/dashboard/Horario'),
 		Icon: () => import('~/components/Icon'),
 	},

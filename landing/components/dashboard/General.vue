@@ -67,7 +67,7 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
-										v-model="formUser.birtdate"
+										v-model="formUser.birthDate"
 										label="Fecha de nacimiento"
 										readonly
 										filled
@@ -79,7 +79,7 @@
 									></v-text-field>
 								</template>
 								<v-date-picker
-									v-model="formUser.birtdate"
+									v-model="formUser.birthDate"
 									locale="es"
 									:active-picker.sync="activePicker"
 									:max="
@@ -160,22 +160,17 @@
 						</v-col>
 						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
 							<v-text-field
-								v-model="formUser.username"
+								v-model="username"
 								:loading="!psychologist"
 								filled
 								outlined
 								dense
-								:hint="`https://hablaqui.cl/${formUser.username}`"
+								:hint="`https://hablaqui.cl/${username}`"
 								label="Dirección"
 								placeholder="daniel-cedeño"
 							>
 								<template #append>
-									<v-btn
-										:disabled="!formUser.username"
-										color="primary"
-										outlined
-										small
-									>
+									<v-btn :disabled="!username" color="primary" outlined small>
 										verificar
 									</v-btn>
 								</template>
@@ -292,11 +287,11 @@ export default {
 				email: '',
 				timeZone: '',
 				address: '',
-				birtdate: '',
+				birthDate: '',
 				city: '',
 				genre: '',
-				username: '',
 			},
+			username: '',
 			timezone: [],
 			loadingUser: false,
 		};
@@ -319,10 +314,10 @@ export default {
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
 					address: this.formUser.address,
-					birtdate: this.formUser.birtdate,
+					birthDate: this.formUser.birthDate,
 					city: this.formUser.city,
 					genre: this.formUser.genre,
-					username: this.formUser.username,
+					username: this.username,
 				}) ===
 				JSON.stringify({
 					name: this.$auth.$state.user.name,
@@ -330,7 +325,7 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
-					birtdate: this.$auth.$state.user.birtdate,
+					birthDate: this.$auth.$state.user.birthDate,
 					city: this.$auth.$state.user.city,
 					genre: this.$auth.$state.user.genre,
 					username: this.psychologist ? this.psychologist.username : '',
@@ -346,8 +341,8 @@ export default {
 	async mounted() {
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
-			username: this.psychologist.username,
 		};
+		this.username = this.psychologist.username;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		this.timezone = data;
 	},
@@ -358,6 +353,17 @@ export default {
 			if (!this.$v.$invalid) {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
+				if (this.$auth.$state.user.role === 'psychologist') {
+					const psychologist = await this.updatePsychologist({
+						...this.psychologist,
+						username: this.username,
+						genre: this.formUser.genre,
+						name: this.formUser.name,
+						lastName: this.formUser.lastName,
+						birthDate: this.formUser.birthDate,
+					});
+					this.setPsychologist(psychologist);
+				}
 				this.$auth.setUser(user);
 				this.$v.$reset();
 				this.loadingUser = false;
@@ -367,6 +373,7 @@ export default {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
+			updatePsychologist: 'Psychologist/updatePsychologist',
 			updateUser: 'User/updateUser',
 		}),
 	},
