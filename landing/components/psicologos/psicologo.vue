@@ -103,7 +103,9 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li v-for="(experience, i) in psychologist.experience" :key="i">
-									{{ experience }}
+									{{ experience.title }} - {{ experience.place }} ({{
+										experience.start
+									}}, {{ experience.end }})
 								</li>
 							</ul>
 						</v-col>
@@ -159,7 +161,9 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li v-for="(formation, i) in psychologist.formation" :key="i">
-									{{ formation }}
+									{{ formation.formationType }} - {{ formation.description }} ({{
+										formation.start
+									}}, {{ formation.end }})
 								</li>
 							</ul>
 						</v-col>
