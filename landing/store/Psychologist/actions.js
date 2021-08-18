@@ -71,6 +71,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async checkUsername({ commit }, username) {
+		try {
+			const { data } = await this.$axios('/psychologist/check-username', {
+				method: 'POST',
+				data: { username },
+			});
+			return data.status;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async updatePsychologist({ commit }, profile) {
 		try {
 			const { data } = await this.$axios('/psychologist/update-profile', {

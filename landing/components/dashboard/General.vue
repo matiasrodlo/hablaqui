@@ -168,10 +168,18 @@
 								:hint="`https://hablaqui.cl/${username}`"
 								label="Dirección"
 								placeholder="daniel-cedeño"
+								@input="() => (available = false)"
 							>
 								<template #append>
-									<v-btn :disabled="!username" color="primary" outlined small>
-										verificar
+									<v-btn
+										v-show="psychologist && psychologist.username !== username"
+										:disabled="!username"
+										color="primary"
+										outlined
+										small
+										@click="check"
+									>
+										{{ available ? 'Disponible' : 'verificar' }}
 									</v-btn>
 								</template>
 							</v-text-field>
@@ -291,6 +299,7 @@ export default {
 				city: '',
 				genre: '',
 			},
+			available: false,
 			username: '',
 			timezone: [],
 			loadingUser: false,
@@ -356,12 +365,15 @@ export default {
 				if (this.$auth.$state.user.role === 'psychologist') {
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
-						username: this.username,
 						genre: this.formUser.genre,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
 						birthDate: this.formUser.birthDate,
 					});
+					if (!this.available && this.username) {
+						const available = await this.checkUsername(this.username);
+						psychologist.username = available ? this.username : psychologist.username;
+					}
 					this.setPsychologist(psychologist);
 				}
 				this.$auth.setUser(user);
@@ -369,11 +381,15 @@ export default {
 				this.loadingUser = false;
 			}
 		},
+		async check() {
+			this.available = await this.checkUsername(this.username);
+		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
+			checkUsername: 'Psychologist/checkUsername',
 			updateUser: 'User/updateUser',
 		}),
 	},
