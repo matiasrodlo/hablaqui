@@ -19,6 +19,7 @@
 								filled
 								outlined
 								readonly
+								disabled
 								dense
 								hide-details
 								label="Nombre"
@@ -30,6 +31,7 @@
 								v-model="formUser.email"
 								readonly
 								filled
+								disabled
 								hide-details
 								outlined
 								dense
@@ -67,6 +69,7 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
+										v-if="$auth.$state.user.role === 'psychologist'"
 										v-model="birthDate"
 										label="Fecha de nacimiento"
 										readonly
@@ -94,20 +97,37 @@
 								></v-date-picker>
 							</v-menu>
 						</v-col>
-						<v-col cols="12" md="6">
-							<v-text-field
-								v-model="formUser.city"
-								filled
-								outlined
-								hide-details
-								dense
-								label="Pais/Ciudad"
-								placeholder="Ejemplo: Chile, Santiago"
-							></v-text-field>
+						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
+							<v-row>
+								<v-col>
+									<v-select
+										v-model="region"
+										:items="regiones"
+										filled
+										outlined
+										hide-details
+										dense
+										label="Región"
+									></v-select>
+								</v-col>
+								<v-col>
+									<v-select
+										v-model="comuna"
+										:disabled="!region"
+										:items="comunas"
+										filled
+										outlined
+										hide-details
+										dense
+										label="Comuna"
+									></v-select>
+								</v-col>
+							</v-row>
 						</v-col>
 						<v-col cols="12" md="6">
 							<v-select
-								v-model="genre"
+								v-if="$auth.$state.user.role === 'psychologist'"
+								v-model="gender"
 								:items="['Hombre', 'Mujer', 'Transgénero']"
 								filled
 								outlined
@@ -295,14 +315,18 @@ export default {
 				email: '',
 				timeZone: '',
 				address: '',
-				city: '',
 			},
-			genre: '',
+			region: '',
+			comuna: '',
+			gender: '',
 			available: false,
 			birthDate: '',
 			username: '',
 			timezone: [],
 			loadingUser: false,
+			regiones: [],
+			comunas: [],
+			comunasRegiones: [],
 		};
 	},
 	computed: {
@@ -322,11 +346,11 @@ export default {
 					phone: this.formUser.phone,
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
-					address: this.formUser.address,
-					city: this.formUser.city,
-					genre: this.formUser.genre,
+					gender: this.gender,
 					birthDate: this.birthDate,
 					username: this.username,
+					region: this.region,
+					comuna: this.comuna,
 				}) ===
 				JSON.stringify({
 					name: this.$auth.$state.user.name,
@@ -334,10 +358,11 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
-					city: this.$auth.$state.user.city,
-					genre: this.$auth.$state.user.genre,
+					gender: this.psychologist.gender,
 					birthDate: this.psychologist.birthDate,
 					username: this.psychologist ? this.psychologist.username : '',
+					region: this.psychologist.region,
+					comuna: this.psychologist.comuna,
 				})
 			);
 		},
@@ -346,16 +371,28 @@ export default {
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
+		region(newVal) {
+			if (newVal) {
+				this.comunas = this.comunasRegiones.find(
+					item => item.region === this.region
+				).comunas;
+			}
+		},
 	},
 	async mounted() {
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
 		};
-		this.genre = this.psychologist.genre;
+		this.gender = this.psychologist.gender;
 		this.username = this.psychologist.username;
 		this.birthDate = this.psychologist.birthDate;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
+		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
+		this.comunasRegiones = response.data;
+		this.regiones = response.data.map(i => i.region);
 		this.timezone = data;
+		this.comuna = this.psychologist.comuna;
+		this.region = this.psychologist.region;
 	},
 
 	methods: {
@@ -365,24 +402,24 @@ export default {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
 				if (this.$auth.$state.user.role === 'psychologist') {
-					if (!this.available && this.username) {
-						const available = await this.checkUsername(this.username);
-						if (available)
-							this.setPsychologist({
-								...this.psychologist,
-								username: this.username,
-							});
+					if (this.username) {
+						this.available = await this.checkUsername(this.username);
 					}
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
-						genre: this.genre,
+						gender: this.gender,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
 						birthDate: this.birthDate,
+						comuna: this.comuna,
+						region: this.region,
+						username: this.available ? this.username : this.psychologist.username,
 					});
-					this.genre = psychologist.genre;
+					this.gender = psychologist.gender;
 					this.username = psychologist.username;
 					this.birthDate = psychologist.birthDate;
+					this.comuna = psychologist.comuna;
+					this.region = psychologist.region;
 					this.setPsychologist(psychologist);
 				}
 				this.$auth.setUser(user);

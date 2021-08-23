@@ -1,5 +1,5 @@
 <template>
-	<v-container style="height: 100vh">
+	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
 		<v-row class="mt-4 mt-md-0">
 			<v-col v-for="(card, i) in cards" :key="i" cols="3">

@@ -1,5 +1,5 @@
 <template>
-	<v-container style="height: 100vh">
+	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
 		<v-list two-line color="transparent" style="height: 150px">
 			<v-list-item class="hidden-sm-and-down" style="position: relative">

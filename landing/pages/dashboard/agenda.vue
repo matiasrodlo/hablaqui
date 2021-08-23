@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="height: 100vh">
+	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
 			<v-col cols="12" md="10" class="heightCalendar">
