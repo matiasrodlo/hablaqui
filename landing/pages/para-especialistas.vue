@@ -35,32 +35,40 @@
 								<v-list-item-icon>
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
-								<v-list-item-content class="body-2 text-md-h6 text-lg-h5">
-									Oficina virtual práctica y segura.
+								<v-list-item-content>
+									<h3 class="body-2 text-md-h6 text-lg-h5">
+										Oficina virtual práctica y segura.
+									</h3>
 								</v-list-item-content>
 							</v-list-item>
 							<v-list-item>
 								<v-list-item-icon>
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
-								<v-list-item-content class="body-2 text-md-h6 text-lg-h5">
-									Acceso a clientes registrados.
+								<v-list-item-content>
+									<h3 class="body-2 text-md-h6 text-lg-h5">
+										Acceso a clientes registrados.
+									</h3>
 								</v-list-item-content>
 							</v-list-item>
 							<v-list-item>
 								<v-list-item-icon>
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
-								<v-list-item-content class="body-2 text-md-h6 text-lg-h5">
-									Crecimiento y desarrollo profesional.
+								<v-list-item-content>
+									<h3 class="body-2 text-md-h6 text-lg-h5">
+										Crecimiento y desarrollo profesional.
+									</h3>
 								</v-list-item-content>
 							</v-list-item>
 							<v-list-item>
 								<v-list-item-icon>
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
-								<v-list-item-content class="body-2 text-md-h6 text-lg-h5">
-									Tarifas accesibles y convenientes
+								<v-list-item-content>
+									<h3 class="body-2 text-md-h6 text-lg-h5">
+										Tarifas accesibles y convenientes
+									</h3>
 								</v-list-item-content>
 							</v-list-item>
 						</v-list>
@@ -73,8 +81,11 @@
 										Únete a la red
 									</h3>
 								</v-card-title>
-								<v-card-text class="text--disabled body-1">
-									En solo unos pasos puedes unirte. Comienza creando tu cuenta.
+								<v-card-text>
+									<h3 class="text--disabled body-1">
+										En solo unos pasos puedes unirte. Comienza creando tu
+										cuenta.
+									</h3>
 								</v-card-text>
 								<v-card-text>
 									<v-text-field
@@ -142,12 +153,12 @@
 		<v-container>
 			<v-row justify="center">
 				<v-col cols="12">
-					<div class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
+					<h2 class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
 						Tu consulta online personalizada
-					</div>
-					<div class="mt-3 mb-16 text-center text-h6 text-color">
+					</h2>
+					<h3 class="mt-3 mb-16 text-center text-h6 text-color">
 						Cree su propia oficina en minutos con alta tecnología y facilidad
-					</div>
+					</h3>
 				</v-col>
 				<v-col v-for="item in items" :key="item.id" cols="12" md="4" class="my-16">
 					<v-card tag="section" flat>
@@ -194,9 +205,9 @@
 							:src="`${$config.LANDING_URL}/check-especialistas.png`"
 							alt="check"
 						/>
-						<span class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
 							Videollamadas seguras y cómodas
-						</span>
+						</h3>
 					</div>
 					<div class="mt-5 d-flex align-center">
 						<img
@@ -205,9 +216,9 @@
 							:src="`${$config.LANDING_URL}/check-especialistas.png`"
 							alt="check"
 						/>
-						<span class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
 							Sistema de reservas
-						</span>
+						</h3>
 					</div>
 					<div class="mt-5 d-flex align-center">
 						<img
@@ -216,9 +227,9 @@
 							:src="`${$config.LANDING_URL}/check-especialistas.png`"
 							alt="check"
 						/>
-						<span class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
 							Sitio web especializado
-						</span>
+						</h3>
 					</div>
 					<div class="mt-5 d-flex align-center">
 						<img
@@ -227,9 +238,9 @@
 							:src="`${$config.LANDING_URL}/check-especialistas.png`"
 							alt="check"
 						/>
-						<span class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
 							Gestión de agenda, clientes y pagos
-						</span>
+						</h3>
 					</div>
 					<div class="mt-5 d-flex align-center">
 						<img
@@ -238,9 +249,9 @@
 							:src="`${$config.LANDING_URL}/check-especialistas.png`"
 							alt="check"
 						/>
-						<span class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
 							Recordatorios y correo electrónico
-						</span>
+						</h3>
 					</div>
 				</v-col>
 			</v-row>
@@ -248,12 +259,12 @@
 		<v-container>
 			<v-row justify="center">
 				<v-col cols="12">
-					<div class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
+					<h2 class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
 						¿Por qué utilizar Office?
-					</div>
-					<div class="mt-3 mb-16 text-center text-h6 text-color">
+					</h2>
+					<h3 class="mt-3 mb-16 text-center text-h6 text-color">
 						Diferénciate con una experiencia 360
-					</div>
+					</h3>
 				</v-col>
 				<v-col v-for="item in Office" :key="item.id" cols="12" md="4" class="my-16">
 					<v-card tag="section" flat>
@@ -443,14 +454,45 @@ export default {
 	},
 	head() {
 		return {
-			title: 'Forma parte | Hablaquí',
+			title: 'Para especialistas | Hablaquí',
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
 					content: 'Tenga un consultorio sin salir de casa',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: `${process.env.VUE_APP_LANDING}/para-especialistas/`,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Para especialistas | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: 'Únete a la red de salud mental y bienestar',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: `${process.env.VUE_APP_LANDING}/para-especialistas`,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Para especialistas | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: 'Únete a la red de salud mental y bienestar',
+				},
 			],
+			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/para-especialistas/` }],
 		};
 	},
 };
