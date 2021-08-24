@@ -1,16 +1,22 @@
 <template>
 	<div>
-		<v-img :src="`${$config.LANDING_URL}/especialistas.png`">
+		<v-img
+			:src="`${$config.LANDING_URL}/especialistas.png`"
+			:lazy-src="`${$config.LANDING_URL}/especialistas.png`"
+			width="100%"
+			height="auto"
+			alt="Únete a la red de salud mental y bienestar"
+		>
 			<Appbar />
 			<v-container tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
-					<v-col cols="12" md="5">
+					<v-col cols="12" md="6" lg="5">
 						<h1
 							class="
 								text-center text-md-left
 								white--text
 								font-weight-bold
-								text-h6 text-md-h4 text-lg-h3
+								text-h4 text-lg-h3
 							"
 						>
 							Únete a la red de salud <br />
@@ -22,8 +28,7 @@
 								text-center text-md-left
 								white--text
 								my-4
-								body-2
-								text-md-h6 text-lg-h5
+								text-h6 text-lg-h5
 								font-weight-bold
 							"
 						>
@@ -36,7 +41,7 @@
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
 								<v-list-item-content>
-									<h3 class="body-2 text-md-h6 text-lg-h5">
+									<h3 class="text-h6 text-lg-h5">
 										Oficina virtual práctica y segura.
 									</h3>
 								</v-list-item-content>
@@ -46,7 +51,7 @@
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
 								<v-list-item-content>
-									<h3 class="body-2 text-md-h6 text-lg-h5">
+									<h3 class="text-h6 text-lg-h5">
 										Acceso a clientes registrados.
 									</h3>
 								</v-list-item-content>
@@ -56,7 +61,7 @@
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
 								<v-list-item-content>
-									<h3 class="body-2 text-md-h6 text-lg-h5">
+									<h3 class="text-h6 text-lg-h5">
 										Crecimiento y desarrollo profesional.
 									</h3>
 								</v-list-item-content>
@@ -66,94 +71,26 @@
 									<icon color="white" :icon="mdiCheck" />
 								</v-list-item-icon>
 								<v-list-item-content>
-									<h3 class="body-2 text-md-h6 text-lg-h5">
+									<h3 class="text-h6 text-lg-h5">
 										Tarifas accesibles y convenientes
 									</h3>
 								</v-list-item-content>
 							</v-list-item>
 						</v-list>
 					</v-col>
-					<v-col cols="12" md="4">
-						<v-form>
-							<v-card flat class="rounded-lg">
-								<v-card-title>
-									<h3 class="primary--text font-weight-bold text-h5">
-										Únete a la red
-									</h3>
-								</v-card-title>
-								<v-card-text>
-									<h3 class="text--disabled body-1">
-										En solo unos pasos puedes unirte. Comienza creando tu
-										cuenta.
-									</h3>
-								</v-card-text>
-								<v-card-text>
-									<v-text-field
-										v-model="formData.rut"
-										dense
-										label="Rut"
-										outlined
-										class="my-3"
-										:error-messages="rutErrors"
-									></v-text-field>
-									<v-text-field
-										v-model="formData.email"
-										dense
-										:error-messages="emailErrors"
-										label="Correo"
-										outlined
-										class="my-3"
-										type="email"
-									></v-text-field>
-									<v-text-field
-										v-model="formData.phone"
-										dense
-										:error-messages="phoneErrors"
-										label="Telefono"
-										outlined
-										class="my-3"
-										type="text"
-									></v-text-field>
-									<v-text-field
-										v-model="formData.password"
-										dense
-										:error-messages="passwordErrors"
-										label="Contraseña"
-										type="password"
-										outlined
-										class="my-3"
-									></v-text-field>
-									<v-checkbox v-model="terminos">
-										<template #label>
-											<div class="caption">
-												He leído y
-												<nuxt-link
-													to="condiciones"
-													style="text-decoration: none"
-												>
-													acepto los Términos y condiciones </nuxt-link
-												>y
-												<nuxt-link
-													to="politicas"
-													style="text-decoration: none"
-												>
-													la Política de privacidad.
-												</nuxt-link>
-											</div>
-										</template>
-									</v-checkbox>
-								</v-card-text>
-								<v-card-actions>
-									<v-btn color="primary" class="rounded-xl mx-auto px-10">
-										Regístrate ahora
-									</v-btn>
-								</v-card-actions>
-							</v-card>
-						</v-form>
+					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4">
+						<form-psy />
 					</v-col>
 				</v-row>
 			</v-container>
 		</v-img>
+		<v-container class="mt-4 hidden-md-and-up">
+			<v-row>
+				<v-col>
+					<form-psy />
+				</v-col>
+			</v-row>
+		</v-container>
 		<v-container>
 			<v-row justify="center">
 				<v-col cols="12">
@@ -193,12 +130,16 @@
 		</v-container>
 		<v-img
 			width="100%"
-			height="500"
+			height="auto"
 			class="d-flex align-center"
-			:src="`${$config.LANDING_URL}/beneficios-de-hablaqui.png`"
+			:src="
+				$vuetify.breakpoint.smAndDown
+					? `${$config.LANDING_URL}/beneficios-hablaqui-mobile.png`
+					: `${$config.LANDING_URL}/beneficios-de-hablaqui.png`
+			"
 		>
 			<v-row justify="center">
-				<v-col offset="6" cols="6">
+				<v-col offset-md="6" cols="6" md="6">
 					<h2 class="font-weight-bold white--text text-h6 text-md-h4 text-lg-h3">
 						Beneficios de Hablaquí Office
 					</h2>
@@ -327,7 +268,7 @@
 			</div>
 		</div>
 		<v-img
-			width="100%"
+			width="100vw"
 			height="auto"
 			class="d-flex align-center"
 			:src="
@@ -338,37 +279,33 @@
 		>
 			<v-row justify="center" class="hidden-sm-and-down">
 				<v-col offset="6" cols="6">
-					<h2 class="text-center font-weight-bold white--text body-1 text-md-h4">
+					<h2 class="pt-16 text-center font-weight-bold white--text body-1 text-md-h4">
 						Descargar nuestra app de chat
 					</h2>
 					<h3 class="text-center font-weight-bold white--text body-2 my-4 text-md-h6">
 						Mantén contacto con tus consultantes vía Chat. <br />
 						¡Descarga la aplicación ahora!
 					</h3>
-					<v-row justify="center">
-						<v-col tag="aside" class="my-md-10 d-flex align-center justify-center">
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								height="50"
-								max-width="160"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/google-play.png`"
-								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
-								alt="descarcar nuestra aplicacion para android"
-							/>
-						</v-col>
-						<v-col tag="aside" class="my-md-10 d-flex align-center justify-center">
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								height="50"
-								max-width="160"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/ios.svg`"
-								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
-								alt="descargar aplicacion para ios"
-							/>
-						</v-col>
-					</v-row>
+					<div class="d-flex justify-center pb-16">
+						<v-img
+							style="cursor: pointer; border-radius: 10px"
+							height="50"
+							max-width="160"
+							class="ma-1"
+							:src="`${$config.LANDING_URL}/google-play.png`"
+							:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+							alt="descarcar nuestra aplicacion para android"
+						/>
+						<v-img
+							style="cursor: pointer; border-radius: 10px"
+							height="50"
+							max-width="160"
+							class="ma-1"
+							:src="`${$config.LANDING_URL}/ios.svg`"
+							:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+							alt="descargar aplicacion para ios"
+						/>
+					</div>
 				</v-col>
 			</v-row>
 		</v-img>
@@ -376,39 +313,22 @@
 			<Footer />
 		</v-container>
 		<div class="primary-color" style="height: 30px"></div>
-		<v-dialog v-model="dialog" width="300">
-			<v-sheet style="width: 300px; height: 100px">
-				<v-alert dense outlined type="error" width="300" height="100">
-					Debes aceptar los
-					<strong>terminos y condiciones</strong>
-					<span class="primary--text">y</span>
-					<strong>politicas de privacidad</strong>
-				</v-alert>
-			</v-sheet>
-		</v-dialog>
 	</div>
 </template>
 
 <script>
 import { mdiCheck } from '@mdi/js';
-import { validationMixin } from 'vuelidate';
-import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
 
 export default {
 	components: {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 		Appbar: () => import('@/components/AppbarWhite'),
+		FormPsy: () => import('@/components/psicologos/FormPsy.vue'),
 	},
-	mixins: [validationMixin],
 	data() {
 		return {
 			mdiCheck,
-			formData: { rut: '', email: '', phone: '', password: '' },
-			terminos: false,
-			dialog: false,
-			loading: false,
 			items: [
 				{
 					id: 1,
@@ -516,72 +436,6 @@ export default {
 			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/para-especialistas/` }],
 		};
-	},
-	computed: {
-		rutErrors() {
-			const errors = [];
-			if (!this.$v.formData.rut.$dirty) return errors;
-			!this.$v.formData.rut.required && errors.push('El Correo rut es querido');
-			return errors;
-		},
-		phoneErrors() {
-			const errors = [];
-			if (!this.$v.formData.phone.$dirty) return errors;
-			!this.$v.formData.phone.required && errors.push('El telefono es querido');
-			return errors;
-		},
-		emailErrors() {
-			const errors = [];
-			if (!this.$v.formData.email.$dirty) return errors;
-			!this.$v.formData.email.required && errors.push('El telefono es querido');
-			!this.$v.formData.email.email && errors.push('Inserte un correo valido');
-			return errors;
-		},
-		passwordErrors() {
-			const errors = [];
-			if (!this.$v.formData.password.$dirty) return errors;
-			!this.$v.formData.password.required && errors.push('La contraseña es querida');
-			!this.$v.formData.password.minLength && errors.push('Minimo 6 caracteres');
-			!this.$v.formData.password.maxLength && errors.push('Maximo 99 caracteres');
-			return errors;
-		},
-	},
-	methods: {
-		async onSubmit() {
-			this.$v.$touch();
-			if (!this.$v.$invalid && !this.terminos) {
-				return (this.dialog = true);
-			}
-			if (!this.$v.$invalid && this.accept) {
-				this.loading = true;
-				await this.registerPsychologist(this.formData);
-				this.loading = false;
-				this.formData = { rut: '', email: '', phone: '', password: '' };
-				this.$v.$reset();
-			}
-		},
-		...mapActions({
-			registerPsychologist: 'Psychologist/registerPsychologist',
-		}),
-	},
-	validations: {
-		formData: {
-			rut: {
-				required,
-			},
-			email: {
-				required,
-				email,
-			},
-			phone: {
-				required,
-			},
-			password: {
-				required,
-				minLength: minLength(6),
-				maxLength: maxLength(99),
-			},
-		},
 	},
 };
 </script>
