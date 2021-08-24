@@ -358,11 +358,11 @@ export default {
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
 					timeZone: this.$auth.$state.user.timeZone,
-					gender: this.psychologist.gender,
-					birthDate: this.psychologist.birthDate,
+					gender: this.psychologist ? this.psychologist.gender : '',
+					birthDate: this.psychologist ? this.psychologist.birthDate : '',
 					username: this.psychologist ? this.psychologist.username : '',
-					region: this.psychologist.region,
-					comuna: this.psychologist.comuna,
+					region: this.psychologist ? this.psychologist.region : '',
+					comuna: this.psychologist ? this.psychologist.comuna : '',
 				})
 			);
 		},
@@ -383,16 +383,18 @@ export default {
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
 		};
-		this.gender = this.psychologist.gender;
-		this.username = this.psychologist.username;
-		this.birthDate = this.psychologist.birthDate;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
 		this.timezone = data;
-		this.comuna = this.psychologist.comuna;
-		this.region = this.psychologist.region;
+		if (this.psychologist && this.$auth.$state.user.role === 'psychologist') {
+			this.gender = this.psychologist.gender;
+			this.username = this.psychologist.username;
+			this.birthDate = this.psychologist.birthDate;
+			this.comuna = this.psychologist.comuna;
+			this.region = this.psychologist.region;
+		}
 	},
 
 	methods: {

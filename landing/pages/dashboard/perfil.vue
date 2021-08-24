@@ -138,10 +138,18 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	async asyncData({ $axios, $auth }) {
-		if ($auth.$state.user.role === 'user' && $auth.$state.user.plan.length) {
-			const item = $auth.$state.user.plan.find(el => el.status === 'success');
-			const { psychologist } = await $axios.$get(`/psychologists/one/${item.psychologist}`);
-			return { psychologist };
+		if ($auth.$state.user.role === 'user') {
+			if ($auth.$state.user.plan.length) {
+				const item = $auth.$state.user.plan.find(el => el.status === 'success');
+				if (item) {
+					console.log(item);
+					const { psychologist } = await $axios.$get(
+						`/psychologists/one/${item.psychologist}`
+					);
+					return { psychologist };
+				}
+			}
+			return { psychologist: null };
 		} else {
 			const { psychologist } = await $axios.$get(
 				`/psychologists/one/${$auth.$state.user.psychologist}`
