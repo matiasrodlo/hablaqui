@@ -142,7 +142,6 @@ export default {
 			if ($auth.$state.user.plan.length) {
 				const item = $auth.$state.user.plan.find(el => el.status === 'success');
 				if (item) {
-					console.log(item);
 					const { psychologist } = await $axios.$get(
 						`/psychologists/one/${item.psychologist}`
 					);
