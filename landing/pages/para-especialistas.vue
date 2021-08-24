@@ -69,16 +69,69 @@
 						<v-form>
 							<v-card flat class="rounded-lg">
 								<v-card-title>
-									<h3 class="primary--text text-h5">Únete a la red</h3>
+									<h3 class="primary--text font-weight-bold text-h5">
+										Únete a la red
+									</h3>
 								</v-card-title>
 								<v-card-text class="text--disabled body-1">
 									En solo unos pasos puedes unirte. Comienza creando tu cuenta.
 								</v-card-text>
 								<v-card-text>
-									<v-text-field label="Ingresa rut" outlined></v-text-field>
+									<v-text-field
+										dense
+										hide-details
+										label="Rut"
+										outlined
+										class="my-3"
+									></v-text-field>
+									<v-text-field
+										dense
+										hide-details
+										label="Correo"
+										outlined
+										class="my-3"
+										type="email"
+									></v-text-field>
+									<v-text-field
+										dense
+										hide-details
+										label="Telefono"
+										outlined
+										class="my-3"
+										type="text"
+									></v-text-field>
+									<v-text-field
+										dense
+										hide-details
+										label="Contraseña"
+										type="password"
+										outlined
+										class="my-3"
+									></v-text-field>
+									<v-checkbox>
+										<template #label>
+											<div class="caption">
+												He leído y
+												<nuxt-link
+													to="condiciones"
+													style="text-decoration: none"
+												>
+													acepto los Términos y condiciones </nuxt-link
+												>y
+												<nuxt-link
+													to="politicas"
+													style="text-decoration: none"
+												>
+													la Política de privacidad.
+												</nuxt-link>
+											</div>
+										</template>
+									</v-checkbox>
 								</v-card-text>
 								<v-card-actions>
-									<v-btn color="primary" class="ml-2 px-10">Ok</v-btn>
+									<v-btn color="primary" class="rounded-xl mx-auto px-10">
+										Regístrate ahora
+									</v-btn>
 								</v-card-actions>
 							</v-card>
 						</v-form>
@@ -125,9 +178,7 @@
 		</v-container>
 		<v-img
 			width="100%"
-			height="auto"
-			min-height="500"
-			contain
+			height="500"
 			class="d-flex align-center"
 			:src="`${$config.LANDING_URL}/beneficios-de-hablaqui.png`"
 		>
@@ -231,13 +282,46 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<div class="primary-color hidden-md-and-up">
+			<h2 class="pt-16 text-center font-weight-bold white--text body-1 text-md-h4">
+				Descargar nuestra app de chat
+			</h2>
+			<h3 class="text-center font-weight-bold white--text body-2 my-4 text-md-h6">
+				Mantén contacto con tus consultantes vía Chat. <br />
+				¡Descarga la aplicación ahora!
+			</h3>
+			<div class="d-flex justify-center pb-16">
+				<v-img
+					style="cursor: pointer; border-radius: 10px"
+					height="50"
+					max-width="160"
+					class="ma-1"
+					:src="`${$config.LANDING_URL}/google-play.png`"
+					:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+					alt="descarcar nuestra aplicacion para android"
+				/>
+				<v-img
+					style="cursor: pointer; border-radius: 10px"
+					height="50"
+					max-width="160"
+					class="ma-1"
+					:src="`${$config.LANDING_URL}/ios.svg`"
+					:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+					alt="descargar aplicacion para ios"
+				/>
+			</div>
+		</div>
 		<v-img
 			width="100%"
 			height="auto"
 			class="d-flex align-center"
-			:src="`${$config.LANDING_URL}/descarga-nuestra-app.png`"
+			:src="
+				$vuetify.breakpoint.smAndDown
+					? `${$config.LANDING_URL}/phone_mobile.webp`
+					: `${$config.LANDING_URL}/descarga-nuestra-app.png`
+			"
 		>
-			<v-row justify="center">
+			<v-row justify="center" class="hidden-sm-and-down">
 				<v-col offset="6" cols="6">
 					<h2 class="text-center font-weight-bold white--text body-1 text-md-h4">
 						Descargar nuestra app de chat
