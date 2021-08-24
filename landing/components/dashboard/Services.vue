@@ -17,13 +17,22 @@
 					</div>
 					<div>
 						<v-select
-							v-model="one"
 							filled
 							outlined
 							dense
 							:items="hours"
 							hide-details
 							label="Seleccione"
+							:value="psychologist.preferences.minimumNewSession"
+							@change="
+								e => {
+									const preferences = psychologist.preferences;
+									setPsychologist({
+										...psychologist,
+										preferences: { ...preferences, minimumNewSession: e },
+									});
+								}
+							"
 						></v-select>
 					</div>
 				</v-col>
@@ -33,13 +42,25 @@
 					</div>
 					<div>
 						<v-select
-							v-model="two"
+							:value="psychologist.preferences.minimumRescheduleSession"
 							filled
 							outlined
 							dense
 							:items="hours"
 							hide-details
 							label="Seleccione"
+							@change="
+								e => {
+									const preferences = psychologist.preferences;
+									setPsychologist({
+										...psychologist,
+										preferences: {
+											...preferences,
+											minimumRescheduleSession: e,
+										},
+									});
+								}
+							"
 						></v-select>
 					</div>
 				</v-col>
@@ -69,7 +90,8 @@
 						Sesión 50 min
 					</div>
 					<div>
-						<v-text-field outlined filled suffix="CLP"> </v-text-field>
+						<v-text-field v-model="newPrice" outlined filled suffix="CLP">
+						</v-text-field>
 					</div>
 				</v-col>
 				<v-col cols="12" md="4">
@@ -77,7 +99,8 @@
 						Sesión mensajería
 					</div>
 					<div>
-						<v-text-field outlined filled suffix="CLP"> </v-text-field>
+						<v-text-field :value="50" readonly disabled outlined filled suffix="CLP">
+						</v-text-field>
 					</div>
 				</v-col>
 				<v-col cols="12" md="4">
@@ -85,7 +108,8 @@
 						Mensajería y videollamada
 					</div>
 					<div>
-						<v-text-field outlined filled suffix="CLP"> </v-text-field>
+						<v-text-field :value="50" readonly disabled outlined filled suffix="CLP">
+						</v-text-field>
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-h6" style="color: #3c3c3b">
@@ -146,15 +170,22 @@
 					</div>
 					<div class="mt-8">
 						<v-checkbox
-							label="Aceptar Clientes Silver"
+							label="Visibilidad en Marketplace"
 							color="primary"
 							persistent-hint
-							hint="Planes que pagan $ 50/50 min o $ 25/30min. Los expertos que aceptan este plan suelen tener un aumento de hasta un 60% en el número de sesiones."
+							hint="Los especialistas que aceptan nuevos clientes tienden a tener un aumento en el número de sesiones."
 						></v-checkbox>
 					</div>
 				</v-col>
 				<v-col cols="12" class="text-center">
-					<v-btn color="primary" depressed class="px-16" style="border-radius: 10px">
+					<v-btn
+						color="primary"
+						depressed
+						:loading="loading"
+						class="px-16"
+						style="border-radius: 10px"
+						@click="onSubmit"
+					>
 						Editar
 					</v-btn>
 				</v-col>
@@ -165,25 +196,49 @@
 
 <script>
 import { mdiInformationOutline } from '@mdi/js';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
+	props: {
+		psychologist: {
+			type: Object,
+			default: null,
+		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			mdiInformationOutline,
 			hours: [
-				{ value: '1', text: '1 hora' },
-				{ value: '2', text: '2 horas' },
-				{ value: '3', text: '3 horas' },
-				{ value: '6', text: '6 horas' },
-				{ value: '12', text: '12 horas' },
-				{ value: '24', text: '24 horas' },
+				{ value: 1, text: '1 hora' },
+				{ value: 2, text: '2 horas' },
+				{ value: 3, text: '3 horas' },
+				{ value: 6, text: '6 horas' },
+				{ value: 12, text: '12 horas' },
+				{ value: 24, text: '24 horas' },
 			],
-			one: '',
-			two: '',
+			newPrice: 0,
+			loading: false,
 		};
+	},
+	methods: {
+		async onSubmit() {
+			this.loading = true;
+			await this.updatePrices(this.newPrice);
+			const psychologist = await this.updatePsychologist(this.psychologist);
+			this.setPsychologist(psychologist);
+			this.loading = false;
+		},
+		...mapActions({
+			updatePsychologist: 'Psychologist/updatePsychologist',
+			updatePrices: 'Psychologist/updatePrices',
+		}),
 	},
 };
 </script>

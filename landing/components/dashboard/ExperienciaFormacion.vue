@@ -298,7 +298,7 @@
 				depressed
 				class="px-16"
 				style="border-radius: 10px"
-				@click="onSubmite"
+				@click="onSubmit"
 			>
 				Guardar
 			</v-btn>
@@ -334,7 +334,7 @@ export default {
 		this.getAppointments();
 	},
 	methods: {
-		async onSubmite() {
+		async onSubmit() {
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
 		},
