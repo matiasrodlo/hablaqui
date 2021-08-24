@@ -89,37 +89,41 @@
 								</v-card-text>
 								<v-card-text>
 									<v-text-field
+										v-model="formData.rut"
 										dense
-										hide-details
 										label="Rut"
 										outlined
 										class="my-3"
+										:error-messages="rutErrors"
 									></v-text-field>
 									<v-text-field
+										v-model="formData.email"
 										dense
-										hide-details
+										:error-messages="emailErrors"
 										label="Correo"
 										outlined
 										class="my-3"
 										type="email"
 									></v-text-field>
 									<v-text-field
+										v-model="formData.phone"
 										dense
-										hide-details
+										:error-messages="phoneErrors"
 										label="Telefono"
 										outlined
 										class="my-3"
 										type="text"
 									></v-text-field>
 									<v-text-field
+										v-model="formData.password"
 										dense
-										hide-details
+										:error-messages="passwordErrors"
 										label="Contraseña"
 										type="password"
 										outlined
 										class="my-3"
 									></v-text-field>
-									<v-checkbox>
+									<v-checkbox v-model="terminos">
 										<template #label>
 											<div class="caption">
 												He leído y
@@ -372,11 +376,24 @@
 			<Footer />
 		</v-container>
 		<div class="primary-color" style="height: 30px"></div>
+		<v-dialog v-model="dialog" width="300">
+			<v-sheet style="width: 300px; height: 100px">
+				<v-alert dense outlined type="error" width="300" height="100">
+					Debes aceptar los
+					<strong>terminos y condiciones</strong>
+					<span class="primary--text">y</span>
+					<strong>politicas de privacidad</strong>
+				</v-alert>
+			</v-sheet>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
 import { mdiCheck } from '@mdi/js';
+import { validationMixin } from 'vuelidate';
+import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -384,9 +401,14 @@ export default {
 		Icon: () => import('~/components/Icon'),
 		Appbar: () => import('@/components/AppbarWhite'),
 	},
+	mixins: [validationMixin],
 	data() {
 		return {
 			mdiCheck,
+			formData: { rut: '', email: '', phone: '', password: '' },
+			terminos: false,
+			dialog: false,
+			loading: false,
 			items: [
 				{
 					id: 1,
@@ -494,6 +516,72 @@ export default {
 			],
 			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/para-especialistas/` }],
 		};
+	},
+	computed: {
+		rutErrors() {
+			const errors = [];
+			if (!this.$v.formData.rut.$dirty) return errors;
+			!this.$v.formData.rut.required && errors.push('El Correo rut es querido');
+			return errors;
+		},
+		phoneErrors() {
+			const errors = [];
+			if (!this.$v.formData.phone.$dirty) return errors;
+			!this.$v.formData.phone.required && errors.push('El telefono es querido');
+			return errors;
+		},
+		emailErrors() {
+			const errors = [];
+			if (!this.$v.formData.email.$dirty) return errors;
+			!this.$v.formData.email.required && errors.push('El telefono es querido');
+			!this.$v.formData.email.email && errors.push('Inserte un correo valido');
+			return errors;
+		},
+		passwordErrors() {
+			const errors = [];
+			if (!this.$v.formData.password.$dirty) return errors;
+			!this.$v.formData.password.required && errors.push('La contraseña es querida');
+			!this.$v.formData.password.minLength && errors.push('Minimo 6 caracteres');
+			!this.$v.formData.password.maxLength && errors.push('Maximo 99 caracteres');
+			return errors;
+		},
+	},
+	methods: {
+		async onSubmit() {
+			this.$v.$touch();
+			if (!this.$v.$invalid && !this.terminos) {
+				return (this.dialog = true);
+			}
+			if (!this.$v.$invalid && this.accept) {
+				this.loading = true;
+				await this.registerPsychologist(this.formData);
+				this.loading = false;
+				this.formData = { rut: '', email: '', phone: '', password: '' };
+				this.$v.$reset();
+			}
+		},
+		...mapActions({
+			registerPsychologist: 'Psychologist/registerPsychologist',
+		}),
+	},
+	validations: {
+		formData: {
+			rut: {
+				required,
+			},
+			email: {
+				required,
+				email,
+			},
+			phone: {
+				required,
+			},
+			password: {
+				required,
+				minLength: minLength(6),
+				maxLength: maxLength(99),
+			},
+		},
 	},
 };
 </script>
