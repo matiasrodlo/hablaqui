@@ -1,69 +1,84 @@
 <template>
 	<div>
-		<v-slide-group v-model="slide" class="content" center-active show-arrows>
-			<template #prev>
-				<div class="align-self-start mt-4">
-					<icon :icon="mdiChevronLeft" />
-				</div>
-			</template>
-			<template #next>
-				<div class="align-self-start mt-4">
-					<icon :icon="mdiChevronRight" />
-				</div>
-			</template>
-			<v-slide-item v-for="(item, k) in items" :key="k" v-slot="{ toggle }">
-				<v-container class="pb-0 px-2 px-sm-4">
-					<div class="text-center" @click="toggle">
-						<div class="primary--text font-weight-bold">{{ item.text }}</div>
-						<div class="text--secondary">{{ item.day }}</div>
+		<v-row v-if="loading" class="ma-0" style="height: 300px" align="center" justify="center">
+			<v-progress-circular indeterminate color="primary" />
+		</v-row>
+		<template v-else>
+			<v-slide-group v-model="slide" class="content" center-active show-arrows>
+				<template #prev>
+					<div class="align-self-start mt-4">
+						<icon :icon="mdiChevronLeft" />
 					</div>
-					<div
-						v-dragscroll
-						class="mt-3"
-						style="
-							overscroll-behavior: contain;
-							max-height: 272px;
-							overflow: hidden auto;
-						"
-					>
-						<v-sheet
-							v-for="(n, r) in item.available"
-							:key="r"
-							rounded
-							class="item text-center my-3 pa-2"
-							style="width: 100%; height: fit-content"
-							:class="
-								selected && selected.start == n && selected.date == item.date
-									? 'itemSelected'
-									: ''
-							"
-							@click.stop="
-								selected = { date: item.date, start: n, end: item.available[r + 1] }
+				</template>
+				<template #next>
+					<div class="align-self-start mt-4">
+						<icon :icon="mdiChevronRight" />
+					</div>
+				</template>
+				<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
+					<v-container class="pb-0 px-2 px-sm-4">
+						<div class="text-center" @click="toggle">
+							<div class="primary--text font-weight-bold">{{ item.text }}</div>
+							<div class="text--secondary">{{ item.day }}</div>
+						</div>
+						<div
+							v-dragscroll
+							class="mt-3"
+							style="
+								overscroll-behavior: contain;
+								max-height: 272px;
+								overflow: hidden auto;
 							"
 						>
-							{{ n }}
-						</v-sheet>
-					</div>
-				</v-container>
-			</v-slide-item>
-		</v-slide-group>
-		<div
-			style="max-width: 200px"
-			:class="selected ? 'primary pointer' : 'blue-grey lighten-3'"
-			class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl white--text"
-			@click="
-				() => {
-					if (selected) setDate(selected);
-				}
-			"
-		>
-			{{ titleButton }}
-		</div>
+							<template v-if="item.available.length">
+								<v-sheet
+									v-for="(n, r) in item.available"
+									:key="r"
+									rounded
+									class="item text-center my-3 pa-2"
+									style="width: 100%; height: fit-content"
+									:class="
+										selected &&
+										selected.start == n &&
+										selected.date == item.date
+											? 'itemSelected'
+											: ''
+									"
+									@click.stop="
+										selected = {
+											date: item.date,
+											start: n,
+											end: item.available[r + 1],
+										}
+									"
+								>
+									{{ n }}
+								</v-sheet>
+							</template>
+							<template v-else> </template>
+						</div>
+					</v-container>
+				</v-slide-item>
+			</v-slide-group>
+			<div
+				style="max-width: 200px"
+				:class="selected ? 'primary pointer' : 'blue-grey lighten-3'"
+				class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl white--text"
+				@click="
+					() => {
+						if (selected) setDate(selected);
+					}
+				"
+			>
+				{{ titleButton }}
+			</div>
+		</template>
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 import { dragscroll } from 'vue-dragscroll';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
@@ -75,15 +90,12 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		sessions: {
-			type: Array,
-			default: () => [],
-		},
 		setDate: {
 			type: Function,
 			required: true,
 		},
 		titleButton: { type: String, default: 'Agendar una cita online' },
+		idPsy: { type: String, default: '' },
 	},
 	data() {
 		return {
@@ -92,61 +104,29 @@ export default {
 			slide: 0,
 			today: moment(),
 			selected: null,
-			hours: [
-				'10:00',
-				'11:00',
-				'12:00',
-				'14:00',
-				'15:00',
-				'16:00',
-				'17:00',
-				'18:00',
-				'19:00',
-			],
-			items: [],
-			length: Array.from(Array(31), (_, x) => x),
+			loading: false,
 		};
 	},
-	created() {
-		moment.locale('es');
-		this.items = [
-			{
-				id: 1,
-				text: moment().format('ddd'),
-				day: moment().format('DD MMM'),
-				date: moment().format('L'),
-				available: this.hours,
-			},
-		];
+	computed: {
+		...mapGetters({ sessions: 'Psychologist/sessionsFormatted' }),
+	},
+	watch: {
+		idPsy(newValue) {
+			this.getData(newValue);
+		},
 	},
 	mounted() {
-		this.addDays();
+		this.getData(this.idPsy);
 	},
 	methods: {
-		addDays() {
-			this.length.map(el => {
-				const day = moment(this.items[-1]).add(el, 'days');
-				if (el !== 0)
-					return (this.items = [
-						...this.items,
-						{
-							id: el,
-							text: day.format('ddd'),
-							day: day.format('DD MMM'),
-							date: day.format('L'),
-							available: this.hours.filter(hour => {
-								return !this.sessions.some(u => {
-									return (
-										u.start === hour &&
-										moment(u).format('L') === day.format('L')
-									);
-								});
-							}),
-						},
-					]);
-				else return null;
-			});
+		async getData(id) {
+			this.loading = true;
+			await this.getFormattedSessions(id);
+			this.loading = false;
 		},
+		...mapActions({
+			getFormattedSessions: 'Psychologist/getFormattedSessions',
+		}),
 	},
 };
 </script>
@@ -173,6 +153,13 @@ export default {
 	border: 1px solid #0085ff80;
 	box-sizing: border-box;
 	border-radius: 2px;
+}
+
+.busy {
+	font-size: 12px;
+	border-radius: 2px;
+	border: 1px solid #d6828280;
+	background-color: #daa4a480;
 }
 
 .itemSelected {

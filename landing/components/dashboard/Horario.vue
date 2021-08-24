@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<v-card :loading="!psychologist" outlined style="max-width: 640px">
+		<v-card
+			:loading="!psychologist"
+			outlined
+			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '640px' : '100%' }"
+		>
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
 					<div>
@@ -83,10 +87,19 @@ import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 export default {
+	props: {
+		psychologist: {
+			type: Object,
+			default: null,
+		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			loading: false,
-			psychologist: null,
 			items: [
 				{
 					title: 'monday',
@@ -188,13 +201,9 @@ export default {
 		},
 	},
 	mounted() {
-		this.initFetch();
+		this.setDay(cloneDeep(this.psychologist.schedule));
 	},
 	methods: {
-		async initFetch() {
-			this.psychologist = await this.getPsychologist(this.$auth.$state.user.psychologist);
-			this.setDay(cloneDeep(this.psychologist.schedule));
-		},
 		setDay(payload) {
 			this.items = this.items.map((item, index) => {
 				let day = ['00:00', '00:00'];
@@ -241,12 +250,12 @@ export default {
 				saturday: this.items[5].active ? this.items[5].day : 'busy',
 				sunday: this.items[6].active ? this.items[6].day : 'busy',
 			};
-			this.psychologist = await this.setSchedule(payload);
-			this.setDay(cloneDeep(this.psychologist.schedule));
+			const psychologist = await this.setSchedule(payload);
+			this.setPsychologist(psychologist);
+			this.setDay(cloneDeep(psychologist.schedule));
 			this.loading = false;
 		},
 		...mapActions({
-			getPsychologist: 'Psychologist/getPsychologist',
 			setSchedule: 'Psychologist/setSchedule',
 		}),
 	},

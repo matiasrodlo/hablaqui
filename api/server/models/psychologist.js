@@ -1,4 +1,4 @@
-import { Schema, model, Mongoose } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 let session = new Schema({
 	date: {
@@ -48,6 +48,36 @@ let defaultPreferences = {
 	corporativeSessions: true,
 };
 
+let formationSchema = new Schema({
+	formationType: {
+		type: String,
+	},
+	description: {
+		type: String,
+	},
+	start: {
+		type: String,
+	},
+	end: {
+		type: String,
+	},
+});
+
+let experienceSchema = new Schema({
+	title: {
+		type: String,
+	},
+	place: {
+		type: String,
+	},
+	start: {
+		type: String,
+	},
+	end: {
+		type: String,
+	},
+});
+
 let rating = new Schema(
 	{
 		author: {
@@ -74,6 +104,9 @@ let psychologist = new Schema({
 	email: {
 		type: String,
 	},
+	linkedin: {
+		type: String,
+	},
 	username: {
 		type: String,
 	},
@@ -86,21 +119,20 @@ let psychologist = new Schema({
 	gender: {
 		type: String,
 	},
+	birthDate: {
+		type: String,
+	},
 	sessionType: {
 		type: String,
 	},
 	languages: {
 		type: Array,
 	},
-	experience: {
-		type: Array,
-	},
 	specialties: {
 		type: Array,
 	},
-	formation: {
-		type: Array,
-	},
+	experience: [experienceSchema],
+	formation: [formationSchema],
 	personalDescription: {
 		type: String,
 	},

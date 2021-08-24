@@ -1,8 +1,8 @@
 <template>
-	<v-container style="height: 100vh">
-		<appbar title="Mi cuenta" />
-		<v-list two-line style="border-radius: 15px; height: 150px">
-			<v-list-item style="position: relative">
+	<v-container style="height: 100vh; max-width: 1200px">
+		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
+		<v-list two-line color="transparent" style="height: 150px">
+			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
 					id="upload"
 					ref="avatar"
@@ -40,8 +40,37 @@
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
+			<v-list-item class="hidden-md-and-up">
+				<div
+					style="position: absolute; top: -70px; left: 0; width: 100%"
+					class="text-center mx-auto"
+				>
+					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
+						<v-progress-circular indeterminate color="primary"></v-progress-circular
+					></v-avatar>
+					<label v-else for="upload" style="cursor: pointer">
+						<v-avatar size="100" color="#EEE">
+							<v-img
+								v-if="$auth.$state.user && $auth.$state.user.avatar"
+								:src="$auth.$state.user.avatar"
+								:alt="$auth.$state.user.name"
+								contain
+							/>
+							<icon v-else x-large :icon="mdiCamera" />
+						</v-avatar>
+					</label>
+				</div>
+				<v-list-item-content v-if="$auth.$state.user" class="mt-10">
+					<v-list-item-title class="text-capitalize font-weight-bold title text-center">
+						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
+					</v-list-item-title>
+					<v-list-item-subtitle class="body-1 text-center">
+						Bienvenido a Hablaquí
+					</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
 		</v-list>
-		<v-tabs v-model="tabs" :grow="$auth.$state.user.role === 'user'" style="height: 100px">
+		<v-tabs v-model="tabs" grow style="height: 100px">
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
@@ -49,10 +78,10 @@
 				{{ $auth.$state.user.role == 'user' ? 'Mis planes' : 'Horario' }}
 			</v-tab>
 
-			<v-tab
-				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
-				class="primary--text text-capitalize"
-			>
+			<!-- <v-tab class="primary--text text-capitalize">
+				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
+			</v-tab> -->
+			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
 				Mi psicologo
 			</v-tab>
 		</v-tabs>
@@ -60,14 +89,31 @@
 			<v-col cols="12">
 				<v-tabs-items v-model="tabs">
 					<v-tab-item :transition="false">
-						<general-information v-if="tabs === 0" />
+						<general-information
+							v-if="tabs === 0"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
 						<my-plans v-if="tabs === 1 && $auth.$state.user.role === 'user'" />
-						<horario v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'" />
+						<horario
+							v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
-						<psicologo v-if="tabs === 2" />
+						<psicologo
+							v-if="tabs === 2 && $auth.$state.user.role === 'user'"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
+						<services
+							v-if="tabs === 2 && $auth.$state.user.role === 'psychologist'"
+							:psychologist="psychologist"
+							:set-psychologist="setPsychologist"
+						/>
 					</v-tab-item>
 				</v-tabs-items>
 			</v-col>
@@ -85,11 +131,35 @@ export default {
 		GeneralInformation: () => import('~/components/dashboard/General'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
+		Services: () => import('~/components/dashboard/Services'),
 		Horario: () => import('~/components/dashboard/Horario'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	async asyncData({ $axios, $auth }) {
+		if ($auth.$state.user.role === 'user' && $auth.$state.user.plan.length) {
+			const item = $auth.$state.user.plan.find(el => el.status === 'success');
+			const { psychologist } = await $axios.$get(`/psychologists/one/${item.psychologist}`);
+			return { psychologist };
+		} else {
+			const { psychologist } = await $axios.$get(
+				`/psychologists/one/${$auth.$state.user.psychologist}`
+			);
+			if (!psychologist.formation.length) {
+				psychologist.formation.push({
+					formationType: '',
+					description: '',
+					start: '',
+					end: '',
+				});
+			}
+			if (!psychologist.experience.length) {
+				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			}
+			return { psychologist };
+		}
+	},
 	data() {
 		return {
 			mdiCamera,
@@ -99,6 +169,9 @@ export default {
 		};
 	},
 	methods: {
+		setPsychologist(value) {
+			this.psychologist = value;
+		},
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const user = await this.upateAvatar(this.setAvatarObject(file));
@@ -110,7 +183,9 @@ export default {
 			avatar.append('avatar', file);
 			return avatar;
 		},
-		...mapActions({ upateAvatar: 'User/upateAvatar' }),
+		...mapActions({
+			upateAvatar: 'User/upateAvatar',
+		}),
 	},
 };
 </script>
