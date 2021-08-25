@@ -14,7 +14,7 @@
 				/>
 			</v-sheet>
 			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
-				<v-list-item class="my-4" link>
+				<v-list-item v-if="false" class="my-4" link>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
 							<icon v-if="online" size="35" color="#8BC34A" :icon="mdiAccount" />
