@@ -196,7 +196,7 @@ export default {
 		moment.locale('es');
 		await this.initFetch();
 		this.successPayment();
-		this.$refs.calendar.checkChange();
+		this.$refs.calendar?.checkChange();
 	},
 	methods: {
 		async initFetch() {
