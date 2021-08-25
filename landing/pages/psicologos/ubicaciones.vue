@@ -199,10 +199,42 @@ export default {
 	head() {
 		return {
 			title: `Ubicaciones de nuestros psicologos | Hablaquí`,
+			meta: [
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `Ubicaciones de nuestros psicologos | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: 'Encuentra tu psicologo ideal en la ubicación más cercana a ti.',
+				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos/ubicaciones',
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `Ubicaciones de nuestros psicologos | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: 'Encuentra tu psicologo ideal en la ubicación más cercana a ti.',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos/ubicaciones',
+				},
+			],
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}psicologos/ubicaciones`,
+					href: `${this.$config.LANDING_URL}/psicologos/ubicaciones`,
 				},
 			],
 		};

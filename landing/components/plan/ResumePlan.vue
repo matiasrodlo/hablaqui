@@ -3,7 +3,7 @@
 		<v-col cols="12" md="6" class="elevation-2 px-4">
 			<div class="my-3 subtitle-2">Aplicar un cupón</div>
 			<div class="d-flex">
-				<v-text-field dense outlined hide-details>
+				<v-text-field v-model="coupon" dense outlined hide-details>
 					<template #label>
 						<span class="caption py-0">Introduzca el codigo</span>
 					</template>
@@ -12,6 +12,7 @@
 					type="button"
 					class="primary px-10"
 					style="border-radius: 10px; width: 45%; height: 40px"
+					@click="setCoupon"
 				>
 					<span class="white--text">Solicitar</span>
 				</button>
@@ -67,7 +68,12 @@
 				<v-divider class="my-4"></v-divider>
 				<div class="d-flex justify-space-between">
 					<span class="font-weight-bold subtitle-1">Monto total</span>
-					<span class="font-weight-bold text-h6 black--text">${{ plan.deal.total }}</span>
+					<span class="font-weight-bold black--text">
+						<span :class="pay ? 'text-decoration-line-through caption' : 'text-h6'">
+							${{ priceInt }}
+						</span>
+						<span v-if="pay" class="text-h6">{{ pay ? pay : priceInt }}</span>
+					</span>
 				</div>
 				<div class="caption my-4 text-left">
 					Realiza el pago de tu suscripción con tarjeta de débito y crédito en cuotas.
@@ -110,26 +116,51 @@ export default {
 	},
 	data() {
 		return {
+			coupon: null,
+			pay: null,
 			loading: false,
+			priceInt: Number(this.plan.deal.total.split('.').join('')),
 		};
 	},
 	mounted() {
 		this.setResumeView(false);
 	},
 	methods: {
+		async setCoupon() {
+			try {
+				const { coupon } = await this.$axios.$post('/coupons/check-coupon', {
+					coupon: this.coupon,
+				});
+				const priceInt = Number(this.plan.deal.total.split('.').join(''));
+				if (coupon.discountType === 'percentage') {
+					const totalValue = priceInt * ((100 - coupon.discount) / 100);
+					this.pay = totalValue.toFixed(0);
+				}
+				if (coupon.discountType === 'static') {
+					this.pay = priceInt - coupon.discountType;
+				}
+			} catch (error) {
+				this.pay = null;
+				this.snackBar({ content: error.response.data.message, color: 'error' });
+			}
+		},
 		async payButton() {
 			this.loading = true;
-			const priceInt = Number(this.plan.deal.total.split('.').join(''));
 			const sessionPayload = {
 				date: this.event.date,
 				start: this.event.start,
 				end: this.event.end,
 				user: this.$auth.$state.user,
 				psychologist: this.psy,
+				paymentPeriod: this.plan.deal.type,
+				title: this.plan.title,
+				price: this.pay ? this.pay : this.priceInt,
+				discountCoupon: this.pay ? this.coupon : '',
+				fullInfo: this.plan,
 			};
 			const createdSession = await this.createSession(sessionPayload);
 			const payload = {
-				price: priceInt,
+				price: this.pay ? this.pay : this.priceInt,
 				title: this.plan.title,
 				quantity: 1,
 				sessionToUpdate: createdSession.id,
@@ -144,7 +175,10 @@ export default {
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
 			createSession: 'Psychologist/createSession',
 		}),
-		...mapMutations({ setResumeView: 'Psychologist/setResumeView' }),
+		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
+			snackBar: 'Snackbar/showMessage',
+		}),
 	},
 };
 </script>

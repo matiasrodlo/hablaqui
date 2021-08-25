@@ -60,7 +60,7 @@
 							style="top: 20px; left: 10px"
 							@click="el.expandCard = false"
 						>
-							<v-icon large>mdi-chevron-left</v-icon>
+							<icon :icon="mdiChevronLeft" />
 						</v-btn>
 						<div
 							style="max-width: 160px"
@@ -134,7 +134,12 @@
 </template>
 
 <script>
+import { mdiChevronLeft } from '@mdi/js';
+
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		setPlan: {
 			type: Function,
@@ -143,6 +148,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronLeft,
 			selectedItem: '',
 			plans: [
 				{

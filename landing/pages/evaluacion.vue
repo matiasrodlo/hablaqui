@@ -575,7 +575,11 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="ma-1 caption text-capitalize"
+																			class="
+																				ma-1
+																				caption
+																				text-capitalize
+																			"
 																		>
 																			{{ tag }};
 																		</span>
@@ -619,7 +623,10 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="ma-1 text-capitalize"
+																			class="
+																				ma-1
+																				text-capitalize
+																			"
 																		>
 																			{{ tag }};
 																		</span>
@@ -645,9 +652,10 @@
 										v-slot="{ active, toggle }"
 									>
 										<v-btn icon color="#BDBDBD" @click="toggle">
-											<v-icon :color="active ? 'primary' : 'info'"
-												>mdi-record</v-icon
-											>
+											<icon
+												:color="active ? 'primary' : 'info'"
+												:icon="mdiRecord"
+											/>
 										</v-btn>
 									</v-item>
 								</v-item-group>
@@ -672,6 +680,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarWhite.vue';
 
 export default {
@@ -680,10 +689,12 @@ export default {
 		Appbar,
 		Precharge: () => import('~/components/evaluation/Precharge'),
 		Selection: () => import('~/components/evaluation/Selection'),
+		Icon: () => import('~/components/Icon'),
 	},
 	middleware: ['auth'],
 	data() {
 		return {
+			mdiRecord,
 			onboarding: 0,
 			dialogPrecharge: false,
 			step: '0',
@@ -701,7 +712,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}evaluacion/`,
+					href: `${this.$config.LANDING_URL}/evaluacion/`,
 				},
 			],
 		};

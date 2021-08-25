@@ -16,11 +16,11 @@
 					</v-card-text>
 					<v-card-text style="height: 70px" class="d-flex align-center">
 						<v-btn icon :class="{ 'primary--text': view == 2 }" @click="setView(2)">
-							<v-icon>mdi-menu</v-icon>
+							<icon :icon="mdiMenu" />
 						</v-btn>
 						<v-divider vertical class="mx-2"></v-divider>
 						<v-btn icon :class="{ 'primary--text': view == 1 }" @click="setView(1)">
-							<v-icon>mdi-view-grid-outline</v-icon>
+							<icon :icon="mdiViewGridOutline" />
 						</v-btn>
 					</v-card-text>
 					<v-card-text>
@@ -191,7 +191,7 @@
 													:class="{ 'primary--text': view == 2 }"
 													@click="setView(2)"
 												>
-													<v-icon>mdi-menu</v-icon>
+													<icon :icon="mdiMenu" />
 												</v-btn>
 												<v-divider vertical class="mx-2"></v-divider>
 												<v-btn
@@ -199,7 +199,7 @@
 													:class="{ 'primary--text': view == 1 }"
 													@click="setView(1)"
 												>
-													<v-icon>mdi-view-grid-outline</v-icon>
+													<icon :icon="mdiViewGridOutline" />
 												</v-btn>
 											</v-card-text>
 										</template>
@@ -409,7 +409,11 @@
 													</v-img>
 													<span
 														v-else
-														class="white--text headline font-weight-bold"
+														class="
+															white--text
+															headline
+															font-weight-bold
+														"
 													>
 														{{ item.name.substr(0, 1) }}
 													</span>
@@ -420,7 +424,11 @@
 													:to="{ path: `/${item.username}` }"
 												>
 													<span
-														class="body-2 font-weight-bold secondary--text"
+														class="
+															body-2
+															font-weight-bold
+															secondary--text
+														"
 													>
 														{{ item.name }}
 														{{ item.lastName && item.lastName }}
@@ -510,7 +518,11 @@
 												>
 													<v-row justify="space-between">
 														<v-col
-															class="headline font-weight-bold white--text"
+															class="
+																headline
+																font-weight-bold
+																white--text
+															"
 														>
 															Encuentra a tu psicólogo ideal
 														</v-col>
@@ -595,18 +607,32 @@
 														</v-img>
 														<span
 															v-else
-															class="white--text headline font-weight-bold"
+															class="
+																white--text
+																headline
+																font-weight-bold
+															"
 														>
 															{{ item.name.substr(0, 1) }}
 														</span>
 													</v-avatar>
 													<div
-														class="text-center body-2 text--secondary mt-3 mb-2"
+														class="
+															text-center
+															body-2
+															text--secondary
+															mt-3
+															mb-2
+														"
 													>
 														Codigo {{ item.code }}
 													</div>
 													<nuxt-link
-														class="primary--text body-2 font-weight-bold"
+														class="
+															primary--text
+															body-2
+															font-weight-bold
+														"
 														style="text-decoration: none"
 														:to="{ path: `/${item.username}` }"
 													>
@@ -630,7 +656,12 @@
 																}"
 															>
 																<span
-																	class="body-1 text-lg-h5 font-weight-bold text--secondary"
+																	class="
+																		body-1
+																		text-lg-h5
+																		font-weight-bold
+																		text--secondary
+																	"
 																>
 																	{{ item.name }}
 																	{{
@@ -643,7 +674,10 @@
 														<v-col
 															cols="12"
 															sm="6"
-															class="text-center text-sm-right mb-4 mb-sm-0"
+															class="
+																text-center text-sm-right
+																mb-4 mb-sm-0
+															"
 														>
 															<dialog-agenda-cita-online
 																:psy="item"
@@ -673,7 +707,12 @@
 														</template>
 													</v-chip-group>
 													<div
-														class="body-2 mt-2 mr-4 text-center text-sm-left"
+														class="
+															body-2
+															mt-2
+															mr-4
+															text-center text-sm-left
+														"
 													>
 														{{
 															item.professionalDescription.length >
@@ -700,14 +739,18 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import { mdiMenu, mdiViewGridOutline } from '@mdi/js';
 
 export default {
 	name: 'AllPsicologos',
 	components: {
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiMenu,
+			mdiViewGridOutline,
 			view: 1,
 			specialties: '',
 			searchInput: '',

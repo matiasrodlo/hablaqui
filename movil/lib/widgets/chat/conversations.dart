@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../services/service-hablaqui.dart';
 import '../../classes/Psychologist.dart';
 import '../../classes/Chat.dart';
@@ -36,13 +37,14 @@ class _ChatConversationsState extends State<ChatConversations>
 	@override
 	Widget build(BuildContext context)
 	{
+		var size = MediaQuery.of(context).size;
 		return Container(
-			child: ListView(
+			child: this._items.length > 0 ? ListView(
 				children: [
 					Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
-							Text('Mis psicólogos', style: TextStyle(color: appColors.mainColors['blue']),),
+							Text('Mi psicólogo', style: TextStyle(color: appColors.mainColors['blue']),),
 							SizedBox(height: 10),
 							Divider(color: appColors.mainColors['blue']),
 							SizedBox(height: 10),
@@ -83,6 +85,10 @@ class _ChatConversationsState extends State<ChatConversations>
 						]
 					)
 				]
+			) : 
+			Container(
+				margin: EdgeInsets.only(top: size.height * 0.25, right: size.width * 0.05, left: size.width * 0.05,),
+				child: this._noData(),
 			),
 			/*
 			child: StreamBuilder(
@@ -110,7 +116,7 @@ class _ChatConversationsState extends State<ChatConversations>
 	Widget _noData()
 	{
 		return Column(
-			mainAxisAlignment: MainAxisAlignment.center,
+			//mainAxisAlignment: MainAxisAlignment.center,
 			crossAxisAlignment: CrossAxisAlignment.stretch,
 			children: [
 				Text('Comienza a hablar con nuestros psicólogos', 
@@ -118,7 +124,7 @@ class _ChatConversationsState extends State<ChatConversations>
 					style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])
 				),
 				SizedBox(height: 20),
-				Text('Lorem ipsum dolor sit amet, consectetuer adipscing elit, sed diam nonumy nibh euismod tincidunt ut laoreet',
+				Text('Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu vida hoy.',
 					textAlign: TextAlign.center,
 				),
 				SizedBox(height: 20),
@@ -130,9 +136,18 @@ class _ChatConversationsState extends State<ChatConversations>
 			]
 		);
 	}
-	void _searchPsychologists()
+	void _searchPsychologists() async
 	{
-		Navigator.of(this.context).pushNamed('/psychologists/search');
+		//Navigator.of(this.context).pushNamed('/psychologists/search');
+		String url = 'https://hablaqui.cl/psicologos';
+		if (await canLaunch(url)) 
+		{
+			await launch(url);
+		} 
+		else 
+		{
+			print('Could not launch $url');
+		}
 	}
 	Stream<List> _getConversations() async*
 	{
@@ -147,15 +162,19 @@ class _ChatConversationsState extends State<ChatConversations>
 			elevation: 0,
 			child: Container(
 				child: ListTile(
-					leading: CircleAvatar(
-						backgroundImage: NetworkImage(chat.psychologist.avatar),
-						backgroundColor: Colors.grey,
+					leading: Container(
+						width: 54,
+						height: 54,
+						child: CircleAvatar(
+							backgroundImage: NetworkImage(chat.psychologist.avatar),
+							backgroundColor: Colors.grey,
+						)
 					),
 					title: Text(chat.psychologist.fullName),
 					subtitle: Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
-							Text('Psicologo - Activo')
+							Text('Psicólogo - Activo')
 						]
 					),
 					//trailing: Image.network(psycho.avatar)

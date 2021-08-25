@@ -47,7 +47,11 @@
 						<v-col cols="12" md="9">
 							<v-row justify="space-between">
 								<v-col
-									class="text-center text-md-left font-weight-bold text-h6 text-md-h4 text-xl-h3 text--secondary"
+									class="
+										text-center text-md-left
+										font-weight-bold
+										text-h6 text-md-h4 text-xl-h3 text--secondary
+									"
 								>
 									{{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
@@ -63,7 +67,7 @@
 									<v-btn
 										v-if="
 											!$auth.$state.loggedIn ||
-											$auth.$state.user.role == 'user'
+											$auth.$state.user.role === 'user'
 										"
 										:loading="loadingChat"
 										rounded
@@ -99,7 +103,9 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li v-for="(experience, i) in psychologist.experience" :key="i">
-									{{ experience }}
+									{{ experience.title }} - {{ experience.place }} ({{
+										experience.start
+									}}, {{ experience.end }})
 								</li>
 							</ul>
 						</v-col>
@@ -155,7 +161,9 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li v-for="(formation, i) in psychologist.formation" :key="i">
-									{{ formation }}
+									{{ formation.formationType }} - {{ formation.description }} ({{
+										formation.start
+									}}, {{ formation.end }})
 								</li>
 							</ul>
 						</v-col>
@@ -193,7 +201,13 @@
 									<v-card-text><signin :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
 										<div
-											class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+											class="
+												mb-2
+												text-center
+												subtitle-1
+												font-weight-bold
+												secondary--text
+											"
 										>
 											<small> ¿No eres parte de Hablaquí? </small>
 										</div>
@@ -226,7 +240,12 @@
 											>
 										</div>
 										<div
-											class="text-center font-weight-bold caption secondary--text"
+											class="
+												text-center
+												font-weight-bold
+												caption
+												secondary--text
+											"
 										>
 											2021 Hablaqui
 										</div>
@@ -246,7 +265,13 @@
 									<v-card-text><signup :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
 										<div
-											class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+											class="
+												mb-2
+												text-center
+												subtitle-1
+												font-weight-bold
+												secondary--text
+											"
 										>
 											<small> ¿Ya tienes cuenta Hablaquí? </small>
 										</div>
@@ -274,7 +299,12 @@
 											>
 										</div>
 										<div
-											class="text-center font-weight-bold caption secondary--text"
+											class="
+												text-center
+												font-weight-bold
+												caption
+												secondary--text
+											"
 										>
 											2021 Hablaqui
 										</div>
@@ -290,7 +320,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -317,9 +347,12 @@ export default {
 		}),
 	},
 	watch: {
-		resumeView(newValue) {
+		async resumeView(newValue) {
 			if (newValue && this.dialog) {
+				this.loadingChat = true;
 				this.dialog = false;
+				await this.startConversation(this.psychologist._id);
+				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
 		},
@@ -333,13 +366,17 @@ export default {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
 			else this.$router.push({ path: '/auth/q=register' });
 		},
-		goChat() {
+		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.dialog = true;
 			} else {
+				this.loadingChat = true;
+				await this.startConversation(this.psychologist._id);
+				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
 		},
+		...mapActions({ startConversation: 'Chat/startConversation' }),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),

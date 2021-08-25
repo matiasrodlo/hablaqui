@@ -35,7 +35,7 @@ export default {
 		if (payload) {
 			return { psychologist: payload };
 		} else {
-			const { psychologist } = await $axios.$get(`/psychologists/${params.slug}`);
+			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return {
 				psychologist,
 			};
@@ -52,11 +52,61 @@ export default {
 					name: 'description',
 					content: this.psychologist ? this.psychologist.professionalDescription : '',
 				},
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+				},
+				{
+					hid: 'twitter:title',
+					name: 'twitter:title',
+					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+				},
+				{
+					hid: 'twitter:description',
+					name: 'twitter:description',
+					content: this.psychologist.professionalDescription,
+				},
+				{
+					hid: 'twitter:image',
+					name: 'twitter:image',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+				},
+				{
+					hid: 'og:title',
+					property: 'og:title',
+					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+				},
+				{
+					hid: 'og:description',
+					property: 'og:description',
+					content: this.psychologist.professionalDescription,
+				},
+				{
+					hid: 'og:image',
+					property: 'og:image',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:image:secure_url',
+					property: 'og:image:secure_url',
+					content: this.psychologist.avatar,
+				},
+				{
+					hid: 'og:image:alt',
+					property: 'og:image:alt',
+					content: this.psychologist.name,
+				},
 			],
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}${this.psychologist.username}/`,
+					href: `${this.$config.LANDING_URL}/${this.psychologist.username}/`,
 				},
 			],
 		};

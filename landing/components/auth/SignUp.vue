@@ -169,9 +169,10 @@ export default {
 						method: 'post',
 						data: this.form,
 					});
-					await this.$auth.loginWith('local', {
+					const response = await this.$auth.loginWith('local', {
 						data: { email: this.form.email, password: this.form.password },
 					});
+					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn)
 						if (!this.isDialog) {
 							if (this.$route.query.from === 'psy')

@@ -81,7 +81,8 @@ export default {
 			if (!this.$v.$invalid) {
 				try {
 					this.loading = true;
-					await this.$auth.loginWith('local', { data: this.form });
+					const response = await this.$auth.loginWith('local', { data: this.form });
+					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn)
 						if (!this.isDialog) {
 							if (this.$route.query.from === 'psy')

@@ -2,9 +2,15 @@
 	<v-app>
 		<snackbar />
 		<nuxt keep-alive />
-		<client-only>
-			<floating-chat v-if="$auth.$state.loggedIn && $auth.$state.user.role == 'user'" />
-		</client-only>
+		<template
+			v-if="
+				$route.name !== 'index' && $auth.$state.loggedIn && $auth.$state.user.role == 'user'
+			"
+		>
+			<client-only>
+				<floating-chat />
+			</client-only>
+		</template>
 	</v-app>
 </template>
 <script>

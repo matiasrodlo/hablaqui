@@ -41,7 +41,7 @@
 				Agenda cita online
 			</v-btn>
 		</template>
-		<v-card rounded="xl">
+		<v-card rounded="xl" min-height="400">
 			<v-card-title class="primary white--text text-h5 py-3">
 				<v-btn
 					v-if="step != 0"
@@ -53,7 +53,7 @@
 						}
 					"
 				>
-					<v-icon color="white" x-large>mdi-chevron-left</v-icon>
+					<icon :icon="mdiChevronLeft" x-large color="white" />
 				</v-btn>
 				<v-spacer></v-spacer>
 				<!-- plan -->
@@ -74,7 +74,11 @@
 				<select-plan :set-plan="plan => setPlan(plan)" />
 			</v-card-text>
 			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
-				<calendar :set-date="date => setDate(date)" title-button="Agendar cita Online" />
+				<calendar
+					:id-psy="psy._id"
+					:set-date="date => setDate(date)"
+					title-button="Agendar cita Online"
+				/>
 			</v-card-text>
 			<v-card-text v-if="step == 2">
 				<v-tabs-items v-model="tab">
@@ -90,7 +94,13 @@
 							<v-card-text><signin :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									class="
+										mb-2
+										text-center
+										subtitle-1
+										font-weight-bold
+										secondary--text
+									"
 								>
 									<small> ¿No eres parte de Hablaquí? </small>
 								</div>
@@ -125,7 +135,13 @@
 							<v-card-text><signup :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
+									class="
+										mb-2
+										text-center
+										subtitle-1
+										font-weight-bold
+										secondary--text
+									"
 								>
 									<small> ¿Ya tienes cuenta Hablaquí? </small>
 								</div>
@@ -133,7 +149,13 @@
 									Entrar
 								</v-btn>
 								<div
-									class="text-center font-weight-bold caption secondary--text pt-2"
+									class="
+										text-center
+										font-weight-bold
+										caption
+										secondary--text
+										pt-2
+									"
 								>
 									2021 Hablaqui
 								</div>
@@ -157,6 +179,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { mdiChevronLeft } from '@mdi/js';
 
 export default {
 	components: {
@@ -165,6 +188,7 @@ export default {
 		calendar: () => import('~/components/Calendar'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
+		Icon: () => import('~/components/Icon'),
 	},
 	props: {
 		mode: {
@@ -178,6 +202,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronLeft,
 			step: 0,
 			tab: 1,
 			dialog: false,

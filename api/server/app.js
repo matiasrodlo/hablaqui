@@ -20,6 +20,7 @@ const limiter = rateLimit({
 	max: 1000, // limit each IP to 1000 requests per windowMs
 });
 //limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
+
 app.use(limiter);
 app.use(helmet());
 app.use(cors());
@@ -31,6 +32,36 @@ passportConfig(passport);
 app.use(passport.initialize());
 
 routes(app);
+
+// Swagger
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerOptions = {
+	definition: {
+		info: {
+			version: '1.0.0',
+			title: 'Hablaqui API',
+			description: 'Hablaqui API documentation',
+			contact: {
+				name: 'Hablaqui',
+			},
+			servers: ['http://localhost:3000'],
+		},
+	},
+	apis: ['./server/routes/*.js'],
+};
+/**
+ * @openapi
+ * /psychologists:
+ * 	get:
+ * 	description: Get all psychologists
+ * 	responses:
+ * 		200:
+ * 			description: Successful response
+ */
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 mongoose
 	.connect(process.env.URLDB, {

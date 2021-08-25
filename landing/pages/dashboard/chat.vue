@@ -1,11 +1,11 @@
 <template>
 	<v-container fluid style="height: 100vh">
-		<appbar title="Chat" />
+		<appbar class="hidden-sm-and-down" title="Chat" />
 		<v-card
 			v-if="initLoading"
 			flat
 			style="height: calc(100vh - 135px)"
-			class="d-flex justify-center align-center"
+			class="mt-4 mt-md-0 d-flex justify-center align-center"
 		>
 			<v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
 		</v-card>
@@ -19,6 +19,7 @@
 						border-radius: 15px;
 					"
 					flat
+					class="mt-4 mt-md-0"
 				>
 					<v-card-text class="py-0">
 						<v-text-field
@@ -33,42 +34,55 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<!-- barra lateral psychologist -->
+					<!-- barra lateral role psychologist -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role == 'psychologist'">
+						<!-- sin consultantes -->
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
 								Mis consultantes
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
-						<v-sheet class="primary white--text pa-4 mx-4" style="border-radius: 20px">
+						<v-sheet
+							v-if="!clients.length"
+							class="primary white--text pa-4 mx-4"
+							style="border-radius: 20px"
+						>
 							Aún no tienes consultantes
 						</v-sheet>
-						<!-- <v-list two-line class="py-0">
-								<v-list-item>
-									<v-list-item-avatar
-										style="border: 3px solid #2070E5; border-radius: 40px; "
-										size="60"
-									>
-										<avatar :url="user.avatar" :name="user.name" size="60" />
-									</v-list-item-avatar>
+						<!-- consultantes -->
+						<v-list v-else two-line style="overflow-y: auto">
+							<v-list-item
+								v-for="(user, e) in listClients"
+								:key="e"
+								@click="setSelectedUser(user)"
+							>
+								<v-list-item-avatar
+									style="border-radius: 40px"
+									:style="user.hasMessageUser ? 'border: 3px solid #2070E5' : ''"
+									size="60"
+								>
+									<avatar :url="user.avatar" :name="user.name" size="60" />
+								</v-list-item-avatar>
 
-									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
-											Psicólogo · Activo(a)
-										</v-list-item-subtitle>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list> -->
-						<template v-if="usersFromChats.length">
+								<v-list-item-content>
+									<v-list-item-title v-html="user.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Usuario · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+						<!-- general lista usuarios -->
+						<template v-if="listUsers.length">
 							<v-card-text class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
+							<!-- usuarios -->
 							<v-list two-line style="overflow-y: auto">
 								<v-list-item
-									v-for="(user, w) in usersFromChats"
+									v-for="(user, w) in listUsers"
 									:key="w"
 									@click="setSelectedUser(user)"
 								>
@@ -92,82 +106,100 @@
 							</v-list>
 						</template>
 					</template>
-					<!-- barra lateral user -->
-					<template v-else>
-						<template v-if="$auth.$state.user && $auth.$state.user.psychologist">
-							<v-card-text>
-								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
-								</v-subheader>
-								<v-divider style="border-color: #5eb3e4"></v-divider>
-							</v-card-text>
-							<v-list two-line class="py-0">
-								<v-list-item>
-									<v-list-item-avatar
-										style="border: 3px solid #2070e5; border-radius: 40px"
+					<!-- barra lateral role user -->
+					<template v-if="$auth.$state.user && $auth.$state.user.role == 'user'">
+						<v-card-text
+							v-if="
+								$auth.$state.user &&
+								$auth.$state.user.plan.some(el => el.status === 'success')
+							"
+						>
+							<v-subheader class="primary--text body-1 px-0">
+								Mi Psicólogo
+							</v-subheader>
+							<v-divider style="border-color: #5eb3e4"></v-divider>
+						</v-card-text>
+						<!-- usuario mi psicologo -->
+						<v-list
+							v-if="
+								$auth.$state.user &&
+								$auth.$state.user.plan.some(el => el.status === 'success')
+							"
+							two-line
+							class="py-0"
+						>
+							<v-list-item @click="setSelectedPsy(getMyPsy)">
+								<v-list-item-avatar
+									style="border-radius: 40px"
+									:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+									size="60"
+								>
+									<avatar
+										:url="getMyPsy.avatar"
+										:name="getMyPsy.name"
 										size="60"
-									>
-										<avatar
-											:url="$auth.$state.user.avatar"
-											:name="$auth.$state.user.name"
-											size="60"
-										/>
-									</v-list-item-avatar>
+									/>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title v-html="getMyPsy.name"></v-list-item-title>
+									<v-list-item-subtitle>
+										Psicólogo · Activo(a)
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+						<!-- usuario sin psicologo -->
+						<v-list
+							v-else-if="
+								!$auth.$state.user &&
+								!$auth.$state.user.plan.some(el => el.status === 'success') &&
+								listPsychologist.length
+							"
+							link
+							two-line
+							class="py-0 primary"
+							dark
+							style="border-radius: 10px"
+						>
+							<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
+								<v-list-item-avatar style="border-radius: 40px" size="50">
+									<v-img
+										height="50"
+										width="50"
+										class="mx-auto"
+										src="/img/Lupa.png"
+									></v-img>
+								</v-list-item-avatar>
 
-									<v-list-item-content>
-										<v-list-item-title
-											v-html="$auth.$state.user.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
-											Psicólogo · Activo(a)
-										</v-list-item-subtitle>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</template>
-						<!-- <template v-else>
-							<v-card-text>
-								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
-								</v-subheader>
-								<v-divider style="border-color: #5EB3E4"></v-divider>
-							</v-card-text>
-							<v-list
-								link
-								two-line
-								class="py-0 primary"
-								dark
-								style="border-radius: 10px"
-							>
-								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
-									<v-list-item-avatar style="border-radius: 40px; " size="50">
-										<v-img
-											height="50"
-											width="50"
-											class="mx-auto"
-											src="/img/Lupa.png"
-										></v-img>
-									</v-list-item-avatar>
-
-									<v-list-item-content>
-										<v-list-item-title class="caption">
-											Aun no tienes psicólogo
-										</v-list-item-title>
-										<v-list-item-title class="caption">
-											Encuentra uno aquí
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</template> -->
-						<template v-if="psyFromChats.length">
-							<v-card-text class="py-0">
+								<v-list-item-content>
+									<v-list-item-title class="caption">
+										Aun no tienes psicólogo
+									</v-list-item-title>
+									<v-list-item-title class="caption">
+										Encuentra uno aquí
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+						<!-- lista de psicologos "chat iniciado" -->
+						<template
+							v-if="
+								listPsychologist.length ||
+								($auth.$state.user &&
+									$auth.$state.user.plan.some(el => el.status === 'success'))
+							"
+						>
+							<v-card-text v-if="listPsychologist.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
-							<v-list two-line style="overflow-y: auto">
+							<v-list
+								v-if="listPsychologist.length"
+								two-line
+								style="overflow-y: auto"
+							>
 								<v-list-item
-									v-for="(psy, e) in psyFromChats"
+									v-for="(psy, e) in listPsychologist"
 									:key="e"
 									@click="setSelectedPsy(psy)"
 								>
@@ -188,6 +220,7 @@
 								</v-list-item>
 							</v-list>
 						</template>
+						<!-- lista de psicologos "sin chats iniciados" -->
 						<template v-else>
 							<div style="flex: 1" class="d-flex justify-center align-center">
 								<div class="text-center">
@@ -244,33 +277,36 @@
 									</div>
 								</div>
 							</v-list-item-title>
-							<!-- <v-list-item-action>
-								<v-btn icon>
+							<div
+								v-if="!selected.assitant"
+								style="min-width: 150px"
+								class="text-right"
+							>
+								<!-- <v-btn id="callheaher" icon >
 									<v-img
 										contain
 										height="25"
+										width="25"
 										:src="`${$config.LANDING_URL}/llamada.png`"
 									></v-img>
-								</v-btn>
-							</v-list-item-action>
-							<v-list-item-action>
-								<v-btn icon class="ml-4">
+								</v-btn> -->
+								<v-btn id="camheader" icon :to="`/video-llamada/${goToCall()}`">
 									<v-img
 										contain
 										height="25"
+										width="25"
 										:src="`${$config.LANDING_URL}/camara.png`"
 									></v-img>
 								</v-btn>
-							</v-list-item-action> -->
-							<v-list-item-action>
-								<v-btn icon class="ml-1">
+								<v-btn id="addheader" icon>
 									<v-img
 										contain
+										width="25"
 										height="25"
 										:src="`${$config.LANDING_URL}/agregar.png`"
 									></v-img>
 								</v-btn>
-							</v-list-item-action>
+							</div>
 						</v-list-item>
 						<v-divider></v-divider>
 					</v-card-text>
@@ -282,154 +318,170 @@
 					>
 						<v-progress-circular indeterminate color="primary" />
 					</v-card-text>
-					<v-card-text
-						v-else
-						class="scroll"
-						style="flex: 1; display: flex; flex-direction: column; overflow-y: auto"
-					>
-						<!-- burbujas asistente -->
-						<template v-if="selected.assitant">
-							<div class="text-center">hablaquí</div>
-							<div
-								class="mx-auto text-center headline font-weight-bold primary--text my-4"
-								style="max-width: 320px"
-							>
-								Bienvenido al chat confidencial
-								{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
-							</div>
-							<v-divider
-								class="mx-auto mb-10"
-								style="width: 100px; border-color: #2070e5"
-							></v-divider>
-							<div style="width: 50%; display: flex; justify-content: space-between">
-								<span class="text--disabled">
-									{{ selected.name }}
-								</span>
-								<span class="text--disabled">{{ setDate() }}</span>
-							</div>
-							<div class="talkbubble talkbubble__two" style="margin-top: 2px">
-								<p style="body-2 max-height: 75px; overflow-y: auto">
-									{{
-										$auth.$state.user.role == 'user'
-											? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-											: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-									}}
-								</p>
-							</div>
-						</template>
-						<!-- Burbujas de chat -->
-						<template v-else>
-							<template v-if="chat && chat.messages.length">
-								<div v-for="item in chat.messages" :key="item._id">
-									<div
-										class="d-flex mt-3"
-										:class="
-											sentBy(item.sentBy) ? 'justify-end' : 'justify-start'
-										"
-									>
-										<div style="width: 50%">
-											<div
-												style="
-													display: flex;
-													justify-content: space-between;
-												"
-											>
-												<span
-													v-if="sentBy(item.sentBy)"
-													class="text--disabled body-2"
-												>
-													{{ $auth.$state.user.name }}
-												</span>
-												<span v-else class="text--disabled body-2">
-													{{ selected.shortName || selected.name }}
-												</span>
-												<span class="text--disabled body-2">
-													{{ setDate(item.createdAt) }}
-												</span>
-											</div>
-											<div
-												style="width: 100%"
-												class="talkbubble"
-												:class="
-													sentBy(item.sentBy)
-														? 'talkbubble__one'
-														: 'talkbubble__two'
-												"
-											>
+					<template v-else>
+						<v-card-text
+							class="scroll"
+							style="flex: 1; display: flex; flex-direction: column; overflow-y: auto"
+						>
+							<!-- burbujas asistente -->
+							<template v-if="selected.assitant">
+								<div class="text-center">hablaquí</div>
+								<div
+									class="
+										mx-auto
+										text-center
+										headline
+										font-weight-bold
+										primary--text
+										my-4
+									"
+									style="max-width: 320px"
+								>
+									Bienvenido al chat confidencial
+									{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
+								</div>
+								<v-divider
+									class="mx-auto mb-10"
+									style="width: 100px; border-color: #2070e5"
+								></v-divider>
+								<div
+									style="
+										width: 50%;
+										display: flex;
+										justify-content: space-between;
+									"
+								>
+									<span class="text--disabled">
+										{{ selected.name }}
+									</span>
+									<span class="text--disabled">{{ setDate() }}</span>
+								</div>
+								<div class="talkbubble talkbubble__two" style="margin-top: 2px">
+									<p style="body-2 max-height: 75px; overflow-y: auto">
+										{{
+											$auth.$state.user.role == 'user'
+												? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+												: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+										}}
+									</p>
+								</div>
+							</template>
+							<!-- Burbujas de chat -->
+							<template v-else>
+								<template v-if="chat && chat.messages.length">
+									<div v-for="item in chat.messages" :key="item._id">
+										<div
+											class="d-flex mt-3"
+											:class="
+												sentBy(item.sentBy)
+													? 'justify-end'
+													: 'justify-start'
+											"
+										>
+											<div style="width: 50%">
 												<div
-													class="body-2"
-													style="max-height: 75px; overflow-y: auto"
+													style="
+														display: flex;
+														justify-content: space-between;
+													"
 												>
-													{{ item.message }}
+													<span
+														v-if="sentBy(item.sentBy)"
+														class="text--disabled body-2"
+													>
+														{{ $auth.$state.user.name }}
+													</span>
+													<span v-else class="text--disabled body-2">
+														{{ selected.shortName || selected.name }}
+													</span>
+													<span class="text--disabled body-2">
+														{{ setDate(item.createdAt) }}
+													</span>
+												</div>
+												<div
+													style="width: 100%"
+													class="talkbubble"
+													:class="
+														sentBy(item.sentBy)
+															? 'talkbubble__one'
+															: 'talkbubble__two'
+													"
+												>
+													<div
+														class="body-2"
+														style="max-height: 75px; overflow-y: auto"
+													>
+														{{ item.message }}
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								</template>
 							</template>
-						</template>
-					</v-card-text>
-					<!-- Zona para escribir -->
-					<v-card-text v-if="selected.assitant">
-						<div class="text-center body-2">
-							Hablaquí valora la privacidad. No compartiremos tus mensajes, ni tampoco
-							ningún dato personal.
-						</div>
-						<div class="primary--text body-2 text-center">
-							<nuxt-link
-								target="_blank"
-								to="/condiciones"
-								style="text-decoration: none"
-							>
-								Ver terminos y condiciones de Chat
-							</nuxt-link>
-						</div>
-					</v-card-text>
-					<v-card-text v-else style="flex: 0">
-						<v-form @submit.prevent="onSubmit">
-							<v-text-field
-								ref="messagechat"
-								v-model="message"
-								outlined
-								dense
-								:label="`Mensaje a ${selected.name}`"
-								hide-details
-								:disabled="loadingMessage"
-								:loader-height="3"
-								:loading="loadingMessage"
-							>
-								<!-- <template #prepend-inner>
+						</v-card-text>
+						<!-- Zona para escribir -->
+						<v-card-text v-if="selected.assitant">
+							<div class="text-center body-2">
+								Hablaquí valora la privacidad. No compartiremos tus mensajes, ni
+								tampoco ningún dato personal.
+							</div>
+							<div class="primary--text body-2 text-center">
+								<nuxt-link
+									target="_blank"
+									to="/condiciones"
+									style="text-decoration: none"
+								>
+									Ver terminos y condiciones de Chat
+								</nuxt-link>
+							</div>
+						</v-card-text>
+						<v-card-text v-else style="flex: 0">
+							<v-form @submit.prevent="onSubmit">
+								<v-text-field
+									ref="messagechat"
+									v-model="message"
+									outlined
+									dense
+									:label="`Mensaje a ${selected.name}`"
+									hide-details
+									:disabled="loadingMessage"
+									:loader-height="3"
+									:loading="loadingMessage"
+								>
+									<!-- <template #prepend-inner>
 									<v-img
 										:src="`${$config.LANDING_URL}/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
 								</template> -->
-								<template #append>
-									<!-- <v-btn depressed icon>
+									<template #append>
+										<!-- <v-btn depressed icon>
 										<v-img
 											:src="`${$config.LANDING_URL}/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
 									</v-btn> -->
-									<v-btn
-										class="ml-2 mr-2"
-										depressed
-										icon
-										type="submit"
-										:disabled="!message"
-									>
-										<v-img
-											:src="`${$config.LANDING_URL}/message.png`"
-											height="30"
-											width="30"
-										></v-img>
-									</v-btn>
-								</template>
-							</v-text-field>
-						</v-form>
-					</v-card-text>
+										<v-btn
+											class="ml-2 mr-2"
+											depressed
+											icon
+											type="submit"
+											:disabled="!message"
+										>
+											<v-img
+												:src="`${$config.LANDING_URL}/message.png`"
+												height="30"
+												width="30"
+											></v-img>
+										</v-btn>
+									</template>
+								</v-text-field>
+							</v-form>
+						</v-card-text>
+					</template>
 				</v-card>
 			</v-col>
 		</v-row>
@@ -471,40 +523,73 @@ export default {
 			if (this.selected.assitant) return 'Asistente virtual';
 			if (
 				!this.selected.assitant &&
+				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.psychologist
 			)
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assitant &&
+				this.$auth.$state.user &&
 				this.selected._id !== this.$auth.$state.user.psychologist
 			)
 				return 'Terapeuta de Hablaquí con licencia';
 			return '';
 		},
-		usersFromChats() {
+		listClients() {
+			return this.clients.map(item => ({
+				...item,
+				hasMessageUser: this.hasMessageUser(item),
+			}));
+		},
+		// lista de usuarios/clientes con los que podria chatear el psicologo
+		listUsers() {
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
 			);
+
 			if (!filterArray.length) filterArray = this.chats;
+
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+				filterArray = filterArray.filter(item => {
+					return this.clients.every(el => el._id !== item.user._id);
+				});
+
 			return filterArray.map(item => ({
 				...item.user,
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
-		psyFromChats() {
+		// lista de psicologos con los que podria chatear el usuario
+		listPsychologist() {
 			let filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
 			);
 			if (!filterArray.length) filterArray = this.chats;
+
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+				filterArray = filterArray.filter(item => {
+					return this.getMyPsy._id !== item.psychologist._id;
+				});
+
 			return filterArray.map(item => ({
 				...item.psychologist,
 				hasMessage: this.hasMessage(item.psychologist),
 			}));
 		},
+		getMyPsy() {
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user') {
+				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
+				if (user) return this.getPsy(user.psychologist);
+				else return null;
+			} else {
+				return null;
+			}
+		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
+			clients: 'Psychologist/clients',
 		}),
 	},
 	created() {
@@ -533,7 +618,7 @@ export default {
 			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
 			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
 		}
-		this.getPsychologists();
+		await this.getPsychologists();
 		await this.getMessages();
 		if (this.$route.params.psy) {
 			const psychologist = this.getPsy(this.$route.params.psy);
@@ -543,9 +628,11 @@ export default {
 			this.selected = {
 				name: 'Habi',
 				assitant: true,
-				avatar:
-					'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+				avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			};
+		}
+		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+			await this.geClients(this.$auth.$state.user.psychologist);
 		}
 		this.initLoading = false;
 	},
@@ -592,13 +679,15 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		async setSelectedUser(user) {
+			this.loadingChat = true;
 			this.selected = {
 				name: user.name,
 				lastName: this.lastName,
 				avatar: user.avatar,
 				_id: user._id,
 			};
-			this.setChat(this.chats.find(item => item.user._id === user._id));
+			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
+			this.loadingChat = false;
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
@@ -651,7 +740,19 @@ export default {
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
 		},
+		goToCall() {
+			const psychologistId =
+				this.$auth.$state.user.role === 'psychologist'
+					? this.$auth.$state.user.psychologist
+					: this.selected._id;
+			const userId =
+				this.$auth.$state.user.role === 'psychologist'
+					? this.selected._id
+					: this.$auth.$state.user._id;
+			return psychologistId + userId;
+		},
 		...mapActions({
+			geClients: 'Psychologist/geClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',

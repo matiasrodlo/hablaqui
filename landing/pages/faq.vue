@@ -78,7 +78,7 @@
 								>
 									{{ el.title }}
 									<template #actions>
-										<v-icon color="info"> mdi-chevron-right </v-icon>
+										<icon :icon="mdiChevronRight" color="info" />
 									</template>
 								</v-expansion-panel-header>
 								<v-expansion-panel-content>
@@ -171,13 +171,16 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { mdiChevronRight } from '@mdi/js';
 
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),
+		Icon: () => import('~/components/Icon'),
 	},
 	data() {
 		return {
+			mdiChevronRight,
 			search: '',
 			selectedItem: null,
 			items: [],
@@ -196,7 +199,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}faq/`,
+					href: `${this.$config.LANDING_URL}/faq/`,
 				},
 			],
 		};

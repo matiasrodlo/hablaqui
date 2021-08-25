@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../../widgets/button.dart';
 import '../../colors.dart' as appColors;
 import '../../helpers/WidgetHelper.dart';
@@ -19,6 +22,8 @@ class _RegisterState extends State<Register>
 	TextEditingController		_ctrlName		= TextEditingController();
 	TextEditingController		_ctrlEmail		= TextEditingController();
 	TextEditingController		_ctrlPass		= TextEditingController();
+	bool						_showPass		= false;
+	
 	
 	@override
 	void initState()
@@ -28,6 +33,7 @@ class _RegisterState extends State<Register>
 	@override
 	Widget build(BuildContext context)
 	{
+		var size = MediaQuery.of(context).size;
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(''), backgroundColor: Colors.white, elevation: 0,
@@ -40,7 +46,7 @@ class _RegisterState extends State<Register>
 			),
 			body: Container(
 				color: Colors.white,
-				padding: EdgeInsets.all(10),
+				padding: EdgeInsets.all(size.width * 0.067),
 				child: ListView(
 					children: [
 						SizedBox(height: 15),
@@ -48,19 +54,31 @@ class _RegisterState extends State<Register>
 							child: Image.asset('images/logo-text.png', fit: BoxFit.cover, height: 40),
 						),
 						SizedBox(height: 15),
-						Text('¡Me alegra que estés aqui!', 
+						Text('¡Tu bienestar comienza aqui!', 
 							textAlign: TextAlign.center,
-							style: TextStyle(fontSize: 20, color: appColors.mainColors['blue'])
+							style: TextStyle(
+								fontSize: 20, 
+								fontWeight: FontWeight.bold,
+								color: Color(0xff3c3c3b), /*appColors.mainColors['blue']*/
+							)
 						),
 						SizedBox(height: 15),
-						Text('Ingresa y continua tu viaje de desarrollo personal ahora mismo',
+						Text('Registrate para iniciar tu camino de desarrollo personal',
 							textAlign: TextAlign.center,
 							style: TextStyle(
 								color: appColors.mainColors['gray'],
 							),
 						),
 						SizedBox(height: 25),
-						this._getForm(),
+						Container(
+							/*
+							padding: EdgeInsets.only(
+								right: size.width * 0.067,
+								left: size.width * 0.067,
+							),
+							*/
+							child: this._getForm()
+						),
 					]
 				)
 			)
@@ -98,8 +116,27 @@ class _RegisterState extends State<Register>
 					TextFormField(
 						controller: this._ctrlPass,
 						keyboardType: TextInputType.text,
-						obscureText: true,
-						decoration: WidgetHelper.getTextFieldDecoration('Contraseña'),
+						obscureText: !this._showPass,
+						decoration: WidgetHelper.getTextFieldDecoration('Contraseña').copyWith(
+							suffixIcon: InkWell(
+								child: Container(
+									//color: Colors.red,
+									padding: EdgeInsets.all(10),
+									child: FaIcon(
+										this._showPass ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+										color: Colors.grey,
+										
+									)
+								),
+								onTap: ()
+								{
+									this.setState(()
+									{
+										this._showPass = !this._showPass;
+									});
+								}
+							),
+						),
 						validator: (v)
 						{
 							if( v.isEmpty )
@@ -127,33 +164,35 @@ class _RegisterState extends State<Register>
 							),
 							SizedBox(width: 10),
 							Expanded(
-								child: RichText(
-									text: TextSpan(
-										text: 'He leido y acepto los ',
-										style: TextStyle(color: appColors.mainColors['gray']),
-										children: [
-											TextSpan(
-												text: 'Terminos y Condiciones y ',
-												style: TextStyle(color: appColors.mainColors['blue']),
-												recognizer: TapGestureRecognizer()
-													..onTap = ()
-												{
+								child: InkWell(
+									child: RichText(
+										text: TextSpan(
+											text: 'He leido y acepto los ',
+											style: TextStyle(color: appColors.mainColors['gray']),
+											children: [
+												TextSpan(
+													text: 'Terminos y Condiciones y ',
+													style: TextStyle(color: appColors.mainColors['blue']),
+													recognizer: TapGestureRecognizer()..onTap = ()
+													{
+														this._openUrl('https://hablaqui.cl/condiciones');
+													}
 													
-												}
-												
-											),
-											TextSpan(
-												text: 'la Politica de privacidad',
-												style: TextStyle(color: appColors.mainColors['blue']),
-												recognizer: TapGestureRecognizer()
-													..onTap = ()
-												{
+												),
+												TextSpan(
+													text: 'la Politica de privacidad',
+													style: TextStyle(color: appColors.mainColors['blue']),
+													recognizer: TapGestureRecognizer()..onTap = ()
+													{
+														this._openUrl('https://hablaqui.cl/politicas');
+													}
 													
-												}
-												
-											)
-										]
+												)
+											]
+										),
 									),
+									//onTap: this._openConditions,
+									
 								)
 							)
 						]
@@ -169,12 +208,22 @@ class _RegisterState extends State<Register>
 					*/
 					SizedBox(height: 15),
 					WidgetButton(
-						text: 'Crear mi cuenta',
+						text: 'Registrar',
 						callback: this._doRegister,
 						color: appColors.mainColors['blue'],
 					),
 					SizedBox(height: 25),
-					
+					Text('¿Ya tienes cuenta Hablaqui?', textAlign: TextAlign.center),
+					SizedBox(height: 15),
+					WidgetButton(
+						text: 'Entrar',
+						bordered: true,
+						callback: ()
+						{
+							Navigator.of(this.context).pop();
+						},
+						color: appColors.mainColors['blue'],
+					),
 					SizedBox(height: 10),
 					Text('2021 Hablaquí', textAlign: TextAlign.center),
 				]
@@ -219,7 +268,7 @@ class _RegisterState extends State<Register>
 					content: SingleChildScrollView(
 						child: ListBody(
 							children: [
-								Text('Tu registro se ha completado correctamente, ahora puedes iniciar sesion'),
+								Text('Tu registro se ha completado correctamente, ahora puedes iniciar sesión'),
 								
 							],
 							
@@ -227,15 +276,29 @@ class _RegisterState extends State<Register>
 					),
 					actions: [
 						TextButton(
-							child: Text('Iniciar Sesion'),
-							onPressed: ()
+							child: Text('Iniciar Sesión'),
+							onPressed: () async
 							{
-								Navigator.of(this.context).pushNamedAndRemoveUntil('/login', (_) => false);
+								//Navigator.of(this.context).pushNamedAndRemoveUntil('/login', (_) => false);
+								var user = await ServiceUsers().login(this._ctrlEmail.text.trim(), this._ctrlPass.text.trim());
+								Navigator.of(this.context).pushNamedAndRemoveUntil('/home', (_) => false);
 							}
 						)
 					]
 				);
 			}
 		);
+	}
+	void _openUrl(url) async
+	{
+		//String url = 'https://hablaqui.cl/condiciones';
+		if (await canLaunch(url)) 
+		{
+			await launch(url);
+		} 
+		else 
+		{
+			print('Could not launch $url');
+		}
 	}
 }

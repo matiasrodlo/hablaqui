@@ -33,12 +33,35 @@ export default {
 	},
 	head() {
 		return {
+			meta: [
+				{
+					hid: 'twitter:url',
+					name: 'twitter:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos',
+				},
+				{
+					hid: 'og:url',
+					property: 'og:url',
+					content: process.env.VUE_APP_LANDING + '/psicologos',
+				},
+			],
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}psicologos/`,
+					href: `${this.$config.LANDING_URL}/psicologos/`,
 				},
 			],
+		};
+	},
+	jsonld() {
+		return {
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			leaglName: 'Hablaquí',
+			url: 'http://hablaqui.cl/psicologos',
+			email: 'c@hablaqui.com',
+			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
+			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
 	},
 };

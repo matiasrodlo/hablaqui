@@ -11,7 +11,8 @@ let session = new Schema({
 		type: String,
 	},
 	user: {
-		type: String,
+		type: Schema.Types.ObjectId,
+		ref: 'User',
 	},
 	typeSession: {
 		type: String,
@@ -25,6 +26,9 @@ let session = new Schema({
 	plan: {
 		type: String,
 	},
+	invitedByPsychologist: {
+		type: Boolean,
+	},
 });
 
 let defaultSchedule = {
@@ -33,9 +37,62 @@ let defaultSchedule = {
 	wednesday: ['09:00', '17:00'],
 	thursday: ['09:00', '17:00'],
 	friday: ['09:00', '17:00'],
-	saturday: ['free', 'free'],
-	sunday: ['free', 'free'],
+	saturday: ['busy', 'busy'],
+	sunday: ['busy', 'busy'],
 };
+
+let defaultPreferences = {
+	marketplaceVisibility: true,
+	minimumNewSession: 24,
+	minimumRescheduleSession: 24,
+	corporativeSessions: true,
+};
+
+let formationSchema = new Schema({
+	formationType: {
+		type: String,
+	},
+	description: {
+		type: String,
+	},
+	start: {
+		type: String,
+	},
+	end: {
+		type: String,
+	},
+});
+
+let experienceSchema = new Schema({
+	title: {
+		type: String,
+	},
+	place: {
+		type: String,
+	},
+	start: {
+		type: String,
+	},
+	end: {
+		type: String,
+	},
+});
+
+let rating = new Schema(
+	{
+		author: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+		},
+		comment: {
+			type: String,
+		},
+		stars: {
+			type: Number,
+		},
+	},
+	{ timestamps: true }
+);
 
 let psychologist = new Schema({
 	avatar: {
@@ -45,6 +102,9 @@ let psychologist = new Schema({
 		type: String,
 	},
 	email: {
+		type: String,
+	},
+	linkedin: {
 		type: String,
 	},
 	username: {
@@ -59,21 +119,20 @@ let psychologist = new Schema({
 	gender: {
 		type: String,
 	},
+	birthDate: {
+		type: String,
+	},
 	sessionType: {
 		type: String,
 	},
 	languages: {
 		type: Array,
 	},
-	experience: {
-		type: Array,
-	},
 	specialties: {
 		type: Array,
 	},
-	formation: {
-		type: Array,
-	},
+	experience: [experienceSchema],
+	formation: [formationSchema],
 	personalDescription: {
 		type: String,
 	},
@@ -97,10 +156,15 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultSchedule,
 	},
+	preferences: {
+		type: Object,
+		default: defaultPreferences,
+	},
 	paymentMethod: {
 		type: Object,
 		required: false,
 	},
+	ratings: [rating],
 	sessions: [session],
 });
 

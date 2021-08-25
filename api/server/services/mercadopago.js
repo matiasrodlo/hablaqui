@@ -57,8 +57,13 @@ const successPay = async params => {
 		},
 		{ $set: { 'sessions.$.statePayments': 'successful' } }
 	);
-	logInfo('Se ha actualizado una sesion');
-	const foundUser = await User.findById(userId);
+
+	let foundUser = await User.findById(userId);
+	foundUser.plan[foundUser.plan.length - 1 || 0].status = 'success';
+	foundUser.psychologist = psyId;
+	foundUser.save();
+
+	logInfo('Se ha realizado un pago');
 	mailer.sendPurchaseInformation(foundUser.email);
 	return okResponse('sesion actualizada');
 };
