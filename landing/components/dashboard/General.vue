@@ -162,48 +162,6 @@
 								</template>
 							</v-combobox>
 						</v-col>
-						<v-col
-							v-if="$auth.$state.user.role === 'psychologist'"
-							cols="12"
-							class="text-h6 py-0"
-							style="color: #3c3c3b"
-						>
-							Mi dirección
-							<v-tooltip bottom>
-								<template #activator="{ on, attrs }">
-									<v-btn icon v-bind="attrs" v-on="on">
-										<icon :icon="mdiInformationOutline" />
-									</v-btn>
-								</template>
-								<span>Para crear tu url personalizada </span>
-							</v-tooltip>
-						</v-col>
-						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
-							<v-text-field
-								v-model="username"
-								:loading="!psychologist"
-								filled
-								outlined
-								dense
-								:hint="`https://hablaqui.cl/${username}`"
-								label="Dirección"
-								placeholder="daniel-cedeño"
-								@input="() => (available = false)"
-							>
-								<template #append>
-									<v-btn
-										v-show="psychologist && psychologist.username !== username"
-										:disabled="!username"
-										color="primary"
-										outlined
-										small
-										@click="check"
-									>
-										{{ available ? 'Disponible' : 'verificar' }}
-									</v-btn>
-								</template>
-							</v-text-field>
-						</v-col>
 						<v-col cols="12" class="text-center">
 							<v-btn
 								:loading="loadingUser"
@@ -311,7 +269,6 @@ export default {
 		BankData: () => import('~/components/dashboard/BankData'),
 		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
-		Icon: () => import('~/components/Icon'),
 	},
 	mixins: [validationMixin],
 	props: {
@@ -343,9 +300,7 @@ export default {
 			region: '',
 			comuna: '',
 			gender: '',
-			available: false,
 			birthDate: '',
-			username: '',
 			timezone: [],
 			loadingUser: false,
 			regiones: [],
@@ -372,7 +327,6 @@ export default {
 					timeZone: this.formUser.timeZone,
 					gender: this.gender,
 					birthDate: this.birthDate,
-					username: this.username,
 					region: this.region,
 					comuna: this.comuna,
 				}) ===
@@ -384,7 +338,6 @@ export default {
 					timeZone: this.$auth.$state.user.timeZone,
 					gender: this.psychologist ? this.psychologist.gender : '',
 					birthDate: this.psychologist ? this.psychologist.birthDate : '',
-					username: this.psychologist ? this.psychologist.username : '',
 					region: this.psychologist ? this.psychologist.region : '',
 					comuna: this.psychologist ? this.psychologist.comuna : '',
 				})
@@ -414,7 +367,6 @@ export default {
 		this.timezone = data;
 		if (this.psychologist && this.$auth.$state.user.role === 'psychologist') {
 			this.gender = this.psychologist.gender;
-			this.username = this.psychologist.username;
 			this.birthDate = this.psychologist.birthDate;
 			this.comuna = this.psychologist.comuna;
 			this.region = this.psychologist.region;
@@ -428,9 +380,6 @@ export default {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
 				if (this.$auth.$state.user.role === 'psychologist') {
-					if (this.username) {
-						this.available = await this.checkUsername(this.username);
-					}
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
 						gender: this.gender,
@@ -439,7 +388,6 @@ export default {
 						birthDate: this.birthDate,
 						comuna: this.comuna,
 						region: this.region,
-						username: this.available ? this.username : this.psychologist.username,
 					});
 					this.gender = psychologist.gender;
 					this.username = psychologist.username;
@@ -453,15 +401,11 @@ export default {
 				this.loadingUser = false;
 			}
 		},
-		async check() {
-			this.available = await this.checkUsername(this.username);
-		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
-			checkUsername: 'Psychologist/checkUsername',
 			updateUser: 'User/updateUser',
 		}),
 	},
