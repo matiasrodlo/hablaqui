@@ -225,13 +225,21 @@
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
 				<v-expansion-panel-header>
 					<div>
-						<div class="text-h6" style="color: #3c3c3b">Datos bancarios</div>
+						<div class="text-h6" style="color: #3c3c3b">
+							Datos bancarios
+							<v-progress-circular
+								v-if="!psychologist"
+								size="20"
+								indeterminate
+								color="primary"
+							></v-progress-circular>
+						</div>
 						<div class="text--secondary">
 							Tus datos de facturación en un solo lugar.
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content>
+				<v-expansion-panel-content v-if="psychologist">
 					<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -239,13 +247,21 @@
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
 				<v-expansion-panel-header>
 					<div>
-						<div class="text-h6" style="color: #3c3c3b">Información profesional</div>
+						<div class="text-h6" style="color: #3c3c3b">
+							Información profesional
+							<v-progress-circular
+								v-if="!psychologist"
+								size="20"
+								indeterminate
+								color="primary"
+							></v-progress-circular>
+						</div>
 						<div class="text--secondary">
 							Datos profesionales, descripción personal y profesional
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content>
+				<v-expansion-panel-content v-if="psychologist">
 					<information-general-psi
 						:psychologist="psychologist"
 						:set-psychologist="setPsychologist"
@@ -256,13 +272,21 @@
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
 				<v-expansion-panel-header>
 					<div>
-						<div class="text-h6" style="color: #3c3c3b">Experiencia y formación</div>
+						<div class="text-h6" style="color: #3c3c3b">
+							Experiencia y formación
+							<v-progress-circular
+								v-if="!psychologist"
+								size="20"
+								indeterminate
+								color="primary"
+							></v-progress-circular>
+						</div>
 						<div class="text--secondary">
 							Modelo terapéutico, especialidades, experiencia y formación
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content>
+				<v-expansion-panel-content v-if="psychologist">
 					<experiencia-formacion
 						:psychologist="psychologist"
 						:set-psychologist="setPsychologist"
