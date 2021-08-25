@@ -249,7 +249,7 @@
 					: `${$config.LANDING_URL}/descargar-app.png`
 			"
 		>
-			<v-row justify="center mt-sm-10 mt-md-16">
+			<v-row justify-md="center">
 				<v-col offset-md="6" cols="12" md="6">
 					<h2
 						class="
