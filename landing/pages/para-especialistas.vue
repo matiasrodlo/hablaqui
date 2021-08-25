@@ -238,48 +238,28 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<div class="primary-color hidden-md-and-up">
-			<h2 class="pt-16 text-center font-weight-bold white--text body-1 text-md-h4">
-				Descargar nuestra app de chat
-			</h2>
-			<h3 class="text-center font-weight-bold white--text body-2 my-4 text-md-h6">
-				Mantén contacto con tus consultantes vía Chat. <br />
-				¡Descarga la aplicación ahora!
-			</h3>
-			<div class="d-flex justify-center pb-16">
-				<v-img
-					style="cursor: pointer; border-radius: 10px"
-					height="50"
-					max-width="160"
-					class="ma-1"
-					:src="`${$config.LANDING_URL}/google-play.png`"
-					:lazy-src="`${$config.LANDING_URL}/google-play.png`"
-					alt="descarcar nuestra aplicacion para android"
-				/>
-				<v-img
-					style="cursor: pointer; border-radius: 10px"
-					height="50"
-					max-width="160"
-					class="ma-1"
-					:src="`${$config.LANDING_URL}/ios.svg`"
-					:lazy-src="`${$config.LANDING_URL}/ios.svg`"
-					alt="descargar aplicacion para ios"
-				/>
-			</div>
-		</div>
 		<v-img
 			width="100vw"
 			height="auto"
-			class="d-flex align-center"
+			style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
+			:class="$vuetify.breakpoint.smAndDown ? '' : 'd-flex align-center'"
 			:src="
 				$vuetify.breakpoint.smAndDown
-					? `${$config.LANDING_URL}/phone_mobile.webp`
-					: `${$config.LANDING_URL}/descarga-nuestra-app.png`
+					? `${$config.LANDING_URL}/descargar-app-small.png`
+					: `${$config.LANDING_URL}/descargar-app.png`
 			"
 		>
-			<v-row justify="center" class="hidden-sm-and-down">
-				<v-col offset="6" cols="6">
-					<h2 class="pt-16 text-center font-weight-bold white--text body-1 text-md-h4">
+			<v-row justify="center mt-sm-10 mt-md-16">
+				<v-col offset-md="6" cols="12" md="6">
+					<h2
+						class="
+							pt-10 pt-sm-16
+							text-center
+							font-weight-bold
+							white--text
+							text-h5 text-md-h4
+						"
+					>
 						Descargar nuestra app de chat
 					</h2>
 					<h3 class="text-center font-weight-bold white--text body-2 my-4 text-md-h6">
