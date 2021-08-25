@@ -113,7 +113,7 @@ export default {
 			return [
 				{
 					name: 'Chat',
-					link: 'chat',
+					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
 					visible: true,
 				},
@@ -125,20 +125,20 @@ export default {
 				},
 				{
 					name: 'Diario de bienestar',
-					link: 'diario',
+					link: { name: 'dashboard-diario' },
 					img: `${this.$config.LANDING_URL}/notas.png`,
 					visible: false,
 				},
 				{
 					name: 'Pagos',
-					link: 'pagos',
+					link: { name: 'dashboard-pagos' },
 					img: `${this.$config.LANDING_URL}/pagos.png`,
 					visible:
 						this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Mi cuenta',
-					link: 'perfil',
+					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
 					visible: true,
 				},

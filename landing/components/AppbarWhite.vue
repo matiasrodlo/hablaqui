@@ -152,28 +152,30 @@
 						</template>
 						<v-card>
 							<v-list>
-								<v-list-item
-									v-for="(item, i) in menu"
-									id="i"
-									:key="i"
-									link
-									:to="item.link"
-								>
-									<v-list-item-avatar size="40" color="primary">
-										<v-img
-											contain
-											height="30"
-											:src="item.img"
-											:alt="item.name"
-										/>
-									</v-list-item-avatar>
-									<v-list-item-content>
-										<v-list-item-title
-											class="secondary--text font-weight-bold body-2"
-											>{{ item.name }}
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
+								<template v-for="(item, i) in menu">
+									<v-list-item
+										v-if="item.visible"
+										id="i"
+										:key="i"
+										link
+										:to="item.link"
+									>
+										<v-list-item-avatar size="40" color="primary">
+											<v-img
+												contain
+												height="30"
+												:src="item.img"
+												:alt="item.name"
+											/>
+										</v-list-item-avatar>
+										<v-list-item-content>
+											<v-list-item-title
+												class="secondary--text font-weight-bold body-2"
+												>{{ item.name }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+								</template>
 								<v-list-item id="logout-appbar" @click="logout">
 									<v-list-item-avatar size="40" color="primary">
 										<v-img
@@ -247,19 +249,28 @@ export default {
 			menu: [
 				{
 					name: 'Chat',
-					link: '/dashboard/chat',
+					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
+					visible: true,
 				},
 				{
 					name: 'Mis sesiones',
-					link: '/dashboard/agenda',
+					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					visible: true,
+				},
+				{
+					name: 'Pagos',
+					link: { name: 'dashboard-pagos' },
+					img: `${this.$config.LANDING_URL}/pagos.png`,
+					visible: this.$auth.$state.user?.role === 'psychologist',
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',
-					link: '/dashboard/perfil',
+					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
+					visible: true,
 				},
 			],
 			drawer: false,
