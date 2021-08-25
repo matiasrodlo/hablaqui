@@ -43,11 +43,13 @@
 						filled
 						outlined
 						:items="banks"
+						:loading="!banks.length"
 						item-text="nombre"
 						item-value="nombre"
 						dense
 						type="text"
 						clearable
+						no-data-text="No hay bancos en este momento para mostrar"
 						:hide-details="!bankError.length"
 					>
 					</v-autocomplete>
@@ -247,7 +249,8 @@ export default {
 		},
 	},
 	async mounted() {
-		this.bankData = cloneDeep(this.psychologist.paymentMethod);
+		if (this.psychologist.paymentMethod)
+			this.bankData = cloneDeep(this.psychologist.paymentMethod);
 		let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 		response = await response.json();
 		this.banks = response;
