@@ -35,6 +35,11 @@
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+					<v-list-item-content>
+						<v-list-item-title>Para especialistas</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item
 					v-show="$auth.$state.loggedIn"
 					id="logout-drawer"
@@ -99,7 +104,7 @@
 				accesskey="p"
 				class="hidden-sm-and-down ml-7 mr-3"
 			>
-				<span class="text--secondary body-1 font-weight-bold">Psicólogos</span>
+				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
 			</router-link>
 			<nuxt-link
 				id="faq-appbar"
@@ -108,7 +113,7 @@
 				class="hidden-sm-and-down mx-5"
 				to="/faq"
 			>
-				<span class="text--secondary body-1 font-weight-bold"> Preguntas frecuentes </span>
+				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
 			</nuxt-link>
 			<nuxt-link
 				id="blog-appabar"
@@ -117,11 +122,20 @@
 				class="hidden-sm-and-down mx-5"
 				to="/blog"
 			>
-				<span class="body-1 text--secondary font-weight-bold">Blog</span>
+				<span class="body-2 text--secondary font-weight-bold">Blog</span>
+			</nuxt-link>
+			<nuxt-link
+				id="especialistas-appabar"
+				accesskey="r"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-5"
+				to="/para-especialistas"
+			>
+				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
-				<div class="hidden-sm-and-down body-1 text--secondary mr-16" rounded text>
+				<div class="hidden-sm-and-down body-2 text--secondary mr-16" rounded text>
 					<v-menu
 						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
@@ -140,7 +154,7 @@
 								v-bind="attrs"
 								v-on="on"
 							>
-								<h3 class="mr-6 secondary--text d-inline-block">
+								<h3 class="lg-mr-6 secondary--text d-inline-block">
 									Hola {{ $auth.$state.user.name }}
 								</h3>
 								<avatar
@@ -211,7 +225,7 @@
 				class="mr-4 mr-lg-5 hidden-sm-and-down"
 				:to="{ name: 'auth' }"
 			>
-				<span class="body-1 font-weight-bold text--secondary">Iniciar sesión</span>
+				<span class="body-2 font-weight-bold text--secondary">Iniciar sesión</span>
 			</router-link>
 			<v-btn
 				v-show="!$auth.$state.loggedIn"
@@ -223,7 +237,7 @@
 				depressed
 				@click="start"
 			>
-				<span class="font-weight-bold body-1">Comenzar</span>
+				<span class="font-weight-bold body-2">Comenzar</span>
 			</v-btn>
 			<div class="hidden-md-and-up">
 				<v-spacer></v-spacer>
