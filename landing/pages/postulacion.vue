@@ -15,7 +15,7 @@
 			</span>
 		</div>
 		<v-row justify="center">
-			<v-col cols="12" md="10" lg="8" xl="6">
+			<v-col cols="12" md="8" lg="6">
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
@@ -49,114 +49,82 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<label for="birthdate" class="d-flex align-center">
-										<div
-											style="min-width: 300px"
-											class="primary--text text-h6 font-weight-regular"
-										>
-											Fecha de nacimiento
-										</div>
-										<v-menu
-											ref="menu"
-											v-model="bmenu"
-											:close-on-content-click="false"
-											transition="scale-transition"
-											offset-y
-											min-width="auto"
-										>
-											<template #activator="{ on, attrs }">
-												<v-text-field
-													v-model="birthDate"
-													readonly
-													filled
-													outlined
-													hide-details
-													dense
-													v-bind="attrs"
-													v-on="on"
-												></v-text-field>
-											</template>
-											<v-date-picker
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Fecha de nacimiento
+									</div>
+									<v-menu
+										ref="menu"
+										v-model="bmenu"
+										:close-on-content-click="false"
+										transition="scale-transition"
+										offset-y
+										min-width="auto"
+									>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												id="birthdate"
 												v-model="birthDate"
-												locale="es"
-												:active-picker.sync="activePicker"
-												:max="
-													new Date(
-														Date.now() -
-															new Date().getTimezoneOffset() * 60000
-													)
-														.toISOString()
-														.substr(0, 10)
-												"
-												min="1950-01-01"
-												@change="save"
-											></v-date-picker>
-										</v-menu>
-									</label>
+												readonly
+												filled
+												outlined
+												hide-details
+												dense
+												v-bind="attrs"
+												v-on="on"
+											></v-text-field>
+										</template>
+										<v-date-picker
+											v-model="birthDate"
+											locale="es"
+											:active-picker.sync="activePicker"
+											:max="
+												new Date(
+													Date.now() -
+														new Date().getTimezoneOffset() * 60000
+												)
+													.toISOString()
+													.substr(0, 10)
+											"
+											min="1950-01-01"
+											@change="save"
+										></v-date-picker>
+									</v-menu>
 								</v-col>
 								<v-col cols="12">
-									<label for="birthdate" class="d-flex align-center mt-10">
-										<div
-											style="min-width: 300px"
-											class="primary--text text-h6 font-weight-regular"
-										>
-											Género
-										</div>
-										<v-select
-											v-model="gender"
-											:items="['Hombre', 'Mujer', 'Transgénero']"
-											filled
-											outlined
-											hide-details
-											dense
-										></v-select>
-									</label>
-								</v-col>
-								<v-col
-									cols="4"
-									class="mt-10 primary--text text-h6 font-weight-regular"
-								>
-									País
-								</v-col>
-								<v-col
-									cols="4"
-									class="mt-10 primary--text text-h6 font-weight-regular"
-								>
-									Región
-								</v-col>
-								<v-col
-									cols="4"
-									class="mt-10 primary--text text-h6 font-weight-regular"
-								>
-									Comuna
-								</v-col>
-								<v-col cols="4">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Género
+									</div>
 									<v-select
-										v-model="country"
-										:items="countries"
+										id="genre"
+										v-model="gender"
+										:items="['Hombre', 'Mujer', 'Transgénero']"
 										filled
-										disabled
-										item-text="name"
-										item-value="code"
 										outlined
 										hide-details
 										dense
-										label="Seleccione"
 									></v-select>
 								</v-col>
-								<v-col cols="4">
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Región
+									</div>
 									<v-select
+										id="region"
 										v-model="region"
 										:items="regiones"
 										filled
 										outlined
 										hide-details
 										dense
-										label="Seleccione"
+										placeholder="Seleccione"
 									></v-select>
 								</v-col>
-								<v-col cols="4">
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Comuna
+									</div>
 									<v-select
+										id="comuna"
 										v-model="comuna"
 										:disabled="!region"
 										:items="comunas"
@@ -164,70 +132,104 @@
 										outlined
 										hide-details
 										dense
-										label="Seleccione"
+										placeholder="Seleccione"
 									></v-select>
 								</v-col>
 								<v-col cols="12">
-									<label for="birthdate" class="d-flex align-center mt-10">
-										<div
-											style="min-width: 300px"
-											class="primary--text text-h6 font-weight-regular"
-										>
-											Zona horaria
-										</div>
-										<v-combobox
-											v-model="timeZone"
-											dense
-											filled
-											hide-details
-											label="Zona horaria"
-											:items="timezone"
-											outlined
-											:search-input.sync="zone"
-										>
-											<template #no-data>
-												<v-list-item>
-													<v-list-item-content>
-														<v-list-item-title>
-															No se encontraron resultados que
-															coincidan con "<strong>
-																{{ zone }}
-															</strong>
-															" .
-														</v-list-item-title>
-													</v-list-item-content>
-												</v-list-item>
-											</template>
-										</v-combobox>
-									</label>
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Zona horaria
+									</div>
+									<v-combobox
+										id="timezone"
+										v-model="timeZone"
+										dense
+										filled
+										hide-details
+										:items="timezone"
+										outlined
+										:search-input.sync="zone"
+									>
+										<template #no-data>
+											<v-list-item>
+												<v-list-item-content>
+													<v-list-item-title>
+														No se encontraron resultados que coincidan
+														con "<strong>
+															{{ zone }}
+														</strong>
+														" .
+													</v-list-item-title>
+												</v-list-item-content>
+											</v-list-item>
+										</template>
+									</v-combobox>
 								</v-col>
 								<v-col cols="12">
-									<label for="birthdate" class="d-flex align-center mt-10">
-										<div
-											style="min-width: 300px"
-											class="primary--text text-h6 font-weight-regular"
-										>
-											Idiomas
-										</div>
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Idiomas
+									</div>
+									<div class="d-flex">
 										<v-checkbox
+											v-model="languages"
 											class="mx-2"
-											value="ingles"
-											filled
-											label="Ingles"
-											outlined
-											hide-details
-											dense
-										></v-checkbox>
-										<v-checkbox
-											class="mx-2"
-											value="Español"
+											value="spanish"
 											filled
 											label="Español"
 											outlined
 											hide-details
 											dense
 										></v-checkbox>
-									</label>
+										<v-checkbox
+											v-model="languages"
+											class="mx-2"
+											value="english"
+											filled
+											label="Ingles"
+											outlined
+											hide-details
+											dense
+										></v-checkbox>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Descripción personal
+									</div>
+									<v-textarea
+										id="description-personal"
+										v-model="personalDescription"
+										outlined
+										filled
+										no-resize
+										:rules="rules"
+										counter
+									></v-textarea>
+								</v-col>
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Instagram
+									</div>
+									<v-text-field
+										v-model="instagram"
+										filled
+										outlined
+										dense
+										type="text"
+										placeholder="Inserte link (opcional)"
+									></v-text-field>
+								</v-col>
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Linkedin
+									</div>
+									<v-text-field
+										v-model="linkedin"
+										placeholder="Inserte link (opcional)"
+										filled
+										outlined
+										dense
+										type="text"
+									></v-text-field>
 								</v-col>
 							</v-row>
 							<div class="d-flex justify-end mt-4">
@@ -236,19 +238,47 @@
 						</v-stepper-content>
 
 						<v-stepper-content step="2">
-							<v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
-
-							<v-btn color="primary" @click="step = 3"> Continue </v-btn>
-
-							<v-btn text> Cancel </v-btn>
+							<v-row>
+								<v-col cols="12">
+									<div class="primary--text">
+										¡Estamos ansiosos de saber más de ti!
+									</div>
+									<div
+										class="
+											mb-10
+											primary--text
+											font-weight-bold
+											text-h4 text-left
+										"
+									>
+										Cuéntanos sobre tu formación profesional
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<v-textarea
+										v-model="professionalDescription"
+										label="Descripción profesional"
+										no-resize
+										filled
+										outlined
+										dense
+										type="text"
+										counter
+										:rules="rules"
+									></v-textarea>
+								</v-col>
+							</v-row>
+							<div class="d-flex justify-end mt-4">
+								<v-btn rounded color="primary" @click="step = 2"> Siguiente </v-btn>
+							</div>
 						</v-stepper-content>
 
 						<v-stepper-content step="3">
 							<v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
 
-							<v-btn color="primary" @click="step = 1"> Continue </v-btn>
-
-							<v-btn text> Cancel </v-btn>
+							<div class="d-flex justify-end mt-4">
+								<v-btn rounded color="primary" @click="step = 2"> Listo </v-btn>
+							</div>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -263,18 +293,25 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
+			professionalDescription: '',
+			activePicker: null,
 			bmenu: false,
-			country: 'CL',
 			region: '',
+			comuna: '',
 			gender: '',
 			birthDate: '',
+			zone: '',
+			linkedin: '',
+			instagram: '',
 			step: 1,
 			regiones: [],
 			comunas: [],
 			comunasRegiones: [],
-			countries: [],
 			timezone: [],
+			languages: [],
+			personalDescription: '',
 			timeZone: 'America/Santiago',
+			rules: [v => v.length <= 300 || 'Maximo 300 caracteres'],
 		};
 	},
 	watch: {
@@ -292,11 +329,14 @@ export default {
 	async mounted() {
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
-		const countries = await axios.get(`${this.$config.LANDING_URL}/countries.json`);
-		this.countries = countries.data;
 		this.timezone = data;
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
+	},
+	methods: {
+		save(date) {
+			this.$refs.menu.save(date);
+		},
 	},
 };
 </script>
