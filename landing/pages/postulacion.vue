@@ -544,17 +544,125 @@
 								</v-col>
 							</v-row>
 							<div class="d-flex justify-end mt-4">
-								<v-btn rounded color="primary" @click="step = 2"> Siguiente </v-btn>
+								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
+									Atras
+								</v-btn>
+								<v-btn class="mx-2" rounded color="primary" @click="step = 3">
+									Siguiente
+								</v-btn>
 							</div>
 						</v-stepper-content>
 
 						<v-stepper-content step="3">
 							<v-row>
-								<v-col></v-col>
+								<v-col cols="12">
+									<div class="primary--text">¡Ya casi terminamos!</div>
+									<div
+										class="
+											mb-10
+											primary--text
+											font-weight-bold
+											text-h4 text-left
+										"
+									>
+										Háblanos sobre tu trabajo
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Cuántos años llevas trabajando como psicólogo clínico?
+									</div>
+									<div>
+										<v-text-field
+											filled
+											outlined
+											dense
+											type="text"
+										></v-text-field>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Cuántos años ha visto pacientes en línea a través de
+										consultas por video?
+									</div>
+									<div>
+										<v-text-field
+											filled
+											outlined
+											dense
+											type="text"
+										></v-text-field>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Cuál es el número promedio de paciente que ve semanalmente?
+									</div>
+									<div>
+										<v-text-field
+											filled
+											outlined
+											dense
+											type="text"
+										></v-text-field>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Es la atención clínica su actividad exclusiva?
+									</div>
+									<div>
+										<v-radio-group v-model="exclusiveActivity" row>
+											<v-radio
+												v-for="n in ['Si', 'No']"
+												:key="n"
+												:label="n"
+												:value="n"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Está actualmente bajo la supervisión clínica de otro
+										profesional de la psicología?
+									</div>
+									<div>
+										<v-radio-group row>
+											<v-radio
+												v-for="n in ['Si', 'No']"
+												:key="n"
+												:label="n"
+												:value="n"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Supervisa actualmente a otros psicólogos?
+									</div>
+									<div>
+										<v-radio-group row>
+											<v-radio
+												v-for="n in ['Si', 'No']"
+												:key="n"
+												:label="n"
+												:value="n"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
 							</v-row>
 
 							<div class="d-flex justify-end mt-4">
-								<v-btn rounded color="primary" @click="step = 2"> Listo </v-btn>
+								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
+									Atras
+								</v-btn>
+								<v-btn class="mx-2" rounded color="primary">
+									Enviar tu postulación
+								</v-btn>
 							</div>
 						</v-stepper-content>
 					</v-stepper-items>
@@ -576,14 +684,16 @@ export default {
 			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
+			yearsWorked: '',
 			region: '',
 			comuna: '',
 			gender: '',
+			exclusiveActivity: null,
 			birthDate: '',
 			zone: '',
 			linkedin: '',
 			instagram: '',
-			step: 2,
+			step: 1,
 			regiones: [],
 			comunas: [],
 			specialtiesSelected: [],
