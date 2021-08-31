@@ -280,6 +280,139 @@
 													font-weight-regular
 												"
 											>
+												Formación
+											</div>
+										</v-col>
+										<v-col cols="3" md="3" class="py-0">
+											<div
+												class="
+													primary--text
+													body-1
+													mb-2
+													font-weight-regular
+												"
+											>
+												Ubicación / Curso / Descripción
+											</div>
+										</v-col>
+										<v-col cols="2" md="2" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
+												Inicio
+											</div>
+										</v-col>
+										<v-col cols="2" md="2" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
+												Termino
+											</div>
+										</v-col>
+									</v-row>
+									<v-row v-for="(item, i) in formation" :key="i">
+										<v-col cols="12" md="3">
+											<v-select
+												filled
+												outlined
+												dense
+												type="text"
+												:items="[
+													'Licenciatura',
+													'Diplomado',
+													'Master',
+													'Magister',
+													'Doctorado',
+													'Curso/especialización',
+													'Otro',
+												]"
+												:value="item.formationType"
+												@change="e => (formation[i].formationType = e)"
+											></v-select>
+										</v-col>
+										<v-col cols="12" md="3">
+											<v-text-field
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.description"
+												@input="e => (formation[i].title = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="12" md="2">
+											<v-text-field
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.start"
+												@input="e => (formation[i].start = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="12" md="2">
+											<v-text-field
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.end"
+												@input="e => (formation[i].end = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="12" md="2" class="text-center text-md-left">
+											<v-btn
+												v-if="i === formation.length - 1"
+												small
+												color="primary"
+												fab
+												depressed
+												@click="newFormation"
+											>
+												<h1>+</h1>
+											</v-btn>
+											<v-btn
+												v-if="
+													i === formation.length - 1 &&
+													formation.length - 1
+												"
+												small
+												color="error"
+												fab
+												depressed
+												@click="
+													() =>
+														(formation = formation.filter(
+															(el, index) => index !== i
+														))
+												"
+											>
+												<h1>-</h1>
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-col>
+								<v-col cols="12">
+									<v-row>
+										<v-col cols="3" md="3" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
 												Experiencia
 											</div>
 										</v-col>
@@ -343,7 +476,6 @@
 										</v-col>
 										<v-col cols="3" md="2">
 											<v-text-field
-												label="Inicio"
 												filled
 												outlined
 												dense
@@ -354,7 +486,6 @@
 										</v-col>
 										<v-col cols="3" md="2">
 											<v-text-field
-												label="Fin"
 												filled
 												outlined
 												dense
@@ -395,6 +526,22 @@
 										</v-col>
 									</v-row>
 								</v-col>
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Especialidades
+									</div>
+									<v-select
+										v-model="specialtiesSelected"
+										:loading="!specialties.length"
+										filled
+										outlined
+										dense
+										chips
+										multiple
+										type="text"
+										:items="specialties"
+									></v-select>
+								</v-col>
 							</v-row>
 							<div class="d-flex justify-end mt-4">
 								<v-btn rounded color="primary" @click="step = 2"> Siguiente </v-btn>
@@ -417,11 +564,13 @@
 
 <script>
 import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	data() {
 		return {
 			experience: [{ title: '', place: '', start: '', end: '' }],
+			formation: [{ formationType: '', description: '', start: '', end: '' }],
 			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
@@ -435,6 +584,7 @@ export default {
 			step: 2,
 			regiones: [],
 			comunas: [],
+			specialtiesSelected: [],
 			comunasRegiones: [],
 			timezone: [],
 			languages: [],
@@ -442,6 +592,11 @@ export default {
 			timeZone: 'America/Santiago',
 			rules: [v => v.length <= 300 || 'Maximo 300 caracteres'],
 		};
+	},
+	computed: {
+		...mapGetters({
+			specialties: 'Appointments/specialties',
+		}),
 	},
 	watch: {
 		bmenu(val) {
@@ -461,6 +616,7 @@ export default {
 		this.timezone = data;
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
+		this.getAppointments();
 	},
 	methods: {
 		save(date) {
@@ -469,6 +625,12 @@ export default {
 		newExperience() {
 			this.experience.push({ title: '', place: '', start: '', end: '' });
 		},
+		newFormation() {
+			this.formation.push({ formationType: '', description: '', start: '', end: '' });
+		},
+		...mapActions({
+			getAppointments: 'Appointments/getAppointments',
+		}),
 	},
 };
 </script>
