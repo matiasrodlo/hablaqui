@@ -15,7 +15,7 @@
 			</span>
 		</div>
 		<v-row justify="center">
-			<v-col cols="12" md="8" lg="6">
+			<v-col cols="12" md="9" lg="8">
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
@@ -255,9 +255,11 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Descripción profesional
+									</div>
 									<v-textarea
 										v-model="professionalDescription"
-										label="Descripción profesional"
 										no-resize
 										filled
 										outlined
@@ -266,6 +268,132 @@
 										counter
 										:rules="rules"
 									></v-textarea>
+								</v-col>
+								<v-col cols="12">
+									<v-row>
+										<v-col cols="3" md="3" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
+												Experiencia
+											</div>
+										</v-col>
+										<v-col cols="3" md="3" class="py-0">
+											<div
+												class="
+													primary--text
+													body-1
+													mb-2
+													font-weight-regular
+												"
+											>
+												Lugar / Descripción
+											</div>
+										</v-col>
+										<v-col cols="2" md="2" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
+												Inicio
+											</div>
+										</v-col>
+										<v-col cols="2" md="2" class="py-0">
+											<div
+												class="
+													primary--text
+													text-h6
+													mb-2
+													font-weight-regular
+												"
+											>
+												Termino
+											</div>
+										</v-col>
+									</v-row>
+									<v-row v-for="(item, i) in experience" :key="i">
+										<v-col cols="3" md="3">
+											<v-text-field
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.title"
+												@input="e => (experience[i].title = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="3" md="3">
+											<v-text-field
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.place"
+												@input="e => (experience[i].place = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="3" md="2">
+											<v-text-field
+												label="Inicio"
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.start"
+												@input="e => (experience[i].start = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="3" md="2">
+											<v-text-field
+												label="Fin"
+												filled
+												outlined
+												dense
+												type="text"
+												:value="item.end"
+												@input="e => (experience[i].end = e)"
+											></v-text-field>
+										</v-col>
+										<v-col cols="12" md="2" class="text-right text-sm-left">
+											<v-btn
+												v-if="i === experience.length - 1"
+												small
+												color="primary"
+												fab
+												depressed
+												@click="newExperience"
+											>
+												<h1>+</h1>
+											</v-btn>
+											<v-btn
+												v-if="
+													i === experience.length - 1 &&
+													experience.length - 1
+												"
+												small
+												color="error"
+												fab
+												depressed
+												@click="
+													() =>
+														(experience = experience.filter(
+															(el, index) => index !== i
+														))
+												"
+											>
+												<h1>-</h1>
+											</v-btn>
+										</v-col>
+									</v-row>
 								</v-col>
 							</v-row>
 							<div class="d-flex justify-end mt-4">
@@ -293,6 +421,7 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
+			experience: [{ title: '', place: '', start: '', end: '' }],
 			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
@@ -303,7 +432,7 @@ export default {
 			zone: '',
 			linkedin: '',
 			instagram: '',
-			step: 1,
+			step: 2,
 			regiones: [],
 			comunas: [],
 			comunasRegiones: [],
@@ -336,6 +465,9 @@ export default {
 	methods: {
 		save(date) {
 			this.$refs.menu.save(date);
+		},
+		newExperience() {
+			this.experience.push({ title: '', place: '', start: '', end: '' });
 		},
 	},
 };
