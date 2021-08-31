@@ -58,7 +58,7 @@
 							dense
 							:error-messages="phoneErrors"
 							class="mx-2"
-							label="Telefono"
+							label="Teléfono"
 							outlined
 							type="text"
 						></v-text-field>
@@ -119,8 +119,8 @@
 			</v-sheet>
 		</v-dialog>
 		<v-dialog v-model="check" width="300">
-			<v-sheet style="width: 300px; height: 50px">
-				<v-alert dense outlined type="error" width="300" height="50">
+			<v-sheet style="width: 300px; height: 40px">
+				<v-alert dense outlined type="warning" width="300" height="40">
 					Username invalido
 				</v-alert>
 			</v-sheet>
@@ -182,7 +182,7 @@ export default {
 		phoneErrors() {
 			const errors = [];
 			if (!this.$v.formData.phone.$dirty) return errors;
-			!this.$v.formData.phone.required && errors.push('El telefono es querido');
+			!this.$v.formData.phone.required && errors.push('El teléfono es querido');
 			return errors;
 		},
 		emailErrors() {
