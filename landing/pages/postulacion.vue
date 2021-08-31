@@ -549,7 +549,9 @@
 						</v-stepper-content>
 
 						<v-stepper-content step="3">
-							<v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+							<v-row>
+								<v-col></v-col>
+							</v-row>
 
 							<div class="d-flex justify-end mt-4">
 								<v-btn rounded color="primary" @click="step = 2"> Listo </v-btn>
