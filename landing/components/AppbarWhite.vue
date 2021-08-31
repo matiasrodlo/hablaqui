@@ -125,6 +125,7 @@
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<nuxt-link
+				v-if="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
 				accesskey="r"
 				style="text-decoration: none"
