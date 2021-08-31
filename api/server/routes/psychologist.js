@@ -66,7 +66,6 @@ psychologistsRouter.post(
 );
 psychologistsRouter.post(
 	'/psychologists/register',
-	[multer.single('avatar'), storage],
 	psychologistsController.register
 );
 psychologistsRouter.post(

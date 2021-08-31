@@ -93,7 +93,6 @@ let rating = new Schema(
 	},
 	{ timestamps: true }
 );
-
 let psychologist = new Schema({
 	avatar: {
 		type: String,
@@ -101,10 +100,17 @@ let psychologist = new Schema({
 	code: {
 		type: String,
 	},
+	isVerified: {
+		type: Boolean,
+		default: false,
+	},
 	email: {
 		type: String,
 	},
 	linkedin: {
+		type: String,
+	},
+	instagram: {
 		type: String,
 	},
 	username: {
@@ -115,6 +121,10 @@ let psychologist = new Schema({
 	},
 	lastName: {
 		type: String,
+	},
+	rut: {
+		type: String,
+		unique: true,
 	},
 	gender: {
 		type: String,

@@ -337,7 +337,7 @@ const createSession = async body => {
 	});
 };
 
-const register = async (body, avatar) => {
+const register = async (body) => {
 	if (await User.exists({ email: body.email })) {
 		return conflictResponse('Este correo ya esta registrado');
 	}
@@ -345,40 +345,14 @@ const register = async (body, avatar) => {
 	if (await Psychologist.exists({ username: body.username })) {
 		return conflictResponse('Este nombre de usuario ya esta ocupado');
 	}
-
-	let splittedExperience = body.experience.split(';');
-	splittedExperience = splittedExperience.map(i => i.trim());
-
-	let splittedFormation = body.formation.split(';');
-	splittedFormation = splittedFormation.map(i => i.trim());
-
-	const newPsychologist = {
-		name: body.name,
-		lastName: body.lastName,
-		code: body.code,
-		personalDescription: body.personalDescription,
-		professionalDescription: body.professionalDescription,
-		email: body.email,
-		username: body.username,
-		experience: splittedExperience,
-		formation: splittedFormation,
-		specialties: JSON.parse(body.specialties),
-		models: JSON.parse(body.models),
-		languages: JSON.parse(body.languages),
-		gender: body.gender,
-		isTrans: body.isTrans,
-		region: body.region,
-		comuna: body.comuna,
-		avatar,
-	};
-	const psychologist = await Psychologist.create(newPsychologist);
-
+	
+	const psychologist = await Psychologist.create(body);
 	const newUser = {
 		name: body.name,
+		rut: body.rut,
 		role: 'psychologist',
 		email: body.email,
 		password: bcrypt.hashSync(body.password, 10),
-		avatar,
 		psychologist: psychologist._id,
 	};
 
