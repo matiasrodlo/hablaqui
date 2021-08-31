@@ -10,57 +10,102 @@
 				</h3>
 			</v-card-text>
 			<v-card-text>
-				<v-text-field
-					v-model="formData.rut"
-					dense
-					label="Rut"
-					outlined
-					class="my-3"
-					:error-messages="rutErrors"
-				></v-text-field>
-				<v-text-field
-					v-model="formData.email"
-					dense
-					:error-messages="emailErrors"
-					label="Correo"
-					outlined
-					class="my-3"
-					type="email"
-				></v-text-field>
-				<v-text-field
-					v-model="formData.phone"
-					dense
-					:error-messages="phoneErrors"
-					label="Telefono"
-					outlined
-					class="my-3"
-					type="text"
-				></v-text-field>
-				<v-text-field
-					v-model="formData.password"
-					dense
-					:error-messages="passwordErrors"
-					label="Contraseña"
-					type="password"
-					outlined
-					class="my-3"
-				></v-text-field>
-				<v-checkbox v-model="terminos">
-					<template #label>
-						<div class="caption">
-							He leído y
-							<nuxt-link to="condiciones" style="text-decoration: none">
-								acepto los Términos y condiciones </nuxt-link
-							>y
-							<nuxt-link to="politicas" style="text-decoration: none">
-								la Política de privacidad.
-							</nuxt-link>
-						</div>
-					</template>
-				</v-checkbox>
+				<v-row no-gutters>
+					<v-col cols="6">
+						<v-text-field
+							v-model.trim="formData.name"
+							dense
+							label="Nombre"
+							outlined
+							:error-messages="nameErrors"
+							class="mx-2"
+						></v-text-field>
+					</v-col>
+					<v-col cols="6">
+						<v-text-field
+							v-model.trim="formData.lastName"
+							dense
+							label="Apellido"
+							outlined
+							:error-messages="lastNameErrors"
+							class="mx-2"
+						></v-text-field>
+					</v-col>
+					<v-col cols="6"
+						><v-text-field
+							v-model="formData.rut"
+							dense
+							label="Rut"
+							outlined
+							:error-messages="rutErrors"
+							class="mx-2"
+						></v-text-field
+					></v-col>
+					<v-col cols="6">
+						<v-text-field
+							v-model="formData.email"
+							dense
+							:error-messages="emailErrors"
+							class="mx-2"
+							label="Correo"
+							outlined
+							type="email"
+						></v-text-field>
+					</v-col>
+					<v-col cols="6">
+						<v-text-field
+							v-model="formData.phone"
+							dense
+							:error-messages="phoneErrors"
+							class="mx-2"
+							label="Teléfono"
+							outlined
+							type="text"
+						></v-text-field>
+					</v-col>
+					<v-col cols="6">
+						<v-text-field
+							v-model.trim="formData.username"
+							dense
+							:error-messages="usernameErrors"
+							class="mx-2"
+							label="username"
+							outlined
+							type="text"
+						></v-text-field>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							v-model="formData.password"
+							dense
+							:error-messages="passwordErrors"
+							class="mx-2"
+							label="Contraseña"
+							type="password"
+							outlined
+						></v-text-field>
+					</v-col>
+					<v-col cols="12">
+						<v-checkbox v-model="terminos" class="mx-2">
+							<template #label>
+								<div class="caption">
+									He leído y
+									<nuxt-link to="condiciones" style="text-decoration: none">
+										acepto los Términos y condiciones </nuxt-link
+									>y
+									<nuxt-link to="politicas" style="text-decoration: none">
+										la Política de privacidad.
+									</nuxt-link>
+								</div>
+							</template>
+						</v-checkbox>
+					</v-col>
+				</v-row>
 			</v-card-text>
 			<v-card-actions>
-				<v-btn color="primary" class="rounded-xl mx-auto px-10"> Regístrate ahora </v-btn>
+				<v-btn color="primary" class="rounded-xl mx-auto px-10" @click="onSubmit">
+					Regístrate ahora
+				</v-btn>
 			</v-card-actions>
 		</v-card>
 		<v-dialog v-model="dialog" width="300">
@@ -70,6 +115,13 @@
 					<strong>terminos y condiciones</strong>
 					<span class="primary--text">y</span>
 					<strong>politicas de privacidad</strong>
+				</v-alert>
+			</v-sheet>
+		</v-dialog>
+		<v-dialog v-model="check" width="300">
+			<v-sheet style="width: 300px; height: 40px">
+				<v-alert dense outlined type="warning" width="300" height="40">
+					Username invalido
 				</v-alert>
 			</v-sheet>
 		</v-dialog>
@@ -85,29 +137,58 @@ export default {
 	mixins: [validationMixin],
 	data() {
 		return {
-			formData: { rut: '', email: '', phone: '', password: '' },
+			check: false,
+			formData: {
+				name: '',
+				lastName: '',
+				rut: '',
+				username: '',
+				email: '',
+				phone: '',
+				password: '',
+			},
 			terminos: false,
 			dialog: false,
 			loading: false,
 		};
 	},
 	computed: {
+		nameErrors() {
+			const errors = [];
+			if (!this.$v.formData.name.$dirty) return errors;
+			!this.$v.formData.name.required && errors.push('El nombre es querido');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.formData.lastName.$dirty) return errors;
+			!this.$v.formData.lastName.required && errors.push('El apellido es querido');
+			return errors;
+		},
+		usernameErrors() {
+			const errors = [];
+			if (!this.$v.formData.username.$dirty) return errors;
+			!this.$v.formData.username.required && errors.push('El username es querido');
+			!this.$v.formData.username.minLength && errors.push('Minimo 6 caracteres');
+			!this.$v.formData.username.maxLength && errors.push('Maximo 30 caracteres');
+			return errors;
+		},
 		rutErrors() {
 			const errors = [];
 			if (!this.$v.formData.rut.$dirty) return errors;
-			!this.$v.formData.rut.required && errors.push('El Correo rut es querido');
+			!this.$v.formData.rut.required && errors.push('El rut es querido');
 			return errors;
 		},
 		phoneErrors() {
 			const errors = [];
 			if (!this.$v.formData.phone.$dirty) return errors;
-			!this.$v.formData.phone.required && errors.push('El telefono es querido');
+			!this.$v.formData.phone.required && errors.push('El teléfono es querido');
 			return errors;
 		},
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.formData.email.$dirty) return errors;
-			!this.$v.formData.email.required && errors.push('El telefono es querido');
+			!this.$v.formData.email.required && errors.push('El correo electronico es querido');
 			!this.$v.formData.email.email && errors.push('Inserte un correo valido');
 			return errors;
 		},
@@ -123,23 +204,48 @@ export default {
 	methods: {
 		async onSubmit() {
 			this.$v.$touch();
+			// validamos que acepte los terminos y condiciones
 			if (!this.$v.$invalid && !this.terminos) {
 				return (this.dialog = true);
 			}
-			if (!this.$v.$invalid && this.accept) {
+			if (!this.$v.$invalid && this.terminos) {
+				// verificamos si el username es valido
+				const available = await this.checkUsername(this.formData.username);
+				if (!available) return (this.check = true);
+				// procedemos a guardar
 				this.loading = true;
 				await this.registerPsychologist(this.formData);
 				this.loading = false;
-				this.formData = { rut: '', email: '', phone: '', password: '' };
+				this.formData = {
+					name: '',
+					lastName: '',
+					rut: '',
+					username: '',
+					email: '',
+					phone: '',
+					password: '',
+				};
 				this.$v.$reset();
 			}
 		},
 		...mapActions({
 			registerPsychologist: 'Psychologist/registerPsychologist',
+			checkUsername: 'Psychologist/checkUsername',
 		}),
 	},
 	validations: {
 		formData: {
+			name: {
+				required,
+			},
+			lastName: {
+				required,
+			},
+			username: {
+				required,
+				minLength: minLength(6),
+				maxLength: maxLength(30),
+			},
 			rut: {
 				required,
 			},

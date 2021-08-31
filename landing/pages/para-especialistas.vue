@@ -8,7 +8,7 @@
 			alt="Únete a la red de salud mental y bienestar"
 		>
 			<Appbar />
-			<v-container tag="section" fluid style="height: calc(100% - 180px)">
+			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="6" lg="5">
 						<h1
@@ -125,6 +125,9 @@
 							</article>
 						</v-card-text>
 					</v-card>
+				</v-col>
+				<v-col cols="12" class="text-center">
+					<v-btn to="#form-psy" color="primary" x-large rounded>Regístrate ahora</v-btn>
 				</v-col>
 			</v-row>
 		</v-container>

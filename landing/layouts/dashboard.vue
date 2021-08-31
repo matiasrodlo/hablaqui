@@ -1,7 +1,15 @@
 <template>
 	<v-app>
-		<v-navigation-drawer v-model="drawer" color="primary" app mobile-breakpoint="960">
-			<v-sheet color="primary" class="pa-4">
+		<v-navigation-drawer
+			v-model="drawer"
+			mini-variant-width="60"
+			mini-variant
+			color="primary"
+			expand-on-hover
+			app
+			mobile-breakpoint="960"
+		>
+			<v-sheet color="primary" class="pa-1">
 				<v-img
 					height="100"
 					contain
@@ -132,7 +140,7 @@ export default {
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible:
 						this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist',
 				},

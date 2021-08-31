@@ -276,7 +276,7 @@ export default {
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible: this.$auth.$state.user?.role === 'psychologist',
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
