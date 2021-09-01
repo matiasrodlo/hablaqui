@@ -35,11 +35,6 @@ export default {
 		const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 		return { psychologist };
 	},
-	data() {
-		return {
-			psychologist: null,
-		};
-	},
 	head() {
 		return {
 			title: `${
