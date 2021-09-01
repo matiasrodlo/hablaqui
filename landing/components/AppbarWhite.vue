@@ -110,7 +110,7 @@
 				id="faq-appbar"
 				accesskey="f"
 				style="text-decoration: none"
-				class="hidden-sm-and-down mx-5"
+				class="hidden-sm-and-down mx-2"
 				to="/faq"
 			>
 				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
@@ -119,16 +119,17 @@
 				id="blog-appabar"
 				accesskey="b"
 				style="text-decoration: none"
-				class="hidden-sm-and-down mx-5"
+				class="hidden-sm-and-down mx-2"
 				to="/blog"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<nuxt-link
+				v-if="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
 				accesskey="r"
 				style="text-decoration: none"
-				class="hidden-sm-and-down mx-5"
+				class="hidden-sm-and-down mx-2"
 				to="/para-especialistas"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
@@ -276,7 +277,7 @@ export default {
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible: this.$auth.$state.user?.role === 'psychologist',
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },

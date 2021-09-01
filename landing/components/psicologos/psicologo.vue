@@ -331,7 +331,7 @@ export default {
 	props: {
 		psychologist: {
 			type: Object,
-			default: null,
+			required: true,
 		},
 	},
 	data() {
