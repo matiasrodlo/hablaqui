@@ -47,6 +47,7 @@ export default {
 			const res = await axios.get(`${baseURL}/psychologists/all`);
 			const psicologos = res.data.psychologists.map(psychologist => ({
 				route: `/${psychologist.username}`,
+				payload: psychologist,
 			}));
 
 			// generate routes comunas
