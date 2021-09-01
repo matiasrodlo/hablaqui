@@ -8,6 +8,7 @@ import userRoutes from './user';
 import blogRouter from './blog';
 import chatRouter from './chat';
 import couponRouter from './coupon';
+import recruitmentRouter from './recruitment';
 
 const apiVersion = '/api/v1';
 
@@ -22,4 +23,5 @@ export default app => {
 	app.use(apiVersion, chatRouter);
 	app.use(apiVersion, mailSubscribersRouter);
 	app.use(apiVersion, couponRouter);
+	app.use(apiVersion, recruitmentRouter)
 };
