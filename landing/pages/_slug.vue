@@ -31,15 +31,14 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologo: () => import('~/components/psicologos/psicologo'),
 	},
-	async asyncData({ $axios, params, payload }) {
-		if (payload) {
-			return { psychologist: payload };
-		} else {
-			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
-			return {
-				psychologist,
-			};
-		}
+	async asyncData({ $axios, params }) {
+		const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
+		return { psychologist };
+	},
+	data() {
+		return {
+			psychologist: null,
+		};
 	},
 	head() {
 		return {
