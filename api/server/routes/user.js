@@ -73,4 +73,9 @@ userRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	userController.getSessions
 );
+
+userRouter.post(
+	'/user/register/psychologist',
+	userController.registerPsychologist
+)
 export default userRouter;

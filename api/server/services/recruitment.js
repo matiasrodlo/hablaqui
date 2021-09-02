@@ -14,15 +14,6 @@ const recruitmentService = {
             return conflictResponse('Este username ya está registrado');
         }
         const recruitedPsy = await Recruitment.create(body);
-        const newUser = {
-            name: body.name,
-            rut: body.rut,
-            role: 'psychologist',
-            email: body.email,
-            password: bcrypt.hashSync(body.password, 10),
-            psychologist: recruitedPsy._id,
-        };
-        User.create(newUser);
         logInfo(actionInfo(recruitedPsy.email, 'se registró como psicologo'));
         return okResponse('Registrado exitosamente');
     }
