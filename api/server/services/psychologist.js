@@ -264,12 +264,14 @@ const createSession = async body => {
 		payload.psychologist._id
 	);
 	if (
-		moment().isBefore(
+		moment().isAfter(
 			moment(isoDate).subtract({
 				hours: foundPsychologist.preferences.minimumNewSession,
 			})
 		)
 	) {
+		console.log(moment(), 'ahora');
+		console.log(moment(isoDate), 'iso');
 		return conflictResponse(
 			`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
 		);
