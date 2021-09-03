@@ -270,8 +270,6 @@ const createSession = async body => {
 			})
 		)
 	) {
-		console.log(moment(), 'ahora');
-		console.log(moment(isoDate), 'iso');
 		return conflictResponse(
 			`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
 		);
