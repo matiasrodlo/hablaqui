@@ -177,6 +177,24 @@ let recruitment = new Schema({
 		type: Object,
 		required: false,
 	},
+	yearsExpPsychologist: {
+		type: String,
+	},
+	yearsExpVideocalls: {
+		type: String,
+	},
+	avgPatients: {
+		type: String,
+	},
+	isExclusiveActivity: {
+		type: Boolean,
+	},
+	isUnderSupervision: {
+		type: Boolean,
+	},
+	isSupervisor: {
+		type: Boolean,
+	},
 	ratings: [rating],
 	sessions: [session],
 });

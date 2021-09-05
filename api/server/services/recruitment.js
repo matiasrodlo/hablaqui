@@ -1,9 +1,7 @@
 import Recruitment from '../models/recruitment';
-import User from '../models/user';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
-import bcrypt from 'bcrypt';
 
 const recruitmentService = {
     async registerPsychologist(body) {
