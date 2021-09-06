@@ -48,7 +48,36 @@
 										¡Es un placer conocerte!
 									</div>
 								</v-col>
-								<v-col cols="12">
+								<v-col cols="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										username
+									</div>
+									<v-text-field
+										v-model.trim="username"
+										filled
+										outlined
+										dense
+										placeholder="(Requerido)"
+										:rules="rulesUsername"
+										type="text"
+										:hint="`hablaqui.com/${username}`"
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Teléfono
+									</div>
+									<v-text-field
+										v-model="phone"
+										filled
+										outlined
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
+										dense
+										type="text"
+									></v-text-field>
+								</v-col>
+								<v-col cols="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
@@ -68,6 +97,8 @@
 												filled
 												outlined
 												hide-details
+												placeholder="(Requerido)"
+												:rules="rulesTextField"
 												dense
 												v-bind="attrs"
 												v-on="on"
@@ -90,7 +121,7 @@
 										></v-date-picker>
 									</v-menu>
 								</v-col>
-								<v-col cols="12">
+								<v-col cols="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Género
 									</div>
@@ -101,6 +132,8 @@
 										filled
 										outlined
 										hide-details
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
 										dense
 									></v-select>
 								</v-col>
@@ -116,7 +149,8 @@
 										outlined
 										hide-details
 										dense
-										placeholder="Seleccione"
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
 									></v-select>
 								</v-col>
 								<v-col cols="6">
@@ -131,8 +165,9 @@
 										filled
 										outlined
 										hide-details
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
 										dense
-										placeholder="Seleccione"
 									></v-select>
 								</v-col>
 								<v-col cols="12">
@@ -145,6 +180,8 @@
 										dense
 										filled
 										hide-details
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
 										:items="timezone"
 										outlined
 										:search-input.sync="zone"
@@ -166,7 +203,7 @@
 								</v-col>
 								<v-col cols="12">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										Idiomas
+										Idiomas (Requerido)
 									</div>
 									<div class="d-flex">
 										<v-checkbox
@@ -233,7 +270,14 @@
 								</v-col>
 							</v-row>
 							<div class="d-flex justify-end mt-4">
-								<v-btn rounded color="primary" @click="step = 2"> Siguiente </v-btn>
+								<v-btn
+									:loading="loadingStep"
+									rounded
+									color="primary"
+									@click="setStepTwo"
+								>
+									Siguiente
+								</v-btn>
 							</div>
 						</v-stepper-content>
 
@@ -264,6 +308,7 @@
 										filled
 										outlined
 										dense
+										placeholder="Requerido"
 										type="text"
 										counter
 										:rules="rules"
@@ -691,6 +736,8 @@ export default {
 			exclusiveActivity: null,
 			birthDate: '',
 			zone: '',
+			phone: '',
+			username: '',
 			linkedin: '',
 			instagram: '',
 			step: 1,
@@ -699,10 +746,23 @@ export default {
 			specialtiesSelected: [],
 			comunasRegiones: [],
 			timezone: [],
-			languages: [],
+			languages: ['spanish'],
+			loadingStep: false,
 			personalDescription: '',
 			timeZone: 'America/Santiago',
-			rules: [v => v.length <= 300 || 'Maximo 300 caracteres'],
+			rules: [
+				v => v.length >= 140 || 'Minimo 140 caracteres',
+				v => v.length <= 300 || 'Maximo 300 caracteres',
+				value => !!value || 'Este campo es requerido.',
+			],
+			rulesUsername: [
+				value => {
+					const re = /^[A-Za-z]+(?:[_-][A-Za-z]+)*$/;
+					return re.test(value) || 'Inserte un username valido';
+				},
+				value => !!value || 'Este campo es requerido.',
+			],
+			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 		};
 	},
 	computed: {
@@ -731,6 +791,29 @@ export default {
 		this.getAppointments();
 	},
 	methods: {
+		async setStepTwo() {
+			this.loadingStep = true;
+			if (
+				this.username &&
+				this.phone &&
+				this.timeZone &&
+				this.gender &&
+				this.languages.length &&
+				this.birthDate &&
+				this.region &&
+				this.comuna &&
+				this.personalDescription &&
+				this.personalDescription.length <= 300 &&
+				this.personalDescription.length >= 100
+			) {
+				const available = await this.checkUsername(this.username);
+				if (available && this.username) this.step = 2;
+				else alert('Username no disponible, por favor cambie');
+			} else {
+				alert('Faltan campos por llenar');
+			}
+			this.loadingStep = false;
+		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
@@ -742,6 +825,7 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
+			checkUsername: 'Psychologist/checkUsername',
 		}),
 	},
 };
