@@ -264,7 +264,7 @@ const createSession = async body => {
 		payload.psychologist._id
 	);
 	if (
-		moment().isBefore(
+		moment().isAfter(
 			moment(isoDate).subtract({
 				hours: foundPsychologist.preferences.minimumNewSession,
 			})

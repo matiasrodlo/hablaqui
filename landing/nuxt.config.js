@@ -201,7 +201,7 @@ export default {
 		[
 			'@nuxtjs/google-gtag',
 			{
-				id: 'UA-185893751-1',
+				id: 'G-VDW0VD7GBN',
 			},
 		],
 	],

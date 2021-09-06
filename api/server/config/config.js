@@ -19,7 +19,7 @@ process.env.JWT_ALGORITHM = process.env.JWT_ALGORITHM || 'HS256';
 process.env.JWT_EXPIRATION = process.env.JWT_EXPIRATION || '30d';
 process.env.PASSWORD_RECOVERY_JWT_EXPIRATION =
 	process.env.PASSWORD_RECOVERY_JWT_EXPIRATION || '4m';
-process.env.API_URL = process.env.API_URL || 'http://localhost:3000/';
+process.env.API_URL = process.env.API_URL || 'http://hablaqui.cl/';
 process.env.GOOGLE_CLIENT_ID =
 	process.env.GOOGLE_CLIENT_ID ||
 	'326428183768-n5t9r18fekpb722933s3sv07q3sd6n0a.apps.googleusercontent.com';
