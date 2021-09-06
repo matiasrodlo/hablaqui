@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import multer from '../middleware/multer';
-import storage from '../middleware/storage';
 import psychologistsController from '../controllers/psychologist';
 
 const psychologistsRouter = Router();

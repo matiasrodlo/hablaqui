@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 import { Schema, model } from 'mongoose';
 
 // Model for psychologist that are not approved
