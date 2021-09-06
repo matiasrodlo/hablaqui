@@ -85,7 +85,12 @@ export default {
 					const response = await this.$auth.loginWith('local', { data: this.form });
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn)
-						if (!this.isDialog) {
+						if (
+							response.data.user.role === 'psychologist' &&
+							!response.data.user.psychologist
+						) {
+							this.$router.push({ name: 'postulacion' });
+						} else if (!this.isDialog) {
 							if (this.$route.query.from === 'psy')
 								this.$router.push({ name: 'evaluacion' });
 							else if (
