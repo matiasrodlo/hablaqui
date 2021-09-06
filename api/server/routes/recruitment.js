@@ -5,7 +5,7 @@ const recruitmentRouter = Router();
 
 recruitmentRouter.post(
 	'/recruitment/psychologist',
-	recruitmentController.registerPsychologist
+	recruitmentController.registerRecruitmentPsy
 )
 
 export default recruitmentRouter;

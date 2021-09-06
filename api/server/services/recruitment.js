@@ -4,7 +4,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 
 const recruitmentService = {
-    async registerPsychologist(body) {
+    async registerRecruitmentPsy(body) {
         if (await Recruitment.exists({rut: body.rut})) {
             return conflictResponse('Este psicologo ya está registrado');
         }

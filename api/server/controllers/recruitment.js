@@ -3,10 +3,10 @@ import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
 const recruitmentController = {
-    async registerPsychologist(req, res) {
+    async registerRecruitmentPsy(req, res) {
         try {
             const { body } = req;
-            const { data, code } = await recruitmentService.registerPsychologist(
+            const { data, code } = await recruitmentService.registerRecruitmentPsy(
                 body
             );
             restResponse(data, code, res);
