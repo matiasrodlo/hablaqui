@@ -3,7 +3,6 @@ import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import { password_recovery_jwt_expiration } from '../config/dotenv';
 
 const usersService = {
 	async getProfile(id) {
@@ -98,28 +97,6 @@ const usersService = {
 		let finishedSessions = user.finishedSessions;
 
 		return okResponse('sesiones conseguidas', { finishedSessions });
-	},
-
-	async registerPsychologist(body) {
-		if (await User.exists({ rut: body.rut })) {
-			return conflictResponse('ya existe un usuario con ese rut');
-		}
-
-		if (await User.exists({ email: body.email })) {
-			return conflictResponse('ya existe un usuario con ese email');
-		}
-
-		const newUser = {
-            name: body.name,
-            rut: body.rut,
-            role: 'psychologist',
-            email: body.email,
-            password: bcrypt.hashSync(body.password, 10),
-            psychologist: recruitedPsy._id,
-        };
-        User.create(newUser);
-		logInfo(actionInfo(body.email, 'se registró un User para psicologo'));
-		return okResponse('psicologo registrado', { user: newUser });
 	},
 };
 

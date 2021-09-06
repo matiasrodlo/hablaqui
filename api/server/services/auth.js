@@ -4,7 +4,7 @@ import User from '../models/user';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
-import { okResponse } from '../utils/responses/functions';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const generateJwt = user => {
 	const payload = {
@@ -25,6 +25,10 @@ const login = async user => {
 };
 
 const register = async payload => {
+	if (await User.exists({ email: payload.email })) {
+		return conflictResponse('Correo electronico en uso');
+	}
+
 	const newUser = {
 		...payload,
 		email: payload.email.toLowerCase(),
@@ -38,16 +42,16 @@ const register = async payload => {
 	});
 };
 
-const generatePasswordRecoverJwt = user => {
-	const payload = {
-		username: user.name,
-		sub: user._id,
-	};
+// const generatePasswordRecoverJwt = user => {
+// 	const payload = {
+// 		username: user.name,
+// 		sub: user._id,
+// 	};
 
-	return sign(payload, process.env.JWT_SECRET, {
-		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
-	});
-};
+// 	return sign(payload, process.env.JWT_SECRET, {
+// 		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
+// 	});
+// };
 
 const getUserByEmail = async email => {
 	return await User.findOne({ email: email });

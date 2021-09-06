@@ -40,6 +40,7 @@
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'SignIn',
@@ -95,7 +96,7 @@ export default {
 							else this.$router.push({ name: 'psicologos' });
 						} else this.setResumeView(true);
 				} catch (error) {
-					this.snackBar({ content: error.message, color: 'error' });
+					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {
 					this.loading = false;
 				}

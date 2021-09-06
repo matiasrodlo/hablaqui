@@ -91,7 +91,8 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'SignUp',
@@ -107,7 +108,6 @@ export default {
 			form: null,
 			loading: false,
 			showPassword: false,
-			// showRepeatPassword: false,
 			accept: false,
 			dialog: false,
 		};
@@ -136,14 +136,6 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
-		// repeatPasswordErrors() {
-		// 	const errors = [];
-		// 	if (!this.$v.form.password.$dirty) return errors;
-		// 	!this.$v.form.repeatPassword.required && errors.push('Repetir contraseña es querido');
-		// 	!this.$v.form.repeatPassword.sameAsPassword &&
-		// 		errors.push('Las contraseñas deben ser iguales');
-		// 	return errors;
-		// },
 	},
 	created() {
 		this.defaultForm();
@@ -153,6 +145,7 @@ export default {
 			this.form = {
 				name: '',
 				email: '',
+				role: 'user',
 				password: '',
 				inviteCode: '',
 			};
@@ -185,13 +178,12 @@ export default {
 							else this.$router.push({ name: 'psicologos' });
 						} else this.setResumeView(true);
 				} catch (error) {
-					this.snackBar({ content: error.message, color: 'error' });
+					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {
 					this.loading = false;
 				}
 			}
 		},
-		...mapActions({ register: 'User/register' }),
 		...mapMutations({
 			setResumeView: 'Psychologist/setResumeView',
 			snackBar: 'Snackbar/showMessage',

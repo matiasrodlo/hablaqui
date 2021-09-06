@@ -79,7 +79,7 @@
 						</v-list>
 					</v-col>
 					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4">
-						<form-psy />
+						<form-user-psy />
 					</v-col>
 				</v-row>
 			</v-container>
@@ -87,7 +87,7 @@
 		<v-container class="mt-4 hidden-md-and-up">
 			<v-row>
 				<v-col>
-					<form-psy />
+					<form-user-psy />
 				</v-col>
 			</v-row>
 		</v-container>
@@ -307,7 +307,7 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 		Appbar: () => import('@/components/AppbarWhite'),
-		FormPsy: () => import('@/components/psicologos/FormPsy.vue'),
+		FormUserPsy: () => import('@/components/psicologos/FormUserPsy.vue'),
 	},
 	data() {
 		return {

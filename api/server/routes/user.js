@@ -74,8 +74,4 @@ userRouter.get(
 	userController.getSessions
 );
 
-userRouter.post(
-	'/user/register/psychologist',
-	userController.registerPsychologist
-)
 export default userRouter;

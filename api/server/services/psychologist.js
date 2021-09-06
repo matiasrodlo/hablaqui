@@ -337,15 +337,15 @@ const createSession = async body => {
 	});
 };
 
-const register = async (body) => {
+const register = async body => {
 	if (await User.exists({ email: body.email })) {
-		return conflictResponse('Este correo ya esta registrado');
+		return conflictResponse('Correo electronico en uso');
 	}
 
 	if (await Psychologist.exists({ username: body.username })) {
 		return conflictResponse('Este nombre de usuario ya esta ocupado');
 	}
-	
+
 	const psychologist = await Psychologist.create(body);
 	const newUser = {
 		name: body.name,
