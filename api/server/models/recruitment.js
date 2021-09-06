@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 import { Schema, model } from 'mongoose';
 
+// Model for psychologist that are not approved
 let session = new Schema({
 	date: {
 		type: String,
@@ -94,12 +96,16 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
-let psychologist = new Schema({
+let recruitment = new Schema({
 	avatar: {
 		type: String,
 	},
 	code: {
 		type: String,
+	},
+	isVerified: {
+		type: Boolean,
+		default: false,
 	},
 	email: {
 		type: String,
@@ -171,9 +177,26 @@ let psychologist = new Schema({
 		type: Object,
 		required: false,
 	},
+	yearsExpPsychologist: {
+		type: String,
+	},
+	yearsExpVideocalls: {
+		type: String,
+	},
+	avgPatients: {
+		type: String,
+	},
+	isExclusiveActivity: {
+		type: Boolean,
+	},
+	isUnderSupervision: {
+		type: Boolean,
+	},
+	isSupervisor: {
+		type: Boolean,
+	},
 	ratings: [rating],
 	sessions: [session],
 });
 
-//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
-export default model('psychologist', psychologist);
+export default model('recruitment', recruitment);

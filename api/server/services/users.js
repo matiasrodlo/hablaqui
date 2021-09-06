@@ -99,6 +99,28 @@ const usersService = {
 
 		return okResponse('sesiones conseguidas', { finishedSessions });
 	},
+
+	async registerPsychologist(body) {
+		if (await User.exists({ rut: body.rut })) {
+			return conflictResponse('ya existe un usuario con ese rut');
+		}
+
+		if (await User.exists({ email: body.email })) {
+			return conflictResponse('ya existe un usuario con ese email');
+		}
+
+		const newUser = {
+            name: body.name,
+            rut: body.rut,
+            role: 'psychologist',
+            email: body.email,
+            password: bcrypt.hashSync(body.password, 10),
+            psychologist: recruitedPsy._id,
+        };
+        User.create(newUser);
+		logInfo(actionInfo(body.email, 'se registró un User para psicologo'));
+		return okResponse('psicologo registrado', { user: newUser });
+	},
 };
 
 export default usersService;

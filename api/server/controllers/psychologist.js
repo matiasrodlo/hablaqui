@@ -52,10 +52,8 @@ const psychologistsController = {
 	async register(req, res) {
 		try {
 			const { body } = req;
-			const avatar = req.file.cloudStoragePublicUrl;
 			const { data, code } = await psychologistsService.register(
 				body,
-				avatar
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

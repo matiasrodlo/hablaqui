@@ -41,13 +41,16 @@ let planSchema = new Schema(
 	},
 	{ timestamps: true }
 );
-
 let userSchema = new Schema({
 	name: {
 		type: String,
 	},
 	lastName: {
 		type: String,
+	},
+	rut: {
+		type: String,
+		unique: true,
 	},
 	email: {
 		type: String,
