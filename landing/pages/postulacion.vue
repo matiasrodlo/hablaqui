@@ -274,7 +274,7 @@
 									:loading="loadingStep"
 									rounded
 									color="primary"
-									@click="setStepTwo"
+									@click="saveStep(2)"
 								>
 									Siguiente
 								</v-btn>
@@ -303,7 +303,7 @@
 										Descripción profesional
 									</div>
 									<v-textarea
-										v-model="professionalDescription"
+										v-model="form.professionalDescription"
 										no-resize
 										filled
 										outlined
@@ -365,7 +365,7 @@
 											</div>
 										</v-col>
 									</v-row>
-									<v-row v-for="(item, i) in formation" :key="i">
+									<v-row v-for="(item, i) in form.formation" :key="i">
 										<v-col cols="12" md="3">
 											<v-select
 												filled
@@ -382,7 +382,7 @@
 													'Otro',
 												]"
 												:value="item.formationType"
-												@change="e => (formation[i].formationType = e)"
+												@change="e => (form.formation[i].formationType = e)"
 											></v-select>
 										</v-col>
 										<v-col cols="12" md="3">
@@ -392,7 +392,7 @@
 												dense
 												type="text"
 												:value="item.description"
-												@input="e => (formation[i].title = e)"
+												@input="e => (form.formation[i].title = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2">
@@ -402,7 +402,7 @@
 												dense
 												type="text"
 												:value="item.start"
-												@input="e => (formation[i].start = e)"
+												@input="e => (form.formation[i].start = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2">
@@ -412,12 +412,12 @@
 												dense
 												type="text"
 												:value="item.end"
-												@input="e => (formation[i].end = e)"
+												@input="e => (form.formation[i].end = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2" class="text-center text-md-left">
 											<v-btn
-												v-if="i === formation.length - 1"
+												v-if="i === form.formation.length - 1"
 												small
 												color="primary"
 												fab
@@ -428,8 +428,8 @@
 											</v-btn>
 											<v-btn
 												v-if="
-													i === formation.length - 1 &&
-													formation.length - 1
+													i === form.formation.length - 1 &&
+													form.formation.length - 1
 												"
 												small
 												color="error"
@@ -437,7 +437,7 @@
 												depressed
 												@click="
 													() =>
-														(formation = formation.filter(
+														(form.formation = form.formation.filter(
 															(el, index) => index !== i
 														))
 												"
@@ -498,7 +498,7 @@
 											</div>
 										</v-col>
 									</v-row>
-									<v-row v-for="(item, i) in experience" :key="i">
+									<v-row v-for="(item, i) in form.experience" :key="i">
 										<v-col cols="3" md="3">
 											<v-text-field
 												filled
@@ -506,7 +506,7 @@
 												dense
 												type="text"
 												:value="item.title"
-												@input="e => (experience[i].title = e)"
+												@input="e => (form.experience[i].title = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="3">
@@ -516,7 +516,7 @@
 												dense
 												type="text"
 												:value="item.place"
-												@input="e => (experience[i].place = e)"
+												@input="e => (form.experience[i].place = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="2">
@@ -526,7 +526,7 @@
 												dense
 												type="text"
 												:value="item.start"
-												@input="e => (experience[i].start = e)"
+												@input="e => (form.experience[i].start = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="2">
@@ -536,12 +536,12 @@
 												dense
 												type="text"
 												:value="item.end"
-												@input="e => (experience[i].end = e)"
+												@input="e => (form.experience[i].end = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2" class="text-right text-sm-left">
 											<v-btn
-												v-if="i === experience.length - 1"
+												v-if="i === form.experience.length - 1"
 												small
 												color="primary"
 												fab
@@ -552,8 +552,8 @@
 											</v-btn>
 											<v-btn
 												v-if="
-													i === experience.length - 1 &&
-													experience.length - 1
+													i === form.experience.length - 1 &&
+													form.experience.length - 1
 												"
 												small
 												color="error"
@@ -561,7 +561,7 @@
 												depressed
 												@click="
 													() =>
-														(experience = experience.filter(
+														(form.experience = form.experience.filter(
 															(el, index) => index !== i
 														))
 												"
@@ -576,7 +576,7 @@
 										Especialidades
 									</div>
 									<v-select
-										v-model="specialtiesSelected"
+										v-model="form.specialties"
 										:loading="!specialties.length"
 										filled
 										outlined
@@ -592,7 +592,7 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary" @click="step = 3">
+								<v-btn class="mx-2" rounded color="primary" @click="saveStep(3)">
 									Siguiente
 								</v-btn>
 							</div>
@@ -737,10 +737,11 @@ export default {
 				personalDescription: '',
 				linkedin: '',
 				instagram: '',
+				experience: [{ title: '', place: '', start: '', end: '' }],
+				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				professionalDescription: '',
+				specialties: [],
 			},
-			experience: [{ title: '', place: '', start: '', end: '' }],
-			formation: [{ formationType: '', description: '', start: '', end: '' }],
-			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
 			yearsWorked: '',
@@ -749,7 +750,6 @@ export default {
 			step: 1,
 			regiones: [],
 			comunas: [],
-			specialtiesSelected: [],
 			comunasRegiones: [],
 			timezone: [],
 			loadingStep: false,
@@ -787,46 +787,80 @@ export default {
 		this.timezone = data;
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
-		this.getAppointments();
+		await this.getAppointments();
+		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
 	},
 	methods: {
-		async setStepTwo() {
+		async saveStep(step) {
 			this.loadingStep = true;
-			if (
-				this.form.username &&
-				this.form.phone &&
-				this.form.timeZone &&
-				this.form.gender &&
-				this.form.languages.length &&
-				this.form.birthDate &&
-				this.form.region &&
-				this.form.comuna &&
-				this.form.personalDescription &&
-				this.form.personalDescription.length <= 300 &&
-				this.form.personalDescription.length >= 100
-			) {
-				const available = await this.checkUsername(this.form.username);
-				if (available && this.form.username) {
+			if (this.validationStep(step)) {
+				if (this.form && this.form._id) {
+					// actualizamos postulacion
+					const { data } = await this.$axios('/recruitment/update', {
+						method: 'put',
+						data: this.form,
+					});
+					this.form = data.recruited;
+					this.step = step;
+				} else {
+					// creamos postulacion
 					const { data } = await this.$axios('/recruitment/register', {
 						method: 'post',
 						data: this.form,
 					});
 					this.form = data.recruited;
-					this.step = 2;
-				} else alert('Username no disponible, por favor cambie');
+					this.step = step;
+				}
 			} else {
 				alert('Faltan campos por llenar');
 			}
 			this.loadingStep = false;
 		},
+		async validationStep(step) {
+			// step el el paso siguiente por lo tanto restamos uno para validar ese step antes pasar al siguiente
+
+			// validamos el step 1
+			if (step - 1 === 1) {
+				const available = await this.checkUsername(this.form.username);
+				if (!available) alert('Username no disponible');
+				return (
+					this.form.username &&
+					this.form.phone &&
+					this.form.timeZone &&
+					this.form.gender &&
+					this.form.languages.length &&
+					this.form.birthDate &&
+					this.form.region &&
+					this.form.comuna &&
+					this.form.personalDescription &&
+					this.form.personalDescription.length <= 300 &&
+					this.form.personalDescription.length >= 100 &&
+					available
+				);
+			}
+			// validamos el step 2
+			else if (step - 1 === 2) {
+				return (
+					this.form.professionalDescription &&
+					this.form.formation.length &&
+					this.form.experience.length &&
+					this.form.specialties.length
+				);
+			}
+			// Final del formulario, validamos step 3
+			else if (step - 1 === 3) {
+				//
+			}
+		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		newExperience() {
-			this.experience.push({ title: '', place: '', start: '', end: '' });
+			this.form.experience.push({ title: '', place: '', start: '', end: '' });
 		},
 		newFormation() {
-			this.formation.push({ formationType: '', description: '', start: '', end: '' });
+			this.form.formation.push({ formationType: '', description: '', start: '', end: '' });
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
