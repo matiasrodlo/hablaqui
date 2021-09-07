@@ -1,5 +1,5 @@
 <template>
-	<div style="height: 100vh">
+	<div v-if="form" style="height: 100vh">
 		<div class="ma-4 d-flex justify-space-between align-center">
 			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
 				<v-img
@@ -392,7 +392,7 @@
 												dense
 												type="text"
 												:value="item.description"
-												@input="e => (form.formation[i].title = e)"
+												@input="e => (form.formation[i].description = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2">
@@ -619,6 +619,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.yearsExpPsychologist"
 											filled
 											outlined
 											dense
@@ -633,6 +634,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.yearsExpVideocalls"
 											filled
 											outlined
 											dense
@@ -646,6 +648,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.avgPatients"
 											filled
 											outlined
 											dense
@@ -658,12 +661,15 @@
 										¿Es la atención clínica su actividad exclusiva?
 									</div>
 									<div>
-										<v-radio-group v-model="exclusiveActivity" row>
+										<v-radio-group v-model="form.isExclusiveActivity" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -674,12 +680,15 @@
 										profesional de la psicología?
 									</div>
 									<div>
-										<v-radio-group row>
+										<v-radio-group v-model="form.isUnderSupervision" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -689,12 +698,15 @@
 										¿Supervisa actualmente a otros psicólogos?
 									</div>
 									<div>
-										<v-radio-group row>
+										<v-radio-group v-model="form.isSupervisor" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -705,10 +717,35 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary">
-									Enviar tu postulación
+								<v-btn class="mx-2" rounded color="primary" @click="saveStep(4)">
+									Finalizar postulación
 								</v-btn>
 							</div>
+						</v-stepper-content>
+
+						<v-stepper-content step="4">
+							<v-row>
+								<v-col>
+									<h1>Listo</h1>
+									<h2>
+										nuestro equipo te contactara via email cuando estes aprobado
+									</h2>
+									<div class="mx-2">
+										<v-btn
+											text
+											class="mx-2"
+											rounded
+											color="primary"
+											@click="step = 3"
+										>
+											Atras
+										</v-btn>
+										<v-btn text color="primary" to="/para-especialistas">
+											Ir pagaina de inicio
+										</v-btn>
+									</div>
+								</v-col>
+							</v-row>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -722,30 +759,12 @@ import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+	name: 'Postulacion',
 	layout: 'simple',
 	data() {
 		return {
-			form: {
-				username: '',
-				phone: '',
-				timeZone: 'America/Santiago',
-				gender: '',
-				languages: ['spanish'],
-				birthDate: '',
-				region: '',
-				comuna: '',
-				personalDescription: '',
-				linkedin: '',
-				instagram: '',
-				experience: [{ title: '', place: '', start: '', end: '' }],
-				formation: [{ formationType: '', description: '', start: '', end: '' }],
-				professionalDescription: '',
-				specialties: [],
-			},
 			activePicker: null,
 			bmenu: false,
-			yearsWorked: '',
-			exclusiveActivity: null,
 			zone: '',
 			step: 1,
 			regiones: [],
@@ -766,6 +785,30 @@ export default {
 				value => !!value || 'Este campo es requerido.',
 			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
+			form: {
+				username: '',
+				phone: '',
+				timeZone: 'America/Santiago',
+				gender: '',
+				languages: ['spanish'],
+				birthDate: '',
+				region: '',
+				comuna: '',
+				personalDescription: '',
+				linkedin: '',
+				instagram: '',
+				experience: [{ title: '', place: '', start: '', end: '' }],
+				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				professionalDescription: '',
+				specialties: [],
+				yearsExpPsychologist: '',
+				yearsExpVideocalls: '',
+				avgPatients: '',
+				isExclusiveActivity: '',
+				isUnderSupervision: '',
+				isSupervisor: '',
+			},
+			recruitment: null,
 		};
 	},
 	computed: {
@@ -802,7 +845,6 @@ export default {
 						data: this.form,
 					});
 					this.form = data.recruited;
-					this.step = step;
 				} else {
 					// creamos postulacion
 					const { data } = await this.$axios('/recruitment/register', {
@@ -810,8 +852,8 @@ export default {
 						data: this.form,
 					});
 					this.form = data.recruited;
-					this.step = step;
 				}
+				this.step = step;
 			} else {
 				alert('Faltan campos por llenar');
 			}
