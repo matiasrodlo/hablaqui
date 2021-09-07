@@ -22,6 +22,18 @@ const recruitmentService = {
 		logInfo(actionInfo(recruited.email, 'se registró como psicologo'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
+	async update(body) {
+		if (!(await Recruitment.exists({ rut: body.rut }))) {
+			return conflictResponse('Este psicologo no existe');
+		}
+		const recruitedPsy = await Recruitment.findOneAndUpdate(
+			{ emai: body.email },
+			body,
+			{ new: true }
+		);
+		logInfo(actionInfo(recruitedPsy.email, 'actualizó su perfil'));
+		return okResponse('Actualizado exitosamente', recruitedPsy);
+	},
 };
 
 export default recruitmentService;
