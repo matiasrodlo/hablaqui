@@ -51,9 +51,6 @@ const recruitmentService = {
 	 * @returns The response code, message and the recruitment profile obtained (if exists)
 	 */
 	async get(email) {
-		if (!(await Recruitment.exists({ email }))) {
-			return conflictResponse('Este postulante no existe');
-		}
 		const recruited = await Recruitment.findOne({ email });
 		return okResponse('Postulante obtenido', { recruited });
 	},

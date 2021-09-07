@@ -224,6 +224,10 @@ let recruitment = new Schema({
 	},
 	ratings: [rating],
 	sessions: [session],
+	timeZone: {
+		type: String,
+		default: 'America/Santiago',
+	},
 });
 
 export default model('recruitment', recruitment);
