@@ -51,6 +51,20 @@ const recruitmentController = {
 			errorCallback(e, res, 'Error obteniendo el postulante');
 		}
 	},
+	/**
+	 * @description - This function is used to get all recruitment
+	 * @param {object} req - The request object (Recruitment email of the profile)
+	 * @param res - The response object (Response code and profile)
+	 * @returns {object} - The response object
+	 */
+	async getAll(req, res) {
+		try {
+			const { data, code } = await recruitmentService.getAll();
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error obteniendo el postulante');
+		}
+	},
 };
 
 export default Object.freeze(recruitmentController);

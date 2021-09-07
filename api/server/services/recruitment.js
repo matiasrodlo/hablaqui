@@ -54,6 +54,14 @@ const recruitmentService = {
 		const recruited = await Recruitment.findOne({ email });
 		return okResponse('Postulante obtenido', { recruited });
 	},
+	/**
+	 * @description - This services is used to get all recruitment
+	 * @returns The response code, message and the recruitments profile obtained
+	 */
+	async getAll() {
+		const recruitment = await Recruitment.find({ isVerified: false });
+		return okResponse('Postulantes obtenidos', { recruitment });
+	},
 };
 
 export default recruitmentService;

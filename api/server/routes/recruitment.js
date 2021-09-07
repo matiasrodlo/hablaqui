@@ -36,4 +36,15 @@ recruitmentRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.get
 );
+/**
+ * @description: Route to get all recruitment profile of psychologist
+ * @route: /api/v1/recruitment
+ * @method: GET
+ * @access: public (authenticated)
+ */
+recruitmentRouter.get(
+	'/recruitment',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.getAll
+);
 export default recruitmentRouter;
