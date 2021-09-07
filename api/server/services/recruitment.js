@@ -22,7 +22,7 @@ const recruitmentService = {
 		logInfo(actionInfo(recruited.email, 'se registró como psicologo'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
-	async updateRecruitmentPsy(body) {
+	async update(body) {
 		if (!(await Recruitment.exists({ rut: body.rut }))) {
 			return conflictResponse('Este psicologo no existe');
 		}

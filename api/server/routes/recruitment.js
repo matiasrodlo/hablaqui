@@ -15,8 +15,9 @@ recruitmentRouter.post(
 	recruitmentController.register
 );
 recruitmentRouter.put(
-	'/recruitment/psychologist/:id',
-	recruitmentController.updateRecruitmentPsy
+	'/recruitment/:id',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.update
 );
 
 export default recruitmentRouter;

@@ -20,13 +20,10 @@ const recruitmentController = {
 			errorCallback(e, res, 'Error registrando el psicologo');
 		}
 	},
-	async updateRecruitmentPsy(req, res) {
+	async update(req, res) {
 		try {
 			const { body } = req;
-			const {
-				data,
-				code,
-			} = await recruitmentService.updateRecruitmentPsy(body);
+			const { data, code } = await recruitmentService.update(body);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando el psicologo');
