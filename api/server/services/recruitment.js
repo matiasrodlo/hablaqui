@@ -6,7 +6,7 @@ import { actionInfo } from '../utils/logger/infoMessages';
 const recruitmentService = {
 	async register(user, body) {
 		const payload = {
-			body,
+			...body,
 			email: user.email,
 			name: user.name,
 			lastName: user.lastName,

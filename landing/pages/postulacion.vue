@@ -811,8 +811,7 @@ export default {
 						method: 'post',
 						data: this.form,
 					});
-					console.log(data);
-					this.form = data;
+					this.form = data.recruited;
 					this.step = 2;
 				} else alert('Username no disponible, por favor cambie');
 			} else {
