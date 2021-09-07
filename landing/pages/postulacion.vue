@@ -761,6 +761,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
 	name: 'Postulacion',
 	layout: 'simple',
+	middleware: ['auth'],
 	data() {
 		return {
 			activePicker: null,

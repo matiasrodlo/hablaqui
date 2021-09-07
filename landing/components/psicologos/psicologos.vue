@@ -761,8 +761,7 @@ export default {
 	},
 	computed: {
 		loading() {
-			if (this.psychologists.length === 0) return true;
-			else return false;
+			return !this.psychologists.length;
 		},
 		/**
 		 * items for search box
