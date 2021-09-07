@@ -19,5 +19,9 @@ recruitmentRouter.put(
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.update
 );
-
+recruitmentRouter.get(
+	'/recruitment/:email',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.get
+);
 export default recruitmentRouter;

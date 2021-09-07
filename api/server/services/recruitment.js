@@ -13,18 +13,18 @@ const recruitmentService = {
 			rut: user.rut,
 		};
 		if (await Recruitment.exists({ rut: payload.rut })) {
-			return conflictResponse('Este psicologo ya está registrado');
+			return conflictResponse('Este postulante ya está registrado');
 		}
 		if (await Recruitment.exists({ username: payload.username })) {
 			return conflictResponse('Este username ya está registrado');
 		}
 		const recruited = await Recruitment.create(payload);
-		logInfo(actionInfo(recruited.email, 'se registró como psicologo'));
+		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
 	async update(body) {
 		if (!(await Recruitment.exists({ rut: body.rut }))) {
-			return conflictResponse('Este psicologo no existe');
+			return conflictResponse('Este postulante no existe');
 		}
 		const recruitedPsy = await Recruitment.findOneAndUpdate(
 			{ emai: body.email },
@@ -33,6 +33,13 @@ const recruitmentService = {
 		);
 		logInfo(actionInfo(recruitedPsy.email, 'actualizó su perfil'));
 		return okResponse('Actualizado exitosamente', recruitedPsy);
+	},
+	async get(mail) {
+		if (!(await Recruitment.exists({ email: mail }))) {
+			return conflictResponse('Este postulante no existe');
+		}
+		const recruited = await Recruitment.findOne({ email: mail });
+		return okResponse('Postulante obtenido', recruited);
 	},
 };
 
