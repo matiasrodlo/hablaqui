@@ -15,7 +15,7 @@ recruitmentRouter.post(
 	recruitmentController.register
 );
 recruitmentRouter.put(
-	'/recruitment/:id',
+	'/recruitment/update',
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.update
 );
