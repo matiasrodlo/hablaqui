@@ -99,18 +99,6 @@ const userController = {
 			errorCallback(e, res, 'Error consiguiendo las sesiones');
 		}
 	},
-
-	async registerPsychologist(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await userService.registerPsychologist(
-				user
-			);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error registrando perfil de User para psicologo');
-		}
-	}
 };
 
 export default userController;

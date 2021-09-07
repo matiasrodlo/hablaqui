@@ -74,7 +74,7 @@ let userSchema = new Schema({
 	},
 	timeZone: {
 		type: String,
-		default: 'America/Santiago'
+		default: 'America/Santiago',
 	},
 	state: {
 		type: Boolean,

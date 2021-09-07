@@ -52,28 +52,6 @@
 							type="email"
 						></v-text-field>
 					</v-col>
-					<v-col cols="6">
-						<v-text-field
-							v-model="formData.phone"
-							dense
-							:error-messages="phoneErrors"
-							class="mx-2"
-							label="Teléfono"
-							outlined
-							type="text"
-						></v-text-field>
-					</v-col>
-					<v-col cols="6">
-						<v-text-field
-							v-model.trim="formData.username"
-							dense
-							:error-messages="usernameErrors"
-							class="mx-2"
-							label="username"
-							outlined
-							type="text"
-						></v-text-field>
-					</v-col>
 					<v-col cols="12">
 						<v-text-field
 							v-model="formData.password"
@@ -118,34 +96,26 @@
 				</v-alert>
 			</v-sheet>
 		</v-dialog>
-		<v-dialog v-model="check" width="300">
-			<v-sheet style="width: 300px; height: 40px">
-				<v-alert dense outlined type="warning" width="300" height="40">
-					Username invalido
-				</v-alert>
-			</v-sheet>
-		</v-dialog>
 	</v-form>
 </template>
 
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	mixins: [validationMixin],
 	data() {
 		return {
-			check: false,
 			formData: {
 				name: '',
 				lastName: '',
 				rut: '',
-				username: '',
 				email: '',
-				phone: '',
 				password: '',
+				role: 'psychologist',
 			},
 			terminos: false,
 			dialog: false,
@@ -165,24 +135,10 @@ export default {
 			!this.$v.formData.lastName.required && errors.push('El apellido es querido');
 			return errors;
 		},
-		usernameErrors() {
-			const errors = [];
-			if (!this.$v.formData.username.$dirty) return errors;
-			!this.$v.formData.username.required && errors.push('El username es querido');
-			!this.$v.formData.username.minLength && errors.push('Minimo 6 caracteres');
-			!this.$v.formData.username.maxLength && errors.push('Maximo 30 caracteres');
-			return errors;
-		},
 		rutErrors() {
 			const errors = [];
 			if (!this.$v.formData.rut.$dirty) return errors;
 			!this.$v.formData.rut.required && errors.push('El rut es querido');
-			return errors;
-		},
-		phoneErrors() {
-			const errors = [];
-			if (!this.$v.formData.phone.$dirty) return errors;
-			!this.$v.formData.phone.required && errors.push('El teléfono es querido');
 			return errors;
 		},
 		emailErrors() {
@@ -208,29 +164,37 @@ export default {
 			if (!this.$v.$invalid && !this.terminos) {
 				return (this.dialog = true);
 			}
+
 			if (!this.$v.$invalid && this.terminos) {
-				// verificamos si el username es valido
-				const available = await this.checkUsername(this.formData.username);
-				if (!available) return (this.check = true);
-				// procedemos a guardar
-				this.loading = true;
-				await this.registerPsychologist(this.formData);
-				this.loading = false;
-				this.formData = {
-					name: '',
-					lastName: '',
-					rut: '',
-					username: '',
-					email: '',
-					phone: '',
-					password: '',
-				};
-				this.$v.$reset();
+				try {
+					this.loading = true;
+					// procedemos a guardar
+					await this.$axios('/auth/register', {
+						method: 'post',
+						data: this.formData,
+					});
+
+					// iniciamos sesion
+					const response = await this.$auth.loginWith('local', {
+						data: { email: this.formData.email, password: this.formData.password },
+					});
+					this.$auth.setUser(response.data.user);
+
+					// redireccionamos a postulacion como psicologo
+					this.$router.push({ name: 'postulacion' });
+				} catch (error) {
+					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+				} finally {
+					this.loading = false;
+				}
 			}
 		},
 		...mapActions({
-			registerPsychologist: 'Psychologist/registerPsychologist',
-			checkUsername: 'Psychologist/checkUsername',
+			register: 'User/register',
+		}),
+		...mapMutations({
+			setResumeView: 'Psychologist/setResumeView',
+			snackBar: 'Snackbar/showMessage',
 		}),
 	},
 	validations: {
@@ -241,20 +205,12 @@ export default {
 			lastName: {
 				required,
 			},
-			username: {
-				required,
-				minLength: minLength(6),
-				maxLength: maxLength(30),
-			},
 			rut: {
 				required,
 			},
 			email: {
 				required,
 				email,
-			},
-			phone: {
-				required,
 			},
 			password: {
 				required,

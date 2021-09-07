@@ -1,5 +1,4 @@
 import MailSubscribers from '../models/mailSubscribers';
-import mailer from '../services/mailer.js';
 import { okResponse, restResponse } from '../utils/responses/functions';
 
 const mailSubscribersController = {
@@ -8,7 +7,6 @@ const mailSubscribersController = {
 		MailSubscribers.create({
 			email,
 		});
-		mailer.sendMailSubscriptionMessage(email);
 		const { data, code } = okResponse('Agregado con exito');
 		return restResponse(data, code, res);
 	},
