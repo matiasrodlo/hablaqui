@@ -307,30 +307,35 @@ export default {
 		return {
 			mdiMenu,
 			mdiAccountDetails,
-			menu: [
+			drawer: false,
+		};
+	},
+	computed: {
+		menu() {
+			const visible =
+				(this.$auth.$state.loggedIn &&
+					this.$auth.user.role === 'psychologist' &&
+					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
+			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
-					visible:
-						(this.$auth.user.role === 'psychologist' &&
-							!!this.$auth.user.psychologist) ||
-						this.$auth.user.role === 'user',
+					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
-					visible:
-						(this.$auth.user.role === 'psychologist' &&
-							!!this.$auth.user.psychologist) ||
-						this.$auth.user.role === 'user',
+					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
 					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible:
+						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
 						this.$auth.$state.user.psychologist,
 				},
@@ -339,14 +344,16 @@ export default {
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
-					visible:
-						(this.$auth.user.role === 'psychologist' &&
-							!!this.$auth.user.psychologist) ||
-						this.$auth.user.role === 'user',
+					visible,
 				},
-			],
-			drawer: false,
-		};
+				{
+					name: 'Panel de control',
+					link: { name: 'dashboard-panel' },
+					img: `${this.$config.LANDING_URL}/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+			];
+		},
 	},
 	methods: {
 		logout() {
