@@ -158,6 +158,9 @@ let recruitment = new Schema({
 		type: String,
 		default: 'Chile',
 	},
+	phone: {
+		type: String,
+	},
 	region: {
 		type: String,
 	},
