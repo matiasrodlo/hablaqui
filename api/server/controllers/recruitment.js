@@ -35,7 +35,7 @@ const recruitmentController = {
 			const { data, code } = await recruitmentService.get(email);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error obteniendo el psicologo');
+			errorCallback(e, res, 'Error obteniendo el postulante');
 		}
 	},
 };
