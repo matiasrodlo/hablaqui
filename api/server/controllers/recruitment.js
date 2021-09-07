@@ -31,7 +31,8 @@ const recruitmentController = {
 	},
 	async get(req, res) {
 		try {
-			const { data, code } = await recruitmentService.get(req.user.mail);
+			const { email } = req.params;
+			const { data, code } = await recruitmentService.get(email);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error obteniendo el psicologo');

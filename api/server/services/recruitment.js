@@ -35,6 +35,9 @@ const recruitmentService = {
 		return okResponse('Actualizado exitosamente', recruitedPsy);
 	},
 	async get(mail) {
+		if (!(await Recruitment.exists({ email: mail }))) {
+			return conflictResponse('Este psicologo no existe');
+		}
 		const recruited = await Recruitment.findOne({ email: mail });
 		return okResponse('Psicólogo obtenido', recruited);
 	},
