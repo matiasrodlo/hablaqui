@@ -8,13 +8,13 @@ import { errorCallback } from '../utils/functions/errorCallback';
  * @returns {object} - The response object
  */
 const recruitmentController = {
-	async registerRecruitmentPsy(req, res) {
+	async register(req, res) {
 		try {
-			const { body } = req;
-			const {
-				data,
-				code,
-			} = await recruitmentService.registerRecruitmentPsy(body);
+			const { body, user } = req;
+			const { data, code } = await recruitmentService.register(
+				user,
+				body
+			);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error registrando el psicologo');

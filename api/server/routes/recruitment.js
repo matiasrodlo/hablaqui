@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import recruitmentController from '../controllers/recruitment';
+import passport from 'passport';
 
 const recruitmentRouter = Router();
 /**
@@ -9,8 +10,9 @@ const recruitmentRouter = Router();
  * @access: public
  */
 recruitmentRouter.post(
-	'/recruitment/psychologist',
-	recruitmentController.registerRecruitmentPsy
+	'/recruitment/register',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.register
 );
 recruitmentRouter.put(
 	'/recruitment/psychologist/:id',

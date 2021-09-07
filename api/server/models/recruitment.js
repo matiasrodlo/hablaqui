@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 import { Schema, model } from 'mongoose';
 
 // Model for psychologist that are not approved
@@ -99,9 +98,11 @@ let rating = new Schema(
 let recruitment = new Schema({
 	avatar: {
 		type: String,
+		default: '',
 	},
 	code: {
 		type: String,
+		default: '',
 	},
 	isVerified: {
 		type: Boolean,
@@ -109,21 +110,27 @@ let recruitment = new Schema({
 	},
 	email: {
 		type: String,
+		default: '',
 	},
 	linkedin: {
 		type: String,
+		default: '',
 	},
 	instagram: {
 		type: String,
+		default: '',
 	},
 	username: {
 		type: String,
+		default: '',
 	},
 	name: {
 		type: String,
+		default: '',
 	},
 	lastName: {
 		type: String,
+		default: '',
 	},
 	rut: {
 		type: String,
@@ -131,39 +138,53 @@ let recruitment = new Schema({
 	},
 	gender: {
 		type: String,
+		default: '',
 	},
 	birthDate: {
 		type: String,
+		default: '',
 	},
 	sessionType: {
 		type: String,
+		default: '',
 	},
 	languages: {
 		type: Array,
+		default: [],
 	},
 	specialties: {
 		type: Array,
+		default: [],
 	},
 	experience: [experienceSchema],
 	formation: [formationSchema],
 	personalDescription: {
 		type: String,
+		default: '',
 	},
 	professionalDescription: {
 		type: String,
+		default: '',
 	},
 	models: {
 		type: Array,
+		default: [],
 	},
 	country: {
 		type: String,
 		default: 'Chile',
 	},
+	phone: {
+		type: String,
+		default: '',
+	},
 	region: {
 		type: String,
+		default: '',
 	},
 	comuna: {
 		type: String,
+		default: '',
 	},
 	schedule: {
 		type: Object,
@@ -179,21 +200,27 @@ let recruitment = new Schema({
 	},
 	yearsExpPsychologist: {
 		type: String,
+		default: '',
 	},
 	yearsExpVideocalls: {
 		type: String,
+		default: '',
 	},
 	avgPatients: {
 		type: String,
+		default: '',
 	},
 	isExclusiveActivity: {
 		type: Boolean,
+		default: false,
 	},
 	isUnderSupervision: {
 		type: Boolean,
+		default: false,
 	},
 	isSupervisor: {
 		type: Boolean,
+		default: false,
 	},
 	ratings: [rating],
 	sessions: [session],

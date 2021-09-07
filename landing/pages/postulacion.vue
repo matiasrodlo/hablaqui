@@ -53,14 +53,14 @@
 										username
 									</div>
 									<v-text-field
-										v-model.trim="username"
+										v-model.trim="form.username"
 										filled
 										outlined
 										dense
 										placeholder="(Requerido)"
 										:rules="rulesUsername"
 										type="text"
-										:hint="`hablaqui.com/${username}`"
+										:hint="`hablaqui.com/${form.username}`"
 									></v-text-field>
 								</v-col>
 								<v-col cols="12" sm="6">
@@ -68,7 +68,7 @@
 										Teléfono
 									</div>
 									<v-text-field
-										v-model="phone"
+										v-model="form.phone"
 										filled
 										outlined
 										placeholder="(Requerido)"
@@ -92,7 +92,7 @@
 										<template #activator="{ on, attrs }">
 											<v-text-field
 												id="birthdate"
-												v-model="birthDate"
+												v-model="form.birthDate"
 												readonly
 												filled
 												outlined
@@ -105,7 +105,7 @@
 											></v-text-field>
 										</template>
 										<v-date-picker
-											v-model="birthDate"
+											v-model="form.birthDate"
 											locale="es"
 											:active-picker.sync="activePicker"
 											:max="
@@ -127,7 +127,7 @@
 									</div>
 									<v-select
 										id="genre"
-										v-model="gender"
+										v-model="form.gender"
 										:items="['Hombre', 'Mujer', 'Transgénero']"
 										filled
 										outlined
@@ -143,7 +143,7 @@
 									</div>
 									<v-select
 										id="region"
-										v-model="region"
+										v-model="form.region"
 										:items="regiones"
 										filled
 										outlined
@@ -159,8 +159,8 @@
 									</div>
 									<v-select
 										id="comuna"
-										v-model="comuna"
-										:disabled="!region"
+										v-model="form.comuna"
+										:disabled="!form.region"
 										:items="comunas"
 										filled
 										outlined
@@ -176,7 +176,7 @@
 									</div>
 									<v-combobox
 										id="timezone"
-										v-model="timeZone"
+										v-model="form.timeZone"
 										dense
 										filled
 										hide-details
@@ -207,7 +207,7 @@
 									</div>
 									<div class="d-flex">
 										<v-checkbox
-											v-model="languages"
+											v-model="form.languages"
 											class="mx-2"
 											value="spanish"
 											filled
@@ -217,7 +217,7 @@
 											dense
 										></v-checkbox>
 										<v-checkbox
-											v-model="languages"
+											v-model="form.languages"
 											class="mx-2"
 											value="english"
 											filled
@@ -234,7 +234,7 @@
 									</div>
 									<v-textarea
 										id="description-personal"
-										v-model="personalDescription"
+										v-model="form.personalDescription"
 										outlined
 										filled
 										no-resize
@@ -247,7 +247,7 @@
 										Instagram
 									</div>
 									<v-text-field
-										v-model="instagram"
+										v-model="form.instagram"
 										filled
 										outlined
 										dense
@@ -260,7 +260,7 @@
 										Linkedin
 									</div>
 									<v-text-field
-										v-model="linkedin"
+										v-model="form.linkedin"
 										placeholder="Inserte link (opcional)"
 										filled
 										outlined
@@ -722,34 +722,37 @@ import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+	layout: 'simple',
 	data() {
 		return {
+			form: {
+				username: '',
+				phone: '',
+				timeZone: 'America/Santiago',
+				gender: '',
+				languages: ['spanish'],
+				birthDate: '',
+				region: '',
+				comuna: '',
+				personalDescription: '',
+				linkedin: '',
+				instagram: '',
+			},
 			experience: [{ title: '', place: '', start: '', end: '' }],
 			formation: [{ formationType: '', description: '', start: '', end: '' }],
 			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
 			yearsWorked: '',
-			region: '',
-			comuna: '',
-			gender: '',
 			exclusiveActivity: null,
-			birthDate: '',
 			zone: '',
-			phone: '',
-			username: '',
-			linkedin: '',
-			instagram: '',
 			step: 1,
 			regiones: [],
 			comunas: [],
 			specialtiesSelected: [],
 			comunasRegiones: [],
 			timezone: [],
-			languages: ['spanish'],
 			loadingStep: false,
-			personalDescription: '',
-			timeZone: 'America/Santiago',
 			rules: [
 				v => v.length >= 140 || 'Minimo 140 caracteres',
 				v => v.length <= 300 || 'Maximo 300 caracteres',
@@ -774,12 +777,8 @@ export default {
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
-		region(newVal) {
-			if (newVal) {
-				this.comunas = this.comunasRegiones.find(
-					item => item.region === this.region
-				).comunas;
-			}
+		'form.region'(newVal) {
+			this.comunas = this.comunasRegiones.find(item => item.region === newVal).comunas;
 		},
 	},
 	async mounted() {
@@ -794,21 +793,27 @@ export default {
 		async setStepTwo() {
 			this.loadingStep = true;
 			if (
-				this.username &&
-				this.phone &&
-				this.timeZone &&
-				this.gender &&
-				this.languages.length &&
-				this.birthDate &&
-				this.region &&
-				this.comuna &&
-				this.personalDescription &&
-				this.personalDescription.length <= 300 &&
-				this.personalDescription.length >= 100
+				this.form.username &&
+				this.form.phone &&
+				this.form.timeZone &&
+				this.form.gender &&
+				this.form.languages.length &&
+				this.form.birthDate &&
+				this.form.region &&
+				this.form.comuna &&
+				this.form.personalDescription &&
+				this.form.personalDescription.length <= 300 &&
+				this.form.personalDescription.length >= 100
 			) {
-				const available = await this.checkUsername(this.username);
-				if (available && this.username) this.step = 2;
-				else alert('Username no disponible, por favor cambie');
+				const available = await this.checkUsername(this.form.username);
+				if (available && this.form.username) {
+					const { data } = await this.$axios('/recruitment/register', {
+						method: 'post',
+						data: this.form,
+					});
+					this.form = data.recruited;
+					this.step = 2;
+				} else alert('Username no disponible, por favor cambie');
 			} else {
 				alert('Faltan campos por llenar');
 			}
