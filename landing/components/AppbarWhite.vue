@@ -73,6 +73,32 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<v-divider></v-divider>
+			<v-list v-if="$auth.$state.loggedIn">
+				<v-subheader>Mi secciones</v-subheader>
+				<v-list-item
+					v-if="
+						$auth.$state.user.role === 'psychologist' && !$auth.$state.user.psychologist
+					"
+					link
+					to="/postulacion"
+				>
+					<v-list-item-content>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Ir a Postulacion
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<template v-for="(item, i) in menu">
+					<v-list-item v-if="item.visible" id="i" :key="i" link :to="item.link">
+						<v-list-item-content>
+							<v-list-item-title class="secondary--text font-weight-bold body-2"
+								>{{ item.name }}
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</template>
+			</v-list>
 		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
@@ -167,6 +193,25 @@
 						</template>
 						<v-card>
 							<v-list>
+								<v-list-item
+									v-if="
+										$auth.$state.user.role === 'psychologist' &&
+										!$auth.$state.user.psychologist
+									"
+									link
+									to="/postulacion"
+								>
+									<v-list-item-avatar size="40" color="primary">
+										<icon size="24" color="white" :icon="mdiAccountDetails" />
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+										>
+											Ir a Postulacion
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
 								<template v-for="(item, i) in menu">
 									<v-list-item
 										v-if="item.visible"
@@ -251,7 +296,7 @@
 </template>
 
 <script>
-import { mdiMenu } from '@mdi/js';
+import { mdiMenu, mdiAccountDetails } from '@mdi/js';
 
 export default {
 	components: {
@@ -261,31 +306,43 @@ export default {
 	data() {
 		return {
 			mdiMenu,
+			mdiAccountDetails,
 			menu: [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
-					visible: true,
+					visible:
+						(this.$auth.user.role === 'psychologist' &&
+							!!this.$auth.user.psychologist) ||
+						this.$auth.user.role === 'user',
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
-					visible: true,
+					visible:
+						(this.$auth.user.role === 'psychologist' &&
+							!!this.$auth.user.psychologist) ||
+						this.$auth.user.role === 'user',
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
 					img: `${this.$config.LANDING_URL}/pay.png`,
-					visible: this.$auth.$state.user?.role === 'psychologist',
+					visible:
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
-					visible: true,
+					visible:
+						(this.$auth.user.role === 'psychologist' &&
+							!!this.$auth.user.psychologist) ||
+						this.$auth.user.role === 'user',
 				},
 			],
 			drawer: false,
