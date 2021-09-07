@@ -29,6 +29,14 @@ const recruitmentController = {
 			errorCallback(e, res, 'Error actualizando el psicologo');
 		}
 	},
+	async get(req, res) {
+		try {
+			const { data, code } = await recruitmentService.get(req.user.mail);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error obteniendo el psicologo');
+		}
+	},
 };
 
 export default Object.freeze(recruitmentController);

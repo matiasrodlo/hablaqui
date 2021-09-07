@@ -34,6 +34,10 @@ const recruitmentService = {
 		logInfo(actionInfo(recruitedPsy.email, 'actualizó su perfil'));
 		return okResponse('Actualizado exitosamente', recruitedPsy);
 	},
+	async get(mail) {
+		const recruited = await Recruitment.findOne({ email: mail });
+		return okResponse('Psicólogo obtenido', recruited);
+	},
 };
 
 export default recruitmentService;
