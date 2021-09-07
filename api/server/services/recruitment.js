@@ -34,12 +34,12 @@ const recruitmentService = {
 		logInfo(actionInfo(recruitedPsy.email, 'actualizó su perfil'));
 		return okResponse('Actualizado exitosamente', recruitedPsy);
 	},
-	async get(mail) {
-		if (!(await Recruitment.exists({ email: mail }))) {
+	async get(email) {
+		if (!(await Recruitment.exists({ email }))) {
 			return conflictResponse('Este postulante no existe');
 		}
-		const recruited = await Recruitment.findOne({ email: mail });
-		return okResponse('Postulante obtenido', recruited);
+		const recruited = await Recruitment.findOne({ email });
+		return okResponse('Postulante obtenido', { recruited });
 	},
 };
 
