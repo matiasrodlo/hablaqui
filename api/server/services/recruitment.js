@@ -37,13 +37,13 @@ const recruitmentService = {
 		if (!(await Recruitment.exists({ rut: body.rut }))) {
 			return conflictResponse('Este postulante no existe');
 		}
-		const recruitedPsy = await Recruitment.findOneAndUpdate(
-			{ emai: body.email },
+		const recruited = await Recruitment.findOneAndUpdate(
+			{ email: body.email },
 			body,
 			{ new: true }
 		);
-		logInfo(actionInfo(recruitedPsy.email, 'actualizó su perfil'));
-		return okResponse('Actualizado exitosamente', recruitedPsy);
+		logInfo(actionInfo(recruited.email, 'actualizó su perfil'));
+		return okResponse('Actualizado exitosamente', { recruited });
 	},
 	/**
 	 * @description - This controller is used to get a recruitment profile by mail
