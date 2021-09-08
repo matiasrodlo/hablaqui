@@ -50,35 +50,6 @@
 								</v-col>
 								<v-col cols="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										username
-									</div>
-									<v-text-field
-										v-model.trim="form.username"
-										filled
-										outlined
-										dense
-										placeholder="(Requerido)"
-										:rules="rulesUsername"
-										type="text"
-										:hint="`hablaqui.com/${form.username}`"
-									></v-text-field>
-								</v-col>
-								<v-col cols="12" sm="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										Teléfono
-									</div>
-									<v-text-field
-										v-model="form.phone"
-										filled
-										outlined
-										placeholder="(Requerido)"
-										:rules="rulesTextField"
-										dense
-										type="text"
-									></v-text-field>
-								</v-col>
-								<v-col cols="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
 									<v-menu
@@ -592,7 +563,13 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary" @click="saveStep(3)">
+								<v-btn
+									:loading="loadingStep"
+									class="mx-2"
+									rounded
+									color="primary"
+									@click="saveStep(3)"
+								>
 									Siguiente
 								</v-btn>
 							</div>
@@ -717,7 +694,13 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary" @click="saveStep(4)">
+								<v-btn
+									:loading="loadingStep"
+									class="mx-2"
+									rounded
+									color="primary"
+									@click="saveStep(4)"
+								>
 									Finalizar postulación
 								</v-btn>
 							</div>
@@ -788,7 +771,6 @@ export default {
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
 				username: '',
-				phone: '',
 				timeZone: 'America/Santiago',
 				gender: '',
 				languages: ['spanish'],
@@ -805,9 +787,9 @@ export default {
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
 				avgPatients: '',
-				isExclusiveActivity: '',
-				isUnderSupervision: '',
-				isSupervisor: '',
+				isExclusiveActivity: false,
+				isUnderSupervision: false,
+				isSupervisor: false,
 			},
 			recruitment: null,
 		};
@@ -856,20 +838,15 @@ export default {
 				}
 				this.step = step;
 			} else {
-				alert('Faltan campos por llenar');
+				alert('Por favor complete el formulario');
 			}
 			this.loadingStep = false;
 		},
-		async validationStep(step) {
-			// step el el paso siguiente por lo tanto restamos uno para validar ese step antes pasar al siguiente
-
+		// step el el paso siguiente por lo tanto restamos uno para validar ese step antes pasar al siguiente
+		validationStep(step) {
 			// validamos el step 1
 			if (step - 1 === 1) {
-				const available = await this.checkUsername(this.form.username);
-				if (!available) alert('Username no disponible');
 				return (
-					this.form.username &&
-					this.form.phone &&
 					this.form.timeZone &&
 					this.form.gender &&
 					this.form.languages.length &&
@@ -878,8 +855,7 @@ export default {
 					this.form.comuna &&
 					this.form.personalDescription &&
 					this.form.personalDescription.length <= 300 &&
-					this.form.personalDescription.length >= 100 &&
-					available
+					this.form.personalDescription.length >= 100
 				);
 			}
 			// validamos el step 2
@@ -893,7 +869,7 @@ export default {
 			}
 			// Final del formulario, validamos step 3
 			else if (step - 1 === 3) {
-				//
+				return true;
 			}
 		},
 		save(date) {
@@ -907,7 +883,6 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			checkUsername: 'Psychologist/checkUsername',
 		}),
 	},
 };
