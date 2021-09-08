@@ -1,10 +1,10 @@
 <template>
 	<v-form>
 		<v-card flat class="rounded-lg">
-			<v-card-title>
+			<v-card-title class="mx-2">
 				<h3 class="primary--text font-weight-bold text-h4">Únete a la red</h3>
 			</v-card-title>
-			<v-card-text>
+			<v-card-text class="py-0 mx-2">
 				<h3 class="text--disabled body-1">
 					En solo unos pasos puedes unirte. Comienza creando tu cuenta.
 				</h3>
@@ -64,7 +64,7 @@
 						></v-text-field>
 					</v-col>
 					<v-col cols="12">
-						<v-checkbox v-model="terminos" class="mx-2">
+						<v-checkbox v-model="terminos" hide-details class="mx-2 my-0">
 							<template #label>
 								<div class="caption">
 									He leído y
@@ -80,11 +80,11 @@
 					</v-col>
 				</v-row>
 			</v-card-text>
-			<v-card-actions>
+			<v-card-text class="text-center">
 				<v-btn color="primary" class="rounded-xl mx-auto px-10" @click="onSubmit">
 					Regístrate ahora
 				</v-btn>
-			</v-card-actions>
+			</v-card-text>
 		</v-card>
 		<v-dialog v-model="dialog" width="300">
 			<v-sheet style="width: 300px; height: 100px">
