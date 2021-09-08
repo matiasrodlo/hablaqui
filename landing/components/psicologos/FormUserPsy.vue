@@ -50,6 +50,7 @@
 							label="Correo"
 							outlined
 							type="email"
+							autocomplete="off"
 						></v-text-field>
 					</v-col>
 					<v-col cols="12">
@@ -61,6 +62,7 @@
 							label="Contraseña"
 							type="password"
 							outlined
+							autocomplete="off"
 						></v-text-field>
 					</v-col>
 					<v-col cols="12">
