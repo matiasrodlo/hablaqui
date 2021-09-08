@@ -10,7 +10,7 @@
 			<Appbar />
 			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
-					<v-col cols="12" md="6" lg="5">
+					<v-col cols="12" md="7" xl="5">
 						<h1
 							class="
 								text-center text-md-left
@@ -78,7 +78,7 @@
 							</v-list-item>
 						</v-list>
 					</v-col>
-					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4">
+					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4" xl="3">
 						<form-user-psy />
 					</v-col>
 				</v-row>
@@ -91,22 +91,22 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container>
+		<v-container style="max-width: 1400px">
 			<v-row justify="center">
 				<v-col cols="12">
-					<h2 class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
+					<h2 class="mt-8 text-center text-h4 text-lg-h3 font-weight-bold text-color">
 						Tu consulta online personalizada
 					</h2>
-					<h3 class="mt-3 mb-16 text-center text-h6 text-color">
+					<h3 class="mt-3 mb-8 text-center text-h6 text-color">
 						Cree su propia oficina en minutos con alta tecnología y facilidad
 					</h3>
 				</v-col>
-				<v-col v-for="item in items" :key="item.id" cols="12" md="4" class="my-16">
+				<v-col v-for="item in items" :key="item.id" cols="12" md="4" class="my-4">
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-img
-								height="113px"
-								width="120px"
+								height="78px"
+								width="80px"
 								contain
 								class="mx-auto"
 								:src="item.img"
@@ -119,15 +119,12 @@
 								{{ item.title }}
 							</h3>
 						</v-card-text>
-						<v-card-text class="text-center">
+						<v-card-text style="max-width: 400px" class="mx-auto text-center">
 							<article class="body-1 mx-auto text-h6">
 								{{ item.subtitle }}
 							</article>
 						</v-card-text>
 					</v-card>
-				</v-col>
-				<v-col cols="12" class="text-center">
-					<v-btn to="#form-psy" color="primary" x-large rounded>Regístrate ahora</v-btn>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -146,7 +143,7 @@
 					<h2 class="font-weight-bold white--text text-h6 text-md-h4 text-lg-h3">
 						Beneficios de Hablaquí Office
 					</h2>
-					<div class="mt-2 d-flex align-center">
+					<div class="mt-8 d-flex align-center">
 						<img
 							height="30"
 							width="30"
@@ -204,22 +201,22 @@
 				</v-col>
 			</v-row>
 		</v-img>
-		<v-container>
+		<v-container style="max-width: 1400px">
 			<v-row justify="center">
 				<v-col cols="12">
-					<h2 class="mt-16 text-center text-h4 text-lg-h3 font-weight-bold text-color">
+					<h2 class="mt-8 text-center text-h4 text-lg-h3 font-weight-bold text-color">
 						¿Por qué utilizar Office?
 					</h2>
-					<h3 class="mt-3 mb-16 text-center text-h6 text-color">
+					<h3 class="mt-3 mb-8 text-center text-h6 text-color">
 						Diferénciate con una experiencia 360
 					</h3>
 				</v-col>
-				<v-col v-for="item in Office" :key="item.id" cols="12" md="4" class="my-16">
+				<v-col v-for="item in Office" :key="item.id" cols="12" md="4" class="my-4">
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-img
-								height="113px"
-								width="120px"
+								height="76px"
+								width="80px"
 								contain
 								class="mx-auto"
 								:src="item.img"
@@ -232,12 +229,15 @@
 								{{ item.title }}
 							</h3>
 						</v-card-text>
-						<v-card-text class="text-center">
+						<v-card-text style="max-width: 400px" class="mx-auto text-center">
 							<article class="body-1 mx-auto text-h6">
 								{{ item.subtitle }}
 							</article>
 						</v-card-text>
 					</v-card>
+				</v-col>
+				<v-col cols="12" class="text-center">
+					<v-btn to="#form-psy" color="primary" x-large rounded>Regístrate ahora</v-btn>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -292,10 +292,9 @@
 				</v-col>
 			</v-row>
 		</v-img>
-		<v-container tag="footer">
+		<v-container fluid style="max-width: 1400px" tag="footer">
 			<Footer />
 		</v-container>
-		<div class="primary-color" style="height: 30px"></div>
 	</div>
 </template>
 
