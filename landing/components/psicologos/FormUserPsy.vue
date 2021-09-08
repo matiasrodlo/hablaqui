@@ -11,7 +11,7 @@
 			</v-card-text>
 			<v-card-text>
 				<v-row no-gutters>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model.trim="formData.name"
 							dense
@@ -21,7 +21,7 @@
 							class="mx-2"
 						></v-text-field>
 					</v-col>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model.trim="formData.lastName"
 							dense
@@ -31,8 +31,8 @@
 							class="mx-2"
 						></v-text-field>
 					</v-col>
-					<v-col cols="6"
-						><v-text-field
+					<v-col cols="12" md="6">
+						<v-text-field
 							v-model="formData.rut"
 							dense
 							label="Rut"
@@ -41,7 +41,7 @@
 							class="mx-2"
 						></v-text-field
 					></v-col>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model="formData.email"
 							dense
@@ -81,7 +81,12 @@
 				</v-row>
 			</v-card-text>
 			<v-card-text class="text-center">
-				<v-btn color="primary" class="rounded-xl mx-auto px-10" @click="onSubmit">
+				<v-btn
+					:loading="loading"
+					color="primary"
+					class="rounded-xl mx-auto px-10"
+					@click="onSubmit"
+				>
 					Regístrate ahora
 				</v-btn>
 			</v-card-text>
