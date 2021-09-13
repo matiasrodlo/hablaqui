@@ -74,31 +74,36 @@
 				</v-list-item>
 			</v-list>
 			<v-divider></v-divider>
-			<v-list v-if="$auth.$state.loggedIn">
-				<v-subheader>Mi secciones</v-subheader>
-				<v-list-item
-					v-if="
-						$auth.$state.user.role === 'psychologist' && !$auth.$state.user.psychologist
-					"
-					link
-					to="/postulacion"
-				>
-					<v-list-item-content>
-						<v-list-item-title class="secondary--text font-weight-bold body-2">
-							Ir a Postulacion
-						</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<template v-for="(item, i) in menu">
-					<v-list-item v-if="item.visible" id="i" :key="i" link :to="item.link">
+			<client-only>
+				<v-list v-show="$auth.$state.loggedIn">
+					<v-subheader>Mi secciones</v-subheader>
+					<v-list-item
+						v-show="
+							$auth.$state.user &&
+							$auth.$state.user.role === 'psychologist' &&
+							$auth.$state.user &&
+							!$auth.$state.user.psychologist
+						"
+						link
+						to="/postulacion"
+					>
 						<v-list-item-content>
-							<v-list-item-title class="secondary--text font-weight-bold body-2"
-								>{{ item.name }}
+							<v-list-item-title class="secondary--text font-weight-bold body-2">
+								Ir a Postulacion
 							</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
-				</template>
-			</v-list>
+					<template v-for="(item, i) in menu">
+						<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
+							<v-list-item-content>
+								<v-list-item-title class="secondary--text font-weight-bold body-2">
+									{{ item.name }}
+								</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</template>
+				</v-list>
+			</client-only>
 		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
@@ -151,7 +156,7 @@
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<nuxt-link
-				v-if="!$auth.$state.loggedIn"
+				v-show="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
 				accesskey="r"
 				style="text-decoration: none"
@@ -162,9 +167,13 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
-				<div class="hidden-sm-and-down body-2 text--secondary mr-16" rounded text>
+				<div
+					v-show="$auth.$state.loggedIn"
+					class="hidden-sm-and-down body-2 text--secondary mr-16"
+					rounded
+					text
+				>
 					<v-menu
-						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
 						rounded="xl"
 						offset-y
@@ -194,8 +203,10 @@
 						<v-card>
 							<v-list>
 								<v-list-item
-									v-if="
+									v-show="
+										$auth.$state.user &&
 										$auth.$state.user.role === 'psychologist' &&
+										$auth.$state.user &&
 										!$auth.$state.user.psychologist
 									"
 									link
@@ -214,7 +225,7 @@
 								</v-list-item>
 								<template v-for="(item, i) in menu">
 									<v-list-item
-										v-if="item.visible"
+										v-show="item.visible"
 										id="i"
 										:key="i"
 										link
