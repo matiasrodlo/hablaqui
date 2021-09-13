@@ -45,10 +45,12 @@ export default {
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists.map(psychologist => ({
-				route: `/${psychologist.username}`,
-				payload: psychologist,
-			}));
+			const psicologos = res.data.psychologists
+				.filter(psychologist => psychologist.username)
+				.map(psychologist => ({
+					route: `/${psychologist.username}`,
+					payload: psychologist,
+				}));
 
 			// generate routes comunas
 			const response = await axios.get(`${baseApi}/comunas.json`);
@@ -183,6 +185,8 @@ export default {
 		'@nuxtjs/vuetify',
 		// https://go.nuxtjs.dev/eslint
 		'@nuxtjs/eslint-module',
+		// https://github.com/Developmint/nuxt-purgecss
+		'nuxt-purgecss',
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
@@ -287,5 +291,10 @@ export default {
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	build: {
 		publicPath: process.env.VUE_APP_LANDING,
+		extend(config, ctx) {
+			if (ctx && ctx.isClient) {
+				config.optimization.splitChunks.maxSize = 51200;
+			}
+		},
 	},
 };
