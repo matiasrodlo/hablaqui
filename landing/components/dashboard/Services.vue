@@ -92,7 +92,24 @@
 						Sesión 50 min
 					</div>
 					<div>
-						<v-text-field v-model="newPrice" outlined filled suffix="CLP">
+						<v-text-field
+							:value="psychologist.sessionPrices.full"
+							outlined
+							filled
+							suffix="CLP"
+							@change="
+								e => {
+									const sessionPrices = psychologist.sessionPrices;
+									setPsychologist({
+										...psychologist,
+										sessionPrices: {
+											...sessionPrices,
+											full: e,
+										},
+									});
+								}
+							"
+						>
 						</v-text-field>
 					</div>
 				</v-col>
@@ -101,7 +118,14 @@
 						Sesión mensajería
 					</div>
 					<div>
-						<v-text-field :value="50" readonly disabled outlined filled suffix="CLP">
+						<v-text-field
+							:value="psychologist.sessionPrices.text"
+							readonly
+							disabled
+							outlined
+							filled
+							suffix="CLP"
+						>
 						</v-text-field>
 					</div>
 				</v-col>
@@ -110,7 +134,14 @@
 						Mensajería y videollamada
 					</div>
 					<div>
-						<v-text-field :value="50" readonly disabled outlined filled suffix="CLP">
+						<v-text-field
+							:value="psychologist.sessionPrices.video"
+							readonly
+							disabled
+							outlined
+							filled
+							suffix="CLP"
+						>
 						</v-text-field>
 					</div>
 				</v-col>
@@ -207,20 +238,17 @@ export default {
 		};
 	},
 	mounted() {
-		console.log(this.psychologist.preferences);
 		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
 	},
 	methods: {
 		async onSubmit() {
 			this.loading = true;
-			// await this.updatePrices(this.newPrice);
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
 			this.loading = false;
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
-			// updatePrices: 'Psychologist/updatePrices',
 		}),
 	},
 };

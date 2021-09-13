@@ -84,17 +84,6 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async updatePrices({ commit }, newPrice) {
-		try {
-			const { data } = await this.$axios('/psychologist/update-prices', {
-				method: 'POST',
-				data: { newPrice },
-			});
-			return data.psychologist;
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
 	async setReschedule({ commit }, { sessionId, newDate }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
