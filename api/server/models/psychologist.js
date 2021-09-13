@@ -48,6 +48,12 @@ let defaultPreferences = {
 	corporativeSessions: true,
 };
 
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
+}
+
 let formationSchema = new Schema({
 	formationType: {
 		type: String,
@@ -166,6 +172,10 @@ let psychologist = new Schema({
 	preferences: {
 		type: Object,
 		default: defaultPreferences,
+	},
+	sessionPrices: {
+		type: Object,
+		default: defaultPrices,
 	},
 	paymentMethod: {
 		type: Object,
