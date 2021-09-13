@@ -52,7 +52,7 @@ const defaultPrices = {
 	text: 38000,
 	full: 62500,
 	video: 50000,
-}
+};
 
 let formationSchema = new Schema({
 	formationType: {
