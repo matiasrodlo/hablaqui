@@ -1,23 +1,11 @@
 <template>
 	<v-card flat class="mb-16">
 		<v-card-title>
-			<div class="my-6 d-flex justify-space-between" style="width: 100%">
-				<div>
-					<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
-					<div class="text--secondary body-2">
-						Configura los servicios ofrecidos por medio de Hablaquí.
-					</div>
+			<div class="my-6" style="width: 100%">
+				<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
+				<div class="text--secondary body-2">
+					Configura los servicios ofrecidos por medio de Hablaquí.
 				</div>
-				<v-btn
-					depressed
-					:loading="loading"
-					color="primary"
-					rounded
-					class="px-10"
-					@click="onSubmit"
-				>
-					Guardar
-				</v-btn>
 			</div>
 		</v-card-title>
 		<v-divider></v-divider>
@@ -78,13 +66,17 @@
 				</v-col>
 				<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 					Valor por sesión
-					<v-tooltip bottom>
+					<v-tooltip right max-width="300" color="white">
 						<template #activator="{ on, attrs }">
 							<v-btn icon v-bind="attrs" v-on="on">
 								<icon :icon="mdiInformationOutline" />
 							</v-btn>
 						</template>
-						<span>Aqui podras configurar el precio de tus sesiones</span>
+						<div class="elevation-5 pa-3">
+							<span class="primary--text">
+								Aqui podras configurar el precio de tus sesiones
+							</span>
+						</div>
 					</v-tooltip>
 				</v-col>
 				<v-col cols="12">
@@ -123,13 +115,30 @@
 					</div>
 				</v-col>
 				<v-col cols="12" class="text-h6" style="color: #3c3c3b">
+					<div>
+						Nuevos clientes
+						<v-tooltip right max-width="300" color="white">
+							<template #activator="{ on, attrs }">
+								<v-btn icon v-bind="attrs" v-on="on">
+									<icon :icon="mdiInformationOutline" />
+								</v-btn>
+							</template>
+							<div class="elevation-5 pa-3">
+								<span class="primary--text">
+									Al desactivarlo, su perfil dejará de aparecer en la búsqueda.
+									Esto no impide que los clientes antiguos o nuevos accedan a su
+									perfil directamente a través de su enlace.
+								</span>
+							</div>
+						</v-tooltip>
+					</div>
 					<div v-if="psychologist.preferences" class="mt-8">
 						<v-switch
 							v-model="marketplaceVisibility"
 							label="Visibilidad en Marketplace"
 							color="primary"
 							persistent-hint
-							hint="Los especialistas que aceptan nuevos clientes tienden a tener un aumento en el número de sesiones."
+							hint="Los especialistas que aceptan nuevos clientes suelen tener un aumento en el número de sesiones."
 							@change="
 								e => {
 									const preferences = psychologist.preferences;
@@ -146,62 +155,18 @@
 						></v-switch>
 					</div>
 				</v-col>
-				<!-- <v-col cols="12" md="6" class="text-h6" style="color: #3c3c3b">
-					<div>
-						Sesiones corporativas
-						<v-tooltip bottom>
-							<template #activator="{ on, attrs }">
-								<v-btn icon v-bind="attrs" v-on="on">
-									<icon :icon="mdiInformationOutline" />
-								</v-btn>
-							</template>
-							<span>Aqui podras configurar el precio de tus sesiones</span>
-						</v-tooltip>
-					</div>
-					<div class="mt-10">
-						<div>Felicitaciones, tiene acceso a Clientes Silver</div>
-						<v-checkbox
-							label="Aceptar Clientes Silver"
-							color="primary"
-							persistent-hint
-							hint="Planes que pagan $ 50/50 min o $ 25/30 min. Los expertos que aceptan este plan suelen tener un aumento de hasta un 60% en el número de sesiones."
-						></v-checkbox>
-					</div>
-					<v-divider class="my-8"></v-divider>
-					<div class="mt-8">
-						<div>Clientes Gold, no esta disponible</div>
-						<v-checkbox
-							disabled
-							label="Aceptar Clientes corporativos Gold"
-							color="primary"
-							persistent-hint
-							hint="Planes que pagan $ 50/50 min o $ 25/30 min. Los expertos que aceptan este plan suelen tener un aumento de hasta un 60% en el número de sesiones."
-						></v-checkbox>
-					</div>
-					<v-divider class="my-8"></v-divider>
-					<div class="mt-8">
-						<div>Clientes Diamond, no esta disponible</div>
-						<v-checkbox
-							disabled
-							label="Aceptar Clientes corporativos Diamond"
-							color="primary"
-							persistent-hint
-							hint="Planes que pagan $ 50/50 min o $ 25/30 min. Los expertos que aceptan este plan suelen tener un aumento de hasta un 60% en el número de sesiones."
-						></v-checkbox>
-					</div>
-				</v-col>
-				<v-col cols="12" class="text-center">
+				<v-col cols="12" class="mt-6 text-center">
 					<v-btn
-						color="primary"
 						depressed
 						:loading="loading"
-						class="px-16"
-						style="border-radius: 10px"
+						color="primary"
+						rounded
+						class="px-10"
 						@click="onSubmit"
 					>
 						Editar
 					</v-btn>
-				</v-col> -->
+				</v-col>
 			</v-row>
 		</v-card-text>
 	</v-card>
@@ -242,6 +207,7 @@ export default {
 		};
 	},
 	mounted() {
+		console.log(this.psychologist.preferences);
 		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
 	},
 	methods: {
