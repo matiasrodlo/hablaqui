@@ -93,22 +93,12 @@
 					</div>
 					<div>
 						<v-text-field
-							:value="psychologist.sessionPrices.full"
+							v-model="video"
 							outlined
 							filled
 							suffix="CLP"
-							@change="
-								e => {
-									const sessionPrices = psychologist.sessionPrices;
-									setPsychologist({
-										...psychologist,
-										sessionPrices: {
-											...sessionPrices,
-											full: e,
-										},
-									});
-								}
-							"
+							type="number"
+							@input="setPrice"
 						>
 						</v-text-field>
 					</div>
@@ -135,7 +125,7 @@
 					</div>
 					<div>
 						<v-text-field
-							:value="psychologist.sessionPrices.video"
+							:value="psychologist.sessionPrices.full"
 							readonly
 							disabled
 							outlined
@@ -232,12 +222,13 @@ export default {
 				{ value: 12, text: '12 horas' },
 				{ value: 24, text: '24 horas' },
 			],
-			newPrice: 0,
+			video: 0,
 			loading: false,
 			marketplaceVisibility: false,
 		};
 	},
 	mounted() {
+		this.video = this.psychologist.sessionPrices.video;
 		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
 	},
 	methods: {
@@ -246,6 +237,17 @@ export default {
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
 			this.loading = false;
+		},
+		setPrice() {
+			const sessionPrices = {
+				video: Math.round(this.video),
+				text: Math.round(this.video * 0.75),
+				full: Math.round(this.video * 1.25),
+			};
+			this.setPsychologist({
+				...this.psychologist,
+				sessionPrices,
+			});
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
