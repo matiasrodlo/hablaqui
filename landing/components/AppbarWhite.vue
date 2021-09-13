@@ -79,9 +79,7 @@
 					<v-subheader>Mi secciones</v-subheader>
 					<v-list-item
 						v-show="
-							$auth.$state.user &&
 							$auth.$state.user.role === 'psychologist' &&
-							$auth.$state.user &&
 							!$auth.$state.user.psychologist
 						"
 						link
@@ -204,9 +202,7 @@
 							<v-list>
 								<v-list-item
 									v-show="
-										$auth.$state.user &&
 										$auth.$state.user.role === 'psychologist' &&
-										$auth.$state.user &&
 										!$auth.$state.user.psychologist
 									"
 									link
