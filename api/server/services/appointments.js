@@ -1,6 +1,5 @@
 import { logInfo } from '../config/pino.js';
 import Appointments from '../models/appointments.js';
-import { infoMessages } from '../utils/logger/infoMessages.js';
 import { okResponse } from '../utils/responses/functions.js';
 
 const getAll = async () => {

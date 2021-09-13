@@ -12,6 +12,184 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
+const getSessions = async (user, idPsy) => {
+	const psychologist = await Psychologist.findById(idPsy).populate({
+		path: 'sessions.user',
+		model: 'User',
+		select: 'name lastName _id',
+	});
+
+	const sessions = setSession(user, psychologist);
+
+	logInfo('obtuvo todos las sesiones');
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
+const setSession = (user, psychologist) => {
+	let sessions = [];
+
+	if (user.role === 'user')
+		sessions = psychologist.sessions.filter(session => {
+			return (
+				session.user &&
+				!Array.isArray(session.user) &&
+				session.user._id.toString() === user._id.toString()
+			);
+		});
+
+	if (user.role === 'psychologist')
+		sessions = sessions = psychologist.sessions;
+
+	sessions = sessions
+		.map(item => {
+			let name = '';
+			let lastName = '';
+			let idUser = '';
+			if (user.role === 'psychologist') {
+				if (item.user && !Array.isArray(item.user)) {
+					name = item.user.name;
+					lastName = item.user.lastName ? item.user.lastName : '';
+					idUser = item.user._id;
+				}
+			}
+
+			if (user.role === 'user') {
+				idUser = user._id;
+				name = psychologist.name;
+				lastName = psychologist.lastName;
+			}
+
+			const start = moment(item.date).format('YYYY-MM-DD hh:mm');
+			const end = moment(item.date)
+				.add(60, 'minutes')
+				.format('YYYY-MM-DD hh:mm');
+			return {
+				name: `${name} ${lastName}`,
+				details: `Sesion con ${name}`,
+				start,
+				end,
+				sessionId: item._id,
+				idUser,
+				idPsychologist: psychologist._id,
+			};
+		})
+		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
+	return sessions;
+};
+
+const getFormattedSessions = async idPsychologist => {
+	moment.locale('es');
+	let sessions = [];
+	const psychologist = await Psychologist.findById(idPsychologist);
+	const length = Array.from(Array(31), (_, x) => x);
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+
+	const daySessions = psychologist.sessions.map(session =>
+		moment(session.date).format('YYYY-MM-DD HH:mm')
+	);
+
+	sessions = length.map(el => {
+		const day = moment().add(el, 'days');
+		return {
+			id: el,
+			text: day.format('ddd'),
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			available: hours.filter(hour => {
+				return (
+					formattedSchedule(psychologist.schedule, day, hour) &&
+					moment(daySessions).isValid &&
+					!daySessions.some(
+						date =>
+							moment(date).format('L') ===
+								moment(day).format('L') &&
+							hour === moment(date).format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
+
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
+const formattedSchedule = (schedule, day, hour) => {
+	if (moment(day).format('dddd') === 'lunes') {
+		if (Array.isArray(schedule.monday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.monday[0], 'HH:mm'),
+				moment(schedule.monday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.monday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'martes') {
+		if (Array.isArray(schedule.tuesday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.tuesday[0], 'HH:mm'),
+				moment(schedule.tuesday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.tuesday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'miércoles') {
+		if (Array.isArray(schedule.wednesday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.wednesday[0], 'HH:mm'),
+				moment(schedule.wednesday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.wednesday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'jueves') {
+		if (Array.isArray(schedule.thursday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.thursday[0], 'HH:mm'),
+				moment(schedule.thursday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.thursday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'viernes') {
+		if (Array.isArray(schedule.friday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.friday[0], 'HH:mm'),
+				moment(schedule.friday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.friday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'sábado') {
+		if (Array.isArray(schedule.saturday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.saturday[0], 'HH:mm'),
+				moment(schedule.saturday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+		else if (schedule.saturday === 'busy') return false;
+	}
+	if (moment(day).format('dddd') === 'domingo') {
+		if (Array.isArray(schedule.sunday))
+			return moment(hour, 'HH:mm').isBetween(
+				moment(schedule.sunday[0], 'HH:mm'),
+				moment(schedule.sunday[1], 'HH:mm'),
+				undefined,
+				[]
+			);
+	} else if (schedule.sunday === 'busy') return false;
+};
+
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
@@ -86,8 +264,8 @@ const createSession = async body => {
 		payload.psychologist._id
 	);
 	if (
-		moment().isBefore(
-			moment().add({
+		moment().isAfter(
+			moment(isoDate).subtract({
 				hours: foundPsychologist.preferences.minimumNewSession,
 			})
 		)
@@ -159,48 +337,22 @@ const createSession = async body => {
 	});
 };
 
-const register = async (body, avatar) => {
+const register = async body => {
 	if (await User.exists({ email: body.email })) {
-		return conflictResponse('Este correo ya esta registrado');
+		return conflictResponse('Correo electronico en uso');
 	}
 
 	if (await Psychologist.exists({ username: body.username })) {
 		return conflictResponse('Este nombre de usuario ya esta ocupado');
 	}
 
-	let splittedExperience = body.experience.split(';');
-	splittedExperience = splittedExperience.map(i => i.trim());
-
-	let splittedFormation = body.formation.split(';');
-	splittedFormation = splittedFormation.map(i => i.trim());
-
-	const newPsychologist = {
-		name: body.name,
-		lastName: body.lastName,
-		code: body.code,
-		personalDescription: body.personalDescription,
-		professionalDescription: body.professionalDescription,
-		email: body.email,
-		username: body.username,
-		experience: splittedExperience,
-		formation: splittedFormation,
-		specialties: JSON.parse(body.specialties),
-		models: JSON.parse(body.models),
-		languages: JSON.parse(body.languages),
-		gender: body.gender,
-		isTrans: body.isTrans,
-		region: body.region,
-		comuna: body.comuna,
-		avatar,
-	};
-	const psychologist = await Psychologist.create(newPsychologist);
-
+	const psychologist = await Psychologist.create(body);
 	const newUser = {
 		name: body.name,
+		rut: body.rut,
 		role: 'psychologist',
 		email: body.email,
 		password: bcrypt.hashSync(body.password, 10),
-		avatar,
 		psychologist: psychologist._id,
 	};
 
@@ -210,32 +362,53 @@ const register = async (body, avatar) => {
 };
 
 const reschedule = async (user, id, newDate) => {
-	let foundPsychologist = await Psychologist.findById(user.psychologist);
+	let foundPsychologist = await Psychologist.findById(
+		user.psychologist
+	).populate({
+		path: 'sessions.user',
+		model: 'User',
+		select: 'name lastName _id',
+	});
+
 	let e = false;
+	let error = '';
+	newDate = moment(
+		`${newDate.date} ${newDate.hour}`,
+		`DD/MM/YYYY HH:mm`
+	).toISOString();
 	foundPsychologist.sessions.forEach(session => {
 		if (session._id == id) {
 			if (
 				foundPsychologist.sessions.filter(item => item.date == newDate)
-					.length == 0 &&
-				moment().isBefore(
-					moment(session.date).subtract({
-						hours:
+					.length == 0
+			) {
+				if (
+					moment(newDate).isAfter(
+						moment().add(
 							foundPsychologist.preferences
 								.minimumRescheduleSession,
-					})
-				)
-			) {
-				session.date = newDate;
+							'hours'
+						)
+					)
+				) {
+					session.date = newDate;
+				} else {
+					e = true;
+					error = 'Esta hora esta muy encima';
+				}
 			} else {
 				e = true;
+				error = 'Esta hora ya esta ocupada';
 			}
 		}
 	});
 	if (!e) {
-		await foundPsychologist.save();
-		return okResponse('Hora actualizada');
+		const savePsychologist = await foundPsychologist.save();
+		return okResponse('Hora actualizada', {
+			sessions: setSession(user, savePsychologist),
+		});
 	}
-	return conflictResponse('Esa hora esta ocupada');
+	return conflictResponse(error);
 };
 
 const updatePlan = async (psychologistId, planInfo) => {
@@ -302,9 +475,7 @@ const updatePaymentMethod = async (user, payload) => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres un psicologo.');
 
-	let foundPsychologist = await Psychologist.findById(
-		foundPsychologist.psychologist
-	);
+	let foundPsychologist = await Psychologist.findById(user.psychologist);
 	const newPaymentMethod = {
 		bank: payload.bank || foundPsychologist.paymentMethod.bank,
 		accountType:
@@ -318,7 +489,7 @@ const updatePaymentMethod = async (user, payload) => {
 	};
 	foundPsychologist.paymentMethod = newPaymentMethod;
 	await foundPsychologist.save();
-	return okResponse('Metodo actualizado', {
+	return okResponse('Metodo de pago actualizado', {
 		psychologist: foundPsychologist,
 	});
 };
@@ -355,7 +526,7 @@ const setPrice = async (user, newPrice) => {
 			sessionPrices: {
 				text: newPrice * 0.75,
 				video: newPrice,
-				full: newPrice * 0.75,
+				full: newPrice * 1.25,
 			},
 		},
 		{ new: true }
@@ -432,8 +603,42 @@ const getClients = async psychologist => {
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
 
+const usernameAvailable = async username => {
+	let available = true;
+	if (await Psychologist.exists({ username })) available = false;
+	return okResponse(
+		available ? 'Usuario disponible' : 'Usuario ya esta ocupado',
+		{ available }
+	);
+};
+
+const updateFormationExperience = async (user, payload) => {
+	if (user.role != 'psychologist') {
+		return conflictResponse('No eres psicologo');
+	}
+
+	/**
+	 * Payload schema:
+	 * 	models: array
+	 * 	specialties: array
+	 * 	languages: array
+	 * 	formation: array
+	 * 	experience: array
+	 */
+
+	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		payload,
+		{ new: true }
+	);
+	return okResponse('psicologo actualizado', {
+		psychologist: updatedPsychologist,
+	});
+};
+
 const psychologistsService = {
 	getAll,
+	getSessions,
 	match,
 	register,
 	createSession,
@@ -450,6 +655,9 @@ const psychologistsService = {
 	getRating,
 	checkPlanTask,
 	getClients,
+	getFormattedSessions,
+	usernameAvailable,
+	updateFormationExperience,
 };
 
 export default Object.freeze(psychologistsService);

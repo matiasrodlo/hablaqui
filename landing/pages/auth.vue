@@ -168,6 +168,7 @@ export default {
 		SignUp: () => import('~/components/auth/SignUp'),
 		Icon: () => import('~/components/Icon'),
 	},
+	layout: 'simple',
 	data() {
 		return {
 			mdiRecord,

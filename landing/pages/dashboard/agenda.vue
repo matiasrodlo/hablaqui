@@ -1,102 +1,53 @@
 <template>
-	<v-container fluid style="height: 100vh">
-		<appbar title="Mi agenda" />
+	<v-container fluid style="height: 100vh; max-width: 1200px">
+		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
-			<v-col cols="12" sm="3" md="4" lg="3">
-				<div class="text-center">
-					<v-date-picker
-						v-model="today"
-						locale="es"
-						full-width
-						no-title
-						:allowed-dates="allowedDates"
-						min="2021-06-01"
-						@change="
-							e => {
-								focus = e;
-								type = 'day';
-							}
-						"
-					/>
-				</div>
-				<v-card
-					v-if="
-						$auth.$state.user.role != 'user' &&
-						$auth.$state.user._id != '60c26d38f12991000bca3bba'
-					"
-					flat
-				>
-					<v-card-text class="text-center">
-						<div
-							class="mt-10 text-h6 font-weight-bold primary--text mx-auto"
-							style="max-width: 340px"
-						>
-							Próximas sesiones
-						</div>
-						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
-							Paciencia. Aún nadie ha reservado una sesión
-						</div>
-					</v-card-text>
-				</v-card>
-				<v-card
-					v-if="
-						$auth.$state.user.role == 'user' &&
-						$auth.$state.user._id != '60a0e168fd8c0f000ace3b71'
-					"
-					flat
-				>
-					<v-card-text class="text-center">
-						<div
-							class="text-h6 font-weight-bold primary--text mx-auto"
-							style="max-width: 340px"
-						>
-							Agenda con un especialista
-						</div>
-						<div class="body-1 my-6 mx-auto" style="max-width: 280px">
-							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
-							tu vida hoy.
-						</div>
-						<v-btn rounded color="primary" :to="{ name: 'psicologos' }">
-							Buscar ahora
-						</v-btn>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col cols="12" sm="9" md="8" lg="8" class="heightCalendar">
-				<v-sheet>
+			<v-col cols="12" md="10" class="heightCalendar">
+				<v-sheet class="mt-4 mt-md-0">
 					<v-toolbar flat>
-						<v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+						<v-btn class="mr-4" color="primary" depressed @click="setToday">
 							Hoy
 						</v-btn>
-						<v-btn fab text small color="grey darken-2" @click="prev">
-							<icon small :icon="mdiChevronLeft" />
+						<v-btn icon x-large @click="prev">
+							<icon x-large color="grey lighten-1" :icon="mdiChevronLeft" />
 						</v-btn>
-						<v-btn fab text small color="grey darken-2" @click="next">
-							<icon small :icon="mdiChevronRight" />
+						<v-btn icon x-large small @click="next">
+							<icon x-large color="grey lighten-1" :icon="mdiChevronRight" />
 						</v-btn>
-						<v-toolbar-title v-if="$refs.calendar">
+						<v-toolbar-title
+							v-if="$refs.calendar"
+							class="text--secondary text-capitalize"
+						>
 							{{ $refs.calendar.title }}
 						</v-toolbar-title>
 						<v-spacer></v-spacer>
 						<v-menu bottom right>
 							<template #activator="{ on, attrs }">
-								<v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+								<v-btn outlined color="grey lighten-1" v-bind="attrs" v-on="on">
 									<span>{{ typeToLabel[type] }}</span>
-									<icon right :icon="mdiMenuDown" />
+									<icon right color="grey lighten-1" :icon="mdiMenuDown" />
 								</v-btn>
 							</template>
 							<v-list>
 								<v-list-item @click="type = 'day'">
-									<v-list-item-title>Dia</v-list-item-title>
+									<v-list-item-title class="text--secondary"
+										>Dia</v-list-item-title
+									>
 								</v-list-item>
 								<v-list-item @click="type = 'week'">
-									<v-list-item-title>Semana</v-list-item-title>
+									<v-list-item-title class="text--secondary"
+										>Semana</v-list-item-title
+									>
 								</v-list-item>
 								<v-list-item @click="type = 'month'">
-									<v-list-item-title>Mes</v-list-item-title>
+									<v-list-item-title class="text--secondary"
+										>Mes</v-list-item-title
+									>
 								</v-list-item>
 								<v-list-item @click="type = '4day'">
-									<v-list-item-title>4 dias</v-list-item-title>
+									<v-list-item-title class="text--secondary"
+										>4 dias</v-list-item-title
+									>
 								</v-list-item>
 							</v-list>
 						</v-menu>
@@ -114,7 +65,6 @@
 						@click:event="showEvent"
 						@click:more="viewDay"
 						@click:date="viewDay"
-						@change="updateRange"
 					></v-calendar>
 					<v-menu
 						v-model="selectedOpen"
@@ -123,26 +73,66 @@
 						offset-x
 					>
 						<v-card color="grey lighten-4" min-width="350px" flat>
-							<v-toolbar flat>
-								<v-toolbar-title
-									class="secondary--text"
-									v-html="selectedEvent.name"
-								></v-toolbar-title>
-							</v-toolbar>
 							<v-card-text>
-								<icon left :icon="mdiClockOutline" />
+								<v-row justify="space-between">
+									<v-col cols="7" class="body-1 secondary--text">
+										{{ selectedEvent.name }}
+									</v-col>
+									<v-col class="text-right">
+										<v-btn icon>
+											<icon color="grey lighten-1" :icon="mdiPencil" />
+										</v-btn>
+										<v-btn icon>
+											<icon color="grey lighten-1" :icon="mdiTrashCan" />
+										</v-btn>
+									</v-col>
+								</v-row>
+							</v-card-text>
+							<v-card-text>
+								<icon color="grey lighten-1" left :icon="mdiClockOutline" />
 								<span>{{ setSubtitle(selectedEvent.start) }}</span>
 							</v-card-text>
 							<v-divider></v-divider>
 							<v-card-actions>
-								<v-btn text color="primary" @click="selectedOpen = false">
-									Reprogramar
+								<v-btn
+									text
+									color="primary"
+									:to="`/video-llamada/${goToCall(selectedEvent)}`"
+								>
+									Ir a video llamada
 								</v-btn>
 								<v-spacer></v-spacer>
-								<v-btn text color="secondary" @click="selectedOpen = false">
-									Cancelar sesion
+								<v-btn
+									text
+									color="secondary"
+									@click="() => openDialog(selectedEvent)"
+								>
+									Reprogramar
 								</v-btn>
 							</v-card-actions>
+							<v-dialog
+								v-if="dialog"
+								v-model="dialog"
+								max-width="600"
+								transition="dialog-top-transition"
+							>
+								<v-card rounded="xl">
+									<v-card-text
+										class="text-center primary white--text text-h5 py-3"
+									>
+										<div class="body-1 font-weight-bold text-center">
+											Reprogramar tu sesion
+										</div>
+									</v-card-text>
+									<v-card-text class="px-0 px-sm-2 px-md-4">
+										<calendar
+											:id-psy="idPsychologist"
+											:set-date="date => reschedule(date)"
+											title-button="Reprogramar sesión"
+										/>
+									</v-card-text>
+								</v-card>
+							</v-dialog>
 						</v-card>
 					</v-menu>
 				</v-sheet>
@@ -153,21 +143,34 @@
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
-import { mdiChevronLeft, mdiChevronRight, mdiMenuDown, mdiClockOutline } from '@mdi/js';
+import { mapActions, mapGetters } from 'vuex';
+import {
+	mdiChevronLeft,
+	mdiChevronRight,
+	mdiMenuDown,
+	mdiClockOutline,
+	mdiClose,
+	mdiTrashCan,
+	mdiPencil,
+} from '@mdi/js';
 
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
+		Calendar: () => import('../../components/Calendar.vue'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		mdiPencil,
+		mdiTrashCan,
+		mdiClose,
 		mdiChevronLeft,
 		mdiChevronRight,
 		mdiMenuDown,
 		mdiClockOutline,
+		dialog: false,
 		date: '2018-03-02',
 		focus: '',
 		type: 'month',
@@ -183,13 +186,46 @@ export default {
 		today: moment().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
+		event: null,
+		idPsychologist: '',
 	}),
-	mounted() {
+	computed: {
+		...mapGetters({ sessions: 'Psychologist/sessions' }),
+	},
+	async mounted() {
 		moment.locale('es');
+		await this.initFetch();
 		this.successPayment();
-		this.$refs.calendar.checkChange();
+		this.$refs.calendar?.checkChange();
 	},
 	methods: {
+		async initFetch() {
+			if (this.$auth.$state.user.role === 'user') {
+				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
+				if (user) this.idPsychologist = user.psychologist;
+			}
+			if (this.$auth.$state.user.role === 'psychologist')
+				this.idPsychologist = this.$auth.$state.user.psychologist;
+
+			if (this.idPsychologist) {
+				await this.getSessions(this.idPsychologist);
+				this.events = this.sessions;
+			}
+		},
+		async reschedule(item) {
+			const newDate = { date: item.date, hour: item.start };
+			this.events = await this.setReschedule({
+				sessionId: this.event.sessionId,
+				newDate,
+			});
+
+			this.event = null;
+			this.dialog = false;
+		},
+		openDialog(item) {
+			this.event = item;
+			this.dialog = true;
+		},
 		allowedDates(val) {
 			if (val === '2021-06-25' || val === '2021-06-30') return false;
 			return true;
@@ -228,124 +264,6 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange() {
-			if (this.$auth.$state.user._id === '60a0e168fd8c0f000ace3b71')
-				this.events = [
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-06-24 09:00',
-						end: '2021-06-24 10:00',
-						details: 'Sesion con Joaquin',
-					},
-
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-06-28 09:00',
-						end: '2021-06-28 10:00',
-						details: 'Sesion con Joaquin',
-					},
-					{
-						name: 'Sesion con Joaquin',
-						start: '2021-07-04 10:00',
-						end: '2021-07-04 11:00',
-						details: 'Sesion con Joaquin',
-					},
-				];
-			if (this.$auth.$state.user._id === '60c26d38f12991000bca3bba') {
-				this.events = [
-					{
-						name: 'Sesion con Matias',
-						start: '2021-06-24 09:00',
-						end: '2021-06-24 10:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-06-24 10:00',
-						end: '2021-06-24 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-06-24 12:00',
-						end: '2021-06-24 13:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-06-28 09:00',
-						end: '2021-06-28 10:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-06-28 10:00',
-						end: '2021-06-28 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-06-28 12:00',
-						end: '2021-06-28 13:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-01 10:00',
-						end: '2021-07-01 11:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-05 10:00',
-						end: '2021-07-05 11:00',
-						details: 'Sesion con Daniel',
-					},
-					{
-						name: 'Sesion con Matias',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Matias',
-					},
-					{
-						name: 'Sesion con Carlos',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Carlos',
-					},
-					{
-						name: 'Sesion con Daniel',
-						start: '2021-07-08 10:00',
-						end: '2021-07-08 11:00',
-						details: 'Sesion con Daniel',
-					},
-				];
-			}
-		},
 		rnd(a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
 		},
@@ -369,10 +287,17 @@ export default {
 			}
 		},
 		setSubtitle(date) {
-			return moment(date).format('LLL');
+			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
+				.add(60, 'minutes')
+				.format('hh:mm')}`;
+		},
+		goToCall(selectedEvent) {
+			return selectedEvent.idPsychologist + selectedEvent.idUser;
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
+			getSessions: 'Psychologist/getSessions',
+			setReschedule: 'Psychologist/setReschedule',
 		}),
 	},
 };

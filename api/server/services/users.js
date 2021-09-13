@@ -3,7 +3,6 @@ import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import { password_recovery_jwt_expiration } from '../config/dotenv';
 
 const usersService = {
 	async getProfile(id) {

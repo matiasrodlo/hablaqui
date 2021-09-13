@@ -613,7 +613,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<!-- SECTION 7 / faq -->.
+		<!-- SECTION 7 / faq -->
 		<v-container tag="section">
 			<v-row tag="section">
 				<v-col
@@ -1012,74 +1012,6 @@ export default {
 				},
 			],
 			link: [{ rel: 'canonical', href: this.$config.LANDING_URL }],
-		};
-	},
-	jsonld() {
-		return {
-			'@context': 'http://schema.org',
-			'@type': 'WebSite',
-			name: 'Hablaquí',
-			thumbnailUrl: 'https://hablaqui.cl/logo.png',
-			url: 'https://hablaqui.cl',
-			sameAs: [
-				'https://www.facebook.com/hablaquicom',
-				'https://www.instagram.com/hablaqui/',
-				'https://www.linkedin.com/company/hablaqui',
-				'https://twitter.com/hablaqui',
-				'https://www.tiktok.com/@hablaqui',
-			],
-			potentialAction: {
-				'@type': 'SearchAction',
-				target: 'http://hablaqui.cl/psicologos/{params}',
-				'query-input': 'required name=params',
-			},
-			sponsor: [
-				{
-					'@type': 'Organization',
-					name: 'startupchile',
-					url: 'https://www.startupchile.org',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Universidad adolfo ibañez',
-					url: 'https://www.uai.cl',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Vidatres',
-					url: 'https://www.vidatres.cl/',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Banmedica',
-					url: 'https://www.banmedica.cl',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Colmena',
-					url: 'https://www.colmena.cl',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Consalud',
-					url: 'https://www.consalud.cl',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Nueva mas vida',
-					url: 'https://www.nuevamasvida.cl/',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Vidatres',
-					url: 'https://www.vidatres.cl/',
-				},
-				{
-					'@type': 'Organization',
-					name: 'Fonasa',
-					url: 'https://www.fonasa.cl',
-				},
-			],
 		};
 	},
 };

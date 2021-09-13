@@ -11,6 +11,35 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getSessions(req, res) {
+		try {
+			const { idPsychologist } = req.params;
+			const { user } = req;
+			const { data, code } = await psychologistsService.getSessions(
+				user,
+				idPsychologist
+			);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo las sesiones');
+		}
+	},
+	async getFormattedSessions(req, res) {
+		try {
+			const { idPsychologist } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.getFormattedSessions(idPsychologist);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
 	async match(req, res) {
 		try {
 			const { body } = req;
@@ -23,10 +52,8 @@ const psychologistsController = {
 	async register(req, res) {
 		try {
 			const { body } = req;
-			const avatar = req.file.cloudStoragePublicUrl;
 			const { data, code } = await psychologistsService.register(
 				body,
-				avatar
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -206,6 +233,33 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'error consiguiendo los clientes');
+		}
+	},
+	async usernameAvailable(req, res) {
+		try {
+			const { username } = req.body;
+			const { data, code } = await psychologistsService.usernameAvailable(
+				username
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async updateFormationExperience(req, res) {
+		try {
+			const { payload } = req.body;
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.updateFormationExperience(
+				user,
+				payload
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
 };

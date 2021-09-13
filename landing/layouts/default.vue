@@ -4,7 +4,10 @@
 		<nuxt keep-alive />
 		<template
 			v-if="
-				$route.name !== 'index' && $auth.$state.loggedIn && $auth.$state.user.role == 'user'
+				$route.name !== 'index' &&
+				$route.name !== 'para-especialistas' &&
+				$auth.$state.loggedIn &&
+				$auth.$state.user.role == 'user'
 			"
 		>
 			<client-only>

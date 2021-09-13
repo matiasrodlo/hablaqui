@@ -1,4 +1,4 @@
-import { snackBarError } from '@/utils/snackbar';
+import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
 	async getPsychologists({ commit }) {
@@ -6,6 +6,29 @@ export default {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			localStorage.setItem('psychologists', JSON.stringify(psychologists));
 			commit('setPsychologists', psychologists);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSessions({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get(
+				`/psychologists/sessions/${idPsychologist}`
+			);
+
+			commit('setSessions', sessions);
+			return sessions;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getFormattedSessions({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get(
+				`/psychologists/formattedSessions/${idPsychologist}`
+			);
+			commit('setSessionsFormatted', sessions);
+			return sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -26,12 +49,60 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async registerPsychologist({ commit }, payload) {
+	async updatePaymentMethod({ commit }, payload) {
 		try {
-			await this.$axios('/psychologists/register', {
-				method: 'POST',
-				data: payload,
+			const { data } = await this.$axios(`/psychologist/update-payment-method`, {
+				method: 'PATCH',
+				data: { payload },
 			});
+			snackBarSuccess('Metodo de pago actualizado')(commit);
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async checkUsername({ commit }, username) {
+		try {
+			const { data } = await this.$axios('/psychologist/check-username', {
+				method: 'POST',
+				data: { username },
+			});
+			return data.available;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async updatePsychologist({ commit }, profile) {
+		try {
+			const { data } = await this.$axios('/psychologist/update-profile', {
+				method: 'PUT',
+				data: { profile },
+			});
+			snackBarSuccess('Actualizado exitosamente')(commit);
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async updatePrices({ commit }, newPrice) {
+		try {
+			const { data } = await this.$axios('/psychologist/update-prices', {
+				method: 'POST',
+				data: { newPrice },
+			});
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async setReschedule({ commit }, { sessionId, newDate }) {
+		try {
+			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+				method: 'POST',
+				data: { newDate },
+			});
+			snackBarSuccess('Sesión reprogramada')(commit);
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

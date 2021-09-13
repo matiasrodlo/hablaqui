@@ -73,4 +73,5 @@ userRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	userController.getSessions
 );
+
 export default userRouter;

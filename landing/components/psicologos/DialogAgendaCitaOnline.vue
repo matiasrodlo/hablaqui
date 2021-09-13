@@ -41,7 +41,7 @@
 				Agenda cita online
 			</v-btn>
 		</template>
-		<v-card rounded="xl">
+		<v-card rounded="xl" min-height="400">
 			<v-card-title class="primary white--text text-h5 py-3">
 				<v-btn
 					v-if="step != 0"
@@ -74,7 +74,11 @@
 				<select-plan :set-plan="plan => setPlan(plan)" />
 			</v-card-text>
 			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
-				<calendar :set-date="date => setDate(date)" title-button="Agendar cita Online" />
+				<calendar
+					:id-psy="psy._id"
+					:set-date="date => setDate(date)"
+					title-button="Agendar cita Online"
+				/>
 			</v-card-text>
 			<v-card-text v-if="step == 2">
 				<v-tabs-items v-model="tab">

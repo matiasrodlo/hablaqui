@@ -4,7 +4,6 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
-import mailer from './mailer';
 import psychologistService from './psychologist';
 import User from '../models/user';
 
@@ -103,7 +102,6 @@ const successPay = async params => {
 	foundUser.save();
 
 	logInfo('Se ha realizado un pago');
-	mailer.sendPurchaseInformation(foundUser.email);
 	return okResponse('sesion actualizada');
 };
 
