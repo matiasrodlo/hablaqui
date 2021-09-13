@@ -509,7 +509,7 @@ const setPrice = async (user, newPrice) => {
 			sessionPrices: {
 				text: newPrice * 0.75,
 				video: newPrice,
-				full: newPrice * 0.75,
+				full: newPrice * 1.25,
 			},
 		},
 		{ new: true }
