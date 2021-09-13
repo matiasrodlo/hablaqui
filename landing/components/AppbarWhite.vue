@@ -75,7 +75,7 @@
 			</v-list>
 			<v-divider></v-divider>
 			<client-only>
-				<v-list v-show="$auth.$state.loggedIn">
+				<v-list v-if="$auth.$state.loggedIn">
 					<v-subheader>Mi secciones</v-subheader>
 					<v-list-item
 						v-show="
@@ -168,7 +168,7 @@
 			<v-spacer></v-spacer>
 			<client-only>
 				<div
-					v-show="$auth.$state.loggedIn"
+					v-if="$auth.$state.loggedIn"
 					class="hidden-sm-and-down body-2 text--secondary mr-16"
 					rounded
 					text
