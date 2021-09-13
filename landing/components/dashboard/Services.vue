@@ -1,11 +1,23 @@
 <template>
-	<v-card outlined class="mb-16">
+	<v-card flat class="mb-16">
 		<v-card-title>
-			<div class="my-6">
-				<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
-				<div class="text--secondary body-2">
-					Configura los servicios ofrecidos por medio de Hablaquí.
+			<div class="my-6 d-flex justify-space-between" style="width: 100%">
+				<div>
+					<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
+					<div class="text--secondary body-2">
+						Configura los servicios ofrecidos por medio de Hablaquí.
+					</div>
 				</div>
+				<v-btn
+					depressed
+					:loading="loading"
+					color="primary"
+					rounded
+					class="px-10"
+					@click="onSubmit"
+				>
+					Guardar
+				</v-btn>
 			</div>
 		</v-card-title>
 		<v-divider></v-divider>
@@ -79,9 +91,7 @@
 					<v-alert prominent text color="info">
 						<div style="color: #0079ff" class="px-6 py-4 font-weight-medium">
 							Puede establecer el precio de su sesión solo por primera vez. Para
-							cambiar tendrás que contactarnos. <br />
-							Sugerimos el valor de 30 USD por sesiones de una hora para adquirir más
-							clientes al principio.
+							cambiar tendrás que contactarnos.
 						</div>
 					</v-alert>
 				</v-col>
@@ -112,7 +122,31 @@
 						</v-text-field>
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-h6" style="color: #3c3c3b">
+				<v-col cols="12" class="text-h6" style="color: #3c3c3b">
+					<div v-if="psychologist.preferences" class="mt-8">
+						<v-switch
+							v-model="marketplaceVisibility"
+							label="Visibilidad en Marketplace"
+							color="primary"
+							persistent-hint
+							hint="Los especialistas que aceptan nuevos clientes tienden a tener un aumento en el número de sesiones."
+							@change="
+								e => {
+									const preferences = psychologist.preferences;
+									setPsychologist({
+										...psychologist,
+										preferences: {
+											...preferences,
+											marketplaceVisibility:
+												!psychologist.preferences.marketplaceVisibility,
+										},
+									});
+								}
+							"
+						></v-switch>
+					</div>
+				</v-col>
+				<!-- <v-col cols="12" md="6" class="text-h6" style="color: #3c3c3b">
 					<div>
 						Sesiones corporativas
 						<v-tooltip bottom>
@@ -156,27 +190,6 @@
 						></v-checkbox>
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-h6" style="color: #3c3c3b">
-					<div>
-						Nuevos clientes
-						<v-tooltip bottom>
-							<template #activator="{ on, attrs }">
-								<v-btn icon v-bind="attrs" v-on="on">
-									<icon :icon="mdiInformationOutline" />
-								</v-btn>
-							</template>
-							<span>Aqui podras configurar el precio de tus sesiones</span>
-						</v-tooltip>
-					</div>
-					<div class="mt-8">
-						<v-checkbox
-							label="Visibilidad en Marketplace"
-							color="primary"
-							persistent-hint
-							hint="Los especialistas que aceptan nuevos clientes tienden a tener un aumento en el número de sesiones."
-						></v-checkbox>
-					</div>
-				</v-col>
 				<v-col cols="12" class="text-center">
 					<v-btn
 						color="primary"
@@ -188,7 +201,7 @@
 					>
 						Editar
 					</v-btn>
-				</v-col>
+				</v-col> -->
 			</v-row>
 		</v-card-text>
 	</v-card>
@@ -225,19 +238,23 @@ export default {
 			],
 			newPrice: 0,
 			loading: false,
+			marketplaceVisibility: false,
 		};
+	},
+	mounted() {
+		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
 	},
 	methods: {
 		async onSubmit() {
 			this.loading = true;
-			await this.updatePrices(this.newPrice);
+			// await this.updatePrices(this.newPrice);
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
 			this.loading = false;
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
-			updatePrices: 'Psychologist/updatePrices',
+			// updatePrices: 'Psychologist/updatePrices',
 		}),
 	},
 };
