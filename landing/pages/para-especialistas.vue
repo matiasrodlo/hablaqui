@@ -101,7 +101,7 @@
 						Cree su propia oficina en minutos con alta tecnología y facilidad
 					</h3>
 				</v-col>
-				<v-col v-for="item in items" :key="item.id" cols="12" md="4" class="my-md-4">
+				<v-col v-for="item in items" :key="item.id" cols="12" md="4" class="my-4">
 					<v-card tag="section" flat>
 						<v-card-text class="text-center">
 							<v-img
@@ -128,151 +128,79 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<!-- beneficios mobile -->
-		<div class="hidden-md-and-up">
-			<v-img
-				width="100%"
-				height="auto"
-				:src="`${$config.LANDING_URL}/beneficios-responsive.png`"
-			>
-				<v-row justify="center" class="mt-16">
-					<v-col cols="11" class="text-center mt-sm-16 pt-sm-16">
-						<h2 class="font-weight-bold white--text text-h4 text-sm-h3">
-							Beneficios de Hablaquí Office
-						</h2>
-					</v-col>
-					<v-col cols="10" sm="8">
-						<div class="mt-8 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Videollamadas seguras y cómodas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="25"
-								width="25"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sistema de reservas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sitio web especializado
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Gestión de agenda, clientes y pagos
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Recordatorios y correo electrónico
-							</h3>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
-		</div>
-		<!-- beneficios desktop -->
-		<div class="hidden-sm-and-down">
-			<v-img
-				width="100%"
-				height="auto"
-				class="d-flex align-center"
-				:src="`${$config.LANDING_URL}/beneficios-de-hablaqui.png`"
-			>
-				<v-row justify="center">
-					<v-col offset-md="6" cols="6" md="6">
-						<h2 class="font-weight-bold white--text text-h6 text-md-h4 text-lg-h3">
-							Beneficios de Hablaquí Office
-						</h2>
-						<div class="mt-8 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
-								Videollamadas seguras y cómodas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="25"
-								width="25"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
-								Sistema de reservas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
-								Sitio web especializado
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
-								Gestión de agenda, clientes y pagos
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
-								Recordatorios y correo electrónico
-							</h3>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
-		</div>
+		<v-img
+			width="100%"
+			height="auto"
+			class="d-flex align-center"
+			:src="
+				$vuetify.breakpoint.smAndDown
+					? `${$config.LANDING_URL}/beneficios-hablaqui-mobile.png`
+					: `${$config.LANDING_URL}/beneficios-de-hablaqui.png`
+			"
+		>
+			<v-row justify="center">
+				<v-col offset-md="6" cols="6" md="6">
+					<h2 class="font-weight-bold white--text text-h6 text-md-h4 text-lg-h3">
+						Beneficios de Hablaquí Office
+					</h2>
+					<div class="mt-8 d-flex align-center">
+						<img
+							height="30"
+							width="30"
+							:src="`${$config.LANDING_URL}/check-especialistas.png`"
+							alt="check"
+						/>
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+							Videollamadas seguras y cómodas
+						</h3>
+					</div>
+					<div class="mt-5 d-flex align-center">
+						<img
+							height="25"
+							width="25"
+							:src="`${$config.LANDING_URL}/check-especialistas.png`"
+							alt="check"
+						/>
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+							Sistema de reservas
+						</h3>
+					</div>
+					<div class="mt-5 d-flex align-center">
+						<img
+							height="30"
+							width="30"
+							:src="`${$config.LANDING_URL}/check-especialistas.png`"
+							alt="check"
+						/>
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+							Sitio web especializado
+						</h3>
+					</div>
+					<div class="mt-5 d-flex align-center">
+						<img
+							height="30"
+							width="30"
+							:src="`${$config.LANDING_URL}/check-especialistas.png`"
+							alt="check"
+						/>
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+							Gestión de agenda, clientes y pagos
+						</h3>
+					</div>
+					<div class="mt-5 d-flex align-center">
+						<img
+							height="30"
+							width="30"
+							:src="`${$config.LANDING_URL}/check-especialistas.png`"
+							alt="check"
+						/>
+						<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
+							Recordatorios y correo electrónico
+						</h3>
+					</div>
+				</v-col>
+			</v-row>
+		</v-img>
 		<v-container style="max-width: 1400px">
 			<v-row justify="center">
 				<v-col cols="12">
@@ -313,103 +241,57 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<div class="hidden-md-and-up">
-			<v-img
-				width="100vw"
-				height="auto"
-				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
-				:src="`${$config.LANDING_URL}/descargar-app-small.png`"
-			>
-				<v-row justify-md="center">
-					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
-						<h2
-							class="
-								pt-10 pt-sm-16
-								text-center
-								font-weight-bold
-								white--text
-								text-h5 text-sm-h4
-							"
-						>
-							Descargar nuestra app de chat
-						</h2>
-						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
-							Mantén contacto con tus consultantes vía Chat. <br />
-							¡Descarga la aplicación ahora!
-						</h3>
-						<div class="d-flex justify-center pb-16">
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								hidden="30"
-								max-width="120"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/google-play.png`"
-								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
-								alt="descarcar nuestra aplicacion para android"
-							/>
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								hidden="30"
-								max-width="120"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/ios.svg`"
-								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
-								alt="descargar aplicacion para ios"
-							/>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
-		</div>
-		<div class="hidden-sm-and-down">
-			<v-img
-				width="100vw"
-				height="auto"
-				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
-				class="d-flex align-center"
-				:src="`${$config.LANDING_URL}/descargar-app.png`"
-			>
-				<v-row justify-md="center">
-					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
-						<h2
-							class="
-								pt-10 pt-sm-16
-								text-center
-								font-weight-bold
-								white--text
-								text-h5 text-sm-h4
-							"
-						>
-							Descargar nuestra app de chat
-						</h2>
-						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
-							Mantén contacto con tus consultantes vía Chat. <br />
-							¡Descarga la aplicación ahora!
-						</h3>
-						<div class="d-flex justify-center pb-16">
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								hidden="40"
-								max-width="140"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/google-play.png`"
-								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
-								alt="descarcar nuestra aplicacion para android"
-							/>
-							<v-img
-								style="cursor: pointer; border-radius: 10px"
-								hidden="40"
-								max-width="140"
-								class="ma-1"
-								:src="`${$config.LANDING_URL}/ios.svg`"
-								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
-								alt="descargar aplicacion para ios"
-							/>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
-		</div>
+		<v-img
+			width="100vw"
+			height="auto"
+			style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
+			:class="$vuetify.breakpoint.smAndDown ? '' : 'd-flex align-center'"
+			:src="
+				$vuetify.breakpoint.smAndDown
+					? `${$config.LANDING_URL}/descargar-app-small.png`
+					: `${$config.LANDING_URL}/descargar-app.png`
+			"
+		>
+			<v-row justify-md="center">
+				<v-col offset-md="6" cols="12" md="6">
+					<h2
+						class="
+							pt-10 pt-sm-16
+							text-center
+							font-weight-bold
+							white--text
+							text-h5 text-md-h4
+						"
+					>
+						Descargar nuestra app de chat
+					</h2>
+					<h3 class="text-center font-weight-bold white--text body-2 my-4 text-md-h6">
+						Mantén contacto con tus consultantes vía Chat. <br />
+						¡Descarga la aplicación ahora!
+					</h3>
+					<div class="d-flex justify-center pb-16">
+						<v-img
+							style="cursor: pointer; border-radius: 10px"
+							height="50"
+							max-width="160"
+							class="ma-1"
+							:src="`${$config.LANDING_URL}/google-play.png`"
+							:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+							alt="descarcar nuestra aplicacion para android"
+						/>
+						<v-img
+							style="cursor: pointer; border-radius: 10px"
+							height="50"
+							max-width="160"
+							class="ma-1"
+							:src="`${$config.LANDING_URL}/ios.svg`"
+							:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+							alt="descargar aplicacion para ios"
+						/>
+					</div>
+				</v-col>
+			</v-row>
+		</v-img>
 		<v-container fluid style="max-width: 1400px" tag="footer">
 			<Footer />
 		</v-container>
