@@ -306,4 +306,19 @@ psychologistsRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateFormationExperience
 );
+
+/**
+ * Crea una nueva sesion custom, un poco mas libre y menos estandarizada.
+ * req.body.payload = {
+ * 		type: string,
+ * 		date: ISO,
+ * 		user: ObjectId,
+ * 		price: integer,
+ * }
+ */
+psychologistsRouter.post(
+	'/psychologist/new-custom-session',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.customNewSession
+)
 export default psychologistsRouter;

@@ -636,6 +636,26 @@ const updateFormationExperience = async (user, payload) => {
 	});
 };
 
+const customNewSession = async (user, payload) => {
+	if (user.role != 'psychologist') return conflictResponse('No eres psicologo');
+
+	const newSession = {
+		typeSession: payload.type,
+		date: moment(payload.date).toISOString,
+		user: payload.type == 'commitment' ? '' : payload.user,
+		invitedByPsychologist: true,
+		price: payload.price,
+	}
+
+	let updatedPsychologist = Psychologist.findByIdAndUpdate(user.psychologist, {
+		$push: {
+			sessions: newSession,
+		}
+	}, { new: true })
+	
+	return okResponse('sesion creada', { session: newSession, psychologist: updatedPsychologist });
+}
+
 const psychologistsService = {
 	getAll,
 	getSessions,
@@ -658,6 +678,7 @@ const psychologistsService = {
 	getFormattedSessions,
 	usernameAvailable,
 	updateFormationExperience,
+	customNewSession,
 };
 
 export default Object.freeze(psychologistsService);
