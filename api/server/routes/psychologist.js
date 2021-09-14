@@ -197,7 +197,7 @@ psychologistsRouter.put(
  * req.body = { id: ObjectId }
  */
 psychologistsRouter.delete(
-	'/psychologist/delete-one',
+	'/psychologist/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.deleteOne
 );

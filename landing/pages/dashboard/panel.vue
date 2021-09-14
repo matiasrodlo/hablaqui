@@ -509,6 +509,15 @@
 					>
 						Aprobar
 					</v-btn>
+					<v-btn
+						v-if="selected.isPsy"
+						:loading="loadingDelete"
+						text
+						color="error"
+						@click="deletePsy"
+					>
+						Eliminar
+					</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
 			</v-card>
@@ -539,6 +548,7 @@ export default {
 			timezone: [],
 			loadingSubmit: false,
 			loadingApprove: false,
+			loadingDelete: false,
 			loading: true,
 		};
 	},
@@ -568,6 +578,7 @@ export default {
 	},
 	methods: {
 		async approve() {
+			if (!confirm('Estas seguro de aprobar este postulado?')) return;
 			this.loadingApprove = true;
 			if (this.selected.isPsy) return;
 			await this.$axios(`/recruitment/approve/${this.selected.email}`, {
@@ -578,6 +589,7 @@ export default {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			this.psychologists = psychologists;
 			this.loadingApprove = false;
+			this.dialog = false;
 		},
 		async submit() {
 			this.loadingSubmit = true;
@@ -594,6 +606,14 @@ export default {
 				this.items = recruitment;
 			}
 			this.loadingSubmit = false;
+		},
+		async deletePsy() {
+			if (confirm('Estas seguro de eliminar?')) {
+				this.loadingDelete = true;
+				this.psychologists = await this.deletePsychologist(this.selected._id);
+				this.loadingDelete = false;
+				this.dialog = false;
+			}
 		},
 		setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
@@ -613,6 +633,7 @@ export default {
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			updatePsychologist: 'Psychologist/updatePsychologist',
+			deletePsychologist: 'Psychologist/deletePsychologist',
 		}),
 	},
 };

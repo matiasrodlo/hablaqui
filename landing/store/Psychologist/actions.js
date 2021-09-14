@@ -49,6 +49,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async deletePsychologist({ commit }, id) {
+		try {
+			const { psychologists } = await this.$axios(`/psychologist/${id}`, {
+				method: 'delete',
+			});
+			commit('setPsychologists', psychologists);
+			return psychologists;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async updatePaymentMethod({ commit }, payload) {
 		try {
 			const { data } = await this.$axios(`/psychologist/update-payment-method`, {

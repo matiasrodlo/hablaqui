@@ -511,9 +511,14 @@ const updatePsychologist = async (user, profile) => {
 };
 
 const deleteOne = async (user, id) => {
-	if (user.role != 'superadmin') return conflictResponse('No tienes poder');
+	if (user.role !== 'superuser')
+		return conflictResponse(
+			'No tienes permisos suficientes para realizar esta acción'
+		);
+
 	await Psychologist.deleteOne({ _id: id });
-	return okResponse('Psicologo eliminado');
+	const psychologists = await Psychologist.find();
+	return okResponse('Psicologo eliminado', { psychologists });
 };
 
 const setPrice = async (user, newPrice) => {
