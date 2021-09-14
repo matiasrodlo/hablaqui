@@ -174,10 +174,6 @@ let recruitment = new Schema({
 		type: String,
 		default: 'Chile',
 	},
-	phone: {
-		type: String,
-		default: '',
-	},
 	region: {
 		type: String,
 		default: '',
@@ -224,6 +220,10 @@ let recruitment = new Schema({
 	},
 	ratings: [rating],
 	sessions: [session],
+	timeZone: {
+		type: String,
+		default: 'America/Santiago',
+	},
 });
 
 export default model('recruitment', recruitment);

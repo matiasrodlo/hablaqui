@@ -118,37 +118,44 @@ export default {
 	},
 	computed: {
 		links() {
+			const visible =
+				(this.$auth.$state.loggedIn &&
+					this.$auth.user.role === 'psychologist' &&
+					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
-					visible: true,
+					visible,
 				},
 				{
 					name: 'Mis sesiones',
-					link: 'agenda',
+					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
-					visible: true,
-				},
-				{
-					name: 'Diario de bienestar',
-					link: { name: 'dashboard-diario' },
-					img: `${this.$config.LANDING_URL}/notas.png`,
-					visible: false,
+					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
 					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible:
-						this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
-					visible: true,
+					visible,
+				},
+				{
+					name: 'Panel de control',
+					link: { name: 'dashboard-panel' },
+					img: `${this.$config.LANDING_URL}/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
 		},

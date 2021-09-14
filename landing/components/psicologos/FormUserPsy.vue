@@ -1,17 +1,17 @@
 <template>
 	<v-form>
 		<v-card flat class="rounded-lg">
-			<v-card-title>
+			<v-card-title class="mx-2">
 				<h3 class="primary--text font-weight-bold text-h4">Únete a la red</h3>
 			</v-card-title>
-			<v-card-text>
+			<v-card-text class="py-0 mx-2">
 				<h3 class="text--disabled body-1">
 					En solo unos pasos puedes unirte. Comienza creando tu cuenta.
 				</h3>
 			</v-card-text>
 			<v-card-text>
 				<v-row no-gutters>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model.trim="formData.name"
 							dense
@@ -21,7 +21,7 @@
 							class="mx-2"
 						></v-text-field>
 					</v-col>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model.trim="formData.lastName"
 							dense
@@ -31,8 +31,8 @@
 							class="mx-2"
 						></v-text-field>
 					</v-col>
-					<v-col cols="6"
-						><v-text-field
+					<v-col cols="12" md="6">
+						<v-text-field
 							v-model="formData.rut"
 							dense
 							label="Rut"
@@ -41,7 +41,7 @@
 							class="mx-2"
 						></v-text-field
 					></v-col>
-					<v-col cols="6">
+					<v-col cols="12" md="6">
 						<v-text-field
 							v-model="formData.email"
 							dense
@@ -50,6 +50,7 @@
 							label="Correo"
 							outlined
 							type="email"
+							autocomplete="off"
 						></v-text-field>
 					</v-col>
 					<v-col cols="12">
@@ -61,10 +62,11 @@
 							label="Contraseña"
 							type="password"
 							outlined
+							autocomplete="off"
 						></v-text-field>
 					</v-col>
 					<v-col cols="12">
-						<v-checkbox v-model="terminos" class="mx-2">
+						<v-checkbox v-model="terminos" hide-details class="mx-2 my-0">
 							<template #label>
 								<div class="caption">
 									He leído y
@@ -80,11 +82,16 @@
 					</v-col>
 				</v-row>
 			</v-card-text>
-			<v-card-actions>
-				<v-btn color="primary" class="rounded-xl mx-auto px-10" @click="onSubmit">
+			<v-card-text class="text-center">
+				<v-btn
+					:loading="loading"
+					color="primary"
+					class="rounded-xl mx-auto px-10"
+					@click="onSubmit"
+				>
 					Regístrate ahora
 				</v-btn>
-			</v-card-actions>
+			</v-card-text>
 		</v-card>
 		<v-dialog v-model="dialog" width="300">
 			<v-sheet style="width: 300px; height: 100px">

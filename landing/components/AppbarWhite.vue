@@ -73,6 +73,35 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<v-divider></v-divider>
+			<client-only>
+				<v-list v-if="$auth.$state.loggedIn">
+					<v-subheader>Mi secciones</v-subheader>
+					<v-list-item
+						v-show="
+							$auth.$state.user.role === 'psychologist' &&
+							!$auth.$state.user.psychologist
+						"
+						link
+						to="/postulacion"
+					>
+						<v-list-item-content>
+							<v-list-item-title class="secondary--text font-weight-bold body-2">
+								Ir a Postulacion
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+					<template v-for="(item, i) in menu">
+						<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
+							<v-list-item-content>
+								<v-list-item-title class="secondary--text font-weight-bold body-2">
+									{{ item.name }}
+								</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</template>
+				</v-list>
+			</client-only>
 		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
@@ -125,7 +154,7 @@
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</nuxt-link>
 			<nuxt-link
-				v-if="!$auth.$state.loggedIn"
+				v-show="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
 				accesskey="r"
 				style="text-decoration: none"
@@ -136,9 +165,13 @@
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
-				<div class="hidden-sm-and-down body-2 text--secondary mr-16" rounded text>
+				<div
+					v-if="$auth.$state.loggedIn"
+					class="hidden-sm-and-down body-2 text--secondary mr-16"
+					rounded
+					text
+				>
 					<v-menu
-						v-if="$auth.$state.loggedIn"
 						id="menu-sesion"
 						rounded="xl"
 						offset-y
@@ -167,9 +200,28 @@
 						</template>
 						<v-card>
 							<v-list>
+								<v-list-item
+									v-show="
+										$auth.$state.user.role === 'psychologist' &&
+										!$auth.$state.user.psychologist
+									"
+									link
+									to="/postulacion"
+								>
+									<v-list-item-avatar size="40" color="primary">
+										<icon size="24" color="white" :icon="mdiAccountDetails" />
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											class="secondary--text font-weight-bold body-2"
+										>
+											Ir a Postulacion
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
 								<template v-for="(item, i) in menu">
 									<v-list-item
-										v-if="item.visible"
+										v-show="item.visible"
 										id="i"
 										:key="i"
 										link
@@ -251,7 +303,7 @@
 </template>
 
 <script>
-import { mdiMenu } from '@mdi/js';
+import { mdiMenu, mdiAccountDetails } from '@mdi/js';
 
 export default {
 	components: {
@@ -261,35 +313,54 @@ export default {
 	data() {
 		return {
 			mdiMenu,
-			menu: [
+			mdiAccountDetails,
+			drawer: false,
+		};
+	},
+	computed: {
+		menu() {
+			const visible =
+				(this.$auth.$state.loggedIn &&
+					this.$auth.user.role === 'psychologist' &&
+					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
+			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
-					visible: true,
+					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
-					visible: true,
+					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
 					img: `${this.$config.LANDING_URL}/pay.png`,
-					visible: this.$auth.$state.user?.role === 'psychologist',
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
-					visible: true,
+					visible,
 				},
-			],
-			drawer: false,
-		};
+				{
+					name: 'Panel de control',
+					link: { name: 'dashboard-panel' },
+					img: `${this.$config.LANDING_URL}/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+			];
+		},
 	},
 	methods: {
 		logout() {

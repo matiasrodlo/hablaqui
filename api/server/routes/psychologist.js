@@ -53,39 +53,82 @@ psychologistsRouter.get(
 	psychologistsController.getFormattedSessions
 );
 
+/**
+ * Retorna un psicolog segun el parametro ingresado
+ * info: username || ObjectId
+ */
 psychologistsRouter.get(
 	'/psychologists/one/:info',
 	psychologistsController.getByData
 );
+
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
 );
+
+/** Registro de psicologo */
 psychologistsRouter.post(
 	'/psychologists/register',
 	psychologistsController.register
 );
+
+/**
+ * Crea una sesion 
+ * NECESITA AUTENTICACION
+ * req.body.payload = {
+ * 	date: string,
+		user._id: ObjectId del usuario,
+		title: string,
+		paymentPeriod: string,
+		price: Number,
+ * }
+ */
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
+
+/**
+ * Cambia la hora de la sesion con el :id
+ * req.body = { newDate: string (ojala en formato ISO) }
+ */
 psychologistsRouter.post(
 	'/psychologists/reschedule/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
+
+/**
+ * Cambia el horario de un psicologo
+ * req.body.payload = {
+ * 	monday: [inicio, termino],
+ * 	tuesday: [inicio, termino],
+ * 	...
+ * }
+ * Para poner un dia libre es ['busy', 'busy']
+ */
 psychologistsRouter.patch(
 	'/psychologist/set-schedule',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.setSchedule
 );
+
+/**
+ * Cancela la sesion
+ * req.body = { sessionId: ObjectId }
+ */
 psychologistsRouter.delete(
 	'/psychologist/cancel-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.cancelSession
 );
+
+/**
+ * Actualiza el metodo de pago
+ */
 psychologistsRouter.patch(
 	'/psychologist/update-payment-method',
 	[passport.authenticate('jwt', { session: true })],
@@ -148,6 +191,11 @@ psychologistsRouter.put(
 	psychologistsController.updatePsychologist
 );
 
+/**
+ * Elimina un psicologo
+ * NECESITA AUTENTICACION Y SUPERUSUARIO
+ * req.body = { id: ObjectId }
+ */
 psychologistsRouter.delete(
 	'/psychologist/delete-one',
 	[passport.authenticate('jwt', { session: true })],
@@ -178,11 +226,19 @@ psychologistsRouter.post(
 	psychologistsController.setPrice
 );
 
+/**
+ * Agrega una nueva calificacion
+ * req.body = { newRating: number, comment: string }
+ */
 psychologistsRouter.post(
 	'/psychologist/add-rating/:psychologist',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.addRating
 );
+
+/**
+ * Consigue las calificaciones del :psychologist
+ */
 psychologistsRouter.get(
 	'/psychologist/get-rating/:psychologist',
 	psychologistsController.getRating
@@ -191,6 +247,9 @@ psychologistsRouter.get(
 	'/psychologist/plan-task',
 	psychologistsController.checkPlanTask
 );
+/**
+ * Consigue los clientes de :psychologist
+ */
 psychologistsRouter.get(
 	'/psychologist/clients/:psychologist',
 	[passport.authenticate('jwt', { session: true })],

@@ -411,6 +411,23 @@ const reschedule = async (user, id, newDate) => {
 	return conflictResponse(error);
 };
 
+const updatePlan = async (psychologistId, planInfo) => {
+	/* planInfo: {
+		name: String,
+		price: Number,
+		hablaquiFee: Number,
+		paymentFee: Number,
+	}*/
+	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
+		psychologistId,
+		{
+			plan: { status: 'success', ...planInfo },
+		},
+		{ new: true }
+	);
+	return okResponse('Plan creado', { psychologist: updatedPsychologist });
+};
+
 const getByData = async username => {
 	const usernameSearch = await Psychologist.findOne({ username });
 	if (!usernameSearch) {
@@ -509,7 +526,7 @@ const setPrice = async (user, newPrice) => {
 			sessionPrices: {
 				text: newPrice * 0.75,
 				video: newPrice,
-				full: newPrice * 0.75,
+				full: newPrice * 1.25,
 			},
 		},
 		{ new: true }
@@ -628,6 +645,7 @@ const psychologistsService = {
 	reschedule,
 	getByData,
 	setSchedule,
+	updatePlan,
 	cancelSession,
 	updatePaymentMethod,
 	updatePsychologist,

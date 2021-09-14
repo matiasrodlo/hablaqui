@@ -1,5 +1,5 @@
 <template>
-	<div style="height: 100vh">
+	<div v-if="form" style="height: 100vh">
 		<div class="ma-4 d-flex justify-space-between align-center">
 			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
 				<v-img
@@ -47,35 +47,6 @@
 									>
 										¡Es un placer conocerte!
 									</div>
-								</v-col>
-								<v-col cols="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										username
-									</div>
-									<v-text-field
-										v-model.trim="form.username"
-										filled
-										outlined
-										dense
-										placeholder="(Requerido)"
-										:rules="rulesUsername"
-										type="text"
-										:hint="`hablaqui.com/${form.username}`"
-									></v-text-field>
-								</v-col>
-								<v-col cols="12" sm="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										Teléfono
-									</div>
-									<v-text-field
-										v-model="form.phone"
-										filled
-										outlined
-										placeholder="(Requerido)"
-										:rules="rulesTextField"
-										dense
-										type="text"
-									></v-text-field>
 								</v-col>
 								<v-col cols="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
@@ -274,7 +245,7 @@
 									:loading="loadingStep"
 									rounded
 									color="primary"
-									@click="setStepTwo"
+									@click="saveStep(2)"
 								>
 									Siguiente
 								</v-btn>
@@ -303,7 +274,7 @@
 										Descripción profesional
 									</div>
 									<v-textarea
-										v-model="professionalDescription"
+										v-model="form.professionalDescription"
 										no-resize
 										filled
 										outlined
@@ -365,7 +336,7 @@
 											</div>
 										</v-col>
 									</v-row>
-									<v-row v-for="(item, i) in formation" :key="i">
+									<v-row v-for="(item, i) in form.formation" :key="i">
 										<v-col cols="12" md="3">
 											<v-select
 												filled
@@ -382,7 +353,7 @@
 													'Otro',
 												]"
 												:value="item.formationType"
-												@change="e => (formation[i].formationType = e)"
+												@change="e => (form.formation[i].formationType = e)"
 											></v-select>
 										</v-col>
 										<v-col cols="12" md="3">
@@ -392,7 +363,7 @@
 												dense
 												type="text"
 												:value="item.description"
-												@input="e => (formation[i].title = e)"
+												@input="e => (form.formation[i].description = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2">
@@ -402,7 +373,7 @@
 												dense
 												type="text"
 												:value="item.start"
-												@input="e => (formation[i].start = e)"
+												@input="e => (form.formation[i].start = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2">
@@ -412,12 +383,12 @@
 												dense
 												type="text"
 												:value="item.end"
-												@input="e => (formation[i].end = e)"
+												@input="e => (form.formation[i].end = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2" class="text-center text-md-left">
 											<v-btn
-												v-if="i === formation.length - 1"
+												v-if="i === form.formation.length - 1"
 												small
 												color="primary"
 												fab
@@ -428,8 +399,8 @@
 											</v-btn>
 											<v-btn
 												v-if="
-													i === formation.length - 1 &&
-													formation.length - 1
+													i === form.formation.length - 1 &&
+													form.formation.length - 1
 												"
 												small
 												color="error"
@@ -437,7 +408,7 @@
 												depressed
 												@click="
 													() =>
-														(formation = formation.filter(
+														(form.formation = form.formation.filter(
 															(el, index) => index !== i
 														))
 												"
@@ -498,7 +469,7 @@
 											</div>
 										</v-col>
 									</v-row>
-									<v-row v-for="(item, i) in experience" :key="i">
+									<v-row v-for="(item, i) in form.experience" :key="i">
 										<v-col cols="3" md="3">
 											<v-text-field
 												filled
@@ -506,7 +477,7 @@
 												dense
 												type="text"
 												:value="item.title"
-												@input="e => (experience[i].title = e)"
+												@input="e => (form.experience[i].title = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="3">
@@ -516,7 +487,7 @@
 												dense
 												type="text"
 												:value="item.place"
-												@input="e => (experience[i].place = e)"
+												@input="e => (form.experience[i].place = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="2">
@@ -526,7 +497,7 @@
 												dense
 												type="text"
 												:value="item.start"
-												@input="e => (experience[i].start = e)"
+												@input="e => (form.experience[i].start = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="3" md="2">
@@ -536,12 +507,12 @@
 												dense
 												type="text"
 												:value="item.end"
-												@input="e => (experience[i].end = e)"
+												@input="e => (form.experience[i].end = e)"
 											></v-text-field>
 										</v-col>
 										<v-col cols="12" md="2" class="text-right text-sm-left">
 											<v-btn
-												v-if="i === experience.length - 1"
+												v-if="i === form.experience.length - 1"
 												small
 												color="primary"
 												fab
@@ -552,8 +523,8 @@
 											</v-btn>
 											<v-btn
 												v-if="
-													i === experience.length - 1 &&
-													experience.length - 1
+													i === form.experience.length - 1 &&
+													form.experience.length - 1
 												"
 												small
 												color="error"
@@ -561,7 +532,7 @@
 												depressed
 												@click="
 													() =>
-														(experience = experience.filter(
+														(form.experience = form.experience.filter(
 															(el, index) => index !== i
 														))
 												"
@@ -576,7 +547,7 @@
 										Especialidades
 									</div>
 									<v-select
-										v-model="specialtiesSelected"
+										v-model="form.specialties"
 										:loading="!specialties.length"
 										filled
 										outlined
@@ -592,7 +563,13 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary" @click="step = 3">
+								<v-btn
+									:loading="loadingStep"
+									class="mx-2"
+									rounded
+									color="primary"
+									@click="saveStep(3)"
+								>
 									Siguiente
 								</v-btn>
 							</div>
@@ -619,6 +596,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.yearsExpPsychologist"
 											filled
 											outlined
 											dense
@@ -633,6 +611,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.yearsExpVideocalls"
 											filled
 											outlined
 											dense
@@ -646,6 +625,7 @@
 									</div>
 									<div>
 										<v-text-field
+											v-model="form.avgPatients"
 											filled
 											outlined
 											dense
@@ -658,12 +638,15 @@
 										¿Es la atención clínica su actividad exclusiva?
 									</div>
 									<div>
-										<v-radio-group v-model="exclusiveActivity" row>
+										<v-radio-group v-model="form.isExclusiveActivity" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -674,12 +657,15 @@
 										profesional de la psicología?
 									</div>
 									<div>
-										<v-radio-group row>
+										<v-radio-group v-model="form.isUnderSupervision" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -689,12 +675,15 @@
 										¿Supervisa actualmente a otros psicólogos?
 									</div>
 									<div>
-										<v-radio-group row>
+										<v-radio-group v-model="form.isSupervisor" row>
 											<v-radio
-												v-for="n in ['Si', 'No']"
-												:key="n"
-												:label="n"
-												:value="n"
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
 											></v-radio>
 										</v-radio-group>
 									</div>
@@ -705,10 +694,41 @@
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
 									Atras
 								</v-btn>
-								<v-btn class="mx-2" rounded color="primary">
-									Enviar tu postulación
+								<v-btn
+									:loading="loadingStep"
+									class="mx-2"
+									rounded
+									color="primary"
+									@click="saveStep(4)"
+								>
+									Finalizar postulación
 								</v-btn>
 							</div>
+						</v-stepper-content>
+
+						<v-stepper-content step="4">
+							<v-row>
+								<v-col>
+									<h1>Listo</h1>
+									<h2>
+										nuestro equipo te contactara via email cuando estes aprobado
+									</h2>
+									<div class="mx-2">
+										<v-btn
+											text
+											class="mx-2"
+											rounded
+											color="primary"
+											@click="step = 3"
+										>
+											Atras
+										</v-btn>
+										<v-btn text color="primary" to="/para-especialistas">
+											Ir pagaina de inicio
+										</v-btn>
+									</div>
+								</v-col>
+							</v-row>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -722,34 +742,17 @@ import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+	name: 'Postulacion',
 	layout: 'simple',
+	middleware: ['auth'],
 	data() {
 		return {
-			form: {
-				username: '',
-				phone: '',
-				timeZone: 'America/Santiago',
-				gender: '',
-				languages: ['spanish'],
-				birthDate: '',
-				region: '',
-				comuna: '',
-				personalDescription: '',
-				linkedin: '',
-				instagram: '',
-			},
-			experience: [{ title: '', place: '', start: '', end: '' }],
-			formation: [{ formationType: '', description: '', start: '', end: '' }],
-			professionalDescription: '',
 			activePicker: null,
 			bmenu: false,
-			yearsWorked: '',
-			exclusiveActivity: null,
 			zone: '',
 			step: 1,
 			regiones: [],
 			comunas: [],
-			specialtiesSelected: [],
 			comunasRegiones: [],
 			timezone: [],
 			loadingStep: false,
@@ -766,6 +769,29 @@ export default {
 				value => !!value || 'Este campo es requerido.',
 			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
+			form: {
+				username: '',
+				timeZone: 'America/Santiago',
+				gender: '',
+				languages: ['spanish'],
+				birthDate: '',
+				region: '',
+				comuna: '',
+				personalDescription: '',
+				linkedin: '',
+				instagram: '',
+				experience: [{ title: '', place: '', start: '', end: '' }],
+				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				professionalDescription: '',
+				specialties: [],
+				yearsExpPsychologist: '',
+				yearsExpVideocalls: '',
+				avgPatients: '',
+				isExclusiveActivity: false,
+				isUnderSupervision: false,
+				isSupervisor: false,
+			},
+			recruitment: null,
 		};
 	},
 	computed: {
@@ -787,50 +813,76 @@ export default {
 		this.timezone = data;
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
-		this.getAppointments();
+		await this.getAppointments();
+		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
 	},
 	methods: {
-		async setStepTwo() {
+		async saveStep(step) {
 			this.loadingStep = true;
-			if (
-				this.form.username &&
-				this.form.phone &&
-				this.form.timeZone &&
-				this.form.gender &&
-				this.form.languages.length &&
-				this.form.birthDate &&
-				this.form.region &&
-				this.form.comuna &&
-				this.form.personalDescription &&
-				this.form.personalDescription.length <= 300 &&
-				this.form.personalDescription.length >= 100
-			) {
-				const available = await this.checkUsername(this.form.username);
-				if (available && this.form.username) {
+			if (this.validationStep(step)) {
+				if (this.form && this.form._id) {
+					// actualizamos postulacion
+					const { data } = await this.$axios('/recruitment/update', {
+						method: 'put',
+						data: this.form,
+					});
+					this.form = data.recruited;
+				} else {
+					// creamos postulacion
 					const { data } = await this.$axios('/recruitment/register', {
 						method: 'post',
 						data: this.form,
 					});
 					this.form = data.recruited;
-					this.step = 2;
-				} else alert('Username no disponible, por favor cambie');
+				}
+				this.step = step;
 			} else {
-				alert('Faltan campos por llenar');
+				alert('Por favor complete el formulario');
 			}
 			this.loadingStep = false;
+		},
+		// step el el paso siguiente por lo tanto restamos uno para validar ese step antes pasar al siguiente
+		validationStep(step) {
+			// validamos el step 1
+			if (step - 1 === 1) {
+				return (
+					this.form.timeZone &&
+					this.form.gender &&
+					this.form.languages.length &&
+					this.form.birthDate &&
+					this.form.region &&
+					this.form.comuna &&
+					this.form.personalDescription &&
+					this.form.personalDescription.length <= 300 &&
+					this.form.personalDescription.length >= 100
+				);
+			}
+			// validamos el step 2
+			else if (step - 1 === 2) {
+				return (
+					this.form.professionalDescription &&
+					this.form.formation.length &&
+					this.form.experience.length &&
+					this.form.specialties.length
+				);
+			}
+			// Final del formulario, validamos step 3
+			else if (step - 1 === 3) {
+				return true;
+			}
 		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		newExperience() {
-			this.experience.push({ title: '', place: '', start: '', end: '' });
+			this.form.experience.push({ title: '', place: '', start: '', end: '' });
 		},
 		newFormation() {
-			this.formation.push({ formationType: '', description: '', start: '', end: '' });
+			this.form.formation.push({ formationType: '', description: '', start: '', end: '' });
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			checkUsername: 'Psychologist/checkUsername',
 		}),
 	},
 };
