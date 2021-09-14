@@ -496,15 +496,11 @@ const updatePaymentMethod = async (user, payload) => {
 
 const updatePsychologist = async (user, profile) => {
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
-	const updated = await Psychologist.findByIdAndUpdate(
-		user.psychologist,
-		profile,
-		{
-			new: true,
-			runValidators: true,
-			context: 'query',
-		}
-	);
+	const updated = await Psychologist.findByIdAndUpdate(profile._id, profile, {
+		new: true,
+		runValidators: true,
+		context: 'query',
+	});
 
 	logInfo(user.email, 'actualizo su perfil de psicologo');
 	return okResponse('Actualizado exitosamente', { psychologist: updated });

@@ -520,6 +520,9 @@
 					</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
+				<div class="text-center warning--text font-weight-bold pb-10">
+					Si hiciste algun cambio, recuerda actualizar antes de aprobar
+				</div>
 			</v-card>
 		</v-dialog>
 	</v-container>

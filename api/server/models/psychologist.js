@@ -183,6 +183,10 @@ let psychologist = new Schema({
 	},
 	ratings: [rating],
 	sessions: [session],
+	timeZone: {
+		type: String,
+		default: 'America/Santiago',
+	},
 });
 
 //psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });

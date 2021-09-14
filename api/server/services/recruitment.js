@@ -79,31 +79,23 @@ const recruitmentService = {
 				'Este postulante ya está aprobado y no puede ser aprobado de nuevo'
 			);
 		}
-		const approvedProfile = await Recruitment.findOneAndUpdate(
+		let payload = await Recruitment.findOneAndUpdate(
 			{ email },
 			{ isVerified: true },
 			{ new: true }
 		);
-		const payload = {
-			...approvedProfile,
-			avatar: approvedProfile.avatar,
-			code: approvedProfile.code,
-			email: approvedProfile.email,
-			linkedin: approvedProfile.linkedin,
-			instagram: approvedProfile.instagram,
-			username: approvedProfile.username,
-			name: approvedProfile.name,
-			lastName: approvedProfile.lastName,
-			rut: approvedProfile.rut,
-			gender: approvedProfile.gender,
-			sessionType: approvedProfile.sessionType,
-		};
+
+		// Formateamos el payload para que nos deje editar
+		payload = JSON.stringify(payload);
+		payload = JSON.parse(payload);
+
+		delete payload._id;
+		delete payload.__v;
+
 		const newProfile = await psychologist.create(payload);
+
 		logInfo(
-			actionInfo(
-				approvedProfile.email,
-				' fue aprobado y tiene un nuevo perfil'
-			)
+			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')
 		);
 		return okResponse('Aprobado exitosamente', { newProfile });
 	},
