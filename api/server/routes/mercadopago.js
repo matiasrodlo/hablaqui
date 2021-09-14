@@ -19,4 +19,14 @@ mercadopagoRouter.get(
 	mercadopagoController.successPay
 );
 
+mercadopagoRouter.post(
+	'/mercadopago/psychologist-preference',
+	mercadopagoController.createPsychologistPreference
+);
+
+mercadopagoRouter.get(
+	'/mercadopago/psychologist-pay/:psychologistId/:price',
+	mercadopagoController.psychologistPay
+);
+
 export default mercadopagoRouter;
