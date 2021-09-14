@@ -2,6 +2,7 @@ import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
+import psychologist from '../models/psychologist';
 
 const recruitmentService = {
 	/**
@@ -59,6 +60,49 @@ const recruitmentService = {
 	async getAll() {
 		const recruitment = await Recruitment.find({ isVerified: false });
 		return okResponse('Postulantes obtenidos', { recruitment });
+	},
+	/**
+	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
+	 * @returns The response code, message and the new Psychologist profile created succesfully
+	 **/
+	async approve(email) {
+		if (!(await Recruitment.exists({ email }))) {
+			return conflictResponse(
+				'Este postulante no existe y el perfil no puede ser aprobado'
+			);
+		}
+		if (await Recruitment.exists({ email, isVerified: true })) {
+			return conflictResponse(
+				'Este postulante ya está aprobado y no puede ser aprobado de nuevo'
+			);
+		}
+		const approvedProfile = await Recruitment.findOneAndUpdate(
+			{ email },
+			{ isVerified: true },
+			{ new: true }
+		);
+		const payload = {
+			...approvedProfile,
+			avatar: approvedProfile.avatar,
+			code: approvedProfile.code,
+			email: approvedProfile.email,
+			linkedin: approvedProfile.linkedin,
+			instagram: approvedProfile.instagram,
+			username: approvedProfile.username,
+			name: approvedProfile.name,
+			lastName: approvedProfile.lastName,
+			rut: approvedProfile.rut,
+			gender: approvedProfile.gender,
+			sessionType: approvedProfile.sessionType,
+		};
+		const newProfile = await psychologist.create(payload);
+		logInfo(
+			actionInfo(
+				approvedProfile.email,
+				' fue aprobado y tiene un nuevo perfil'
+			)
+		);
+		return okResponse('Aprobado exitosamente', { newProfile });
 	},
 };
 

@@ -47,4 +47,16 @@ recruitmentRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.getAll
 );
+/**
+ * @description: Route to approve a Recruitment profile and to create a new psychologist profile
+ * @route: /api/v1/recruitment/approve/:email
+ * @method: POST
+ * @access: public (authenticated)
+ * @param: email
+ **/
+recruitmentRouter.post(
+	'/recruitment/approve/:email',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.approve
+);
 export default recruitmentRouter;
