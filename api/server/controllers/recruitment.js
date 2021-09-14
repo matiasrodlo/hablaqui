@@ -73,8 +73,11 @@ const recruitmentController = {
 	 */
 	async approve(req, res) {
 		try {
+			const { user } = req;
+			const { email } = req.params;
 			const { data, code } = await recruitmentService.approve(
-				req.params.email
+				user,
+				email
 			);
 			restResponse(data, code, res);
 		} catch (e) {

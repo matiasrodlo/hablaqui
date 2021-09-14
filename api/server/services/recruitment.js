@@ -65,7 +65,10 @@ const recruitmentService = {
 	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
 	 * @returns The response code, message and the new Psychologist profile created succesfully
 	 **/
-	async approve(email) {
+	async approve(user, email) {
+		if (user.role !== 'superuser')
+			return conflictResponse('No tienes los permisos suficientes');
+
 		if (!(await Recruitment.exists({ email }))) {
 			return conflictResponse(
 				'Este postulante no existe y el perfil no puede ser aprobado'
