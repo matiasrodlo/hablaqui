@@ -761,16 +761,8 @@ export default {
 				v => v.length <= 300 || 'Maximo 300 caracteres',
 				value => !!value || 'Este campo es requerido.',
 			],
-			rulesUsername: [
-				value => {
-					const re = /^[A-Za-z]+(?:[_-][A-Za-z]+)*$/;
-					return re.test(value) || 'Inserte un username valido';
-				},
-				value => !!value || 'Este campo es requerido.',
-			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
-				username: '',
 				timeZone: 'America/Santiago',
 				gender: '',
 				languages: ['spanish'],

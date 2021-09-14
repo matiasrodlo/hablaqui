@@ -18,7 +18,7 @@ const recruitmentController = {
 			);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error registrando el psicologo');
+			errorCallback(e, res, 'Error registrando el postulado');
 		}
 	},
 	/**

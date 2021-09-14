@@ -21,9 +21,7 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
-		if (await Recruitment.exists({ username: payload.username })) {
-			return conflictResponse('Este username ya está registrado');
-		}
+
 		const recruited = await Recruitment.create(payload);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
