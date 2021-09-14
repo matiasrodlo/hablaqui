@@ -38,6 +38,34 @@
 				</v-toolbar>
 				<v-card-text class="mt-3">
 					<v-row>
+						<v-col cols="12">Username</v-col>
+						<!-- username -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							username
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								class="px-2"
+								:value="selected.username"
+								type="text"
+								:disabled="selected.isPsy"
+								@input="
+									e => {
+										selected.username = e.target.value;
+										available = false;
+									}
+								"
+							/>
+						</v-col>
+						<v-col v-if="!selected.isPsy" cols="4" class="py-2">
+							<v-btn
+								:color="available ? 'success' : 'warning'"
+								small
+								@click="checkusername"
+							>
+								Verificar
+							</v-btn>
+						</v-col>
 						<v-col cols="12">Datos basicos</v-col>
 						<!-- email -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Email</v-col>
@@ -524,7 +552,8 @@
 					v-if="!selected.isPsy"
 					class="text-center warning--text font-weight-bold pb-10"
 				>
-					Si hiciste algun cambio, recuerda actualizar antes de aprobar
+					Si hiciste algun cambio, recuerda actualizar antes de aprobar y verificar el
+					username
 				</div>
 			</v-card>
 		</v-dialog>
@@ -556,6 +585,7 @@ export default {
 			loadingApprove: false,
 			loadingDelete: false,
 			loading: true,
+			available: false,
 		};
 	},
 	computed: {
@@ -584,7 +614,13 @@ export default {
 	},
 	methods: {
 		async approve() {
-			if (!confirm('Estas seguro de aprobar este postulado?')) return;
+			await this.checkusername();
+			if (!this.available) {
+				this.loadingApprove = false;
+				return alert('Username no disponible');
+			}
+			if (!confirm('Estas seguro de aprobar este postulado?'))
+				return (this.loadingApprove = false);
 			this.loadingApprove = true;
 			if (this.selected.isPsy) return;
 			await this.$axios(`/recruitment/approve/${this.selected.email}`, {
@@ -604,6 +640,11 @@ export default {
 				const { psychologists } = await this.$axios.$get('/psychologists/all');
 				this.psychologists = psychologists;
 			} else {
+				await this.checkusername();
+				if (!this.available) {
+					this.loadingSubmit = false;
+					return alert('Username no disponible');
+				}
 				await this.$axios('/recruitment/update', {
 					method: 'put',
 					data: this.selected,
@@ -621,6 +662,9 @@ export default {
 				this.dialog = false;
 			}
 		},
+		async checkusername() {
+			this.available = await this.checkUsername(this.selected.username);
+		},
 		setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
 			this.dialog = true;
@@ -637,9 +681,10 @@ export default {
 			});
 		},
 		...mapActions({
+			checkUsername: 'Psychologist/checkUsername',
+			deletePsychologist: 'Psychologist/deletePsychologist',
 			getAppointments: 'Appointments/getAppointments',
 			updatePsychologist: 'Psychologist/updatePsychologist',
-			deletePsychologist: 'Psychologist/deletePsychologist',
 		}),
 	},
 };
