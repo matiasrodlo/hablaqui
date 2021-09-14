@@ -56,7 +56,7 @@ recruitmentRouter.get(
  **/
 recruitmentRouter.post(
 	'/recruitment/approve/:email',
-	//[passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.approve
 );
 export default recruitmentRouter;
