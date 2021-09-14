@@ -500,7 +500,15 @@
 					<v-btn :loading="loadingSubmit" text color="primary" @click="submit">
 						Actualizar
 					</v-btn>
-					<v-btn v-if="!selected.isPsy" text color="primary">Aprobar</v-btn>
+					<v-btn
+						v-if="!selected.isPsy"
+						:loading="loadingApprove"
+						text
+						color="primary"
+						@click="approve"
+					>
+						Aprobar
+					</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
 			</v-card>
@@ -530,6 +538,7 @@ export default {
 			comunas: [],
 			timezone: [],
 			loadingSubmit: false,
+			loadingApprove: false,
 			loading: true,
 		};
 	},
@@ -558,6 +567,18 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		async approve() {
+			this.loadingApprove = true;
+			if (this.selected.isPsy) return;
+			await this.$axios(`/recruitment/approve/${this.selected.email}`, {
+				method: 'post',
+			});
+			const { recruitment } = await this.$axios.$get(`/recruitment`);
+			this.items = recruitment;
+			const { psychologists } = await this.$axios.$get('/psychologists/all');
+			this.psychologists = psychologists;
+			this.loadingApprove = false;
+		},
 		async submit() {
 			this.loadingSubmit = true;
 			if (this.selected.isPsy) {
