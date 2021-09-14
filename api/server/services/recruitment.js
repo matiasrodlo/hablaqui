@@ -28,12 +28,12 @@ const recruitmentService = {
 		return okResponse('Registrado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This controller is used to update a recruitment profile
+	 * @description - This service is used to update a recruitment profile
 	 * @param {Object} body - The body of the request with the new values
 	 * @returns The response code, message and the updated recruitment profile (if any)
 	 */
 	async update(body) {
-		if (!(await Recruitment.exists({ rut: body.rut }))) {
+		if (!(await Recruitment.exists({ email: body.email }))) {
 			return conflictResponse('Este postulante no existe');
 		}
 		const recruited = await Recruitment.findOneAndUpdate(
@@ -45,7 +45,7 @@ const recruitmentService = {
 		return okResponse('Actualizado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This controller is used to get a recruitment profile by mail
+	 * @description - This service is used to get a recruitment profile by mail
 	 * @param {Object} mail - The mail of the recruitment profile
 	 * @returns The response code, message and the recruitment profile obtained (if exists)
 	 */

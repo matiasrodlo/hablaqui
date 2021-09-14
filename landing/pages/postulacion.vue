@@ -99,7 +99,11 @@
 									<v-select
 										id="genre"
 										v-model="form.gender"
-										:items="['Hombre', 'Mujer', 'Transgénero']"
+										:items="[
+											{ text: 'Hombre', value: 'male' },
+											{ text: 'Mujer', value: 'female' },
+											{ text: 'Transgénero', value: 'transgender' },
+										]"
 										filled
 										outlined
 										hide-details
