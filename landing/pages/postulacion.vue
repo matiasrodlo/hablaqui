@@ -19,7 +19,7 @@
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
-							Hablanos sobre ti
+							Háblanos sobre ti
 						</v-stepper-step>
 
 						<v-divider></v-divider>
@@ -556,16 +556,34 @@
 										filled
 										outlined
 										dense
-										chips
 										multiple
+										hide-details
 										type="text"
+										class="pb-0"
 										:items="specialties"
-									></v-select>
+									>
+										<template #selection>
+											<div></div>
+										</template>
+									</v-select>
+								</v-col>
+								<v-col cols="12" class="pt-0">
+									<v-chip
+										v-for="(item, i) in form.specialties"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
 								</v-col>
 							</v-row>
-							<div class="d-flex justify-end mt-4">
+							<div class="d-flex justify-end mt-8">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
-									Atras
+									Atrás
 								</v-btn>
 								<v-btn
 									:loading="loadingStep"
@@ -610,7 +628,7 @@
 								</v-col>
 								<v-col cols="12">
 									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cuántos años ha visto pacientes en línea a través de
+										¿Cuántos años has visto pacientes en línea a través de
 										consultas por video?
 									</div>
 									<div>
@@ -696,7 +714,7 @@
 
 							<div class="d-flex justify-end mt-4">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
-									Atras
+									Atrás
 								</v-btn>
 								<v-btn
 									:loading="loadingStep"
@@ -711,28 +729,41 @@
 						</v-stepper-content>
 
 						<v-stepper-content step="4">
-							<v-row>
-								<v-col>
-									<h1>Listo</h1>
-									<h2>
-										nuestro equipo te contactara via email cuando estes aprobado
-									</h2>
-									<div class="mx-2">
-										<v-btn
-											text
-											class="mx-2"
-											rounded
-											color="primary"
-											@click="step = 3"
+							<v-container fluid style="height: 70vh; max-width: 1200px">
+								<v-row
+									justify="center"
+									align="center"
+									style="height: 100%; overflow-y: auto"
+								>
+									<v-col cols="12" class="text-center" style="color: #5c5c5c">
+										<div class="headline font-weight-bold">
+											¡Ya has terminado!
+										</div>
+										<div
+											class="my-6 text--secondary body-1 mx-auto"
+											style="max-width: 800px"
 										>
-											Atras
-										</v-btn>
-										<v-btn text color="primary" to="/para-especialistas">
-											Ir pagaina de inicio
-										</v-btn>
-									</div>
-								</v-col>
-							</v-row>
+											Hemos recibido tu registro y verificaremos tu profesión
+											en la superintendencia de salud. Será un honor para
+											nosotros contar contigo en nuestro equipo de psicólogos,
+											te contactaremos pronto.
+										</div>
+										<div>
+											<v-btn
+												class="mx-2"
+												rounded
+												color="primary"
+												@click="step = 3"
+											>
+												Atrás
+											</v-btn>
+											<v-btn class="mx-2" color="primary" rounded to="/">
+												Ir a Hablaquí
+											</v-btn>
+										</div>
+									</v-col>
+								</v-row>
+							</v-container>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -867,6 +898,9 @@ export default {
 			else if (step - 1 === 3) {
 				return true;
 			}
+		},
+		rmSpecialties(index) {
+			this.form.specialties.splice(index, 1);
 		},
 		save(date) {
 			this.$refs.menu.save(date);
