@@ -119,6 +119,31 @@ const getFormattedSessions = async idPsychologist => {
 };
 
 const formattedSchedule = (schedule, day, hour) => {
+	// VERSION 2
+	// let validHour = false;
+	// const week = [
+	// 	'monday',
+	// 	'tuesday',
+	// 	'wednesday',
+	// 	'thursday',
+	// 	'saturday',
+	// 	'sunday',
+	// ];
+	// day = moment(day).format('dddd');
+	// week.forEach(weekDay => {
+	// 	if (day.toLowerCase() === weekDay)
+	// 		if (Array.isArray(schedule[weekDay]))
+	// 			validHour = moment(hour, 'HH:mm').isBetween(
+	// 				moment(schedule[weekDay][0], 'HH:mm'),
+	// 				moment(schedule[weekDay][1], 'HH:mm'),
+	// 				undefined,
+	// 				[]
+	// 			);
+	// 		else if (schedule[weekDay] === 'busy') validHour = false;
+	// });
+
+	// return validHour;
+
 	if (moment(day).format('dddd') === 'lunes') {
 		if (Array.isArray(schedule.monday))
 			return moment(hour, 'HH:mm').isBetween(
