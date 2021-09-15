@@ -48,7 +48,7 @@
 										¡Es un placer conocerte!
 									</div>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
@@ -92,7 +92,7 @@
 										></v-date-picker>
 									</v-menu>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Género
 									</div>
@@ -112,7 +112,7 @@
 										dense
 									></v-select>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Región
 									</div>
@@ -128,7 +128,7 @@
 										:rules="rulesTextField"
 									></v-select>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Comuna
 									</div>
@@ -217,7 +217,7 @@
 										counter
 									></v-textarea>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Instagram
 									</div>
@@ -230,7 +230,7 @@
 										placeholder="Inserte link (opcional)"
 									></v-text-field>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Linkedin
 									</div>
@@ -315,7 +315,7 @@
 												Ubicación / Curso / Descripción
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -327,7 +327,7 @@
 												Inicio
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -341,7 +341,7 @@
 										</v-col>
 									</v-row>
 									<v-row v-for="(item, i) in form.formation" :key="i">
-										<v-col cols="12" md="3">
+										<v-col cols="3" md="3">
 											<v-select
 												filled
 												outlined
@@ -360,7 +360,7 @@
 												@change="e => (form.formation[i].formationType = e)"
 											></v-select>
 										</v-col>
-										<v-col cols="12" md="3">
+										<v-col cols="3" md="3">
 											<v-text-field
 												filled
 												outlined
@@ -370,7 +370,7 @@
 												@input="e => (form.formation[i].description = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2">
+										<v-col cols="3" md="2">
 											<v-text-field
 												filled
 												outlined
@@ -380,7 +380,7 @@
 												@input="e => (form.formation[i].start = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2">
+										<v-col cols="3" md="2">
 											<v-text-field
 												filled
 												outlined
@@ -390,7 +390,7 @@
 												@input="e => (form.formation[i].end = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2" class="text-center text-md-left">
+										<v-col cols="12" md="2" class="text-right text-md-left">
 											<v-btn
 												v-if="i === form.formation.length - 1"
 												small
@@ -448,7 +448,7 @@
 												Lugar / Descripción
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -460,7 +460,7 @@
 												Inicio
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -514,7 +514,7 @@
 												@input="e => (form.experience[i].end = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2" class="text-right text-sm-left">
+										<v-col cols="12" md="2" class="text-right text-md-left">
 											<v-btn
 												v-if="i === form.experience.length - 1"
 												small
@@ -546,7 +546,7 @@
 										</v-col>
 									</v-row>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Especialidades
 									</div>
