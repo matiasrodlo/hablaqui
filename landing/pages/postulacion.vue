@@ -19,7 +19,7 @@
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
-							Hablanos sobre ti
+							Háblanos sobre ti
 						</v-stepper-step>
 
 						<v-divider></v-divider>
@@ -48,7 +48,7 @@
 										¡Es un placer conocerte!
 									</div>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
@@ -92,14 +92,18 @@
 										></v-date-picker>
 									</v-menu>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Género
 									</div>
 									<v-select
 										id="genre"
 										v-model="form.gender"
-										:items="['Hombre', 'Mujer', 'Transgénero']"
+										:items="[
+											{ text: 'Hombre', value: 'male' },
+											{ text: 'Mujer', value: 'female' },
+											{ text: 'Transgénero', value: 'transgender' },
+										]"
 										filled
 										outlined
 										hide-details
@@ -108,7 +112,7 @@
 										dense
 									></v-select>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Región
 									</div>
@@ -124,7 +128,7 @@
 										:rules="rulesTextField"
 									></v-select>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Comuna
 									</div>
@@ -213,7 +217,7 @@
 										counter
 									></v-textarea>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Instagram
 									</div>
@@ -226,7 +230,7 @@
 										placeholder="Inserte link (opcional)"
 									></v-text-field>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Linkedin
 									</div>
@@ -311,7 +315,7 @@
 												Ubicación / Curso / Descripción
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -323,7 +327,7 @@
 												Inicio
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -337,7 +341,7 @@
 										</v-col>
 									</v-row>
 									<v-row v-for="(item, i) in form.formation" :key="i">
-										<v-col cols="12" md="3">
+										<v-col cols="3" md="3">
 											<v-select
 												filled
 												outlined
@@ -356,7 +360,7 @@
 												@change="e => (form.formation[i].formationType = e)"
 											></v-select>
 										</v-col>
-										<v-col cols="12" md="3">
+										<v-col cols="3" md="3">
 											<v-text-field
 												filled
 												outlined
@@ -366,7 +370,7 @@
 												@input="e => (form.formation[i].description = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2">
+										<v-col cols="3" md="2">
 											<v-text-field
 												filled
 												outlined
@@ -376,7 +380,7 @@
 												@input="e => (form.formation[i].start = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2">
+										<v-col cols="3" md="2">
 											<v-text-field
 												filled
 												outlined
@@ -386,7 +390,7 @@
 												@input="e => (form.formation[i].end = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2" class="text-center text-md-left">
+										<v-col cols="12" md="2" class="text-right text-md-left">
 											<v-btn
 												v-if="i === form.formation.length - 1"
 												small
@@ -444,7 +448,7 @@
 												Lugar / Descripción
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -456,7 +460,7 @@
 												Inicio
 											</div>
 										</v-col>
-										<v-col cols="2" md="2" class="py-0">
+										<v-col cols="3" md="2" class="py-0">
 											<div
 												class="
 													primary--text
@@ -510,7 +514,7 @@
 												@input="e => (form.experience[i].end = e)"
 											></v-text-field>
 										</v-col>
-										<v-col cols="12" md="2" class="text-right text-sm-left">
+										<v-col cols="12" md="2" class="text-right text-md-left">
 											<v-btn
 												v-if="i === form.experience.length - 1"
 												small
@@ -542,7 +546,7 @@
 										</v-col>
 									</v-row>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Especialidades
 									</div>
@@ -552,16 +556,34 @@
 										filled
 										outlined
 										dense
-										chips
 										multiple
+										hide-details
 										type="text"
+										class="pb-0"
 										:items="specialties"
-									></v-select>
+									>
+										<template #selection>
+											<div></div>
+										</template>
+									</v-select>
+								</v-col>
+								<v-col cols="12" class="pt-0">
+									<v-chip
+										v-for="(item, i) in form.specialties"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
 								</v-col>
 							</v-row>
-							<div class="d-flex justify-end mt-4">
+							<div class="d-flex justify-end mt-8">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 1">
-									Atras
+									Atrás
 								</v-btn>
 								<v-btn
 									:loading="loadingStep"
@@ -606,7 +628,7 @@
 								</v-col>
 								<v-col cols="12">
 									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cuántos años ha visto pacientes en línea a través de
+										¿Cuántos años has visto pacientes en línea a través de
 										consultas por video?
 									</div>
 									<div>
@@ -692,7 +714,7 @@
 
 							<div class="d-flex justify-end mt-4">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
-									Atras
+									Atrás
 								</v-btn>
 								<v-btn
 									:loading="loadingStep"
@@ -707,28 +729,41 @@
 						</v-stepper-content>
 
 						<v-stepper-content step="4">
-							<v-row>
-								<v-col>
-									<h1>Listo</h1>
-									<h2>
-										nuestro equipo te contactara via email cuando estes aprobado
-									</h2>
-									<div class="mx-2">
-										<v-btn
-											text
-											class="mx-2"
-											rounded
-											color="primary"
-											@click="step = 3"
+							<v-container fluid style="height: 70vh; max-width: 1200px">
+								<v-row
+									justify="center"
+									align="center"
+									style="height: 100%; overflow-y: auto"
+								>
+									<v-col cols="12" class="text-center" style="color: #5c5c5c">
+										<div class="headline font-weight-bold">
+											¡Ya has terminado!
+										</div>
+										<div
+											class="my-6 text--secondary body-1 mx-auto"
+											style="max-width: 800px"
 										>
-											Atras
-										</v-btn>
-										<v-btn text color="primary" to="/para-especialistas">
-											Ir pagaina de inicio
-										</v-btn>
-									</div>
-								</v-col>
-							</v-row>
+											Hemos recibido tu registro y verificaremos tu profesión
+											en la superintendencia de salud. Será un honor para
+											nosotros contar contigo en nuestro equipo de psicólogos,
+											te contactaremos pronto.
+										</div>
+										<div>
+											<v-btn
+												class="mx-2"
+												rounded
+												color="primary"
+												@click="step = 3"
+											>
+												Atrás
+											</v-btn>
+											<v-btn class="mx-2" color="primary" rounded to="/">
+												Ir a Hablaquí
+											</v-btn>
+										</div>
+									</v-col>
+								</v-row>
+							</v-container>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -761,16 +796,8 @@ export default {
 				v => v.length <= 300 || 'Maximo 300 caracteres',
 				value => !!value || 'Este campo es requerido.',
 			],
-			rulesUsername: [
-				value => {
-					const re = /^[A-Za-z]+(?:[_-][A-Za-z]+)*$/;
-					return re.test(value) || 'Inserte un username valido';
-				},
-				value => !!value || 'Este campo es requerido.',
-			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
-				username: '',
 				timeZone: 'America/Santiago',
 				gender: '',
 				languages: ['spanish'],
@@ -871,6 +898,9 @@ export default {
 			else if (step - 1 === 3) {
 				return true;
 			}
+		},
+		rmSpecialties(index) {
+			this.form.specialties.splice(index, 1);
 		},
 		save(date) {
 			this.$refs.menu.save(date);

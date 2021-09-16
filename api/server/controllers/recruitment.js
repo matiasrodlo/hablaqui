@@ -18,7 +18,7 @@ const recruitmentController = {
 			);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error registrando el psicologo');
+			errorCallback(e, res, 'Error registrando el postulado');
 		}
 	},
 	/**
@@ -63,6 +63,25 @@ const recruitmentController = {
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error obteniendo el postulante');
+		}
+	},
+	/**
+	 * @description - This function is used to approve a specific Recruitment profile by mail
+	 * @param {object} req - The request object (Recruitment email of the profile)
+	 * @param res - The response object (Response code and the new Psychologist profile)
+	 * @returns {object} - The response object
+	 */
+	async approve(req, res) {
+		try {
+			const { user } = req;
+			const { email } = req.params;
+			const { data, code } = await recruitmentService.approve(
+				user,
+				email
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el postulante');
 		}
 	},
 };

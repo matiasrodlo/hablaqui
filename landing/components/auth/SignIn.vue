@@ -90,6 +90,8 @@ export default {
 							!response.data.user.psychologist
 						) {
 							this.$router.push({ name: 'postulacion' });
+						} else if (response.data.user.role === 'superuser') {
+							this.$router.push({ name: 'dashboard-panel' });
 						} else if (!this.isDialog) {
 							if (this.$route.query.from === 'psy')
 								this.$router.push({ name: 'evaluacion' });

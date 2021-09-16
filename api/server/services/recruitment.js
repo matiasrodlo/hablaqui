@@ -2,6 +2,7 @@ import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
+import psychologist from '../models/psychologist';
 
 const recruitmentService = {
 	/**
@@ -21,20 +22,18 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
-		if (await Recruitment.exists({ username: payload.username })) {
-			return conflictResponse('Este username ya está registrado');
-		}
+
 		const recruited = await Recruitment.create(payload);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This controller is used to update a recruitment profile
+	 * @description - This service is used to update a recruitment profile
 	 * @param {Object} body - The body of the request with the new values
 	 * @returns The response code, message and the updated recruitment profile (if any)
 	 */
 	async update(body) {
-		if (!(await Recruitment.exists({ rut: body.rut }))) {
+		if (!(await Recruitment.exists({ email: body.email }))) {
 			return conflictResponse('Este postulante no existe');
 		}
 		const recruited = await Recruitment.findOneAndUpdate(
@@ -46,7 +45,7 @@ const recruitmentService = {
 		return okResponse('Actualizado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This controller is used to get a recruitment profile by mail
+	 * @description - This service is used to get a recruitment profile by mail
 	 * @param {Object} mail - The mail of the recruitment profile
 	 * @returns The response code, message and the recruitment profile obtained (if exists)
 	 */
@@ -61,6 +60,44 @@ const recruitmentService = {
 	async getAll() {
 		const recruitment = await Recruitment.find({ isVerified: false });
 		return okResponse('Postulantes obtenidos', { recruitment });
+	},
+	/**
+	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
+	 * @returns The response code, message and the new Psychologist profile created succesfully
+	 **/
+	async approve(user, email) {
+		if (user.role !== 'superuser')
+			return conflictResponse('No tienes los permisos suficientes');
+
+		if (!(await Recruitment.exists({ email }))) {
+			return conflictResponse(
+				'Este postulante no existe y el perfil no puede ser aprobado'
+			);
+		}
+		if (await Recruitment.exists({ email, isVerified: true })) {
+			return conflictResponse(
+				'Este postulante ya está aprobado y no puede ser aprobado de nuevo'
+			);
+		}
+		let payload = await Recruitment.findOneAndUpdate(
+			{ email },
+			{ isVerified: true },
+			{ new: true }
+		);
+
+		// Formateamos el payload para que nos deje editar
+		payload = JSON.stringify(payload);
+		payload = JSON.parse(payload);
+
+		delete payload._id;
+		delete payload.__v;
+
+		const newProfile = await psychologist.create(payload);
+
+		logInfo(
+			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')
+		);
+		return okResponse('Aprobado exitosamente', { newProfile });
 	},
 };
 

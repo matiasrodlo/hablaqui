@@ -49,6 +49,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async deletePsychologist({ commit }, id) {
+		try {
+			const { psychologists } = await this.$axios(`/psychologist/${id}`, {
+				method: 'delete',
+			});
+			commit('setPsychologists', psychologists);
+			return psychologists;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async updatePaymentMethod({ commit }, payload) {
 		try {
 			const { data } = await this.$axios(`/psychologist/update-payment-method`, {
@@ -79,17 +90,6 @@ export default {
 				data: { profile },
 			});
 			snackBarSuccess('Actualizado exitosamente')(commit);
-			return data.psychologist;
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
-	async updatePrices({ commit }, newPrice) {
-		try {
-			const { data } = await this.$axios('/psychologist/update-prices', {
-				method: 'POST',
-				data: { newPrice },
-			});
 			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);

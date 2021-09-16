@@ -48,6 +48,12 @@ let defaultPreferences = {
 	corporativeSessions: true,
 };
 
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
+};
+
 let formationSchema = new Schema({
 	formationType: {
 		type: String,
@@ -167,12 +173,20 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultPreferences,
 	},
+	sessionPrices: {
+		type: Object,
+		default: defaultPrices,
+	},
 	paymentMethod: {
 		type: Object,
 		required: false,
 	},
 	ratings: [rating],
 	sessions: [session],
+	timeZone: {
+		type: String,
+		default: 'America/Santiago',
+	},
 });
 
 //psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
