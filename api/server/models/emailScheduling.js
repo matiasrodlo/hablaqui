@@ -1,15 +1,13 @@
+import moment from 'moment';
 import { Schema, model } from 'mongoose';
 
-let emailScheduling = new Schema({
-	emailId: {
-		type: String,
-		required: true,
-	},
+let emailscheduling = new Schema({
 	mailgunId: {
 		type: String,
+		default: null,
 	},
-	scheduledTime: {
-		type: Date,
+	sessionDate: {
+		type: String,
 		required: true,
 	},
 	wasScheduled: {
@@ -21,11 +19,11 @@ let emailScheduling = new Schema({
 		enum: ['reminder-user', 'reminder-psy'],
 	},
 	queuedAt: {
-		type: Date,
-		default: Date.now,
+		type: String,
+		default: moment(),
 	},
 	scheduledAt: {
-		type: Date,
+		type: String,
 		default: null,
 	},
 	userRef: {
@@ -34,4 +32,4 @@ let emailScheduling = new Schema({
 	},
 });
 
-export default model('emailScheduling', emailScheduling);
+export default model('emailscheduling', emailscheduling);
