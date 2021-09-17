@@ -264,7 +264,7 @@
 							</select>
 						</v-col>
 					</v-row>
-					<v-row>
+					<v-row v-if="selected.isPsy">
 						<v-col cols="12">Datos Bancarios</v-col>
 						<!-- bank data -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
