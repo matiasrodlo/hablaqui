@@ -604,6 +604,19 @@ export default {
 		this.items = recruitment;
 		const { psychologists } = await this.$axios.$get('/psychologists/all');
 		this.psychologists = psychologists;
+		this.psychologists = this.psychologists.map(psychologist => {
+			const psy = psychologist;
+			if (!psychologist.experience.length)
+				psy.experience.push({ title: '', place: '', start: '', end: '' });
+			if (!psychologist.formation.length)
+				psy.formation.push({
+					formationType: '',
+					description: '',
+					start: '',
+					end: '',
+				});
+			return psy;
+		});
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
