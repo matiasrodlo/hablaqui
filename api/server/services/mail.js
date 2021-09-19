@@ -8,6 +8,10 @@ const mg = mailgun({
 });
 
 const mailService = {
+	/**
+	 * @description Send a welcome email to a new user using the mailgun API with the template 'welcome-new-user'
+	 * @param {string} user - A User object from the database, corresponding to a new client
+	 */
 	async sendWelcomeNewUser(user) {
 		const { email, name } = user;
 		const dataPayload = {
@@ -26,6 +30,10 @@ const mailService = {
 			}
 		});
 	},
+	/**
+	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
+	 * @param {string} user - A User object from the database, corresponding to the new psychologist
+	 */
 	async sendWelcomeNewPsychologist(user) {
 		const { email, name } = user;
 		const dataPayload = {
@@ -45,7 +53,7 @@ const mailService = {
 			}
 		});
 	},
-	async sendReminderUser(user, date) {
+	async sendReminderUser(user, psy, date) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.com>',
@@ -57,6 +65,8 @@ const mailService = {
 				.subtract(1, 'hour')
 				.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 			'v:first_name': name,
+			'v:psy_first_name': psy.name,
+			'v:psy_last_name': psy.lastName,
 			'v:day': moment(date)
 				.locale('es-mx')
 				.format('LL'),
@@ -65,7 +75,6 @@ const mailService = {
 				.format('LT'),
 		};
 
-		// Create a promise to send an email
 		const sendMail = new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -75,7 +84,6 @@ const mailService = {
 				}
 			});
 		});
-		// Return the promise
 		return sendMail;
 	},
 };

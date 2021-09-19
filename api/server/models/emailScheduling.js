@@ -30,6 +30,10 @@ let emailscheduling = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 	},
+	psyRef: {
+		type: Schema.Types.ObjectId,
+		ref: 'Pyschologist',
+	},
 });
 
 export default model('emailscheduling', emailscheduling);

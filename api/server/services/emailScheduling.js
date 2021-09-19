@@ -1,5 +1,6 @@
 import emailscheduling from '../models/emailscheduling';
 import User from '../models/user';
+import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
 import { logInfo } from '../config/pino';
 import moment from 'moment';
@@ -12,15 +13,16 @@ const emailSchedulingService = {
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
 				const sessionDate = emailInfo.sessionDate;
-				logInfo(`Scheduling email for ${sessionDate}`);
 				if (moment(3, 'day').isBefore(sessionDate)) {
-					logInfo('Found pending emails');
 					if (emailInfo.type == 'reminder-user') {
-						logInfo('Found pending email for a user');
 						const user = await User.findById(emailInfo.userRef);
+						const psy = await psychologist.findById(
+							emailInfo.psyRef
+						);
 						try {
 							const emailSent = await mailService.sendReminderUser(
 								user,
+								psy,
 								sessionDate
 							);
 							const updatePayload = {
