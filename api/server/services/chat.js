@@ -126,21 +126,20 @@ const readMessage = async messageId => {
 };
 
 const setUserOnline = async user => {
-	data = {
+	const data = {
 		user,
-	}
+	};
 	pusher.trigger('user-status', 'online', data, pusherCallback);
-	return okResponse('Usuario conectado', user)
-}
+	return okResponse('Usuario conectado', user);
+};
 
 const setUserOffline = async user => {
-	data = {
+	const data = {
 		user,
-	}
+	};
 	pusher.trigger('user-status', 'offline', data, pusherCallback);
-	return okResponse('Usuario desconectado', user)
-}
-
+	return okResponse('Usuario desconectado', user);
+};
 
 const chatService = {
 	startConversation,

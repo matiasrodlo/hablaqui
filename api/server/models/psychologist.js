@@ -148,9 +148,11 @@ let psychologist = new Schema({
 	formation: [formationSchema],
 	personalDescription: {
 		type: String,
+		default: '',
 	},
 	professionalDescription: {
 		type: String,
+		default: '',
 	},
 	models: {
 		type: Array,

@@ -32,7 +32,15 @@
 		<v-dialog v-model="dialog" fullscreen>
 			<v-card v-if="selected" max-width="1200px">
 				<v-toolbar flat color="primary" class="white--text">
-					{{ selected.name }} {{ selected.lastName }}
+					<nuxt-link
+						v-if="selected.isPsy"
+						style="text-decoration: none; display: block"
+						:to="{ path: `/${selected.username}` }"
+					>
+						<span class="body-2 font-weight-bold white--text">
+							{{ selected.name }} {{ selected.lastName }}
+						</span>
+					</nuxt-link>
 					<v-spacer></v-spacer>
 					<v-btn text color="white" @click="dialog = false">Cerrar</v-btn>
 				</v-toolbar>
@@ -167,11 +175,7 @@
 							<div class="d-flex align-center" style="height: 100%">Inf.personal</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<textarea
-								:value="selected.personalDescription"
-								rows="3"
-								@input="e => (selected.personalDescription = e.target.value)"
-							></textarea>
+							<textarea v-model="selected.personalDescription" rows="3"></textarea>
 						</v-col>
 						<!-- linkedin -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -181,9 +185,8 @@
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
 							<textarea
-								:value="selected.professionalDescription"
+								v-model="selected.professionalDescription"
 								rows="3"
-								@input="e => (selected.professionalDescription = e.target.value)"
 							></textarea>
 						</v-col>
 					</v-row>

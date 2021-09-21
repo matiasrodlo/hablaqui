@@ -103,9 +103,10 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li v-for="(experience, i) in psychologist.experience" :key="i">
-									{{ experience.title }} - {{ experience.place }} ({{
-										experience.start
-									}}, {{ experience.end }})
+									{{ experience.title }} - {{ experience.place }}
+									<span v-if="experience.start && experience.end"
+										>({{ experience.start }}, {{ experience.end }})</span
+									>
 								</li>
 							</ul>
 						</v-col>
@@ -161,9 +162,10 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li v-for="(formation, i) in psychologist.formation" :key="i">
-									{{ formation.formationType }} - {{ formation.description }} ({{
-										formation.start
-									}}, {{ formation.end }})
+									{{ formation.formationType }} - {{ formation.description }}
+									<span v-if="formation.start && formation.end">
+										({{ formation.start }}, {{ formation.end }})
+									</span>
 								</li>
 							</ul>
 						</v-col>
@@ -321,6 +323,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -333,12 +336,18 @@ export default {
 			type: Object,
 			required: true,
 		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
 			loadingChat: false,
 			dialog: false,
 			tab: 1,
+			pusher: null,
+			channel: null,
 		};
 	},
 	computed: {
@@ -359,8 +368,26 @@ export default {
 	},
 	created() {
 		this.setFloatingChat(false);
+		// PUSHER
+		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
+			cluster: this.$config.PUSHER_CLUSTER,
+		});
+		this.pusher.connection.bind('update', function (err) {
+			console.error(err);
+		});
+		this.channel = this.pusher.subscribe('psychologist');
+		this.channel.bind('update', data => this.$emit('updatePsychologist', data));
+		this.$on('updatePsychologist', data => {
+			if (data.username === this.psychologist.username) {
+				this.getPsychologist(data);
+			}
+		});
 	},
 	methods: {
+		async getPsychologist(data) {
+			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
+			this.setPsychologist(psychologist);
+		},
 		toAuth(item) {
 			localStorage.setItem('psi', JSON.stringify(item));
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
