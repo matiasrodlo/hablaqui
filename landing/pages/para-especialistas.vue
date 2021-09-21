@@ -130,72 +130,113 @@
 		</v-container>
 		<!-- beneficios mobile -->
 		<div class="hidden-md-and-up">
-			<v-img
-				width="100%"
-				height="auto"
-				:src="`${$config.LANDING_URL}/beneficios-responsive.png`"
-			>
-				<v-row justify="center" class="mt-16">
-					<v-col cols="11" class="text-center mt-sm-16 pt-sm-16">
+			<v-img width="100%" height="800" :src="`${$config.LANDING_URL}/beneficios-res.png`">
+				<v-row justify="center" align="center" style="height: 800px">
+					<v-col cols="11" class="text-center">
 						<h2 class="font-weight-bold white--text text-h4 text-sm-h3">
 							Beneficios de Hablaquí Office
 						</h2>
-					</v-col>
-					<v-col cols="10" sm="8">
-						<div class="mt-8 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Videollamadas seguras y cómodas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="25"
-								width="25"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sistema de reservas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sitio web especializado
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Gestión de agenda, clientes y pagos
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Recordatorios y correo electrónico
-							</h3>
+						<div style="max-width: 500px" class="mx-auto mt-10">
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`${$config.LANDING_URL}/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Videollamadas seguras y cómodas
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="25"
+									width="25"
+									:src="`${$config.LANDING_URL}/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Sistema de reservas
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`${$config.LANDING_URL}/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Sitio web especializado
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`${$config.LANDING_URL}/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Gestión de agenda, clientes y pagos
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`${$config.LANDING_URL}/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Recordatorios y correo electrónico
+								</h3>
+							</div>
 						</div>
 					</v-col>
 				</v-row>
@@ -315,12 +356,13 @@
 		</v-container>
 		<div class="hidden-md-and-up">
 			<v-img
-				width="100vw"
+				width="100%"
+				contain
 				height="auto"
 				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
 				:src="`${$config.LANDING_URL}/descargar-app-small.png`"
 			>
-				<v-row justify-md="center">
+				<v-row justify-md="center" align="center" style="height: 500px">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
 						<h2
 							class="
@@ -331,26 +373,35 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Descargar nuestra app de chat
+							Pronto podrás Descargar nuestra app de chat
 						</h2>
-						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
+						<h3
+							class="
+								text-center
+								font-weight-bold
+								white--text
+								caption
+								my-sm-4
+								text-sm-h6
+							"
+						>
 							Mantén contacto con tus consultantes vía Chat. <br />
 							¡Descarga la aplicación ahora!
 						</h3>
 						<div class="d-flex justify-center pb-16">
 							<v-img
-								style="cursor: pointer; border-radius: 10px"
+								style="cursor: pointer; border-radius: 5px"
 								hidden="30"
-								max-width="120"
+								max-width="90"
 								class="ma-1"
 								:src="`${$config.LANDING_URL}/google-play.png`"
 								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
 								alt="descarcar nuestra aplicacion para android"
 							/>
 							<v-img
-								style="cursor: pointer; border-radius: 10px"
+								style="cursor: pointer; border-radius: 5px"
 								hidden="30"
-								max-width="120"
+								max-width="90"
 								class="ma-1"
 								:src="`${$config.LANDING_URL}/ios.svg`"
 								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
