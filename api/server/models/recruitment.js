@@ -218,6 +218,18 @@ let recruitment = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	isContentCreator: {
+		type: Boolean,
+		default: false,
+	},
+	isAffiliateExternal: {
+		type: Boolean,
+		default: false,
+	},
+	isInterestedBusiness: {
+		type: Boolean,
+		default: false,
+	},
 	ratings: [rating],
 	sessions: [session],
 	timeZone: {
