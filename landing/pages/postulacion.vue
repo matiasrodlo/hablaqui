@@ -30,7 +30,9 @@
 
 						<v-divider></v-divider>
 
-						<v-stepper-step step="3"> Experiencia laboral </v-stepper-step>
+						<v-stepper-step :complete="step > 3" step="3">
+							Experiencia laboral
+						</v-stepper-step>
 					</v-stepper-header>
 
 					<v-stepper-items>
@@ -312,7 +314,7 @@
 													font-weight-regular
 												"
 											>
-												Ubicación / Curso / Descripción
+												Curso / Institución educativa
 											</div>
 										</v-col>
 										<v-col cols="3" md="2" class="py-0">
@@ -567,7 +569,7 @@
 										</template>
 									</v-select>
 								</v-col>
-								<v-col cols="12" class="pt-0">
+								<v-col cols="12" md="6" class="pt-0 hidden-md-and-up">
 									<v-chip
 										v-for="(item, i) in form.specialties"
 										:key="i"
@@ -576,6 +578,58 @@
 										class="ma-2"
 										close
 										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
+								</v-col>
+								<v-col cols="12" md="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Modelo terapéutico
+									</div>
+									<v-select
+										v-model="form.models"
+										filled
+										outlined
+										dense
+										multiple
+										hide-details
+										type="text"
+										class="pb-0"
+										:items="[
+											'Cognitivo-conductual',
+											'Contextual',
+											'Psicoanálisis',
+											'Humanista',
+											'Sistémico',
+										]"
+									>
+										<template #selection>
+											<div></div>
+										</template>
+									</v-select>
+								</v-col>
+								<v-col cols="12" md="6" class="pt-0 hidden-sm-and-down">
+									<v-chip
+										v-for="(item, i) in form.specialties"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
+								</v-col>
+								<v-col cols="12" md="6" class="pt-0">
+									<v-chip
+										v-for="(item, i) in form.models"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmModels(i)"
 									>
 										{{ item }}
 									</v-chip>
@@ -798,25 +852,26 @@ export default {
 			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
-				timeZone: 'America/Santiago',
-				gender: '',
-				languages: ['spanish'],
+				avgPatients: '',
 				birthDate: '',
-				region: '',
 				comuna: '',
-				personalDescription: '',
-				linkedin: '',
-				instagram: '',
 				experience: [{ title: '', place: '', start: '', end: '' }],
 				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				gender: '',
+				instagram: '',
+				isExclusiveActivity: false,
+				isSupervisor: false,
+				isUnderSupervision: false,
+				languages: ['spanish'],
+				linkedin: '',
+				personalDescription: '',
 				professionalDescription: '',
+				region: '',
 				specialties: [],
+				timeZone: 'America/Santiago',
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
-				avgPatients: '',
-				isExclusiveActivity: false,
-				isUnderSupervision: false,
-				isSupervisor: false,
+				models: [],
 			},
 			recruitment: null,
 		};
@@ -901,6 +956,9 @@ export default {
 		},
 		rmSpecialties(index) {
 			this.form.specialties.splice(index, 1);
+		},
+		rmModels(index) {
+			this.form.models.splice(index, 1);
 		},
 		save(date) {
 			this.$refs.menu.save(date);
