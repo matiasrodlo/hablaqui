@@ -3,9 +3,9 @@
 		<v-navigation-drawer
 			v-model="drawer"
 			mini-variant-width="60"
-			mini-variant
+			:mini-variant.sync="isMini"
 			color="primary"
-			expand-on-hover
+			:expand-on-hover="$vuetify.breakpoint.mdAndUp"
 			app
 			mobile-breakpoint="960"
 		>
@@ -75,6 +75,12 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<template v-if="!isMini" #append>
+				<div class="pa-2 white--text">
+					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
+					contactarnos
+				</div>
+			</template>
 		</v-navigation-drawer>
 		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
 			<h1 class="white--text">{{ routeName }}</h1>
@@ -114,6 +120,7 @@ export default {
 			mdiMenu,
 			drawer: true,
 			online: true,
+			isMini: false,
 		};
 	},
 	computed: {
