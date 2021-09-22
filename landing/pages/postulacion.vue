@@ -796,12 +796,15 @@
 									color="primary"
 									@click="saveStep(4)"
 								>
-									Finalizar postulación
+									Siguiente
 								</v-btn>
 							</div>
 						</v-stepper-content>
 
 						<v-stepper-content step="4">
+							<plans :next="() => (step = 5)" />
+						</v-stepper-content>
+						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
 									justify="center"
@@ -809,6 +812,14 @@
 									style="height: 100%; overflow-y: auto"
 								>
 									<v-col cols="12" class="text-center" style="color: #5c5c5c">
+										<div>
+											<v-img
+												width="300"
+												height="300"
+												class="mx-auto"
+												:src="`${$config.LANDING_URL}/balloon.png`"
+											></v-img>
+										</div>
 										<div class="headline font-weight-bold">
 											¡Ya has terminado!
 										</div>
@@ -854,6 +865,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
+		plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -869,7 +881,7 @@ export default {
 			activePicker: null,
 			bmenu: false,
 			zone: '',
-			step: 2,
+			step: 5,
 			regiones: [],
 			comunas: [],
 			comunasRegiones: [],
