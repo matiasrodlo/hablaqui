@@ -881,7 +881,7 @@ export default {
 			activePicker: null,
 			bmenu: false,
 			zone: '',
-			step: 5,
+			step: 1,
 			regiones: [],
 			comunas: [],
 			comunasRegiones: [],
