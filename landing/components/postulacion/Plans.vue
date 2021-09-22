@@ -72,7 +72,7 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-btn class="mt-4" color="primary" rounded block
+					<v-btn class="mt-4" color="primary" rounded block @click="goMercadoPago"
 						>Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
@@ -151,6 +151,10 @@ export default {
 				'20% de comisión por sesión',
 			],
 		};
+	},
+	// Logica para ir a mercado pago
+	methods: {
+		goMercadoPago() {},
 	},
 };
 </script>
