@@ -93,7 +93,7 @@
 					</v-card-text>
 					<v-card-text>
 						<v-list>
-							<v-list-item v-for="item in itemsPremiun" :key="item">
+							<v-list-item v-for="item in itemsBasico" :key="item">
 								<v-list-item-icon>
 									<v-btn x-small fab outlined color="primary">
 										<icon :icon="mdiCheck" />
