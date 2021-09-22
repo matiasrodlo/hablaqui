@@ -47,7 +47,7 @@
 				<v-radio-group v-model="radioGroup" hide-details>
 					<v-card class="my-2 rounded-xl">
 						<v-card-text class="py-1">
-							<v-radio :value="mensual">
+							<v-radio value="mensual">
 								<template #label>
 									<div style="width: 100%" class="d-flex justify-space-between">
 										<div class="body-2 text--secondary">Mensual</div>
@@ -62,7 +62,7 @@
 							Ahorra 20%
 						</div>
 						<v-card-text class="py-1">
-							<v-radio :value="anual">
+							<v-radio value="anual">
 								<template #label>
 									<div style="width: 100%" class="d-flex justify-space-between">
 										<div class="body-2 text--secondary">Anual</div>
