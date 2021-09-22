@@ -834,14 +834,12 @@
 										</div>
 										<div>
 											<v-btn
+												depressed
 												class="mx-2"
-												rounded
 												color="primary"
-												@click="step = 3"
+												rounded
+												to="/"
 											>
-												Atrás
-											</v-btn>
-											<v-btn class="mx-2" color="primary" rounded to="/">
 												Ir a Hablaquí
 											</v-btn>
 										</div>
