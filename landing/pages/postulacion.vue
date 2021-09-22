@@ -801,10 +801,10 @@
 							</div>
 						</v-stepper-content>
 
-						<v-stepper-content step="4">
+						<!-- <v-stepper-content step="4">
 							<plans :next="() => (step = 5)" />
-						</v-stepper-content>
-						<v-stepper-content step="5">
+						</v-stepper-content> -->
+						<v-stepper-content step="4">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
 									justify="center"
@@ -814,8 +814,8 @@
 									<v-col cols="12" class="text-center" style="color: #5c5c5c">
 										<div>
 											<v-img
-												width="300"
-												height="300"
+												width="200"
+												height="200"
 												class="mx-auto"
 												:src="`${$config.LANDING_URL}/balloon.png`"
 											></v-img>
@@ -832,7 +832,7 @@
 											nosotros contar contigo en nuestro equipo de psicólogos,
 											te contactaremos pronto.
 										</div>
-										<div>
+										<!-- <div>
 											<v-btn
 												depressed
 												class="mx-2"
@@ -842,7 +842,7 @@
 											>
 												Ir a Hablaquí
 											</v-btn>
-										</div>
+										</div> -->
 									</v-col>
 								</v-row>
 							</v-container>
@@ -863,7 +863,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		plans: () => import('~/components/postulacion/Plans'),
+		// plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
