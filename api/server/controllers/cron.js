@@ -5,8 +5,8 @@ import { errorCallback } from '../utils/functions/errorCallback';
 const cronController = {
 	async scheduleEmails(req, res) {
 		try {
-			const result = await cronService.scheduleEmails();
-			return restResponse(res, result);
+			const { data, code } = await cronService.scheduleEmails();
+			return restResponse(data, code, res);
 		} catch (err) {
 			errorCallback(res, err);
 		}

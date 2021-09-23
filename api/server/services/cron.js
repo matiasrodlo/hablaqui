@@ -3,16 +3,21 @@ import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
 import { logInfo } from '../config/pino';
-import moment from 'moment';
+import moment from 'moment-timezone';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 const cronService = {
 	async scheduleEmails() {
 		const pendingEmails = await emailscheduling.find({
 			wasScheduled: false,
 		});
+		logInfo('Email scheduling service invoked');
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = emailInfo.sessionDate;
+				const sessionDate = moment.tz(
+					emailInfo.sessionDate,
+					'America/Santiago'
+				);
 				if (
 					moment()
 						.add(3, 'days')
@@ -44,11 +49,19 @@ const cronService = {
 							);
 						} catch (error) {
 							logInfo(error);
+							return conflictResponse(
+								'Email sheduling service found an error'
+							);
 						}
 					}
 				}
 			});
 		}
+		return okResponse(
+			'Email scheduling service invoked and ' +
+				pendingEmails.length +
+				' email(s) scheduled'
+		);
 	},
 };
 

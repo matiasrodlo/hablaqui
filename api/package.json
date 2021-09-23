@@ -33,6 +33,7 @@
 		"mailgun-js": "^0.22.0",
 		"mercadopago": "^1.5.7",
 		"moment": "^2.24.0",
+		"moment-timezone": "^0.5.33",
 		"moments": "0.0.2",
 		"mongodb": "^3.3.5",
 		"mongoose": "^5.9.1",
