@@ -20,7 +20,9 @@ let emailscheduling = new Schema({
 	},
 	queuedAt: {
 		type: String,
-		default: moment(),
+		default: moment()
+			.locale('es-mx')
+			.format('D MMMM YYYY, h:mm:ss a'),
 	},
 	scheduledAt: {
 		type: String,
@@ -33,6 +35,10 @@ let emailscheduling = new Schema({
 	psyRef: {
 		type: Schema.Types.ObjectId,
 		ref: 'Pyschologist',
+	},
+	psySessionID: {
+		type: Schema.Types.ObjectId,
+		ref: 'sessions',
 	},
 });
 

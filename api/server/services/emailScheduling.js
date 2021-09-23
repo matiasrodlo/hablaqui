@@ -13,7 +13,11 @@ const emailSchedulingService = {
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
 				const sessionDate = emailInfo.sessionDate;
-				if (moment(3, 'day').isBefore(sessionDate)) {
+				if (
+					moment()
+						.add(3, 'days')
+						.isAfter(sessionDate)
+				) {
 					if (emailInfo.type == 'reminder-user') {
 						const user = await User.findById(emailInfo.userRef);
 						const psy = await psychologist.findById(

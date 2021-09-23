@@ -37,7 +37,9 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
-	await mailService.sendWelcomeNewUser(user);
+	if (user.role === 'user') {
+		await mailService.sendWelcomeNewUser(user);
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user,
 		token: generateJwt(user),

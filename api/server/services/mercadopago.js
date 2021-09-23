@@ -6,6 +6,7 @@ import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
 import User from '../models/user';
+import emailscheduling from '../models/emailscheduling';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -88,18 +89,46 @@ const createPsychologistPreference = async (body, res) => {
 
 const successPay = async params => {
 	const { psyId, userId, sessionId } = params;
-	const foundPsychologist = await Psychologist.updateOne(
+	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{
 			_id: psyId,
 			sessions: { $elemMatch: { _id: sessionId } },
 		},
-		{ $set: { 'sessions.$.statePayments': 'successful' } }
+		{ $set: { 'sessions.$.statePayments': 'successful' } },
+		{ new: true }
 	);
-
 	let foundUser = await User.findById(userId);
 	foundUser.plan[foundUser.plan.length - 1 || 0].status = 'success';
 	foundUser.psychologist = psyId;
 	foundUser.save();
+
+	// Email scheduling for appointment reminder for the user
+	const sessionData = foundPsychologist.sessions.filter(
+		session => session._id.toString() == sessionId
+	)[0];
+	await emailscheduling.create({
+		mailgunIdL: undefined,
+		sessionDate: sessionData.date,
+		wasScheduled: false,
+		type: 'reminder-user',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userId,
+		psyRef: psyId,
+		sessionRef: sessionId,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await emailscheduling.create({
+		mailgunIdL: undefined,
+		sessionDate: sessionData.date,
+		wasScheduled: false,
+		type: 'reminder-psy',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userId,
+		psyRef: psyId,
+		sessionRef: sessionId,
+	});
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');
