@@ -10,7 +10,6 @@ import routes from './routes/index';
 import { logError, logger } from './config/pino';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import emailScheduling from './services/emailScheduling';
 import cron from 'node-cron';
 const app = express();
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
@@ -64,16 +63,6 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-// Cron job to execute the mail scheduler every 1 minute
-cron.schedule('*/45 * * * * *', async () => {
-	try {
-		console.log('Cron job executed');
-		emailScheduling.schedulePendingEmails();
-	} catch (error) {
-		logError(error);
-	}
-});
 
 mongoose
 	.connect(process.env.URLDB, {
