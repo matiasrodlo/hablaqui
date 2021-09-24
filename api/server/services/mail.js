@@ -86,6 +86,34 @@ const mailService = {
 		});
 		return sendMail;
 	},
+	async sendAppointmentConfirmation(user, date) {
+		const { email, name } = user;
+		const dataPayload = {
+			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
+			subject: 'Agendamiento exitoso de tu cita',
+			template: 'appointment-confirmation',
+			'v:first_name': name,
+			'v:day': moment(date)
+				.locale('es-mx')
+				.format('LL'),
+			'v:hour': moment(date)
+				.locale('es-mx')
+				.format('LT'),
+		};
+
+		const sendMail = new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+		return sendMail;
+	},
 };
 
 export default mailService;

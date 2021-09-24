@@ -7,6 +7,7 @@ import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
 import User from '../models/user';
 import emailscheduling from '../models/emailscheduling';
+import mailService from './mail';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -106,6 +107,7 @@ const successPay = async params => {
 	const sessionData = foundPsychologist.sessions.filter(
 		session => session._id.toString() == sessionId
 	)[0];
+
 	await emailscheduling.create({
 		mailgunIdL: undefined,
 		sessionDate: sessionData.date,
@@ -129,6 +131,7 @@ const successPay = async params => {
 		psyRef: psyId,
 		sessionRef: sessionId,
 	});
+	await mailService.sendAppointmentConfirmation(foundUser, sessionData.date);
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');
