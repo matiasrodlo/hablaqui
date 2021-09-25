@@ -79,10 +79,10 @@ psychologistsRouter.post(
  * NECESITA AUTENTICACION
  * req.body.payload = {
  * 	date: string,
-		user._id: ObjectId del usuario,
-		title: string,
-		paymentPeriod: string,
-		price: Number,
+	user._id: ObjectId del usuario,
+	title: string,
+	paymentPeriod: string,
+	price: Number,
  * }
  */
 psychologistsRouter.post(
