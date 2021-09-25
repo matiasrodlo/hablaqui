@@ -6,8 +6,8 @@ import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
 import User from '../models/user';
-import emailscheduling from '../models/emailscheduling';
-import mailService from './mail';
+//import emailscheduling from '../models/emailscheduling';
+//import mailService from './mail';
 import moment from 'moment-timezone';
 
 mercadopago.configure({
@@ -108,7 +108,7 @@ const successPay = async params => {
 	const sessionData = foundPsychologist.sessions.filter(
 		session => session._id.toString() == sessionId
 	)[0];
-
+	/*
 	await emailscheduling.create({
 		mailgunIdL: undefined,
 		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
@@ -119,7 +119,8 @@ const successPay = async params => {
 		userRef: userId,
 		psyRef: psyId,
 		sessionRef: sessionId,
-	});
+	});*/
+	/*
 	// Email scheduling for appointment reminder for the psychologist
 	await emailscheduling.create({
 		mailgunIdL: undefined,
@@ -131,7 +132,7 @@ const successPay = async params => {
 		userRef: userId,
 		psyRef: psyId,
 		sessionRef: sessionId,
-	});
+	});*/
 	// Send appointment confirmation for user and psychologist
 	/*await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
 	await mailService.sendAppConfirmationPsy(
