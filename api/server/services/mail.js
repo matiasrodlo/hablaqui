@@ -2,10 +2,11 @@ import moment from 'moment';
 import mailgun from 'mailgun-js';
 
 const DOMAIN = 'mail.hablaqui.com';
+/*
 const mg = mailgun({
 	apiKey: process.env.MAILGUN_API_KEY,
 	domain: DOMAIN,
-});
+});*/
 
 const mailService = {
 	/**
@@ -22,13 +23,14 @@ const mailService = {
 			template: 'welcome-new-user',
 			'v:first_name': name,
 		};
+		/*
 		await mg.messages().send(dataPayload, function(error, body) {
 			if (error) {
 				console.log(error);
 			} else {
 				console.log(body);
 			}
-		});
+		});*/
 	},
 	/**
 	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
@@ -45,13 +47,14 @@ const mailService = {
 			template: 'welcome-new-psy',
 			'v:first_name': name,
 		};
+		/*
 		await mg.messages().send(dataPayload, function(error, body) {
 			if (error) {
 				console.log(error);
 			} else {
 				console.log(body);
 			}
-		});
+		});*/
 	},
 	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
@@ -80,7 +83,7 @@ const mailService = {
 				.locale('es-mx')
 				.format('LT'),
 		};
-
+		/*
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -89,7 +92,7 @@ const mailService = {
 					resolve(body);
 				}
 			});
-		});
+		});*/
 	},
 
 	/**
@@ -120,7 +123,7 @@ const mailService = {
 				.locale('es-mx')
 				.format('LT'),
 		};
-
+		/*
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -129,7 +132,7 @@ const mailService = {
 					resolve(body);
 				}
 			});
-		});
+		});*/
 	},
 	/**
 	 * @description Send an appointmet purchase confirmation to a user
@@ -152,6 +155,7 @@ const mailService = {
 				.locale('es-mx')
 				.format('LT'),
 		};
+		/*
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -160,7 +164,7 @@ const mailService = {
 					resolve(body);
 				}
 			});
-		});
+		});*/
 	},
 	/**
 	 * @description Send an appointmet purchase confirmation to a user
@@ -188,6 +192,7 @@ const mailService = {
 				.locale('es-mx')
 				.format('LT'),
 		};
+		/*
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -196,7 +201,7 @@ const mailService = {
 					resolve(body);
 				}
 			});
-		});
+		});*/
 	},
 	/**
 	 * @description Send an email to a psychologist about his/her new application
@@ -212,6 +217,7 @@ const mailService = {
 			template: 'recruitment-confirmation',
 			'v:user_first_name': name,
 		};
+		/*
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -220,7 +226,7 @@ const mailService = {
 					resolve(body);
 				}
 			});
-		});
+		});*/
 	},
 };
 
