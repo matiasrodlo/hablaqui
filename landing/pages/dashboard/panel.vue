@@ -32,7 +32,15 @@
 		<v-dialog v-model="dialog" fullscreen>
 			<v-card v-if="selected" max-width="1200px">
 				<v-toolbar flat color="primary" class="white--text">
-					{{ selected.name }} {{ selected.lastName }}
+					<nuxt-link
+						v-if="selected.isPsy"
+						style="text-decoration: none; display: block"
+						:to="{ path: `/${selected.username}` }"
+					>
+						<span class="body-2 font-weight-bold white--text">
+							{{ selected.name }} {{ selected.lastName }}
+						</span>
+					</nuxt-link>
 					<v-spacer></v-spacer>
 					<v-btn text color="white" @click="dialog = false">Cerrar</v-btn>
 				</v-toolbar>
@@ -167,11 +175,7 @@
 							<div class="d-flex align-center" style="height: 100%">Inf.personal</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<textarea
-								:value="selected.personalDescription"
-								rows="3"
-								@input="e => (selected.personalDescription = e.target.value)"
-							></textarea>
+							<textarea v-model="selected.personalDescription" rows="3"></textarea>
 						</v-col>
 						<!-- linkedin -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -181,9 +185,8 @@
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
 							<textarea
-								:value="selected.professionalDescription"
+								v-model="selected.professionalDescription"
 								rows="3"
-								@input="e => (selected.professionalDescription = e.target.value)"
 							></textarea>
 						</v-col>
 					</v-row>
@@ -262,6 +265,93 @@
 									</option>
 								</template>
 							</select>
+						</v-col>
+					</v-row>
+					<v-row v-if="selected.isPsy">
+						<v-col cols="12">Datos Bancarios</v-col>
+						<!-- bank data -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							<div class="d-flex align-center" style="height: 100%">Banco</div>
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<select
+								:value="selected.paymentMethod.bank"
+								type="text"
+								@change="e => (selected.paymentMethod.bank = e.target.value)"
+							>
+								<option v-for="(item, i) in banks" :key="i" :value="item.nombre">
+									{{ item.nombre }}
+								</option>
+							</select>
+						</v-col>
+						<!-- RUT del titular -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							<div class="d-flex align-center" style="height: 100%">RUT titular</div>
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								:value="selected.paymentMethod.rut"
+								type="text"
+								@input="e => (selected.paymentMethod.rut = e.target.value)"
+							/>
+						</v-col>
+						<!-- Tipo de cuenta -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							Tipo de cuenta
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<select
+								:value="selected.paymentMethod.accountType"
+								type="text"
+								@change="e => (selected.paymentMethod.accountType = e.target.value)"
+							>
+								<option
+									v-for="(item, i) in [
+										'Cuenta vista',
+										'Cuenta ahorro',
+										'Cuenta corriente',
+									]"
+									:key="i"
+									:value="item"
+								>
+									{{ item }}
+								</option>
+							</select>
+						</v-col>
+						<!-- Nombre completo del titular -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							Nombre titular
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								:value="selected.paymentMethod.name"
+								type="text"
+								@input="e => (selected.paymentMethod.name = e.target.value)"
+							/>
+						</v-col>
+						<!-- Número de cuenta -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							Número de cuenta
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								:value="selected.paymentMethod.accountNumber"
+								type="text"
+								@input="
+									e => (selected.paymentMethod.accountNumber = e.target.value)
+								"
+							/>
+						</v-col>
+						<!-- Email -->
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							Correo
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								:value="selected.paymentMethod.email"
+								type="text"
+								@input="e => (selected.paymentMethod.email = e.target.value)"
+							/>
 						</v-col>
 					</v-row>
 					<v-row>
@@ -563,6 +653,7 @@
 <script>
 import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
+import { isEmpty } from 'lodash';
 
 export default {
 	name: 'Panel',
@@ -586,6 +677,7 @@ export default {
 			loadingDelete: false,
 			loading: true,
 			available: false,
+			banks: [],
 		};
 	},
 	computed: {
@@ -604,6 +696,31 @@ export default {
 		this.items = recruitment;
 		const { psychologists } = await this.$axios.$get('/psychologists/all');
 		this.psychologists = psychologists;
+		this.psychologists = this.psychologists.map(psychologist => {
+			const psy = psychologist;
+			if (!psychologist.experience.length)
+				psy.experience.push({ title: '', place: '', start: '', end: '' });
+			if (!psychologist.formation.length)
+				psy.formation.push({
+					formationType: '',
+					description: '',
+					start: '',
+					end: '',
+				});
+			if (isEmpty(psychologist.paymentMethod))
+				psychologist.paymentMethod = {
+					bank: '',
+					accountType: '',
+					accountNumber: '',
+					rut: '',
+					name: '',
+					email: '',
+				};
+			return psy;
+		});
+		let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
+		banks = await banks.json();
+		this.banks = banks;
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);

@@ -4,7 +4,6 @@ export default {
 	async getPsychologists({ commit }) {
 		try {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			localStorage.setItem('psychologists', JSON.stringify(psychologists));
 			commit('setPsychologists', psychologists);
 		} catch (e) {
 			snackBarError(e)(commit);

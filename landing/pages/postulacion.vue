@@ -30,7 +30,9 @@
 
 						<v-divider></v-divider>
 
-						<v-stepper-step step="3"> Experiencia laboral </v-stepper-step>
+						<v-stepper-step :complete="step > 3" step="3">
+							Experiencia laboral
+						</v-stepper-step>
 					</v-stepper-header>
 
 					<v-stepper-items>
@@ -289,262 +291,281 @@
 										:rules="rules"
 									></v-textarea>
 								</v-col>
-								<v-col cols="12">
-									<v-row>
-										<v-col cols="3" md="3" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Formación
-											</div>
-										</v-col>
-										<v-col cols="3" md="3" class="py-0">
-											<div
-												class="
-													primary--text
-													body-1
-													mb-2
-													font-weight-regular
-												"
-											>
-												Ubicación / Curso / Descripción
-											</div>
-										</v-col>
-										<v-col cols="3" md="2" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Inicio
-											</div>
-										</v-col>
-										<v-col cols="3" md="2" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Termino
-											</div>
-										</v-col>
-									</v-row>
-									<v-row v-for="(item, i) in form.formation" :key="i">
-										<v-col cols="3" md="3">
-											<v-select
-												filled
-												outlined
-												dense
-												type="text"
-												:items="[
-													'Licenciatura',
-													'Diplomado',
-													'Master',
-													'Magister',
-													'Doctorado',
-													'Curso/especialización',
-													'Otro',
-												]"
-												:value="item.formationType"
-												@change="e => (form.formation[i].formationType = e)"
-											></v-select>
-										</v-col>
-										<v-col cols="3" md="3">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.description"
-												@input="e => (form.formation[i].description = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="3" md="2">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.start"
-												@input="e => (form.formation[i].start = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="3" md="2">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.end"
-												@input="e => (form.formation[i].end = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="12" md="2" class="text-right text-md-left">
-											<v-btn
-												v-if="i === form.formation.length - 1"
-												small
-												color="primary"
-												fab
-												depressed
-												@click="newFormation"
-											>
-												<h1>+</h1>
-											</v-btn>
-											<v-btn
-												v-if="
-													i === form.formation.length - 1 &&
-													form.formation.length - 1
-												"
-												small
-												color="error"
-												fab
-												depressed
-												@click="
-													() =>
-														(form.formation = form.formation.filter(
-															(el, index) => index !== i
-														))
-												"
-											>
-												<h1>-</h1>
-											</v-btn>
-										</v-col>
-									</v-row>
+								<v-col cols="12" md="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Formación
+									</div>
+									<div class="text--secondary body-2 mb-2 font-weight-regular">
+										Grado académico, área de formación, institución educativa,
+										etc.
+									</div>
+									<v-list>
+										<v-list-item v-for="(item, t) in form.formation" :key="t">
+											<v-list-item-content>
+												<v-list-item-title>
+													{{ item.formationType }} -
+													{{ item.description }}
+												</v-list-item-title>
+												<v-list-item-subtitle>
+													{{ item.start }} -
+													{{ item.end }}
+												</v-list-item-subtitle>
+											</v-list-item-content>
+											<v-list-item-icon>
+												<v-btn icon @click="setFormation(item, t)">
+													<icon :icon="mdiPencilOutline" />
+												</v-btn>
+												<v-btn
+													icon
+													@click="
+														() =>
+															(form.formation = form.formation.filter(
+																(el, index) => index !== t
+															))
+													"
+												>
+													<icon color="error" :icon="mdiDeleteOutline" />
+												</v-btn>
+											</v-list-item-icon>
+										</v-list-item>
+									</v-list>
+									<v-btn
+										depressed
+										color="#ecf5ff"
+										rounded
+										block
+										@click="setFormation"
+									>
+										<span class="primary--text">Agregar formación</span>
+									</v-btn>
+									<v-dialog
+										v-if="selectedFormation"
+										v-model="dialogFormation"
+										max-width="400"
+										@click:outside="
+											() => {
+												selectedFormation = null;
+												indexSelected = null;
+												dialogFormation = false;
+											}
+										"
+									>
+										<v-card>
+											<v-card-title>Formación</v-card-title>
+											<v-card-text class="mt-4">
+												<v-row>
+													<v-col cols="12">
+														<v-select
+															v-model="
+																selectedFormation.formationType
+															"
+															filled
+															outlined
+															dense
+															label="Formación"
+															type="text"
+															:items="[
+																'Licenciatura',
+																'Diplomado',
+																'Master',
+																'Magister',
+																'Doctorado',
+																'Curso/especialización',
+																'Otro',
+															]"
+														></v-select>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedFormation.description"
+															filled
+															outlined
+															dense
+															type="text"
+															label="Curso / Institución educativa"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedFormation.start"
+															filled
+															outlined
+															dense
+															label="Inicio"
+															type="text"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedFormation.end"
+															filled
+															outlined
+															dense
+															label="Termino"
+															type="text"
+														></v-text-field>
+													</v-col>
+												</v-row>
+											</v-card-text>
+											<v-card-actions>
+												<v-spacer></v-spacer>
+												<v-btn
+													color="error"
+													text
+													@click="
+														() => {
+															selectedFormation = null;
+															indexSelected = null;
+															dialogFormation = false;
+														}
+													"
+												>
+													Cancelar
+												</v-btn>
+												<v-btn color="primary" text @click="newFormation">
+													{{
+														parseInt(indexSelected) >= 0 &&
+														indexSelected !== null
+															? 'Editar'
+															: 'Agregar'
+													}}
+												</v-btn>
+											</v-card-actions>
+										</v-card>
+									</v-dialog>
 								</v-col>
-								<v-col cols="12">
-									<v-row>
-										<v-col cols="3" md="3" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Experiencia
-											</div>
-										</v-col>
-										<v-col cols="3" md="3" class="py-0">
-											<div
-												class="
-													primary--text
-													body-1
-													mb-2
-													font-weight-regular
-												"
-											>
-												Lugar / Descripción
-											</div>
-										</v-col>
-										<v-col cols="3" md="2" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Inicio
-											</div>
-										</v-col>
-										<v-col cols="3" md="2" class="py-0">
-											<div
-												class="
-													primary--text
-													text-h6
-													mb-2
-													font-weight-regular
-												"
-											>
-												Termino
-											</div>
-										</v-col>
-									</v-row>
-									<v-row v-for="(item, i) in form.experience" :key="i">
-										<v-col cols="3" md="3">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.title"
-												@input="e => (form.experience[i].title = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="3" md="3">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.place"
-												@input="e => (form.experience[i].place = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="3" md="2">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.start"
-												@input="e => (form.experience[i].start = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="3" md="2">
-											<v-text-field
-												filled
-												outlined
-												dense
-												type="text"
-												:value="item.end"
-												@input="e => (form.experience[i].end = e)"
-											></v-text-field>
-										</v-col>
-										<v-col cols="12" md="2" class="text-right text-md-left">
-											<v-btn
-												v-if="i === form.experience.length - 1"
-												small
-												color="primary"
-												fab
-												depressed
-												@click="newExperience"
-											>
-												<h1>+</h1>
-											</v-btn>
-											<v-btn
-												v-if="
-													i === form.experience.length - 1 &&
-													form.experience.length - 1
-												"
-												small
-												color="error"
-												fab
-												depressed
-												@click="
-													() =>
-														(form.experience = form.experience.filter(
-															(el, index) => index !== i
-														))
-												"
-											>
-												<h1>-</h1>
-											</v-btn>
-										</v-col>
-									</v-row>
+								<!-- Experiencia -->
+								<v-col cols="12" md="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Experiencia
+									</div>
+									<div class="text--secondary body-2 mb-2 font-weight-regular">
+										Profesión, función, lugar donde realizó la experiencia, etc.
+									</div>
+									<v-list>
+										<v-list-item v-for="(item, t) in form.experience" :key="t">
+											<v-list-item-content>
+												<v-list-item-title>
+													{{ item.title }} -
+													{{ item.place }}
+												</v-list-item-title>
+												<v-list-item-subtitle>
+													{{ item.start }} -
+													{{ item.end }}
+												</v-list-item-subtitle>
+											</v-list-item-content>
+											<v-list-item-icon>
+												<v-btn icon @click="setExperience(item, t)">
+													<icon :icon="mdiPencilOutline" />
+												</v-btn>
+												<v-btn
+													icon
+													@click="
+														() =>
+															(form.experience =
+																form.experience.filter(
+																	(el, index) => index !== t
+																))
+													"
+												>
+													<icon color="error" :icon="mdiDeleteOutline" />
+												</v-btn>
+											</v-list-item-icon>
+										</v-list-item>
+									</v-list>
+									<v-btn
+										depressed
+										color="#ecf5ff"
+										rounded
+										block
+										@click="setExperience"
+									>
+										<span class="primary--text">Agregar experiencia</span>
+									</v-btn>
+									<v-dialog
+										v-if="selectedExperience"
+										v-model="dialogExperience"
+										max-width="400"
+										@click:outside="
+											() => {
+												selectedExperience = null;
+												indexSelected = null;
+												dialogExperience = false;
+											}
+										"
+									>
+										<v-card>
+											<v-card-title>Experiencia</v-card-title>
+											<v-card-text class="mt-4">
+												<v-row>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedExperience.title"
+															filled
+															outlined
+															label="Experiencia"
+															dense
+															type="text"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedExperience.place"
+															filled
+															outlined
+															dense
+															label="Lugar / Descripción"
+															type="text"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedExperience.start"
+															filled
+															outlined
+															dense
+															label="Inicio"
+															type="text"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<v-text-field
+															v-model="selectedExperience.end"
+															filled
+															outlined
+															dense
+															label="Termino"
+															type="text"
+														></v-text-field>
+													</v-col>
+												</v-row>
+											</v-card-text>
+											<v-card-actions>
+												<v-spacer></v-spacer>
+												<v-btn
+													color="error"
+													text
+													@click="
+														() => {
+															selectedExperience = null;
+															indexSelected = null;
+															dialogExperience = false;
+														}
+													"
+												>
+													Cancelar
+												</v-btn>
+												<v-btn color="primary" text @click="newExperience">
+													{{
+														parseInt(indexSelected) >= 0 &&
+														indexSelected !== null
+															? 'Editar'
+															: 'Agregar'
+													}}
+												</v-btn>
+											</v-card-actions>
+										</v-card>
+									</v-dialog>
 								</v-col>
 								<v-col cols="12" md="6">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
@@ -567,7 +588,7 @@
 										</template>
 									</v-select>
 								</v-col>
-								<v-col cols="12" class="pt-0">
+								<v-col cols="12" md="6" class="pt-0 hidden-md-and-up">
 									<v-chip
 										v-for="(item, i) in form.specialties"
 										:key="i"
@@ -576,6 +597,58 @@
 										class="ma-2"
 										close
 										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
+								</v-col>
+								<v-col cols="12" md="6">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Modelo terapéutico
+									</div>
+									<v-select
+										v-model="form.models"
+										filled
+										outlined
+										dense
+										multiple
+										hide-details
+										type="text"
+										class="pb-0"
+										:items="[
+											'Cognitivo-conductual',
+											'Contextual',
+											'Psicoanálisis',
+											'Humanista',
+											'Sistémico',
+										]"
+									>
+										<template #selection>
+											<div></div>
+										</template>
+									</v-select>
+								</v-col>
+								<v-col cols="12" md="6" class="pt-0 hidden-sm-and-down">
+									<v-chip
+										v-for="(item, i) in form.specialties"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmSpecialties(i)"
+									>
+										{{ item }}
+									</v-chip>
+								</v-col>
+								<v-col cols="12" md="6" class="pt-0">
+									<v-chip
+										v-for="(item, i) in form.models"
+										:key="i"
+										outlined
+										small
+										class="ma-2"
+										close
+										@click:close="rmModels(i)"
 									>
 										{{ item }}
 									</v-chip>
@@ -723,11 +796,14 @@
 									color="primary"
 									@click="saveStep(4)"
 								>
-									Finalizar postulación
+									Siguiente
 								</v-btn>
 							</div>
 						</v-stepper-content>
 
+						<!-- <v-stepper-content step="4">
+							<plans :next="() => (step = 5)" />
+						</v-stepper-content> -->
 						<v-stepper-content step="4">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -736,6 +812,14 @@
 									style="height: 100%; overflow-y: auto"
 								>
 									<v-col cols="12" class="text-center" style="color: #5c5c5c">
+										<div>
+											<v-img
+												width="200"
+												height="200"
+												class="mx-auto"
+												:src="`${$config.LANDING_URL}/balloon.png`"
+											></v-img>
+										</div>
 										<div class="headline font-weight-bold">
 											¡Ya has terminado!
 										</div>
@@ -748,19 +832,17 @@
 											nosotros contar contigo en nuestro equipo de psicólogos,
 											te contactaremos pronto.
 										</div>
-										<div>
+										<!-- <div>
 											<v-btn
+												depressed
 												class="mx-2"
-												rounded
 												color="primary"
-												@click="step = 3"
+												rounded
+												to="/"
 											>
-												Atrás
-											</v-btn>
-											<v-btn class="mx-2" color="primary" rounded to="/">
 												Ir a Hablaquí
 											</v-btn>
-										</div>
+										</div> -->
 									</v-col>
 								</v-row>
 							</v-container>
@@ -775,13 +857,25 @@
 <script>
 import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
+import { mdiPencilOutline, mdiDeleteOutline } from '@mdi/js';
 
 export default {
 	name: 'Postulacion',
+	components: {
+		Icon: () => import('~/components/Icon'),
+		// plans: () => import('~/components/postulacion/Plans'),
+	},
 	layout: 'simple',
 	middleware: ['auth'],
 	data() {
 		return {
+			indexSelected: null,
+			selectedFormation: null,
+			selectedExperience: null,
+			dialogExperience: false,
+			dialogFormation: false,
+			mdiPencilOutline,
+			mdiDeleteOutline,
 			activePicker: null,
 			bmenu: false,
 			zone: '',
@@ -798,25 +892,26 @@ export default {
 			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
-				timeZone: 'America/Santiago',
-				gender: '',
-				languages: ['spanish'],
+				avgPatients: '',
 				birthDate: '',
-				region: '',
 				comuna: '',
-				personalDescription: '',
-				linkedin: '',
-				instagram: '',
 				experience: [{ title: '', place: '', start: '', end: '' }],
 				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				gender: '',
+				instagram: '',
+				isExclusiveActivity: false,
+				isSupervisor: false,
+				isUnderSupervision: false,
+				languages: ['spanish'],
+				linkedin: '',
+				personalDescription: '',
 				professionalDescription: '',
+				region: '',
 				specialties: [],
+				timeZone: 'America/Santiago',
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
-				avgPatients: '',
-				isExclusiveActivity: false,
-				isUnderSupervision: false,
-				isSupervisor: false,
+				models: [],
 			},
 			recruitment: null,
 		};
@@ -902,14 +997,36 @@ export default {
 		rmSpecialties(index) {
 			this.form.specialties.splice(index, 1);
 		},
+		rmModels(index) {
+			this.form.models.splice(index, 1);
+		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		newExperience() {
-			this.form.experience.push({ title: '', place: '', start: '', end: '' });
+			if (this.indexSelected >= 0 && this.indexSelected !== null)
+				this.form.experience[parseInt(this.indexSelected)] = this.selectedExperience;
+			else this.form.experience.push(this.selectedExperience);
+			this.dialogExperience = false;
+		},
+		setExperience(item, index) {
+			if (index !== null) this.indexSelected = index;
+			if (item) this.selectedExperience = item;
+			else this.selectedExperience = { title: '', place: '', start: '', end: '' };
+			this.dialogExperience = true;
 		},
 		newFormation() {
-			this.form.formation.push({ formationType: '', description: '', start: '', end: '' });
+			if (this.indexSelected >= 0 && this.indexSelected !== null)
+				this.form.formation[parseInt(this.indexSelected)] = this.selectedFormation;
+			else this.form.formation.push(this.selectedFormation);
+			this.dialogFormation = false;
+		},
+		setFormation(item, index) {
+			if (index !== null) this.indexSelected = index;
+			if (item) this.selectedFormation = item;
+			else
+				this.selectedFormation = { formationType: '', description: '', start: '', end: '' };
+			this.dialogFormation = true;
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

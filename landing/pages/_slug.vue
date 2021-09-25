@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologo :psychologist="psychologist" />
+		<psicologo :psychologist="psychologist" :set-psychologist="setPsychologist" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -104,6 +104,11 @@ export default {
 				},
 			],
 		};
+	},
+	methods: {
+		setPsychologist(value) {
+			this.psychologist = value;
+		},
 	},
 };
 </script>

@@ -6,6 +6,8 @@ import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from './mail';
 import moment from 'moment';
+import pusher from '../config/pusher';
+import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -528,6 +530,14 @@ const updatePsychologist = async (user, profile) => {
 		runValidators: true,
 		context: 'query',
 	});
+
+	const data = {
+		user: user._id,
+		psychologistId: updated._id,
+		username: updated.username,
+	};
+
+	pusher.trigger('psychologist', 'update', data, pusherCallback);
 
 	logInfo(user.email, 'actualizo su perfil de psicologo');
 	return okResponse('Actualizado exitosamente', { psychologist: updated });

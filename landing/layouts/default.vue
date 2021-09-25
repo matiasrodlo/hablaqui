@@ -26,16 +26,12 @@ export default {
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	mounted() {
-		if (process.browser) {
-			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
-			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
-		}
 		this.initialFetch();
 	},
 	methods: {
 		async initialFetch() {
+			await this.getPsychologists();
 			await this.getAppointments();
-			this.getPsychologists();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

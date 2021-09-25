@@ -614,10 +614,6 @@ export default {
 	},
 	async mounted() {
 		moment.locale('es');
-		if (process.browser) {
-			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
-			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
-		}
 		await this.getPsychologists();
 		await this.getMessages();
 		if (this.$route.params.psy) {
