@@ -230,6 +230,10 @@ let recruitment = new Schema({
 		type: Boolean,
 		default: false,
 	},
+	isFormCompleted: {
+		type: Boolean,
+		default: false,
+	},
 	ratings: [rating],
 	sessions: [session],
 	timeZone: {
