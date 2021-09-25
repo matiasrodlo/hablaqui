@@ -10,8 +10,17 @@
 					contain
 				/>
 			</nuxt-link>
-			<span class="text--secondary text-h6">
+			<span class="hidden-sm-and-down text--secondary text-h6">
 				¿Necesitas ayuda? <b class="primary--text">Contáctanos</b>
+			</span>
+			<span class="hidden-md-and-up">
+				<v-img
+					style="max-width: 30px"
+					alt="Ayuda"
+					:src="`${$config.LANDING_URL}/help.png`"
+					:lazy-src="`${$config.LANDING_URL}/help.png`"
+					contain
+				/>
 			</span>
 		</div>
 		<v-row justify="center">
