@@ -512,7 +512,7 @@
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															label="Experiencia"
+															label="Cargo"
 															dense
 															type="text"
 														></v-text-field>
@@ -523,7 +523,7 @@
 															filled
 															outlined
 															dense
-															label="Lugar / Descripción"
+															label="Lugar"
 															type="text"
 														></v-text-field>
 													</v-col>
