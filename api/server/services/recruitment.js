@@ -98,7 +98,7 @@ const recruitmentService = {
 		delete payload.__v;
 
 		const newProfile = await psychologist.create(payload);
-		mailService.sendWelcomeNewPsychologist(user);
+		mailService.sendWelcomeNewPsychologist(payload);
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')

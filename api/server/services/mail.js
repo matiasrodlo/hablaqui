@@ -212,7 +212,7 @@ const mailService = {
 			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.com',
 			subject: 'Recibimos tu postulación a Hablaquí',
 			template: 'recruitment-confirmation',
-			'v:user_first_name': name,
+			'v:first_name': name,
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
