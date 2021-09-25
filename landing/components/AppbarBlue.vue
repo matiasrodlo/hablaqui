@@ -70,7 +70,7 @@
 					icon
 					@click="drawer = !drawer"
 				>
-					<icon :icon="mdiMenu" />
+					<icon color="white" :icon="mdiMenu" />
 				</v-btn>
 			</div>
 		</v-app-bar>

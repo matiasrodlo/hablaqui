@@ -14,6 +14,11 @@
 				/>
 			</v-list-item>
 			<v-list dense>
+				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+					<v-list-item-content>
+						<v-list-item-title>Para especialistas</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item
 					id="link-psi-drawer"
 					accesskey="p"
@@ -33,11 +38,6 @@
 				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
-					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -126,12 +126,22 @@
 					contain
 				/>
 			</nuxt-link>
+			<nuxt-link
+				v-show="!$auth.$state.loggedIn"
+				id="especialistas-appabar"
+				accesskey="r"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-2 ml-7 mr-3"
+				to="/para-especialistas"
+			>
+				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
+			</nuxt-link>
 			<router-link
 				id="psicologo-appbar"
 				:to="{ name: 'psicologos' }"
 				style="text-decoration: none"
 				accesskey="p"
-				class="hidden-sm-and-down ml-7 mr-3"
+				class="hidden-sm-and-down mx-2"
 			>
 				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
 			</router-link>
@@ -152,16 +162,6 @@
 				to="/blog"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</nuxt-link>
-			<nuxt-link
-				v-show="!$auth.$state.loggedIn"
-				id="especialistas-appabar"
-				accesskey="r"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				to="/para-especialistas"
-			>
-				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
