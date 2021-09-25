@@ -10,7 +10,7 @@ const mg = mailgun({
 const mailService = {
 	/**
 	 * @description Send a welcome email to a new user using the mailgun API with the template 'welcome-new-user'
-	 * @param {string} user - A User object from the database, corresponding to a new client
+	 * @param {Object} user - A User object from the database, corresponding to a new client
 	 */
 	async sendWelcomeNewUser(user) {
 		const { email, name } = user;
@@ -32,7 +32,7 @@ const mailService = {
 	},
 	/**
 	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
-	 * @param {string} user - A User object from the database, corresponding to the new psychologist
+	 * @param {Object} user - A User object from the database, corresponding to the new psychologist
 	 */
 	async sendWelcomeNewPsychologist(user) {
 		const { email, name } = user;
@@ -55,8 +55,8 @@ const mailService = {
 	},
 	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
-	 * @param {string} user - A User object from the database, corresponding to the client
-	 * @param {string} psy - A psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 * @returns A promise with Mailgun's response
 	 */
@@ -92,6 +92,14 @@ const mailService = {
 			});
 		});
 	},
+
+	/**
+	 * @description Send an appointmet reminder to a psychologist about an upcomming session
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {string} date - The date of the appointment
+	 * @returns A promise with Mailgun's response
+	 */
 	async sendReminderPsy(user, psy, date) {
 		const { email, name, lastName } = user;
 		const dataPayload = {

@@ -35,7 +35,6 @@ function generatePayload(date, mailId) {
 const cronService = {
 	/**
 	 * @description This function is used to schedule emails about an upcoming appoitment
-	 * @param no params
 	 * @returns {object} The response about the scheduling system
 	 **/
 	async scheduleEmails() {
