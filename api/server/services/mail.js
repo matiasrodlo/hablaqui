@@ -53,6 +53,13 @@ const mailService = {
 			}
 		});
 	},
+	/**
+	 * @description Send an appointmet reminder to a user about an upcomming session
+	 * @param {string} user - A User object from the database, corresponding to the client
+	 * @param {string} psy - A psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {string} date - The date of the appointment
+	 * @returns A promise with Mailgun's response
+	 */
 	async sendReminderUser(user, psy, date) {
 		const { email, name } = user;
 		const dataPayload = {
@@ -86,15 +93,20 @@ const mailService = {
 		});
 		return sendMail;
 	},
-	async sendAppointmentConfirmation(user, date) {
+	async sendReminderPsy(user, psy, date) {
 		const { email, name } = user;
 		const dataPayload = {
-			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
-			subject: 'Agendamiento exitoso de tu cita',
-			template: 'appointment-confirmation',
-			'v:first_name': name,
+			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
+			subject: 'Queda una hora para tu sesión en Hablaquí',
+			template: 'reminder-psy',
+			'o:deliverytime': moment(date)
+				.subtract(1, 'hour')
+				.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+			'v:user_first_name': name,
+			'v:psy_first_name': psy.name,
+			'v:psy_last_name': psy.lastName,
 			'v:day': moment(date)
 				.locale('es-mx')
 				.format('LL'),
