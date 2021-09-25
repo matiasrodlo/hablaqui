@@ -120,10 +120,13 @@ export default {
 			mdiMenu,
 			drawer: true,
 			online: true,
-			isMini: false,
+			isMini: true,
 		};
 	},
 	computed: {
+		expand() {
+			return true;
+		},
 		links() {
 			const visible =
 				(this.$auth.$state.loggedIn &&
