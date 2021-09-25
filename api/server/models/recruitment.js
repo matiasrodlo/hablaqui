@@ -232,7 +232,7 @@ let recruitment = new Schema({
 	},
 	isFormCompleted: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 	ratings: [rating],
 	sessions: [session],
