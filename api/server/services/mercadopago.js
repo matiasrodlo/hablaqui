@@ -8,6 +8,7 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import emailscheduling from '../models/emailscheduling';
 import mailService from './mail';
+import moment from 'moment-timezone';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -110,7 +111,7 @@ const successPay = async params => {
 
 	await emailscheduling.create({
 		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
+		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -122,7 +123,7 @@ const successPay = async params => {
 	// Email scheduling for appointment reminder for the psychologist
 	await emailscheduling.create({
 		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
+		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
@@ -131,7 +132,13 @@ const successPay = async params => {
 		psyRef: psyId,
 		sessionRef: sessionId,
 	});
-	await mailService.sendAppointmentConfirmation(foundUser, sessionData.date);
+	// Send appointment confirmation for user and psychologist
+	await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
+	await mailService.sendAppConfirmationPsy(
+		foundPsychologist,
+		foundUser,
+		sessionData.date
+	);
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');

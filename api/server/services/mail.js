@@ -58,7 +58,6 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
-	 * @returns A promise with Mailgun's response
 	 */
 	async sendReminderUser(user, psy, date) {
 		const { email, name } = user;
@@ -98,7 +97,6 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
-	 * @returns A promise with Mailgun's response
 	 */
 	async sendReminderPsy(user, psy, date) {
 		const { email, name, lastName } = user;
@@ -133,7 +131,12 @@ const mailService = {
 			});
 		});
 	},
-	async sendAppointmentConfirmation(user, date) {
+	/**
+	 * @description Send an appointmet purchase confirmation to a user
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {string} date - The date of the appointment
+	 */
+	async sendAppConfirmationUser(user, date) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
@@ -159,15 +162,55 @@ const mailService = {
 			});
 		});
 	},
-	async sendRecruitmentConfirmation(psy) {
+	/**
+	 * @description Send an appointmet purchase confirmation to a user
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {string} date - The date of the appointment
+	 */
+	async sendAppConfirmationPsy(psy, user, date) {
+		const nameUser = user.name;
+		const lastNameUser = user.lastName;
 		const { email, name } = psy;
+		const dataPayload = {
+			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
+			subject: 'Te han reservado una sesión en Hablaquí',
+			template: 'appointment-confirmation-psy',
+			'v:user_first_name': nameUser,
+			'v:user_last_name': lastNameUser,
+			'v:psy_first_name': name,
+			'v:date': moment(date)
+				.locale('es-mx')
+				.format('LL'),
+			'v:hour': moment(date)
+				.locale('es-mx')
+				.format('LT'),
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
+	/**
+	 * @description Send an email to a psychologist about his/her new application
+	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
+	 */
+	async sendRecruitmentConfirmation(recruitedPsy) {
+		const { email, name } = recruitedPsy;
 		const dataPayload = {
 			from: 'Hablaquí <reclutamiento@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.com',
 			subject: 'Recibimos tu postulación a Hablaquí',
 			template: 'recruitment-confirmation',
-			'v:first_name': name,
+			'v:user_first_name': name,
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
