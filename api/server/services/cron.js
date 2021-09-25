@@ -1,4 +1,5 @@
-import emailscheduling from '../models/emailscheduling';
+'use-strict';
+import email from '../models/email';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
@@ -10,6 +11,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
  * @param {moment} date Is the date of the appointment
  * @returns
  */
+
 function isSchedulableEmail(date) {
 	return moment()
 		.add(3, 'days')
@@ -22,6 +24,7 @@ function isSchedulableEmail(date) {
  * @param {string} mailId Mailgun ID to identify the email internally
  * @returns an object with the payload
  */
+
 function generatePayload(date, mailId) {
 	return {
 		wasScheduled: true,
@@ -38,7 +41,7 @@ const cronService = {
 	 * @returns {object} The response about the scheduling system
 	 **/
 	async scheduleEmails() {
-		const pendingEmails = await emailscheduling.find({
+		const pendingEmails = await email.find({
 			wasScheduled: false,
 		});
 		if (pendingEmails.length > 0) {
@@ -69,7 +72,7 @@ const cronService = {
 							sessionDate,
 							emailSent.id
 						);
-						await emailscheduling.findByIdAndUpdate(
+						await email.findByIdAndUpdate(
 							emailInfo._id,
 							updatePayload,
 							{ new: true }

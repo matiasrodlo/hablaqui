@@ -1,3 +1,5 @@
+'use strict';
+
 import chatService from '../services/chat';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';

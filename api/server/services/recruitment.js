@@ -1,3 +1,5 @@
+'use strict';
+
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';

@@ -1,3 +1,5 @@
+'use strict';
+
 import blogService from '../services/blog';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';

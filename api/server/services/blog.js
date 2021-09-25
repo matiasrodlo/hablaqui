@@ -1,3 +1,5 @@
+'use strict';
+
 import { logInfo } from '../config/pino';
 import Article from '../models/article';
 import Psychologist from '../models/psychologist';

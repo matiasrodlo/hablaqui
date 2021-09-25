@@ -1,3 +1,5 @@
+'use strict';
+
 import { Router } from 'express';
 import recruitmentController from '../controllers/recruitment';
 import passport from 'passport';

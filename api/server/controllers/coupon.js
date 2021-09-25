@@ -1,3 +1,5 @@
+'use strict';
+
 import couponService from '../services/coupon';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';

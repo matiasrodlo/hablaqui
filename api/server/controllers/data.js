@@ -1,3 +1,5 @@
+'use strict';
+
 import dataService from '../services/data';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';

@@ -1,3 +1,5 @@
+'use strict';
+
 import uniqueValidator from 'mongoose-unique-validator';
 import bcrypt from 'bcrypt';
 const mongoose = require('mongoose');

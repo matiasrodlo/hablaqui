@@ -1,3 +1,5 @@
+'use strict';
+
 import { Router } from 'express';
 import passport from 'passport';
 import chatController from '../controllers/chat';

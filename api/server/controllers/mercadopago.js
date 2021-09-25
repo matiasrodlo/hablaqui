@@ -1,3 +1,5 @@
+'use strict';
+
 import mercadopagoService from '../services/mercadopago';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';

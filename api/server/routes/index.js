@@ -1,3 +1,5 @@
+'use strict';
+
 import appointmentsRouter from './appointments';
 import authRoutes from './auth';
 import dataRouter from './data';

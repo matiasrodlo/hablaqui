@@ -1,3 +1,5 @@
+'use strict';
+
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
