@@ -4,7 +4,6 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import mailService from './mail';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
@@ -385,7 +384,6 @@ const register = async body => {
 	};
 
 	User.create(newUser);
-	mailService.sendWelcomeNewPsychologist(newUser);
 
 	return okResponse('psicologo creado');
 };

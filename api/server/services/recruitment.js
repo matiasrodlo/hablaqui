@@ -25,6 +25,8 @@ const recruitmentService = {
 		}
 
 		const recruited = await Recruitment.create(payload);
+		// Send email to the psychologist confirming the application
+		mailService.sendRecruitmentConfirmation(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},

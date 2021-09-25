@@ -133,6 +133,52 @@ const mailService = {
 			});
 		});
 	},
+	async sendAppointmentConfirmation(user, date) {
+		const { email, name } = user;
+		const dataPayload = {
+			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
+			subject: 'Agendaste una cita en Hablaquí',
+			template: 'appointment-confirmation-user',
+			'v:first_name': name,
+			'v:day': moment(date)
+				.locale('es-mx')
+				.format('LL'),
+			'v:hour': moment(date)
+				.locale('es-mx')
+				.format('LT'),
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
+	async sendRecruitmentConfirmation(psy) {
+		const { email, name } = psy;
+		const dataPayload = {
+			from: 'Hablaquí <reclutamiento@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.com',
+			subject: 'Recibimos tu postulación a Hablaquí',
+			template: 'recruitment-confirmation',
+			'v:first_name': name,
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
