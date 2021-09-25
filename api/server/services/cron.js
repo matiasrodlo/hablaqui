@@ -3,7 +3,7 @@ import email from '../models/email';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
-import moment from 'moment-timezone';
+import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 
 /**
@@ -46,10 +46,7 @@ const cronService = {
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = moment.tz(
-					emailInfo.sessionDate,
-					'America/Santiago'
-				);
+				const sessionDate = moment(emailInfo.sessionDate);
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);

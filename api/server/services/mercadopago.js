@@ -10,7 +10,7 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
-import moment from 'moment-timezone';
+import moment from 'moment';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -113,7 +113,7 @@ const successPay = async params => {
 
 	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -125,7 +125,7 @@ const successPay = async params => {
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
