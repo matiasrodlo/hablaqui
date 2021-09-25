@@ -82,7 +82,7 @@ const mailService = {
 				.format('LT'),
 		};
 
-		const sendMail = new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
@@ -91,10 +91,9 @@ const mailService = {
 				}
 			});
 		});
-		return sendMail;
 	},
 	async sendReminderPsy(user, psy, date) {
-		const { email, name } = user;
+		const { email, name, lastName } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
@@ -105,6 +104,7 @@ const mailService = {
 				.subtract(1, 'hour')
 				.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 			'v:user_first_name': name,
+			'v:user_last_name': lastName,
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
 			'v:day': moment(date)
@@ -115,7 +115,7 @@ const mailService = {
 				.format('LT'),
 		};
 
-		const sendMail = new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
@@ -124,7 +124,6 @@ const mailService = {
 				}
 			});
 		});
-		return sendMail;
 	},
 };
 
