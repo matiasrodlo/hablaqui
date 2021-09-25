@@ -3,6 +3,7 @@ import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
+import mailService from './mail';
 
 const recruitmentService = {
 	/**
@@ -24,6 +25,8 @@ const recruitmentService = {
 		}
 
 		const recruited = await Recruitment.create(payload);
+		// Send email to the psychologist confirming the application
+		mailService.sendRecruitmentConfirmation(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
@@ -93,6 +96,7 @@ const recruitmentService = {
 		delete payload.__v;
 
 		const newProfile = await psychologist.create(payload);
+		mailService.sendWelcomeNewPsychologist(user);
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')
