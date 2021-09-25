@@ -1,7 +1,7 @@
 import moment from 'moment';
-import mailgun from 'mailgun-js';
+//import mailgun from 'mailgun-js';
 
-const DOMAIN = 'mail.hablaqui.com';
+//const DOMAIN = 'mail.hablaqui.com';
 /*
 const mg = mailgun({
 	apiKey: process.env.MAILGUN_API_KEY,

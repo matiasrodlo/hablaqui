@@ -133,12 +133,12 @@ const successPay = async params => {
 		sessionRef: sessionId,
 	});
 	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
+	/*await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
 	await mailService.sendAppConfirmationPsy(
 		foundPsychologist,
 		foundUser,
 		sessionData.date
-	);
+	);*/
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');

@@ -53,17 +53,17 @@ const cronService = {
 					try {
 						let emailSent;
 						if (emailInfo.type === 'reminder-user') {
-							emailSent = await mailService.sendReminderUser(
+							/*emailSent = await mailService.sendReminderUser(
 								user,
 								psy,
 								sessionDate
-							);
+							);*/
 						} else if (emailInfo.type === 'reminder-psy') {
-							emailSent = await mailService.sendReminderPsy(
+							/*emailSent = await mailService.sendReminderPsy(
 								user,
 								psy,
 								sessionDate
-							);
+							);*/
 						}
 						const updatePayload = generatePayload(
 							sessionDate,
