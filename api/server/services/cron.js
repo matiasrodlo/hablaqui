@@ -1,4 +1,4 @@
-import emailscheduling from '../models/emailscheduling';
+//import emailscheduling from '../models/emailscheduling';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
@@ -37,6 +37,7 @@ const cronService = {
 	 * @description This function is used to schedule emails about an upcoming appoitment
 	 * @returns {object} The response about the scheduling system
 	 **/
+	/*
 	async scheduleEmails() {
 		const pendingEmails = await emailscheduling.find({
 			wasScheduled: false,
@@ -57,13 +58,13 @@ const cronService = {
 								user,
 								psy,
 								sessionDate
-							);*/
+							);
 						} else if (emailInfo.type === 'reminder-psy') {
 							/*emailSent = await mailService.sendReminderPsy(
 								user,
 								psy,
 								sessionDate
-							);*/
+							);
 						}
 						const updatePayload = generatePayload(
 							sessionDate,
@@ -88,6 +89,7 @@ const cronService = {
 				' email(s) scheduled'
 		);
 	},
+	*/
 };
 
 export default cronService;

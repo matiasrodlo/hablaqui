@@ -3,6 +3,7 @@ import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
 const cronController = {
+	/*
 	async scheduleEmails(req, res) {
 		try {
 			const { data, code } = await cronService.scheduleEmails();
@@ -10,7 +11,7 @@ const cronController = {
 		} catch (err) {
 			errorCallback(res, err);
 		}
-	},
+	},*/
 };
 
 export default Object.freeze(cronController);
