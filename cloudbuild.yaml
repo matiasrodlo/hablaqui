@@ -72,5 +72,6 @@ steps:
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
   
-machineType: 'N1_HIGHCPU_8'
+options:
+  machineType: 'N1_HIGHCPU_8'
 timeout: "2600s"
