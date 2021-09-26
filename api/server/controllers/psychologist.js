@@ -1,3 +1,5 @@
+'use strict';
+
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
@@ -52,11 +54,7 @@ const psychologistsController = {
 	async register(req, res) {
 		try {
 			const { body } = req;
-			const avatar = req.file.cloudStoragePublicUrl;
-			const { data, code } = await psychologistsService.register(
-				body,
-				avatar
-			);
+			const { data, code } = await psychologistsService.register(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error registrando un psicologo');
@@ -157,7 +155,7 @@ const psychologistsController = {
 	async deleteOne(req, res) {
 		try {
 			const { user } = req;
-			const { id } = req.body;
+			const { id } = req.params;
 			const { data, code } = await psychologistsService.deleteOne(
 				user,
 				id

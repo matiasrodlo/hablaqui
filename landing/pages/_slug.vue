@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<psicologo :psychologist="psychologist" />
+		<psicologo :psychologist="psychologist" :set-psychologist="setPsychologist" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -31,15 +31,9 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologo: () => import('~/components/psicologos/psicologo'),
 	},
-	async asyncData({ $axios, params, payload }) {
-		if (payload) {
-			return { psychologist: payload };
-		} else {
-			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
-			return {
-				psychologist,
-			};
-		}
+	async asyncData({ $axios, params }) {
+		const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
+		return { psychologist };
 	},
 	head() {
 		return {
@@ -110,6 +104,11 @@ export default {
 				},
 			],
 		};
+	},
+	methods: {
+		setPsychologist(value) {
+			this.psychologist = value;
+		},
 	},
 };
 </script>

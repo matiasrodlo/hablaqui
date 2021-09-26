@@ -79,11 +79,8 @@
 				{{ $auth.$state.user.role == 'user' ? 'Mis planes' : 'Horario' }}
 			</v-tab>
 
-			<!-- <v-tab class="primary--text text-capitalize">
+			<v-tab class="primary--text text-capitalize">
 				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
-			</v-tab> -->
-			<v-tab v-if="$auth.$state.user.role == 'user'" class="primary--text text-capitalize">
-				Mi psicologo
 			</v-tab>
 		</v-tabs>
 		<v-row>

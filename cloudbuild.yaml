@@ -58,6 +58,7 @@ steps:
       - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
       - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "MAILGUN_API_KEY=${_MAILGUN_API_KEY}"
       - "NO_REPLY_EMAIL=${_NO_REPLY_EMAIL}"
       - "NO_REPLY_PASSWORD=${_NO_REPLY_PASSWORD}"
       - "GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}"
@@ -70,5 +71,7 @@ steps:
     args: ["app", "deploy"]
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
-
+  
+options:
+  machineType: 'N1_HIGHCPU_8'
 timeout: "2600s"

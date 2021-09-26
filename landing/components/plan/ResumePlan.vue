@@ -5,7 +5,7 @@
 			<div class="d-flex">
 				<v-text-field v-model="coupon" dense outlined hide-details>
 					<template #label>
-						<span class="caption py-0">Introduzca el codigo</span>
+						<span class="caption py-0">Introduzca el código</span>
 					</template>
 				</v-text-field>
 				<button

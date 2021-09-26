@@ -1,3 +1,5 @@
+'use strict';
+
 import { model, plugin, Schema } from 'mongoose';
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 

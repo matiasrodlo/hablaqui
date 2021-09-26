@@ -52,5 +52,5 @@ export const push_person_verify_url = process.env.PUSH_PERSON_VERIFY_URL;
 export const push_person_verify = process.env.PUSH_PERSON_VERIFY;
 export const no_reply_email = process.env.NO_REPLY_EMAIL;
 export const no_reply_password = process.env.NO_REPLY_PASSWORD;
-export const landing_url = process.env.LANDING_URL;
+export const landing_url = process.env.VUE_APP_LANDING;
 export const mercadopago_key = process.env.MERCADOPAGO_KEY;

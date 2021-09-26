@@ -4,62 +4,56 @@
 			<v-progress-circular indeterminate color="primary" />
 		</v-row>
 		<template v-else>
-			<v-slide-group v-model="slide" class="content" center-active show-arrows>
-				<template #prev>
-					<div class="align-self-start mt-4">
-						<icon :icon="mdiChevronLeft" />
-					</div>
-				</template>
-				<template #next>
-					<div class="align-self-start mt-4">
-						<icon :icon="mdiChevronRight" />
-					</div>
-				</template>
-				<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
-					<v-container class="pb-0 px-2 px-sm-4">
-						<div class="text-center" @click="toggle">
-							<div class="primary--text font-weight-bold">{{ item.text }}</div>
-							<div class="text--secondary">{{ item.day }}</div>
+			<div style="max-height: 280px; overflow-y: auto">
+				<v-slide-group v-model="slide" class="content" center-active show-arrows>
+					<template #prev>
+						<div class="align-self-start mt-4">
+							<icon :icon="mdiChevronLeft" />
 						</div>
-						<div
-							v-dragscroll
-							class="mt-3"
-							style="
-								overscroll-behavior: contain;
-								max-height: 272px;
-								overflow: hidden auto;
-							"
-						>
-							<template v-if="item.available.length">
-								<v-sheet
-									v-for="(n, r) in item.available"
-									:key="r"
-									rounded
-									class="item text-center my-3 pa-2"
-									style="width: 100%; height: fit-content"
-									:class="
-										selected &&
-										selected.start == n &&
-										selected.date == item.date
-											? 'itemSelected'
-											: ''
-									"
-									@click.stop="
-										selected = {
-											date: item.date,
-											start: n,
-											end: item.available[r + 1],
-										}
-									"
-								>
-									{{ n }}
-								</v-sheet>
-							</template>
-							<template v-else> </template>
+					</template>
+					<template #next>
+						<div class="align-self-start mt-4">
+							<icon :icon="mdiChevronRight" />
 						</div>
-					</v-container>
-				</v-slide-item>
-			</v-slide-group>
+					</template>
+					<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
+						<v-container class="pb-0 px-2 px-sm-4">
+							<div style="display: fixed" class="text-center" @click="toggle">
+								<div class="primary--text font-weight-bold">{{ item.text }}</div>
+								<div class="text--secondary">{{ item.day }}</div>
+							</div>
+							<div class="mt-3" style="">
+								<template v-if="item.available.length">
+									<v-sheet
+										v-for="(n, r) in item.available"
+										:key="r"
+										rounded
+										class="item text-center my-3 pa-2"
+										style="width: 100%; height: fit-content"
+										:class="
+											selected &&
+											selected.start == n &&
+											selected.date == item.date
+												? 'itemSelected'
+												: ''
+										"
+										@click.stop="
+											selected = {
+												date: item.date,
+												start: n,
+												end: item.available[r + 1],
+											}
+										"
+									>
+										{{ n }}
+									</v-sheet>
+								</template>
+								<template v-else> </template>
+							</div>
+						</v-container>
+					</v-slide-item>
+				</v-slide-group>
+			</div>
 			<div
 				style="max-width: 200px"
 				:class="selected ? 'primary pointer' : 'blue-grey lighten-3'"
@@ -79,13 +73,9 @@
 <script>
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
-import { dragscroll } from 'vue-dragscroll';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
 export default {
-	directives: {
-		dragscroll,
-	},
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
@@ -137,9 +127,9 @@ export default {
 	align-self: start;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
 	display: none;
-}
+} */
 
 .item {
 	white-space: nowrap;

@@ -1,7 +1,15 @@
 <template>
 	<v-app>
-		<v-navigation-drawer v-model="drawer" color="primary" app mobile-breakpoint="960">
-			<v-sheet color="primary" class="pa-4">
+		<v-navigation-drawer
+			v-model="drawer"
+			mini-variant-width="60"
+			:mini-variant.sync="isMini"
+			color="primary"
+			:expand-on-hover="$vuetify.breakpoint.mdAndUp"
+			app
+			mobile-breakpoint="960"
+		>
+			<v-sheet color="primary" class="pa-1">
 				<v-img
 					height="100"
 					contain
@@ -67,6 +75,13 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<template v-if="!isMini" #append>
+				<div class="pa-2 white--text">
+					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
+					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
+					contactarnos
+				</div>
+			</template>
 		</v-navigation-drawer>
 		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
 			<h1 class="white--text">{{ routeName }}</h1>
@@ -91,7 +106,7 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 
 export default {
@@ -101,46 +116,58 @@ export default {
 	},
 	data() {
 		return {
+			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
 			drawer: true,
 			online: true,
+			isMini: true,
 		};
 	},
 	computed: {
+		expand() {
+			return true;
+		},
 		links() {
+			const visible =
+				(this.$auth.$state.loggedIn &&
+					this.$auth.user.role === 'psychologist' &&
+					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: `${this.$config.LANDING_URL}/chat.png`,
-					visible: true,
+					visible,
 				},
 				{
 					name: 'Mis sesiones',
-					link: 'agenda',
+					link: { name: 'dashboard-agenda' },
 					img: `${this.$config.LANDING_URL}/sesiones.png`,
-					visible: true,
-				},
-				{
-					name: 'Diario de bienestar',
-					link: { name: 'dashboard-diario' },
-					img: `${this.$config.LANDING_URL}/notas.png`,
-					visible: false,
+					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `${this.$config.LANDING_URL}/pay.png`,
 					visible:
-						this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `${this.$config.LANDING_URL}/home.png`,
-					visible: true,
+					visible,
+				},
+				{
+					name: 'Panel de control',
+					link: { name: 'dashboard-panel' },
+					img: `${this.$config.LANDING_URL}/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
 		},

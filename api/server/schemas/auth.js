@@ -6,6 +6,18 @@ const authSchema = {
 			.min(3)
 			.max(100)
 			.required(),
+		lastName: Joi.string()
+			.min(3)
+			.max(100)
+			.allow(''),
+		role: Joi.string()
+			.min(3)
+			.max(100)
+			.allow(''),
+		rut: Joi.string()
+			.min(3)
+			.max(100)
+			.allow(''),
 		email: Joi.string()
 			.email()
 			.required(),

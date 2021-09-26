@@ -4,7 +4,10 @@
 		<nuxt keep-alive />
 		<template
 			v-if="
-				$route.name !== 'index' && $auth.$state.loggedIn && $auth.$state.user.role == 'user'
+				$route.name !== 'index' &&
+				$route.name !== 'para-especialistas' &&
+				$auth.$state.loggedIn &&
+				$auth.$state.user.role == 'user'
 			"
 		>
 			<client-only>
@@ -23,16 +26,12 @@ export default {
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	mounted() {
-		if (process.browser) {
-			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
-			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
-		}
 		this.initialFetch();
 	},
 	methods: {
 		async initialFetch() {
+			await this.getPsychologists();
 			await this.getAppointments();
-			this.getPsychologists();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

@@ -4,7 +4,6 @@ export default {
 	async getPsychologists({ commit }) {
 		try {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			localStorage.setItem('psychologists', JSON.stringify(psychologists));
 			commit('setPsychologists', psychologists);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -49,12 +48,13 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async registerPsychologist({ commit }, payload) {
+	async deletePsychologist({ commit }, id) {
 		try {
-			await this.$axios('/psychologists/register', {
-				method: 'POST',
-				data: payload,
+			const { psychologists } = await this.$axios(`/psychologist/${id}`, {
+				method: 'delete',
 			});
+			commit('setPsychologists', psychologists);
+			return psychologists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -89,17 +89,6 @@ export default {
 				data: { profile },
 			});
 			snackBarSuccess('Actualizado exitosamente')(commit);
-			return data.psychologist;
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
-	async updatePrices({ commit }, newPrice) {
-		try {
-			const { data } = await this.$axios('/psychologist/update-prices', {
-				method: 'POST',
-				data: { newPrice },
-			});
 			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);

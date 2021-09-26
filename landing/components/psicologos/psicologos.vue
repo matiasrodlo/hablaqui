@@ -439,7 +439,7 @@
 													class="caption primary--text pb-2"
 													style="border-bottom: 1px solid #bdbdbd"
 												>
-													<span> Codigo {{ item.code }} </span>
+													<span> código {{ item.code }} </span>
 												</span>
 											</div>
 											<div class="body-2 mt-4">
@@ -625,7 +625,7 @@
 															mb-2
 														"
 													>
-														Codigo {{ item.code }}
+														código {{ item.code }}
 													</div>
 													<nuxt-link
 														class="
@@ -761,8 +761,7 @@ export default {
 	},
 	computed: {
 		loading() {
-			if (this.psychologists.length === 0) return true;
-			else return false;
+			return !this.psychologists.length;
 		},
 		/**
 		 * items for search box
@@ -798,9 +797,8 @@ export default {
 		 * filter panel checkbox
 		 */
 		filterLevelOne() {
-			if (!this.gender.length && !this.models.length && !this.languages.length)
-				return this.psychologists;
-			let result = this.psychologists;
+			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
+			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';

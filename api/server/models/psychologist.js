@@ -1,3 +1,5 @@
+'use strict';
+
 import { Schema, model } from 'mongoose';
 
 let session = new Schema({
@@ -46,6 +48,12 @@ let defaultPreferences = {
 	minimumNewSession: 24,
 	minimumRescheduleSession: 24,
 	corporativeSessions: true,
+};
+
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
 };
 
 let formationSchema = new Schema({
@@ -107,6 +115,9 @@ let psychologist = new Schema({
 	linkedin: {
 		type: String,
 	},
+	instagram: {
+		type: String,
+	},
 	username: {
 		type: String,
 	},
@@ -115,6 +126,10 @@ let psychologist = new Schema({
 	},
 	lastName: {
 		type: String,
+	},
+	rut: {
+		type: String,
+		unique: true,
 	},
 	gender: {
 		type: String,
@@ -135,9 +150,11 @@ let psychologist = new Schema({
 	formation: [formationSchema],
 	personalDescription: {
 		type: String,
+		default: '',
 	},
 	professionalDescription: {
 		type: String,
+		default: '',
 	},
 	models: {
 		type: Array,
@@ -160,12 +177,20 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultPreferences,
 	},
+	sessionPrices: {
+		type: Object,
+		default: defaultPrices,
+	},
 	paymentMethod: {
 		type: Object,
 		required: false,
 	},
 	ratings: [rating],
 	sessions: [session],
+	timeZone: {
+		type: String,
+		default: 'America/Santiago',
+	},
 });
 
 //psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });

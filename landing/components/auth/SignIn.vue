@@ -40,6 +40,7 @@
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'SignIn',
@@ -84,7 +85,14 @@ export default {
 					const response = await this.$auth.loginWith('local', { data: this.form });
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn)
-						if (!this.isDialog) {
+						if (
+							response.data.user.role === 'psychologist' &&
+							!response.data.user.psychologist
+						) {
+							this.$router.push({ name: 'postulacion' });
+						} else if (response.data.user.role === 'superuser') {
+							this.$router.push({ name: 'dashboard-panel' });
+						} else if (!this.isDialog) {
 							if (this.$route.query.from === 'psy')
 								this.$router.push({ name: 'evaluacion' });
 							else if (
@@ -95,7 +103,11 @@ export default {
 							else this.$router.push({ name: 'psicologos' });
 						} else this.setResumeView(true);
 				} catch (error) {
-					this.snackBar({ content: error.message, color: 'error' });
+					if (error.response.status === 401) {
+						alert('Correo o contraseña invalida');
+					} else {
+						this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+					}
 				} finally {
 					this.loading = false;
 				}

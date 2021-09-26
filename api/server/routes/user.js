@@ -1,3 +1,5 @@
+'use strict';
+
 import { Router } from 'express';
 import passport from 'passport';
 import userController from '../controllers/users';
@@ -73,4 +75,5 @@ userRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	userController.getSessions
 );
+
 export default userRouter;
