@@ -224,6 +224,27 @@ const mailService = {
 			});
 		});
 	},
+	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
+		const { name, lastName } = recruitedPsy;
+		const dataPayload = {
+			from: 'Hablaquí <internal@mail.hablaqui.com>',
+			to: 'direccion@hablaqui.com',
+			replyto: 'Hablaquí <noreply@mail.hablaqui.com',
+			subject: '[Internal] Hay una nueva postulación a Hablaquí',
+			template: 'internal-recruitment-profile-received',
+			'v:psy_first_name': name,
+			'v:psy_last_name': lastName,
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
