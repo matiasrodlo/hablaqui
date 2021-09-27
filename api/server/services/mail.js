@@ -21,7 +21,7 @@ const mailService = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: 'Bienvenido/a a Hablaquí',
+			subject: '¡Bienvenido/a a Hablaquí!',
 			template: 'welcome-new-user',
 			'v:first_name': name,
 		};
@@ -44,7 +44,7 @@ const mailService = {
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: 'Bienvenido/a a Hablaquí',
+			subject: '¡Bienvenido/a a Hablaquí!',
 			template: 'welcome-new-psy',
 			'v:first_name': name,
 		};
@@ -68,7 +68,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
-			subject: 'Queda una hora para tu sesión en Hablaquí',
+			subject: 'Tu sesión en Hablaquí está por comenzar',
 			template: 'reminder-users',
 			'o:deliverytime': moment(date)
 				.subtract(1, 'hour')
@@ -107,7 +107,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
-			subject: 'Queda una hora para tu sesión en Hablaquí',
+			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
 			template: 'reminder-psy',
 			'o:deliverytime': moment(date)
 				.subtract(1, 'hour')
@@ -144,7 +144,7 @@ const mailService = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
-			subject: 'Agendaste una cita en Hablaquí',
+			subject: 'Agendaste una sesión en Hablaquí',
 			template: 'appointment-confirmation-user',
 			'v:first_name': name,
 			'v:day': moment(date)

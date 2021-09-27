@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
+import momentz from 'moment-timezone';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 
@@ -273,13 +274,17 @@ const createSession = async body => {
 		'DD/MM/YYYY HH:mm'
 	).toISOString();
 
+	const formatedDate = momentz
+		.tz(moment(isoDate).format('DD/MM/YYYY HH:mm'), 'America/Santiago')
+		.format();
+
 	let sessionQuantity = 0;
 	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
 	if (payload.paymentPeriod == 'Pago mensual') sessionQuantity = 4;
 	if (payload.paymentPeriod == 'Pago cada tres meses') sessionQuantity = 12;
 
 	const sessions = {
-		date: isoDate,
+		date: formatedDate,
 		user: payload.user._id,
 		plan: payload.title,
 		statePayments: 'pending',
@@ -294,7 +299,7 @@ const createSession = async body => {
 	);
 	if (
 		moment().isAfter(
-			moment(isoDate).subtract({
+			moment(formatedDate).subtract({
 				hours: foundPsychologist.preferences.minimumNewSession,
 			})
 		)

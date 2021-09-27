@@ -113,7 +113,7 @@ const successPay = async params => {
 
 	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment(sessionData.date),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -125,7 +125,7 @@ const successPay = async params => {
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment(sessionData.date),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
