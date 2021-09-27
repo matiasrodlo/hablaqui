@@ -1,6 +1,7 @@
 'use strict';
 
 import moment from 'moment';
+import momentz from 'moment-timezone';
 import mailgun from 'mailgun-js';
 import { logInfo } from '../config/winston';
 
@@ -78,7 +79,7 @@ const mailService = {
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
 			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': moment(date).format('HH:mm'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 
 		return new Promise((resolve, reject) => {
@@ -114,7 +115,7 @@ const mailService = {
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
 			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': moment(date).format('HH:mm'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
@@ -141,7 +142,7 @@ const mailService = {
 			template: 'appointment-confirmation-user',
 			'v:first_name': name,
 			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': moment(date).format('HH:mm'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
@@ -173,7 +174,7 @@ const mailService = {
 			'v:user_last_name': lastNameUser,
 			'v:psy_first_name': name,
 			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': moment(date).format('HH:mm'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
