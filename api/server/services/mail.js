@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import mailgun from 'mailgun-js';
+import { logInfo } from '../config/winston';
 
 const DOMAIN = 'mail.hablaqui.com';
 
@@ -76,12 +77,8 @@ const mailService = {
 			'v:first_name': name,
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': moment(date).format('HH:mm'),
 		};
 
 		return new Promise((resolve, reject) => {
@@ -116,12 +113,8 @@ const mailService = {
 			'v:user_last_name': lastName,
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': moment(date).format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
