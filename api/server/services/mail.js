@@ -147,12 +147,8 @@ const mailService = {
 			subject: 'Agendaste una sesión en Hablaquí',
 			template: 'appointment-confirmation-user',
 			'v:first_name': name,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': moment(date).format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
@@ -183,12 +179,8 @@ const mailService = {
 			'v:user_first_name': nameUser,
 			'v:user_last_name': lastNameUser,
 			'v:psy_first_name': name,
-			'v:date': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': moment(date).format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
