@@ -10,7 +10,6 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
-import moment from 'moment';
 
 mercadopago.configure({
 	access_token: mercadopago_key,

@@ -269,14 +269,12 @@ const match = async body => {
 const createSession = async body => {
 	const { payload } = body;
 
-	const isoDate = moment(
-		`${payload.date} ${payload.start}`,
-		'DD/MM/YYYY HH:mm'
-	).toISOString();
+	const date = payload.date;
+	const start = payload.start;
 
-	const formatedDate = momentz
-		.tz(moment(isoDate).format('DD/MM/YYYY HH:mm'), 'America/Santiago')
-		.format();
+	const parsedDate = date.split('/');
+	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
+	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
 
 	let sessionQuantity = 0;
 	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
@@ -284,7 +282,7 @@ const createSession = async body => {
 	if (payload.paymentPeriod == 'Pago cada tres meses') sessionQuantity = 12;
 
 	const sessions = {
-		date: formatedDate,
+		date: isoDate,
 		user: payload.user._id,
 		plan: payload.title,
 		statePayments: 'pending',
@@ -299,7 +297,7 @@ const createSession = async body => {
 	);
 	if (
 		moment().isAfter(
-			moment(formatedDate).subtract({
+			moment(isoDate).subtract({
 				hours: foundPsychologist.preferences.minimumNewSession,
 			})
 		)
