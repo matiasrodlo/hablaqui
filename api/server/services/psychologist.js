@@ -358,6 +358,7 @@ const createSession = async body => {
 						: 'not used',
 				},
 			},
+			hasPaid: true,
 		}
 	);
 

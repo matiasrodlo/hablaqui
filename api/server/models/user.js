@@ -91,6 +91,10 @@ let userSchema = new Schema({
 		default: false,
 	},
 	plan: [planSchema],
+	hasPaid: {
+		type: Boolean,
+		default: 'false',
+	},
 	finishedSessions: {
 		type: Array,
 		required: false,

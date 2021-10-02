@@ -28,6 +28,10 @@ couponRouter.post(
  * Revisa la validez de un cupon.
  * req.body = { coupon: string }
  */
-couponRouter.post('/coupons/check-coupon', couponController.checkCoupon);
+couponRouter.post(
+	'/coupons/check-coupon',
+	[passport.authenticate('jwt', { session: true })],
+	couponController.checkCoupon
+);
 
 export default couponRouter;
