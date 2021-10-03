@@ -133,7 +133,7 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	token: [tokenSchema],
+	token: tokenSchema,
 });
 
 userSchema.methods.toJSON = function() {

@@ -8,6 +8,7 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+import crypto from 'crypto';
 
 const generateJwt = user => {
 	const payload = {
@@ -21,7 +22,8 @@ const generateJwt = user => {
 };
 
 const login = async user => {
-	let userDB = await User.findById(user._id);
+	let userDB = await User.findOne(user.email);
+	// Check whether the user has been verified or not. If not, we return a conflict response.
 	if (!userDB.isEmailVerified) {
 		return conflictResponse('Correo no verificado');
 	}
@@ -45,6 +47,14 @@ const register = async payload => {
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
 		await mailService.sendWelcomeNewUser(user);
+		const token = {
+			token: crypto.randomBytes(20).toString('hex'),
+			user: user._id,
+			type: 'verifyEmail',
+			createdAt: undefined,
+		};
+		// To find the id later {"token._id": ObjectId('')}
+		await User.findByIdAndUpdate(user._id, { token: token });
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user,
