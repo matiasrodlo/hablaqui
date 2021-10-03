@@ -1,3 +1,5 @@
+'use strict';
+
 import uniqueValidator from 'mongoose-unique-validator';
 import bcrypt from 'bcrypt';
 const mongoose = require('mongoose');
@@ -89,6 +91,10 @@ let userSchema = new Schema({
 		default: false,
 	},
 	plan: [planSchema],
+	hasPaid: {
+		type: Boolean,
+		default: 'false',
+	},
 	finishedSessions: {
 		type: Array,
 		required: false,

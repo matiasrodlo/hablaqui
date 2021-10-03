@@ -1,3 +1,5 @@
+'use strict';
+
 import { Router } from 'express';
 import multer from '../middleware/multer';
 import dataController from '../controllers/data';

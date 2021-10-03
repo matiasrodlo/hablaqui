@@ -1,13 +1,17 @@
 <template>
 	<div>
+		<div class="primary">
+			<Appbar class="hidden-md-and-up" />
+		</div>
 		<v-img
+			class="hidden-sm-and-down"
 			:src="`${$config.LANDING_URL}/especialistas.png`"
 			:lazy-src="`${$config.LANDING_URL}/especialistas.png`"
 			width="100%"
 			height="auto"
 			alt="Únete a la red de salud mental y bienestar"
 		>
-			<Appbar />
+			<Appbar class="hidden-sm-and-down" />
 			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="7" xl="5">
@@ -84,7 +88,7 @@
 				</v-row>
 			</v-container>
 		</v-img>
-		<v-container class="mt-4 hidden-md-and-up">
+		<v-container class="hidden-md-and-up primary pb-16">
 			<v-row>
 				<v-col>
 					<form-user-psy />
@@ -360,7 +364,7 @@
 				contain
 				height="auto"
 				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
-				:src="`${$config.LANDING_URL}/descargar-app-small.png`"
+				:src="`${$config.LANDING_URL}/phone-descarga.png`"
 			>
 				<v-row justify-md="center" align="center" style="height: 500px">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
@@ -373,7 +377,7 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Pronto podrás Descargar nuestra app de chat
+							Proximamente
 						</h2>
 						<h3
 							class="
@@ -431,7 +435,7 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Descargar nuestra app de chat
+							Proximamente
 						</h2>
 						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
 							Mantén contacto con tus consultantes vía Chat. <br />

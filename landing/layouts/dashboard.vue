@@ -77,6 +77,7 @@
 			</v-list>
 			<template v-if="!isMini" #append>
 				<div class="pa-2 white--text">
+					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
 					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
 					contactarnos
 				</div>
@@ -105,7 +106,7 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 
 export default {
@@ -115,15 +116,19 @@ export default {
 	},
 	data() {
 		return {
+			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
 			drawer: true,
 			online: true,
-			isMini: false,
+			isMini: true,
 		};
 	},
 	computed: {
+		expand() {
+			return true;
+		},
 		links() {
 			const visible =
 				(this.$auth.$state.loggedIn &&

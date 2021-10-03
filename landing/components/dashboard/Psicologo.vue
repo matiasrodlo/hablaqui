@@ -39,7 +39,7 @@
 						</span>
 					</v-avatar>
 					<div class="text-center body-2 text--secondary mt-3 mb-2">
-						Codigo {{ psychologist.code }}
+						Código {{ psychologist.code }}
 					</div>
 					<nuxt-link
 						class="primary--text body-2 font-weight-bold"

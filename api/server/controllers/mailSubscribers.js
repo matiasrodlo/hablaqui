@@ -1,3 +1,5 @@
+'use strict';
+
 import MailSubscribers from '../models/mailSubscribers';
 import { okResponse, restResponse } from '../utils/responses/functions';
 

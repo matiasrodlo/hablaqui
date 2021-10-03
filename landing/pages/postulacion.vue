@@ -1,5 +1,5 @@
 <template>
-	<div v-if="form" style="height: 100vh">
+	<div v-if="!loading" style="height: 100vh">
 		<div class="ma-4 d-flex justify-space-between align-center">
 			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
 				<v-img
@@ -10,8 +10,17 @@
 					contain
 				/>
 			</nuxt-link>
-			<span class="text--secondary text-h6">
+			<span class="hidden-sm-and-down text--secondary text-h6">
 				¿Necesitas ayuda? <b class="primary--text">Contáctanos</b>
+			</span>
+			<span class="hidden-md-and-up">
+				<v-img
+					style="max-width: 30px"
+					alt="Ayuda"
+					:src="`${$config.LANDING_URL}/help.png`"
+					:lazy-src="`${$config.LANDING_URL}/help.png`"
+					contain
+				/>
 			</span>
 		</div>
 		<v-row justify="center">
@@ -503,7 +512,7 @@
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															label="Experiencia"
+															label="Cargo"
 															dense
 															type="text"
 														></v-text-field>
@@ -514,7 +523,7 @@
 															filled
 															outlined
 															dense
-															label="Lugar / Descripción"
+															label="Lugar"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -794,7 +803,12 @@
 									class="mx-2"
 									rounded
 									color="primary"
-									@click="saveStep(4)"
+									@click="
+										() => {
+											form.isFormCompleted = true;
+											saveStep(4);
+										}
+									"
 								>
 									Siguiente
 								</v-btn>
@@ -895,8 +909,8 @@ export default {
 				avgPatients: '',
 				birthDate: '',
 				comuna: '',
-				experience: [{ title: '', place: '', start: '', end: '' }],
-				formation: [{ formationType: '', description: '', start: '', end: '' }],
+				experience: [],
+				formation: [],
 				gender: '',
 				instagram: '',
 				isExclusiveActivity: false,
@@ -914,6 +928,7 @@ export default {
 				models: [],
 			},
 			recruitment: null,
+			loading: false,
 		};
 	},
 	computed: {
@@ -930,6 +945,7 @@ export default {
 		},
 	},
 	async mounted() {
+		this.loading = true;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.timezone = data;
@@ -938,6 +954,8 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
+		if (this.form.isFormCompleted) this.step = 4;
+		this.loading = false;
 	},
 	methods: {
 		async saveStep(step) {
@@ -986,7 +1004,8 @@ export default {
 					this.form.professionalDescription &&
 					this.form.formation.length &&
 					this.form.experience.length &&
-					this.form.specialties.length
+					this.form.specialties.length &&
+					this.form.models.length
 				);
 			}
 			// Final del formulario, validamos step 3

@@ -1,3 +1,5 @@
+'use strict';
+
 import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -6,9 +8,8 @@ import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
 import User from '../models/user';
-import emailscheduling from '../models/emailscheduling';
+import email from '../models/email';
 import mailService from './mail';
-import moment from 'moment-timezone';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -109,9 +110,9 @@ const successPay = async params => {
 		session => session._id.toString() == sessionId
 	)[0];
 
-	await emailscheduling.create({
+	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -121,9 +122,9 @@ const successPay = async params => {
 		sessionRef: sessionId,
 	});
 	// Email scheduling for appointment reminder for the psychologist
-	await emailscheduling.create({
+	await email.create({
 		mailgunIdL: undefined,
-		sessionDate: moment.tz(sessionData.date, 'America/Santiago'),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,

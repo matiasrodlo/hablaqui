@@ -1,3 +1,5 @@
+'use strict';
+
 import { logInfo } from '../config/pino';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
@@ -5,6 +7,7 @@ import bcrypt from 'bcrypt';
 import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
+import momentz from 'moment-timezone';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 
@@ -266,10 +269,12 @@ const match = async body => {
 const createSession = async body => {
 	const { payload } = body;
 
-	const isoDate = moment(
-		`${payload.date} ${payload.start}`,
-		'DD/MM/YYYY HH:mm'
-	).toISOString();
+	const date = payload.date;
+	const start = payload.start;
+
+	const parsedDate = date.split('/');
+	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
+	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
 
 	let sessionQuantity = 0;
 	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
@@ -353,6 +358,7 @@ const createSession = async body => {
 						: 'not used',
 				},
 			},
+			hasPaid: true,
 		}
 	);
 

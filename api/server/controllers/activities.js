@@ -1,3 +1,4 @@
+'use strict';
 import activitiesService from '../services/activities';
 
 const activitiesController = {

@@ -41,7 +41,7 @@
 								v-if="$vuetify.breakpoint.mdAndUp && psychologist.code"
 								class="caption text--secondary"
 							>
-								Codigo {{ psychologist.code }}
+								Código {{ psychologist.code }}
 							</div>
 						</v-col>
 						<v-col cols="12" md="9">
@@ -59,7 +59,7 @@
 										v-if="!$vuetify.breakpoint.mdAndUp && psychologist.code"
 										class="caption text--secondary"
 									>
-										Codigo {{ psychologist.code }}
+										Código {{ psychologist.code }}
 									</div>
 								</v-col>
 								<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">

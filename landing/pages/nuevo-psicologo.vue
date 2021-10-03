@@ -126,7 +126,7 @@ CUALQUIER PERSONA
 								<v-text-field
 									v-model="form.code"
 									type="number"
-									label="Codigo"
+									label="Código"
 									outlined
 									autocomplete="off"
 								></v-text-field>

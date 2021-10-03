@@ -1,3 +1,5 @@
+'use strict';
+
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
 import { logInfo } from '../config/pino';

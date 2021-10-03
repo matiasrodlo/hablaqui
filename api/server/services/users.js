@@ -1,3 +1,5 @@
+'use strict';
+
 import User from '../models/user';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';

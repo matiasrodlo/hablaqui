@@ -25,6 +25,11 @@
 						<v-list-item-title>Psicólogos</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+					<v-list-item-content>
+						<v-list-item-title>Para especialistas</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
 					<v-list-item-content>
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
@@ -33,11 +38,6 @@
 				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
-					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -136,6 +136,16 @@
 				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
 			</router-link>
 			<nuxt-link
+				v-show="!$auth.$state.loggedIn"
+				id="especialistas-appabar"
+				accesskey="r"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-2"
+				to="/para-especialistas"
+			>
+				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
+			</nuxt-link>
+			<nuxt-link
 				id="faq-appbar"
 				accesskey="f"
 				style="text-decoration: none"
@@ -152,16 +162,6 @@
 				to="/blog"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</nuxt-link>
-			<nuxt-link
-				v-show="!$auth.$state.loggedIn"
-				id="especialistas-appabar"
-				accesskey="r"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				to="/para-especialistas"
-			>
-				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>

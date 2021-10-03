@@ -1,3 +1,5 @@
+'use strict';
+
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';

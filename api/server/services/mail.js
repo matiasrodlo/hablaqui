@@ -1,7 +1,12 @@
+'use strict';
+
 import moment from 'moment';
+import momentz from 'moment-timezone';
 import mailgun from 'mailgun-js';
+import { logInfo } from '../config/winston';
 
 const DOMAIN = 'mail.hablaqui.com';
+
 const mg = mailgun({
 	apiKey: process.env.MAILGUN_API_KEY,
 	domain: DOMAIN,
@@ -18,7 +23,7 @@ const mailService = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: 'Bienvenido/a a Hablaquí',
+			subject: '¡Bienvenido/a a Hablaquí!',
 			template: 'welcome-new-user',
 			'v:first_name': name,
 		};
@@ -41,7 +46,7 @@ const mailService = {
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: 'Bienvenido/a a Hablaquí',
+			subject: '¡Bienvenido/a a Hablaquí!',
 			template: 'welcome-new-psy',
 			'v:first_name': name,
 		};
@@ -65,7 +70,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
-			subject: 'Queda una hora para tu sesión en Hablaquí',
+			subject: 'Tu sesión en Hablaquí está por comenzar',
 			template: 'reminder-users',
 			'o:deliverytime': moment(date)
 				.subtract(1, 'hour')
@@ -73,12 +78,8 @@ const mailService = {
 			'v:first_name': name,
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 
 		return new Promise((resolve, reject) => {
@@ -104,7 +105,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
-			subject: 'Queda una hora para tu sesión en Hablaquí',
+			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
 			template: 'reminder-psy',
 			'o:deliverytime': moment(date)
 				.subtract(1, 'hour')
@@ -113,14 +114,9 @@ const mailService = {
 			'v:user_last_name': lastName,
 			'v:psy_first_name': psy.name,
 			'v:psy_last_name': psy.lastName,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
-
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
 				if (error) {
@@ -142,15 +138,11 @@ const mailService = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
-			subject: 'Agendaste una cita en Hablaquí',
+			subject: 'Agendaste una sesión en Hablaquí',
 			template: 'appointment-confirmation-user',
 			'v:first_name': name,
-			'v:day': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
@@ -181,12 +173,8 @@ const mailService = {
 			'v:user_first_name': nameUser,
 			'v:user_last_name': lastNameUser,
 			'v:psy_first_name': name,
-			'v:date': moment(date)
-				.locale('es-mx')
-				.format('LL'),
-			'v:hour': moment(date)
-				.locale('es-mx')
-				.format('LT'),
+			'v:date': moment(date).format('DD/MM/YYYY'),
+			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {
@@ -210,7 +198,28 @@ const mailService = {
 			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.com',
 			subject: 'Recibimos tu postulación a Hablaquí',
 			template: 'recruitment-confirmation',
-			'v:user_first_name': name,
+			'v:first_name': name,
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
+	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
+		const { name, lastName } = recruitedPsy;
+		const dataPayload = {
+			from: 'Hablaquí <internal@mail.hablaqui.com>',
+			to: 'direccion@hablaqui.com',
+			replyto: 'Hablaquí <noreply@mail.hablaqui.com',
+			subject: '[Internal] Hay una nueva postulación a Hablaquí',
+			template: 'internal-recruitment-profile-received',
+			'v:psy_first_name': name,
+			'v:psy_last_name': lastName,
 		};
 		return new Promise((resolve, reject) => {
 			mg.messages().send(dataPayload, function(error, body) {

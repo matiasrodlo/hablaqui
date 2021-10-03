@@ -439,7 +439,7 @@
 													class="caption primary--text pb-2"
 													style="border-bottom: 1px solid #bdbdbd"
 												>
-													<span> Codigo {{ item.code }} </span>
+													<span> código {{ item.code }} </span>
 												</span>
 											</div>
 											<div class="body-2 mt-4">
@@ -625,7 +625,7 @@
 															mb-2
 														"
 													>
-														Codigo {{ item.code }}
+														código {{ item.code }}
 													</div>
 													<nuxt-link
 														class="

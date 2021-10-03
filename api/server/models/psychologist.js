@@ -1,3 +1,5 @@
+'use strict';
+
 import { Schema, model } from 'mongoose';
 
 let session = new Schema({

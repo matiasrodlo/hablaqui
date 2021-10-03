@@ -1,3 +1,5 @@
+'use strict';
+
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -25,8 +27,9 @@ const recruitmentService = {
 		}
 
 		const recruited = await Recruitment.create(payload);
-		// Send email to the psychologist confirming the application
+		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
 		mailService.sendRecruitmentConfirmation(recruited);
+		mailService.sendRecruitmentConfirmationAdmin(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
@@ -96,7 +99,7 @@ const recruitmentService = {
 		delete payload.__v;
 
 		const newProfile = await psychologist.create(payload);
-		mailService.sendWelcomeNewPsychologist(user);
+		mailService.sendWelcomeNewPsychologist(payload);
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')

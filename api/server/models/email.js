@@ -1,7 +1,9 @@
+'use strict';
+
 import moment from 'moment';
 import { Schema, model } from 'mongoose';
 
-let emailscheduling = new Schema({
+let email = new Schema({
 	mailgunId: {
 		type: String,
 		default: null,
@@ -42,4 +44,4 @@ let emailscheduling = new Schema({
 	},
 });
 
-export default model('emailscheduling', emailscheduling);
+export default model('email', email);

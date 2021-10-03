@@ -1,3 +1,5 @@
+'use strict';
+
 import cronService from '../services/cron';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
