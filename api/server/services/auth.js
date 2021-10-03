@@ -21,6 +21,10 @@ const generateJwt = user => {
 };
 
 const login = async user => {
+	let userDB = await User.findById(user._id);
+	if (!userDB.isEmailVerified) {
+		return conflictResponse('Correo no verificado');
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user,
 		token: generateJwt(user),
