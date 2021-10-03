@@ -43,6 +43,26 @@ let planSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+let tokenSchema = new Schema(
+	{
+		token: {
+			type: String,
+		},
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: 'user',
+		},
+		type: {
+			type: String,
+			enum: ['passwordReset', 'verifyEmail'],
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
+		},
+	},
+	{ timestamps: true }
+);
 let userSchema = new Schema({
 	name: {
 		type: String,
@@ -109,6 +129,11 @@ let userSchema = new Schema({
 		default: 'user',
 		enum: ['user', 'psychologist', 'superuser'],
 	},
+	isEmailVerified: {
+		type: Boolean,
+		default: false,
+	},
+	token: [tokenSchema],
 });
 
 userSchema.methods.toJSON = function() {
