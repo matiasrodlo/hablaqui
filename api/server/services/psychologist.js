@@ -325,6 +325,7 @@ const createSession = async body => {
 	);
 
 	let expirationDate = '';
+	let remainingSessions = 0;
 	if (payload.paymentPeriod == 'Pago semanal')
 		expirationDate = moment()
 			.add({ weeks: 1 })
@@ -333,10 +334,12 @@ const createSession = async body => {
 		expirationDate = moment()
 			.add({ weeks: 4 })
 			.toISOString();
+		remainingSessions = 3;
 	if (payload.paymentPeriod == 'Pago cada tres meses')
 		expirationDate = moment()
 			.add({ months: 3 })
 			.toISOString();
+		remainingSessions = 11;
 
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
@@ -356,6 +359,8 @@ const createSession = async body => {
 					usedCoupon: payload.discountCoupon
 						? payload.discountCoupon
 						: 'not used',
+					remainingSessions,
+					totalSessions: sessionQuantity,
 				},
 			},
 			hasPaid: true,
@@ -677,6 +682,28 @@ const updateFormationExperience = async (user, payload) => {
 		psychologist: updatedPsychologist,
 	});
 };
+
+const paymentsInfo = async user => {
+	if (user.role != 'psychologist') return conflictResponse('');
+	const foundUsers = await User.find({ psychologist: user.psychologist });
+	const mappedUsers = foundUsers
+		.map(user => {
+			return {
+				role: user.role,
+				name: user.name,
+				lastName: user.lastName,
+				avatar: user.avatar,
+				_id: user._id,
+				plan: user.plan[user.plan.length - 1]
+			};
+		})
+		.filter(user => user.role != 'psychologist');
+	
+
+	const response = {
+
+	}
+}
 
 const psychologistsService = {
 	getAll,
