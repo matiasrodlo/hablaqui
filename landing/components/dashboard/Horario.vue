@@ -317,9 +317,22 @@ export default {
 		async schedule() {
 			this.loading = true;
 
+			// Sort and remove empty
 			this.items = this.items.map(item => ({
 				...item,
-				intervals: item.intervals.filter(el => el[0] !== '' || el[1] !== ''),
+				intervals: item.intervals
+					.filter(
+						el =>
+							el[0] !== '' ||
+							el[1] !== '' ||
+							moment(el[0], 'HH:mm').isSame(moment(el[1], 'HH:mm'))
+					)
+					.map(el => {
+						if (moment(el[0], 'HH:mm').isBefore(moment(el[1], 'HH:mm')))
+							return [el[0], el[1]];
+						else return [el[1], el[0]];
+					})
+					.filter(el => !moment(el[0], 'HH:mm').isSame(moment(el[1], 'HH:mm'))),
 			}));
 
 			const payload = {
