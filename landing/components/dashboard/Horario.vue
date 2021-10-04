@@ -44,9 +44,9 @@
 							{{ item.active ? 'Abierto' : 'Cerrado' }}
 						</div>
 					</v-col>
-					<v-col cols="6">
+					<v-col cols="7">
 						<v-row v-for="(interval, i) in item.day" :key="i">
-							<v-col cols="5" class="text-center">
+							<v-col cols="5" class="text-center py-2">
 								<v-select
 									v-model="interval[0]"
 									:disabled="!item.active"
@@ -57,7 +57,7 @@
 									:items="hours"
 								></v-select>
 							</v-col>
-							<v-col cols="5" class="text-center">
+							<v-col cols="5" class="text-center py-2">
 								<v-select
 									v-model="interval[1]"
 									:disabled="!item.active"
@@ -68,32 +68,33 @@
 									:items="hours"
 								></v-select>
 							</v-col>
-							<v-col cols="2">
+							<v-col v-if="i !== 0" align-self="center" cols="2">
 								<v-btn
 									fab
 									depressed
 									outlined
 									color="error"
-									x-small
-									:disabled="i === 0"
+									width="25"
+									height="25"
 									@click="rmInterval(index, i)"
 								>
 									<icon color="error" :icon="mdiMinus"
 								/></v-btn>
 							</v-col>
+							<v-col v-if="i == 0" cols="2">
+								<v-btn
+									fab
+									depressed
+									outlined
+									color="primary"
+									width="25"
+									height="25"
+									@click="addInterval(index)"
+								>
+									<icon color="primary" :icon="mdiPlus"
+								/></v-btn>
+							</v-col>
 						</v-row>
-					</v-col>
-					<v-col cols="1">
-						<v-btn
-							fab
-							depressed
-							outlined
-							color="primary"
-							x-small
-							@click="addInterval(index)"
-						>
-							<icon color="primary" :icon="mdiPlus"
-						/></v-btn>
 					</v-col>
 					<v-col cols="2" class="text-right">
 						<v-switch
@@ -101,7 +102,6 @@
 							hide-details
 							dense
 							class="mt-0 pb-0 d-inline-block"
-							@change="item.day = ['9:00', '18:00']"
 						></v-switch>
 					</v-col>
 				</v-row>
@@ -223,17 +223,16 @@ export default {
 	},
 	computed: {
 		hasChanges() {
-			// const days = {
-			// 	monday: this.items[0].active ? this.items[0].day : 'busy',
-			// 	tuesday: this.items[1].active ? this.items[1].day : 'busy',
-			// 	wednesday: this.items[2].active ? this.items[2].day : 'busy',
-			// 	thursday: this.items[3].active ? this.items[3].day : 'busy',
-			// 	friday: this.items[4].active ? this.items[4].day : 'busy',
-			// 	saturday: this.items[5].active ? this.items[5].day : 'busy',
-			// 	sunday: this.items[6].active ? this.items[6].day : 'busy',
-			// };
-			// return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
-			return true;
+			const days = {
+				monday: this.items[0].active ? this.items[0].day : 'busy',
+				tuesday: this.items[1].active ? this.items[1].day : 'busy',
+				wednesday: this.items[2].active ? this.items[2].day : 'busy',
+				thursday: this.items[3].active ? this.items[3].day : 'busy',
+				friday: this.items[4].active ? this.items[4].day : 'busy',
+				saturday: this.items[5].active ? this.items[5].day : 'busy',
+				sunday: this.items[6].active ? this.items[6].day : 'busy',
+			};
+			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
 		},
 	},
 	mounted() {
@@ -241,7 +240,7 @@ export default {
 	},
 	methods: {
 		setDay(payload) {
-			let day = ['00:00', '00:00'];
+			let day;
 			this.items = this.items.map((item, index) => {
 				let active = true;
 				if (index === 0) {
