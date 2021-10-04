@@ -90,7 +90,7 @@
 					</v-row>
 				</v-card-text>
 			</v-card>
-			<v-card v-if="psychologist" class="mt-6">
+			<v-card v-if="psychologist" class="mt-6 pb-10">
 				<v-card-text class="text-h5 primary--text font-weight-bold">Perfil</v-card-text>
 				<v-card-text>
 					<v-divider></v-divider>
@@ -183,6 +183,18 @@
 									? psychologist.personalDescription
 									: 'Sin descripcion'
 							}}
+						</v-col>
+					</v-row>
+				</v-card-text>
+				<v-card-text>
+					<v-row align="center">
+						<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
+							Política de reprogramación
+						</v-col>
+						<v-col class="body-1 text-left">
+							Puedes reprogramar tu sesión hasta
+							{{ psychologist.preferences.minimumRescheduleSession }}hora(s) antes sin
+							costo adicional.
 						</v-col>
 					</v-row>
 				</v-card-text>
