@@ -20,9 +20,9 @@
 						>
 							Gestiona tu horario de trabajo aquí
 						</div>
-						<small v-if="hasOverlay" class="error--text"
-							>Existe un solapamiento de horas</small
-						>
+						<small v-if="hasOverlay" class="error--text">
+							Existe un solapamiento de horas
+						</small>
 					</div>
 					<div>
 						<v-btn
@@ -316,6 +316,12 @@ export default {
 		},
 		async schedule() {
 			this.loading = true;
+
+			this.items = this.items.map(item => ({
+				...item,
+				intervals: item.intervals.filter(el => el[0] !== '' || el[1] !== ''),
+			}));
+
 			const payload = {
 				monday: this.items[0].active ? this.items[0].intervals : 'busy',
 				tuesday: this.items[1].active ? this.items[1].intervals : 'busy',
