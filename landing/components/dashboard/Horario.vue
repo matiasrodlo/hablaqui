@@ -12,10 +12,10 @@
 							class="text-h5 font-weight-medium my-4"
 							style="color: #3c3c3b; line-height: 26.4px"
 						>
-							Configura tus horarios
+							Configura tu horario semanal
 						</div>
 						<div class="text-h6" style="color: #3c3c3b; line-height: 26.4px">
-							Si deseas agregar otro intervalo, puedes usar tu calendario de Google.
+							Gestiona tu horario de trabajo aquí
 						</div>
 					</div>
 					<div>
@@ -34,9 +34,9 @@
 				</div>
 			</v-card-text>
 			<v-divider></v-divider>
-			<v-card-text v-for="item in items" :key="item.id" class="py-2 px-0">
-				<v-row align="center" class="px-8">
-					<v-col cols="4">
+			<v-card-text v-for="(item, index) in items" :key="item.id" class="py-2 px-0">
+				<v-row align="start" class="px-8">
+					<v-col cols="3">
 						<div class="primary--text text-h5 font-weight-medium">
 							{{ item.titulo }}
 						</div>
@@ -44,34 +44,63 @@
 							{{ item.active ? 'Abierto' : 'Cerrado' }}
 						</div>
 					</v-col>
-					<v-col class="text-center">
-						<v-select
-							v-model="item.day[0]"
-							:disabled="!item.active"
-							full-width
-							outlined
-							dense
-							hide-details
-							:items="hours"
-						></v-select>
+					<v-col cols="6">
+						<v-row v-for="(interval, i) in item.day" :key="i">
+							<v-col cols="5" class="text-center">
+								<v-select
+									v-model="interval[0]"
+									:disabled="!item.active"
+									full-width
+									outlined
+									dense
+									hide-details
+									:items="hours"
+								></v-select>
+							</v-col>
+							<v-col cols="5" class="text-center">
+								<v-select
+									v-model="interval[1]"
+									:disabled="!item.active"
+									full-width
+									outlined
+									dense
+									hide-details
+									:items="hours"
+								></v-select>
+							</v-col>
+							<v-col cols="2">
+								<v-btn
+									fab
+									depressed
+									outlined
+									color="error"
+									x-small
+									:disabled="i === 0"
+									@click="rmInterval(index, i)"
+								>
+									<icon color="error" :icon="mdiMinus"
+								/></v-btn>
+							</v-col>
+						</v-row>
 					</v-col>
-					<v-col class="text-center">
-						<v-select
-							v-model="item.day[1]"
-							:disabled="!item.active"
-							full-width
+					<v-col cols="1">
+						<v-btn
+							fab
+							depressed
 							outlined
-							dense
-							hide-details
-							:items="hours"
-						></v-select>
+							color="primary"
+							x-small
+							@click="addInterval(index)"
+						>
+							<icon color="primary" :icon="mdiPlus"
+						/></v-btn>
 					</v-col>
 					<v-col cols="2" class="text-right">
 						<v-switch
 							v-model="item.active"
 							hide-details
 							dense
-							class="pb-4 d-inline-block"
+							class="mt-0 pb-0 d-inline-block"
 							@change="item.day = ['9:00', '18:00']"
 						></v-switch>
 					</v-col>
@@ -85,8 +114,12 @@
 <script>
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
+import { mdiPlus, mdiMinus } from '@mdi/js';
 
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		psychologist: {
 			type: Object,
@@ -104,7 +137,7 @@ export default {
 				{
 					title: 'monday',
 					titulo: 'Lunes',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: true,
 					divider: true,
 					id: 1,
@@ -112,7 +145,7 @@ export default {
 				{
 					title: 'tuesday',
 					titulo: 'Martes',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: true,
 					divider: true,
 					id: 2,
@@ -120,7 +153,7 @@ export default {
 				{
 					title: 'wednesday',
 					titulo: 'Miercoles',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: true,
 					divider: true,
 					id: 3,
@@ -136,7 +169,7 @@ export default {
 				{
 					title: 'friday',
 					titulo: 'Viernes',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: true,
 					divider: true,
 					id: 5,
@@ -144,7 +177,7 @@ export default {
 				{
 					title: 'saturday',
 					titulo: 'Sabado',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: false,
 					divider: true,
 					id: 6,
@@ -152,7 +185,7 @@ export default {
 				{
 					title: 'sunday',
 					titulo: 'Domingo',
-					day: ['8:00', '18:00'],
+					day: [['8:00', '18:00']],
 					active: false,
 					divider: false,
 					id: 7,
@@ -184,20 +217,23 @@ export default {
 				'22:00',
 				'23:00',
 			],
+			mdiPlus,
+			mdiMinus,
 		};
 	},
 	computed: {
 		hasChanges() {
-			const days = {
-				monday: this.items[0].active ? this.items[0].day : 'busy',
-				tuesday: this.items[1].active ? this.items[1].day : 'busy',
-				wednesday: this.items[2].active ? this.items[2].day : 'busy',
-				thursday: this.items[3].active ? this.items[3].day : 'busy',
-				friday: this.items[4].active ? this.items[4].day : 'busy',
-				saturday: this.items[5].active ? this.items[5].day : 'busy',
-				sunday: this.items[6].active ? this.items[6].day : 'busy',
-			};
-			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
+			// const days = {
+			// 	monday: this.items[0].active ? this.items[0].day : 'busy',
+			// 	tuesday: this.items[1].active ? this.items[1].day : 'busy',
+			// 	wednesday: this.items[2].active ? this.items[2].day : 'busy',
+			// 	thursday: this.items[3].active ? this.items[3].day : 'busy',
+			// 	friday: this.items[4].active ? this.items[4].day : 'busy',
+			// 	saturday: this.items[5].active ? this.items[5].day : 'busy',
+			// 	sunday: this.items[6].active ? this.items[6].day : 'busy',
+			// };
+			// return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
+			return true;
 		},
 	},
 	mounted() {
@@ -205,27 +241,27 @@ export default {
 	},
 	methods: {
 		setDay(payload) {
+			let day = ['00:00', '00:00'];
 			this.items = this.items.map((item, index) => {
-				let day = ['00:00', '00:00'];
 				let active = true;
 				if (index === 0) {
-					day = payload.monday === 'busy' ? ['9:00', '18:00'] : payload.monday;
+					day = payload.monday === 'busy' ? [['9:00', '18:00']] : payload.monday;
 					active = payload.monday !== 'busy';
 				}
 				if (index === 1) {
-					day = payload.tuesday === 'busy' ? ['9:00', '18:00'] : payload.tuesday;
+					day = payload.tuesday === 'busy' ? [['9:00', '18:00']] : payload.tuesday;
 					active = payload.tuesday !== 'busy';
 				}
 				if (index === 2) {
-					day = payload.wednesday === 'busy' ? ['9:00', '18:00'] : payload.wednesday;
+					day = payload.wednesday === 'busy' ? [['9:00', '18:00']] : payload.wednesday;
 					active = payload.wednesday !== 'busy';
 				}
 				if (index === 3) {
-					day = payload.thursday === 'busy' ? ['9:00', '18:00'] : payload.thursday;
+					day = payload.thursday === 'busy' ? [['9:00', '18:00']] : payload.thursday;
 					active = payload.thursday !== 'busy';
 				}
 				if (index === 4) {
-					day = payload.friday === 'busy' ? ['9:00', '18:00'] : payload.friday;
+					day = payload.friday === 'busy' ? [['9:00', '18:00']] : payload.friday;
 					active = payload.friday !== 'busy';
 				}
 				if (index === 5) {
@@ -233,11 +269,19 @@ export default {
 					active = payload.saturday !== 'busy';
 				}
 				if (index === 6) {
-					day = payload.sunday === 'busy' ? ['9:00', '18:00'] : payload.sunday;
+					day = payload.sunday === 'busy' ? [['9:00', '18:00']] : payload.sunday;
 					active = payload.sunday !== 'busy';
 				}
 				return { ...item, day, active };
 			});
+		},
+		addInterval(indexDay) {
+			this.items[indexDay].day.push(['9:00', '18:00']);
+		},
+		rmInterval(indexDay, indexInterval) {
+			this.items[indexDay].day = this.items[indexDay].day.filter(
+				(el, index) => index !== indexInterval
+			);
 		},
 		async schedule() {
 			this.loading = true;
