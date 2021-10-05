@@ -2,17 +2,17 @@
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
-			<v-col cols="12" md="10" class="heightCalendar">
+			<v-col class="heightCalendar" cols="12" md="10">
 				<v-sheet class="mt-4 mt-md-0">
 					<v-toolbar flat>
 						<v-btn class="mr-4" color="primary" depressed @click="setToday">
 							Hoy
 						</v-btn>
 						<v-btn icon x-large @click="prev">
-							<icon x-large color="grey lighten-1" :icon="mdiChevronLeft" />
+							<icon :icon="mdiChevronLeft" color="grey lighten-1" x-large />
 						</v-btn>
-						<v-btn icon x-large small @click="next">
-							<icon x-large color="grey lighten-1" :icon="mdiChevronRight" />
+						<v-btn icon small x-large @click="next">
+							<icon :icon="mdiChevronRight" color="grey lighten-1" x-large />
 						</v-btn>
 						<v-toolbar-title
 							v-if="$refs.calendar"
@@ -23,31 +23,31 @@
 						<v-spacer></v-spacer>
 						<v-menu bottom right>
 							<template #activator="{ on, attrs }">
-								<v-btn outlined color="grey lighten-1" v-bind="attrs" v-on="on">
+								<v-btn color="grey lighten-1" outlined v-bind="attrs" v-on="on">
 									<span>{{ typeToLabel[type] }}</span>
-									<icon right color="grey lighten-1" :icon="mdiMenuDown" />
+									<icon :icon="mdiMenuDown" color="grey lighten-1" right />
 								</v-btn>
 							</template>
 							<v-list>
 								<v-list-item @click="type = 'day'">
 									<v-list-item-title class="text--secondary"
-										>Dia</v-list-item-title
-									>
+										>Dia
+									</v-list-item-title>
 								</v-list-item>
 								<v-list-item @click="type = 'week'">
 									<v-list-item-title class="text--secondary"
-										>Semana</v-list-item-title
-									>
+										>Semana
+									</v-list-item-title>
 								</v-list-item>
 								<v-list-item @click="type = 'month'">
 									<v-list-item-title class="text--secondary"
-										>Mes</v-list-item-title
-									>
+										>Mes
+									</v-list-item-title>
 								</v-list-item>
 								<v-list-item @click="type = '4day'">
 									<v-list-item-title class="text--secondary"
-										>4 dias</v-list-item-title
-									>
+										>4 dias
+									</v-list-item-title>
 								</v-list-item>
 							</v-list>
 						</v-menu>
@@ -57,11 +57,11 @@
 					<v-calendar
 						ref="calendar"
 						v-model="focus"
-						locale="es"
-						color="primary"
-						:now="today"
 						:events="events"
+						:now="today"
 						:type="type"
+						color="primary"
+						locale="es"
 						@click:event="showEvent"
 						@click:more="viewDay"
 						@click:day="addAppointment"
@@ -69,43 +69,43 @@
 					></v-calendar>
 					<v-menu
 						v-model="selectedOpen"
-						:close-on-content-click="false"
 						:activator="selectedElement"
+						:close-on-content-click="false"
 						offset-x
 					>
-						<v-card color="grey lighten-4" min-width="350px" flat>
+						<v-card color="grey lighten-4" flat min-width="350px">
 							<v-card-text>
 								<v-row justify="space-between">
-									<v-col cols="7" class="body-1 secondary--text">
+									<v-col class="body-1 secondary--text" cols="7">
 										{{ selectedEvent.name }}
 									</v-col>
 									<v-col class="text-right">
 										<v-btn icon>
-											<icon color="grey lighten-1" :icon="mdiPencil" />
+											<icon :icon="mdiPencil" color="grey lighten-1" />
 										</v-btn>
 										<v-btn icon>
-											<icon color="grey lighten-1" :icon="mdiTrashCan" />
+											<icon :icon="mdiTrashCan" color="grey lighten-1" />
 										</v-btn>
 									</v-col>
 								</v-row>
 							</v-card-text>
 							<v-card-text>
-								<icon color="grey lighten-1" left :icon="mdiClockOutline" />
+								<icon :icon="mdiClockOutline" color="grey lighten-1" left />
 								<span>{{ setSubtitle(selectedEvent.start) }}</span>
 							</v-card-text>
 							<v-divider></v-divider>
 							<v-card-actions>
 								<v-btn
-									text
-									color="primary"
 									:to="`/video-llamada/${goToCall(selectedEvent)}`"
+									color="primary"
+									text
 								>
 									Ir a video llamada
 								</v-btn>
 								<v-spacer></v-spacer>
 								<v-btn
-									text
 									color="secondary"
+									text
 									@click="() => openDialog(selectedEvent)"
 								>
 									Reprogramar
@@ -137,12 +137,12 @@
 						</v-card>
 					</v-menu>
 					<v-dialog
-						v-if="newAppointment"
-						v-model="newAppointment"
+						v-if="dialogAppointment"
+						v-model="dialogAppointment"
 						max-width="600"
 						transition="dialog-top-transition"
 					>
-						<v-card rounded="lg" min-height="300">
+						<v-card min-height="300" rounded="lg">
 							<v-card-text
 								class="
 									d-flex
@@ -154,22 +154,18 @@
 								"
 							>
 								<div class="body-1 font-weight-bold">Agendar</div>
-								<v-btn icon @click="() => (newAppointment = false)">
-									<icon color="white" :icon="mdiClose" />
+								<v-btn icon @click="dialogAppointment = false">
+									<icon :icon="mdiClose" color="white" />
 								</v-btn>
 							</v-card-text>
 							<v-card-text class="pt-2 pl-2">
 								<v-row>
-									<v-col cols="12" class="font-weight-medium">
+									<v-col class="font-weight-medium" cols="12">
 										Tipo de evento
 									</v-col>
 									<v-col cols="12">
 										<v-select
 											v-model="typeSession"
-											dense
-											hide-details
-											outlined
-											label="Seleccione"
 											:items="[
 												{ text: 'Sesión online', value: 'sesion online' },
 												{
@@ -181,15 +177,15 @@
 													value: 'compromiso privado',
 												},
 											]"
+											dense
+											hide-details
+											label="Seleccione"
+											outlined
 										></v-select>
 									</v-col>
 									<v-col cols="6">
 										<v-autocomplete
 											v-model="client"
-											dense
-											hide-details
-											outlined
-											label="Nombre"
 											:items="
 												clients.map(item => ({
 													...item,
@@ -198,6 +194,10 @@
 													}`,
 												}))
 											"
+											dense
+											hide-details
+											label="Nombre"
+											outlined
 										>
 											<template #item="{ item }">
 												<div class="my-2">
@@ -215,18 +215,16 @@
 											</template>
 										</v-autocomplete>
 									</v-col>
-									<v-col cols="6">
-										<v-btn
-											fab
-											depressed
-											outlined
-											color="primary"
-											width="25"
-											height="25"
-										>
-											<icon color="primary" :icon="mdiPlus" />
+									<v-col class="d-flex align-center" cols="6">
+										<v-btn text>
+											<div
+												class="primary rounded-circle"
+												style="height: 20px; width: 20px"
+											>
+												<icon :icon="mdiPlus" color="white" small />
+											</div>
+											<span class="ml-2">Consultante nuevo</span>
 										</v-btn>
-										<span class="primary--text">Consultante nuevo </span>
 									</v-col>
 									<v-col cols="6">
 										<v-menu
@@ -234,30 +232,30 @@
 											v-model="menu"
 											:close-on-content-click="false"
 											:return-value.sync="date"
-											transition="scale-transition"
-											offset-y
 											min-width="auto"
+											offset-y
+											transition="scale-transition"
 										>
 											<template #activator="{ on, attrs }">
 												<v-text-field
 													v-model="date"
-													prepend-icon="mdi-calendar"
-													readonly
 													dense
 													hide-details
 													outlined
+													:append-icon="mdiCalendar"
+													readonly
 													v-bind="attrs"
 													v-on="on"
 												></v-text-field>
 											</template>
 											<v-date-picker v-model="date" no-title scrollable>
 												<v-spacer></v-spacer>
-												<v-btn text color="primary" @click="menu = false">
+												<v-btn color="primary" text @click="menu = false">
 													Cancel
 												</v-btn>
 												<v-btn
-													text
 													color="primary"
+													text
 													@click="$refs.menu.save(date)"
 												>
 													OK
@@ -265,30 +263,22 @@
 											</v-date-picker>
 										</v-menu>
 									</v-col>
-									<v-col cols="3" class="text-center py-2">
+									<v-col class="text-center py-2" cols="3">
 										<v-select
-											full-width
-											outlined
+											:items="hours"
 											dense
+											full-width
 											hide-details
-											:items="hours"
+											outlined
 										></v-select>
 									</v-col>
-									<v-col cols="3" class="text-center py-2">
+									<v-col class="text-center py-2" cols="3">
 										<v-select
 											:items="hours"
+											dense
 											full-width
 											outlined
-											dense
 										></v-select>
-									</v-col>
-									<v-col cols="6" class="d-flex align-center">
-										<v-btn text>
-											<div class="primary rounded-circle">
-												<icon small color="white" :icon="mdiPlus" />
-											</div>
-											<span class="ml-2">Consultante nuevo</span>
-										</v-btn>
 									</v-col>
 								</v-row>
 							</v-card-text>
@@ -296,26 +286,26 @@
 					</v-dialog>
 					<div class="text-right py-10">
 						<span class="mx-3">
-							<v-btn x-small fab depressed color="primary">
-								<icon color="white" :icon="mdiCheck" />
+							<v-btn color="primary" depressed fab x-small>
+								<icon :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1">Sesiones online</span>
 						</span>
 						<span class="mx-3">
-							<v-btn x-small fab depressed color="#00c6ea">
-								<icon color="white" :icon="mdiCheck" />
+							<v-btn color="#00c6ea" depressed fab x-small>
+								<icon :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1">Sesiones online</span>
 						</span>
 						<span class="mx-3">
-							<v-btn x-small fab depressed color="#efb908">
-								<icon color="white" :icon="mdiCheck" />
+							<v-btn color="#efb908" depressed fab x-small>
+								<icon :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1">Sesiones online</span>
 						</span>
 						<span class="mx-3">
-							<v-btn x-small outlined fab depressed color="grey">
-								<icon color="grey" :icon="mdiCheck" />
+							<v-btn color="grey" depressed fab outlined x-small>
+								<icon :icon="mdiCheck" color="grey" />
 							</v-btn>
 							<span class="ml-1">Sesiones online</span>
 						</span>
@@ -331,15 +321,16 @@ import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
 import {
+	mdiCheck,
 	mdiChevronLeft,
 	mdiChevronRight,
-	mdiMenuDown,
 	mdiClockOutline,
 	mdiClose,
+	mdiMenuDown,
+	mdiPencil,
 	mdiPlus,
 	mdiTrashCan,
-	mdiPencil,
-	mdiCheck,
+	mdiCalendar,
 } from '@mdi/js';
 
 export default {
@@ -354,6 +345,7 @@ export default {
 		menu: false,
 		date: null,
 		typeSession: '',
+		mdiCalendar,
 		mdiCheck,
 		mdiPencil,
 		mdiTrashCan,
@@ -382,7 +374,7 @@ export default {
 		event: null,
 		idPsychologist: '',
 		dateSelected: null,
-		newAppointment: false,
+		dialogAppointment: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -416,7 +408,7 @@ export default {
 	async mounted() {
 		moment.locale('es');
 		await this.initFetch();
-		this.successPayment();
+		await this.successPayment();
 		this.$refs.calendar?.checkChange();
 	},
 	methods: {
@@ -456,8 +448,7 @@ export default {
 			this.type = 'day';
 		},
 		addAppointment({ date }) {
-			console.log(date);
-			this.newAppointment = true;
+			this.dialogAppointment = true;
 			this.dateSelected = date;
 		},
 		getEventColor(event) {
@@ -505,9 +496,9 @@ export default {
 					sessionId: this.$route.params.sessionId,
 				};
 				await this.updateSession(payload);
-				//  Limpia la query url cuando viene desde mercadopago
-				this.$router.replace({ query: null });
-				// limpiamos el LC "match o psi"
+				//  clean query url from MercadoPago
+				await this.$router.replace({ query: null });
+				// clear Localstorage"match o psi"
 				localStorage.removeItem('match');
 				localStorage.removeItem('psi');
 			}
@@ -518,7 +509,7 @@ export default {
 				.format('hh:mm')}`;
 		},
 		goToCall(selectedEvent) {
-			return selectedEvent.idPsychologist + selectedEvent.idUser;
+			return `${selectedEvent.idPsychologist} ${selectedEvent.idUser}`;
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
