@@ -128,7 +128,7 @@
 									<v-card-text class="px-0 px-sm-2 px-md-4">
 										<calendar
 											:id-psy="idPsychologist"
-											:set-date="date => reschedule(date)"
+											:set-date="e => reschedule(e)"
 											title-button="Reprogramar sesión"
 										/>
 									</v-card-text>
@@ -184,19 +184,110 @@
 										></v-select>
 									</v-col>
 									<v-col cols="6">
-										<v-text-field
+										<v-autocomplete
+											v-model="client"
 											dense
 											hide-details
 											outlined
-											label="Cliente"
-										></v-text-field>
+											label="Nombre"
+											:items="
+												clients.map(item => ({
+													...item,
+													text: `${item.name} ${
+														item.lastName ? item.lastName : ''
+													}`,
+												}))
+											"
+										>
+											<template #item="{ item }">
+												<div class="my-2">
+													<div class="body-2">
+														{{
+															`${item.name} ${
+																item.lastName ? item.lastName : ''
+															}`
+														}}
+													</div>
+													<div style="font-size: 10px">
+														{{ item.email }}
+													</div>
+												</div>
+											</template>
+										</v-autocomplete>
 									</v-col>
 									<v-col cols="6">
+										<v-btn
+											fab
+											depressed
+											outlined
+											color="primary"
+											width="25"
+											height="25"
+										>
+											<icon color="primary" :icon="mdiPlus" />
+										</v-btn>
+										<span class="primary--text">Consultante nuevo </span>
+									</v-col>
+									<v-col cols="6">
+										<v-menu
+											ref="menu"
+											v-model="menu"
+											:close-on-content-click="false"
+											:return-value.sync="date"
+											transition="scale-transition"
+											offset-y
+											min-width="auto"
+										>
+											<template #activator="{ on, attrs }">
+												<v-text-field
+													v-model="date"
+													prepend-icon="mdi-calendar"
+													readonly
+													dense
+													hide-details
+													outlined
+													v-bind="attrs"
+													v-on="on"
+												></v-text-field>
+											</template>
+											<v-date-picker v-model="date" no-title scrollable>
+												<v-spacer></v-spacer>
+												<v-btn text color="primary" @click="menu = false">
+													Cancel
+												</v-btn>
+												<v-btn
+													text
+													color="primary"
+													@click="$refs.menu.save(date)"
+												>
+													OK
+												</v-btn>
+											</v-date-picker>
+										</v-menu>
+									</v-col>
+									<v-col cols="3" class="text-center py-2">
+										<v-select
+											full-width
+											outlined
+											dense
+											hide-details
+											:items="hours"
+										></v-select>
+									</v-col>
+									<v-col cols="3" class="text-center py-2">
+										<v-select
+											:items="hours"
+											full-width
+											outlined
+											dense
+										></v-select>
+									</v-col>
+									<v-col cols="6" class="d-flex align-center">
 										<v-btn text>
 											<div class="primary rounded-circle">
 												<icon small color="white" :icon="mdiPlus" />
 											</div>
-											<span class="ml-1">Consultante nuevo</span>
+											<span class="ml-2">Consultante nuevo</span>
 										</v-btn>
 									</v-col>
 								</v-row>
@@ -238,6 +329,7 @@
 <script>
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
+
 import {
 	mdiChevronLeft,
 	mdiChevronRight,
@@ -259,6 +351,8 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		menu: false,
+		date: null,
 		typeSession: '',
 		mdiCheck,
 		mdiPencil,
@@ -269,8 +363,8 @@ export default {
 		mdiChevronRight,
 		mdiMenuDown,
 		mdiClockOutline,
+		client: null,
 		dialog: false,
-		date: '2018-03-02',
 		focus: '',
 		type: 'month',
 		typeToLabel: {
@@ -289,9 +383,35 @@ export default {
 		idPsychologist: '',
 		dateSelected: null,
 		newAppointment: false,
+		hours: [
+			'00:00',
+			'1:00',
+			'2:00',
+			'3:00',
+			'4:00',
+			'5:00',
+			'6:00',
+			'7:00',
+			'8:00',
+			'9:00',
+			'10:00',
+			'11:00',
+			'12:00',
+			'13:00',
+			'14:00',
+			'15:00',
+			'16:00',
+			'17:00',
+			'18:00',
+			'19:00',
+			'20:00',
+			'21:00',
+			'22:00',
+			'23:00',
+		],
 	}),
 	computed: {
-		...mapGetters({ sessions: 'Psychologist/sessions' }),
+		...mapGetters({ sessions: 'Psychologist/sessions', clients: 'Psychologist/clients' }),
 	},
 	async mounted() {
 		moment.locale('es');
@@ -309,6 +429,7 @@ export default {
 				this.idPsychologist = this.$auth.$state.user.psychologist;
 
 			if (this.idPsychologist) {
+				await this.getClients(this.idPsychologist);
 				await this.getSessions(this.idPsychologist);
 				this.events = this.sessions;
 			}
@@ -328,8 +449,7 @@ export default {
 			this.dialog = true;
 		},
 		allowedDates(val) {
-			if (val === '2021-06-25' || val === '2021-06-30') return false;
-			return true;
+			return val === '2021-06-25' || val === '2021-06-30';
 		},
 		viewDay({ date }) {
 			this.focus = date;
@@ -404,6 +524,7 @@ export default {
 			updateSession: 'Psychologist/updateSession',
 			getSessions: 'Psychologist/getSessions',
 			setReschedule: 'Psychologist/setReschedule',
+			getClients: 'Psychologist/getClients',
 		}),
 	},
 };
