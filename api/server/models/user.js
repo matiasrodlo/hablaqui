@@ -43,6 +43,16 @@ let planSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+let userState = new Schema({
+	psychologist: {
+		type: Schema.Types.ObjectId,
+		ref: 'psychologist',
+	},
+	state: {
+		type: String,
+		default: 'Sin estado',
+	},
+});
 let userSchema = new Schema({
 	name: {
 		type: String,
@@ -104,6 +114,7 @@ let userSchema = new Schema({
 		ref: 'psychologist',
 		required: false,
 	},
+	sessionState: [userState],
 	role: {
 		type: String,
 		default: 'user',
