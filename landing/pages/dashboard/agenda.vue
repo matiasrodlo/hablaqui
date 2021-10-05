@@ -64,7 +64,8 @@
 						:type="type"
 						@click:event="showEvent"
 						@click:more="viewDay"
-						@click:date="viewDay"
+						@click:day="addAppointment"
+						@click:date="addAppointment"
 					></v-calendar>
 					<v-menu
 						v-model="selectedOpen"
@@ -135,6 +136,99 @@
 							</v-dialog>
 						</v-card>
 					</v-menu>
+					<v-dialog
+						v-if="newAppointment"
+						v-model="newAppointment"
+						max-width="600"
+						transition="dialog-top-transition"
+					>
+						<v-card rounded="lg" min-height="300">
+							<v-card-text
+								class="
+									d-flex
+									justify-space-between justify-center
+									primary
+									white--text
+									text-h5
+									py-3
+								"
+							>
+								<div class="body-1 font-weight-bold">Agendar</div>
+								<v-btn icon @click="() => (newAppointment = false)">
+									<icon color="white" :icon="mdiClose" />
+								</v-btn>
+							</v-card-text>
+							<v-card-text class="pt-2 pl-2">
+								<v-row>
+									<v-col cols="12" class="font-weight-medium">
+										Tipo de evento
+									</v-col>
+									<v-col cols="12">
+										<v-select
+											v-model="typeSession"
+											dense
+											hide-details
+											outlined
+											label="Seleccione"
+											:items="[
+												{ text: 'Sesión online', value: 'sesion online' },
+												{
+													text: 'Sesión presencial',
+													value: 'sesion presencial',
+												},
+												{
+													text: 'Compromiso privado',
+													value: 'compromiso privado',
+												},
+											]"
+										></v-select>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											dense
+											hide-details
+											outlined
+											label="Cliente"
+										></v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-btn text>
+											<div class="primary rounded-circle">
+												<icon small color="white" :icon="mdiPlus" />
+											</div>
+											<span class="ml-1">Consultante nuevo</span>
+										</v-btn>
+									</v-col>
+								</v-row>
+							</v-card-text>
+						</v-card>
+					</v-dialog>
+					<div class="text-right py-10">
+						<span class="mx-3">
+							<v-btn x-small fab depressed color="primary">
+								<icon color="white" :icon="mdiCheck" />
+							</v-btn>
+							<span class="ml-1">Sesiones online</span>
+						</span>
+						<span class="mx-3">
+							<v-btn x-small fab depressed color="#00c6ea">
+								<icon color="white" :icon="mdiCheck" />
+							</v-btn>
+							<span class="ml-1">Sesiones online</span>
+						</span>
+						<span class="mx-3">
+							<v-btn x-small fab depressed color="#efb908">
+								<icon color="white" :icon="mdiCheck" />
+							</v-btn>
+							<span class="ml-1">Sesiones online</span>
+						</span>
+						<span class="mx-3">
+							<v-btn x-small outlined fab depressed color="grey">
+								<icon color="grey" :icon="mdiCheck" />
+							</v-btn>
+							<span class="ml-1">Sesiones online</span>
+						</span>
+					</div>
 				</v-sheet>
 			</v-col>
 		</v-row>
@@ -150,21 +244,26 @@ import {
 	mdiMenuDown,
 	mdiClockOutline,
 	mdiClose,
+	mdiPlus,
 	mdiTrashCan,
 	mdiPencil,
+	mdiCheck,
 } from '@mdi/js';
 
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
-		Calendar: () => import('../../components/Calendar.vue'),
+		Calendar: () => import('~/components/Calendar.vue'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		typeSession: '',
+		mdiCheck,
 		mdiPencil,
 		mdiTrashCan,
+		mdiPlus,
 		mdiClose,
 		mdiChevronLeft,
 		mdiChevronRight,
@@ -188,6 +287,8 @@ export default {
 		names: ['Sescion con', 'ocupado'],
 		event: null,
 		idPsychologist: '',
+		dateSelected: null,
+		newAppointment: false,
 	}),
 	computed: {
 		...mapGetters({ sessions: 'Psychologist/sessions' }),
@@ -233,6 +334,11 @@ export default {
 		viewDay({ date }) {
 			this.focus = date;
 			this.type = 'day';
+		},
+		addAppointment({ date }) {
+			console.log(date);
+			this.newAppointment = true;
+			this.dateSelected = date;
 		},
 		getEventColor(event) {
 			return event.color;
