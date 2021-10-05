@@ -645,6 +645,14 @@ const getClients = async psychologist => {
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
 
+const getClientsByEmail = async email => {
+	const foundUser = await User.find({ email });
+	if (!foundUser) {
+		return okResponse('No se encontró al usuario', {});
+	}
+	return okResponse('Usuario encontrado', { user: foundUser });
+};
+
 const usernameAvailable = async username => {
 	let available = true;
 	if (await Psychologist.exists({ username })) available = false;
@@ -681,6 +689,7 @@ const updateFormationExperience = async (user, payload) => {
 const psychologistsService = {
 	getAll,
 	getSessions,
+	getClientsByEmail,
 	match,
 	register,
 	createSession,
