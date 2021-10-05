@@ -259,6 +259,16 @@ psychologistsRouter.get(
 );
 
 /**
+ * @description: Obtiene los clientes de un psicologo mediante email
+ * @param {string} email email de la busqueda
+ * @returns {array} usuario/s encontrados
+ */
+psychologistsRouter.get(
+	'/psychologist/clients/:email',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getClientsByEmail
+);
+/**
  * @swagger
  * /api/v1/psychologist/check-username:
  *  post:
