@@ -251,14 +251,14 @@
 											<v-date-picker v-model="date" no-title scrollable>
 												<v-spacer></v-spacer>
 												<v-btn color="primary" text @click="menu = false">
-													Cancel
+													Cancelar
 												</v-btn>
 												<v-btn
 													color="primary"
 													text
 													@click="$refs.menu.save(date)"
 												>
-													OK
+													Ok
 												</v-btn>
 											</v-date-picker>
 										</v-menu>
