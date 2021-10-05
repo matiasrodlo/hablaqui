@@ -139,7 +139,7 @@
 					<v-dialog
 						v-if="dialogAppointment"
 						v-model="dialogAppointment"
-						max-width="600"
+						max-width="500"
 						transition="dialog-top-transition"
 					>
 						<v-card min-height="300" rounded="lg">
@@ -263,20 +263,13 @@
 											</v-date-picker>
 										</v-menu>
 									</v-col>
-									<v-col class="text-center py-2" cols="3">
+									<v-col class="text-center py-2" cols="6">
 										<v-select
 											:items="hours"
 											dense
 											full-width
 											hide-details
-											outlined
-										></v-select>
-									</v-col>
-									<v-col class="text-center py-2" cols="3">
-										<v-select
-											:items="hours"
-											dense
-											full-width
+											label="Hora"
 											outlined
 										></v-select>
 									</v-col>
@@ -293,7 +286,7 @@
 									</v-col>
 								</v-row>
 								<v-row justify="space-between">
-									<v-col cols="4">
+									<v-col cols="5">
 										<v-text-field
 											label="Valor"
 											dense
@@ -302,7 +295,7 @@
 											prefix="$"
 										></v-text-field>
 									</v-col>
-									<v-col cols="5">
+									<v-col cols="6">
 										<v-btn text @click="dialogAppointment = false">
 											Cancelar
 										</v-btn>
