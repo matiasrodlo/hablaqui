@@ -216,15 +216,15 @@
 										</v-autocomplete>
 									</v-col>
 									<v-col class="d-flex align-center" cols="6">
-										<v-btn text>
-											<div
-												class="primary rounded-circle"
-												style="height: 20px; width: 20px"
-											>
-												<icon :icon="mdiPlus" color="white" small />
-											</div>
-											<span class="ml-2">Consultante nuevo</span>
+										<v-btn
+											fab
+											depressed
+											color="primary"
+											style="width: 20px; height: 20px"
+										>
+											<icon :icon="mdiPlus" color="white" small />
 										</v-btn>
+										<span class="primary--text ml-2">Consultante nuevo</span>
 									</v-col>
 									<v-col cols="6">
 										<v-menu
@@ -280,34 +280,68 @@
 											outlined
 										></v-select>
 									</v-col>
+									<v-col class="d-flex align-center" cols="12">
+										<v-btn
+											fab
+											outlined
+											color="primary"
+											style="width: 20px; height: 20px"
+										>
+											<icon :icon="mdiPlus" color="primary" small />
+										</v-btn>
+										<span class="primary--text ml-2">Añadir día/hora</span>
+									</v-col>
+								</v-row>
+								<v-row justify="space-between">
+									<v-col cols="4">
+										<v-text-field
+											label="Valor"
+											dense
+											hide-details
+											outlined
+											prefix="$"
+										></v-text-field>
+									</v-col>
+									<v-col cols="5">
+										<v-btn text @click="dialogAppointment = false">
+											Cancelar
+										</v-btn>
+										<v-btn rounded color="primary"> Agendar </v-btn>
+									</v-col>
 								</v-row>
 							</v-card-text>
 						</v-card>
 					</v-dialog>
 					<div class="text-right py-10">
-						<span class="mx-3">
-							<v-btn color="primary" depressed fab x-small>
-								<icon :icon="mdiCheck" color="white" />
+						<span class="mx-3 pointer">
+							<v-btn color="primary" depressed fab style="width: 20px; height: 20px">
+								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
-							<span class="ml-1">Sesiones online</span>
+							<span class="ml-1 caption">Sesiones online</span>
 						</span>
-						<span class="mx-3">
-							<v-btn color="#00c6ea" depressed fab x-small>
-								<icon :icon="mdiCheck" color="white" />
+						<span class="mx-3 pointer">
+							<v-btn color="#00c6ea" depressed fab style="width: 20px; height: 20px">
+								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
-							<span class="ml-1">Sesiones online</span>
+							<span class="ml-1 caption">Sesiones presenciales</span>
 						</span>
-						<span class="mx-3">
-							<v-btn color="#efb908" depressed fab x-small>
-								<icon :icon="mdiCheck" color="white" />
+						<span class="mx-3 pointer">
+							<v-btn color="#efb908" depressed fab style="width: 20px; height: 20px">
+								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
-							<span class="ml-1">Sesiones online</span>
+							<span class="ml-1 caption">Compromiso privado</span>
 						</span>
-						<span class="mx-3">
-							<v-btn color="grey" depressed fab outlined x-small>
-								<icon :icon="mdiCheck" color="grey" />
+						<span class="mx-3 pointer">
+							<v-btn
+								color="grey"
+								depressed
+								fab
+								outlined
+								style="width: 20px; height: 20px"
+							>
+								<icon small :icon="mdiCheck" color="grey" />
 							</v-btn>
-							<span class="ml-1">Sesiones online</span>
+							<span class="ml-1 caption">Disponibilidad</span>
 						</span>
 					</div>
 				</v-sheet>
@@ -373,7 +407,6 @@ export default {
 		names: ['Sescion con', 'ocupado'],
 		event: null,
 		idPsychologist: '',
-		dateSelected: null,
 		dialogAppointment: false,
 		hours: [
 			'00:00',
@@ -448,8 +481,8 @@ export default {
 			this.type = 'day';
 		},
 		addAppointment({ date }) {
+			this.date = date;
 			this.dialogAppointment = true;
-			this.dateSelected = date;
 		},
 		getEventColor(event) {
 			return event.color;
