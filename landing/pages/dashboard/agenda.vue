@@ -139,10 +139,10 @@
 					<v-dialog
 						v-if="dialogAppointment"
 						v-model="dialogAppointment"
-						max-width="500"
+						max-width="550"
 						transition="dialog-top-transition"
 					>
-						<v-card min-height="300" rounded="lg">
+						<v-card min-height="300" width="550" rounded="lg">
 							<v-card-text
 								class="
 									d-flex
@@ -158,7 +158,7 @@
 									<icon :icon="mdiClose" color="white" />
 								</v-btn>
 							</v-card-text>
-							<v-card-text class="pt-2 pl-2">
+							<v-card-text class="pt-2">
 								<v-row>
 									<v-col class="font-weight-medium" cols="12">
 										Tipo de evento
@@ -216,15 +216,19 @@
 										</v-autocomplete>
 									</v-col>
 									<v-col class="d-flex align-center" cols="6">
-										<v-btn
-											fab
-											depressed
-											color="primary"
-											style="width: 20px; height: 20px"
-										>
-											<icon :icon="mdiPlus" color="white" small />
-										</v-btn>
-										<span class="primary--text ml-2">Consultante nuevo</span>
+										<span class="pointer">
+											<v-btn
+												fab
+												depressed
+												color="primary"
+												style="width: 20px; height: 20px"
+											>
+												<icon :icon="mdiPlus" color="white" small />
+											</v-btn>
+											<span class="primary--text ml-2">
+												Consultante nuevo
+											</span>
+										</span>
 									</v-col>
 									<v-col cols="6">
 										<v-menu
@@ -274,15 +278,19 @@
 										></v-select>
 									</v-col>
 									<v-col class="d-flex align-center" cols="12">
-										<v-btn
-											fab
-											outlined
-											color="primary"
-											style="width: 20px; height: 20px"
-										>
-											<icon :icon="mdiPlus" color="primary" small />
-										</v-btn>
-										<span class="primary--text ml-2">Añadir día/hora</span>
+										<span class="pointer">
+											<v-btn
+												fab
+												outlined
+												color="primary"
+												style="width: 20px; height: 20px"
+											>
+												<icon :icon="mdiPlus" color="primary" small />
+											</v-btn>
+											<span class="primary--text ml-2">
+												Añadir día/hora
+											</span>
+										</span>
 									</v-col>
 								</v-row>
 								<v-row justify="space-between">
