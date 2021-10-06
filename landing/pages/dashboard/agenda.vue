@@ -429,7 +429,6 @@
 <script>
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
-
 import {
 	mdiCheck,
 	mdiChevronLeft,
