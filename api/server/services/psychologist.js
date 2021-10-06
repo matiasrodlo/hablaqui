@@ -334,12 +334,12 @@ const createSession = async body => {
 		expirationDate = moment()
 			.add({ weeks: 4 })
 			.toISOString();
-		remainingSessions = 3;
+	remainingSessions = 3;
 	if (payload.paymentPeriod == 'Pago cada tres meses')
 		expirationDate = moment()
 			.add({ months: 3 })
 			.toISOString();
-		remainingSessions = 11;
+	remainingSessions = 11;
 
 	await User.findOneAndUpdate(
 		{ _id: payload.user._id },
@@ -684,7 +684,8 @@ const updateFormationExperience = async (user, payload) => {
 };
 
 const paymentsInfo = async user => {
-	if (user.role != 'psychologist') return conflictResponse('');
+	if (user.role != 'psychologist')
+		return conflictResponse('No eres psicologo');
 	const foundUsers = await User.find({ psychologist: user.psychologist });
 	const mappedUsers = foundUsers
 		.map(user => {
@@ -692,22 +693,22 @@ const paymentsInfo = async user => {
 				role: user.role,
 				name: user.name,
 				lastName: user.lastName,
-				avatar: user.avatar,
 				_id: user._id,
-				plan: user.plan[user.plan.length - 1]
+				plan: user.plan[user.plan.length - 1],
 			};
 		})
 		.filter(user => user.role != 'psychologist');
-	
-	console.log(mappedUsers)
-	
 
-	const response = {
+	console.log(mappedUsers);
 
-	}
+	const response = mappedUsers.map(user => {
+		return {
+			name: `${user.name} ${user.lastName}`,
+		};
+	});
 
-	return okResponse('', repsonse)
-}
+	return okResponse('', response);
+};
 
 const psychologistsService = {
 	getAll,
