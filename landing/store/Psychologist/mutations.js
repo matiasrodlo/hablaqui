@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default {
 	setPsychologists(state, value) {
 		state.psychologists = value;
@@ -5,8 +7,12 @@ export default {
 	setSessions(state, value) {
 		state.sessions = value;
 	},
-	setSessionsFormatted(state, value) {
-		state.sessionsFormatted = value;
+	setSessionsFormatted(state, sessions) {
+		moment.locale('es');
+		state.sessionsFormatted = sessions.map(session => ({
+			...session,
+			text: moment(session.value).format('ddd'),
+		}));
 	},
 	setClients(state, value) {
 		state.clients = value;

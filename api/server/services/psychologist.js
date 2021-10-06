@@ -9,6 +9,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import session from '../schemas/session';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -82,7 +83,6 @@ const setSession = (user, psychologist) => {
 };
 
 const getFormattedSessions = async idPsychologist => {
-	moment.locale('es');
 	let sessions = [];
 	const psychologist = await Psychologist.findById(idPsychologist);
 	const length = Array.from(Array(31), (_, x) => x);
@@ -99,9 +99,10 @@ const getFormattedSessions = async idPsychologist => {
 
 	sessions = length.map(el => {
 		const day = moment().add(el, 'days');
+
 		return {
 			id: el,
-			text: day.format('ddd'),
+			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
 			available: hours.filter(hour => {
@@ -123,100 +124,31 @@ const getFormattedSessions = async idPsychologist => {
 };
 
 const formattedSchedule = (schedule, day, hour) => {
-	// VERSION 2
-	// let validHour = false;
-	// const week = [
-	// 	'monday',
-	// 	'tuesday',
-	// 	'wednesday',
-	// 	'thursday',
-	// 	'saturday',
-	// 	'sunday',
-	// ];
-	// day = moment(day).format('dddd');
-	// week.forEach(weekDay => {
-	// 	if (day.toLowerCase() === weekDay)
-	// 		if (Array.isArray(schedule[weekDay]))
-	// 			validHour = moment(hour, 'HH:mm').isBetween(
-	// 				moment(schedule[weekDay][0], 'HH:mm'),
-	// 				moment(schedule[weekDay][1], 'HH:mm'),
-	// 				undefined,
-	// 				[]
-	// 			);
-	// 		else if (schedule[weekDay] === 'busy') validHour = false;
-	// });
+	let validHour = false;
+	const week = [
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'saturday',
+		'sunday',
+	];
+	day = moment(day).format('dddd');
+	week.forEach(weekDay => {
+		if (day.toLowerCase() === weekDay)
+			if (Array.isArray(schedule[weekDay]))
+				validHour = schedule[weekDay].every(interval =>
+					moment(hour, 'HH:mm').isBetween(
+						moment(interval[0], 'HH:mm'),
+						moment(interval[1], 'HH:mm'),
+						undefined,
+						[]
+					)
+				);
+			else if (schedule[weekDay] === 'busy') validHour = false;
+	});
 
-	// return validHour;
-
-	if (moment(day).format('dddd') === 'lunes') {
-		if (Array.isArray(schedule.monday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.monday[0], 'HH:mm'),
-				moment(schedule.monday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.monday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'martes') {
-		if (Array.isArray(schedule.tuesday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.tuesday[0], 'HH:mm'),
-				moment(schedule.tuesday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.tuesday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'miércoles') {
-		if (Array.isArray(schedule.wednesday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.wednesday[0], 'HH:mm'),
-				moment(schedule.wednesday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.wednesday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'jueves') {
-		if (Array.isArray(schedule.thursday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.thursday[0], 'HH:mm'),
-				moment(schedule.thursday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.thursday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'viernes') {
-		if (Array.isArray(schedule.friday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.friday[0], 'HH:mm'),
-				moment(schedule.friday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.friday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'sábado') {
-		if (Array.isArray(schedule.saturday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.saturday[0], 'HH:mm'),
-				moment(schedule.saturday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.saturday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'domingo') {
-		if (Array.isArray(schedule.sunday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.sunday[0], 'HH:mm'),
-				moment(schedule.sunday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-	} else if (schedule.sunday === 'busy') return false;
+	return validHour;
 };
 
 const match = async body => {
