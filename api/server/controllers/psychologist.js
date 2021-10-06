@@ -242,6 +242,10 @@ const psychologistsController = {
 				email
 			);
 			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 	async usernameAvailable(req, res) {
 		try {
 			const { username } = req.body;
