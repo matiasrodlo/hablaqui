@@ -74,7 +74,6 @@
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
