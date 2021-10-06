@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
-import momentz from 'moment-timezone';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 
@@ -638,6 +637,7 @@ const getClients = async psychologist => {
 				name: user.name,
 				lastName: user.lastName,
 				avatar: user.avatar,
+				email: user.email,
 				_id: user._id,
 			};
 		})
@@ -645,12 +645,12 @@ const getClients = async psychologist => {
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
 
-const getClientsByEmail = async email => {
-	const foundUser = await User.find({ email });
+const searchClients = async search => {
+	const foundUser = await User.find({ email: search, name: search });
 	if (!foundUser) {
-		return okResponse('No se encontró al usuario', {});
+		return okResponse('No se encontró al usuario', { users: [] });
 	}
-	return okResponse('Usuario encontrado', { user: foundUser });
+	return okResponse('Usuario encontrado', { users: foundUser });
 };
 
 const usernameAvailable = async username => {
@@ -689,7 +689,7 @@ const updateFormationExperience = async (user, payload) => {
 const psychologistsService = {
 	getAll,
 	getSessions,
-	getClientsByEmail,
+	searchClients,
 	match,
 	register,
 	createSession,

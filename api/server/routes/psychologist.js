@@ -264,9 +264,9 @@ psychologistsRouter.get(
  * @returns {array} usuario/s encontrados
  */
 psychologistsRouter.get(
-	'/psychologist/clients/:email',
+	'/psychologist/:search',
 	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getClientsByEmail
+	psychologistsController.searchClients
 );
 /**
  * @swagger

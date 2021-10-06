@@ -35,7 +35,7 @@
 						/>
 					</v-card-text>
 					<!-- barra lateral role psychologist -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role == 'psychologist'">
+					<template v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'">
 						<!-- sin consultantes -->
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
@@ -107,7 +107,7 @@
 						</template>
 					</template>
 					<!-- barra lateral role user -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role == 'user'">
+					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
 						<v-card-text
 							v-if="
 								$auth.$state.user &&
@@ -338,7 +338,9 @@
 									style="max-width: 320px"
 								>
 									Bienvenido al chat confidencial
-									{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
+									{{
+										$auth.$state.user.role === 'user' ? 'con el psicólogo' : ''
+									}}
 								</div>
 								<v-divider
 									class="mx-auto mb-10"
@@ -357,9 +359,9 @@
 									<span class="text--disabled">{{ setDate() }}</span>
 								</div>
 								<div class="talkbubble talkbubble__two" style="margin-top: 2px">
-									<p style="body-2 max-height: 75px; overflow-y: auto">
+									<p style="max-height: 75px; overflow-y: auto" class="body-2">
 										{{
-											$auth.$state.user.role == 'user'
+											$auth.$state.user.role === 'user'
 												? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 												: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 										}}
@@ -628,7 +630,7 @@ export default {
 			};
 		}
 		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
-			await this.geClients(this.$auth.$state.user.psychologist);
+			await this.getClients(this.$auth.$state.user.psychologist);
 		}
 		this.initLoading = false;
 	},
@@ -748,7 +750,7 @@ export default {
 			return psychologistId + userId;
 		},
 		...mapActions({
-			geClients: 'Psychologist/geClients',
+			getClients: 'Psychologist/getClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',

@@ -32,11 +32,21 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async geClients({ commit }, id) {
+	async getClients({ commit }, id) {
 		try {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
 			commit('setClients', users);
 		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async searchClients({ commit }, search) {
+		try {
+			const { users } = await this.$axios.$get(`/psychologist/${search}`);
+			console.log(users);
+			commit('setClients', users);
+		} catch (e) {
+			console.log(e.response);
 			snackBarError(e)(commit);
 		}
 	},
