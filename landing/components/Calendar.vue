@@ -111,7 +111,6 @@ export default {
 		async getData(id) {
 			this.loading = true;
 			await this.getFormattedSessions(id);
-			console.log(this.sessions);
 			this.loading = false;
 		},
 		...mapActions({

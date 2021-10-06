@@ -130,6 +130,7 @@ const formattedSchedule = (schedule, day, hour) => {
 		'tuesday',
 		'wednesday',
 		'thursday',
+		'friday',
 		'saturday',
 		'sunday',
 	];
@@ -137,7 +138,7 @@ const formattedSchedule = (schedule, day, hour) => {
 	week.forEach(weekDay => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
-				validHour = schedule[weekDay].every(interval =>
+				validHour = schedule[weekDay].some(interval =>
 					moment(hour, 'HH:mm').isBetween(
 						moment(interval[0], 'HH:mm'),
 						moment(interval[1], 'HH:mm'),
