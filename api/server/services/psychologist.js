@@ -10,6 +10,7 @@ import moment from 'moment';
 import momentz from 'moment-timezone';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import Sessions from '../models/sessions';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -266,112 +267,124 @@ const match = async body => {
 	}
 };
 
-const createSession = async body => {
+const createPlan = async body => {
 	const { payload } = body;
 
+	let sessionQuantity = 0;
+	let expirationDate = '';
+	if (payload.paymentPeriod == 'Pago semanal') {
+		sessionQuantity = 1;
+		expirationDate = moment()
+			.add({ weeks: 1 })
+			.toISOString();
+	}
+	if (payload.paymentPeriod == 'Pago mensual') {
+		sessionQuantity = 4;
+		expirationDate = moment()
+			.add({ months: 1 })
+			.toISOString();
+	}
+	if (payload.paymentPeriod == 'Pago cada tres meses') {
+		sessionQuantity = 12;
+		expirationDate = moment()
+			.add({ months: 3 })
+			.toISOString();
+	}
+	const newPlan = {
+		title: payload.title,
+		period: payload.paymentPeriod,
+		totalPrice: payload.price,
+		sessionPrice: payload.price / sessionQuantity,
+		expiration: expirationDate,
+		usedCoupon: payload.coupon,
+		totalSessions: sessionQuantity,
+		remainingSessions: sessionQuantity,
+	};
+
+	if (
+		await Sessions.exists({
+			user: payload.user,
+			psychologist: payload.psychologist,
+		})
+	) {
+		const created = await Sessions.findOneAndUpdate(
+			{ user: payload.user, psychologist: payload.psychologist },
+			{ $push: { plan: newPlan } }
+		);
+
+		return okResponse('Plan creado', { plan: created });
+	} else {
+		const created = await Sessions.create({
+			user: payload.user,
+			psychologsit: payload.psychologist,
+			plan: [newPlan],
+			session: [],
+		});
+
+		chat.startConversation(payload.psychologist, payload.user);
+		return okResponse('Plan creado', { plan: created });
+	}
+};
+
+const createSession = async body => {
+	const { payload } = body;
+	let foundSession = await Sessions.findOne({
+		user: payload.user,
+		psychologist: payload.psychologist,
+	});
+
+	if (foundSession.plan.slice(-1)[0].remainingSessions == 0)
+		return conflictResponse('No te quedan sesiones por agendar');
+
+	// Se resta una sesion
+	foundSession.plan[foundSession.plan.length - 1].remainingSessions -= 1;
+
+	// Se formatea la fecha de forma correcta
 	const date = payload.date;
 	const start = payload.start;
-
 	const parsedDate = date.split('/');
 	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
 	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
 
-	let sessionQuantity = 0;
-	if (payload.paymentPeriod == 'Pago semanal') sessionQuantity = 1;
-	if (payload.paymentPeriod == 'Pago mensual') sessionQuantity = 4;
-	if (payload.paymentPeriod == 'Pago cada tres meses') sessionQuantity = 12;
-
-	const sessions = {
+	const newSession = {
 		date: isoDate,
-		user: payload.user._id,
-		plan: payload.title,
-		statePayments: 'pending',
-		price: payload.price / sessionQuantity,
-		invitedByPsychologist:
-			payload.psychologist.username == payload.user.inviteCode,
+		sessionNumber: `${foundSession.totalSessions -
+			foundSession.remainingSessions} / ${foundSession.totalSessions}`,
+		paidToPsychologist: false,
 	};
+	foundSession.session.push(newSession);
+	foundSession.save();
 
-	// Check if available
-	const foundPsychologist = await Psychologist.findById(
-		payload.psychologist._id
-	);
-	if (
-		moment().isAfter(
-			moment(isoDate).subtract({
-				hours: foundPsychologist.preferences.minimumNewSession,
-			})
-		)
-	) {
-		return conflictResponse(
-			`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
-		);
-	}
+	// Revisar la fecha no deberia ser necesario si el frontend esta bien hecho.
+	// En caso de querer usar esta funcionalidad, hay que adaptarla al nuevo modelo.
 
-	let dateConflict = false;
-	foundPsychologist.sessions.forEach(session => {
-		if (moment(session.date).isSame(payload.date)) {
-			dateConflict = true;
-		}
-	});
-	if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
+	// const foundPsychologist = await Psychologist.findById(
+	// 	payload.psychologist._id
+	// );
+	// if (
+	// 	moment().isAfter(
+	// 		moment(isoDate).subtract({
+	// 			hours: foundPsychologist.preferences.minimumNewSession,
+	// 		})
+	// 	)
+	// ) {
+	// 	return conflictResponse(
+	// 		`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
+	// 	);
+	// }
 
-	// Save session
-	const savedSession = await Psychologist.findOneAndUpdate(
-		{ _id: payload.psychologist._id },
-		{
-			$push: { sessions },
-		},
-		{ upsert: true, returnOriginal: false }
-	);
-
-	let expirationDate = '';
-	let remainingSessions = 0;
-	if (payload.paymentPeriod == 'Pago semanal')
-		expirationDate = moment()
-			.add({ weeks: 1 })
-			.toISOString();
-	if (payload.paymentPeriod == 'Pago mensual')
-		expirationDate = moment()
-			.add({ weeks: 4 })
-			.toISOString();
-	remainingSessions = 3;
-	if (payload.paymentPeriod == 'Pago cada tres meses')
-		expirationDate = moment()
-			.add({ months: 3 })
-			.toISOString();
-	remainingSessions = 11;
-
-	await User.findOneAndUpdate(
-		{ _id: payload.user._id },
-		{
-			$push: {
-				plan: {
-					fullInfo: payload.fullInfo,
-					title: payload.title,
-					period: payload.paymentPeriod,
-					price: payload.price,
-					sessionPrice: payload.price / sessionQuantity,
-					psychologist: payload.psychologist._id,
-					expiration: expirationDate,
-					invitedByPsychologist:
-						payload.psychologist.username ==
-						payload.user.inviteCode,
-					usedCoupon: payload.discountCoupon
-						? payload.discountCoupon
-						: 'not used',
-					remainingSessions,
-					totalSessions: sessionQuantity,
-				},
-			},
-			hasPaid: true,
-		}
-	);
+	// let dateConflict = false;
+	// foundPsychologist.sessions.forEach(session => {
+	// 	if (moment(session.date).isSame(payload.date)) {
+	// 		dateConflict = true;
+	// 	}
+	// });
+	// if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
 
 	logInfo('creo una nueva cita');
-	chat.startConversation(payload.psychologist._id, payload.user);
 
 	return okResponse('sesion creada', {
-		id: savedSession.sessions[savedSession.sessions.length - 1]._id,
+		id: foundSession.session[foundSession.session.length - 1]._id,
 	});
 };
 
@@ -715,6 +728,7 @@ const psychologistsService = {
 	getSessions,
 	match,
 	register,
+	createPlan,
 	createSession,
 	reschedule,
 	getByData,
