@@ -699,10 +699,14 @@ const paymentsInfo = async user => {
 		})
 		.filter(user => user.role != 'psychologist');
 	
+	console.log(mappedUsers)
+	
 
 	const response = {
 
 	}
+
+	return okResponse('', repsonse)
 }
 
 const psychologistsService = {
@@ -727,6 +731,7 @@ const psychologistsService = {
 	getFormattedSessions,
 	usernameAvailable,
 	updateFormationExperience,
+	paymentsInfo,
 };
 
 export default Object.freeze(psychologistsService);

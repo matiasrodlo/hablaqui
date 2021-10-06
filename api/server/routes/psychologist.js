@@ -308,4 +308,10 @@ psychologistsRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateFormationExperience
 );
+
+psychologistsRouter.get(
+	'/psychologist/payments',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfo
+)
 export default psychologistsRouter;
