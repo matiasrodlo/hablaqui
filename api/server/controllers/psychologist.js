@@ -235,11 +235,11 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error consiguiendo los clientes');
 		}
 	},
-	async getClientsByEmail(req, res) {
+	async searchClients(req, res) {
 		try {
-			const { email } = req.params;
-			const { data, code } = await psychologistsService.getClientsByEmail(
-				email
+			const { search } = req.params;
+			const { data, code } = await psychologistsService.searchClients(
+				search
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

@@ -517,7 +517,7 @@ export default {
 			this.loading = false;
 			this.terminado = true;
 
-			// Se devuelve todo a la normalidad para otro registro
+			// Se devuelve a la normalidad para otro registro
 			this.defaultForm();
 			this.step = 1;
 		},
