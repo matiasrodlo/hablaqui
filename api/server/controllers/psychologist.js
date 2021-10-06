@@ -243,7 +243,7 @@ const psychologistsController = {
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'error consiguiendo los clientes');
+			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 	async usernameAvailable(req, res) {
