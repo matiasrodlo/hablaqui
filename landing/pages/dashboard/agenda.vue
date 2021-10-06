@@ -153,12 +153,87 @@
 									py-3
 								"
 							>
-								<div class="body-1 font-weight-bold">Agendar</div>
+								<div class="body-1 font-weight-bold pt-2">
+									{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
+								</div>
 								<v-btn icon @click="dialogAppointment = false">
 									<icon :icon="mdiClose" color="white" />
 								</v-btn>
 							</v-card-text>
-							<v-card-text class="pt-2">
+							<v-card-text v-if="dialogNewUser" class="pt-3">
+								<v-row>
+									<v-col cols="6">
+										<v-text-field
+											type="text"
+											dense
+											hide-details
+											outlined
+											label="Nombre"
+										>
+										</v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											type="text"
+											dense
+											hide-details
+											outlined
+											label="Rut"
+										>
+										</v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											type="email"
+											dense
+											hide-details
+											outlined
+											label="email"
+										>
+										</v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											type="text"
+											dense
+											hide-details
+											outlined
+											prefix="+56"
+											label="Teléfono"
+										>
+										</v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											type="text"
+											dense
+											hide-details
+											outlined
+											label="Dirección"
+										>
+										</v-text-field>
+									</v-col>
+									<v-col cols="6">
+										<v-text-field
+											type="text"
+											dense
+											hide-details
+											outlined
+											label="Comuna"
+										>
+										</v-text-field>
+									</v-col>
+								</v-row>
+								<v-row justify="center">
+									<v-col cols="6">
+										<v-btn text @click="dialogNewUser = false">
+											Cancelar
+										</v-btn>
+										<v-btn rounded color="primary"> Agregar </v-btn>
+									</v-col>
+								</v-row>
+							</v-card-text>
+							<v-card-text v-else class="pt-2">
 								<v-row>
 									<v-col class="font-weight-medium" cols="12">
 										Tipo de evento
@@ -216,7 +291,7 @@
 										</v-autocomplete>
 									</v-col>
 									<v-col class="d-flex align-center" cols="6">
-										<span class="pointer">
+										<span class="pointer" @click="dialogNewUser = true">
 											<v-btn
 												fab
 												depressed
@@ -277,7 +352,7 @@
 											outlined
 										></v-select>
 									</v-col>
-									<v-col class="d-flex align-center" cols="12">
+									<!-- <v-col class="d-flex align-center" cols="12">
 										<span class="pointer">
 											<v-btn
 												fab
@@ -291,7 +366,7 @@
 												Añadir día/hora
 											</span>
 										</span>
-									</v-col>
+									</v-col> -->
 								</v-row>
 								<v-row justify="space-between">
 									<v-col cols="5">
@@ -400,7 +475,15 @@ export default {
 			day: 'Dia',
 			'4day': '4 dias',
 		},
-		selectedEvent: {},
+		selectedEvent: {
+			details: '',
+			end: '',
+			start: '',
+			name: '',
+			idUser: '',
+			sessionId: '',
+			idPsychologist: '',
+		},
 		selectedElement: null,
 		selectedOpen: false,
 		today: moment().format('YYYY-MM-DD'),
@@ -409,6 +492,7 @@ export default {
 		event: null,
 		idPsychologist: '',
 		dialogAppointment: false,
+		dialogNewUser: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -474,9 +558,6 @@ export default {
 			this.event = item;
 			this.dialog = true;
 		},
-		allowedDates(val) {
-			return val === '2021-06-25' || val === '2021-06-30';
-		},
 		viewDay({ date }) {
 			this.focus = date;
 			this.type = 'day';
@@ -484,9 +565,6 @@ export default {
 		addAppointment({ date }) {
 			this.date = date;
 			this.dialogAppointment = true;
-		},
-		getEventColor(event) {
-			return event.color;
 		},
 		setToday() {
 			this.focus = moment().format('YYYY-MM-DD');
@@ -514,9 +592,6 @@ export default {
 			}
 
 			nativeEvent.stopPropagation();
-		},
-		rnd(a, b) {
-			return Math.floor((b - a + 1) * Math.random()) + a;
 		},
 		async successPayment() {
 			if (
