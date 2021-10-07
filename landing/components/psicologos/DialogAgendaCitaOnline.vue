@@ -71,7 +71,7 @@
 				<v-spacer></v-spacer>
 			</v-card-title>
 			<v-card-text v-if="step == 0">
-				<select-plan :set-plan="plan => setPlan(plan)" />
+				<select-plan :set-plan="plan => setPlan(plan)" :psychologist="psy" />
 			</v-card-text>
 			<v-card-text v-if="step == 1" class="px-0 px-sm-2 px-md-4">
 				<calendar

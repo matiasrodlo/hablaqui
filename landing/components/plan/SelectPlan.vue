@@ -145,6 +145,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		psychologist: {
+			type: Object,
+			default: null,
+		},
 	},
 	data() {
 		return {
@@ -258,6 +262,76 @@ export default {
 				},
 			],
 		};
+	},
+	mounted() {
+		this.setPrices();
+	},
+	methods: {
+		/**
+		 * Set prices
+		 */
+		setPrices() {
+			if (this.psychologist.sessionPrices)
+				this.plans = this.plans.map((item, i) => {
+					if (item.title === 'Mensajería y videollamada') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.full,
+							deals: item.deals.map(deal => this.setDeals(deal, 'full')),
+						};
+					}
+					if (item.title === 'Acompañamiento vía mensajería') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.text,
+							deals: item.deals.map(deal => this.setDeals(deal, 'text')),
+						};
+					}
+					if (item.title === 'Sesiones por videollamada') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.video,
+							deals: item.deals.map(deal => this.setDeals(deal, 'video')),
+						};
+					} else return { ...item };
+				});
+		},
+		/**
+		 * Set values
+		 * @param deal
+		 * @param type
+		 * @returns {{total: number, lapse, price: number}}
+		 */
+		setDeals(deal, type) {
+			let price;
+			let lapse;
+			let total;
+			if (deal.type === 'Pago semanal') {
+				lapse = deal.lapse;
+				price = this.psychologist.sessionPrices[type];
+				total = this.psychologist.sessionPrices[type];
+			}
+			if (deal.type === 'Pago mensual') {
+				price =
+					this.psychologist.sessionPrices[type] * 4 -
+					this.psychologist.sessionPrices[type] * 4 * 0.1;
+				lapse = `/semana ($${price * 4} mensual)`;
+				total = price * 4;
+			}
+			if (deal.type === 'Pago cada tres meses') {
+				price =
+					this.psychologist.sessionPrices[type] * 12 -
+					this.psychologist.sessionPrices[type] * 12 * 0.2;
+				lapse = `/semana ($${price * 12} mensual)`;
+				total = price * 12;
+			}
+			return {
+				...deal,
+				price,
+				total,
+				lapse,
+			};
+		},
 	},
 };
 </script>
