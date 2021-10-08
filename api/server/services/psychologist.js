@@ -412,54 +412,46 @@ const register = async body => {
 	return okResponse('psicologo creado');
 };
 
-const reschedule = async (user, id, newDate) => {
-	let foundPsychologist = await Psychologist.findById(
-		user.psychologist
-	).populate({
-		path: 'sessions.user',
-		model: 'User',
-		select: 'name lastName _id',
-	});
+const checkAvailability = async (psyId, date) => {
+	const sessions = Sessions.find({ psychologist: psyId });
+	const psychologist = Psychologist.findById(psyId);
 
-	let e = false;
-	let error = '';
+	if (
+		moment(newDate)
+			.isBefore(moment())
+			.add(psychologist.preferences.minimumRescheduleSession, 'hours')
+	) {
+		return false;
+	}
+
+	const formatted = sessions.map(e => e.sessions).flat();
+
+	const found = formatted.find(el => el == date);
+	return found ? false : true;
+};
+
+const reschedule = async (user, id, newDate) => {
 	newDate = moment(
 		`${newDate.date} ${newDate.hour}`,
 		`DD/MM/YYYY HH:mm`
 	).toISOString();
-	foundPsychologist.sessions.forEach(session => {
-		if (session._id == id) {
-			if (
-				foundPsychologist.sessions.filter(item => item.date == newDate)
-					.length == 0
-			) {
-				if (
-					moment(newDate).isAfter(
-						moment().add(
-							foundPsychologist.preferences
-								.minimumRescheduleSession,
-							'hours'
-						)
-					)
-				) {
-					session.date = newDate;
-				} else {
-					e = true;
-					error = 'Esta hora esta muy encima';
-				}
-			} else {
-				e = true;
-				error = 'Esta hora ya esta ocupada';
-			}
-		}
+
+	const availability = checkAvailability(user.psychologist, newDate);
+	if (!availability)
+		return conflictResponse('El psicologo no esta disponible');
+
+	const session = await Sessions.findOne({
+		user: user._id,
+		psychologist: user.psychologist,
 	});
-	if (!e) {
-		const savePsychologist = await foundPsychologist.save();
-		return okResponse('Hora actualizada', {
-			sessions: setSession(user, savePsychologist),
-		});
-	}
-	return conflictResponse(error);
+	let foundSession = session.session.find(el => el._id.toString() == id);
+	foundSession.date = newDate;
+	await session.save();
+
+	// No se como funciona setSession
+	return okResponse('Hora actualizada', {
+		sessions: setSession(user, savePsychologist),
+	});
 };
 
 const updatePlan = async (psychologistId, planInfo) => {
@@ -513,13 +505,16 @@ const setSchedule = async (user, payload) => {
 };
 
 const cancelSession = async (user, sessionId) => {
-	let foundPsychologist = await Psychologist.findById(user.psychologist);
-	foundPsychologist.sessions = foundPsychologist.sessions.filter(
-		item => item._id != sessionId
+	let sessions = await Sessions.findOne({
+		user: user._id,
+		psychologist: user.psychologist,
+	});
+	sessions.session = sessions.session.filter(
+		el => el._id.toString() != sessionId
 	);
-	await foundPsychologist.save();
+	await sessions.save();
 
-	return okResponse('Sesion cancelada', { psychologist: foundPsychologist });
+	return okResponse('Sesion cancelada', { sessions });
 };
 
 const updatePaymentMethod = async (user, payload) => {
