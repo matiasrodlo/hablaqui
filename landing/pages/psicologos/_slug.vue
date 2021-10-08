@@ -10,23 +10,24 @@ export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	async asyncData({ params, payload, $config }) {
-		if (payload) return { comuna: payload };
-		else {
+	async asyncData({ params, $config, redirect }) {
+		try {
 			const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
 			const comunas = await response.json();
 			const item = comunas.find(el => el.comuna.slug === params.slug);
 			return { comuna: item.comuna };
+		} catch (e) {
+			redirect('/psicologos');
 		}
 	},
 	head() {
 		return {
-			title: `Psicologos en ${this.comuna ? this.comuna.name : ''} | Hablaquí`,
+			title: `Psicólogos en ${this.$route.params.slug} | Hablaquí`,
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
-					content: `Nuestros psicologos en ${this.comuna ? this.comuna.name : ''}`,
+					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'twitter:url',
@@ -36,7 +37,7 @@ export default {
 				{
 					hid: 'twitter:title',
 					name: 'twitter:title',
-					content: `Nuestros psicologos en ${this.comuna.name}`,
+					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'og:url',
@@ -46,7 +47,7 @@ export default {
 				{
 					hid: 'og:title',
 					property: 'og:title',
-					content: `Nuestros psicologos en ${this.comuna.name}`,
+					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
 				},
 			],
 			link: [

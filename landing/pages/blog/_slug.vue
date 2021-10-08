@@ -344,13 +344,14 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 	},
-	async asyncData({ $axios, params, payload }) {
-		if (payload) return { article: payload };
-		else {
+	async asyncData({ $axios, params, redirect }) {
+		try {
 			const { article } = await $axios.$get(`/blog/${params.slug}`);
 			return {
 				article,
 			};
+		} catch (e) {
+			redirect('/psicologos');
 		}
 	},
 	data() {
