@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import psychologistsController from '../controllers/psychologist';
+import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
@@ -318,4 +319,16 @@ psychologistsRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateFormationExperience
 );
+
+/**
+ * @descrioption: Route to upload/update psychologist's profile picture
+ * @route {PATCH} /api/v1/psychologist/profile-picture
+ * @access {Private}
+ * @body {file} file
+ */
+psychologistsRouter.patch('/psychologist/profile-picture/:id', [
+	passport.authenticate('jwt', { session: true }),
+	multer.single('avatar'),
+	psychologistsController.uploadProfilePicture,
+]);
 export default psychologistsRouter;

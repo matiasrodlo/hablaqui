@@ -273,6 +273,23 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+	async uploadProfilePicture(req, res) {
+		try {
+			const id = req.params.id;
+			const { file } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.uploadProfilePicture(id, file);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error actualizando/subiendo imágen de perfil'
+			);
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

@@ -106,6 +106,9 @@ let psychologist = new Schema({
 	avatar: {
 		type: String,
 	},
+	avatarThumbnail: {
+		type: String,
+	},
 	code: {
 		type: String,
 	},
