@@ -287,7 +287,7 @@
 										contain
 										height="25"
 										width="25"
-										:src="`${$config.LANDING_URL}/llamada.png`"
+										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
 								<v-btn id="camheader" icon :to="`/video-llamada/${goToCall()}`">
@@ -295,7 +295,7 @@
 										contain
 										height="25"
 										width="25"
-										:src="`${$config.LANDING_URL}/camara.png`"
+										:src="`https://cdn.hablaqui.cl/static/camara.png`"
 									></v-img>
 								</v-btn>
 								<v-btn id="addheader" icon>
@@ -303,7 +303,7 @@
 										contain
 										width="25"
 										height="25"
-										:src="`${$config.LANDING_URL}/agregar.png`"
+										:src="`https://cdn.hablaqui.cl/static/agregar.png`"
 									></v-img>
 								</v-btn>
 							</div>
@@ -453,7 +453,7 @@
 								>
 									<!-- <template #prepend-inner>
 									<v-img
-										:src="`${$config.LANDING_URL}/adjuntar.png`"
+										:src="`https://cdn.hablaqui.cl/static/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
@@ -461,7 +461,7 @@
 									<template #append>
 										<!-- <v-btn depressed icon>
 										<v-img
-											:src="`${$config.LANDING_URL}/voz.png`"
+											:src="`https://cdn.hablaqui.cl/static/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
@@ -474,7 +474,7 @@
 											:disabled="!message"
 										>
 											<v-img
-												:src="`${$config.LANDING_URL}/message.png`"
+												:src="`https://cdn.hablaqui.cl/static/message.png`"
 												height="30"
 												width="30"
 											></v-img>

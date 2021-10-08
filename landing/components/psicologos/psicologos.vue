@@ -318,8 +318,8 @@
 												height="100"
 												width="100"
 												class="mx-auto"
-												:src="`${$config.LANDING_URL}/Lupa.png`"
-												:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+												:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 											>
 												<template #placeholder>
 													<v-row
@@ -494,8 +494,8 @@
 														height="140"
 														width="140"
 														class="mx-auto"
-														:src="`${$config.LANDING_URL}/Lupa.png`"
-														:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+														:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+														:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 													>
 														<template #placeholder>
 															<v-row

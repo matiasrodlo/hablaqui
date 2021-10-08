@@ -104,7 +104,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/${this.psychologist.username}/`,
+					href: `https://cdn.hablaqui.cl/static/${this.psychologist.username}/`,
 				},
 			],
 		};

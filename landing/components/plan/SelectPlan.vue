@@ -186,7 +186,7 @@ export default {
 					mode: 'Semana',
 					title: 'Sesiones por videollamada',
 					subtitle: 'Sesiones por videollamada (50 min)',
-					image: `${this.$config.LANDING_URL}/planOne.png`,
+					image: `https://cdn.hablaqui.cl/static/planOne.png`,
 					description:
 						'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.',
 				},
@@ -221,7 +221,7 @@ export default {
 					mode: 'Semana',
 					title: 'Acompañamiento vía mensajería',
 					subtitle: 'Terapia vía mensajes de texto',
-					image: `${this.$config.LANDING_URL}/planTwo.png`,
+					image: `https://cdn.hablaqui.cl/static/planTwo.png`,
 					description:
 						'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
@@ -256,7 +256,7 @@ export default {
 					mode: 'Semana',
 					title: 'Mensajería y videollamada',
 					subtitle: 'Mensajería + Videollamada (30min)',
-					image: `${this.$config.LANDING_URL}/planThree.png`,
+					image: `https://cdn.hablaqui.cl/static/planThree.png`,
 					description:
 						'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},

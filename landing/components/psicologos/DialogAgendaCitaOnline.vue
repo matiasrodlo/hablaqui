@@ -88,8 +88,8 @@
 								width="50"
 								height="50"
 								class="mx-auto mt-3"
-								:src="`${$config.LANDING_URL}/logo_tiny.png`"
-								:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+								:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 							></v-img>
 							<v-card-text><signin :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
@@ -128,8 +128,8 @@
 								width="50"
 								height="50"
 								class="mx-auto mt-3"
-								:src="`${$config.LANDING_URL}/logo_tiny.png`"
-								:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+								:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 							>
 							</v-img>
 							<v-card-text><signup :is-dialog="true" /></v-card-text>

@@ -84,19 +84,19 @@
 							class="my-3 d-block"
 							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 						>
-							<v-img :src="`${$config.LANDING_URL}/instagram.png`"></v-img>
+							<v-img :src="`https://cdn.hablaqui.cl/static/instagram.png`"></v-img>
 						</v-avatar>
 						<v-avatar
 							class="my-3 d-block"
 							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 						>
-							<v-img :src="`${$config.LANDING_URL}/facebook.png`"></v-img>
+							<v-img :src="`https://cdn.hablaqui.cl/static/facebook.png`"></v-img>
 						</v-avatar>
 						<v-avatar
 							class="my-3 d-block"
 							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
 						>
-							<v-img :src="`${$config.LANDING_URL}/tiktop.png`"></v-img>
+							<v-img :src="`https://cdn.hablaqui.cl/static/tiktop.png`"></v-img>
 						</v-avatar>
 					</v-col>
 					<v-col cols="12" sm="11">
@@ -268,7 +268,7 @@
 
 			<img
 				class="mt-16"
-				:src="`${$config.LANDING_URL}/Blog-05-top.png`"
+				:src="`https://cdn.hablaqui.cl/static/Blog-05-top.png`"
 				style="width: 100%"
 			/>
 			<v-container fluid class="primary py-0">
@@ -303,8 +303,8 @@
 									contain
 									class="mx-auto"
 									alt="Recibe contenido exclusivo periódicamente"
-									:src="`${$config.LANDING_URL}/suscribete.webp`"
-									:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+									:src="`https://cdn.hablaqui.cl/static/suscribete.webp`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/suscribete.webp`"
 								>
 									<template #placeholder>
 										<v-row
@@ -324,7 +324,7 @@
 					</v-col>
 				</v-row>
 			</v-container>
-			<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
+			<img :src="`https://cdn.hablaqui.cl/static/Blog-05-bottom.png`" style="width: 100%" />
 
 			<v-container>
 				<Footer />
@@ -429,7 +429,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/blog/${this.$route.params.slug}/`,
+					href: `https://cdn.hablaqui.cl/static/blog/${this.$route.params.slug}/`,
 				},
 			],
 		};

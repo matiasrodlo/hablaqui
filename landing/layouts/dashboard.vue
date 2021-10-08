@@ -14,8 +14,8 @@
 					height="100"
 					contain
 					style="cursor: pointer"
-					:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaqui"
 					class="my-16"
 					@click="() => $router.push({ name: 'psicologos' })"
@@ -64,7 +64,7 @@
 						<v-img
 							height="50"
 							width="50"
-							:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+							:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 							alt="cerrar sesión"
 						/>
 					</v-list-item-avatar>
@@ -139,19 +139,19 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
@@ -160,13 +160,13 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `${this.$config.LANDING_URL}/apps.png`,
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];

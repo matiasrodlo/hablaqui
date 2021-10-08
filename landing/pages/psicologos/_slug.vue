@@ -53,7 +53,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/psicologos/${this.$route.params.slug}/`,
+					href: `https://cdn.hablaqui.cl/static/psicologos/${this.$route.params.slug}/`,
 				},
 			],
 		};

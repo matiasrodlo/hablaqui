@@ -5,8 +5,8 @@
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
 			</nuxt-link>
@@ -17,8 +17,8 @@
 				<v-img
 					style="max-width: 30px"
 					alt="Ayuda"
-					:src="`${$config.LANDING_URL}/help.png`"
-					:lazy-src="`${$config.LANDING_URL}/help.png`"
+					:src="`https://cdn.hablaqui.cl/static/help.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/help.png`"
 					contain
 				/>
 			</span>
@@ -831,7 +831,7 @@
 												width="200"
 												height="200"
 												class="mx-auto"
-												:src="`${$config.LANDING_URL}/balloon.png`"
+												:src="`https://cdn.hablaqui.cl/static/balloon.png`"
 											></v-img>
 										</div>
 										<div class="headline font-weight-bold">

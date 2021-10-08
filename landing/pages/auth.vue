@@ -2,8 +2,8 @@
 	<div style="position: relative">
 		<v-img
 			class="hidden-sm-and-down"
-			:src="`${$config.LANDING_URL}/login.png`"
-			:lazy-src="`${$config.LANDING_URL}/login.png`"
+			:src="`https://cdn.hablaqui.cl/static/login.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/login.png`"
 			style="height: 100vh"
 		></v-img>
 		<v-container
@@ -19,8 +19,8 @@
 								<v-img
 									class="mx-auto"
 									style="max-width: 200px"
-									:src="`${$config.LANDING_URL}/logo.png`"
-									:lazy-src="`${$config.LANDING_URL}/logo.png`"
+									:src="`https://cdn.hablaqui.cl/static/logo.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 								/>
 							</nuxt-link>
 						</v-col>
@@ -109,12 +109,12 @@
 								<v-img
 									style="z-index: 1; position: absolute; top: 30px; right: 30%"
 									width="80"
-									:src="`${$config.LANDING_URL}/plus-login.png`"
+									:src="`https://cdn.hablaqui.cl/static/plus-login.png`"
 								></v-img>
 								<v-img
 									style="position: absolute; bottom: 30%; right: 17%"
 									width="220"
-									:src="`${$config.LANDING_URL}/circle-login.png`"
+									:src="`https://cdn.hablaqui.cl/static/circle-login.png`"
 								>
 								</v-img>
 								<v-list-item-avatar size="400" class="ml-4">
@@ -175,22 +175,22 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: `${this.$config.LANDING_URL}/auth.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth.webp`,
 					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/auth-2.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: `${this.$config.LANDING_URL}/auth-3.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
 					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/auth-4.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
 					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
@@ -224,7 +224,7 @@ export default {
 					content: `Ingresa o registrate | Hablaquí`,
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/auth/` }],
+			link: [{ rel: 'canonical', href: `https://cdn.hablaqui.cl/static/auth/` }],
 		};
 	},
 	created() {
