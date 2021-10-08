@@ -694,25 +694,20 @@ const updateFormationExperience = async (user, payload) => {
 const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
-	const foundUsers = await User.find({ psychologist: user.psychologist });
-	const mappedUsers = foundUsers
-		.map(user => {
+
+	const allSessions = Sessions.find({
+		psychologist: user.psychologist,
+	}).populate('User');
+	const response = allSessions.map(data => {
+		const plan = data.plan[data.plan.length - 1];
+		return data.session.map(session => {
 			return {
-				role: user.role,
-				name: user.name,
-				lastName: user.lastName,
-				_id: user._id,
-				plan: user.plan[user.plan.length - 1],
+				...session,
+				sessionPrice: plan.sessionPrice,
+				invitedByPsychologist: plan.invitedByPsychologist,
+				client: `${data.user.name} ${data.user.lastName}`,
 			};
-		})
-		.filter(user => user.role != 'psychologist');
-
-	console.log(mappedUsers);
-
-	const response = mappedUsers.map(user => {
-		return {
-			name: `${user.name} ${user.lastName}`,
-		};
+		});
 	});
 
 	return okResponse('', response);
