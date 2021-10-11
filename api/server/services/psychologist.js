@@ -397,11 +397,11 @@ const getByData = async username => {
 	const usernameSearch = await Psychologist.findOne({ username });
 	if (!usernameSearch) {
 		const idSearch = await Psychologist.findOne({ _id: username });
-		return okResponse('Psicologo encontrado', {
+		return okResponse('Psicólogo encontrado', {
 			psychologist: idSearch,
 		});
 	}
-	return okResponse('Psicologo encontrado', { psychologist: usernameSearch });
+	return okResponse('Psicólogo encontrado', { psychologist: usernameSearch });
 };
 
 const setSchedule = async (user, payload) => {

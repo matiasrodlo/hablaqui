@@ -16,20 +16,20 @@ const psychologistsRouter = Router();
  * @swagger
  * /api/v1/psychologists/all:
  *   get:
- *     summary: Devuelve todos los psicologos de la base de datos
+ *     summary: Devuelve todos los psicólogos de la base de datos
  *     tags: [Psychologists]
  *     responses:
  *       200:
- *         description: Todos los psicologos
+ *         description: Todos los psicólogos
  *
  */
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 
 /**
  * @swagger
- * /api/v1/psychologists/sesssions/{id}:
+ * /api/v1/psychologists/sessions/{id}:
  *  get:
- *    summary: Devuelve todas las sesiones del psicologo
+ *    summary: Devuelve todas las sesiones del psicólogo
  *    tags: [Psychologists]
  *    parameters:
  *      - in: path
@@ -37,12 +37,12 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        schema:
  *          type: string
  *        required: true
- *        descritpion: Id del psicologo
- *    repsonses:
+ *        description: Id del psicólogo
+ *    responses:
  *      200:
- *        despcription: Las sesiones segun el id
+ *        description: Las sesiones segue el id
  *      400:
- *        description: Psicologo no encontrado
+ *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
 	'/psychologists/sessions/:idPsychologist',
@@ -56,8 +56,7 @@ psychologistsRouter.get(
 );
 
 /**
- * Retorna un psicolog segun el parametro ingresado
- * info: username || ObjectId
+ * get psychologist bt username or _id
  */
 psychologistsRouter.get(
 	'/psychologists/one/:info',
@@ -70,15 +69,15 @@ psychologistsRouter.post(
 	psychologistsController.match
 );
 
-/** Registro de psicologo */
+/** Register psychologist */
 psychologistsRouter.post(
 	'/psychologists/register',
 	psychologistsController.register
 );
 
 /**
- * Crea una sesion 
- * NECESITA AUTENTICACION
+ * Crea una session
+ * NEED AUTHENTICATION
  * req.body.payload = {
  * 	date: string,
 	user._id: ObjectId del usuario,
@@ -94,7 +93,7 @@ psychologistsRouter.post(
 );
 
 /**
- * Cambia la hora de la sesion con el :id
+ * Cambia la hora de la session con el :id
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
@@ -104,7 +103,7 @@ psychologistsRouter.post(
 );
 
 /**
- * Cambia el horario de un psicologo
+ * change schedule psychologist
  * req.body.payload = {
  * 	monday: [inicio, termino],
  * 	tuesday: [inicio, termino],
@@ -119,7 +118,7 @@ psychologistsRouter.patch(
 );
 
 /**
- * Cancela la sesion
+ * Cancel session
  * req.body = { sessionId: ObjectId }
  */
 psychologistsRouter.delete(
@@ -129,7 +128,7 @@ psychologistsRouter.delete(
 );
 
 /**
- * Actualiza el metodo de pago
+ * update payment method
  */
 psychologistsRouter.patch(
 	'/psychologist/update-payment-method',
@@ -141,7 +140,7 @@ psychologistsRouter.patch(
  * @swagger
  * /api/v1/psychologists/update-profile:
  *  post:
- *    summary: Actualiza el perfil del psicologo
+ *    summary: Actualiza el perfil del psicólogo
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -183,7 +182,7 @@ psychologistsRouter.patch(
  *                type: integer
  *              corporativeSessions:
  *                type: boolean
- *        description: Objeto con la informacion a actualizar (funciona igual que el user)
+ *        description: Objeto con la information a actualizar (funciona igual que el user)
  *    responses:
  *      200: Actualizado correctamente
  */
@@ -194,8 +193,7 @@ psychologistsRouter.put(
 );
 
 /**
- * Elimina un psicologo
- * NECESITA AUTENTICACION Y SUPERUSUARIO
+ * Elimina un psicólogo - only superuser
  * req.body = { id: ObjectId }
  */
 psychologistsRouter.delete(
@@ -229,7 +227,7 @@ psychologistsRouter.post(
 );
 
 /**
- * Agrega una nueva calificacion
+ * Add new rating
  * req.body = { newRating: number, comment: string }
  */
 psychologistsRouter.post(
@@ -250,7 +248,7 @@ psychologistsRouter.get(
 	psychologistsController.checkPlanTask
 );
 /**
- * Consigue los clientes de :psychologist
+ * get all clients('consultantes') the psychologist
  */
 psychologistsRouter.get(
 	'/psychologist/clients/:psychologist',
@@ -259,8 +257,8 @@ psychologistsRouter.get(
 );
 
 /**
- * @description: Obtiene los clientes de un psicologo mediante email
- * @param {string} email email de la busqueda
+ * @description: Obtiene los clientes de un psicólogo mediante email
+ * @param {string} email email de la búsqueda
  * @returns {array} usuario/s encontrados
  */
 psychologistsRouter.get(
@@ -272,7 +270,7 @@ psychologistsRouter.get(
  * @swagger
  * /api/v1/psychologist/check-username:
  *  post:
- *    summary: Revisa disponibilidad de nombre. El psicologo debe estar logeado (se modifica el user logeado)
+ *    summary: Revisa disponibilidad de nombre. El psicólogo debe estar lodged (se modifica el user lodged)
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -296,7 +294,7 @@ psychologistsRouter.post(
  * @swagger
  * /api/v1/psychologist/update-experience:
  *  post:
- *    summary: Actualiza formacion, experiencia, modelos, especialidades e idiomas.
+ *    summary: Actualiza formation, experiencia, modelos, especialidades e idiomas.
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -307,11 +305,11 @@ psychologistsRouter.post(
  *        description: Contenido a actualizar
  *    responses:
  *      200:
- *        description: Psicologo actualizado
+ *        description: Psicólogo actualizado
  *      401:
- *        description: No hay ningun usuario loggeado
+ *        description: No hay ninguno usuario logged
  *      409:
- *        description: No eres un psicologo
+ *        description: No eres un psicólogo
  */
 psychologistsRouter.post(
 	'/psychologist/update-experience',
