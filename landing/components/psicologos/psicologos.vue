@@ -385,12 +385,14 @@
 											<div>
 												<v-avatar
 													size="100"
-													:color="item.avatar ? 'trasnparent' : 'primary'"
+													:color="item.avatar ? 'transparent' : 'primary'"
 												>
 													<v-img
-														v-if="item.avatar"
-														:src="item.avatar"
-														:lazy-src="item.avatar"
+														v-if="item.avatarThumbnail || item.avatar"
+														:src="item.avatarThumbnail || item.avatar"
+														:lazy-src="
+															item.avatarThumbnail || item.avatar
+														"
 														width="100"
 														height="100"
 													>
@@ -574,13 +576,19 @@
 																: '140'
 														"
 														:color="
-															item.avatar ? 'trasnparent' : 'primary'
+															item.avatar ? 'transparent' : 'primary'
 														"
 													>
 														<v-img
-															v-if="item.avatar"
-															:src="item.avatar"
-															:lazy-src="item.avatar"
+															v-if="
+																item.avatarThumbnail || item.avatar
+															"
+															:src="
+																item.avatarThumbnail || item.avatar
+															"
+															:lazy-src="
+																item.avatarThumbnail || item.avatar
+															"
 															:width="
 																$vuetify.breakpoint.lgAndUp
 																	? '200'

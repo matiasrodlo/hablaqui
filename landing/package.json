@@ -24,6 +24,7 @@
         "nuxt": "^2.15.7",
         "nuxt-jsonld": "^1.5.1",
         "pusher-js": "^7.0.3",
+        "vue2-editor": "^2.10.3",
         "vuelidate": "^0.7.6"
     },
     "devDependencies": {
