@@ -405,6 +405,22 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
+	for (let day in payload) {
+		if (Array.isArray(payload[day])) {
+			payload[day].sort();
+			for (let i = 0; i < payload[day].length - 1; i++) {
+				if (payload[day][0][0] !== 'busy')
+					if (
+						moment(payload[day][i][1], 'HH:mm').isAfter(
+							moment(payload[day][i + 1][0], 'HH:mm')
+						)
+					)
+						return false;
+			}
+		} else {
+			console.log(payload[day]);
+		}
+	}
 	let foundPsychologist = await Psychologist.findByIdAndUpdate(
 		user.psychologist,
 		{
@@ -619,6 +635,26 @@ const updateFormationExperience = async (user, payload) => {
 	});
 };
 
+const customNewSession = async (user, payload) => {
+	if (user.role != 'psychologist') return conflictResponse('No eres psicologo');
+
+	const newSession = {
+		typeSession: payload.type,
+		date: moment(payload.date).toISOString,
+		user: payload.type == 'commitment' ? '' : payload.user,
+		invitedByPsychologist: true,
+		price: payload.price,
+	}
+
+	let updatedPsychologist = Psychologist.findByIdAndUpdate(user.psychologist, {
+		$push: {
+			sessions: newSession,
+		}
+	}, { new: true })
+	
+	return okResponse('sesion creada', { session: newSession, psychologist: updatedPsychologist });
+}
+
 const psychologistsService = {
 	getAll,
 	getSessions,
@@ -642,6 +678,7 @@ const psychologistsService = {
 	getFormattedSessions,
 	usernameAvailable,
 	updateFormationExperience,
+	customNewSession,
 };
 
 export default Object.freeze(psychologistsService);
