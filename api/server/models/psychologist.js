@@ -33,7 +33,7 @@ let session = new Schema({
 	},
 	price: {
 		type: Number,
-	}
+	},
 });
 
 let defaultSchedule = {

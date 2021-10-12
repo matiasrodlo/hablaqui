@@ -2,6 +2,8 @@
 
 import { Router } from 'express';
 import passport from 'passport';
+import userSchema from '../schemas/user';
+import validation from '../middleware/validation';
 import psychologistsController from '../controllers/psychologist';
 
 const psychologistsRouter = Router();
@@ -67,6 +69,23 @@ psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
+);
+
+/** Psychologist register a new User at cost 0
+ * req.body = {
+ * 	name = string,
+ * 	email = string,
+ * 	rut = string,
+ * 	phone = string
+ * }
+ */
+psychologistsRouter.post(
+	'/psychologists/register/newUser',
+	[
+		passport.authenticate('jwt', { session: true }),
+		validation(userSchema.newUserByPsy, 'body'),
+	],
+	psychologistsController.registerNewUser
 );
 
 /** Register psychologist */
@@ -330,5 +349,5 @@ psychologistsRouter.post(
 	'/psychologist/new-custom-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.customNewSession
-)
+);
 export default psychologistsRouter;
