@@ -1,8 +1,10 @@
 runtime: nodejs10
-instance_class: B1
-basic_scaling:
+instance_class: F1
+automatic_scaling:
+    target_cpu_utilization: 80%
     max_instances: 3
-    idle_timeout: 7m
+    min_instances: 1
+    idle_timeout: 59m
 
 service: api
 handlers:

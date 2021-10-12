@@ -1,5 +1,10 @@
 runtime: nodejs10
 instance_class: F1
+automatic_scaling:
+    target_cpu_utilization: 80%
+    max_instances: 3
+    min_instances: 1
+    idle_timeout: 59m
 
 handlers:
     - url: /_nuxt
