@@ -5,6 +5,11 @@ import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import {
+	bucket,
+	getPublicUrlAvatar,
+	getPublicUrlAvatarThumb,
+} from '../config/bucket';
 
 const usersService = {
 	async getProfile(id) {
@@ -99,6 +104,37 @@ const usersService = {
 		let finishedSessions = user.finishedSessions;
 
 		return okResponse('sesiones conseguidas', { finishedSessions });
+	},
+
+	async uploadProfilePicture(userID, picture) {
+		if (!picture)
+			return conflictResponse('No se ha enviado ninguna imagen');
+		const { name, lastName } = await User.findById(userID);
+		const gcsname = `${userID}-${name}-${lastName}`;
+		const file = bucket.file(gcsname);
+		const stream = file.createWriteStream({
+			metadata: {
+				contentType: picture.mimetype,
+			},
+		});
+		stream.on('error', err => {
+			picture.cloudStorageError = err;
+			conflictResponse('Error al subir la imagen');
+		});
+		stream.on('finish', () => {
+			logInfo(`${gcsname}` + ' subido exitosamente');
+		});
+		stream.end(picture.buffer);
+
+		await User.findByIdAndUpdate(userID, {
+			avatar: getPublicUrlAvatar(gcsname),
+			avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+		});
+
+		return okResponse('Imagen subida', {
+			avatar: getPublicUrlAvatar(gcsname),
+			avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+		});
 	},
 };
 

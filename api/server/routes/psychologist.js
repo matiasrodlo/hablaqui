@@ -321,12 +321,12 @@ psychologistsRouter.post(
 );
 
 /**
- * @descrioption: Route to upload/update psychologist's profile picture
+ * @description: Route to upload/update psychologist's profile picture
  * @route {PATCH} /api/v1/psychologist/profile-picture
  * @access {Private}
  * @body {file} file
  */
-psychologistsRouter.patch('/psychologist/profile-picture/:id', [
+psychologistsRouter.put('/psychologist/avatar/:id', [
 	passport.authenticate('jwt', { session: true }),
 	multer.single('avatar'),
 	psychologistsController.uploadProfilePicture,

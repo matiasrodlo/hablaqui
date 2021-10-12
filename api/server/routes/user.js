@@ -70,6 +70,16 @@ userRouter.put(
 	userController.updateAvatar
 );
 
+/**
+ * Nuevo endpoint para actualizar/subir foto de perfil
+ */
+userRouter.put(
+	'/user/avatar/:id',
+	passport.authenticate('jwt', { session: true }),
+	multer.single('avatar'),
+	userController.uploadProfilePicture
+);
+
 userRouter.get(
 	'/user/sessions',
 	[passport.authenticate('jwt', { session: true })],

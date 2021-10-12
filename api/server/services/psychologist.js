@@ -9,13 +9,11 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
-import { get, isArray, isEmpty } from 'underscore';
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-import session from '../schemas/session';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -627,7 +625,8 @@ const updateFormationExperience = async (user, payload) => {
 
 const uploadProfilePicture = async (psyID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const gcsname = `${Date.now()}-${picture.originalname}`;
+	const { name, lastName } = await User.findById(psyID);
+	const gcsname = `${psyID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	const stream = file.createWriteStream({
 		metadata: {
