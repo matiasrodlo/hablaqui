@@ -93,11 +93,12 @@
 					</div>
 					<div>
 						<v-text-field
-							v-model="video"
+							:value="video"
 							outlined
 							filled
 							suffix="CLP"
 							type="number"
+							hint="Precio de la session de video sin puntos ni comas"
 							@input="setPrice"
 						>
 						</v-text-field>
@@ -238,7 +239,12 @@ export default {
 			this.setPsychologist(psychologist);
 			this.loading = false;
 		},
-		setPrice() {
+		setPrice(e) {
+			if (this.verifyOnlyNumbers(e)) {
+				this.video = Number(e);
+			} else {
+				this.video = Number(e.split('.').join(''));
+			}
 			const sessionPrices = {
 				video: Math.round(this.video),
 				text: Math.round(this.video * 0.75),
@@ -248,6 +254,10 @@ export default {
 				...this.psychologist,
 				sessionPrices,
 			});
+		},
+		verifyOnlyNumbers(value) {
+			const regex = /^[0-9]*$/;
+			return regex.test(value.toString());
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',

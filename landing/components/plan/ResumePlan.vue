@@ -119,25 +119,35 @@ export default {
 			coupon: null,
 			pay: null,
 			loading: false,
-			priceInt: Number(this.plan.deal.total.split('.').join('')),
+			priceInt: 0,
 		};
+	},
+	created() {
+		if (this.verifyOnlyNumbers(this.plan.deal.total)) {
+			this.priceInt = Number(this.plan.deal.total);
+		} else {
+			this.priceInt = Number(this.plan.deal.total.split('.').join(''));
+		}
 	},
 	mounted() {
 		this.setResumeView(false);
 	},
 	methods: {
+		verifyOnlyNumbers(value) {
+			const regex = /^[0-9]*$/;
+			return regex.test(value.toString());
+		},
 		async setCoupon() {
 			try {
 				const { coupon } = await this.$axios.$post('/coupons/check-coupon', {
 					coupon: this.coupon,
 				});
-				const priceInt = Number(this.plan.deal.total.split('.').join(''));
 				if (coupon.discountType === 'percentage') {
-					const totalValue = priceInt * ((100 - coupon.discount) / 100);
+					const totalValue = this.priceInt * ((100 - coupon.discount) / 100);
 					this.pay = totalValue.toFixed(0);
 				}
 				if (coupon.discountType === 'static') {
-					this.pay = priceInt - coupon.discountType;
+					this.pay = this.priceInt - coupon.discountType;
 				}
 			} catch (error) {
 				this.pay = null;
