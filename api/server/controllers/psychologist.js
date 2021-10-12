@@ -273,6 +273,16 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+	async customNewSession(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const { data, code } = await psychologistsService.customNewSession(user, payload);
+			return restResponse(data, code, res);
+		} catch(e) {
+			return errorCallback(e, res, 'Error creando la sesion');
+		}
+	}
 };
 
 export default Object.freeze(psychologistsController);

@@ -31,6 +31,9 @@ let session = new Schema({
 	invitedByPsychologist: {
 		type: Boolean,
 	},
+	price: {
+		type: Number,
+	}
 });
 
 let defaultSchedule = {
