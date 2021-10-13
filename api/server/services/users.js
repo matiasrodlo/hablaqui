@@ -105,7 +105,8 @@ const usersService = {
 
 	async setUserOnline(user) {
 		const data = {
-			user,
+			...user,
+			status: false,
 		};
 		pusher.trigger('user-status', 'online', data, pusherCallback);
 		return okResponse('Usuario conectado', user);
@@ -113,7 +114,8 @@ const usersService = {
 
 	async setUserOffline(user) {
 		const data = {
-			user,
+			...user,
+			status: true,
 		};
 		pusher.trigger('user-status', 'offline', data, pusherCallback);
 		return okResponse('Usuario desconectado', user);
