@@ -33,7 +33,7 @@ let session = new Schema({
 	},
 	price: {
 		type: Number,
-	}
+	},
 });
 
 let defaultSchedule = {
@@ -104,6 +104,13 @@ let rating = new Schema(
 	},
 	{ timestamps: true }
 );
+
+let plan = new Schema({
+	status: { type: String },
+	hablaquiFee: { type: Number },
+	paymentFee: { type: Number },
+	expirationDate: { type: String },
+});
 
 let psychologist = new Schema({
 	avatar: {
@@ -190,6 +197,7 @@ let psychologist = new Schema({
 	},
 	ratings: [rating],
 	sessions: [session],
+	plan: [plan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

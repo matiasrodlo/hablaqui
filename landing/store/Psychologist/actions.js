@@ -136,6 +136,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async mercadopagoPsychologistPay({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
+				method: 'POST',
+				data: payload,
+			});
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async createSession({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/psychologists/session/create', {

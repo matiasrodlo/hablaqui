@@ -118,6 +118,7 @@
 
 <script>
 import { mdiCheck } from '@mdi/js';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -154,8 +155,23 @@ export default {
 	},
 	// Logica para ir a mercado pago
 	methods: {
-		goMercadoPago() {},
+		goMercadoPago() {
+			// Necesitas agregar el precio y el periodo (mensual, anual)
+			const preference = {
+				price: this.price,
+				period: this.period,
+				title: 'Plan Premium',
+				quantity: 1,
+				psychologist: this.psychologist,
+			}
+
+			const response = await mercadopagoPsychologistPay(preference);
+			window.location.href = response.body.init_point;
+		},
 	},
+	...mapActions({
+		mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
+	}),
 };
 </script>
 

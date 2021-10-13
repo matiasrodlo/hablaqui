@@ -55,16 +55,14 @@ const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
 		items: [
 			{
-				title: body.description,
+				title: body.title,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
 				quantity: 1,
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/psychologist-pay/${
-				body.psychologistToUpdate
-			}/${Number(body.price)}`,
+			success: `${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}/${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
@@ -146,12 +144,20 @@ const successPay = async params => {
 };
 
 const psychologistPay = async params => {
-	const { psychologistId, price } = params;
+	const { psychologistId, period } = params;
+	let expirationDate;
+	if (period == 'anual') {
+		expirationDate = moment().add({ months: 12 }).toISOString;
+	}
+	if (period == 'mensual') {
+		expirationDate = moment().add({ months: 1 }).toISOString;
+	}
+
 	const newPlan = {
-		name: 'paid',
-		price,
+		name: 'premium',
 		hablaquiFee: 0,
 		paymentFee: 3.99,
+		expirationDate,
 	};
 	await psychologistService.updatePlan(psychologistId, newPlan);
 	return okResponse('plan actualizado');
