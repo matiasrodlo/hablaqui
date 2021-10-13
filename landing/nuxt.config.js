@@ -24,6 +24,7 @@ export default {
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
+		host: '0.0.0.0',
 	},
 	loading: {
 		color: '#2070E5',

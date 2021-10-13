@@ -108,6 +108,7 @@
 <script>
 import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -158,6 +159,15 @@ export default {
 						this.$auth.$state.user.psychologist,
 				},
 				{
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
+				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `https://cdn.hablaqui.cl/static/home.png`,
@@ -185,12 +195,28 @@ export default {
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
 			return '';
 		},
+		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+	},
+	mounted() {
+		if (!this.listenerUserOnline) {
+			this.setListenerUserOnline(true);
+			document.addEventListener('visibilitychange', this.visibilityListener);
+			this.visibilityListener();
+		}
 	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		visibilityListener() {
+			if (document.visibilityState === 'visible') {
+				console.info('user online');
+			} else {
+				console.info('user offline');
+			}
+		},
+		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},
 };
 </script>

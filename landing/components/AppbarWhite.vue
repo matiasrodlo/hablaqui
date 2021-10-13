@@ -346,6 +346,15 @@ export default {
 						this.$auth.$state.user.role === 'psychologist' &&
 						this.$auth.$state.user.psychologist,
 				},
+				{
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',

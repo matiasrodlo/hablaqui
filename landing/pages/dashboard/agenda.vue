@@ -141,6 +141,7 @@
 						v-model="dialogAppointment"
 						max-width="550"
 						transition="dialog-top-transition"
+						@click:outside="closeDialog"
 					>
 						<v-card min-height="300" width="550" rounded="lg">
 							<v-card-text
@@ -156,7 +157,7 @@
 								<div class="body-1 font-weight-bold pt-2">
 									{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
 								</div>
-								<v-btn icon @click="dialogAppointment = false">
+								<v-btn icon @click="closeDialog">
 									<icon :icon="mdiClose" color="white" />
 								</v-btn>
 							</v-card-text>
@@ -288,6 +289,15 @@
 													</div>
 												</div>
 											</template>
+											<template #selection="{ item }">
+												<div class="body-2">
+													{{
+														`${item.name} ${
+															item.lastName ? item.lastName : ''
+														}`
+													}}
+												</div>
+											</template>
 										</v-autocomplete>
 									</v-col>
 									<v-col class="d-flex align-center" cols="6">
@@ -352,21 +362,6 @@
 											outlined
 										></v-select>
 									</v-col>
-									<!-- <v-col class="d-flex align-center" cols="12">
-										<span class="pointer">
-											<v-btn
-												fab
-												outlined
-												color="primary"
-												style="width: 20px; height: 20px"
-											>
-												<icon :icon="mdiPlus" color="primary" small />
-											</v-btn>
-											<span class="primary--text ml-2">
-												Añadir día/hora
-											</span>
-										</span>
-									</v-col> -->
 								</v-row>
 								<v-row justify="space-between">
 									<v-col cols="5">
@@ -379,9 +374,7 @@
 										></v-text-field>
 									</v-col>
 									<v-col cols="6">
-										<v-btn text @click="dialogAppointment = false">
-											Cancelar
-										</v-btn>
+										<v-btn text @click="closeDialog"> Cancelar </v-btn>
 										<v-btn rounded color="primary"> Agendar </v-btn>
 									</v-col>
 								</v-row>
@@ -518,9 +511,27 @@ export default {
 			'22:00',
 			'23:00',
 		],
+		idClient: null,
 	}),
 	computed: {
 		...mapGetters({ sessions: 'Psychologist/sessions', clients: 'Psychologist/clients' }),
+	},
+	watch: {
+		clients() {
+			if (this.idClient) {
+				this.idClient = null;
+				this.client = this.clients
+					.map(item => ({
+						...item,
+						text: `${item.name} ${item.lastName ? item.lastName : ''}`,
+					}))
+					.find(item => item._id === this.$route.query.client);
+			}
+		},
+	},
+	created() {
+		this.dialogAppointment = this.$route.query.dialog ? !!this.$route.query.dialog : false;
+		this.idClient = this.$route.query.client;
 	},
 	async mounted() {
 		moment.locale('es');
@@ -618,6 +629,14 @@ export default {
 		},
 		goToCall(selectedEvent) {
 			return `${selectedEvent.idPsychologist} ${selectedEvent.idUser}`;
+		},
+		closeDialog() {
+			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
+			this.dialogAppointment = false;
+			this.dialogNewUser = false;
+			this.date = null;
+			this.client = null;
+			this.idClient = null;
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',

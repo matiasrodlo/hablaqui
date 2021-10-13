@@ -278,7 +278,7 @@
 								</div>
 							</v-list-item-title>
 							<div
-								v-if="!selected.assitant"
+								v-if="!selected.assistant"
 								style="min-width: 150px"
 								class="text-right"
 							>
@@ -324,7 +324,7 @@
 							style="flex: 1; display: flex; flex-direction: column; overflow-y: auto"
 						>
 							<!-- burbujas asistente -->
-							<template v-if="selected.assitant">
+							<template v-if="selected.assistant">
 								<div class="text-center">hablaquí</div>
 								<div
 									class="
@@ -423,7 +423,7 @@
 							</template>
 						</v-card-text>
 						<!-- Zona para escribir -->
-						<v-card-text v-if="selected.assitant">
+						<v-card-text v-if="selected.assistant">
 							<div class="text-center body-2">
 								Hablaquí valora la privacidad. No compartiremos tus mensajes, ni
 								tampoco ningún dato personal.
@@ -522,15 +522,15 @@ export default {
 			}));
 		},
 		subHeader() {
-			if (this.selected.assitant) return 'Asistente virtual';
+			if (this.selected.assistant) return 'Asistente virtual';
 			if (
-				!this.selected.assitant &&
+				!this.selected.assistant &&
 				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.psychologist
 			)
 				return 'Mi psicólogo';
 			if (
-				!this.selected.assitant &&
+				!this.selected.assistant &&
 				this.$auth.$state.user &&
 				this.selected._id !== this.$auth.$state.user.psychologist
 			)
@@ -543,7 +543,7 @@ export default {
 				hasMessageUser: this.hasMessageUser(item),
 			}));
 		},
-		// lista de usuarios/clientes con los que podria chatear el psicologo
+		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
@@ -561,7 +561,7 @@ export default {
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
-		// lista de psicologos con los que podria chatear el usuario
+		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
 			let filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
@@ -618,19 +618,21 @@ export default {
 		moment.locale('es');
 		await this.getPsychologists();
 		await this.getMessages();
-		if (this.$route.params.psy) {
-			const psychologist = this.getPsy(this.$route.params.psy);
-			this.setSelectedPsy(psychologist);
-		} else {
-			// SELECT DEFAULT
-			this.selected = {
-				name: 'Habi',
-				assitant: true,
-				avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
-			};
-		}
 		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
 			await this.getClients(this.$auth.$state.user.psychologist);
+			if ('client' in this.$route.query) {
+				this.setSelectedUser(
+					this.clients.find(client => client._id === this.$route.query.client)
+				);
+				if ('client' in this.$route.query) this.$router.replace({ query: null });
+			} else {
+				// SELECT DEFAULT
+				this.selected = {
+					name: 'Habi',
+					assistant: true,
+					avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+				};
+			}
 		}
 		this.initLoading = false;
 	},
@@ -696,20 +698,20 @@ export default {
 		},
 		async setSelectedPsy(psy) {
 			if (this.selected && this.selected._id === psy._id) return;
-			// inicamos carga del seleccionado
+			// iniciamos carga del seleccionado
 			this.loadingChat = true;
 			this.selected = psy;
-			// obeteners chat del seleccciona
+			// obtener chat del selecciona
 			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			// scroll hasta el final para ver los ultimos mensajes
+			// scroll hasta el final para ver los ultimo mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
-			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
 			if (!this.chat) await this.startConversation(psy._id);
-			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
+			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
 			if (psy.hasMessage) {
 				await this.updateMessage(psy.hasMessage);
 				await this.getMessages();
