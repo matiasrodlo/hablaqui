@@ -4,7 +4,6 @@
 		<v-list two-line color="transparent" style="height: 150px">
 			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
-					v-if="$auth.$state.user.role == 'user'"
 					id="upload"
 					ref="avatar"
 					class="d-none"

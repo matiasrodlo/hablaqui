@@ -9,7 +9,6 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
-import session from '../schemas/session';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -636,7 +635,8 @@ const updateFormationExperience = async (user, payload) => {
 };
 
 const customNewSession = async (user, payload) => {
-	if (user.role != 'psychologist') return conflictResponse('No eres psicologo');
+	if (user.role != 'psychologist')
+		return conflictResponse('No eres psicologo');
 
 	const newSession = {
 		typeSession: payload.type,
@@ -644,16 +644,23 @@ const customNewSession = async (user, payload) => {
 		user: payload.type == 'commitment' ? '' : payload.user,
 		invitedByPsychologist: true,
 		price: payload.price,
-	}
+	};
 
-	let updatedPsychologist = Psychologist.findByIdAndUpdate(user.psychologist, {
-		$push: {
-			sessions: newSession,
-		}
-	}, { new: true })
-	
-	return okResponse('sesion creada', { session: newSession, psychologist: updatedPsychologist });
-}
+	let updatedPsychologist = Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		{
+			$push: {
+				sessions: newSession,
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('sesion creada', {
+		session: newSession,
+		psychologist: updatedPsychologist,
+	});
+};
 
 const psychologistsService = {
 	getAll,

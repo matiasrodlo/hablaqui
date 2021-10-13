@@ -1,6 +1,7 @@
 'use strict';
 
 import User from '../models/user';
+import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
@@ -85,10 +86,22 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async updateAvatar(user, avatar) {
+	async updateAvatar(user, urlAvatar) {
+		const avatar = {
+			url: urlAvatar,
+			approved: user.role === 'user' ? true : false,
+		};
+
+		if (user.role === 'psychologist')
+			await Psychologist.findByIdAndUpdate(user.psychologist, {
+				$push: { avatar },
+			});
+
 		const profile = await User.findByIdAndUpdate(
 			user._id,
-			{ avatar },
+			{
+				$push: { avatar },
+			},
 			{
 				new: true,
 			}
