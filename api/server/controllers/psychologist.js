@@ -277,12 +277,15 @@ const psychologistsController = {
 		try {
 			const { user } = req;
 			const { payload } = req.body;
-			const { data, code } = await psychologistsService.customNewSession(user, payload);
+			const { data, code } = await psychologistsService.customNewSession(
+				user,
+				payload
+			);
 			return restResponse(data, code, res);
-		} catch(e) {
+		} catch (e) {
 			return errorCallback(e, res, 'Error creando la sesion');
 		}
-	}
+	},
 	async uploadProfilePicture(req, res) {
 		try {
 			const id = req.params.id;

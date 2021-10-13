@@ -670,7 +670,8 @@ const uploadProfilePicture = async (psyID, picture) => {
 };
 
 const customNewSession = async (user, payload) => {
-	if (user.role != 'psychologist') return conflictResponse('No eres psicologo');
+	if (user.role != 'psychologist')
+		return conflictResponse('No eres psicologo');
 
 	const newSession = {
 		typeSession: payload.type,
@@ -678,16 +679,23 @@ const customNewSession = async (user, payload) => {
 		user: payload.type == 'commitment' ? '' : payload.user,
 		invitedByPsychologist: true,
 		price: payload.price,
-	}
+	};
 
-	let updatedPsychologist = Psychologist.findByIdAndUpdate(user.psychologist, {
-		$push: {
-			sessions: newSession,
-		}
-	}, { new: true })
-	
-	return okResponse('sesion creada', { session: newSession, psychologist: updatedPsychologist });
-}
+	let updatedPsychologist = Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		{
+			$push: {
+				sessions: newSession,
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('sesion creada', {
+		session: newSession,
+		psychologist: updatedPsychologist,
+	});
+};
 
 const psychologistsService = {
 	getAll,
