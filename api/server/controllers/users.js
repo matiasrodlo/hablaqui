@@ -91,24 +91,21 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando el avatar');
 		}
 	},
-
-	async approveAvatar(req, res) {
+	async uploadProfilePicture(req, res) {
 		try {
-			const { user } = req;
-			const { data, code } = await userService.approveAvatar(user);
-			restResponse(data, code, res);
+			const id = req.params.id;
+			const { file } = req;
+			const { data, code } = await userService.uploadProfilePicture(
+				id,
+				file
+			);
+			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error aprobando el avatar');
-		}
-	},
-
-	async getSessions(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await userService.getSessions(user);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error consiguiendo las sesiones');
+			return errorCallback(
+				e,
+				res,
+				'Error actualizando/subiendo imágen de perfil'
+			);
 		}
 	},
 	async setUserOnline(req, res) {

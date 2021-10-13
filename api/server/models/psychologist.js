@@ -110,7 +110,13 @@ let psychologist = new Schema({
 		type: String,
 		default: '',
 	},
-	approveAvatar: false,
+	avatarThumbnail: {
+		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
+	},
 	code: {
 		type: String,
 	},

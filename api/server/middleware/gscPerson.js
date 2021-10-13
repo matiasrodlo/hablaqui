@@ -1,4 +1,9 @@
-import { bucket, getPublicUrl } from '../config/bucket';
+import {
+	bucket,
+	getPublicUrl,
+	getPublicUrlAvatar,
+	getPublicUrlAvatarThumb,
+} from '../config/bucket';
 import { isArray, isEmpty } from 'underscore';
 
 /**
@@ -63,7 +68,8 @@ const uploadAvatar = (req, res, next) => {
 		next(err);
 	});
 	stream.on('finish', () => {
-		req.body.avatar = getPublicUrl(gcsname);
+		req.body.avatar = getPublicUrlAvatar(gcsname);
+		req.body.thumbnail = getPublicUrlAvatarThumb(gcsname);
 		next();
 	});
 	stream.end(req.files.avatar[0].buffer);

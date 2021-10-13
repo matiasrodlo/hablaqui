@@ -9,6 +9,11 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import {
+	bucket,
+	getPublicUrlAvatar,
+	getPublicUrlAvatarThumb,
+} from '../config/bucket';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -634,6 +639,36 @@ const updateFormationExperience = async (user, payload) => {
 	});
 };
 
+const uploadProfilePicture = async (psyID, picture) => {
+	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
+	const { name, lastName } = await User.findById(psyID);
+	const gcsname = `${psyID}-${name}-${lastName}`;
+	const file = bucket.file(gcsname);
+	const stream = file.createWriteStream({
+		metadata: {
+			contentType: picture.mimetype,
+		},
+	});
+	stream.on('error', err => {
+		picture.cloudStorageError = err;
+		conflictResponse('Error al subir la imagen');
+	});
+	stream.on('finish', () => {
+		logInfo(`${gcsname}` + ' subido exitosamente');
+	});
+	stream.end(picture.buffer);
+
+	await Psychologist.findByIdAndUpdate(psyID, {
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+	});
+
+	return okResponse('Imagen subida', {
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+	});
+};
+
 const customNewSession = async (user, payload) => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
@@ -701,6 +736,7 @@ const psychologistsService = {
 	updatePlan,
 	updatePsychologist,
 	usernameAvailable,
+	uploadProfilePicture,
 };
 
 export default Object.freeze(psychologistsService);

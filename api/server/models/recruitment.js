@@ -97,152 +97,171 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
-let recruitment = new Schema({
-	avatar: {
-		type: String,
-		default: '',
+let recruitment = new Schema(
+	{
+		avatar: {
+			type: String,
+			default: '',
+		},
+		avatarThumbnail: {
+			type: String,
+		},
+		approveAvatar: {
+			type: Boolean,
+			default: false,
+		},
+		code: {
+			type: String,
+			default: '',
+		},
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
+		email: {
+			type: String,
+			default: '',
+		},
+		linkedin: {
+			type: String,
+			default: '',
+		},
+		instagram: {
+			type: String,
+			default: '',
+		},
+		username: {
+			type: String,
+			default: '',
+		},
+		name: {
+			type: String,
+			default: '',
+		},
+		lastName: {
+			type: String,
+			default: '',
+		},
+		rut: {
+			type: String,
+			unique: true,
+		},
+		gender: {
+			type: String,
+			default: '',
+		},
+		birthDate: {
+			type: String,
+			default: '',
+		},
+		sessionType: {
+			type: String,
+			default: '',
+		},
+		languages: {
+			type: Array,
+			default: [],
+		},
+		specialties: {
+			type: Array,
+			default: [],
+		},
+		experience: [experienceSchema],
+		formation: [formationSchema],
+		personalDescription: {
+			type: String,
+			default: '',
+		},
+		professionalDescription: {
+			type: String,
+			default: '',
+		},
+		models: {
+			type: Array,
+			default: [],
+		},
+		country: {
+			type: String,
+			default: 'Chile',
+		},
+		region: {
+			type: String,
+			default: '',
+		},
+		comuna: {
+			type: String,
+			default: '',
+		},
+		schedule: {
+			type: Object,
+			default: defaultSchedule,
+		},
+		preferences: {
+			type: Object,
+			default: defaultPreferences,
+		},
+		paymentMethod: {
+			type: Object,
+			required: false,
+		},
+		yearsExpPsychologist: {
+			type: String,
+			default: '',
+		},
+		yearsExpVideocalls: {
+			type: String,
+			default: '',
+		},
+		avgPatients: {
+			type: String,
+			default: '',
+		},
+		isExclusiveActivity: {
+			type: Boolean,
+			default: false,
+		},
+		isUnderSupervision: {
+			type: Boolean,
+			default: false,
+		},
+		isSupervisor: {
+			type: Boolean,
+			default: false,
+		},
+		isContentCreator: {
+			type: Boolean,
+			default: false,
+		},
+		isAffiliateExternal: {
+			type: Boolean,
+			default: false,
+		},
+		isInterestedBusiness: {
+			type: Boolean,
+			default: false,
+		},
+		isFormCompleted: {
+			type: Boolean,
+			default: false,
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
+		},
+		updatedAt: {
+			type: Date,
+			default: Date.now,
+		},
+		ratings: [rating],
+		sessions: [session],
+		timeZone: {
+			type: String,
+			default: 'America/Santiago',
+		},
 	},
-	approveAvatar: false,
-	code: {
-		type: String,
-		default: '',
-	},
-	isVerified: {
-		type: Boolean,
-		default: false,
-	},
-	email: {
-		type: String,
-		default: '',
-	},
-	linkedin: {
-		type: String,
-		default: '',
-	},
-	instagram: {
-		type: String,
-		default: '',
-	},
-	username: {
-		type: String,
-		default: '',
-	},
-	name: {
-		type: String,
-		default: '',
-	},
-	lastName: {
-		type: String,
-		default: '',
-	},
-	rut: {
-		type: String,
-		unique: true,
-	},
-	gender: {
-		type: String,
-		default: '',
-	},
-	birthDate: {
-		type: String,
-		default: '',
-	},
-	sessionType: {
-		type: String,
-		default: '',
-	},
-	languages: {
-		type: Array,
-		default: [],
-	},
-	specialties: {
-		type: Array,
-		default: [],
-	},
-	experience: [experienceSchema],
-	formation: [formationSchema],
-	personalDescription: {
-		type: String,
-		default: '',
-	},
-	professionalDescription: {
-		type: String,
-		default: '',
-	},
-	models: {
-		type: Array,
-		default: [],
-	},
-	country: {
-		type: String,
-		default: 'Chile',
-	},
-	region: {
-		type: String,
-		default: '',
-	},
-	comuna: {
-		type: String,
-		default: '',
-	},
-	schedule: {
-		type: Object,
-		default: defaultSchedule,
-	},
-	preferences: {
-		type: Object,
-		default: defaultPreferences,
-	},
-	paymentMethod: {
-		type: Object,
-		required: false,
-	},
-	yearsExpPsychologist: {
-		type: String,
-		default: '',
-	},
-	yearsExpVideocalls: {
-		type: String,
-		default: '',
-	},
-	avgPatients: {
-		type: String,
-		default: '',
-	},
-	isExclusiveActivity: {
-		type: Boolean,
-		default: false,
-	},
-	isUnderSupervision: {
-		type: Boolean,
-		default: false,
-	},
-	isSupervisor: {
-		type: Boolean,
-		default: false,
-	},
-	isContentCreator: {
-		type: Boolean,
-		default: false,
-	},
-	isAffiliateExternal: {
-		type: Boolean,
-		default: false,
-	},
-	isInterestedBusiness: {
-		type: Boolean,
-		default: false,
-	},
-	isFormCompleted: {
-		type: Boolean,
-		default: false,
-	},
-	ratings: [rating],
-	sessions: [session],
-	timeZone: {
-		type: String,
-		default: 'America/Santiago',
-	},
-});
+	{
+		timestamps: true,
+	}
+);
 
 export default model('recruitment', recruitment);
