@@ -11,8 +11,22 @@
 				Psicólogos
 			</router-link>
 		</div>
+		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
+			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
+				<div class="d-flex align-center">
+					<v-img
+						src="https://cdn.hablaqui.cl/static/diamond.png"
+						contain
+						height="30"
+						width="30"
+						class="mx-2"
+					></v-img>
+					Mi plan premium
+				</div>
+			</nuxt-link>
+		</div>
 		<div class="mx-5 body-1 primary--text">
-			<a style="text-decoration: none" to="/faq"> Centro de ayuda </a>
+			<nuxt-link style="text-decoration: none" to="/faq"> Centro de ayuda </nuxt-link>
 		</div>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />
