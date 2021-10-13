@@ -5,6 +5,8 @@ import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import pusher from '../config/pusher';
+import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const usersService = {
 	async getProfile(id) {
@@ -99,6 +101,22 @@ const usersService = {
 		let finishedSessions = user.finishedSessions;
 
 		return okResponse('sesiones conseguidas', { finishedSessions });
+	},
+
+	async setUserOnline(user) {
+		const data = {
+			user,
+		};
+		pusher.trigger('user-status', 'online', data, pusherCallback);
+		return okResponse('Usuario conectado', user);
+	},
+
+	async setUserOffline(user) {
+		const data = {
+			user,
+		};
+		pusher.trigger('user-status', 'offline', data, pusherCallback);
+		return okResponse('Usuario desconectado', user);
 	},
 };
 
