@@ -155,7 +155,7 @@ export default {
 	},
 	// Logica para ir a mercado pago
 	methods: {
-		goMercadoPago() {
+		async goMercadoPago() {
 			// Necesitas agregar el precio y el periodo (mensual, anual)
 			const preference = {
 				price: this.price,
@@ -163,9 +163,9 @@ export default {
 				title: 'Plan Premium',
 				quantity: 1,
 				psychologist: this.psychologist,
-			}
+			};
 
-			const response = await mercadopagoPsychologistPay(preference);
+			const response = await this.mercadopagoPsychologistPay(preference);
 			window.location.href = response.body.init_point;
 		},
 	},
