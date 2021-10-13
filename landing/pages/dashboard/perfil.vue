@@ -183,7 +183,7 @@ export default {
 		},
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
-			const user = await this.upateAvatar(this.setAvatarObject(file));
+			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 			if (this.$auth.user.role === 'psychologist')
@@ -191,7 +191,11 @@ export default {
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
-			avatar.append('avatar', file);
+			avatar.append('_id', file);
+			avatar.append('name', this.$auth.$state.user.name);
+			avatar.append('lastName', this.$auth.$state.user.lastName);
+			avatar.append('idPsychologist', this.$auth.$state.user.psychologist);
+			avatar.append('role', this.$auth.$state.user.role);
 			return avatar;
 		},
 		...mapActions({

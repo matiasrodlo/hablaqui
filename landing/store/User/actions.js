@@ -16,12 +16,12 @@ export default {
 	},
 	async upateAvatar({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/user/update/avatar', {
+			const { data } = await this.$axios('/user/upload/avatar', {
 				method: 'put',
 				data: payload,
 			});
 			snackBarSuccess(data.message)(commit);
-			return data.user;
+			return data;
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
