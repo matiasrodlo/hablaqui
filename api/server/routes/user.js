@@ -70,12 +70,6 @@ userRouter.put(
 	userController.updateAvatar
 );
 
-userRouter.patch(
-	'/user/approve/avatar',
-	[passport.authenticate('jwt', { session: true })],
-	userController.approveAvatar
-);
-
 userRouter.get(
 	'/user/sessions',
 	[passport.authenticate('jwt', { session: true })],

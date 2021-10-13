@@ -273,16 +273,34 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+
+	async approveAvatar(req, res) {
+		try {
+			const { user } = req;
+			const { idPsychologist } = req.params;
+			const { data, code } = await psychologistsService.approveAvatar(
+				user,
+				idPsychologist
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el avatar');
+		}
+	},
+
 	async customNewSession(req, res) {
 		try {
 			const { user } = req;
 			const { payload } = req.body;
-			const { data, code } = await psychologistsService.customNewSession(user, payload);
+			const { data, code } = await psychologistsService.customNewSession(
+				user,
+				payload
+			);
 			return restResponse(data, code, res);
-		} catch(e) {
+		} catch (e) {
 			return errorCallback(e, res, 'Error creando la sesion');
 		}
-	}
+	},
 };
 
 export default Object.freeze(psychologistsController);

@@ -116,18 +116,6 @@ const usersService = {
 		});
 	},
 
-	async approveAvatar(user) {
-		const psychologist = await Psychologist.findByIdAndUpdate(
-			user.psychologist,
-			{
-				approveAvatar: true,
-			}
-		);
-		return okResponse('Avatar actualizado', {
-			psychologist,
-		});
-	},
-
 	async getSessions(user) {
 		let finishedSessions = user.finishedSessions;
 
