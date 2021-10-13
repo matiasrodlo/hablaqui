@@ -32,23 +32,23 @@
 			</v-col>
 			<v-col cols="12">
 				<v-data-table
-					:search="search"
-					:loading="loading"
-					:headers="headers"
-					:items="items"
-					item-key="name"
-					:items-per-page="5"
-					:footer-props="{
+                    :search="search"
+                    :loading="loading"
+                    :headers="headers"
+                    :items="items"
+                    item-key="_id"
+                    :items-per-page="5"
+                    :footer-props="{
 						'items-per-page-text': 'Consultantes por página',
 					}"
-					no-data-text="No hay consultantes"
+                    no-data-text="No hay consultantes"
 				>
-					<template #[`item.user`]="{ item }">
-						<div>
-							<avatar size="30" :name="item.user.name" :url="item.user.avatar" />
-							<span class="ml-2 body-2">{{ item.user.name }}</span>
-						</div>
-					</template>
+                    <template #[`item.name`]="{ item }">
+                        <div>
+                            <avatar size="30" :name="item.name" :url="item.avatar" />
+                            <span class="ml-2 body-2">{{ item.name }}</span>
+                        </div>
+                    </template>
 					<template #[`item.actions`]="{ item }">
 						<div>
 							<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
@@ -149,11 +149,11 @@ export default {
 		mdiCalendar,
 		search: '',
 		headers: [
-			{
-				text: 'Nombre',
-				sortable: false,
-				value: 'user',
-			},
+            {
+                text: "Nombre",
+                sortable: false,
+                value: "name"
+            },
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
 			{ text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
@@ -163,14 +163,12 @@ export default {
 	computed: {
 		items() {
 			return this.clientes.map(item => ({
-				user: {
-					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
-					avatar: item.avatar,
-				},
-				lastSession: item.lastSession,
-				status: item.status,
-				_id: item._id,
-			}));
+                avatar: item.avatar,
+                name: `${item.name} ${item.lastName ? item.lastName : ""}`,
+                lastSession: item.lastSession,
+                status: item.status,
+                _id: item._id
+            }));
 		},
 		...mapGetters({ clientes: 'Psychologist/clients' }),
 	},
