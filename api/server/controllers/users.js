@@ -101,6 +101,26 @@ const userController = {
 			errorCallback(e, res, 'Error consiguiendo las sesiones');
 		}
 	},
+	async setUserOnline(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await userService.setUserOnline(user);
+
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando el estado');
+		}
+	},
+	async setUserOffline(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await userService.setUserOffline(user);
+
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error actualizando el estado');
+		}
+	},
 };
 
 export default userController;

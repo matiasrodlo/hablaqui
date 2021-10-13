@@ -76,4 +76,24 @@ userRouter.get(
 	userController.getSessions
 );
 
+/**
+ * Pone al usuario loggeado como "en linea"
+ * NECESITA AUTENTICACION.
+ */
+userRouter.post(
+	'/chat/set-status/online',
+	[passport.authenticate('jwt', { session: true })],
+	userController.setUserOnline
+);
+
+/**
+ * Pone al usuario loggeado como "desconectado"
+ * NECESITA AUTENTICACION.
+ */
+userRouter.post(
+	'/chat/set-status/offline',
+	[passport.authenticate('jwt', { session: true })],
+	userController.setUserOffline
+);
+
 export default userRouter;
