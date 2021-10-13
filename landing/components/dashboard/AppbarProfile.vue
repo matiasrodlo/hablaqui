@@ -15,7 +15,7 @@
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
 					<v-img
-						:src="`${$config.LANDING_URL}/diamond.png`"
+						src="https://cdn.hablaqui.cl/static/diamond.png"
 						contain
 						height="30"
 						width="30"
