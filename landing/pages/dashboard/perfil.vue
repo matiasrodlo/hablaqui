@@ -186,6 +186,8 @@ export default {
 			const user = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
+			if (this.$auth.user.role === 'psychologist')
+				alert('Tu avatar estara disponible despues de que hablaquí lo apruebe');
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
