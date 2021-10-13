@@ -815,9 +815,9 @@
 							</div>
 						</v-stepper-content>
 
-						<!-- <v-stepper-content step="4">
+						<v-stepper-content step="4">
 							<plans :next="() => (step = 5)" />
-						</v-stepper-content> -->
+						</v-stepper-content>
 						<v-stepper-content step="4">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
