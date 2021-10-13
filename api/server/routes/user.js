@@ -81,7 +81,7 @@ userRouter.get(
  * NECESITA AUTENTICACION.
  */
 userRouter.post(
-	'/chat/set-status/online',
+	'/user/set-status/online',
 	[passport.authenticate('jwt', { session: true })],
 	userController.setUserOnline
 );
@@ -91,7 +91,7 @@ userRouter.post(
  * NECESITA AUTENTICACION.
  */
 userRouter.post(
-	'/chat/set-status/offline',
+	'/user/set-status/offline',
 	[passport.authenticate('jwt', { session: true })],
 	userController.setUserOffline
 );
