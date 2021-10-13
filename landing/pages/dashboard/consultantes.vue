@@ -42,23 +42,23 @@
 						'items-per-page-text': 'Consultantes por página',
 					}"
                     no-data-text="No hay consultantes"
-				>
+                >
                     <template #[`item.name`]="{ item }">
                         <div>
                             <avatar size="30" :name="item.name" :url="item.avatar" />
                             <span class="ml-2 body-2">{{ item.name }}</span>
                         </div>
                     </template>
-					<template #[`item.actions`]="{ item }">
-						<div>
-							<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
-								<icon :icon="mdiCalendar" small color="primary"></icon>
-							</v-btn>
-							<v-btn icon :to="`chat?client=${item._id}`">
-								<icon :icon="mdiChat" small color="primary"></icon>
-							</v-btn>
-							<v-btn icon>
-								<icon :icon="mdiClose" small color="error"> </icon>
+                    <template #[`item.actions`]="{ item }">
+                        <div>
+                            <v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
+                                <icon :icon="mdiCalendar" small color="primary"></icon>
+                            </v-btn>
+                            <v-btn icon :to="`chat?client=${item._id}`">
+                                <icon :icon="mdiChat" small color="primary"></icon>
+                            </v-btn>
+                            <v-btn icon>
+                                <icon :icon="mdiClose" small color="error"></icon>
 							</v-btn>
 						</div>
 					</template>
@@ -154,15 +154,15 @@ export default {
                 sortable: false,
                 value: "name"
             },
-			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			{ text: 'Estado', value: 'status', sortable: false },
-			{ text: 'Acciones', value: 'actions', sortable: false },
-		],
+            { text: "Última sesión", value: "lastSession", sortable: false },
+            { text: "Estado", value: "status", sortable: false },
+            { text: "Acciones", value: "actions", sortable: false }
+        ],
 		loading: false,
 	}),
 	computed: {
 		items() {
-			return this.clientes.map(item => ({
+            return this.clientes.map(item => ({
                 avatar: item.avatar,
                 name: `${item.name} ${item.lastName ? item.lastName : ""}`,
                 lastSession: item.lastSession,

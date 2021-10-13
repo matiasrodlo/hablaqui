@@ -29,13 +29,31 @@ export default {
 	async upatePassword({ commit }, payload) {
 		try {
 			delete payload.repeatNewPassword;
-			const { data } = await this.$axios('/user/update/password', {
-				method: 'patch',
-				data: payload,
+			const { data } = await this.$axios("/user/update/password", {
+				method: "patch",
+				data: payload
 			});
 			snackBarSuccess(data.message)(commit);
 		} catch (error) {
 			snackBarError(error)(commit);
 		}
 	},
+	async setOnline({ commit }) {
+		try {
+			await this.$axios("/user/set-status/online", {
+				method: "post"
+			});
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
+	async setOffline({ commit }) {
+		try {
+			await this.$axios("/user/set-status/offline", {
+				method: "post"
+			});
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	}
 };
