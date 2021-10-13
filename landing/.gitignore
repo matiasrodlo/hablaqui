@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# App Engine Yaml (to optimize costs)
+app.yaml
