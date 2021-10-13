@@ -1,13 +1,17 @@
 <template>
 	<div>
+		<div class="primary">
+			<Appbar class="hidden-md-and-up" />
+		</div>
 		<v-img
-			:src="`${$config.LANDING_URL}/especialistas.png`"
-			:lazy-src="`${$config.LANDING_URL}/especialistas.png`"
+			class="hidden-sm-and-down"
+			:src="`https://cdn.hablaqui.cl/static/especialistas.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/especialistas.png`"
 			width="100%"
 			height="auto"
 			alt="Únete a la red de salud mental y bienestar"
 		>
-			<Appbar />
+			<Appbar class="hidden-sm-and-down" />
 			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="7" xl="5">
@@ -84,7 +88,7 @@
 				</v-row>
 			</v-container>
 		</v-img>
-		<v-container class="mt-4 hidden-md-and-up">
+		<v-container class="hidden-md-and-up primary pb-16">
 			<v-row>
 				<v-col>
 					<form-user-psy />
@@ -132,70 +136,115 @@
 		<div class="hidden-md-and-up">
 			<v-img
 				width="100%"
-				height="auto"
-				:src="`${$config.LANDING_URL}/beneficios-responsive.png`"
+				height="800"
+				:src="`https://cdn.hablaqui.cl/static/beneficios-res.png`"
 			>
-				<v-row justify="center" class="mt-16">
-					<v-col cols="11" class="text-center mt-sm-16 pt-sm-16">
+				<v-row justify="center" align="center" style="height: 800px">
+					<v-col cols="11" class="text-center">
 						<h2 class="font-weight-bold white--text text-h4 text-sm-h3">
 							Beneficios de Hablaquí Office
 						</h2>
-					</v-col>
-					<v-col cols="10" sm="8">
-						<div class="mt-8 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Videollamadas seguras y cómodas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="25"
-								width="25"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sistema de reservas
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Sitio web especializado
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Gestión de agenda, clientes y pagos
-							</h3>
-						</div>
-						<div class="mt-5 d-flex align-center">
-							<img
-								height="30"
-								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
-								alt="check"
-							/>
-							<h3 class="white--text ml-6 text-h6 text-sm-h5 font-weight-bold">
-								Recordatorios y correo electrónico
-							</h3>
+						<div style="max-width: 500px" class="mx-auto mt-10">
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Videollamadas seguras y cómodas
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="25"
+									width="25"
+									:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Sistema de reservas
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Sitio web especializado
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Gestión de agenda, clientes y pagos
+								</h3>
+							</div>
+							<div class="mt-5 d-flex align-center">
+								<img
+									height="30"
+									width="30"
+									:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
+									alt="check"
+								/>
+								<h3
+									class="
+										white--text
+										ml-6
+										text-left
+										body-1
+										text-sm-h5
+										font-weight-bold
+									"
+								>
+									Recordatorios y correo electrónico
+								</h3>
+							</div>
 						</div>
 					</v-col>
 				</v-row>
@@ -207,7 +256,7 @@
 				width="100%"
 				height="auto"
 				class="d-flex align-center"
-				:src="`${$config.LANDING_URL}/beneficios-de-hablaqui.png`"
+				:src="`https://cdn.hablaqui.cl/static/beneficios-de-hablaqui.png`"
 			>
 				<v-row justify="center">
 					<v-col offset-md="6" cols="6" md="6">
@@ -218,7 +267,7 @@
 							<img
 								height="30"
 								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
+								:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
 								alt="check"
 							/>
 							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
@@ -229,7 +278,7 @@
 							<img
 								height="25"
 								width="25"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
+								:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
 								alt="check"
 							/>
 							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
@@ -240,7 +289,7 @@
 							<img
 								height="30"
 								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
+								:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
 								alt="check"
 							/>
 							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
@@ -251,7 +300,7 @@
 							<img
 								height="30"
 								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
+								:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
 								alt="check"
 							/>
 							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
@@ -262,7 +311,7 @@
 							<img
 								height="30"
 								width="30"
-								:src="`${$config.LANDING_URL}/check-especialistas.png`"
+								:src="`https://cdn.hablaqui.cl/static/check-especialistas.png`"
 								alt="check"
 							/>
 							<h3 class="white--text ml-6 body-1 text-md-h6 font-weight-bold">
@@ -315,12 +364,13 @@
 		</v-container>
 		<div class="hidden-md-and-up">
 			<v-img
-				width="100vw"
+				width="100%"
+				contain
 				height="auto"
 				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
-				:src="`${$config.LANDING_URL}/descargar-app-small.png`"
+				:src="`https://cdn.hablaqui.cl/static/phone-descarga.png`"
 			>
-				<v-row justify-md="center">
+				<v-row justify-md="center" align="center" style="height: 500px">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
 						<h2
 							class="
@@ -331,29 +381,38 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Descargar nuestra app de chat
+							Proximamente
 						</h2>
-						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
+						<h3
+							class="
+								text-center
+								font-weight-bold
+								white--text
+								caption
+								my-sm-4
+								text-sm-h6
+							"
+						>
 							Mantén contacto con tus consultantes vía Chat. <br />
 							¡Descarga la aplicación ahora!
 						</h3>
 						<div class="d-flex justify-center pb-16">
 							<v-img
-								style="cursor: pointer; border-radius: 10px"
+								style="cursor: pointer; border-radius: 5px"
 								hidden="30"
-								max-width="120"
+								max-width="90"
 								class="ma-1"
-								:src="`${$config.LANDING_URL}/google-play.png`"
-								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+								:src="`https://cdn.hablaqui.cl/static/google-play.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/google-play.png`"
 								alt="descarcar nuestra aplicacion para android"
 							/>
 							<v-img
-								style="cursor: pointer; border-radius: 10px"
+								style="cursor: pointer; border-radius: 5px"
 								hidden="30"
-								max-width="120"
+								max-width="90"
 								class="ma-1"
-								:src="`${$config.LANDING_URL}/ios.svg`"
-								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+								:src="`https://cdn.hablaqui.cl/static/ios.svg`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/ios.svg`"
 								alt="descargar aplicacion para ios"
 							/>
 						</div>
@@ -367,7 +426,7 @@
 				height="auto"
 				style="background-image: linear-gradient(to top, #fff, #ffffff80, #fff0)"
 				class="d-flex align-center"
-				:src="`${$config.LANDING_URL}/descargar-app.png`"
+				:src="`https://cdn.hablaqui.cl/static/descargar-app.png`"
 			>
 				<v-row justify-md="center">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
@@ -380,7 +439,7 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Descargar nuestra app de chat
+							Proximamente
 						</h2>
 						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
 							Mantén contacto con tus consultantes vía Chat. <br />
@@ -392,8 +451,8 @@
 								hidden="40"
 								max-width="140"
 								class="ma-1"
-								:src="`${$config.LANDING_URL}/google-play.png`"
-								:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+								:src="`https://cdn.hablaqui.cl/static/google-play.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/google-play.png`"
 								alt="descarcar nuestra aplicacion para android"
 							/>
 							<v-img
@@ -401,8 +460,8 @@
 								hidden="40"
 								max-width="140"
 								class="ma-1"
-								:src="`${$config.LANDING_URL}/ios.svg`"
-								:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+								:src="`https://cdn.hablaqui.cl/static/ios.svg`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/ios.svg`"
 								alt="descargar aplicacion para ios"
 							/>
 						</div>
@@ -434,40 +493,40 @@ export default {
 					id: 1,
 					title: 'Plataforma de video de sesión',
 					subtitle: 'En su nueva oficina virtual, atienda a clientes de todo el mundo',
-					img: `${this.$config.LANDING_URL}/videollamada.png`,
+					img: `https://cdn.hablaqui.cl/static/videollamada.png`,
 				},
 				{
 					id: 2,
 					title: 'Autonomía y flexibilidad',
 					subtitle:
 						'Desde ahora organizar tu vida es más fácil. Gestiona tus horarios en tiempo real',
-					img: `${this.$config.LANDING_URL}/agenda-cita.png`,
+					img: `https://cdn.hablaqui.cl/static/agenda-cita.png`,
 				},
 				{
 					id: 3,
 					title: 'Atención a los clientes',
 					subtitle:
 						'Gestiona tus clientes fácilmente y ten tiempo para cuidar a tus consultantes',
-					img: `${this.$config.LANDING_URL}/nuestros-especialistas.png`,
+					img: `https://cdn.hablaqui.cl/static/nuestros-especialistas.png`,
 				},
 				{
 					id: 4,
 					title: 'Usted define el valor',
 					subtitle:
 						'Nuestra membresía es simple y sin costo. Sin cuota mensual, solo comisión por sesión',
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `https://cdn.hablaqui.cl/static/pagos.png`,
 				},
 				{
 					id: 5,
 					title: 'Pagos directamente a su banco',
 					subtitle: 'No se preocupe por los pagos, nosotros nos encargaremos de eso',
-					img: `${this.$config.LANDING_URL}/banco.png`,
+					img: `https://cdn.hablaqui.cl/static/banco.png`,
 				},
 				{
 					id: 6,
 					title: 'Soporte personalizado',
 					subtitle: 'Hacemos tu día más fácil y rápido. Menos estrés, más bienestar',
-					img: `${this.$config.LANDING_URL}/llamadas.png`,
+					img: `https://cdn.hablaqui.cl/static/llamadas.png`,
 				},
 			],
 			Office: [
@@ -476,20 +535,20 @@ export default {
 					title: 'Brinda una experiencia increíble',
 					subtitle:
 						'Programar sesiones para sus consultantes actuales y futuros debe ser un proceso fluido',
-					img: `${this.$config.LANDING_URL}/agenda.png`,
+					img: `https://cdn.hablaqui.cl/static/agenda.png`,
 				},
 				{
 					id: 2,
 					title: 'Haga crecer su base de clientes',
 					subtitle: 'Disponible las 24 horas del día, los 7 días de la semana',
-					img: `${this.$config.LANDING_URL}/pagos-usuarios.png`,
+					img: `https://cdn.hablaqui.cl/static/pagos-usuarios.png`,
 				},
 				{
 					id: 3,
 					title: '¿Quieres formar parte de Hablaquí?',
 					subtitle:
 						'Invitamos a los mejores profesionales para atender a los clientes de Hablaquí',
-					img: `${this.$config.LANDING_URL}/red-de-usuarios.png`,
+					img: `https://cdn.hablaqui.cl/static/red-de-usuarios.png`,
 				},
 			],
 		};
@@ -534,7 +593,9 @@ export default {
 					content: 'Únete a la red de salud mental y bienestar',
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/para-especialistas/` }],
+			link: [
+				{ rel: 'canonical', href: `https://cdn.hablaqui.cl/static/para-especialistas/` },
+			],
 		};
 	},
 };

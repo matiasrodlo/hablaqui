@@ -45,8 +45,8 @@
 						<v-img
 							:style="$vuetify.breakpoint.lgAndUp ? 'height: 750px' : 'height: 600px'"
 							contain
-							:lazy-src="`${$config.LANDING_URL}/phone.webp`"
-							:src="`${$config.LANDING_URL}/phone.webp`"
+							:lazy-src="`https://cdn.hablaqui.cl/static/phone.webp`"
+							:src="`https://cdn.hablaqui.cl/static/phone.webp`"
 							alt="habla aqui videollamada"
 						>
 							<template #placeholder>
@@ -63,15 +63,15 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
-			src="/wave1.png"
-			lazy-src="/wave1.png"
+			src="https://cdn.hablaqui.cl/static/wave1.png"
+			lazy-src="https://cdn.hablaqui.cl/static/wave1.png"
 			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
 		<v-img
 			class="hidden-md-and-up"
-			:lazy-src="`${$config.LANDING_URL}/phone_mobile.webp`"
-			:src="`${$config.LANDING_URL}/phone_mobile.webp`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/phone_mobile.webp`"
+			:src="`https://cdn.hablaqui.cl/static/phone_mobile.webp`"
 			style="width: 100%; height: auto"
 			alt="Tu psicólogo Online"
 		/>
@@ -155,15 +155,15 @@
 		<v-img
 			v-if="$vuetify.breakpoint.mdAndUp"
 			class="mt-10"
-			:src="`${$config.LANDING_URL}/wave-blue-1.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-blue-1.png`"
+			:src="`https://cdn.hablaqui.cl/static/wave-blue-1.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/wave-blue-1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			v-else
 			class="mt-10"
-			:src="`${$config.LANDING_URL}/responsive_1.png`"
-			:lazy-src="`${$config.LANDING_URL}/responsive_1.png`"
+			:src="`https://cdn.hablaqui.cl/static/responsive_1.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/responsive_1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<section class="primary-color">
@@ -229,8 +229,8 @@
 										</template>
 										<aside style="position: absolute; bottom: 0; width: 100%">
 											<v-img
-												:src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
-												:lazy-src="`${$config.LANDING_URL}/nuestros_psicologos.png`"
+												:src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
 											>
 												<h4
 													class="
@@ -299,14 +299,14 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
-			:src="`${$config.LANDING_URL}/wave-blue-2.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-blue-2.png`"
+			:src="`https://cdn.hablaqui.cl/static/wave-blue-2.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/wave-blue-2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
-			:src="`${$config.LANDING_URL}/responsive_2.png`"
-			:lazy-src="`${$config.LANDING_URL}/responsive_2.png`"
+			:src="`https://cdn.hablaqui.cl/static/responsive_2.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/responsive_2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 4 / VENTAJAS  -->
@@ -379,22 +379,22 @@
 		<v-img
 			v-if="$vuetify.breakpoint.mdAndUp"
 			class="mt-10"
-			:src="`${$config.LANDING_URL}/wave-part1.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-part1.png`"
+			:src="`https://cdn.hablaqui.cl/static/wave-part1.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/wave-part1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			v-else
-			:src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
-			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_1.png`"
+			:src="`https://cdn.hablaqui.cl/static/efectividad_wave_1.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/efectividad_wave_1.png`"
 			style="width: 100%; height: auto"
 		/>
 		<section style="position: relative" class="mb-2 primary-color">
 			<aside style="position: absolute; top: -100px; left: -20px; z-index: 0">
 				<v-img
 					width="200"
-					:src="`${$config.LANDING_URL}/plus.png`"
-					:lazy-src="`${$config.LANDING_URL}/plus.png`"
+					:src="`https://cdn.hablaqui.cl/static/plus.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/plus.png`"
 				></v-img>
 			</aside>
 			<v-container tag="aside" class="py-0">
@@ -549,14 +549,14 @@
 		</section>
 		<v-img
 			class="hidden-sm-and-down"
-			:src="`${$config.LANDING_URL}/wave-part2.png`"
-			:lazy-src="`${$config.LANDING_URL}/wave-part2.png`"
+			:src="`https://cdn.hablaqui.cl/static/wave-part2.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/wave-part2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<v-img
 			class="hidden-md-and-up"
-			:src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
-			:lazy-src="`${$config.LANDING_URL}/efectividad_wave_2.png`"
+			:src="`https://cdn.hablaqui.cl/static/efectividad_wave_2.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/efectividad_wave_2.png`"
 			style="width: 100%; height: auto"
 		/>
 		<!-- SECTION 6 / download app -->
@@ -588,8 +588,8 @@
 						height="50px"
 						width="auto"
 						class="ma-1"
-						:src="`${$config.LANDING_URL}/google-play.png`"
-						:lazy-src="`${$config.LANDING_URL}/google-play.png`"
+						:src="`https://cdn.hablaqui.cl/static/google-play.png`"
+						:lazy-src="`https://cdn.hablaqui.cl/static/google-play.png`"
 						alt="descarcar nuestra aplicacion para android"
 					/>
 				</v-col>
@@ -606,8 +606,8 @@
 						height="50px"
 						width="auto"
 						class="ma-1"
-						:src="`${$config.LANDING_URL}/ios.svg`"
-						:lazy-src="`${$config.LANDING_URL}/ios.svg`"
+						:src="`https://cdn.hablaqui.cl/static/ios.svg`"
+						:lazy-src="`https://cdn.hablaqui.cl/static/ios.svg`"
 						alt="descargar aplicacion para ios"
 					/>
 				</v-col>
@@ -686,8 +686,8 @@
 									alt="Vida Tres Isapre"
 									contain
 									height="100"
-									:src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
-									:lazy-src="`${$config.LANDING_URL}/VidaTresIsapre.png`"
+									:src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -695,8 +695,8 @@
 									contain
 									max-height="100"
 									alt="nueva masvida"
-									:src="`${$config.LANDING_URL}/nueva-masvida.png`"
-									:lazy-src="`${$config.LANDING_URL}/nueva-masvida.png`"
+									:src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -704,8 +704,8 @@
 									contain
 									alt="fonasa"
 									max-height="100"
-									:src="`${$config.LANDING_URL}/fonasa.png`"
-									:lazy-src="`${$config.LANDING_URL}/fonasa.png`"
+									:src="`https://cdn.hablaqui.cl/static/fonasa.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/fonasa.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -713,8 +713,8 @@
 									contain
 									max-height="100"
 									alt="ban medica"
-									:src="`${$config.LANDING_URL}/banmedica.png`"
-									:lazy-src="`${$config.LANDING_URL}/banmedica.png`"
+									:src="`https://cdn.hablaqui.cl/static/banmedica.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/banmedica.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -722,8 +722,8 @@
 									contain
 									max-height="100"
 									alt="colmena"
-									:src="`${$config.LANDING_URL}/colmena.png`"
-									:lazy-src="`${$config.LANDING_URL}/colmena.png`"
+									:src="`https://cdn.hablaqui.cl/static/colmena.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/colmena.png`"
 								></v-img>
 							</v-col>
 							<v-col tag="section" cols="6" sm="2">
@@ -731,8 +731,8 @@
 									contain
 									max-height="100"
 									alt="consalud"
-									:src="`${$config.LANDING_URL}/consalud.png`"
-									:lazy-src="`${$config.LANDING_URL}/consalud.png`"
+									:src="`https://cdn.hablaqui.cl/static/consalud.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/consalud.png`"
 								></v-img>
 							</v-col>
 						</v-row>
@@ -752,12 +752,12 @@
 			>
 				<v-carousel-item
 					v-for="(item, e) in [
-						`${$config.LANDING_URL}/VidaTresIsapre.png`,
-						`${$config.LANDING_URL}/nueva-masvida.png`,
-						`${$config.LANDING_URL}/fonasa.png`,
-						`${$config.LANDING_URL}/banmedica.png`,
-						`${$config.LANDING_URL}/colmena.png`,
-						`${$config.LANDING_URL}/consalud.png`,
+						`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`,
+						`https://cdn.hablaqui.cl/static/nueva-masvida.png`,
+						`https://cdn.hablaqui.cl/static/fonasa.png`,
+						`https://cdn.hablaqui.cl/static/banmedica.png`,
+						`https://cdn.hablaqui.cl/static/colmena.png`,
+						`https://cdn.hablaqui.cl/static/consalud.png`,
 					]"
 					:key="e"
 				>
@@ -814,21 +814,21 @@ export default {
 					id: 1,
 					title: 'Comodidad',
 					desc: 'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
-					img: `${this.$config.LANDING_URL}/comodidad.png`,
+					img: `https://cdn.hablaqui.cl/static/comodidad.png`,
 					maxWidth: '250px',
 				},
 				{
 					id: 2,
 					title: 'Privacidad',
 					desc: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
-					img: `${this.$config.LANDING_URL}/privacidad.png`,
+					img: `https://cdn.hablaqui.cl/static/privacidad.png`,
 					maxWidth: '214px',
 				},
 				{
 					id: 3,
 					title: 'Personalización',
 					desc: 'Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios a través de una breve evaluación.',
-					img: `${this.$config.LANDING_URL}/personalizacion.png`,
+					img: `https://cdn.hablaqui.cl/static/personalizacion.png`,
 					maxWidth: '250px',
 				},
 			],
@@ -890,19 +890,19 @@ export default {
 				[
 					{
 						id: 1,
-						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
+						img: `https://cdn.hablaqui.cl/static/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
 					{
 						id: 3,
-						img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
+						img: `https://cdn.hablaqui.cl/static/NewYorkUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text: '“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 					},
 					{
 						id: 5,
-						img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
+						img: `https://cdn.hablaqui.cl/static/ColumbiaUniversity.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 						text: '“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
 					},
@@ -910,19 +910,19 @@ export default {
 				[
 					{
 						id: 2,
-						img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
+						img: `https://cdn.hablaqui.cl/static/UniversityofCaliforniaBerkeley.webp`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
 						text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
-						img: `${this.$config.LANDING_URL}/TheLancet.png`,
+						img: `https://cdn.hablaqui.cl/static/TheLancet.png`,
 						href: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 						text: '“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 					},
 					{
 						id: 6,
-						img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
+						img: `https://cdn.hablaqui.cl/static/BaylorCollegeOfMedicine.png`,
 						href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 						text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 					},
@@ -931,38 +931,38 @@ export default {
 			efectividadMobile: [
 				{
 					id: 1,
-					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
+					img: `https://cdn.hablaqui.cl/static/BaylorCollegeOfMedicine.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 					text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
 				{
 					id: 3,
-					img: `${this.$config.LANDING_URL}/NewYorkUniversity.png`,
+					img: `https://cdn.hablaqui.cl/static/NewYorkUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 					text: '“El tratamiento de Trastono por Estrés Postraumático por medio de mensajería multimedia mostraró tasas de reducción de síntomas similares a las formas tradicionales de tratamiento. (2020)”',
 				},
 				{
 					id: 5,
-					img: `${this.$config.LANDING_URL}/ColumbiaUniversity.png`,
+					img: `https://cdn.hablaqui.cl/static/ColumbiaUniversity.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/32347814/',
 					text: '“Los hallazgos iniciales muestran una mejora casi total en el bienestar psicológico para el 90% de los que reciben tratamiento de terapia basada en mensajes de texto. (2015)”',
 				},
 
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/UniversityofCaliforniaBerkeley.webp`,
+					img: `https://cdn.hablaqui.cl/static/UniversityofCaliforniaBerkeley.webp`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
 					text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/TheLancet.png`,
+					img: `https://cdn.hablaqui.cl/static/TheLancet.png`,
 					href: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(09)61257-5/fulltext',
 					text: '“La terapia es eficaz cuando la realiza un terapeuta en línea, y los beneficios se mantienen durante más de ocho meses (2009)”',
 				},
 				{
 					id: 6,
-					img: `${this.$config.LANDING_URL}/BaylorCollegeOfMedicine.png`,
+					img: `https://cdn.hablaqui.cl/static/BaylorCollegeOfMedicine.png`,
 					href: 'https://pubmed.ncbi.nlm.nih.gov/26231819/',
 					text: '“Incluso en entornos inestables e inseguros, las personas con síntomas de estrés postraumático muestran mejoras gracias a un tratamiento completamente online.” (2016)',
 				},
@@ -974,28 +974,28 @@ export default {
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Aihnoa Con',
-					image: `${this.$config.LANDING_URL}/Aihnoa_Con.webp`,
+					image: `https://cdn.hablaqui.cl/static/Aihnoa_Con.webp`,
 				},
 				{
 					id: 2,
 					name: 'Joaquín Bustos',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima, fobia social.',
-					image: `${this.$config.LANDING_URL}/Joaquin_Bustos.webp`,
+					image: `https://cdn.hablaqui.cl/static/Joaquin_Bustos.webp`,
 				},
 				{
 					id: 3,
 					name: 'Jorge Calderon',
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoestima, duelo o perdida, ansiedad/estrés.',
-					image: `${this.$config.LANDING_URL}/Jorge_Calderon.webp`,
+					image: `https://cdn.hablaqui.cl/static/Jorge_Calderon.webp`,
 				},
 				{
 					id: 4,
 					title: 'Terapeuta de Hablaquí con licencia',
 					subtitle: 'Autoconocimiento, autoestima,ansiedad/estrés.',
 					name: 'Tamara Stein',
-					image: `${this.$config.LANDING_URL}/Tamara_Stein.webp`,
+					image: `https://cdn.hablaqui.cl/static/Tamara_Stein.webp`,
 				},
 			],
 		};

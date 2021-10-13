@@ -318,8 +318,8 @@
 												height="100"
 												width="100"
 												class="mx-auto"
-												:src="`${$config.LANDING_URL}/Lupa.png`"
-												:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+												:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 											>
 												<template #placeholder>
 													<v-row
@@ -385,12 +385,14 @@
 											<div>
 												<v-avatar
 													size="100"
-													:color="item.avatar ? 'trasnparent' : 'primary'"
+													:color="item.avatar ? 'transparent' : 'primary'"
 												>
 													<v-img
-														v-if="item.avatar"
-														:src="item.avatar"
-														:lazy-src="item.avatar"
+														v-if="item.avatarThumbnail || item.avatar"
+														:src="item.avatarThumbnail || item.avatar"
+														:lazy-src="
+															item.avatarThumbnail || item.avatar
+														"
 														width="100"
 														height="100"
 													>
@@ -439,7 +441,7 @@
 													class="caption primary--text pb-2"
 													style="border-bottom: 1px solid #bdbdbd"
 												>
-													<span> Codigo {{ item.code }} </span>
+													<span> código {{ item.code }} </span>
 												</span>
 											</div>
 											<div class="body-2 mt-4">
@@ -494,8 +496,8 @@
 														height="140"
 														width="140"
 														class="mx-auto"
-														:src="`${$config.LANDING_URL}/Lupa.png`"
-														:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+														:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+														:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 													>
 														<template #placeholder>
 															<v-row
@@ -574,13 +576,19 @@
 																: '140'
 														"
 														:color="
-															item.avatar ? 'trasnparent' : 'primary'
+															item.avatar ? 'transparent' : 'primary'
 														"
 													>
 														<v-img
-															v-if="item.avatar"
-															:src="item.avatar"
-															:lazy-src="item.avatar"
+															v-if="
+																item.avatarThumbnail || item.avatar
+															"
+															:src="
+																item.avatarThumbnail || item.avatar
+															"
+															:lazy-src="
+																item.avatarThumbnail || item.avatar
+															"
 															:width="
 																$vuetify.breakpoint.lgAndUp
 																	? '200'
@@ -625,7 +633,7 @@
 															mb-2
 														"
 													>
-														Codigo {{ item.code }}
+														código {{ item.code }}
 													</div>
 													<nuxt-link
 														class="

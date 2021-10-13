@@ -1,3 +1,5 @@
+'use strict';
+
 import { logInfo } from '../config/pino.js';
 import Appointments from '../models/appointments.js';
 import { okResponse } from '../utils/responses/functions.js';

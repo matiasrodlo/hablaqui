@@ -380,7 +380,7 @@
 				</div>
 			</v-container>
 			<!-- for companies -->
-			<img :src="`${$config.LANDING_URL}/Blog-top.png`" style="width: 100%" />
+			<img :src="`https://cdn.hablaqui.cl/static/Blog-top.png`" style="width: 100%" />
 			<v-container fluid class="primary py-0">
 				<v-row justify="center">
 					<v-col tag="section" cols="12" class="mb-5">
@@ -496,7 +496,7 @@
 					</v-col>
 				</v-row>
 			</v-container>
-			<img :src="`${$config.LANDING_URL}/Blog-bottom.png`" style="width: 100%" />
+			<img :src="`https://cdn.hablaqui.cl/static/Blog-bottom.png`" style="width: 100%" />
 
 			<!-- Categorias -->
 			<v-container fluid class="mb-16">
@@ -570,7 +570,7 @@
 			</v-container>
 			<img
 				class="mt-10"
-				:src="`${$config.LANDING_URL}/Blog-05-top.png`"
+				:src="`https://cdn.hablaqui.cl/static/Blog-05-top.png`"
 				style="width: 100%"
 			/>
 			<v-container fluid class="primary py-0">
@@ -604,8 +604,8 @@
 									contain
 									class="mx-auto"
 									alt="Recibe contenido exclusivo periódicamente"
-									:src="`${$config.LANDING_URL}/suscribete.webp`"
-									:lazy-src="`${$config.LANDING_URL}/suscribete.webp`"
+									:src="`https://cdn.hablaqui.cl/static/suscribete.webp`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/suscribete.webp`"
 								>
 									<template #placeholder>
 										<v-row
@@ -625,7 +625,7 @@
 					</v-col>
 				</v-row>
 			</v-container>
-			<img :src="`${$config.LANDING_URL}/Blog-05-bottom.png`" style="width: 100%" />
+			<img :src="`https://cdn.hablaqui.cl/static/Blog-05-bottom.png`" style="width: 100%" />
 			<v-container tag="footer">
 				<Footer />
 			</v-container>
@@ -664,18 +664,18 @@ export default {
 			combobox: [],
 			length: 5,
 			categories: [
-				{ title: 'Pareja y sexo', img: `${this.$config.LANDING_URL}/pareja_y_sexo.png` },
+				{ title: 'Pareja y sexo', img: `https://cdn.hablaqui.cl/static/pareja_y_sexo.png` },
 				{
 					title: 'Conocimiento de sí mismo',
-					img: `${this.$config.LANDING_URL}/conocimiento_de_si_mismo.png`,
+					img: `https://cdn.hablaqui.cl/static/conocimiento_de_si_mismo.png`,
 				},
 				{
 					title: 'Salud y bienestar',
-					img: `${this.$config.LANDING_URL}/salud_y_bienestar.png`,
+					img: `https://cdn.hablaqui.cl/static/salud_y_bienestar.png`,
 				},
 				{
 					title: 'Familia y amigos',
-					img: `${this.$config.LANDING_URL}/familia_y_amigos.png`,
+					img: `https://cdn.hablaqui.cl/static/familia_y_amigos.png`,
 				},
 			],
 		};
@@ -723,7 +723,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/blog/`,
+					href: `https://cdn.hablaqui.cl/static/blog/`,
 				},
 			],
 		};

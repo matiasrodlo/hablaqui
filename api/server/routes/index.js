@@ -1,3 +1,5 @@
+'use strict';
+
 import appointmentsRouter from './appointments';
 import authRoutes from './auth';
 import dataRouter from './data';
@@ -9,6 +11,7 @@ import blogRouter from './blog';
 import chatRouter from './chat';
 import couponRouter from './coupon';
 import recruitmentRouter from './recruitment';
+import cronRouter from './cron';
 
 const apiVersion = '/api/v1';
 
@@ -24,4 +27,5 @@ export default app => {
 	app.use(apiVersion, psychologistsRouter);
 	app.use(apiVersion, recruitmentRouter);
 	app.use(apiVersion, userRoutes);
+	app.use(apiVersion, cronRouter);
 };

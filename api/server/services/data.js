@@ -1,3 +1,5 @@
+'use strict';
+
 import csvtojson from 'csvtojson';
 import Appointments from '../models/appointments';
 import Psychologist from '../models/psychologist';

@@ -1,6 +1,6 @@
+'use strict';
+
 import { Router } from 'express';
-import passport from 'passport';
-import grantAccess from '../middleware/strategies/rbac';
 import appointmentsController from '../controllers/appointments';
 
 const appointmentsRouter = Router();

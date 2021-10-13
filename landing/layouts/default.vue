@@ -17,7 +17,7 @@
 	</v-app>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Snackbar from '@/components/Snackbar';
 
 export default {
@@ -25,23 +25,35 @@ export default {
 		Snackbar,
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
+	computed: {
+		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+	},
 	mounted() {
-		if (process.browser) {
-			const psicologos = JSON.parse(localStorage.getItem('psychologists'));
-			if (psicologos && psicologos.length) this.setPsychologists(psicologos);
+		if (!this.listenerUserOnline) {
+			this.setListenerUserOnline(true);
+			document.addEventListener('visibilitychange', this.visibilityListener);
+			this.visibilityListener();
 		}
 		this.initialFetch();
 	},
 	methods: {
 		async initialFetch() {
+			await this.getPsychologists();
 			await this.getAppointments();
-			this.getPsychologists();
+		},
+		visibilityListener() {
+			if (document.visibilityState === 'visible') {
+				console.info('user online');
+			} else {
+				console.info('user offline');
+			}
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 		...mapMutations({
+			setListenerUserOnline: 'User/setListenerUserOnline',
 			setLoading: 'Psychologist/setLoading',
 			setPsychologists: 'Psychologist/setPsychologists',
 		}),

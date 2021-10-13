@@ -1,3 +1,5 @@
+'use strict';
+
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
@@ -233,6 +235,17 @@ const psychologistsController = {
 			return errorCallback(e, res, 'error consiguiendo los clientes');
 		}
 	},
+	async searchClients(req, res) {
+		try {
+			const { search } = req.params;
+			const { data, code } = await psychologistsService.searchClients(
+				search
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 	async usernameAvailable(req, res) {
 		try {
 			const { username } = req.body;
@@ -260,6 +273,16 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+	async customNewSession(req, res) {
+		try {
+			const { user } = req;
+			const { payload } = req.body;
+			const { data, code } = await psychologistsService.customNewSession(user, payload);
+			return restResponse(data, code, res);
+		} catch(e) {
+			return errorCallback(e, res, 'Error creando la sesion');
+		}
+	}
 };
 
 export default Object.freeze(psychologistsController);

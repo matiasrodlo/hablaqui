@@ -7,8 +7,8 @@
 					tabindex="0"
 					class="mx-auto my-5"
 					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					alt="hablaqui Logo"
 					accesskey="h"
 				/>
@@ -25,6 +25,11 @@
 						<v-list-item-title>Psicólogos</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+					<v-list-item-content>
+						<v-list-item-title>Para especialistas</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
 					<v-list-item-content>
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
@@ -33,11 +38,6 @@
 				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
-					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -121,8 +121,8 @@
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
 			</nuxt-link>
@@ -135,6 +135,16 @@
 			>
 				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
 			</router-link>
+			<nuxt-link
+				v-show="!$auth.$state.loggedIn"
+				id="especialistas-appabar"
+				accesskey="r"
+				style="text-decoration: none"
+				class="hidden-sm-and-down mx-2"
+				to="/para-especialistas"
+			>
+				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
+			</nuxt-link>
 			<nuxt-link
 				id="faq-appbar"
 				accesskey="f"
@@ -152,16 +162,6 @@
 				to="/blog"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</nuxt-link>
-			<nuxt-link
-				v-show="!$auth.$state.loggedIn"
-				id="especialistas-appabar"
-				accesskey="r"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				to="/para-especialistas"
-			>
-				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
 			</nuxt-link>
 			<v-spacer></v-spacer>
 			<client-only>
@@ -248,7 +248,7 @@
 										<v-img
 											contain
 											height="30"
-											:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+											:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 											alt="cerrar sesión"
 										/>
 									</v-list-item-avatar>
@@ -328,19 +328,28 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
+				{
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
@@ -350,13 +359,13 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `${this.$config.LANDING_URL}/apps.png`,
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];

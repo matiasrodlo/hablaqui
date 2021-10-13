@@ -1,4 +1,4 @@
-import axios from 'axios';
+const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
 	target: 'static',
@@ -24,43 +24,7 @@ export default {
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
-	},
-	generate: {
-		fallback: '404.html',
-		// genera las rutas dinamicas
-		async routes() {
-			const baseURL = process.env.VUE_APP_URL
-				? process.env.VUE_APP_URL
-				: 'http://localhost:3000/api/v1';
-			const baseApi = process.env.API_ABSOLUTE
-				? process.env.API_ABSOLUTE
-				: 'http://localhost:3000/';
-
-			// generate routes blogs
-			const { data } = await axios.get(`${baseURL}/blog/all`);
-			const blogs = data.articles.map(item => ({
-				route: `/blog/${item.slug}`,
-				payload: item,
-			}));
-
-			// generate routes psicologos
-			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists
-				.filter(psychologist => psychologist.username)
-				.map(psychologist => ({
-					route: `/${psychologist.username}`,
-					payload: psychologist,
-				}));
-
-			// generate routes comunas
-			const response = await axios.get(`${baseApi}/comunas.json`);
-			const comunas = response.data.map(el => ({
-				route: `/psicologos/${el.comuna.slug}`,
-				payload: el.comuna,
-			}));
-
-			return blogs.concat(psicologos).concat(comunas);
-		},
+		host: '0.0.0.0',
 	},
 	loading: {
 		color: '#2070E5',
@@ -213,12 +177,14 @@ export default {
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
 		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
+		debug: isDev,
 	},
 
 	sitemap: {
 		hostname: process.env.VUE_APP_LANDING
 			? process.env.VUE_APP_LANDING
 			: 'http://localhost:9000/',
+		gzip: true,
 		exclude: ['/dashboard/**', '/nuevo-psicologo'],
 		trailingSlash: true,
 	},
@@ -287,9 +253,15 @@ export default {
 		},
 		treeShake: true,
 	},
-
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	build: {
+		/*
+		 ** Analyze build files
+		 */
+		analyze: isDev,
+		/*
+		 ** public patch
+		 */
 		publicPath: process.env.VUE_APP_LANDING,
 	},
 };

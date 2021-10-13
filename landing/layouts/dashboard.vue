@@ -3,9 +3,9 @@
 		<v-navigation-drawer
 			v-model="drawer"
 			mini-variant-width="60"
-			mini-variant
+			:mini-variant.sync="isMini"
 			color="primary"
-			expand-on-hover
+			:expand-on-hover="$vuetify.breakpoint.mdAndUp"
 			app
 			mobile-breakpoint="960"
 		>
@@ -14,8 +14,8 @@
 					height="100"
 					contain
 					style="cursor: pointer"
-					:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaqui"
 					class="my-16"
 					@click="() => $router.push({ name: 'psicologos' })"
@@ -64,7 +64,7 @@
 						<v-img
 							height="50"
 							width="50"
-							:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+							:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 							alt="cerrar sesión"
 						/>
 					</v-list-item-avatar>
@@ -75,6 +75,13 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
+			<template v-if="!isMini" #append>
+				<div class="pa-2 white--text">
+					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
+					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
+					contactarnos
+				</div>
+			</template>
 		</v-navigation-drawer>
 		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
 			<h1 class="white--text">{{ routeName }}</h1>
@@ -99,8 +106,9 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -109,14 +117,19 @@ export default {
 	},
 	data() {
 		return {
+			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
 			drawer: true,
 			online: true,
+			isMini: true,
 		};
 	},
 	computed: {
+		expand() {
+			return true;
+		},
 		links() {
 			const visible =
 				(this.$auth.$state.loggedIn &&
@@ -127,19 +140,28 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
+				{
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
@@ -148,13 +170,19 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `${this.$config.LANDING_URL}/apps.png`,
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Nuevo articulo',
+					link: { name: 'dashboard-newArticle' },
+					img: `https://cdn.hablaqui.cl/static/article.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
@@ -167,12 +195,28 @@ export default {
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
 			return '';
 		},
+		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+	},
+	mounted() {
+		if (!this.listenerUserOnline) {
+			this.setListenerUserOnline(true);
+			document.addEventListener('visibilitychange', this.visibilityListener);
+			this.visibilityListener();
+		}
 	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		visibilityListener() {
+			if (document.visibilityState === 'visible') {
+				console.info('user online');
+			} else {
+				console.info('user offline');
+			}
+		},
+		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},
 };
 </script>

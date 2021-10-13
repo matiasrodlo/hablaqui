@@ -1,3 +1,5 @@
+'use strict';
+
 import chatService from '../services/chat';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
@@ -83,9 +85,9 @@ const chatController = {
 			const { user } = req;
 			const { data, code } = await chatService.setUserOnline(user);
 
-			return restResponse(data, code, res)
+			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error actualizando el estado')	
+			return errorCallback(e, res, 'Error actualizando el estado');
 		}
 	},
 	async setUserOffline(req, res) {
@@ -93,11 +95,11 @@ const chatController = {
 			const { user } = req;
 			const { data, code } = await chatService.setUserOffline(user);
 
-			return restResponse(data, code, res)
+			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error actualizando el estado')	
+			return errorCallback(e, res, 'Error actualizando el estado');
 		}
-	}
+	},
 };
 
 export default Object.freeze(chatController);

@@ -31,7 +31,7 @@
 			</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/Grafico-datos-bancarios.png`"
+					:src="`https://cdn.hablaqui.cl/static/Grafico-datos-bancarios.png`"
 					contain
 					height="30"
 					width="10%"
@@ -61,7 +61,7 @@
 			<div class="text-h6 secondary--text mb-2">RUT del titular</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/dni.png`"
+					:src="`https://cdn.hablaqui.cl/static/dni.png`"
 					contain
 					height="30"
 					width="10%"
@@ -84,7 +84,7 @@
 			<div class="text-h6 secondary--text mb-2">Tipo de cuenta</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/tipo-de-cuenta.png`"
+					:src="`https://cdn.hablaqui.cl/static/tipo-de-cuenta.png`"
 					contain
 					height="30"
 					width="10%"
@@ -107,7 +107,7 @@
 			<div class="text-h6 secondary--text mb-2">Nombre completo del titular</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/name-account.png`"
+					:src="`https://cdn.hablaqui.cl/static/name-account.png`"
 					contain
 					height="30"
 					width="10%"
@@ -130,7 +130,7 @@
 			<div class="text-h6 secondary--text mb-2">Número de cuenta</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/numero-cuenta.png`"
+					:src="`https://cdn.hablaqui.cl/static/numero-cuenta.png`"
 					contain
 					height="30"
 					width="10%"
@@ -152,7 +152,7 @@
 			<div class="text-h6 secondary--text mb-2">Email</div>
 			<div class="d-flex align-center">
 				<v-img
-					:src="`${$config.LANDING_URL}/icon-email.png`"
+					:src="`https://cdn.hablaqui.cl/static/icon-email.png`"
 					contain
 					height="30"
 					width="10%"

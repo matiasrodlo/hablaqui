@@ -126,7 +126,7 @@ CUALQUIER PERSONA
 								<v-text-field
 									v-model="form.code"
 									type="number"
-									label="Codigo"
+									label="Código"
 									outlined
 									autocomplete="off"
 								></v-text-field>
@@ -383,22 +383,22 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: `${this.$config.LANDING_URL}/auth.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth.webp`,
 					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/auth-2.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: `${this.$config.LANDING_URL}/auth-3.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
 					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/auth-4.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
 					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
@@ -406,7 +406,7 @@ export default {
 	},
 	computed: {
 		backgroundImg() {
-			if (this.$vuetify.breakpoint.smAndUp) return `${this.$config.LANDING_URL}/login.png`;
+			if (this.$vuetify.breakpoint.smAndUp) return `https://cdn.hablaqui.cl/static/login.png`;
 			return null;
 		},
 		emailErrors() {
@@ -517,7 +517,7 @@ export default {
 			this.loading = false;
 			this.terminado = true;
 
-			// Se devuelve todo a la normalidad para otro registro
+			// Se devuelve a la normalidad para otro registro
 			this.defaultForm();
 			this.step = 1;
 		},

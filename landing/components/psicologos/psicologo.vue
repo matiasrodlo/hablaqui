@@ -41,7 +41,7 @@
 								v-if="$vuetify.breakpoint.mdAndUp && psychologist.code"
 								class="caption text--secondary"
 							>
-								Codigo {{ psychologist.code }}
+								Código {{ psychologist.code }}
 							</div>
 						</v-col>
 						<v-col cols="12" md="9">
@@ -59,7 +59,7 @@
 										v-if="!$vuetify.breakpoint.mdAndUp && psychologist.code"
 										class="caption text--secondary"
 									>
-										Codigo {{ psychologist.code }}
+										Código {{ psychologist.code }}
 									</div>
 								</v-col>
 								<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
@@ -90,7 +90,7 @@
 					</v-row>
 				</v-card-text>
 			</v-card>
-			<v-card v-if="psychologist" class="mt-6">
+			<v-card v-if="psychologist" class="mt-6 pb-10">
 				<v-card-text class="text-h5 primary--text font-weight-bold">Perfil</v-card-text>
 				<v-card-text>
 					<v-divider></v-divider>
@@ -103,9 +103,10 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li v-for="(experience, i) in psychologist.experience" :key="i">
-									{{ experience.title }} - {{ experience.place }} ({{
-										experience.start
-									}}, {{ experience.end }})
+									{{ experience.title }} - {{ experience.place }}
+									<span v-if="experience.start && experience.end"
+										>({{ experience.start }}, {{ experience.end }})</span
+									>
 								</li>
 							</ul>
 						</v-col>
@@ -161,9 +162,10 @@
 						<v-col class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li v-for="(formation, i) in psychologist.formation" :key="i">
-									{{ formation.formationType }} - {{ formation.description }} ({{
-										formation.start
-									}}, {{ formation.end }})
+									{{ formation.formationType }} - {{ formation.description }}
+									<span v-if="formation.start && formation.end">
+										({{ formation.start }}, {{ formation.end }})
+									</span>
 								</li>
 							</ul>
 						</v-col>
@@ -184,6 +186,18 @@
 						</v-col>
 					</v-row>
 				</v-card-text>
+				<v-card-text>
+					<v-row align="center">
+						<v-col cols="12" md="3" class="align-self-start subtitle-1 primary--text">
+							Política de reprogramación
+						</v-col>
+						<v-col class="body-1 text-left">
+							Puedes reprogramar tu sesión hasta
+							{{ psychologist.preferences.minimumRescheduleSession }}hora(s) antes sin
+							costo adicional.
+						</v-col>
+					</v-row>
+				</v-card-text>
 			</v-card>
 			<v-dialog v-model="dialog" transition="dialog-top-transition" width="450">
 				<v-card rounded="xl">
@@ -195,8 +209,8 @@
 										width="80"
 										height="80"
 										class="mx-auto mt-8"
-										:src="`${$config.LANDING_URL}/logo_tiny.png`"
-										:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+										:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+										:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 									></v-img>
 									<v-card-text><signin :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
@@ -258,8 +272,8 @@
 										width="80"
 										height="80"
 										class="mx-auto mt-8"
-										:src="`${$config.LANDING_URL}/logo_tiny.png`"
-										:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+										:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+										:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 									>
 									</v-img>
 									<v-card-text><signup :is-dialog="true" /></v-card-text>
@@ -321,6 +335,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -333,12 +348,18 @@ export default {
 			type: Object,
 			required: true,
 		},
+		setPsychologist: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
 			loadingChat: false,
 			dialog: false,
 			tab: 1,
+			pusher: null,
+			channel: null,
 		};
 	},
 	computed: {
@@ -359,8 +380,26 @@ export default {
 	},
 	created() {
 		this.setFloatingChat(false);
+		// PUSHER
+		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
+			cluster: this.$config.PUSHER_CLUSTER,
+		});
+		this.pusher.connection.bind('update', function (err) {
+			console.error(err);
+		});
+		this.channel = this.pusher.subscribe('psychologist');
+		this.channel.bind('update', data => this.$emit('updatePsychologist', data));
+		this.$on('updatePsychologist', data => {
+			if (data.username === this.psychologist.username) {
+				this.getPsychologist(data);
+			}
+		});
 	},
 	methods: {
+		async getPsychologist(data) {
+			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
+			this.setPsychologist(psychologist);
+		},
 		toAuth(item) {
 			localStorage.setItem('psi', JSON.stringify(item));
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });

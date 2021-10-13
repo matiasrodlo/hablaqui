@@ -1,3 +1,5 @@
+'use strict';
+
 import { Schema, model } from 'mongoose';
 
 let session = new Schema({
@@ -29,16 +31,19 @@ let session = new Schema({
 	invitedByPsychologist: {
 		type: Boolean,
 	},
+	price: {
+		type: Number,
+	}
 });
 
 let defaultSchedule = {
-	monday: ['09:00', '17:00'],
-	tuesday: ['09:00', '17:00'],
-	wednesday: ['09:00', '17:00'],
-	thursday: ['09:00', '17:00'],
-	friday: ['09:00', '17:00'],
-	saturday: ['busy', 'busy'],
-	sunday: ['busy', 'busy'],
+	monday: [['09:00', '17:00']],
+	tuesday: [['09:00', '17:00']],
+	wednesday: [['09:00', '17:00']],
+	thursday: [['09:00', '17:00']],
+	friday: [['09:00', '17:00']],
+	saturday: 'busy',
+	sunday: 'busy',
 };
 
 let defaultPreferences = {
@@ -148,9 +153,11 @@ let psychologist = new Schema({
 	formation: [formationSchema],
 	personalDescription: {
 		type: String,
+		default: '',
 	},
 	professionalDescription: {
 		type: String,
+		default: '',
 	},
 	models: {
 		type: Array,

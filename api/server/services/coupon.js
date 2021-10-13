@@ -1,3 +1,5 @@
+'use strict';
+
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
@@ -22,13 +24,14 @@ const newCoupon = async (user, payload) => {
 	return okResponse('Cupon creado con exito');
 };
 
-const checkCoupon = async code => {
+const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
 	if (moment().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
-
+	if (foundCoupon.restrictions.firstTimeOnly && user.hasPaid)
+		return conflictResponse('Este usuario ya ha comprado alguna vez');
 	return okResponse('el cupon es valido', { coupon: foundCoupon });
 };
 

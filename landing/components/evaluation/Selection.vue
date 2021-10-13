@@ -20,7 +20,7 @@
 								>
 									<v-img :src="item.avatar"></v-img>
 								</v-list-item-avatar>
-								<div class="caption text--secondary">codigo {{ item.code }}</div>
+								<div class="caption text--secondary">código {{ item.code }}</div>
 								<v-btn text color="primary" :to="`/${item.username}`">
 									Mas información
 								</v-btn>
@@ -28,7 +28,11 @@
 							<v-col cols="12" sm="9">
 								<v-row justify="space-between">
 									<v-col
-										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
+										class="
+											text-center text-sm-left
+											font-weight-bold
+											text-h5 text--secondary
+										"
 									>
 										<nuxt-link
 											:to="`psicologo/${item._id}`"

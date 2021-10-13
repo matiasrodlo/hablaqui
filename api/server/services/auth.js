@@ -1,3 +1,5 @@
+'use strict';
+
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
@@ -5,6 +7,7 @@ import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import mailService from '../services/mail';
 
 const generateJwt = user => {
 	const payload = {
@@ -36,6 +39,9 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
+	if (user.role === 'user') {
+		await mailService.sendWelcomeNewUser(user);
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user,
 		token: generateJwt(user),

@@ -4,7 +4,6 @@ export default {
 	async getPsychologists({ commit }) {
 		try {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			localStorage.setItem('psychologists', JSON.stringify(psychologists));
 			commit('setPsychologists', psychologists);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -33,9 +32,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async geClients({ commit }, id) {
+	async getClients({ commit }, id) {
 		try {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
+			commit('setClients', users);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async searchClients({ commit }, search) {
+		try {
+			const { users } = await this.$axios.$get(`/psychologist/${search}`);
 			commit('setClients', users);
 		} catch (e) {
 			snackBarError(e)(commit);

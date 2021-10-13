@@ -27,7 +27,7 @@
 		<div style="height: calc(100vh - 300px); overflow-y: auto" class="d-flex">
 			<v-col cols="12" class="px-0">
 				<div class="grey darken-1 d-flex justify-space-around pa-4 mt-10 mb-2 rounded-lg">
-					<span class="white--text body-1 text-center">Codigo</span>
+					<span class="white--text body-1 text-center">Código</span>
 					<span class="white--text body-1 text-center">Nombre</span>
 					<span class="white--text body-1 text-center"> Planes contratados </span>
 					<span class="white--text body-1 text-center">Pagado</span>
@@ -102,25 +102,25 @@ export default {
 					value: '128',
 					title: 'Usuarios',
 					subtitle: '',
-					img: `${this.$config.LANDING_URL}/accoun.png`,
+					img: `https://cdn.hablaqui.cl/static/accoun.png`,
 				},
 				{
 					value: '200',
 					title: 'Planes contratados',
 					subtitle: '',
-					img: `${this.$config.LANDING_URL}/brain.png`,
+					img: `https://cdn.hablaqui.cl/static/brain.png`,
 				},
 				{
 					value: '$400.000',
 					title: 'Pagado',
 					subtitle: '',
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
 				},
 				{
 					value: '$300.000',
 					title: 'Por pagar',
 					subtitle: '',
-					img: `${this.$config.LANDING_URL}/pagos.png`,
+					img: `https://cdn.hablaqui.cl/static/pagos.png`,
 				},
 			],
 			payments: [

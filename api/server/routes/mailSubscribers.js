@@ -1,3 +1,5 @@
+'use strict';
+
 import { Router } from 'express';
 import mailSubscribers from '../controllers/mailSubscribers';
 const mailSubscribersRouter = Router();

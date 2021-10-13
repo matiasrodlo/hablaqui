@@ -103,7 +103,11 @@ export default {
 							else this.$router.push({ name: 'psicologos' });
 						} else this.setResumeView(true);
 				} catch (error) {
-					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+					if (error.response.status === 401) {
+						alert('Correo o contraseña invalida');
+					} else {
+						this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+					}
 				} finally {
 					this.loading = false;
 				}

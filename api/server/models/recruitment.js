@@ -1,3 +1,5 @@
+'use strict';
+
 import { Schema, model } from 'mongoose';
 
 // Model for psychologist that are not approved
@@ -215,6 +217,22 @@ let recruitment = new Schema({
 		default: false,
 	},
 	isSupervisor: {
+		type: Boolean,
+		default: false,
+	},
+	isContentCreator: {
+		type: Boolean,
+		default: false,
+	},
+	isAffiliateExternal: {
+		type: Boolean,
+		default: false,
+	},
+	isInterestedBusiness: {
+		type: Boolean,
+		default: false,
+	},
+	isFormCompleted: {
 		type: Boolean,
 		default: false,
 	},
