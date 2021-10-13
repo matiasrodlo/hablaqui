@@ -16,19 +16,21 @@
 					@change="uploadAvatar"
 				></v-file-input>
 				<v-list-item-avatar size="150">
-					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
-						<v-progress-circular indeterminate color="primary"></v-progress-circular
-					></v-avatar>
-					<label v-else for="upload" style="cursor: pointer">
-						<v-avatar size="100" color="#EEE">
-							<v-img
-								v-if="$auth.$state.user && $auth.$state.user.avatar"
-								:src="$auth.$state.user.avatar"
-								:alt="$auth.$state.user.name"
-								contain
-							/>
-							<icon v-else x-large :icon="mdiCamera" />
-						</v-avatar>
+					<label for="upload" style="cursor: pointer; position: relative">
+						<avatar
+							:url="$auth.$state.user.avatar"
+							:name="$auth.$state.user.name"
+							size="100"
+							:loading="loadingAvatar"
+							loading-color="white"
+						></avatar>
+						<div
+							v-if="!loadingAvatar"
+							class="white rounded-circle elevation-1"
+							style="position: absolute; right: 0px; bottom: 0px; padding: 4px"
+						>
+							<icon size="30" color="primary" :icon="mdiCamera" />
+						</div>
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
@@ -45,19 +47,21 @@
 					style="position: absolute; top: -70px; left: 0; width: 100%"
 					class="text-center mx-auto"
 				>
-					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
-						<v-progress-circular indeterminate color="primary"></v-progress-circular
-					></v-avatar>
-					<label v-else for="upload" style="cursor: pointer">
-						<v-avatar size="100" color="#EEE">
-							<v-img
-								v-if="$auth.$state.user && $auth.$state.user.avatar"
-								:src="$auth.$state.user.avatar"
-								:alt="$auth.$state.user.name"
-								contain
-							/>
-							<icon v-else x-large :icon="mdiCamera" />
-						</v-avatar>
+					<label for="upload" style="cursor: pointer; position: relative">
+						<avatar
+							:url="$auth.$state.user.avatar"
+							:name="$auth.$state.user.name"
+							size="100"
+							:loading="loadingAvatar"
+							loading-color="white"
+						></avatar>
+						<div
+							v-if="!loadingAvatar"
+							class="white rounded-circle elevation-1"
+							style="position: absolute; right: 0; bottom: -40px; padding: 4px"
+						>
+							<icon size="30" color="primary" :icon="mdiCamera" />
+						</div>
 					</label>
 				</div>
 				<v-list-item-content v-if="$auth.$state.user" class="mt-10">
@@ -124,13 +128,14 @@ import { mdiCamera } from '@mdi/js';
 
 export default {
 	components: {
-		appbar: () => import('~/components/dashboard/AppbarProfile'),
+		Appbar: () => import('~/components/dashboard/AppbarProfile'),
+		Avatar: () => import('~/components/Avatar'),
 		GeneralInformation: () => import('~/components/dashboard/General'),
+		Horario: () => import('~/components/dashboard/Horario'),
+		Icon: () => import('~/components/Icon'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
 		Services: () => import('~/components/dashboard/Services'),
-		Horario: () => import('~/components/dashboard/Horario'),
-		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],

@@ -13,7 +13,7 @@
 			v-if="loading"
 			style="position: absolute"
 			indeterminate
-			color="primary"
+			:color="loadingColor"
 		></v-progress-circular>
 	</v-avatar>
 </template>
@@ -36,6 +36,10 @@ export default {
 		loading: {
 			type: Boolean,
 			default: false,
+		},
+		loadingColor: {
+			type: String,
+			default: 'primary',
 		},
 		size: {
 			type: String,

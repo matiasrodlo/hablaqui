@@ -102,6 +102,7 @@ let recruitment = new Schema({
 		type: String,
 		default: '',
 	},
+	approveAvatar: false,
 	code: {
 		type: String,
 		default: '',
