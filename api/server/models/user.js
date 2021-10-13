@@ -5,17 +5,6 @@ import bcrypt from 'bcrypt';
 const mongoose = require('mongoose');
 const { Model, Schema } = mongoose;
 
-let avatarSchema = new Schema(
-	{
-		url: {
-			type: String,
-			default: '',
-		},
-		approved: { type: Boolean, default: false },
-	},
-	{ timestamps: true }
-);
-
 let planSchema = new Schema(
 	{
 		title: {
@@ -93,7 +82,7 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: true,
 	},
-	avatar: [avatarSchema],
+	avatar: { type: String, default: '' },
 	google: {
 		type: Boolean,
 		default: false,

@@ -330,5 +330,5 @@ psychologistsRouter.post(
 	'/psychologist/new-custom-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.customNewSession
-)
+);
 export default psychologistsRouter;

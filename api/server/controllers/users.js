@@ -92,6 +92,16 @@ const userController = {
 		}
 	},
 
+	async approveAvatar(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await userService.approveAvatar(user);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el avatar');
+		}
+	},
+
 	async getSessions(req, res) {
 		try {
 			const { user } = req;

@@ -2,17 +2,6 @@
 
 import { Schema, model } from 'mongoose';
 
-let avatarSchema = new Schema(
-	{
-		url: {
-			type: String,
-			default: '',
-		},
-		approved: { type: Boolean, default: false },
-	},
-	{ timestamps: true }
-);
-
 let session = new Schema({
 	date: {
 		type: String,
@@ -117,7 +106,11 @@ let rating = new Schema(
 );
 
 let psychologist = new Schema({
-	avatar: [avatarSchema],
+	avatar: {
+		type: String,
+		default: '',
+	},
+	approveAvatar: false,
 	code: {
 		type: String,
 	},

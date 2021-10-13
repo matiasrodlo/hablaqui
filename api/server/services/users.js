@@ -86,28 +86,46 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async updateAvatar(user, urlAvatar) {
-		const avatar = {
-			url: urlAvatar,
-			approved: user.role === 'user' ? true : false,
-		};
+	async updateAvatar(user, avatar) {
+		let psychologist, profile;
 
 		if (user.role === 'psychologist')
-			await Psychologist.findByIdAndUpdate(user.psychologist, {
-				$push: { avatar },
-			});
+			psychologist = await Psychologist.findByIdAndUpdate(
+				user.psychologist,
+				{
+					avatar,
+					approveAvatar: false,
+				}
+			);
 
-		const profile = await User.findByIdAndUpdate(
+		profile = await User.findByIdAndUpdate(
 			user._id,
 			{
-				$push: { avatar },
+				avatar,
 			},
 			{
 				new: true,
 			}
 		);
+
 		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('Avatar actualizado', { user: profile });
+
+		return okResponse('Avatar actualizado', {
+			user: profile,
+			psychologist,
+		});
+	},
+
+	async approveAvatar(user) {
+		const psychologist = await Psychologist.findByIdAndUpdate(
+			user.psychologist,
+			{
+				approveAvatar: true,
+			}
+		);
+		return okResponse('Avatar actualizado', {
+			psychologist,
+		});
 	},
 
 	async getSessions(user) {
