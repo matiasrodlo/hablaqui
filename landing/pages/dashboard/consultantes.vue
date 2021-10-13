@@ -59,10 +59,10 @@
                             </v-btn>
                             <v-btn icon>
                                 <icon :icon="mdiClose" small color="error"></icon>
-							</v-btn>
-						</div>
-					</template>
-				</v-data-table>
+                            </v-btn>
+                        </div>
+                    </template>
+                </v-data-table>
 			</v-col>
 		</v-row>
 		<v-dialog v-if="dialog" v-model="dialog" max-width="550" transition="dialog-top-transition">
@@ -141,14 +141,14 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
-		dialog: false,
-		mdiClose,
-		mdiMagnify,
-		mdiPlus,
-		mdiChat,
-		mdiCalendar,
-		search: '',
-		headers: [
+        dialog: false,
+        mdiClose,
+        mdiMagnify,
+        mdiPlus,
+        mdiChat,
+        mdiCalendar,
+        search: "",
+        headers: [
             {
                 text: "Nombre",
                 sortable: false,
@@ -158,8 +158,8 @@ export default {
             { text: "Estado", value: "status", sortable: false },
             { text: "Acciones", value: "actions", sortable: false }
         ],
-		loading: false,
-	}),
+        loading: false
+    }),
 	computed: {
 		items() {
             return this.clientes.map(item => ({
@@ -169,7 +169,7 @@ export default {
                 status: item.status,
                 _id: item._id
             }));
-		},
+        },
 		...mapGetters({ clientes: 'Psychologist/clients' }),
 	},
 	async mounted() {

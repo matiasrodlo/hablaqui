@@ -19,16 +19,16 @@
                     alt="logo hablaquí"
                     class="my-16"
                     @click="() => $router.push({ name: 'psicologos' })"
-				/>
+                />
 			</v-sheet>
 			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
 				<v-list-item v-if="false" class="my-4" link>
-					<v-list-item-avatar size="35">
+                    <v-list-item-avatar size="35">
                         <v-btn outlined fab color="white">
                             <icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
                             <icon v-else size="30" color="red" :icon="mdiAccountOff" />
                         </v-btn>
-					</v-list-item-avatar>
+                    </v-list-item-avatar>
 					<v-list-item-content>
 						<v-list-item-title class="font-weight-bold body-2">
 							<v-switch v-model="online" dense>
