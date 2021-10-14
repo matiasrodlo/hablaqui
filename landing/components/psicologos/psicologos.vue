@@ -384,7 +384,7 @@
 										<v-card-text style="height: 250px">
 											<div>
 												<avatar
-													:url="item.avatarThumbnail || item.avatar"
+													:url="avatar(item)"
 													:name="`${item.name} ${
 														item.lastName ? item.lastName : ''
 													}`"
@@ -541,7 +541,7 @@
 											<v-row align="center" justify="center">
 												<v-col cols="12" sm="3" class="text-center">
 													<avatar
-														:url="item.avatarThumbnail || item.avatar"
+														:url="avatar(item)"
 														:name="`${item.name} ${
 															item.lastName ? item.lastName : ''
 														}`"
@@ -815,6 +815,12 @@ export default {
 			this.gender = payload.gender;
 			this.models = [payload.model];
 			this.specialties = payload.themes;
+		},
+		avatar(psychologist) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

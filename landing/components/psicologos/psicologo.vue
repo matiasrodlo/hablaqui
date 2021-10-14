@@ -18,7 +18,7 @@
 								class="ml-4"
 							>
 								<avatar
-									:url="psychologist.avatar"
+									:url="psychologist.approveAvatar ? psychologist.avatar : ''"
 									:name="`${psychologist.name} ${
 										psychologist.lastName ? psychologist.lastName : ''
 									}`"

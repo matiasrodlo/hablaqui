@@ -188,7 +188,7 @@ export default {
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 			if (this.$auth.user.role === 'psychologist')
-				alert('Tu avatar estara disponible publicamente despues de que lo apruebemos');
+				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
