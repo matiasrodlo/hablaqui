@@ -198,6 +198,11 @@ export default {
 			avatar.append('lastName', this.$auth.$state.user.lastName);
 			avatar.append('idPsychologist', this.$auth.$state.user.psychologist);
 			avatar.append('role', this.$auth.$state.user.role);
+			avatar.append('oldAvatar', this.$auth.$state.user.avatar);
+			avatar.append(
+				'oldAvatarThumbnail',
+				this.$auth.$state.user.avatarThumbnail ? this.$auth.$state.user.avatarThumbnail : ''
+			);
 			return avatar;
 		},
 		...mapActions({

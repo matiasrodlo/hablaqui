@@ -10,11 +10,29 @@ import {
  */
 const storage = (req, res, next) => {
 	if (!req.file) return next();
-	const { name, lastName, _id } = req.body;
-	console.log(name, lastName, _id);
-	const gcsname = `${_id}-${name.toLowerCase()}-${
+	const { name, lastName, oldAvatar, oldAvatarThumbnail } = req.body;
+
+	async function deleteFile() {
+		if (oldAvatar)
+			await bucket
+				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
+				.delete();
+		if (oldAvatarThumbnail)
+			await bucket
+				.file(
+					oldAvatarThumbnail
+						.split('https://cdn.hablaqui.cl/')
+						.join('')
+				)
+				.delete();
+	}
+
+	deleteFile().catch(console.error);
+
+	const gcsname = `${Date.now()}-${name.toLowerCase()}-${
 		lastName ? lastName.toLowerCase() : ''
 	}`;
+
 	const file = bucket.file('profile-pictures/' + gcsname);
 	const stream = file.createWriteStream({
 		metadata: {

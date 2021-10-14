@@ -83,6 +83,9 @@ let userSchema = new Schema({
 		default: true,
 	},
 	avatar: { type: String, default: '' },
+	avatarThumbnail: {
+		type: String,
+	},
 	google: {
 		type: Boolean,
 		default: false,
