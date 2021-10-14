@@ -49,7 +49,7 @@
 				>
 					<label for="upload" style="cursor: pointer; position: relative">
 						<avatar
-							:url="$auth.$state.user.avatar"
+							:url="$auth.$state.user.avatarThumbnail"
 							:name="$auth.$state.user.name"
 							size="100"
 							:loading="loadingAvatar"
@@ -188,7 +188,7 @@ export default {
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 			if (this.$auth.user.role === 'psychologist')
-				alert('Tu avatar estara disponible despues de que hablaquí lo apruebe');
+				alert('Tu avatar estara disponible publicamente despues de que lo apruebemos');
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();

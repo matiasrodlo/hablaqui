@@ -194,7 +194,7 @@
 								<avatar
 									size="50"
 									:name="$auth.$state.user.name"
-									:url="$auth.$state.user.avatar"
+									:url="$auth.$state.user.avatarThumbnail"
 								/>
 							</div>
 						</template>
