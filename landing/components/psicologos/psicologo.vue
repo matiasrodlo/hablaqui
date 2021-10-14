@@ -18,10 +18,9 @@
 								class="ml-4"
 							>
 								<avatar
-									:url="psychologist.approveAvatar ? psychologist.avatar : ''"
-									:name="`${psychologist.name} ${
-										psychologist.lastName ? psychologist.lastName : ''
-									}`"
+									:url="avatar(psychologist)"
+									:name="psychologist.name"
+									:last-name="psychologist.lastName ? psychologist.lastName : ''"
 									:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
 									loading-color="white"
 								></avatar>
@@ -328,7 +327,7 @@ import Pusher from 'pusher-js';
 
 export default {
 	components: {
-		Avatar: () => import('~/components/Avatar'),
+		Avatar: () => import('@/components/Avatar'),
 		signin: () => import('@/components/auth/SignIn'),
 		signup: () => import('@/components/auth/SignUp'),
 		DialogAgendaCitaOnline: () => import('@/components/psicologos/DialogAgendaCitaOnline'),
@@ -404,6 +403,12 @@ export default {
 				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
+		},
+		avatar(psychologist) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
 		},
 		...mapActions({ startConversation: 'Chat/startConversation' }),
 		...mapMutations({

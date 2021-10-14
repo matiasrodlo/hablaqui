@@ -20,6 +20,9 @@
 						<avatar
 							:url="$auth.$state.user.avatar"
 							:name="$auth.$state.user.name"
+							:last-name="
+								$auth.$state.user.lastName ? $auth.$state.user.lastName : ''
+							"
 							size="100"
 							:loading="loadingAvatar"
 							loading-color="white"

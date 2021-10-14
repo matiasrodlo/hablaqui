@@ -385,9 +385,8 @@
 											<div>
 												<avatar
 													:url="avatar(item)"
-													:name="`${item.name} ${
-														item.lastName ? item.lastName : ''
-													}`"
+													:name="item.name"
+													:last-name="item.lastName ? item.lastName : ''"
 													size="100"
 													loading-color="white"
 												></avatar>
@@ -542,9 +541,10 @@
 												<v-col cols="12" sm="3" class="text-center">
 													<avatar
 														:url="avatar(item)"
-														:name="`${item.name} ${
+														:name="item.name"
+														:last-name="
 															item.lastName ? item.lastName : ''
-														}`"
+														"
 														:size="
 															$vuetify.breakpoint.lgAndUp
 																? '200'
