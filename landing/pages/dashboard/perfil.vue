@@ -184,6 +184,7 @@ export default {
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
+			console.log(user);
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 			if (this.$auth.user.role === 'psychologist')
@@ -191,7 +192,8 @@ export default {
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
-			avatar.append('_id', file);
+			avatar.append('avatar', file);
+			avatar.append('_id', this.$auth.$state.user._id);
 			avatar.append('name', this.$auth.$state.user.name);
 			avatar.append('lastName', this.$auth.$state.user.lastName);
 			avatar.append('idPsychologist', this.$auth.$state.user.psychologist);

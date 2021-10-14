@@ -62,12 +62,12 @@ userRouter.put(
 
 /**
  * Nuevo endpoint para actualizar/subir foto de perfil
- * req.body = {
- * 		_id: id de del usuario a actualizar avatar,
- * 		role: role del usuario a actualizar avatar,
- * 		name: nombre del usuario a actualizar avatar,
- * 		lastName: apellido del usuario a actualizar avatar,
- *      idPsychologist: Para actualizar elavatar del psicologo
+ * after parser by multer req.body = {
+ * 	_id: id de del usuario a actualizar avatar,
+ * 	role: role del usuario a actualizar avatar,
+ * 	name: nombre del usuario a actualizar avatar,
+ * 	lastName: apellido del usuario a actualizar avatar,
+ *  idPsychologist: Para actualizar elavatar del psicologo
  * }
  */
 userRouter.put(

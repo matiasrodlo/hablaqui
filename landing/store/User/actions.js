@@ -19,6 +19,7 @@ export default {
 			const { data } = await this.$axios('/user/upload/avatar', {
 				method: 'put',
 				data: payload,
+				headers: { 'Content-Type': 'multipart/form-data' },
 			});
 			snackBarSuccess(data.message)(commit);
 			return data;

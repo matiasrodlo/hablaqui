@@ -1,6 +1,6 @@
 <template>
 	<v-avatar x-small :color="randomColors" :size="size">
-		<v-img v-if="Boolean(url)" class="pa-1" :src="url" alt="avatar" contain />
+		<v-img v-if="Boolean(url)" class="pa-1" :src="url" :lazy-src="url" alt="avatar" contain />
 		<span
 			v-else
 			style="font-size: 8px"

@@ -11,10 +11,11 @@ import {
 const storage = (req, res, next) => {
 	if (!req.file) return next();
 	const { name, lastName, _id } = req.body;
-
-	const gcsname = `${_id}-${name}-${lastName}`;
-
-	const file = bucket.file(gcsname);
+	console.log(name, lastName, _id);
+	const gcsname = `${_id}-${name.toLowerCase()}-${
+		lastName ? lastName.toLowerCase() : ''
+	}`;
+	const file = bucket.file('profile-pictures/' + gcsname);
 	const stream = file.createWriteStream({
 		metadata: {
 			contentType: req.file.mimetype,
