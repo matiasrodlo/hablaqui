@@ -703,9 +703,13 @@ const approveAvatar = async (user, id) => {
 			'No tienes permisos suficientes para realizar esta acción'
 		);
 
-	const psychologist = await Psychologist.findByIdAndUpdate(id, {
-		approveAvatar: true,
-	});
+	const psychologist = await Psychologist.findByIdAndUpdate(
+		id,
+		{
+			approveAvatar: true,
+		},
+		{ new: true }
+	);
 	return okResponse('Avatar actualizado', {
 		psychologist,
 	});
