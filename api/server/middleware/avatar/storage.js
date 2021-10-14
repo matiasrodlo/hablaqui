@@ -29,8 +29,16 @@ const storage = (req, res, next) => {
 
 	deleteFile().catch(console.error);
 
-	const gcsname = `${Date.now()}-${name.toLowerCase()}-${
-		lastName ? lastName.toLowerCase() : ''
+	const gcsname = `${Date.now()}-${name
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036F]/g, '')}-${
+		lastName
+			? lastName
+					.toLowerCase()
+					.normalize('NFD')
+					.replace(/[\u0300-\u036F]/g, '')
+			: ''
 	}`;
 
 	const file = bucket.file('profile-pictures/' + gcsname);
