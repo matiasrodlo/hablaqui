@@ -86,17 +86,22 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async uploadAvatar(
-		user,
-		{ avatar, avatarThumbnail, role, idPsychologist, _id }
-	) {
+	async uploadAvatar({
+		userLogged,
+		avatar,
+		avatarThumbnail,
+		role,
+		idPsychologist,
+		_id,
+	}) {
 		let psychologist;
 		let userRole = role;
 		let userID = _id;
 
-		if (user.role === 'superuser') {
-			const userSelected = await User.find({
+		if (userLogged.role === 'superuser') {
+			const userSelected = await User.findOne({
 				psychologist: idPsychologist,
+				role: 'psychologist',
 			});
 
 			userRole = userSelected.role;
@@ -125,7 +130,7 @@ const usersService = {
 			}
 		);
 
-		logInfo(`${user.email} actualizo su avatar`);
+		logInfo(`${userLogged.email} actualizo su avatar`);
 
 		return okResponse('Avatar actualizado', {
 			user: profile,

@@ -81,10 +81,14 @@ const userController = {
 	async uploadAvatar(req, res) {
 		try {
 			const { body, file, user } = req;
-			const { data, code } = await userService.uploadAvatar(user, {
+			const { data, code } = await userService.uploadAvatar({
 				...body,
 				avatar: file.avatar,
 				avatarThumbnail: file.avatarThumbnail,
+				userLogged: {
+					role: user.role,
+					email: user.email,
+				},
 			});
 			return restResponse(data, code, res);
 		} catch (e) {

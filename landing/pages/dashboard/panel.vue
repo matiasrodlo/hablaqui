@@ -55,6 +55,7 @@
 										:last-name="selected.lastName ? selected.lastName : ''"
 										size="100"
 										loading-color="white"
+										:loading="loadingAvatar"
 									></avatar>
 								</a>
 								<div
