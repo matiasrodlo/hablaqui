@@ -127,22 +127,6 @@ const readMessage = async messageId => {
 	return okResponse('Mensaje visto', { chat: updatedChat });
 };
 
-const setUserOnline = async user => {
-	const data = {
-		user,
-	};
-	pusher.trigger('user-status', 'online', data, pusherCallback);
-	return okResponse('Usuario conectado', user);
-};
-
-const setUserOffline = async user => {
-	const data = {
-		user,
-	};
-	pusher.trigger('user-status', 'offline', data, pusherCallback);
-	return okResponse('Usuario desconectado', user);
-};
-
 const chatService = {
 	startConversation,
 	getMessages,
@@ -150,8 +134,6 @@ const chatService = {
 	sendMessage,
 	createReport,
 	readMessage,
-	setUserOnline,
-	setUserOffline,
 };
 
 export default Object.freeze(chatService);

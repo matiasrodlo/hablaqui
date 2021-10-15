@@ -5,6 +5,7 @@ import passport from 'passport';
 import userSchema from '../schemas/user';
 import validation from '../middleware/validation';
 import psychologistsController from '../controllers/psychologist';
+import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
@@ -337,6 +338,18 @@ psychologistsRouter.post(
 );
 
 /**
+ * @description: Route to upload/update psychologist's profile picture
+ * @route {PATCH} /api/v1/psychologist/profile-picture
+ * @access {Private}
+ * @body {file} file
+ */
+psychologistsRouter.put('/psychologist/avatar/:id', [
+	passport.authenticate('jwt', { session: true }),
+	multer.single('avatar'),
+	psychologistsController.uploadProfilePicture,
+]);
+
+/**
  * Crea una nueva sesion custom, un poco mas libre y menos estandarizada.
  * req.body.payload = {
  * 		type: string,
@@ -349,5 +362,14 @@ psychologistsRouter.post(
 	'/psychologist/new-custom-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.customNewSession
+);
+
+/**
+ * Actualiza la propiedad approveAvatar
+ */
+psychologistsRouter.put(
+	'/psychologist/:id/approve-avatar',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.approveAvatar
 );
 export default psychologistsRouter;

@@ -24,6 +24,7 @@ export default {
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
+		host: '0.0.0.0',
 	},
 	loading: {
 		color: '#2070E5',
@@ -176,7 +177,6 @@ export default {
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
 		baseUrl: process.env.VUE_APP_URL ? process.env.VUE_APP_URL : 'http://localhost:3000/api/v1',
-		debug: isDev,
 	},
 
 	sitemap: {

@@ -1,10 +1,13 @@
 'use strict';
 
 import User from '../models/user';
+import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import pusher from '../config/pusher';
+import { pusherCallback } from '../utils/functions/pusherCallback';
 
 const usersService = {
 	async getProfile(id) {
@@ -83,22 +86,74 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async updateAvatar(user, avatar) {
+	async uploadAvatar({
+		userLogged,
+		avatar,
+		avatarThumbnail,
+		role,
+		idPsychologist,
+		_id,
+	}) {
+		let psychologist;
+		let userRole = role;
+		let userID = _id;
+
+		if (userLogged.role === 'superuser') {
+			const userSelected = await User.findOne({
+				psychologist: idPsychologist,
+				role: 'psychologist',
+			});
+
+			userRole = userSelected.role;
+			userID = userSelected._id;
+		}
+
+		if (userRole === 'psychologist')
+			psychologist = await Psychologist.findByIdAndUpdate(
+				idPsychologist,
+				{
+					avatar,
+					avatarThumbnail,
+					approveAvatar: false,
+				},
+				{ new: true }
+			);
+
 		const profile = await User.findByIdAndUpdate(
-			user._id,
-			{ avatar },
+			userID,
+			{
+				avatar,
+				avatarThumbnail,
+			},
 			{
 				new: true,
 			}
 		);
-		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('Avatar actualizado', { user: profile });
+
+		logInfo(`${userLogged.email} actualizo su avatar`);
+
+		return okResponse('Avatar actualizado', {
+			user: profile,
+			psychologist,
+		});
 	},
 
-	async getSessions(user) {
-		let finishedSessions = user.finishedSessions;
+	async setUserOnline(user) {
+		const data = {
+			...user,
+			status: true,
+		};
+		pusher.trigger('user-status', 'online', data, pusherCallback);
+		return okResponse('Usuario conectado', user);
+	},
 
-		return okResponse('sesiones conseguidas', { finishedSessions });
+	async setUserOffline(user) {
+		const data = {
+			...user,
+			status: false,
+		};
+		pusher.trigger('user-status', 'offline', data, pusherCallback);
+		return okResponse('Usuario desconectado', user);
 	},
 };
 

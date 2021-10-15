@@ -108,6 +108,14 @@ let rating = new Schema(
 let psychologist = new Schema({
 	avatar: {
 		type: String,
+		default: '',
+	},
+	avatarThumbnail: {
+		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
 	},
 	code: {
 		type: String,
@@ -132,7 +140,6 @@ let psychologist = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	gender: {
 		type: String,
@@ -196,5 +203,4 @@ let psychologist = new Schema({
 	},
 });
 
-//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
 export default model('psychologist', psychologist);
