@@ -46,73 +46,76 @@
 				</v-toolbar>
 				<v-card-text class="mt-3">
 					<v-row>
-						<v-col cols="12">
-							<a :href="selected.avatar" target="_blank">
-								<avatar
-									:url="selected.avatar"
-									:name="selected.name"
-									:last-name="selected.lastName ? selected.lastName : ''"
-									size="100"
-									loading-color="white"
-								></avatar>
-							</a>
-							{{ selected._id }}
-							<div
-								:class="selected.approveAvatar ? 'success--text' : 'warning--text'"
-								class="font-weight-bold body-1"
-							>
-								{{
-									selected.approveAvatar
-										? 'Avatar aprobado'
-										: 'Avatar a la esperade aproación'
-								}}
-							</div>
-							<label for="upload">
+						<template v-if="selected.isPsy">
+							<v-col cols="12">
+								<a :href="selected.avatar" target="_blank">
+									<avatar
+										:url="selected.avatar"
+										:name="selected.name"
+										:last-name="selected.lastName ? selected.lastName : ''"
+										size="100"
+										loading-color="white"
+									></avatar>
+								</a>
+								<div
+									:class="
+										selected.approveAvatar ? 'success--text' : 'warning--text'
+									"
+									class="font-weight-bold body-1"
+								>
+									{{
+										selected.approveAvatar
+											? 'Avatar aprobado'
+											: 'Avatar a la esperade aproación'
+									}}
+								</div>
+								<label for="upload">
+									<div
+										class="
+											elevation-1
+											pointer
+											rounded
+											cyan
+											body-1
+											white--text
+											text-center
+											d-inline-block
+										"
+										style="width: 200px"
+									>
+										{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
+									</div>
+								</label>
 								<div
 									class="
+										d-inline-block
 										elevation-1
 										pointer
+										success
 										rounded
-										cyan
 										body-1
 										white--text
 										text-center
-										d-inline-block
+										ml-2
 									"
 									style="width: 200px"
 								>
-									{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
+									Aprobar Avatar actual
 								</div>
-							</label>
-							<div
-								class="
-									d-inline-block
-									elevation-1
-									pointer
-									success
-									rounded
-									body-1
-									white--text
-									text-center
-									ml-2
-								"
-								style="width: 200px"
-							>
-								Aprobar Avatar actual
-							</div>
-							<v-file-input
-								id="upload"
-								ref="avatar"
-								class="d-none"
-								dense
-								filled
-								hide-details
-								accept="image/jpeg, image/png, image/gif, image/jpg"
-								placeholder="Agrega un avatar"
-								drop-placeholder="Arrastrar aqui..."
-								@change="uploadAvatar"
-							></v-file-input>
-						</v-col>
+								<v-file-input
+									id="upload"
+									ref="avatar"
+									class="d-none"
+									dense
+									filled
+									hide-details
+									accept="image/jpeg, image/png, image/gif, image/jpg"
+									placeholder="Agrega un avatar"
+									drop-placeholder="Arrastrar aqui..."
+									@change="uploadAvatar"
+								></v-file-input>
+							</v-col>
+						</template>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
