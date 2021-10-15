@@ -6,7 +6,7 @@ import userController from '../controllers/users';
 import userSchema from '../schemas/user';
 import validation from '../middleware/validation';
 import multer from '../middleware/multer';
-import storage from '../middleware/storage';
+import storageAvatar from '../middleware/avatar/storage';
 
 const userRouter = Router();
 
@@ -60,30 +60,24 @@ userRouter.put(
 	userController.updatePsychologist
 );
 
+/**
+ * Nuevo endpoint para actualizar/subir foto de perfil
+ * after parser by multer req.body = {
+ * 	_id: id de del usuario a actualizar avatar,
+ * 	role: role del usuario a actualizar avatar,
+ * 	name: nombre del usuario a actualizar avatar,
+ * 	lastName: apellido del usuario a actualizar avatar,
+ *  idPsychologist: Para actualizar elavatar del psicologo
+ * }
+ */
 userRouter.put(
-	'/user/update/avatar',
+	'/user/upload/avatar',
 	[
 		passport.authenticate('jwt', { session: true }),
 		multer.single('avatar'),
-		storage,
+		storageAvatar,
 	],
-	userController.updateAvatar
-);
-
-/**
- * Nuevo endpoint para actualizar/subir foto de perfil
- */
-userRouter.put(
-	'/user/avatar/:id',
-	passport.authenticate('jwt', { session: true }),
-	multer.single('avatar'),
-	userController.uploadProfilePicture
-);
-
-userRouter.get(
-	'/user/sessions',
-	[passport.authenticate('jwt', { session: true })],
-	userController.getSessions
+	userController.uploadAvatar
 );
 
 /**

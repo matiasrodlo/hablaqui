@@ -108,9 +108,14 @@ let rating = new Schema(
 let psychologist = new Schema({
 	avatar: {
 		type: String,
+		default: '',
 	},
 	avatarThumbnail: {
 		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
 	},
 	code: {
 		type: String,

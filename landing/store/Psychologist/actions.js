@@ -102,6 +102,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async approveAvatar({ commit }, id) {
+		try {
+			const { data } = await this.$axios(`/psychologist/${id}/approve-avatar`, {
+				method: 'PUT',
+			});
+			snackBarSuccess('Avatar aprobado')(commit);
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async setReschedule({ commit }, { sessionId, newDate }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {

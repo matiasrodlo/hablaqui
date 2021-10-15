@@ -697,31 +697,50 @@ const customNewSession = async (user, payload) => {
 	});
 };
 
+const approveAvatar = async (user, id) => {
+	if (user.role !== 'superuser')
+		return conflictResponse(
+			'No tienes permisos suficientes para realizar esta acción'
+		);
+
+	const psychologist = await Psychologist.findByIdAndUpdate(
+		id,
+		{
+			approveAvatar: true,
+		},
+		{ new: true }
+	);
+	return okResponse('Avatar actualizado', {
+		psychologist,
+	});
+};
+
 const psychologistsService = {
-	getAll,
-	getSessions,
-	searchClients,
-	match,
-	register,
-	createSession,
-	reschedule,
-	getByData,
-	setSchedule,
-	updatePlan,
-	cancelSession,
-	updatePaymentMethod,
-	updatePsychologist,
-	deleteOne,
-	setPrice,
 	addRating,
-	getRating,
+	approveAvatar,
+	cancelSession,
 	checkPlanTask,
+	createSession,
+	customNewSession,
+	deleteOne,
+	getAll,
+	getByData,
 	getClients,
 	getFormattedSessions,
-	usernameAvailable,
+	getRating,
+	getSessions,
+	match,
+	register,
+	reschedule,
+	searchClients,
+	setPrice,
+	setSchedule,
 	updateFormationExperience,
+	updatePaymentMethod,
+	updatePlan,
+	updatePsychologist,
+	usernameAvailable,
 	uploadProfilePicture,
-	customNewSession,
 };
 
 export default Object.freeze(psychologistsService);

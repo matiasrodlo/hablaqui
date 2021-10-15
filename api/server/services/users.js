@@ -1,17 +1,13 @@
 'use strict';
 
 import User from '../models/user';
+import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
-import {
-	bucket,
-	getPublicUrlAvatar,
-	getPublicUrlAvatarThumb,
-} from '../config/bucket';
 
 const usersService = {
 	async getProfile(id) {
@@ -90,52 +86,50 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async updateAvatar(user, avatar) {
+	async uploadAvatar(
+		user,
+		{ avatar, avatarThumbnail, role, idPsychologist, _id }
+	) {
+		let psychologist;
+		let userRole = role;
+		let userID = _id;
+
+		if (user.role === 'superuser') {
+			const userSelected = await User.find({
+				psychologist: idPsychologist,
+			});
+
+			userRole = userSelected.role;
+			userID = userSelected._id;
+		}
+
+		if (userRole === 'psychologist')
+			psychologist = await Psychologist.findByIdAndUpdate(
+				idPsychologist,
+				{
+					avatar,
+					avatarThumbnail,
+					approveAvatar: false,
+				},
+				{ new: true }
+			);
+
 		const profile = await User.findByIdAndUpdate(
-			user._id,
-			{ avatar },
+			userID,
+			{
+				avatar,
+				avatarThumbnail,
+			},
 			{
 				new: true,
 			}
 		);
+
 		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('Avatar actualizado', { user: profile });
-	},
 
-	async getSessions(user) {
-		let finishedSessions = user.finishedSessions;
-
-		return okResponse('sesiones conseguidas', { finishedSessions });
-	},
-
-	async uploadProfilePicture(userID, picture) {
-		if (!picture)
-			return conflictResponse('No se ha enviado ninguna imagen');
-		const { name, lastName } = await User.findById(userID);
-		const gcsname = `${userID}-${name}-${lastName}`;
-		const file = bucket.file(gcsname);
-		const stream = file.createWriteStream({
-			metadata: {
-				contentType: picture.mimetype,
-			},
-		});
-		stream.on('error', err => {
-			picture.cloudStorageError = err;
-			conflictResponse('Error al subir la imagen');
-		});
-		stream.on('finish', () => {
-			logInfo(`${gcsname}` + ' subido exitosamente');
-		});
-		stream.end(picture.buffer);
-
-		await User.findByIdAndUpdate(userID, {
-			avatar: getPublicUrlAvatar(gcsname),
-			avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
-		});
-
-		return okResponse('Imagen subida', {
-			avatar: getPublicUrlAvatar(gcsname),
-			avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+		return okResponse('Avatar actualizado', {
+			user: profile,
+			psychologist,
 		});
 	},
 

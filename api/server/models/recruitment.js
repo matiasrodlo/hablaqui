@@ -103,6 +103,13 @@ let recruitment = new Schema(
 			type: String,
 			default: '',
 		},
+		avatarThumbnail: {
+			type: String,
+		},
+		approveAvatar: {
+			type: Boolean,
+			default: false,
+		},
 		code: {
 			type: String,
 			default: '',

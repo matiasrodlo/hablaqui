@@ -273,6 +273,21 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+
+	async approveAvatar(req, res) {
+		try {
+			const { user } = req;
+			const { idPsychologist } = req.params;
+			const { data, code } = await psychologistsService.approveAvatar(
+				user,
+				idPsychologist
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el avatar');
+		}
+	},
+
 	async customNewSession(req, res) {
 		try {
 			const { user } = req;
