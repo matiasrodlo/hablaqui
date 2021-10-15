@@ -384,7 +384,7 @@
 										<v-card-text style="height: 250px">
 											<div>
 												<avatar
-													:url="avatar(item)"
+													:url="avatar(item, true)"
 													:name="item.name"
 													:last-name="item.lastName ? item.lastName : ''"
 													size="100"
@@ -540,7 +540,7 @@
 											<v-row align="center" justify="center">
 												<v-col cols="12" sm="3" class="text-center">
 													<avatar
-														:url="avatar(item)"
+														:url="avatar(item, false)"
 														:name="item.name"
 														:last-name="
 															item.lastName ? item.lastName : ''
@@ -816,9 +816,10 @@ export default {
 			this.models = [payload.model];
 			this.specialties = payload.themes;
 		},
-		avatar(psychologist) {
+		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatarThumbnail && (thumbnail || this.$vuetify.breakpoint.smAndDown))
+				return psychologist.avatarThumbnail;
 			if (psychologist.avatar) return psychologist.avatar;
 			return '';
 		},
