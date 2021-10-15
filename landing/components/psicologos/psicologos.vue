@@ -818,8 +818,7 @@ export default {
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && (thumbnail || this.$vuetify.breakpoint.smAndDown))
-				return psychologist.avatarThumbnail;
+			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
 			if (psychologist.avatar) return psychologist.avatar;
 			return '';
 		},
