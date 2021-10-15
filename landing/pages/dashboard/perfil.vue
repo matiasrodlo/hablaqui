@@ -187,7 +187,6 @@ export default {
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
-			console.log(user);
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
 			if (this.$auth.user.role === 'psychologist')

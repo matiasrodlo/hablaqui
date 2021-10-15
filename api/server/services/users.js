@@ -91,18 +91,31 @@ const usersService = {
 		{ avatar, avatarThumbnail, role, idPsychologist, _id }
 	) {
 		let psychologist;
-		if (role === 'psychologist')
+		let userRole = role;
+		let userID = _id;
+
+		if (user.role === 'superuser') {
+			const userSelected = await User.find({
+				psychologist: idPsychologist,
+			});
+
+			userRole = userSelected.role;
+			userID = userSelected._id;
+		}
+
+		if (userRole === 'psychologist')
 			psychologist = await Psychologist.findByIdAndUpdate(
 				idPsychologist,
 				{
 					avatar,
 					avatarThumbnail,
 					approveAvatar: false,
-				}
+				},
+				{ new: true }
 			);
 
 		const profile = await User.findByIdAndUpdate(
-			_id,
+			userID,
 			{
 				avatar,
 				avatarThumbnail,
