@@ -107,7 +107,7 @@ export default {
 			const { data } = await this.$axios(`/psychologist/${id}/approve-avatar`, {
 				method: 'PUT',
 			});
-			snackBarSuccess('Avatar aprobado')(commit);
+			snackBarSuccess(data.message)(commit);
 			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);

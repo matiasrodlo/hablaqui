@@ -277,10 +277,10 @@ const psychologistsController = {
 	async approveAvatar(req, res) {
 		try {
 			const { user } = req;
-			const { idPsychologist } = req.params;
+			const { id } = req.params;
 			const { data, code } = await psychologistsService.approveAvatar(
 				user,
-				idPsychologist
+				id
 			);
 			restResponse(data, code, res);
 		} catch (e) {

@@ -349,7 +349,7 @@ psychologistsRouter.post(
  * Actualiza la propiedad approveAvatar
  */
 psychologistsRouter.put(
-	'/psychologist/:idPsychologist/approve-avatar',
+	'/psychologist/:id/approve-avatar',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.approveAvatar
 );

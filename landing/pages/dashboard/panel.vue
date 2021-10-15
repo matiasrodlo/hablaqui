@@ -67,7 +67,7 @@
 									{{
 										selected.approveAvatar
 											? 'Avatar aprobado'
-											: 'Avatar a la esperade aproación'
+											: 'Avatar a la esperade aprobación'
 									}}
 								</div>
 								<label for="upload">
@@ -100,8 +100,13 @@
 										ml-2
 									"
 									style="width: 200px"
+									@click="approveAvatar(selected._id)"
 								>
-									Aprobar Avatar actual
+									{{
+										loadingApproveAvatar
+											? 'Actualizando'
+											: 'Aprobar Avatar actual'
+									}}
 								</div>
 								<v-file-input
 									id="upload"
@@ -736,6 +741,7 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
+			loadingApproveAvatar: false,
 			loadingAvatar: false,
 			dialog: false,
 			items: [],
@@ -764,45 +770,76 @@ export default {
 				this.comunas = this.comunasRegiones.find(item => item.region === newVal).comunas;
 		},
 	},
-	async mounted() {
-		const { recruitment } = await this.$axios.$get(`/recruitment`);
-		this.items = recruitment;
-		const { psychologists } = await this.$axios.$get('/psychologists/all');
-		this.psychologists = psychologists;
-		this.psychologists = this.psychologists.map(psychologist => {
-			const psy = psychologist;
-			if (!psychologist.experience.length)
-				psy.experience.push({ title: '', place: '', start: '', end: '' });
-			if (!psychologist.formation.length)
-				psy.formation.push({
-					formationType: '',
-					description: '',
-					start: '',
-					end: '',
-				});
-			if (isEmpty(psychologist.paymentMethod))
-				psychologist.paymentMethod = {
-					bank: '',
-					accountType: '',
-					accountNumber: '',
-					rut: '',
-					name: '',
-					email: '',
-				};
-			return psy;
-		});
-		let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
-		banks = await banks.json();
-		this.banks = banks;
-		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
-		this.comunasRegiones = response.data;
-		this.regiones = response.data.map(i => i.region);
-		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
-		this.timezone = data;
-		await this.getAppointments();
-		this.loading = false;
+	mounted() {
+		this.initFetch();
 	},
 	methods: {
+		async initFetch() {
+			await this.getRecruitments();
+			await this.getPsychologist();
+			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
+			banks = await banks.json();
+			this.banks = banks;
+			const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
+			this.comunasRegiones = response.data;
+			this.regiones = response.data.map(i => i.region);
+			const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
+			this.timezone = data;
+			await this.getAppointments();
+			this.loading = false;
+		},
+		async getRecruitments() {
+			const { recruitment } = await this.$axios.$get(`/recruitment`);
+			this.items = recruitment.sort((a, b) => {
+				const fa = a.name.toLowerCase();
+				const fb = b.name.toLowerCase();
+
+				if (fa < fb) {
+					return -1;
+				}
+				if (fa > fb) {
+					return 1;
+				}
+				return 0;
+			});
+		},
+		async getPsychologist() {
+			const { psychologists } = await this.$axios.$get('/psychologists/all');
+			this.psychologists = psychologists.sort((a, b) => {
+				const fa = a.name.toLowerCase();
+				const fb = b.name.toLowerCase();
+
+				if (fa < fb) {
+					return -1;
+				}
+				if (fa > fb) {
+					return 1;
+				}
+				return 0;
+			});
+			this.psychologists = this.psychologists.map(psychologist => {
+				const psy = psychologist;
+				if (!psychologist.experience.length)
+					psy.experience.push({ title: '', place: '', start: '', end: '' });
+				if (!psychologist.formation.length)
+					psy.formation.push({
+						formationType: '',
+						description: '',
+						start: '',
+						end: '',
+					});
+				if (isEmpty(psychologist.paymentMethod))
+					psychologist.paymentMethod = {
+						bank: '',
+						accountType: '',
+						accountNumber: '',
+						rut: '',
+						name: '',
+						email: '',
+					};
+				return psy;
+			});
+		},
 		async approve() {
 			await this.checkusername();
 			if (!this.available) {
@@ -873,7 +910,8 @@ export default {
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const { psychologist } = await this.upateAvatar(this.setAvatarObject(file));
-			console.log(psychologist);
+			const index = this.psychologists.findIndex(element => element._id === psychologist._id);
+			this.psychologists[index] = psychologist;
 			this.setSelected(
 				{
 					...this.selected,
@@ -884,6 +922,20 @@ export default {
 				true
 			);
 			this.loadingAvatar = false;
+		},
+		async approveAvatar(id) {
+			this.loadingApproveAvatar = true;
+			const psychologist = await this.putApproveAvatar(id);
+			const index = this.psychologists.findIndex(element => element._id === psychologist._id);
+			this.psychologists[index] = psychologist;
+			this.setSelected(
+				{
+					...this.selected,
+					approveAvatar: psychologist.approveAvatar,
+				},
+				true
+			);
+			this.loadingApproveAvatar = false;
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
@@ -899,6 +951,7 @@ export default {
 			return avatar;
 		},
 		...mapActions({
+			putApproveAvatar: 'Psychologist/approveAvatar',
 			checkUsername: 'Psychologist/checkUsername',
 			deletePsychologist: 'Psychologist/deletePsychologist',
 			getAppointments: 'Appointments/getAppointments',

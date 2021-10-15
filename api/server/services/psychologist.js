@@ -710,7 +710,7 @@ const approveAvatar = async (user, id) => {
 		},
 		{ new: true }
 	);
-	return okResponse('Avatar actualizado', {
+	return okResponse('Avatar aprobado', {
 		psychologist,
 	});
 };
