@@ -65,7 +65,8 @@ const mailService = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
 			replyto: 'Hablaquí <soporte-invitaciones@mail.hablaqui.com',
-			subject: '¡Bienvenido! Fuiste invitado por tu psicólogo a Hablaquí',
+			subject:
+				'¡Bienvenido/a! Fuiste invitado por tu psicólogo a Hablaquí',
 			template: 'welcome-user-by-psy',
 			'v:name': name,
 			'v:email': email,
