@@ -185,6 +185,7 @@ export default {
 			this.psychologist = value;
 		},
 		async uploadAvatar(file) {
+			if (!file) return false;
 			this.loadingAvatar = true;
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);

@@ -8,6 +8,7 @@ import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import { bucket } from '../config/bucket';
 
 const usersService = {
 	async getProfile(id) {
@@ -93,10 +94,15 @@ const usersService = {
 		role,
 		idPsychologist,
 		_id,
+		oldAvatar,
+		oldAvatarThumbnail,
 	}) {
 		let psychologist;
 		let userRole = role;
 		let userID = _id;
+
+		if (!avatar && !avatarThumbnail)
+			return conflictResponse('Ha ocurrido un error inesperado');
 
 		if (userLogged.role === 'superuser') {
 			const userSelected = await User.findOne({
@@ -130,12 +136,32 @@ const usersService = {
 			}
 		);
 
+		// delete old image
+		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch(
+			console.error
+		);
+
 		logInfo(`${userLogged.email} actualizo su avatar`);
 
 		return okResponse('Avatar actualizado', {
 			user: profile,
 			psychologist,
 		});
+	},
+
+	async deleteFile(oldAvatar, oldAvatarThumbnail) {
+		if (oldAvatar)
+			await bucket
+				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
+				.delete();
+		if (oldAvatarThumbnail)
+			await bucket
+				.file(
+					oldAvatarThumbnail
+						.split('https://cdn.hablaqui.cl/')
+						.join('')
+				)
+				.delete();
 	},
 
 	async setUserOnline(user) {

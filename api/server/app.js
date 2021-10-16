@@ -67,6 +67,8 @@ mongoose
 	.connect(process.env.URLDB, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
+		useCreateIndex: true,
+		useFindAndModify: false,
 	})
 	.then(logger.info('Data base online'))
 	.catch(error => logError(error));

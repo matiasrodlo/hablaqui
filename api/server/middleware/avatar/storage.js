@@ -10,24 +10,7 @@ import {
  */
 const storage = (req, res, next) => {
 	if (!req.file) return next();
-	const { name, lastName, oldAvatar, oldAvatarThumbnail } = req.body;
-
-	async function deleteFile() {
-		if (oldAvatar)
-			await bucket
-				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
-				.delete();
-		if (oldAvatarThumbnail)
-			await bucket
-				.file(
-					oldAvatarThumbnail
-						.split('https://cdn.hablaqui.cl/')
-						.join('')
-				)
-				.delete();
-	}
-
-	deleteFile().catch(console.error);
+	const { name, lastName } = req.body;
 
 	const gcsname = `${Date.now()}-${name
 		.toLowerCase()
