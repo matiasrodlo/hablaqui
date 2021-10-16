@@ -51,6 +51,14 @@ const userSchema = {
 			.email()
 			.required(),
 	}),
+	newUserByPsy: Joi.object({
+		email: Joi.string()
+			.email()
+			.required(),
+		name: Joi.string().required(),
+		rut: Joi.string().allow(''),
+		phone: Joi.string().allow(''),
+	}),
 };
 
 export default Object.freeze(userSchema);
