@@ -10,6 +10,7 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
+import moment from 'moment';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -68,6 +69,10 @@ const createPsychologistPreference = async (body, res) => {
 		},
 		auto_return: 'approved',
 	};
+
+	console.log(
+		`${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}/${body.period}`
+	);
 
 	let bodyId = '';
 	let error = '';

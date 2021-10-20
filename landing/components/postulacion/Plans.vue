@@ -72,7 +72,7 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-btn class="mt-4" color="primary" rounded block @click="goMercadoPago"
+					<v-btn class="mt-4" color="primary" rounded block @click="goMercadoPago()"
 						>Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
@@ -157,21 +157,23 @@ export default {
 	methods: {
 		async goMercadoPago() {
 			// Necesitas agregar el precio y el periodo (mensual, anual)
+			// Necesitas agregar el psicologo (la Id)
 			const preference = {
-				price: this.price,
-				period: this.period,
+				price: this.price || 100,
+				period: this.period || 'mensual',
 				title: 'Plan Premium',
 				quantity: 1,
-				psychologist: this.psychologist,
+				psychologist: this.psychologist || '60c26d37f12991000bca3bb9',
 			};
 
+			console.log(preference);
 			const response = await this.mercadopagoPsychologistPay(preference);
 			window.location.href = response.body.init_point;
 		},
+		...mapActions({
+			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
+		}),
 	},
-	...mapActions({
-		mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
-	}),
 };
 </script>
 
