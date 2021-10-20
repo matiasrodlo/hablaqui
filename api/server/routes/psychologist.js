@@ -309,9 +309,12 @@ psychologistsRouter.post(
 	psychologistsController.updateFormationExperience
 );
 
+/**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
 psychologistsRouter.get(
 	'/psychologist/payments',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfo
-)
+);
 export default psychologistsRouter;
