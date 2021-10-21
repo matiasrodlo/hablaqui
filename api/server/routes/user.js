@@ -19,12 +19,12 @@ const userRouter = Router();
  * }
  */
 userRouter.post(
-	'/user/register/user',
+	'/user/register',
 	[
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.newUserByPsy, 'body'),
 	],
-	userRouter.registerUser
+	userController.registerUser
 );
 
 userRouter.get(
