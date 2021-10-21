@@ -51,7 +51,6 @@ let userSchema = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	email: {
 		type: String,

@@ -196,6 +196,7 @@ const usersService = {
 			Math.random()
 				.toString(36)
 				.slice(2);
+
 		const newUser = {
 			name: body.name,
 			email: body.email,
@@ -204,10 +205,20 @@ const usersService = {
 			rut: body.rut,
 			phone: body.phone,
 		};
-		User.create(newUser);
+		const createdUser = await User.create(newUser);
+
+		if (process.env.NODE_ENV === 'development')
+			logInfo(
+				actionInfo(
+					user.email,
+					`Usuario registrado ${newUser.email} ${pass}`
+				)
+			);
+
+		// Sending email with user information
 		await mailService.sendGuestNewUser(user, newUser, pass);
-		//Enviar correo para avisar sobre usuario creado
-		return okResponse('Nuevo usuario creado', { user: newUser });
+
+		return okResponse('Nuevo usuario creado', { user: createdUser });
 	},
 };
 

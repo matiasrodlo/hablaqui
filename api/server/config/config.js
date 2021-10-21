@@ -6,12 +6,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 process.env.PORT = process.env.PORT || 3000;
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-// process.env.URLDB = process.env.URLDB || 'mongodb://localhost:27017/sochamar';
-
-process.env.URLDB =
-	process.env.URLDB ||
-	'mongodb+srv://silvita:Perez123@hablaqui-staging.awvck.mongodb.net/hablaqui';
-
 process.env.FRONTEND_URL =
 	process.env.FRONTEND_URL || 'http://localhost:8080/#';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'sochamar12345';

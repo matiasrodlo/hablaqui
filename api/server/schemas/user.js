@@ -3,26 +3,28 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const userSchema = {
 	updateProfile: Joi.object({
-		_id: Joi.string().allow(''),
 		__v: Joi.number(),
+		_id: Joi.string().allow(''),
 		adminNotifyTime: Joi.string().allow(''),
 		avatar: Joi.string().allow(''),
+		chats: Joi.array(),
 		email: Joi.string().allow(''),
 		finishedSessions: Joi.string().allow(''),
 		google: Joi.boolean().allow(''),
+		googleCalendar: Joi.object(),
 		googleId: Joi.string().allow(''),
 		inviteCode: Joi.string().allow(''),
 		lastName: Joi.string().allow(''),
+		myPlan: Joi.optional(),
 		name: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
+		plan: Joi.array(),
 		psychologist: Joi.string().allow(''),
+		hasPaid: Joi.optional(),
 		role: Joi.string().allow(''),
+		rut: Joi.string().allow(''),
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
-		chats: Joi.array(),
-		plan: Joi.array(),
-		googleCalendar: Joi.object(),
-		myPlan: Joi.optional(),
 	}).min(1),
 	updatePassword: Joi.object({
 		oldPassword: Joi.string()
