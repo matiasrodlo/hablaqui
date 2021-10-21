@@ -296,7 +296,8 @@ export default {
 					active = payload.friday !== 'busy';
 				}
 				if (index === 5) {
-					intervals = payload.saturday === 'busy' ? ['9:00', '18:00'] : payload.saturday;
+					intervals =
+						payload.saturday === 'busy' ? [['9:00', '18:00']] : payload.saturday;
 					active = payload.saturday !== 'busy';
 				}
 				if (index === 6) {

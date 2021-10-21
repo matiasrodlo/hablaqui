@@ -32,9 +32,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async geClients({ commit }, id) {
+	async getClients({ commit }, id) {
 		try {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
+			commit('setClients', users);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async searchClients({ commit }, search) {
+		try {
+			const { users } = await this.$axios.$get(`/psychologist/${search}`);
 			commit('setClients', users);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -89,6 +97,17 @@ export default {
 				data: { profile },
 			});
 			snackBarSuccess('Actualizado exitosamente')(commit);
+			return data.psychologist;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async approveAvatar({ commit }, id) {
+		try {
+			const { data } = await this.$axios(`/psychologist/${id}/approve-avatar`, {
+				method: 'PUT',
+			});
+			snackBarSuccess(data.message)(commit);
 			return data.psychologist;
 		} catch (e) {
 			snackBarError(e)(commit);

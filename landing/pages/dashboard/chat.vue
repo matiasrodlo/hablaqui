@@ -35,7 +35,7 @@
 						/>
 					</v-card-text>
 					<!-- barra lateral role psychologist -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role == 'psychologist'">
+					<template v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'">
 						<!-- sin consultantes -->
 						<v-card-text>
 							<v-subheader class="primary--text body-1 px-0">
@@ -107,7 +107,7 @@
 						</template>
 					</template>
 					<!-- barra lateral role user -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role == 'user'">
+					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
 						<v-card-text
 							v-if="
 								$auth.$state.user &&
@@ -278,7 +278,7 @@
 								</div>
 							</v-list-item-title>
 							<div
-								v-if="!selected.assitant"
+								v-if="!selected.assistant"
 								style="min-width: 150px"
 								class="text-right"
 							>
@@ -287,7 +287,7 @@
 										contain
 										height="25"
 										width="25"
-										:src="`${$config.LANDING_URL}/llamada.png`"
+										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
 								<v-btn id="camheader" icon :to="`/video-llamada/${goToCall()}`">
@@ -295,7 +295,7 @@
 										contain
 										height="25"
 										width="25"
-										:src="`${$config.LANDING_URL}/camara.png`"
+										:src="`https://cdn.hablaqui.cl/static/camara.png`"
 									></v-img>
 								</v-btn>
 								<v-btn id="addheader" icon>
@@ -303,7 +303,7 @@
 										contain
 										width="25"
 										height="25"
-										:src="`${$config.LANDING_URL}/agregar.png`"
+										:src="`https://cdn.hablaqui.cl/static/agregar.png`"
 									></v-img>
 								</v-btn>
 							</div>
@@ -324,7 +324,7 @@
 							style="flex: 1; display: flex; flex-direction: column; overflow-y: auto"
 						>
 							<!-- burbujas asistente -->
-							<template v-if="selected.assitant">
+							<template v-if="selected.assistant">
 								<div class="text-center">hablaquí</div>
 								<div
 									class="
@@ -338,7 +338,9 @@
 									style="max-width: 320px"
 								>
 									Bienvenido al chat confidencial
-									{{ $auth.$state.user.role == 'user' ? 'con el psicólogo' : '' }}
+									{{
+										$auth.$state.user.role === 'user' ? 'con el psicólogo' : ''
+									}}
 								</div>
 								<v-divider
 									class="mx-auto mb-10"
@@ -357,9 +359,9 @@
 									<span class="text--disabled">{{ setDate() }}</span>
 								</div>
 								<div class="talkbubble talkbubble__two" style="margin-top: 2px">
-									<p style="body-2 max-height: 75px; overflow-y: auto">
+									<p style="max-height: 75px; overflow-y: auto" class="body-2">
 										{{
-											$auth.$state.user.role == 'user'
+											$auth.$state.user.role === 'user'
 												? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 												: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
 										}}
@@ -421,7 +423,7 @@
 							</template>
 						</v-card-text>
 						<!-- Zona para escribir -->
-						<v-card-text v-if="selected.assitant">
+						<v-card-text v-if="selected.assistant">
 							<div class="text-center body-2">
 								Hablaquí valora la privacidad. No compartiremos tus mensajes, ni
 								tampoco ningún dato personal.
@@ -451,7 +453,7 @@
 								>
 									<!-- <template #prepend-inner>
 									<v-img
-										:src="`${$config.LANDING_URL}/adjuntar.png`"
+										:src="`https://cdn.hablaqui.cl/static/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
@@ -459,7 +461,7 @@
 									<template #append>
 										<!-- <v-btn depressed icon>
 										<v-img
-											:src="`${$config.LANDING_URL}/voz.png`"
+											:src="`https://cdn.hablaqui.cl/static/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
@@ -472,7 +474,7 @@
 											:disabled="!message"
 										>
 											<v-img
-												:src="`${$config.LANDING_URL}/message.png`"
+												:src="`https://cdn.hablaqui.cl/static/message.png`"
 												height="30"
 												width="30"
 											></v-img>
@@ -520,15 +522,15 @@ export default {
 			}));
 		},
 		subHeader() {
-			if (this.selected.assitant) return 'Asistente virtual';
+			if (this.selected.assistant) return 'Asistente virtual';
 			if (
-				!this.selected.assitant &&
+				!this.selected.assistant &&
 				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.psychologist
 			)
 				return 'Mi psicólogo';
 			if (
-				!this.selected.assitant &&
+				!this.selected.assistant &&
 				this.$auth.$state.user &&
 				this.selected._id !== this.$auth.$state.user.psychologist
 			)
@@ -541,7 +543,7 @@ export default {
 				hasMessageUser: this.hasMessageUser(item),
 			}));
 		},
-		// lista de usuarios/clientes con los que podria chatear el psicologo
+		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
 			let filterArray = this.chats.filter(el =>
 				el.user.name.toLowerCase().includes(this.search.toLowerCase())
@@ -559,7 +561,7 @@ export default {
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
-		// lista de psicologos con los que podria chatear el usuario
+		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
 			let filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
@@ -616,19 +618,21 @@ export default {
 		moment.locale('es');
 		await this.getPsychologists();
 		await this.getMessages();
-		if (this.$route.params.psy) {
-			const psychologist = this.getPsy(this.$route.params.psy);
-			this.setSelectedPsy(psychologist);
-		} else {
-			// SELECT DEFAULT
-			this.selected = {
-				name: 'Habi',
-				assitant: true,
-				avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
-			};
-		}
 		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
-			await this.geClients(this.$auth.$state.user.psychologist);
+			await this.getClients(this.$auth.$state.user.psychologist);
+			if ('client' in this.$route.query) {
+				this.setSelectedUser(
+					this.clients.find(client => client._id === this.$route.query.client)
+				);
+				if ('client' in this.$route.query) this.$router.replace({ query: null });
+			} else {
+				// SELECT DEFAULT
+				this.selected = {
+					name: 'Habi',
+					assistant: true,
+					avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+				};
+			}
 		}
 		this.initLoading = false;
 	},
@@ -694,20 +698,20 @@ export default {
 		},
 		async setSelectedPsy(psy) {
 			if (this.selected && this.selected._id === psy._id) return;
-			// inicamos carga del seleccionado
+			// iniciamos carga del seleccionado
 			this.loadingChat = true;
 			this.selected = psy;
-			// obeteners chat del seleccciona
+			// obtener chat del selecciona
 			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			// scroll hasta el final para ver los ultimos mensajes
+			// scroll hasta el final para ver los ultimo mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
-			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
 			if (!this.chat) await this.startConversation(psy._id);
-			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
+			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
 			if (psy.hasMessage) {
 				await this.updateMessage(psy.hasMessage);
 				await this.getMessages();
@@ -748,7 +752,7 @@ export default {
 			return psychologistId + userId;
 		},
 		...mapActions({
-			geClients: 'Psychologist/geClients',
+			getClients: 'Psychologist/getClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',

@@ -1,5 +1,5 @@
 {
-	"name": "api-HABLAQUI",
+	"name": "api-hablaqui",
 	"version": "1.0.0",
 	"description": "Administracion de datos de HABLAQUI",
 	"main": "server.js",

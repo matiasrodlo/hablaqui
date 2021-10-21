@@ -17,7 +17,7 @@
 					v-bind="attrs"
 					width="65"
 					height="65"
-					:src="`${$config.LANDING_URL}/icono_chat.png`"
+					:src="`https://cdn.hablaqui.cl/static/icono_chat.png`"
 					contain
 					v-on="on"
 				></v-img>
@@ -60,7 +60,7 @@
 									<v-img
 										contain
 										height="25"
-										:src="`${$config.LANDING_URL}/llamada.png`"
+										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn>
 							</v-list-item-action>
@@ -69,7 +69,7 @@
 									<v-img
 										contain
 										height="25"
-										:src="`${$config.LANDING_URL}/camara.png`"
+										:src="`https://cdn.hablaqui.cl/static/camara.png`"
 									></v-img>
 								</v-btn>
 							</v-list-item-action> -->
@@ -78,7 +78,7 @@
 									<v-img
 										contain
 										height="25"
-										:src="`${$config.LANDING_URL}/agregar.png`"
+										:src="`https://cdn.hablaqui.cl/static/agregar.png`"
 									></v-img>
 								</v-btn>
 							</v-list-item-action>
@@ -148,7 +148,7 @@
 							>
 								<!-- <template #prepend-inner>
 									<v-img
-										:src="`${$config.LANDING_URL}/adjuntar.png`"
+										:src="`https://cdn.hablaqui.cl/static/adjuntar.png`"
 										height="25"
 										width="25"
 									></v-img>
@@ -156,7 +156,7 @@
 								<template #append>
 									<!-- <v-btn depressed icon>
 										<v-img
-											:src="`${$config.LANDING_URL}/voz.png`"
+											:src="`https://cdn.hablaqui.cl/static/voz.png`"
 											height="30"
 											width="30"
 										></v-img>
@@ -165,7 +165,7 @@
 										<v-img
 											height="25"
 											contain
-											:src="`${$config.LANDING_URL}/message.png`"
+											:src="`https://cdn.hablaqui.cl/static/message.png`"
 										></v-img>
 									</v-btn>
 								</template>

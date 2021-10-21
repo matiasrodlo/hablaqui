@@ -7,8 +7,8 @@
 					tabindex="0"
 					class="mx-auto my-5"
 					style="max-width: 150px"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					alt="hablaqui Logo"
 					accesskey="h"
 				/>
@@ -121,8 +121,8 @@
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
 			</nuxt-link>
@@ -194,7 +194,10 @@
 								<avatar
 									size="50"
 									:name="$auth.$state.user.name"
-									:url="$auth.$state.user.avatar"
+									:last-name="
+										$auth.$state.user.lastName ? $auth.$state.user.lastName : ''
+									"
+									:url="$auth.$state.user.avatarThumbnail"
 								/>
 							</div>
 						</template>
@@ -248,7 +251,7 @@
 										<v-img
 											contain
 											height="30"
-											:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+											:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 											alt="cerrar sesión"
 										/>
 									</v-list-item-avatar>
@@ -328,19 +331,28 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
+				{
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
@@ -350,13 +362,13 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `${this.$config.LANDING_URL}/apps.png`,
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];

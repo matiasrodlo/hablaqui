@@ -8,6 +8,9 @@ export default {
 	setLoggedIn(state) {
 		state.loggedIn = !!state.user && !!state.token;
 	},
+	setListenerUserOnline(state, value) {
+		state.listenerUserOnline = value;
+	},
 	reset(state) {
 		state.user = {};
 		state.token = '';

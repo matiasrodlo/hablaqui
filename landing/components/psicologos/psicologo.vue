@@ -15,27 +15,15 @@
 						<v-col cols="12" md="3" class="text-center">
 							<v-list-item-avatar
 								:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
-								:color="psychologist.avatar ? 'trasnparent' : 'primary'"
 								class="ml-4"
 							>
-								<v-img
-									v-if="psychologist.avatar"
-									:lazy-src="psychologist.avatar"
-									:src="psychologist.avatar"
-								>
-									<template #placeholder>
-										<v-row
-											class="fill-height ma-0"
-											align="center"
-											justify="center"
-										>
-											<v-progress-circular indeterminate color="primary" />
-										</v-row>
-									</template>
-								</v-img>
-								<span v-else class="white--text text-h2 font-weight-bold">
-									{{ psychologist.name.substr(0, 1) }}
-								</span>
+								<avatar
+									:url="avatar(psychologist)"
+									:name="psychologist.name"
+									:last-name="psychologist.lastName ? psychologist.lastName : ''"
+									:size="$vuetify.breakpoint.mdAndUp ? '180' : '100'"
+									loading-color="white"
+								></avatar>
 							</v-list-item-avatar>
 							<div
 								v-if="$vuetify.breakpoint.mdAndUp && psychologist.code"
@@ -209,8 +197,8 @@
 										width="80"
 										height="80"
 										class="mx-auto mt-8"
-										:src="`${$config.LANDING_URL}/logo_tiny.png`"
-										:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+										:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+										:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 									></v-img>
 									<v-card-text><signin :is-dialog="true" /></v-card-text>
 									<v-card-text class="pt-0">
@@ -272,8 +260,8 @@
 										width="80"
 										height="80"
 										class="mx-auto mt-8"
-										:src="`${$config.LANDING_URL}/logo_tiny.png`"
-										:lazy-src="`${$config.LANDING_URL}/logo_tiny.png`"
+										:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
+										:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 									>
 									</v-img>
 									<v-card-text><signup :is-dialog="true" /></v-card-text>
@@ -339,6 +327,7 @@ import Pusher from 'pusher-js';
 
 export default {
 	components: {
+		Avatar: () => import('@/components/Avatar'),
 		signin: () => import('@/components/auth/SignIn'),
 		signup: () => import('@/components/auth/SignUp'),
 		DialogAgendaCitaOnline: () => import('@/components/psicologos/DialogAgendaCitaOnline'),
@@ -414,6 +403,12 @@ export default {
 				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
+		},
+		avatar(psychologist) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
 		},
 		...mapActions({ startConversation: 'Chat/startConversation' }),
 		...mapMutations({

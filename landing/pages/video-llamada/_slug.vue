@@ -5,8 +5,8 @@
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
 			</nuxt-link>
@@ -56,7 +56,7 @@
 								<v-img
 									contain
 									height="30"
-									:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+									:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 									alt="cerrar sesión"
 								/>
 							</v-list-item-avatar>
@@ -125,18 +125,18 @@ export default {
 				{
 					name: 'Chat',
 					link: '/dashboard/chat',
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 				},
 				{
 					name: 'Mis sesiones',
 					link: '/dashboard/agenda',
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',
 					link: '/dashboard/perfil',
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 				},
 			],
 		};
