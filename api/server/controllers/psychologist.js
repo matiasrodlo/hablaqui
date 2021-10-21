@@ -51,18 +51,6 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error haciendo match');
 		}
 	},
-	async registerNewUser(req, res) {
-		try {
-			const { user, body } = req;
-			const { data, code } = await psychologistsService.registerNewUser(
-				user,
-				body
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error registrando un usuario');
-		}
-	},
 	async register(req, res) {
 		try {
 			const { body } = req;

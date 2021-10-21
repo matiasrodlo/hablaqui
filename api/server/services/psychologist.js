@@ -9,8 +9,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
-import session from '../schemas/session';
-import mailService from './mail';
+
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -307,32 +306,7 @@ const createSession = async body => {
 		id: savedSession.sessions[savedSession.sessions.length - 1]._id,
 	});
 };
-const registerNewUser = async (user, body) => {
-	if (user.role != 'psychologist')
-		return conflictResponse('Usuario activo no es psicologo');
-	if (await User.exists({ email: body.email }))
-		return conflictResponse('Correo electronico en uso');
 
-	const pass =
-		Math.random()
-			.toString(36)
-			.slice(2) +
-		Math.random()
-			.toString(36)
-			.slice(2);
-	const newUser = {
-		name: body.name,
-		email: body.email,
-		password: bcrypt.hashSync(pass, 10),
-		role: 'user',
-		rut: body.rut,
-		phone: body.phone,
-	};
-	User.create(newUser);
-	await mailService.sendGuestNewUser(user, newUser, pass);
-	//Enviar correo para avisar sobre usuario creado
-	return okResponse('Nuevo usuario creado', { user: newUser });
-};
 const register = async body => {
 	if (await User.exists({ email: body.email })) {
 		return conflictResponse('Correo electronico en uso');
@@ -757,7 +731,6 @@ const psychologistsService = {
 	getRating,
 	getSessions,
 	match,
-	registerNewUser,
 	register,
 	reschedule,
 	searchClients,

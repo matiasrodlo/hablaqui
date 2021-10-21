@@ -9,6 +9,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
+import mailService from './mail';
 
 const usersService = {
 	async getProfile(id) {
@@ -180,6 +181,33 @@ const usersService = {
 		};
 		pusher.trigger('user-status', 'offline', data, pusherCallback);
 		return okResponse('Usuario desconectado', user);
+	},
+
+	async registerUser(user, body) {
+		if (user.role != 'psychologist')
+			return conflictResponse('Usuario activo no es psicologo');
+		if (await User.exists({ email: body.email }))
+			return conflictResponse('Correo electronico en uso');
+
+		const pass =
+			Math.random()
+				.toString(36)
+				.slice(2) +
+			Math.random()
+				.toString(36)
+				.slice(2);
+		const newUser = {
+			name: body.name,
+			email: body.email,
+			password: bcrypt.hashSync(pass, 10),
+			role: 'user',
+			rut: body.rut,
+			phone: body.phone,
+		};
+		User.create(newUser);
+		await mailService.sendGuestNewUser(user, newUser, pass);
+		//Enviar correo para avisar sobre usuario creado
+		return okResponse('Nuevo usuario creado', { user: newUser });
 	},
 };
 
