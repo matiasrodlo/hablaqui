@@ -22,9 +22,32 @@ const generateJwt = user => {
 
 const login = async user => {
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
+		user: generateUser(user),
 		token: generateJwt(user),
 	});
+};
+
+const generateUser = user => {
+	return {
+		_id: user._id,
+		avatar: user.avatar,
+		avatarThumbnail: user.avatarThumbnail,
+		email: user.email,
+		finishedSessions: user.finishedSessions,
+		google: user.google,
+		googleId: user.googleId,
+		hasPaid: user.hasPaid,
+		inviteCode: user.inviteCode,
+		lastName: user.lastName,
+		name: user.name,
+		phone: user.phone,
+		plan: user.plan,
+		psychologist: user.psychologist,
+		role: user.role,
+		rut: user.rut,
+		state: user.state,
+		timeZone: user.timeZone,
+	};
 };
 
 const register = async payload => {
@@ -43,7 +66,7 @@ const register = async payload => {
 		await mailService.sendWelcomeNewUser(user);
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
+		user: generateUser(user),
 		token: generateJwt(user),
 	});
 };
@@ -98,6 +121,7 @@ const googleAuthCallback = (req, res) => {
 const authService = {
 	login,
 	generateJwt,
+	generateUser,
 	register,
 	sendPasswordRecover,
 	changeUserPassword,

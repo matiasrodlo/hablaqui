@@ -4,6 +4,7 @@ import User from '../models/user';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
+import servicesUser from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
@@ -218,7 +219,9 @@ const usersService = {
 		// Sending email with user information
 		await mailService.sendGuestNewUser(user, newUser, pass);
 
-		return okResponse('Nuevo usuario creado', { user: createdUser });
+		return okResponse('Nuevo usuario creado', {
+			user: servicesUser.generateUser(createdUser),
+		});
 	},
 };
 
