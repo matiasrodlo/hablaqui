@@ -144,7 +144,6 @@ let recruitment = new Schema(
 		},
 		rut: {
 			type: String,
-			unique: true,
 		},
 		gender: {
 			type: String,
