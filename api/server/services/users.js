@@ -18,7 +18,9 @@ const usersService = {
 		if (!user) {
 			return conflictResponse('perfil no encontrado');
 		}
-		return okResponse('perfil obtenido', { user });
+		return okResponse('perfil obtenido', {
+			user: servicesUser.generateUser(user),
+		});
 	},
 	async changeActualPassword(user, newPassword) {
 		user.password = bcrypt.hashSync(newPassword, 10);
