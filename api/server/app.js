@@ -11,6 +11,18 @@ import { logError, logger } from './config/pino';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 const app = express();
+
+// fisrt connect to data base
+mongoose
+	.connect(process.env.URLDB, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		useFindAndModify: false,
+	})
+	.then(logger.info('Data base online'))
+	.catch(error => logError(error));
+
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
@@ -63,13 +75,4 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-mongoose
-	.connect(process.env.URLDB, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useCreateIndex: true,
-		useFindAndModify: false,
-	})
-	.then(logger.info('Data base online'))
-	.catch(error => logError(error));
 module.exports = app;

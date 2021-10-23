@@ -51,7 +51,6 @@ let userSchema = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	email: {
 		type: String,
@@ -111,5 +110,4 @@ let userSchema = new Schema({
 });
 
 userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
-
 export default model('User', userSchema);

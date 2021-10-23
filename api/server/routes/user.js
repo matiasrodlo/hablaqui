@@ -10,6 +10,23 @@ import storageAvatar from '../middleware/avatar/storage';
 
 const userRouter = Router();
 
+/** register consultante
+ * req.body = {
+ * 	name = string(requerido),
+ * 	email = string(requerido),
+ * 	rut = string,
+ * 	phone = string
+ * }
+ */
+userRouter.post(
+	'/user/register',
+	[
+		passport.authenticate('jwt', { session: true }),
+		validation(userSchema.newUserByPsy, 'body'),
+	],
+	userController.registerUser
+);
+
 userRouter.get(
 	'/user/profile',
 	[passport.authenticate('jwt', { session: true })],

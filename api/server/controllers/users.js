@@ -119,6 +119,15 @@ const userController = {
 			return errorCallback(e, res, 'Error actualizando el estado');
 		}
 	},
+	async registerUser(req, res) {
+		try {
+			const { user, body } = req;
+			const { data, code } = await userService.registerUser(user, body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error registrando un usuario');
+		}
+	},
 };
 
 export default userController;

@@ -14,6 +14,18 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async registerUser({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/user/register', {
+				method: 'post',
+				data: payload,
+			});
+			snackBarSuccess(data.message)(commit);
+			return data.user;
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 	async upateAvatar({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/user/upload/avatar', {
