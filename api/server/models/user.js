@@ -1,5 +1,6 @@
 'use strict';
 
+import uniqueValidator from 'mongoose-unique-validator';
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
@@ -55,6 +56,7 @@ let userSchema = new Schema({
 		type: String,
 		lowercase: true,
 		trim: true,
+		unique: true,
 	},
 	password: {
 		type: String,
@@ -107,4 +109,5 @@ let userSchema = new Schema({
 	},
 });
 
+userSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 export default model('User', userSchema);
