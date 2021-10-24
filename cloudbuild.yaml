@@ -1,11 +1,11 @@
 steps:
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["install"]
     dir: "landing"
     id: "install-landing"
     waitFor: ["-"]
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["run", "create-env"]
     env:
@@ -24,7 +24,7 @@ steps:
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["run", "generate"]
     dir: "landing"
@@ -35,13 +35,13 @@ steps:
     dir: "landing"
     id: "deploy-landing"
     waitFor: ["envvars-landing", "install-landing", "generate-landing"]
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: npm
     args: ["install"]
     dir: "api"
     id: "install-api"
     waitFor: ["-"]
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: npm
     args: ["run", "create-env"]
     env:
