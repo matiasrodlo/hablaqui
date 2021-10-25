@@ -47,8 +47,7 @@ const setSession = (user, psychologist) => {
 			);
 		});
 
-	if (user.role === 'psychologist')
-		sessions = sessions = psychologist.sessions;
+	if (user.role === 'psychologist') sessions = psychologist.sessions;
 
 	sessions = sessions
 		.map(item => {
