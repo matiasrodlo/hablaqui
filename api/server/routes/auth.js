@@ -54,8 +54,8 @@ authRouter.post(
  * Recuperar contraseña
  * req.body = { email: string }
  */
-authRouter.post(
-	'/auth/send/passwordRecover',
+authRouter.get(
+	'/auth/send-password-recover/:email',
 	authController.sendPasswordRecover
 );
 
