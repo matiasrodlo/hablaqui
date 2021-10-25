@@ -33,11 +33,9 @@
 								text--secondary
 							"
 						>
-							{{
-								step == 1
-									? '¡Qué gusto verte nuevamente!'
-									: '¡Tu bienestar comienza aquí!'
-							}}
+							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
+							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>
+							<span v-show="step === 3">Recupera tu contraseña</span>
 						</v-col>
 						<v-col
 							cols="12"
@@ -45,21 +43,29 @@
 							lg="6"
 							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
 						>
-							{{
-								step == 1
-									? 'Ingresa y continúa tu viaje de desarrollo personal ahora mismo.'
-									: 'Regístrate para iniciar tu camino de desarrollo personal'
-							}}
+							<span v-show="step === 1"
+								>Ingresa y continúa tu viaje de desarrollo personal ahora
+								mismo.</span
+							>
+							<span v-show="step === 2"
+								>Regístrate para iniciar tu camino de desarrollo personal</span
+							>
+							<span v-show="step === 3">
+								Continua disfrutando de los beneficios de hablaquí
+							</span>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
 							<v-window v-model="step">
 								<v-window-item :value="1">
-									<sign-in />
+									<sign-in :set-reset-password="() => (step = 3)" />
 								</v-window-item>
 								<v-window-item :value="2">
 									<sign-up />
+								</v-window-item>
+								<v-window-item :value="3">
+									<Send-password-recovery />
 								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
@@ -166,6 +172,7 @@ export default {
 	components: {
 		SignIn: () => import('~/components/auth/SignIn'),
 		SignUp: () => import('~/components/auth/SignUp'),
+		SendPasswordRecovery: () => import('~/components/auth/SendPasswordRecovery'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'simple',

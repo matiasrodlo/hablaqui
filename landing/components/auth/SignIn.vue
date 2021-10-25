@@ -24,7 +24,15 @@
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12" class="text-left primary--text"> ¿Olvidó la contraseña? </v-col>
+			<v-col cols="12" class="text-left">
+				<v-btn
+					text
+					color="primary"
+					class="px-0 body-2 font-weigth-medium"
+					@click="setResetPassword"
+					>¿Olvidó la contraseña?</v-btn
+				>
+			</v-col>
 		</v-row>
 		<v-row>
 			<v-col cols="12">
@@ -49,6 +57,10 @@ export default {
 		isDialog: {
 			type: Boolean,
 			default: false,
+		},
+		setResetPassword: {
+			type: Function,
+			required: true,
 		},
 	},
 	data() {
