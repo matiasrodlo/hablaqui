@@ -441,7 +441,7 @@ const checkAvailability = async (psyId, date) => {
 	const psychologist = Psychologist.findById(psyId);
 
 	if (
-		moment(newDate)
+		moment(date)
 			.isBefore(moment())
 			.add(psychologist.preferences.minimumRescheduleSession, 'hours')
 	) {
