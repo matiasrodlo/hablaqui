@@ -231,7 +231,7 @@ export default {
 	created() {
 		if (this.$route.query.token) {
 			this.token = this.$route.query.token;
-			// this.deleteQueryFromRoute();
+			this.deleteQueryFromRoute();
 		} else {
 			this.$router.push({ name: 'auth' });
 		}
