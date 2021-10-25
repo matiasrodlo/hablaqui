@@ -33,7 +33,7 @@ const authController = {
 	async sendPasswordRecover(req, res) {
 		try {
 			const { email } = req.params;
-			const { data, code } = authService.sendPasswordRecover(email);
+			const { data, code } = await authService.sendPasswordRecover(email);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res);

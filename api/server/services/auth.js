@@ -107,7 +107,7 @@ const sendPasswordRecover = async email => {
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
 	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
 
-	return okResponse('Email enviado a su correo');
+	return okResponse('Sé le ha enviado un correo electronico');
 };
 
 const changeUserPassword = async (user, newPassword, res) => {
