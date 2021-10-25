@@ -38,6 +38,12 @@ import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 export default {
 	name: 'SendEmailRecoveryPassword',
 	mixins: [validationMixin],
+	props: {
+		goBack: {
+			type: Function,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			email: '',
@@ -66,6 +72,7 @@ export default {
 						content: data.message,
 						color: 'success',
 					});
+					this.goBack();
 				} catch (error) {
 					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {

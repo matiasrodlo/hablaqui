@@ -65,15 +65,32 @@
 									<sign-up />
 								</v-window-item>
 								<v-window-item :value="3">
-									<Send-password-recovery />
+									<Send-password-recovery :go-back="() => (step = 1)" />
 								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1"> ¿No eres parte de Hablaquí? </small>
 								<small v-else>¿Ya tienes cuenta Hablaquí?</small>
 							</div>
-							<v-btn outlined block rounded color="primary" @click="setStep">
-								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
+							<v-btn
+								v-show="step == 2 || step === 3"
+								outlined
+								block
+								rounded
+								color="primary"
+								@click="setStep"
+							>
+								Entra
+							</v-btn>
+							<v-btn
+								v-show="step == 1"
+								outlined
+								block
+								rounded
+								color="primary"
+								@click="setStep"
+							>
+								Crea una cuenta
 							</v-btn>
 							<div class="mt-16">
 								<v-btn class="px-0" text color="primary" :to="{ name: 'politicas' }"
