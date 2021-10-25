@@ -98,10 +98,10 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.PASSWORD_RECOVERY_JWT_EXPIRATION}
+	const recoveryUrl = `${process.env.FRONTEND_URL}
 		/password-reset?token=${token}`;
 
-	// TODO: crear envio de contraseña al email
+	// TODO: crear aqui el envio de contraseña al email
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
