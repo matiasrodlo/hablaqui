@@ -71,29 +71,43 @@ const register = async payload => {
 	});
 };
 
-// const generatePasswordRecoverJwt = user => {
-// 	const payload = {
-// 		username: user.name,
-// 		sub: user._id,
-// 	};
+/**
+ * token generator - password recovery
+ * @param {Object} user
+ * @returns string Token
+ */
+const generatePasswordRecoverJwt = user => {
+	const payload = {
+		username: user.name,
+		sub: user._id,
+	};
 
-// 	return sign(payload, process.env.JWT_SECRET, {
-// 		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
-// 	});
-// };
+	return sign(payload, process.env.JWT_SECRET, {
+		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION, // 40m
+	});
+};
 
 const getUserByEmail = async email => {
 	return await User.findOne({ email: email });
 };
 
-const sendPasswordRecover = async (email, res) => {
+const sendPasswordRecover = async email => {
 	const user = await getUserByEmail(email);
 	if (!user) {
-		return res.sendStatus(404);
-	} else {
-		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
-		return res.sendStatus(200);
+		return conflictResponse('Este usuario no existe');
 	}
+	const token = generatePasswordRecoverJwt(user);
+
+	const recoveryUrl = `${process.env.PASSWORD_RECOVERY_JWT_EXPIRATION}
+		/password-reset?token=${token}`;
+
+	// TODO: crear envio de contraseña al email
+
+	if (process.env.NODE_ENV === 'development')
+		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
+	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
+
+	return okResponse('Email enviado a su correo');
 };
 
 const changeUserPassword = async (user, newPassword, res) => {
