@@ -68,9 +68,10 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <recuperacion@mail.hablaqui.com>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
+			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.com',
 			subject: 'Recuperación de contraseña de Hablaquí!',
-			text: url,
+			template: 'reset-password',
+			'v:first_name': url,
 		};
 		await mg.messages().send(dataPayload, function(error, body) {
 			if (error) {
