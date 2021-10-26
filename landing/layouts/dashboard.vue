@@ -197,24 +197,10 @@ export default {
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
-	mounted() {
-		if (!this.listenerUserOnline) {
-			this.setListenerUserOnline(true);
-			document.addEventListener('visibilitychange', this.visibilityListener);
-			this.visibilityListener();
-		}
-	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
-		},
-		visibilityListener() {
-			if (document.visibilityState === 'visible') {
-				console.info('user online');
-			} else {
-				console.info('user offline');
-			}
 		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},
