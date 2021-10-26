@@ -2,7 +2,19 @@
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 		<v-row justify="center" style="height: calc(100vh - 110px)">
-			<v-col class="heightCalendar" cols="12" md="10">
+			<v-col cols="12" md="10">
+				<div class="hidden-md-and-up text-center">
+					<div class="text-center text--secondary">Nº de Sesiones</div>
+					<div class="text-center text--secondary font-weight-bold my-1">0/0</div>
+					<v-btn
+						text
+						nuxt
+						to="/psicologos"
+						class="primary--text font-weight-bold body-1 pointer"
+					>
+						Adquirir
+					</v-btn>
+				</div>
 				<v-sheet class="mt-4 mt-md-0">
 					<v-toolbar flat>
 						<v-btn class="mr-4" color="primary" depressed @click="setToday">
@@ -53,7 +65,7 @@
 						</v-menu>
 					</v-toolbar>
 				</v-sheet>
-				<v-sheet height="calc(100% - 64px)">
+				<v-sheet :height="$vuetify.breakpoint.mdAndUp ? '80%' : ''">
 					<v-calendar
 						ref="calendar"
 						v-model="focus"
@@ -375,26 +387,26 @@
 							</v-card-text>
 						</v-card>
 					</v-dialog>
-					<div class="text-right py-10">
-						<span class="mx-3 pointer">
+					<v-row class="text-md-right pt-4">
+						<v-col cols="6" md="3" class="pointer">
 							<v-btn color="primary" depressed fab style="width: 20px; height: 20px">
 								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1 caption">Sesiones online</span>
-						</span>
-						<span class="mx-3 pointer">
+						</v-col>
+						<v-col cols="6" md="3" class="pointer">
 							<v-btn color="#00c6ea" depressed fab style="width: 20px; height: 20px">
 								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1 caption">Sesiones presenciales</span>
-						</span>
-						<span class="mx-3 pointer">
+						</v-col>
+						<v-col cols="6" md="3" class="pointer">
 							<v-btn color="#efb908" depressed fab style="width: 20px; height: 20px">
 								<icon small :icon="mdiCheck" color="white" />
 							</v-btn>
 							<span class="ml-1 caption">Compromiso privado</span>
-						</span>
-						<span class="mx-3 pointer">
+						</v-col>
+						<v-col cols="6" md="3" class="pointer">
 							<v-btn
 								color="grey"
 								depressed
@@ -405,9 +417,19 @@
 								<icon small :icon="mdiCheck" color="grey" />
 							</v-btn>
 							<span class="ml-1 caption">Disponibilidad</span>
-						</span>
-					</div>
+						</v-col>
+					</v-row>
 				</v-sheet>
+			</v-col>
+			<v-col md="2" class="mt-16 hidden-sm-and-down">
+				<v-btn
+					text
+					nuxt
+					to="/psicologos"
+					class="primary--text font-weight-bold body-1 pointer"
+				>
+					Adquirir
+				</v-btn>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -692,9 +714,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped>
-.heightCalendar {
-	height: calc(100vh - 110px);
-}
-</style>
