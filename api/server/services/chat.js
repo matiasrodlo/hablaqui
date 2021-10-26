@@ -2,6 +2,7 @@
 
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
+import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
@@ -27,6 +28,7 @@ const getMessages = async (user, psy) => {
 			psychologist: psy,
 			user: user,
 		}).populate('user psychologist'),
+		url: `${room}${user}-${psy}`,
 	});
 };
 
@@ -127,22 +129,6 @@ const readMessage = async messageId => {
 	return okResponse('Mensaje visto', { chat: updatedChat });
 };
 
-const setUserOnline = async user => {
-	const data = {
-		user,
-	};
-	pusher.trigger('user-status', 'online', data, pusherCallback);
-	return okResponse('Usuario conectado', user);
-};
-
-const setUserOffline = async user => {
-	const data = {
-		user,
-	};
-	pusher.trigger('user-status', 'offline', data, pusherCallback);
-	return okResponse('Usuario desconectado', user);
-};
-
 const chatService = {
 	startConversation,
 	getMessages,
@@ -150,8 +136,6 @@ const chatService = {
 	sendMessage,
 	createReport,
 	readMessage,
-	setUserOnline,
-	setUserOffline,
 };
 
 export default Object.freeze(chatService);

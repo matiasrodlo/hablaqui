@@ -8,7 +8,7 @@
 						accesskey="h"
 						style="max-width: 150px"
 						class="mx-auto my-5"
-						:src="`${$config.LANDING_URL}/logo.png`"
+						:src="`https://cdn.hablaqui.cl/static/logo.png`"
 						alt="hablaqui logo"
 					/>
 				</nuxt-link>
@@ -42,8 +42,8 @@
 					accesskey="h"
 					style="max-width: 160px"
 					alt="hablaqui Logo"
-					:src="`${$config.LANDING_URL}/logo_white.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo_white.png`"
+					:src="`https://cdn.hablaqui.cl/static/logo_white.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo_white.png`"
 					contain
 				/>
 			</nuxt-link>

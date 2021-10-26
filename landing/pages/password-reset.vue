@@ -33,82 +33,43 @@
 								text--secondary
 							"
 						>
-							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
-							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>
-							<span v-show="step === 3">Recupera tu contraseña</span>
-						</v-col>
-						<v-col
-							cols="12"
-							sm="9"
-							lg="6"
-							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
-						>
-							<span v-show="step === 1"
-								>Ingresa y continúa tu viaje de desarrollo personal ahora
-								mismo.</span
-							>
-							<span v-show="step === 2"
-								>Regístrate para iniciar tu camino de desarrollo personal</span
-							>
-							<span v-show="step === 3">
-								Continua disfrutando de los beneficios de hablaquí
-							</span>
+							<span>Ingresa tu nueva contraseña</span>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
-							<v-window v-model="step">
-								<v-window-item :value="1">
-									<sign-in :set-reset-password="() => (step = 3)" />
-								</v-window-item>
-								<v-window-item :value="2">
-									<sign-up />
-								</v-window-item>
-								<v-window-item :value="3">
-									<Send-password-recovery :go-back="() => (step = 1)" />
-								</v-window-item>
-							</v-window>
-							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
-								<small v-if="step == 1"> ¿No eres parte de Hablaquí? </small>
-								<small v-else>¿Ya tienes cuenta Hablaquí?</small>
-							</div>
-							<v-btn
-								v-show="step == 2 || step === 3"
-								outlined
-								block
-								rounded
-								color="primary"
-								@click="setStep"
-							>
-								Entra
-							</v-btn>
-							<v-btn
-								v-show="step == 1"
-								outlined
-								block
-								rounded
-								color="primary"
-								@click="setStep"
-							>
-								Crea una cuenta
-							</v-btn>
-							<div class="mt-16">
-								<v-btn class="px-0" text color="primary" :to="{ name: 'politicas' }"
-									>Aviso de privacidad</v-btn
-								>
-								<span class="primary--text mx-1">y</span>
+							<v-form @submit.prevent="onSubmit">
+								<v-text-field
+									v-model.trim="$v.formData.newPassword.$model"
+									label="Contraseña"
+									:type="showPassword ? 'text' : 'password'"
+									outlined
+									:prepend-icon="mdiLock"
+									:append-icon="showPassword ? mdiEye : mdiEyeOff"
+									:error-messages="passwordErrors"
+									@click:append="showPassword = !showPassword"
+								></v-text-field>
+								<v-text-field
+									v-model.trim="$v.formData.repeatedPassword.$model"
+									:type="showRepeatPassword ? 'text' : 'password'"
+									outlined
+									:prepend-icon="mdiLock"
+									label="Repita la contraseña"
+									:append-icon="showRepeatPassword ? mdiEye : mdiEyeOff"
+									:error-messages="repetPasswordErrors"
+									@click:append="showRepeatPassword = !showRepeatPassword"
+								></v-text-field>
 								<v-btn
-									class="px-0"
-									text
+									:loading="loading"
+									:disabled="loading"
+									type="submit"
+									block
+									rounded
 									color="primary"
-									:to="{ name: 'condiciones' }"
 								>
-									Términos y Condiciones</v-btn
-								>
-							</div>
-							<div class="font-weight-bold caption secondary--text">
-								2021 Hablaqui
-							</div>
+									Enviar
+								</v-btn>
+							</v-form>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -178,23 +139,51 @@
 					</v-item-group>
 				</v-col>
 			</v-row>
+			<v-dialog v-model="dialog" max-width="500" persistent>
+				<v-card>
+					<v-card-title class="text-h5">
+						<span>Su contraseña ha sido restablecida</span>
+					</v-card-title>
+					<v-card-text>
+						<span class="mr-2">Redirigiendo al login... </span>
+						<v-progress-circular
+							size="18"
+							indeterminate
+							color="primary"
+						></v-progress-circular>
+					</v-card-text>
+				</v-card>
+			</v-dialog>
 		</v-container>
 	</div>
 </template>
 
 <script>
-import { mdiRecord } from '@mdi/js';
+import { mdiRecord, mdiEye, mdiEyeOff, mdiLock } from '@mdi/js';
+import { validationMixin } from 'vuelidate';
+import { mapMutations } from 'vuex';
+import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
+import axios from 'axios';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
-	components: {
-		SignIn: () => import('~/components/auth/SignIn'),
-		SignUp: () => import('~/components/auth/SignUp'),
-		SendPasswordRecovery: () => import('~/components/auth/SendPasswordRecovery'),
-		Icon: () => import('~/components/Icon'),
-	},
+	name: 'PasswordRecovery',
+	mixins: [validationMixin],
 	layout: 'simple',
 	data() {
 		return {
+			dialog: false,
+			mdiLock,
+			mdiEyeOff,
+			mdiEye,
+			loading: false,
+			formData: {
+				newPassword: '',
+				repeatedPassword: '',
+			},
+			token: '',
+			showPassword: false,
+			showRepeatPassword: false,
 			mdiRecord,
 			length: [
 				{
@@ -219,51 +208,88 @@ export default {
 				},
 			],
 			carousel: 0,
-			menu: false,
-			step: 1,
-			fromRoute: '',
 		};
 	},
-	head() {
-		return {
-			meta: [
-				{
-					hid: 'twitter:url',
-					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/auth',
-				},
-				{
-					hid: 'twitter:title',
-					name: 'twitter:title',
-					content: `Ingresa o registrate | Hablaquí`,
-				},
-				{
-					hid: 'og:url',
-					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/auth',
-				},
-				{
-					hid: 'og:title',
-					property: 'og:title',
-					content: `Ingresa o registrate | Hablaquí`,
-				},
-			],
-			link: [{ rel: 'canonical', href: `https://cdn.hablaqui.cl/static/auth/` }],
-		};
+	computed: {
+		passwordErrors() {
+			const errors = [];
+			if (!this.$v.formData.newPassword.$dirty) return errors;
+			!this.$v.formData.newPassword.required && errors.push('Campo querido');
+			!this.$v.formData.newPassword.maxLength && errors.push('Maximo 100 caracteres');
+			!this.$v.formData.newPassword.minLength && errors.push('Minimo 5 caracteres');
+			return errors;
+		},
+		repetPasswordErrors() {
+			const errors = [];
+			if (!this.$v.formData.repeatedPassword.$dirty) return errors;
+			!this.$v.formData.repeatedPassword.required && errors.push('Campo querido');
+			!this.$v.formData.repeatedPassword.sameAsPassword &&
+				errors.push('Las contraseñas no son iguales');
+			return errors;
+		},
 	},
 	created() {
-		if (this.$route.params.q) this.step = 2;
+		if (this.$route.query.token) {
+			this.token = this.$route.query.token;
+			this.deleteQueryFromRoute();
+		} else {
+			this.$router.push({ name: 'auth' });
+		}
 	},
 	methods: {
-		setStep() {
-			if (this.step === 1) this.step = 2;
-			else this.step = 1;
+		async onSubmit() {
+			this.$v.$touch();
+			if (!this.$v.$invalid) {
+				try {
+					this.loading = true;
+					await axios(`${this.$config.API_URL}/user/reset-password`, {
+						method: 'patch',
+						data: { password: this.formData.newPassword },
+						headers: {
+							Authorization: `Bearer ${this.token}`,
+						},
+					});
+					this.loading = false;
+					this.logout();
+				} catch (error) {
+					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+				} finally {
+					this.loading = !this.loading;
+				}
+			}
 		},
 		next() {
 			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
 		},
 		prev() {
 			this.carousel = this.carousel - 1 < 0 ? this.length - 1 : this.carousel - 1;
+		},
+		deleteQueryFromRoute() {
+			this.$router.replace({ query: null });
+		},
+		logout() {
+			this.$auth.logout();
+			this.dialog = true;
+			setTimeout(() => {
+				this.dialog = false;
+				this.$router.push('/auth');
+			}, 3000);
+		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
+	},
+	validations: {
+		formData: {
+			newPassword: {
+				required,
+				minLength: minLength(5),
+				maxLength: maxLength(100),
+			},
+			repeatedPassword: {
+				required,
+				sameAsPassword: sameAs('newPassword'),
+			},
 		},
 	},
 };

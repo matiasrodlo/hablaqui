@@ -67,7 +67,7 @@ const getArticle = async slug => {
 	return okResponse(`articulo encontrado ${slug}`, { article });
 };
 
-const updateRating = async (newRating, slug, body) => {
+const updateRating = async (newRating, slug) => {
 	newRating = Number(newRating);
 	const article = await Article.findOne({ slug });
 

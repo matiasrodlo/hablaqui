@@ -34,7 +34,7 @@ export default {
 			const { data } = await this.$axios(`/chat/get-messages/${psy}/${user}`, {
 				method: 'GET',
 			});
-			commit('setChat', data.messages);
+			commit('setChat', { ...data.messages, url: data.url });
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

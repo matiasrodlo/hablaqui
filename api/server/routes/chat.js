@@ -66,24 +66,4 @@ chatRouter.patch(
 	chatController.readMessage
 );
 
-/**
- * Pone al usuario loggeado como "en linea"
- * NECESITA AUTENTICACION.
- */
-chatRouter.post(
-	'/chat/set-status/online',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.setUserOnline
-);
-
-/**
- * Pone al usuario loggeado como "desconectado"
- * NECESITA AUTENTICACION.
- */
-chatRouter.post(
-	'/chat/set-status/offline',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.setUserOffline
-);
-
 export default Object.freeze(chatRouter);

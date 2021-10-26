@@ -159,7 +159,7 @@
 				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
 					<img
 						style="height: 40px"
-						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						:src="`https://cdn.hablaqui.cl/static/redes_sociales.png`"
 						alt="redes sociales"
 						class="mb-4 mb-md-0"
 					/>
@@ -189,7 +189,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/politicas/`,
+					href: `https://cdn.hablaqui.cl/static/politicas/`,
 				},
 			],
 		};

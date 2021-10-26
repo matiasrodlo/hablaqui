@@ -58,6 +58,32 @@ const mailService = {
 			}
 		});
 	},
+
+	async sendGuestNewUser(psy, newUser, pass) {
+		const { name, email } = newUser;
+		const dataPayload = {
+			from: 'Hablaquí <invitaciones@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-invitaciones@mail.hablaqui.com',
+			subject:
+				'¡Bienvenido/a! Fuiste invitado por tu psicólogo a Hablaquí',
+			template: 'welcome-user-by-psy',
+			'v:name': name,
+			'v:email': email,
+			'v:password': pass,
+			'v:psy_first_name': psy.name,
+			'v:psy_last_name': psy.lastName,
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
 	 * @param {Object} user - A User object from the database, corresponding to the client

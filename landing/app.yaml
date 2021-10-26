@@ -1,5 +1,5 @@
-runtime: nodejs10
-instance_class: F2
+runtime: nodejs14
+instance_class: F1
 
 handlers:
     - url: /_nuxt

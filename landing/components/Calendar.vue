@@ -71,10 +71,8 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -92,7 +90,6 @@ export default {
 			mdiChevronLeft,
 			mdiChevronRight,
 			slide: 0,
-			today: moment(),
 			selected: null,
 			loading: false,
 		};

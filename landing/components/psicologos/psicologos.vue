@@ -318,8 +318,8 @@
 												height="100"
 												width="100"
 												class="mx-auto"
-												:src="`${$config.LANDING_URL}/Lupa.png`"
-												:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+												:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 											>
 												<template #placeholder>
 													<v-row
@@ -383,41 +383,13 @@
 									>
 										<v-card-text style="height: 250px">
 											<div>
-												<v-avatar
+												<avatar
+													:url="avatar(item, true)"
+													:name="item.name"
+													:last-name="item.lastName ? item.lastName : ''"
 													size="100"
-													:color="item.avatar ? 'trasnparent' : 'primary'"
-												>
-													<v-img
-														v-if="item.avatar"
-														:src="item.avatar"
-														:lazy-src="item.avatar"
-														width="100"
-														height="100"
-													>
-														<template #placeholder>
-															<v-row
-																class="fill-height ma-0"
-																align="center"
-																justify="center"
-															>
-																<v-progress-circular
-																	indeterminate
-																	color="primary"
-																/>
-															</v-row>
-														</template>
-													</v-img>
-													<span
-														v-else
-														class="
-															white--text
-															headline
-															font-weight-bold
-														"
-													>
-														{{ item.name.substr(0, 1) }}
-													</span>
-												</v-avatar>
+													loading-color="white"
+												></avatar>
 												<nuxt-link
 													v-if="item.name"
 													style="text-decoration: none; display: block"
@@ -494,8 +466,8 @@
 														height="140"
 														width="140"
 														class="mx-auto"
-														:src="`${$config.LANDING_URL}/Lupa.png`"
-														:lazy-src="`${$config.LANDING_URL}/Lupa.png`"
+														:src="`https://cdn.hablaqui.cl/static/Lupa.png`"
+														:lazy-src="`https://cdn.hablaqui.cl/static/Lupa.png`"
 													>
 														<template #placeholder>
 															<v-row
@@ -567,55 +539,19 @@
 										<v-card-text>
 											<v-row align="center" justify="center">
 												<v-col cols="12" sm="3" class="text-center">
-													<v-avatar
+													<avatar
+														:url="avatar(item, false)"
+														:name="item.name"
+														:last-name="
+															item.lastName ? item.lastName : ''
+														"
 														:size="
 															$vuetify.breakpoint.lgAndUp
 																? '200'
 																: '140'
 														"
-														:color="
-															item.avatar ? 'trasnparent' : 'primary'
-														"
-													>
-														<v-img
-															v-if="item.avatar"
-															:src="item.avatar"
-															:lazy-src="item.avatar"
-															:width="
-																$vuetify.breakpoint.lgAndUp
-																	? '200'
-																	: '140'
-															"
-															:height="
-																$vuetify.breakpoint.lgAndUp
-																	? '200'
-																	: '140'
-															"
-														>
-															<template #placeholder>
-																<v-row
-																	class="fill-height ma-0"
-																	align="center"
-																	justify="center"
-																>
-																	<v-progress-circular
-																		indeterminate
-																		color="primary"
-																	/>
-																</v-row>
-															</template>
-														</v-img>
-														<span
-															v-else
-															class="
-																white--text
-																headline
-																font-weight-bold
-															"
-														>
-															{{ item.name.substr(0, 1) }}
-														</span>
-													</v-avatar>
+														loading-color="white"
+													></avatar>
 													<div
 														class="
 															text-center
@@ -744,6 +680,7 @@ import { mdiMenu, mdiViewGridOutline } from '@mdi/js';
 export default {
 	name: 'AllPsicologos',
 	components: {
+		Avatar: () => import('~/components/Avatar'),
 		DialogAgendaCitaOnline: () => import('~/components/psicologos/DialogAgendaCitaOnline'),
 		Icon: () => import('~/components/Icon'),
 	},
@@ -878,6 +815,12 @@ export default {
 			this.gender = payload.gender;
 			this.models = [payload.model];
 			this.specialties = payload.themes;
+		},
+		avatar(psychologist, thumbnail) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

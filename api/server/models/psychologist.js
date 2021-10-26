@@ -3,13 +3,13 @@
 import { Schema, model } from 'mongoose';
 
 let defaultSchedule = {
-	monday: ['09:00', '17:00'],
-	tuesday: ['09:00', '17:00'],
-	wednesday: ['09:00', '17:00'],
-	thursday: ['09:00', '17:00'],
-	friday: ['09:00', '17:00'],
-	saturday: ['busy', 'busy'],
-	sunday: ['busy', 'busy'],
+	monday: [['09:00', '17:00']],
+	tuesday: [['09:00', '17:00']],
+	wednesday: [['09:00', '17:00']],
+	thursday: [['09:00', '17:00']],
+	friday: [['09:00', '17:00']],
+	saturday: 'busy',
+	sunday: 'busy',
 };
 
 let defaultPreferences = {
@@ -74,6 +74,14 @@ let rating = new Schema(
 let psychologist = new Schema({
 	avatar: {
 		type: String,
+		default: '',
+	},
+	avatarThumbnail: {
+		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
 	},
 	code: {
 		type: String,
@@ -98,7 +106,6 @@ let psychologist = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	gender: {
 		type: String,
@@ -162,5 +169,4 @@ let psychologist = new Schema({
 	},
 });
 
-//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
 export default model('psychologist', psychologist);
