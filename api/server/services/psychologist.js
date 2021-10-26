@@ -1,6 +1,7 @@
 'use strict';
 
 import { logInfo } from '../config/pino';
+import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
@@ -81,7 +82,7 @@ const setSession = (user, psychologist) => {
 				sessionId: item._id,
 				idUser,
 				idPsychologist: psychologist._id,
-				url: `https://rooms.hablaqui.com/room/${idUser}-${psychologist._id}`,
+				url: `${room}${idUser}-${psychologist._id}`,
 			};
 		})
 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');

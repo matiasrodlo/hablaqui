@@ -2,6 +2,7 @@
 
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
+import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
@@ -27,7 +28,7 @@ const getMessages = async (user, psy) => {
 			psychologist: psy,
 			user: user,
 		}).populate('user psychologist'),
-		url: `https://rooms.hablaqui.com/room/${user}-${psy}`,
+		url: `${room}${user}-${psy}`,
 	});
 };
 
