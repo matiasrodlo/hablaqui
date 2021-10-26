@@ -425,7 +425,7 @@
 				<div class="body-2 text-center text--secondary font-weight-bold">
 					Nº de Sesiones
 				</div>
-				<div class="body-1 text-center text--secondary font-weight-bold my-1">0/0</div>
+				<div class="headline text-center text--secondary font-weight-bold my-1">0/0</div>
 				<div class="body-2 text-center text--secondary font-weight-bold mt-16">
 					Siguiente sesión
 				</div>
@@ -434,6 +434,30 @@
 				</v-btn>
 			</v-col>
 		</v-row>
+		<v-dialog
+			v-if="dialogSearchNow"
+			v-model="dialogSearchNow"
+			max-width="300"
+			class="rounded-xl"
+			transition="dialog-top-transition"
+		>
+			<v-card rounded="xl">
+				<v-card-text class="text-center primary--text text-h5 py-3">
+					<div class="body-1 font-weight-bold text-center">
+						Comienza a hablar con nuestros psicólogos
+					</div>
+				</v-card-text>
+				<v-card-text class="text-center">
+					<small class="py-2 text--secondary">
+						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
+						vida hoy
+					</small>
+				</v-card-text>
+				<v-card-text class="text-center">
+					<v-btn color="primary" rounded to="/psicologos">Buscar ahora</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 
@@ -535,6 +559,7 @@ export default {
 			'23:00',
 		],
 		idClient: null,
+		dialogSearchNow: false,
 	}),
 	computed: {
 		emailErrors() {
@@ -632,8 +657,13 @@ export default {
 			this.type = 'day';
 		},
 		addAppointment({ date }) {
-			this.date = date;
-			this.dialogAppointment = true;
+			// TODO: without psychologist
+			const withoutPsychologist = true;
+			if (withoutPsychologist) this.dialogSearchNow = true;
+			else {
+				this.date = date;
+				this.dialogAppointment = true;
+			}
 		},
 		setToday() {
 			this.focus = moment().format('YYYY-MM-DD');
