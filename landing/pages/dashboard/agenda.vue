@@ -421,14 +421,16 @@
 					</v-row>
 				</v-sheet>
 			</v-col>
-			<v-col md="2" class="mt-16 hidden-sm-and-down">
-				<v-btn
-					text
-					nuxt
-					to="/psicologos"
-					class="primary--text font-weight-bold body-1 pointer"
-				>
-					Adquirir
+			<v-col md="2" class="mt-16 hidden-sm-and-down text-center">
+				<div class="body-2 text-center text--secondary font-weight-bold">
+					Nº de Sesiones
+				</div>
+				<div class="body-1 text-center text--secondary font-weight-bold my-1">0/0</div>
+				<div class="body-2 text-center text--secondary font-weight-bold mt-16">
+					Siguiente sesión
+				</div>
+				<v-btn text nuxt to="/psicologos">
+					<span class="body-1 primary--text font-weight-bold">Adquirir</span>
 				</v-btn>
 			</v-col>
 		</v-row>
