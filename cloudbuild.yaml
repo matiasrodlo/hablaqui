@@ -1,30 +1,30 @@
 steps:
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["install"]
     dir: "landing"
     id: "install-landing"
     waitFor: ["-"]
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["run", "create-env"]
     env:
-      - "FRONTEND_URL=${_FRONTEND_URL}"
       - "API_ABSOLUTE=${_API_ABSOLUTE}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
+      - "FRONTEND_URL=${_FRONTEND_URL}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
-      - "PUSHER_SECRET=${_PUSHER_SECRET}"
-      - "PUSHER_KEY=${_PUSHER_KEY}"
       - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
-      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_URL=${_VUE_APP_URL}"
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
-  - name: node:12.10.0
+  - name: node:14
     entrypoint: npm
     args: ["run", "generate"]
     dir: "landing"
@@ -35,35 +35,37 @@ steps:
     dir: "landing"
     id: "deploy-landing"
     waitFor: ["envvars-landing", "install-landing", "generate-landing"]
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: npm
     args: ["install"]
     dir: "api"
     id: "install-api"
     waitFor: ["-"]
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: npm
     args: ["run", "create-env"]
     env:
-      - "FRONTEND_URL=${_FRONTEND_URL}"
-      - "LANDING_URL=${_LANDING_URL}"
       - "API_URL=${_API_URL}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
-      - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
-      - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
-      - "PUSHER_SECRET=${_PUSHER_SECRET}"
-      - "PUSHER_KEY=${_PUSHER_KEY}"
-      - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
-      - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
-      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
-      - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "BUCKETNAME=${_BUCKETNAME}"
+      - "FRONTEND_URL=${_FRONTEND_URL}"
+      - "GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}"
+      - "GOOGLE_CLIENT_REDIRECT=${_GOOGLE_CLIENT_REDIRECT}"
+      - "GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}"
+      - "LANDING_URL=${_LANDING_URL}"
       - "MAILGUN_API_KEY=${_MAILGUN_API_KEY}"
+      - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "NO_REPLY_EMAIL=${_NO_REPLY_EMAIL}"
       - "NO_REPLY_PASSWORD=${_NO_REPLY_PASSWORD}"
-      - "GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}"
-      - "GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}"
-      - "GOOGLE_CLIENT_REDIRECT=${_GOOGLE_CLIENT_REDIRECT}"
+      - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
+      - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
+      - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
+      - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_URL=${_VUE_APP_URL}"
+      - "URLDB=${_URLDB}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]

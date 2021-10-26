@@ -1,16 +1,23 @@
 'use strict';
 
 import { logInfo } from '../config/pino';
+import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import chat from './chat';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
-import momentz from 'moment-timezone';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
+
+import {
+	bucket,
+	getPublicUrlAvatar,
+	getPublicUrlAvatarThumb,
+} from '../config/bucket';
+import psychologist from '../models/psychologist';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -18,207 +25,143 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
-// const getSessions = async (user, idPsy) => {
-// 	const psychologist = await Psychologist.findById(idPsy).populate({
-// 		path: 'sessions.user',
-// 		model: 'User',
-// 		select: 'name lastName _id',
-// 	});
+const getSessions = async (user, idPsy) => {
 
-// 	const sessions = setSession(user, psychologist);
+	const sessions = await Sessions.find({ psychologist: idPsy, user: user });
+	const mappedSessions = setSession(user, idPsy, sessions);
 
-// 	logInfo('obtuvo todos las sesiones');
-// 	return okResponse('sesiones obtenidas', { sessions });
-// };
+	logInfo('obtuvo todos las sesiones');
+	return okResponse('sesiones obtenidas', { mappedSessions });
+};
 
-// const setSession = (user, psychologist) => {
-// 	let sessions = [];
+// Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
+const setSession = (user, psychologist, sessions) => {
 
-// 	if (user.role === 'user')
-// 		sessions = psychologist.sessions.filter(session => {
-// 			return (
-// 				session.user &&
-// 				!Array.isArray(session.user) &&
-// 				session.user._id.toString() === user._id.toString()
-// 			);
-// 		});
+	var filteredSessions;
 
-// 	if (user.role === 'psychologist')
-// 		sessions = sessions = psychologist.sessions;
+	if (user.role === 'user')
+		filteredSessions.push(...sessions);
 
-// 	sessions = sessions
-// 		.map(item => {
-// 			let name = '';
-// 			let lastName = '';
-// 			let idUser = '';
-// 			if (user.role === 'psychologist') {
-// 				if (item.user && !Array.isArray(item.user)) {
-// 					name = item.user.name;
-// 					lastName = item.user.lastName ? item.user.lastName : '';
-// 					idUser = item.user._id;
-// 				}
-// 			}
+	if (user.role === 'psychologist'){
+		// user is psychologist
+		filteredSessions.push(await Sessions.find({user: user._id}));
+	}
 
-// 			if (user.role === 'user') {
-// 				idUser = user._id;
-// 				name = psychologist.name;
-// 				lastName = psychologist.lastName;
-// 			}
+	allSessions = filteredSessions
+		.map(item => {
+			let name = '';
+			let lastName = '';
+			let idUser = item.user;
+			if (user.role === 'psychologist') {
+				if (item.user && !Array.isArray(item.user)) {
+					const user = await User.findById(item.user);
+					name = user.name;
+					lastName = user.lastName ? user.lastName : '';
+					idUser = user._id;
+				}
+			}
+			else if (user.role === 'user') {
+				if (item.user && !Array.isArray(item.user)) {
+					const psy = await Psychologist.findById(psychologist);
+					idUser = psy._id;
+					name = psy.name;
+					lastName = psy.lastName ? psy.lastName : '';
+				}
+			}
+			const currentSessions = item.session.map(session => {
+				const randomToken1 = (Math.random() + 1).toString(36).substring(2);
+				const randomToken2 = (Math.random() + 1).toString(36).substring(2);
+				const start = moment(session.date).format('DD-MM-YYYY hh:mm');
+				const end = moment(session.date)
+					.add(60, 'minutes')
+					.format('DD-MM-YYYY hh:mm');
+				return {
+					name: `${name} ${lastName}`,
+					details: `Sesion con ${name}`,
+					start,
+					end,
+					sessionId: item._id,
+					idUser,
+					idPsychologist: psychologist._id,
+					url: `${room}/room/${randomToken1}-${randomToken2}`,
+				};
+			});
+			return currentSessions;
+		})
+		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
+	return allSessions;
+};
 
-// 			const start = moment(item.date).format('YYYY-MM-DD hh:mm');
-// 			const end = moment(item.date)
-// 				.add(60, 'minutes')
-// 				.format('YYYY-MM-DD hh:mm');
-// 			return {
-// 				name: `${name} ${lastName}`,
-// 				details: `Sesion con ${name}`,
-// 				start,
-// 				end,
-// 				sessionId: item._id,
-// 				idUser,
-// 				idPsychologist: psychologist._id,
-// 			};
-// 		})
-// 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
-// 	return sessions;
-// };
+// Utilizado en modal agenda cita online
+const getFormattedSessions = async idPsychologist => {
+	let sessions = [];
+	const psychologist = await Psychologist.findById(idPsychologist);
+	const length = Array.from(Array(31), (_, x) => x);
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
 
-// const getFormattedSessions = async idPsychologist => {
-// 	moment.locale('es');
-// 	let sessions = [];
-// 	const psychologist = await Psychologist.findById(idPsychologist);
-// 	const length = Array.from(Array(31), (_, x) => x);
-// 	const hours = Array.from(Array(24), (_, x) =>
-// 		moment()
-// 			.hour(x)
-// 			.minute(0)
-// 			.format('HH:mm')
-// 	);
+	const psySessions = Sessions.find({psychologist: idPsychologist});
+	const daySessions = psySessions.session.map(session =>
+		moment(session.date).format('YYYY-MM-DD HH:mm')
+	);
 
-// 	const daySessions = psychologist.sessions.map(session =>
-// 		moment(session.date).format('YYYY-MM-DD HH:mm')
-// 	);
+	sessions = length.map(el => {
+		const day = moment().add(el, 'days');
 
-// 	sessions = length.map(el => {
-// 		const day = moment().add(el, 'days');
-// 		return {
-// 			id: el,
-// 			text: day.format('ddd'),
-// 			day: day.format('DD MMM'),
-// 			date: day.format('L'),
-// 			available: hours.filter(hour => {
-// 				return (
-// 					formattedSchedule(psychologist.schedule, day, hour) &&
-// 					moment(daySessions).isValid &&
-// 					!daySessions.some(
-// 						date =>
-// 							moment(date).format('L') ===
-// 								moment(day).format('L') &&
-// 							hour === moment(date).format('HH:mm')
-// 					)
-// 				);
-// 			}),
-// 		};
-// 	});
+		return {
+			id: el,
+			value: day,
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			available: hours.filter(hour => {
+				return (
+					formattedSchedule(psychologist.schedule, day, hour) &&
+					moment(daySessions).isValid &&
+					!daySessions.some(
+						date =>
+							moment(date).format('L') ===
+								moment(day).format('L') &&
+							hour === moment(date).format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
 
-// 	return okResponse('sesiones obtenidas', { sessions });
-// };
+	return okResponse('sesiones obtenidas', { sessions });
+};
 
 const formattedSchedule = (schedule, day, hour) => {
-	// VERSION 2
-	// let validHour = false;
-	// const week = [
-	// 	'monday',
-	// 	'tuesday',
-	// 	'wednesday',
-	// 	'thursday',
-	// 	'saturday',
-	// 	'sunday',
-	// ];
-	// day = moment(day).format('dddd');
-	// week.forEach(weekDay => {
-	// 	if (day.toLowerCase() === weekDay)
-	// 		if (Array.isArray(schedule[weekDay]))
-	// 			validHour = moment(hour, 'HH:mm').isBetween(
-	// 				moment(schedule[weekDay][0], 'HH:mm'),
-	// 				moment(schedule[weekDay][1], 'HH:mm'),
-	// 				undefined,
-	// 				[]
-	// 			);
-	// 		else if (schedule[weekDay] === 'busy') validHour = false;
-	// });
+	let validHour = false;
+	const week = [
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+		'sunday',
+	];
+	day = moment(day).format('dddd');
+	week.forEach(weekDay => {
+		if (day.toLowerCase() === weekDay)
+			if (Array.isArray(schedule[weekDay]))
+				validHour = schedule[weekDay].some(interval =>
+					moment(hour, 'HH:mm').isBetween(
+						moment(interval[0], 'HH:mm'),
+						moment(interval[1], 'HH:mm'),
+						undefined,
+						[]
+					)
+				);
+			else if (schedule[weekDay] === 'busy') validHour = false;
+	});
 
-	// return validHour;
-
-	if (moment(day).format('dddd') === 'lunes') {
-		if (Array.isArray(schedule.monday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.monday[0], 'HH:mm'),
-				moment(schedule.monday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.monday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'martes') {
-		if (Array.isArray(schedule.tuesday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.tuesday[0], 'HH:mm'),
-				moment(schedule.tuesday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.tuesday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'miércoles') {
-		if (Array.isArray(schedule.wednesday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.wednesday[0], 'HH:mm'),
-				moment(schedule.wednesday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.wednesday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'jueves') {
-		if (Array.isArray(schedule.thursday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.thursday[0], 'HH:mm'),
-				moment(schedule.thursday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.thursday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'viernes') {
-		if (Array.isArray(schedule.friday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.friday[0], 'HH:mm'),
-				moment(schedule.friday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.friday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'sábado') {
-		if (Array.isArray(schedule.saturday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.saturday[0], 'HH:mm'),
-				moment(schedule.saturday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-		else if (schedule.saturday === 'busy') return false;
-	}
-	if (moment(day).format('dddd') === 'domingo') {
-		if (Array.isArray(schedule.sunday))
-			return moment(hour, 'HH:mm').isBetween(
-				moment(schedule.sunday[0], 'HH:mm'),
-				moment(schedule.sunday[1], 'HH:mm'),
-				undefined,
-				[]
-			);
-	} else if (schedule.sunday === 'busy') return false;
+	return validHour;
 };
 
 const match = async body => {
@@ -499,11 +442,11 @@ const getByData = async username => {
 	const usernameSearch = await Psychologist.findOne({ username });
 	if (!usernameSearch) {
 		const idSearch = await Psychologist.findOne({ _id: username });
-		return okResponse('Psicologo encontrado', {
+		return okResponse('Psicólogo encontrado', {
 			psychologist: idSearch,
 		});
 	}
-	return okResponse('Psicologo encontrado', { psychologist: usernameSearch });
+	return okResponse('Psicólogo encontrado', { psychologist: usernameSearch });
 };
 
 const setSchedule = async (user, payload) => {
@@ -675,11 +618,20 @@ const getClients = async psychologist => {
 				name: user.name,
 				lastName: user.lastName,
 				avatar: user.avatar,
+				email: user.email,
 				_id: user._id,
 			};
 		})
 		.filter(user => user.role != 'psychologist');
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
+};
+
+const searchClients = async search => {
+	const foundUser = await User.find({ email: search, name: search });
+	if (!foundUser) {
+		return okResponse('No se encontró al usuario', { users: [] });
+	}
+	return okResponse('Usuario encontrado', { users: foundUser });
 };
 
 const usernameAvailable = async username => {
@@ -715,6 +667,82 @@ const updateFormationExperience = async (user, payload) => {
 	});
 };
 
+const uploadProfilePicture = async (psyID, picture) => {
+	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
+	const { name, lastName } = await User.findById(psyID);
+	const gcsname = `${psyID}-${name}-${lastName}`;
+	const file = bucket.file(gcsname);
+	const stream = file.createWriteStream({
+		metadata: {
+			contentType: picture.mimetype,
+		},
+	});
+	stream.on('error', err => {
+		picture.cloudStorageError = err;
+		conflictResponse('Error al subir la imagen');
+	});
+	stream.on('finish', () => {
+		logInfo(`${gcsname}` + ' subido exitosamente');
+	});
+	stream.end(picture.buffer);
+
+	await Psychologist.findByIdAndUpdate(psyID, {
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+	});
+
+	return okResponse('Imagen subida', {
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+	});
+};
+
+const customNewSession = async (user, payload) => {
+	if (user.role != 'psychologist')
+		return conflictResponse('No eres psicologo');
+
+	const newSession = {
+		typeSession: payload.type,
+		date: moment(payload.date).toISOString,
+		user: payload.type == 'commitment' ? '' : payload.user,
+		invitedByPsychologist: true,
+		price: payload.price,
+	};
+
+	let updatedPsychologist = Psychologist.findByIdAndUpdate(
+		user.psychologist,
+		{
+			$push: {
+				sessions: newSession,
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('sesion creada', {
+		session: newSession,
+		psychologist: updatedPsychologist,
+	});
+};
+
+const approveAvatar = async (user, id) => {
+	if (user.role !== 'superuser')
+		return conflictResponse(
+			'No tienes permisos suficientes para realizar esta acción'
+		);
+
+	const psychologist = await Psychologist.findByIdAndUpdate(
+		id,
+		{
+			approveAvatar: true,
+		},
+		{ new: true }
+	);
+	return okResponse('Avatar aprobado', {
+		psychologist,
+	});
+};
+
 const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
@@ -738,29 +766,35 @@ const paymentsInfo = async user => {
 };
 
 const psychologistsService = {
+	addRating,
+	approveAvatar,
+	cancelSession,
+	checkPlanTask,
+	createSession,
+	customNewSession,
+	deleteOne,
 	getAll,
+	getByData,
+	getClients,
+	getFormattedSessions,
+	getRating,
 	getSessions,
 	match,
 	register,
 	createPlan,
 	createSession,
 	reschedule,
-	getByData,
-	setSchedule,
-	updatePlan,
-	cancelSession,
-	updatePaymentMethod,
-	updatePsychologist,
-	deleteOne,
+	searchClients,
 	setPrice,
-	addRating,
-	getRating,
-	checkPlanTask,
-	getClients,
-	getFormattedSessions,
+	setSchedule,
+	updateFormationExperience,
+	updatePaymentMethod,
+	updatePlan,
+	updatePsychologist,
 	usernameAvailable,
 	updateFormationExperience,
 	paymentsInfo,
+	uploadProfilePicture,
 };
 
 export default Object.freeze(psychologistsService);

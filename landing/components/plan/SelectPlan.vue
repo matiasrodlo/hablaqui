@@ -145,6 +145,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		psychologist: {
+			type: Object,
+			default: null,
+		},
 	},
 	data() {
 		return {
@@ -157,32 +161,32 @@ export default {
 						{
 							id: 1,
 							lapse: '/semana',
-							total: '17.500',
-							price: '17.500',
+							total: '17500',
+							price: '17500',
 							type: 'Pago semanal',
 						},
 						{
 							id: 2,
 							lapse: '/semana ($63.000 mensual)',
-							price: '15.750',
+							price: '15750',
+							total: '63000',
 							type: 'Pago mensual',
-							total: '63.000',
 						},
 						{
 							id: 3,
 							lapse: '/semana ($168.000 mensual)',
-							price: '14.000',
-							total: '168.000',
+							price: '14000',
+							total: '168000',
 							type: 'Pago cada tres meses',
 						},
 					],
 					expandCard: false,
 					recommended: false,
-					price: '17.500',
+					price: '17500',
 					mode: 'Semana',
 					title: 'Sesiones por videollamada',
 					subtitle: 'Sesiones por videollamada (50 min)',
-					image: `${this.$config.LANDING_URL}/planOne.png`,
+					image: `https://cdn.hablaqui.cl/static/planOne.png`,
 					description:
 						'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.',
 				},
@@ -192,32 +196,32 @@ export default {
 						{
 							id: 4,
 							lapse: '/Semana',
-							price: '14.000',
-							total: '14.000',
+							price: '14000',
+							total: '14000',
 							type: 'Pago semanal',
 						},
 						{
 							id: 5,
 							lapse: '/semana ($50.400 mensual)',
-							total: '50.400',
-							price: '12.600',
+							total: '50400',
+							price: '12600',
 							type: 'Pago mensual',
 						},
 						{
 							id: 6,
 							lapse: '/semana ($134.400 trimestral)',
-							total: '134.400',
-							price: '11.200',
+							total: '134400',
+							price: '11200',
 							type: 'Pago cada tres meses',
 						},
 					],
 					recommended: false,
 					expandCard: false,
-					price: '14.000',
+					price: '14000',
 					mode: 'Semana',
 					title: 'Acompañamiento vía mensajería',
 					subtitle: 'Terapia vía mensajes de texto',
-					image: `${this.$config.LANDING_URL}/planTwo.png`,
+					image: `https://cdn.hablaqui.cl/static/planTwo.png`,
 					description:
 						'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
@@ -227,37 +231,107 @@ export default {
 						{
 							id: 7,
 							lapse: '/semana',
-							price: '22.000',
-							total: '22.000',
+							price: '22000',
+							total: '22000',
 							type: 'Pago semanal',
 						},
 						{
 							id: 8,
 							lapse: '/semana ($79.200 mensual)',
-							total: '79.200',
-							price: '19.800',
+							total: '79200',
+							price: '19800',
 							type: 'Pago mensual',
 						},
 						{
 							id: 9,
 							lapse: '/semana ($211.200 trimestral)',
-							total: '211.200',
-							price: '17.600',
+							total: '211200',
+							price: '17600',
 							type: 'Pago cada tres meses',
 						},
 					],
 					recommended: true,
 					expandCard: false,
-					price: '22.000',
+					price: '22000',
 					mode: 'Semana',
 					title: 'Mensajería y videollamada',
 					subtitle: 'Mensajería + Videollamada (30min)',
-					image: `${this.$config.LANDING_URL}/planThree.png`,
+					image: `https://cdn.hablaqui.cl/static/planThree.png`,
 					description:
 						'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
 			],
 		};
+	},
+	mounted() {
+		this.setPrices();
+	},
+	methods: {
+		/**
+		 * Set prices
+		 */
+		setPrices() {
+			if (this.psychologist.sessionPrices)
+				this.plans = this.plans.map((item, i) => {
+					if (item.title === 'Mensajería y videollamada') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.full,
+							deals: item.deals.map(deal => this.setDeals(deal, 'full')),
+						};
+					}
+					if (item.title === 'Acompañamiento vía mensajería') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.text,
+							deals: item.deals.map(deal => this.setDeals(deal, 'text')),
+						};
+					}
+					if (item.title === 'Sesiones por videollamada') {
+						return {
+							...item,
+							price: this.psychologist.sessionPrices.video,
+							deals: item.deals.map(deal => this.setDeals(deal, 'video')),
+						};
+					} else return { ...item };
+				});
+		},
+		/**
+		 * Set values
+		 * @param deal
+		 * @param type
+		 * @returns {{total: number, lapse, price: number}}
+		 */
+		setDeals(deal, type) {
+			let price;
+			let lapse;
+			let total;
+			if (deal.type === 'Pago semanal') {
+				lapse = deal.lapse;
+				price = this.psychologist.sessionPrices[type];
+				total = this.psychologist.sessionPrices[type];
+			}
+			if (deal.type === 'Pago mensual') {
+				price =
+					this.psychologist.sessionPrices[type] * 4 -
+					this.psychologist.sessionPrices[type] * 4 * 0.1;
+				lapse = `/semana ($${price * 4} mensual)`;
+				total = price * 4;
+			}
+			if (deal.type === 'Pago cada tres meses') {
+				price =
+					this.psychologist.sessionPrices[type] * 12 -
+					this.psychologist.sessionPrices[type] * 12 * 0.2;
+				lapse = `/semana ($${price * 12} mensual)`;
+				total = price * 12;
+			}
+			return {
+				...deal,
+				price,
+				total,
+				lapse,
+			};
+		},
 	},
 };
 </script>

@@ -12,7 +12,7 @@ const couponController = {
 			const { data, code } = await couponService.newCoupon(user, payload);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback('Error creando el cupon');
+			return errorCallback(e, res);
 		}
 	},
 
@@ -26,7 +26,7 @@ const couponController = {
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback('Error verificado el cupon');
+			return errorCallback(e, res);
 		}
 	},
 };

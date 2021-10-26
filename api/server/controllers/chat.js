@@ -80,26 +80,6 @@ const chatController = {
 			return errorCallback(e, res, 'Error actualizando el chat');
 		}
 	},
-	async setUserOnline(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await chatService.setUserOnline(user);
-
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error actualizando el estado');
-		}
-	},
-	async setUserOffline(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await chatService.setUserOffline(user);
-
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error actualizando el estado');
-		}
-	},
 };
 
 export default Object.freeze(chatController);

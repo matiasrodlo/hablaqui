@@ -4,7 +4,6 @@
 		<v-list two-line color="transparent" style="height: 150px">
 			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
-					v-if="$auth.$state.user.role == 'user'"
 					id="upload"
 					ref="avatar"
 					class="d-none"
@@ -17,19 +16,24 @@
 					@change="uploadAvatar"
 				></v-file-input>
 				<v-list-item-avatar size="150">
-					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
-						<v-progress-circular indeterminate color="primary"></v-progress-circular
-					></v-avatar>
-					<label v-else for="upload" style="cursor: pointer">
-						<v-avatar size="100" color="#EEE">
-							<v-img
-								v-if="$auth.$state.user && $auth.$state.user.avatar"
-								:src="$auth.$state.user.avatar"
-								:alt="$auth.$state.user.name"
-								contain
-							/>
-							<icon v-else x-large :icon="mdiCamera" />
-						</v-avatar>
+					<label for="upload" style="cursor: pointer; position: relative">
+						<avatar
+							:url="$auth.$state.user.avatar"
+							:name="$auth.$state.user.name"
+							:last-name="
+								$auth.$state.user.lastName ? $auth.$state.user.lastName : ''
+							"
+							size="100"
+							:loading="loadingAvatar"
+							loading-color="white"
+						></avatar>
+						<div
+							v-if="!loadingAvatar"
+							class="white rounded-circle elevation-1"
+							style="position: absolute; right: 0px; bottom: 0px; padding: 4px"
+						>
+							<icon size="30" color="primary" :icon="mdiCamera" />
+						</div>
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
@@ -46,19 +50,21 @@
 					style="position: absolute; top: -70px; left: 0; width: 100%"
 					class="text-center mx-auto"
 				>
-					<v-avatar v-if="loadingAvatar" size="150" color="#EEE">
-						<v-progress-circular indeterminate color="primary"></v-progress-circular
-					></v-avatar>
-					<label v-else for="upload" style="cursor: pointer">
-						<v-avatar size="100" color="#EEE">
-							<v-img
-								v-if="$auth.$state.user && $auth.$state.user.avatar"
-								:src="$auth.$state.user.avatar"
-								:alt="$auth.$state.user.name"
-								contain
-							/>
-							<icon v-else x-large :icon="mdiCamera" />
-						</v-avatar>
+					<label for="upload" style="cursor: pointer; position: relative">
+						<avatar
+							:url="$auth.$state.user.avatarThumbnail"
+							:name="$auth.$state.user.name"
+							size="100"
+							:loading="loadingAvatar"
+							loading-color="white"
+						></avatar>
+						<div
+							v-if="!loadingAvatar"
+							class="white rounded-circle elevation-1"
+							style="position: absolute; right: 0; bottom: -40px; padding: 4px"
+						>
+							<icon size="30" color="primary" :icon="mdiCamera" />
+						</div>
 					</label>
 				</div>
 				<v-list-item-content v-if="$auth.$state.user" class="mt-10">
@@ -125,13 +131,14 @@ import { mdiCamera } from '@mdi/js';
 
 export default {
 	components: {
-		appbar: () => import('~/components/dashboard/AppbarProfile'),
+		Appbar: () => import('~/components/dashboard/AppbarProfile'),
+		Avatar: () => import('~/components/Avatar'),
 		GeneralInformation: () => import('~/components/dashboard/General'),
+		Horario: () => import('~/components/dashboard/Horario'),
+		Icon: () => import('~/components/Icon'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
 		Psicologo: () => import('~/components/dashboard/Psicologo'),
 		Services: () => import('~/components/dashboard/Services'),
-		Horario: () => import('~/components/dashboard/Horario'),
-		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -178,14 +185,27 @@ export default {
 			this.psychologist = value;
 		},
 		async uploadAvatar(file) {
+			if (!file) return false;
 			this.loadingAvatar = true;
-			const user = await this.upateAvatar(this.setAvatarObject(file));
+			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
+			if (this.$auth.user.role === 'psychologist')
+				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
 		setAvatarObject(file) {
 			const avatar = new FormData();
 			avatar.append('avatar', file);
+			avatar.append('_id', this.$auth.$state.user._id);
+			avatar.append('name', this.$auth.$state.user.name);
+			avatar.append('lastName', this.$auth.$state.user.lastName);
+			avatar.append('idPsychologist', this.$auth.$state.user.psychologist);
+			avatar.append('role', this.$auth.$state.user.role);
+			avatar.append('oldAvatar', this.$auth.$state.user.avatar);
+			avatar.append(
+				'oldAvatarThumbnail',
+				this.$auth.$state.user.avatarThumbnail ? this.$auth.$state.user.avatarThumbnail : ''
+			);
 			return avatar;
 		},
 		...mapActions({
