@@ -27,6 +27,7 @@ const getMessages = async (user, psy) => {
 			psychologist: psy,
 			user: user,
 		}).populate('user psychologist'),
+		url: `https://rooms.hablaqui.com/room/${user}-${psy}`,
 	});
 };
 

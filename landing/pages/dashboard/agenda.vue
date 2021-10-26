@@ -96,7 +96,8 @@
 							<v-divider></v-divider>
 							<v-card-actions>
 								<v-btn
-									:to="`/video-llamada/${goToCall(selectedEvent)}`"
+									:href="selectedEvent.url"
+									target="_blank"
 									color="primary"
 									text
 								>
@@ -660,9 +661,6 @@ export default {
 			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
 				.add(60, 'minutes')
 				.format('hh:mm')}`;
-		},
-		goToCall(selectedEvent) {
-			return `${selectedEvent.idPsychologist} ${selectedEvent.idUser}`;
 		},
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });

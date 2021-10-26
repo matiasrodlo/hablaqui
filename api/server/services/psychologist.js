@@ -35,6 +35,7 @@ const getSessions = async (user, idPsy) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
+// Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = (user, psychologist) => {
 	let sessions = [];
 
@@ -80,12 +81,14 @@ const setSession = (user, psychologist) => {
 				sessionId: item._id,
 				idUser,
 				idPsychologist: psychologist._id,
+				url: `https://rooms.hablaqui.com/room/${idUser}-${psychologist._id}`,
 			};
 		})
 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
 	return sessions;
 };
 
+// Utilizado en modal agenda cita online
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	const psychologist = await Psychologist.findById(idPsychologist);
