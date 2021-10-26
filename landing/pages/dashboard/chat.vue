@@ -290,7 +290,7 @@
 										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
-								<v-btn id="camheader" icon :href="chat.url">
+								<v-btn id="camheader" icon :href="chat.url" target="_blank">
 									<v-img
 										contain
 										height="25"
