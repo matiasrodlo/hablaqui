@@ -427,7 +427,7 @@
 				</div>
 				<div class="headline text-center text--secondary font-weight-bold my-1">0/0</div>
 				<div class="body-2 text-center text--secondary font-weight-bold mt-16">
-					Siguiente sesión
+					Próxima sesión
 				</div>
 				<v-btn text nuxt to="/psicologos">
 					<span class="body-1 primary--text font-weight-bold">Adquirir</span>
@@ -458,6 +458,134 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
+		<v-dialog
+			v-if="dialogHasSessions"
+			v-model="dialogHasSessions"
+			max-width="500"
+			class="rounded-xl"
+			transition="dialog-top-transition"
+		>
+			<v-card rounded="xl">
+				<v-card-text class="d-flex text-center primary white--text pt-2 pb-0">
+					<div class="body-1 font-weight-bold text-center" style="flex: 1">Agendar</div>
+					<v-btn style="flex: 0" icon @click="() => (dialogHasSessions = false)">
+						<icon :icon="mdiClose" color="white" />
+					</v-btn>
+				</v-card-text>
+				<v-card-text>
+					<v-row>
+						<v-col class="font-weight-medium" cols="12"> Tipo de evento </v-col>
+						<v-col cols="12">
+							<v-select
+								v-model="typeSession"
+								:items="[
+									{ text: 'Sesión online', value: 'sesion online' },
+									{
+										text: 'Sesión presencial',
+										value: 'sesion presencial',
+									},
+									{
+										text: 'Compromiso privado',
+										value: 'compromiso privado',
+									},
+								]"
+								dense
+								hide-details
+								label="Seleccione"
+								outlined
+							></v-select>
+						</v-col>
+						<v-col cols="6">
+							<v-menu
+								ref="menu"
+								v-model="menu"
+								:close-on-content-click="false"
+								:return-value.sync="date"
+								min-width="auto"
+								offset-y
+								transition="scale-transition"
+							>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										v-model="date"
+										dense
+										hide-details
+										outlined
+										:append-icon="mdiCalendar"
+										readonly
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-date-picker v-model="date" no-title scrollable>
+									<v-spacer></v-spacer>
+									<v-btn color="primary" text @click="menu = false">
+										Cancelar
+									</v-btn>
+									<v-btn color="primary" text @click="$refs.menu.save(date)">
+										Ok
+									</v-btn>
+								</v-date-picker>
+							</v-menu>
+						</v-col>
+						<v-col class="text-center py-2" cols="6">
+							<v-select
+								:items="hours"
+								dense
+								full-width
+								hide-details
+								label="Hora"
+								outlined
+							></v-select>
+						</v-col>
+					</v-row>
+					<v-row justify="center">
+						<v-col cols="6">
+							<v-btn rounded color="primary"> Agendar </v-btn>
+							<v-btn text @click="() => (dialogHasSessions = false)">
+								Cancelar
+							</v-btn>
+						</v-col>
+					</v-row>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
+		<v-dialog
+			v-if="dialogWithoutSessions"
+			v-model="dialogWithoutSessions"
+			:max-width="maxWidth"
+			transition="dialog-top-transition"
+		>
+			<v-card rounded="xl">
+				<v-card-text class="d-flex text-center primary white--text text-h5 py-3">
+					<v-btn v-if="step != 0" style="flex: 0" icon @click="() => (step -= 1)">
+						<icon :icon="mdiChevronLeft" x-large color="white" />
+					</v-btn>
+					<div style="flex: 1" class="body-1 font-weight-bold text-center">
+						Agenda la hora y el día de tu consulta
+					</div>
+				</v-card-text>
+				<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
+					<calendar
+						:id-psy="idPsychologist"
+						:set-date="e => setSchedule(e)"
+						title-button="Continuar"
+					/>
+				</v-card-text>
+				<v-card-text v-if="step == 1">
+					<select-plan :set-plan="setPlan" :psychologist="psychologist" />
+				</v-card-text>
+				<v-card-text v-if="step == 2">
+					<resume-plan
+						:close="() => (dialogWithoutSessions = false)"
+						:go-back="() => (step = 1)"
+						:plan="plan"
+						:psy="psychologist"
+						:event="newEvent"
+					/>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 
@@ -484,11 +612,14 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
+		SelectPlan: () => import('~/components/plan/SelectPlan'),
+		ResumePlan: () => import('~/components/plan/ResumePlan'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		step: 0,
 		form: null,
 		loadingCreatedUser: false,
 		menu: false,
@@ -560,8 +691,17 @@ export default {
 		],
 		idClient: null,
 		dialogSearchNow: false,
+		dialogHasSessions: false,
+		dialogWithoutSessions: false,
+		newEvent: null,
+		psychologist: null,
 	}),
 	computed: {
+		maxWidth() {
+			if (this.step === 0) return '700';
+			if (this.step === 1) return '900';
+			else return '800';
+		},
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -605,7 +745,11 @@ export default {
 		async initFetch() {
 			if (this.$auth.$state.user.role === 'user') {
 				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-				if (user) this.idPsychologist = user.psychologist;
+				if (user) {
+					this.idPsychologist = user.psychologist;
+					console.log('idPsychologist', this.idPsychologist);
+					this.psychologist = await this.getPsychologist(user.psychologist);
+				}
 			}
 			if (this.$auth.$state.user.role === 'psychologist')
 				this.idPsychologist = this.$auth.$state.user.psychologist;
@@ -648,6 +792,14 @@ export default {
 			this.event = null;
 			this.dialog = false;
 		},
+		setSchedule(item) {
+			this.newEvent = item;
+			this.step = 1;
+		},
+		setPlan(plan) {
+			this.plan = plan;
+			this.step = 2;
+		},
 		openDialog(item) {
 			this.event = item;
 			this.dialog = true;
@@ -657,10 +809,27 @@ export default {
 			this.type = 'day';
 		},
 		addAppointment({ date }) {
-			// TODO: without psychologist
-			const withoutPsychologist = true;
-			if (withoutPsychologist) this.dialogSearchNow = true;
-			else {
+			if (
+				moment(date).isBefore(moment()) &&
+				moment(date).format('l') !== moment().format('l')
+			)
+				return alert('No puede seleccionar dias pasados');
+
+			if (this.$auth.user.role === 'user') {
+				// TODO: esperando backend, estas variables deberian establecer dinamicamente segun el usuario
+
+				// TODO: Sin psicologo - sin sesiones
+				const withoutPsychologist = false;
+				if (withoutPsychologist) this.dialogSearchNow = false;
+
+				// TODO: con psicologo - con sesiones por agendar
+				const hasSessions = true;
+				if (hasSessions) this.dialogHasSessions = false;
+
+				// TODO: con psicologo - sin sesiones por agendar
+				const withoutSessions = true;
+				if (withoutSessions) this.dialogWithoutSessions = true;
+			} else if (this.$auth.user.role === 'psychologist') {
 				this.date = date;
 				this.dialogAppointment = true;
 			}
@@ -726,6 +895,7 @@ export default {
 			this.goBack();
 		},
 		...mapActions({
+			getPsychologist: 'Psychologist/getPsychologist',
 			updateSession: 'Psychologist/updateSession',
 			getSessions: 'Psychologist/getSessions',
 			setReschedule: 'Psychologist/setReschedule',
