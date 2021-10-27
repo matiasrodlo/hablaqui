@@ -318,6 +318,15 @@ const psychologistsController = {
 			);
 		}
 	},
+	async paymentsInfo(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.paymentsInfo(user);
+			return restResponse(data, code, res)
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la informacion de los pagos');
+		}
+	}
 };
 
 export default Object.freeze(psychologistsController);

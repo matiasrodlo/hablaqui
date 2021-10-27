@@ -10,6 +10,7 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
+import Sessions from '../models/sessions';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -26,7 +27,7 @@ const createPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
+			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
@@ -91,20 +92,16 @@ const createPsychologistPreference = async (body, res) => {
 };
 
 const successPay = async params => {
-	const { psyId, userId, sessionId } = params;
-	const foundPsychologist = await Psychologist.findOneAndUpdate(
+	const { planId } = params;
+	const updatedPlan = await Sessions.findByIdAndUpdate(
+		planId,
 		{
-			_id: psyId,
-			sessions: { $elemMatch: { _id: sessionId } },
+			$set: { 'plan.$.payment': 'successful' },
 		},
-		{ $set: { 'sessions.$.statePayments': 'successful' } },
 		{ new: true }
 	);
-	let foundUser = await User.findById(userId);
-	foundUser.plan[foundUser.plan.length - 1 || 0].status = 'success';
-	foundUser.psychologist = psyId;
-	foundUser.save();
 
+	// Aqui necesitas cambiarlo, no se muy bien como funciona el tema de correos.
 	// Email scheduling for appointment reminder for the user
 	const sessionData = foundPsychologist.sessions.filter(
 		session => session._id.toString() == sessionId

@@ -156,28 +156,23 @@ export default {
 		},
 		async payButton() {
 			this.loading = true;
-			const sessionPayload = {
+			const planPayload = {
 				date: this.event.date,
-				start: this.event.start,
-				end: this.event.end,
 				user: this.$auth.$state.user,
-				psychologist: this.psy,
+				psychologist: this.psy._id,
 				paymentPeriod: this.plan.deal.type,
 				title: this.plan.title,
 				price: this.pay ? this.pay : this.priceInt,
-				discountCoupon: this.pay ? this.coupon : '',
-				fullInfo: this.plan,
+				coupon: this.pay ? this.coupon : '',
 			};
-			const createdSession = await this.createSession(sessionPayload);
-			const payload = {
+			const createdPlan = await this.createPlan(planPayload);
+			const mercadopagoPayload = {
 				price: this.pay ? this.pay : this.priceInt,
-				title: this.plan.title,
+				description: this.plan.title,
 				quantity: 1,
-				sessionToUpdate: createdSession.id,
-				userToUpdate: this.$auth.$state.user._id,
-				psychologistToUpdate: this.psy._id,
+				plan: createdPlan._id,
 			};
-			const preferenceData = await this.mercadopagoPay(payload);
+			const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
 			this.loading = false;
 			window.location.href = preferenceData.body.init_point;
 		},

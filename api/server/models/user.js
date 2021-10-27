@@ -3,54 +3,6 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
-let planSchema = new Schema(
-	{
-		title: {
-			type: String,
-		},
-		fullInfo: {
-			type: Object,
-		},
-		period: {
-			type: String,
-		},
-		psychologist: {
-			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
-		},
-		price: {
-			type: Number,
-		},
-		sessionPrice: {
-			type: Number,
-		},
-		status: {
-			type: String,
-			default: 'pending',
-		},
-		expiration: {
-			type: String,
-		},
-		invitedByPsychologist: {
-			type: Boolean,
-			default: false,
-		},
-		usedCoupon: {
-			type: String,
-		},
-	},
-	{ timestamps: true }
-);
-let userState = new Schema({
-	psychologist: {
-		type: Schema.Types.ObjectId,
-		ref: 'psychologist',
-	},
-	state: {
-		type: String,
-		default: 'Sin estado',
-	},
-});
 let userSchema = new Schema({
 	name: {
 		type: String,
@@ -96,7 +48,6 @@ let userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	plan: [planSchema],
 	hasPaid: {
 		type: Boolean,
 		default: 'false',
