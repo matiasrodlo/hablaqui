@@ -290,7 +290,7 @@
 										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
-								<v-btn id="camheader" icon :to="`/video-llamada/${goToCall()}`">
+								<v-btn id="camheader" icon :href="chat.url" target="_blank">
 									<v-img
 										contain
 										height="25"
@@ -631,6 +631,7 @@ export default {
 					name: 'Habi',
 					assistant: true,
 					avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+					url: '',
 				};
 			}
 		}
@@ -739,17 +740,6 @@ export default {
 		},
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
-		},
-		goToCall() {
-			const psychologistId =
-				this.$auth.$state.user.role === 'psychologist'
-					? this.$auth.$state.user.psychologist
-					: this.selected._id;
-			const userId =
-				this.$auth.$state.user.role === 'psychologist'
-					? this.selected._id
-					: this.$auth.$state.user._id;
-			return psychologistId + userId;
 		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',

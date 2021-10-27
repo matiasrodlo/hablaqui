@@ -1,6 +1,7 @@
 'use strict';
 
 import { logInfo } from '../config/pino';
+import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
@@ -35,6 +36,7 @@ const getSessions = async (user, idPsy) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
+// Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = (user, psychologist) => {
 	let sessions = [];
 
@@ -47,8 +49,7 @@ const setSession = (user, psychologist) => {
 			);
 		});
 
-	if (user.role === 'psychologist')
-		sessions = sessions = psychologist.sessions;
+	if (user.role === 'psychologist') sessions = psychologist.sessions;
 
 	sessions = sessions
 		.map(item => {
@@ -81,12 +82,14 @@ const setSession = (user, psychologist) => {
 				sessionId: item._id,
 				idUser,
 				idPsychologist: psychologist._id,
+				url: `${room}${idUser}-${psychologist._id}`,
 			};
 		})
 		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
 	return sessions;
 };
 
+// Utilizado en modal agenda cita online
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	const psychologist = await Psychologist.findById(idPsychologist);
@@ -410,22 +413,6 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
-	for (let day in payload) {
-		if (Array.isArray(payload[day])) {
-			payload[day].sort();
-			for (let i = 0; i < payload[day].length - 1; i++) {
-				if (payload[day][0][0] !== 'busy')
-					if (
-						moment(payload[day][i][1], 'HH:mm').isAfter(
-							moment(payload[day][i + 1][0], 'HH:mm')
-						)
-					)
-						return false;
-			}
-		} else {
-			console.log(payload[day]);
-		}
-	}
 	let foundPsychologist = await Psychologist.findByIdAndUpdate(
 		user.psychologist,
 		{

@@ -149,15 +149,15 @@ export default {
 					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
-				{
-					name: 'Pagos',
-					link: { name: 'dashboard-pagos' },
-					img: `https://cdn.hablaqui.cl/static/pay.png`,
-					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
-				},
+				// {
+				// 	name: 'Pagos',
+				// 	link: { name: 'dashboard-pagos' },
+				// 	img: `https://cdn.hablaqui.cl/static/pay.png`,
+				// 	visible:
+				// 		this.$auth.$state.loggedIn &&
+				// 		this.$auth.$state.user.role === 'psychologist' &&
+				// 		this.$auth.$state.user.psychologist,
+				// },
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },
@@ -197,24 +197,10 @@ export default {
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
-	mounted() {
-		if (!this.listenerUserOnline) {
-			this.setListenerUserOnline(true);
-			document.addEventListener('visibilitychange', this.visibilityListener);
-			this.visibilityListener();
-		}
-	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
-		},
-		visibilityListener() {
-			if (document.visibilityState === 'visible') {
-				console.info('user online');
-			} else {
-				console.info('user offline');
-			}
 		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},

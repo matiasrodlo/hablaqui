@@ -96,7 +96,8 @@
 							<v-divider></v-divider>
 							<v-card-actions>
 								<v-btn
-									:to="`/video-llamada/${goToCall(selectedEvent)}`"
+									:href="selectedEvent.url"
+									target="_blank"
 									color="primary"
 									text
 								>
@@ -165,19 +166,22 @@
 								<v-row>
 									<v-col cols="6">
 										<v-text-field
+											v-model="form.name"
 											type="text"
 											dense
-											hide-details
 											outlined
 											label="Nombre"
+											hide-details="auto"
+											:error-messages="nameErrors"
 										>
 										</v-text-field>
 									</v-col>
 									<v-col cols="6">
 										<v-text-field
+											v-model="form.rut"
+											hide-details="auto"
 											type="text"
 											dense
-											hide-details
 											outlined
 											label="Rut"
 										>
@@ -185,52 +189,42 @@
 									</v-col>
 									<v-col cols="6">
 										<v-text-field
+											v-model="form.email"
 											type="email"
 											dense
-											hide-details
+											hide-details="auto"
 											outlined
 											label="email"
+											:error-messages="emailErrors"
 										>
 										</v-text-field>
 									</v-col>
 									<v-col cols="6">
 										<v-text-field
+											v-model="form.phone"
 											type="text"
 											dense
-											hide-details
+											hide-details="auto"
 											outlined
 											prefix="+56"
 											label="Teléfono"
 										>
 										</v-text-field>
 									</v-col>
-									<v-col cols="6">
-										<v-text-field
-											type="text"
-											dense
-											hide-details
-											outlined
-											label="Dirección"
-										>
-										</v-text-field>
-									</v-col>
-									<v-col cols="6">
-										<v-text-field
-											type="text"
-											dense
-											hide-details
-											outlined
-											label="Comuna"
-										>
-										</v-text-field>
-									</v-col>
 								</v-row>
 								<v-row justify="center">
 									<v-col cols="6">
-										<v-btn text @click="dialogNewUser = false">
-											Cancelar
+										<v-btn :disabled="loadingCreatedUser" text @click="goBack">
+											Atras
 										</v-btn>
-										<v-btn rounded color="primary"> Agregar </v-btn>
+										<v-btn
+											:loading="loadingCreatedUser"
+											rounded
+											color="primary"
+											@click="submitUser"
+										>
+											Agregar
+										</v-btn>
 									</v-col>
 								</v-row>
 							</v-card-text>
@@ -422,6 +416,8 @@
 <script>
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
+import { required, email } from 'vuelidate/lib/validators';
+import { validationMixin } from 'vuelidate';
 import {
 	mdiCheck,
 	mdiChevronLeft,
@@ -441,9 +437,12 @@ export default {
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
 	},
+	mixins: [validationMixin],
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		form: null,
+		loadingCreatedUser: false,
 		menu: false,
 		date: null,
 		typeSession: '',
@@ -514,6 +513,19 @@ export default {
 		idClient: null,
 	}),
 	computed: {
+		emailErrors() {
+			const errors = [];
+			if (!this.$v.form.email.$dirty) return errors;
+			!this.$v.form.email.required && errors.push('Se requiere correo electrónico');
+			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
+			return errors;
+		},
+		nameErrors() {
+			const errors = [];
+			if (!this.$v.form.name.$dirty) return errors;
+			!this.$v.form.name.required && errors.push('Se requiere rut');
+			return errors;
+		},
 		...mapGetters({ sessions: 'Psychologist/sessions', clients: 'Psychologist/clients' }),
 	},
 	watch: {
@@ -530,6 +542,7 @@ export default {
 		},
 	},
 	created() {
+		this.resetForm();
 		this.dialogAppointment = this.$route.query.dialog ? !!this.$route.query.dialog : false;
 		this.idClient = this.$route.query.client;
 	},
@@ -553,6 +566,28 @@ export default {
 				await this.getSessions(this.idPsychologist);
 				this.events = this.sessions;
 			}
+		},
+		async submitUser() {
+			this.$v.$touch();
+			if (!this.$v.$invalid) {
+				this.loadingCreatedUser = true;
+				await this.registerUser(this.form);
+				this.loadingCreatedUser = false;
+				this.goBack();
+			}
+		},
+		resetForm() {
+			this.form = {
+				name: '',
+				rut: '',
+				phone: '',
+				email: '',
+			};
+		},
+		goBack() {
+			this.dialogNewUser = false;
+			this.resetForm();
+			this.$v.$reset();
 		},
 		async reschedule(item) {
 			const newDate = { date: item.date, hour: item.start };
@@ -627,9 +662,6 @@ export default {
 				.add(60, 'minutes')
 				.format('hh:mm')}`;
 		},
-		goToCall(selectedEvent) {
-			return `${selectedEvent.idPsychologist} ${selectedEvent.idUser}`;
-		},
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
 			this.dialogAppointment = false;
@@ -637,13 +669,26 @@ export default {
 			this.date = null;
 			this.client = null;
 			this.idClient = null;
+			this.goBack();
 		},
 		...mapActions({
 			updateSession: 'Psychologist/updateSession',
 			getSessions: 'Psychologist/getSessions',
 			setReschedule: 'Psychologist/setReschedule',
 			getClients: 'Psychologist/getClients',
+			registerUser: 'User/registerUser',
 		}),
+	},
+	validations: {
+		form: {
+			email: {
+				required,
+				email,
+			},
+			name: {
+				required,
+			},
+		},
 	},
 };
 </script>

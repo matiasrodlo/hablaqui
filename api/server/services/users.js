@@ -4,6 +4,7 @@ import User from '../models/user';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
+import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
@@ -17,7 +18,9 @@ const usersService = {
 		if (!user) {
 			return conflictResponse('perfil no encontrado');
 		}
-		return okResponse('perfil obtenido', { user });
+		return okResponse('perfil obtenido', {
+			user: servicesAuth.generateUser(user),
+		});
 	},
 	async changeActualPassword(user, newPassword) {
 		user.password = bcrypt.hashSync(newPassword, 10);
@@ -196,6 +199,7 @@ const usersService = {
 			Math.random()
 				.toString(36)
 				.slice(2);
+
 		const newUser = {
 			name: body.name,
 			email: body.email,
@@ -204,10 +208,22 @@ const usersService = {
 			rut: body.rut,
 			phone: body.phone,
 		};
-		User.create(newUser);
+		const createdUser = await User.create(newUser);
+
+		if (process.env.NODE_ENV === 'development')
+			logInfo(
+				actionInfo(
+					user.email,
+					`Usuario registrado ${newUser.email} ${pass}`
+				)
+			);
+
+		// Sending email with user information
 		await mailService.sendGuestNewUser(user, newUser, pass);
-		//Enviar correo para avisar sobre usuario creado
-		return okResponse('Nuevo usuario creado', { user: newUser });
+
+		return okResponse('Nuevo usuario creado', {
+			user: servicesAuth.generateUser(createdUser),
+		});
 	},
 };
 

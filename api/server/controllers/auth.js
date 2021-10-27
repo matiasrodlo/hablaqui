@@ -30,9 +30,14 @@ const authController = {
 		};
 		res.json(response);
 	},
-	sendPasswordRecover(req, res) {
-		const { email } = req.body;
-		return authService.sendPasswordRecover(email, res);
+	async sendPasswordRecover(req, res) {
+		try {
+			const { email } = req.params;
+			const { data, code } = await authService.sendPasswordRecover(email);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res);
+		}
 	},
 	changeUserPassword(req, res) {
 		const { password } = req.body;

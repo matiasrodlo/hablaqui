@@ -24,7 +24,11 @@
 			</v-col>
 			<v-col cols="12" md="6">
 				<v-alert prominent text color="info">
-					<div style="color: #0079ff" class="font-weight-medium">
+					<div
+						style="color: #0079ff"
+						class="font-weight-medium pointer"
+						@click="() => (dialogComission = true)"
+					>
 						Paga 0% de comisión con los consultantes nuevos que invites.
 						<b>¡Sepa más!</b>
 					</div>
@@ -65,7 +69,13 @@
 				</v-data-table>
 			</v-col>
 		</v-row>
-		<v-dialog v-if="dialog" v-model="dialog" max-width="550" transition="dialog-top-transition">
+		<v-dialog
+			v-if="dialog"
+			v-model="dialog"
+			max-width="550"
+			transition="dialog-top-transition"
+			@click:outside="closeDialog"
+		>
 			<v-card min-height="300" width="550" rounded="lg">
 				<v-card-text
 					class="
@@ -78,26 +88,50 @@
 					"
 				>
 					<div class="body-1 font-weight-bold pt-2">Consultante nuevo</div>
-					<v-btn icon @click="dialog = false">
+					<v-btn icon @click="closeDialog">
 						<icon :icon="mdiClose" color="white" />
 					</v-btn>
 				</v-card-text>
 				<v-card-text class="pt-3">
 					<v-row>
 						<v-col cols="6">
-							<v-text-field type="text" dense hide-details outlined label="Nombre">
-							</v-text-field>
-						</v-col>
-						<v-col cols="6">
-							<v-text-field type="text" dense hide-details outlined label="Rut">
-							</v-text-field>
-						</v-col>
-						<v-col cols="6">
-							<v-text-field type="email" dense hide-details outlined label="email">
+							<v-text-field
+								v-model="form.name"
+								type="text"
+								dense
+								hide-details="auto"
+								outlined
+								label="Nombre"
+								:error-messages="nameErrors"
+							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="6">
 							<v-text-field
+								v-model="form.rut"
+								type="text"
+								dense
+								hide-details="auto"
+								outlined
+								label="Rut"
+							>
+							</v-text-field>
+						</v-col>
+						<v-col cols="6">
+							<v-text-field
+								v-model="form.email"
+								type="email"
+								dense
+								hide-details
+								outlined
+								label="email"
+								:error-messages="emailErrors"
+							>
+							</v-text-field>
+						</v-col>
+						<v-col cols="6">
+							<v-text-field
+								v-model="form.phone"
 								type="text"
 								dense
 								hide-details
@@ -107,21 +141,74 @@
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="6">
-							<v-text-field type="text" dense hide-details outlined label="Dirección">
-							</v-text-field>
-						</v-col>
-						<v-col cols="6">
-							<v-text-field type="text" dense hide-details outlined label="Comuna">
-							</v-text-field>
-						</v-col>
 					</v-row>
 					<v-row justify="center">
 						<v-col cols="6">
-							<v-btn text @click="dialog = false"> Cancelar </v-btn>
-							<v-btn rounded color="primary"> Agregar </v-btn>
+							<v-btn text @click="closeDialog"> Cancelar </v-btn>
+							<v-btn
+								:loading="loadingCreatedUser"
+								rounded
+								color="primary"
+								@click="submitUser"
+							>
+								Agregar
+							</v-btn>
 						</v-col>
 					</v-row>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
+		<v-dialog
+			v-if="dialogComission"
+			v-model="dialogComission"
+			max-width="650"
+			transition="dialog-top-transition"
+		>
+			<v-card min-height="300" width="650" rounded="lg">
+				<v-card-text class="d-flex align-center white--text text-center py-3">
+					<div
+						style="flex: 1"
+						class="text-center text-h6 font-weight-bold pt-2 primary--text"
+					>
+						0% de comisión por clientes referidos por ti
+					</div>
+					<v-btn
+						style="flex: 0"
+						class="pr-4"
+						icon
+						@click="() => (dialogComission = false)"
+					>
+						<icon :icon="mdiClose" color="grey" />
+					</v-btn>
+				</v-card-text>
+				<v-card-text class="pt-3">
+					<p>
+						Nuestro objetivo es ampliar y potenciar su consulta mediante un entorno de
+						trabajo automatizado y dinámico.
+					</p>
+					<p>
+						Por ello, le animamos a liberarse de las cuatro paredes de su consulta
+						atendiendo a todos sus clientes en Hablaquí. Ingresar a sus clientes es cosa
+						de unos clics y lo mejor: cobramos 0% de comisión.
+					</p>
+					<p>
+						Al llevar a sus clientes a la plataforma asegura organización y practicidad
+						en sus actividades, además de optimizar sus tiempos y dinero. Concéntrese en
+						atender a sus clientes y déjenos la burocracia a nosotros.
+					</p>
+					<h4 class="primary--text">Cómo hacerlo:</h4>
+					<br />
+					<ul style="list-style: none; padding: 0">
+						<li>1. Vaya a la sección “Consultantes”</li>
+						<li>2. Haga clic en “Consultante nuevo”</li>
+						<li>3. Rellene los datos solicitados</li>
+						<li>4. Haga clic en el botón “Agregar”</li>
+						<li>4. Haga clic en el botón “Agregar”</li>
+						<li>
+							5. Hecho, tu consultante ya está asociado a ti y no pagará más comisión
+							a Hablaquí.
+						</li>
+					</ul>
 				</v-card-text>
 			</v-card>
 		</v-dialog>
@@ -131,6 +218,8 @@
 <script>
 import { mdiMagnify, mdiPlus, mdiChat, mdiClose, mdiCalendar } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
+import { required, email } from 'vuelidate/lib/validators';
+import { validationMixin } from 'vuelidate';
 
 export default {
 	components: {
@@ -138,9 +227,12 @@ export default {
 		Avatar: () => import('~/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
 	},
+	mixins: [validationMixin],
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		dialogComission: false,
+		loadingCreatedUser: false,
 		dialog: false,
 		mdiClose,
 		mdiMagnify,
@@ -159,6 +251,7 @@ export default {
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,
+		form: null,
 	}),
 	computed: {
 		items() {
@@ -170,7 +263,23 @@ export default {
 				_id: item._id,
 			}));
 		},
+		emailErrors() {
+			const errors = [];
+			if (!this.$v.form.email.$dirty) return errors;
+			!this.$v.form.email.required && errors.push('Se requiere correo electrónico');
+			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
+			return errors;
+		},
+		nameErrors() {
+			const errors = [];
+			if (!this.$v.form.name.$dirty) return errors;
+			!this.$v.form.name.required && errors.push('Se requiere rut');
+			return errors;
+		},
 		...mapGetters({ clientes: 'Psychologist/clients' }),
+	},
+	created() {
+		this.resetForm();
 	},
 	async mounted() {
 		this.loading = true;
@@ -178,9 +287,43 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		async submitUser() {
+			this.$v.$touch();
+			if (!this.$v.$invalid) {
+				this.loadingCreatedUser = true;
+				await this.registerUser(this.form);
+				this.loadingCreatedUser = false;
+				this.closeDialog();
+			}
+		},
+		resetForm() {
+			this.form = {
+				name: '',
+				rut: '',
+				phone: '',
+				email: '',
+			};
+		},
+		closeDialog() {
+			this.dialog = false;
+			this.resetForm();
+			this.$v.$reset();
+		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',
+			registerUser: 'User/registerUser',
 		}),
+	},
+	validations: {
+		form: {
+			email: {
+				required,
+				email,
+			},
+			name: {
+				required,
+			},
+		},
 	},
 };
 </script>
