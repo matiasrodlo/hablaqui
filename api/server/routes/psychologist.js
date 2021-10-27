@@ -362,4 +362,5 @@ psychologistsRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfo
 );
+
 export default psychologistsRouter;

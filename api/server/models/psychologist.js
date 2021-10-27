@@ -162,7 +162,6 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	sessions: [session],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

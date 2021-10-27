@@ -26,7 +26,6 @@ const getAll = async () => {
 };
 
 const getSessions = async (user, idPsy) => {
-
 	const sessions = await Sessions.find({ psychologist: idPsy, user: user });
 	const mappedSessions = setSession(user, idPsy, sessions);
 
@@ -35,20 +34,18 @@ const getSessions = async (user, idPsy) => {
 };
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
-const setSession = (user, psychologist, sessions) => {
-
+const setSession = async (user, psychologist, sessions) => {
 	var filteredSessions;
 
-	if (user.role === 'user')
-		filteredSessions.push(...sessions);
+	if (user.role === 'user') filteredSessions.push(...sessions);
 
-	if (user.role === 'psychologist'){
+	if (user.role === 'psychologist') {
 		// user is psychologist
-		filteredSessions.push(await Sessions.find({user: user._id}));
+		filteredSessions.push(await Sessions.find({ user: user._id }));
 	}
 
 	allSessions = filteredSessions
-		.map(item => {
+		.map(async item => {
 			let name = '';
 			let lastName = '';
 			let idUser = item.user;
@@ -59,8 +56,7 @@ const setSession = (user, psychologist, sessions) => {
 					lastName = user.lastName ? user.lastName : '';
 					idUser = user._id;
 				}
-			}
-			else if (user.role === 'user') {
+			} else if (user.role === 'user') {
 				if (item.user && !Array.isArray(item.user)) {
 					const psy = await Psychologist.findById(psychologist);
 					idUser = psy._id;
@@ -69,8 +65,12 @@ const setSession = (user, psychologist, sessions) => {
 				}
 			}
 			const currentSessions = item.session.map(session => {
-				const randomToken1 = (Math.random() + 1).toString(36).substring(2);
-				const randomToken2 = (Math.random() + 1).toString(36).substring(2);
+				const randomToken1 = (Math.random() + 1)
+					.toString(36)
+					.substring(2);
+				const randomToken2 = (Math.random() + 1)
+					.toString(36)
+					.substring(2);
 				const start = moment(session.date).format('DD-MM-YYYY hh:mm');
 				const end = moment(session.date)
 					.add(60, 'minutes')
@@ -104,7 +104,14 @@ const getFormattedSessions = async idPsychologist => {
 			.format('HH:mm')
 	);
 
-	const psySessions = Sessions.find({psychologist: idPsychologist});
+	const psySessions = await Sessions.find({
+		psychologist: idPsychologist,
+	});
+
+	if (psySessions.length == 0) {
+		return okResponse('sesiones obtenidas', {});
+	}
+
 	const daySessions = psySessions.session.map(session =>
 		moment(session.date).format('YYYY-MM-DD HH:mm')
 	);
