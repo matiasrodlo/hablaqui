@@ -64,6 +64,7 @@ steps:
       - "GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}"
       - "GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}"
       - "GOOGLE_CLIENT_REDIRECT=${_GOOGLE_CLIENT_REDIRECT}"
+      - "URLDB=${_URLDB}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
