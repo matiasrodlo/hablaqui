@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -161,3 +161,4 @@ const mercadopagoService = {
 };
 
 export default Object.freeze(mercadopagoService);
+*/
