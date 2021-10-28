@@ -61,6 +61,7 @@ let sessionSchema = new Schema({
 	},
 	plan: [plan],
 	session: [session],
+	status: { type: String, default: 'Sin estado' },
 });
 
 export default model('session', sessionSchema);

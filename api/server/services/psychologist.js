@@ -44,7 +44,7 @@ const setSession = async (user, psychologist, sessions) => {
 		filteredSessions.push(await Sessions.find({ user: user._id }));
 	}
 
-	allSessions = filteredSessions
+	let allSessions = filteredSessions
 		.map(async item => {
 			let name = '';
 			let lastName = '';
@@ -424,7 +424,7 @@ const reschedule = async (user, id, newDate) => {
 
 	// No se como funciona setSession
 	return okResponse('Hora actualizada', {
-		sessions: setSession(user, savePsychologist),
+		//sessions: setSession(user, savePsychologist),
 	});
 };
 
@@ -618,43 +618,26 @@ const checkPlanTask = async () => {
 
 const getClients = async psychologist => {
 	const foundUsers = await User.find({ psychologist });
-	const users = await Psychologist.findById(psychologist);
-	const sessions = users.sessions;
+	const sessions = await Sessions.find({ psychologist: psychologist });
 	const mappedUsers = foundUsers
 		.map(user => {
-			let userSessions = [];
-			let lastSession = '';
 			let state = 'Sin estado';
-			let sessionPrice = 0;
-
+			let lastSession = '';
+			const userSessions = [];
 			for (let i = 0; i < sessions.length; i++)
-				if (sessions[i].user)
-					if (sessions[i].user.toString() === user._id.toString())
-						userSessions.push(sessions.splice(i, 1)[0]);
+				if (sessions[i].user.toString() === user._id.toString()) {
+					userSessions.push(sessions.splice(i, 1)[0]);
+					break;
+				}
+
+			if (userSessions[0].state) state = userSessions[0].state;
 
 			if (userSessions.length !== 0) {
-				userSessions.reverse(function(a, b) {
+				userSessions[0].session.reverse(function(a, b) {
 					return a['date'] > b['date'];
 				});
-				lastSession = userSessions[0].date;
+				lastSession = userSessions[0].session[0].date;
 			}
-
-			if (user.plan)
-				for (let i = 0; i < user.plan.length; i++)
-					if (
-						user.plan[i].psychologist.toString() ===
-						psychologist.toString()
-					)
-						sessionPrice = user.plan[i].sessionPrice;
-
-			if (user.sessionState)
-				for (let i = 0; i < user.sessionState.length; i++)
-					if (
-						user.sessionState[i].psychologist.toString() ===
-						psychologist.toString()
-					)
-						state = user.sessionState[i].state;
-
 			return {
 				role: user.role,
 				name: user.name,
@@ -662,10 +645,8 @@ const getClients = async psychologist => {
 				avatar: user.avatar,
 				email: user.email,
 				_id: user._id,
-				//sessionPrice: sessionPrice,
-				sessions: userSessions,
-				lastSession: lastSession,
 				state: state,
+				lastSession: lastSession,
 			};
 		})
 		.filter(user => user.role != 'psychologist');
@@ -831,7 +812,6 @@ const psychologistsService = {
 	match,
 	register,
 	createPlan,
-	createSession,
 	reschedule,
 	searchClients,
 	setPrice,
@@ -841,7 +821,6 @@ const psychologistsService = {
 	updatePlan,
 	updatePsychologist,
 	usernameAvailable,
-	updateFormationExperience,
 	paymentsInfo,
 	uploadProfilePicture,
 };
