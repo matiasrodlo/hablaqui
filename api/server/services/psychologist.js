@@ -618,21 +618,23 @@ const checkPlanTask = async () => {
 
 const getClients = async psychologist => {
 	const foundUsers = await User.find({ psychologist });
+	console.log(foundUsers);
 	const sessions = await Sessions.find({ psychologist: psychologist });
+	console.log(sessions);
 	const mappedUsers = foundUsers
 		.map(user => {
-			let state = 'Sin estado';
+			let state = '';
 			let lastSession = '';
-			let userSessions;
+			let userSessions = { state: 'Sin estado', session: [] };
 			for (let i = 0; i < sessions.length; i++)
 				if (sessions[i].user.toString() === user._id.toString()) {
 					userSessions = sessions.splice(i, 1)[0];
 					break;
 				}
+			console.log(userSessions);
+			state = userSessions.state;
 
-			if (userSessions.state) state = userSessions.state;
-
-			if (userSessions.length !== 0) {
+			if (userSessions.session.length !== 0) {
 				userSessions.session.reverse(function(a, b) {
 					return a['date'] > b['date'];
 				});

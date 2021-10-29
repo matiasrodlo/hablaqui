@@ -61,7 +61,6 @@ let userSchema = new Schema({
 		ref: 'psychologist',
 		required: false,
 	},
-	sessionState: [userState],
 	role: {
 		type: String,
 		default: 'user',
