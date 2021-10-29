@@ -623,20 +623,20 @@ const getClients = async psychologist => {
 		.map(user => {
 			let state = 'Sin estado';
 			let lastSession = '';
-			const userSessions = [];
+			let userSessions;
 			for (let i = 0; i < sessions.length; i++)
 				if (sessions[i].user.toString() === user._id.toString()) {
-					userSessions.push(sessions.splice(i, 1)[0]);
+					userSessions = sessions.splice(i, 1)[0];
 					break;
 				}
 
-			if (userSessions[0].state) state = userSessions[0].state;
+			if (userSessions.state) state = userSessions.state;
 
 			if (userSessions.length !== 0) {
-				userSessions[0].session.reverse(function(a, b) {
+				userSessions.session.reverse(function(a, b) {
 					return a['date'] > b['date'];
 				});
-				lastSession = userSessions[0].session[0].date;
+				lastSession = userSessions.session[0].date;
 			}
 			return {
 				role: user.role,
@@ -651,7 +651,7 @@ const getClients = async psychologist => {
 		})
 		.filter(user => user.role != 'psychologist');
 	mappedUsers.reverse(function(a, b) {
-		return a['date'] > b['date'];
+		return a['lastSession'] > b['lastSession'];
 	});
 	return okResponse('Usuarios encontrados', { users: mappedUsers });
 };
