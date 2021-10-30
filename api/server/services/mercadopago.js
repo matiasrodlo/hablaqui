@@ -21,6 +21,7 @@ const createPreference = async (body, res) => {
 		items: [
 			{
 				title: body.description,
+				description: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
 				quantity: 1,
@@ -57,6 +58,7 @@ const createPsychologistPreference = async (body, res) => {
 		items: [
 			{
 				title: body.description,
+				description: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
 				quantity: 1,

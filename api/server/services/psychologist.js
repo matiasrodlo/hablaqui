@@ -27,6 +27,7 @@ const getAll = async () => {
 
 const getSessions = async (user, idPsy) => {
 	const sessions = await Sessions.find({ psychologist: idPsy, user: user });
+	console.log(sessions);
 	const mappedSessions = setSession(user, idPsy, sessions);
 
 	logInfo('obtuvo todos las sesiones');
@@ -35,7 +36,7 @@ const getSessions = async (user, idPsy) => {
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = async (user, psychologist, sessions) => {
-	var filteredSessions;
+	var filteredSessions = [];
 
 	if (user.role === 'user') filteredSessions.push(...sessions);
 
@@ -44,7 +45,7 @@ const setSession = async (user, psychologist, sessions) => {
 		filteredSessions.push(await Sessions.find({ user: user._id }));
 	}
 
-	allSessions = filteredSessions
+	const allSessions = filteredSessions
 		.map(async item => {
 			let name = '';
 			let lastName = '';
@@ -65,12 +66,6 @@ const setSession = async (user, psychologist, sessions) => {
 				}
 			}
 			const currentSessions = item.session.map(session => {
-				const randomToken1 = (Math.random() + 1)
-					.toString(36)
-					.substring(2);
-				const randomToken2 = (Math.random() + 1)
-					.toString(36)
-					.substring(2);
 				const start = moment(session.date).format('DD-MM-YYYY hh:mm');
 				const end = moment(session.date)
 					.add(60, 'minutes')
@@ -83,7 +78,7 @@ const setSession = async (user, psychologist, sessions) => {
 					sessionId: item._id,
 					idUser,
 					idPsychologist: psychologist._id,
-					url: `${room}/room/${randomToken1}-${randomToken2}`,
+					url: item.roomsUrl,
 				};
 			});
 			return currentSessions;
@@ -274,11 +269,14 @@ const createPlan = async body => {
 
 		return okResponse('Plan creado', { plan: created });
 	} else {
+		const randomToken1 = (Math.random() + 1).toString(36).substring(2);
+		const randomToken2 = (Math.random() + 1).toString(36).substring(2);
 		const created = await Sessions.create({
 			user: payload.user,
 			psychologsit: payload.psychologist,
 			plan: [newPlan],
 			session: [],
+			roomsUrl: `${room}/room/${randomToken1}-${randomToken2}`,
 		});
 
 		chat.startConversation(payload.psychologist, payload.user);

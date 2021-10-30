@@ -61,6 +61,9 @@ let sessionSchema = new Schema({
 	},
 	plan: [plan],
 	session: [session],
+	roomsUrl: {
+		type: String,
+	},
 });
 
 export default model('session', sessionSchema);
