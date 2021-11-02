@@ -158,6 +158,8 @@ export default {
 			this.loading = true;
 			const planPayload = {
 				date: this.event.date,
+				start: this.event.start,
+				end: this.event.end,
 				user: this.$auth.$state.user,
 				psychologist: this.psy._id,
 				paymentPeriod: this.plan.deal.type,

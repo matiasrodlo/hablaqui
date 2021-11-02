@@ -224,9 +224,8 @@ const match = async body => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
-const createPlan = async body => {
-	const { payload } = body;
-
+const createPlan = async ({ payload }) => {
+	console.log(payload);
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -255,7 +254,21 @@ const createPlan = async body => {
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
-		remainingSessions: sessionQuantity,
+		remainingSessions: sessionQuantity - 1,
+	};
+
+	// TODO: REFACTORIZAR
+	// Se formatea la fecha de forma correcta
+	const date = payload.date;
+	const start = payload.start;
+	const parsedDate = date.split('/');
+	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
+	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
+
+	const newSession = {
+		date: isoDate,
+		sessionNumber: 1,
+		paidToPsychologist: false,
 	};
 
 	if (
@@ -266,7 +279,7 @@ const createPlan = async body => {
 	) {
 		const created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan } }
+			{ $push: { plan: newPlan, session: newSession } }
 		);
 
 		return okResponse('Plan creado', { plan: created });
@@ -275,12 +288,11 @@ const createPlan = async body => {
 		const randomToken2 = (Math.random() + 1).toString(36).substring(2);
 		const created = await Sessions.create({
 			user: payload.user,
-			psychologsit: payload.psychologist,
+			psychologist: payload.psychologist,
 			plan: [newPlan],
-			session: [],
-			roomsUrl: `${room}/room/${randomToken1}-${randomToken2}`,
+			session: [newSession],
+			roomsUrl: `${room}room/${randomToken1}-${randomToken2}`,
 		});
-
 		chat.startConversation(payload.psychologist, payload.user);
 		return okResponse('Plan creado', { plan: created });
 	}
