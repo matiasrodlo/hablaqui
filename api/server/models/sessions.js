@@ -1,4 +1,4 @@
-import { Schema, model, SchemaTypeOptions } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 let plan = new Schema(
 	{
