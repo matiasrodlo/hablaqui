@@ -88,15 +88,18 @@ const setSession = async (user, psychologist, sessions) => {
 // Utilizado en modal agenda cita online
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
+	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist);
+	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		moment()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
 	);
-
+	//Obtenemos sessiones del psicologo
 	const psySessions = await Sessions.find({
 		psychologist: idPsychologist,
 	});
