@@ -165,7 +165,7 @@ export default {
 				price: this.pay ? this.pay : this.priceInt,
 				coupon: this.pay ? this.coupon : '',
 			};
-			const createdPlan = await this.createPlan(planPayload);
+			const createdPlan = await this.createSession(planPayload);
 			const mercadopagoPayload = {
 				price: this.pay ? this.pay : this.priceInt,
 				description: this.plan.title,

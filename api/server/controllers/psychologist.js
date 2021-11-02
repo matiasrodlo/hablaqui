@@ -60,16 +60,13 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
-	async createSession(req, res) {
+	async createPlan(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await psychologistsService.createSession(
-				body,
-				res
-			);
+			const { data, code } = await psychologistsService.createPlan(body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error creando una cita');
+			errorCallback(e, res, 'error creando una plan');
 		}
 	},
 	async reschedule(req, res) {
@@ -321,12 +318,18 @@ const psychologistsController = {
 	async paymentsInfo(req, res) {
 		try {
 			const { user } = req;
-			const { data, code } = await psychologistsService.paymentsInfo(user);
-			return restResponse(data, code, res)
+			const { data, code } = await psychologistsService.paymentsInfo(
+				user
+			);
+			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la informacion de los pagos');
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
 		}
-	}
+	},
 };
 
 export default Object.freeze(psychologistsController);

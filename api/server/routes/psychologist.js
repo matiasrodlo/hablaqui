@@ -90,7 +90,7 @@ psychologistsRouter.post(
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createSession
+	psychologistsController.createPlan
 );
 
 /**

@@ -294,8 +294,8 @@ const createPlan = async body => {
  * @param {String} payload.start - Hora de inicio
  * @returns El Id de la sesion recien creada
  */
-const createSession = async body => {
-	const { payload } = body;
+const createSession = async ({ payload }) => {
+	// Obtenemos la session correspondiente
 	let foundSession = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -321,33 +321,7 @@ const createSession = async body => {
 		paidToPsychologist: false,
 	};
 	foundSession.session.push(newSession);
-	foundSession.save();
-
-	// Revisar la fecha no deberia ser necesario si el frontend esta bien hecho.
-	// En caso de querer usar esta funcionalidad, hay que adaptarla al nuevo modelo.
-
-	// const foundPsychologist = await Psychologist.findById(
-	// 	payload.psychologist._id
-	// );
-	// if (
-	// 	moment().isAfter(
-	// 		moment(isoDate).subtract({
-	// 			hours: foundPsychologist.preferences.minimumNewSession,
-	// 		})
-	// 	)
-	// ) {
-	// 	return conflictResponse(
-	// 		`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
-	// 	);
-	// }
-
-	// let dateConflict = false;
-	// foundPsychologist.sessions.forEach(session => {
-	// 	if (moment(session.date).isSame(payload.date)) {
-	// 		dateConflict = true;
-	// 	}
-	// });
-	// if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
+	await foundSession.save();
 
 	logInfo('creo una nueva cita');
 
@@ -777,6 +751,7 @@ const psychologistsService = {
 	approveAvatar,
 	cancelSession,
 	checkPlanTask,
+	createPlan,
 	createSession,
 	customNewSession,
 	deleteOne,
@@ -787,9 +762,8 @@ const psychologistsService = {
 	getRating,
 	getSessions,
 	match,
+	paymentsInfo,
 	register,
-	createPlan,
-	createSession,
 	reschedule,
 	searchClients,
 	setPrice,
@@ -798,10 +772,8 @@ const psychologistsService = {
 	updatePaymentMethod,
 	updatePlan,
 	updatePsychologist,
-	usernameAvailable,
-	updateFormationExperience,
-	paymentsInfo,
 	uploadProfilePicture,
+	usernameAvailable,
 };
 
 export default Object.freeze(psychologistsService);
