@@ -553,20 +553,13 @@ export default {
 		this.$refs.calendar?.checkChange();
 	},
 	methods: {
-		initFetch() {
-			console.log(this.$auth);
-			// if (this.$auth.$state.user.role === 'user') {
-			// 	const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-			// 	if (user) this.idPsychologist = user.psychologist;
-			// }
-			// if (this.$auth.$state.user.role === 'psychologist')
-			// 	this.idPsychologist = this.$auth.$state.user.psychologist;
-
-			// if (this.idPsychologist) {
-			// 	await this.getClients(this.idPsychologist);
-			// 	await this.getSessions(this.idPsychologist);
-			// 	this.events = this.sessions;
-			// }
+		async initFetch() {
+			if (this.$auth.$state.user.sessions) {
+				this.idPsychologist = this.$auth.$state.user.sessions.psychologist;
+				await this.getClients(this.idPsychologist);
+				await this.getSessions(this.idPsychologist);
+				this.events = this.sessions;
+			}
 		},
 		async submitUser() {
 			this.$v.$touch();
