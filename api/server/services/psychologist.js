@@ -100,12 +100,13 @@ const getFormattedSessions = async idPsychologist => {
 			.format('HH:mm')
 	);
 	//Obtenemos sessiones del psicologo
-	const psySessions = await Sessions.find({
+	const psySessions = await Sessions.findOne({
 		psychologist: idPsychologist,
 	});
 
-	if (psySessions.length == 0) {
-		return okResponse('sesiones obtenidas', {});
+	// Si el psicologo no tiene sessiones retornamos array vacío
+	if (!psySessions) {
+		return okResponse('sesiones obtenidas', { sessions: [] });
 	}
 
 	const daySessions = psySessions.session.map(session =>
