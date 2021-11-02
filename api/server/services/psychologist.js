@@ -11,13 +11,11 @@ import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
-
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-import psychologist from '../models/psychologist';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
