@@ -1,4 +1,4 @@
-import { Schema, model, SchemaTypeOptions } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 let plan = new Schema(
 	{
@@ -17,6 +17,7 @@ let plan = new Schema(
 		payment: {
 			type: String,
 			default: 'pending',
+			enum: ['pending', 'success', 'failed'],
 		},
 		expiration: {
 			type: String,
@@ -62,6 +63,9 @@ let sessionSchema = new Schema({
 	plan: [plan],
 	session: [session],
 	status: { type: String, default: 'Sin estado' },
+	roomsUrl: {
+		type: String,
+	},
 });
 
 export default model('session', sessionSchema);

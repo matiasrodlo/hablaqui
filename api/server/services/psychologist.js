@@ -11,13 +11,11 @@ import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
-
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-import psychologist from '../models/psychologist';
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -27,6 +25,7 @@ const getAll = async () => {
 
 const getSessions = async (user, idPsy) => {
 	const sessions = await Sessions.find({ psychologist: idPsy, user: user });
+	console.log(sessions);
 	const mappedSessions = setSession(user, idPsy, sessions);
 
 	logInfo('obtuvo todos las sesiones');
@@ -35,7 +34,7 @@ const getSessions = async (user, idPsy) => {
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = async (user, psychologist, sessions) => {
-	var filteredSessions;
+	var filteredSessions = [];
 
 	if (user.role === 'user') filteredSessions.push(...sessions);
 
@@ -44,7 +43,7 @@ const setSession = async (user, psychologist, sessions) => {
 		filteredSessions.push(await Sessions.find({ user: user._id }));
 	}
 
-	let allSessions = filteredSessions
+	const allSessions = filteredSessions
 		.map(async item => {
 			let name = '';
 			let lastName = '';
@@ -65,12 +64,6 @@ const setSession = async (user, psychologist, sessions) => {
 				}
 			}
 			const currentSessions = item.session.map(session => {
-				const randomToken1 = (Math.random() + 1)
-					.toString(36)
-					.substring(2);
-				const randomToken2 = (Math.random() + 1)
-					.toString(36)
-					.substring(2);
 				const start = moment(session.date).format('DD-MM-YYYY hh:mm');
 				const end = moment(session.date)
 					.add(60, 'minutes')
@@ -83,7 +76,7 @@ const setSession = async (user, psychologist, sessions) => {
 					sessionId: item._id,
 					idUser,
 					idPsychologist: psychologist._id,
-					url: `${room}/room/${randomToken1}-${randomToken2}`,
+					url: item.roomsUrl,
 				};
 			});
 			return currentSessions;
@@ -95,21 +88,25 @@ const setSession = async (user, psychologist, sessions) => {
 // Utilizado en modal agenda cita online
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
+	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist);
+	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		moment()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
 	);
-
-	const psySessions = await Sessions.find({
+	//Obtenemos sessiones del psicologo
+	const psySessions = await Sessions.findOne({
 		psychologist: idPsychologist,
 	});
 
-	if (psySessions.length == 0) {
-		return okResponse('sesiones obtenidas', {});
+	// Si el psicologo no tiene sessiones retornamos array vacío
+	if (!psySessions) {
+		return okResponse('sesiones obtenidas', { sessions: [] });
 	}
 
 	const daySessions = psySessions.session.map(session =>
@@ -227,9 +224,8 @@ const match = async body => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
-const createPlan = async body => {
-	const { payload } = body;
-
+const createPlan = async ({ payload }) => {
+	console.log(payload);
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -258,7 +254,21 @@ const createPlan = async body => {
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
-		remainingSessions: sessionQuantity,
+		remainingSessions: sessionQuantity - 1,
+	};
+
+	// TODO: REFACTORIZAR
+	// Se formatea la fecha de forma correcta
+	const date = payload.date;
+	const start = payload.start;
+	const parsedDate = date.split('/');
+	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
+	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
+
+	const newSession = {
+		date: isoDate,
+		sessionNumber: 1,
+		paidToPsychologist: false,
 	};
 
 	if (
@@ -269,18 +279,20 @@ const createPlan = async body => {
 	) {
 		const created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan } }
+			{ $push: { plan: newPlan, session: newSession } }
 		);
 
 		return okResponse('Plan creado', { plan: created });
 	} else {
+		const randomToken1 = (Math.random() + 1).toString(36).substring(2);
+		const randomToken2 = (Math.random() + 1).toString(36).substring(2);
 		const created = await Sessions.create({
 			user: payload.user,
-			psychologsit: payload.psychologist,
+			psychologist: payload.psychologist,
 			plan: [newPlan],
-			session: [],
+			session: [newSession],
+			roomsUrl: `${room}room/${randomToken1}-${randomToken2}`,
 		});
-
 		chat.startConversation(payload.psychologist, payload.user);
 		return okResponse('Plan creado', { plan: created });
 	}
@@ -294,8 +306,8 @@ const createPlan = async body => {
  * @param {String} payload.start - Hora de inicio
  * @returns El Id de la sesion recien creada
  */
-const createSession = async body => {
-	const { payload } = body;
+const createSession = async ({ payload }) => {
+	// Obtenemos la session correspondiente
 	let foundSession = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -321,33 +333,7 @@ const createSession = async body => {
 		paidToPsychologist: false,
 	};
 	foundSession.session.push(newSession);
-	foundSession.save();
-
-	// Revisar la fecha no deberia ser necesario si el frontend esta bien hecho.
-	// En caso de querer usar esta funcionalidad, hay que adaptarla al nuevo modelo.
-
-	// const foundPsychologist = await Psychologist.findById(
-	// 	payload.psychologist._id
-	// );
-	// if (
-	// 	moment().isAfter(
-	// 		moment(isoDate).subtract({
-	// 			hours: foundPsychologist.preferences.minimumNewSession,
-	// 		})
-	// 	)
-	// ) {
-	// 	return conflictResponse(
-	// 		`La hora tiene que ser tomada con ${foundPsychologist.preferences.minimumNewSession} horas de anticipacion`
-	// 	);
-	// }
-
-	// let dateConflict = false;
-	// foundPsychologist.sessions.forEach(session => {
-	// 	if (moment(session.date).isSame(payload.date)) {
-	// 		dateConflict = true;
-	// 	}
-	// });
-	// if (dateConflict) return conflictResponse('Esta hora ya esta ocupada');
+	await foundSession.save();
 
 	logInfo('creo una nueva cita');
 
@@ -802,6 +788,7 @@ const psychologistsService = {
 	approveAvatar,
 	cancelSession,
 	checkPlanTask,
+	createPlan,
 	createSession,
 	customNewSession,
 	deleteOne,
@@ -812,8 +799,8 @@ const psychologistsService = {
 	getRating,
 	getSessions,
 	match,
+	paymentsInfo,
 	register,
-	createPlan,
 	reschedule,
 	searchClients,
 	setPrice,
@@ -822,9 +809,8 @@ const psychologistsService = {
 	updatePaymentMethod,
 	updatePlan,
 	updatePsychologist,
-	usernameAvailable,
-	paymentsInfo,
 	uploadProfilePicture,
+	usernameAvailable,
 };
 
 export default Object.freeze(psychologistsService);

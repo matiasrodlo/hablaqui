@@ -158,6 +158,8 @@ export default {
 			this.loading = true;
 			const planPayload = {
 				date: this.event.date,
+				start: this.event.start,
+				end: this.event.end,
 				user: this.$auth.$state.user,
 				psychologist: this.psy._id,
 				paymentPeriod: this.plan.deal.type,
@@ -165,7 +167,7 @@ export default {
 				price: this.pay ? this.pay : this.priceInt,
 				coupon: this.pay ? this.coupon : '',
 			};
-			const createdPlan = await this.createPlan(planPayload);
+			const createdPlan = await this.createSession(planPayload);
 			const mercadopagoPayload = {
 				price: this.pay ? this.pay : this.priceInt,
 				description: this.plan.title,

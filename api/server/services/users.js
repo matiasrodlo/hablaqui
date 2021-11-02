@@ -19,7 +19,7 @@ const usersService = {
 			return conflictResponse('perfil no encontrado');
 		}
 		return okResponse('perfil obtenido', {
-			user: servicesAuth.generateUser(user),
+			user: await servicesAuth.generateUser(user),
 		});
 	},
 	async changeActualPassword(user, newPassword) {
@@ -222,7 +222,7 @@ const usersService = {
 		await mailService.sendGuestNewUser(user, newUser, pass);
 
 		return okResponse('Nuevo usuario creado', {
-			user: servicesAuth.generateUser(createdUser),
+			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
 };
