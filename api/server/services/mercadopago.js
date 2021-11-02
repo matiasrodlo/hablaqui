@@ -63,16 +63,12 @@ const createPsychologistPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}/${body.period}`,
+			success: `${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}?period=${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
 	};
-
-	console.log(
-		`${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}/${body.period}`
-	);
 
 	let bodyId = '';
 	let error = '';
@@ -148,14 +144,19 @@ const successPay = async params => {
 	return okResponse('sesion actualizada');
 };
 
-const psychologistPay = async params => {
-	const { psychologistId, period } = params;
+const psychologistPay = async (params, query) => {
+	const { psychologistId } = params;
+	const { period } = query;
 	let expirationDate;
 	if (period == 'anual') {
-		expirationDate = moment().add({ months: 12 }).toISOString;
+		expirationDate = moment()
+			.add({ months: 12 })
+			.toISOString();
 	}
 	if (period == 'mensual') {
-		expirationDate = moment().add({ months: 1 }).toISOString;
+		expirationDate = moment()
+			.add({ months: 1 })
+			.toISOString();
 	}
 
 	const newPlan = {

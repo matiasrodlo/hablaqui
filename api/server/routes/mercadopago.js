@@ -27,7 +27,7 @@ mercadopagoRouter.post(
 );
 
 mercadopagoRouter.get(
-	'/mercadopago/psychologist-pay/:psychologistId/:period',
+	'/mercadopago/psychologist-pay/:psychologistId',
 	mercadopagoController.psychologistPay
 );
 

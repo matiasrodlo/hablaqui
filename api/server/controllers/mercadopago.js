@@ -44,9 +44,9 @@ const mercadopagoController = {
 	},
 	async psychologistPay(req, res) {
 		try {
-			const { params } = req;
-			await mercadopagoService.psychologistPay(params);
-			return res.redirect(`${landing_url}/psicologos`);
+			const { params, query } = req;
+			await mercadopagoService.psychologistPay(params, query);
+			return res.redirect(`${landing_url}/psicologos/jaja`);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
