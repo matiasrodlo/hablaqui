@@ -559,7 +559,8 @@ export default {
 			}));
 		},
 		getMyPsy() {
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user') {
+			const user = this.$auth.$state.user;
+			if (user && user.role === 'user' && !!user.sessions) {
 				const psy = this.$auth.$state.user.sessions.psychologist;
 				if (psy) return this.getPsy(psy);
 				else return null;
@@ -569,7 +570,7 @@ export default {
 		},
 		planSuccess() {
 			// session is object(unica session)
-			if (this.$auth.$state.user.role === 'user') {
+			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
 				return !!this.$auth.$state.user.sessions.psychologist;
 			} else return false;
 		},

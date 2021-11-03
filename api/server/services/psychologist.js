@@ -100,19 +100,17 @@ const getFormattedSessions = async idPsychologist => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	//Obtenemos sessiones del psicologo
-	const psySessions = await Sessions.findOne({
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
 		psychologist: idPsychologist,
 	});
+	const daySessions = psySessions.flatMap(item => {
+		return item.session.length
+			? item.session.map(session => session.date)
+			: [];
+	});
 
-	// Si el psicologo no tiene sessiones retornamos array vacío
-	if (!psySessions) {
-		return okResponse('sesiones obtenidas', { sessions: [] });
-	}
-
-	const daySessions = psySessions.session.map(session =>
-		moment(session.date).format('YYYY-MM-DD HH:mm')
-	);
+	console.log(daySessions);
 
 	sessions = length.map(el => {
 		const day = moment().add(el, 'days');
@@ -125,12 +123,12 @@ const getFormattedSessions = async idPsychologist => {
 			available: hours.filter(hour => {
 				return (
 					formattedSchedule(psychologist.schedule, day, hour) &&
-					moment(daySessions).isValid &&
 					!daySessions.some(
 						date =>
-							moment(date).format('L') ===
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
 								moment(day).format('L') &&
-							hour === moment(date).format('HH:mm')
+							hour ===
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -257,17 +255,11 @@ const createPlan = async ({ payload }) => {
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
 	};
-
-	// TODO: REFACTORIZAR
-	// Se formatea la fecha de forma correcta
-	const date = payload.date;
-	const start = payload.start;
-	const parsedDate = date.split('/');
-	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
-	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
+	// valido MM/DD/YYYY HH:mm
+	const date = `${payload.date} ${payload.start}`;
 
 	const newSession = {
-		date: isoDate,
+		date,
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
