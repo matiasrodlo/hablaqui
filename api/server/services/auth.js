@@ -101,7 +101,7 @@ const sendPasswordRecover = async email => {
 	const recoveryUrl = `${process.env.FRONTEND_URL}
 		/password-reset?token=${token}`;
 
-	// TODO: crear aqui el envio de contraseña al email
+	mailService.sendPasswordRecovery(user, recoveryUrl);
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));

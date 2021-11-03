@@ -58,7 +58,35 @@ const mailService = {
 			}
 		});
 	},
-
+	/**
+	 * @description Send a recovery password email to a user
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {String} url - URL to password recovery
+	 */
+	async sendPasswordRecovery(user, url) {
+		const { email, name } = user;
+		const dataPayload = {
+			from: 'Hablaquí <recuperacion@mail.hablaqui.com>',
+			to: name + '<' + email + '>',
+			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.com',
+			subject: 'Recuperación de contraseña de Hablaquí!',
+			template: 'reset-password',
+			'v:url': url,
+		};
+		await mg.messages().send(dataPayload, function(error, body) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(body);
+			}
+		});
+	},
+	/**
+	 * @description Send a welcome email to a new  user created by a psychologist
+	 * @param {Object} psy - A User object from the database, corresponding to the client
+	 * @param {Object} newUser -  A User object from the database, corresponding to the psychologist
+	 * @param {String} pass - Password to login
+	 */
 	async sendGuestNewUser(psy, newUser, pass) {
 		const { name, email } = newUser;
 		const dataPayload = {
