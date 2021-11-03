@@ -71,7 +71,7 @@ const mailService = {
 			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.com',
 			subject: 'Recuperación de contraseña de Hablaquí!',
 			template: 'reset-password',
-			'v:first_name': url,
+			'v:url': url,
 		};
 		await mg.messages().send(dataPayload, function(error, body) {
 			if (error) {
