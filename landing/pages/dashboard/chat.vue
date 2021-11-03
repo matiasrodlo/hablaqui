@@ -108,26 +108,14 @@
 					</template>
 					<!-- barra lateral role user -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
-						<v-card-text
-							v-if="
-								$auth.$state.user &&
-								$auth.$state.user.sessions.plan.some(el => el.payment === 'success')
-							"
-						>
+						<v-card-text v-if="planSuccess">
 							<v-subheader class="primary--text body-1 px-0">
 								Mi Psicólogo
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
 						<!-- usuario mi psicologo -->
-						<v-list
-							v-if="
-								$auth.$state.user &&
-								$auth.$state.user.sessions.plan.some(el => el.payment === 'success')
-							"
-							two-line
-							class="py-0"
-						>
+						<v-list v-if="planSuccess" two-line class="py-0">
 							<v-list-item @click="setSelectedPsy(getMyPsy)">
 								<v-list-item-avatar
 									style="border-radius: 40px"
@@ -151,11 +139,7 @@
 						<!-- usuario sin psicologo -->
 						<v-list
 							v-else-if="
-								!$auth.$state.user &&
-								!$auth.$state.user.sessions.plan.some(
-									el => el.payment === 'success'
-								) &&
-								listPsychologist.length
+								!$auth.$state.user && !planSuccess && listPsychologist.length
 							"
 							link
 							two-line
@@ -184,13 +168,7 @@
 							</v-list-item>
 						</v-list>
 						<!-- lista de psicologos "chat iniciado" -->
-						<template
-							v-if="
-								listPsychologist.length ||
-								($auth.$state.user &&
-									$auth.$state.user.plan.some(el => el.status === 'success'))
-							"
-						>
+						<template v-if="listPsychologist.length || planSuccess">
 							<v-card-text v-if="listPsychologist.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
@@ -588,6 +566,12 @@ export default {
 			} else {
 				return null;
 			}
+		},
+		planSuccess() {
+			// session is object(unica session)
+			if (this.$auth.$state.user.role === 'user') {
+				return !!this.$auth.$state.user.sessions.psychologist;
+			} else return false;
 		},
 		...mapGetters({
 			chat: 'Chat/chat',

@@ -21,7 +21,12 @@
 								<div>
 									{{ item.title }}
 								</div>
-								<div class="caption">
+								<div v-if="itemExpired(item)" class="caption">
+									<template v-if="item.payment === 'success'">
+										<span class="error--text">Finalizó</span>
+									</template>
+								</div>
+								<div v-else class="caption">
 									<template v-if="item.payment === 'success'">
 										<span class="success--text">Tu plan actual</span>
 									</template>
@@ -33,10 +38,7 @@
 									</template>
 								</div>
 							</div>
-							<div
-								style="width: 20px; height: 20px"
-								:class="status(item.payment)"
-							></div>
+							<div style="width: 20px; height: 20px" :class="status(item)"></div>
 						</v-card-title>
 						<v-card-text>
 							<div>
@@ -58,37 +60,41 @@
 					class="my-4"
 					height="220"
 					width="100%"
-					@click="toggle"
 				>
 					<v-card-title class="d-flex justify-space-between body-1 font-weight-medium">
 						<div>
 							<div>
-								{{ item }}
+								{{ item.title }}
 							</div>
-							<div class="caption">
-								<template v-if="item.status === 'success'">
+							<div v-if="itemExpired(item)" class="caption">
+								<template v-if="item.payment === 'success'">
+									<span class="success--text">Expiro</span>
+								</template>
+							</div>
+							<div v-else class="caption">
+								<template v-if="item.payment === 'success'">
 									<span class="success--text">Tu plan actual</span>
 								</template>
-								<template v-if="item.status === 'pending'">
+								<template v-if="item.payment === 'pending'">
 									<span class="warning--text">Pendiente</span>
 								</template>
-								<template v-if="item.status === 'expired'">
+								<template v-if="item.payment === 'expired'">
 									<span class="error--text">Expirado</span>
 								</template>
 							</div>
 						</div>
-						<div style="width: 20px; height: 20px" :class="status(item.status)"></div>
+						<div style="width: 20px; height: 20px" :class="status(item)"></div>
 					</v-card-title>
-					<!-- <v-card-text>
+					<v-card-text>
 						<div>
-							<span class="headline font-weight-bold">{{ item.price }}</span>
+							<span class="headline font-weight-bold">{{ item.totalPrice }}</span>
 							<span>/ {{ item.period }}</span>
 						</div>
-						{{ item.fullInfo.description }}
+						{{ setDescrition(item.title) }}
 					</v-card-text>
 					<v-card-text>
-						{{ item.fullInfo.subtitle }}
-					</v-card-text> -->
+						{{ setSubtitle(item.title) }}
+					</v-card-text>
 				</v-card>
 			</template>
 		</template>
@@ -121,10 +127,11 @@ export default {
 		};
 	},
 	methods: {
-		status(status) {
-			if (status === 'success') return 'success rounded-xl';
-			if (status === 'pending') return 'warning rounded-xl';
-			if (status === 'expired') return 'error rounded-xl';
+		status(item) {
+			if (this.itemExpired(item)) return 'grey rounded-xl';
+			if (item.payment === 'success') return 'success rounded-xl';
+			if (item.payment === 'pending') return 'warning rounded-xl';
+			if (item.payment === 'failed') return 'error rounded-xl';
 		},
 		setDescrition(title) {
 			if (title === 'Sesiones por videollamada')
@@ -141,6 +148,9 @@ export default {
 		},
 		setDate(date) {
 			return moment(date).format('l');
+		},
+		itemExpired(item) {
+			return item.payment === 'success' && moment().isBefore(moment(item.expiration));
 		},
 	},
 };
