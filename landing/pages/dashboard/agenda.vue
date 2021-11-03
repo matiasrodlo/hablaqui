@@ -557,8 +557,12 @@ export default {
 			if (this.$auth.$state.user.sessions) {
 				this.idPsychologist = this.$auth.$state.user.sessions.psychologist;
 				await this.getClients(this.idPsychologist);
-				await this.getSessions(this.idPsychologist);
+				await this.getSessions({
+					idPsychologist: this.idPsychologist,
+					idUser: this.$auth.$state.user.sessions.user,
+				});
 				this.events = this.sessions;
+				console.log(this.events);
 			}
 		},
 		async submitUser() {

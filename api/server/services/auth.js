@@ -29,9 +29,12 @@ const login = async user => {
 };
 
 const getSessions = async user => {
+	// User retorna un objeto con sus sessiones
 	if (user.role === 'user') return await Sessions.findOne({ user: user._id });
+
+	// Psicologo retorna array de muchas sessiones
 	if (user.role === 'psychologist')
-		return await Sessions.findOne({ psychologist: user.psychologist });
+		return await Sessions.find({ psychologist: user.psychologist });
 	return null;
 };
 

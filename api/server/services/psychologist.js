@@ -23,66 +23,56 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
-const getSessions = async (user, idPsy) => {
-	const sessions = await Sessions.find({ psychologist: idPsy, user: user });
-	console.log(sessions);
-	const mappedSessions = setSession(user, idPsy, sessions);
+const getSessions = async (userLogged, idUser, idPsy) => {
+	const sessions = await Sessions.find({
+		psychologist: idPsy,
+		user: idUser,
+	}).populate('psychologist user');
+	const mappedSessions = setSession(userLogged.role, sessions);
 
 	logInfo('obtuvo todos las sesiones');
-	return okResponse('sesiones obtenidas', { mappedSessions });
+	return okResponse('sesiones obtenidas', { sessions: mappedSessions });
 };
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
-const setSession = async (user, psychologist, sessions) => {
-	var filteredSessions = [];
-
-	if (user.role === 'user') filteredSessions.push(...sessions);
-
-	if (user.role === 'psychologist') {
-		// user is psychologist
-		filteredSessions.push(await Sessions.find({ user: user._id }));
-	}
-
-	const allSessions = filteredSessions
-		.map(async item => {
+const setSession = (role, sessions) => {
+	const items = sessions
+		.flatMap(item => {
 			let name = '';
 			let lastName = '';
-			let idUser = item.user;
-			if (user.role === 'psychologist') {
-				if (item.user && !Array.isArray(item.user)) {
-					const user = await User.findById(item.user);
-					name = user.name;
-					lastName = user.lastName ? user.lastName : '';
-					idUser = user._id;
+
+			// Establece nombre de quien pertenece cada sesion
+			if (role === 'psychologist') {
+				if (item.user) {
+					name = item.user.name;
+					lastName = item.user.lastName ? item.user.lastName : '';
 				}
-			} else if (user.role === 'user') {
-				if (item.user && !Array.isArray(item.user)) {
-					const psy = await Psychologist.findById(psychologist);
-					idUser = psy._id;
-					name = psy.name;
-					lastName = psy.lastName ? psy.lastName : '';
-				}
+			} else if (role === 'user') {
+				name = item.psychologist.name;
+				lastName = item.psychologist.lastName
+					? item.psychologist.lastName
+					: '';
 			}
-			const currentSessions = item.session.map(session => {
-				const start = moment(session.date).format('DD-MM-YYYY hh:mm');
-				const end = moment(session.date)
-					.add(60, 'minutes')
-					.format('DD-MM-YYYY hh:mm');
+
+			return item.session.map(session => {
+				const start = moment(session.date);
+				const end = moment(session.date).add(60, 'minutes');
 				return {
 					name: `${name} ${lastName}`,
 					details: `Sesion con ${name}`,
 					start,
 					end,
 					sessionId: item._id,
-					idUser,
-					idPsychologist: psychologist._id,
+					idUser: item.user._id,
+					idPsychologist: item.psychologist._id,
 					url: item.roomsUrl,
 				};
 			});
-			return currentSessions;
 		})
-		.filter(el => el.start !== 'Invalid date' && el.end !== 'Invalid date');
-	return allSessions;
+		.filter(
+			el => !isNaN(Date.parse(el.start)) && !isNaN(Date.parse(el.end))
+		);
+	return items;
 };
 
 // Utilizado en modal agenda cita online
