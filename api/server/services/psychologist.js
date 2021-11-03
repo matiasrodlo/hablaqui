@@ -36,7 +36,7 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = (role, sessions) => {
-	const items = sessions
+	return sessions
 		.flatMap(item => {
 			let name = '';
 			let lastName = '';
@@ -55,8 +55,12 @@ const setSession = (role, sessions) => {
 			}
 
 			return item.session.map(session => {
-				const start = moment(session.date);
-				const end = moment(session.date).add(60, 'minutes');
+				const start = moment(session.date, 'YYYY-DD-MM').format(
+					'YYYY-MM-DD hh:mm'
+				);
+				const end = moment(session.date, 'YYYY-DD-MM')
+					.add(60, 'minutes')
+					.format('YYYY-MM-DD hh:mm');
 				return {
 					name: `${name} ${lastName}`,
 					details: `Sesion con ${name}`,
@@ -72,7 +76,6 @@ const setSession = (role, sessions) => {
 		.filter(
 			el => !isNaN(Date.parse(el.start)) && !isNaN(Date.parse(el.end))
 		);
-	return items;
 };
 
 // Utilizado en modal agenda cita online

@@ -562,7 +562,6 @@ export default {
 					idUser: this.$auth.$state.user.sessions.user,
 				});
 				this.events = this.sessions;
-				console.log(this.events);
 			}
 		},
 		async submitUser() {
