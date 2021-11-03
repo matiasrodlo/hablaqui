@@ -111,7 +111,7 @@
 						<v-card-text
 							v-if="
 								$auth.$state.user &&
-								$auth.$state.user.plan.some(el => el.status === 'success')
+								$auth.$state.user.sessions.plan.some(el => el.payment === 'success')
 							"
 						>
 							<v-subheader class="primary--text body-1 px-0">
@@ -123,7 +123,7 @@
 						<v-list
 							v-if="
 								$auth.$state.user &&
-								$auth.$state.user.plan.some(el => el.status === 'success')
+								$auth.$state.user.sessions.plan.some(el => el.payment === 'success')
 							"
 							two-line
 							class="py-0"
@@ -152,7 +152,9 @@
 						<v-list
 							v-else-if="
 								!$auth.$state.user &&
-								!$auth.$state.user.plan.some(el => el.status === 'success') &&
+								!$auth.$state.user.sessions.plan.some(
+									el => el.payment === 'success'
+								) &&
 								listPsychologist.length
 							"
 							link
@@ -580,8 +582,8 @@ export default {
 		},
 		getMyPsy() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user') {
-				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-				if (user) return this.getPsy(user.psychologist);
+				const psy = this.$auth.$state.user.sessions.psychologist;
+				if (psy) return this.getPsy(psy);
 				else return null;
 			} else {
 				return null;
