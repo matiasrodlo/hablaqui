@@ -24,10 +24,18 @@ const getAll = async () => {
 };
 
 const getSessions = async (userLogged, idUser, idPsy) => {
-	const sessions = await Sessions.find({
+	let sessions = await Sessions.find({
 		psychologist: idPsy,
 		user: idUser,
 	}).populate('psychologist user');
+	sessions = sessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
 	const mappedSessions = setSession(userLogged.role, sessions);
 
 	logInfo('obtuvo todos las sesiones');

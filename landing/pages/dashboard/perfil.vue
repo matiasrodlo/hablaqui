@@ -144,11 +144,11 @@ export default {
 	middleware: ['auth'],
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
-			if ($auth.$state.user.plan.length) {
-				const item = $auth.$state.user.plan.find(el => el.status === 'success');
-				if (item) {
+			if ($auth.$state.user.sessions) {
+				const idPsychologist = $auth.$state.user.sessions.psychologist;
+				if (idPsychologist) {
 					const { psychologist } = await $axios.$get(
-						`/psychologists/one/${item.psychologist}`
+						`/psychologists/one/${idPsychologist}`
 					);
 					return { psychologist };
 				}

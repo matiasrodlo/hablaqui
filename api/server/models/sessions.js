@@ -50,6 +50,12 @@ let session = new Schema({
 		type: Boolean,
 		default: 'false',
 	},
+	// TODO: en un futuro se puede agregar sistema de mensajeria para confirmar sesion o cancelar
+	status: {
+		type: String,
+		default: 'pending',
+		enum: ['pending', 'confirmed', 'canceled', 'failed'],
+	},
 });
 let sessionSchema = new Schema({
 	user: {
