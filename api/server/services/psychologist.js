@@ -111,8 +111,6 @@ const getFormattedSessions = async idPsychologist => {
 			: [];
 	});
 
-	console.log(daySessions);
-
 	sessions = length.map(el => {
 		const day = moment().add(el, 'days');
 
@@ -225,7 +223,6 @@ const match = async body => {
  * @returns
  */
 const createPlan = async ({ payload }) => {
-	console.log(payload);
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
