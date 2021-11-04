@@ -172,7 +172,7 @@ export default {
 				price: this.pay ? this.pay : this.priceInt,
 				description: this.plan.title,
 				quantity: 1,
-				plan: createdPlan._id,
+				plan: createdPlan.plan._id,
 			};
 			const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
 			this.loading = false;

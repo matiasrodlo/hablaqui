@@ -95,13 +95,9 @@ const createPsychologistPreference = async (body, res) => {
 
 const successPay = async params => {
 	const { planId } = params;
-	const updatedPlan = await Sessions.findByIdAndUpdate(
-		planId,
-		{
-			$set: { 'plan.$.payment': 'successful' },
-		},
-		{ new: true }
-	);
+	const foundPlan = await Sessions.findById(planId);
+	foundPlan.plan.at(-1).payment = 'success';
+	await foundPlan.save();
 
 	// Aqui necesitas cambiarlo, no se muy bien como funciona el tema de correos.
 	// Email scheduling for appointment reminder for the user
