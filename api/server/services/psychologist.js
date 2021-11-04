@@ -292,14 +292,16 @@ const createPlan = async ({ payload }) => {
 
 		return okResponse('Plan creado', { plan: created });
 	} else {
-		const randomToken1 = (Math.random() + 1).toString(36).substring(2);
-		const randomToken2 = (Math.random() + 1).toString(36).substring(2);
+		const roomId = require('crypto')
+			.createHash('md5')
+			.update(`${payload.user}${payload.psychologist}`)
+			.digest('hex');
 		const created = await Sessions.create({
 			user: payload.user,
 			psychologist: payload.psychologist,
 			plan: [newPlan],
 			session: [newSession],
-			roomsUrl: `${room}room/${randomToken1}-${randomToken2}`,
+			roomsUrl: `${room}room/${roomId}`,
 		});
 		chat.startConversation(payload.psychologist, payload.user);
 		return okResponse('Plan creado', { plan: created });
