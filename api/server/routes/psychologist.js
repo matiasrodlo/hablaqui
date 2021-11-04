@@ -98,7 +98,7 @@ psychologistsRouter.post(
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );

@@ -88,14 +88,18 @@ const setSession = (role, sessions) => {
 					.format('YYYY-MM-DD hh:mm');
 
 				return {
-					name: `${name} ${lastName}`,
+					_id: session._id,
 					details: `Sesion con ${name}`,
-					start,
 					end,
-					sessionId: item._id,
-					idUser: item.user._id,
 					idPsychologist: item.psychologist._id,
+					idUser: item.user._id,
+					name: `${name} ${lastName}`,
+					sessionNumber: session.sessionNumber,
+					sessionsId: item._id,
+					start,
+					status: session.status,
 					url: item.roomsUrl,
+					paidToPsychologist: session.paidToPsychologist,
 				};
 			});
 		})
@@ -388,50 +392,24 @@ const register = async body => {
 };
 
 /**
- * Necesita pruebas!
- * @param {ObjectId} psyId - Id del Psicologo
- * @param {String} date - La fecha donde se agendara (en formato ISO)
- * @returns Si esta disponible (true) o no (false)
+ * Reprogramacion de sesion
+ * @param {string} userLogged Usuario logeado
+ * @param {string} sessionsId sessionsId id de las sessiones
+ * @param {string} id id del sub scheme session
+ * @param {Object} newDate Datos a actualizar
+ * @returns sessions
  */
-const checkAvailability = async (psyId, date) => {
-	const sessions = Sessions.find({ psychologist: psyId });
-	const psychologist = Psychologist.findById(psyId);
+const reschedule = async (userLogged, sessionsId, id, newDate) => {
+	const date = `${newDate.date} ${newDate.hour}`;
 
-	if (
-		moment(date)
-			.isBefore(moment())
-			.add(psychologist.preferences.minimumRescheduleSession, 'hours')
-	) {
-		return false;
-	}
+	const sessions = await Sessions.findOneAndUpdate(
+		{ _id: sessionsId, 'session._id': id },
+		{ $set: { 'session.$.date': date } },
+		{ new: true }
+	).populate('psychologist user');
 
-	const formatted = sessions.map(e => e.sessions).flat();
-
-	const found = formatted.find(el => el == date);
-	return found ? false : true;
-};
-
-const reschedule = async (user, id, newDate) => {
-	newDate = moment(
-		`${newDate.date} ${newDate.hour}`,
-		`DD/MM/YYYY HH:mm`
-	).toISOString();
-
-	const availability = checkAvailability(user.psychologist, newDate);
-	if (!availability)
-		return conflictResponse('El psicologo no esta disponible');
-
-	const session = await Sessions.findOne({
-		user: user._id,
-		psychologist: user.psychologist,
-	});
-	let foundSession = session.session.find(el => el._id.toString() == id);
-	foundSession.date = newDate;
-	await session.save();
-
-	// No se como funciona setSession
 	return okResponse('Hora actualizada', {
-		sessions: setSession(user, savePsychologist),
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 
