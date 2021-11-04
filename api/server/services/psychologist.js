@@ -55,40 +55,37 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 	sessions = setSession(userLogged.role, sessions);
 
 	logInfo('obtuvo todos las sesiones');
-	logInfo(sessions);
 
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = (role, sessions) => {
-	return sessions.flatMap(item => {
-		let name = '';
-		let lastName = '';
+	return sessions
+		.flatMap(item => {
+			let name = '';
+			let lastName = '';
 
-		// Establece nombre de quien pertenece cada sesion
-		if (role === 'psychologist') {
-			if (item.user) {
-				name = item.user.name;
-				lastName = item.user.lastName ? item.user.lastName : '';
+			// Establece nombre de quien pertenece cada sesion
+			if (role === 'psychologist') {
+				if (item.user) {
+					name = item.user.name;
+					lastName = item.user.lastName ? item.user.lastName : '';
+				}
+			} else if (role === 'user') {
+				name = item.psychologist.name;
+				lastName = item.psychologist.lastName
+					? item.psychologist.lastName
+					: '';
 			}
-		} else if (role === 'user') {
-			name = item.psychologist.name;
-			lastName = item.psychologist.lastName
-				? item.psychologist.lastName
-				: '';
-		}
 
-		return item.plan
-			.map(plan => {
-				return plan.session.map(session => {
-					const start = moment(
-						session.date,
-						'MM/DD/YYYY HH:mm'
-					).format('YYYY-MM-DD hh:mm');
-					const end = moment(session.date, 'MM/DD/YYYY HH:mm')
-						.add(60, 'minutes')
-						.format('YYYY-MM-DD hh:mm');
+			return item.session.map(session => {
+				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
+					'YYYY-MM-DD hh:mm'
+				);
+				const end = moment(session.date, 'MM/DD/YYYY HH:mm')
+					.add(60, 'minutes')
+					.format('YYYY-MM-DD hh:mm');
 
 				return {
 					_id: session._id,
@@ -141,11 +138,9 @@ const getFormattedSessions = async idPsychologist => {
 	);
 
 	const daySessions = psySessions.flatMap(item => {
-		return item.plan.map(plan => {
-			return plan.session.length
-				? plan.session.map(session => session.date)
-				: [];
-		});
+		return item.session.length
+			? item.session.map(session => session.date)
+			: [];
 	});
 
 	sessions = length.map(el => {
@@ -170,7 +165,7 @@ const getFormattedSessions = async idPsychologist => {
 			}),
 		};
 	});
-	logInfo(sessions);
+
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
@@ -362,22 +357,13 @@ const createSession = async ({ payload }) => {
 			foundSession.remainingSessions} / ${foundSession.totalSessions}`,
 		paidToPsychologist: false,
 	};
-	foundSession.plan[foundSession.plan.length - 1].session.push(newSession);
+	foundSession.session.push(newSession);
 	await foundSession.save();
 
 	logInfo('creo una nueva cita');
-	logInfo(
-		foundSession.plan[foundSession.plan.length - 1].session[
-			foundSession.plan[foundSession.plan.length - 1].session.length - 1
-		]._id
-	);
 
 	return okResponse('sesion creada', {
-		id:
-			foundSession.plan[foundSession.plan.length - 1].session[
-				foundSession.plan[foundSession.plan.length - 1].session.length -
-					1
-			]._id,
+		id: foundSession.session[foundSession.session.length - 1]._id,
 	});
 };
 
@@ -422,35 +408,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		{ new: true }
 	).populate('psychologist user');
 
-	const formatted = sessions.map(e => e.sessions).flat();
-
-	const found = formatted.find(el => el == date);
-	return found ? false : true;
-};
-
-const reschedule = async (user, id, newDate) => {
-	newDate = moment(
-		`${newDate.date} ${newDate.hour}`,
-		`DD/MM/YYYY HH:mm`
-	).toISOString();
-
-	const availability = checkAvailability(user.psychologist, newDate);
-	if (!availability)
-		return conflictResponse('El psicologo no esta disponible');
-
-	const session = await Sessions.findOne({
-		user: user._id,
-		psychologist: user.psychologist,
-	});
-	let foundSession = session.plan[session.plan.length - 1].session.find(
-		el => el._id.toString() == id
-	);
-	foundSession.date = newDate;
-	await session.save();
-
-	// No se como funciona setSession
 	return okResponse('Hora actualizada', {
-		sessions: setSession(user, session),
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 
@@ -509,9 +468,9 @@ const cancelSession = async (user, sessionId) => {
 		user: user._id,
 		psychologist: user.psychologist,
 	});
-	sessions.plan[sessions.plan.length - 1].session = sessions.plan[
-		sessions.plan.length - 1
-	].session.filter(el => el._id.toString() != sessionId);
+	sessions.session = sessions.session.filter(
+		el => el._id.toString() != sessionId
+	);
 	await sessions.save();
 
 	return okResponse('Sesion cancelada', { sessions });
@@ -785,7 +744,7 @@ const paymentsInfo = async user => {
 	}).populate('User');
 	const response = allSessions.map(data => {
 		const plan = data.plan[data.plan.length - 1];
-		return plan.session.map(session => {
+		return data.session.map(session => {
 			return {
 				...session,
 				sessionPrice: plan.sessionPrice,
