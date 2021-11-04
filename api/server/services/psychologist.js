@@ -282,6 +282,7 @@ const createPlan = async (user, payload) => {
 	if (user.role === 'user') {
 		const sessions = await Sessions.findOne({ user: payload.user });
 		if (
+			sessions &&
 			sessions.plan.some(
 				item =>
 					item.payment === 'success' &&
