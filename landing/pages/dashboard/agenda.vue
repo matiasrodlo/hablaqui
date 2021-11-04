@@ -605,7 +605,6 @@ export default {
 				id: this.selectedEvent._id,
 				newDate,
 			});
-			console.log(response);
 			this.events = this.events.map(item => {
 				if (item._id !== response._id) {
 					// This isn't the item we care about - keep it as-is
