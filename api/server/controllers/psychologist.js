@@ -63,8 +63,12 @@ const psychologistsController = {
 	},
 	async createPlan(req, res) {
 		try {
+			const { user } = req;
 			const { body } = req;
-			const { data, code } = await psychologistsService.createPlan(body);
+			const { data, code } = await psychologistsService.createPlan(
+				user,
+				body.payload
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error creando una plan');

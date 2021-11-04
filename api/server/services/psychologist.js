@@ -239,7 +239,7 @@ const match = async body => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
-const createPlan = async ({ payload }) => {
+const createPlan = async (user, payload) => {
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -278,6 +278,18 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+
+	if (user.role === 'user') {
+		const sessions = await Sessions.findOne({ user: payload.user });
+		if (
+			sessions.plan.some(
+				item =>
+					item.payment === 'success' &&
+					moment().isBefore(moment(item.expiration))
+			)
+		)
+			return conflictResponse('Ya tienes un plan activo');
+	}
 
 	if (
 		await Sessions.exists({
