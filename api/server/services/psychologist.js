@@ -24,10 +24,24 @@ const getAll = async () => {
 };
 
 const getSessions = async (userLogged, idUser, idPsy) => {
-	let sessions = await Sessions.find({
-		psychologist: idPsy,
-		user: idUser,
-	}).populate('psychologist user');
+	// iniciamos la variable
+	let sessions;
+
+	// buscamos la sesiones correspondiente a ese user y psicologo
+	if (userLogged.role === 'user') {
+		sessions = await Sessions.find({
+			psychologist: idPsy,
+			user: idUser,
+		}).populate('psychologist user');
+	}
+
+	if (userLogged.role === 'psychologist') {
+		sessions = await Sessions.find({
+			psychologist: idPsy,
+		}).populate('psychologist user');
+	}
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(item =>
 		item.plan.some(plan => {
 			return (
@@ -36,10 +50,13 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			);
 		})
 	);
-	const mappedSessions = setSession(userLogged.role, sessions);
+
+	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
+	sessions = setSession(userLogged.role, sessions);
 
 	logInfo('obtuvo todos las sesiones');
-	return okResponse('sesiones obtenidas', { sessions: mappedSessions });
+
+	return okResponse('sesiones obtenidas', { sessions });
 };
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo

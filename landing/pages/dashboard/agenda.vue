@@ -554,12 +554,19 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			if (this.$auth.$state.user.sessions) {
+			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
 				this.idPsychologist = this.$auth.$state.user.sessions.psychologist;
-				await this.getClients(this.idPsychologist);
 				await this.getSessions({
 					idPsychologist: this.idPsychologist,
 					idUser: this.$auth.$state.user.sessions.user,
+				});
+				this.events = this.sessions;
+			}
+			if (this.$auth.$state.user.role === 'psychologist' && this.$auth.$state.user.sessions) {
+				this.idPsychologist = this.$auth.$state.user.psychologist;
+				await this.getClients(this.idPsychologist);
+				await this.getSessions({
+					idPsychologist: this.idPsychologist,
 				});
 				this.events = this.sessions;
 			}
