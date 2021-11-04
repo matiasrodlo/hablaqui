@@ -63,12 +63,13 @@ const setSession = (role, sessions) => {
 			}
 
 			return item.session.map(session => {
-				const start = moment(session.date, 'YYYY-DD-MM').format(
+				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
 					'YYYY-MM-DD hh:mm'
 				);
-				const end = moment(session.date, 'YYYY-DD-MM')
+				const end = moment(session.date, 'MM/DD/YYYY HH:mm')
 					.add(60, 'minutes')
 					.format('YYYY-MM-DD hh:mm');
+
 				return {
 					name: `${name} ${lastName}`,
 					details: `Sesion con ${name}`,
