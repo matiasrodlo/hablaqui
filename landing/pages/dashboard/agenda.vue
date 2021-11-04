@@ -469,11 +469,16 @@ export default {
 		selectedEvent: {
 			details: '',
 			end: '',
-			start: '',
-			name: '',
-			idUser: '',
-			sessionId: '',
 			idPsychologist: '',
+			idUser: '',
+			name: '',
+			paidToPsychologist: false,
+			sessionNumber: '',
+			sessionsId: '',
+			start: '',
+			status: '',
+			url: '',
+			_id: '',
 		},
 		selectedElement: null,
 		selectedOpen: false,
@@ -595,11 +600,23 @@ export default {
 		},
 		async reschedule(item) {
 			const newDate = { date: item.date, hour: item.start };
-			this.events = await this.setReschedule({
-				sessionId: this.event.sessionId,
+			const response = await this.setReschedule({
+				sessionsId: this.selectedEvent.sessionsId,
+				id: this.selectedEvent._id,
 				newDate,
 			});
+			this.events = this.events.map(item => {
+				if (item._id !== response._id) {
+					// This isn't the item we care about - keep it as-is
+					return item;
+				}
 
+				// Otherwise, this is the one we want - return an updated value
+				return {
+					...item,
+					...response,
+				};
+			});
 			this.event = null;
 			this.dialog = false;
 		},
