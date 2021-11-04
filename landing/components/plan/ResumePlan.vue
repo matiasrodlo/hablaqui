@@ -175,8 +175,8 @@ export default {
 				plan: createdPlan.plan._id,
 			};
 			const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
-			this.loading = false;
 			window.location.href = preferenceData.body.init_point;
+			this.loading = false;
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
