@@ -96,45 +96,45 @@ const createPsychologistPreference = async (body, res) => {
 const successPay = async params => {
 	const { planId } = params;
 	const foundPlan = await Sessions.findById(planId);
-	foundPlan.plan.at(-1).payment = 'success';
+	foundPlan.plan[foundPlan.plan.length - 1].payment = 'success';
 	await foundPlan.save();
 
 	// Aqui necesitas cambiarlo, no se muy bien como funciona el tema de correos.
 	// Email scheduling for appointment reminder for the user
-	const sessionData = foundPsychologist.sessions.filter(
-		session => session._id.toString() == sessionId
-	)[0];
+	// const sessionData = foundPsychologist.sessions.filter(
+	// 	session => session._id.toString() == sessionId
+	// )[0];
 
-	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
-		wasScheduled: false,
-		type: 'reminder-user',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
-	});
-	// Email scheduling for appointment reminder for the psychologist
-	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
-		wasScheduled: false,
-		type: 'reminder-psy',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
-	});
-	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
-	await mailService.sendAppConfirmationPsy(
-		foundPsychologist,
-		foundUser,
-		sessionData.date
-	);
+	// await email.create({
+	// 	mailgunIdL: undefined,
+	// 	sessionDate: sessionData.date,
+	// 	wasScheduled: false,
+	// 	type: 'reminder-user',
+	// 	queuedAt: undefined,
+	// 	scheduledAt: undefined,
+	// 	userRef: userId,
+	// 	psyRef: psyId,
+	// 	sessionRef: sessionId,
+	// });
+	// // Email scheduling for appointment reminder for the psychologist
+	// await email.create({
+	// 	mailgunIdL: undefined,
+	// 	sessionDate: sessionData.date,
+	// 	wasScheduled: false,
+	// 	type: 'reminder-psy',
+	// 	queuedAt: undefined,
+	// 	scheduledAt: undefined,
+	// 	userRef: userId,
+	// 	psyRef: psyId,
+	// 	sessionRef: sessionId,
+	// });
+	// // Send appointment confirmation for user and psychologist
+	// await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
+	// await mailService.sendAppConfirmationPsy(
+	// 	foundPsychologist,
+	// 	foundUser,
+	// 	sessionData.date
+	// );
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');
