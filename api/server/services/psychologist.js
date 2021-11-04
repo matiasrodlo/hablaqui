@@ -122,6 +122,17 @@ const getFormattedSessions = async idPsychologist => {
 	let psySessions = await Sessions.find({
 		psychologist: idPsychologist,
 	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	psySessions = psySessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
 	const daySessions = psySessions.flatMap(item => {
 		return item.session.length
 			? item.session.map(session => session.date)
