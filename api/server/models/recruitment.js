@@ -215,6 +215,25 @@ let recruitment = new Schema(
 			type: String,
 			default: '',
 		},
+		howFindOut: {
+			type: String,
+			default: 'Búsqueda de internet',
+			enum: [
+				'Búsqueda de internet',
+				'Por redes sociales',
+				'Por amigos/familiares',
+				'Por blog',
+				'Anuncio en google',
+				'Otro',
+			],
+		},
+		celNumberPrefix: {
+			type: String,
+			default: '+56',
+		},
+		celNumber: {
+			type: Number,
+		},
 		isExclusiveActivity: {
 			type: Boolean,
 			default: false,
