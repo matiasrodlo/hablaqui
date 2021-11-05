@@ -168,14 +168,16 @@ export default {
 				coupon: this.pay ? this.coupon : '',
 			};
 			const createdPlan = await this.createSession(planPayload);
-			const mercadopagoPayload = {
-				price: this.pay ? this.pay : this.priceInt,
-				description: this.plan.title,
-				quantity: 1,
-				plan: createdPlan.plan._id,
-			};
-			const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
-			window.location.href = preferenceData.body.init_point;
+			if (createdPlan) {
+				const mercadopagoPayload = {
+					price: this.pay ? this.pay : this.priceInt,
+					description: this.plan.title,
+					quantity: 1,
+					plan: createdPlan.plan._id,
+				};
+				const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
+				window.location.href = preferenceData.body.init_point;
+			}
 			this.loading = false;
 		},
 		...mapActions({

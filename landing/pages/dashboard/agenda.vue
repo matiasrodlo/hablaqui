@@ -1,276 +1,299 @@
 <template>
-	<v-container fluid style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Mi sesiones" />
-		<v-row justify="center" style="height: calc(100vh - 110px)">
-			<v-col class="heightCalendar" cols="12" md="10">
-				<v-sheet class="mt-4 mt-md-0">
-					<v-toolbar flat>
-						<v-btn class="mr-4" color="primary" depressed @click="setToday">
-							Hoy
-						</v-btn>
-						<v-btn icon x-large @click="prev">
-							<icon :icon="mdiChevronLeft" color="grey lighten-1" x-large />
-						</v-btn>
-						<v-btn icon small x-large @click="next">
-							<icon :icon="mdiChevronRight" color="grey lighten-1" x-large />
-						</v-btn>
-						<v-toolbar-title
-							v-if="$refs.calendar"
-							class="text--secondary text-capitalize"
+	<div>
+		<v-container fluid style="height: 100vh; max-width: 1200px">
+			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
+			<v-row justify="center" style="height: calc(100vh - 110px)">
+				<v-col class="heightCalendar" cols="12" md="10">
+					<v-sheet class="mt-4 mt-md-0">
+						<v-toolbar flat>
+							<v-btn class="mr-4" color="primary" depressed @click="setToday">
+								Hoy
+							</v-btn>
+							<v-btn icon x-large @click="prev">
+								<icon :icon="mdiChevronLeft" color="grey lighten-1" x-large />
+							</v-btn>
+							<v-btn icon small x-large @click="next">
+								<icon :icon="mdiChevronRight" color="grey lighten-1" x-large />
+							</v-btn>
+							<v-toolbar-title
+								v-if="$refs.calendar"
+								class="text--secondary text-capitalize"
+							>
+								{{ $refs.calendar.title }}
+							</v-toolbar-title>
+							<v-spacer></v-spacer>
+							<v-menu bottom right>
+								<template #activator="{ on, attrs }">
+									<v-btn color="grey lighten-1" outlined v-bind="attrs" v-on="on">
+										<span>{{ typeToLabel[type] }}</span>
+										<icon :icon="mdiMenuDown" color="grey lighten-1" right />
+									</v-btn>
+								</template>
+								<v-list>
+									<v-list-item @click="type = 'day'">
+										<v-list-item-title class="text--secondary"
+											>Dia
+										</v-list-item-title>
+									</v-list-item>
+									<v-list-item @click="type = 'week'">
+										<v-list-item-title class="text--secondary"
+											>Semana
+										</v-list-item-title>
+									</v-list-item>
+									<v-list-item @click="type = 'month'">
+										<v-list-item-title class="text--secondary"
+											>Mes
+										</v-list-item-title>
+									</v-list-item>
+									<v-list-item @click="type = '4day'">
+										<v-list-item-title class="text--secondary"
+											>4 dias
+										</v-list-item-title>
+									</v-list-item>
+								</v-list>
+							</v-menu>
+						</v-toolbar>
+					</v-sheet>
+					<v-sheet height="calc(100% - 64px)">
+						<v-calendar
+							ref="calendar"
+							v-model="focus"
+							:events="events"
+							:now="today"
+							:type="type"
+							color="primary"
+							locale="es"
+							@click:event="showEvent"
+							@click:more="viewDay"
+							@click:day="addAppointment"
+							@click:date="addAppointment"
+						></v-calendar>
+						<v-menu
+							v-model="selectedOpen"
+							:activator="selectedElement"
+							:close-on-content-click="false"
+							offset-x
 						>
-							{{ $refs.calendar.title }}
-						</v-toolbar-title>
-						<v-spacer></v-spacer>
-						<v-menu bottom right>
-							<template #activator="{ on, attrs }">
-								<v-btn color="grey lighten-1" outlined v-bind="attrs" v-on="on">
-									<span>{{ typeToLabel[type] }}</span>
-									<icon :icon="mdiMenuDown" color="grey lighten-1" right />
-								</v-btn>
-							</template>
-							<v-list>
-								<v-list-item @click="type = 'day'">
-									<v-list-item-title class="text--secondary"
-										>Dia
-									</v-list-item-title>
-								</v-list-item>
-								<v-list-item @click="type = 'week'">
-									<v-list-item-title class="text--secondary"
-										>Semana
-									</v-list-item-title>
-								</v-list-item>
-								<v-list-item @click="type = 'month'">
-									<v-list-item-title class="text--secondary"
-										>Mes
-									</v-list-item-title>
-								</v-list-item>
-								<v-list-item @click="type = '4day'">
-									<v-list-item-title class="text--secondary"
-										>4 dias
-									</v-list-item-title>
-								</v-list-item>
-							</v-list>
-						</v-menu>
-					</v-toolbar>
-				</v-sheet>
-				<v-sheet height="calc(100% - 64px)">
-					<v-calendar
-						ref="calendar"
-						v-model="focus"
-						:events="events"
-						:now="today"
-						:type="type"
-						color="primary"
-						locale="es"
-						@click:event="showEvent"
-						@click:more="viewDay"
-						@click:day="addAppointment"
-						@click:date="addAppointment"
-					></v-calendar>
-					<v-menu
-						v-model="selectedOpen"
-						:activator="selectedElement"
-						:close-on-content-click="false"
-						offset-x
-					>
-						<v-card color="grey lighten-4" flat min-width="350px">
-							<v-card-text>
-								<v-row justify="space-between">
-									<v-col class="body-1 secondary--text" cols="7">
-										{{ selectedEvent.name }}
-									</v-col>
-									<v-col class="text-right">
-										<v-btn icon>
-											<icon :icon="mdiPencil" color="grey lighten-1" />
-										</v-btn>
-										<v-btn icon>
-											<icon :icon="mdiTrashCan" color="grey lighten-1" />
-										</v-btn>
-									</v-col>
-								</v-row>
-							</v-card-text>
-							<v-card-text>
-								<icon :icon="mdiClockOutline" color="grey lighten-1" left />
-								<span>{{ setSubtitle(selectedEvent.start) }}</span>
-							</v-card-text>
-							<v-divider></v-divider>
-							<v-card-actions>
-								<v-btn
-									:href="selectedEvent.url"
-									target="_blank"
-									color="primary"
-									text
-								>
-									Ir a video llamada
-								</v-btn>
-								<v-spacer></v-spacer>
-								<v-btn
-									color="secondary"
-									text
-									@click="() => openDialog(selectedEvent)"
-								>
-									Reprogramar
-								</v-btn>
-							</v-card-actions>
-							<v-dialog
-								v-if="dialog"
-								v-model="dialog"
-								max-width="600"
-								transition="dialog-top-transition"
-							>
-								<v-card rounded="xl">
-									<v-card-text
-										class="text-center primary white--text text-h5 py-3"
+							<v-card color="grey lighten-4" flat min-width="350px">
+								<v-card-text>
+									<v-row justify="space-between">
+										<v-col class="body-1 secondary--text" cols="7">
+											{{ selectedEvent.name }}
+										</v-col>
+										<v-col class="text-right">
+											<v-btn icon>
+												<icon :icon="mdiPencil" color="grey lighten-1" />
+											</v-btn>
+											<v-btn icon>
+												<icon :icon="mdiTrashCan" color="grey lighten-1" />
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-card-text>
+								<v-card-text>
+									<icon :icon="mdiClockOutline" color="grey lighten-1" left />
+									<span>{{ setSubtitle(selectedEvent.start) }}</span>
+								</v-card-text>
+								<v-divider></v-divider>
+								<v-card-actions>
+									<v-btn
+										:href="selectedEvent.url"
+										target="_blank"
+										color="primary"
+										text
 									>
-										<div class="body-1 font-weight-bold text-center">
-											Reprogramar tu sesion
-										</div>
-									</v-card-text>
-									<v-card-text class="px-0 px-sm-2 px-md-4">
-										<calendar
-											:id-psy="idPsychologist"
-											:set-date="e => reschedule(e)"
-											title-button="Reprogramar sesión"
-										/>
-									</v-card-text>
-								</v-card>
-							</v-dialog>
-						</v-card>
-					</v-menu>
-					<v-dialog
-						v-if="dialogAppointment"
-						v-model="dialogAppointment"
-						max-width="550"
-						transition="dialog-top-transition"
-						@click:outside="closeDialog"
-					>
-						<v-card min-height="300" width="550" rounded="lg">
-							<v-card-text
-								class="
-									d-flex
-									justify-space-between justify-center
-									primary
-									white--text
-									text-h5
-									py-3
-								"
-							>
-								<div class="body-1 font-weight-bold pt-2">
-									{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
-								</div>
-								<v-btn icon @click="closeDialog">
-									<icon :icon="mdiClose" color="white" />
-								</v-btn>
-							</v-card-text>
-							<v-card-text v-if="dialogNewUser" class="pt-3">
-								<v-row>
-									<v-col cols="6">
-										<v-text-field
-											v-model="form.name"
-											type="text"
-											dense
-											outlined
-											label="Nombre"
-											hide-details="auto"
-											:error-messages="nameErrors"
+										Ir a video llamada
+									</v-btn>
+									<v-spacer></v-spacer>
+									<v-btn
+										color="secondary"
+										text
+										@click="() => openDialog(selectedEvent)"
+									>
+										Reprogramar
+									</v-btn>
+								</v-card-actions>
+								<v-dialog
+									v-if="dialog"
+									v-model="dialog"
+									max-width="600"
+									transition="dialog-top-transition"
+								>
+									<v-card rounded="xl">
+										<v-card-text
+											class="text-center primary white--text text-h5 py-3"
 										>
-										</v-text-field>
-									</v-col>
-									<v-col cols="6">
-										<v-text-field
-											v-model="form.rut"
-											hide-details="auto"
-											type="text"
-											dense
-											outlined
-											label="Rut"
-										>
-										</v-text-field>
-									</v-col>
-									<v-col cols="6">
-										<v-text-field
-											v-model="form.email"
-											type="email"
-											dense
-											hide-details="auto"
-											outlined
-											label="email"
-											:error-messages="emailErrors"
-										>
-										</v-text-field>
-									</v-col>
-									<v-col cols="6">
-										<v-text-field
-											v-model="form.phone"
-											type="text"
-											dense
-											hide-details="auto"
-											outlined
-											prefix="+56"
-											label="Teléfono"
-										>
-										</v-text-field>
-									</v-col>
-								</v-row>
-								<v-row justify="center">
-									<v-col cols="6">
-										<v-btn :disabled="loadingCreatedUser" text @click="goBack">
-											Atras
-										</v-btn>
-										<v-btn
-											:loading="loadingCreatedUser"
-											rounded
-											color="primary"
-											@click="submitUser"
-										>
-											Agregar
-										</v-btn>
-									</v-col>
-								</v-row>
-							</v-card-text>
-							<v-card-text v-else class="pt-2">
-								<v-row>
-									<v-col class="font-weight-medium" cols="12">
-										Tipo de evento
-									</v-col>
-									<v-col cols="12">
-										<v-select
-											v-model="typeSession"
-											:items="[
-												{ text: 'Sesión online', value: 'sesion online' },
-												{
-													text: 'Sesión presencial',
-													value: 'sesion presencial',
-												},
-												{
-													text: 'Compromiso privado',
-													value: 'compromiso privado',
-												},
-											]"
-											dense
-											hide-details
-											label="Seleccione"
-											outlined
-										></v-select>
-									</v-col>
-									<v-col cols="6">
-										<v-autocomplete
-											v-model="client"
-											:items="
-												clients.map(item => ({
-													...item,
-													text: `${item.name} ${
-														item.lastName ? item.lastName : ''
-													}`,
-												}))
-											"
-											dense
-											hide-details
-											label="Nombre"
-											outlined
-										>
-											<template #item="{ item }">
-												<div class="my-2">
+											<div class="body-1 font-weight-bold text-center">
+												Reprogramar tu sesion
+											</div>
+										</v-card-text>
+										<v-card-text class="px-0 px-sm-2 px-md-4">
+											<calendar
+												:id-psy="idPsychologist"
+												:set-date="e => reschedule(e)"
+												title-button="Reprogramar sesión"
+											/>
+										</v-card-text>
+									</v-card>
+								</v-dialog>
+							</v-card>
+						</v-menu>
+						<v-dialog
+							v-if="dialogAppointment"
+							v-model="dialogAppointment"
+							max-width="550"
+							transition="dialog-top-transition"
+							@click:outside="closeDialog"
+						>
+							<v-card min-height="300" width="550" rounded="lg">
+								<v-card-text
+									class="
+										d-flex
+										justify-space-between justify-center
+										primary
+										white--text
+										text-h5
+										py-3
+									"
+								>
+									<div class="body-1 font-weight-bold pt-2">
+										{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
+									</div>
+									<v-btn icon @click="closeDialog">
+										<icon :icon="mdiClose" color="white" />
+									</v-btn>
+								</v-card-text>
+								<v-card-text v-if="dialogNewUser" class="pt-3">
+									<v-row>
+										<v-col cols="6">
+											<v-text-field
+												v-model="form.name"
+												type="text"
+												dense
+												outlined
+												label="Nombre"
+												hide-details="auto"
+												:error-messages="nameErrors"
+											>
+											</v-text-field>
+										</v-col>
+										<v-col cols="6">
+											<v-text-field
+												v-model="form.rut"
+												hide-details="auto"
+												type="text"
+												dense
+												outlined
+												label="Rut"
+											>
+											</v-text-field>
+										</v-col>
+										<v-col cols="6">
+											<v-text-field
+												v-model="form.email"
+												type="email"
+												dense
+												hide-details="auto"
+												outlined
+												label="email"
+												:error-messages="emailErrors"
+											>
+											</v-text-field>
+										</v-col>
+										<v-col cols="6">
+											<v-text-field
+												v-model="form.phone"
+												type="text"
+												dense
+												hide-details="auto"
+												outlined
+												prefix="+56"
+												label="Teléfono"
+											>
+											</v-text-field>
+										</v-col>
+									</v-row>
+									<v-row justify="center">
+										<v-col cols="6">
+											<v-btn
+												:disabled="loadingCreatedUser"
+												text
+												@click="goBack"
+											>
+												Atras
+											</v-btn>
+											<v-btn
+												:loading="loadingCreatedUser"
+												rounded
+												color="primary"
+												@click="submitUser"
+											>
+												Agregar
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-card-text>
+								<v-card-text v-else class="pt-2">
+									<v-row>
+										<v-col class="font-weight-medium" cols="12">
+											Tipo de evento
+										</v-col>
+										<v-col cols="12">
+											<v-select
+												v-model="typeSession"
+												:items="[
+													{
+														text: 'Sesión online',
+														value: 'sesion online',
+													},
+													{
+														text: 'Sesión presencial',
+														value: 'sesion presencial',
+													},
+													{
+														text: 'Compromiso privado',
+														value: 'compromiso privado',
+													},
+												]"
+												dense
+												hide-details
+												label="Seleccione"
+												outlined
+											></v-select>
+										</v-col>
+										<v-col cols="6">
+											<v-autocomplete
+												v-model="client"
+												:items="
+													clients.map(item => ({
+														...item,
+														text: `${item.name} ${
+															item.lastName ? item.lastName : ''
+														}`,
+													}))
+												"
+												dense
+												hide-details
+												label="Nombre"
+												outlined
+											>
+												<template #item="{ item }">
+													<div class="my-2">
+														<div class="body-2">
+															{{
+																`${item.name} ${
+																	item.lastName
+																		? item.lastName
+																		: ''
+																}`
+															}}
+														</div>
+														<div style="font-size: 10px">
+															{{ item.email }}
+														</div>
+													</div>
+												</template>
+												<template #selection="{ item }">
 													<div class="body-2">
 														{{
 															`${item.name} ${
@@ -278,139 +301,149 @@
 															}`
 														}}
 													</div>
-													<div style="font-size: 10px">
-														{{ item.email }}
-													</div>
-												</div>
-											</template>
-											<template #selection="{ item }">
-												<div class="body-2">
-													{{
-														`${item.name} ${
-															item.lastName ? item.lastName : ''
-														}`
-													}}
-												</div>
-											</template>
-										</v-autocomplete>
-									</v-col>
-									<v-col class="d-flex align-center" cols="6">
-										<span class="pointer" @click="dialogNewUser = true">
-											<v-btn
-												fab
-												depressed
-												color="primary"
-												style="width: 20px; height: 20px"
-											>
-												<icon :icon="mdiPlus" color="white" small />
-											</v-btn>
-											<span class="primary--text ml-2">
-												Consultante nuevo
-											</span>
-										</span>
-									</v-col>
-									<v-col cols="6">
-										<v-menu
-											ref="menu"
-											v-model="menu"
-											:close-on-content-click="false"
-											:return-value.sync="date"
-											min-width="auto"
-											offset-y
-											transition="scale-transition"
-										>
-											<template #activator="{ on, attrs }">
-												<v-text-field
-													v-model="date"
-													dense
-													hide-details
-													outlined
-													:append-icon="mdiCalendar"
-													readonly
-													v-bind="attrs"
-													v-on="on"
-												></v-text-field>
-											</template>
-											<v-date-picker v-model="date" no-title scrollable>
-												<v-spacer></v-spacer>
-												<v-btn color="primary" text @click="menu = false">
-													Cancelar
-												</v-btn>
+												</template>
+											</v-autocomplete>
+										</v-col>
+										<v-col class="d-flex align-center" cols="6">
+											<span class="pointer" @click="dialogNewUser = true">
 												<v-btn
+													fab
+													depressed
 													color="primary"
-													text
-													@click="$refs.menu.save(date)"
+													style="width: 20px; height: 20px"
 												>
-													Ok
+													<icon :icon="mdiPlus" color="white" small />
 												</v-btn>
-											</v-date-picker>
-										</v-menu>
-									</v-col>
-									<v-col class="text-center py-2" cols="6">
-										<v-select
-											:items="hours"
-											dense
-											full-width
-											hide-details
-											label="Hora"
-											outlined
-										></v-select>
-									</v-col>
-								</v-row>
-								<v-row justify="space-between">
-									<v-col cols="5">
-										<v-text-field
-											label="Valor"
-											dense
-											hide-details
-											outlined
-											prefix="$"
-										></v-text-field>
-									</v-col>
-									<v-col cols="6">
-										<v-btn text @click="closeDialog"> Cancelar </v-btn>
-										<v-btn rounded color="primary"> Agendar </v-btn>
-									</v-col>
-								</v-row>
-							</v-card-text>
-						</v-card>
-					</v-dialog>
-					<div class="text-right py-10">
-						<span class="mx-3 pointer">
-							<v-btn color="primary" depressed fab style="width: 20px; height: 20px">
-								<icon small :icon="mdiCheck" color="white" />
-							</v-btn>
-							<span class="ml-1 caption">Sesiones online</span>
-						</span>
-						<span class="mx-3 pointer">
-							<v-btn color="#00c6ea" depressed fab style="width: 20px; height: 20px">
-								<icon small :icon="mdiCheck" color="white" />
-							</v-btn>
-							<span class="ml-1 caption">Sesiones presenciales</span>
-						</span>
-						<span class="mx-3 pointer">
-							<v-btn color="#efb908" depressed fab style="width: 20px; height: 20px">
-								<icon small :icon="mdiCheck" color="white" />
-							</v-btn>
-							<span class="ml-1 caption">Compromiso privado</span>
-						</span>
-						<span class="mx-3 pointer">
-							<v-btn
-								color="grey"
-								depressed
-								fab
-								outlined
-								style="width: 20px; height: 20px"
-							>
-								<icon small :icon="mdiCheck" color="grey" />
-							</v-btn>
-							<span class="ml-1 caption">Disponibilidad</span>
-						</span>
-					</div>
-				</v-sheet>
-			</v-col>
-		</v-row>
-	</v-container>
+												<span class="primary--text ml-2">
+													Consultante nuevo
+												</span>
+											</span>
+										</v-col>
+										<v-col cols="6">
+											<v-menu
+												ref="menu"
+												v-model="menu"
+												:close-on-content-click="false"
+												:return-value.sync="date"
+												min-width="auto"
+												offset-y
+												transition="scale-transition"
+											>
+												<template #activator="{ on, attrs }">
+													<v-text-field
+														v-model="date"
+														dense
+														hide-details
+														outlined
+														:append-icon="mdiCalendar"
+														readonly
+														v-bind="attrs"
+														v-on="on"
+													></v-text-field>
+												</template>
+												<v-date-picker v-model="date" no-title scrollable>
+													<v-spacer></v-spacer>
+													<v-btn
+														color="primary"
+														text
+														@click="menu = false"
+													>
+														Cancelar
+													</v-btn>
+													<v-btn
+														color="primary"
+														text
+														@click="$refs.menu.save(date)"
+													>
+														Ok
+													</v-btn>
+												</v-date-picker>
+											</v-menu>
+										</v-col>
+										<v-col class="text-center py-2" cols="6">
+											<v-select
+												:items="hours"
+												dense
+												full-width
+												hide-details
+												label="Hora"
+												outlined
+											></v-select>
+										</v-col>
+									</v-row>
+									<v-row justify="space-between">
+										<v-col cols="5">
+											<v-text-field
+												label="Valor"
+												dense
+												hide-details
+												outlined
+												prefix="$"
+											></v-text-field>
+										</v-col>
+										<v-col cols="6">
+											<v-btn text @click="closeDialog"> Cancelar </v-btn>
+											<v-btn rounded color="primary"> Agendar </v-btn>
+										</v-col>
+									</v-row>
+								</v-card-text>
+							</v-card>
+						</v-dialog>
+						<div class="text-right py-10">
+							<span class="mx-3 pointer">
+								<v-btn
+									color="primary"
+									depressed
+									fab
+									style="width: 20px; height: 20px"
+								>
+									<icon small :icon="mdiCheck" color="white" />
+								</v-btn>
+								<span class="ml-1 caption">Sesiones online</span>
+							</span>
+							<span class="mx-3 pointer">
+								<v-btn
+									color="#00c6ea"
+									depressed
+									fab
+									style="width: 20px; height: 20px"
+								>
+									<icon small :icon="mdiCheck" color="white" />
+								</v-btn>
+								<span class="ml-1 caption">Sesiones presenciales</span>
+							</span>
+							<span class="mx-3 pointer">
+								<v-btn
+									color="#efb908"
+									depressed
+									fab
+									style="width: 20px; height: 20px"
+								>
+									<icon small :icon="mdiCheck" color="white" />
+								</v-btn>
+								<span class="ml-1 caption">Compromiso privado</span>
+							</span>
+							<span class="mx-3 pointer">
+								<v-btn
+									color="grey"
+									depressed
+									fab
+									outlined
+									style="width: 20px; height: 20px"
+								>
+									<icon small :icon="mdiCheck" color="grey" />
+								</v-btn>
+								<span class="ml-1 caption">Disponibilidad</span>
+							</span>
+						</div>
+					</v-sheet>
+				</v-col>
+			</v-row>
+		</v-container>
+		<v-overlay :value="overlay">
+			<v-progress-circular indeterminate size="64"></v-progress-circular>
+		</v-overlay>
+	</div>
 </template>
 
 <script>
@@ -441,6 +474,7 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		overlay: false,
 		form: null,
 		loadingCreatedUser: false,
 		menu: false,
@@ -552,10 +586,12 @@ export default {
 		this.idClient = this.$route.query.client;
 	},
 	async mounted() {
+		this.overlay = true;
 		moment.locale('es');
 		await this.initFetch();
 		await this.successPayment();
 		this.$refs.calendar?.checkChange();
+		this.overlay = false;
 	},
 	methods: {
 		async initFetch() {
