@@ -150,7 +150,7 @@ export default {
 			return moment(date).format('l');
 		},
 		itemExpired(item) {
-			return item.payment === 'success' && moment().isBefore(moment(item.expiration));
+			return !(item.payment === 'success' && moment().isBefore(moment(item.expiration)));
 		},
 	},
 };
