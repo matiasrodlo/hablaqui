@@ -50,7 +50,6 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			);
 		})
 	);
-	logInfo('Pre-session' + sessions);
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
 
@@ -108,7 +107,6 @@ const setSession = (role, sessions) => {
 		return sessions;
 	});
 	allSessions = allSessions.flat();
-	logInfo('sesiones' + JSON.stringify(allSessions));
 	return allSessions;
 };
 
@@ -171,7 +169,6 @@ const getFormattedSessions = async idPsychologist => {
 			}),
 		};
 	});
-	logInfo(sessions);
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
