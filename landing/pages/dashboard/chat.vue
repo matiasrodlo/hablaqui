@@ -37,11 +37,11 @@
 					<!-- barra lateral role psychologist -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'">
 						<!-- sin consultantes -->
-						<v-card-text>
+						<v-card-text class="py-0">
 							<v-subheader class="primary--text body-1 px-0">
 								Mis consultantes
 							</v-subheader>
-							<v-divider style="border-color: #5eb3e4"></v-divider>
+							<v-divider style="border-color: #5eb3e4" class="pa-0"></v-divider>
 						</v-card-text>
 						<v-sheet
 							v-if="!clients.length"
@@ -51,18 +51,19 @@
 							Aún no tienes consultantes
 						</v-sheet>
 						<!-- consultantes -->
-						<v-list v-else two-line style="overflow-y: auto">
+						<v-list v-else two-line style="overflow-y: auto; min-height: 100px">
 							<v-list-item
 								v-for="(user, e) in listClients"
 								:key="e"
+								dense
 								@click="setSelectedUser(user)"
 							>
 								<v-list-item-avatar
-									style="border-radius: 40px"
+									style="border-radius: 50%"
 									:style="user.hasMessageUser ? 'border: 3px solid #2070E5' : ''"
-									size="60"
+									size="40"
 								>
-									<avatar :url="user.avatar" :name="user.name" size="60" />
+									<avatar :url="user.avatar" :name="user.name" size="40" />
 								</v-list-item-avatar>
 
 								<v-list-item-content>
@@ -80,20 +81,20 @@
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
 							<!-- usuarios -->
-							<v-list two-line style="overflow-y: auto">
+							<v-list dense two-line style="overflow-y: auto">
 								<v-list-item
 									v-for="(user, w) in listUsers"
 									:key="w"
 									@click="setSelectedUser(user)"
 								>
 									<v-list-item-avatar
-										style="border-radius: 40px"
+										style="border-radius: 50%"
 										:style="
 											user.hasMessageUser ? 'border: 3px solid #2070E5' : ''
 										"
-										size="60"
+										size="40"
 									>
-										<avatar :url="user.avatar" :name="user.name" size="60" />
+										<avatar :url="user.avatar" :name="user.name" size="40" />
 									</v-list-item-avatar>
 
 									<v-list-item-content>
@@ -108,24 +109,24 @@
 					</template>
 					<!-- barra lateral role user -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
-						<v-card-text v-if="planSuccess">
+						<v-card-text v-if="planSuccess" class="py-0">
 							<v-subheader class="primary--text body-1 px-0">
 								Mi Psicólogo
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
 						<!-- usuario mi psicologo -->
-						<v-list v-if="planSuccess" two-line class="py-0">
+						<v-list v-if="planSuccess" dense two-line class="py-0">
 							<v-list-item @click="setSelectedPsy(getMyPsy)">
 								<v-list-item-avatar
-									style="border-radius: 40px"
+									style="border-radius: 50%"
 									:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-									size="60"
+									size="40"
 								>
 									<avatar
 										:url="getMyPsy.avatar"
 										:name="getMyPsy.name"
-										size="60"
+										size="40"
 									/>
 								</v-list-item-avatar>
 								<v-list-item-content>
@@ -176,6 +177,7 @@
 							<v-list
 								v-if="listPsychologist.length"
 								two-line
+								dense
 								style="overflow-y: auto"
 							>
 								<v-list-item
@@ -184,11 +186,11 @@
 									@click="setSelectedPsy(psy)"
 								>
 									<v-list-item-avatar
-										style="border-radius: 40px"
+										style="border-radius: 50%"
 										:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-										size="60"
+										size="40"
 									>
-										<avatar :url="psy.avatar" :name="psy.name" size="60" />
+										<avatar :url="psy.avatar" :name="psy.name" size="40" />
 									</v-list-item-avatar>
 
 									<v-list-item-content>
