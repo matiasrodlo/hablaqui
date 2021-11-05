@@ -293,17 +293,31 @@ const createPlan = async ({ payload }) => {
 		session: [newSession],
 	};
 
-	if (
-		await Sessions.exists({
+	const userSessions = await Sessions.findOne({
+		user: payload.user,
+		psychologist: payload.psychologist,
+	});
+
+	if (userSessions) {
+		let userSessions = await Sessions.findOne({
 			user: payload.user,
 			psychologist: payload.psychologist,
-		})
-	) {
+		});
+
+		if (
+			userSessions.plan.some(
+				plan =>
+					plan.payment === 'success' &&
+					moment().isBefore(moment(plan.expiration))
+			)
+		) {
+			return conflictResponse('El usuario ya tiene un plan vigente');
+		}
+
 		const created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
 			{ $push: { plan: newPlan } }
 		);
-
 		return okResponse('Plan creado', { plan: created });
 	} else {
 		const roomId = require('crypto')
