@@ -270,7 +270,13 @@
 										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
-								<v-btn id="camheader" icon :href="chat.url" target="_blank">
+								<v-btn
+									v-if="selected.url"
+									id="camheader"
+									icon
+									:href="selected.url"
+									target="_blank"
+								>
 									<v-img
 										contain
 										height="25"
@@ -673,6 +679,7 @@ export default {
 				lastName: this.lastName,
 				avatar: user.avatar,
 				_id: user._id,
+				url: '',
 			};
 			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
 			this.loadingChat = false;

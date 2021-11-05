@@ -623,20 +623,23 @@ const checkPlanTask = async () => {
 };
 
 const getClients = async psychologist => {
-	const foundUsers = await User.find({ psychologist });
-	const mappedUsers = foundUsers
-		.map(user => {
-			return {
-				role: user.role,
-				name: user.name,
-				lastName: user.lastName,
-				avatar: user.avatar,
-				email: user.email,
-				_id: user._id,
-			};
-		})
-		.filter(user => user.role != 'psychologist');
-	return okResponse('Usuarios encontrados', { users: mappedUsers });
+	const sessions = await Sessions.find({
+		psychologist,
+	}).populate('user');
+
+	return okResponse('Usuarios encontrados', {
+		users: sessions
+			.map(item => ({
+				_id: item.user._id,
+				avatar: item.user.avatar,
+				email: item.user.email,
+				lastName: item.user.lastName,
+				name: item.user.name,
+				role: item.user.role,
+				url: item.url,
+			}))
+			.filter(item => item.role !== 'psychologist'),
+	});
 };
 
 const searchClients = async search => {
