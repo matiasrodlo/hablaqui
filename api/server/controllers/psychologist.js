@@ -61,10 +61,12 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
-	async createPlan(req, res) {
+	async createSessions(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await psychologistsService.createPlan(body);
+			const { data, code } = await psychologistsService.createSessions(
+				body
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error creando una plan');
