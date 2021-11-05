@@ -60,7 +60,7 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 
 // Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
 const setSession = (role, sessions) => {
-	let allSessions = sessions.map(item => {
+	return sessions.flatMap(item => {
 		let name = '';
 		let lastName = '';
 
@@ -76,9 +76,8 @@ const setSession = (role, sessions) => {
 				? item.psychologist.lastName
 				: '';
 		}
-		sessions = [];
-		item.plan.forEach(plan => {
-			plan.session.forEach(session => {
+		return item.plan.flatMap(plan =>
+			plan.session.map(session => {
 				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
 					'YYYY-MM-DD hh:mm'
 				);
@@ -86,7 +85,7 @@ const setSession = (role, sessions) => {
 					.add(60, 'minutes')
 					.format('YYYY-MM-DD hh:mm');
 
-				var aSession = {
+				return {
 					_id: session._id,
 					details: `Sesion con ${name}`,
 					end,
@@ -100,14 +99,9 @@ const setSession = (role, sessions) => {
 					url: item.roomsUrl,
 					paidToPsychologist: session.paidToPsychologist,
 				};
-				sessions.push(aSession);
-			});
-		});
-		sessions.flat();
-		return sessions;
+			})
+		);
 	});
-	allSessions = allSessions.flat();
-	return allSessions;
 };
 
 // Utilizado en modal agenda cita online
@@ -417,13 +411,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			},
 		},
 		{ arrayFilters: [{ 'session._id': id }], new: true }
-	);
-
-	// const sessions = await Sessions.findOneAndUpdate(
-	// 	{ _id: sessionsId, 'session._id': id },
-	// 	{ $set: { 'session.$.date': date } },
-	// 	{ new: true }
-	// ).populate('psychologist user');
+	).populate('psychologist user');
 
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [updatedSession]),
