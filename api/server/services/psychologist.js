@@ -251,7 +251,7 @@ const match = async body => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
-const createSessions = async ({ payload }) => {
+const createPlan = async ({ payload }) => {
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -319,6 +319,50 @@ const createSessions = async ({ payload }) => {
 		chat.startConversation(payload.psychologist, payload.user);
 		return okResponse('Plan creado', { plan: created });
 	}
+};
+
+/**
+ * @description Crea una sesion nueva.
+ * @param {ObjectId} payload.user - Id del usuario
+ * @param {ObjectId} payload.psychologist - Id del psicologo
+ * @param {String} payload.date - Fecha de la sesion (solamente el dia)
+ * @param {String} payload.start - Hora de inicio
+ * @returns El Id de la sesion recien creada
+ */
+const createSession = async ({ payload }) => {
+	// Obtenemos la session correspondiente
+	let foundSession = await Sessions.findOne({
+		user: payload.user,
+		psychologist: payload.psychologist,
+	});
+
+	if (foundSession.plan.slice(-1)[0].remainingSessions == 0)
+		return conflictResponse('No te quedan sesiones por agendar');
+
+	// Se resta una sesion
+	foundSession.plan[foundSession.plan.length - 1].remainingSessions -= 1;
+
+	// Se formatea la fecha de forma correcta
+	const date = payload.date;
+	const start = payload.start;
+	const parsedDate = date.split('/');
+	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
+	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
+
+	const newSession = {
+		date: isoDate,
+		sessionNumber: `${foundSession.totalSessions -
+			foundSession.remainingSessions} / ${foundSession.totalSessions}`,
+		paidToPsychologist: false,
+	};
+	foundSession.plan.slice(-1)[0].session.push(newSession);
+	await foundSession.save();
+
+	logInfo('creo una nueva cita');
+
+	return okResponse('sesion creada', {
+		id: foundSession.plan.slice(-1)[0].session.slice(-1)[0]._id,
+	});
 };
 
 const register = async body => {
@@ -720,7 +764,8 @@ const psychologistsService = {
 	approveAvatar,
 	cancelSession,
 	checkPlanTask,
-	createSessions,
+	createPlan,
+	createSession,
 	customNewSession,
 	deleteOne,
 	getAll,
