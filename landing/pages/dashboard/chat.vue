@@ -273,10 +273,10 @@
 									></v-img>
 								</v-btn> -->
 								<v-btn
-									v-if="selected.url"
+									v-if="selected.roomsUrl"
 									id="camheader"
 									icon
-									:href="selected.url"
+									:href="selected.roomsUrl"
 									target="_blank"
 								>
 									<v-img
@@ -286,7 +286,7 @@
 										:src="`https://cdn.hablaqui.cl/static/camara.png`"
 									></v-img>
 								</v-btn>
-								<v-btn id="addheader" icon>
+								<v-btn v-show="false" id="addheader" icon>
 									<v-img
 										contain
 										width="25"
@@ -570,11 +570,14 @@ export default {
 			const user = this.$auth.$state.user;
 			if (user && user.role === 'user' && !!user.sessions) {
 				const psy = this.$auth.$state.user.sessions.psychologist;
-				if (psy) return this.getPsy(psy);
+				if (psy)
+					return {
+						...this.getPsy(psy),
+						roomsUrl: this.$auth.$state.user.sessions.roomsUrl,
+					};
 				else return null;
-			} else {
-				return null;
 			}
+			return null;
 		},
 		planSuccess() {
 			// session is object(unica session)
@@ -681,7 +684,7 @@ export default {
 				lastName: this.lastName,
 				avatar: user.avatar,
 				_id: user._id,
-				url: '',
+				roomsUrl: user.roomsUrl,
 			};
 			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
 			this.loadingChat = false;

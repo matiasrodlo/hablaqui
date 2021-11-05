@@ -628,17 +628,15 @@ const getClients = async psychologist => {
 	}).populate('user');
 
 	return okResponse('Usuarios encontrados', {
-		users: sessions
-			.map(item => ({
-				_id: item.user._id,
-				avatar: item.user.avatar,
-				email: item.user.email,
-				lastName: item.user.lastName,
-				name: item.user.name,
-				role: item.user.role,
-				url: item.url,
-			}))
-			.filter(item => item.role !== 'psychologist'),
+		users: sessions.map(item => ({
+			_id: item.user._id,
+			avatar: item.user.avatar,
+			email: item.user.email,
+			lastName: item.user.lastName,
+			name: item.user.name,
+			role: item.user.role,
+			roomsUrl: item.roomsUrl,
+		})),
 	});
 };
 
