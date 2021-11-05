@@ -55,7 +55,6 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 		),
 	}));
 
-	console.log(sessions);
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
 
