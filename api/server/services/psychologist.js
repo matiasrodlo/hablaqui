@@ -41,15 +41,21 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 		}).populate('psychologist user');
 	}
 
-	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
-	sessions = sessions.filter(item =>
-		item.plan.some(plan => {
-			return (
+	// Para que nos de deje modificar el array de mongo
+	sessions = JSON.stringify(sessions);
+	sessions = JSON.parse(sessions);
+
+	// Filtramos y modificamos que cada session sea de usuarios con pagos success y no hayan expirado
+	sessions = sessions.map(item => ({
+		...item,
+		plan: item.plan.filter(
+			plan =>
 				plan.payment === 'success' &&
 				moment().isBefore(moment(plan.expiration))
-			);
-		})
-	);
+		),
+	}));
+
+	console.log(sessions);
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
 
