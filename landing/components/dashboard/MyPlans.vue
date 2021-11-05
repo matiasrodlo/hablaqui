@@ -21,21 +21,19 @@
 								<div>
 									{{ item.title }}
 								</div>
-								<div v-if="itemExpired(item)" class="caption">
-									<template v-if="item.payment === 'success'">
-										<span class="error--text">Finalizó</span>
-									</template>
-								</div>
-								<div v-else class="caption">
+								<div v-if="itemSuccess(item)" class="caption">
 									<template v-if="item.payment === 'success'">
 										<span class="success--text">Tu plan actual</span>
 									</template>
 									<template v-if="item.payment === 'pending'">
 										<span class="warning--text">Pendiente</span>
 									</template>
-									<template v-if="item.payment === 'expired'">
+									<template v-if="item.payment === 'failed'">
 										<span class="error--text">Expirado</span>
 									</template>
+								</div>
+								<div v-else class="caption">
+									<span class="error--text">Finalizó</span>
 								</div>
 							</div>
 							<div style="width: 20px; height: 20px" :class="status(item)"></div>
@@ -66,21 +64,19 @@
 							<div>
 								{{ item.title }}
 							</div>
-							<div v-if="itemExpired(item)" class="caption">
-								<template v-if="item.payment === 'success'">
-									<span class="success--text">Expiro</span>
-								</template>
-							</div>
-							<div v-else class="caption">
+							<div v-if="itemSuccess(item)" class="caption">
 								<template v-if="item.payment === 'success'">
 									<span class="success--text">Tu plan actual</span>
 								</template>
 								<template v-if="item.payment === 'pending'">
 									<span class="warning--text">Pendiente</span>
 								</template>
-								<template v-if="item.payment === 'expired'">
+								<template v-if="item.payment === 'failed'">
 									<span class="error--text">Expirado</span>
 								</template>
+							</div>
+							<div v-else class="caption">
+								<span class="error--text">Finalizó</span>
 							</div>
 						</div>
 						<div style="width: 20px; height: 20px" :class="status(item)"></div>
@@ -128,10 +124,12 @@ export default {
 	},
 	methods: {
 		status(item) {
-			if (this.itemExpired(item)) return 'grey rounded-xl';
-			if (item.payment === 'success') return 'success rounded-xl';
-			if (item.payment === 'pending') return 'warning rounded-xl';
-			if (item.payment === 'failed') return 'error rounded-xl';
+			if (this.itemSuccess(item)) {
+				if (item.payment === 'success') return 'success rounded-xl';
+				if (item.payment === 'pending') return 'warning rounded-xl';
+				if (item.payment === 'failed') return 'error rounded-xl';
+			}
+			return 'grey rounded-xl';
 		},
 		setDescrition(title) {
 			if (title === 'Sesiones por videollamada')
@@ -149,8 +147,13 @@ export default {
 		setDate(date) {
 			return moment(date).format('l');
 		},
-		itemExpired(item) {
-			return !(item.payment === 'success' && moment().isBefore(moment(item.expiration)));
+		itemSuccess(item) {
+			return (
+				(item.payment === 'success' ||
+					item.payment === 'pending' ||
+					item.payment === 'failed') &&
+				moment().isBefore(moment(item.expiration))
+			);
 		},
 	},
 };
