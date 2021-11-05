@@ -37,11 +37,11 @@
 					<!-- barra lateral role psychologist -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'">
 						<!-- sin consultantes -->
-						<v-card-text>
+						<v-card-text class="py-0">
 							<v-subheader class="primary--text body-1 px-0">
 								Mis consultantes
 							</v-subheader>
-							<v-divider style="border-color: #5eb3e4"></v-divider>
+							<v-divider style="border-color: #5eb3e4" class="pa-0"></v-divider>
 						</v-card-text>
 						<v-sheet
 							v-if="!clients.length"
@@ -51,18 +51,19 @@
 							Aún no tienes consultantes
 						</v-sheet>
 						<!-- consultantes -->
-						<v-list v-else two-line style="overflow-y: auto">
+						<v-list v-else two-line style="overflow-y: auto; min-height: 100px">
 							<v-list-item
 								v-for="(user, e) in listClients"
 								:key="e"
+								dense
 								@click="setSelectedUser(user)"
 							>
 								<v-list-item-avatar
-									style="border-radius: 40px"
+									style="border-radius: 50%"
 									:style="user.hasMessageUser ? 'border: 3px solid #2070E5' : ''"
-									size="60"
+									size="40"
 								>
-									<avatar :url="user.avatar" :name="user.name" size="60" />
+									<avatar :url="user.avatar" :name="user.name" size="40" />
 								</v-list-item-avatar>
 
 								<v-list-item-content>
@@ -80,20 +81,20 @@
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 							</v-card-text>
 							<!-- usuarios -->
-							<v-list two-line style="overflow-y: auto">
+							<v-list dense two-line style="overflow-y: auto">
 								<v-list-item
 									v-for="(user, w) in listUsers"
 									:key="w"
 									@click="setSelectedUser(user)"
 								>
 									<v-list-item-avatar
-										style="border-radius: 40px"
+										style="border-radius: 50%"
 										:style="
 											user.hasMessageUser ? 'border: 3px solid #2070E5' : ''
 										"
-										size="60"
+										size="40"
 									>
-										<avatar :url="user.avatar" :name="user.name" size="60" />
+										<avatar :url="user.avatar" :name="user.name" size="40" />
 									</v-list-item-avatar>
 
 									<v-list-item-content>
@@ -108,36 +109,24 @@
 					</template>
 					<!-- barra lateral role user -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
-						<v-card-text
-							v-if="
-								$auth.$state.user &&
-								$auth.$state.user.plan.some(el => el.status === 'success')
-							"
-						>
+						<v-card-text v-if="planSuccess" class="py-0">
 							<v-subheader class="primary--text body-1 px-0">
 								Mi Psicólogo
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
 						<!-- usuario mi psicologo -->
-						<v-list
-							v-if="
-								$auth.$state.user &&
-								$auth.$state.user.plan.some(el => el.status === 'success')
-							"
-							two-line
-							class="py-0"
-						>
+						<v-list v-if="planSuccess" dense two-line class="py-0">
 							<v-list-item @click="setSelectedPsy(getMyPsy)">
 								<v-list-item-avatar
-									style="border-radius: 40px"
+									style="border-radius: 50%"
 									:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-									size="60"
+									size="40"
 								>
 									<avatar
 										:url="getMyPsy.avatar"
 										:name="getMyPsy.name"
-										size="60"
+										size="40"
 									/>
 								</v-list-item-avatar>
 								<v-list-item-content>
@@ -151,9 +140,7 @@
 						<!-- usuario sin psicologo -->
 						<v-list
 							v-else-if="
-								!$auth.$state.user &&
-								!$auth.$state.user.plan.some(el => el.status === 'success') &&
-								listPsychologist.length
+								!$auth.$state.user && !planSuccess && listPsychologist.length
 							"
 							link
 							two-line
@@ -182,13 +169,7 @@
 							</v-list-item>
 						</v-list>
 						<!-- lista de psicologos "chat iniciado" -->
-						<template
-							v-if="
-								listPsychologist.length ||
-								($auth.$state.user &&
-									$auth.$state.user.plan.some(el => el.status === 'success'))
-							"
-						>
+						<template v-if="listPsychologist.length || planSuccess">
 							<v-card-text v-if="listPsychologist.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
@@ -196,6 +177,7 @@
 							<v-list
 								v-if="listPsychologist.length"
 								two-line
+								dense
 								style="overflow-y: auto"
 							>
 								<v-list-item
@@ -204,11 +186,11 @@
 									@click="setSelectedPsy(psy)"
 								>
 									<v-list-item-avatar
-										style="border-radius: 40px"
+										style="border-radius: 50%"
 										:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-										size="60"
+										size="40"
 									>
-										<avatar :url="psy.avatar" :name="psy.name" size="60" />
+										<avatar :url="psy.avatar" :name="psy.name" size="40" />
 									</v-list-item-avatar>
 
 									<v-list-item-content>
@@ -290,7 +272,13 @@
 										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
 									></v-img>
 								</v-btn> -->
-								<v-btn id="camheader" icon :href="chat.url" target="_blank">
+								<v-btn
+									v-if="selected.roomsUrl"
+									id="camheader"
+									icon
+									:href="selected.roomsUrl"
+									target="_blank"
+								>
 									<v-img
 										contain
 										height="25"
@@ -298,7 +286,7 @@
 										:src="`https://cdn.hablaqui.cl/static/camara.png`"
 									></v-img>
 								</v-btn>
-								<v-btn id="addheader" icon>
+								<v-btn v-show="false" id="addheader" icon>
 									<v-img
 										contain
 										width="25"
@@ -579,13 +567,23 @@ export default {
 			}));
 		},
 		getMyPsy() {
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user') {
-				const user = this.$auth.$state.user.plan.find(psi => psi.status === 'success');
-				if (user) return this.getPsy(user.psychologist);
+			const user = this.$auth.$state.user;
+			if (user && user.role === 'user' && !!user.sessions) {
+				const psy = this.$auth.$state.user.sessions.psychologist;
+				if (psy)
+					return {
+						...this.getPsy(psy),
+						roomsUrl: this.$auth.$state.user.sessions.roomsUrl,
+					};
 				else return null;
-			} else {
-				return null;
 			}
+			return null;
+		},
+		planSuccess() {
+			// session is object(unica session)
+			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
+				return !!this.$auth.$state.user.sessions.psychologist;
+			} else return false;
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
@@ -686,6 +684,7 @@ export default {
 				lastName: this.lastName,
 				avatar: user.avatar,
 				_id: user._id,
+				roomsUrl: user.roomsUrl,
 			};
 			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
 			this.loadingChat = false;

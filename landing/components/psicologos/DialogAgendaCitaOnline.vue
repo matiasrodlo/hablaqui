@@ -91,7 +91,17 @@
 								:src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 								:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny.png`"
 							></v-img>
-							<v-card-text><signin :is-dialog="true" /></v-card-text>
+							<v-card-text v-if="showRecoveryPassword">
+								<send-password-recovery
+									:go-back="() => (showRecoveryPassword = false)"
+								/>
+							</v-card-text>
+							<v-card-text v-else>
+								<signin
+									:is-dialog="true"
+									:set-reset-password="() => (showRecoveryPassword = true)"
+								/>
+							</v-card-text>
 							<v-card-text class="pt-0">
 								<div
 									class="
@@ -185,6 +195,7 @@ export default {
 	components: {
 		signin: () => import('~/components/auth/SignIn'),
 		signup: () => import('~/components/auth/SignUp'),
+		sendPasswordRecovery: () => import('~/components/auth/SendPasswordRecovery'),
 		calendar: () => import('~/components/Calendar'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
@@ -202,6 +213,7 @@ export default {
 	},
 	data() {
 		return {
+			showRecoveryPassword: false,
 			mdiChevronLeft,
 			step: 0,
 			tab: 1,

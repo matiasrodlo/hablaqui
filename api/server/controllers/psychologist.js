@@ -15,10 +15,11 @@ const psychologistsController = {
 	},
 	async getSessions(req, res) {
 		try {
-			const { idPsychologist } = req.params;
+			const { idUser, idPsychologist } = req.params;
 			const { user } = req;
 			const { data, code } = await psychologistsService.getSessions(
 				user,
+				idUser,
 				idPsychologist
 			);
 			return restResponse(data, code, res);
@@ -60,25 +61,23 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
-	async createSession(req, res) {
+	async createPlan(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await psychologistsService.createSession(
-				body,
-				res
-			);
+			const { data, code } = await psychologistsService.createPlan(body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error creando una cita');
+			errorCallback(e, res, 'error creando una plan');
 		}
 	},
 	async reschedule(req, res) {
 		try {
-			const { id } = req.params;
+			const { id, sessionsId } = req.params;
 			const { user } = req;
 			const { newDate } = req.body;
 			const { data, code } = await psychologistsService.reschedule(
 				user,
+				sessionsId,
 				id,
 				newDate
 			);
@@ -315,6 +314,21 @@ const psychologistsController = {
 				e,
 				res,
 				'Error actualizando/subiendo imágen de perfil'
+			);
+		}
+	},
+	async paymentsInfo(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.paymentsInfo(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
 			);
 		}
 	},

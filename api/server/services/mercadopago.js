@@ -10,6 +10,7 @@ import psychologistService from './psychologist';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
+import Sessions from '../models/sessions';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -20,13 +21,14 @@ const createPreference = async (body, res) => {
 		items: [
 			{
 				title: body.description,
+				description: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
 				quantity: 1,
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/success-pay/${body.psychologistToUpdate}/${body.userToUpdate}/${body.sessionToUpdate}`,
+			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
@@ -56,6 +58,7 @@ const createPsychologistPreference = async (body, res) => {
 		items: [
 			{
 				title: body.description,
+				description: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
 				quantity: 1,
@@ -91,55 +94,47 @@ const createPsychologistPreference = async (body, res) => {
 };
 
 const successPay = async params => {
-	const { psyId, userId, sessionId } = params;
-	const foundPsychologist = await Psychologist.findOneAndUpdate(
-		{
-			_id: psyId,
-			sessions: { $elemMatch: { _id: sessionId } },
-		},
-		{ $set: { 'sessions.$.statePayments': 'successful' } },
-		{ new: true }
-	);
-	let foundUser = await User.findById(userId);
-	foundUser.plan[foundUser.plan.length - 1 || 0].status = 'success';
-	foundUser.psychologist = psyId;
-	foundUser.save();
+	const { planId } = params;
+	const foundPlan = await Sessions.findById(planId);
+	foundPlan.plan[foundPlan.plan.length - 1].payment = 'success';
+	await foundPlan.save();
 
+	// Aqui necesitas cambiarlo, no se muy bien como funciona el tema de correos.
 	// Email scheduling for appointment reminder for the user
-	const sessionData = foundPsychologist.sessions.filter(
-		session => session._id.toString() == sessionId
-	)[0];
+	// const sessionData = foundPsychologist.sessions.filter(
+	// 	session => session._id.toString() == sessionId
+	// )[0];
 
-	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
-		wasScheduled: false,
-		type: 'reminder-user',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
-	});
-	// Email scheduling for appointment reminder for the psychologist
-	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
-		wasScheduled: false,
-		type: 'reminder-psy',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
-	});
-	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
-	await mailService.sendAppConfirmationPsy(
-		foundPsychologist,
-		foundUser,
-		sessionData.date
-	);
+	// await email.create({
+	// 	mailgunIdL: undefined,
+	// 	sessionDate: sessionData.date,
+	// 	wasScheduled: false,
+	// 	type: 'reminder-user',
+	// 	queuedAt: undefined,
+	// 	scheduledAt: undefined,
+	// 	userRef: userId,
+	// 	psyRef: psyId,
+	// 	sessionRef: sessionId,
+	// });
+	// // Email scheduling for appointment reminder for the psychologist
+	// await email.create({
+	// 	mailgunIdL: undefined,
+	// 	sessionDate: sessionData.date,
+	// 	wasScheduled: false,
+	// 	type: 'reminder-psy',
+	// 	queuedAt: undefined,
+	// 	scheduledAt: undefined,
+	// 	userRef: userId,
+	// 	psyRef: psyId,
+	// 	sessionRef: sessionId,
+	// });
+	// // Send appointment confirmation for user and psychologist
+	// await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
+	// await mailService.sendAppConfirmationPsy(
+	// 	foundPsychologist,
+	// 	foundUser,
+	// 	sessionData.date
+	// );
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');

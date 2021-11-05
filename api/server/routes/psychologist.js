@@ -46,7 +46,7 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist',
+	'/psychologists/sessions/:idPsychologist/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
@@ -90,7 +90,7 @@ psychologistsRouter.post(
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createSession
+	psychologistsController.createPlan
 );
 
 /**
@@ -98,7 +98,7 @@ psychologistsRouter.post(
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
@@ -353,4 +353,14 @@ psychologistsRouter.put(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.approveAvatar
 );
+
+/**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
+psychologistsRouter.get(
+	'/psychologist/payments',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfo
+);
+
 export default psychologistsRouter;

@@ -9,12 +9,11 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSessions({ commit }, idPsychologist) {
+	async getSessions({ commit }, { idPsychologist, idUser }) {
 		try {
 			const { sessions } = await this.$axios.$get(
-				`/psychologists/sessions/${idPsychologist}`
+				`/psychologists/sessions/${idPsychologist}/${idUser}`
 			);
-
 			commit('setSessions', sessions);
 			return sessions;
 		} catch (e) {
@@ -113,14 +112,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async setReschedule({ commit }, { sessionId, newDate }) {
+	async setReschedule({ commit }, { id, sessionsId, newDate }) {
 		try {
-			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+			const { data } = await this.$axios(`/psychologists/reschedule/${sessionsId}/${id}`, {
 				method: 'POST',
 				data: { newDate },
 			});
 			snackBarSuccess('Sesión reprogramada')(commit);
-			return data.sessions;
+			return data.sessions[0];
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
