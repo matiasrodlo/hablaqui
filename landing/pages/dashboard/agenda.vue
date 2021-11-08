@@ -3,7 +3,7 @@
 		<v-container fluid style="height: 100vh; max-width: 1200px">
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
-				<v-col class="heightCalendar" cols="12" md="10">
+				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
 					<div class="hidden-md-and-up text-center">
 						<div class="text-center text--secondary">Nº de Sesiones</div>
 						<div class="text-center text--secondary font-weight-bold my-1">0/0</div>
@@ -406,7 +406,11 @@
 						</v-row>
 					</v-sheet>
 				</v-col>
-				<v-col md="2" class="mt-16 hidden-sm-and-down text-center">
+				<v-col
+					v-if="$auth.$state.user.role === 'user'"
+					md="2"
+					class="mt-16 hidden-sm-and-down text-center"
+				>
 					<div class="body-2 text-center text--secondary font-weight-bold">
 						Nº de Sesiones
 					</div>
