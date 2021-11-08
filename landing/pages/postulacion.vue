@@ -1031,11 +1031,7 @@
 												class="mx-2"
 												color="primary"
 												rounded
-												@click="
-													() => {
-														step = 1;
-													}
-												"
+												@click="step = 1"
 											>
 												Editar postulación
 											</v-btn>
