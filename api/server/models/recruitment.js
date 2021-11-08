@@ -221,7 +221,7 @@ let recruitment = new Schema(
 		},
 		howFindOut: {
 			type: String,
-			default: 'Búsqueda de internet',
+			default: '',
 			enum: [
 				'Búsqueda de internet',
 				'Por redes sociales',

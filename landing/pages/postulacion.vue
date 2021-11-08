@@ -834,13 +834,21 @@
 										¿Cómo te enteraste de nosotros?
 									</div>
 									<div>
-										<v-text-field
+										<v-select
 											v-model="form.howFindOut"
 											filled
 											outlined
 											dense
 											type="text"
-										></v-text-field>
+											:items="[
+												'Búsqueda de internet',
+												'Por redes sociales',
+												'Por amigos/familiares',
+												'Por blog',
+												'Anuncio en google',
+												'Otro',
+											]"
+										></v-select>
 									</div>
 								</v-col>
 								<v-col cols="12">
@@ -1000,7 +1008,7 @@ export default {
 			activePicker: null,
 			bmenu: false,
 			zone: '',
-			step: 2,
+			step: 1,
 			regiones: [],
 			comunas: [],
 			comunasRegiones: [],
