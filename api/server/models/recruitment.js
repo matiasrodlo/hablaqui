@@ -79,6 +79,10 @@ let experienceSchema = new Schema({
 	end: {
 		type: String,
 	},
+	current: {
+		type: Boolean,
+		defautl: false,
+	},
 });
 
 let rating = new Schema(
@@ -217,7 +221,7 @@ let recruitment = new Schema(
 		},
 		howFindOut: {
 			type: String,
-			default: 'Búsqueda de internet',
+			default: '',
 			enum: [
 				'Búsqueda de internet',
 				'Por redes sociales',
@@ -227,12 +231,9 @@ let recruitment = new Schema(
 				'Otro',
 			],
 		},
-		celNumberPrefix: {
-			type: String,
-			default: '+56',
-		},
-		celNumber: {
-			type: Number,
+		phone: {
+			type: Object,
+			default: { number: '', code: '', flag: '' },
 		},
 		isExclusiveActivity: {
 			type: Boolean,
