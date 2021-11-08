@@ -906,6 +906,69 @@
 										</v-radio-group>
 									</div>
 								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Produce algún tipo de contenido para el público en general?
+									</div>
+									<div class="text--secondary vsption mb-2 font-weight-regular">
+										Ej: artículos en LinkedIn; Columnas en vehículos de
+										comunicación (portales, periódicos, revistas); Artículos en
+										blogs propios o de terceros; Publicación rica en contenido
+										en las redes sociales; etc.
+									</div>
+									<div>
+										<v-radio-group v-model="form.isContentCreator" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Estás actualmente asociado con otra plataforma de
+										psicología?
+									</div>
+									<div>
+										<v-radio-group v-model="form.isAffiliateExternal" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Está interesado en participar en conferencias / paneles /
+										chats en empresas Clientes en el ámbito de Hablaquí
+										Business?
+									</div>
+									<div>
+										<v-radio-group v-model="form.isInterestedBusiness" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
 							</v-row>
 
 							<div class="d-flex justify-end mt-4">
@@ -958,19 +1021,25 @@
 											Hemos recibido tu registro y verificaremos tu profesión
 											en la superintendencia de salud. Será un honor para
 											nosotros contar contigo en nuestro equipo de psicólogos,
-											te contactaremos pronto.
+											<span class="primary--text">
+												te contactaremos pronto.
+											</span>
 										</div>
-										<!-- <div>
+										<div>
 											<v-btn
 												depressed
 												class="mx-2"
 												color="primary"
 												rounded
-												to="/"
+												@click="
+													() => {
+														step = 1;
+													}
+												"
 											>
-												Ir a Hablaquí
+												Editar postulación
 											</v-btn>
-										</div> -->
+										</div>
 									</v-col>
 								</v-row>
 							</v-container>
@@ -1044,6 +1113,9 @@ export default {
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
 				howFindOut: '',
+				isContentCreator: false,
+				isAffiliateExternal: false,
+				isInterestedBusiness: false,
 			},
 			recruitment: null,
 			loading: false,
