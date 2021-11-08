@@ -3,6 +3,7 @@
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
+import Sessions from '../models/sessions';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
@@ -22,12 +23,22 @@ const generateJwt = user => {
 
 const login = async user => {
 	return okResponse(`Bienvenido ${user.name}`, {
-		user: generateUser(user),
 		token: generateJwt(user),
+		user: await generateUser(user),
 	});
 };
 
-const generateUser = user => {
+const getSessions = async user => {
+	// User retorna un objeto con sus sessiones
+	if (user.role === 'user') return await Sessions.findOne({ user: user._id });
+
+	// Psicologo retorna array de muchas sessiones
+	if (user.role === 'psychologist')
+		return await Sessions.find({ psychologist: user.psychologist });
+	return null;
+};
+
+const generateUser = async user => {
 	return {
 		_id: user._id,
 		avatar: user.avatar,
@@ -47,6 +58,7 @@ const generateUser = user => {
 		rut: user.rut,
 		state: user.state,
 		timeZone: user.timeZone,
+		sessions: await getSessions(user),
 	};
 };
 
@@ -66,7 +78,7 @@ const register = async payload => {
 		await mailService.sendWelcomeNewUser(user);
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
-		user: generateUser(user),
+		user: await generateUser(user),
 		token: generateJwt(user),
 	});
 };
@@ -98,10 +110,10 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.FRONTEND_URL}
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}
 		/password-reset?token=${token}`;
 
-	// TODO: crear aqui el envio de contraseña al email
+	mailService.sendPasswordRecovery(user, recoveryUrl);
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
@@ -140,6 +152,7 @@ const authService = {
 	sendPasswordRecover,
 	changeUserPassword,
 	googleAuthCallback,
+	getSessions,
 };
 
 export default Object.freeze(authService);

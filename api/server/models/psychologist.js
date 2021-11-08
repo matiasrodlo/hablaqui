@@ -2,40 +2,6 @@
 
 import { Schema, model } from 'mongoose';
 
-let session = new Schema({
-	date: {
-		type: String,
-	},
-	start: {
-		type: String,
-	},
-	end: {
-		type: String,
-	},
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-	},
-	typeSession: {
-		type: String,
-	},
-	typePayments: {
-		type: String,
-	},
-	statePayments: {
-		type: String,
-	},
-	plan: {
-		type: String,
-	},
-	invitedByPsychologist: {
-		type: Boolean,
-	},
-	price: {
-		type: Number,
-	},
-});
-
 let defaultSchedule = {
 	monday: [['09:00', '17:00']],
 	tuesday: [['09:00', '17:00']],
@@ -196,7 +162,6 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	sessions: [session],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

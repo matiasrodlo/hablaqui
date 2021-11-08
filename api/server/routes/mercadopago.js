@@ -17,7 +17,7 @@ mercadopagoRouter.post(
  * Pasa una sesion a pagada.
  */
 mercadopagoRouter.get(
-	'/mercadopago/success-pay/:psyId/:userId/:sessionId',
+	'/mercadopago/success-pay/:planId',
 	mercadopagoController.successPay
 );
 
