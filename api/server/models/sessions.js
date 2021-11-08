@@ -1,5 +1,24 @@
 import { Schema, model } from 'mongoose';
 
+let session = new Schema({
+	date: {
+		type: String,
+	},
+	sessionNumber: {
+		type: String,
+	},
+	paidToPsychologist: {
+		type: Boolean,
+		default: 'false',
+	},
+	// TODO: en un futuro se puede agregar sistema de mensajeria para confirmar sesion o cancelar
+	status: {
+		type: String,
+		default: 'pending',
+		enum: ['pending', 'confirmed', 'canceled', 'failed'],
+	},
+});
+
 let plan = new Schema(
 	{
 		title: {
@@ -35,22 +54,10 @@ let plan = new Schema(
 		remainingSessions: {
 			type: Number,
 		},
+		session: [session],
 	},
 	{ timestamps: true }
 );
-
-let session = new Schema({
-	date: {
-		type: String,
-	},
-	sessionNumber: {
-		type: String,
-	},
-	paidToPsychologist: {
-		type: Boolean,
-		default: 'false',
-	},
-});
 let sessionSchema = new Schema({
 	user: {
 		type: Schema.Types.ObjectId,
@@ -61,8 +68,6 @@ let sessionSchema = new Schema({
 		ref: 'psychologist',
 	},
 	plan: [plan],
-	session: [session],
-	status: { type: String, default: 'Sin estado' },
 	roomsUrl: {
 		type: String,
 	},

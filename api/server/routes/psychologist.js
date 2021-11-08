@@ -46,7 +46,7 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist',
+	'/psychologists/sessions/:idPsychologist/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
@@ -92,13 +92,26 @@ psychologistsRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createPlan
 );
-
+/**
+ * Create a session
+ * req.body.payload = {
+ *	user: ObjectId,
+	psychologist: ObjectId,
+	date: String,
+	start: String,
+ * }
+ */
+psychologistsRouter.post(
+	'/psychologists/session/create-session',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createSession
+);
 /**
  * Cambia la hora de la session con el :id
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );

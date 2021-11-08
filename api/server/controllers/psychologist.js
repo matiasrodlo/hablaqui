@@ -15,10 +15,11 @@ const psychologistsController = {
 	},
 	async getSessions(req, res) {
 		try {
-			const { idPsychologist } = req.params;
+			const { idUser, idPsychologist } = req.params;
 			const { user } = req;
 			const { data, code } = await psychologistsService.getSessions(
 				user,
+				idUser,
 				idPsychologist
 			);
 			return restResponse(data, code, res);
@@ -60,6 +61,17 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
+	async createSession(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.createSession(
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error creando una sessión');
+		}
+	},
 	async createPlan(req, res) {
 		try {
 			const { body } = req;
@@ -71,11 +83,12 @@ const psychologistsController = {
 	},
 	async reschedule(req, res) {
 		try {
-			const { id } = req.params;
+			const { id, sessionsId } = req.params;
 			const { user } = req;
 			const { newDate } = req.body;
 			const { data, code } = await psychologistsService.reschedule(
 				user,
+				sessionsId,
 				id,
 				newDate
 			);

@@ -79,6 +79,10 @@ let experienceSchema = new Schema({
 	end: {
 		type: String,
 	},
+	current: {
+		type: Boolean,
+		defautl: false,
+	},
 });
 
 let rating = new Schema(
@@ -214,6 +218,22 @@ let recruitment = new Schema(
 		avgPatients: {
 			type: String,
 			default: '',
+		},
+		howFindOut: {
+			type: String,
+			default: '',
+			enum: [
+				'Búsqueda de internet',
+				'Por redes sociales',
+				'Por amigos/familiares',
+				'Por blog',
+				'Anuncio en google',
+				'Otro',
+			],
+		},
+		phone: {
+			type: Object,
+			default: { number: '', code: '', flag: '' },
 		},
 		isExclusiveActivity: {
 			type: Boolean,

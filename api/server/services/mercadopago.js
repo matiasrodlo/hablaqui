@@ -95,50 +95,44 @@ const createPsychologistPreference = async (body, res) => {
 
 const successPay = async params => {
 	const { planId } = params;
-	const updatedPlan = await Sessions.findByIdAndUpdate(
-		planId,
-		{
-			$set: { 'plan.$.payment': 'successful' },
-		},
-		{ new: true }
-	);
+	const foundPlan = await Sessions.findById(planId);
+	foundPlan.plan[foundPlan.plan.length - 1].payment = 'success';
+	await foundPlan.save();
 
-	// Aqui necesitas cambiarlo, no se muy bien como funciona el tema de correos.
+	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
+	const originalDate = sessionData.date.split(' ');
+	const splitted = originalDate.split(' ');
+	const date = splitted[0].split('/');
+	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${splitted[1]}:00-03:00`;
 	// Email scheduling for appointment reminder for the user
-	const sessionData = foundPsychologist.sessions.filter(
-		session => session._id.toString() == sessionId
-	)[0];
-
 	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
+		mailgunId: undefined,
+		sessionDate: dateFormatted,
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
+		userRef: foundPlan.userRef,
+		psyRef: foundPlan.psyRef,
+		sessionRef: sessionData._id,
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
-		mailgunIdL: undefined,
-		sessionDate: sessionData.date,
+		mailgunId: undefined,
+		sessionDate: dateFormatted,
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: userId,
-		psyRef: psyId,
-		sessionRef: sessionId,
+		userRef: foundPlan.userRef,
+		psyRef: foundPlan.psyRef,
+		sessionRef: sessionData._id,
 	});
+	const user = await User.findById(foundPlan.userRef);
+	const psy = await Psychologist.findById(foundPlan.psyRef);
 	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(foundUser, sessionData.date);
-	await mailService.sendAppConfirmationPsy(
-		foundPsychologist,
-		foundUser,
-		sessionData.date
-	);
+	await mailService.sendAppConfirmationUser(user, dateFormatted);
+	await mailService.sendAppConfirmationPsy(psy, user, dateFormatted);
 
 	logInfo('Se ha realizado un pago');
 	return okResponse('sesion actualizada');

@@ -29,9 +29,12 @@ const login = async user => {
 };
 
 const getSessions = async user => {
+	// User retorna un objeto con sus sessiones
 	if (user.role === 'user') return await Sessions.findOne({ user: user._id });
+
+	// Psicologo retorna array de muchas sessiones
 	if (user.role === 'psychologist')
-		return await Sessions.findOne({ psychologist: user.psychologist });
+		return await Sessions.find({ psychologist: user.psychologist });
 	return null;
 };
 
@@ -107,10 +110,10 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.FRONTEND_URL}
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}
 		/password-reset?token=${token}`;
 
-	// TODO: crear aqui el envio de contraseña al email
+	mailService.sendPasswordRecovery(user, recoveryUrl);
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));

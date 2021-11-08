@@ -24,7 +24,7 @@
 			</span>
 		</div>
 		<v-row justify="center">
-			<v-col cols="12" md="9" lg="8">
+			<v-col cols="12" md="8" lg="6">
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
@@ -59,10 +59,12 @@
 										¡Es un placer conocerte!
 									</div>
 								</v-col>
-								<v-col cols="12" md="6">
+								<v-col cols="6" align-self="center">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
+								</v-col>
+								<v-col cols="12" md="6">
 									<v-menu
 										ref="menu"
 										v-model="bmenu"
@@ -103,10 +105,12 @@
 										></v-date-picker>
 									</v-menu>
 								</v-col>
-								<v-col cols="12" md="6">
+								<v-col cols="6" align-self="center">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Género
 									</div>
+								</v-col>
+								<v-col cols="12" md="6">
 									<v-select
 										id="genre"
 										v-model="form.gender"
@@ -123,40 +127,70 @@
 										dense
 									></v-select>
 								</v-col>
-								<v-col cols="12" md="6">
+								<v-col cols="12" md="4">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										País
+									</div>
+									<v-autocomplete
+										id="region"
+										v-model="form.country"
+										:items="countries"
+										item-text="name"
+										item-value="name"
+										filled
+										outlined
+										hide-details
+										dense
+										placeholder="(Requerido)"
+										:rules="rulesTextField"
+										@change="
+											e => {
+												form.phone.code = countries.find(
+													item => item.name === e
+												).dialCode;
+												if (e !== 'Chile') {
+													form.region = '';
+													form.comuna = '';
+												}
+											}
+										"
+									></v-autocomplete>
+								</v-col>
+								<v-col cols="12" md="4">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Región
 									</div>
-									<v-select
+									<v-autocomplete
 										id="region"
 										v-model="form.region"
+										:disabled="form.country !== 'Chile'"
 										:items="regiones"
 										filled
 										outlined
 										hide-details
 										dense
-										placeholder="(Requerido)"
+										:placeholder="form.country !== 'Chile' ? '' : '(Requerido)'"
 										:rules="rulesTextField"
-									></v-select>
+									></v-autocomplete>
 								</v-col>
-								<v-col cols="12" md="6">
+								<v-col cols="12" md="4">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Comuna
 									</div>
-									<v-select
+									<v-autocomplete
 										id="comuna"
 										v-model="form.comuna"
-										:disabled="!form.region"
+										:disabled="!form.region || form.country !== 'Chile'"
 										:items="comunas"
 										filled
 										outlined
 										hide-details
-										placeholder="(Requerido)"
+										:placeholder="form.country !== 'Chile' ? '' : '(Requerido)'"
 										:rules="rulesTextField"
 										dense
-									></v-select>
+									></v-autocomplete>
 								</v-col>
-								<v-col cols="12">
+								<v-col cols="4">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Zona horaria
 									</div>
@@ -186,6 +220,45 @@
 											</v-list-item>
 										</template>
 									</v-combobox>
+								</v-col>
+								<v-col cols="3" offset="1">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Código
+									</div>
+									<v-autocomplete
+										id="phonecode"
+										v-model="form.phone.code"
+										:items="countries"
+										item-text="dialCode"
+										filled
+										outlined
+										hide-details
+										dense
+										:rules="rulesTextField"
+									>
+										<template #selection="{ item }">
+											<div>
+												<v-avatar size="20">
+													<v-img :src="item.flag"></v-img>
+												</v-avatar>
+												<span class="caption">{{ item.dialCode }}</span>
+											</div>
+										</template>
+									</v-autocomplete>
+								</v-col>
+								<v-col cols="4">
+									<div class="primary--text text-h6 mb-2 font-weight-regular">
+										Teléfono
+									</div>
+									<v-text-field
+										id="phoneNumber"
+										v-model="form.phone.number"
+										filled
+										outlined
+										type="number"
+										:rules="rulesTextField"
+										dense
+									></v-text-field>
 								</v-col>
 								<v-col cols="12">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
@@ -224,6 +297,11 @@
 										outlined
 										filled
 										no-resize
+										persistent-hint
+										hint="El consultante quiere saber un poco más sobre ti más allá de lo
+									profesional. Explica con más detalle el objetivo de tu línea de
+									trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
+									ambiente acogedor con las palabras."
 										:rules="rules"
 										counter
 									></v-textarea>
@@ -295,6 +373,10 @@
 										outlined
 										dense
 										placeholder="Requerido"
+										persistent-hint
+										hint="Cuenta, en pocas palabras, un poco sobre tu experiencia
+                                            profesional. También puedes hablar sobre el modelo terapéutico
+                                            que trabajas, y cómo puedes ayudar a tu consultante."
 										type="text"
 										counter
 										:rules="rules"
@@ -304,9 +386,8 @@
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Formación
 									</div>
-									<div class="text--secondary body-2 mb-2 font-weight-regular">
-										Grado académico, área de formación, institución educativa,
-										etc.
+									<div class="text--secondary caption mb-2 font-weight-regular">
+										Tipo, disciplina académica, institución académica, etc
 									</div>
 									<v-list>
 										<v-list-item v-for="(item, t) in form.formation" :key="t">
@@ -400,7 +481,7 @@
 															filled
 															outlined
 															dense
-															label="Inicio"
+															label="Año de inicio"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -410,7 +491,7 @@
 															filled
 															outlined
 															dense
-															label="Termino"
+															label="Año de termino"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -448,8 +529,8 @@
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Experiencia
 									</div>
-									<div class="text--secondary body-2 mb-2 font-weight-regular">
-										Profesión, función, lugar donde realizó la experiencia, etc.
+									<div class="text--secondary caption mb-2 font-weight-regular">
+										Tipo, disciplina académica, institución académica, etc
 									</div>
 									<v-list>
 										<v-list-item v-for="(item, t) in form.experience" :key="t">
@@ -460,7 +541,7 @@
 												</v-list-item-title>
 												<v-list-item-subtitle>
 													{{ item.start }} -
-													{{ item.end }}
+													{{ item.current ? 'Actualmente' : item.end }}
 												</v-list-item-subtitle>
 											</v-list-item-content>
 											<v-list-item-icon>
@@ -528,22 +609,33 @@
 														></v-text-field>
 													</v-col>
 													<v-col cols="12">
+														<v-checkbox
+															v-model="selectedExperience.current"
+															dense
+															label="Actualmente tengo este cargo"
+															@change="
+																() => (selectedExperience.end = '')
+															"
+														></v-checkbox>
+													</v-col>
+													<v-col cols="12">
 														<v-text-field
 															v-model="selectedExperience.start"
 															filled
 															outlined
 															dense
-															label="Inicio"
+															label="Año de inicio"
 															type="text"
 														></v-text-field>
 													</v-col>
 													<v-col cols="12">
 														<v-text-field
+															v-if="!selectedExperience.current"
 															v-model="selectedExperience.end"
 															filled
 															outlined
 															dense
-															label="Termino"
+															label="Año de Termino"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -739,6 +831,28 @@
 								</v-col>
 								<v-col cols="12">
 									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Cómo te enteraste de nosotros?
+									</div>
+									<div>
+										<v-select
+											v-model="form.howFindOut"
+											filled
+											outlined
+											dense
+											type="text"
+											:items="[
+												'Búsqueda de internet',
+												'Por redes sociales',
+												'Por amigos/familiares',
+												'Por blog',
+												'Anuncio en google',
+												'Otro',
+											]"
+										></v-select>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
 										¿Es la atención clínica su actividad exclusiva?
 									</div>
 									<div>
@@ -780,6 +894,69 @@
 									</div>
 									<div>
 										<v-radio-group v-model="form.isSupervisor" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Produce algún tipo de contenido para el público en general?
+									</div>
+									<div class="text--secondary vsption mb-2 font-weight-regular">
+										Ej: artículos en LinkedIn; Columnas en vehículos de
+										comunicación (portales, periódicos, revistas); Artículos en
+										blogs propios o de terceros; Publicación rica en contenido
+										en las redes sociales; etc.
+									</div>
+									<div>
+										<v-radio-group v-model="form.isContentCreator" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Estás actualmente asociado con otra plataforma de
+										psicología?
+									</div>
+									<div>
+										<v-radio-group v-model="form.isAffiliateExternal" row>
+											<v-radio
+												v-for="n in [
+													{ text: 'Si', value: true },
+													{ text: 'No', value: false },
+												]"
+												:key="n.text"
+												:label="n.text"
+												:value="n.value"
+											></v-radio>
+										</v-radio-group>
+									</div>
+								</v-col>
+								<v-col cols="12">
+									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+										¿Está interesado en participar en conferencias / paneles /
+										chats en empresas Clientes en el ámbito de Hablaquí
+										Business?
+									</div>
+									<div>
+										<v-radio-group v-model="form.isInterestedBusiness" row>
 											<v-radio
 												v-for="n in [
 													{ text: 'Si', value: true },
@@ -844,19 +1021,21 @@
 											Hemos recibido tu registro y verificaremos tu profesión
 											en la superintendencia de salud. Será un honor para
 											nosotros contar contigo en nuestro equipo de psicólogos,
-											te contactaremos pronto.
+											<span class="primary--text">
+												te contactaremos pronto.
+											</span>
 										</div>
-										<!-- <div>
+										<div>
 											<v-btn
 												depressed
 												class="mx-2"
 												color="primary"
 												rounded
-												to="/"
+												@click="step = 1"
 											>
-												Ir a Hablaquí
+												Editar postulación
 											</v-btn>
-										</div> -->
+										</div>
 									</v-col>
 								</v-row>
 							</v-container>
@@ -883,6 +1062,7 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
+			countries: [],
 			indexSelected: null,
 			selectedFormation: null,
 			selectedExperience: null,
@@ -909,6 +1089,7 @@ export default {
 				avgPatients: '',
 				birthDate: '',
 				comuna: '',
+				country: 'Chile',
 				experience: [],
 				formation: [],
 				gender: '',
@@ -918,14 +1099,19 @@ export default {
 				isUnderSupervision: false,
 				languages: ['spanish'],
 				linkedin: '',
+				models: [],
 				personalDescription: '',
+				phone: { code: '', number: '', flag: '' },
 				professionalDescription: '',
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
-				models: [],
+				howFindOut: '',
+				isContentCreator: false,
+				isAffiliateExternal: false,
+				isInterestedBusiness: false,
 			},
 			recruitment: null,
 			loading: false,
@@ -941,12 +1127,16 @@ export default {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
 		'form.region'(newVal) {
-			this.comunas = this.comunasRegiones.find(item => item.region === newVal).comunas;
+			if (newVal)
+				this.comunas = this.comunasRegiones.find(item => item.region === newVal).comunas;
 		},
 	},
 	async mounted() {
 		this.loading = true;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
+		let responseCountries = await fetch(`${this.$config.LANDING_URL}/countries.json`);
+		responseCountries = await responseCountries.json();
+		this.countries = responseCountries;
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.timezone = data;
 		this.comunasRegiones = response.data;
@@ -1031,7 +1221,8 @@ export default {
 		setExperience(item, index) {
 			if (index !== null) this.indexSelected = index;
 			if (item) this.selectedExperience = item;
-			else this.selectedExperience = { title: '', place: '', start: '', end: '' };
+			else
+				this.selectedExperience = { title: '', place: '', start: '', end: '', current: '' };
 			this.dialogExperience = true;
 		},
 		newFormation() {
