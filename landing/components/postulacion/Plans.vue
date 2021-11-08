@@ -44,7 +44,7 @@
 						</v-list>
 					</v-card-text>
 				</v-card>
-				<v-radio-group v-model="radioGroup" hide-details>
+				<v-radio-group v-model="period" hide-details>
 					<v-card class="my-2 rounded-xl">
 						<v-card-text class="py-1">
 							<v-radio value="mensual">
@@ -133,7 +133,7 @@ export default {
 	data() {
 		return {
 			mdiCheck,
-			radioGroup: null,
+			period: null,
 			itemsPremiun: [
 				'Prioridad Nº1 en la activación del perfil',
 				'Acceso a Hablaquí Office',
@@ -153,20 +153,15 @@ export default {
 			],
 		};
 	},
-	// Logica para ir a mercado pago
 	methods: {
 		async goMercadoPago() {
-			// Necesitas agregar el precio y el periodo (mensual, anual)
-			// Necesitas agregar el psicologo (la Id)
 			const preference = {
-				price: this.price || 100,
-				period: this.period || 'mensual',
+				price: this.period === 'mensual' ? 39990 : 31920,
+				period: this.period === 'mensual' ? this.period : 'anual',
 				title: 'Plan Premium',
 				quantity: 1,
-				psychologist: this.psychologist || '60c26d37f12991000bca3bb9',
+				psychologist: this.$auth.$state.user.psychologist,
 			};
-
-			console.log(preference);
 			const response = await this.mercadopagoPsychologistPay(preference);
 			window.location.href = response.body.init_point;
 		},
