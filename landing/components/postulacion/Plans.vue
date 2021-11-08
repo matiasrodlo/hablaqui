@@ -133,7 +133,7 @@ export default {
 	data() {
 		return {
 			mdiCheck,
-			period: null,
+			period: 'mensual',
 			itemsPremiun: [
 				'Prioridad Nº1 en la activación del perfil',
 				'Acceso a Hablaquí Office',
@@ -156,7 +156,7 @@ export default {
 	methods: {
 		async goMercadoPago() {
 			const preference = {
-				price: this.period === 'mensual' ? 39990 : 31920,
+				price: this.period === 'mensual' ? 39990 : 31920 * 12,
 				period: this.period === 'mensual' ? this.period : 'anual',
 				title: 'Plan Premium',
 				quantity: 1,
