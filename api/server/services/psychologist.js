@@ -257,6 +257,9 @@ const match = async body => {
  * @returns
  */
 const createPlan = async ({ payload }) => {
+	if (payload.user === payload.psychologist) {
+		return conflictResponse('No puedes suscribirte a ti mismo');
+	}
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -367,7 +370,7 @@ const createSession = async ({ payload }) => {
 	const parsedDate = date.split('/');
 	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
 	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
-
+	logInfo(isoDate);
 	const newSession = {
 		date: isoDate,
 		sessionNumber: `${foundSession.totalSessions -
