@@ -38,7 +38,7 @@ let email = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Pyschologist',
 	},
-	psySessionID: {
+	sessionRef: {
 		type: Schema.Types.ObjectId,
 		ref: 'sessions',
 	},

@@ -3,7 +3,6 @@
 import moment from 'moment';
 import momentz from 'moment-timezone';
 import mailgun from 'mailgun-js';
-import { logInfo } from '../config/winston';
 
 const DOMAIN = 'mail.hablaqui.com';
 
@@ -264,6 +263,10 @@ const mailService = {
 			});
 		});
 	},
+	/**
+	 * @description Send an internal email about a new psy application
+	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
+	 */
 	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
 		const { name, lastName } = recruitedPsy;
 		const dataPayload = {
