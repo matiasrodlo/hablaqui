@@ -3,6 +3,7 @@
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
+import Sessions from '../models/sessions';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
@@ -22,9 +23,43 @@ const generateJwt = user => {
 
 const login = async user => {
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
 		token: generateJwt(user),
+		user: await generateUser(user),
 	});
+};
+
+const getSessions = async user => {
+	// User retorna un objeto con sus sessiones
+	if (user.role === 'user') return await Sessions.findOne({ user: user._id });
+
+	// Psicologo retorna array de muchas sessiones
+	if (user.role === 'psychologist')
+		return await Sessions.find({ psychologist: user.psychologist });
+	return null;
+};
+
+const generateUser = async user => {
+	return {
+		_id: user._id,
+		avatar: user.avatar,
+		avatarThumbnail: user.avatarThumbnail,
+		email: user.email,
+		finishedSessions: user.finishedSessions,
+		google: user.google,
+		googleId: user.googleId,
+		hasPaid: user.hasPaid,
+		inviteCode: user.inviteCode,
+		lastName: user.lastName,
+		name: user.name,
+		phone: user.phone,
+		plan: user.plan,
+		psychologist: user.psychologist,
+		role: user.role,
+		rut: user.rut,
+		state: user.state,
+		timeZone: user.timeZone,
+		sessions: await getSessions(user),
+	};
 };
 
 const register = async payload => {
@@ -43,34 +78,48 @@ const register = async payload => {
 		await mailService.sendWelcomeNewUser(user);
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
+		user: await generateUser(user),
 		token: generateJwt(user),
 	});
 };
 
-// const generatePasswordRecoverJwt = user => {
-// 	const payload = {
-// 		username: user.name,
-// 		sub: user._id,
-// 	};
+/**
+ * token generator - password recovery
+ * @param {Object} user
+ * @returns string Token
+ */
+const generatePasswordRecoverJwt = user => {
+	const payload = {
+		username: user.name,
+		sub: user._id,
+	};
 
-// 	return sign(payload, process.env.JWT_SECRET, {
-// 		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
-// 	});
-// };
+	return sign(payload, process.env.JWT_SECRET, {
+		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION, // 40m
+	});
+};
 
 const getUserByEmail = async email => {
 	return await User.findOne({ email: email });
 };
 
-const sendPasswordRecover = async (email, res) => {
+const sendPasswordRecover = async email => {
 	const user = await getUserByEmail(email);
 	if (!user) {
-		return res.sendStatus(404);
-	} else {
-		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
-		return res.sendStatus(200);
+		return conflictResponse('Este usuario no existe');
 	}
+	const token = generatePasswordRecoverJwt(user);
+
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}
+		/password-reset?token=${token}`;
+
+	mailService.sendPasswordRecovery(user, recoveryUrl);
+
+	if (process.env.NODE_ENV === 'development')
+		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
+	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
+
+	return okResponse('Sé le ha enviado un correo electronico');
 };
 
 const changeUserPassword = async (user, newPassword, res) => {
@@ -98,10 +147,12 @@ const googleAuthCallback = (req, res) => {
 const authService = {
 	login,
 	generateJwt,
+	generateUser,
 	register,
 	sendPasswordRecover,
 	changeUserPassword,
 	googleAuthCallback,
+	getSessions,
 };
 
 export default Object.freeze(authService);

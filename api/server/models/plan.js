@@ -1,7 +1,6 @@
 'use strict';
 
-import { model, plugin, Schema } from 'mongoose';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
+import { model, Schema } from 'mongoose';
 
 let plan = new Schema({
 	name: {
@@ -12,5 +11,4 @@ let plan = new Schema({
 	},
 });
 
-plan.plugin(mongooseUniqueValidator, { message: '{PATH} debe ser unico' });
 export default model('plan', plan);

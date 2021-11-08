@@ -1,5 +1,7 @@
-runtime: nodejs10
+runtime: nodejs14
 instance_class: F1
+automatic_scaling:
+    max_instances: 3
 
 handlers:
     - url: /_nuxt

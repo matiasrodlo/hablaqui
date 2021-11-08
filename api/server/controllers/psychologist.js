@@ -15,10 +15,11 @@ const psychologistsController = {
 	},
 	async getSessions(req, res) {
 		try {
-			const { idPsychologist } = req.params;
+			const { idUser, idPsychologist } = req.params;
 			const { user } = req;
 			const { data, code } = await psychologistsService.getSessions(
 				user,
+				idUser,
 				idPsychologist
 			);
 			return restResponse(data, code, res);
@@ -64,21 +65,30 @@ const psychologistsController = {
 		try {
 			const { body } = req;
 			const { data, code } = await psychologistsService.createSession(
-				body,
-				res
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error creando una cita');
+			errorCallback(e, res, 'error creando una sessión');
+		}
+	},
+	async createPlan(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.createPlan(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error creando una plan');
 		}
 	},
 	async reschedule(req, res) {
 		try {
-			const { id } = req.params;
+			const { id, sessionsId } = req.params;
 			const { user } = req;
 			const { newDate } = req.body;
 			const { data, code } = await psychologistsService.reschedule(
 				user,
+				sessionsId,
 				id,
 				newDate
 			);
@@ -273,16 +283,66 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error actualizando');
 		}
 	},
+
+	async approveAvatar(req, res) {
+		try {
+			const { user } = req;
+			const { id } = req.params;
+			const { data, code } = await psychologistsService.approveAvatar(
+				user,
+				id
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el avatar');
+		}
+	},
+
 	async customNewSession(req, res) {
 		try {
 			const { user } = req;
 			const { payload } = req.body;
-			const { data, code } = await psychologistsService.customNewSession(user, payload);
+			const { data, code } = await psychologistsService.customNewSession(
+				user,
+				payload
+			);
 			return restResponse(data, code, res);
-		} catch(e) {
+		} catch (e) {
 			return errorCallback(e, res, 'Error creando la sesion');
 		}
-	}
+	},
+	async uploadProfilePicture(req, res) {
+		try {
+			const id = req.params.id;
+			const { file } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.uploadProfilePicture(id, file);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error actualizando/subiendo imágen de perfil'
+			);
+		}
+	},
+	async paymentsInfo(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.paymentsInfo(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

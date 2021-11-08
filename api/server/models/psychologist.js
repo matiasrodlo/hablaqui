@@ -2,40 +2,6 @@
 
 import { Schema, model } from 'mongoose';
 
-let session = new Schema({
-	date: {
-		type: String,
-	},
-	start: {
-		type: String,
-	},
-	end: {
-		type: String,
-	},
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-	},
-	typeSession: {
-		type: String,
-	},
-	typePayments: {
-		type: String,
-	},
-	statePayments: {
-		type: String,
-	},
-	plan: {
-		type: String,
-	},
-	invitedByPsychologist: {
-		type: Boolean,
-	},
-	price: {
-		type: Number,
-	},
-});
-
 let defaultSchedule = {
 	monday: [['09:00', '17:00']],
 	tuesday: [['09:00', '17:00']],
@@ -115,6 +81,14 @@ let plan = new Schema({
 let psychologist = new Schema({
 	avatar: {
 		type: String,
+		default: '',
+	},
+	avatarThumbnail: {
+		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
 	},
 	code: {
 		type: String,
@@ -139,7 +113,6 @@ let psychologist = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	gender: {
 		type: String,
@@ -196,7 +169,6 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	sessions: [session],
 	plan: [plan],
 	timeZone: {
 		type: String,
@@ -204,5 +176,4 @@ let psychologist = new Schema({
 	},
 });
 
-//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
 export default model('psychologist', psychologist);

@@ -10,16 +10,16 @@ steps:
     args: ["run", "create-env"]
     env:
       - "FRONTEND_URL=${_FRONTEND_URL}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
-      - "PUSHER_SECRET=${_PUSHER_SECRET}"
-      - "PUSHER_KEY=${_PUSHER_KEY}"
       - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
-      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_URL=${_VUE_APP_URL}"
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
@@ -52,16 +52,16 @@ steps:
     args: ["run", "create-env"]
     env:
       - "FRONTEND_URL=${_FRONTEND_URL}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
-      - "PUSHER_SECRET=${_PUSHER_SECRET}"
-      - "PUSHER_KEY=${_PUSHER_KEY}"
       - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
-      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_URL=${_VUE_APP_URL}"
     dir: "front"
     id: "envvars-front"
     waitFor: ["install-front"]
@@ -93,17 +93,18 @@ steps:
     entrypoint: npm
     args: ["run", "create-env"]
     env:
+      - "BUCKETNAME=${_BUCKETNAME}"
       - "FRONTEND_URL=${_FRONTEND_URL}"
-      - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
-      - "PUSHER_SECRET=${_PUSHER_SECRET}"
-      - "PUSHER_KEY=${_PUSHER_KEY}"
       - "PUSHER_CLUSTER=${_PUSHER_CLUSTER}"
+      - "PUSHER_KEY=${_PUSHER_KEY}"
+      - "PUSHER_SECRET=${_PUSHER_SECRET}"
+      - "VUE_APP_LANDING=${_VUE_APP_LANDING}"
       - "VUE_APP_PUSHER_BEAMS_INSTANCE=${_VUE_APP_PUSHER_BEAMS_INSTANCE}"
-      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
+      - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
+      - "VUE_APP_URL=${_VUE_APP_URL}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]

@@ -78,27 +78,25 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando el psicologo');
 		}
 	},
-
-	async updateAvatar(req, res) {
+	async uploadAvatar(req, res) {
 		try {
-			const { user, file } = req;
-			const { data, code } = await userService.updateAvatar(
-				user,
-				file.cloudStoragePublicUrl
+			const { body, file, user } = req;
+			const { data, code } = await userService.uploadAvatar({
+				...body,
+				avatar: file.avatar,
+				avatarThumbnail: file.avatarThumbnail,
+				userLogged: {
+					role: user.role,
+					email: user.email,
+				},
+			});
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error actualizando/subiendo imágen de perfil'
 			);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el avatar');
-		}
-	},
-
-	async getSessions(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await userService.getSessions(user);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error consiguiendo las sesiones');
 		}
 	},
 	async setUserOnline(req, res) {
@@ -119,6 +117,15 @@ const userController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error actualizando el estado');
+		}
+	},
+	async registerUser(req, res) {
+		try {
+			const { user, body } = req;
+			const { data, code } = await userService.registerUser(user, body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error registrando un usuario');
 		}
 	},
 };

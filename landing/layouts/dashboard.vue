@@ -16,7 +16,7 @@
 					style="cursor: pointer"
 					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
-					alt="logo hablaqui"
+					alt="logo hablaquí"
 					class="my-16"
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
@@ -25,8 +25,8 @@
 				<v-list-item v-if="false" class="my-4" link>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
-							<icon v-if="online" size="35" color="#8BC34A" :icon="mdiAccount" />
-							<icon v-else size="35" color="red" :icon="mdiAccountOff" />
+							<icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
+							<icon v-else size="30" color="red" :icon="mdiAccountOff" />
 						</v-btn>
 					</v-list-item-avatar>
 					<v-list-item-content>
@@ -149,15 +149,15 @@ export default {
 					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
-				{
-					name: 'Pagos',
-					link: { name: 'dashboard-pagos' },
-					img: `https://cdn.hablaqui.cl/static/pay.png`,
-					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
-				},
+				// {
+				// 	name: 'Pagos',
+				// 	link: { name: 'dashboard-pagos' },
+				// 	img: `https://cdn.hablaqui.cl/static/pay.png`,
+				// 	visible:
+				// 		this.$auth.$state.loggedIn &&
+				// 		this.$auth.$state.user.role === 'psychologist' &&
+				// 		this.$auth.$state.user.psychologist,
+				// },
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },
@@ -197,24 +197,10 @@ export default {
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
-	mounted() {
-		if (!this.listenerUserOnline) {
-			this.setListenerUserOnline(true);
-			document.addEventListener('visibilitychange', this.visibilityListener);
-			this.visibilityListener();
-		}
-	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
-		},
-		visibilityListener() {
-			if (document.visibilityState === 'visible') {
-				console.info('user online');
-			} else {
-				console.info('user offline');
-			}
 		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},

@@ -1,12 +1,16 @@
 'use strict';
 
 import User from '../models/user';
+import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
+import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import { bucket } from '../config/bucket';
+import mailService from './mail';
 
 const usersService = {
 	async getProfile(id) {
@@ -14,7 +18,9 @@ const usersService = {
 		if (!user) {
 			return conflictResponse('perfil no encontrado');
 		}
-		return okResponse('perfil obtenido', { user });
+		return okResponse('perfil obtenido', {
+			user: await servicesAuth.generateUser(user),
+		});
 	},
 	async changeActualPassword(user, newPassword) {
 		user.password = bcrypt.hashSync(newPassword, 10);
@@ -85,22 +91,81 @@ const usersService = {
 		return okResponse('psicologo actualizado', { profile: updated });
 	},
 
-	async updateAvatar(user, avatar) {
+	async uploadAvatar({
+		userLogged,
+		avatar,
+		avatarThumbnail,
+		role,
+		idPsychologist,
+		_id,
+		oldAvatar,
+		oldAvatarThumbnail,
+	}) {
+		let psychologist;
+		let userRole = role;
+		let userID = _id;
+
+		if (!avatar && !avatarThumbnail)
+			return conflictResponse('Ha ocurrido un error inesperado');
+
+		if (userLogged.role === 'superuser') {
+			const userSelected = await User.findOne({
+				psychologist: idPsychologist,
+				role: 'psychologist',
+			});
+
+			userRole = userSelected.role;
+			userID = userSelected._id;
+		}
+
+		if (userRole === 'psychologist')
+			psychologist = await Psychologist.findByIdAndUpdate(
+				idPsychologist,
+				{
+					avatar,
+					avatarThumbnail,
+					approveAvatar: false,
+				},
+				{ new: true }
+			);
+
 		const profile = await User.findByIdAndUpdate(
-			user._id,
-			{ avatar },
+			userID,
+			{
+				avatar,
+				avatarThumbnail,
+			},
 			{
 				new: true,
 			}
 		);
-		logInfo(`${user.email} actualizo su avatar`);
-		return okResponse('Avatar actualizado', { user: profile });
+
+		// delete old image
+		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch(
+			console.error
+		);
+
+		logInfo(`${userLogged.email} actualizo su avatar`);
+
+		return okResponse('Avatar actualizado', {
+			user: profile,
+			psychologist,
+		});
 	},
 
-	async getSessions(user) {
-		let finishedSessions = user.finishedSessions;
-
-		return okResponse('sesiones conseguidas', { finishedSessions });
+	async deleteFile(oldAvatar, oldAvatarThumbnail) {
+		if (oldAvatar)
+			await bucket
+				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
+				.delete();
+		if (oldAvatarThumbnail)
+			await bucket
+				.file(
+					oldAvatarThumbnail
+						.split('https://cdn.hablaqui.cl/')
+						.join('')
+				)
+				.delete();
 	},
 
 	async setUserOnline(user) {
@@ -119,6 +184,46 @@ const usersService = {
 		};
 		pusher.trigger('user-status', 'offline', data, pusherCallback);
 		return okResponse('Usuario desconectado', user);
+	},
+
+	async registerUser(user, body) {
+		if (user.role != 'psychologist')
+			return conflictResponse('Usuario activo no es psicologo');
+		if (await User.exists({ email: body.email }))
+			return conflictResponse('Correo electronico en uso');
+
+		const pass =
+			Math.random()
+				.toString(36)
+				.slice(2) +
+			Math.random()
+				.toString(36)
+				.slice(2);
+
+		const newUser = {
+			name: body.name,
+			email: body.email,
+			password: bcrypt.hashSync(pass, 10),
+			role: 'user',
+			rut: body.rut,
+			phone: body.phone,
+		};
+		const createdUser = await User.create(newUser);
+
+		if (process.env.NODE_ENV === 'development')
+			logInfo(
+				actionInfo(
+					user.email,
+					`Usuario registrado ${newUser.email} ${pass}`
+				)
+			);
+
+		// Sending email with user information
+		await mailService.sendGuestNewUser(user, newUser, pass);
+
+		return okResponse('Nuevo usuario creado', {
+			user: await servicesAuth.generateUser(createdUser),
+		});
 	},
 };
 

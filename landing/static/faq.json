@@ -39,11 +39,11 @@
             },
             {
                 "title": "¿Tienen convenios con isapres?",
-                "description": "Si, más de 3 millones de personas están inscritas en alguna Isapre, y 14 millones en Fonasa. Por eso, todos nuestros psicólogos están habilitados para extender boletasreembolsables en Isapres y Fonasa, justo como funciona en una terapia presencial. Una vez contrates tu plan, puedes solicitar tu boleta a c@hablaqui.com"
+                "description": "Si, más de 3 millones de personas están inscritas en alguna Isapre, y 14 millones en Fonasa. Por eso, todos nuestros psicólogos están habilitados para extender boletasreembolsables en Isapres y Fonasa, justo como funciona en una terapia presencial. Una vez contrates tu plan, puedes solicitar tu boleta a soporte@hablaqui.cl"
             },
             {
                 "title": "¿Cómo puedo recibir un reembolso de mi Isapre?",
-                "description": "Funciona igual que en la terapia presencial. La diferencia es que debes solicitar tu boleta en c@hablaqui.com, y el documento que te entregaremos es el que debes mostrar en tu Isapre o Fonasa para recibir el reembolso correspondiente."
+                "description": "Funciona igual que en la terapia presencial. La diferencia es que debes solicitar tu boleta en soporte@hablaqui.cl, y el documento que te entregaremos es el que debes mostrar en tu Isapre o Fonasa para recibir el reembolso correspondiente."
             },
             {
                 "title": "¿Cuál es su política de cancelación?",
@@ -51,7 +51,7 @@
             },
             {
                 "title": "¿Cómo pauso/congelo mi suscripción?",
-                "description": "Puede colocar su suscripción de Hablaquí en una pausa de 7 días en cualquier momento.Tenga en cuenta que la pausa finaliza automáticamente, por lo que es una buena idea establecer un recordatorio para que vuelva a activarla si necesita mantener su cuenta en pausa por más tiempo. Si desea poner su cuenta en pausa por un período de tiempo más largo, no dude en comunicarse con c@hablaqui.com para obtener ayuda."
+                "description": "Puede colocar su suscripción de Hablaquí en una pausa de 7 días en cualquier momento.Tenga en cuenta que la pausa finaliza automáticamente, por lo que es una buena idea establecer un recordatorio para que vuelva a activarla si necesita mantener su cuenta en pausa por más tiempo. Si desea poner su cuenta en pausa por un período de tiempo más largo, no dude en comunicarse con soporte@hablaqui.cl para obtener ayuda."
             },
             {
                 "title": "¿Puedo pagar mi suscripción con una tarjeta de crédito internacional?",
@@ -205,11 +205,11 @@
         "faq": [
             {
                 "title": "Consejos generales para la resolución de problemas",
-                "description": "Si tiene algún problema al usar la aplicación Hablaquí, elimine la aplicación de su dispositivo móvil y luego descárguela nuevamente. Si surge un problema mientras usa el sitio web, cierre la sesión de su cuenta y luego vuelva a iniciarla; esto refrescará el entorno. También recomendamos usar Google Chrome cuando visualice el sitio y borre su caché periódicamente. Si el problema persiste, comuníquese con c@hablaqui.com e incluya la mayor cantidad de información posible sobre los problemas que está experimentando y el tipo de dispositivo/navegador que está utilizando."
+                "description": "Si tiene algún problema al usar la aplicación Hablaquí, elimine la aplicación de su dispositivo móvil y luego descárguela nuevamente. Si surge un problema mientras usa el sitio web, cierre la sesión de su cuenta y luego vuelva a iniciarla; esto refrescará el entorno. También recomendamos usar Google Chrome cuando visualice el sitio y borre su caché periódicamente. Si el problema persiste, comuníquese con soporte@hablaqui.cl e incluya la mayor cantidad de información posible sobre los problemas que está experimentando y el tipo de dispositivo/navegador que está utilizando."
             },
             {
                 "title": "¿Por qué no se envían mis mensajes a mi psicólogo?",
-                "description": "Una conexión débil puede provocar que los mensajes no se envíen. Recomendamos verificar la intensidad de su conexión a Internet y luego cerrar la sesión y volver a ingresar a la aplicación. Si esto continúa puede ser problema de la aplicación, le recomendamos iniciar sesión en su sala de chat directamente a través de nuestro sitio web en www.hablaqui.com hasta que podamos resolver el problema. Si continúa teniendo dificultades, comuníquese con c@hablaqui.com con la siguiente información: 1. El tipo de dispositivo que está utilizando. 2. El número de versión de su teléfono / dispositivo. 3. El número de versión de la aplicación Hablaquí. 4. Si el problema está ocurriendo por igual en redes de datos móviles y WiFi."
+                "description": "Una conexión débil puede provocar que los mensajes no se envíen. Recomendamos verificar la intensidad de su conexión a Internet y luego cerrar la sesión y volver a ingresar a la aplicación. Si esto continúa puede ser problema de la aplicación, le recomendamos iniciar sesión en su sala de chat directamente a través de nuestro sitio web en www.hablaqui.com hasta que podamos resolver el problema. Si continúa teniendo dificultades, comuníquese con soporte@hablaqui.cl con la siguiente información: 1. El tipo de dispositivo que está utilizando. 2. El número de versión de su teléfono / dispositivo. 3. El número de versión de la aplicación Hablaquí. 4. Si el problema está ocurriendo por igual en redes de datos móviles y WiFi."
             },
             {
                 "title": "¿Por qué no puedo enviar mi encuesta/evaluación?",
@@ -221,7 +221,7 @@
             },
             {
                 "title": "¿Cómo me comunico con Hablaquí?",
-                "description": "Para cualquier pregunta a la que no pueda encontrar respuesta en nuestra página de preguntas frecuentes, no dude en contactarnos por correo electrónico a sc@hablaqui.com."
+                "description": "Para cualquier pregunta a la que no pueda encontrar respuesta en nuestra página de preguntas frecuentes, no dude en contactarnos por correo electrónico a soporte@hablaqui.cl"
             }
         ]
     }

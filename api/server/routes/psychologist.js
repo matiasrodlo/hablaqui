@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import psychologistsController from '../controllers/psychologist';
+import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
@@ -45,7 +46,7 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist',
+	'/psychologists/sessions/:idPsychologist/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
@@ -89,15 +90,28 @@ psychologistsRouter.post(
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createPlan
+);
+/**
+ * Create a session
+ * req.body.payload = {
+ *	user: ObjectId,
+	psychologist: ObjectId,
+	date: String,
+	start: String,
+ * }
+ */
+psychologistsRouter.post(
+	'/psychologists/session/create-session',
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
-
 /**
  * Cambia la hora de la session con el :id
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
@@ -318,6 +332,18 @@ psychologistsRouter.post(
 );
 
 /**
+ * @description: Route to upload/update psychologist's profile picture
+ * @route {PATCH} /api/v1/psychologist/profile-picture
+ * @access {Private}
+ * @body {file} file
+ */
+psychologistsRouter.put('/psychologist/avatar/:id', [
+	passport.authenticate('jwt', { session: true }),
+	multer.single('avatar'),
+	psychologistsController.uploadProfilePicture,
+]);
+
+/**
  * Crea una nueva sesion custom, un poco mas libre y menos estandarizada.
  * req.body.payload = {
  * 		type: string,
@@ -330,5 +356,24 @@ psychologistsRouter.post(
 	'/psychologist/new-custom-session',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.customNewSession
-)
+);
+
+/**
+ * Actualiza la propiedad approveAvatar
+ */
+psychologistsRouter.put(
+	'/psychologist/:id/approve-avatar',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.approveAvatar
+);
+
+/**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
+psychologistsRouter.get(
+	'/psychologist/payments',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfo
+);
+
 export default psychologistsRouter;
