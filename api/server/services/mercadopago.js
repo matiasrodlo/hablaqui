@@ -177,7 +177,7 @@ const createRecruitedPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.psychologist}?period=${body.period}`,
+			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitment}?period=${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
