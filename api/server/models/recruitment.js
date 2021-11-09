@@ -305,6 +305,7 @@ let recruitment = new Schema(
 			default: Date.now,
 		},
 		ratings: [rating],
+		psyPlans: psyPlan,
 		sessions: [session],
 		timeZone: {
 			type: String,
