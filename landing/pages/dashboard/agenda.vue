@@ -6,8 +6,20 @@
 				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
 					<div class="hidden-md-and-up text-center">
 						<div class="text-center text--secondary">Nº de Sesiones</div>
-						<div class="text-center text--secondary font-weight-bold my-1">0/0</div>
+						<div v-if="plan" class="text-center text--secondary font-weight-bold my-1">
+							{{ plan.remainingSessions }}/{{ plan.totalSessions }}
+						</div>
+						<div v-else class="text-center text--secondary font-weight-bold my-1">
+							0/0
+						</div>
+						<div
+							v-if="plan"
+							class="headline text-center text--secondary font-weight-bold my-1"
+						>
+							{{ nextSesion }}
+						</div>
 						<v-btn
+							v-else
 							text
 							nuxt
 							to="/psicologos"
@@ -414,13 +426,25 @@
 					<div class="body-2 text-center text--secondary font-weight-bold">
 						Nº de Sesiones
 					</div>
-					<div class="headline text-center text--secondary font-weight-bold my-1">
+					<div
+						v-if="plan"
+						class="headline text-center text--secondary font-weight-bold my-1"
+					>
+						{{ plan.remainingSessions }}/{{ plan.totalSessions }}
+					</div>
+					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
 					</div>
 					<div class="body-2 text-center text--secondary font-weight-bold mt-16">
 						Próxima sesión
 					</div>
-					<v-btn text nuxt to="/psicologos">
+					<div
+						v-if="plan"
+						class="headline text-center text--secondary font-weight-bold my-1"
+					>
+						{{ nextSesion }}
+					</div>
+					<v-btn v-else text nuxt to="/psicologos">
 						<span class="body-1 primary--text font-weight-bold">Adquirir</span>
 					</v-btn>
 				</v-col>
@@ -700,6 +724,30 @@ export default {
 		psychologist: null,
 	}),
 	computed: {
+		// Filtramos que cada session
+		session() {
+			if (!this.$auth.$state.user) return null;
+			return this.$auth.$state.user.sessions.find(item =>
+				item.plan.some(plan => {
+					return plan.payment === 'success' && moment().isBefore(moment(plan.expiration));
+				})
+			);
+		},
+		// Filtramos que sea de usuarios con pagos success y no hayan expirado
+		plan() {
+			if (!this.session) return null;
+			return this.session.plan.find(
+				plan => plan.payment === 'success' && moment().isBefore(moment(plan.expiration))
+			);
+		},
+		nextSesion() {
+			// Si no hay plan
+			if (!this.plan) return '';
+			// Obtenemos unarray solamente con las fechas de sesiones del plan
+			const dates = this.plan.session.flatMap(session => moment(session.date).format('l'));
+			// Encontramos la session siguiente
+			return dates.find(item => moment(item).isSameOrAfter(moment()));
+		},
 		maxWidth() {
 			if (this.step === 0) return '700';
 			if (this.step === 1) return '900';
@@ -748,19 +796,20 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
-				this.idPsychologist = this.$auth.$state.user.sessions.psychologist;
+			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
-					idPsychologist: this.idPsychologist,
-					idUser: this.$auth.$state.user.sessions.user,
+					idPsychologist: this.session.psychologist,
+					idUser: this.session.user,
 				});
 				this.events = this.sessions;
 			}
-			if (this.$auth.$state.user.role === 'psychologist' && this.$auth.$state.user.sessions) {
-				this.idPsychologist = this.$auth.$state.user.psychologist;
-				await this.getClients(this.idPsychologist);
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.sessions.length
+			) {
+				await this.getClients(this.$auth.$state.user.psychologist);
 				await this.getSessions({
-					idPsychologist: this.idPsychologist,
+					idPsychologist: this.$auth.$state.user.psychologist,
 				});
 				this.events = this.sessions;
 			}

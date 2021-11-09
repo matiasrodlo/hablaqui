@@ -567,23 +567,30 @@ export default {
 			}));
 		},
 		getMyPsy() {
-			const user = this.$auth.$state.user;
-			if (user && user.role === 'user' && !!user.sessions) {
-				const psy = this.$auth.$state.user.sessions.psychologist;
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.session) {
+				const psy = this.session.psychologist;
 				if (psy)
 					return {
 						...this.getPsy(psy),
-						roomsUrl: this.$auth.$state.user.sessions.roomsUrl,
+						roomsUrl: this.session.roomsUrl,
 					};
 				else return null;
 			}
 			return null;
 		},
+		session() {
+			if (!this.$auth.$state.user) return null;
+			return this.$auth.$state.user.sessions.find(item =>
+				item.plan.some(plan => {
+					return plan.payment === 'success' && moment().isBefore(moment(plan.expiration));
+				})
+			);
+		},
 		planSuccess() {
-			// session is object(unica session)
-			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
-				return !!this.$auth.$state.user.sessions.psychologist;
-			} else return false;
+			if (!this.session) return null;
+			return this.session.plan.find(
+				plan => plan.payment === 'success' && moment().isBefore(moment(plan.expiration))
+			);
 		},
 		...mapGetters({
 			chat: 'Chat/chat',

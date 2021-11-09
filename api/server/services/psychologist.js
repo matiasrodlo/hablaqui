@@ -616,7 +616,7 @@ const checkPlanTask = async () => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
 			if (moment().isAfter(plan.expiration)) {
-				plan.stauts = 'expired';
+				plan.status = 'expired';
 			}
 		});
 		foundUser.save();
