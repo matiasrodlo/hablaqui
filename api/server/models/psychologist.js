@@ -195,7 +195,7 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	psyPlans: [psyPlan],
+	plan: [plan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

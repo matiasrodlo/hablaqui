@@ -304,7 +304,6 @@ let recruitment = new Schema(
 			type: Date,
 			default: Date.now,
 		},
-		psyPlans: [psyPlan],
 		ratings: [rating],
 		sessions: [session],
 		timeZone: {
