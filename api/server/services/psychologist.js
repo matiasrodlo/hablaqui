@@ -635,15 +635,18 @@ const getClients = async psychologist => {
 		let sessionsPlan = [];
 		let lastSession = '';
 		let state = '';
+		//Se obtienen todas las sesiones que hay en todos los planes de este psicologo-usuario
 		for (let i = 0; i < plan.length; i++)
 			sessionsPlan = sessionsPlan.concat(plan[i].session);
 
+		//Se ordenan las sesiones de mayor a menor según su fecha
 		sessionsPlan.sort(function(a, b) {
 			a = a.date;
 			b = b.date;
 			return a > b ? -1 : a < b ? 1 : 0;
 		});
-		console.log(sessionsPlan);
+
+		//Se obtiene la última sesión que ha pasado, relativa a la fecha actual
 		for (let i = 0; i < sessionsPlan.length; i++) {
 			if (
 				moment().isSameOrAfter(
