@@ -101,6 +101,39 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
+let psyPlan = new Schema({
+	tier: {
+		type: String,
+		enum: ['free', 'premium'],
+		default: 'free',
+	},
+	payment: {
+		type: String,
+		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	expirationDate: {
+		type: String,
+		default: '',
+	},
+	subscriptionPeriod: {
+		type: String,
+		enum: ['monthly', 'yearly'],
+	},
+	price: {
+		type: Number,
+		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
+	},
+});
+
 let recruitment = new Schema(
 	{
 		avatar: {
@@ -271,6 +304,7 @@ let recruitment = new Schema(
 			type: Date,
 			default: Date.now,
 		},
+		psyPlans: [psyPlan],
 		ratings: [rating],
 		sessions: [session],
 		timeZone: {
