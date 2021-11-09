@@ -630,8 +630,38 @@ const getClients = async psychologist => {
 		psychologist,
 	}).populate('user');
 
-	return okResponse('Usuarios encontrados', {
-		users: sessions.map(item => ({
+	let sessionsFilter = sessions.map(item => {
+		const plan = item.plan;
+		let sessionsPlan = [];
+		let lastSession = '';
+		let state = '';
+		for (let i = 0; i < plan.length; i++)
+			sessionsPlan = sessionsPlan.concat(plan[i].session);
+
+		sessionsPlan.sort(function(a, b) {
+			a = a.date;
+			b = b.date;
+			return a > b ? -1 : a < b ? 1 : 0;
+		});
+		console.log(sessionsPlan);
+		for (let i = 0; i < sessionsPlan.length; i++) {
+			if (
+				moment().isSameOrAfter(
+					moment(sessionsPlan[i].date, 'MM/DD/YYYY HH:mm').format(
+						'YYYY-MM-DD hh:mm'
+					)
+				)
+			) {
+				lastSession = moment(
+					sessionsPlan[i].date,
+					'MM/DD/YYYY HH:mm'
+				).format('DD/MM/YYYY hh:mm');
+				state = sessionsPlan[i].status;
+				break;
+			}
+		}
+
+		return {
 			_id: item.user._id,
 			avatar: item.user.avatar,
 			email: item.user.email,
@@ -639,7 +669,13 @@ const getClients = async psychologist => {
 			name: item.user.name,
 			role: item.user.role,
 			roomsUrl: item.roomsUrl,
-		})),
+			lastSession: lastSession,
+			status: state,
+		};
+	});
+
+	return okResponse('Usuarios encontrados', {
+		users: sessionsFilter.filter(item => item.lastSession != ''),
 	});
 };
 
