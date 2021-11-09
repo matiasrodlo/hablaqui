@@ -77,7 +77,7 @@ let psyPlan = new Schema({
 		enum: ['free', 'premium'],
 		default: 'free',
 	},
-	payment: {
+	paymentStatus: {
 		type: String,
 		enum: ['success', 'pending'],
 		default: 'pending',
@@ -88,11 +88,19 @@ let psyPlan = new Schema({
 	},
 	subscriptionPeriod: {
 		type: String,
-		enum: ['monthly', 'yearly'],
+		enum: ['mensual', 'anual'],
 	},
-	amountPaid: {
+	price: {
 		type: Number,
 		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
 	},
 });
 

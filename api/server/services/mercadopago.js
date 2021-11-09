@@ -151,12 +151,14 @@ const psychologistPay = async (params, query) => {
 			.add({ months: 1 })
 			.toISOString();
 	}
-
+	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
 	const newPlan = {
-		name: 'premium',
+		tier: 'premium',
 		hablaquiFee: 0,
-		paymentFee: 3.99,
+		paymentFee: 0.0399,
 		expirationDate,
+		price: pricePaid,
+		subscriptionPeriod: period,
 	};
 	await psychologistService.updatePlan(psychologistId, newPlan);
 	return okResponse('plan actualizado');
