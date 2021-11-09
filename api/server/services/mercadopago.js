@@ -138,22 +138,71 @@ const successPay = async params => {
 	return okResponse('sesion actualizada');
 };
 
-const psychologistPay = async params => {
-	const { psychologistId, price } = params;
-	const newPlan = {
-		name: 'paid',
-		price,
-		hablaquiFee: 0,
-		paymentFee: 3.99,
-	};
-	await psychologistService.updatePlan(psychologistId, newPlan);
+const customSessionPay = async params => {
+	const { userId, psyId, planId } = params;
+	let foundSession = await Sessions.findOne({
+		user: userId,
+		psychologist: psyId,
+	});
+
+	let foundPlan = foundSession.plan.filter(e => e._id == planId);
+	foundPlan.payment = 'success';
+	foundSession.save();
 	return okResponse('plan actualizado');
 };
+
+const createCustomSessionPreference = async (userId, psyId, planId) => {
+	let foundSession = await Sessions.findOne({
+		user: userId,
+		psychologist: psyId,
+	});
+
+	let foundPlan = foundSession.plan.filter(e => e._id == planId);
+
+	let newPreference = {
+		items: [
+			{
+				title: 'Sesion personalizada',
+				description: 'Sesion personalizada creada por psicologo',
+				currency_id: 'CLP',
+				unit_price: foundPlan.totalPrice,
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${api_url}api/v1/mercadopago/custom-session-pay/${userId}/${psyId}/${planId}`,
+			failure: `${landing_url}/pago/failure-pay`,
+			pending: `${landing_url}/pago/pending-pay`,
+		},
+		auto_return: 'approved',
+	};
+
+	let bodyId = '';
+	let error = '';
+	await mercadopago.preferences
+		.create(newPreference)
+		.then(res => {
+			bodyId = res.body;
+		})
+		.catch(e => {
+			error = e;
+		});
+
+	if (error != '') {
+		return errorCallback(error, res, 'error creando la preferencia');
+	}
+	if (bodyId != '') return okResponse('preference created', { body: bodyId });
+
+	return conflictResponse('Ha ocurrido un error');
+};
+
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
 	successPay,
 	psychologistPay,
+	createCustomSessionPreference,
+	customSessionPay,
 };
 
 export default Object.freeze(mercadopagoService);

@@ -6,21 +6,21 @@ import mercadopagoController from '../controllers/mercadopago';
 const mercadopagoRouter = Router();
 
 /**
- * Crea una preferencia en mercadopago (sirve para extraer un link donde pagar)
+ * MERCADOPAGO SESIONES GENERAL
  */
 mercadopagoRouter.post(
 	'/mercadopago/create-preference',
 	mercadopagoController.createPreference
 );
 
-/**
- * Pasa una sesion a pagada.
- */
 mercadopagoRouter.get(
 	'/mercadopago/success-pay/:planId',
 	mercadopagoController.successPay
 );
 
+/**
+ * MERCADOPAGO PLANES DE PSICOLOGO
+ */
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
 	mercadopagoController.createPsychologistPreference
@@ -29,6 +29,20 @@ mercadopagoRouter.post(
 mercadopagoRouter.get(
 	'/mercadopago/psychologist-pay/:psychologistId/:price',
 	mercadopagoController.psychologistPay
+);
+
+/**
+ * MERCADOPAGO SESIONES CUSTOM
+ */
+
+mercadopagoRouter.get(
+	'/mercadopago/custom-session/:userId/:psyId/:planId',
+	mercadopagoController.createCustomSessionPreference
+);
+
+mercadopagoRouter.get(
+	'/mercadopago/custom-session-pay/:id',
+	mercadopagoController.customSessionPay
 );
 
 export default mercadopagoRouter;
