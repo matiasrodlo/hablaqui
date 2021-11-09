@@ -7,13 +7,13 @@
 					<div class="hidden-md-and-up text-center">
 						<div class="text-center text--secondary">Nº de Sesiones</div>
 						<div v-if="plan" class="text-center text--secondary font-weight-bold my-1">
-							{{ plan.remainingSessions }}/{{ plan.totalSessions }}
+							{{ plan.session.length }}/{{ plan.totalSessions }}
 						</div>
 						<div v-else class="text-center text--secondary font-weight-bold my-1">
 							0/0
 						</div>
 						<div
-							v-if="plan"
+							v-if="nextSesion"
 							class="headline text-center text--secondary font-weight-bold my-1"
 						>
 							{{ nextSesion }}
@@ -153,7 +153,7 @@
 										</v-card-text>
 										<v-card-text class="px-0 px-sm-2 px-md-4">
 											<calendar
-												:id-psy="idPsychologist"
+												:id-psy="session.psychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
 											/>
@@ -430,7 +430,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ plan.remainingSessions }}/{{ plan.totalSessions }}
+						{{ plan.session.length }}/{{ plan.totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -439,7 +439,7 @@
 						Próxima sesión
 					</div>
 					<div
-						v-if="plan"
+						v-if="nextSesion"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
 						{{ nextSesion }}
@@ -584,7 +584,7 @@
 					</v-card-text>
 					<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
 						<calendar
-							:id-psy="idPsychologist"
+							:id-psy="session.psychologist"
 							:set-date="e => setSchedule(e)"
 							title-button="Continuar"
 						/>
@@ -687,7 +687,6 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
-		idPsychologist: '',
 		dialogAppointment: false,
 		dialogNewUser: false,
 		hours: [
@@ -724,29 +723,42 @@ export default {
 		psychologist: null,
 	}),
 	computed: {
-		// Filtramos que cada session
-		session() {
-			if (!this.$auth.$state.user) return null;
-			return this.$auth.$state.user.sessions.find(item =>
-				item.plan.some(plan => {
-					return plan.payment === 'success' && moment().isBefore(moment(plan.expiration));
-				})
-			);
-		},
 		// Filtramos que sea de usuarios con pagos success y no hayan expirado
 		plan() {
-			if (!this.session) return null;
-			return this.session.plan.find(
-				plan => plan.payment === 'success' && moment().isBefore(moment(plan.expiration))
+			if (!this.$auth.$state.user) return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
 			);
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
 		},
 		nextSesion() {
 			// Si no hay plan
 			if (!this.plan) return '';
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
-			const dates = this.plan.session.flatMap(session => moment(session.date).format('l'));
+			const dates = this.plan.session.flatMap(session => session.date);
 			// Encontramos la session siguiente
-			return dates.find(item => moment(item).isSameOrAfter(moment()));
+			const date = dates.find(item =>
+				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+			);
+			if (date) {
+				return moment(date).format('DD/MM/YY');
+			}
+			return '';
 		},
 		maxWidth() {
 			if (this.step === 0) return '700';
@@ -798,8 +810,8 @@ export default {
 		async initFetch() {
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
-					idPsychologist: this.session.psychologist,
-					idUser: this.session.user,
+					idPsychologist: this.plan.psychologist,
+					idUser: this.plan.user,
 				});
 				this.events = this.sessions;
 			}
@@ -882,19 +894,15 @@ export default {
 				return alert('No puede seleccionar dias pasados');
 
 			if (this.$auth.user.role === 'user') {
-				// TODO: esperando backend, estas variables deberian establecer dinamicamente segun el usuario
+				// Sin psicologo - sin sesiones
+				this.dialogSearchNow = !this.plan.psychologist;
 
-				// TODO: Sin psicologo - sin sesiones
-				const withoutPsychologist = false;
-				if (withoutPsychologist) this.dialogSearchNow = false;
+				// con psicologo - con sesiones por agendar
+				this.dialogHasSessions = this.plan.psychologist && this.plan.remainingSessions > 0;
 
-				// TODO: con psicologo - con sesiones por agendar
-				const hasSessions = true;
-				if (hasSessions) this.dialogHasSessions = false;
-
-				// TODO: con psicologo - sin sesiones por agendar
-				const withoutSessions = true;
-				if (withoutSessions) this.dialogWithoutSessions = true;
+				// con psicologo - sin sesiones por agendar
+				this.dialogWithoutSessions =
+					this.plan.psychologist && this.plan.remainingSessions < 1;
 			} else if (this.$auth.user.role === 'psychologist') {
 				this.date = date;
 				this.dialogAppointment = true;
