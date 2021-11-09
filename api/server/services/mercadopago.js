@@ -7,6 +7,7 @@ import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
+import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
@@ -163,11 +164,78 @@ const psychologistPay = async (params, query) => {
 	await psychologistService.updatePlan(psychologistId, newPlan);
 	return okResponse('plan actualizado');
 };
+
+const createRecruitedPreference = async (body, res) => {
+	let newPreference = {
+		items: [
+			{
+				title: 'Plan Premium de Hablaqui',
+				description: 'Plan Premium de Hablaqui',
+				currency_id: 'CLP',
+				unit_price: Number(body.price),
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.psychologist}?period=${body.period}`,
+			failure: `${landing_url}/pago/failure-pay`,
+			pending: `${landing_url}/pago/pending-pay`,
+		},
+		auto_return: 'approved',
+	};
+	let bodyId = '';
+	let error = '';
+	await mercadopago.preferences
+		.create(newPreference)
+		.then(res => {
+			bodyId = res.body;
+		})
+		.catch(e => {
+			error = e;
+		});
+
+	if (error != '') {
+		return errorCallback(error, res, 'error creando la preferencia');
+	}
+	if (bodyId != '') return okResponse('preference created', { body: bodyId });
+
+	return conflictResponse('Ha ocurrido un error');
+};
+
+const recruitedPay = async (params, query) => {
+	const { recruitedId } = params;
+	const { period } = query;
+	let expirationDate;
+	if (period == 'anual') {
+		expirationDate = moment()
+			.add({ months: 12 })
+			.toISOString();
+	}
+	if (period == 'mensual') {
+		expirationDate = moment()
+			.add({ months: 1 })
+			.toISOString();
+	}
+	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
+	const newPlan = {
+		tier: 'premium',
+		hablaquiFee: 0,
+		paymentFee: 0.0399,
+		expirationDate,
+		price: pricePaid,
+		subscriptionPeriod: period,
+	};
+	await recruitmentService.updatePlan(recruitedId, newPlan);
+	return okResponse('plan actualizado/creado');
+};
+
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
+	createRecruitedPreference,
 	successPay,
 	psychologistPay,
+	recruitedPay,
 };
 
 export default Object.freeze(mercadopagoService);
