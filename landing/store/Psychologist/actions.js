@@ -163,10 +163,9 @@ export default {
 				method: 'put',
 				data: payload,
 			});
-			console.log(data);
 			snackBarSuccess('Sesión agregada')(commit);
 			commit('setSessions', data.sessions);
-			return data.sessions;
+			return { sessions: data.sessions, remainingSessions: data.remainingSessions };
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

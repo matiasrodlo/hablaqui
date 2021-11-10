@@ -82,17 +82,18 @@ const setSession = (role, sessions) => {
 
 				return {
 					_id: session._id,
+					date: session.date,
 					details: `Sesion con ${name}`,
 					end,
 					idPsychologist: item.psychologist._id,
 					idUser: item.user._id,
 					name: `${name} ${lastName}`,
+					paidToPsychologist: session.paidToPsychologist,
 					sessionNumber: session.sessionNumber,
 					sessionsId: item._id,
 					start,
 					status: session.status,
 					url: item.roomsUrl,
-					paidToPsychologist: session.paidToPsychologist,
 				};
 			})
 		);
@@ -337,20 +338,22 @@ const createPlan = async ({ payload }) => {
  * @returns sessions actualizada
  */
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const sessions = await Sessions.findOneAndUpdate(
+	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
 		{
 			$set: {
-				remainingSessions: payload.remainingSessions,
+				'plan.$.remainingSessions': payload.remainingSessions,
 			},
 			$push: { 'plan.$.session': payload },
 		},
 		{ new: true }
-	);
+	).populate('psychologist user');
+
 	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
+		remainingSessions: payload.remainingSessions,
 	});
 };
 
