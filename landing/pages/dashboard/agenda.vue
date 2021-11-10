@@ -37,9 +37,8 @@
 								<v-btn
 									v-else
 									text
-									nuxt
-									to="/psicologos"
 									class="primary--text font-weight-bold body-1 pointer"
+									@click="acquire"
 								>
 									Adquirir
 								</v-btn>
@@ -462,7 +461,7 @@
 					>
 						{{ nextSesion }}
 					</div>
-					<v-btn v-else text nuxt to="/psicologos">
+					<v-btn v-else text @click="acquire">
 						<span class="body-1 primary--text font-weight-bold">Adquirir</span>
 					</v-btn>
 				</v-col>
@@ -551,12 +550,12 @@
 				</v-card>
 			</v-dialog>
 			<v-dialog
-				v-if="dialogWithoutSessions"
+				v-if="dialogWithoutSessions && !overlay"
 				v-model="dialogWithoutSessions"
 				:max-width="maxWidth"
 				transition="dialog-top-transition"
 			>
-				<v-card rounded="xl">
+				<v-card rounded="xl" min-height="200">
 					<v-card-text class="d-flex text-center primary white--text text-h5 py-3">
 						<v-btn v-if="step != 0" style="flex: 0" icon @click="() => (step -= 1)">
 							<icon :icon="mdiChevronLeft" x-large color="white" />
@@ -567,19 +566,25 @@
 					</v-card-text>
 					<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
 						<calendar
-							:id-psy="session.psychologist"
+							v-if="psychologist"
+							:id-psy="psychologist._id"
 							:set-date="e => setSchedule(e)"
 							title-button="Continuar"
 						/>
 					</v-card-text>
 					<v-card-text v-if="step == 1">
-						<select-plan :set-plan="setPlan" :psychologist="psychologist" />
+						<select-plan
+							v-if="psychologist"
+							:set-plan="setNewPlan"
+							:psychologist="psychologist"
+						/>
 					</v-card-text>
 					<v-card-text v-if="step == 2">
 						<resume-plan
+							v-if="psychologist"
 							:close="() => (dialogWithoutSessions = false)"
 							:go-back="() => (step = 1)"
-							:plan="plan"
+							:plan="newPlan"
 							:psy="psychologist"
 							:event="newEvent"
 						/>
@@ -821,8 +826,8 @@ export default {
 			this.newEvent = item;
 			this.step = 1;
 		},
-		setPlan(plan) {
-			this.plan = plan;
+		setNewPlan(newPlan) {
+			this.newPlan = newPlan;
 			this.step = 2;
 		},
 		openDialog(item) {
@@ -833,17 +838,21 @@ export default {
 			this.focus = date;
 			this.type = 'day';
 		},
-		addAppointment({ date }) {
+		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
 				// Sin psicologo - sin sesiones
 				this.dialogSearchNow = !this.plan.psychologist;
 
 				// con psicologo - con sesiones por agendar
-				this.dialogHasSessions = this.plan.psychologist && this.plan.remainingSessions > 0;
-
+				this.dialogHasSessions =
+					this.plan.psychologist && this.sessions.length < this.plan.totalSessions;
 				// con psicologo - sin sesiones por agendar
-				this.dialogWithoutSessions =
-					this.plan.psychologist && this.plan.remainingSessions < 1;
+				if (this.plan.psychologist && this.plan.totalSessions <= this.sessions.length) {
+					this.overlay = true;
+					this.psychologist = await this.getPsychologist(this.plan.psychologist);
+					this.overlay = false;
+					this.dialogWithoutSessions = true;
+				}
 			} else if (this.$auth.user.role === 'psychologist') {
 				this.date = date;
 				this.dialogAppointment = true;
@@ -939,6 +948,11 @@ export default {
 					...response,
 				};
 			});
+		},
+		acquire() {
+			if (this.plan.psychologist) {
+				this.addAppointment({ date: null });
+			} else this.$router.push('/psicologos');
 		},
 		...mapActions({
 			addSession: 'Psychologist/addSession',
