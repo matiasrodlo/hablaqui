@@ -4,29 +4,42 @@
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
-					<div class="hidden-md-and-up text-center">
-						<div class="text-center text--secondary">Nº de Sesiones</div>
-						<div v-if="plan" class="text-center text--secondary font-weight-bold my-1">
-							{{ plan.session.length }}/{{ plan.totalSessions }}
+					<div class="d-flex hidden-md-and-up justify-center">
+						<div>
+							<div class="body-2 text-center text--secondary font-weight-bold">
+								Nº de Sesiones
+							</div>
+							<div
+								v-if="plan"
+								class="text-center text--secondary font-weight-bold my-1"
+							>
+								{{ plan.session.length }}/{{ plan.totalSessions }}
+							</div>
+							<div v-else class="text-center text--secondary font-weight-bold my-1">
+								0/0
+							</div>
 						</div>
-						<div v-else class="text-center text--secondary font-weight-bold my-1">
-							0/0
+						<v-divider vertical class="mx-8"></v-divider>
+						<div>
+							<div class="body-2 text-center text--secondary font-weight-bold">
+								Próxima sesión
+							</div>
+							<div
+								v-if="nextSesion"
+								class="text-center text--secondary font-weight-bold my-1"
+							>
+								{{ nextSesion }}
+							</div>
+							<v-btn
+								v-else
+								text
+								nuxt
+								to="/psicologos"
+								class="primary--text font-weight-bold body-1 pointer"
+							>
+								Adquirir
+							</v-btn>
 						</div>
-						<div
-							v-if="nextSesion"
-							class="headline text-center text--secondary font-weight-bold my-1"
-						>
-							{{ nextSesion }}
-						</div>
-						<v-btn
-							v-else
-							text
-							nuxt
-							to="/psicologos"
-							class="primary--text font-weight-bold body-1 pointer"
-						>
-							Adquirir
-						</v-btn>
 					</div>
 					<v-sheet class="mt-4 mt-md-0">
 						<v-toolbar flat>
@@ -78,7 +91,7 @@
 							</v-menu>
 						</v-toolbar>
 					</v-sheet>
-					<v-sheet height="calc(100% - 64px)">
+					<v-sheet :height="$vuetify.breakpoint.mdAndUp ? 'calc(100% - 110px)' : ''">
 						<v-calendar
 							ref="calendar"
 							v-model="focus"
@@ -153,7 +166,7 @@
 										</v-card-text>
 										<v-card-text class="px-0 px-sm-2 px-md-4">
 											<calendar
-												:id-psy="session.psychologist"
+												:id-psy="selectedEvent.idPsychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
 											/>
@@ -476,7 +489,7 @@
 			<v-dialog
 				v-if="dialogHasSessions"
 				v-model="dialogHasSessions"
-				max-width="500"
+				max-width="600"
 				class="rounded-xl"
 				transition="dialog-top-transition"
 			>
@@ -491,7 +504,9 @@
 					</v-card-text>
 					<v-card-text>
 						<v-row>
-							<v-col class="font-weight-medium" cols="12"> Tipo de evento </v-col>
+							<v-col class="font-weight-medium pt-6 pb-0" cols="12">
+								Tipo de evento
+							</v-col>
 							<v-col cols="12">
 								<v-select
 									v-model="typeSession"
@@ -512,56 +527,12 @@
 									outlined
 								></v-select>
 							</v-col>
-							<v-col cols="6">
-								<v-menu
-									ref="menu"
-									v-model="menu"
-									:close-on-content-click="false"
-									:return-value.sync="date"
-									min-width="auto"
-									offset-y
-									transition="scale-transition"
-								>
-									<template #activator="{ on, attrs }">
-										<v-text-field
-											v-model="date"
-											dense
-											hide-details
-											outlined
-											:append-icon="mdiCalendar"
-											readonly
-											v-bind="attrs"
-											v-on="on"
-										></v-text-field>
-									</template>
-									<v-date-picker v-model="date" no-title scrollable>
-										<v-spacer></v-spacer>
-										<v-btn color="primary" text @click="menu = false">
-											Cancelar
-										</v-btn>
-										<v-btn color="primary" text @click="$refs.menu.save(date)">
-											Ok
-										</v-btn>
-									</v-date-picker>
-								</v-menu>
-							</v-col>
-							<v-col class="text-center py-2" cols="6">
-								<v-select
-									:items="hours"
-									dense
-									full-width
-									hide-details
-									label="Hora"
-									outlined
-								></v-select>
-							</v-col>
-						</v-row>
-						<v-row justify="center">
-							<v-col cols="6">
-								<v-btn rounded color="primary"> Agendar </v-btn>
-								<v-btn text @click="() => (dialogHasSessions = false)">
-									Cancelar
-								</v-btn>
+							<v-col>
+								<calendar
+									:id-psy="plan.psychologist"
+									:set-date="e => newSession(e)"
+									title-button="Nueva sesión"
+								/>
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -625,7 +596,6 @@ import {
 	mdiPencil,
 	mdiPlus,
 	mdiTrashCan,
-	mdiCalendar,
 } from '@mdi/js';
 
 export default {
@@ -644,10 +614,7 @@ export default {
 		overlay: false,
 		form: null,
 		loadingCreatedUser: false,
-		menu: false,
-		date: null,
 		typeSession: '',
-		mdiCalendar,
 		mdiCheck,
 		mdiPencil,
 		mdiTrashCan,
@@ -689,32 +656,6 @@ export default {
 		event: null,
 		dialogAppointment: false,
 		dialogNewUser: false,
-		hours: [
-			'00:00',
-			'1:00',
-			'2:00',
-			'3:00',
-			'4:00',
-			'5:00',
-			'6:00',
-			'7:00',
-			'8:00',
-			'9:00',
-			'10:00',
-			'11:00',
-			'12:00',
-			'13:00',
-			'14:00',
-			'15:00',
-			'16:00',
-			'17:00',
-			'18:00',
-			'19:00',
-			'20:00',
-			'21:00',
-			'22:00',
-			'23:00',
-		],
 		idClient: null,
 		dialogSearchNow: false,
 		dialogHasSessions: false,
@@ -887,12 +828,6 @@ export default {
 			this.type = 'day';
 		},
 		addAppointment({ date }) {
-			if (
-				moment(date).isBefore(moment()) &&
-				moment(date).format('l') !== moment().format('l')
-			)
-				return alert('No puede seleccionar dias pasados');
-
 			if (this.$auth.user.role === 'user') {
 				// Sin psicologo - sin sesiones
 				this.dialogSearchNow = !this.plan.psychologist;
@@ -968,6 +903,7 @@ export default {
 			this.idClient = null;
 			this.goBack();
 		},
+		newSession() {},
 		...mapActions({
 			getPsychologist: 'Psychologist/getPsychologist',
 			updateSession: 'Psychologist/updateSession',
