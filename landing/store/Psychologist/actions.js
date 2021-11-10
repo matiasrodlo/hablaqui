@@ -165,7 +165,7 @@ export default {
 			});
 			snackBarSuccess('Sesión agregada')(commit);
 			commit('setSessions', data.sessions);
-			return { sessions: data.sessions, remainingSessions: data.remainingSessions };
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

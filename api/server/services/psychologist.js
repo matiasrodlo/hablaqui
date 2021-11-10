@@ -353,7 +353,6 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
-		remainingSessions: payload.remainingSessions,
 	});
 };
 

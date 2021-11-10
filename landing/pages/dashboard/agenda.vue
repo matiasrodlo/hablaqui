@@ -14,9 +14,7 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{
-										remainingSessions ? remainingSessions : plan.session.length
-									}}/{{ plan.totalSessions }}
+									{{ sessions.length }}/{{ plan.totalSessions }}
 								</div>
 								<div
 									v-else
@@ -450,9 +448,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ remainingSessions ? remainingSessions : plan.session.length }}/{{
-							plan.totalSessions
-						}}
+						{{ sessions.length }}/{{ plan.totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -533,9 +529,7 @@
 								<v-text-field
 									readonly
 									disabled
-									:value="`Sesión ${plan.session.length + 1}/${
-										plan.totalSessions
-									}`"
+									:value="`Sesión ${sessions.length + 1}/${plan.totalSessions}`"
 									hide-details="auto"
 									type="text"
 									class="mt-2"
@@ -681,7 +675,6 @@ export default {
 		newEvent: null,
 		psychologist: null,
 		loadingSession: false,
-		remainingSessions: null,
 	}),
 	computed: {
 		// Filtramos que sea de usuarios con pagos success y no hayan expirado
@@ -740,7 +733,10 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ sessions: 'Psychologist/sessions', clients: 'Psychologist/clients' }),
+		...mapGetters({
+			sessions: 'Psychologist/sessions',
+			clients: 'Psychologist/clients',
+		}),
 	},
 	watch: {
 		clients() {
@@ -920,13 +916,13 @@ export default {
 				sessionNumber: this.plan.session.length + 1,
 				remainingSessions: (this.plan.remainingSessions -= 1),
 			};
-			const { sessions, remainingSessions } = await this.addSession({
+			const response = await this.addSession({
 				id: this.plan.idSessions,
 				idPlan: this.plan._id,
 				payload,
 			});
-			this.event = sessions;
-			this.remainingSessions = remainingSessions;
+
+			this.events = response;
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},
