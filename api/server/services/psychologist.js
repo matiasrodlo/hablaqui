@@ -785,7 +785,8 @@ const customNewSession = async (user, payload) => {
 
 	// Aqui tienes la URL de mercadopago, debes agregarle la URL de la API, pero no se donde querras hacer eso.
 	// Recuerda no mandar el correo si el precio es 0.
-	const paymentUrl = `/mercadopago/custom-session/${payload.user ||
+	const currentAPIURL = process.env.API_ABSOLUTE;
+	const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${payload.user ||
 		user.psychologist}/${user.psychologist}/${
 		updatedSession.plan[updatedSession.plan.length - 1]._id
 	}`;
