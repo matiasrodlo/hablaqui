@@ -45,16 +45,6 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 	sessions = JSON.stringify(sessions);
 	sessions = JSON.parse(sessions);
 
-	// Filtramos y modificamos que cada session sea de usuarios con pagos success y no hayan expirado
-	// sessions = sessions.map(item => ({
-	// 	...item,
-	// 	plan: item.plan.filter(
-	// 		plan =>
-	// 			plan.payment === 'success' &&
-	// 			moment().isBefore(moment(plan.expiration))
-	// 	),
-	// }));
-
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
 
