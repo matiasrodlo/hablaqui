@@ -46,14 +46,14 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 	sessions = JSON.parse(sessions);
 
 	// Filtramos y modificamos que cada session sea de usuarios con pagos success y no hayan expirado
-	sessions = sessions.map(item => ({
-		...item,
-		plan: item.plan.filter(
-			plan =>
-				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
-		),
-	}));
+	// sessions = sessions.map(item => ({
+	// 	...item,
+	// 	plan: item.plan.filter(
+	// 		plan =>
+	// 			plan.payment === 'success' &&
+	// 			moment().isBefore(moment(plan.expiration))
+	// 	),
+	// }));
 
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
@@ -307,11 +307,6 @@ const createPlan = async ({ payload }) => {
 	});
 
 	if (userSessions) {
-		let userSessions = await Sessions.findOne({
-			user: payload.user,
-			psychologist: payload.psychologist,
-		});
-
 		if (
 			userSessions.plan.some(
 				plan =>
