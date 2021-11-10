@@ -6,6 +6,7 @@ import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import chat from './chat';
+import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import pusher from '../config/pusher';
@@ -257,7 +258,7 @@ const match = async body => {
  * @returns
  */
 const createPlan = async ({ payload }) => {
-	if (payload.user === payload.psychologist) {
+	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
 	}
 	let sessionQuantity = 0;
@@ -785,11 +786,24 @@ const customNewSession = async (user, payload) => {
 
 	// Aqui tienes la URL de mercadopago, debes agregarle la URL de la API, pero no se donde querras hacer eso.
 	// Recuerda no mandar el correo si el precio es 0.
-	const currentAPIURL = process.env.API_ABSOLUTE;
-	const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${payload.user ||
-		user.psychologist}/${user.psychologist}/${
-		updatedSession.plan[updatedSession.plan.length - 1]._id
-	}`;
+
+	// Si la sesión es de costo 0, se asume que no es un sesión personalizada, sino una sesión de bloqueo de horas.
+	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
+	if (payload.price !== 0) {
+		const currentAPIURL = process.env.API_ABSOLUTE;
+		const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${payload.user ||
+			user.psychologist}/${user.psychologist}/${
+			updatedSession.plan[updatedSession.plan.length - 1]._id
+		}`;
+
+		const user = await User.findById(payload.user);
+		const psychologist = await Psychologist.findById(user.psychologist);
+		await mailService.sendCustomSessionPaymentURL(
+			user,
+			psychologist,
+			paymentUrl
+		);
+	}
 
 	return okResponse('sesion creada', {
 		session: updatedSession,

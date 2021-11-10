@@ -288,6 +288,27 @@ const mailService = {
 			});
 		});
 	},
+	async sendCustomSessionPaymentURL(user, psychologist, paymentURL) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.com>',
+			to: user.name + '<' + user.email + '>',
+			replyto: 'Hablaquí <soporte-pagos@mail.hablaqui.com',
+			subject: 'Completa el pago de tu sesión en Hablaquí',
+			template: 'custom-session-payment-email',
+			'v:user_name': user.name,
+			'v:psy_name': psychologist.name,
+			'v:payment_url': paymentURL,
+		};
+		return new Promise((resolve, reject) => {
+			mg.messages().send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
