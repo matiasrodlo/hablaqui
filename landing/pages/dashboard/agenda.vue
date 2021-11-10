@@ -96,7 +96,7 @@
 							</v-menu>
 						</v-toolbar>
 					</v-sheet>
-					<v-sheet :height="$vuetify.breakpoint.mdAndUp ? 'calc(100% - 110px)' : ''">
+					<v-sheet :height="$vuetify.breakpoint.mdAndUp ? '80%' : ''">
 						<v-calendar
 							ref="calendar"
 							v-model="focus"
