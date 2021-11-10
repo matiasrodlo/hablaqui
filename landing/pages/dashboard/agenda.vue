@@ -510,28 +510,37 @@
 							<v-col cols="12">
 								<v-select
 									v-model="typeSession"
+									solo
+									flat
 									:items="[
-										{ text: 'Sesión online', value: 'sesion online' },
-										{
-											text: 'Sesión presencial',
-											value: 'sesion presencial',
-										},
-										{
-											text: 'Compromiso privado',
-											value: 'compromiso privado',
-										},
+										'Sesión online',
+										'Sesión presencial',
+										'Compromiso privado',
 									]"
 									dense
 									hide-details
 									label="Seleccione"
-									outlined
 								></v-select>
+								<v-text-field
+									readonly
+									disabled
+									:value="`Sesión ${plan.session.length + 1}/${
+										plan.totalSessions
+									}`"
+									hide-details="auto"
+									type="text"
+									class="mt-2"
+									dense
+									outlined
+								>
+								</v-text-field>
 							</v-col>
 							<v-col>
 								<calendar
 									:id-psy="plan.psychologist"
 									:set-date="e => newSession(e)"
-									title-button="Nueva sesión"
+									title-button="Agendar"
+									:loading-btn="loadingSession"
 								/>
 							</v-col>
 						</v-row>
@@ -614,7 +623,7 @@ export default {
 		overlay: false,
 		form: null,
 		loadingCreatedUser: false,
-		typeSession: '',
+		typeSession: 'Sesión online',
 		mdiCheck,
 		mdiPencil,
 		mdiTrashCan,
@@ -662,6 +671,7 @@ export default {
 		dialogWithoutSessions: false,
 		newEvent: null,
 		psychologist: null,
+		loadingSession: false,
 	}),
 	computed: {
 		// Filtramos que sea de usuarios con pagos success y no hayan expirado
@@ -671,6 +681,7 @@ export default {
 			const plans = this.$auth.$state.user.sessions.flatMap(item =>
 				item.plan.map(plan => ({
 					...plan,
+					idSessions: item._id,
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
@@ -903,14 +914,26 @@ export default {
 			this.idClient = null;
 			this.goBack();
 		},
-		newSession() {},
+		async newSession(event) {
+			this.loadingSession = true;
+			const payload = {
+				date: `${event.date} ${event.start}`,
+				sessionNumber: `${this.plan.totalSessions - this.plan.remainingSessions} / ${
+					this.plan.totalSessions
+				}`,
+				remainingSessions: (this.plan.remainingSessions -= 1),
+			};
+			await this.addSession({ id: this.plan.idSessions, payload });
+			this.loadingSession = false;
+		},
 		...mapActions({
-			getPsychologist: 'Psychologist/getPsychologist',
-			updateSession: 'Psychologist/updateSession',
-			getSessions: 'Psychologist/getSessions',
-			setReschedule: 'Psychologist/setReschedule',
+			addSession: 'Psychologist/addSession',
 			getClients: 'Psychologist/getClients',
+			getPsychologist: 'Psychologist/getPsychologist',
+			getSessions: 'Psychologist/getSessions',
 			registerUser: 'User/registerUser',
+			setReschedule: 'Psychologist/setReschedule',
+			updateSession: 'Psychologist/updateSession',
 		}),
 	},
 	validations: {

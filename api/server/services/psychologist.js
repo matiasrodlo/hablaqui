@@ -336,18 +336,22 @@ const createPlan = async ({ payload }) => {
  * @param {String} payload.start - Hora de inicio
  * @returns El Id de la sesion recien creada
  */
-const createSession = async ({ payload }) => {
+const createSession = async (id, payload) => {
 	// Obtenemos la session correspondiente
-	let foundSession = await Sessions.findOne({
-		user: payload.user,
-		psychologist: payload.psychologist,
-	});
+	let foundSession = await Sessions.findById(id);
 
-	if (foundSession.plan.slice(-1)[0].remainingSessions == 0)
+	// Obtenemos plan success y sin expirar
+	let plan = foundSession.plan.find(
+		item =>
+			item.payment === 'success' &&
+			moment().isBefore(moment(item.expiration))
+	);
+
+	if (plan.session.length >= plan.totalSessions)
 		return conflictResponse('No te quedan sesiones por agendar');
 
 	// Se resta una sesion
-	foundSession.plan[foundSession.plan.length - 1].remainingSessions -= 1;
+	plan.remainingSessions -= 1;
 
 	// Se formatea la fecha de forma correcta
 	const date = payload.date;

@@ -101,8 +101,8 @@ psychologistsRouter.post(
 	start: String,
  * }
  */
-psychologistsRouter.post(
-	'/psychologists/session/create-session',
+psychologistsRouter.put(
+	'/psychologists/session/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
