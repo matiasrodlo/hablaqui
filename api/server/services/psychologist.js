@@ -330,13 +330,14 @@ const createPlan = async ({ payload }) => {
 
 /**
  * @description Crea una sesion nueva.
+ * @param {Object} userLogged - user logged
  * @param {ObjectId} payload.id - Id sessions
  * @param {ObjectId} payload.idPlan - Id plan
  * @param {Object} payload - data to save
  * @returns sessions actualizada
  */
-const createSession = async (id, idPlan, payload) => {
-	const sessions = Sessions.findOneAndUpdate(
+const createSession = async (userLogged, id, idPlan, payload) => {
+	const sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
 		{
 			$set: {
@@ -349,7 +350,7 @@ const createSession = async (id, idPlan, payload) => {
 	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
-		sessions: sessions,
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 

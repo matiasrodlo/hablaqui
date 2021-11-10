@@ -160,10 +160,13 @@ export default {
 	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
-				method: 'POST',
+				method: 'put',
 				data: payload,
 			});
-			return data;
+			console.log(data);
+			snackBarSuccess('Sesión agregada')(commit);
+			commit('setSessions', data.sessions);
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

@@ -4,41 +4,46 @@
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
-					<div class="d-flex hidden-md-and-up justify-center">
-						<div>
-							<div class="body-2 text-center text--secondary font-weight-bold">
-								Nº de Sesiones
+					<div class="hidden-md-and-up">
+						<div class="d-flex justify-center">
+							<div>
+								<div class="body-2 text-center text--secondary font-weight-bold">
+									Nº de Sesiones
+								</div>
+								<div
+									v-if="plan"
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									{{ plan.session.length }}/{{ plan.totalSessions }}
+								</div>
+								<div
+									v-else
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									0/0
+								</div>
 							</div>
-							<div
-								v-if="plan"
-								class="text-center text--secondary font-weight-bold my-1"
-							>
-								{{ plan.session.length }}/{{ plan.totalSessions }}
+							<v-divider vertical class="mx-8"></v-divider>
+							<div>
+								<div class="body-2 text-center text--secondary font-weight-bold">
+									Próxima sesión
+								</div>
+								<div
+									v-if="nextSesion"
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									{{ nextSesion }}
+								</div>
+								<v-btn
+									v-else
+									text
+									nuxt
+									to="/psicologos"
+									class="primary--text font-weight-bold body-1 pointer"
+								>
+									Adquirir
+								</v-btn>
 							</div>
-							<div v-else class="text-center text--secondary font-weight-bold my-1">
-								0/0
-							</div>
-						</div>
-						<v-divider vertical class="mx-8"></v-divider>
-						<div>
-							<div class="body-2 text-center text--secondary font-weight-bold">
-								Próxima sesión
-							</div>
-							<div
-								v-if="nextSesion"
-								class="text-center text--secondary font-weight-bold my-1"
-							>
-								{{ nextSesion }}
-							</div>
-							<v-btn
-								v-else
-								text
-								nuxt
-								to="/psicologos"
-								class="primary--text font-weight-bold body-1 pointer"
-							>
-								Adquirir
-							</v-btn>
 						</div>
 					</div>
 					<v-sheet class="mt-4 mt-md-0">
@@ -504,11 +509,11 @@
 					</v-card-text>
 					<v-card-text>
 						<v-row>
-							<v-col class="font-weight-medium pt-6 pb-0" cols="12">
+							<!-- <v-col class="font-weight-medium pt-6 pb-0" cols="12">
 								Tipo de evento
-							</v-col>
+							</v-col> -->
 							<v-col cols="12">
-								<v-select
+								<!-- <v-select
 									v-model="typeSession"
 									solo
 									flat
@@ -520,7 +525,7 @@
 									dense
 									hide-details
 									label="Seleccione"
-								></v-select>
+								></v-select> -->
 								<v-text-field
 									readonly
 									disabled
@@ -807,18 +812,7 @@ export default {
 				id: this.selectedEvent._id,
 				newDate,
 			});
-			this.events = this.events.map(item => {
-				if (item._id !== response._id) {
-					// This isn't the item we care about - keep it as-is
-					return item;
-				}
-
-				// Otherwise, this is the one we want - return an updated value
-				return {
-					...item,
-					...response,
-				};
-			});
+			this.setEvent(response);
 			this.event = null;
 			this.dialog = false;
 		},
@@ -918,13 +912,31 @@ export default {
 			this.loadingSession = true;
 			const payload = {
 				date: `${event.date} ${event.start}`,
-				sessionNumber: `${this.plan.totalSessions - this.plan.remainingSessions} / ${
-					this.plan.totalSessions
-				}`,
+				sessionNumber: this.plan.session.length + 1,
 				remainingSessions: (this.plan.remainingSessions -= 1),
 			};
-			await this.addSession({ id: this.plan.idSessions, idPlan: this.plan._id, payload });
+			const response = await this.addSession({
+				id: this.plan.idSessions,
+				idPlan: this.plan._id,
+				payload,
+			});
+			this.event = response;
 			this.loadingSession = false;
+			this.dialogHasSessions = false;
+		},
+		setEvent(response) {
+			this.events = this.events.map(item => {
+				if (item._id !== response._id) {
+					// This isn't the item we care about - keep it as-is
+					return item;
+				}
+
+				// Otherwise, this is the one we want - return an updated value
+				return {
+					...item,
+					...response,
+				};
+			});
 		},
 		...mapActions({
 			addSession: 'Psychologist/addSession',
