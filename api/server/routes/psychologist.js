@@ -102,7 +102,7 @@ psychologistsRouter.post(
  * }
  */
 psychologistsRouter.put(
-	'/psychologists/session/:id',
+	'/psychologists/session/:id/plan/:idPlan',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );

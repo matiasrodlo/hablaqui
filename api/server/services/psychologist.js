@@ -330,49 +330,26 @@ const createPlan = async ({ payload }) => {
 
 /**
  * @description Crea una sesion nueva.
- * @param {ObjectId} payload.user - Id del usuario
- * @param {ObjectId} payload.psychologist - Id del psicologo
- * @param {String} payload.date - Fecha de la sesion (solamente el dia)
- * @param {String} payload.start - Hora de inicio
- * @returns El Id de la sesion recien creada
+ * @param {ObjectId} payload.id - Id sessions
+ * @param {ObjectId} payload.idPlan - Id plan
+ * @param {Object} payload - data to save
+ * @returns sessions actualizada
  */
-const createSession = async (id, payload) => {
-	// Obtenemos la session correspondiente
-	let foundSession = await Sessions.findById(id);
-
-	// Obtenemos plan success y sin expirar
-	let plan = foundSession.plan.find(
-		item =>
-			item.payment === 'success' &&
-			moment().isBefore(moment(item.expiration))
+const createSession = async (id, idPlan, payload) => {
+	const sessions = Sessions.findOneAndUpdate(
+		{ _id: id, 'plan._id': idPlan },
+		{
+			$set: {
+				remainingSessions: payload.remainingSessions,
+			},
+			$push: { 'plan.$.session': payload },
+		},
+		{ new: true }
 	);
-
-	if (plan.session.length >= plan.totalSessions)
-		return conflictResponse('No te quedan sesiones por agendar');
-
-	// Se resta una sesion
-	plan.remainingSessions -= 1;
-
-	// Se formatea la fecha de forma correcta
-	const date = payload.date;
-	const start = payload.start;
-	const parsedDate = date.split('/');
-	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
-	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
-	logInfo(isoDate);
-	const newSession = {
-		date: isoDate,
-		sessionNumber: `${foundSession.totalSessions -
-			foundSession.remainingSessions} / ${foundSession.totalSessions}`,
-		paidToPsychologist: false,
-	};
-	foundSession.plan.slice(-1)[0].session.push(newSession);
-	await foundSession.save();
-
 	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
-		id: foundSession.plan.slice(-1)[0].session.slice(-1)[0]._id,
+		sessions: sessions,
 	});
 };
 

@@ -157,9 +157,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async addSession({ commit }, { id, payload }) {
+	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
-			const { data } = await this.$axios(`/psychologists/session/${id}`, {
+			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
 				method: 'POST',
 				data: payload,
 			});

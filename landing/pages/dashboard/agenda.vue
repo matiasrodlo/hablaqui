@@ -923,7 +923,7 @@ export default {
 				}`,
 				remainingSessions: (this.plan.remainingSessions -= 1),
 			};
-			await this.addSession({ id: this.plan.idSessions, payload });
+			await this.addSession({ id: this.plan.idSessions, idPlan: this.plan._id, payload });
 			this.loadingSession = false;
 		},
 		...mapActions({

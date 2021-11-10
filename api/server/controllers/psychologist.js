@@ -64,9 +64,10 @@ const psychologistsController = {
 	async createSession(req, res) {
 		try {
 			const { body } = req;
-			const { id } = req.params;
+			const { id, idPlan } = req.params;
 			const { data, code } = await psychologistsService.createSession(
 				id,
+				idPlan,
 				body
 			);
 			return restResponse(data, code, res);
