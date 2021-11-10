@@ -756,7 +756,7 @@ export default {
 				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 			);
 			if (date) {
-				return moment(date).format('DD/MM/YY');
+				return moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
 			}
 			return '';
 		},
