@@ -19,44 +19,50 @@ import {
 
 const modifyStatus = async sessions => {
 	// Mapea todas las sesiones
-	sessions.map(item => {
+	return sessions.map(item => {
 		// Se obtiene psy y tiempo minimo de reagendamiento
-		let min_reschedule_time =
+		let minimumRescheduleSession =
 			item.psychologist.preferences.minimumRescheduleSession;
-		logInfo(`min_reschedule_time: ${min_reschedule_time}`);
+		logInfo(`min_reschedule_time: ${minimumRescheduleSession}`);
 		// Se mapean todos los planes guardados en el objeto Session (item)
-		item.plan.map(plan => {
-			// Se mapean todas las sesiones dentro del plan
-			plan.session.map(session => {
-				let date = moment(session.date, 'MM/DD/YYYY HH:mm');
-				// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
-				if (
-					session.status === 'pending' &&
-					moment(plan.expirationDate).isAfter(moment()) &&
-					moment().isAfter(
-						date.subtract(min_reschedule_time, 'minutes')
-					)
-				) {
-					// Se cambia el status de la sesión a 'upnext' (a continuación)
-					session.status = 'upnext';
-				}
-				// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
-				else if (
-					(session.status === 'upnext' ||
-						session.status === 'pending') &&
-					moment(plan.expirationDate).isAfter(moment()) &&
-					moment().isAfter(date)
-				) {
-					// Se cambia el status de la sesión a 'success' (completada)
-					session.status = 'success';
-				}
-				return session;
-			});
-			return plan;
-		});
-		return item;
+		return {
+			...item,
+			plan: item.plan.map(plan => {
+				// Se mapean todas las sesiones dentro del plan
+				return {
+					...plan,
+					session: plan.session.map(session => {
+						let date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
+						if (
+							session.status === 'pending' &&
+							moment(plan.expirationDate).isAfter(moment()) &&
+							moment().isAfter(
+								date.subtract(
+									minimumRescheduleSession,
+									'minutes'
+								)
+							)
+						) {
+							// Se cambia el status de la sesión a 'upnext' (a continuación)
+							session.status = 'upnext';
+						}
+						// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
+						else if (
+							(session.status === 'upnext' ||
+								session.status === 'pending') &&
+							moment(plan.expirationDate).isAfter(moment()) &&
+							moment().isAfter(date)
+						) {
+							// Se cambia el status de la sesión a 'success' (completada)
+							session.status = 'success';
+						}
+						return session;
+					}),
+				};
+			}),
+		};
 	});
-	return sessions;
 };
 
 const getAll = async () => {
