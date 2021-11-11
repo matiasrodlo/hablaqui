@@ -106,6 +106,18 @@ const recruitmentService = {
 		);
 		return okResponse('Aprobado exitosamente', { newProfile });
 	},
+	async updatePlan(recruitedId, newPlan) {
+		const recruitedToUpdate = await Recruitment.findById(
+			recruitedId,
+			{
+				$push: {
+					psyPlans: { paymentStatus: 'success', ...newPlan },
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
+	},
 };
 
 export default recruitmentService;

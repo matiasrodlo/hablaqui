@@ -2,6 +2,7 @@
 
 import { Router } from 'express';
 import mercadopagoController from '../controllers/mercadopago';
+import mercadopago from '../services/mercadopago';
 
 const mercadopagoRouter = Router();
 
@@ -24,6 +25,26 @@ mercadopagoRouter.get(
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
 	mercadopagoController.createPsychologistPreference
+);
+
+/**
+ * Crea una preferencia de mercadopago para pago de plan de postulante
+ * @param {string} planId
+ * @body {string} datos de la preferencia (precio, periodo, id del postulante)
+ */
+mercadopagoRouter.post(
+	'/mercadopago/recruited-preference',
+	mercadopagoController.createRecruitedPreference
+);
+
+/**
+ * Pasa una plan de postulante a pagado.
+ * @param {string} recruitedId el id del postulante
+ * @query {string} planId el periodo de pago (mensual, anual)
+ */
+mercadopagoRouter.get(
+	'/mercadopago/recruited-pay/:recruitedId',
+	mercadopagoController.recruitedPay
 );
 
 mercadopagoRouter.get(
