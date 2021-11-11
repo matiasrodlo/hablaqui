@@ -28,7 +28,7 @@ const modifyStatus = async sessions => {
 			// Se mapean todas las sesiones dentro del plan
 			plan.session.map(session => {
 				let date = moment(session.date, 'MM/DD/YYYY HH:mm');
-				// Si es que el plan está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
+				// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
 				if (
 					session.status === 'pending' &&
 					moment(plan.expirationDate) < moment() &&
@@ -39,7 +39,7 @@ const modifyStatus = async sessions => {
 					// Se cambia el status de la sesión a 'upnext' (a continuación)
 					session.status = 'upnext';
 				}
-				// Si es que el plan está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
+				// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
 				else if (
 					(session.status === 'upnext' ||
 						session.status === 'pending') &&
