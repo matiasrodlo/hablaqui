@@ -855,13 +855,19 @@ export default {
 		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
 				// Sin psicologo - sin sesiones
-				this.dialogSearchNow = !this.plan.psychologist;
+				this.dialogSearchNow = !this.plan || (this.plan && !this.plan.psychologist);
 
 				// con psicologo - con sesiones por agendar
 				this.dialogHasSessions =
-					this.plan.psychologist && this.plan.session.length < this.plan.totalSessions;
+					this.plan &&
+					this.plan.psychologist &&
+					this.plan.session.length < this.plan.totalSessions;
 				// con psicologo - sin sesiones por agendar
-				if (this.plan.psychologist && this.plan.totalSessions <= this.plan.session.length) {
+				if (
+					this.plan &&
+					this.plan.psychologist &&
+					this.plan.totalSessions <= this.plan.session.length
+				) {
 					this.overlay = true;
 					this.psychologist = await this.getPsychologist(this.plan.psychologist);
 					this.overlay = false;
@@ -950,9 +956,9 @@ export default {
 			this.dialogHasSessions = false;
 		},
 		acquire() {
-			if (this.plan.psychologist) {
+			if (this.plan && this.plan.psychologist) {
 				this.addAppointment({ date: null });
-			} else this.$router.push('/psicologos');
+			} else this.$router.push({ name: 'psicologos' });
 		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',
