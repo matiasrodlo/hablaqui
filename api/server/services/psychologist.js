@@ -131,13 +131,18 @@ const getFormattedSessions = async idPsychologist => {
 		})
 	);
 
-	const daySessions = psySessions.flatMap(item => {
-		return item.plan.map(plan => {
-			return plan.session.length
-				? plan.session.map(session => session.date)
-				: [];
-		});
-	});
+	// Formato de array debe ser [date, date, ...date]
+	const daySessions = psySessions
+		.flatMap(item => {
+			return item.plan.flatMap(plan => {
+				return plan.session.length
+					? plan.session.map(session => session.date)
+					: [];
+			});
+		})
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
 
 	sessions = length.map(el => {
 		const day = moment().add(el, 'days');
