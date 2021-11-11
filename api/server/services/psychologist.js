@@ -140,7 +140,9 @@ const setSession = (role, sessions) => {
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
-	const psychologist = await Psychologist.findById(idPsychologist);
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'schedule'
+	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
@@ -427,7 +429,7 @@ const register = async body => {
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
 
-	const updatedSession = await Sessions.findOneAndUpdate(
+	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
 			'plan.session._id': id,
@@ -441,7 +443,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	).populate('psychologist user');
 
 	return okResponse('Hora actualizada', {
-		sessions: setSession(userLogged.role, [updatedSession]),
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 
