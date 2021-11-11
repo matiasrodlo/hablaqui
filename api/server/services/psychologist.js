@@ -17,6 +17,47 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
+const modifyStatus = async sessions => {
+	// Mapea todas las sesiones
+	sessions.map(item => {
+		// Se obtiene psy y tiempo minimo de reagendamiento
+		let psy_info = Psychologist.findById(item.psychologist);
+		let min_reschedule_time = psy_info.preferences.minimumRescheduleSession;
+		// Se mapean todos los planes guardados en el objeto Session (item)
+		item.map(plan => {
+			// Se mapean todas las sesiones dentro del plan
+			plan.session.map(session => {
+				let date = moment(session.date, 'MM/DD/YYYY HH:mm');
+				// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
+				if (
+					session.status === 'pending' &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(
+						date.subtract(min_reschedule_time, 'minutes')
+					)
+				) {
+					// Se cambia el status de la sesión a 'upnext' (a continuación)
+					session.status = 'upnext';
+				}
+				// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
+				else if (
+					(session.status === 'upnext' ||
+						session.status === 'pending') &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(date)
+				) {
+					// Se cambia el status de la sesión a 'success' (completada)
+					session.status = 'success';
+				}
+				return session;
+			});
+			return plan;
+		});
+		return item;
+	});
+	return sessions;
+};
+
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
@@ -41,19 +82,13 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 		}).populate('psychologist user');
 	}
 
+	// se llama a modifyStatus para cambiar el status de las sesiones acorde a la fecha
+	sessions = await modifyStatus(sessions);
+	sessions.save();
+
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);
 	sessions = JSON.parse(sessions);
-
-	// Filtramos y modificamos que cada session sea de usuarios con pagos success y no hayan expirado
-	sessions = sessions.map(item => ({
-		...item,
-		plan: item.plan.filter(
-			plan =>
-				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
-		),
-	}));
 
 	// comenzamos a modificar el array de sessiones con la estructura que necesita el frontend
 	sessions = setSession(userLogged.role, sessions);
@@ -92,17 +127,18 @@ const setSession = (role, sessions) => {
 
 				return {
 					_id: session._id,
+					date: session.date,
 					details: `Sesion con ${name}`,
 					end,
 					idPsychologist: item.psychologist._id,
 					idUser: item.user._id,
 					name: `${name} ${lastName}`,
+					paidToPsychologist: session.paidToPsychologist,
 					sessionNumber: session.sessionNumber,
 					sessionsId: item._id,
 					start,
 					status: session.status,
 					url: item.roomsUrl,
-					paidToPsychologist: session.paidToPsychologist,
 				};
 			})
 		);
@@ -113,7 +149,9 @@ const setSession = (role, sessions) => {
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
-	const psychologist = await Psychologist.findById(idPsychologist);
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'schedule'
+	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
@@ -138,13 +176,18 @@ const getFormattedSessions = async idPsychologist => {
 		})
 	);
 
-	const daySessions = psySessions.flatMap(item => {
-		return item.plan.map(plan => {
-			return plan.session.length
-				? plan.session.map(session => session.date)
-				: [];
-		});
-	});
+	// Formato de array debe ser [date, date, ...date]
+	const daySessions = psySessions
+		.flatMap(item => {
+			return item.plan.flatMap(plan => {
+				return plan.session.length
+					? plan.session.map(session => session.date)
+					: [];
+			});
+		})
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
 
 	sessions = length.map(el => {
 		const day = moment().add(el, 'days');
@@ -307,11 +350,6 @@ const createPlan = async ({ payload }) => {
 	});
 
 	if (userSessions) {
-		let userSessions = await Sessions.findOne({
-			user: payload.user,
-			psychologist: payload.psychologist,
-		});
-
 		if (
 			userSessions.plan.some(
 				plan =>
@@ -345,45 +383,28 @@ const createPlan = async ({ payload }) => {
 
 /**
  * @description Crea una sesion nueva.
- * @param {ObjectId} payload.user - Id del usuario
- * @param {ObjectId} payload.psychologist - Id del psicologo
- * @param {String} payload.date - Fecha de la sesion (solamente el dia)
- * @param {String} payload.start - Hora de inicio
- * @returns El Id de la sesion recien creada
+ * @param {Object} userLogged - user logged
+ * @param {ObjectId} payload.id - Id sessions
+ * @param {ObjectId} payload.idPlan - Id plan
+ * @param {Object} payload - data to save
+ * @returns sessions actualizada
  */
-const createSession = async ({ payload }) => {
-	// Obtenemos la session correspondiente
-	let foundSession = await Sessions.findOne({
-		user: payload.user,
-		psychologist: payload.psychologist,
-	});
-
-	if (foundSession.plan.slice(-1)[0].remainingSessions == 0)
-		return conflictResponse('No te quedan sesiones por agendar');
-
-	// Se resta una sesion
-	foundSession.plan[foundSession.plan.length - 1].remainingSessions -= 1;
-
-	// Se formatea la fecha de forma correcta
-	const date = payload.date;
-	const start = payload.start;
-	const parsedDate = date.split('/');
-	// Tiene que cambiarse la zona horaria cuando haya cambio de horario en Chile
-	const isoDate = `${parsedDate[2]}-${parsedDate[1]}-${parsedDate[0]}T${start}:00-03:00`;
-	logInfo(isoDate);
-	const newSession = {
-		date: isoDate,
-		sessionNumber: `${foundSession.totalSessions -
-			foundSession.remainingSessions} / ${foundSession.totalSessions}`,
-		paidToPsychologist: false,
-	};
-	foundSession.plan.slice(-1)[0].session.push(newSession);
-	await foundSession.save();
+const createSession = async (userLogged, id, idPlan, payload) => {
+	let sessions = await Sessions.findOneAndUpdate(
+		{ _id: id, 'plan._id': idPlan },
+		{
+			$set: {
+				'plan.$.remainingSessions': payload.remainingSessions,
+			},
+			$push: { 'plan.$.session': payload },
+		},
+		{ new: true }
+	).populate('psychologist user');
 
 	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
-		id: foundSession.plan.slice(-1)[0].session.slice(-1)[0]._id,
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 
@@ -422,7 +443,7 @@ const register = async body => {
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
 
-	const updatedSession = await Sessions.findOneAndUpdate(
+	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
 			'plan.session._id': id,
@@ -436,7 +457,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	).populate('psychologist user');
 
 	return okResponse('Hora actualizada', {
-		sessions: setSession(userLogged.role, [updatedSession]),
+		sessions: setSession(userLogged.role, [sessions]),
 	});
 };
 
@@ -491,11 +512,19 @@ const setSchedule = async (user, payload) => {
 };
 
 const cancelSession = async (user, sessionId) => {
-	let sessions = await Sessions.findOneAndDelete({
-		user: user._id,
-		psychologist: user.psychologist,
-		'plan.session._id': sessionId,
-	});
+	const sessions = await Sessions.findOneAndUpdate(
+		{
+			user: user._id,
+			_id: sessionId,
+			'plan.session._id': sessionId,
+		},
+		{
+			$pull: {
+				'plan.$[].session': { _id: sessionId },
+			},
+		},
+		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
+	).populate('psychologist user');
 
 	return okResponse('Sesion cancelada', { sessions });
 };
@@ -616,7 +645,7 @@ const checkPlanTask = async () => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
 			if (moment().isAfter(plan.expiration)) {
-				plan.stauts = 'expired';
+				plan.status = 'expired';
 			}
 		});
 		foundUser.save();

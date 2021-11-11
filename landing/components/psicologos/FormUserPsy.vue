@@ -109,7 +109,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
@@ -196,9 +196,6 @@ export default {
 				}
 			}
 		},
-		...mapActions({
-			register: 'User/register',
-		}),
 		...mapMutations({
 			setResumeView: 'Psychologist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
