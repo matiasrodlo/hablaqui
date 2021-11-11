@@ -15,7 +15,7 @@ let session = new Schema({
 	status: {
 		type: String,
 		default: 'pending',
-		enum: ['pending', 'confirmed', 'canceled', 'failed'],
+		enum: ['pending', 'success', 'canceled'],
 	},
 });
 

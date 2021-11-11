@@ -138,6 +138,7 @@
 								<v-divider></v-divider>
 								<v-card-actions>
 									<v-btn
+										v-if="selectedEvent.status === 'pending'"
 										:href="selectedEvent.url"
 										target="_blank"
 										color="primary"
@@ -147,12 +148,23 @@
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
-										color="secondary"
+										v-if="selectedEvent.status === 'pending'"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
 										Reprogramar
 									</v-btn>
+									<v-chip
+										v-if="selectedEvent.status === 'success'"
+										color="success"
+										>Completado</v-chip
+									>
+									<v-chip
+										v-if="selectedEvent.status === 'canceled'"
+										color="error"
+									>
+										Cancelado
+									</v-chip>
 								</v-card-actions>
 								<v-dialog
 									v-if="dialog"
@@ -600,7 +612,7 @@
 
 <script>
 import moment from 'moment';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
 import {
@@ -948,12 +960,16 @@ export default {
 					...response,
 				};
 			});
+			this.setSessions(this.events);
 		},
 		acquire() {
 			if (this.plan.psychologist) {
 				this.addAppointment({ date: null });
 			} else this.$router.push('/psicologos');
 		},
+		...mapMutations({
+			setSessions: 'Psychologist/setSessions',
+		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',
 			getClients: 'Psychologist/getClients',
