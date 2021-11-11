@@ -104,7 +104,9 @@ const setSession = (role, sessions) => {
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
-	const psychologist = await Psychologist.findById(idPsychologist);
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'schedule'
+	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
