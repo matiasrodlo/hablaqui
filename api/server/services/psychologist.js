@@ -349,6 +349,16 @@ const createPlan = async ({ payload }) => {
 		psychologist: payload.psychologist,
 	});
 
+	const roomId = require('crypto')
+		.createHash('md5')
+		.update(`${payload.user}${payload.psychologist}`)
+		.digest('hex');
+
+	const url =
+		payload.title !== 'Acompañamiento vía mensajería'
+			? `${room}room/${roomId}`
+			: '';
+
 	if (userSessions) {
 		if (
 			userSessions.plan.some(
@@ -362,19 +372,15 @@ const createPlan = async ({ payload }) => {
 
 		const created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan } }
+			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
 		);
 		return okResponse('Plan creado', { plan: created });
 	} else {
-		const roomId = require('crypto')
-			.createHash('md5')
-			.update(`${payload.user}${payload.psychologist}`)
-			.digest('hex');
 		const created = await Sessions.create({
 			user: payload.user,
 			psychologist: payload.psychologist,
 			plan: [newPlan],
-			roomsUrl: `${room}room/${roomId}`,
+			roomsUrl: url,
 		});
 		chat.startConversation(payload.psychologist, payload.user);
 		return okResponse('Plan creado', { plan: created });
