@@ -17,6 +17,47 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
+const modifyStatus = async sessions => {
+	// Mapea todas las sesiones
+	sessions.map(item => {
+		// Se obtiene psy y tiempo minimo de reagendamiento
+		let psy_info = Psychologist.findById(item.psychologist);
+		let min_reschedule_time = psy_info.preferences.minimumRescheduleSession;
+		// Se mapean todos los planes guardados en el objeto Session (item)
+		item.map(plan => {
+			// Se mapean todas las sesiones dentro del plan
+			plan.session.map(session => {
+				let date = moment(session.date, 'MM/DD/YYYY HH:mm');
+				// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
+				if (
+					session.status === 'pending' &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(
+						date.subtract(min_reschedule_time, 'minutes')
+					)
+				) {
+					// Se cambia el status de la sesión a 'upnext' (a continuación)
+					session.status = 'upnext';
+				}
+				// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
+				else if (
+					(session.status === 'upnext' ||
+						session.status === 'pending') &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(date)
+				) {
+					// Se cambia el status de la sesión a 'success' (completada)
+					session.status = 'success';
+				}
+				return session;
+			});
+			return plan;
+		});
+		return item;
+	});
+	return sessions;
+};
+
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
@@ -40,6 +81,10 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			psychologist: idPsy,
 		}).populate('psychologist user');
 	}
+
+	// se llama a modifyStatus para cambiar el status de las sesiones acorde a la fecha
+	sessions = await modifyStatus(sessions);
+	sessions.save();
 
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);
@@ -467,11 +512,19 @@ const setSchedule = async (user, payload) => {
 };
 
 const cancelSession = async (user, sessionId) => {
-	let sessions = await Sessions.findOneAndDelete({
-		user: user._id,
-		psychologist: user.psychologist,
-		'plan.session._id': sessionId,
-	});
+	const sessions = await Sessions.findOneAndUpdate(
+		{
+			user: user._id,
+			_id: sessionId,
+			'plan.session._id': sessionId,
+		},
+		{
+			$pull: {
+				'plan.$[].session': { _id: sessionId },
+			},
+		},
+		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
+	).populate('psychologist user');
 
 	return okResponse('Sesion cancelada', { sessions });
 };
