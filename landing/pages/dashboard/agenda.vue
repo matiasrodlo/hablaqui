@@ -722,7 +722,7 @@ export default {
 			// Si no hay plan
 			if (!this.plan) return '';
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
-			const dates = this.plan.session.flatMap(session => session.date);
+			const dates = this.sessions.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const date = dates.find(item =>
 				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
