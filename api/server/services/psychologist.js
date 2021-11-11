@@ -17,11 +17,11 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
-const modifyStatus = async sessions => {
+const modifyStatus = async (sessions, idPsy) => {
 	// Mapea todas las sesiones
 	sessions.map(item => {
 		// Se obtiene psy y tiempo minimo de reagendamiento
-		let psy_info = Psychologist.findById(item.psychologist);
+		let psy_info = Psychologist.findById(idPsy);
 		let min_reschedule_time = psy_info.preferences.minimumRescheduleSession;
 		// Se mapean todos los planes guardados en el objeto Session (item)
 		item.map(plan => {
@@ -83,7 +83,7 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 	}
 
 	// se llama a modifyStatus para cambiar el status de las sesiones acorde a la fecha
-	sessions = await modifyStatus(sessions);
+	sessions = await modifyStatus(sessions, idPsy);
 	sessions.save();
 
 	// Para que nos de deje modificar el array de mongo
