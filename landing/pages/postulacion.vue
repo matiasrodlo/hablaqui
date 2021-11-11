@@ -614,7 +614,11 @@
 															dense
 															label="Actualmente tengo este cargo"
 															@change="
-																() => (selectedExperience.end = '')
+																e => {
+																	selectedExperience.end = '';
+																	if (e) hiddenInput = true;
+																	else hiddenInput = false;
+																}
 															"
 														></v-checkbox>
 													</v-col>
@@ -628,9 +632,8 @@
 															type="text"
 														></v-text-field>
 													</v-col>
-													<v-col cols="12">
+													<v-col v-show="!hiddenInput" cols="12">
 														<v-text-field
-															v-if="!selectedExperience.current"
 															v-model="selectedExperience.end"
 															filled
 															outlined
@@ -1009,6 +1012,7 @@
 												height="200"
 												class="mx-auto"
 												:src="`https://cdn.hablaqui.cl/static/balloon.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
 											></v-img>
 										</div>
 										<div class="headline font-weight-bold">
@@ -1062,6 +1066,7 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
+			hiddenInput: false,
 			countries: [],
 			indexSelected: null,
 			selectedFormation: null,
@@ -1101,14 +1106,14 @@ export default {
 				linkedin: '',
 				models: [],
 				personalDescription: '',
-				phone: { code: '', number: '', flag: '' },
+				phone: { code: '+56', number: '', flag: '' },
 				professionalDescription: '',
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
-				howFindOut: '',
+				howFindOut: 'Búsqueda de internet',
 				isContentCreator: false,
 				isAffiliateExternal: false,
 				isInterestedBusiness: false,
@@ -1220,9 +1225,19 @@ export default {
 		},
 		setExperience(item, index) {
 			if (index !== null) this.indexSelected = index;
-			if (item) this.selectedExperience = item;
-			else
-				this.selectedExperience = { title: '', place: '', start: '', end: '', current: '' };
+			if (item) {
+				this.hiddenInput = item.current;
+				this.selectedExperience = item;
+			} else {
+				this.hiddenInput = false;
+				this.selectedExperience = {
+					title: '',
+					place: '',
+					start: '',
+					end: '',
+					current: false,
+				};
+			}
 			this.dialogExperience = true;
 		},
 		newFormation() {

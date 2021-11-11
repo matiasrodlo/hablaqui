@@ -201,6 +201,7 @@ const usersService = {
 				.slice(2);
 
 		const newUser = {
+			psychologist: user._id,
 			name: body.name,
 			email: body.email,
 			password: bcrypt.hashSync(pass, 10),
