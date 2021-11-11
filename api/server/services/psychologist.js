@@ -507,11 +507,19 @@ const setSchedule = async (user, payload) => {
 };
 
 const cancelSession = async (user, sessionId) => {
-	let sessions = await Sessions.findOneAndDelete({
-		user: user._id,
-		psychologist: user.psychologist,
-		'plan.session._id': sessionId,
-	});
+	const sessions = await Sessions.findOneAndUpdate(
+		{
+			user: user._id,
+			_id: sessionId,
+			'plan.session._id': sessionId,
+		},
+		{
+			$pull: {
+				'plan.$[].session': { _id: sessionId },
+			},
+		},
+		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
+	).populate('psychologist user');
 
 	return okResponse('Sesion cancelada', { sessions });
 };
