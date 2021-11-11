@@ -17,6 +17,38 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
+const modifyStatus = async sessions => {
+	sessions.map(item => {
+		let psy_info = Psychologist.findById(item.psychologist);
+		let min_reschedule_time = psy_info.preferences.minimumRescheduleSession;
+		item.map(plan => {
+			plan.session.map(session => {
+				let date = moment(session.date, 'MM/DD/YYYY HH:mm');
+				if (
+					session.status === 'pending' &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(
+						date.subtract(min_reschedule_time, 'minutes')
+					)
+				) {
+					session.status = 'upnext';
+				} else if (
+					(session.status === 'upnext' ||
+						session.status === 'pending') &&
+					moment(plan.expirationDate) < moment() &&
+					moment().isAfter(date)
+				) {
+					session.status = 'success';
+				}
+				return session;
+			});
+			return plan;
+		});
+		return item;
+	});
+	return sessions;
+};
+
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
@@ -40,6 +72,10 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			psychologist: idPsy,
 		}).populate('psychologist user');
 	}
+
+	// se llama a modifyStatus para cambiar el status de las sesiones acorde a la fecha
+	sessions = await modifyStatus(sessions);
+	sessions.save();
 
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);

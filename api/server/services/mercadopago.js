@@ -101,9 +101,8 @@ const successPay = async params => {
 
 	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
 	const originalDate = sessionData.date.split(' ');
-	const splitted = originalDate.split(' ');
-	const date = splitted[0].split('/');
-	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${splitted[1]}:00-03:00`;
+	const date = originalDate[0].split('/');
+	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
 	// Email scheduling for appointment reminder for the user
 	await email.create({
 		mailgunId: undefined,
