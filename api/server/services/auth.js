@@ -67,6 +67,10 @@ const register = async payload => {
 		return conflictResponse('Correo electronico en uso');
 	}
 
+	if (payload.role === 'psychologist')
+		if (await User.exists({ rut: payload.rut }))
+			return conflictResponse('Rut en uso');
+
 	const newUser = {
 		...payload,
 		email: payload.email.toLowerCase(),
