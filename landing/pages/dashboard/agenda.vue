@@ -14,7 +14,7 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{ sessions.length }}/{{ plan.totalSessions }}
+									{{ plan.session.length }}/{{ plan.totalSessions }}
 								</div>
 								<div
 									v-else
@@ -459,7 +459,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ sessions.length }}/{{ plan.totalSessions }}
+						{{ plan.session.length }}/{{ plan.totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -540,7 +540,9 @@
 								<v-text-field
 									readonly
 									disabled
-									:value="`Sesión ${sessions.length + 1}/${plan.totalSessions}`"
+									:value="`Sesión ${plan.session.length + 1}/${
+										plan.totalSessions
+									}`"
 									hide-details="auto"
 									type="text"
 									class="mt-2"
@@ -830,7 +832,7 @@ export default {
 				id: this.selectedEvent._id,
 				newDate,
 			});
-			this.setEvent(response);
+			this.events = response;
 			this.event = null;
 			this.dialog = false;
 		},
@@ -857,9 +859,9 @@ export default {
 
 				// con psicologo - con sesiones por agendar
 				this.dialogHasSessions =
-					this.plan.psychologist && this.sessions.length < this.plan.totalSessions;
+					this.plan.psychologist && this.plan.session.length < this.plan.totalSessions;
 				// con psicologo - sin sesiones por agendar
-				if (this.plan.psychologist && this.plan.totalSessions <= this.sessions.length) {
+				if (this.plan.psychologist && this.plan.totalSessions <= this.plan.session.length) {
 					this.overlay = true;
 					this.psychologist = await this.getPsychologist(this.plan.psychologist);
 					this.overlay = false;
@@ -942,25 +944,10 @@ export default {
 				idPlan: this.plan._id,
 				payload,
 			});
-
+			await this.$auth.fetchUser();
 			this.events = response;
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
-		},
-		setEvent(response) {
-			this.events = this.events.map(item => {
-				if (item._id !== response._id) {
-					// This isn't the item we care about - keep it as-is
-					return item;
-				}
-
-				// Otherwise, this is the one we want - return an updated value
-				return {
-					...item,
-					...response,
-				};
-			});
-			this.setSessions(this.events);
 		},
 		acquire() {
 			if (this.plan.psychologist) {
