@@ -629,8 +629,20 @@ const getClients = async psychologist => {
 			name: item.user.name,
 			role: item.user.role,
 			roomsUrl: item.roomsUrl,
+			lastSession: getLastSession(item) || 'N/A',
 		})),
 	});
+};
+
+const getLastSession = item => {
+	return item.plan
+		.flatMap(plan =>
+			plan.session.map(session =>
+				moment(session.date, 'MM/DD/YYYY HH:mm').format('L')
+			)
+		)
+		.sort((a, b) => new Date(b) - new Date(a))
+		.find(sessionDate => moment(sessionDate).isSameOrBefore(moment()));
 };
 
 const searchClients = async search => {
