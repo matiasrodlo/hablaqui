@@ -190,11 +190,12 @@
 						<v-dialog
 							v-if="dialogAppointment"
 							v-model="dialogAppointment"
-							max-width="550"
+							max-width="650"
+							class="rounded-xl"
 							transition="dialog-top-transition"
 							@click:outside="closeDialog"
 						>
-							<v-card min-height="300" width="550" rounded="lg">
+							<v-card width="650" rounded="xl">
 								<v-card-text
 									class="
 										d-flex
@@ -262,8 +263,8 @@
 											</v-text-field>
 										</v-col>
 									</v-row>
-									<v-row justify="center">
-										<v-col cols="6">
+									<v-row>
+										<v-col cols="12" class="text-center">
 											<v-btn
 												:disabled="loadingCreatedUser"
 												text
@@ -287,7 +288,7 @@
 										<v-col class="font-weight-medium" cols="12">
 											Tipo de evento
 										</v-col>
-										<v-col cols="12">
+										<v-col cols="6">
 											<v-select
 												v-model="typeSession"
 												:items="[
@@ -311,6 +312,16 @@
 											></v-select>
 										</v-col>
 										<v-col cols="6">
+											<v-text-field
+												v-model="valueSession"
+												label="Valor"
+												dense
+												hide-details
+												outlined
+												suffix="CLP"
+											></v-text-field>
+										</v-col>
+										<v-col cols="6">
 											<v-autocomplete
 												v-model="client"
 												:items="
@@ -319,6 +330,7 @@
 														text: `${item.name} ${
 															item.lastName ? item.lastName : ''
 														}`,
+														value: item._id,
 													}))
 												"
 												dense
@@ -365,30 +377,13 @@
 												</v-btn>
 											</span>
 										</v-col>
-										<v-col class="text-center py-2" cols="6">
-											<v-select
-												:items="hours"
-												dense
-												full-width
-												hide-details
-												label="Hora"
-												outlined
-											></v-select>
-										</v-col>
-									</v-row>
-									<v-row justify="space-between">
-										<v-col cols="5">
-											<v-text-field
-												label="Valor"
-												dense
-												hide-details
-												outlined
-												prefix="$"
-											></v-text-field>
-										</v-col>
-										<v-col cols="6">
-											<v-btn text @click="closeDialog"> Cancelar </v-btn>
-											<v-btn rounded color="primary"> Agendar </v-btn>
+										<v-col class="text-center py-2" cols="12">
+											<calendar
+												:id-psy="$auth.user.psychologist"
+												:set-date="e => newCustomSession(e)"
+												title-button="Agendar"
+												:loading-btn="loadingSession"
+											/>
 										</v-col>
 									</v-row>
 								</v-card-text>
@@ -636,6 +631,7 @@ export default {
 	middleware: ['auth'],
 	data: () => ({
 		step: 0,
+		valueSession: 0,
 		overlay: false,
 		form: null,
 		loadingCreatedUser: false,
@@ -961,6 +957,21 @@ export default {
 			this.idClient = null;
 			this.goBack();
 		},
+		async newCustomSession(item) {
+			if (this.validatenewCustomSession(item)) return alert('Debe completar los campos');
+			this.loadingSession = true;
+			await this.createCustomSession({
+				user: this.client,
+				date: `${item.date} ${item.start}`,
+				type: this.typeSession,
+				price: this.valueSession,
+			});
+			this.loadingSession = false;
+			this.closeDialog();
+		},
+		validatenewCustomSession() {
+			return !this.client || !this.typeSession || !this.valueSession;
+		},
 		async newSession(event) {
 			this.loadingSession = true;
 			const payload = {
@@ -988,6 +999,7 @@ export default {
 		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',
+			createCustomSession: 'Psychologist/createCustomSession',
 			getClients: 'Psychologist/getClients',
 			getPsychologist: 'Psychologist/getPsychologist',
 			getSessions: 'Psychologist/getSessions',

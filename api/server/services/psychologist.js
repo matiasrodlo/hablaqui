@@ -723,11 +723,11 @@ const uploadProfilePicture = async (psyID, picture) => {
  * @returns sessions
  */
 const customNewSession = async (user, payload) => {
-	if (user.role != 'psychologist')
+	if (user.role !== 'psychologist')
 		return conflictResponse('No eres psicologo');
 
 	const newSession = {
-		date: moment(payload.date).format('MM/DD/YYYY HH:mm'),
+		date: payload.date,
 		sessionNumber: 1,
 		paidToPsychologist: false,
 		status: 'pending',
@@ -745,7 +745,7 @@ const customNewSession = async (user, payload) => {
 		totalPrice: payload.price,
 		sessionPrice: payload.price,
 		payment: 'pending',
-		expiration: moment(payload.date)
+		expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
 			.add({ weeks: 1 })
 			.toISOString(),
 		invitedByPsychologist: true,

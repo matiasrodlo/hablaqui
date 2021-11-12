@@ -304,11 +304,10 @@ const psychologistsController = {
 
 	async customNewSession(req, res) {
 		try {
-			const { user } = req;
-			const { payload } = req.body;
+			const { user, body } = req;
 			const { data, code } = await psychologistsService.customNewSession(
 				user,
-				payload
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
