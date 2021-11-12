@@ -17,54 +17,6 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
-const modifyStatus = async sessions => {
-	// Mapea todas las sesiones
-	return sessions.map(item => {
-		// Se obtiene psy y tiempo minimo de reagendamiento
-		let minimumRescheduleSession =
-			item.psychologist.preferences.minimumRescheduleSession;
-		logInfo(`min_reschedule_time: ${minimumRescheduleSession}`);
-		// Se mapean todos los planes guardados en el objeto Session (item)
-		return {
-			...item,
-			plan: item.plan.map(plan => {
-				// Se mapean todas las sesiones dentro del plan
-				return {
-					...plan,
-					session: plan.session.map(session => {
-						let date = moment(session.date, 'MM/DD/YYYY HH:mm');
-						// Si la sesión está pendiente, el plan no expira aún y la fecha de reagendamiento ya pasó
-						if (
-							session.status === 'pending' &&
-							moment(plan.expirationDate).isAfter(moment()) &&
-							moment().isAfter(
-								date.subtract(
-									minimumRescheduleSession,
-									'minutes'
-								)
-							)
-						) {
-							// Se cambia el status de la sesión a 'upnext' (a continuación)
-							session.status = 'upnext';
-						}
-						// Si la sesión está pendiente o en upnext, el plan no expira aún y la fecha de la sesión ya pasó
-						else if (
-							(session.status === 'upnext' ||
-								session.status === 'pending') &&
-							moment(plan.expirationDate).isAfter(moment()) &&
-							moment().isAfter(date)
-						) {
-							// Se cambia el status de la sesión a 'success' (completada)
-							session.status = 'success';
-						}
-						return session;
-					}),
-				};
-			}),
-		};
-	});
-};
-
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
@@ -88,10 +40,6 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			psychologist: idPsy,
 		}).populate('psychologist user');
 	}
-
-	// se llama a modifyStatus para cambiar el status de las sesiones acorde a la fecha
-	sessions = await modifyStatus(sessions);
-	sessions.save();
 
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);

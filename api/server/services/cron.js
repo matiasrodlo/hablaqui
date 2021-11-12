@@ -5,6 +5,10 @@ import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
 import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Sessions from '../models/sessions';
+import { logInfo } from '../config/pino';
+
+const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 
 /**
  * @description Checks wheter the email is schedulable (3 days or less before the appointment)
@@ -40,7 +44,12 @@ const cronService = {
 	 * @description This function is used to schedule emails about an upcoming appoitment
 	 * @returns {object} The response about the scheduling system
 	 **/
-	async scheduleEmails() {
+	async scheduleEmails(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
 		const pendingEmails = await email.find({
 			wasScheduled: false,
 		});
@@ -87,6 +96,149 @@ const cronService = {
 				pendingEmails.length +
 				' email(s) scheduled'
 		);
+	},
+	async sessionStatus(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		const pendingSessions = await Sessions.find();
+		var toUpdateUpnext = [];
+		var toUpdateSuccess = [];
+		await Promise.allSettled(
+			pendingSessions.map(async item => {
+				const psyInfo = await psychologist.findOne(item.psychologist);
+				await item.plan.map(async plan => {
+					await plan.session.map(async session => {
+						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						if (
+							session.status === 'pending' &&
+							moment(date)
+								.subtract(
+									psyInfo.preferences
+										.minimumRescheduleSession,
+									'hours'
+								)
+								.isBefore(moment()) &&
+							moment().isBefore(date) &&
+							moment().isBefore(plan.expiration)
+						) {
+							session.status = 'upnext';
+							toUpdateUpnext.push({
+								id: session._id.toString(),
+								status: session.status,
+							});
+						} else if (
+							(session.status === 'upnext' ||
+								session.status === 'pending') &&
+							moment().isAfter(date)
+						) {
+							session.status = 'success';
+							toUpdateSuccess.push({
+								id: session._id.toString(),
+								status: session.status,
+							});
+						}
+					});
+				});
+			})
+		);
+
+		if (toUpdateUpnext.length > 1) {
+			try {
+				console.log('A' + toUpdateSuccess.length);
+				await Promise.allSettled(
+					toUpdateUpnext.forEach(async item => {
+						await Sessions.findOneAndUpdate(
+							{
+								'plan.session._id': item.id,
+							},
+							{
+								$set: {
+									'plan.$[].session.$[element].status':
+										item.status,
+								},
+							},
+							{
+								arrayFilters: [{ 'element._id': item.id }],
+							}
+						);
+					})
+				);
+			} catch (error) {
+				logInfo(error);
+			}
+		} else if (toUpdateUpnext.length === 1) {
+			try {
+				console.log('B' + toUpdateSuccess.length);
+				await Sessions.findOneAndUpdate(
+					{
+						'plan.session._id': toUpdateUpnext[0].id,
+					},
+					{
+						$set: {
+							'plan.$[].session.$[element].status':
+								toUpdateUpnext[0].status,
+						},
+					},
+					{
+						arrayFilters: [{ 'element._id': toUpdateUpnext[0].id }],
+					}
+				);
+			} catch (error) {
+				logInfo(error);
+			}
+		}
+
+		if (toUpdateSuccess.length > 1) {
+			try {
+				console.log('C' + toUpdateSuccess.length);
+				await Promise.allSettled(
+					toUpdateSuccess.forEach(async item => {
+						await Sessions.findOneAndUpdate(
+							{
+								'plan.session._id': item.id,
+							},
+							{
+								$set: {
+									'plan.$[].session.$[element].status':
+										item.status,
+								},
+							},
+							{
+								arrayFilters: [{ 'element._id': item.id }],
+							}
+						);
+					})
+				);
+			} catch (error) {
+				logInfo(error);
+			}
+		} else if (toUpdateSuccess.length === 1) {
+			try {
+				await Sessions.findOneAndUpdate(
+					{
+						'plan.session._id': toUpdateSuccess[0].id,
+					},
+					{
+						$set: {
+							'plan.$[].session.$[element].status':
+								toUpdateSuccess[0].status,
+						},
+					},
+					{
+						arrayFilters: [
+							{ 'element._id': toUpdateSuccess[0].id },
+						],
+						new: true,
+					}
+				);
+			} catch (error) {
+				logInfo(error);
+			}
+		}
+		return okResponse('Sesiones actualizadas');
 	},
 };
 
