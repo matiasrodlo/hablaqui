@@ -15,12 +15,12 @@
 				/>
 			</v-col>
 			<v-col class="d-flex align-center mt-2" cols="4">
-				<span class="pointer" @click="dialog = true">
+				<!-- <span class="pointer" @click="dialog = true">
 					<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 						<icon :icon="mdiPlus" color="white" small />
 					</v-btn>
 					<span class="primary--text ml-2"> Consultante nuevo </span>
-				</span>
+				</span> -->
 			</v-col>
 			<v-col cols="12" md="6">
 				<v-alert prominent text color="info">

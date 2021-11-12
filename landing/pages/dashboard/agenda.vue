@@ -365,7 +365,7 @@
 												</template>
 											</v-autocomplete>
 										</v-col>
-										<v-col class="d-flex align-center" cols="6">
+										<!-- <v-col class="d-flex align-center" cols="6">
 											<span class="pointer" @click="dialogNewUser = true">
 												<v-btn
 													fab
@@ -376,7 +376,7 @@
 													<icon :icon="mdiPlus" color="white" small />
 												</v-btn>
 											</span>
-										</v-col>
+										</v-col> -->
 										<v-col class="text-center py-2" cols="12">
 											<calendar
 												:id-psy="$auth.user.psychologist"
