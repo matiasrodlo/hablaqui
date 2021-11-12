@@ -7,10 +7,12 @@ import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import psychologistService from './psychologist';
+import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import moment from 'moment';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -42,7 +44,7 @@ const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
 		items: [
 			{
-				title: body.description,
+				title: body.title,
 				description: body.description,
 				currency_id: 'CLP',
 				unit_price: Number(body.price),
@@ -50,9 +52,7 @@ const createPsychologistPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/psychologist-pay/${
-				body.psychologistToUpdate
-			}/${Number(body.price)}`,
+			success: `${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}?period=${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
@@ -107,6 +107,30 @@ const successPay = async params => {
 	return okResponse('sesion actualizada');
 };
 
+
+const psychologistPay = async (params, query) => {
+	const { psychologistId } = params;
+	const { period } = query;
+	let expirationDate;
+	if (period == 'anual') {
+		expirationDate = moment()
+			.add({ months: 12 })
+			.toISOString();
+	}
+	if (period == 'mensual') {
+		expirationDate = moment()
+			.add({ months: 1 })
+			.toISOString();
+	}
+	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
+	const newPlan = {
+		tier: 'premium',
+		hablaquiFee: 0,
+		paymentFee: 0.0399,
+		expirationDate,
+		price: pricePaid,
+		subscriptionPeriod: period,
+
 const customSessionPay = async params => {
 	const { userId, psyId, planId } = params;
 
@@ -148,16 +172,85 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
+
 	};
 
 	const { body } = await mercadopago.preferences.create(newPreference);
 	return okResponse('preference created', { body });
 };
 
+
+const createRecruitedPreference = async (body, res) => {
+	let newPreference = {
+		items: [
+			{
+				title: 'Plan Premium de Hablaqui',
+				description: 'Plan Premium de Hablaqui',
+				currency_id: 'CLP',
+				unit_price: Number(body.price),
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitment}?period=${body.period}`,
+			failure: `${landing_url}/pago/failure-pay`,
+			pending: `${landing_url}/pago/pending-pay`,
+		},
+		auto_return: 'approved',
+	};
+	let bodyId = '';
+	let error = '';
+	await mercadopago.preferences
+		.create(newPreference)
+		.then(res => {
+			bodyId = res.body;
+		})
+		.catch(e => {
+			error = e;
+		});
+
+	if (error != '') {
+		return errorCallback(error, res, 'error creando la preferencia');
+	}
+	if (bodyId != '') return okResponse('preference created', { body: bodyId });
+
+	return conflictResponse('Ha ocurrido un error');
+};
+
+const recruitedPay = async (params, query) => {
+	const { recruitedId } = params;
+	const { period } = query;
+	let expirationDate;
+	if (period == 'anual') {
+		expirationDate = moment()
+			.add({ months: 12 })
+			.toISOString();
+	}
+	if (period == 'mensual') {
+		expirationDate = moment()
+			.add({ months: 1 })
+			.toISOString();
+	}
+	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
+	const newPlan = {
+		tier: 'premium',
+		hablaquiFee: 0,
+		paymentFee: 0.0399,
+		expirationDate,
+		price: pricePaid,
+		subscriptionPeriod: period,
+	};
+	await recruitmentService.updatePlan(recruitedId, newPlan);
+	return okResponse('plan actualizado/creado');
+};
+
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
+	createRecruitedPreference,
 	successPay,
+	psychologistPay,
+	recruitedPay,
 	createCustomSessionPreference,
 	customSessionPay,
 };

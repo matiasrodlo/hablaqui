@@ -71,6 +71,39 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
+let psyPlan = new Schema({
+	tier: {
+		type: String,
+		enum: ['free', 'premium'],
+		default: 'free',
+	},
+	paymentStatus: {
+		type: String,
+		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	expirationDate: {
+		type: String,
+		default: '',
+	},
+	subscriptionPeriod: {
+		type: String,
+		enum: ['mensual', 'anual'],
+	},
+	price: {
+		type: Number,
+		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
+	},
+});
+
 let psychologist = new Schema({
 	avatar: {
 		type: String,
@@ -162,6 +195,7 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
+	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

@@ -44,7 +44,7 @@
 						</v-list>
 					</v-card-text>
 				</v-card>
-				<v-radio-group v-model="radioGroup" hide-details>
+				<v-radio-group v-model="period" hide-details>
 					<v-card class="my-2 rounded-xl">
 						<v-card-text class="py-1">
 							<v-radio value="mensual">
@@ -118,6 +118,7 @@
 
 <script>
 import { mdiCheck } from '@mdi/js';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -132,7 +133,7 @@ export default {
 	data() {
 		return {
 			mdiCheck,
-			radioGroup: null,
+			period: 'mensual',
 			itemsPremiun: [
 				'Prioridad Nº1 en la activación del perfil',
 				'Acceso a Hablaquí Office',
@@ -152,9 +153,21 @@ export default {
 			],
 		};
 	},
-	// Logica para ir a mercado pago
 	methods: {
-		goMercadoPago() {},
+		async goMercadoPago() {
+			const preference = {
+				price: this.period === 'mensual' ? 39990 : 31920 * 12,
+				period: this.period === 'mensual' ? this.period : 'anual',
+				title: 'Plan Premium',
+				quantity: 1,
+				psychologist: this.$auth.$state.user.psychologist,
+			};
+			const response = await this.mercadopagoPsychologistPay(preference);
+			window.location.href = response.body.init_point;
+		},
+		...mapActions({
+			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
+		}),
 	},
 };
 </script>

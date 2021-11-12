@@ -424,16 +424,12 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 };
 
 const updatePlan = async (psychologistId, planInfo) => {
-	/* planInfo: {
-		name: String,
-		price: Number,
-		hablaquiFee: Number,
-		paymentFee: Number,
-	}*/
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
 		psychologistId,
 		{
-			plan: { status: 'success', ...planInfo },
+			$push: {
+				psyPlans: { paymentStatus: 'success', ...planInfo },
+			},
 		},
 		{ new: true }
 	);
