@@ -139,15 +139,19 @@ const successPay = async params => {
 
 const customSessionPay = async params => {
 	const { userId, psyId, planId } = params;
-	let foundSession = await Sessions.findOne({
-		user: userId,
-		psychologist: psyId,
-	});
 
-	let foundPlan = foundSession.plan.filter(e => e._id == planId);
-	foundPlan.payment = 'success';
-	foundSession.save();
-	return okResponse('plan actualizado');
+	const updatePlan = await Sessions.findOneAndUpdate(
+		{
+			'plan._id': planId,
+			user: userId,
+			psychologist: psyId,
+		},
+		{
+			$set: { 'plan.$.payment': 'success' },
+		},
+		{ new: true }
+	);
+	return okResponse('plan actualizado', { body: updatePlan });
 };
 
 const createCustomSessionPreference = async (userId, psyId, planId) => {

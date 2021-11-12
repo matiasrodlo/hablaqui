@@ -719,7 +719,7 @@ const customNewSession = async (user, payload) => {
 		return conflictResponse('No eres psicologo');
 
 	const newSession = {
-		date: moment(payload.date).toISOString(),
+		date: moment(payload.date).format('MM/DD/YYYY HH:mm'),
 		sessionNumber: 1,
 		paidToPsychologist: false,
 		status: 'pending',
@@ -727,7 +727,7 @@ const customNewSession = async (user, payload) => {
 
 	// Validador si existe un documento sesion entre ambos usuarios.
 	const validation = await Sessions.exists({
-		user: payload.user || user.psychologist,
+		user: payload.user,
 		psychologist: user.psychologsit,
 	});
 
@@ -752,7 +752,7 @@ const customNewSession = async (user, payload) => {
 	if (validation) {
 		updatedSession = await Sessions.findOneAndUpdate(
 			{
-				user: payload.user || user.psychologist,
+				user: payload.user,
 				psychologist: user.psychologist,
 			},
 			{
@@ -767,7 +767,7 @@ const customNewSession = async (user, payload) => {
 			.digest('hex');
 
 		updatedSession = await Sessions.create({
-			user: payload.user || user.psychologist,
+			user: payload.user,
 			psychologist: user.psychologist,
 			plan: [newPlan],
 			roomsUrl: `${room}room/${roomId}`,
