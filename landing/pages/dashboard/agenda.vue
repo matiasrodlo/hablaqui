@@ -954,6 +954,8 @@ export default {
 			this.dialogNewUser = false;
 			this.date = null;
 			this.client = null;
+			this.typeSession = 'Sesión online';
+			this.valueSession = 0;
 			this.idClient = null;
 			this.goBack();
 		},
