@@ -171,6 +171,7 @@
 									v-model="dialog"
 									max-width="600"
 									transition="dialog-top-transition"
+									@click:outside="selectedOpen = false"
 								>
 									<v-card rounded="xl">
 										<v-card-text
@@ -865,7 +866,7 @@ export default {
 			this.events = this.sessions;
 			this.event = null;
 			this.selectedOpen = false;
-			this.loagindReschedule = true;
+			this.loagindReschedule = false;
 			this.dialog = false;
 		},
 		setSchedule(item) {
