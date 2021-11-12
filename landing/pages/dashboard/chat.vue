@@ -109,14 +109,14 @@
 					</template>
 					<!-- barra lateral role user -->
 					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
-						<v-card-text v-if="planSuccess" class="py-0">
+						<v-card-text v-if="plan" class="py-0">
 							<v-subheader class="primary--text body-1 px-0">
 								Mi Psicólogo
 							</v-subheader>
 							<v-divider style="border-color: #5eb3e4"></v-divider>
 						</v-card-text>
 						<!-- usuario mi psicologo -->
-						<v-list v-if="planSuccess" dense two-line class="py-0">
+						<v-list v-if="plan" dense two-line class="py-0">
 							<v-list-item @click="setSelectedPsy(getMyPsy)">
 								<v-list-item-avatar
 									style="border-radius: 50%"
@@ -139,9 +139,7 @@
 						</v-list>
 						<!-- usuario sin psicologo -->
 						<v-list
-							v-else-if="
-								!$auth.$state.user && !planSuccess && listPsychologist.length
-							"
+							v-else-if="!$auth.$state.user && !plan && listPsychologist.length"
 							link
 							two-line
 							class="py-0 primary"
@@ -169,7 +167,7 @@
 							</v-list-item>
 						</v-list>
 						<!-- lista de psicologos "chat iniciado" -->
-						<template v-if="listPsychologist.length || planSuccess">
+						<template v-if="listPsychologist.length || plan">
 							<v-card-text v-if="listPsychologist.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
 								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
@@ -567,23 +565,49 @@ export default {
 			}));
 		},
 		getMyPsy() {
-			const user = this.$auth.$state.user;
-			if (user && user.role === 'user' && !!user.sessions) {
-				const psy = this.$auth.$state.user.sessions.psychologist;
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
+				const psy = this.plan.psychologist;
 				if (psy)
 					return {
 						...this.getPsy(psy),
-						roomsUrl: this.$auth.$state.user.sessions.roomsUrl,
+						roomsUrl: this.plan.roomsUrl,
 					};
 				else return null;
 			}
 			return null;
 		},
-		planSuccess() {
-			// session is object(unica session)
-			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
-				return !!this.$auth.$state.user.sessions.psychologist;
-			} else return false;
+		// retorna el plan act o el ultimo expirado
+		plan() {
+			if (!this.$auth.$state.user || this.$auth.$state.user.role !== 'user') return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					idSessions: item._id,
+					roomsUrl: item.roomsUrl,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
+		},
+		// retorna verdadero si el usurio tiene plan activo
+		isActivePlan() {
+			if (!this.plan) return false;
+			return (
+				this.plan.remainingSessions > 0 ||
+				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
+			);
 		},
 		...mapGetters({
 			chat: 'Chat/chat',

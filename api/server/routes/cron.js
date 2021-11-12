@@ -5,6 +5,14 @@ import cronController from '../controllers/cron';
 
 const cronRouter = Router();
 
-cronRouter.post('/emails/schedule', cronController.scheduleEmails);
+cronRouter.post(
+	'/cron/email-schedule/:authToken',
+	cronController.scheduleEmails
+);
+
+cronRouter.post(
+	'/cron/session-status/:authToken',
+	cronController.sessionStatus
+);
 
 export default cronRouter;

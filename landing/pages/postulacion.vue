@@ -302,7 +302,6 @@
 									profesional. Explica con más detalle el objetivo de tu línea de
 									trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
 									ambiente acogedor con las palabras."
-										:rules="rules"
 										counter
 									></v-textarea>
 								</v-col>
@@ -379,7 +378,6 @@
                                             que trabajas, y cómo puedes ayudar a tu consultante."
 										type="text"
 										counter
-										:rules="rules"
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
@@ -614,7 +612,11 @@
 															dense
 															label="Actualmente tengo este cargo"
 															@change="
-																() => (selectedExperience.end = '')
+																e => {
+																	selectedExperience.end = '';
+																	if (e) hiddenInput = true;
+																	else hiddenInput = false;
+																}
 															"
 														></v-checkbox>
 													</v-col>
@@ -628,9 +630,8 @@
 															type="text"
 														></v-text-field>
 													</v-col>
-													<v-col cols="12">
+													<v-col v-show="!hiddenInput" cols="12">
 														<v-text-field
-															v-if="!selectedExperience.current"
 															v-model="selectedExperience.end"
 															filled
 															outlined
@@ -1009,6 +1010,7 @@
 												height="200"
 												class="mx-auto"
 												:src="`https://cdn.hablaqui.cl/static/balloon.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
 											></v-img>
 										</div>
 										<div class="headline font-weight-bold">
@@ -1062,6 +1064,7 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
+			hiddenInput: false,
 			countries: [],
 			indexSelected: null,
 			selectedFormation: null,
@@ -1079,11 +1082,6 @@ export default {
 			comunasRegiones: [],
 			timezone: [],
 			loadingStep: false,
-			rules: [
-				v => v.length >= 140 || 'Minimo 140 caracteres',
-				v => v.length <= 300 || 'Maximo 300 caracteres',
-				value => !!value || 'Este campo es requerido.',
-			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
 				avgPatients: '',
@@ -1101,14 +1099,14 @@ export default {
 				linkedin: '',
 				models: [],
 				personalDescription: '',
-				phone: { code: '', number: '', flag: '' },
+				phone: { code: '+56', number: '', flag: '' },
 				professionalDescription: '',
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
 				yearsExpPsychologist: '',
 				yearsExpVideocalls: '',
-				howFindOut: '',
+				howFindOut: 'Búsqueda de internet',
 				isContentCreator: false,
 				isAffiliateExternal: false,
 				isInterestedBusiness: false,
@@ -1183,9 +1181,7 @@ export default {
 					this.form.birthDate &&
 					this.form.region &&
 					this.form.comuna &&
-					this.form.personalDescription &&
-					this.form.personalDescription.length <= 300 &&
-					this.form.personalDescription.length >= 100
+					this.form.personalDescription
 				);
 			}
 			// validamos el step 2
@@ -1220,9 +1216,19 @@ export default {
 		},
 		setExperience(item, index) {
 			if (index !== null) this.indexSelected = index;
-			if (item) this.selectedExperience = item;
-			else
-				this.selectedExperience = { title: '', place: '', start: '', end: '', current: '' };
+			if (item) {
+				this.hiddenInput = item.current;
+				this.selectedExperience = item;
+			} else {
+				this.hiddenInput = false;
+				this.selectedExperience = {
+					title: '',
+					place: '',
+					start: '',
+					end: '',
+					current: false,
+				};
+			}
 			this.dialogExperience = true;
 		},
 		newFormation() {

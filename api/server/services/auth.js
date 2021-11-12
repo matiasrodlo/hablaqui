@@ -29,12 +29,11 @@ const login = async user => {
 };
 
 const getSessions = async user => {
-	// User retorna un objeto con sus sessiones
-	if (user.role === 'user') return await Sessions.findOne({ user: user._id });
+	if (user.role === 'user') return await Sessions.find({ user: user._id });
 
-	// Psicologo retorna array de muchas sessiones
 	if (user.role === 'psychologist')
 		return await Sessions.find({ psychologist: user.psychologist });
+
 	return null;
 };
 
@@ -66,6 +65,10 @@ const register = async payload => {
 	if (await User.exists({ email: payload.email })) {
 		return conflictResponse('Correo electronico en uso');
 	}
+
+	if (payload.role === 'psychologist')
+		if (await User.exists({ rut: payload.rut }))
+			return conflictResponse('Rut en uso');
 
 	const newUser = {
 		...payload,

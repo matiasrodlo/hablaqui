@@ -54,17 +54,23 @@
 					</v-slide-item>
 				</v-slide-group>
 			</div>
-			<div
-				style="max-width: 200px"
-				:class="selected ? 'primary pointer' : 'blue-grey lighten-3'"
-				class="px-3 py-2 mx-auto text-center body-1 mt-5 rounded-xl white--text"
-				@click="
-					() => {
-						if (selected) setDate(selected);
-					}
-				"
-			>
-				{{ titleButton }}
+			<div class="text-center">
+				<v-btn
+					:loading="loadingBtn"
+					:disabled="!selected"
+					rounded
+					color="primary"
+					depressed
+					style="width: 200px"
+					class="mt-5"
+					@click="
+						() => {
+							if (selected) setDate(selected);
+						}
+					"
+				>
+					{{ titleButton }}
+				</v-btn>
 			</div>
 		</template>
 	</div>
@@ -84,6 +90,7 @@ export default {
 		},
 		titleButton: { type: String, default: 'Agendar una cita online' },
 		idPsy: { type: String, default: '' },
+		loadingBtn: { type: Boolean, default: false },
 	},
 	data() {
 		return {
