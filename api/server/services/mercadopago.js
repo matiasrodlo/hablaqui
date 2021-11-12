@@ -37,8 +37,10 @@ const createPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	const { body } = await mercadopago.preferences.create(newPreference);
-	return okResponse('preference created', { body });
+	const { responseBody } = await mercadopago.preferences.create(
+		newPreference
+	);
+	return okResponse('preference created', { responseBody });
 };
 const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
@@ -59,8 +61,10 @@ const createPsychologistPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	const { body } = await mercadopago.preferences.create(newPreference);
-	return okResponse('preference created', { body });
+	const { responseBody } = await mercadopago.preferences.create(
+		newPreference
+	);
+	return okResponse('preference created', { responseBody });
 };
 
 const successPay = async params => {
@@ -107,7 +111,6 @@ const successPay = async params => {
 	return okResponse('sesion actualizada');
 };
 
-
 const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
 	const { period } = query;
@@ -130,6 +133,16 @@ const psychologistPay = async (params, query) => {
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,
+	};
+
+	// Push newPlan to myPlans on Psychologist
+	const foundPsychologist = await Psychologist.findOneAndUpdate(
+		{ _id: psychologistId },
+		{ $push: { myPlans: newPlan } },
+		{ new: true }
+	);
+	return okResponse('plan actualizado', { foundPsychologist });
+};
 
 const customSessionPay = async params => {
 	const { userId, psyId, planId } = params;
@@ -172,13 +185,13 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
-
 	};
 
-	const { body } = await mercadopago.preferences.create(newPreference);
-	return okResponse('preference created', { body });
+	const { responseBody } = await mercadopago.preferences.create(
+		newPreference
+	);
+	return okResponse('preference created', { responseBody });
 };
-
 
 const createRecruitedPreference = async (body, res) => {
 	let newPreference = {
