@@ -74,11 +74,11 @@ const setSession = (role, sessions) => {
 		return item.plan.flatMap(plan =>
 			plan.session.map(session => {
 				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
-					'YYYY-MM-DD hh:mm'
+					'YYYY-MM-DD HH:mm'
 				);
 				const end = moment(session.date, 'MM/DD/YYYY HH:mm')
 					.add(60, 'minutes')
-					.format('YYYY-MM-DD hh:mm');
+					.format('YYYY-MM-DD HH:mm');
 
 				return {
 					_id: session._id,
