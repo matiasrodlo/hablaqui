@@ -121,14 +121,6 @@
 										<v-col class="body-1 secondary--text" cols="7">
 											{{ selectedEvent.name }}
 										</v-col>
-										<v-col class="text-right">
-											<v-btn icon>
-												<icon :icon="mdiPencil" color="grey lighten-1" />
-											</v-btn>
-											<v-btn icon>
-												<icon :icon="mdiTrashCan" color="grey lighten-1" />
-											</v-btn>
-										</v-col>
 									</v-row>
 								</v-card-text>
 								<v-card-text>
@@ -626,9 +618,7 @@ import {
 	mdiClockOutline,
 	mdiClose,
 	mdiMenuDown,
-	mdiPencil,
 	mdiPlus,
-	mdiTrashCan,
 } from '@mdi/js';
 
 export default {
@@ -649,8 +639,6 @@ export default {
 		loadingCreatedUser: false,
 		typeSession: 'Sesión online',
 		mdiCheck,
-		mdiPencil,
-		mdiTrashCan,
 		mdiPlus,
 		mdiClose,
 		mdiChevronLeft,

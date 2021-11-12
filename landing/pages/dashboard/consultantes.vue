@@ -61,9 +61,6 @@
 							<v-btn icon :to="`chat?client=${item._id}`">
 								<icon :icon="mdiChat" small color="primary"></icon>
 							</v-btn>
-							<v-btn icon>
-								<icon :icon="mdiClose" small color="error"></icon>
-							</v-btn>
 						</div>
 					</template>
 				</v-data-table>
