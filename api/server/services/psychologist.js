@@ -736,7 +736,7 @@ const customNewSession = async (user, payload) => {
 	// Validador si existe un documento sesion entre ambos usuarios.
 	const validation = await Sessions.exists({
 		user: payload.user,
-		psychologist: user.psychologsit,
+		psychologist: user.psychologist,
 	});
 
 	const newPlan = {
