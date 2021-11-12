@@ -119,7 +119,8 @@ export default {
 				data: { newDate },
 			});
 			snackBarSuccess('Sesión reprogramada')(commit);
-			return data.sessions[0];
+			commit('setOneSessions', { payload: data.sessions, id });
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -164,6 +165,19 @@ export default {
 				data: { payload },
 			});
 			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async addSession({ commit }, { id, idPlan, payload }) {
+		try {
+			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
+				method: 'put',
+				data: payload,
+			});
+			snackBarSuccess('Sesión agregada')(commit);
+			commit('setSessions', data.sessions);
+			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

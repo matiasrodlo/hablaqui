@@ -3,7 +3,48 @@
 		<v-container fluid style="height: 100vh; max-width: 1200px">
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
-				<v-col class="heightCalendar" cols="12" md="10">
+				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
+					<div class="hidden-md-and-up">
+						<div class="d-flex justify-center">
+							<div>
+								<div class="body-2 text-center text--secondary font-weight-bold">
+									Nº de Sesiones
+								</div>
+								<div
+									v-if="plan"
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									{{ plan.session.length }}/{{ plan.totalSessions }}
+								</div>
+								<div
+									v-else
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									0/0
+								</div>
+							</div>
+							<v-divider vertical class="mx-8"></v-divider>
+							<div>
+								<div class="body-2 text-center text--secondary font-weight-bold">
+									Próxima sesión
+								</div>
+								<div
+									v-if="nextSesion"
+									class="text-center text--secondary font-weight-bold my-1"
+								>
+									{{ nextSesion }}
+								</div>
+								<v-btn
+									v-else
+									text
+									class="primary--text font-weight-bold body-1 pointer"
+									@click="acquire"
+								>
+									Adquirir
+								</v-btn>
+							</div>
+						</div>
+					</div>
 					<v-sheet class="mt-4 mt-md-0">
 						<v-toolbar flat>
 							<v-btn class="mr-4" color="primary" depressed @click="setToday">
@@ -54,7 +95,7 @@
 							</v-menu>
 						</v-toolbar>
 					</v-sheet>
-					<v-sheet height="calc(100% - 64px)">
+					<v-sheet :height="$vuetify.breakpoint.mdAndUp ? '80%' : ''">
 						<v-calendar
 							ref="calendar"
 							v-model="focus"
@@ -80,14 +121,6 @@
 										<v-col class="body-1 secondary--text" cols="7">
 											{{ selectedEvent.name }}
 										</v-col>
-										<v-col class="text-right">
-											<v-btn icon>
-												<icon :icon="mdiPencil" color="grey lighten-1" />
-											</v-btn>
-											<v-btn icon>
-												<icon :icon="mdiTrashCan" color="grey lighten-1" />
-											</v-btn>
-										</v-col>
 									</v-row>
 								</v-card-text>
 								<v-card-text>
@@ -97,6 +130,7 @@
 								<v-divider></v-divider>
 								<v-card-actions>
 									<v-btn
+										v-if="selectedEvent.status === 'pending'"
 										:href="selectedEvent.url"
 										target="_blank"
 										color="primary"
@@ -106,18 +140,30 @@
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
-										color="secondary"
+										v-if="selectedEvent.status === 'pending'"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
 										Reprogramar
 									</v-btn>
+									<v-chip
+										v-if="selectedEvent.status === 'success'"
+										color="success"
+										>Completado</v-chip
+									>
+									<v-chip
+										v-if="selectedEvent.status === 'canceled'"
+										color="error"
+									>
+										Cancelado
+									</v-chip>
 								</v-card-actions>
 								<v-dialog
 									v-if="dialog"
 									v-model="dialog"
 									max-width="600"
 									transition="dialog-top-transition"
+									@click:outside="selectedOpen = false"
 								>
 									<v-card rounded="xl">
 										<v-card-text
@@ -129,9 +175,10 @@
 										</v-card-text>
 										<v-card-text class="px-0 px-sm-2 px-md-4">
 											<calendar
-												:id-psy="idPsychologist"
+												:id-psy="selectedEvent.idPsychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
+												:loading-btn="loagindReschedule"
 											/>
 										</v-card-text>
 									</v-card>
@@ -314,51 +361,7 @@
 												>
 													<icon :icon="mdiPlus" color="white" small />
 												</v-btn>
-												<span class="primary--text ml-2">
-													Consultante nuevo
-												</span>
 											</span>
-										</v-col>
-										<v-col cols="6">
-											<v-menu
-												ref="menu"
-												v-model="menu"
-												:close-on-content-click="false"
-												:return-value.sync="date"
-												min-width="auto"
-												offset-y
-												transition="scale-transition"
-											>
-												<template #activator="{ on, attrs }">
-													<v-text-field
-														v-model="date"
-														dense
-														hide-details
-														outlined
-														:append-icon="mdiCalendar"
-														readonly
-														v-bind="attrs"
-														v-on="on"
-													></v-text-field>
-												</template>
-												<v-date-picker v-model="date" no-title scrollable>
-													<v-spacer></v-spacer>
-													<v-btn
-														color="primary"
-														text
-														@click="menu = false"
-													>
-														Cancelar
-													</v-btn>
-													<v-btn
-														color="primary"
-														text
-														@click="$refs.menu.save(date)"
-													>
-														Ok
-													</v-btn>
-												</v-date-picker>
-											</v-menu>
 										</v-col>
 										<v-col class="text-center py-2" cols="6">
 											<v-select
@@ -389,8 +392,8 @@
 								</v-card-text>
 							</v-card>
 						</v-dialog>
-						<div class="text-right py-10">
-							<span class="mx-3 pointer">
+						<v-row class="text-md-right pt-4">
+							<v-col cols="6" md="3" class="pointer">
 								<v-btn
 									color="primary"
 									depressed
@@ -400,8 +403,8 @@
 									<icon small :icon="mdiCheck" color="white" />
 								</v-btn>
 								<span class="ml-1 caption">Sesiones online</span>
-							</span>
-							<span class="mx-3 pointer">
+							</v-col>
+							<v-col cols="6" md="3" class="pointer">
 								<v-btn
 									color="#00c6ea"
 									depressed
@@ -411,8 +414,8 @@
 									<icon small :icon="mdiCheck" color="white" />
 								</v-btn>
 								<span class="ml-1 caption">Sesiones presenciales</span>
-							</span>
-							<span class="mx-3 pointer">
+							</v-col>
+							<v-col cols="6" md="3" class="pointer">
 								<v-btn
 									color="#efb908"
 									depressed
@@ -422,8 +425,8 @@
 									<icon small :icon="mdiCheck" color="white" />
 								</v-btn>
 								<span class="ml-1 caption">Compromiso privado</span>
-							</span>
-							<span class="mx-3 pointer">
+							</v-col>
+							<v-col cols="6" md="3" class="pointer">
 								<v-btn
 									color="grey"
 									depressed
@@ -434,11 +437,168 @@
 									<icon small :icon="mdiCheck" color="grey" />
 								</v-btn>
 								<span class="ml-1 caption">Disponibilidad</span>
-							</span>
-						</div>
+							</v-col>
+						</v-row>
 					</v-sheet>
 				</v-col>
+				<v-col
+					v-if="$auth.$state.user.role === 'user'"
+					md="2"
+					class="mt-16 hidden-sm-and-down text-center"
+				>
+					<div class="body-2 text-center text--secondary font-weight-bold">
+						Nº de Sesiones
+					</div>
+					<div
+						v-if="plan"
+						class="headline text-center text--secondary font-weight-bold my-1"
+					>
+						{{ plan.session.length }}/{{ plan.totalSessions }}
+					</div>
+					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
+						0/0
+					</div>
+					<div class="body-2 text-center text--secondary font-weight-bold mt-16">
+						Próxima sesión
+					</div>
+					<div
+						v-if="nextSesion"
+						class="headline text-center text--secondary font-weight-bold my-1"
+					>
+						{{ nextSesion }}
+					</div>
+					<v-btn v-else text @click="acquire">
+						<span class="body-1 primary--text font-weight-bold">Adquirir</span>
+					</v-btn>
+				</v-col>
 			</v-row>
+			<v-dialog
+				v-if="dialogSearchNow"
+				v-model="dialogSearchNow"
+				max-width="300"
+				class="rounded-xl"
+				transition="dialog-top-transition"
+			>
+				<v-card rounded="xl">
+					<v-card-text class="text-center primary--text text-h5 py-3">
+						<div class="body-1 font-weight-bold text-center">
+							Comienza a hablar con nuestros psicólogos
+						</div>
+					</v-card-text>
+					<v-card-text class="text-center">
+						<small class="py-2 text--secondary">
+							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
+							tu vida hoy
+						</small>
+					</v-card-text>
+					<v-card-text class="text-center">
+						<v-btn color="primary" rounded to="/psicologos">Buscar ahora</v-btn>
+					</v-card-text>
+				</v-card>
+			</v-dialog>
+			<v-dialog
+				v-if="dialogHasSessions"
+				v-model="dialogHasSessions"
+				max-width="600"
+				class="rounded-xl"
+				transition="dialog-top-transition"
+			>
+				<v-card rounded="xl">
+					<v-card-text class="d-flex text-center primary white--text pt-2 pb-0">
+						<div class="body-1 font-weight-bold text-center" style="flex: 1">
+							Agendar
+						</div>
+						<v-btn style="flex: 0" icon @click="() => (dialogHasSessions = false)">
+							<icon :icon="mdiClose" color="white" />
+						</v-btn>
+					</v-card-text>
+					<v-card-text>
+						<v-row>
+							<!-- <v-col class="font-weight-medium pt-6 pb-0" cols="12">
+								Tipo de evento
+							</v-col> -->
+							<v-col cols="12">
+								<!-- <v-select
+									v-model="typeSession"
+									solo
+									flat
+									:items="[
+										'Sesión online',
+										'Sesión presencial',
+										'Compromiso privado',
+									]"
+									dense
+									hide-details
+									label="Seleccione"
+								></v-select> -->
+								<v-text-field
+									readonly
+									disabled
+									:value="`Sesión ${plan.session.length + 1}/${
+										plan.totalSessions
+									}`"
+									hide-details="auto"
+									type="text"
+									class="mt-2"
+									dense
+									outlined
+								>
+								</v-text-field>
+							</v-col>
+							<v-col>
+								<calendar
+									:id-psy="plan.psychologist"
+									:set-date="e => newSession(e)"
+									title-button="Agendar"
+									:loading-btn="loadingSession"
+								/>
+							</v-col>
+						</v-row>
+					</v-card-text>
+				</v-card>
+			</v-dialog>
+			<v-dialog
+				v-if="dialogWithoutSessions && !overlay"
+				v-model="dialogWithoutSessions"
+				:max-width="maxWidth"
+				transition="dialog-top-transition"
+			>
+				<v-card rounded="xl" min-height="200">
+					<v-card-text class="d-flex text-center primary white--text text-h5 py-3">
+						<v-btn v-if="step != 0" style="flex: 0" icon @click="() => (step -= 1)">
+							<icon :icon="mdiChevronLeft" x-large color="white" />
+						</v-btn>
+						<div style="flex: 1" class="body-1 font-weight-bold text-center">
+							Agenda la hora y el día de tu consulta
+						</div>
+					</v-card-text>
+					<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
+						<calendar
+							v-if="psychologist"
+							:id-psy="psychologist._id"
+							:set-date="e => setSchedule(e)"
+							title-button="Continuar"
+						/>
+					</v-card-text>
+					<v-card-text v-if="step == 1">
+						<select-plan
+							v-if="psychologist"
+							:set-plan="setNewPlan"
+							:psychologist="psychologist"
+						/>
+					</v-card-text>
+					<v-card-text v-if="step == 2">
+						<resume-plan
+							v-if="psychologist"
+							:close="() => (dialogWithoutSessions = false)"
+							:go-back="() => (step = 1)"
+							:plan="newPlan"
+							:psy="psychologist"
+							:event="newEvent"
+						/>
+					</v-card-text>
+				</v-card>
+			</v-dialog>
 		</v-container>
 		<v-overlay :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -448,7 +608,7 @@
 
 <script>
 import moment from 'moment';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
 import {
@@ -458,10 +618,7 @@ import {
 	mdiClockOutline,
 	mdiClose,
 	mdiMenuDown,
-	mdiPencil,
 	mdiPlus,
-	mdiTrashCan,
-	mdiCalendar,
 } from '@mdi/js';
 
 export default {
@@ -469,21 +626,19 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
+		SelectPlan: () => import('~/components/plan/SelectPlan'),
+		ResumePlan: () => import('~/components/plan/ResumePlan'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		step: 0,
 		overlay: false,
 		form: null,
 		loadingCreatedUser: false,
-		menu: false,
-		date: null,
-		typeSession: '',
-		mdiCalendar,
+		typeSession: 'Sesión online',
 		mdiCheck,
-		mdiPencil,
-		mdiTrashCan,
 		mdiPlus,
 		mdiClose,
 		mdiChevronLeft,
@@ -520,9 +675,16 @@ export default {
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
-		idPsychologist: '',
 		dialogAppointment: false,
 		dialogNewUser: false,
+		idClient: null,
+		dialogSearchNow: false,
+		dialogHasSessions: false,
+		dialogWithoutSessions: false,
+		newEvent: null,
+		psychologist: null,
+		loadingSession: false,
+		loagindReschedule: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -549,9 +711,51 @@ export default {
 			'22:00',
 			'23:00',
 		],
-		idClient: null,
 	}),
 	computed: {
+		// Filtramos que sea de usuarios con pagos success y no hayan expirado
+		plan() {
+			if (!this.$auth.$state.user) return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					idSessions: item._id,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
+		},
+		nextSesion() {
+			// Si no hay plan
+			if (!this.plan) return '';
+			// Obtenemos unarray solamente con las fechas de sesiones del plan
+			const dates = this.sessions.flatMap(session => session.date);
+			// Encontramos la session siguiente
+			const date = dates.find(item =>
+				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+			);
+			if (date) {
+				return moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
+			}
+			return '';
+		},
+		maxWidth() {
+			if (this.step === 0) return '700';
+			if (this.step === 1) return '900';
+			else return '800';
+		},
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -565,7 +769,10 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ sessions: 'Psychologist/sessions', clients: 'Psychologist/clients' }),
+		...mapGetters({
+			sessions: 'Psychologist/sessions',
+			clients: 'Psychologist/clients',
+		}),
 	},
 	watch: {
 		clients() {
@@ -595,19 +802,20 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			if (this.$auth.$state.user.role === 'user' && this.$auth.$state.user.sessions) {
-				this.idPsychologist = this.$auth.$state.user.sessions.psychologist;
+			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
-					idPsychologist: this.idPsychologist,
-					idUser: this.$auth.$state.user.sessions.user,
+					idPsychologist: this.plan.psychologist,
+					idUser: this.plan.user,
 				});
 				this.events = this.sessions;
 			}
-			if (this.$auth.$state.user.role === 'psychologist' && this.$auth.$state.user.sessions) {
-				this.idPsychologist = this.$auth.$state.user.psychologist;
-				await this.getClients(this.idPsychologist);
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.sessions.length
+			) {
+				await this.getClients(this.$auth.$state.user.psychologist);
 				await this.getSessions({
-					idPsychologist: this.idPsychologist,
+					idPsychologist: this.$auth.$state.user.psychologist,
 				});
 				this.events = this.sessions;
 			}
@@ -635,26 +843,27 @@ export default {
 			this.$v.$reset();
 		},
 		async reschedule(item) {
+			this.loagindReschedule = true;
 			const newDate = { date: item.date, hour: item.start };
-			const response = await this.setReschedule({
+			await this.setReschedule({
 				sessionsId: this.selectedEvent.sessionsId,
 				id: this.selectedEvent._id,
 				newDate,
 			});
-			this.events = this.events.map(item => {
-				if (item._id !== response._id) {
-					// This isn't the item we care about - keep it as-is
-					return item;
-				}
 
-				// Otherwise, this is the one we want - return an updated value
-				return {
-					...item,
-					...response,
-				};
-			});
+			this.events = this.sessions;
 			this.event = null;
+			this.selectedOpen = false;
+			this.loagindReschedule = false;
 			this.dialog = false;
+		},
+		setSchedule(item) {
+			this.newEvent = item;
+			this.step = 1;
+		},
+		setNewPlan(newPlan) {
+			this.newPlan = newPlan;
+			this.step = 2;
 		},
 		openDialog(item) {
 			this.event = item;
@@ -664,9 +873,31 @@ export default {
 			this.focus = date;
 			this.type = 'day';
 		},
-		addAppointment({ date }) {
-			this.date = date;
-			this.dialogAppointment = true;
+		async addAppointment({ date }) {
+			if (this.$auth.user.role === 'user') {
+				// Sin psicologo - sin sesiones
+				this.dialogSearchNow = !this.plan || (this.plan && !this.plan.psychologist);
+
+				// con psicologo - con sesiones por agendar
+				this.dialogHasSessions =
+					this.plan &&
+					this.plan.psychologist &&
+					this.plan.session.length < this.plan.totalSessions;
+				// con psicologo - sin sesiones por agendar
+				if (
+					this.plan &&
+					this.plan.psychologist &&
+					this.plan.totalSessions <= this.plan.session.length
+				) {
+					this.overlay = true;
+					this.psychologist = await this.getPsychologist(this.plan.psychologist);
+					this.overlay = false;
+					this.dialogWithoutSessions = true;
+				}
+			} else if (this.$auth.user.role === 'psychologist') {
+				this.date = date;
+				this.dialogAppointment = true;
+			}
 		},
 		setToday() {
 			this.focus = moment().format('YYYY-MM-DD');
@@ -715,9 +946,9 @@ export default {
 			}
 		},
 		setSubtitle(date) {
-			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
+			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
 				.add(60, 'minutes')
-				.format('hh:mm')}`;
+				.format('HH:mm')}`;
 		},
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
@@ -728,12 +959,39 @@ export default {
 			this.idClient = null;
 			this.goBack();
 		},
+		async newSession(event) {
+			this.loadingSession = true;
+			const payload = {
+				date: `${event.date} ${event.start}`,
+				sessionNumber: this.plan.session.length + 1,
+				remainingSessions: (this.plan.remainingSessions -= 1),
+			};
+			const response = await this.addSession({
+				id: this.plan.idSessions,
+				idPlan: this.plan._id,
+				payload,
+			});
+			await this.$auth.fetchUser();
+			this.events = response;
+			this.loadingSession = false;
+			this.dialogHasSessions = false;
+		},
+		acquire() {
+			if (this.plan && this.plan.psychologist) {
+				this.addAppointment({ date: null });
+			} else this.$router.push({ name: 'psicologos' });
+		},
+		...mapMutations({
+			setSessions: 'Psychologist/setSessions',
+		}),
 		...mapActions({
-			updateSession: 'Psychologist/updateSession',
-			getSessions: 'Psychologist/getSessions',
-			setReschedule: 'Psychologist/setReschedule',
+			addSession: 'Psychologist/addSession',
 			getClients: 'Psychologist/getClients',
+			getPsychologist: 'Psychologist/getPsychologist',
+			getSessions: 'Psychologist/getSessions',
 			registerUser: 'User/registerUser',
+			setReschedule: 'Psychologist/setReschedule',
+			updateSession: 'Psychologist/updateSession',
 		}),
 	},
 	validations: {
@@ -749,9 +1007,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped>
-.heightCalendar {
-	height: calc(100vh - 110px);
-}
-</style>

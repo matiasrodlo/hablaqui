@@ -61,9 +61,6 @@
 							<v-btn icon :to="`chat?client=${item._id}`">
 								<icon :icon="mdiChat" small color="primary"></icon>
 							</v-btn>
-							<v-btn icon>
-								<icon :icon="mdiClose" small color="error"></icon>
-							</v-btn>
 						</div>
 					</template>
 				</v-data-table>
@@ -247,7 +244,7 @@ export default {
 				value: 'name',
 			},
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			{ text: 'Estado', value: 'status', sortable: false },
+			// { text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,

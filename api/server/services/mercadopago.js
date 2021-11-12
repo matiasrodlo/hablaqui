@@ -37,23 +37,8 @@ const createPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
-
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
 };
 const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
@@ -74,23 +59,8 @@ const createPsychologistPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
-
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
 };
 
 const successPay = async params => {
@@ -101,9 +71,8 @@ const successPay = async params => {
 
 	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
 	const originalDate = sessionData.date.split(' ');
-	const splitted = originalDate.split(' ');
-	const date = splitted[0].split('/');
-	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${splitted[1]}:00-03:00`;
+	const date = originalDate[0].split('/');
+	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
 	// Email scheduling for appointment reminder for the user
 	await email.create({
 		mailgunId: undefined,
@@ -138,6 +107,7 @@ const successPay = async params => {
 	return okResponse('sesion actualizada');
 };
 
+
 const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
 	const { period } = query;
@@ -160,10 +130,55 @@ const psychologistPay = async (params, query) => {
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,
-	};
-	await psychologistService.updatePlan(psychologistId, newPlan);
-	return okResponse('plan actualizado');
+
+const customSessionPay = async params => {
+	const { userId, psyId, planId } = params;
+
+	const updatePlan = await Sessions.findOneAndUpdate(
+		{
+			'plan._id': planId,
+			user: userId,
+			psychologist: psyId,
+		},
+		{
+			$set: { 'plan.$.payment': 'success' },
+		},
+		{ new: true }
+	);
+	return okResponse('plan actualizado', { body: updatePlan });
 };
+
+const createCustomSessionPreference = async (userId, psyId, planId) => {
+	let foundSession = await Sessions.findOne({
+		user: userId,
+		psychologist: psyId,
+	});
+
+	let foundPlan = foundSession.plan.filter(e => e._id == planId);
+
+	let newPreference = {
+		items: [
+			{
+				title: 'Sesion personalizada',
+				description: 'Sesion personalizada creada por psicologo',
+				currency_id: 'CLP',
+				unit_price: foundPlan.totalPrice,
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${api_url}api/v1/mercadopago/custom-session-pay/${userId}/${psyId}/${planId}`,
+			failure: `${landing_url}/pago/failure-pay`,
+			pending: `${landing_url}/pago/pending-pay`,
+		},
+		auto_return: 'approved',
+
+	};
+
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
+};
+
 
 const createRecruitedPreference = async (body, res) => {
 	let newPreference = {
@@ -236,6 +251,8 @@ const mercadopagoService = {
 	successPay,
 	psychologistPay,
 	recruitedPay,
+	createCustomSessionPreference,
+	customSessionPay,
 };
 
 export default Object.freeze(mercadopagoService);

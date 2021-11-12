@@ -1,4 +1,5 @@
 import moment from 'moment';
+import updateObjectInArray from '@/plugins/updateArray';
 
 export default {
 	setPsychologists(state, value) {
@@ -6,6 +7,12 @@ export default {
 	},
 	setSessions(state, value) {
 		state.sessions = value;
+	},
+	setOneSessions(state, { payload, id }) {
+		state.sessions = updateObjectInArray(
+			state.sessions,
+			payload.find(session => session._id === id)
+		);
 	},
 	setSessionsFormatted(state, sessions) {
 		moment.locale('es');

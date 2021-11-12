@@ -76,6 +76,31 @@ const mercadopagoController = {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
 	},
+	async createCustomSessionPreference(req, res) {
+		try {
+			const { userId, psyId, planId } = req.params;
+			const {
+				data,
+				code,
+			} = await mercadopagoService.createCustomSessionPreference(
+				userId,
+				psyId,
+				planId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error procesando el servicio');
+		}
+	},
+	async customSessionPay(req, res) {
+		try {
+			const { params } = req;
+			await mercadopagoService.customSessionPay(params);
+			return res.redirect(`${landing_url}/psicologos`);
+		} catch (e) {
+			errorCallback(e, res, 'Error al aprobar pago.');
+		}
+	},
 };
 
 export default Object.freeze(mercadopagoController);

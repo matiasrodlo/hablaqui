@@ -302,7 +302,6 @@
 									profesional. Explica con más detalle el objetivo de tu línea de
 									trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
 									ambiente acogedor con las palabras."
-										:rules="rules"
 										counter
 									></v-textarea>
 								</v-col>
@@ -379,7 +378,6 @@
                                             que trabajas, y cómo puedes ayudar a tu consultante."
 										type="text"
 										counter
-										:rules="rules"
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
@@ -1084,11 +1082,6 @@ export default {
 			comunasRegiones: [],
 			timezone: [],
 			loadingStep: false,
-			rules: [
-				v => v.length >= 140 || 'Minimo 140 caracteres',
-				v => v.length <= 300 || 'Maximo 300 caracteres',
-				value => !!value || 'Este campo es requerido.',
-			],
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
 			form: {
 				avgPatients: '',
@@ -1188,9 +1181,7 @@ export default {
 					this.form.birthDate &&
 					this.form.region &&
 					this.form.comuna &&
-					this.form.personalDescription &&
-					this.form.personalDescription.length <= 300 &&
-					this.form.personalDescription.length >= 100
+					this.form.personalDescription
 				);
 			}
 			// validamos el step 2

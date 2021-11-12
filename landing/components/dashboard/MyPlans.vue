@@ -1,18 +1,14 @@
 <template>
 	<div>
-		<template v-if="$auth.$state.user.sessions">
+		<template v-if="plans.length">
 			<v-slide-group
 				v-if="$vuetify.breakpoint.mdAndUp"
-				v-model="plans"
+				v-model="slider"
 				class="pa-4"
 				center-active
 				show-arrows
 			>
-				<v-slide-item
-					v-for="(item, n) in $auth.$state.user.sessions.plan"
-					:key="n"
-					v-slot="{ toggle }"
-				>
+				<v-slide-item v-for="(item, n) in plans" :key="n" v-slot="{ toggle }">
 					<v-card class="ma-4" height="220" width="400" @click="toggle">
 						<v-card-title
 							class="d-flex justify-space-between body-1 font-weight-medium"
@@ -52,13 +48,7 @@
 				</v-slide-item>
 			</v-slide-group>
 			<template v-else>
-				<v-card
-					v-for="(item, n) in $auth.$state.user.sessions.plan"
-					:key="n"
-					class="my-4"
-					height="220"
-					width="100%"
-				>
+				<v-card v-for="(item, n) in plans" :key="n" class="my-4" height="220" width="100%">
 					<v-card-title class="d-flex justify-space-between body-1 font-weight-medium">
 						<div>
 							<div>
@@ -119,8 +109,24 @@ import moment from 'moment';
 export default {
 	data() {
 		return {
-			plans: null,
+			slider: null,
 		};
+	},
+	computed: {
+		// Filtramos que sea de usuarios con pagos success y no hayan expirado
+		plans() {
+			if (!this.$auth.$state.user) return [];
+			// Obtenemos un array con todo los planes solamente
+			return this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+		},
 	},
 	methods: {
 		status(item) {
