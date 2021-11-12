@@ -35,23 +35,8 @@ const createPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
-
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
 };
 const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
@@ -74,23 +59,8 @@ const createPsychologistPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
-
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
 };
 
 const successPay = async params => {
@@ -180,30 +150,14 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 		auto_return: 'approved',
 	};
 
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
-
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const { body } = await mercadopago.preferences.create(newPreference);
+	return okResponse('preference created', { body });
 };
 
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
 	successPay,
-	psychologistPay,
 	createCustomSessionPreference,
 	customSessionPay,
 };
