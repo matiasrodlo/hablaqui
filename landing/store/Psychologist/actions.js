@@ -119,7 +119,7 @@ export default {
 				data: { newDate },
 			});
 			snackBarSuccess('Sesión reprogramada')(commit);
-			commit('setSessions', data.sessions);
+			commit('setOneSessions', { payload: data.sessions, id });
 			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);

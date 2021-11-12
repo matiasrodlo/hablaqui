@@ -185,6 +185,7 @@
 												:id-psy="selectedEvent.idPsychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
+												:loading-btn="loagindReschedule"
 											/>
 										</v-card-text>
 									</v-card>
@@ -694,6 +695,7 @@ export default {
 		newEvent: null,
 		psychologist: null,
 		loadingSession: false,
+		loagindReschedule: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -852,14 +854,18 @@ export default {
 			this.$v.$reset();
 		},
 		async reschedule(item) {
+			this.loagindReschedule = true;
 			const newDate = { date: item.date, hour: item.start };
-			const response = await this.setReschedule({
+			await this.setReschedule({
 				sessionsId: this.selectedEvent.sessionsId,
 				id: this.selectedEvent._id,
 				newDate,
 			});
-			this.events = response;
+
+			this.events = this.sessions;
 			this.event = null;
+			this.selectedOpen = false;
+			this.loagindReschedule = true;
 			this.dialog = false;
 		},
 		setSchedule(item) {
