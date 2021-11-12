@@ -21,7 +21,6 @@ mercadopagoRouter.post(
 	mercadopagoController.createPreference
 );
 
-
 /**
  * @description: Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
  */
@@ -67,7 +66,7 @@ mercadopagoRouter.get(
 	mercadopagoController.recruitedPay
 );
 
-
+/*
  * @description: Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
  */
 mercadopagoRouter.get(
