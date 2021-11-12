@@ -14,7 +14,9 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{ plan.session.length }}/{{ plan.totalSessions }}
+									{{ plan.totalSessions - plan.remainingSessions }}/{{
+										plan.totalSessions
+									}}
 								</div>
 								<div
 									v-else
@@ -453,7 +455,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ plan.session.length }}/{{ plan.totalSessions }}
+						{{ plan.totalSessions - plan.remainingSessions }}/{{ plan.totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
