@@ -37,10 +37,9 @@ const createPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	const { responseBody } = await mercadopago.preferences.create(
-		newPreference
-	);
-	return okResponse('preference created', { responseBody });
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	return okResponse('preference created', { resBody });
 };
 const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
@@ -61,10 +60,9 @@ const createPsychologistPreference = async (body, res) => {
 		auto_return: 'approved',
 	};
 
-	const { responseBody } = await mercadopago.preferences.create(
-		newPreference
-	);
-	return okResponse('preference created', { responseBody });
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	return okResponse('preference created', { resBody });
 };
 
 const successPay = async params => {
@@ -135,7 +133,6 @@ const psychologistPay = async (params, query) => {
 		subscriptionPeriod: period,
 	};
 
-	// Push newPlan to myPlans on Psychologist
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
 		{ $push: { myPlans: newPlan } },
@@ -168,14 +165,14 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 	});
 
 	let foundPlan = foundSession.plan.filter(e => e._id == planId);
-
+	logInfo(foundPlan[0].totalPrice);
 	let newPreference = {
 		items: [
 			{
 				title: 'Sesion personalizada',
 				description: 'Sesion personalizada creada por psicologo',
 				currency_id: 'CLP',
-				unit_price: foundPlan.totalPrice,
+				unit_price: foundPlan[0].totalPrice,
 				quantity: 1,
 			},
 		],
@@ -187,10 +184,9 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 		auto_return: 'approved',
 	};
 
-	const { responseBody } = await mercadopago.preferences.create(
-		newPreference
-	);
-	return okResponse('preference created', { responseBody });
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	return okResponse('preference created', { resBody });
 };
 
 const createRecruitedPreference = async (body, res) => {
@@ -211,23 +207,10 @@ const createRecruitedPreference = async (body, res) => {
 		},
 		auto_return: 'approved',
 	};
-	let bodyId = '';
-	let error = '';
-	await mercadopago.preferences
-		.create(newPreference)
-		.then(res => {
-			bodyId = res.body;
-		})
-		.catch(e => {
-			error = e;
-		});
 
-	if (error != '') {
-		return errorCallback(error, res, 'error creando la preferencia');
-	}
-	if (bodyId != '') return okResponse('preference created', { body: bodyId });
-
-	return conflictResponse('Ha ocurrido un error');
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	return okResponse('preference created', { resBody });
 };
 
 const recruitedPay = async (params, query) => {
