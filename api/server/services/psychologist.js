@@ -789,15 +789,15 @@ const customNewSession = async (user, payload) => {
 	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
 	if (payload.price !== 0) {
 		const currentAPIURL = process.env.API_ABSOLUTE;
-		const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${payload.user ||
-			user.psychologist}/${user.psychologist}/${
+		const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${
+			payload.user
+		}/${user.psychologist}/${
 			updatedSession.plan[updatedSession.plan.length - 1]._id
 		}`;
-
-		const user = await User.findById(payload.user);
+		const consultant = await User.findById(payload.user);
 		const psychologist = await Psychologist.findById(user.psychologist);
 		await mailService.sendCustomSessionPaymentURL(
-			user,
+			consultant,
 			psychologist,
 			paymentUrl
 		);
