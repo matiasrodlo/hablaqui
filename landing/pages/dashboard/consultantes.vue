@@ -247,7 +247,7 @@ export default {
 				value: 'name',
 			},
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			{ text: 'Estado', value: 'status', sortable: false },
+			// { text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,
