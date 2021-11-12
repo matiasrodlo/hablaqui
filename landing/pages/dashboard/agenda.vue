@@ -951,9 +951,9 @@ export default {
 			}
 		},
 		setSubtitle(date) {
-			return `Desde las ${moment(date).format('hh:mm')} hasta las ${moment(date)
+			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
 				.add(60, 'minutes')
-				.format('hh:mm')}`;
+				.format('HH:mm')}`;
 		},
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
