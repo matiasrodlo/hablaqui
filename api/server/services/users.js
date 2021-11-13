@@ -216,7 +216,7 @@ const usersService = {
 
 		const roomId = require('crypto')
 			.createHash('md5')
-			.update(`${payload.user}${payload.psychologist}`)
+			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
 		const newPlan = {
