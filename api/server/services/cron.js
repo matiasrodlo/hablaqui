@@ -9,6 +9,8 @@ import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
+const sgClient = require('@sendgrid/client');
+sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
  * @description Checks wheter the email is schedulable (3 days or less before the appointment)
@@ -29,14 +31,29 @@ function isSchedulableEmail(date) {
  * @returns an object with the payload
  */
 
-function generatePayload(date, mailId) {
+function generatePayload(date, batch) {
 	return {
 		wasScheduled: true,
 		scheduledAt: moment(date)
 			.subtract(1, 'hour')
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-		mailgunId: mailId,
+		batchId: batch,
 	};
+}
+
+async function getBatchId() {
+	const result = await sgClient
+		.request({
+			method: 'POST',
+			url: '/v3/mail/batch',
+		})
+		.then(([response, body]) => {
+			if (response.statusCode === 201) {
+				return body;
+			}
+		});
+	let { batch_id } = result;
+	return batch_id;
 }
 
 const cronService = {
@@ -60,23 +77,25 @@ const cronService = {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
 					try {
-						let emailSent;
+						let batch = await getBatchId();
 						if (emailInfo.type === 'reminder-user') {
-							emailSent = await mailService.sendReminderUser(
+							await mailService.sendReminderUser(
 								user,
 								psy,
-								emailInfo.sessionDate
+								emailInfo.sessionDate,
+								batch
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
-							emailSent = await mailService.sendReminderPsy(
+							await mailService.sendReminderPsy(
 								user,
 								psy,
-								emailInfo.sessionDate
+								emailInfo.sessionDate,
+								batch
 							);
 						}
 						const updatePayload = generatePayload(
 							sessionDate,
-							emailSent.id
+							batch
 						);
 						await email.findByIdAndUpdate(
 							emailInfo._id,

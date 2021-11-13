@@ -16,11 +16,14 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: '¡Te damos la bienvenida a Hablaquí!',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.cl',
-			subject: '¡Bienvenido/a a Hablaquí!',
-			template: 'welcome-new-user',
+			templateId: 'd-47d8674ebc0841b381cf68fa42c03b13',
 			dynamicTemplateData: {
 				first_name: name,
+			},
+			asm: {
+				group_id: '16321',
 			},
 		};
 		await sgMail.send(dataPayload, function(error, body) {
@@ -41,11 +44,14 @@ const mailService = {
 			from:
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: '¡Te damos la bienvenida a Hablaquí!',
 			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.cl',
-			subject: '¡Bienvenido/a a Hablaquí!',
-			template: 'welcome-new-psy',
+			templateId: 'd-6db5e38488fc42769fca7398be2930ae',
 			dynamicTemplateData: {
 				first_name: name,
+			},
+			asm: {
+				group_id: '16321',
 			},
 		};
 		await sgMail.send(dataPayload, function(error, body) {
@@ -66,11 +72,14 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <recuperacion@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: 'Recupera tu contraseña de Hablaquí',
 			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.cl',
-			subject: 'Recuperación de contraseña de Hablaquí!',
-			template: 'reset-password',
+			templateId: 'd-f025d6b8c63a4567897817ecd8f31aee',
 			dynamicTemplateData: {
 				url: url,
+			},
+			asm: {
+				group_id: '16321',
 			},
 		};
 		await sgMail.send(dataPayload, function(error, body) {
@@ -92,16 +101,18 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: '¡Te han invitado a Hablaquí!',
 			replyto: 'Hablaquí <soporte-invitaciones@mail.hablaqui.cl',
-			subject:
-				'¡Bienvenido/a! Fuiste invitado por tu psicólogo a Hablaquí',
-			template: 'welcome-user-by-psy',
+			templateId: 'd-84ac6d244f044322916649f448ebcecd',
 			dynamicTemplateData: {
 				name: name,
 				email: email,
 				password: pass,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
+			},
+			asm: {
+				group_id: '16321',
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -120,14 +131,14 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date) {
+	async sendReminderUser(user, psy, date, batch) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
 			subject: 'Tu sesión en Hablaquí está por comenzar',
-			template: 'reminder-users',
+			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
+			templateId: 'd-9a0771dd50e44569b8bb8d5bbce9a886',
 			dynamicTemplateData: {
 				first_name: name,
 				psy_first_name: psy.name,
@@ -135,9 +146,13 @@ const mailService = {
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
 			},
+			asm: {
+				group_id: '16321',
+			},
 			sendAt: moment(date)
 				.subtract(1, 'hour')
 				.unix(),
+			batchId: batch,
 		};
 
 		return new Promise((resolve, reject) => {
@@ -157,14 +172,14 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date) {
+	async sendReminderPsy(user, psy, date, batch) {
 		const { email, name, lastName } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
 			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
-			template: 'reminder-psy',
+			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
+			templateId: 'd-4ae158cf069a4f9abd6aae9784e1a255',
 			dynamicTemplateData: {
 				user_first_name: name,
 				user_last_name: lastName,
@@ -173,9 +188,13 @@ const mailService = {
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
 			},
+			asm: {
+				group_id: '16321',
+			},
 			sendAt: moment(date)
 				.subtract(1, 'hour')
 				.unix(),
+			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
 			sgMail.send(dataPayload, function(error, body) {
@@ -197,9 +216,12 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: 'Tu sesión en Hablaquí ha sido agendada',
 			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.cl',
-			subject: 'Agendaste una sesión en Hablaquí',
-			template: 'appointment-confirmation-user',
+			templateId: 'd-4b0e727fd03144aa819e7814e39e8504',
+			asm: {
+				group_id: '16321',
+			},
 			dynamicTemplateData: {
 				first_name: name,
 				date: moment(date).format('DD/MM/YYYY'),
@@ -229,9 +251,12 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: `${nameUser} ${lastNameUser} ha agendado una sesión contigo en Hablaquí`,
 			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.cl',
-			subject: 'Te han reservado una sesión en Hablaquí',
-			template: 'appointment-confirmation-psy',
+			templateId: 'd-d7fbf8c891a84343b8bcaab38cbc2bab',
+			asm: {
+				group_id: '16321',
+			},
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
@@ -259,9 +284,12 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reclutamiento@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
+			subject: '¡Gracias por postular a Hablaquí!',
 			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.cl',
-			subject: 'Recibimos tu postulación a Hablaquí',
-			template: 'recruitment-confirmation',
+			templateId: 'd-d40470d41a3842ac9108bcdb6ac70022',
+			asm: {
+				group_id: '16321',
+			},
 			dynamicTemplateData: {
 				first_name: name,
 			},
@@ -281,16 +309,20 @@ const mailService = {
 	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
 	 */
 	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
-		const { name, lastName } = recruitedPsy;
+		const { name, lastName, email } = recruitedPsy;
 		const dataPayload = {
 			from: 'Hablaquí <internal@mail.hablaqui.cl>',
 			to: 'direccion@hablaqui.com',
+			subject: '[Internal] ¡Hay una nueva postulación para Hablaquí!',
 			replyto: 'Hablaquí <noreply@mail.hablaqui.cl',
-			subject: '[Internal] Hay una nueva postulación a Hablaquí',
-			template: 'internal-recruitment-profile-received',
+			template: 'd-8ee906349e144427ad0103a31507541a',
+			asm: {
+				group_id: '16321',
+			},
 			dynamicTemplateData: {
 				psy_first_name: name,
 				psy_last_name: lastName,
+				psy_email: email,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -307,9 +339,12 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
+			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
 			replyto: 'Hablaquí <soporte-pagos@mail.hablaqui.cl',
-			subject: 'Completa el pago de tu sesión en Hablaquí',
-			template: 'custom-session-payment-email',
+			template: 'd-b334d5a385c84a378b41d64395d96ae7',
+			asm: {
+				group_id: '16321',
+			},
 			dynamicTemplateData: {
 				user_name: user.name,
 				psy_name: psychologist.name,
