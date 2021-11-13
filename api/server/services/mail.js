@@ -17,7 +17,7 @@ const mailService = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: '¡Te damos la bienvenida a Hablaquí!',
-			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-47d8674ebc0841b381cf68fa42c03b13',
 			dynamicTemplateData: {
 				first_name: name,
@@ -45,7 +45,7 @@ const mailService = {
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: '¡Te damos la bienvenida a Hablaquí!',
-			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-6db5e38488fc42769fca7398be2930ae',
 			dynamicTemplateData: {
 				first_name: name,
@@ -73,7 +73,7 @@ const mailService = {
 			from: 'Hablaquí <recuperacion@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: 'Recupera tu contraseña de Hablaquí',
-			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-f025d6b8c63a4567897817ecd8f31aee',
 			dynamicTemplateData: {
 				url: url,
@@ -102,7 +102,7 @@ const mailService = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: '¡Te han invitado a Hablaquí!',
-			replyto: 'Hablaquí <soporte-invitaciones@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-84ac6d244f044322916649f448ebcecd',
 			dynamicTemplateData: {
 				name: name,
@@ -137,7 +137,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: 'Tu sesión en Hablaquí está por comenzar',
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-9a0771dd50e44569b8bb8d5bbce9a886',
 			dynamicTemplateData: {
 				first_name: name,
@@ -178,7 +178,7 @@ const mailService = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-4ae158cf069a4f9abd6aae9784e1a255',
 			dynamicTemplateData: {
 				user_first_name: name,
@@ -217,7 +217,7 @@ const mailService = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: 'Tu sesión en Hablaquí ha sido agendada',
-			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-4b0e727fd03144aa819e7814e39e8504',
 			asm: {
 				group_id: '16321',
@@ -252,7 +252,7 @@ const mailService = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: `${nameUser} ${lastNameUser} ha agendado una sesión contigo en Hablaquí`,
-			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-d7fbf8c891a84343b8bcaab38cbc2bab',
 			asm: {
 				group_id: '16321',
@@ -285,7 +285,7 @@ const mailService = {
 			from: 'Hablaquí <reclutamiento@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: '¡Gracias por postular a Hablaquí!',
-			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			templateId: 'd-d40470d41a3842ac9108bcdb6ac70022',
 			asm: {
 				group_id: '16321',
@@ -314,7 +314,7 @@ const mailService = {
 			from: 'Hablaquí <internal@mail.hablaqui.cl>',
 			to: 'direccion@hablaqui.com',
 			subject: '[Internal] ¡Hay una nueva postulación para Hablaquí!',
-			replyto: 'Hablaquí <noreply@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			template: 'd-8ee906349e144427ad0103a31507541a',
 			asm: {
 				group_id: '16321',
@@ -340,7 +340,7 @@ const mailService = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
 			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
-			replyto: 'Hablaquí <soporte-pagos@mail.hablaqui.cl',
+			replyto: 'Hablaquí <soporte@hablaqui.cl',
 			template: 'd-b334d5a385c84a378b41d64395d96ae7',
 			asm: {
 				group_id: '16321',
