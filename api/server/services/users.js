@@ -11,6 +11,9 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
+import Sessions from '../models/sessions';
+import moment from 'moment';
+import { room } from '../config/dotenv';
 
 const usersService = {
 	async getProfile(id) {
@@ -210,6 +213,32 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
+
+		const roomId = require('crypto')
+			.createHash('md5')
+			.update(`${payload.user}${payload.psychologist}`)
+			.digest('hex');
+
+		const newPlan = {
+			title: 'Plan inicial',
+			period: 'Plan inicial',
+			totalPrice: 0,
+			sessionPrice: 0,
+			payment: 'success',
+			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
+			invitedByPsychologist: true,
+			usedCoupon: '',
+			totalSessions: 999,
+			remainingSessions: 999,
+			session: [],
+		};
+
+		await Sessions.create({
+			...newPlan,
+			user: createdUser._id,
+			psychologist: user._id,
+			roomsUrl: `${room}room/${roomId}`,
+		});
 
 		if (process.env.NODE_ENV === 'development')
 			logInfo(

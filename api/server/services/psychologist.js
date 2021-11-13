@@ -614,9 +614,21 @@ const checkPlanTask = async () => {
 
 const getClients = async psychologist => {
 	const sessions = await Sessions.find({
-		psychologist,
+		psychologist: psychologist,
 	}).populate('user');
 
+	// logInfo(
+	// 	sessions.map(item => ({
+	// 		_id: item.user._id,
+	// 		avatar: item.user.avatar,
+	// 		email: item.user.email,
+	// 		lastName: item.user.lastName,
+	// 		name: item.user.name,
+	// 		role: item.user.role,
+	// 		roomsUrl: item.roomsUrl,
+	// 		lastSession: getLastSession(item) || 'N/A',
+	// 	}))
+	// );
 	return okResponse('Usuarios encontrados', {
 		users: sessions.map(item => ({
 			_id: item.user._id,
@@ -639,7 +651,9 @@ const getLastSession = item => {
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
-		.find(sessionDate => moment(sessionDate).isSameOrBefore(moment()));
+		.find(sessionDate =>
+			moment(sessionDate, 'MM/DD/YYYY HH:mm').isSameOrBefore(moment())
+		);
 };
 
 const searchClients = async search => {
