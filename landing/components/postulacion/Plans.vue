@@ -162,8 +162,8 @@ export default {
 				quantity: 1,
 				psychologist: this.$auth.$state.user.psychologist,
 			};
-			const response = await this.mercadopagoPsychologistPay(preference);
-			window.location.href = response.body.init_point;
+			const { init_point } = await this.mercadopagoPay(mercadopagoPayload);
+			window.location.href = init_point;
 		},
 		...mapActions({
 			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',

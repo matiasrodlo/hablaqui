@@ -175,8 +175,8 @@ export default {
 					quantity: 1,
 					plan: createdPlan.plan._id,
 				};
-				const preferenceData = await this.mercadopagoPay(mercadopagoPayload);
-				window.location.href = preferenceData.body.init_point;
+				const { init_point } = await this.mercadopagoPay(mercadopagoPayload);
+				window.location.href = init_point;
 			}
 			this.loading = false;
 		},

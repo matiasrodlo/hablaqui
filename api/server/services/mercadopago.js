@@ -39,7 +39,7 @@ const createPreference = async (body, res) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', { resBody });
+	return okResponse('preference created', resBody);
 };
 const createPsychologistPreference = async (body, res) => {
 	let newPreference = {
@@ -62,7 +62,7 @@ const createPsychologistPreference = async (body, res) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', { resBody });
+	return okResponse('preference created', resBody);
 };
 
 const successPay = async params => {
@@ -186,7 +186,7 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', { resBody });
+	return okResponse('preference created', resBody);
 };
 
 const createRecruitedPreference = async (body, res) => {
@@ -210,7 +210,7 @@ const createRecruitedPreference = async (body, res) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', { resBody });
+	return okResponse('preference created', resBody);
 };
 
 const recruitedPay = async (params, query) => {
