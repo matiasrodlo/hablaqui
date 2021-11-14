@@ -83,8 +83,8 @@ const successPay = async params => {
 		type: 'reminder-user',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: foundPlan.userRef,
-		psyRef: foundPlan.psyRef,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
 	});
 	// Email scheduling for appointment reminder for the psychologist
@@ -95,12 +95,12 @@ const successPay = async params => {
 		type: 'reminder-psy',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: foundPlan.userRef,
-		psyRef: foundPlan.psyRef,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
 	});
-	const user = await User.findById(foundPlan.userRef);
-	const psy = await Psychologist.findById(foundPlan.psyRef);
+	const user = await User.findById(foundPlan.user);
+	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist
 	await mailService.sendAppConfirmationUser(user, dateFormatted);
 	await mailService.sendAppConfirmationPsy(psy, user, dateFormatted);
