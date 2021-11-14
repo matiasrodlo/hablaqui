@@ -7,6 +7,9 @@ import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
 import mailService from './mail';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 const recruitmentService = {
 	/**
 	 * @description - This controller is used to create a new recruitment profile
@@ -25,6 +28,17 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
+
+		analytics.track({
+			userId: user._id,
+			event: 'New psy application',
+			properties: {
+				email: user.email,
+				name: user.name,
+				lastName: user.lastName,
+				rut: user.rut,
+			},
+		});
 
 		const recruited = await Recruitment.create(payload);
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
@@ -100,6 +114,18 @@ const recruitmentService = {
 
 		const newProfile = await psychologist.create(payload);
 		mailService.sendWelcomeNewPsychologist(payload);
+
+		analytics.track({
+			userId: user._id,
+			event: 'New psy recruited',
+			properties: {
+				email: payload.email,
+				name: payload.name,
+				lastName: payload.lastName,
+				rut: payload.rut,
+				psyId: newProfile._id,
+			},
+		});
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')

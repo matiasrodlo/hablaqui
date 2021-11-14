@@ -18,6 +18,9 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
@@ -315,6 +318,32 @@ const createPlan = async ({ payload }) => {
 			? `${room}room/${roomId}`
 			: '';
 
+	if (payload.price > 0 && payload.user !== payload.psychologist) {
+		analytics.track({
+			userId: payload.user,
+			event: 'Nuevo plan contratado (user)',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist,
+			event: 'Nuevo plan agendado (psicologo)',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+				user: payload.user,
+			},
+		});
+	}
+
 	if (userSessions) {
 		if (
 			userSessions.plan.some(
@@ -356,12 +385,31 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		{ _id: id, 'plan._id': idPlan },
 		{
 			$set: {
-				'plan.$.remainingSessions': payload.remainingSessions,
+				'plan.$.remainingSessions': payload.remainingSessions - 1,
 			},
 			$push: { 'plan.$.session': payload },
 		},
 		{ new: true }
 	).populate('psychologist user');
+
+	analytics.track({
+		userId: payload.user,
+		event: 'Nueva sesion creada (user)',
+		properties: {
+			user: payload.user,
+			planId: idPlan,
+			userpsyId: id,
+		},
+	});
+	analytics.track({
+		userId: payload.psychologist,
+		event: 'Nueva sesion agendada (psicologo)',
+		properties: {
+			user: payload.user,
+			planId: idPlan,
+			userpsyId: id,
+		},
+	});
 
 	logInfo('creo una nueva cita');
 
