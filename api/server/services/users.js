@@ -14,6 +14,8 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 import { room } from '../config/dotenv';
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -214,9 +216,31 @@ const usersService = {
 		};
 		const createdUser = await User.create(newUser);
 
+		analytics.identify({
+			userId: createdUser._id,
+			traits: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+				referencerId: user._id,
+				referencerName: `${user.name} ${user.lastName}`,
+			},
+		});
+		analytics.track({
+			userId: createdUser._id,
+			event: 'Registered with psy referral',
+			properties: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+				referencerId: user._id,
+				referencerName: `${user.name} ${user.lastName}`,
+			},
+		});
+
 		const roomId = require('crypto')
 			.createHash('md5')
-			.update(`${payload.user}${payload.psychologist}`)
+			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
 		const newPlan = {

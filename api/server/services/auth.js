@@ -10,6 +10,9 @@ import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 const generateJwt = user => {
 	const payload = {
 		username: user.name,
@@ -76,6 +79,25 @@ const register = async payload => {
 		password: bcrypt.hashSync(payload.password, 10),
 	};
 	const user = await User.create(newUser);
+	// Segment identification
+	analytics.identify({
+		userId: user._id,
+		traits: {
+			name: user.name,
+			email: user.email,
+			type: user.role,
+		},
+	});
+	analytics.track({
+		userId: user._id,
+		event: 'Registered',
+		properties: {
+			name: user.name,
+			email: user.email,
+			type: user.role,
+		},
+	});
+
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
 		await mailService.sendWelcomeNewUser(user);
