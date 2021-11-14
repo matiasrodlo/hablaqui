@@ -217,7 +217,7 @@ const usersService = {
 		const createdUser = await User.create(newUser);
 
 		analytics.identify({
-			userId: createdUser._id,
+			userId: createdUser._id.toString(),
 			traits: {
 				name: user.name,
 				email: user.email,

@@ -81,7 +81,7 @@ const register = async payload => {
 	const user = await User.create(newUser);
 	// Segment identification
 	analytics.identify({
-		userId: user._id,
+		userId: user._id.toString(),
 		traits: {
 			name: user.name,
 			email: user.email,
