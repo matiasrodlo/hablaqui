@@ -15,12 +15,12 @@
 				/>
 			</v-col>
 			<v-col class="d-flex align-center mt-2" cols="4">
-				<!-- <span class="pointer" @click="dialog = true">
+				<span class="pointer" @click="dialog = true">
 					<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 						<icon :icon="mdiPlus" color="white" small />
 					</v-btn>
 					<span class="primary--text ml-2"> Consultante nuevo </span>
-				</span> -->
+				</span>
 			</v-col>
 			<v-col cols="12" md="6">
 				<v-alert prominent text color="info">
@@ -41,6 +41,7 @@
 					:headers="headers"
 					:items="items"
 					item-key="_id"
+					loading-text="Cargando..."
 					:items-per-page="5"
 					:footer-props="{
 						'items-per-page-text': 'Consultantes por página',
@@ -73,7 +74,7 @@
 			transition="dialog-top-transition"
 			@click:outside="closeDialog"
 		>
-			<v-card min-height="300" width="550" rounded="lg">
+			<v-card width="550" rounded="lg">
 				<v-card-text
 					class="
 						d-flex
@@ -89,7 +90,7 @@
 						<icon :icon="mdiClose" color="white" />
 					</v-btn>
 				</v-card-text>
-				<v-card-text class="pt-3">
+				<v-card-text class="mt-4">
 					<v-row>
 						<v-col cols="6">
 							<v-text-field
@@ -278,12 +279,15 @@ export default {
 	created() {
 		this.resetForm();
 	},
-	async mounted() {
-		this.loading = true;
-		await this.getClients(this.$auth.$state.user.psychologist);
-		this.loading = false;
+	mounted() {
+		this.initFetch();
 	},
 	methods: {
+		async initFetch() {
+			this.loading = true;
+			await this.getClients(this.$auth.$state.user.psychologist);
+			this.loading = false;
+		},
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -291,6 +295,7 @@ export default {
 				await this.registerUser(this.form);
 				this.loadingCreatedUser = false;
 				this.closeDialog();
+				await this.initFetch();
 			}
 		},
 		resetForm() {
