@@ -218,6 +218,7 @@ import { mdiMagnify, mdiPlus, mdiChat, mdiClose, mdiCalendar } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -253,13 +254,16 @@ export default {
 	}),
 	computed: {
 		items() {
-			return this.clientes.map(item => ({
-				avatar: item.avatar,
-				name: `${item.name} ${item.lastName ? item.lastName : ''}`,
-				lastSession: item.lastSession,
-				status: item.status,
-				_id: item._id,
-			}));
+			return this.clients
+				.map(item => ({
+					avatar: item.avatar,
+					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
+					lastSession: item.lastSession,
+					status: item.status,
+					_id: item._id,
+					createdAt: item.createdAt,
+				}))
+				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
 		emailErrors() {
 			const errors = [];
@@ -274,7 +278,7 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ clientes: 'Psychologist/clients' }),
+		...mapGetters({ clients: 'Psychologist/clients' }),
 	},
 	created() {
 		this.resetForm();
