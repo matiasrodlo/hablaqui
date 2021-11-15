@@ -155,15 +155,15 @@ export default {
 	},
 	methods: {
 		async goMercadoPago() {
-			const preference = {
+			const mercadopagoPayload = {
 				price: this.period === 'mensual' ? 39990 : 31920 * 12,
 				period: this.period === 'mensual' ? this.period : 'anual',
 				title: 'Plan Premium',
 				quantity: 1,
 				psychologist: this.$auth.$state.user.psychologist,
 			};
-			const { init_point } = await this.mercadopagoPay(mercadopagoPayload);
-			window.location.href = init_point;
+			const res = await this.mercadopagoPay(mercadopagoPayload);
+			window.location.href = res.init_point;
 		},
 		...mapActions({
 			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
