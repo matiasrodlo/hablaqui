@@ -261,7 +261,7 @@ const usersService = {
 			await Sessions.create({
 				plan: [newPlan],
 				user: createdUser._id,
-				psychologist: user.psychologust,
+				psychologist: user.psychologist,
 				roomsUrl: `${room}room/${roomId}`,
 			});
 
