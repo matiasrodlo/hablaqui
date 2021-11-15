@@ -114,11 +114,12 @@ export default {
 	},
 	async createCustomSession({ commit }, payload) {
 		try {
-			await this.$axios('/psychologist/new-custom-session', {
+			const { data } = await this.$axios('/psychologist/new-custom-session', {
 				method: 'POST',
 				data: payload,
 			});
 			snackBarSuccess('Sesión agregada')(commit);
+			console.log(data);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
