@@ -192,7 +192,7 @@ const usersService = {
 	},
 
 	async registerUser(user, body) {
-		if (user.role != 'psychologist')
+		if (user.role !== 'psychologist')
 			return conflictResponse('Usuario activo no es psicologo');
 		if (await User.exists({ email: body.email }))
 			return conflictResponse('Correo electronico en uso');
@@ -258,7 +258,7 @@ const usersService = {
 		};
 
 		await Sessions.create({
-			...newPlan,
+			plan: [newPlan],
 			user: createdUser._id,
 			psychologist: user._id,
 			roomsUrl: `${room}room/${roomId}`,
