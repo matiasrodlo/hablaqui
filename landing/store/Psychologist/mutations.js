@@ -8,6 +8,9 @@ export default {
 	setSessions(state, value) {
 		state.sessions = value;
 	},
+	setCustomSessions(state, value) {
+		state.sessions.push(value);
+	},
 	setOneSessions(state, { payload, id }) {
 		state.sessions = updateObjectInArray(
 			state.sessions,

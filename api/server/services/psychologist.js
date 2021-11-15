@@ -809,7 +809,7 @@ const customNewSession = async (user, payload) => {
 	let updatedSession;
 
 	if (validation) {
-		await Sessions.findOneAndUpdate(
+		await Sessions.updateOne(
 			{
 				user: payload.user,
 				psychologist: user.psychologist,
@@ -818,6 +818,14 @@ const customNewSession = async (user, payload) => {
 				$pull: {
 					plan: { title: 'Plan inicial' },
 				},
+			}
+		);
+		updatedSession = await Sessions.findOneAndUpdate(
+			{
+				user: payload.user,
+				psychologist: user.psychologist,
+			},
+			{
 				$push: { plan: newPlan },
 			},
 			{ new: true }
@@ -833,7 +841,7 @@ const customNewSession = async (user, payload) => {
 			psychologist: user.psychologist,
 			plan: [newPlan],
 			roomsUrl: `${room}room/${roomId}`,
-		});
+		}).populate('user psychologist');
 	}
 
 	// Aqui tienes la URL de mercadopago, debes agregarle la URL de la API, pero no se donde querras hacer eso.
@@ -858,7 +866,7 @@ const customNewSession = async (user, payload) => {
 	}
 
 	return okResponse('sesion creada', {
-		sessions: setSession(user.role, [updatedSession]),
+		sessions: setSession(user.role, [updatedSession]).pop(),
 	});
 };
 

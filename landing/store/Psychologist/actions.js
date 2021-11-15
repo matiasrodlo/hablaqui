@@ -118,8 +118,8 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
+			commit('setCustomSessions', data.sessions);
 			snackBarSuccess('Sesión agregada')(commit);
-			console.log(data);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
