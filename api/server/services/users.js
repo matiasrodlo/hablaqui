@@ -257,12 +257,13 @@ const usersService = {
 			session: [],
 		};
 
-		await Sessions.create({
-			plan: [newPlan],
-			user: createdUser._id,
-			psychologist: user._id,
-			roomsUrl: `${room}room/${roomId}`,
-		});
+		if (user.role === 'psychologist' && createdUser.role === 'user')
+			await Sessions.create({
+				plan: [newPlan],
+				user: createdUser._id,
+				psychologist: user.psychologust,
+				roomsUrl: `${room}room/${roomId}`,
+			});
 
 		if (process.env.NODE_ENV === 'development')
 			logInfo(

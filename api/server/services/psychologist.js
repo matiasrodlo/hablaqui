@@ -663,7 +663,7 @@ const checkPlanTask = async () => {
 const getClients = async psychologist => {
 	const sessions = await Sessions.find({
 		psychologist: psychologist,
-	}).populate('user');
+	}).populate('user psychologist');
 
 	return okResponse('Usuarios encontrados', {
 		users: sessions.map(item => ({
