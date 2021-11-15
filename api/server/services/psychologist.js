@@ -665,18 +665,6 @@ const getClients = async psychologist => {
 		psychologist: psychologist,
 	}).populate('user');
 
-	// logInfo(
-	// 	sessions.map(item => ({
-	// 		_id: item.user._id,
-	// 		avatar: item.user.avatar,
-	// 		email: item.user.email,
-	// 		lastName: item.user.lastName,
-	// 		name: item.user.name,
-	// 		role: item.user.role,
-	// 		roomsUrl: item.roomsUrl,
-	// 		lastSession: getLastSession(item) || 'N/A',
-	// 	}))
-	// );
 	return okResponse('Usuarios encontrados', {
 		users: sessions.map(item => ({
 			_id: item.user._id,
@@ -820,6 +808,17 @@ const customNewSession = async (user, payload) => {
 	let updatedSession;
 
 	if (validation) {
+		await Sessions.findOneAndUpdate(
+			{
+				user: payload.user,
+				psychologist: user.psychologist,
+			},
+			{
+				$pull: {
+					plan: { title: 'Plan inicial' },
+				},
+			}
+		);
 		updatedSession = await Sessions.findOneAndUpdate(
 			{
 				user: payload.user,

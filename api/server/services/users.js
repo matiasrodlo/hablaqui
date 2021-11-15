@@ -252,8 +252,8 @@ const usersService = {
 			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
-			totalSessions: 999,
-			remainingSessions: 999,
+			totalSessions: 0,
+			remainingSessions: 0,
 			session: [],
 		};
 
