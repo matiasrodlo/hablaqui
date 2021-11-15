@@ -315,7 +315,7 @@ const mailService = {
 			to: 'direccion@hablaqui.com',
 			subject: '[Internal] ¡Hay una nueva postulación para Hablaquí!',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			template: 'd-8ee906349e144427ad0103a31507541a',
+			templateId: 'd-8ee906349e144427ad0103a31507541a',
 			asm: {
 				group_id: 16321,
 			},
