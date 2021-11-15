@@ -674,6 +674,7 @@ const getClients = async psychologist => {
 			name: item.user.name,
 			role: item.user.role,
 			roomsUrl: item.roomsUrl,
+			createdAt: item.user.createdAt,
 			lastSession: getLastSession(item) || 'N/A',
 		})),
 	});
@@ -817,18 +818,10 @@ const customNewSession = async (user, payload) => {
 				$pull: {
 					plan: { title: 'Plan inicial' },
 				},
-			}
-		);
-		updatedSession = await Sessions.findOneAndUpdate(
-			{
-				user: payload.user,
-				psychologist: user.psychologist,
-			},
-			{
 				$push: { plan: newPlan },
 			},
 			{ new: true }
-		);
+		).populate('user psychologist');
 	} else {
 		const roomId = require('crypto')
 			.createHash('md5')
@@ -865,7 +858,7 @@ const customNewSession = async (user, payload) => {
 	}
 
 	return okResponse('sesion creada', {
-		session: updatedSession,
+		sessions: setSession(user.role, [updatedSession]),
 	});
 };
 
