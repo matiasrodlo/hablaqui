@@ -87,6 +87,7 @@ const setSession = (role, sessions) => {
 				return {
 					_id: session._id,
 					date: session.date,
+					title: plan.title,
 					details: `Sesion con ${name}`,
 					end,
 					idPsychologist: item.psychologist._id,

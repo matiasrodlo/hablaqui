@@ -106,6 +106,7 @@
 							:type="type"
 							color="primary"
 							locale="es"
+							:event-color="getEventColor"
 							@click:event="showEvent"
 							@click:more="viewDay"
 							@click:day="addAppointment"
@@ -818,12 +819,16 @@ export default {
 				this.events = this.sessions;
 			}
 		},
+		getEventColor(event) {
+			if (event.title === 'compromiso privado') return 'warning';
+			if (event.title === 'sesion presencial') return 'info';
+			return 'primary';
+		},
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loadingCreatedUser = true;
-				const newUser = await this.registerUser(this.form);
-				console.log(newUser);
+				await this.registerUser(this.form);
 				await this.getClients(this.$auth.$state.user.psychologist);
 				this.loadingCreatedUser = false;
 				this.goBack();
