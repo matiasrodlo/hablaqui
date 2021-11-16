@@ -314,7 +314,10 @@
 													outlined
 												></v-select>
 											</v-col>
-											<v-col cols="6">
+											<v-col
+												v-show="typeSession !== 'compromiso privado'"
+												cols="6"
+											>
 												<v-text-field
 													v-model="valueSession"
 													label="Valor"
@@ -324,7 +327,10 @@
 													suffix="CLP"
 												></v-text-field>
 											</v-col>
-											<v-col cols="6">
+											<v-col
+												v-show="typeSession !== 'compromiso privado'"
+												cols="6"
+											>
 												<v-autocomplete
 													v-model="client"
 													:items="
@@ -370,7 +376,11 @@
 													</template>
 												</v-autocomplete>
 											</v-col>
-											<v-col class="d-flex align-center" cols="6">
+											<v-col
+												v-if="typeSession !== 'compromiso privado'"
+												class="d-flex align-center"
+												cols="6"
+											>
 												<span class="pointer" @click="dialogNewUser = true">
 													<v-btn
 														fab
@@ -795,6 +805,7 @@ export default {
 			return errors;
 		},
 		validatenewCustomSession() {
+			if (this.typeSession === 'compromiso privado') return false;
 			return !this.client || !this.typeSession || !this.valueSession;
 		},
 		...mapGetters({
