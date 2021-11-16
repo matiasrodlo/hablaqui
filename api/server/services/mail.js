@@ -2,14 +2,9 @@
 
 import moment from 'moment';
 import momentz from 'moment-timezone';
-import mailgun from 'mailgun-js';
 
-const DOMAIN = 'mail.hablaqui.com';
-
-const mg = mailgun({
-	apiKey: process.env.MAILGUN_API_KEY,
-	domain: DOMAIN,
-});
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {
 	/**
@@ -19,14 +14,19 @@ const mailService = {
 	async sendWelcomeNewUser(user) {
 		const { email, name } = user;
 		const dataPayload = {
-			from: 'Hablaquí <bienvenida@mail.hablaqui.com>',
+			from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: '¡Bienvenido/a a Hablaquí!',
-			template: 'welcome-new-user',
-			'v:first_name': name,
+			subject: '¡Te damos la bienvenida a Hablaquí!',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-47d8674ebc0841b381cf68fa42c03b13',
+			dynamicTemplateData: {
+				first_name: name,
+			},
+			asm: {
+				group_id: 16321,
+			},
 		};
-		await mg.messages().send(dataPayload, function(error, body) {
+		await sgMail.send(dataPayload, function(error, body) {
 			if (error) {
 				console.log(error);
 			} else {
@@ -42,14 +42,19 @@ const mailService = {
 		const { email, name } = user;
 		const dataPayload = {
 			from:
-				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.com>',
+				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-bienvenida@mail.hablaqui.com',
-			subject: '¡Bienvenido/a a Hablaquí!',
-			template: 'welcome-new-psy',
-			'v:first_name': name,
+			subject: '¡Te damos la bienvenida a Hablaquí!',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-6db5e38488fc42769fca7398be2930ae',
+			dynamicTemplateData: {
+				first_name: name,
+			},
+			asm: {
+				group_id: 16321,
+			},
 		};
-		await mg.messages().send(dataPayload, function(error, body) {
+		await sgMail.send(dataPayload, function(error, body) {
 			if (error) {
 				console.log(error);
 			} else {
@@ -65,14 +70,19 @@ const mailService = {
 	async sendPasswordRecovery(user, url) {
 		const { email, name } = user;
 		const dataPayload = {
-			from: 'Hablaquí <recuperacion@mail.hablaqui.com>',
+			from: 'Hablaquí <recuperacion@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-recuperacion@mail.hablaqui.com',
-			subject: 'Recuperación de contraseña de Hablaquí!',
-			template: 'reset-password',
-			'v:url': url,
+			subject: 'Recupera tu contraseña de Hablaquí',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-f025d6b8c63a4567897817ecd8f31aee',
+			dynamicTemplateData: {
+				url: url,
+			},
+			asm: {
+				group_id: 16321,
+			},
 		};
-		await mg.messages().send(dataPayload, function(error, body) {
+		await sgMail.send(dataPayload, function(error, body) {
 			if (error) {
 				console.log(error);
 			} else {
@@ -89,20 +99,24 @@ const mailService = {
 	async sendGuestNewUser(psy, newUser, pass) {
 		const { name, email } = newUser;
 		const dataPayload = {
-			from: 'Hablaquí <invitaciones@mail.hablaqui.com>',
+			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-invitaciones@mail.hablaqui.com',
-			subject:
-				'¡Bienvenido/a! Fuiste invitado por tu psicólogo a Hablaquí',
-			template: 'welcome-user-by-psy',
-			'v:name': name,
-			'v:email': email,
-			'v:password': pass,
-			'v:psy_first_name': psy.name,
-			'v:psy_last_name': psy.lastName,
+			subject: '¡Te han invitado a Hablaquí!',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-84ac6d244f044322916649f448ebcecd',
+			dynamicTemplateData: {
+				name: name,
+				email: email,
+				password: pass,
+				psy_first_name: psy.name,
+				psy_last_name: psy.lastName,
+			},
+			asm: {
+				group_id: 16321,
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -117,26 +131,32 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date) {
+	async sendReminderUser(user, psy, date, batch) {
 		const { email, name } = user;
 		const dataPayload = {
-			from: 'Hablaquí <recordatorios@mail.hablaqui.com>',
+			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
 			subject: 'Tu sesión en Hablaquí está por comenzar',
-			template: 'reminder-users',
-			'o:deliverytime': moment(date)
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-9a0771dd50e44569b8bb8d5bbce9a886',
+			dynamicTemplateData: {
+				first_name: name,
+				psy_first_name: psy.name,
+				psy_last_name: psy.lastName,
+				date: moment(date).format('DD/MM/YYYY'),
+				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			},
+			asm: {
+				group_id: 16321,
+			},
+			sendAt: moment(date)
 				.subtract(1, 'hour')
-				.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-			'v:first_name': name,
-			'v:psy_first_name': psy.name,
-			'v:psy_last_name': psy.lastName,
-			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				.unix(),
+			batchId: batch,
 		};
 
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -152,26 +172,32 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date) {
+	async sendReminderPsy(user, psy, date, batch) {
 		const { email, name, lastName } = user;
 		const dataPayload = {
-			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.com>',
+			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-recordatorios@mail.hablaqui.com',
 			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
-			template: 'reminder-psy',
-			'o:deliverytime': moment(date)
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-4ae158cf069a4f9abd6aae9784e1a255',
+			dynamicTemplateData: {
+				user_first_name: name,
+				user_last_name: lastName,
+				psy_first_name: psy.name,
+				psy_last_name: psy.lastName,
+				date: moment(date).format('DD/MM/YYYY'),
+				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			},
+			asm: {
+				group_id: 16321,
+			},
+			sendAt: moment(date)
 				.subtract(1, 'hour')
-				.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-			'v:user_first_name': name,
-			'v:user_last_name': lastName,
-			'v:psy_first_name': psy.name,
-			'v:psy_last_name': psy.lastName,
-			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				.unix(),
+			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -188,17 +214,22 @@ const mailService = {
 	async sendAppConfirmationUser(user, date) {
 		const { email, name } = user;
 		const dataPayload = {
-			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
-			subject: 'Agendaste una sesión en Hablaquí',
-			template: 'appointment-confirmation-user',
-			'v:first_name': name,
-			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			subject: 'Tu sesión en Hablaquí ha sido agendada',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-4b0e727fd03144aa819e7814e39e8504',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				first_name: name,
+				date: moment(date).format('DD/MM/YYYY'),
+				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -218,19 +249,24 @@ const mailService = {
 		const lastNameUser = user.lastName;
 		const { email, name } = psy;
 		const dataPayload = {
-			from: 'Hablaquí <agendamientos@mail.hablaqui.com>',
+			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-agendamiento@mail.hablaqui.com',
-			subject: 'Te han reservado una sesión en Hablaquí',
-			template: 'appointment-confirmation-psy',
-			'v:user_first_name': nameUser,
-			'v:user_last_name': lastNameUser,
-			'v:psy_first_name': name,
-			'v:date': moment(date).format('DD/MM/YYYY'),
-			'v:hour': momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			subject: `${nameUser} ${lastNameUser} ha agendado una sesión contigo en Hablaquí`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-d7fbf8c891a84343b8bcaab38cbc2bab',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_first_name: nameUser,
+				user_last_name: lastNameUser,
+				psy_first_name: name,
+				date: moment(date).format('DD/MM/YYYY'),
+				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -246,15 +282,20 @@ const mailService = {
 	async sendRecruitmentConfirmation(recruitedPsy) {
 		const { email, name } = recruitedPsy;
 		const dataPayload = {
-			from: 'Hablaquí <reclutamiento@mail.hablaqui.com>',
+			from: 'Hablaquí <reclutamiento@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			replyto: 'Hablaquí <soporte-reclutamiento@mail.hablaqui.com',
-			subject: 'Recibimos tu postulación a Hablaquí',
-			template: 'recruitment-confirmation',
-			'v:first_name': name,
+			subject: '¡Gracias por postular a Hablaquí!',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-d40470d41a3842ac9108bcdb6ac70022',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				first_name: name,
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -268,18 +309,24 @@ const mailService = {
 	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
 	 */
 	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
-		const { name, lastName } = recruitedPsy;
+		const { name, lastName, email } = recruitedPsy;
 		const dataPayload = {
-			from: 'Hablaquí <internal@mail.hablaqui.com>',
+			from: 'Hablaquí <internal@mail.hablaqui.cl>',
 			to: 'direccion@hablaqui.com',
-			replyto: 'Hablaquí <noreply@mail.hablaqui.com',
-			subject: '[Internal] Hay una nueva postulación a Hablaquí',
-			template: 'internal-recruitment-profile-received',
-			'v:psy_first_name': name,
-			'v:psy_last_name': lastName,
+			subject: '[Internal] ¡Hay una nueva postulación para Hablaquí!',
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-8ee906349e144427ad0103a31507541a',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_first_name: name,
+				psy_last_name: lastName,
+				psy_email: email,
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {
@@ -290,17 +337,22 @@ const mailService = {
 	},
 	async sendCustomSessionPaymentURL(user, psychologist, paymentURL) {
 		const dataPayload = {
-			from: 'Hablaquí <pagos@mail.hablaqui.com>',
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			replyto: 'Hablaquí <soporte-pagos@mail.hablaqui.com',
-			subject: 'Completa el pago de tu sesión en Hablaquí',
-			template: 'custom-session-payment-email',
-			'v:user_name': user.name,
-			'v:psy_name': psychologist.name,
-			'v:payment_url': paymentURL,
+			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			template: 'd-b334d5a385c84a378b41d64395d96ae7',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				payment_url: paymentURL,
+			},
 		};
 		return new Promise((resolve, reject) => {
-			mg.messages().send(dataPayload, function(error, body) {
+			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
 				} else {

@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Schema, model } from 'mongoose';
 
 let email = new Schema({
-	mailgunId: {
+	batchId: {
 		type: String,
 		default: null,
 	},
