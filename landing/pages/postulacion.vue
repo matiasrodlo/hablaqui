@@ -297,11 +297,15 @@
 										outlined
 										filled
 										no-resize
-										persistent-hint
-										hint="El consultante quiere saber un poco más sobre ti más allá de lo
-									profesional. Explica con más detalle el objetivo de tu línea de
-									trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
-									ambiente acogedor con las palabras."
+										:persistent-hint="!form.personalDescription"
+										:hint="
+											!form.personalDescription.length
+												? `El consultante quiere saber un poco más sobre ti más allá de lo
+                                                    profesional. Explica con más detalle el objetivo de tu línea de
+                                                    trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
+                                                    ambiente acogedor con las palabras.`
+												: ''
+										"
 										counter
 									></v-textarea>
 								</v-col>
@@ -372,11 +376,14 @@
 										outlined
 										dense
 										placeholder="Requerido"
-										persistent-hint
-										hint="Cuenta, en pocas palabras, un poco sobre tu experiencia
-                                            profesional. También puedes hablar sobre el modelo terapéutico
-                                            que trabajas, y cómo puedes ayudar a tu consultante."
-										type="text"
+										:persistent-hint="!form.professionalDescription"
+										:hint="
+											!form.professionalDescription
+												? `Cuenta, en pocas palabras, un poco sobre tu experiencia
+                                                profesional. También puedes hablar sobre el modelo terapéutico
+                                                que trabajas, y cómo puedes ayudar a tu consultante.`
+												: ''
+										"
 										counter
 									></v-textarea>
 								</v-col>
@@ -390,11 +397,12 @@
 									<v-list>
 										<v-list-item v-for="(item, t) in form.formation" :key="t">
 											<v-list-item-content>
-												<v-list-item-title>
+												<v-list-item-title class="text-capitalize">
 													{{ item.formationType }} -
 													{{ item.description }}
 												</v-list-item-title>
-												<v-list-item-subtitle>
+												<v-list-item-subtitle class="text-capitalize">
+													{{ item.intitucion }}
 													{{ item.start }} -
 													{{ item.end }}
 												</v-list-item-subtitle>
@@ -439,18 +447,28 @@
 										"
 									>
 										<v-card>
-											<v-card-title>Formación</v-card-title>
-											<v-card-text class="mt-4">
+											<v-card-text class="pt-8">
 												<v-row>
 													<v-col cols="12">
+														<div
+															class="
+																primary--text
+																font-weight-bold
+																body-1
+																pb-2
+															"
+														>
+															Formación
+														</div>
 														<v-select
 															v-model="
 																selectedFormation.formationType
 															"
 															filled
 															outlined
+															hide-details
+															placeholder="Título"
 															dense
-															label="Formación"
 															type="text"
 															:items="[
 																'Licenciatura',
@@ -464,32 +482,58 @@
 														></v-select>
 													</v-col>
 													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Disciplina académica
+														</div>
 														<v-text-field
 															v-model="selectedFormation.description"
 															filled
 															outlined
+															placeholder="P. ej: Psicología forense"
 															dense
+															hide-details
 															type="text"
-															label="Curso / Institución educativa"
 														></v-text-field>
 													</v-col>
 													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Institucion académica
+														</div>
+														<v-text-field
+															v-model="selectedFormation.intitucion"
+															filled
+															outlined
+															placeholder="P. ej: universidad de Chile"
+															dense
+															hide-details
+															type="text"
+														></v-text-field>
+													</v-col>
+													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Año de inicio
+														</div>
 														<v-text-field
 															v-model="selectedFormation.start"
 															filled
 															outlined
 															dense
-															label="Año de inicio"
 															type="text"
+															placeholder="P. ej: 2019"
+															hide-details
 														></v-text-field>
 													</v-col>
 													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Año de termino
+														</div>
 														<v-text-field
 															v-model="selectedFormation.end"
 															filled
 															outlined
 															dense
-															label="Año de termino"
+															placeholder="P. ej: 2021"
+															hide-details
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -533,11 +577,11 @@
 									<v-list>
 										<v-list-item v-for="(item, t) in form.experience" :key="t">
 											<v-list-item-content>
-												<v-list-item-title>
+												<v-list-item-title class="text-capitalize">
 													{{ item.title }} -
 													{{ item.place }}
 												</v-list-item-title>
-												<v-list-item-subtitle>
+												<v-list-item-subtitle class="text-capitalize">
 													{{ item.start }} -
 													{{ item.current ? 'Actualmente' : item.end }}
 												</v-list-item-subtitle>
@@ -583,26 +627,43 @@
 										"
 									>
 										<v-card>
-											<v-card-title>Experiencia</v-card-title>
-											<v-card-text class="mt-4">
+											<v-card-text class="pt-8">
 												<v-row>
 													<v-col cols="12">
+														<div
+															class="
+																primary--text
+																font-weight-bold
+																body-1
+																pb-3
+															"
+														>
+															Experiencia
+														</div>
+														<div class="primary--text body-1 pb-2">
+															Cargo
+														</div>
 														<v-text-field
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															label="Cargo"
+															placeholder="P. ej: Psicólogo"
 															dense
+															hide-details
 															type="text"
 														></v-text-field>
 													</v-col>
 													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Institucion
+														</div>
 														<v-text-field
 															v-model="selectedExperience.place"
 															filled
 															outlined
 															dense
-															label="Lugar"
+															hide-details
+															placeholder="P. ej: Hospital del cancer"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -610,6 +671,7 @@
 														<v-checkbox
 															v-model="selectedExperience.current"
 															dense
+															hide-details
 															label="Actualmente tengo este cargo"
 															@change="
 																e => {
@@ -621,25 +683,35 @@
 														></v-checkbox>
 													</v-col>
 													<v-col cols="12">
+														<div class="primary--text body-1 pb-2">
+															Año de inicio
+														</div>
 														<v-text-field
 															v-model="selectedExperience.start"
 															filled
 															outlined
 															dense
-															label="Año de inicio"
+															hide-details
+															placeholder="P. ej: 2019"
 															type="text"
 														></v-text-field>
 													</v-col>
-													<v-col v-show="!hiddenInput" cols="12">
-														<v-text-field
-															v-model="selectedExperience.end"
-															filled
-															outlined
-															dense
-															label="Año de Termino"
-															type="text"
-														></v-text-field>
-													</v-col>
+													<v-expand-transition>
+														<v-col v-show="!hiddenInput" cols="12">
+															<div class="primary--text body-1 pb-2">
+																Año de Termino
+															</div>
+															<v-text-field
+																v-model="selectedExperience.end"
+																filled
+																outlined
+																dense
+																hide-details
+																placeholder="P. ej: 2021"
+																type="text"
+															></v-text-field>
+														</v-col>
+													</v-expand-transition>
 												</v-row>
 											</v-card-text>
 											<v-card-actions>
@@ -1241,7 +1313,13 @@ export default {
 			if (index !== null) this.indexSelected = index;
 			if (item) this.selectedFormation = item;
 			else
-				this.selectedFormation = { formationType: '', description: '', start: '', end: '' };
+				this.selectedFormation = {
+					formationType: '',
+					description: '',
+					intitucion: '',
+					start: '',
+					end: '',
+				};
 			this.dialogFormation = true;
 		},
 		...mapActions({

@@ -58,6 +58,9 @@ let formationSchema = new Schema({
 	description: {
 		type: String,
 	},
+	intitucion: {
+		type: String,
+	},
 	start: {
 		type: String,
 	},
