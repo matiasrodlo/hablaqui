@@ -201,7 +201,7 @@
 									class="d-flex text-center primary white--text text-h5 py-3"
 								>
 									<v-btn
-										v-if="stepAddAppoinment != 1"
+										v-if="stepAddAppoinment != 0"
 										style="flex: 0"
 										icon
 										@click="() => (stepAddAppoinment -= 1)"
@@ -215,7 +215,7 @@
 										<icon :icon="mdiClose" color="white" />
 									</v-btn>
 								</v-card-text>
-								<template v-if="stepAddAppoinment == 1">
+								<template v-if="stepAddAppoinment == 0">
 									<v-card-text v-if="dialogNewUser" class="pt-3">
 										<v-row>
 											<v-col cols="6">
@@ -396,7 +396,7 @@
 										</v-row>
 									</v-card-text>
 								</template>
-								<template v-else>
+								<template v-if="stepAddAppoinment == 1">
 									<calendar
 										:id-psy="$auth.user.psychologist"
 										:set-date="e => newCustomSession(e)"
@@ -404,6 +404,14 @@
 										:loading-btn="loadingSession"
 										class="pb-4"
 									/>
+								</template>
+								<template v-if="stepAddAppoinment == 2">
+									<v-card-text
+										class="text-center py-16 primary--text font-weight-medium"
+									>
+										Se le ha enviado un email al consultante, La fecha y hora
+										estará disponible hasta que el consultante cancele
+									</v-card-text>
 								</template>
 							</v-card>
 						</v-dialog>
@@ -701,7 +709,7 @@ export default {
 		psychologist: null,
 		loadingSession: false,
 		loagindReschedule: false,
-		stepAddAppoinment: 1,
+		stepAddAppoinment: 0,
 		hours: [
 			'00:00',
 			'1:00',
@@ -901,7 +909,7 @@ export default {
 		},
 		setStepAddAppoinment() {
 			if (this.validatenewCustomSession) return alert('Debe completar los campos');
-			this.stepAddAppoinment = 2;
+			this.stepAddAppoinment = 1;
 		},
 		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
@@ -983,7 +991,7 @@ export default {
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
 			this.dialogAppointment = false;
-			this.stepAddAppoinment = 1;
+			this.stepAddAppoinment = 0;
 			this.dialogNewUser = false;
 			this.date = null;
 			this.client = null;
@@ -1002,7 +1010,7 @@ export default {
 				price: this.valueSession,
 			});
 			this.loadingSession = false;
-			this.closeDialog();
+			this.stepAddAppoinment = 2;
 		},
 		async newSession(event) {
 			this.loadingSession = true;
