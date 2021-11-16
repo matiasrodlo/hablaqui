@@ -198,149 +198,166 @@
 						>
 							<v-card width="650" rounded="xl">
 								<v-card-text
-									class="
-										d-flex
-										justify-space-between justify-center
-										primary
-										white--text
-										text-h5
-										py-3
-									"
+									class="d-flex text-center primary white--text text-h5 py-3"
 								>
-									<div class="body-1 font-weight-bold pt-2">
+									<v-btn
+										v-if="stepAddAppoinment != 1"
+										style="flex: 0"
+										icon
+										@click="() => (stepAddAppoinment -= 1)"
+									>
+										<icon :icon="mdiChevronLeft" x-large color="white" />
+									</v-btn>
+									<div style="flex: 1" class="body-1 font-weight-bold pt-2">
 										{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
 									</div>
-									<v-btn icon @click="closeDialog">
+									<v-btn style="flex: 0" icon @click="closeDialog">
 										<icon :icon="mdiClose" color="white" />
 									</v-btn>
 								</v-card-text>
-								<v-card-text v-if="dialogNewUser" class="pt-3">
-									<v-row>
-										<v-col cols="6">
-											<v-text-field
-												v-model="form.name"
-												type="text"
-												dense
-												outlined
-												label="Nombre"
-												hide-details="auto"
-												:error-messages="nameErrors"
-											>
-											</v-text-field>
-										</v-col>
-										<v-col cols="6">
-											<v-text-field
-												v-model="form.rut"
-												hide-details="auto"
-												type="text"
-												dense
-												outlined
-												label="Rut"
-											>
-											</v-text-field>
-										</v-col>
-										<v-col cols="6">
-											<v-text-field
-												v-model="form.email"
-												type="email"
-												dense
-												hide-details="auto"
-												outlined
-												label="email"
-												:error-messages="emailErrors"
-											>
-											</v-text-field>
-										</v-col>
-										<v-col cols="6">
-											<v-text-field
-												v-model="form.phone"
-												type="text"
-												dense
-												hide-details="auto"
-												outlined
-												prefix="+56"
-												label="Teléfono"
-											>
-											</v-text-field>
-										</v-col>
-									</v-row>
-									<v-row>
-										<v-col cols="12" class="text-center">
-											<v-btn
-												:disabled="loadingCreatedUser"
-												text
-												@click="goBack"
-											>
-												Atras
-											</v-btn>
-											<v-btn
-												:loading="loadingCreatedUser"
-												rounded
-												color="primary"
-												@click="submitUser"
-											>
-												Agregar
-											</v-btn>
-										</v-col>
-									</v-row>
-								</v-card-text>
-								<v-card-text v-else class="pt-2">
-									<v-row>
-										<v-col class="font-weight-medium" cols="12">
-											Tipo de evento
-										</v-col>
-										<v-col cols="6">
-											<v-select
-												v-model="typeSession"
-												:items="[
-													{
-														text: 'Sesión online',
-														value: 'sesion online',
-													},
-													{
-														text: 'Sesión presencial',
-														value: 'sesion presencial',
-													},
-													{
-														text: 'Compromiso privado',
-														value: 'compromiso privado',
-													},
-												]"
-												dense
-												hide-details
-												label="Seleccione"
-												outlined
-											></v-select>
-										</v-col>
-										<v-col cols="6">
-											<v-text-field
-												v-model="valueSession"
-												label="Valor"
-												dense
-												hide-details
-												outlined
-												suffix="CLP"
-											></v-text-field>
-										</v-col>
-										<v-col cols="6">
-											<v-autocomplete
-												v-model="client"
-												:items="
-													clients.map(item => ({
-														...item,
-														text: `${item.name} ${
-															item.lastName ? item.lastName : ''
-														}`,
-														value: item._id,
-													}))
-												"
-												dense
-												hide-details
-												label="Nombre"
-												outlined
-											>
-												<template #item="{ item }">
-													<div class="my-2">
+								<template v-if="stepAddAppoinment == 1">
+									<v-card-text v-if="dialogNewUser" class="pt-3">
+										<v-row>
+											<v-col cols="6">
+												<v-text-field
+													v-model="form.name"
+													type="text"
+													dense
+													outlined
+													label="Nombre"
+													hide-details="auto"
+													:error-messages="nameErrors"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
+													v-model="form.rut"
+													hide-details="auto"
+													type="text"
+													dense
+													outlined
+													label="Rut"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
+													v-model="form.email"
+													type="email"
+													dense
+													hide-details="auto"
+													outlined
+													label="email"
+													:error-messages="emailErrors"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
+													v-model="form.phone"
+													type="text"
+													dense
+													hide-details="auto"
+													outlined
+													prefix="+56"
+													label="Teléfono"
+												>
+												</v-text-field>
+											</v-col>
+										</v-row>
+										<v-row>
+											<v-col cols="12" class="text-center">
+												<v-btn
+													:disabled="loadingCreatedUser"
+													text
+													@click="goBack"
+												>
+													Atras
+												</v-btn>
+												<v-btn
+													:loading="loadingCreatedUser"
+													rounded
+													color="primary"
+													@click="submitUser"
+												>
+													Agregar
+												</v-btn>
+											</v-col>
+										</v-row>
+									</v-card-text>
+									<v-card-text v-else class="pt-2">
+										<v-row>
+											<v-col class="font-weight-medium" cols="12">
+												Tipo de evento
+											</v-col>
+											<v-col cols="6">
+												<v-select
+													v-model="typeSession"
+													:items="[
+														{
+															text: 'Sesión online',
+															value: 'sesion online',
+														},
+														{
+															text: 'Sesión presencial',
+															value: 'sesion presencial',
+														},
+														{
+															text: 'Compromiso privado',
+															value: 'compromiso privado',
+														},
+													]"
+													dense
+													hide-details
+													label="Seleccione"
+													outlined
+												></v-select>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
+													v-model="valueSession"
+													label="Valor"
+													dense
+													hide-details
+													outlined
+													suffix="CLP"
+												></v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-autocomplete
+													v-model="client"
+													:items="
+														clients.map(item => ({
+															...item,
+															text: `${item.name} ${
+																item.lastName ? item.lastName : ''
+															}`,
+															value: item._id,
+														}))
+													"
+													dense
+													hide-details
+													label="Nombre"
+													outlined
+												>
+													<template #item="{ item }">
+														<div class="my-2">
+															<div class="body-2">
+																{{
+																	`${item.name} ${
+																		item.lastName
+																			? item.lastName
+																			: ''
+																	}`
+																}}
+															</div>
+															<div style="font-size: 10px">
+																{{ item.email }}
+															</div>
+														</div>
+													</template>
+													<template #selection="{ item }">
 														<div class="body-2">
 															{{
 																`${item.name} ${
@@ -350,44 +367,44 @@
 																}`
 															}}
 														</div>
-														<div style="font-size: 10px">
-															{{ item.email }}
-														</div>
-													</div>
-												</template>
-												<template #selection="{ item }">
-													<div class="body-2">
-														{{
-															`${item.name} ${
-																item.lastName ? item.lastName : ''
-															}`
-														}}
-													</div>
-												</template>
-											</v-autocomplete>
-										</v-col>
-										<v-col class="d-flex align-center" cols="6">
-											<span class="pointer" @click="dialogNewUser = true">
+													</template>
+												</v-autocomplete>
+											</v-col>
+											<v-col class="d-flex align-center" cols="6">
+												<span class="pointer" @click="dialogNewUser = true">
+													<v-btn
+														fab
+														depressed
+														color="primary"
+														style="width: 20px; height: 20px"
+													>
+														<icon :icon="mdiPlus" color="white" small />
+													</v-btn>
+												</span>
+											</v-col>
+											<v-col class="text-center py-2" cols="12">
 												<v-btn
-													fab
+													:disabled="validatenewCustomSession"
 													depressed
 													color="primary"
-													style="width: 20px; height: 20px"
+													rounded
+													@click="setStepAddAppoinment"
 												>
-													<icon :icon="mdiPlus" color="white" small />
+													Continuar
 												</v-btn>
-											</span>
-										</v-col>
-										<v-col class="text-center py-2" cols="12">
-											<calendar
-												:id-psy="$auth.user.psychologist"
-												:set-date="e => newCustomSession(e)"
-												title-button="Agendar"
-												:loading-btn="loadingSession"
-											/>
-										</v-col>
-									</v-row>
-								</v-card-text>
+											</v-col>
+										</v-row>
+									</v-card-text>
+								</template>
+								<template v-else>
+									<calendar
+										:id-psy="$auth.user.psychologist"
+										:set-date="e => newCustomSession(e)"
+										title-button="Agendar"
+										:loading-btn="loadingSession"
+										class="pb-4"
+									/>
+								</template>
 							</v-card>
 						</v-dialog>
 						<v-row class="text-md-right pt-4">
@@ -684,6 +701,7 @@ export default {
 		psychologist: null,
 		loadingSession: false,
 		loagindReschedule: false,
+		stepAddAppoinment: 1,
 		hours: [
 			'00:00',
 			'1:00',
@@ -767,6 +785,9 @@ export default {
 			if (!this.$v.form.name.$dirty) return errors;
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
+		},
+		validatenewCustomSession() {
+			return !this.client || !this.typeSession || !this.valueSession;
 		},
 		...mapGetters({
 			sessions: 'Psychologist/sessions',
@@ -878,6 +899,10 @@ export default {
 			this.focus = date;
 			this.type = 'day';
 		},
+		setStepAddAppoinment() {
+			if (this.validatenewCustomSession) return alert('Debe completar los campos');
+			this.stepAddAppoinment = 2;
+		},
 		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
 				// Sin psicologo - sin sesiones
@@ -958,6 +983,7 @@ export default {
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
 			this.dialogAppointment = false;
+			this.stepAddAppoinment = 1;
 			this.dialogNewUser = false;
 			this.date = null;
 			this.client = null;
@@ -967,7 +993,7 @@ export default {
 			this.goBack();
 		},
 		async newCustomSession(item) {
-			if (this.validatenewCustomSession(item)) return alert('Debe completar los campos');
+			if (this.validatenewCustomSession) return alert('Debe completar los campos');
 			this.loadingSession = true;
 			await this.createCustomSession({
 				user: this.client,
@@ -977,9 +1003,6 @@ export default {
 			});
 			this.loadingSession = false;
 			this.closeDialog();
-		},
-		validatenewCustomSession() {
-			return !this.client || !this.typeSession || !this.valueSession;
 		},
 		async newSession(event) {
 			this.loadingSession = true;
