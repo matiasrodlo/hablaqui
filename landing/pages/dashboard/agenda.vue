@@ -312,6 +312,14 @@
 													hide-details
 													label="Seleccione"
 													outlined
+													@change="
+														e => {
+															if (e === 'compromiso privado') {
+																valueSession = null;
+																client = null;
+															}
+														}
+													"
 												></v-select>
 											</v-col>
 											<v-col
