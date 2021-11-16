@@ -201,7 +201,6 @@
 						<li>2. Haga clic en “Consultante nuevo”</li>
 						<li>3. Rellene los datos solicitados</li>
 						<li>4. Haga clic en el botón “Agregar”</li>
-						<li>4. Haga clic en el botón “Agregar”</li>
 						<li>
 							5. Hecho, tu consultante ya está asociado a ti y no pagará más comisión
 							a Hablaquí.
