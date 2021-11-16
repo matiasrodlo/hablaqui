@@ -361,6 +361,31 @@ const mailService = {
 			});
 		});
 	},
+	async sendVerifyEmail(user, url) {
+		const dataPayload = {
+			from: 'Hablaquí <verificacion@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Verificación de cuenta de Hablaquí`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			template: 'd-8e397d37317c403ea7bb53cbbadac30a',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				verify_url: url,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
