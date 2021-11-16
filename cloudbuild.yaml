@@ -67,6 +67,7 @@ steps:
       - "VUE_APP_URL=${_VUE_APP_URL}"
       - "URLDB=${_URLDB}"
       - "SEGMENT_API_KEY=${_SEGMENT_API_KEY}"
+      - "SENDGRID_API_KEY=${_SENDGRID_API_KEY}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
