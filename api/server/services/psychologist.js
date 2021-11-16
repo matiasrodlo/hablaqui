@@ -98,6 +98,7 @@ const setSession = (role, sessions) => {
 					sessionsId: item._id,
 					start,
 					status: session.status,
+					statusPlan: plan.payment,
 					url: item.roomsUrl,
 				};
 			})
