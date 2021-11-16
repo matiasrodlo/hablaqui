@@ -109,7 +109,7 @@
 					</v-card-text>
 				</v-card>
 				<v-radio-group v-model="period" hide-details>
-					<v-card class="my-2 rounded-xl">
+					<v-card class="my-2 rounded-xl elevation-12">
 						<v-card-text class="py-1">
 							<v-radio value="mensual">
 								<template #label>
@@ -121,7 +121,7 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-card class="my-2">
+					<v-card class="my-2 elevation-12">
 						<div class="primary caption text-center white--text" style="height: 20px">
 							Ahorra 20%
 						</div>
@@ -136,7 +136,12 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-btn class="mt-4" color="primary" rounded block @click="goMercadoPago"
+					<v-btn
+						class="mt-4 elevation-12"
+						color="primary"
+						rounded
+						block
+						@click="goMercadoPago"
 						>Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
