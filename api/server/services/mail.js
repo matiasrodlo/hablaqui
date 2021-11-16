@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import momentz from 'moment-timezone';
+import { logInfo } from '../config/pino';
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -341,7 +342,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			template: 'd-b334d5a385c84a378b41d64395d96ae7',
+			templateId: 'd-b334d5a385c84a378b41d64395d96ae7',
 			asm: {
 				group_id: 16321,
 			},
