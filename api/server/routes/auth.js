@@ -68,5 +68,13 @@ authRouter.put(
 	passport.authenticate('jwt'),
 	authController.changeUserPassword
 );
+/**
+ *
+ */
+authRouter.get(
+	'/auth/user/verification/:email',
+	passport.authenticate('jwt'),
+	authController.changeVerifiedStatus
+);
 
 export default authRouter;

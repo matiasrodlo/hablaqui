@@ -81,6 +81,10 @@ const register = async payload => {
 		password: bcrypt.hashSync(payload.password, 10),
 	};
 	const user = await User.create(newUser);
+	//Enviar correo de verificación
+	const verifyurl = `${process.env.API_URL}api/v1/auth/user/verification/${payload.email}`;
+	await mailService.sendVerifyEmail(user, verifyurl);
+
 	// Segment identification
 	analytics.identify({
 		userId: user._id.toString(),
@@ -99,11 +103,6 @@ const register = async payload => {
 			type: user.role,
 		},
 	});
-
-	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
-	if (user.role === 'user') {
-		await mailService.sendWelcomeNewUser(user);
-	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user: await generateUser(user),
 		token: generateJwt(user),
@@ -163,6 +162,18 @@ const changeUserPassword = async (user, newPassword, res) => {
 	}
 };
 
+const changeVerifiedStatus = async email => {
+	const user = await getUserByEmail(email);
+
+	if (!user) return conflictResponse('Este usuario no existe');
+
+	user.isVerified = true;
+	await user.save();
+	if (user.role === 'user') await mailService.sendWelcomeNewUser(user);
+
+	return okResponse('Cuenta verificada');
+};
+
 const googleAuthCallback = (req, res) => {
 	const frontendUrL = process.env.FRONTEND_URL;
 	const jwt = generateJwt(req.user);
@@ -180,6 +191,7 @@ const authService = {
 	changeUserPassword,
 	googleAuthCallback,
 	getSessions,
+	changeVerifiedStatus,
 };
 
 export default Object.freeze(authService);

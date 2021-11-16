@@ -44,6 +44,15 @@ const authController = {
 		const user = req.user;
 		return authService.changeUserPassword(user, password, res);
 	},
+	async changeVerifiedStatus(req, res) {
+		try {
+			const { email } = req.params;
+			await authService.changeVerifiedStatus(email);
+			return res.redirect(`${process.env.VUE_APP_LANDING}/auth`);
+		} catch (error) {
+			errorCallback(error, res, 'Ha ocurrido un error al verificar');
+		}
+	},
 	googleAuthCallback(req, res) {
 		authService.googleAuthCallback(req, res);
 	},
