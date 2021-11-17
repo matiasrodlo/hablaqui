@@ -846,17 +846,12 @@ const customNewSession = async (user, payload) => {
 	// Si la sesión es de costo 0, se asume que no es un sesión personalizada, sino una sesión de bloqueo de horas.
 	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
 	if (payload.price && payload.price > 0 && payload.user) {
-		const paymentUrl = `${api_url}api/v1/mercadopago/custom-session/${
-			payload.user
-		}/${user.psychologist}/${
-			updatedSession.plan[updatedSession.plan.length - 1]._id
-		}`;
-		const consultant = updatedSession.user;
-		const psychologist = updatedSession.psychologist;
 		await mailService.sendCustomSessionPaymentURL(
-			consultant,
-			psychologist,
-			paymentUrl
+			updatedSession.user,
+			updatedSession.psychologist,
+			`${api_url}api/v1/mercadopago/custom-session/${payload.user}/${
+				user.psychologist
+			}/${updatedSession.plan[updatedSession.plan.length - 1]._id}`
 		);
 	}
 
