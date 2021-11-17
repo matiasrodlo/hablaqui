@@ -144,11 +144,12 @@ const recruitmentService = {
 		);
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
 	},
-	async freePlan (recruitedId) {
+	async freePlan(recruitedId) {
 		const recruited = await Recruitment.findById(recruitedId);
 		if (recruited) return conflictResponse('No se encontró al postulante');
 		if (recruited.psyPlans.length > 0) {
-			const currentPlan = recruited.psyPlans[recruited.psyPlans.length - 1];
+			const currentPlan =
+				recruited.psyPlans[recruited.psyPlans.length - 1];
 			if (currentPlan.tier === 'free') {
 				return okResponse('Ya tienes el plan gratuito');
 			} else if (
@@ -188,7 +189,7 @@ const recruitmentService = {
 		return okResponse('Plan gratuito creado', {
 			psyPlans: createdPlan.psyPlans,
 		});
-	};
+	},
 };
 
 export default recruitmentService;
