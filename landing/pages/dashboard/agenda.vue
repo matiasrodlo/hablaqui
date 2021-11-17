@@ -107,6 +107,7 @@
 							color="primary"
 							locale="es"
 							:event-color="getEventColor"
+							:event-text-color="getEventTextColor"
 							@click:event="showEvent"
 							@click:more="viewDay"
 							@click:day="addAppointment"
@@ -131,7 +132,12 @@
 									<span>{{ setSubtitle(selectedEvent.start) }}</span>
 								</v-card-text>
 								<v-divider></v-divider>
-								<v-card-actions v-if="selectedEvent.title !== 'compromiso privado'">
+								<v-card-actions
+									v-if="
+										selectedEvent.title !== 'compromiso privado' &&
+										selectedEvent.statusPlan !== 'pending'
+									"
+								>
 									<v-btn
 										v-if="selectedEvent.status === 'pending'"
 										:href="selectedEvent.url"
@@ -160,6 +166,12 @@
 									>
 										Cancelado
 									</v-chip>
+								</v-card-actions>
+								<v-card-actions
+									v-if="selectedEvent.statusPlan === 'pending'"
+									class="text--secondary body-2"
+								>
+									Pendiente por pago de consultante
 								</v-card-actions>
 								<v-dialog
 									v-if="dialog"
@@ -432,49 +444,39 @@
 							</v-card>
 						</v-dialog>
 						<v-row class="text-md-right pt-4">
-							<v-col cols="6" md="3" class="pointer">
-								<v-btn
-									color="primary"
-									depressed
-									fab
-									style="width: 20px; height: 20px"
-								>
-									<icon small :icon="mdiCheck" color="white" />
+							<v-col cols="6" md="3">
+								<v-btn text @click="() => setFilter('sesion online')">
+									<v-avatar size="20" color="primary">
+										<icon small :icon="mdiCheck" color="white" />
+									</v-avatar>
+									<span class="ml-1 caption">Sesiones online</span>
 								</v-btn>
-								<span class="ml-1 caption">Sesiones online</span>
 							</v-col>
-							<v-col cols="6" md="3" class="pointer">
-								<v-btn
-									color="#00c6ea"
-									depressed
-									fab
-									style="width: 20px; height: 20px"
-								>
-									<icon small :icon="mdiCheck" color="white" />
+							<v-col cols="6" md="3">
+								<v-btn text depressed @click="() => setFilter('sesion presencial')">
+									<v-avatar color="#00c6ea" size="20">
+										<icon small :icon="mdiCheck" color="white" />
+									</v-avatar>
+									<span class="ml-1 caption">Sesiones presenciales</span>
 								</v-btn>
-								<span class="ml-1 caption">Sesiones presenciales</span>
 							</v-col>
-							<v-col cols="6" md="3" class="pointer">
-								<v-btn
-									color="#efb908"
-									depressed
-									fab
-									style="width: 20px; height: 20px"
-								>
-									<icon small :icon="mdiCheck" color="white" />
+							<v-col cols="6" md="3">
+								<v-btn text @click="() => setFilter('compromiso privado')">
+									<v-avatar color="#efb908" size="20">
+										<icon small :icon="mdiCheck" color="white" />
+									</v-avatar>
+									<span class="ml-1 caption">Compromiso privado</span>
 								</v-btn>
-								<span class="ml-1 caption">Compromiso privado</span>
 							</v-col>
-							<v-col cols="6" md="3" class="pointer">
-								<v-btn
-									color="blue-grey lighten-4"
-									depressed
-									fab
-									style="width: 20px; height: 20px"
-								>
-									<icon small :icon="mdiCheck" color="white" />
+							<v-col cols="6" md="3">
+								<v-btn text @click="() => setFilter('pending')">
+									<v-avatar color="blue-grey lighten-4" size="20">
+										<icon small :icon="mdiCheck" color="white" />
+									</v-avatar>
+									<span class="ml-1 caption">
+										Pendiente por pago del consultante
+									</span>
 								</v-btn>
-								<span class="ml-1 caption">Pendiente por pago del consultante</span>
 							</v-col>
 						</v-row>
 					</v-sheet>
@@ -722,6 +724,7 @@ export default {
 		dialogWithoutSessions: false,
 		newEvent: null,
 		psychologist: null,
+		filterTypeSession: '',
 		loadingSession: false,
 		loagindReschedule: false,
 		stepAddAppoinment: 0,
@@ -813,8 +816,18 @@ export default {
 			if (this.typeSession === 'compromiso privado') return false;
 			return !this.client || !this.typeSession || !this.valueSession;
 		},
+		sessions() {
+			const copyArray = [...this.allSessions];
+			if (this.filterTypeSession)
+				return copyArray.filter(
+					sesion =>
+						sesion.title === this.filterTypeSession ||
+						sesion.statusPlan === this.filterTypeSession
+				);
+			else return copyArray;
+		},
 		...mapGetters({
-			sessions: 'Psychologist/sessions',
+			allSessions: 'Psychologist/sessions',
 			clients: 'Psychologist/clients',
 		}),
 	},
@@ -829,6 +842,9 @@ export default {
 					}))
 					.find(item => item._id === this.$route.query.client);
 			}
+		},
+		sessions(newVal) {
+			if (newVal.length) this.events = this.sessions;
 		},
 	},
 	created() {
@@ -851,7 +867,6 @@ export default {
 					idPsychologist: this.plan.psychologist,
 					idUser: this.plan.user,
 				});
-				this.events = this.sessions;
 			}
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&
@@ -861,14 +876,17 @@ export default {
 				await this.getSessions({
 					idPsychologist: this.$auth.$state.user.psychologist,
 				});
-				this.events = this.sessions;
 			}
 		},
 		getEventColor(event) {
-			if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
+			// if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
+		},
+		getEventTextColor(event) {
+			if (event.statusPlan === 'pending') return 'error';
+			return 'white';
 		},
 		async submitUser() {
 			this.$v.$touch();
@@ -902,7 +920,6 @@ export default {
 				newDate,
 			});
 
-			this.events = this.sessions;
 			this.event = null;
 			this.selectedOpen = false;
 			this.loagindReschedule = false;
@@ -1000,6 +1017,10 @@ export default {
 				localStorage.removeItem('psi');
 			}
 		},
+		setFilter(value) {
+			if (this.filterTypeSession === value) this.filterTypeSession = '';
+			else this.filterTypeSession = value;
+		},
 		setSubtitle(date) {
 			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
 				.add(60, 'minutes')
@@ -1037,13 +1058,12 @@ export default {
 				sessionNumber: this.plan.session.length + 1,
 				remainingSessions: (this.plan.remainingSessions -= 1),
 			};
-			const response = await this.addSession({
+			await this.addSession({
 				id: this.plan.idSessions,
 				idPlan: this.plan._id,
 				payload,
 			});
 			await this.$auth.fetchUser();
-			this.events = response;
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},
