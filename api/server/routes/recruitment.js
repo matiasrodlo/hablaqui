@@ -65,8 +65,8 @@ recruitmentRouter.post(
 /**
  * @description: Crea un plan gratuito para el psicologo postulante (si es que no tiene plan vigente)
  * @route {POST} /api/v1/psychologist/create-free-plan
- * @param {req} recruitedId id del psicologo
- * @returns {object} psicologo con plan free creado
+ * @param {req} recruitedId id del postulante
+ * @returns {object} postulante con plan free creado
  * */
 recruitmentRouter.post(
 	'/recruitment/create-free-plan',

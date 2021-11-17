@@ -62,7 +62,8 @@ const createPsychologistPreference = async (body, res) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	const { init_point } = resBody;
+	return okResponse('preference created', init_point);
 };
 
 const successPay = async params => {
@@ -203,7 +204,7 @@ const createRecruitedPreference = async (body, res) => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitment}?period=${body.period}`,
+			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitmentId}?period=${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
@@ -212,7 +213,8 @@ const createRecruitedPreference = async (body, res) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	const { init_point } = resBody;
+	return okResponse('preference created', init_point);
 };
 
 const recruitedPay = async (params, query) => {

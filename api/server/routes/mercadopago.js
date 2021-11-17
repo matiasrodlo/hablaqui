@@ -34,12 +34,15 @@ mercadopagoRouter.get(
  * MERCADOPAGO PLANES DE PSICOLOGO
 
  * @description: Ruta para crear una preferencia (URL de pago) de un plan de psicologo
- * @param {Object} body - Objeto con los parametros necesarios
- * @param {String} body.descritipn - Titulo del objeto de pago
- * @param {Integer} body.price - Precio a pagar (en CLP)
- * @param {String} body.psychologistToUpdate - ObjectId del psicologo que ha pagado
- * @returns: Preferencia, pero lo importante es el init_point (la URL para redireccionar a mercadopago)
-
+ * @body {Object} datos de la preferencia (precio, periodo, id del psicologo)
+ * {
+ * 		"title": "Premium mensual" o  "Premium anual",
+ * 		"description": "Plan Premium de Hablaqui",
+ * 		"price": "{PRECIO DEL PLAN}",
+ * 		"period": "anual" o "mensual",
+ * 		"psychologistId": "{ID DEL PSICOLOGO}",
+ * }
+ * @returns {Object} preferencia creada con el URL para pagar en init_point
  */
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
@@ -48,8 +51,15 @@ mercadopagoRouter.post(
 
 /**
  * Crea una preferencia de mercadopago para pago de plan de postulante
- * @param {string} planId
- * @body {string} datos de la preferencia (precio, periodo, id del postulante)
+ * @body {Object} datos de la preferencia (precio, periodo, id del postulante)
+ * {
+ * 		"title": "Premium mensual" o  "Premium anual",
+ * 		"description": "Plan Premium de Hablaqui",
+ * 		"price": "{PRECIO DEL PLAN}",
+ * 		"period": "anual" o "mensual",
+ * 		"recruitmentId": "{ID DEL POSTULANTE}",
+ * }
+ * @returns {Object} preferencia creada con el URL para pagar en init_point
  */
 mercadopagoRouter.post(
 	'/mercadopago/recruited-preference',
