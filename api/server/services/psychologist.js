@@ -12,6 +12,7 @@ import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
+import { api_url } from '../config/dotenv';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -845,14 +846,13 @@ const customNewSession = async (user, payload) => {
 	// Si la sesión es de costo 0, se asume que no es un sesión personalizada, sino una sesión de bloqueo de horas.
 	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
 	if (payload.price && payload.price > 0 && payload.user) {
-		const currentAPIURL = process.env.API_ABSOLUTE;
-		const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${
+		const paymentUrl = `${api_url}api/v1/mercadopago/custom-session/${
 			payload.user
 		}/${user.psychologist}/${
 			updatedSession.plan[updatedSession.plan.length - 1]._id
 		}`;
-		const consultant = await User.findById(payload.user);
-		const psychologist = await Psychologist.findById(user.psychologist);
+		const consultant = updatedSession.user;
+		const psychologist = updatedSession.psychologist;
 		await mailService.sendCustomSessionPaymentURL(
 			consultant,
 			psychologist,

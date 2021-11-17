@@ -1,12 +1,10 @@
 'use strict';
 
-import { errorCallback } from '../utils/functions/errorCallback';
 import mercadopago from 'mercadopago';
-import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { okResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
-import psychologistService from './psychologist';
 import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
@@ -18,7 +16,7 @@ mercadopago.configure({
 	access_token: mercadopago_key,
 });
 
-const createPreference = async (body, res) => {
+const createPreference = async body => {
 	let newPreference = {
 		items: [
 			{
@@ -41,7 +39,7 @@ const createPreference = async (body, res) => {
 	const resBody = responseBody.body;
 	return okResponse('preference created', resBody);
 };
-const createPsychologistPreference = async (body, res) => {
+const createPsychologistPreference = async body => {
 	let newPreference = {
 		items: [
 			{
@@ -192,7 +190,7 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 	return okResponse('preference created', resBody);
 };
 
-const createRecruitedPreference = async (body, res) => {
+const createRecruitedPreference = async body => {
 	let newPreference = {
 		items: [
 			{

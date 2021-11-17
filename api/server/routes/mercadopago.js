@@ -2,7 +2,6 @@
 
 import { Router } from 'express';
 import mercadopagoController from '../controllers/mercadopago';
-import mercadopago from '../services/mercadopago';
 
 const mercadopagoRouter = Router();
 

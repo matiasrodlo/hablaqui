@@ -10,8 +10,7 @@ const mercadopagoController = {
 		try {
 			const { body } = req;
 			const { data, code } = await mercadopagoService.createPreference(
-				body,
-				res
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -33,10 +32,7 @@ const mercadopagoController = {
 			const {
 				data,
 				code,
-			} = await mercadopagoService.createPsychologistPreference(
-				body,
-				res
-			);
+			} = await mercadopagoService.createPsychologistPreference(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error procesando el servicio');
@@ -59,7 +55,7 @@ const mercadopagoController = {
 			const {
 				data,
 				code,
-			} = await mercadopagoService.createRecruitedPreference(body, res);
+			} = await mercadopagoService.createRecruitedPreference(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error creando el pago en MercadoPago');
