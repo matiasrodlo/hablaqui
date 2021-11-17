@@ -783,9 +783,11 @@ const uploadProfilePicture = async (psyID, picture) => {
  * @returns sessions
  */
 const customNewSession = async (user, payload) => {
+	// Validamos que sea psicologo
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres psicologo');
 
+	// Objeto con la sesion a crear
 	const newSession = {
 		date: payload.date,
 		sessionNumber: 1,
@@ -793,6 +795,7 @@ const customNewSession = async (user, payload) => {
 		status: 'pending',
 	};
 
+	// Objeto con el plan a crear
 	const newPlan = {
 		title: payload.type,
 		period: 'Pago semanal',
@@ -809,6 +812,7 @@ const customNewSession = async (user, payload) => {
 		session: [newSession],
 	};
 
+	// Si existe un plan con este titulo lo removemos
 	await Sessions.updateOne(
 		{
 			user: payload.user,
@@ -821,11 +825,14 @@ const customNewSession = async (user, payload) => {
 		}
 	);
 
+	// Creamos la direccion de la sala de videollamadas
 	const roomId = require('crypto')
 		.createHash('md5')
 		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
 
+	// creamos o actualizamos las sesiones entre el usuario y el psicologo
+	// cuando se crea compromiso privado el user será null
 	const updatedSession = await Sessions.findOneAndUpdate(
 		{
 			user: payload.user,
@@ -840,12 +847,9 @@ const customNewSession = async (user, payload) => {
 		{ upsert: true, new: true }
 	).populate('user psychologist');
 
-	// Aqui tienes la URL de mercadopago, debes agregarle la URL de la API, pero no se donde querras hacer eso.
-	// Recuerda no mandar el correo si el precio es 0.
-
-	// Si la sesión es de costo 0, se asume que no es un sesión personalizada, sino una sesión de bloqueo de horas.
-	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
+	// validamos precio y que exista user(recordemos que user es null en compromiso privado)
 	if (payload.price && payload.price > 0 && payload.user) {
+		// Enviamos email a el user con el link para pagar
 		await mailService.sendCustomSessionPaymentURL(
 			updatedSession.user,
 			updatedSession.psychologist,
@@ -855,6 +859,7 @@ const customNewSession = async (user, payload) => {
 		);
 	}
 
+	// respondemos con la sesion creada
 	return okResponse('sesion creada', {
 		sessions: setSession(user.role, [updatedSession]).pop(),
 	});
