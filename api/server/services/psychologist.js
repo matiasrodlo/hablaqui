@@ -323,7 +323,7 @@ const createPlan = async ({ payload }) => {
 	if (payload.price > 0 && payload.user !== payload.psychologist) {
 		analytics.track({
 			userId: payload.user,
-			event: 'Nuevo plan contratado (user)',
+			event: 'user-purchase-plan',
 			properties: {
 				plan: payload.title,
 				period: payload.paymentPeriod,
@@ -334,7 +334,7 @@ const createPlan = async ({ payload }) => {
 		});
 		analytics.track({
 			userId: payload.psychologist,
-			event: 'Nuevo plan agendado (psicologo)',
+			event: 'psy-new-plan',
 			properties: {
 				plan: payload.title,
 				period: payload.paymentPeriod,
@@ -396,7 +396,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 
 	analytics.track({
 		userId: payload.user,
-		event: 'Nueva sesion creada (user)',
+		event: 'user-new-session',
 		properties: {
 			user: payload.user,
 			planId: idPlan,
@@ -405,7 +405,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	});
 	analytics.track({
 		userId: payload.psychologist,
-		event: 'Nueva sesion agendada (psicologo)',
+		event: 'psy-new-session',
 		properties: {
 			user: payload.user,
 			planId: idPlan,

@@ -228,7 +228,7 @@ const usersService = {
 		});
 		analytics.track({
 			userId: createdUser._id,
-			event: 'Registered with psy referral',
+			event: 'referral-user-signup',
 			properties: {
 				name: user.name,
 				email: user.email,

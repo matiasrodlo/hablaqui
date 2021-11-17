@@ -31,7 +31,7 @@ const recruitmentService = {
 
 		analytics.track({
 			userId: user._id,
-			event: 'New psy application',
+			event: 'psy-new-application',
 			properties: {
 				email: user.email,
 				name: user.name,
@@ -117,7 +117,7 @@ const recruitmentService = {
 
 		analytics.track({
 			userId: user._id,
-			event: 'New psy recruited',
+			event: 'new-psy-onboard',
 			properties: {
 				email: payload.email,
 				name: payload.name,

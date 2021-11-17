@@ -90,7 +90,7 @@ const register = async payload => {
 	});
 	analytics.track({
 		userId: user._id,
-		event: 'Registered',
+		event: 'organic-user-signup',
 		properties: {
 			name: user.name,
 			email: user.email,
