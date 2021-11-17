@@ -813,7 +813,11 @@ const customNewSession = async (user, payload) => {
 			user: payload.user,
 			psychologist: user.psychologist,
 		},
-		{}
+		{
+			$pull: {
+				plan: { title: 'Plan inicial' },
+			},
+		}
 	);
 
 	const roomId = require('crypto')
