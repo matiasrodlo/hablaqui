@@ -906,10 +906,10 @@ const freePlan = async psychologistId => {
 	if (!psy) return conflictResponse('No se encontró el psicologo');
 	if (psy.psyPlans.length > 0) {
 		const currentPlan = psy.psyPlans[psy.psyPlans.length - 1];
-		if (currentPlan.title === 'free') {
+		if (currentPlan.tier === 'free') {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
-			currentPlan.title === 'premium' &&
+			currentPlan.tier === 'premium' &&
 			moment(currentPlan.expirationDate).isAfter(moment())
 		) {
 			return okResponse('Tienes un plan premium vigente');
@@ -929,7 +929,7 @@ const freePlan = async psychologistId => {
 		{
 			$push: {
 				psyPlans: {
-					title: 'free',
+					tier: 'free',
 					paymentStatus: 'success',
 					planStatus: 'active',
 					expirationDate: '',
