@@ -443,7 +443,10 @@
 								</template>
 							</v-card>
 						</v-dialog>
-						<v-row class="text-md-right pt-4">
+						<v-row
+							v-if="$auth.$state.user.role === 'psychologist'"
+							class="text-md-right pt-4"
+						>
 							<v-col cols="6" md="3">
 								<v-btn text @click="() => setFilter('sesion online')">
 									<v-avatar size="20" color="primary">
@@ -770,14 +773,17 @@ export default {
 					diff: moment(plan.expiration).diff(moment(), 'days'),
 				}))
 			);
-			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+			const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
 			// retornamos el plan success y sin expirar
 			let plan = plans.find(
 				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
 			);
-			// retornamos el ultimo plan succes y que expiro
+			// retornamos el siguiente plan pendiente
 			if (!plan) plan = plans.find(item => item.diff === max);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === min);
 			return plan;
 		},
 		nextSesion() {

@@ -39,12 +39,12 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			user: idUser,
 		}).populate('psychologist user');
 	}
-
 	if (userLogged.role === 'psychologist') {
 		sessions = await Sessions.find({
 			psychologist: idPsy,
 		}).populate('psychologist user');
 	}
+	console.log('getsession', sessions);
 
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);
@@ -80,8 +80,15 @@ const setSession = (role, sessions) => {
 				? item.psychologist.lastName
 				: '';
 		}
-		return item.plan.flatMap(plan =>
-			plan.session.map(session => {
+		return item.plan.flatMap(plan => {
+			if (plan.title === 'Mensajería y videollamada')
+				plan.title = 'sesion online';
+			else if (plan.title === 'Acompañamiento vía mensajería')
+				plan.title = 'sesion online';
+			else if (plan.title === 'Sesiones por videollamada')
+				plan.title = 'sesion online';
+
+			return plan.session.map(session => {
 				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
 					'YYYY-MM-DD HH:mm'
 				);
@@ -106,8 +113,8 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					url: item.roomsUrl,
 				};
-			})
-		);
+			});
+		});
 	});
 };
 
