@@ -114,11 +114,11 @@ const usersService = {
 			return conflictResponse('Ha ocurrido un error inesperado');
 
 		if (userLogged.role === 'superuser') {
+			const psy = await Psychologist.findById(idPsychologist);
 			const userSelected = await User.findOne({
-				email: userLogged.email,
+				email: psy.email,
 				role: 'psychologist',
 			});
-
 			userRole = userSelected.role;
 			userID = userSelected._id;
 		}
