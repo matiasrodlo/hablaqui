@@ -115,7 +115,7 @@ const usersService = {
 
 		if (userLogged.role === 'superuser') {
 			const userSelected = await User.findOne({
-				psychologist: idPsychologist,
+				email: userLogged.email,
 				role: 'psychologist',
 			});
 
