@@ -376,4 +376,16 @@ psychologistsRouter.get(
 	psychologistsController.paymentsInfo
 );
 
+/**
+ * @description: Crea un plan gratuito para el psicologo (si es que no tiene plan vigente)
+ * @route {POST} /api/v1/psychologist/create-free-plan
+ * @param {req} psychologist id del psicologo
+ * @returns {object} psicologo con plan free creado
+ * */
+psychologistsRouter.post(
+	'/psychologist/create-free-plan',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.freePlan
+);
+
 export default psychologistsRouter;

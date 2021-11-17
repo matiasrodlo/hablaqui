@@ -113,19 +113,21 @@ const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
 	const { period } = query;
 	let expirationDate;
-	if (period == 'anual') {
+	if (period === 'anual') {
 		expirationDate = moment()
 			.add({ months: 12 })
 			.toISOString();
 	}
-	if (period == 'mensual') {
+	if (period === 'mensual') {
 		expirationDate = moment()
 			.add({ months: 1 })
 			.toISOString();
 	}
-	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
+	const pricePaid = period === 'mensual' ? 39990 : 31920 * 12;
 	const newPlan = {
 		tier: 'premium',
+		paymentStatus: 'success',
+		planStatus: 'active',
 		hablaquiFee: 0,
 		paymentFee: 0.0399,
 		expirationDate,

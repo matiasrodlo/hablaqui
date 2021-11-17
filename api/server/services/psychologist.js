@@ -912,6 +912,52 @@ const paymentsInfo = async user => {
 	return okResponse('', response);
 };
 
+const freePlan = async psychologistId => {
+	const psy = await Psychologist.findById(psychologistId);
+	if (!psy) return conflictResponse('No se encontró el psicologo');
+	if (psy.psyPlans.length > 0) {
+		const currentPlan = psy.psyPlans[psy.psyPlans.length - 1];
+		if (currentPlan.title === 'free') {
+			return okResponse('Ya tienes el plan gratuito');
+		} else if (
+			currentPlan.title === 'premium' &&
+			moment(currentPlan.expirationDate).isAfter(moment())
+		) {
+			return okResponse('Tienes un plan premium vigente');
+		} else {
+			await Psychologist.findByIdAndUpdate(
+				{ psychologistId, 'psyPlans.planStatus': 'active' },
+				{
+					$set: {
+						'psyPlans.$.planStatus': 'expired',
+					},
+				}
+			);
+		}
+	}
+	const createdPlan = await Psychologist.findByIdAndUpdate(
+		psychologistId,
+		{
+			$push: {
+				psyPlans: {
+					title: 'free',
+					paymentStatus: 'success',
+					planStatus: 'active',
+					expirationDate: '',
+					subscriptionPeriod: '',
+					price: 0,
+					hablaquiFee: 0.2,
+					paymentFee: 0.0399,
+				},
+			},
+		},
+		{ new: true }
+	);
+	return okResponse('Plan gratuito creado', {
+		psyPlans: createdPlan.psyPlans,
+	});
+};
+
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -940,6 +986,7 @@ const psychologistsService = {
 	updatePsychologist,
 	uploadProfilePicture,
 	usernameAvailable,
+	freePlan,
 };
 
 export default Object.freeze(psychologistsService);

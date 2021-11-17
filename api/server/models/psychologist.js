@@ -82,6 +82,11 @@ let psyPlan = new Schema({
 		enum: ['success', 'pending'],
 		default: 'pending',
 	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
+		default: 'pending',
+	},
 	expirationDate: {
 		type: String,
 		default: '',
