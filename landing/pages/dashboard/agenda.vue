@@ -131,7 +131,7 @@
 									<span>{{ setSubtitle(selectedEvent.start) }}</span>
 								</v-card-text>
 								<v-divider></v-divider>
-								<v-card-actions>
+								<v-card-actions v-if="selectedEvent.title !== 'compromiso privado'">
 									<v-btn
 										v-if="selectedEvent.status === 'pending'"
 										:href="selectedEvent.url"
@@ -313,11 +313,9 @@
 													label="Seleccione"
 													outlined
 													@change="
-														e => {
-															if (e === 'compromiso privado') {
-																valueSession = null;
-																client = null;
-															}
+														() => {
+															valueSession = null;
+															client = null;
 														}
 													"
 												></v-select>
@@ -469,15 +467,14 @@
 							</v-col>
 							<v-col cols="6" md="3" class="pointer">
 								<v-btn
-									color="grey"
+									color="blue-grey lighten-4"
 									depressed
 									fab
-									outlined
 									style="width: 20px; height: 20px"
 								>
-									<icon small :icon="mdiCheck" color="grey" />
+									<icon small :icon="mdiCheck" color="white" />
 								</v-btn>
-								<span class="ml-1 caption">Disponibilidad</span>
+								<span class="ml-1 caption">Pendiente por pago del consultante</span>
 							</v-col>
 						</v-row>
 					</v-sheet>
@@ -868,8 +865,9 @@ export default {
 			}
 		},
 		getEventColor(event) {
-			if (event.title === 'compromiso privado') return 'warning';
-			if (event.title === 'sesion presencial') return 'info';
+			if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
+			if (event.title === 'compromiso privado') return '#efb908';
+			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
 		},
 		async submitUser() {
@@ -1029,7 +1027,8 @@ export default {
 				price: this.valueSession,
 			});
 			this.loadingSession = false;
-			this.stepAddAppoinment = 2;
+			if (this.typeSession !== 'compromiso privado') this.stepAddAppoinment = 2;
+			if (this.typeSession === 'compromiso privado') this.closeDialog();
 		},
 		async newSession(event) {
 			this.loadingSession = true;

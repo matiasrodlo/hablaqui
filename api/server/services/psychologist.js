@@ -62,12 +62,16 @@ const setSession = (role, sessions) => {
 	return sessions.flatMap(item => {
 		let name = '';
 		let lastName = '';
+		let idUser = item.user && item.user._id ? item.user._id : item._id;
 
 		// Establece nombre de quien pertenece cada sesion
 		if (role === 'psychologist') {
-			if (item.user) {
+			if (item.user && item.user._id) {
 				name = item.user.name;
 				lastName = item.user.lastName ? item.user.lastName : '';
+			} else {
+				name = 'Compromiso privado';
+				lastName = '';
 			}
 		} else if (role === 'user') {
 			name = item.psychologist.name;
@@ -91,7 +95,7 @@ const setSession = (role, sessions) => {
 					details: `Sesion con ${name}`,
 					end,
 					idPsychologist: item.psychologist._id,
-					idUser: item.user._id,
+					idUser,
 					name: `${name} ${lastName}`,
 					paidToPsychologist: session.paidToPsychologist,
 					sessionNumber: session.sessionNumber,
@@ -668,17 +672,19 @@ const getClients = async psychologist => {
 	}).populate('user psychologist');
 
 	return okResponse('Usuarios encontrados', {
-		users: sessions.map(item => ({
-			_id: item.user._id,
-			avatar: item.user.avatar,
-			email: item.user.email,
-			lastName: item.user.lastName,
-			name: item.user.name,
-			role: item.user.role,
-			roomsUrl: item.roomsUrl,
-			createdAt: item.user.createdAt,
-			lastSession: getLastSession(item) || 'N/A',
-		})),
+		users: sessions
+			.filter(item => item.user)
+			.map(item => ({
+				_id: item.user._id,
+				avatar: item.user.avatar,
+				email: item.user.email,
+				lastName: item.user.lastName,
+				name: item.user.name,
+				role: item.user.role,
+				roomsUrl: item.roomsUrl,
+				createdAt: item.user.createdAt,
+				lastSession: getLastSession(item) || 'N/A',
+			})),
 	});
 };
 
@@ -786,18 +792,12 @@ const customNewSession = async (user, payload) => {
 		status: 'pending',
 	};
 
-	// Validador si existe un documento sesion entre ambos usuarios.
-	const validation = await Sessions.exists({
-		user: payload.user,
-		psychologist: user.psychologist,
-	});
-
 	const newPlan = {
 		title: payload.type,
 		period: 'Pago semanal',
 		totalPrice: payload.price,
 		sessionPrice: payload.price,
-		payment: 'pending',
+		payment: payload.type === 'compromiso privado' ? 'success' : 'pending',
 		expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
 			.add({ weeks: 1 })
 			.toISOString(),
@@ -808,50 +808,39 @@ const customNewSession = async (user, payload) => {
 		session: [newSession],
 	};
 
-	let updatedSession;
-
-	if (validation) {
-		await Sessions.updateOne(
-			{
-				user: payload.user,
-				psychologist: user.psychologist,
-			},
-			{
-				$pull: {
-					plan: { title: 'Plan inicial' },
-				},
-			}
-		);
-		updatedSession = await Sessions.findOneAndUpdate(
-			{
-				user: payload.user,
-				psychologist: user.psychologist,
-			},
-			{
-				$push: { plan: newPlan },
-			},
-			{ new: true }
-		).populate('user psychologist');
-	} else {
-		const roomId = require('crypto')
-			.createHash('md5')
-			.update(`${payload.user}${payload.psychologist}`)
-			.digest('hex');
-
-		updatedSession = await Sessions.create({
+	await Sessions.updateOne(
+		{
 			user: payload.user,
 			psychologist: user.psychologist,
-			plan: [newPlan],
-			roomsUrl: `${room}room/${roomId}`,
-		}).populate('user psychologist');
-	}
+		},
+		{}
+	);
+
+	const roomId = require('crypto')
+		.createHash('md5')
+		.update(`${payload.user}${payload.psychologist}`)
+		.digest('hex');
+
+	const updatedSession = await Sessions.findOneAndUpdate(
+		{
+			user: payload.user,
+			psychologist: user.psychologist,
+		},
+		{
+			user: payload.user,
+			psychologist: user.psychologist,
+			$push: { plan: newPlan },
+			roomsUrl: payload.user ? `${room}room/${roomId}` : '',
+		},
+		{ upsert: true, new: true }
+	).populate('user psychologist');
 
 	// Aqui tienes la URL de mercadopago, debes agregarle la URL de la API, pero no se donde querras hacer eso.
 	// Recuerda no mandar el correo si el precio es 0.
 
 	// Si la sesión es de costo 0, se asume que no es un sesión personalizada, sino una sesión de bloqueo de horas.
 	// Si es distinta de costo 0, se general URL de mercadopago y se envía correo.
-	if (payload.price !== 0) {
+	if (payload.price && payload.price > 0 && payload.user) {
 		const currentAPIURL = process.env.API_ABSOLUTE;
 		const paymentUrl = `${currentAPIURL}/mercadopago/custom-session/${
 			payload.user
