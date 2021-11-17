@@ -14,9 +14,7 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{ plan.totalSessions - plan.remainingSessions }}/{{
-										plan.totalSessions
-									}}
+									{{ plan.session.length }}/{{ plan.totalSessions }}
 								</div>
 								<div
 									v-else
@@ -496,7 +494,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ plan.totalSessions - plan.remainingSessions }}/{{ plan.totalSessions }}
+						{{ plan.session.length }}/{{ plan.totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -780,17 +778,20 @@ export default {
 			let plan = plans.find(
 				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
 			);
-			// retornamos el siguiente plan pendiente
-			if (!plan) plan = plans.find(item => item.diff === max);
 			// retornamos el ultimo plan succes y que expiro
 			if (!plan) plan = plans.find(item => item.diff === min);
+			// retornamos el siguiente plan pendiente
+			if (!plan) plan = plans.find(item => item.diff === max);
 			return plan;
 		},
 		nextSesion() {
 			// Si no hay plan
 			if (!this.plan) return '';
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
-			const dates = this.sessions.flatMap(session => session.date);
+			const filterSessions = this.sessions.filter(
+				session => session.idPlan === this.plan._id
+			);
+			const dates = filterSessions.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const date = dates.find(item =>
 				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())

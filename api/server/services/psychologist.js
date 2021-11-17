@@ -44,7 +44,6 @@ const getSessions = async (userLogged, idUser, idPsy) => {
 			psychologist: idPsy,
 		}).populate('psychologist user');
 	}
-	console.log('getsession', sessions);
 
 	// Para que nos de deje modificar el array de mongo
 	sessions = JSON.stringify(sessions);
@@ -111,6 +110,7 @@ const setSession = (role, sessions) => {
 					start,
 					status: session.status,
 					statusPlan: plan.payment,
+					idPlan: plan._id,
 					url: item.roomsUrl,
 				};
 			});
