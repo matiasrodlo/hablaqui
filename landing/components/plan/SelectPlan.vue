@@ -174,7 +174,7 @@ export default {
 						},
 						{
 							id: 3,
-							lapse: '/por sesión ($168.000 mensual)',
+							lapse: '/por sesión ($168.000 trimestral)',
 							price: '14000',
 							total: '168000',
 							type: 'Pago cada tres meses',
@@ -328,7 +328,7 @@ export default {
 				weekPrice = priceWithDiscount / 12;
 				weekPrice = Math.ceil(weekPrice / 100) * 100;
 				price = weekPrice * 12;
-				lapse = `/por sesión ($${price} mensual)`;
+				lapse = `/por sesión ($${price} trimestral)`;
 			}
 			return {
 				...deal,
