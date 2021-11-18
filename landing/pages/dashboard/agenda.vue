@@ -865,6 +865,7 @@ export default {
 	async mounted() {
 		this.overlay = true;
 		moment.locale('es');
+		await this.$auth.fetchUser();
 		await this.initFetch();
 		await this.successPayment();
 		this.$refs.calendar?.checkChange();
