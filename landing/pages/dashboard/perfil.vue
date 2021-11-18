@@ -155,14 +155,18 @@ export default {
 						diff: moment(plan.expiration).diff(moment(), 'days'),
 					}))
 				);
-				const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+				const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
 				// retornamos el plan success y sin expirar
 				let plan = plans.find(
 					item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
 				);
-				// retornamos el ultimo plan succes y que expiro
+				// retornamos el siguiente plan pendiente
 				if (!plan) plan = plans.find(item => item.diff === max);
+				// retornamos el ultimo plan succes y que expiro
+				if (!plan) plan = plans.find(item => item.diff === min);
+
 				if (plan.psychologist) {
 					const { psychologist } = await $axios.$get(
 						`/psychologists/one/${plan.psychologist}`
