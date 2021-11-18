@@ -159,21 +159,22 @@ const customSessionPay = async params => {
 	return okResponse('plan actualizado', { body: updatePlan });
 };
 
-const createCustomSessionPreference = async (userId, psyId, planId) => {
-	let foundSession = await Sessions.findOne({
+const createCustomSessionPreference = async params => {
+	const { userId, psyId, planId } = params;
+	const foundPlan = await Sessions.findOne({
+		'plan._id': planId,
 		user: userId,
 		psychologist: psyId,
 	});
-
-	let foundPlan = foundSession.plan.filter(e => e._id == planId);
-	logInfo(foundPlan[0].totalPrice);
+	logInfo('el' + JSON.stringify(foundPlan));
+	const planData = foundPlan.plan[foundPlan.plan.length - 1];
 	let newPreference = {
 		items: [
 			{
 				title: 'Sesion personalizada',
 				description: 'Sesion personalizada creada por psicologo',
 				currency_id: 'CLP',
-				unit_price: foundPlan[0].totalPrice,
+				unit_price: planData.totalPrice,
 				quantity: 1,
 			},
 		],
@@ -187,7 +188,8 @@ const createCustomSessionPreference = async (userId, psyId, planId) => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	const { init_point } = resBody;
+	return okResponse('preference created', { init_point });
 };
 
 const createRecruitedPreference = async body => {

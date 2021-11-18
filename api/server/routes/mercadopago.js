@@ -96,7 +96,7 @@ mercadopagoRouter.get(
 );
 
 mercadopagoRouter.get(
-	'/mercadopago/custom-session-pay/:id',
+	'/mercadopago/custom-session-pay/:userId/:psyId/:planId',
 	mercadopagoController.customSessionPay
 );
 

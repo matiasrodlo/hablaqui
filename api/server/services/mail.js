@@ -342,7 +342,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-b334d5a385c84a378b41d64395d96ae7',
+			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
 			asm: {
 				group_id: 16321,
 			},
@@ -356,8 +356,10 @@ const mailService = {
 			sgMail.send(dataPayload, function(error, body) {
 				if (error) {
 					reject(error);
+					logInfo(error);
 				} else {
 					resolve(body);
+					logInfo(body);
 				}
 			});
 		});

@@ -13,6 +13,7 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import { api_url } from '../config/dotenv';
+import mercadopagoService from './mercadopago';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -790,86 +791,96 @@ const uploadProfilePicture = async (psyID, picture) => {
  * @returns sessions
  */
 const customNewSession = async (user, payload) => {
-	// Validamos que sea psicologo
-	if (user.role !== 'psychologist')
-		return conflictResponse('No eres psicologo');
+	try {
+		// Validamos que sea psicologo
+		if (user.role !== 'psychologist')
+			return conflictResponse('No eres psicologo');
 
-	// Objeto con la sesion a crear
-	const newSession = {
-		date: payload.date,
-		sessionNumber: 1,
-		paidToPsychologist: false,
-		status: 'pending',
-	};
+		// Objeto con la sesion a crear
+		const newSession = {
+			date: payload.date,
+			sessionNumber: 1,
+			paidToPsychologist: false,
+			status: 'pending',
+		};
 
-	// Objeto con el plan a crear
-	const newPlan = {
-		title: payload.type,
-		period: 'Pago semanal',
-		totalPrice: payload.price,
-		sessionPrice: payload.price,
-		payment: payload.type === 'compromiso privado' ? 'success' : 'pending',
-		expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
-			.add({ weeks: 1 })
-			.toISOString(),
-		invitedByPsychologist: true,
-		usedCoupon: '',
-		totalSessions: 1,
-		remainingSessions: 0,
-		session: [newSession],
-	};
+		// Objeto con el plan a crear
+		const newPlan = {
+			title: payload.type,
+			period: 'Pago semanal',
+			totalPrice: payload.price,
+			sessionPrice: payload.price,
+			payment:
+				payload.type === 'compromiso privado' ? 'success' : 'pending',
+			expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
+				.add({ weeks: 1 })
+				.toISOString(),
+			invitedByPsychologist: true,
+			usedCoupon: '',
+			totalSessions: 1,
+			remainingSessions: 0,
+			session: [newSession],
+		};
 
-	// Si existe un plan con este titulo lo removemos
-	await Sessions.updateOne(
-		{
-			user: payload.user,
-			psychologist: user.psychologist,
-		},
-		{
-			$pull: {
-				plan: { title: 'Plan inicial' },
+		// Si existe un plan con este titulo lo removemos
+		await Sessions.updateOne(
+			{
+				user: payload.user,
+				psychologist: user.psychologist,
 			},
-		}
-	);
-
-	// Creamos la direccion de la sala de videollamadas
-	const roomId = require('crypto')
-		.createHash('md5')
-		.update(`${payload.user}${payload.psychologist}`)
-		.digest('hex');
-
-	// creamos o actualizamos las sesiones entre el usuario y el psicologo
-	// cuando se crea compromiso privado el user será null
-	const updatedSession = await Sessions.findOneAndUpdate(
-		{
-			user: payload.user,
-			psychologist: user.psychologist,
-		},
-		{
-			user: payload.user,
-			psychologist: user.psychologist,
-			$push: { plan: newPlan },
-			roomsUrl: payload.user ? `${room}room/${roomId}` : '',
-		},
-		{ upsert: true, new: true }
-	).populate('user psychologist');
-
-	// validamos precio y que exista user(recordemos que user es null en compromiso privado)
-	if (payload.price && payload.price > 0 && payload.user) {
-		// Enviamos email a el user con el link para pagar
-		await mailService.sendCustomSessionPaymentURL(
-			updatedSession.user,
-			updatedSession.psychologist,
-			`${api_url}api/v1/mercadopago/custom-session/${payload.user}/${
-				user.psychologist
-			}/${updatedSession.plan[updatedSession.plan.length - 1]._id}`
+			{
+				$pull: {
+					plan: { title: 'Plan inicial' },
+				},
+			}
 		);
-	}
 
-	// respondemos con la sesion creada
-	return okResponse('sesion creada', {
-		sessions: setSession(user.role, [updatedSession]).pop(),
-	});
+		// Creamos la direccion de la sala de videollamadas
+		const roomId = require('crypto')
+			.createHash('md5')
+			.update(`${payload.user}${payload.psychologist}`)
+			.digest('hex');
+
+		// creamos o actualizamos las sesiones entre el usuario y el psicologo
+		// cuando se crea compromiso privado el user será null
+		const updatedSession = await Sessions.findOneAndUpdate(
+			{
+				user: payload.user,
+				psychologist: user.psychologist,
+			},
+			{
+				user: payload.user,
+				psychologist: user.psychologist,
+				$push: { plan: newPlan },
+				roomsUrl: payload.user ? `${room}room/${roomId}` : '',
+			},
+			{ upsert: true, new: true }
+		).populate('user psychologist');
+
+		//validamos precio y que exista user(recordemos que user es null en compromiso privado)
+		if (payload.price && payload.price > 0 && payload.user) {
+			const {
+				data,
+			} = await mercadopagoService.createCustomSessionPreference({
+				userId: payload.user,
+				psyId: user.psychologist,
+				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
+			});
+			// Enviamos email a el user con el link para pagar
+			await mailService.sendCustomSessionPaymentURL(
+				updatedSession.user,
+				updatedSession.psychologist,
+				data.init_point
+			);
+		}
+
+		// respondemos con la sesion creada
+		return okResponse('sesion creada', {
+			sessions: setSession(user.role, [updatedSession]).pop(),
+		});
+	} catch (err) {
+		logInfo(err);
+	}
 };
 
 const approveAvatar = async (user, id) => {
@@ -969,7 +980,7 @@ const deleteCommitment = async (user, body) => {
 		},
 		{
 			$pull: {
-				plan: { _id: planId },
+				plan: { _id: planId, title: 'compromiso privado' },
 				'plan.$.session': { _id: sessionId },
 			},
 		},
