@@ -357,6 +357,18 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async deleteCommitment(req, res) {
+		try {
+			const { user, body } = req;
+			const { data, code } = await psychologistsService.deleteCommitment(
+				user,
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

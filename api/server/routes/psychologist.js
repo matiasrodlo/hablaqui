@@ -388,4 +388,21 @@ psychologistsRouter.post(
 	psychologistsController.freePlan
 );
 
+/**
+ * @description: Elimina un compromiso privado de un psicologo
+ * @route {PATCH} /api/v1/psychologist/delete-private-commitment
+ * @param {String} psyId id del compromiso
+ * @body {Object} planId y sessionId del compromiso
+ * @returns {Object} Objecto Session con el compromiso eliminado
+ * {
+ * 		planId: String del ObjectId,
+ * 		sessionId: String del ObjectId
+ * }
+ */
+psychologistsRouter.patch(
+	'/psychologist/delete-commitment/:psyId/',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.deleteCommitment
+);
+
 export default psychologistsRouter;

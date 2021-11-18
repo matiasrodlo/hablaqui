@@ -951,6 +951,29 @@ const freePlan = async psychologistId => {
 	});
 };
 
+const deleteCommitment = async (user, body) => {
+	if (user.role != 'psychologist') {
+		return conflictResponse('No eres psicologo');
+	}
+	const { planId, sessionId } = body;
+
+	const updatedSessions = await Sessions.findOneAndUpdate(
+		{
+			psychologist: user.psychologist,
+			'plan._id': planId,
+		},
+		{
+			$pull: {
+				plan: { _id: planId },
+				'plan.$.session': { _id: sessionId },
+			},
+		},
+		{ new: true }
+	);
+
+	return okResponse('Sesion eliminada', updatedSessions);
+};
+
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -980,6 +1003,7 @@ const psychologistsService = {
 	uploadProfilePicture,
 	usernameAvailable,
 	freePlan,
+	deleteCommitment,
 };
 
 export default Object.freeze(psychologistsService);
