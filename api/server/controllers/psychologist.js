@@ -3,6 +3,7 @@
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
+import { logInfo } from '../config/pino';
 
 const psychologistsController = {
 	async getAll(req, res) {
@@ -357,10 +358,10 @@ const psychologistsController = {
 	},
 	async deleteCommitment(req, res) {
 		try {
-			const { user, body } = req;
+			const { psyId, planId } = req.params;
 			const { data, code } = await psychologistsService.deleteCommitment(
-				user,
-				body
+				planId,
+				psyId
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

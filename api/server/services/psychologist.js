@@ -966,21 +966,20 @@ const freePlan = async psychologistId => {
 	return okResponse('Plan gratuito creado', { createdPlan });
 };
 
-const deleteCommitment = async (user, body) => {
-	if (user.role != 'psychologist') {
-		return conflictResponse('No eres psicologo');
+const deleteCommitment = async (planId, psyId) => {
+	const psy = await Psychologist.findById(psyId);
+	if (!psy) {
+		return conflictResponse('No existe el psicólogo');
 	}
-	const { planId, sessionId } = body;
 
 	const updatedSessions = await Sessions.findOneAndUpdate(
 		{
-			psychologist: user.psychologist,
+			psychologist: psy._id,
 			'plan._id': planId,
 		},
 		{
 			$pull: {
-				plan: { _id: planId, title: 'compromiso privado' },
-				'plan.$.session': { _id: sessionId },
+				plan: { _id: planId },
 			},
 		},
 		{ new: true }
