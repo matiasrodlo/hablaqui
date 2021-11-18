@@ -89,6 +89,11 @@ sw.*
 # Vim swap files
 *.swp
 
+
 api/.idea*
 landing/.idea*
 front/.idea*
+
+# App Engine Yaml (to optimize costs)
+app.yaml
+
