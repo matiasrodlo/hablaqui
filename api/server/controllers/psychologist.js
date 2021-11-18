@@ -3,7 +3,6 @@
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
-import { logInfo } from '../config/pino';
 
 const psychologistsController = {
 	async getAll(req, res) {
@@ -345,15 +344,6 @@ const psychologistsController = {
 				res,
 				'Error procesando la informacion de los pagos'
 			);
-		}
-	},
-	async freePlan(req, res) {
-		try {
-			const { psyId } = req.params;
-			const { data, code } = await psychologistsService.freePlan(psyId);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 	async deleteCommitment(req, res) {

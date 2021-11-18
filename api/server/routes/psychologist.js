@@ -377,18 +377,6 @@ psychologistsRouter.get(
 );
 
 /**
- * @description: Crea un plan gratuito para el psicologo (si es que no tiene plan vigente)
- * @route {POST} /api/v1/psychologist/create-free-plan
- * @param {String} psyId id del psicologo
- * @returns {object} psicologo con plan free creado
- * */
-psychologistsRouter.post(
-	'/psychologist/create-free-plan/:psyId',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.freePlan
-);
-
-/**
  * @description: Elimina un compromiso privado de un psicologo
  * @route {PATCH} /api/v1/psychologist/delete-private-commitment
  * @param {String} psyId id del compromiso y planId es el id del plan

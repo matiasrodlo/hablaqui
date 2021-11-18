@@ -6,7 +6,6 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
 import mailService from './mail';
-import moment from 'moment';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -144,50 +143,6 @@ const recruitmentService = {
 			{ new: true }
 		);
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
-	},
-	async freePlan(recruitedId) {
-		const recruited = await Recruitment.findById(recruitedId);
-		if (recruited) return conflictResponse('No se encontró al postulante');
-		if (recruited.psyPlans.length > 0) {
-			const currentPlan =
-				recruited.psyPlans[recruited.psyPlans.length - 1];
-			if (currentPlan.tier === 'free') {
-				return okResponse('Ya tienes el plan gratuito');
-			} else if (
-				currentPlan.tier === 'premium' &&
-				moment(currentPlan.expirationDate).isAfter(moment())
-			) {
-				return okResponse('Tienes un plan premium vigente');
-			} else {
-				await Recruitment.findByIdAndUpdate(
-					{ recruitedId, 'psyPlans.planStatus': 'active' },
-					{
-						$set: {
-							'psyPlans.$.planStatus': 'expired',
-						},
-					}
-				);
-			}
-		}
-		const createdPlan = await Recruitment.findByIdAndUpdate(
-			recruitedId,
-			{
-				$push: {
-					psyPlans: {
-						tier: 'free',
-						paymentStatus: 'success',
-						planStatus: 'active',
-						expirationDate: '',
-						subscriptionPeriod: '',
-						price: 0,
-						hablaquiFee: 0.2,
-						paymentFee: 0.0399,
-					},
-				},
-			},
-			{ new: true }
-		);
-		return okResponse('Plan gratuito creado', { createdPlan });
 	},
 };
 

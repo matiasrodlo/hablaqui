@@ -39,26 +39,6 @@ mercadopagoRouter.post(
 );
 
 /**
- *
- * MERCADOPAGO PLANES DE POSTULANTE
- *
- * Crea una preferencia de mercadopago para pago de plan de postulante
- * @body {Object} datos de la preferencia (precio, periodo, id del postulante)
- * {
- * 		"title": "Premium mensual" o  "Premium anual",
- * 		"description": "Plan Premium de Hablaqui",
- * 		"price": "{PRECIO DEL PLAN}",
- * 		"period": "anual" o "mensual",
- * 		"recruitmentId": "{ID DEL POSTULANTE}",
- * }
- * @returns {String} URL para pagar
- */
-mercadopagoRouter.post(
-	'/mercadopago/recruited-preference',
-	mercadopagoController.createRecruitedPreference
-);
-
-/**
  * Pasa una plan de postulante a pagado.
  * @param {string} recruitedId el id del postulante
  * @query {string} planId el periodo de pago (mensual, anual)

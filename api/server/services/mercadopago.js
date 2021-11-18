@@ -49,17 +49,18 @@ const createPreference = async body => {
  * @returns {Obeject} payment
  */
 const createPsychologistPreference = async body => {
+	const id = body.psychologistId || body.recruitedId;
+	const isPsychologist = !!body.psychologistId;
+	let preference = {};
 	if (body.plan === 'premium')
-		if (body.psychologistId) await setPreferencePsychologist(body);
-		else await setPreferenceRecruited();
+		preference.init_point = await setPlanPremium(body, isPsychologist, id);
 	else {
-		const id = body.psychologistId || body.recruitedId;
-		const isPsychologist = !!body.psychologistId;
-		await setPlanFree(id, isPsychologist);
+		preference = await setPlanFree(id, isPsychologist);
 	}
+	return okResponse('Preferecia creada', { preference });
 };
 
-const setPreferencePsychologist = async body => {
+const setPlanPremium = async (body, isPsychologist, id) => {
 	let newPreference = {
 		items: [
 			{
@@ -71,37 +72,14 @@ const setPreferencePsychologist = async body => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/psychologist-pay/${body.psychologist}?period=${body.period}`,
+			success: `${api_url}api/v1/mercadopago/${
+				isPsychologist ? 'psychologist' : 'recruited'
+			}-pay/${id}?period=${body.period}`,
 			failure: `${landing_url}/pago/failure-pay`,
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
 	};
-	const responseBody = await mercadopago.preferences.create(newPreference);
-	const resBody = responseBody.body;
-	const { init_point } = resBody;
-	return init_point;
-};
-
-const setPreferenceRecruited = async body => {
-	let newPreference = {
-		items: [
-			{
-				title: 'Plan Premium de Hablaqui',
-				description: 'Plan Premium de Hablaqui',
-				currency_id: 'CLP',
-				unit_price: Number(body.price),
-				quantity: 1,
-			},
-		],
-		back_urls: {
-			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitmentId}?period=${body.period}`,
-			failure: `${landing_url}/pago/failure-pay`,
-			pending: `${landing_url}/pago/pending-pay`,
-		},
-		auto_return: 'approved',
-	};
-
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
 	const { init_point } = resBody;
@@ -145,9 +123,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			paymentFee: 0.0399,
 		},
 	];
-	response = await response.save();
-
-	return response;
+	return await response.save();
 };
 
 const successPay = async params => {
@@ -278,31 +254,6 @@ const createCustomSessionPreference = async params => {
 	return okResponse('preference created', { init_point });
 };
 
-const createRecruitedPreference = async body => {
-	let newPreference = {
-		items: [
-			{
-				title: 'Plan Premium de Hablaqui',
-				description: 'Plan Premium de Hablaqui',
-				currency_id: 'CLP',
-				unit_price: Number(body.price),
-				quantity: 1,
-			},
-		],
-		back_urls: {
-			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitmentId}?period=${body.period}`,
-			failure: `${landing_url}/pago/failure-pay`,
-			pending: `${landing_url}/pago/pending-pay`,
-		},
-		auto_return: 'approved',
-	};
-
-	const responseBody = await mercadopago.preferences.create(newPreference);
-	const resBody = responseBody.body;
-	const { init_point } = resBody;
-	return okResponse('preference created', init_point);
-};
-
 const recruitedPay = async (params, query) => {
 	const { recruitedId } = params;
 	const { period } = query;
@@ -333,7 +284,6 @@ const recruitedPay = async (params, query) => {
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
-	createRecruitedPreference,
 	successPay,
 	psychologistPay,
 	recruitedPay,
