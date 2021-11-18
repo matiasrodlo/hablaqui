@@ -1186,7 +1186,6 @@ export default {
 		},
 	},
 	async mounted() {
-		console.log(this.$auth.$state.user);
 		this.loading = true;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		let responseCountries = await fetch(`${this.$config.LANDING_URL}/countries.json`);

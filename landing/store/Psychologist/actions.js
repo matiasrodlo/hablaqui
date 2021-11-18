@@ -165,6 +165,9 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
+			if (payload.plan === 'premium')
+				snackBarSuccess('Redirigientote a mercado pago')(commit);
+			else snackBarSuccess('Plan basico establecido')(commit);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);
