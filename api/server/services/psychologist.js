@@ -333,8 +333,14 @@ const createPlan = async ({ payload }) => {
 			: '';
 
 	if (payload.price > 0 && payload.user !== payload.psychologist) {
+		await User.findByIdAndUpdate(payload.user, {
+			$set: {
+				psychologist: payload.psychologist,
+			},
+		});
+		logInfo(JSON.stringify(payload));
 		analytics.track({
-			userId: payload.user,
+			userId: payload.user._id,
 			event: 'user-purchase-plan',
 			properties: {
 				plan: payload.title,
@@ -353,7 +359,7 @@ const createPlan = async ({ payload }) => {
 				price: payload.price,
 				expiration: expirationDate,
 				totalSessions: sessionQuantity,
-				user: payload.user,
+				user: payload.user._id,
 			},
 		});
 	}
@@ -407,19 +413,20 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	).populate('psychologist user');
 
 	analytics.track({
-		userId: payload.user,
+		userId: userLogged._id,
 		event: 'user-new-session',
 		properties: {
-			user: payload.user,
+			user: userLogged._id,
 			planId: idPlan,
 			userpsyId: id,
 		},
 	});
+	logInfo(userLogged.psychologist);
 	analytics.track({
-		userId: payload.psychologist,
+		userId: userLogged.psychologist,
 		event: 'psy-new-session',
 		properties: {
-			user: payload.user,
+			user: userLogged._id,
 			planId: idPlan,
 			userpsyId: id,
 		},
