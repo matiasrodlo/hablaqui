@@ -135,8 +135,7 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.VUE_APP_LANDING}
-		/password-reset?token=${token}`;
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
 
 	mailService.sendPasswordRecovery(user, recoveryUrl);
 
