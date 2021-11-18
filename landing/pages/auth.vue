@@ -2,8 +2,8 @@
 	<div style="position: relative">
 		<v-img
 			class="hidden-sm-and-down"
-			:src="`${$config.LANDING_URL}/login.png`"
-			:lazy-src="`${$config.LANDING_URL}/login.png`"
+			:src="`https://cdn.hablaqui.cl/static/login.png`"
+			:lazy-src="`https://cdn.hablaqui.cl/static/login.png`"
 			style="height: 100vh"
 		></v-img>
 		<v-container
@@ -19,8 +19,8 @@
 								<v-img
 									class="mx-auto"
 									style="max-width: 200px"
-									:src="`${$config.LANDING_URL}/logo.png`"
-									:lazy-src="`${$config.LANDING_URL}/logo.png`"
+									:src="`https://cdn.hablaqui.cl/static/logo.png`"
+									:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 								/>
 							</nuxt-link>
 						</v-col>
@@ -33,11 +33,9 @@
 								text--secondary
 							"
 						>
-							{{
-								step == 1
-									? '¡Qué gusto verte nuevamente!'
-									: '¡Tu bienestar comienza aquí!'
-							}}
+							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
+							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>
+							<span v-show="step === 3">Recupera tu contraseña</span>
 						</v-col>
 						<v-col
 							cols="12"
@@ -45,29 +43,54 @@
 							lg="6"
 							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
 						>
-							{{
-								step == 1
-									? 'Ingresa y continúa tu viaje de desarrollo personal ahora mismo.'
-									: 'Regístrate para iniciar tu camino de desarrollo personal'
-							}}
+							<span v-show="step === 1"
+								>Ingresa y continúa tu viaje de desarrollo personal ahora
+								mismo.</span
+							>
+							<span v-show="step === 2"
+								>Regístrate para iniciar tu camino de desarrollo personal</span
+							>
+							<span v-show="step === 3">
+								Continua disfrutando de los beneficios de hablaquí
+							</span>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
 							<v-window v-model="step">
 								<v-window-item :value="1">
-									<sign-in />
+									<sign-in :set-reset-password="() => (step = 3)" />
 								</v-window-item>
 								<v-window-item :value="2">
 									<sign-up />
+								</v-window-item>
+								<v-window-item :value="3">
+									<Send-password-recovery :go-back="() => (step = 1)" />
 								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
 								<small v-if="step == 1"> ¿No eres parte de Hablaquí? </small>
 								<small v-else>¿Ya tienes cuenta Hablaquí?</small>
 							</div>
-							<v-btn outlined block rounded color="primary" @click="setStep">
-								{{ step == 1 ? 'Crea una cuenta' : 'Entra' }}
+							<v-btn
+								v-show="step == 2 || step === 3"
+								outlined
+								block
+								rounded
+								color="primary"
+								@click="setStep"
+							>
+								Entra
+							</v-btn>
+							<v-btn
+								v-show="step == 1"
+								outlined
+								block
+								rounded
+								color="primary"
+								@click="setStep"
+							>
+								Crea una cuenta
 							</v-btn>
 							<div class="mt-16">
 								<v-btn class="px-0" text color="primary" :to="{ name: 'politicas' }"
@@ -109,12 +132,12 @@
 								<v-img
 									style="z-index: 1; position: absolute; top: 30px; right: 30%"
 									width="80"
-									:src="`${$config.LANDING_URL}/plus-login.png`"
+									:src="`https://cdn.hablaqui.cl/static/plus-login.png`"
 								></v-img>
 								<v-img
 									style="position: absolute; bottom: 30%; right: 17%"
 									width="220"
-									:src="`${$config.LANDING_URL}/circle-login.png`"
+									:src="`https://cdn.hablaqui.cl/static/circle-login.png`"
 								>
 								</v-img>
 								<v-list-item-avatar size="400" class="ml-4">
@@ -166,6 +189,7 @@ export default {
 	components: {
 		SignIn: () => import('~/components/auth/SignIn'),
 		SignUp: () => import('~/components/auth/SignUp'),
+		SendPasswordRecovery: () => import('~/components/auth/SendPasswordRecovery'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'simple',
@@ -175,22 +199,22 @@ export default {
 			length: [
 				{
 					id: 1,
-					img: `${this.$config.LANDING_URL}/auth.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth.webp`,
 					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
-					img: `${this.$config.LANDING_URL}/auth-2.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
 					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
 				},
 				{
 					id: 3,
-					img: `${this.$config.LANDING_URL}/auth-3.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
 					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
 				},
 				{
 					id: 4,
-					img: `${this.$config.LANDING_URL}/auth-4.webp`,
+					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
 					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
 				},
 			],
@@ -224,7 +248,7 @@ export default {
 					content: `Ingresa o registrate | Hablaquí`,
 				},
 			],
-			link: [{ rel: 'canonical', href: `${this.$config.LANDING_URL}/auth/` }],
+			link: [{ rel: 'canonical', href: `https://cdn.hablaqui.cl/static/auth/` }],
 		};
 	},
 	created() {

@@ -31,7 +31,7 @@
 					>
 						Atención a clientes
 					</div>
-					<div class="body-1 my-4">c@hablaqui.com</div>
+					<div class="body-1 my-4">soporte@hablaqui.cl</div>
 					<div class="body-1 my-4">09:00am - 18:30pm</div>
 				</v-col>
 				<v-col cols="12" sm="3" md="3" class="headline text--secondary">
@@ -39,18 +39,22 @@
 						contain
 						width="240"
 						class="mx-auto"
-						:src="`${$config.LANDING_URL}/Startup.png`"
+						:src="`https://cdn.hablaqui.cl/static/Startup.png`"
 					></v-img>
 					<v-img
 						contain
 						height="60"
 						width="220"
 						class="mt-3 mx-auto"
-						:src="`${$config.LANDING_URL}/Adolfo_Ibanez.png`"
+						:src="`https://cdn.hablaqui.cl/static/Adolfo_Ibanez.png`"
 					></v-img>
 				</v-col>
 				<v-col cols="6" sm="3" md="3" class="headline text--secondary">
-					<v-img contain height="90" :src="`${$config.LANDING_URL}/Web_Pay.png`" />
+					<v-img
+						contain
+						height="90"
+						:src="`https://cdn.hablaqui.cl/static/Web_Pay.png`"
+					/>
 				</v-col>
 			</v-row>
 		</v-col>

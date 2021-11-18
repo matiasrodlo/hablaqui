@@ -14,9 +14,9 @@
 					height="100"
 					contain
 					style="cursor: pointer"
-					:src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-					:lazy-src="`${$config.LANDING_URL}/logo_tiny_white.png`"
-					alt="logo hablaqui"
+					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
+					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
+					alt="logo hablaquí"
 					class="my-16"
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
@@ -25,8 +25,8 @@
 				<v-list-item v-if="false" class="my-4" link>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
-							<icon v-if="online" size="35" color="#8BC34A" :icon="mdiAccount" />
-							<icon v-else size="35" color="red" :icon="mdiAccountOff" />
+							<icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
+							<icon v-else size="30" color="red" :icon="mdiAccountOff" />
 						</v-btn>
 					</v-list-item-avatar>
 					<v-list-item-content>
@@ -64,7 +64,7 @@
 						<v-img
 							height="50"
 							width="50"
-							:src="`${$config.LANDING_URL}/cerrar_sesion.png`"
+							:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 							alt="cerrar sesión"
 						/>
 					</v-list-item-avatar>
@@ -108,6 +108,7 @@
 <script>
 import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -139,19 +140,28 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `${this.$config.LANDING_URL}/chat.png`,
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `${this.$config.LANDING_URL}/sesiones.png`,
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
+				// {
+				// 	name: 'Pagos',
+				// 	link: { name: 'dashboard-pagos' },
+				// 	img: `https://cdn.hablaqui.cl/static/pay.png`,
+				// 	visible:
+				// 		this.$auth.$state.loggedIn &&
+				// 		this.$auth.$state.user.role === 'psychologist' &&
+				// 		this.$auth.$state.user.psychologist,
+				// },
 				{
-					name: 'Pagos',
-					link: { name: 'dashboard-pagos' },
-					img: `${this.$config.LANDING_URL}/pay.png`,
+					name: 'Consultantes',
+					link: { name: 'dashboard-consultantes' },
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist' &&
@@ -160,13 +170,19 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `${this.$config.LANDING_URL}/home.png`,
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `${this.$config.LANDING_URL}/apps.png`,
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Nuevo articulo',
+					link: { name: 'dashboard-newArticle' },
+					img: `https://cdn.hablaqui.cl/static/article.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
@@ -179,12 +195,14 @@ export default {
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
 			return '';
 		},
+		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 	},
 };
 </script>

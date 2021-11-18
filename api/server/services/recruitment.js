@@ -1,11 +1,16 @@
 'use strict';
 
 import Recruitment from '../models/recruitment';
+import User from '../models/user';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
 import mailService from './mail';
+import moment from 'moment';
+
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const recruitmentService = {
 	/**
@@ -25,6 +30,17 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
+
+		analytics.track({
+			userId: user._id,
+			event: 'psy-new-application',
+			properties: {
+				email: user.email,
+				name: user.name,
+				lastName: user.lastName,
+				rut: user.rut,
+			},
+		});
 
 		const recruited = await Recruitment.create(payload);
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
@@ -101,10 +117,84 @@ const recruitmentService = {
 		const newProfile = await psychologist.create(payload);
 		mailService.sendWelcomeNewPsychologist(payload);
 
+		const userUpdated = await User.findOneAndUpdate(
+			{ email: payload.email },
+			{ $set: { psychologist: newProfile._id } },
+			{ new: true }
+		);
+
+		analytics.track({
+			userId: userUpdated._id.toString(),
+			event: 'new-psy-onboard',
+			properties: {
+				email: payload.email,
+				name: payload.name,
+				lastName: payload.lastName,
+				rut: payload.rut,
+				psyId: newProfile._id,
+			},
+		});
+
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')
 		);
 		return okResponse('Aprobado exitosamente', { newProfile });
+	},
+	async updatePlan(recruitedId, newPlan) {
+		const recruitedToUpdate = await Recruitment.findById(
+			recruitedId,
+			{
+				$push: {
+					psyPlans: { paymentStatus: 'success', ...newPlan },
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
+	},
+	async freePlan(recruitedId) {
+		const recruited = await Recruitment.findById(recruitedId);
+		if (recruited) return conflictResponse('No se encontró al postulante');
+		if (recruited.psyPlans.length > 0) {
+			const currentPlan =
+				recruited.psyPlans[recruited.psyPlans.length - 1];
+			if (currentPlan.tier === 'free') {
+				return okResponse('Ya tienes el plan gratuito');
+			} else if (
+				currentPlan.tier === 'premium' &&
+				moment(currentPlan.expirationDate).isAfter(moment())
+			) {
+				return okResponse('Tienes un plan premium vigente');
+			} else {
+				await Recruitment.findByIdAndUpdate(
+					{ recruitedId, 'psyPlans.planStatus': 'active' },
+					{
+						$set: {
+							'psyPlans.$.planStatus': 'expired',
+						},
+					}
+				);
+			}
+		}
+		const createdPlan = await Recruitment.findByIdAndUpdate(
+			recruitedId,
+			{
+				$push: {
+					psyPlans: {
+						tier: 'free',
+						paymentStatus: 'success',
+						planStatus: 'active',
+						expirationDate: '',
+						subscriptionPeriod: '',
+						price: 0,
+						hablaquiFee: 0.2,
+						paymentFee: 0.0399,
+					},
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Plan gratuito creado', { createdPlan });
 	},
 };
 

@@ -3,11 +3,15 @@
 import '../config/config.js';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
+import Sessions from '../models/sessions';
 import { sign } from 'jsonwebtoken';
 import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const generateJwt = user => {
 	const payload = {
@@ -22,9 +26,42 @@ const generateJwt = user => {
 
 const login = async user => {
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
 		token: generateJwt(user),
+		user: await generateUser(user),
 	});
+};
+
+const getSessions = async user => {
+	if (user.role === 'user') return await Sessions.find({ user: user._id });
+
+	if (user.role === 'psychologist')
+		return await Sessions.find({ psychologist: user.psychologist });
+
+	return null;
+};
+
+const generateUser = async user => {
+	return {
+		_id: user._id,
+		avatar: user.avatar,
+		avatarThumbnail: user.avatarThumbnail,
+		email: user.email,
+		finishedSessions: user.finishedSessions,
+		google: user.google,
+		googleId: user.googleId,
+		hasPaid: user.hasPaid,
+		inviteCode: user.inviteCode,
+		lastName: user.lastName,
+		name: user.name,
+		phone: user.phone,
+		plan: user.plan,
+		psychologist: user.psychologist,
+		role: user.role,
+		rut: user.rut,
+		state: user.state,
+		timeZone: user.timeZone,
+		sessions: await getSessions(user),
+	};
 };
 
 const register = async payload => {
@@ -32,45 +69,81 @@ const register = async payload => {
 		return conflictResponse('Correo electronico en uso');
 	}
 
+	if (payload.role === 'psychologist')
+		if (await User.exists({ rut: payload.rut }))
+			return conflictResponse('Rut en uso');
+
 	const newUser = {
 		...payload,
 		email: payload.email.toLowerCase(),
 		password: bcrypt.hashSync(payload.password, 10),
 	};
 	const user = await User.create(newUser);
+	// Segment identification
+	analytics.identify({
+		userId: user._id.toString(),
+		traits: {
+			name: user.name,
+			email: user.email,
+			type: user.role,
+		},
+	});
+	analytics.track({
+		userId: user._id.toString(),
+		event: 'organic-user-signup',
+		properties: {
+			name: user.name,
+			email: user.email,
+			type: user.role,
+		},
+	});
+
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
 		await mailService.sendWelcomeNewUser(user);
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
-		user,
+		user: await generateUser(user),
 		token: generateJwt(user),
 	});
 };
 
-// const generatePasswordRecoverJwt = user => {
-// 	const payload = {
-// 		username: user.name,
-// 		sub: user._id,
-// 	};
+/**
+ * token generator - password recovery
+ * @param {Object} user
+ * @returns string Token
+ */
+const generatePasswordRecoverJwt = user => {
+	const payload = {
+		username: user.name,
+		sub: user._id,
+	};
 
-// 	return sign(payload, process.env.JWT_SECRET, {
-// 		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
-// 	});
-// };
+	return sign(payload, process.env.JWT_SECRET, {
+		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION, // 40m
+	});
+};
 
 const getUserByEmail = async email => {
 	return await User.findOne({ email: email });
 };
 
-const sendPasswordRecover = async (email, res) => {
+const sendPasswordRecover = async email => {
 	const user = await getUserByEmail(email);
 	if (!user) {
-		return res.sendStatus(404);
-	} else {
-		logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
-		return res.sendStatus(200);
+		return conflictResponse('Este usuario no existe');
 	}
+	const token = generatePasswordRecoverJwt(user);
+
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
+
+	mailService.sendPasswordRecovery(user, recoveryUrl);
+
+	if (process.env.NODE_ENV === 'development')
+		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
+	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
+
+	return okResponse('Sé le ha enviado un correo electronico');
 };
 
 const changeUserPassword = async (user, newPassword, res) => {
@@ -98,10 +171,12 @@ const googleAuthCallback = (req, res) => {
 const authService = {
 	login,
 	generateJwt,
+	generateUser,
 	register,
 	sendPasswordRecover,
 	changeUserPassword,
 	googleAuthCallback,
+	getSessions,
 };
 
 export default Object.freeze(authService);

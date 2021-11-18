@@ -4,25 +4,23 @@ Joi.objectId = require('joi-objectid')(Joi);
 const userSchema = {
 	updateProfile: Joi.object({
 		_id: Joi.string().allow(''),
-		__v: Joi.number(),
-		adminNotifyTime: Joi.string().allow(''),
 		avatar: Joi.string().allow(''),
+		avatarThumbnail: Joi.string().allow(''),
 		email: Joi.string().allow(''),
 		finishedSessions: Joi.string().allow(''),
 		google: Joi.boolean().allow(''),
 		googleId: Joi.string().allow(''),
+		hasPaid: Joi.boolean(),
 		inviteCode: Joi.string().allow(''),
 		lastName: Joi.string().allow(''),
 		name: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
+		plan: Joi.array(),
 		psychologist: Joi.string().allow(''),
 		role: Joi.string().allow(''),
+		rut: Joi.string().allow(''),
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
-		chats: Joi.array(),
-		plan: Joi.array(),
-		googleCalendar: Joi.object(),
-		myPlan: Joi.optional(),
 	}).min(1),
 	updatePassword: Joi.object({
 		oldPassword: Joi.string()
@@ -50,6 +48,14 @@ const userSchema = {
 		email: Joi.string()
 			.email()
 			.required(),
+	}),
+	newUserByPsy: Joi.object({
+		email: Joi.string()
+			.email()
+			.required(),
+		name: Joi.string().required(),
+		rut: Joi.string().allow(''),
+		phone: Joi.string().allow(''),
 	}),
 };
 

@@ -12,17 +12,21 @@ const couponController = {
 			const { data, code } = await couponService.newCoupon(user, payload);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback('Error creando el cupon');
+			return errorCallback(e, res);
 		}
 	},
 
 	async checkCoupon(req, res) {
 		try {
 			const { coupon } = req.body;
-			const { data, code } = await couponService.checkCoupon(coupon);
+			const { user } = req;
+			const { data, code } = await couponService.checkCoupon(
+				coupon,
+				user
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback('Error verificado el cupon');
+			return errorCallback(e, res);
 		}
 	},
 };

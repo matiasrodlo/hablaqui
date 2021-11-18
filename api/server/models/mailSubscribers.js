@@ -1,7 +1,6 @@
 'use strict';
 
 import { Schema, model } from 'mongoose';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
 
 let subscriber = new Schema(
 	{
@@ -13,9 +12,5 @@ let subscriber = new Schema(
 	},
 	{ timestamps: true }
 );
-
-subscriber.plugin(mongooseUniqueValidator, {
-	message: `{PATH} debe ser unico`,
-});
 
 export default model('emailSubscriber', subscriber);

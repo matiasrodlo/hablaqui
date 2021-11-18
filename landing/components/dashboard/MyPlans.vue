@@ -1,93 +1,85 @@
 <template>
 	<div>
-		<template v-if="$auth.$state.user.plan.length">
+		<template v-if="plans.length">
 			<v-slide-group
 				v-if="$vuetify.breakpoint.mdAndUp"
-				v-model="plans"
+				v-model="slider"
 				class="pa-4"
 				center-active
 				show-arrows
 			>
-				<v-slide-item
-					v-for="(item, n) in $auth.$state.user.plan"
-					:key="n"
-					v-slot="{ toggle }"
-				>
+				<v-slide-item v-for="(item, n) in plans" :key="n" v-slot="{ toggle }">
 					<v-card class="ma-4" height="220" width="400" @click="toggle">
 						<v-card-title
 							class="d-flex justify-space-between body-1 font-weight-medium"
 						>
 							<div>
 								<div>
-									{{ item.fullInfo.title }}
+									{{ item.title }}
 								</div>
-								<div class="caption">
-									<template v-if="item.status === 'success'">
+								<div v-if="itemSuccess(item)" class="caption">
+									<template v-if="item.payment === 'success'">
 										<span class="success--text">Tu plan actual</span>
 									</template>
-									<template v-if="item.status === 'pending'">
+									<template v-if="item.payment === 'pending'">
 										<span class="warning--text">Pendiente</span>
 									</template>
-									<template v-if="item.status === 'expired'">
+									<template v-if="item.payment === 'failed'">
 										<span class="error--text">Expirado</span>
 									</template>
 								</div>
+								<div v-else class="caption">
+									<span class="error--text">Finalizó</span>
+								</div>
 							</div>
-							<div
-								style="width: 20px; height: 20px"
-								:class="status(item.status)"
-							></div>
+							<div style="width: 20px; height: 20px" :class="status(item)"></div>
 						</v-card-title>
 						<v-card-text>
 							<div>
-								<span class="headline font-weight-bold">{{ item.price }}</span>
+								<span class="headline font-weight-bold">{{ item.totalPrice }}</span>
 								<span>/ {{ item.period }}</span>
 							</div>
-							{{ item.fullInfo.description }}
+							{{ setDescrition(item.title) }}
 						</v-card-text>
 						<v-card-text>
-							{{ item.fullInfo.subtitle }}
+							{{ setSubtitle(item.title) }}
 						</v-card-text>
 					</v-card>
 				</v-slide-item>
 			</v-slide-group>
 			<template v-else>
-				<v-card
-					v-for="(item, n) in $auth.$state.user.plan"
-					:key="n"
-					class="my-4"
-					height="220"
-					width="100%"
-					@click="toggle"
-				>
+				<v-card v-for="(item, n) in plans" :key="n" class="my-4" height="220" width="100%">
 					<v-card-title class="d-flex justify-space-between body-1 font-weight-medium">
 						<div>
 							<div>
-								{{ item.fullInfo.title }}
+								{{ item.title }}
 							</div>
-							<div class="caption">
-								<template v-if="item.status === 'success'">
+							<div v-if="itemSuccess(item)" class="caption">
+								<template v-if="item.payment === 'success'">
 									<span class="success--text">Tu plan actual</span>
 								</template>
-								<template v-if="item.status === 'pending'">
+								<template v-if="item.payment === 'pending'">
 									<span class="warning--text">Pendiente</span>
 								</template>
-								<template v-if="item.status === 'expired'">
+								<template v-if="item.payment === 'failed'">
 									<span class="error--text">Expirado</span>
 								</template>
 							</div>
+							<div v-else class="caption">
+								<span class="error--text">Finalizó</span>
+							</div>
 						</div>
-						<div style="width: 20px; height: 20px" :class="status(item.status)"></div>
+						<div style="width: 20px; height: 20px" :class="status(item)"></div>
 					</v-card-title>
 					<v-card-text>
 						<div>
-							<span class="headline font-weight-bold">{{ item.price }}</span>
+							<span class="headline font-weight-bold">{{ item.totalPrice }}</span>
 							<span>/ {{ item.period }}</span>
 						</div>
-						{{ item.fullInfo.description }}
+						{{ setDescrition(item.title) }}
 					</v-card-text>
 					<v-card-text>
-						{{ item.fullInfo.subtitle }}
+						{{ setSubtitle(item.title) }}
 					</v-card-text>
 				</v-card>
 			</template>
@@ -113,17 +105,61 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
 	data() {
 		return {
-			plans: null,
+			slider: null,
 		};
 	},
+	computed: {
+		// Filtramos que sea de usuarios con pagos success y no hayan expirado
+		plans() {
+			if (!this.$auth.$state.user) return [];
+			// Obtenemos un array con todo los planes solamente
+			return this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+		},
+	},
 	methods: {
-		status(status) {
-			if (status === 'success') return 'success rounded-xl';
-			if (status === 'pending') return 'warning rounded-xl';
-			if (status === 'expired') return 'error rounded-xl';
+		status(item) {
+			if (this.itemSuccess(item)) {
+				if (item.payment === 'success') return 'success rounded-xl';
+				if (item.payment === 'pending') return 'warning rounded-xl';
+				if (item.payment === 'failed') return 'error rounded-xl';
+			}
+			return 'grey rounded-xl';
+		},
+		setDescrition(title) {
+			if (title === 'Sesiones por videollamada')
+				return 'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.';
+			if (title === 'Mensajería y videollamada')
+				return 'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.';
+			if (title === 'Acompañamiento vía mensajería')
+				return 'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.';
+		},
+		setSubtitle(title) {
+			if (title === 'Sesiones por videollamada') return 'Sesiones por videollamada (50 min)';
+			if (title === 'Mensajería y videollamada') return 'Mensajería + Videollamada (30min)';
+			if (title === 'Acompañamiento vía mensajería') return 'Terapia vía mensajes de texto';
+		},
+		setDate(date) {
+			return moment(date).format('l');
+		},
+		itemSuccess(item) {
+			return (
+				(item.payment === 'success' ||
+					item.payment === 'pending' ||
+					item.payment === 'failed') &&
+				moment().isBefore(moment(item.expiration))
+			);
 		},
 	},
 };

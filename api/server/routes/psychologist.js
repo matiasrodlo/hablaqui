@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import psychologistsController from '../controllers/psychologist';
+import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
@@ -16,20 +17,20 @@ const psychologistsRouter = Router();
  * @swagger
  * /api/v1/psychologists/all:
  *   get:
- *     summary: Devuelve todos los psicologos de la base de datos
+ *     summary: Devuelve todos los psicólogos de la base de datos
  *     tags: [Psychologists]
  *     responses:
  *       200:
- *         description: Todos los psicologos
+ *         description: Todos los psicólogos
  *
  */
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 
 /**
  * @swagger
- * /api/v1/psychologists/sesssions/{id}:
+ * /api/v1/psychologists/sessions/{id}:
  *  get:
- *    summary: Devuelve todas las sesiones del psicologo
+ *    summary: Devuelve todas las sesiones del psicólogo
  *    tags: [Psychologists]
  *    parameters:
  *      - in: path
@@ -37,15 +38,15 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        schema:
  *          type: string
  *        required: true
- *        descritpion: Id del psicologo
- *    repsonses:
+ *        description: Id del psicólogo
+ *    responses:
  *      200:
- *        despcription: Las sesiones segun el id
+ *        description: Las sesiones segue el id
  *      400:
- *        description: Psicologo no encontrado
+ *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist',
+	'/psychologists/sessions/:idPsychologist/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
@@ -56,8 +57,7 @@ psychologistsRouter.get(
 );
 
 /**
- * Retorna un psicolog segun el parametro ingresado
- * info: username || ObjectId
+ * get psychologist bt username or _id
  */
 psychologistsRouter.get(
 	'/psychologists/one/:info',
@@ -70,15 +70,15 @@ psychologistsRouter.post(
 	psychologistsController.match
 );
 
-/** Registro de psicologo */
+/** Register psychologist */
 psychologistsRouter.post(
 	'/psychologists/register',
 	psychologistsController.register
 );
 
 /**
- * Crea una sesion 
- * NECESITA AUTENTICACION
+ * Crea una session
+ * NEED AUTHENTICATION
  * req.body.payload = {
  * 	date: string,
 	user._id: ObjectId del usuario,
@@ -90,21 +90,34 @@ psychologistsRouter.post(
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createPlan
+);
+/**
+ * Create a session
+ * req.body.payload = {
+ *	user: ObjectId,
+	psychologist: ObjectId,
+	date: String,
+	start: String,
+ * }
+ */
+psychologistsRouter.put(
+	'/psychologists/session/:id/plan/:idPlan',
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
-
 /**
- * Cambia la hora de la sesion con el :id
+ * Cambia la hora de la session con el :id
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
 
 /**
- * Cambia el horario de un psicologo
+ * change schedule psychologist
  * req.body.payload = {
  * 	monday: [inicio, termino],
  * 	tuesday: [inicio, termino],
@@ -119,7 +132,7 @@ psychologistsRouter.patch(
 );
 
 /**
- * Cancela la sesion
+ * Cancel session
  * req.body = { sessionId: ObjectId }
  */
 psychologistsRouter.delete(
@@ -129,7 +142,7 @@ psychologistsRouter.delete(
 );
 
 /**
- * Actualiza el metodo de pago
+ * update payment method
  */
 psychologistsRouter.patch(
 	'/psychologist/update-payment-method',
@@ -141,7 +154,7 @@ psychologistsRouter.patch(
  * @swagger
  * /api/v1/psychologists/update-profile:
  *  post:
- *    summary: Actualiza el perfil del psicologo
+ *    summary: Actualiza el perfil del psicólogo
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -183,7 +196,7 @@ psychologistsRouter.patch(
  *                type: integer
  *              corporativeSessions:
  *                type: boolean
- *        description: Objeto con la informacion a actualizar (funciona igual que el user)
+ *        description: Objeto con la information a actualizar (funciona igual que el user)
  *    responses:
  *      200: Actualizado correctamente
  */
@@ -194,8 +207,7 @@ psychologistsRouter.put(
 );
 
 /**
- * Elimina un psicologo
- * NECESITA AUTENTICACION Y SUPERUSUARIO
+ * Elimina un psicólogo - only superuser
  * req.body = { id: ObjectId }
  */
 psychologistsRouter.delete(
@@ -229,7 +241,7 @@ psychologistsRouter.post(
 );
 
 /**
- * Agrega una nueva calificacion
+ * Add new rating
  * req.body = { newRating: number, comment: string }
  */
 psychologistsRouter.post(
@@ -250,7 +262,7 @@ psychologistsRouter.get(
 	psychologistsController.checkPlanTask
 );
 /**
- * Consigue los clientes de :psychologist
+ * get all clients('consultantes') the psychologist
  */
 psychologistsRouter.get(
 	'/psychologist/clients/:psychologist',
@@ -259,10 +271,20 @@ psychologistsRouter.get(
 );
 
 /**
+ * @description: Obtiene los clientes de un psicólogo mediante email
+ * @param {string} email email de la búsqueda
+ * @returns {array} usuario/s encontrados
+ */
+psychologistsRouter.get(
+	'/psychologist/:search',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.searchClients
+);
+/**
  * @swagger
  * /api/v1/psychologist/check-username:
  *  post:
- *    summary: Revisa disponibilidad de nombre. El psicologo debe estar logeado (se modifica el user logeado)
+ *    summary: Revisa disponibilidad de nombre. El psicólogo debe estar lodged (se modifica el user lodged)
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -286,7 +308,7 @@ psychologistsRouter.post(
  * @swagger
  * /api/v1/psychologist/update-experience:
  *  post:
- *    summary: Actualiza formacion, experiencia, modelos, especialidades e idiomas.
+ *    summary: Actualiza formation, experiencia, modelos, especialidades e idiomas.
  *    tags: [Psychologists]
  *    consumes:
  *      - application/x-www-form-urlencoded
@@ -297,15 +319,84 @@ psychologistsRouter.post(
  *        description: Contenido a actualizar
  *    responses:
  *      200:
- *        description: Psicologo actualizado
+ *        description: Psicólogo actualizado
  *      401:
- *        description: No hay ningun usuario loggeado
+ *        description: No hay ninguno usuario logged
  *      409:
- *        description: No eres un psicologo
+ *        description: No eres un psicólogo
  */
 psychologistsRouter.post(
 	'/psychologist/update-experience',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateFormationExperience
 );
+
+/**
+ * @description: Route to upload/update psychologist's profile picture
+ * @route {PATCH} /api/v1/psychologist/profile-picture
+ * @access {Private}
+ * @body {file} file
+ */
+psychologistsRouter.put('/psychologist/avatar/:id', [
+	passport.authenticate('jwt', { session: true }),
+	multer.single('avatar'),
+	psychologistsController.uploadProfilePicture,
+]);
+
+/**
+ * Crea una nueva sesion custom, un poco mas libre y menos estandarizada.
+ * req.body.payload = {
+ * 		type: string,
+ * 		date: ISO,
+ * 		user: ObjectId,
+ * 		price: integer,
+ * }
+ */
+psychologistsRouter.post(
+	'/psychologist/new-custom-session',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.customNewSession
+);
+
+/**
+ * Actualiza la propiedad approveAvatar
+ */
+psychologistsRouter.put(
+	'/psychologist/:id/approve-avatar',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.approveAvatar
+);
+
+/**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
+psychologistsRouter.get(
+	'/psychologist/payments',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfo
+);
+
+/**
+ * @description: Crea un plan gratuito para el psicologo (si es que no tiene plan vigente)
+ * @route {POST} /api/v1/psychologist/create-free-plan
+ * @param {String} psyId id del psicologo
+ * @returns {object} psicologo con plan free creado
+ * */
+psychologistsRouter.post(
+	'/psychologist/create-free-plan/:psyId',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.freePlan
+);
+
+/**
+ * @description: Elimina un compromiso privado de un psicologo
+ * @route {PATCH} /api/v1/psychologist/delete-private-commitment
+ * @param {String} psyId id del compromiso y planId es el id del plan
+ * @returns {Object} Objecto Session con el compromiso eliminado
+ */
+psychologistsRouter.patch(
+	'/psychologist/delete-commitment/:psyId/:planId',
+	psychologistsController.deleteCommitment
+);
+
 export default psychologistsRouter;

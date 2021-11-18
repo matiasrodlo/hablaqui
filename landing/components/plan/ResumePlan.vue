@@ -63,7 +63,7 @@
 				</div>
 				<div class="font-weight-bold">Resumen</div>
 				<div class="caption">
-					{{ plan.title }} {{ plan.deal.price }} {{ plan.deal.lapse }}
+					{{ plan.title }} {{ plan.deal.weekPrice }} {{ plan.deal.lapse }}
 				</div>
 				<v-divider class="my-4"></v-divider>
 				<div class="d-flex justify-space-between">
@@ -80,9 +80,9 @@
 				</div>
 			</div>
 			<div class="mt-6 d-flex justify-space-around">
-				<v-img width="80" :src="`${$config.LANDING_URL}/planFour.png`"></v-img>
-				<v-img width="80" :src="`${$config.LANDING_URL}/planFive.png`"></v-img>
-				<v-img width="80" :src="`${$config.LANDING_URL}/planSix.png`"></v-img>
+				<v-img width="80" :src="`https://cdn.hablaqui.cl/static/planFour.png`"></v-img>
+				<v-img width="80" :src="`https://cdn.hablaqui.cl/static/planFive.png`"></v-img>
+				<v-img width="80" :src="`https://cdn.hablaqui.cl/static/planSix.png`"></v-img>
 			</div>
 		</v-col>
 	</v-row>
@@ -119,25 +119,35 @@ export default {
 			coupon: null,
 			pay: null,
 			loading: false,
-			priceInt: Number(this.plan.deal.total.split('.').join('')),
+			priceInt: 0,
 		};
+	},
+	created() {
+		if (this.verifyOnlyNumbers(this.plan.deal.price)) {
+			this.priceInt = Number(this.plan.deal.price);
+		} else {
+			this.priceInt = Number(this.plan.deal.price.split('.').join(''));
+		}
 	},
 	mounted() {
 		this.setResumeView(false);
 	},
 	methods: {
+		verifyOnlyNumbers(value) {
+			const regex = /^[0-9]*$/;
+			return regex.test(value.toString());
+		},
 		async setCoupon() {
 			try {
 				const { coupon } = await this.$axios.$post('/coupons/check-coupon', {
 					coupon: this.coupon,
 				});
-				const priceInt = Number(this.plan.deal.total.split('.').join(''));
 				if (coupon.discountType === 'percentage') {
-					const totalValue = priceInt * ((100 - coupon.discount) / 100);
+					const totalValue = this.priceInt * ((100 - coupon.discount) / 100);
 					this.pay = totalValue.toFixed(0);
 				}
 				if (coupon.discountType === 'static') {
-					this.pay = priceInt - coupon.discountType;
+					this.pay = this.priceInt - coupon.discountType;
 				}
 			} catch (error) {
 				this.pay = null;
@@ -146,30 +156,29 @@ export default {
 		},
 		async payButton() {
 			this.loading = true;
-			const sessionPayload = {
+			const planPayload = {
 				date: this.event.date,
 				start: this.event.start,
 				end: this.event.end,
 				user: this.$auth.$state.user,
-				psychologist: this.psy,
+				psychologist: this.psy._id,
 				paymentPeriod: this.plan.deal.type,
 				title: this.plan.title,
 				price: this.pay ? this.pay : this.priceInt,
-				discountCoupon: this.pay ? this.coupon : '',
-				fullInfo: this.plan,
+				coupon: this.pay ? this.coupon : '',
 			};
-			const createdSession = await this.createSession(sessionPayload);
-			const payload = {
-				price: this.pay ? this.pay : this.priceInt,
-				title: this.plan.title,
-				quantity: 1,
-				sessionToUpdate: createdSession.id,
-				userToUpdate: this.$auth.$state.user._id,
-				psychologistToUpdate: this.psy._id,
-			};
-			const preferenceData = await this.mercadopagoPay(payload);
+			const createdPlan = await this.createSession(planPayload);
+			if (createdPlan) {
+				const mercadopagoPayload = {
+					price: this.pay ? this.pay : this.priceInt,
+					description: this.plan.title,
+					quantity: 1,
+					plan: createdPlan.plan._id,
+				};
+				const res = await this.mercadopagoPay(mercadopagoPayload);
+				window.location.href = res.init_point;
+			}
 			this.loading = false;
-			window.location.href = preferenceData.body.init_point;
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

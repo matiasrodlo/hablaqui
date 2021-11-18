@@ -158,10 +158,10 @@
 				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
 					<img
 						style="height: 40px"
-						:src="`${$config.LANDING_URL}/redes_sociales.png`"
+						:src="`https://cdn.hablaqui.cl/static/redes_sociales.png`"
 						alt="redes sociales"
 					/>
-					<div class="my-4">Atención a clientes: c@hablaqui.com</div>
+					<div class="my-4">Atención a clientes: soporte@hablaqui.cl</div>
 					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
@@ -199,7 +199,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/faq/`,
+					href: `https://cdn.hablaqui.cl/static/faq/`,
 				},
 			],
 		};

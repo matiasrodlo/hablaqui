@@ -2,45 +2,14 @@
 
 import { Schema, model } from 'mongoose';
 
-let session = new Schema({
-	date: {
-		type: String,
-	},
-	start: {
-		type: String,
-	},
-	end: {
-		type: String,
-	},
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-	},
-	typeSession: {
-		type: String,
-	},
-	typePayments: {
-		type: String,
-	},
-	statePayments: {
-		type: String,
-	},
-	plan: {
-		type: String,
-	},
-	invitedByPsychologist: {
-		type: Boolean,
-	},
-});
-
 let defaultSchedule = {
-	monday: ['09:00', '17:00'],
-	tuesday: ['09:00', '17:00'],
-	wednesday: ['09:00', '17:00'],
-	thursday: ['09:00', '17:00'],
-	friday: ['09:00', '17:00'],
-	saturday: ['busy', 'busy'],
-	sunday: ['busy', 'busy'],
+	monday: [['09:00', '17:00']],
+	tuesday: [['09:00', '17:00']],
+	wednesday: [['09:00', '17:00']],
+	thursday: [['09:00', '17:00']],
+	friday: [['09:00', '17:00']],
+	saturday: 'busy',
+	sunday: 'busy',
 };
 
 let defaultPreferences = {
@@ -102,9 +71,55 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
+let psyPlan = new Schema({
+	tier: {
+		type: String,
+		enum: ['free', 'premium'],
+		default: 'free',
+	},
+	paymentStatus: {
+		type: String,
+		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
+		default: 'pending',
+	},
+	expirationDate: {
+		type: String,
+		default: '',
+	},
+	subscriptionPeriod: {
+		type: String,
+		enum: ['mensual', 'anual'],
+	},
+	price: {
+		type: Number,
+		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
+	},
+});
+
 let psychologist = new Schema({
 	avatar: {
 		type: String,
+		default: '',
+	},
+	avatarThumbnail: {
+		type: String,
+	},
+	approveAvatar: {
+		type: Boolean,
+		default: false,
 	},
 	code: {
 		type: String,
@@ -129,7 +144,6 @@ let psychologist = new Schema({
 	},
 	rut: {
 		type: String,
-		unique: true,
 	},
 	gender: {
 		type: String,
@@ -186,12 +200,11 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	sessions: [session],
+	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',
 	},
 });
 
-//psychologist.plugin(uniqueValidator, { message: '{PATH} debe ser único' });
 export default model('psychologist', psychologist);

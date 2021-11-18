@@ -48,7 +48,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `${this.$config.LANDING_URL}/psicologos/`,
+					href: `https://cdn.hablaqui.cl/static/psicologos/`,
 				},
 			],
 		};
@@ -59,7 +59,7 @@ export default {
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
 			url: 'http://hablaqui.cl/psicologos',
-			email: 'c@hablaqui.com',
+			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};

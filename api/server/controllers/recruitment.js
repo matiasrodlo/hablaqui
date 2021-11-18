@@ -86,6 +86,17 @@ const recruitmentController = {
 			errorCallback(e, res, 'Error aprobando el postulante');
 		}
 	},
+	async freePlan(req, res) {
+		try {
+			const { recruitedId } = req;
+			const { data, code } = await recruitmentService.freePlan(
+				recruitedId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(recruitmentController);
