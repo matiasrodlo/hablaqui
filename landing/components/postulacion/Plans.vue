@@ -65,6 +65,7 @@
 					color="white"
 					rounded
 					block
+					:disabled="currentPlan.tier === 'free'"
 					@click="setPreferences('free')"
 				>
 					<span class="primary--text">Continuar con plan básico</span>
@@ -154,6 +155,7 @@
 						color="primary"
 						rounded
 						block
+						:disabled="currentPlan.tier === 'premium'"
 						@click="setPreferences('premium')"
 						>Suscríbete al plan premium
 					</v-btn>
@@ -184,6 +186,7 @@ export default {
 	},
 	data() {
 		return {
+			recruited: null,
 			psychologist: null,
 			mdiCheck,
 			period: 'mensual',
@@ -205,7 +208,8 @@ export default {
 	},
 	computed: {
 		currentPlan() {
-			if (!this.psychologist) return false;
+			if (!this.psychologist && !this.recruited) return false;
+			if (this.recruited) return this.recruited.psyPlans[this.recruited.psyPlans.length - 1];
 			return this.psychologist.psyPlans[this.psychologist.psyPlans.length - 1];
 		},
 		hasPremiunPlan() {
@@ -223,6 +227,10 @@ export default {
 			);
 			this.psychologist = psychologist;
 		}
+		if (this.recruitedId) {
+			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+			this.recruited = recruited;
+		}
 	},
 	methods: {
 		async setPreferences(plan) {
@@ -237,11 +245,15 @@ export default {
 				recruitedId: this.recruitedId,
 			});
 
-			if (plan === 'premium') {
-				window.location.href = res.preference.init_point;
-			} else if (this.recruitedId) {
-				this.next();
-			} else if (this.currentPlan.tier !== plan) this.psychologist = res.preference;
+			if (this.recruitedId) {
+				if (plan === 'premium') window.location.href = res.preference.init_point;
+				else this.next();
+			}
+
+			if (this.$auth.$state.user.psychologist) {
+				if (plan === 'premium') window.location.href = res.preference.init_point;
+				else this.$router.push({ name: 'dashboard-perfil' });
+			}
 		},
 		...mapActions({
 			setPaymentPreferences: 'Psychologist/setPaymentPreferences',

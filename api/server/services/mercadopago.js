@@ -94,7 +94,7 @@ const setPlanFree = async (id, isPsychologist) => {
 	if (!response)
 		return conflictResponse('No se encontró el postulante o psicologo');
 
-	if (response.psyPlans.length) {
+	if (response.psyPlans && response.psyPlans.length) {
 		const currentPlan = response.psyPlans.pop();
 		if (currentPlan.tier === 'free') {
 			return okResponse('Ya tienes el plan gratuito');
@@ -109,6 +109,8 @@ const setPlanFree = async (id, isPsychologist) => {
 				planStatus: 'expired',
 			}));
 	}
+
+	if (!response.psyPlans) response.psyPlans = [];
 
 	response.psyPlans = [
 		...response.psyPlans,
