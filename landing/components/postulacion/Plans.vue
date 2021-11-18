@@ -59,7 +59,13 @@
 						</v-list>
 					</v-card-text>
 				</v-card>
-				<v-btn class="mt-4 elevation-12" color="white" rounded block @click="next">
+				<v-btn
+					class="mt-4 elevation-12"
+					color="white"
+					rounded
+					block
+					@click="setPreferences('free')"
+				>
 					<span class="primary--text">Continuar con plan básico</span>
 				</v-btn>
 			</v-col>
@@ -141,7 +147,7 @@
 						color="primary"
 						rounded
 						block
-						@click="goMercadoPago"
+						@click="setPreferences('premium')"
 						>Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
@@ -185,19 +191,20 @@ export default {
 		};
 	},
 	methods: {
-		async goMercadoPago() {
-			const mercadopagoPayload = {
+		async setPreferences(plan) {
+			const res = await this.setPaymentPreferences({
+				plan,
 				price: this.period === 'mensual' ? 69990 : 55900 * 12,
 				period: this.period === 'mensual' ? this.period : 'anual',
-				title: 'Plan Premium',
-				quantity: 1,
-				psychologist: this.$auth.$state.user.psychologist,
-			};
-			const res = await this.mercadopagoPay(mercadopagoPayload);
+				description:
+					plan === 'premium' ? 'Plan Premium de Hablaqui' : 'Plan Basico de Hablaqui',
+				title: plan === 'premium' ? 'Plan Premium' : 'Plan Free',
+				psychologistId: this.$auth.$state.user.psychologist,
+			});
 			window.location.href = res.init_point;
 		},
 		...mapActions({
-			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
+			setPaymentPreferences: 'Psychologist/setPaymentPreferences',
 		}),
 	},
 };

@@ -159,7 +159,7 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async mercadopagoPsychologistPay({ commit }, payload) {
+	async setPaymentPreferences({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
 				method: 'POST',

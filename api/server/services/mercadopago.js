@@ -1,8 +1,9 @@
 'use strict';
 
 import mercadopago from 'mercadopago';
-import { okResponse } from '../utils/responses/functions';
+import { okResponse, conflictResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import recruitmentService from './recruitment';
@@ -39,7 +40,26 @@ const createPreference = async body => {
 	const resBody = responseBody.body;
 	return okResponse('preference created', resBody);
 };
+
+/**
+ * Casos:
+ * 1- postulante o psicologo
+ * 2- plan free o premium
+ * @param {Object} body
+ * @returns {Obeject} payment
+ */
 const createPsychologistPreference = async body => {
+	if (body.plan === 'premium')
+		if (body.psychologistId) await setPreferencePsychologist(body);
+		else await setPreferenceRecruited();
+	else {
+		const id = body.psychologistId || body.recruitedId;
+		const isPsychologist = !!body.psychologistId;
+		await setPlanFree(id, isPsychologist);
+	}
+};
+
+const setPreferencePsychologist = async body => {
 	let newPreference = {
 		items: [
 			{
@@ -57,11 +77,77 @@ const createPsychologistPreference = async body => {
 		},
 		auto_return: 'approved',
 	};
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	const { init_point } = resBody;
+	return init_point;
+};
+
+const setPreferenceRecruited = async body => {
+	let newPreference = {
+		items: [
+			{
+				title: 'Plan Premium de Hablaqui',
+				description: 'Plan Premium de Hablaqui',
+				currency_id: 'CLP',
+				unit_price: Number(body.price),
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${api_url}api/v1/mercadopago/recruited-pay/${body.recruitmentId}?period=${body.period}`,
+			failure: `${landing_url}/pago/failure-pay`,
+			pending: `${landing_url}/pago/pending-pay`,
+		},
+		auto_return: 'approved',
+	};
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
 	const { init_point } = resBody;
-	return okResponse('preference created', init_point);
+	return init_point;
+};
+
+const setPlanFree = async (id, isPsychologist) => {
+	let response;
+	if (isPsychologist) response = await Psychologist.findById(id);
+	else response = await Recruitment.findById(id);
+
+	if (!response)
+		return conflictResponse('No se encontró el postulante o psicologo');
+
+	if (response.psyPlans.length) {
+		const currentPlan = response.psyPlans.pop();
+		if (currentPlan.tier === 'free') {
+			return okResponse('Ya tienes el plan gratuito');
+		} else if (
+			currentPlan.tier === 'premium' &&
+			moment(currentPlan.expirationDate).isAfter(moment())
+		) {
+			return okResponse('Tienes un plan premium vigente');
+		} else
+			response.psyPlans = response.psyPlans.map(item => ({
+				...item,
+				planStatus: 'expired',
+			}));
+	}
+
+	response.psyPlans = [
+		...response.psyPlans,
+		{
+			tier: 'free',
+			paymentStatus: 'success',
+			planStatus: 'active',
+			expirationDate: '',
+			subscriptionPeriod: '',
+			price: 0,
+			hablaquiFee: 0.2,
+			paymentFee: 0.0399,
+		},
+	];
+	response = await response.save();
+
+	return response;
 };
 
 const successPay = async params => {

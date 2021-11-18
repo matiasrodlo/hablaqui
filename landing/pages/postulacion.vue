@@ -1065,9 +1065,9 @@
 							</div>
 						</v-stepper-content>
 
-						<v-stepper-content step="4">
+						<!-- <v-stepper-content step="4">
 							<plans :next="() => (step = 5)" />
-						</v-stepper-content>
+						</v-stepper-content> -->
 						<v-stepper-content step="4">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -1202,6 +1202,7 @@ export default {
 		},
 	},
 	async mounted() {
+		console.log(this.$auth.$state.user);
 		this.loading = true;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		let responseCountries = await fetch(`${this.$config.LANDING_URL}/countries.json`);
