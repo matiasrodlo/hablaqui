@@ -30,7 +30,7 @@ mercadopagoRouter.get(
 
 /**
 
- * MERCADOPAGO PLANES DE PSICOLOGO
+ * MERCADOPAGO PLANES DE PSICOLOGO 
 
  * @description: Ruta para crear una preferencia (URL de pago) de un plan de psicologo
  * @body {Object} datos de la preferencia (precio, periodo, id del psicologo)
@@ -41,7 +41,7 @@ mercadopagoRouter.get(
  * 		"period": "anual" o "mensual",
  * 		"psychologistId": "{ID DEL PSICOLOGO}",
  * }
- * @returns {Object} preferencia creada con el URL para pagar en init_point
+ * @returns {String} URL para pagar 
  */
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
@@ -49,6 +49,9 @@ mercadopagoRouter.post(
 );
 
 /**
+ *
+ * MERCADOPAGO PLANES DE POSTULANTE
+ *
  * Crea una preferencia de mercadopago para pago de plan de postulante
  * @body {Object} datos de la preferencia (precio, periodo, id del postulante)
  * {
@@ -58,7 +61,7 @@ mercadopagoRouter.post(
  * 		"period": "anual" o "mensual",
  * 		"recruitmentId": "{ID DEL POSTULANTE}",
  * }
- * @returns {Object} preferencia creada con el URL para pagar en init_point
+ * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
 	'/mercadopago/recruited-preference',

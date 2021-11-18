@@ -348,10 +348,8 @@ const psychologistsController = {
 	},
 	async freePlan(req, res) {
 		try {
-			const { psychologistId } = req;
-			const { data, code } = await psychologistsService.freePlan(
-				psychologistId
-			);
+			const { psyId } = req.params;
+			const { data, code } = await psychologistsService.freePlan(psyId);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');

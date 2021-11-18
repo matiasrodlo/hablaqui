@@ -187,9 +187,7 @@ const recruitmentService = {
 			},
 			{ new: true }
 		);
-		return okResponse('Plan gratuito creado', {
-			psyPlans: createdPlan.psyPlans,
-		});
+		return okResponse('Plan gratuito creado', { createdPlan });
 	},
 };
 

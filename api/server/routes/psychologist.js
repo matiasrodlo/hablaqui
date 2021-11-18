@@ -379,11 +379,11 @@ psychologistsRouter.get(
 /**
  * @description: Crea un plan gratuito para el psicologo (si es que no tiene plan vigente)
  * @route {POST} /api/v1/psychologist/create-free-plan
- * @param {req} psychologistId id del psicologo
+ * @param {String} psyId id del psicologo
  * @returns {object} psicologo con plan free creado
  * */
 psychologistsRouter.post(
-	'/psychologist/create-free-plan',
+	'/psychologist/create-free-plan/:psyId',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.freePlan
 );

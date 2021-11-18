@@ -953,9 +953,7 @@ const freePlan = async psychologistId => {
 		},
 		{ new: true }
 	);
-	return okResponse('Plan gratuito creado', {
-		psyPlans: createdPlan.psyPlans,
-	});
+	return okResponse('Plan gratuito creado', { createdPlan });
 };
 
 const deleteCommitment = async (user, body) => {
