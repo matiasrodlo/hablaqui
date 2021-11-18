@@ -12,7 +12,6 @@ import moment from 'moment';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
-import { api_url } from '../config/dotenv';
 import mercadopagoService from './mercadopago';
 import {
 	bucket,

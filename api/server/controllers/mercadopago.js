@@ -4,7 +4,6 @@ import mercadopagoService from '../services/mercadopago';
 import { errorCallback } from '../utils/functions/errorCallback';
 import { restResponse } from '../utils/responses/functions';
 import { landing_url } from '../config/dotenv';
-import { logInfo } from '../config/pino';
 
 const mercadopagoController = {
 	async createPreference(req, res) {
