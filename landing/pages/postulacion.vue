@@ -190,7 +190,7 @@
 										dense
 									></v-autocomplete>
 								</v-col>
-								<v-col cols="4">
+								<v-col cols="12" md="4">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Zona horaria
 									</div>
@@ -221,7 +221,7 @@
 										</template>
 									</v-combobox>
 								</v-col>
-								<v-col cols="3" offset="1">
+								<v-col cols="4" md="3" offset-md="1">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Código
 									</div>
@@ -246,7 +246,7 @@
 										</template>
 									</v-autocomplete>
 								</v-col>
-								<v-col cols="4">
+								<v-col cols="8" md="4">
 									<div class="primary--text text-h6 mb-2 font-weight-regular">
 										Teléfono
 									</div>
@@ -295,17 +295,10 @@
 										id="description-personal"
 										v-model="form.personalDescription"
 										outlined
+										placeholder="Me considero una persona calida, risueña y empatica, a la cual le gusta estar constantemente estudiando y aprendiendo cosas nuevas. Aparte de la psicología me apasionan las artes marciales las cuales practico desde mi adolescencia. También disfruto mucho de pasear en bici, leer y juntarme con amigos."
 										filled
 										no-resize
-										:persistent-hint="!form.personalDescription"
-										:hint="
-											!form.personalDescription.length
-												? `El consultante quiere saber un poco más sobre ti más allá de lo
-                                                    profesional. Explica con más detalle el objetivo de tu línea de
-                                                    trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un
-                                                    ambiente acogedor con las palabras.`
-												: ''
-										"
+										hint="El consultante quiere saber un poco más sobre ti más allá de loprofesional. Explica con más detalle el objetivo de tu línea de trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un ambiente acogedor con las palabras."
 										counter
 									></v-textarea>
 								</v-col>
@@ -375,15 +368,8 @@
 										filled
 										outlined
 										dense
-										placeholder="Requerido"
-										:persistent-hint="!form.professionalDescription"
-										:hint="
-											!form.professionalDescription
-												? `Cuenta, en pocas palabras, un poco sobre tu experiencia
-                                                profesional. También puedes hablar sobre el modelo terapéutico
-                                                que trabajas, y cómo puedes ayudar a tu consultante.`
-												: ''
-										"
+										placeholder="Te acompañare en el proceso en el proceso de conocerte más, exploraremos juntos aquello que te causa malestar, comprendiendolo y aceptandolo. En este proceso aprenderas a relacionarte con tus pensamientos y emociones de una nueva forma en la cual puedas construir una vida valiosa, gratificante y llena de sentido. Esto dentro de un espacio seguro, sin juicios y colaborativo."
+										hint="Cuenta, en pocas palabras, un poco sobre tu experiencia profesional. También puedes hablar sobre el modelo terapéutico que trabajas, y cómo puedes ayudar a tu consultante."
 										counter
 									></v-textarea>
 								</v-col>
@@ -473,11 +459,9 @@
 															:items="[
 																'Licenciatura',
 																'Diplomado',
-																'Master',
 																'Magister',
 																'Doctorado',
-																'Curso/especialización',
-																'Otro',
+																'Curso',
 															]"
 														></v-select>
 													</v-col>
@@ -497,7 +481,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Institucion académica
+															Institución académica
 														</div>
 														<v-text-field
 															v-model="selectedFormation.intitucion"
@@ -655,7 +639,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Institucion
+															Institución
 														</div>
 														<v-text-field
 															v-model="selectedExperience.place"
@@ -663,7 +647,7 @@
 															outlined
 															dense
 															hide-details
-															placeholder="P. ej: Hospital del cancer"
+															placeholder="P. ej: Hospital del Cáncer"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -1066,8 +1050,8 @@
 						</v-stepper-content>
 
 						<!-- <v-stepper-content step="4">
-							<plans :next="() => (step = 5)" />
-						</v-stepper-content> -->
+								<plans :next="() => (step = 5)" />
+							</v-stepper-content> -->
 						<v-stepper-content step="4">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
