@@ -413,7 +413,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	).populate('psychologist user');
 
 	analytics.track({
-		userId: userLogged._id,
+		userId: userLogged._id.toString(),
 		event: 'user-new-session',
 		properties: {
 			user: userLogged._id,
@@ -423,7 +423,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	});
 	logInfo(userLogged.psychologist);
 	analytics.track({
-		userId: userLogged.psychologist,
+		userId: userLogged.psychologist.toString(),
 		event: 'psy-new-session',
 		properties: {
 			user: userLogged._id,

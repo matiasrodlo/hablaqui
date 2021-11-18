@@ -793,7 +793,10 @@ export default {
 			);
 			const dates = filterSessions.flatMap(session => session.date);
 			// Encontramos la session siguiente
-			const date = dates.find(item =>
+			const allDates = dates.sort((a, b) => {
+				return moment(a, 'MM/DD/YYYY HH:mm').diff(moment(b, 'MM/DD/YYYY HH:mm'));
+			});
+			const date = allDates.find(item =>
 				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 			);
 			if (date) {

@@ -3,7 +3,6 @@
 import psychologistsService from '../services/psychologist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
-import { logInfo } from '../config/pino';
 
 const psychologistsController = {
 	async getAll(req, res) {

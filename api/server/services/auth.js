@@ -89,7 +89,7 @@ const register = async payload => {
 		},
 	});
 	analytics.track({
-		userId: user._id,
+		userId: user._id.toString(),
 		event: 'organic-user-signup',
 		properties: {
 			name: user.name,
