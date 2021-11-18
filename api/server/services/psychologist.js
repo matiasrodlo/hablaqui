@@ -538,22 +538,27 @@ const setSchedule = async (user, payload) => {
 	});
 };
 
-const cancelSession = async (user, sessionId) => {
-	const sessions = await Sessions.findOneAndUpdate(
+const cancelSession = async (user, planId, sessionsId, id) => {
+	await Sessions.updateOne(
 		{
-			user: user._id,
-			_id: sessionId,
-			'plan.session._id': sessionId,
+			_id: sessionsId,
+			'plan._id': planId,
+			'plan.session._id': id,
 		},
 		{
 			$pull: {
-				'plan.$[].session': { _id: sessionId },
+				'plan.$[].session': { _id: id },
 			},
-		},
-		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
-	).populate('psychologist user');
+		}
+	);
 
-	return okResponse('Sesion cancelada', { sessions });
+	const sessions = await Sessions.find({
+		psychologist: user.psychologist,
+	}).populate('psychologist user');
+
+	return okResponse('Sesion cancelada', {
+		sessions: setSession(user.role, sessions),
+	});
 };
 
 const updatePaymentMethod = async (user, payload) => {

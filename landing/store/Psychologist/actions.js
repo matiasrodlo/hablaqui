@@ -181,6 +181,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async cancelSession({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/psychologist/cancel-session', {
+				method: 'delete',
+				data: payload,
+			});
+			commit('setSessions', data.sessions);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {

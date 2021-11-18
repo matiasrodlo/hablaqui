@@ -128,10 +128,12 @@ const psychologistsController = {
 	async cancelSession(req, res) {
 		try {
 			const { user } = req;
-			const { sessionId } = req.body;
+			const { sessionsId, planId, id } = req.body;
 			const { data, code } = await psychologistsService.cancelSession(
 				user,
-				sessionId
+				planId,
+				sessionsId,
+				id
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

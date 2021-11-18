@@ -171,6 +171,15 @@
 								>
 									Pendiente por pago de consultante
 								</v-card-actions>
+								<v-card-actions
+									v-if="selectedEvent.title === 'compromiso privado'"
+									class="text--secondary body-2"
+								>
+									<v-spacer></v-spacer>
+									<v-btn text @click="() => cancelOneSession(selectedEvent)">
+										Quitar
+									</v-btn>
+								</v-card-actions>
 								<v-dialog
 									v-if="dialog"
 									v-model="dialog"
@@ -1078,6 +1087,15 @@ export default {
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},
+		async cancelOneSession(item) {
+			this.overlay = true;
+			await this.cancelSession({
+				sessionsId: item.sessionsId,
+				id: item._id,
+				planId: item.idPlan,
+			});
+			this.overlay = false;
+		},
 		acquire() {
 			if (this.plan && this.plan.psychologist) {
 				this.addAppointment({ date: null });
@@ -1088,6 +1106,7 @@ export default {
 		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',
+			cancelSession: 'Psychologist/cancelSession',
 			createCustomSession: 'Psychologist/createCustomSession',
 			getClients: 'Psychologist/getClients',
 			getPsychologist: 'Psychologist/getPsychologist',
