@@ -1,93 +1,94 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<v-row class="mt-4 mt-md-0">
-			<v-col v-for="(card, i) in cards" :key="i" cols="3">
-				<v-card dark color="primary" class="pa-4 rounded-lg">
-					<v-list-item>
-						<v-list-item-avatar size="50">
-							<v-img :src="card.img" :lazy-src="card.img" :alt="card.title" />
-						</v-list-item-avatar>
-						<v-list-item-content>
-							<v-list-item-title class="headline font-weight-bold">
-								{{
-									$auth.$state.user._id == '60c26d38f12991000bca3bba'
-										? card.value
-										: '0'
-								}}
-							</v-list-item-title>
-							<v-list-item-subtitle class="body-1">
-								{{ card.title }}
-							</v-list-item-subtitle>
-						</v-list-item-content>
-					</v-list-item>
-				</v-card>
+		<div class="tex-h5 secondary--text font-weight-bold mb-4">Transacciones</div>
+		<v-row align="center">
+			<v-col cols="12" md="4" lg="3">
+				<v-text-field
+					v-model="search"
+					placeholder="Buscar por nombre"
+					hide-details
+					outlined
+					filled
+					dense
+					:append-icon="mdiMagnify"
+				></v-text-field>
+			</v-col>
+			<v-col cols="12" md="4" lg="3">
+				<v-menu
+					ref="menu"
+					v-model="menu"
+					:close-on-content-click="false"
+					:return-value.sync="findByDate"
+					transition="scale-transition"
+					offset-y
+					max-width="290px"
+					min-width="auto"
+				>
+					<template #activator="{ on, attrs }">
+						<v-text-field
+							v-model="findByDate"
+							placeholder="Buscar por fecha"
+							:append-icon="mdiMagnify"
+							readonly
+							outlined
+							filled
+							dense
+							hide-details
+							v-bind="attrs"
+							v-on="on"
+						></v-text-field>
+					</template>
+					<v-date-picker v-model="findByDate" type="month" no-title scrollable>
+						<v-spacer></v-spacer>
+						<v-btn text color="primary" @click="menu = false"> Cerrar </v-btn>
+						<v-btn text color="primary" @click="$refs.menu.save(findByDate)">
+							OK
+						</v-btn>
+					</v-date-picker>
+				</v-menu>
+			</v-col>
+			<v-col>
+				<v-btn rounded class="primary" depressed>Filtrar</v-btn>
 			</v-col>
 		</v-row>
-		<div style="height: calc(100vh - 300px); overflow-y: auto" class="d-flex">
-			<v-col cols="12" class="px-0">
-				<div class="grey darken-1 d-flex justify-space-around pa-4 mt-10 mb-2 rounded-lg">
-					<span class="white--text body-1 text-center">Código</span>
-					<span class="white--text body-1 text-center">Nombre</span>
-					<span class="white--text body-1 text-center"> Planes contratados </span>
-					<span class="white--text body-1 text-center">Pagado</span>
-					<span class="white--text body-1 text-center">Deuda</span>
+		<v-data-table
+			:search="search"
+			:loading="loading"
+			:headers="headers"
+			:items="items"
+			item-key="_id"
+			loading-text="Cargando..."
+			:items-per-page="5"
+			:footer-props="{
+				'items-per-page-text': 'Pagos por página',
+			}"
+			no-data-text="No hay pagos"
+		>
+			<template #[`item.name`]="{ item }">
+				<div>
+					<avatar size="30" :name="item.name" :url="item.avatar" />
+					<span class="ml-2 body-2">{{ item.name }}</span>
 				</div>
-				<v-expansion-panels v-if="$auth.$state.user._id == '60c26d38f12991000bca3bba'">
-					<v-expansion-panel v-for="(item, i) in payments" :key="i">
-						<v-expansion-panel-header>
-							<div class="d-flex justify-space-around">
-								<span class="body-1 text-center" style="width: 150px">
-									{{ item.code }}
-								</span>
-								<span class="body-1 text-center" style="width: 150px">
-									{{ item.name }}
-								</span>
-								<span class="body-1 text-center" style="width: 150px">
-									{{ item.plan }}
-								</span>
-								<span class="body-1 text-center" style="width: 150px">
-									{{ item.pay }}
-								</span>
-								<span class="body-1 text-center" style="width: 150px">
-									{{ item.deuda }}
-								</span>
-							</div>
-						</v-expansion-panel-header>
-						<v-expansion-panel-content>
-							<div
-								v-for="(detail, k) in item.details"
-								:key="k"
-								class="d-flex justify-space-around"
-							>
-								<span class="body-1 text-center" style="width: 150px"></span>
-								<span class="body-1 text-center" style="width: 150px"></span>
-								<span class="body-1 text-center" style="width: 150px">{{
-									detail.plan
-								}}</span>
-								<span class="body-1 text-center" style="width: 150px">{{
-									detail.pay
-								}}</span>
-								<span class="body-1 text-center" style="width: 150px">{{
-									detail.deuda
-								}}</span>
-							</div>
-						</v-expansion-panel-content>
-					</v-expansion-panel>
-				</v-expansion-panels>
-				<v-card v-if="$auth.$state.user._id != '60c26d38f12991000bca3bba'" flat>
-					<v-card-text class="text-center">
-						<div class="body-1 my-3 mx-auto">
-							Paciencia. Aún nadie ha reservado una sesión
-						</div>
-					</v-card-text>
-				</v-card>
-			</v-col>
-		</div>
+			</template>
+			<template #[`item.actions`]="{ item }">
+				<div>
+					<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
+						<icon :icon="mdiCalendar" small color="primary"></icon>
+					</v-btn>
+					<v-btn icon :to="`chat?client=${item._id}`">
+						<icon :icon="mdiChat" small color="primary"></icon>
+					</v-btn>
+				</div>
+			</template>
+		</v-data-table>
+		<div class="ma-6 text-right secondary--text body-1 font-weight-bold">total: $10000</div>
 	</v-container>
 </template>
 
 <script>
+import { mdiMagnify } from '@mdi/js';
+
 export default {
 	name: 'Pagos',
 	components: {
@@ -97,79 +98,25 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
-			cards: [
+			menu: false,
+			mdiMagnify,
+			findByDate: '',
+			items: [],
+			search: '',
+			headers: [
 				{
-					value: '128',
-					title: 'Usuarios',
-					subtitle: '',
-					img: `https://cdn.hablaqui.cl/static/accoun.png`,
+					text: 'Fecha',
+					sortable: false,
+					value: 'name',
 				},
-				{
-					value: '200',
-					title: 'Planes contratados',
-					subtitle: '',
-					img: `https://cdn.hablaqui.cl/static/brain.png`,
-				},
-				{
-					value: '$400.000',
-					title: 'Pagado',
-					subtitle: '',
-					img: `https://cdn.hablaqui.cl/static/pay.png`,
-				},
-				{
-					value: '$300.000',
-					title: 'Por pagar',
-					subtitle: '',
-					img: `https://cdn.hablaqui.cl/static/pagos.png`,
-				},
+				{ text: 'Nombre', value: 'lastSession', sortable: false },
+				{ text: 'Tipo de plan', value: 'lastSession', sortable: false },
+				{ text: 'Nº Sesión', value: 'actions', sortable: false },
+				{ text: 'Monto', value: 'actions', sortable: false },
+				{ text: '% Hablaquí', value: 'actions', sortable: false },
+				{ text: 'Monto final', value: 'actions', sortable: false },
 			],
-			payments: [
-				{
-					code: '0923',
-					name: 'Joaquín Mendoza',
-					plan: '12',
-					pay: '6/12 · $550.000',
-					deuda: '6/12 · $550.000',
-					details: [
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'En proceso' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-					],
-				},
-				{
-					code: '0923',
-					name: 'Josefa Hodges',
-					plan: '8',
-					pay: '6/12 · $550.000',
-					deuda: '6/12 · $550.000',
-					details: [
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'En proceso' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-					],
-				},
-				{
-					code: '0923',
-					name: 'Manuel Rosales',
-					plan: '8',
-					pay: '6/12 · $550.000',
-					deuda: '6/12 · $550.000',
-					details: [
-						{ plan: '1', pay: '$91.600', deuda: 'Aprobado' },
-						{ plan: '1', pay: '$91.600', deuda: 'En proceso' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-						{ plan: '1', pay: '$91.600', deuda: 'Pendiente' },
-					],
-				},
-			],
+			loading: false,
 		};
 	},
 };
