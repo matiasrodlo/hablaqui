@@ -916,9 +916,20 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
-	const allSessions = Sessions.find({
+	let allSessions = Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('User');
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
 	const response = allSessions.map(data => {
 		const plan = data.plan[data.plan.length - 1];
 		return plan.session.map(session => {
