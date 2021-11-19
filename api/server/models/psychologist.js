@@ -93,7 +93,6 @@ let psyPlan = new Schema({
 	},
 	subscriptionPeriod: {
 		type: String,
-		enum: ['mensual', 'anual'],
 	},
 	price: {
 		type: Number,
