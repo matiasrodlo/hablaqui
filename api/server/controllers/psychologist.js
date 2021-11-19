@@ -348,15 +348,6 @@ const psychologistsController = {
 			);
 		}
 	},
-	async freePlan(req, res) {
-		try {
-			const { psyId } = req.params;
-			const { data, code } = await psychologistsService.freePlan(psyId);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
 	async deleteCommitment(req, res) {
 		try {
 			const { psyId, planId } = req.params;

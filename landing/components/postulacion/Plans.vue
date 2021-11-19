@@ -11,6 +11,7 @@
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
+								v-if="(currentPlan && currentPlan.tier === 'free') || !currentPlan"
 								class="text-left body-1 font-weight-bold d-block"
 								style="color: #15314a"
 							>
@@ -59,7 +60,14 @@
 						</v-list>
 					</v-card-text>
 				</v-card>
-				<v-btn class="mt-4 elevation-12" color="white" rounded block @click="next">
+				<v-btn
+					class="mt-4 elevation-12"
+					color="white"
+					rounded
+					block
+					:disabled="currentPlan.tier === 'free'"
+					@click="setPreferences('free')"
+				>
 					<span class="primary--text">Continuar con plan básico</span>
 				</v-btn>
 			</v-col>
@@ -67,6 +75,12 @@
 				<v-card class="rounded-xl elevation-12">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
+							<div
+								v-if="currentPlan.tier === 'premium'"
+								class="primary--text text-left body-1 font-weight-bold d-block"
+							>
+								Tu plan actual
+							</div>
 							<div class="primary--text text-left headline font-weight-bold d-block">
 								Premium
 							</div>
@@ -141,7 +155,8 @@
 						color="primary"
 						rounded
 						block
-						@click="goMercadoPago"
+						:disabled="currentPlan.tier === 'premium'"
+						@click="setPreferences('premium')"
 						>Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
@@ -153,6 +168,7 @@
 <script>
 import { mdiCheck } from '@mdi/js';
 import { mapActions } from 'vuex';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -163,9 +179,15 @@ export default {
 			type: Function,
 			required: true,
 		},
+		recruitedId: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {
+			recruited: null,
+			psychologist: null,
 			mdiCheck,
 			period: 'mensual',
 			itemsPremiun: [
@@ -184,20 +206,57 @@ export default {
 			],
 		};
 	},
+	computed: {
+		currentPlan() {
+			if (!this.psychologist && !this.recruited) return false;
+			if (this.recruited) return this.recruited.psyPlans[this.recruited.psyPlans.length - 1];
+			return this.psychologist.psyPlans[this.psychologist.psyPlans.length - 1];
+		},
+		hasPremiunPlan() {
+			if (!this.currentPlan) return false;
+			return (
+				this.currentPlan.tier === 'premium' &&
+				moment(this.currentPlan.expirationDate).isAfter(moment())
+			);
+		},
+	},
+	async mounted() {
+		if (this.$auth.$state.user.psychologist) {
+			const { psychologist } = await this.$axios.$get(
+				`/psychologists/one/${this.$auth.$state.user.psychologist}`
+			);
+			this.psychologist = psychologist;
+		}
+		if (this.recruitedId) {
+			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+			this.recruited = recruited;
+		}
+	},
 	methods: {
-		async goMercadoPago() {
-			const mercadopagoPayload = {
+		async setPreferences(plan) {
+			const res = await this.setPaymentPreferences({
+				plan,
 				price: this.period === 'mensual' ? 69990 : 55900 * 12,
 				period: this.period === 'mensual' ? this.period : 'anual',
-				title: 'Plan Premium',
-				quantity: 1,
-				psychologist: this.$auth.$state.user.psychologist,
-			};
-			const res = await this.mercadopagoPay(mercadopagoPayload);
-			window.location.href = res.init_point;
+				description:
+					plan === 'premium' ? 'Plan Premium de Hablaqui' : 'Plan Basico de Hablaqui',
+				title: plan === 'premium' ? 'Plan Premium' : 'Plan Free',
+				psychologistId: this.$auth.$state.user.psychologist,
+				recruitedId: this.recruitedId,
+			});
+
+			if (this.recruitedId) {
+				if (plan === 'premium') window.location.href = res.preference.init_point;
+				else this.next();
+			}
+
+			if (this.$auth.$state.user.psychologist) {
+				if (plan === 'premium') window.location.href = res.preference.init_point;
+				else this.$router.push({ name: 'dashboard-perfil' });
+			}
 		},
 		...mapActions({
-			mercadopagoPsychologistPay: 'Psychologist/mercadopagoPsychologistPay',
+			setPaymentPreferences: 'Psychologist/setPaymentPreferences',
 		}),
 	},
 };

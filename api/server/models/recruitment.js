@@ -110,9 +110,14 @@ let psyPlan = new Schema({
 		enum: ['free', 'premium'],
 		default: 'free',
 	},
-	payment: {
+	paymentStatus: {
 		type: String,
 		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
 		default: 'pending',
 	},
 	expirationDate: {
@@ -121,7 +126,6 @@ let psyPlan = new Schema({
 	},
 	subscriptionPeriod: {
 		type: String,
-		enum: ['monthly', 'yearly'],
 	},
 	price: {
 		type: Number,
@@ -308,7 +312,7 @@ let recruitment = new Schema(
 			default: Date.now,
 		},
 		ratings: [rating],
-		psyPlans: psyPlan,
+		psyPlans: [psyPlan],
 		sessions: [session],
 		timeZone: {
 			type: String,

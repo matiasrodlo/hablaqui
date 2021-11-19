@@ -24,7 +24,7 @@
 			</span>
 		</div>
 		<v-row justify="center">
-			<v-col cols="12" md="8" lg="6">
+			<v-col cols="12" :md="step === 4 ? '10' : '8'" :lg="step === 4 ? '8' : '6'">
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
@@ -1040,7 +1040,8 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											saveStep(4);
+											if (form.psyPlans && form.psyPlans.length) saveStep(5);
+											else saveStep(4);
 										}
 									"
 								>
@@ -1048,11 +1049,17 @@
 								</v-btn>
 							</div>
 						</v-stepper-content>
-
-						<!-- <v-stepper-content step="4">
-								<plans :next="() => (step = 5)" />
-							</v-stepper-content> -->
 						<v-stepper-content step="4">
+							<plans
+								:recruited-id="form._id"
+								:next="
+									() => {
+										step = 5;
+									}
+								"
+							/>
+						</v-stepper-content>
+						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
 									justify="center"
@@ -1114,7 +1121,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		// plans: () => import('~/components/postulacion/Plans'),
+		plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -1198,7 +1205,7 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
-		if (this.form.isFormCompleted) this.step = 4;
+		if (this.form.isFormCompleted) this.step = 5;
 		this.loading = false;
 	},
 	methods: {
@@ -1252,6 +1259,10 @@ export default {
 			}
 			// Final del formulario, validamos step 3
 			else if (step - 1 === 3) {
+				return true;
+			}
+			// Final del formulario, validamos step 4
+			else if (step - 1 === 4) {
 				return true;
 			}
 		},

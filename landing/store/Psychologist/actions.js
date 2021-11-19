@@ -159,12 +159,15 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async mercadopagoPsychologistPay({ commit }, payload) {
+	async setPaymentPreferences({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
 				method: 'POST',
 				data: payload,
 			});
+			if (payload.plan === 'premium')
+				snackBarSuccess('Redirigientote a mercado pago')(commit);
+			else snackBarSuccess('Plan basico establecido')(commit);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);
