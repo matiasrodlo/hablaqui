@@ -207,7 +207,7 @@ const formattedSchedule = (schedule, day, hour) => {
 						moment(interval[0], 'HH:mm'),
 						moment(interval[1], 'HH:mm'),
 						undefined,
-						[]
+						'[)'
 					)
 				);
 			else if (schedule[weekDay] === 'busy') validHour = false;
