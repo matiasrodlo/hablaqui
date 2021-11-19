@@ -130,9 +130,19 @@ const setPlanFree = async (id, isPsychologist) => {
 
 const successPay = async params => {
 	const { planId } = params;
-	const foundPlan = await Sessions.findById(planId);
-	foundPlan.plan[foundPlan.plan.length - 1].payment = 'success';
-	await foundPlan.save();
+
+	const foundPlan = await Sessions.findOneAndUpdate(
+		{
+			'plan._id': planId,
+		},
+		{
+			$set: {
+				'plan.$.payment': 'success',
+				'plan.$.datePayment': moment(),
+			},
+		},
+		{ new: true }
+	);
 
 	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
 	const originalDate = sessionData.date.split(' ');
@@ -216,7 +226,10 @@ const customSessionPay = async params => {
 			psychologist: psyId,
 		},
 		{
-			$set: { 'plan.$.payment': 'success' },
+			$set: {
+				'plan.$.payment': 'success',
+				'plan.$.datePayment': moment(),
+			},
 		},
 		{ new: true }
 	);
