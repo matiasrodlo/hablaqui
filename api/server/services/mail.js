@@ -367,7 +367,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `Verificación de cuenta de Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			template: 'd-8e397d37317c403ea7bb53cbbadac30a',
+			templateId: 'd-8e397d37317c403ea7bb53cbbadac30a',
 			asm: {
 				group_id: 16321,
 			},
