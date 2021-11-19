@@ -5,7 +5,6 @@ import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import chat from './chat';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
@@ -18,7 +17,6 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -379,6 +377,7 @@ const createPlan = async ({ payload }) => {
 			{ user: payload.user, psychologist: payload.psychologist },
 			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
 		);
+
 		return okResponse('Plan creado', { plan: created });
 	} else {
 		const created = await Sessions.create({
@@ -387,7 +386,7 @@ const createPlan = async ({ payload }) => {
 			plan: [newPlan],
 			roomsUrl: url,
 		});
-		chat.startConversation(payload.psychologist, payload.user);
+
 		return okResponse('Plan creado', { plan: created });
 	}
 };
