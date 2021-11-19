@@ -56,8 +56,7 @@
 			:search="search"
 			:loading="loading"
 			:headers="headers"
-			:items="items"
-			item-key="_id"
+			:items="payments"
 			loading-text="Cargando..."
 			:items-per-page="5"
 			:footer-props="{
@@ -65,30 +64,14 @@
 			}"
 			no-data-text="No hay pagos"
 		>
-			<template #[`item.name`]="{ item }">
-				<div>
-					<avatar size="30" :name="item.name" :url="item.avatar" />
-					<span class="ml-2 body-2">{{ item.name }}</span>
-				</div>
-			</template>
-			<template #[`item.actions`]="{ item }">
-				<div>
-					<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
-						<icon :icon="mdiCalendar" small color="primary"></icon>
-					</v-btn>
-					<v-btn icon :to="`chat?client=${item._id}`">
-						<icon :icon="mdiChat" small color="primary"></icon>
-					</v-btn>
-				</div>
-			</template>
 		</v-data-table>
-		<div class="ma-6 text-right secondary--text body-1 font-weight-bold">total: $10000</div>
+		<!-- <div class="ma-6 text-right secondary--text body-1 font-weight-bold">total: $10000</div> -->
 	</v-container>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import { mdiMagnify } from '@mdi/js';
-
 export default {
 	name: 'Pagos',
 	components: {
@@ -107,17 +90,35 @@ export default {
 				{
 					text: 'Fecha',
 					sortable: false,
-					value: 'name',
+					value: 'date',
 				},
-				{ text: 'Nombre', value: 'lastSession', sortable: false },
-				{ text: 'Tipo de plan', value: 'lastSession', sortable: false },
-				{ text: 'Nº Sesión', value: 'actions', sortable: false },
-				{ text: 'Monto', value: 'actions', sortable: false },
-				{ text: '% Hablaquí', value: 'actions', sortable: false },
-				{ text: 'Monto final', value: 'actions', sortable: false },
+				{ text: 'Nombre', value: 'name', sortable: false },
+				{ text: 'Tipo de plan', value: 'plan', sortable: false },
+				{ text: 'Nº Sesión', value: 'sessionsNumber', sortable: false },
+				{ text: 'Monto', value: 'amount', sortable: false },
+				{ text: '% Hablaquí', value: 'percentage', sortable: false },
+				{ text: 'Monto final', value: 'total', sortable: false },
 			],
 			loading: false,
 		};
+	},
+	computed: {
+		...mapGetters({
+			payments: 'Psychologist/payments',
+		}),
+	},
+	mounted() {
+		this.initFetch();
+	},
+	methods: {
+		async initFetch() {
+			this.loading = true;
+			await this.getPayments();
+			this.loading = false;
+		},
+		...mapActions({
+			getPayments: 'Psychologist/getPayments',
+		}),
 	},
 };
 </script>

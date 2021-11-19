@@ -916,33 +916,37 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
-	let allSessions = Sessions.find({
+	let allSessions = await Sessions.find({
 		psychologist: user.psychologist,
-	}).populate('User');
+	}).populate('user');
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	allSessions = allSessions.filter(item =>
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				plan.title !== 'compromiso privado'
 			);
 		})
 	);
 
-	const response = allSessions.map(data => {
-		const plan = data.plan[data.plan.length - 1];
-		return plan.session.map(session => {
-			return {
-				...session,
-				sessionPrice: plan.sessionPrice,
-				invitedByPsychologist: plan.invitedByPsychologist,
-				client: `${data.user.name} ${data.user.lastName}`,
-			};
-		});
+	const payments = allSessions.flatMap(item => {
+		return item.plan.map(plan => ({
+			idPlan: plan._id,
+			sessionsId: item._id,
+			name: `${item.user.name} ${
+				item.user.lastName ? item.user.lastName : ''
+			}`,
+			date: plan.datePayment,
+			plan: plan.title,
+			sessionsNumber: `${plan.session.length} de ${plan.totalSessions}`,
+			amount: '0',
+			percentage: '0',
+			total: '0',
+		}));
 	});
 
-	return okResponse('', response);
+	return okResponse('Obtubo todo sus pagos', { payments });
 };
 
 const deleteCommitment = async (planId, psyId) => {
