@@ -1,6 +1,7 @@
 'use strict';
 
 import Recruitment from '../models/recruitment';
+import User from '../models/user';
 import { logInfo } from '../config/winston';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
@@ -31,7 +32,7 @@ const recruitmentService = {
 
 		analytics.track({
 			userId: user._id,
-			event: 'New psy application',
+			event: 'psy-new-application',
 			properties: {
 				email: user.email,
 				name: user.name,
@@ -115,9 +116,15 @@ const recruitmentService = {
 		const newProfile = await psychologist.create(payload);
 		mailService.sendWelcomeNewPsychologist(payload);
 
+		const userUpdated = await User.findOneAndUpdate(
+			{ email: payload.email },
+			{ $set: { psychologist: newProfile._id } },
+			{ new: true }
+		);
+
 		analytics.track({
-			userId: user._id,
-			event: 'New psy recruited',
+			userId: userUpdated._id.toString(),
+			event: 'new-psy-onboard',
 			properties: {
 				email: payload.email,
 				name: payload.name,

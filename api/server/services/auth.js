@@ -93,8 +93,8 @@ const register = async payload => {
 		},
 	});
 	analytics.track({
-		userId: user._id,
-		event: 'Registered',
+		userId: user._id.toString(),
+		event: 'organic-user-signup',
 		properties: {
 			name: user.name,
 			email: user.email,
@@ -134,8 +134,7 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.VUE_APP_LANDING}
-		/password-reset?token=${token}`;
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
 
 	mailService.sendPasswordRecovery(user, recoveryUrl);
 

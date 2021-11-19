@@ -159,12 +159,15 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async mercadopagoPsychologistPay({ commit }, payload) {
+	async setPaymentPreferences({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
 				method: 'POST',
 				data: payload,
 			});
+			if (payload.plan === 'premium')
+				snackBarSuccess('Redirigientote a mercado pago')(commit);
+			else snackBarSuccess('Plan basico establecido')(commit);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -181,6 +184,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async cancelSession({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/psychologist/cancel-session', {
+				method: 'delete',
+				data: payload,
+			});
+			commit('setSessions', data.sessions);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
@@ -189,7 +203,6 @@ export default {
 			});
 			snackBarSuccess('Sesión agregada')(commit);
 			commit('setSessions', data.sessions);
-			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

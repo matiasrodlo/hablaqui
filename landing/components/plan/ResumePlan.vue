@@ -63,7 +63,8 @@
 				</div>
 				<div class="font-weight-bold">Resumen</div>
 				<div class="caption">
-					{{ plan.title }} {{ plan.deal.price }} {{ plan.deal.lapse }}
+					{{ plan.title }} {{ plan.deal.weekPrice }} {{ plan.deal.lapse }}<br />
+					{{ plan.deal.type }}
 				</div>
 				<v-divider class="my-4"></v-divider>
 				<div class="d-flex justify-space-between">
@@ -123,10 +124,10 @@ export default {
 		};
 	},
 	created() {
-		if (this.verifyOnlyNumbers(this.plan.deal.total)) {
-			this.priceInt = Number(this.plan.deal.total);
+		if (this.verifyOnlyNumbers(this.plan.deal.price)) {
+			this.priceInt = Number(this.plan.deal.price);
 		} else {
-			this.priceInt = Number(this.plan.deal.total.split('.').join(''));
+			this.priceInt = Number(this.plan.deal.price.split('.').join(''));
 		}
 	},
 	mounted() {

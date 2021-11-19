@@ -128,10 +128,12 @@ const psychologistsController = {
 	async cancelSession(req, res) {
 		try {
 			const { user } = req;
-			const { sessionId } = req.body;
+			const { sessionsId, planId, id } = req.body;
 			const { data, code } = await psychologistsService.cancelSession(
 				user,
-				sessionId
+				planId,
+				sessionsId,
+				id
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -344,6 +346,18 @@ const psychologistsController = {
 				res,
 				'Error procesando la informacion de los pagos'
 			);
+		}
+	},
+	async deleteCommitment(req, res) {
+		try {
+			const { psyId, planId } = req.params;
+			const { data, code } = await psychologistsService.deleteCommitment(
+				planId,
+				psyId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 };

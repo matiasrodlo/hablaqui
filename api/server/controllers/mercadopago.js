@@ -10,8 +10,7 @@ const mercadopagoController = {
 		try {
 			const { body } = req;
 			const { data, code } = await mercadopagoService.createPreference(
-				body,
-				res
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -33,10 +32,7 @@ const mercadopagoController = {
 			const {
 				data,
 				code,
-			} = await mercadopagoService.createPsychologistPreference(
-				body,
-				res
-			);
+			} = await mercadopagoService.createPsychologistPreference(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error procesando el servicio');
@@ -51,18 +47,6 @@ const mercadopagoController = {
 			);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
-		}
-	},
-	async createRecruitedPreference(req, res) {
-		try {
-			const { body } = req;
-			const {
-				data,
-				code,
-			} = await mercadopagoService.createRecruitedPreference(body, res);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error creando el pago en MercadoPago');
 		}
 	},
 	async recruitedPay(req, res) {
@@ -96,7 +80,7 @@ const mercadopagoController = {
 		try {
 			const { params } = req;
 			await mercadopagoService.customSessionPay(params);
-			return res.redirect(`${landing_url}/psicologos`);
+			return res.redirect(`${landing_url}/dashboard/chat`);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}

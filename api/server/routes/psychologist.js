@@ -376,4 +376,15 @@ psychologistsRouter.get(
 	psychologistsController.paymentsInfo
 );
 
+/**
+ * @description: Elimina un compromiso privado de un psicologo
+ * @route {PATCH} /api/v1/psychologist/delete-private-commitment
+ * @param {String} psyId id del compromiso y planId es el id del plan
+ * @returns {Object} Objecto Session con el compromiso eliminado
+ */
+psychologistsRouter.patch(
+	'/psychologist/delete-commitment/:psyId/:planId',
+	psychologistsController.deleteCommitment
+);
+
 export default psychologistsRouter;

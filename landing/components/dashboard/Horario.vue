@@ -360,6 +360,7 @@ export default {
 						undefined,
 						[]
 					);
+				else if (item[0] === item[1]) return true;
 				else return false;
 			});
 			if (!result) {

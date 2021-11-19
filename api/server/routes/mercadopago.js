@@ -2,7 +2,6 @@
 
 import { Router } from 'express';
 import mercadopagoController from '../controllers/mercadopago';
-import mercadopago from '../services/mercadopago';
 
 const mercadopagoRouter = Router();
 
@@ -30,30 +29,13 @@ mercadopagoRouter.get(
 );
 
 /**
-
- * MERCADOPAGO PLANES DE PSICOLOGO
-
- * @description: Ruta para crear una preferencia (URL de pago) de un plan de psicologo
- * @param {Object} body - Objeto con los parametros necesarios
- * @param {String} body.descritipn - Titulo del objeto de pago
- * @param {Integer} body.price - Precio a pagar (en CLP)
- * @param {String} body.psychologistToUpdate - ObjectId del psicologo que ha pagado
- * @returns: Preferencia, pero lo importante es el init_point (la URL para redireccionar a mercadopago)
-
+ * Mercadopago
+ * @description crear preferencias para generar ruta de pago
+ * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
 	mercadopagoController.createPsychologistPreference
-);
-
-/**
- * Crea una preferencia de mercadopago para pago de plan de postulante
- * @param {string} planId
- * @body {string} datos de la preferencia (precio, periodo, id del postulante)
- */
-mercadopagoRouter.post(
-	'/mercadopago/recruited-preference',
-	mercadopagoController.createRecruitedPreference
 );
 
 /**
@@ -84,7 +66,7 @@ mercadopagoRouter.get(
 );
 
 mercadopagoRouter.get(
-	'/mercadopago/custom-session-pay/:id',
+	'/mercadopago/custom-session-pay/:userId/:psyId/:planId',
 	mercadopagoController.customSessionPay
 );
 
