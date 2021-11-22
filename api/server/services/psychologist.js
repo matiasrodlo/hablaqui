@@ -472,7 +472,16 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
-
+	const { psychologist } = await Sessions.findOne({ _id: sessionsId });
+	const minimumRescheduleSession =
+		psychologist.preferences.minimumRescheduleSession;
+	if (
+		moment(date, 'MM/DD/YYYY HH:mm').isAfter(
+			moment().subtract(minimumRescheduleSession, 'hours')
+		)
+	) {
+		return conflictResponse('El tiempo para reagendar esta sesión expiró');
+	}
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
