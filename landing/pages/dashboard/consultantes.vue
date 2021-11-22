@@ -34,6 +34,87 @@
 					</div>
 				</v-alert>
 			</v-col>
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12" class="d-flex algin-center">
+					<span style="flex: 2; align-self: center">
+						<avatar size="70" :name="selected.name" :url="selected.avatar" />
+						<span class="ml-4 secondary--text text-h6">{{ selected.name }}</span>
+					</span>
+					<span style="flex: 1" class="text-right">
+						<v-btn icon>
+							<icon size="30" :icon="mdiCalendar" color="primary"></icon>
+						</v-btn>
+						<v-btn icon>
+							<icon size="30" :icon="mdiChat" color="primary"></icon>
+						</v-btn>
+					</span>
+				</v-col>
+			</v-expand-transition>
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12" class="d-flex algin-center">
+					<v-expansion-panels accordion class="rounded-xl">
+						<v-expansion-panel>
+							<v-expansion-panel-header>
+								<span class="text-h6 secondary--text">Datos del consultante</span>
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<v-divider class="mx-auto"></v-divider>
+								<v-row>
+									<v-col cols="4" class="pt-14 body-2 secondary--text">
+										<div class="font-weight-bold">Información personal</div>
+										<div class="pt-4 d-flex">
+											<span style="flex: 1">Nombres:</span>
+											<span style="flex: 0">{{ selected.name }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Nacimiento:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Edad:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Estado:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Plan contratado:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Valor por sesión:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+									</v-col>
+									<v-col><v-divider vertical class="pa-0"></v-divider></v-col>
+									<v-col cols="7" class="pt-14">
+										<div class="secondary--text body-2 font-weight-bold">
+											Contácto
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Email:</span>
+											<span style="flex: 0">{{ selected.email }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Celular:</span>
+											<span style="flex: 0">{{ selected.phone }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Dirección:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Observaciones:</span>
+											<span style="flex: 0">{{ selected.birthdate }}</span>
+										</div>
+									</v-col>
+								</v-row>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-col>
+			</v-expand-transition>
 			<v-col cols="12">
 				<v-data-table
 					:search="search"
@@ -41,12 +122,14 @@
 					:headers="headers"
 					:items="items"
 					item-key="_id"
+					class="elevation-2"
 					loading-text="Cargando..."
 					:items-per-page="5"
 					:footer-props="{
 						'items-per-page-text': 'Consultantes por página',
 					}"
 					no-data-text="No hay consultantes"
+					@click:row="setSelected"
 				>
 					<template #[`item.name`]="{ item }">
 						<div>
@@ -229,6 +312,7 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		selected: null,
 		dialogComission: false,
 		loadingCreatedUser: false,
 		dialog: false,
@@ -308,6 +392,10 @@ export default {
 				phone: '',
 				email: '',
 			};
+		},
+		setSelected(item) {
+			if (this.selected && item._id === this.selected._id) this.selected = null;
+			else this.selected = item;
 		},
 		closeDialog() {
 			this.dialog = false;
