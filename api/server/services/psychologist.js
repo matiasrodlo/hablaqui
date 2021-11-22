@@ -274,6 +274,20 @@ const createPlan = async ({ payload }) => {
 	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
 	}
+	// valido MM/DD/YYYY HH:mm
+	const date = `${payload.date} ${payload.start}`;
+	const psychologist = await Psychologist.findById(payload.psychologist);
+	const minimumNewSession = psychologist.preferences.minimumNewSession;
+	// check whether the date is after the current date plus the minimum time
+	if (
+		moment(date, 'MM/DD/YYYY HH:mm').isAfter(
+			moment().subtract(minimumNewSession, 'hours')
+		)
+	) {
+		return conflictResponse(
+			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
+		);
+	}
 	let sessionQuantity = 0;
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
@@ -294,8 +308,6 @@ const createPlan = async ({ payload }) => {
 			.add({ months: 3 })
 			.toISOString();
 	}
-	// valido MM/DD/YYYY HH:mm
-	const date = `${payload.date} ${payload.start}`;
 
 	const newSession = {
 		date,
@@ -400,6 +412,18 @@ const createPlan = async ({ payload }) => {
  * @returns sessions actualizada
  */
 const createSession = async (userLogged, id, idPlan, payload) => {
+	const { psychologist } = await Sessions.findOne({ _id: id });
+	const minimumNewSession = psychologist.preferences.minimumNewSession;
+	// check whether the date is after the current date plus the minimum time
+	if (
+		moment(payload.date, 'MM/DD/YYYY HH:mm').isAfter(
+			moment().subtract(minimumNewSession, 'hours')
+		)
+	) {
+		return conflictResponse(
+			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
+		);
+	}
 	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
 		{
@@ -917,17 +941,32 @@ const paymentsInfo = async user => {
 
 	const allSessions = Sessions.find({
 		psychologist: user.psychologist,
-	}).populate('User');
-	const response = allSessions.map(data => {
-		const plan = data.plan[data.plan.length - 1];
-		return plan.session.map(session => {
-			return {
-				...session,
-				sessionPrice: plan.sessionPrice,
-				invitedByPsychologist: plan.invitedByPsychologist,
-				client: `${data.user.name} ${data.user.lastName}`,
-			};
-		});
+	}).populate('user');
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				plan.title !== 'compromiso privado'
+			);
+		})
+	);
+	// TODO: Agregar datos faltantes
+	const payments = allSessions.flatMap(item => {
+		return item.plan.map(plan => ({
+			idPlan: plan._id,
+			sessionsId: item._id,
+			name: `${item.user.name} ${
+				item.user.lastName ? item.user.lastName : ''
+			}`,
+			date: plan.datePayment,
+			plan: plan.title,
+			sessionsNumber: `${plan.session.length} de ${plan.totalSessions}`,
+			amount: '0',
+			percentage: '0',
+			total: '0',
+		}));
 	});
 
 	return okResponse('', response);
