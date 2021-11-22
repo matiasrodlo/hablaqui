@@ -371,7 +371,7 @@ psychologistsRouter.put(
  * @description: Consigue los datos (y la tabla) de pagos del psicologo.
  */
 psychologistsRouter.get(
-	'/psychologist/payments',
+	'/psychologist/payments/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfo
 );

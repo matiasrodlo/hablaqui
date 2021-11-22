@@ -38,6 +38,9 @@ let plan = new Schema(
 			default: 'pending',
 			enum: ['pending', 'success', 'failed'],
 		},
+		datePayment: {
+			type: String,
+		},
 		expiration: {
 			type: String,
 		},
