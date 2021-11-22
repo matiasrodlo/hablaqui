@@ -11,6 +11,7 @@
 					outlined
 					filled
 					dense
+					clearable
 					:append-icon="mdiMagnify"
 				></v-text-field>
 			</v-col>
@@ -27,7 +28,7 @@
 				>
 					<template #activator="{ on, attrs }">
 						<v-text-field
-							v-model="findByDate"
+							:value="findByDate"
 							placeholder="Buscar por fecha"
 							:append-icon="mdiMagnify"
 							readonly
@@ -39,12 +40,13 @@
 							v-on="on"
 						></v-text-field>
 					</template>
-					<v-date-picker v-model="findByDate" type="month" no-title scrollable>
-						<v-spacer></v-spacer>
-						<v-btn text color="primary" @click="menu = false"> Cerrar </v-btn>
-						<v-btn text color="primary" @click="$refs.menu.save(findByDate)">
-							OK
-						</v-btn>
+					<v-date-picker
+						v-model="findByDate"
+						type="month"
+						no-title
+						scrollable
+						@change="$refs.menu.save(findByDate)"
+					>
 					</v-date-picker>
 				</v-menu>
 			</v-col>
@@ -56,7 +58,7 @@
 			:search="search"
 			:loading="loading"
 			:headers="headers"
-			:items="payments"
+			:items="items"
 			loading-text="Cargando..."
 			:items-per-page="5"
 			:footer-props="{
@@ -72,6 +74,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiMagnify } from '@mdi/js';
+import moment from 'moment';
 export default {
 	name: 'Pagos',
 	components: {
@@ -83,8 +86,7 @@ export default {
 		return {
 			menu: false,
 			mdiMagnify,
-			findByDate: '',
-			items: [],
+			findByDate: moment().format('YYYY-MM'),
 			search: '',
 			headers: [
 				{
@@ -103,6 +105,17 @@ export default {
 		};
 	},
 	computed: {
+		items: {
+			get() {
+				return this.payments.filter(
+					item =>
+						moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') === this.findByDate
+				);
+			},
+			set(payments) {
+				return payments;
+			},
+		},
 		...mapGetters({
 			payments: 'Psychologist/payments',
 		}),
