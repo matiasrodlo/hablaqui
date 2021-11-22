@@ -1096,9 +1096,9 @@
 												class="mx-2"
 												color="primary"
 												rounded
-												@click="step = 1"
+												:to="{ name: 'dashboard-perfil' }"
 											>
-												Editar postulación
+												Ir a mi cuenta
 											</v-btn>
 										</div>
 									</v-col>
