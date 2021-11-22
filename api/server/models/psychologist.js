@@ -2,40 +2,6 @@
 
 import { Schema, model } from 'mongoose';
 
-let session = new Schema({
-	date: {
-		type: String,
-	},
-	start: {
-		type: String,
-	},
-	end: {
-		type: String,
-	},
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-	},
-	typeSession: {
-		type: String,
-	},
-	typePayments: {
-		type: String,
-	},
-	statePayments: {
-		type: String,
-	},
-	plan: {
-		type: String,
-	},
-	invitedByPsychologist: {
-		type: Boolean,
-	},
-	price: {
-		type: Number,
-	},
-});
-
 let defaultSchedule = {
 	monday: [['09:00', '17:00']],
 	tuesday: [['09:00', '17:00']],
@@ -104,6 +70,43 @@ let rating = new Schema(
 	},
 	{ timestamps: true }
 );
+
+let psyPlan = new Schema({
+	tier: {
+		type: String,
+		enum: ['free', 'premium'],
+		default: 'free',
+	},
+	paymentStatus: {
+		type: String,
+		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
+		default: 'pending',
+	},
+	expirationDate: {
+		type: String,
+		default: '',
+	},
+	subscriptionPeriod: {
+		type: String,
+	},
+	price: {
+		type: Number,
+		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
+	},
+});
 
 let psychologist = new Schema({
 	avatar: {
@@ -196,7 +199,7 @@ let psychologist = new Schema({
 		required: false,
 	},
 	ratings: [rating],
-	sessions: [session],
+	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

@@ -2,7 +2,6 @@
 
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
-import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
@@ -23,12 +22,19 @@ const startConversation = async (psychologistId, user) => {
 };
 
 const getMessages = async (user, psy) => {
-	return okResponse('Mensajes conseguidos', {
-		messages: await Chat.findOne({
-			psychologist: psy,
+	let messages = await await Chat.findOne({
+		psychologist: psy,
+		user: user,
+	}).populate('user psychologist');
+
+	if (!messages)
+		messages = await Chat.create({
 			user: user,
-		}).populate('user psychologist'),
-		url: `${room}${user}-${psy}`,
+			psychologist: psy,
+		});
+
+	return okResponse('Mensajes conseguidos', {
+		messages,
 	});
 };
 

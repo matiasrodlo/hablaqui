@@ -3,108 +3,74 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
-let planSchema = new Schema(
+let userSchema = new Schema(
 	{
-		title: {
+		name: {
 			type: String,
 		},
-		fullInfo: {
-			type: Object,
-		},
-		period: {
+		lastName: {
 			type: String,
+		},
+		rut: {
+			type: String,
+		},
+		email: {
+			type: String,
+			lowercase: true,
+			trim: true,
+		},
+		password: {
+			type: String,
+		},
+		inviteCode: {
+			type: String,
+		},
+		googleId: {
+			type: String,
+		},
+		phone: {
+			type: String,
+			trim: true,
+			required: false,
+		},
+		timeZone: {
+			type: String,
+			default: 'America/Santiago',
+		},
+		state: {
+			type: Boolean,
+			default: true,
+		},
+		avatar: { type: String, default: '' },
+		avatarThumbnail: {
+			type: String,
+		},
+		google: {
+			type: Boolean,
+			default: false,
+		},
+		hasPaid: {
+			type: Boolean,
+			default: 'false',
+		},
+		finishedSessions: {
+			type: Array,
+			required: false,
 		},
 		psychologist: {
 			type: Schema.Types.ObjectId,
 			ref: 'psychologist',
+			required: false,
 		},
-		price: {
-			type: Number,
-		},
-		sessionPrice: {
-			type: Number,
-		},
-		status: {
+		role: {
 			type: String,
-			default: 'pending',
-		},
-		expiration: {
-			type: String,
-		},
-		invitedByPsychologist: {
-			type: Boolean,
-			default: false,
-		},
-		usedCoupon: {
-			type: String,
+			default: 'user',
+			enum: ['user', 'psychologist', 'superuser'],
 		},
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+	}
 );
-let userSchema = new Schema({
-	name: {
-		type: String,
-	},
-	lastName: {
-		type: String,
-	},
-	rut: {
-		type: String,
-	},
-	email: {
-		type: String,
-		lowercase: true,
-		trim: true,
-	},
-	password: {
-		type: String,
-	},
-	inviteCode: {
-		type: String,
-	},
-	googleId: {
-		type: String,
-	},
-	phone: {
-		type: String,
-		trim: true,
-		required: false,
-	},
-	timeZone: {
-		type: String,
-		default: 'America/Santiago',
-	},
-	state: {
-		type: Boolean,
-		default: true,
-	},
-	avatar: { type: String, default: '' },
-	avatarThumbnail: {
-		type: String,
-	},
-	google: {
-		type: Boolean,
-		default: false,
-	},
-	plan: [planSchema],
-	hasPaid: {
-		type: Boolean,
-		default: 'false',
-	},
-	finishedSessions: {
-		type: Array,
-		required: false,
-	},
-	psychologist: {
-		type: Schema.Types.ObjectId,
-		ref: 'psychologist',
-		required: false,
-	},
-	role: {
-		type: String,
-		default: 'user',
-		enum: ['user', 'psychologist', 'superuser'],
-	},
-});
 
 export default model('User', userSchema);

@@ -7,13 +7,17 @@
 		"start": "node -r esm server.js",
 		"dev": "nodemon -r esm --inspect server.js",
 		"test": "jest",
-		"create-env": "printenv > .env"
+		"create-env": "printenv > .env && cat .env"
 	},
 	"author": "",
 	"dependencies": {
+		"@google-cloud/debug-agent": "^5.2.8",
 		"@google-cloud/storage": "^4.4.0",
 		"@hapi/joi": "^17.1.0",
+		"@sendgrid/client": "^7.6.0",
+		"@sendgrid/mail": "^7.6.0",
 		"accesscontrol": "^2.2.1",
+		"analytics-node": "^5.1.2",
 		"axios": "^0.19.2",
 		"bcrypt": "^3.0.6",
 		"body-parser": "^1.19.0",

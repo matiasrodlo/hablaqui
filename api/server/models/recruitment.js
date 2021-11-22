@@ -58,6 +58,9 @@ let formationSchema = new Schema({
 	description: {
 		type: String,
 	},
+	intitucion: {
+		type: String,
+	},
 	start: {
 		type: String,
 	},
@@ -79,6 +82,10 @@ let experienceSchema = new Schema({
 	end: {
 		type: String,
 	},
+	current: {
+		type: Boolean,
+		defautl: false,
+	},
 });
 
 let rating = new Schema(
@@ -96,6 +103,43 @@ let rating = new Schema(
 	},
 	{ timestamps: true }
 );
+
+let psyPlan = new Schema({
+	tier: {
+		type: String,
+		enum: ['free', 'premium'],
+		default: 'free',
+	},
+	paymentStatus: {
+		type: String,
+		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
+		default: 'pending',
+	},
+	expirationDate: {
+		type: String,
+		default: '',
+	},
+	subscriptionPeriod: {
+		type: String,
+	},
+	price: {
+		type: Number,
+		default: 0,
+	},
+	hablaquiFee: {
+		type: Number,
+		default: 0.2,
+	},
+	paymentFee: {
+		type: Number,
+		default: 0.0399,
+	},
+});
 
 let recruitment = new Schema(
 	{
@@ -215,6 +259,22 @@ let recruitment = new Schema(
 			type: String,
 			default: '',
 		},
+		howFindOut: {
+			type: String,
+			default: 'Búsqueda de internet',
+			enum: [
+				'Búsqueda de internet',
+				'Por redes sociales',
+				'Por amigos/familiares',
+				'Por blog',
+				'Anuncio en google',
+				'Otro',
+			],
+		},
+		phone: {
+			type: Object,
+			default: { number: '', code: '', flag: '' },
+		},
 		isExclusiveActivity: {
 			type: Boolean,
 			default: false,
@@ -252,6 +312,7 @@ let recruitment = new Schema(
 			default: Date.now,
 		},
 		ratings: [rating],
+		psyPlans: [psyPlan],
 		sessions: [session],
 		timeZone: {
 			type: String,

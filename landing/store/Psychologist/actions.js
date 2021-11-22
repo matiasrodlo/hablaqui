@@ -9,12 +9,11 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSessions({ commit }, idPsychologist) {
+	async getSessions({ commit }, { idPsychologist, idUser }) {
 		try {
 			const { sessions } = await this.$axios.$get(
-				`/psychologists/sessions/${idPsychologist}`
+				`/psychologists/sessions/${idPsychologist}/${idUser}`
 			);
-
 			commit('setSessions', sessions);
 			return sessions;
 		} catch (e) {
@@ -113,13 +112,26 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async setReschedule({ commit }, { sessionId, newDate }) {
+	async createCustomSession({ commit }, payload) {
 		try {
-			const { data } = await this.$axios(`/psychologists/reschedule/${sessionId}`, {
+			const { data } = await this.$axios('/psychologist/new-custom-session', {
+				method: 'POST',
+				data: payload,
+			});
+			commit('setCustomSessions', data.sessions);
+			snackBarSuccess('Sesión agregada')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async setReschedule({ commit }, { id, sessionsId, newDate }) {
+		try {
+			const { data } = await this.$axios(`/psychologists/reschedule/${sessionsId}/${id}`, {
 				method: 'POST',
 				data: { newDate },
 			});
 			snackBarSuccess('Sesión reprogramada')(commit);
+			commit('setOneSessions', { payload: data.sessions, id });
 			return data.sessions;
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -147,6 +159,20 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async setPaymentPreferences({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
+				method: 'POST',
+				data: payload,
+			});
+			if (payload.plan === 'premium')
+				snackBarSuccess('Redirigientote a mercado pago')(commit);
+			else snackBarSuccess('Plan basico establecido')(commit);
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async createSession({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/psychologists/session/create', {
@@ -154,6 +180,29 @@ export default {
 				data: { payload },
 			});
 			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async cancelSession({ commit }, payload) {
+		try {
+			const { data } = await this.$axios('/psychologist/cancel-session', {
+				method: 'delete',
+				data: payload,
+			});
+			commit('setSessions', data.sessions);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async addSession({ commit }, { id, idPlan, payload }) {
+		try {
+			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
+				method: 'put',
+				data: payload,
+			});
+			snackBarSuccess('Sesión agregada')(commit);
+			commit('setSessions', data.sessions);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

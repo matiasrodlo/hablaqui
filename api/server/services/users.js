@@ -11,6 +11,11 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
+import Sessions from '../models/sessions';
+import moment from 'moment';
+import { room } from '../config/dotenv';
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -19,7 +24,7 @@ const usersService = {
 			return conflictResponse('perfil no encontrado');
 		}
 		return okResponse('perfil obtenido', {
-			user: servicesAuth.generateUser(user),
+			user: await servicesAuth.generateUser(user),
 		});
 	},
 	async changeActualPassword(user, newPassword) {
@@ -109,11 +114,11 @@ const usersService = {
 			return conflictResponse('Ha ocurrido un error inesperado');
 
 		if (userLogged.role === 'superuser') {
+			const psy = await Psychologist.findById(idPsychologist);
 			const userSelected = await User.findOne({
-				psychologist: idPsychologist,
+				email: psy.email,
 				role: 'psychologist',
 			});
-
 			userRole = userSelected.role;
 			userID = userSelected._id;
 		}
@@ -187,7 +192,7 @@ const usersService = {
 	},
 
 	async registerUser(user, body) {
-		if (user.role != 'psychologist')
+		if (user.role !== 'psychologist')
 			return conflictResponse('Usuario activo no es psicologo');
 		if (await User.exists({ email: body.email }))
 			return conflictResponse('Correo electronico en uso');
@@ -201,6 +206,7 @@ const usersService = {
 				.slice(2);
 
 		const newUser = {
+			psychologist: user._id,
 			name: body.name,
 			email: body.email,
 			password: bcrypt.hashSync(pass, 10),
@@ -209,6 +215,55 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
+
+		analytics.identify({
+			userId: createdUser._id.toString(),
+			traits: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+				referencerId: user._id,
+				referencerName: `${user.name} ${user.lastName}`,
+			},
+		});
+		analytics.track({
+			userId: createdUser._id,
+			event: 'referral-user-signup',
+			properties: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+				referencerId: user._id,
+				referencerName: `${user.name} ${user.lastName}`,
+			},
+		});
+
+		const roomId = require('crypto')
+			.createHash('md5')
+			.update(`${createdUser._id}${user._id}`)
+			.digest('hex');
+
+		const newPlan = {
+			title: 'Plan inicial',
+			period: 'Plan inicial',
+			totalPrice: 0,
+			sessionPrice: 0,
+			payment: 'success',
+			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
+			invitedByPsychologist: true,
+			usedCoupon: '',
+			totalSessions: 0,
+			remainingSessions: 0,
+			session: [],
+		};
+
+		if (user.role === 'psychologist' && createdUser.role === 'user')
+			await Sessions.create({
+				plan: [newPlan],
+				user: createdUser._id,
+				psychologist: user.psychologist,
+				roomsUrl: `${room}room/${roomId}`,
+			});
 
 		if (process.env.NODE_ENV === 'development')
 			logInfo(
@@ -222,7 +277,7 @@ const usersService = {
 		await mailService.sendGuestNewUser(user, newUser, pass);
 
 		return okResponse('Nuevo usuario creado', {
-			user: servicesAuth.generateUser(createdUser),
+			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
 };

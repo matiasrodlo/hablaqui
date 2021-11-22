@@ -290,7 +290,7 @@ class _ChatPageState extends State<ChatPage>
 	}
 	void _openPsychoEmail() async
 	{
-		String url = 'mailto:c@hablaqui.com?subject=';//'mailto:${this.widget.psycho.email}?subject=';
+		String url = 'mailto:soporte@hablaqui.cl?subject=';//'mailto:${this.widget.psycho.email}?subject=';
 		if (await canLaunch(url)) 
 		{
 			await launch(

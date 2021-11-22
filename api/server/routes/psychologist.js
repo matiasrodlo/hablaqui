@@ -46,7 +46,7 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *        description: Psicólogo no encontrado
  */
 psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist',
+	'/psychologists/sessions/:idPsychologist/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
@@ -90,15 +90,28 @@ psychologistsRouter.post(
 psychologistsRouter.post(
 	'/psychologists/session/create',
 	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createPlan
+);
+/**
+ * Create a session
+ * req.body.payload = {
+ *	user: ObjectId,
+	psychologist: ObjectId,
+	date: String,
+	start: String,
+ * }
+ */
+psychologistsRouter.put(
+	'/psychologists/session/:id/plan/:idPlan',
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
-
 /**
  * Cambia la hora de la session con el :id
  * req.body = { newDate: string (ojala en formato ISO) }
  */
 psychologistsRouter.post(
-	'/psychologists/reschedule/:id',
+	'/psychologists/reschedule/:sessionsId/:id',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
@@ -353,4 +366,25 @@ psychologistsRouter.put(
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.approveAvatar
 );
+
+/**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
+psychologistsRouter.get(
+	'/psychologist/payments',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfo
+);
+
+/**
+ * @description: Elimina un compromiso privado de un psicologo
+ * @route {PATCH} /api/v1/psychologist/delete-private-commitment
+ * @param {String} psyId id del compromiso y planId es el id del plan
+ * @returns {Object} Objecto Session con el compromiso eliminado
+ */
+psychologistsRouter.patch(
+	'/psychologist/delete-commitment/:psyId/:planId',
+	psychologistsController.deleteCommitment
+);
+
 export default psychologistsRouter;

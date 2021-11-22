@@ -61,4 +61,5 @@ recruitmentRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.approve
 );
+
 export default recruitmentRouter;

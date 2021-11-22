@@ -15,10 +15,11 @@ const psychologistsController = {
 	},
 	async getSessions(req, res) {
 		try {
-			const { idPsychologist } = req.params;
+			const { idUser, idPsychologist } = req.params;
 			const { user } = req;
 			const { data, code } = await psychologistsService.getSessions(
 				user,
+				idUser,
 				idPsychologist
 			);
 			return restResponse(data, code, res);
@@ -62,23 +63,36 @@ const psychologistsController = {
 	},
 	async createSession(req, res) {
 		try {
-			const { body } = req;
+			const { body, user } = req;
+			const { id, idPlan } = req.params;
 			const { data, code } = await psychologistsService.createSession(
-				body,
-				res
+				user,
+				id,
+				idPlan,
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error creando una cita');
+			errorCallback(e, res, 'error creando una sessión');
+		}
+	},
+	async createPlan(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.createPlan(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error creando una plan');
 		}
 	},
 	async reschedule(req, res) {
 		try {
-			const { id } = req.params;
+			const { id, sessionsId } = req.params;
 			const { user } = req;
 			const { newDate } = req.body;
 			const { data, code } = await psychologistsService.reschedule(
 				user,
+				sessionsId,
 				id,
 				newDate
 			);
@@ -114,10 +128,12 @@ const psychologistsController = {
 	async cancelSession(req, res) {
 		try {
 			const { user } = req;
-			const { sessionId } = req.body;
+			const { sessionsId, planId, id } = req.body;
 			const { data, code } = await psychologistsService.cancelSession(
 				user,
-				sessionId
+				planId,
+				sessionsId,
+				id
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -290,11 +306,10 @@ const psychologistsController = {
 
 	async customNewSession(req, res) {
 		try {
-			const { user } = req;
-			const { payload } = req.body;
+			const { user, body } = req;
 			const { data, code } = await psychologistsService.customNewSession(
 				user,
-				payload
+				body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -316,6 +331,33 @@ const psychologistsController = {
 				res,
 				'Error actualizando/subiendo imágen de perfil'
 			);
+		}
+	},
+	async paymentsInfo(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.paymentsInfo(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
+		}
+	},
+	async deleteCommitment(req, res) {
+		try {
+			const { psyId, planId } = req.params;
+			const { data, code } = await psychologistsService.deleteCommitment(
+				planId,
+				psyId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 };

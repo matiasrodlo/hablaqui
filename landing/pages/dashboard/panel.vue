@@ -150,6 +150,18 @@
 								Verificar
 							</v-btn>
 						</v-col>
+						<!-- Codigo -->
+						<v-col cols="12">Codigo</v-col>
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
+							<div class="d-flex align-center" style="height: 100%">Codigo</div>
+						</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input
+								:value="selected.code"
+								type="text"
+								@input="e => (selected.code = e.target.value)"
+							/>
+						</v-col>
 						<v-col cols="12">Datos basicos</v-col>
 						<!-- email -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Email</v-col>
@@ -431,8 +443,8 @@
 						</v-col>
 					</v-row>
 					<v-row>
-						<v-col cols="12">Especialidades</v-col>
 						<!-- Especialidades -->
+						<v-col cols="12">Especialidades</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							<div class="d-flex align-center" style="height: 100%">
 								Especialidades
@@ -689,7 +701,11 @@
 						</v-col>
 					</v-row>
 				</v-card-text>
-				<v-card-actions>
+				<div v-if="!selected.isPsy" class="text-center warning--text font-weight-bold pb-2">
+					Recuerda antes de aprobar dar al boton actualizar y tambien recuerda verificar
+					el username que este disponible
+				</div>
+				<v-card-actions class="pb-16">
 					<v-spacer></v-spacer>
 					<v-btn :loading="loadingSubmit" text color="primary" @click="submit">
 						Actualizar
@@ -714,13 +730,6 @@
 					</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
-				<div
-					v-if="!selected.isPsy"
-					class="text-center warning--text font-weight-bold pb-10"
-				>
-					Si hiciste algun cambio, recuerda actualizar antes de aprobar y verificar el
-					username
-				</div>
 			</v-card>
 		</v-dialog>
 	</v-container>

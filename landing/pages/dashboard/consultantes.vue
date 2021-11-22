@@ -41,6 +41,7 @@
 					:headers="headers"
 					:items="items"
 					item-key="_id"
+					loading-text="Cargando..."
 					:items-per-page="5"
 					:footer-props="{
 						'items-per-page-text': 'Consultantes por página',
@@ -61,9 +62,6 @@
 							<v-btn icon :to="`chat?client=${item._id}`">
 								<icon :icon="mdiChat" small color="primary"></icon>
 							</v-btn>
-							<v-btn icon>
-								<icon :icon="mdiClose" small color="error"></icon>
-							</v-btn>
 						</div>
 					</template>
 				</v-data-table>
@@ -76,7 +74,7 @@
 			transition="dialog-top-transition"
 			@click:outside="closeDialog"
 		>
-			<v-card min-height="300" width="550" rounded="lg">
+			<v-card width="550" rounded="lg">
 				<v-card-text
 					class="
 						d-flex
@@ -92,7 +90,7 @@
 						<icon :icon="mdiClose" color="white" />
 					</v-btn>
 				</v-card-text>
-				<v-card-text class="pt-3">
+				<v-card-text class="mt-4">
 					<v-row>
 						<v-col cols="6">
 							<v-text-field
@@ -203,7 +201,6 @@
 						<li>2. Haga clic en “Consultante nuevo”</li>
 						<li>3. Rellene los datos solicitados</li>
 						<li>4. Haga clic en el botón “Agregar”</li>
-						<li>4. Haga clic en el botón “Agregar”</li>
 						<li>
 							5. Hecho, tu consultante ya está asociado a ti y no pagará más comisión
 							a Hablaquí.
@@ -220,6 +217,7 @@ import { mdiMagnify, mdiPlus, mdiChat, mdiClose, mdiCalendar } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -247,7 +245,7 @@ export default {
 				value: 'name',
 			},
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			{ text: 'Estado', value: 'status', sortable: false },
+			// { text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,
@@ -255,13 +253,16 @@ export default {
 	}),
 	computed: {
 		items() {
-			return this.clientes.map(item => ({
-				avatar: item.avatar,
-				name: `${item.name} ${item.lastName ? item.lastName : ''}`,
-				lastSession: item.lastSession,
-				status: item.status,
-				_id: item._id,
-			}));
+			return this.clients
+				.map(item => ({
+					avatar: item.avatar,
+					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
+					lastSession: item.lastSession,
+					status: item.status,
+					_id: item._id,
+					createdAt: item.createdAt,
+				}))
+				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
 		emailErrors() {
 			const errors = [];
@@ -276,17 +277,20 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ clientes: 'Psychologist/clients' }),
+		...mapGetters({ clients: 'Psychologist/clients' }),
 	},
 	created() {
 		this.resetForm();
 	},
-	async mounted() {
-		this.loading = true;
-		await this.getClients(this.$auth.$state.user.psychologist);
-		this.loading = false;
+	mounted() {
+		this.initFetch();
 	},
 	methods: {
+		async initFetch() {
+			this.loading = true;
+			await this.getClients(this.$auth.$state.user.psychologist);
+			this.loading = false;
+		},
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -294,6 +298,7 @@ export default {
 				await this.registerUser(this.form);
 				this.loadingCreatedUser = false;
 				this.closeDialog();
+				await this.initFetch();
 			}
 		},
 		resetForm() {

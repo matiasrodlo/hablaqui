@@ -2,7 +2,6 @@
 
 import csvtojson from 'csvtojson';
 import Appointments from '../models/appointments';
-import Psychologist from '../models/psychologist';
 import { okResponse, conflictResponse } from '../utils/responses/functions';
 
 const uploadCsv = async file => {
