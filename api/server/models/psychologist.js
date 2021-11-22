@@ -32,6 +32,9 @@ let formationSchema = new Schema({
 	description: {
 		type: String,
 	},
+	intitucion: {
+		type: String,
+	},
 	start: {
 		type: String,
 	},
@@ -52,6 +55,10 @@ let experienceSchema = new Schema({
 	},
 	end: {
 		type: String,
+	},
+	current: {
+		type: Boolean,
+		defautl: false,
 	},
 });
 

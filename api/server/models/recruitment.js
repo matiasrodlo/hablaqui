@@ -44,6 +44,12 @@ let defaultSchedule = {
 	sunday: 'busy',
 };
 
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
+};
+
 let defaultPreferences = {
 	marketplaceVisibility: true,
 	minimumNewSession: 24,
@@ -242,6 +248,10 @@ let recruitment = new Schema(
 		preferences: {
 			type: Object,
 			default: defaultPreferences,
+		},
+		sessionPrices: {
+			type: Object,
+			default: defaultPrices,
 		},
 		paymentMethod: {
 			type: Object,
