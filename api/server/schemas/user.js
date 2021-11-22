@@ -19,6 +19,7 @@ const userSchema = {
 		psychologist: Joi.string().allow(''),
 		role: Joi.string().allow(''),
 		rut: Joi.string().allow(''),
+		sessions: Joi.array(),
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
 	}).min(1),
