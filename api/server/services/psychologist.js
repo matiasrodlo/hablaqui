@@ -920,6 +920,19 @@ const paymentsInfo = async user => {
 		psychologist: user.psychologist,
 	}).populate('user');
 
+	let comission = 0;
+	let percentage = '0%';
+
+	let { psyPlans } = await Psychologist.findById(user.psychologist);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
+
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	allSessions = allSessions.filter(item =>
 		item.plan.some(plan => {
@@ -929,24 +942,29 @@ const paymentsInfo = async user => {
 			);
 		})
 	);
-
-	const payments = allSessions.flatMap(item => {
-		return item.plan.map(plan => ({
-			idPlan: plan._id,
-			sessionsId: item._id,
-			name: `${item.user.name} ${
-				item.user.lastName ? item.user.lastName : ''
-			}`,
-			date: plan.datePayment,
-			plan: plan.title,
-			sessionsNumber: `${plan.session.length} de ${plan.totalSessions}`,
-			amount: '0',
-			percentage: '0',
-			total: '0',
-		}));
+	const validPayments = allSessions.flatMap(item => {
+		return item.plan.flatMap(plans => {
+			return plans.session.map(session => {
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: `${item.user.name} ${
+						item.user.lastName ? item.user.lastName : ''
+					}`,
+					date: session.date,
+					plan: plans.title,
+					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+					amount: plans.sessionPrice,
+					percentage: percentage,
+					total: plans.sessionPrice * (1 - comission),
+				};
+			});
+		});
 	});
-
-	return okResponse('Obtubo todo sus pagos', { payments });
+	const payments = validPayments.filter(item => {
+		return moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+	});
+	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
 const deleteCommitment = async (planId, psyId) => {
