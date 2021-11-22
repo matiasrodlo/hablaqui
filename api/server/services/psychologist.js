@@ -547,6 +547,20 @@ const setSchedule = async (user, payload) => {
 };
 
 const cancelSession = async (user, planId, sessionsId, id) => {
+	const { psychologist, session } = await Sessions.findOne(
+		{ _id: sessionsId, 'plan._id': planId, 'plan.session._id': id },
+		{ psychologist: 1, 'plan.$[].session.$[session]': 1 },
+		{ arrayFilters: [{ 'session._id': id }] }
+	);
+	const minimumRescheduleSession =
+		psychologist.preferences.minimumRescheduleSession;
+	if (
+		moment(session.date, 'MM/DD/YYYY HH:mm').isAfter(
+			moment().subtract(minimumRescheduleSession, 'hours')
+		)
+	) {
+		return conflictResponse('El tiempo para cancelar esta sesión expiró');
+	}
 	await Sessions.updateOne(
 		{
 			_id: sessionsId,
