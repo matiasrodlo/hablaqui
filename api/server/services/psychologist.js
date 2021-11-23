@@ -5,7 +5,6 @@ import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import chat from './chat';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
@@ -18,7 +17,6 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -207,7 +205,7 @@ const formattedSchedule = (schedule, day, hour) => {
 						moment(interval[0], 'HH:mm'),
 						moment(interval[1], 'HH:mm'),
 						undefined,
-						[]
+						'[)'
 					)
 				);
 			else if (schedule[weekDay] === 'busy') validHour = false;
@@ -379,6 +377,7 @@ const createPlan = async ({ payload }) => {
 			{ user: payload.user, psychologist: payload.psychologist },
 			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
 		);
+
 		return okResponse('Plan creado', { plan: created });
 	} else {
 		const created = await Sessions.create({
@@ -387,7 +386,7 @@ const createPlan = async ({ payload }) => {
 			plan: [newPlan],
 			roomsUrl: url,
 		});
-		chat.startConversation(payload.psychologist, payload.user);
+
 		return okResponse('Plan creado', { plan: created });
 	}
 };
@@ -916,22 +915,55 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
-	const allSessions = Sessions.find({
+	let allSessions = await Sessions.find({
 		psychologist: user.psychologist,
-	}).populate('User');
-	const response = allSessions.map(data => {
-		const plan = data.plan[data.plan.length - 1];
-		return plan.session.map(session => {
-			return {
-				...session,
-				sessionPrice: plan.sessionPrice,
-				invitedByPsychologist: plan.invitedByPsychologist,
-				client: `${data.user.name} ${data.user.lastName}`,
-			};
+	}).populate('user');
+
+	let comission = 0;
+	let percentage = '0%';
+
+	let { psyPlans } = await Psychologist.findById(user.psychologist);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				plan.title !== 'compromiso privado'
+			);
+		})
+	);
+	const validPayments = allSessions.flatMap(item => {
+		return item.plan.flatMap(plans => {
+			return plans.session.map(session => {
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: `${item.user.name} ${
+						item.user.lastName ? item.user.lastName : ''
+					}`,
+					date: session.date,
+					plan: plans.title,
+					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+					amount: plans.sessionPrice,
+					percentage: percentage,
+					total: plans.sessionPrice * (1 - comission),
+				};
+			});
 		});
 	});
-
-	return okResponse('', response);
+	const payments = validPayments.filter(item => {
+		return moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+	});
+	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
 const deleteCommitment = async (planId, psyId) => {

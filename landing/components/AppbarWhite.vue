@@ -340,15 +340,15 @@ export default {
 					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
-				// {
-				// 	name: 'Pagos',
-				// 	link: { name: 'dashboard-pagos' },
-				// 	img: `https://cdn.hablaqui.cl/static/pay.png`,
-				// 	visible:
-				// 		this.$auth.$state.loggedIn &&
-				// 		this.$auth.$state.user.role === 'psychologist' &&
-				// 		this.$auth.$state.user.psychologist,
-				// },
+				{
+					name: 'Pagos',
+					link: { name: 'dashboard-pagos' },
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					visible:
+						this.$auth.$state.loggedIn &&
+						this.$auth.$state.user.role === 'psychologist' &&
+						this.$auth.$state.user.psychologist,
+				},
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },

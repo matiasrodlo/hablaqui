@@ -381,7 +381,7 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Proximamente
+							Próximamente
 						</h2>
 						<h3
 							class="
@@ -439,7 +439,7 @@
 								text-h5 text-sm-h4
 							"
 						>
-							Proximamente
+							Próximamente
 						</h2>
 						<h3 class="text-center font-weight-bold white--text body-2 my-4 text-sm-h6">
 							Mantén contacto con tus consultantes vía Chat. <br />

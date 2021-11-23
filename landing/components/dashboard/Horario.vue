@@ -171,7 +171,7 @@ export default {
 				},
 				{
 					title: 'wednesday',
-					titulo: 'Miercoles',
+					titulo: 'Miércoles',
 					intervals: [['8:00', '18:00']],
 					active: true,
 					divider: true,
@@ -198,7 +198,7 @@ export default {
 				},
 				{
 					title: 'saturday',
-					titulo: 'Sabado',
+					titulo: 'Sábado',
 					intervals: [['8:00', '18:00']],
 					active: false,
 					divider: true,

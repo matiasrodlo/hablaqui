@@ -518,10 +518,10 @@ export default {
 			if (
 				!this.selected.assistant &&
 				this.$auth.$state.user &&
-				this.selected._id !== this.$auth.$state.user.psychologist
+				this.clients.some(client => client._id === this.selected._id)
 			)
-				return 'Terapeuta de Hablaquí con licencia';
-			return '';
+				return 'Consultante';
+			return 'Usuario de hablaquí';
 		},
 		listClients() {
 			return this.clients.map(item => ({
