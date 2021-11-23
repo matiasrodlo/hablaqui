@@ -162,21 +162,23 @@ export default {
 						method: 'post',
 						data: this.form,
 					});
-					const response = await this.$auth.loginWith('local', {
-						data: { email: this.form.email, password: this.form.password },
-					});
-					this.$auth.setUser(response.data.user);
-					if (this.$auth.$state.loggedIn)
-						if (!this.isDialog) {
-							if (this.$route.query.from === 'psy')
-								this.$router.push({ name: 'evaluacion' });
-							else if (
-								this.$route.name !== 'psicologos' &&
-								this.$route.name !== 'psicologos-id'
-							)
-								this.$router.push({ name: 'dashboard-chat' });
-							else this.$router.push({ name: 'psicologos' });
-						} else this.setResumeView(true);
+					this.defaultForm();
+					this.snackBar({ content: 'Verifica tu email por favor', color: 'warning' });
+					// const response = await this.$auth.loginWith('local', {
+					// 	data: { email: this.form.email, password: this.form.password },
+					// });
+					// this.$auth.setUser(response.data.user);
+					// if (this.$auth.$state.loggedIn)
+					// 	if (!this.isDialog) {
+					// 		if (this.$route.query.from === 'psy')
+					// 			this.$router.push({ name: 'evaluacion' });
+					// 		else if (
+					// 			this.$route.name !== 'psicologos' &&
+					// 			this.$route.name !== 'psicologos-id'
+					// 		)
+					// 			this.$router.push({ name: 'dashboard-chat' });
+					// 		else this.$router.push({ name: 'psicologos' });
+					// 	} else this.setResumeView(true);
 				} catch (error) {
 					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {

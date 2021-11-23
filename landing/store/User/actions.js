@@ -14,6 +14,15 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async verifyEmail({ commit }, email) {
+		try {
+			await this.$axios(`/auth/user/verification/${email}`, {
+				method: 'put',
+			});
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 	async registerUser({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/user/register', {

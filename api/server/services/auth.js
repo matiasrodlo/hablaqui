@@ -81,8 +81,11 @@ const register = async payload => {
 	const user = await User.create(newUser);
 	//Enviar correo de verificación
 	const token = generateJwt(user);
-	const verifyurl = `${process.env.VUE_APP_LANDING}/verification-email?token=${token}?email=${payload.email}`;
-	await mailService.sendVerifyEmail(user, verifyurl);
+	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?email=${user.email}&token=${token}`;
+
+	if (process.env.NODE_ENV === 'development')
+		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
+	else await mailService.sendVerifyEmail(user, verifyurl);
 
 	// Segment identification
 	analytics.identify({
