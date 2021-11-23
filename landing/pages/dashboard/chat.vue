@@ -72,6 +72,14 @@
 										Usuario · Activo(a)
 									</v-list-item-subtitle>
 								</v-list-item-content>
+								<v-list-item-action>
+									<v-badge
+										color="primary"
+										:content="user.countMessagesUnRead"
+										:value="user.countMessagesUnRead"
+									>
+									</v-badge>
+								</v-list-item-action>
 							</v-list-item>
 						</v-list>
 						<!-- general lista usuarios -->
@@ -207,6 +215,14 @@
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
+									<v-list-item-action>
+										<v-badge
+											color="primary"
+											:content="psy.countMessagesUnRead"
+											:value="psy.countMessagesUnRead"
+										>
+										</v-badge>
+									</v-list-item-action>
 								</v-list-item>
 							</v-list>
 						</template>
@@ -536,6 +552,9 @@ export default {
 		listClients() {
 			return this.clients.map(item => ({
 				...item,
+				countMessagesUnRead: this.setCountMessagesUnread(
+					this.chats.find(chat => chat.user && chat.user._id === item._id)
+				),
 				hasMessageUser: this.hasMessageUser(item),
 			}));
 		},
@@ -727,7 +746,7 @@ export default {
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
-			if (user.hasMessageUser) {
+			if (user.countMessagesUnRead) {
 				await this.updateMessage(user.hasMessageUser);
 				await this.getMessages();
 			}
@@ -748,29 +767,33 @@ export default {
 			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
 			if (!this.chat) await this.startConversation(psy._id);
 			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
-			if (psy.hasMessage) {
+			if (psy.countMessagesUnRead) {
 				await this.updateMessage(psy.hasMessage);
 				await this.getMessages();
 			}
 		},
 		hasMessage(psy) {
-			let temp = {
+			const temp = {
 				...this.chats.find(item => item.psychologist && item.psychologist._id === psy._id),
 			};
 			if (temp && temp.messages && temp.messages.length) {
-				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
-					return temp._id;
+				const hasMessage = temp.messages.some(
+					message =>
+						message && !message.read && message.sentBy !== this.$auth.$state.user._id
+				);
+				if (hasMessage) return temp._id;
 			}
 		},
 		hasMessageUser(user) {
-			let temp = {
+			const temp = {
 				...this.chats.find(item => item.user && item.user._id === user._id),
 			};
 			if (temp && temp.messages && temp.messages.length) {
-				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
-					return temp._id;
+				const hasMessage = temp.messages.some(
+					message =>
+						message && !message.read && message.sentBy !== this.$auth.$state.user._id
+				);
+				if (hasMessage) return temp._id;
 			}
 		},
 		getPsy(id) {
@@ -778,8 +801,9 @@ export default {
 		},
 		setCountMessagesUnread(item) {
 			let count = 0;
+			if (!item || !item.messages) return count;
 			item.messages.forEach(el => {
-				if (!el.read) {
+				if (!el.read && el.sentBy !== this.$auth.$state.user._id) {
 					count += 1;
 				}
 			});
