@@ -26,7 +26,7 @@ const generateJwt = user => {
 
 const login = async user => {
 	//el objeto user debe contener, ahora, un elemento isVerified que indica si la cuenta está o no verificada
-	if (!user.isVerified) return conflictResponse('Cuenta no verificada');
+	if (!user.isVerified) return conflictResponse('Verifica tu correo');
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),
@@ -80,7 +80,8 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	//Enviar correo de verificación
-	const verifyurl = `${process.env.API_URL}api/v1/auth/user/verification/${payload.email}`;
+	const token = generateJwt(user);
+	const verifyurl = `${process.env.VUE_APP_LANDING}/verification-email?token=${token}?email=${payload.email}`;
 	await mailService.sendVerifyEmail(user, verifyurl);
 
 	// Segment identification

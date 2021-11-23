@@ -47,8 +47,10 @@ const authController = {
 	async changeVerifiedStatus(req, res) {
 		try {
 			const { email } = req.params;
-			await authService.changeVerifiedStatus(email);
-			return res.redirect(`${process.env.VUE_APP_LANDING}/auth`);
+			const { data, code } = await authService.changeVerifiedStatus(
+				email
+			);
+			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(error, res, 'Ha ocurrido un error al verificar');
 		}
