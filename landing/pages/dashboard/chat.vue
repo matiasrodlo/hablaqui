@@ -98,11 +98,21 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-title>
+											{{ user.name }}
+										</v-list-item-title>
 										<v-list-item-subtitle>
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
+									<v-list-item-action>
+										<v-badge
+											color="primary"
+											:content="user.countMessagesUnRead"
+											:value="user.countMessagesUnRead"
+										>
+										</v-badge>
+									</v-list-item-action>
 								</v-list-item>
 							</v-list>
 						</template>
@@ -544,6 +554,7 @@ export default {
 
 			return filterArray.map(item => ({
 				...item.user,
+				countMessagesUnRead: this.setCountMessagesUnread(item),
 				hasMessageUser: this.hasMessageUser(item.user),
 			}));
 		},
@@ -561,6 +572,7 @@ export default {
 
 			return filterArray.map(item => ({
 				...item.psychologist,
+				countMessagesUnRead: this.setCountMessagesUnread(item),
 				hasMessage: this.hasMessage(item.psychologist),
 			}));
 		},
@@ -763,6 +775,15 @@ export default {
 		},
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
+		},
+		setCountMessagesUnread(item) {
+			let count = 0;
+			item.messages.forEach(el => {
+				if (!el.read) {
+					count += 1;
+				}
+			});
+			return count;
 		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',
