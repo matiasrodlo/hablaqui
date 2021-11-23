@@ -37,8 +37,8 @@
 			<v-expand-transition>
 				<v-col v-if="selected" cols="12" class="d-flex algin-center">
 					<span style="flex: 2; align-self: center">
-						<avatar size="70" :name="selected.name" :url="selected.avatar" />
-						<span class="ml-4 secondary--text text-h6">{{ selected.name }}</span>
+						<avatar size="70" :name="selected.name" :url="selected.avatarThumbnail" />
+						<span class="ml-4 secondary--text text-h6">{{ selected.fullname }}</span>
 					</span>
 					<span style="flex: 1" class="text-right">
 						<v-btn icon>
@@ -64,49 +64,57 @@
 										<div class="font-weight-bold">Información personal</div>
 										<div class="pt-4 d-flex">
 											<span style="flex: 1">Nombres:</span>
-											<span style="flex: 0">{{ selected.name }}</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.name }}
+											</span>
 										</div>
 										<div class="pt-1 d-flex">
-											<span style="flex: 1">Nacimiento:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
+											<span style="flex: 1">Apellidos:</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.lastName }}
+											</span>
 										</div>
 										<div class="pt-1 d-flex">
-											<span style="flex: 1">Edad:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
-										</div>
-										<div class="pt-1 d-flex">
-											<span style="flex: 1">Estado:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
+											<span style="flex: 1">Rut:</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.rut }}
+											</span>
 										</div>
 										<div class="pt-1 d-flex">
 											<span style="flex: 1">Plan contratado:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
+											<span style="flex: 1" class="text-right">
+												{{
+													selected.plan ? selected.plan.title : 'Sin plan'
+												}}
+											</span>
 										</div>
 										<div class="pt-1 d-flex">
 											<span style="flex: 1">Valor por sesión:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
+											<span style="flex: 1" class="text-right">
+												{{
+													selected.plan
+														? `$${selected.plan.sessionPrice}`
+														: 'Sin plan'
+												}}
+											</span>
 										</div>
 									</v-col>
 									<v-col><v-divider vertical class="pa-0"></v-divider></v-col>
-									<v-col cols="7" class="pt-14">
+									<v-col cols="7" class="pt-14 body-2 secondary--text">
 										<div class="secondary--text body-2 font-weight-bold">
 											Contácto
 										</div>
-										<div class="pt-1 d-flex">
+										<div class="pt-4 d-flex">
 											<span style="flex: 1">Email:</span>
-											<span style="flex: 0">{{ selected.email }}</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.email }}
+											</span>
 										</div>
 										<div class="pt-1 d-flex">
-											<span style="flex: 1">Celular:</span>
-											<span style="flex: 0">{{ selected.phone }}</span>
-										</div>
-										<div class="pt-1 d-flex">
-											<span style="flex: 1">Dirección:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
-										</div>
-										<div class="pt-1 d-flex">
-											<span style="flex: 1">Observaciones:</span>
-											<span style="flex: 0">{{ selected.birthdate }}</span>
+											<span style="flex: 1">Teléfono:</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.phone }}
+											</span>
 										</div>
 									</v-col>
 								</v-row>
@@ -133,8 +141,8 @@
 				>
 					<template #[`item.name`]="{ item }">
 						<div>
-							<avatar size="30" :name="item.name" :url="item.avatar" />
-							<span class="ml-2 body-2">{{ item.name }}</span>
+							<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
+							<span class="ml-2 body-2">{{ item.fullname }}</span>
 						</div>
 					</template>
 					<template #[`item.actions`]="{ item }">
@@ -323,13 +331,8 @@ export default {
 		mdiCalendar,
 		search: '',
 		headers: [
-			{
-				text: 'Nombre',
-				sortable: false,
-				value: 'name',
-			},
+			{ text: 'Nombre', sortable: false, value: 'name' },
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			// { text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,
@@ -345,6 +348,7 @@ export default {
 					status: item.status,
 					_id: item._id,
 					createdAt: item.createdAt,
+					...item,
 				}))
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
@@ -394,8 +398,7 @@ export default {
 			};
 		},
 		setSelected(item) {
-			if (this.selected && item._id === this.selected._id) this.selected = null;
-			else this.selected = item;
+			this.selected = item;
 		},
 		closeDialog() {
 			this.dialog = false;

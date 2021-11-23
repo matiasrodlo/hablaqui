@@ -688,7 +688,7 @@ const checkPlanTask = async () => {
 const getClients = async psychologist => {
 	const sessions = await Sessions.find({
 		psychologist: psychologist,
-	}).populate('user psychologist');
+	}).populate('user');
 
 	return okResponse('Usuarios encontrados', {
 		users: sessions
@@ -696,13 +696,24 @@ const getClients = async psychologist => {
 			.map(item => ({
 				_id: item.user._id,
 				avatar: item.user.avatar,
+				avatarThumbnail: item.user.avatarThumbnail,
+				createdAt: item.user.createdAt,
 				email: item.user.email,
+				fullname: `${item.user.name} ${
+					item.user.lastName ? item.user.lastName : ''
+				}`,
 				lastName: item.user.lastName,
+				lastSession: getLastSession(item) || 'N/A',
 				name: item.user.name,
+				phone: item.user.phone,
+				plan: item.plan.find(
+					plan =>
+						plan.payment === 'success' &&
+						moment().isBefore(moment(plan.expiration))
+				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
-				createdAt: item.user.createdAt,
-				lastSession: getLastSession(item) || 'N/A',
+				rut: item.user.rut,
 			})),
 	});
 };
