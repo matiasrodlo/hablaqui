@@ -63,6 +63,16 @@ const usersService = {
 		logInfo(actionInfo(user.email, 'actualizo su perfil'));
 		return okResponse('Actualizado exitosamente', { user: updated });
 	},
+	async updateOne(user, id, profile) {
+		const updated = await User.findByIdAndUpdate(id, profile, {
+			new: true,
+			runValidators: true,
+			context: 'query',
+		});
+
+		logInfo(actionInfo(user.email, 'actualizo su perfil'));
+		return okResponse('Actualizado exitosamente', { user: updated });
+	},
 
 	async updatePlan(user, newPlan) {
 		let updated = null;

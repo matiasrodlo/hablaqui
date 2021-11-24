@@ -27,6 +27,21 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando perfil');
 		}
 	},
+	async updateOne(req, res) {
+		try {
+			const { id } = req.params;
+			const profile = req.body;
+			const { user } = req;
+			const { data, code } = await userService.updateOne(
+				user,
+				id,
+				profile
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando perfil');
+		}
+	},
 	async passwordRecovery(req, res) {
 		try {
 			const { user } = req;

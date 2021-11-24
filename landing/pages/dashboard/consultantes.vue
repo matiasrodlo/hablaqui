@@ -459,6 +459,10 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		async onSubmit() {
+			this.loading = true;
+			this.loading = false;
+		},
 		async initFetch() {
 			this.loading = true;
 			await this.getClients(this.$auth.$state.user.psychologist);
@@ -499,6 +503,7 @@ export default {
 		...mapActions({
 			getClients: 'Psychologist/getClients',
 			registerUser: 'User/registerUser',
+			registerUser: 'User/updatePro',
 		}),
 	},
 	validations: {
