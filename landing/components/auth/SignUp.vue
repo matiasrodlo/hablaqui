@@ -163,6 +163,7 @@ export default {
 						data: this.form,
 					});
 					this.defaultForm();
+					this.$v.$reset();
 					this.snackBar({ content: 'Verifica tu email por favor', color: 'warning' });
 					// const response = await this.$auth.loginWith('local', {
 					// 	data: { email: this.form.email, password: this.form.password },
