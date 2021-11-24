@@ -18,7 +18,7 @@
 				<v-list-item-avatar size="150">
 					<label for="upload" style="cursor: pointer; position: relative">
 						<avatar
-							:url="$auth.$state.user.avatar"
+							:url="$auth.$state.user.avatarThumbnail"
 							:name="$auth.$state.user.name"
 							:last-name="
 								$auth.$state.user.lastName ? $auth.$state.user.lastName : ''

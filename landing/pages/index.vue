@@ -26,7 +26,6 @@
 						</div>
 						<v-btn
 							id="quiero-comenzar-1"
-							accesskey="p"
 							style="border-radius: 15px"
 							color="white"
 							x-large
@@ -287,7 +286,6 @@
 							x-large
 							class="pa-4"
 							to="/psicologos"
-							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -368,7 +366,6 @@
 						class="font-weight-bold pa-8"
 						nuxt
 						to="/psicologos"
-						accesskey="p"
 					>
 						Quiero empezar
 					</v-btn>
@@ -652,7 +649,6 @@
 						id="comenzar-4"
 						style="border-radius: 15px"
 						color="primary"
-						accesskey="p"
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
