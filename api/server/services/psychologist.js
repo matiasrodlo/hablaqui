@@ -712,7 +712,7 @@ const checkPlanTask = async () => {
 const getClients = async psychologist => {
 	const sessions = await Sessions.find({
 		psychologist: psychologist,
-	}).populate('user psychologist');
+	}).populate('user');
 
 	return okResponse('Usuarios encontrados', {
 		users: sessions
@@ -720,13 +720,24 @@ const getClients = async psychologist => {
 			.map(item => ({
 				_id: item.user._id,
 				avatar: item.user.avatar,
+				avatarThumbnail: item.user.avatarThumbnail,
+				createdAt: item.user.createdAt,
 				email: item.user.email,
+				fullname: `${item.user.name} ${
+					item.user.lastName ? item.user.lastName : ''
+				}`,
 				lastName: item.user.lastName,
+				lastSession: getLastSession(item) || 'N/A',
 				name: item.user.name,
+				phone: item.user.phone,
+				plan: item.plan.find(
+					plan =>
+						plan.payment === 'success' &&
+						moment().isBefore(moment(plan.expiration))
+				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
-				createdAt: item.user.createdAt,
-				lastSession: getLastSession(item) || 'N/A',
+				rut: item.user.rut,
 			})),
 	});
 };
@@ -939,9 +950,22 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
-	const allSessions = Sessions.find({
+	let allSessions = await Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('user');
+
+	let comission = 0;
+	let percentage = '0%';
+
+	let { psyPlans } = await Psychologist.findById(user.psychologist);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	allSessions = allSessions.filter(item =>
@@ -952,24 +976,29 @@ const paymentsInfo = async user => {
 			);
 		})
 	);
-	// TODO: Agregar datos faltantes
-	const payments = allSessions.flatMap(item => {
-		return item.plan.map(plan => ({
-			idPlan: plan._id,
-			sessionsId: item._id,
-			name: `${item.user.name} ${
-				item.user.lastName ? item.user.lastName : ''
-			}`,
-			date: plan.datePayment,
-			plan: plan.title,
-			sessionsNumber: `${plan.session.length} de ${plan.totalSessions}`,
-			amount: '0',
-			percentage: '0',
-			total: '0',
-		}));
+	const validPayments = allSessions.flatMap(item => {
+		return item.plan.flatMap(plans => {
+			return plans.session.map(session => {
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: `${item.user.name} ${
+						item.user.lastName ? item.user.lastName : ''
+					}`,
+					date: session.date,
+					plan: plans.title,
+					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+					amount: plans.sessionPrice,
+					percentage: percentage,
+					total: plans.sessionPrice * (1 - comission),
+				};
+			});
+		});
 	});
-
-	return okResponse('', response);
+	const payments = validPayments.filter(item => {
+		return moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+	});
+	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
 const deleteCommitment = async (planId, psyId) => {

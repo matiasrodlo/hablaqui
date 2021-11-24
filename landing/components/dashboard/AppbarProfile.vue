@@ -26,7 +26,9 @@
 			</nuxt-link>
 		</div>
 		<div class="mx-5 body-1 primary--text">
-			<nuxt-link style="text-decoration: none" to="/faq"> Centro de ayuda </nuxt-link>
+			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
+				Centro de ayuda
+			</a>
 		</div>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />

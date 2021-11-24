@@ -55,6 +55,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getPayments({ commit }) {
+		try {
+			const { payments } = await this.$axios.$get('/psychologist/payments/all');
+			commit('setPayments', payments);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async deletePsychologist({ commit }, id) {
 		try {
 			const { psychologists } = await this.$axios(`/psychologist/${id}`, {

@@ -72,8 +72,12 @@ const chatController = {
 	},
 	async readMessage(req, res) {
 		try {
+			const { user } = req;
 			const { messageId } = req.params;
-			const { data, code } = await chatService.readMessage(messageId);
+			const { data, code } = await chatService.readMessage(
+				user,
+				messageId
+			);
 
 			return restResponse(data, code, res);
 		} catch (e) {
