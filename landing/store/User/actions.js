@@ -14,9 +14,9 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
-	async verifyEmail({ commit }, email) {
+	async verifyEmail({ commit }, id) {
 		try {
-			await this.$axios(`/auth/user/verification/${email}`, {
+			await this.$axios(`/auth/user/verification/${id}`, {
 				method: 'put',
 			});
 		} catch (error) {

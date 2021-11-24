@@ -21,17 +21,17 @@ import { mapActions } from 'vuex';
 export default {
 	data() {
 		return {
-			email: '',
+			id: '',
 			token: '',
 		};
 	},
 	created() {
-		this.email = this.$route.query.email;
+		this.id = this.$route.query.id;
 		this.token = this.$route.query.token;
 	},
 	async mounted() {
 		this.$auth.setUserToken(this.token);
-		await this.verifyEmail(this.email);
+		await this.verifyEmail(this.id);
 		this.$auth.logout();
 		this.$router.push('auth');
 	},
