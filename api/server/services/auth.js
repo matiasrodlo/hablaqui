@@ -81,7 +81,7 @@ const register = async payload => {
 	const user = await User.create(newUser);
 	//Enviar correo de verificación
 	const token = generateJwt(user);
-	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?email=${user.email}&token=${token}`;
+	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${user._id}&token=${token}`;
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
@@ -163,8 +163,8 @@ const changeUserPassword = async (user, newPassword, res) => {
 	}
 };
 
-const changeVerifiedStatus = async email => {
-	const user = await getUserByEmail(email);
+const changeVerifiedStatus = async id => {
+	const user = await User.findById(id);
 
 	if (!user) return conflictResponse('Este usuario no existe');
 

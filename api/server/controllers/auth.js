@@ -46,10 +46,8 @@ const authController = {
 	},
 	async changeVerifiedStatus(req, res) {
 		try {
-			const { email } = req.params;
-			const { data, code } = await authService.changeVerifiedStatus(
-				email
-			);
+			const { id } = req.params;
+			const { data, code } = await authService.changeVerifiedStatus(id);
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(error, res, 'Ha ocurrido un error al verificar');

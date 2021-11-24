@@ -72,7 +72,7 @@ authRouter.put(
  *
  */
 authRouter.put(
-	'/auth/user/verification/:email',
+	'/auth/user/verification/:id',
 	passport.authenticate('jwt'),
 	authController.changeVerifiedStatus
 );
