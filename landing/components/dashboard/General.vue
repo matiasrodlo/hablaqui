@@ -6,8 +6,7 @@
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">Configuración personal</div>
 						<div class="text--secondary">
-							Revisa aquí tu nombre, apellido, zona horaria, tu dirección web,
-							contraseña, entre otros.
+							Revisa aquí tu nombre, apellido, zona horaria contraseña, entre otros.
 						</div>
 					</div>
 				</v-expansion-panel-header>
@@ -50,12 +49,22 @@
 						</v-col>
 						<v-col cols="12" md="6">
 							<v-text-field
+								v-model="formUser.rut"
+								filled
+								outlined
+								hide-details
+								dense
+								label="RUT"
+							></v-text-field>
+						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
 								v-model="formUser.phone"
 								filled
 								outlined
 								hide-details
 								dense
-								label="Numero de telefono"
+								label="Número de teléfono"
 							></v-text-field>
 						</v-col>
 						<v-col cols="12" md="6">
@@ -69,8 +78,7 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
-										v-if="$auth.$state.user.role === 'psychologist'"
-										v-model="birthDate"
+										v-model="formUser.birthDate"
 										label="Fecha de nacimiento"
 										readonly
 										filled
@@ -82,7 +90,7 @@
 									></v-text-field>
 								</template>
 								<v-date-picker
-									v-model="birthDate"
+									v-model="formUser.birthDate"
 									locale="es"
 									:active-picker.sync="activePicker"
 									:max="
@@ -124,9 +132,8 @@
 								</v-col>
 							</v-row>
 						</v-col>
-						<v-col cols="12" md="6">
+						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
 							<v-select
-								v-if="$auth.$state.user.role === 'psychologist'"
 								v-model="gender"
 								:items="['Hombre', 'Mujer', 'Transgénero']"
 								filled
@@ -296,11 +303,11 @@ export default {
 				email: '',
 				timeZone: '',
 				address: '',
+				birthDate: '',
 			},
 			region: '',
 			comuna: '',
 			gender: '',
-			birthDate: '',
 			timezone: [],
 			loadingUser: false,
 			regiones: [],
@@ -326,7 +333,7 @@ export default {
 					email: this.formUser.email,
 					timeZone: this.formUser.timeZone,
 					gender: this.gender,
-					birthDate: this.birthDate,
+					birthDate: this.formUser.birthDate,
 					region: this.region,
 					comuna: this.comuna,
 				}) ===
@@ -367,7 +374,6 @@ export default {
 		this.timezone = data;
 		if (this.psychologist && this.$auth.$state.user.role === 'psychologist') {
 			this.gender = this.psychologist.gender;
-			this.birthDate = this.psychologist.birthDate;
 			this.comuna = this.psychologist.comuna;
 			this.region = this.psychologist.region;
 		}
@@ -385,13 +391,12 @@ export default {
 						gender: this.gender,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
-						birthDate: this.birthDate,
+						birthDate: this.formUser.birthDate,
 						comuna: this.comuna,
 						region: this.region,
 					});
 					this.gender = psychologist.gender;
 					this.username = psychologist.username;
-					this.birthDate = psychologist.birthDate;
 					this.comuna = psychologist.comuna;
 					this.region = psychologist.region;
 					this.setPsychologist(psychologist);
