@@ -132,6 +132,16 @@
 								</v-col>
 							</v-row>
 						</v-col>
+						<v-col cols="12" md="6">
+							<v-text-field
+								v-model="formUser.direction"
+								filled
+								outlined
+								hide-details
+								dense
+								label="Dirección"
+							></v-text-field>
+						</v-col>
 						<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
 							<v-select
 								v-model="gender"
@@ -331,6 +341,7 @@ export default {
 					lastName: this.formUser.lastName,
 					phone: this.formUser.phone,
 					email: this.formUser.email,
+					direction: this.formUser.direction,
 					timeZone: this.formUser.timeZone,
 					gender: this.gender,
 					birthDate: this.formUser.birthDate,
@@ -342,6 +353,7 @@ export default {
 					lastName: this.$auth.$state.user.lastName,
 					phone: this.$auth.$state.user.phone,
 					email: this.$auth.$state.user.email,
+					direction: this.$auth.$state.user.direction,
 					timeZone: this.$auth.$state.user.timeZone,
 					gender: this.psychologist ? this.psychologist.gender : '',
 					birthDate: this.psychologist ? this.psychologist.birthDate : '',

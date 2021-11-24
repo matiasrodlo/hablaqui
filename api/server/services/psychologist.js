@@ -698,6 +698,7 @@ const getClients = async psychologist => {
 				avatar: item.user.avatar,
 				avatarThumbnail: item.user.avatarThumbnail,
 				createdAt: item.user.createdAt,
+				direction: item.user.direction,
 				email: item.user.email,
 				fullname: `${item.user.name} ${
 					item.user.lastName ? item.user.lastName : ''

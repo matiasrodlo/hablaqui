@@ -22,6 +22,9 @@ let userSchema = new Schema(
 		birthDate: {
 			type: String,
 		},
+		direction: {
+			type: String,
+		},
 		password: {
 			type: String,
 		},

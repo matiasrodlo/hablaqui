@@ -45,6 +45,7 @@ const generateUser = async user => {
 		_id: user._id,
 		avatar: user.avatar,
 		avatarThumbnail: user.avatarThumbnail,
+		direction: user.direction,
 		email: user.email,
 		finishedSessions: user.finishedSessions,
 		google: user.google,
