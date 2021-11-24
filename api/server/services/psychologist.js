@@ -703,6 +703,7 @@ const getClients = async psychologist => {
 					item.user.lastName ? item.user.lastName : ''
 				}`,
 				lastName: item.user.lastName,
+				birthDate: item.user.birthDate,
 				lastSession: getLastSession(item) || 'N/A',
 				name: item.user.name,
 				phone: item.user.phone,

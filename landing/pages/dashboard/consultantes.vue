@@ -47,6 +47,7 @@
 						<v-btn icon>
 							<icon size="30" :icon="mdiChat" color="primary"></icon>
 						</v-btn>
+						<v-btn small color="primary" rounded> Editar </v-btn>
 					</span>
 				</v-col>
 			</v-expand-transition>
@@ -78,6 +79,22 @@
 											<span style="flex: 1">Rut:</span>
 											<span style="flex: 1" class="text-right">
 												{{ selected.rut }}
+											</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Nacimiento:</span>
+											<span style="flex: 1" class="text-right">
+												{{ selected.birthDate }}
+											</span>
+										</div>
+										<div class="pt-1 d-flex">
+											<span style="flex: 1">Edad:</span>
+											<span
+												v-if="selected.birthDate"
+												style="flex: 1"
+												class="text-right"
+											>
+												{{ getAge(selected.birthDate) }}
 											</span>
 										</div>
 										<div class="pt-1 d-flex">
@@ -404,6 +421,9 @@ export default {
 			this.dialog = false;
 			this.resetForm();
 			this.$v.$reset();
+		},
+		getAge(date) {
+			return moment().diff(date, 'years');
 		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',
