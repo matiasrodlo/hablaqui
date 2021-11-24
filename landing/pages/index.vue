@@ -1000,6 +1000,17 @@ export default {
 			],
 		};
 	},
+	jsonld() {
+		return {
+			'@context': 'http://www.schema.org',
+			'@type': 'Organization',
+			name: 'Hablaqui',
+			url: this.$config.LANDING_URL,
+			logo: this.$config.LANDING_URL,
+			description:
+				'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+		};
+	},
 	head() {
 		const { path } = this.$route;
 		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
