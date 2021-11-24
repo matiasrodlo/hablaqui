@@ -3,6 +3,7 @@
 import { logInfo } from '../config/pino';
 import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import mailService from './mail';
@@ -516,25 +517,48 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
-	let foundPsychologist = await Psychologist.findByIdAndUpdate(
-		user.psychologist,
-		{
-			schedule: {
-				monday: payload.monday,
-				tuesday: payload.tuesday,
-				wednesday: payload.wednesday,
-				thursday: payload.thursday,
-				friday: payload.friday,
-				saturday: payload.saturday,
-				sunday: payload.sunday,
+	// Si el user es un psicologo
+	if (user.psychologist) {
+		let foundPsychologist = await Psychologist.findByIdAndUpdate(
+			user.psychologist,
+			{
+				schedule: {
+					monday: payload.monday,
+					tuesday: payload.tuesday,
+					wednesday: payload.wednesday,
+					thursday: payload.thursday,
+					friday: payload.friday,
+					saturday: payload.saturday,
+					sunday: payload.sunday,
+				},
 			},
-		},
-		{ new: true }
-	);
-
-	return okResponse('Horario actualizado', {
-		psychologist: foundPsychologist,
-	});
+			{ new: true }
+		);
+		return okResponse('Horario actualizado', {
+			psychologist: foundPsychologist,
+		});
+	}
+	// Si el user es un postulante (psychologist === undefined), pero no un user
+	else {
+		let foundRecruited = await Recruitment.findOneAndUpdate(
+			user.email,
+			{
+				schedule: {
+					monday: payload.monday,
+					tuesday: payload.tuesday,
+					wednesday: payload.wednesday,
+					thursday: payload.thursday,
+					friday: payload.friday,
+					saturday: payload.saturday,
+					sunday: payload.sunday,
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Horario actualizado', {
+			psychologist: foundRecruited,
+		});
+	}
 };
 
 const cancelSession = async (user, planId, sessionsId, id) => {
@@ -584,7 +608,8 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updatePsychologist = async (user, profile) => {
-	if (user.role == 'user') return conflictResponse('No tienes poder.');
+	if (user.role == 'user')
+		return conflictResponse('No tienes acceso a estas configuraciones.');
 	const updated = await Psychologist.findByIdAndUpdate(profile._id, profile, {
 		new: true,
 		runValidators: true,
