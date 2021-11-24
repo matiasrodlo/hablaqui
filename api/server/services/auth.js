@@ -58,6 +58,7 @@ const generateUser = async user => {
 		psychologist: user.psychologist,
 		role: user.role,
 		rut: user.rut,
+		birthDate: user.birthDate,
 		state: user.state,
 		timeZone: user.timeZone,
 		sessions: await getSessions(user),
