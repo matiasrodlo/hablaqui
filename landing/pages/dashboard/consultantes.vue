@@ -34,6 +34,170 @@
 					</div>
 				</v-alert>
 			</v-col>
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12" class="d-flex algin-center">
+					<span style="flex: 2; align-self: center">
+						<avatar size="70" :name="selected.name" :url="selected.avatarThumbnail" />
+						<span class="ml-4 secondary--text text-h6">
+							{{ selected.name }}
+							{{ selected.lastName ? selected.lastName : '' }}
+						</span>
+					</span>
+					<span style="flex: 1" class="text-right">
+						<v-btn icon :to="`chat?client=${selected._id}`">
+							<icon size="30" :icon="mdiChatProcessingOutline" color="primary"></icon>
+						</v-btn>
+						<v-btn icon :to="`agenda?dialog=${true}&client=${selected._id}`">
+							<icon size="30" :icon="mdiCalendarClockOutline" color="primary"></icon>
+						</v-btn>
+					</span>
+				</v-col>
+			</v-expand-transition>
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12" class="d-flex algin-center">
+					<v-expansion-panels accordion class="rounded-xl">
+						<v-expansion-panel>
+							<v-expansion-panel-header>
+								<span class="text-h6 secondary--text">Datos del consultante</span>
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<v-row>
+									<v-col cols="6">
+										<v-text-field
+											v-model="selected.name"
+											disabled
+											label="Nombre"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											v-model="selected.lastName"
+											label="Apellido"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											v-model="selected.rut"
+											label="Rut"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-menu
+											ref="menu"
+											v-model="bmenu"
+											:close-on-content-click="false"
+											transition="scale-transition"
+											offset-y
+											min-width="auto"
+										>
+											<template #activator="{ on, attrs }">
+												<v-text-field
+													v-model="selected.birthDate"
+													label="Fecha de nacimiento"
+													readonly
+													filled
+													outlined
+													dense
+													v-bind="attrs"
+													v-on="on"
+												></v-text-field>
+											</template>
+											<v-date-picker
+												v-model="selected.birthDate"
+												locale="es"
+												:active-picker.sync="activePicker"
+												:max="
+													new Date(
+														Date.now() -
+															new Date().getTimezoneOffset() * 60000
+													)
+														.toISOString()
+														.substr(0, 10)
+												"
+												min="1950-01-01"
+												@change="save"
+											></v-date-picker>
+										</v-menu>
+										<v-text-field
+											:value="
+												selected.birthDate ? getAge(selected.birthDate) : ''
+											"
+											label="Edad"
+											disabled
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											:value="
+												selected.plan ? selected.plan.title : 'Sin plan'
+											"
+											label="Plan contratado"
+											disabled
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											:value="
+												selected.plan
+													? `$${selected.plan.sessionPrice}`
+													: 'Sin plan'
+											"
+											label="Valor por sesión"
+											disabled
+											dense
+											filled
+											outlined
+										></v-text-field>
+									</v-col>
+									<v-divider vertical></v-divider>
+									<v-col cols="6">
+										<v-text-field
+											v-model="selected.email"
+											disabled
+											label="Correo electrónico"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											v-model="selected.direction"
+											label="Direccion"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-text-field
+											v-model="selected.phone"
+											label="Teléfono"
+											dense
+											filled
+											outlined
+										></v-text-field>
+										<v-textarea
+											v-model="selected.observation"
+											label="Observaciones"
+											dense
+											filled
+											outlined
+											no-resize
+										></v-textarea>
+									</v-col>
+									<v-col cols="12" class="text-right">
+										<v-btn small color="primary" rounded @click="onSubmit">
+											Guardar
+										</v-btn>
+									</v-col>
+								</v-row>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-col>
+			</v-expand-transition>
 			<v-col cols="12">
 				<v-data-table
 					:search="search"
@@ -41,26 +205,31 @@
 					:headers="headers"
 					:items="items"
 					item-key="_id"
+					class="elevation-2"
 					loading-text="Cargando..."
 					:items-per-page="5"
 					:footer-props="{
 						'items-per-page-text': 'Consultantes por página',
 					}"
 					no-data-text="No hay consultantes"
+					@click:row="setSelected"
 				>
 					<template #[`item.name`]="{ item }">
 						<div>
-							<avatar size="30" :name="item.name" :url="item.avatar" />
-							<span class="ml-2 body-2">{{ item.name }}</span>
+							<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
+							<span class="ml-2 body-2">
+								{{ item.name }}
+								{{ item.lastName ? item.lastName : '' }}
+							</span>
 						</div>
 					</template>
 					<template #[`item.actions`]="{ item }">
 						<div>
 							<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
-								<icon :icon="mdiCalendar" small color="primary"></icon>
+								<icon :icon="mdiCalendarClockOutline" small color="primary"></icon>
 							</v-btn>
 							<v-btn icon :to="`chat?client=${item._id}`">
-								<icon :icon="mdiChat" small color="primary"></icon>
+								<icon :icon="mdiChatProcessingOutline" small color="primary"></icon>
 							</v-btn>
 						</div>
 					</template>
@@ -213,7 +382,13 @@
 </template>
 
 <script>
-import { mdiMagnify, mdiPlus, mdiChat, mdiClose, mdiCalendar } from '@mdi/js';
+import {
+	mdiMagnify,
+	mdiPlus,
+	mdiChatProcessingOutline,
+	mdiClose,
+	mdiCalendarClockOutline,
+} from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -229,23 +404,21 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data: () => ({
+		selected: null,
 		dialogComission: false,
 		loadingCreatedUser: false,
 		dialog: false,
+		activePicker: null,
 		mdiClose,
 		mdiMagnify,
 		mdiPlus,
-		mdiChat,
-		mdiCalendar,
+		mdiChatProcessingOutline,
+		mdiCalendarClockOutline,
+		bmenu: false,
 		search: '',
 		headers: [
-			{
-				text: 'Nombre',
-				sortable: false,
-				value: 'name',
-			},
+			{ text: 'Nombre', sortable: false, value: 'name' },
 			{ text: 'Última sesión', value: 'lastSession', sortable: false },
-			// { text: 'Estado', value: 'status', sortable: false },
 			{ text: 'Acciones', value: 'actions', sortable: false },
 		],
 		loading: false,
@@ -255,12 +428,7 @@ export default {
 		items() {
 			return this.clients
 				.map(item => ({
-					avatar: item.avatar,
-					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
-					lastSession: item.lastSession,
-					status: item.status,
-					_id: item._id,
-					createdAt: item.createdAt,
+					...item,
 				}))
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
@@ -279,6 +447,11 @@ export default {
 		},
 		...mapGetters({ clients: 'Psychologist/clients' }),
 	},
+	watch: {
+		bmenu(val) {
+			val && setTimeout(() => (this.activePicker = 'YEAR'));
+		},
+	},
 	created() {
 		this.resetForm();
 	},
@@ -286,6 +459,22 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		async onSubmit() {
+			this.loading = true;
+			await this.updateOne({
+				_id: this.selected._id,
+				lastName: this.selected.lastName,
+				rut: this.selected.rut,
+				direction: this.selected.direction,
+				birthDate: this.selected.birthDate,
+				phone: this.selected.phone,
+			});
+			await this.updateSessions({
+				_id: this.selected.sessionsId,
+				observation: this.selected.observation,
+			});
+			this.loading = false;
+		},
 		async initFetch() {
 			this.loading = true;
 			await this.getClients(this.$auth.$state.user.psychologist);
@@ -309,14 +498,25 @@ export default {
 				email: '',
 			};
 		},
+		setSelected(item) {
+			this.selected = item;
+		},
+		save(date) {
+			this.$refs.menu.save(date);
+		},
 		closeDialog() {
 			this.dialog = false;
 			this.resetForm();
 			this.$v.$reset();
 		},
+		getAge(date) {
+			return moment().diff(date, 'years');
+		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',
+			updateSessions: 'Psychologist/updateSessions',
 			registerUser: 'User/registerUser',
+			updateOne: 'User/updateOne',
 		}),
 	},
 	validations: {

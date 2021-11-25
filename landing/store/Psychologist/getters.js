@@ -8,6 +8,7 @@ export default {
 		});
 	},
 	sessions: state => state.sessions,
+	payments: state => state.payments,
 	sessionsFormatted: state => state.sessionsFormatted,
 	clients: state => {
 		const clients = [...state.clients];
