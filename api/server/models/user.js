@@ -19,6 +19,12 @@ let userSchema = new Schema(
 			lowercase: true,
 			trim: true,
 		},
+		birthDate: {
+			type: String,
+		},
+		direction: {
+			type: String,
+		},
 		password: {
 			type: String,
 		},

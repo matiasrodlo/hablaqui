@@ -515,6 +515,25 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	});
 };
 
+/**
+ * Actualiza una sessions
+ * @param {string} sessions campos a actualizar
+ */
+const updateSessions = async sessions => {
+	await Sessions.updateOne(
+		{
+			_id: sessions._id,
+		},
+		{
+			$set: {
+				observation: sessions.observation,
+			},
+		}
+	);
+
+	return okResponse('Observacion agregada');
+};
+
 const updatePlan = async (psychologistId, planInfo) => {
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
 		psychologistId,
@@ -722,13 +741,16 @@ const getClients = async psychologist => {
 				avatar: item.user.avatar,
 				avatarThumbnail: item.user.avatarThumbnail,
 				createdAt: item.user.createdAt,
+				direction: item.user.direction,
 				email: item.user.email,
 				fullname: `${item.user.name} ${
 					item.user.lastName ? item.user.lastName : ''
 				}`,
 				lastName: item.user.lastName,
+				birthDate: item.user.birthDate,
 				lastSession: getLastSession(item) || 'N/A',
 				name: item.user.name,
+				observation: item.observation,
 				phone: item.user.phone,
 				plan: item.plan.find(
 					plan =>
@@ -738,6 +760,7 @@ const getClients = async psychologist => {
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
+				sessionsId: item._id,
 			})),
 	});
 };
@@ -1045,6 +1068,7 @@ const psychologistsService = {
 	searchClients,
 	setPrice,
 	setSchedule,
+	updateSessions,
 	updateFormationExperience,
 	updatePaymentMethod,
 	updatePlan,

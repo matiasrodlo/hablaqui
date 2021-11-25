@@ -6,6 +6,8 @@ const userSchema = {
 		_id: Joi.string().allow(''),
 		avatar: Joi.string().allow(''),
 		avatarThumbnail: Joi.string().allow(''),
+		birthDate: Joi.string().allow(''),
+		direction: Joi.string().allow(''),
 		email: Joi.string().allow(''),
 		finishedSessions: Joi.string().allow(''),
 		google: Joi.boolean().allow(''),

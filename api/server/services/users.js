@@ -53,14 +53,13 @@ const usersService = {
 			return conflictResponse('no puede ser la misma contraseña');
 		else return await this.changeActualPassword(foundUser, newPassword);
 	},
-	async updateProfile(user, profile) {
-		const updated = await User.findByIdAndUpdate(user._id, profile, {
+	async updateProfile(id, profile) {
+		const updated = await User.findByIdAndUpdate(id, profile, {
 			new: true,
 			runValidators: true,
 			context: 'query',
 		});
 
-		logInfo(actionInfo(user.email, 'actualizo su perfil'));
 		return okResponse('Actualizado exitosamente', { user: updated });
 	},
 
