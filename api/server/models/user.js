@@ -19,12 +19,6 @@ let userSchema = new Schema(
 			lowercase: true,
 			trim: true,
 		},
-		birthDate: {
-			type: String,
-		},
-		direction: {
-			type: String,
-		},
 		password: {
 			type: String,
 		},
@@ -52,6 +46,10 @@ let userSchema = new Schema(
 			type: String,
 		},
 		google: {
+			type: Boolean,
+			default: false,
+		},
+		onboarding: {
 			type: Boolean,
 			default: false,
 		},
