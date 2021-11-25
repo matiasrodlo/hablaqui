@@ -364,6 +364,34 @@ const mailService = {
 			});
 		});
 	},
+	async sendPsychologistPay(psychologist, period, price) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Has actualizado tu cuenta, ${psychologist.name}`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-f5eb2f1bfaf14d888b3276f8010dacc4',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psychologist.name,
+				period: period,
+				price: price,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;

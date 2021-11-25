@@ -12,6 +12,7 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
+import mail from '@sendgrid/mail';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -220,6 +221,7 @@ const psychologistPay = async (params, query) => {
 		{ $push: { myPlans: newPlan } },
 		{ new: true }
 	);
+	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
 	return okResponse('plan actualizado', { foundPsychologist });
 };
 
