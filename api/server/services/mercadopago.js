@@ -203,7 +203,7 @@ const psychologistPay = async (params, query) => {
 			.add({ months: 1 })
 			.toISOString();
 	}
-	const pricePaid = period === 'mensual' ? 39990 : 31920 * 12;
+	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;
 	const newPlan = {
 		tier: 'premium',
 		paymentStatus: 'success',
