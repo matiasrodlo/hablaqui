@@ -608,24 +608,57 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updatePsychologist = async (user, profile) => {
-	if (user.role == 'user')
-		return conflictResponse('No tienes acceso a estas configuraciones.');
-	const updated = await Psychologist.findByIdAndUpdate(profile._id, profile, {
-		new: true,
-		runValidators: true,
-		context: 'query',
-	});
+	logInfo(JSON.stringify(profile));
+	if (user.role == 'user') return conflictResponse('No tienes poder.');
+	if (user.psychologist) {
+		try {
+			const updated = await Psychologist.findByIdAndUpdate(
+				profile._id,
+				profile,
+				{
+					new: true,
+					runValidators: true,
+					context: 'query',
+				}
+			);
 
-	const data = {
-		user: user._id,
-		psychologistId: updated._id,
-		username: updated.username,
-	};
+			const data = {
+				user: user._id,
+				psychologistId: updated._id,
+				username: updated.username,
+			};
 
-	pusher.trigger('psychologist', 'update', data, pusherCallback);
+			pusher.trigger('psychologist', 'update', data, pusherCallback);
 
-	logInfo(user.email, 'actualizo su perfil de psicologo');
-	return okResponse('Actualizado exitosamente', { psychologist: updated });
+			logInfo(user.email, 'actualizo su perfil de psicologo');
+			return okResponse('Actualizado exitosamente', {
+				psychologist: updated,
+			});
+		} catch (err) {
+			logInfo(err.stack);
+			return conflictResponse(
+				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
+			);
+		}
+	} else {
+		try {
+			const updated = await Recruitment.findByIdAndUpdate(
+				profile._id,
+				profile,
+				{
+					new: true,
+				}
+			);
+			return okResponse('Actualizado exitosamente', {
+				psychologist: updated,
+			});
+		} catch (err) {
+			logInfo(err.stack);
+			return conflictResponse(
+				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
+			);
+		}
+	}
 };
 
 const deleteOne = async (user, id) => {
