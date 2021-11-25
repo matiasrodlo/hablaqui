@@ -177,7 +177,7 @@
 											outlined
 										></v-text-field>
 										<v-textarea
-											v-model="obs"
+											v-model="selected.observation"
 											label="Observaciones"
 											dense
 											filled
@@ -404,7 +404,6 @@ export default {
 		loadingCreatedUser: false,
 		dialog: false,
 		activePicker: null,
-		obs: '',
 		mdiClose,
 		mdiMagnify,
 		mdiPlus,
@@ -467,6 +466,10 @@ export default {
 				birthDate: this.selected.birthDate,
 				phone: this.selected.phone,
 			});
+			await this.updateSessions({
+				_id: this.selected.sessionsId,
+				observation: this.selected.observation,
+			});
 			this.loading = false;
 		},
 		async initFetch() {
@@ -508,6 +511,7 @@ export default {
 		},
 		...mapActions({
 			getClients: 'Psychologist/getClients',
+			updateSessions: 'Psychologist/updateSessions',
 			registerUser: 'User/registerUser',
 			updateOne: 'User/updateOne',
 		}),
