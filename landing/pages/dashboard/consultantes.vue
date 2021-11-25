@@ -41,10 +41,10 @@
 						<span class="ml-4 secondary--text text-h6">{{ selected.fullname }}</span>
 					</span>
 					<span style="flex: 1" class="text-right">
-						<v-btn icon>
+						<v-btn icon :to="`chat?client=${selected._id}`">
 							<icon size="30" :icon="mdiChatProcessingOutline" color="primary"></icon>
 						</v-btn>
-						<v-btn icon>
+						<v-btn icon :to="`agenda?dialog=${true}&client=${selected._id}`">
 							<icon size="30" :icon="mdiCalendarClockOutline" color="primary"></icon>
 						</v-btn>
 					</span>
@@ -186,7 +186,9 @@
 										></v-textarea>
 									</v-col>
 									<v-col cols="12" class="text-right">
-										<v-btn small color="primary" rounded> Guardar </v-btn>
+										<v-btn small color="primary" rounded @click="onSubmit">
+											Guardar
+										</v-btn>
 									</v-col>
 								</v-row>
 							</v-expansion-panel-content>
@@ -422,13 +424,8 @@ export default {
 		items() {
 			return this.clients
 				.map(item => ({
-					avatar: item.avatar,
-					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
-					lastSession: item.lastSession,
-					status: item.status,
-					_id: item._id,
-					createdAt: item.createdAt,
 					...item,
+					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
 				}))
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
@@ -461,6 +458,15 @@ export default {
 	methods: {
 		async onSubmit() {
 			this.loading = true;
+			await this.updateOne({
+				_id: this.selected._id,
+				name: this.selected.name,
+				lastName: this.selected.lastName,
+				rut: this.selected.rut,
+				direction: this.selected.direction,
+				birthDate: this.selected.birthDate,
+				phone: this.selected.phone,
+			});
 			this.loading = false;
 		},
 		async initFetch() {
@@ -503,7 +509,7 @@ export default {
 		...mapActions({
 			getClients: 'Psychologist/getClients',
 			registerUser: 'User/registerUser',
-			registerUser: 'User/updatePro',
+			updateOne: 'User/updateOne',
 		}),
 	},
 	validations: {
