@@ -64,6 +64,12 @@ psychologistsRouter.get(
 	psychologistsController.getByData
 );
 
+psychologistsRouter.put(
+	'/psychologists/update/sessions',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updateSessions
+);
+
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],

@@ -262,6 +262,16 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async updateSessions(req, res) {
+		try {
+			const { data, code } = await psychologistsService.updateSessions(
+				req.body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 	async usernameAvailable(req, res) {
 		try {
 			const { username } = req.body;
