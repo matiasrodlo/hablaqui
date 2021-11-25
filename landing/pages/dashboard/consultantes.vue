@@ -38,7 +38,10 @@
 				<v-col v-if="selected" cols="12" class="d-flex algin-center">
 					<span style="flex: 2; align-self: center">
 						<avatar size="70" :name="selected.name" :url="selected.avatarThumbnail" />
-						<span class="ml-4 secondary--text text-h6">{{ selected.fullname }}</span>
+						<span class="ml-4 secondary--text text-h6">
+							{{ selected.name }}
+							{{ selected.lastName ? selected.lastName : '' }}
+						</span>
 					</span>
 					<span style="flex: 1" class="text-right">
 						<v-btn icon :to="`chat?client=${selected._id}`">
@@ -163,7 +166,6 @@
 										></v-text-field>
 										<v-text-field
 											v-model="selected.direction"
-											disabled
 											label="Direccion"
 											dense
 											filled
@@ -215,7 +217,10 @@
 					<template #[`item.name`]="{ item }">
 						<div>
 							<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
-							<span class="ml-2 body-2">{{ item.fullname }}</span>
+							<span class="ml-2 body-2">
+								{{ item.name }}
+								{{ item.lastName ? item.lastName : '' }}
+							</span>
 						</div>
 					</template>
 					<template #[`item.actions`]="{ item }">
@@ -424,7 +429,6 @@ export default {
 			return this.clients
 				.map(item => ({
 					...item,
-					name: `${item.name} ${item.lastName ? item.lastName : ''}`,
 				}))
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
@@ -459,7 +463,6 @@ export default {
 			this.loading = true;
 			await this.updateOne({
 				_id: this.selected._id,
-				name: this.selected.name,
 				lastName: this.selected.lastName,
 				rut: this.selected.rut,
 				direction: this.selected.direction,
