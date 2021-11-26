@@ -266,7 +266,6 @@ export default {
 		},
 	},
 	mounted() {
-		console.log(this.psychologist.schedule);
 		this.setDay(cloneDeep(this.psychologist.schedule));
 	},
 	methods: {

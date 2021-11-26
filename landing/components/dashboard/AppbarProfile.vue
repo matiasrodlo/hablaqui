@@ -11,7 +11,10 @@
 				Psicólogos
 			</router-link>
 		</div>
-		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
+		<div
+			v-if="$auth.$state.user.role === 'psychologist' && $auth.$state.user.psychologist"
+			class="mx-5 body-1 primary--text"
+		>
 			<a
 				style="text-decoration: none"
 				href="https://calendly.com/daniel-hablaqui/30min"
