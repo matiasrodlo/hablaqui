@@ -2,38 +2,14 @@
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Consultantes" />
 		<v-row align="start" style="overflow-y: auto">
-			<v-col cols="8" md="4">
-				<v-text-field
-					v-model="search"
-					hide-details
-					filled
-					dense
-					outlined
-					single-line
-					:append-icon="mdiMagnify"
-					label="Nombre del consultante"
-				/>
-			</v-col>
-			<v-col class="d-flex align-center mt-2" cols="4">
-				<span class="pointer" @click="dialog = true">
-					<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
-						<icon :icon="mdiPlus" color="white" small />
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12" class="mt-16 text-left">
+					<v-btn small color="primary" outlined rounded @click="selected = null">
+						<icon size="30" left :icon="mdiChevronLeft" color="primary"></icon>
+						Regresar
 					</v-btn>
-					<span class="primary--text ml-2"> Consultante nuevo </span>
-				</span>
-			</v-col>
-			<v-col cols="12" md="6">
-				<v-alert prominent text color="info">
-					<div
-						style="color: #0079ff"
-						class="font-weight-medium pointer"
-						@click="() => (dialogComission = true)"
-					>
-						Paga 0% de comisión con los consultantes nuevos que invites.
-						<b>¡Sepa más!</b>
-					</div>
-				</v-alert>
-			</v-col>
+				</v-col>
+			</v-expand-transition>
 			<v-expand-transition>
 				<v-col v-if="selected" cols="12" class="d-flex algin-center">
 					<span style="flex: 2; align-self: center">
@@ -198,43 +174,87 @@
 					</v-expansion-panels>
 				</v-col>
 			</v-expand-transition>
-			<v-col cols="12">
-				<v-data-table
-					:search="search"
-					:loading="loading"
-					:headers="headers"
-					:items="items"
-					item-key="_id"
-					class="elevation-2"
-					loading-text="Cargando..."
-					:items-per-page="5"
-					:footer-props="{
-						'items-per-page-text': 'Consultantes por página',
-					}"
-					no-data-text="No hay consultantes"
-					@click:row="setSelected"
-				>
-					<template #[`item.name`]="{ item }">
-						<div>
-							<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
-							<span class="ml-2 body-2">
-								{{ item.name }}
-								{{ item.lastName ? item.lastName : '' }}
-							</span>
-						</div>
-					</template>
-					<template #[`item.actions`]="{ item }">
-						<div>
-							<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
-								<icon :icon="mdiCalendarClockOutline" small color="primary"></icon>
-							</v-btn>
-							<v-btn icon :to="`chat?client=${item._id}`">
-								<icon :icon="mdiChatProcessingOutline" small color="primary"></icon>
-							</v-btn>
-						</div>
-					</template>
-				</v-data-table>
+			<template v-if="!selected">
+				<v-col cols="8" md="4">
+					<v-text-field
+						v-model="search"
+						hide-details
+						filled
+						dense
+						outlined
+						single-line
+						:append-icon="mdiMagnify"
+						label="Nombre del consultante"
+					/>
+				</v-col>
+				<v-col class="d-flex align-center mt-2" cols="4">
+					<span class="pointer" @click="dialog = true">
+						<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
+							<icon :icon="mdiPlus" color="white" small />
+						</v-btn>
+						<span class="primary--text ml-2"> Consultante nuevo </span>
+					</span>
+				</v-col>
+			</template>
+			<v-col cols="12" md="6">
+				<v-alert prominent text color="info">
+					<div
+						style="color: #0079ff"
+						class="font-weight-medium pointer"
+						@click="() => (dialogComission = true)"
+					>
+						Paga 0% de comisión con los consultantes nuevos que invites.
+						<b>¡Sepa más!</b>
+					</div>
+				</v-alert>
 			</v-col>
+			<v-expand-transition>
+				<v-col v-if="!selected" cols="12">
+					<v-data-table
+						:search="search"
+						:loading="loading"
+						:headers="headers"
+						:items="items"
+						item-key="_id"
+						class="elevation-2"
+						loading-text="Cargando..."
+						:items-per-page="5"
+						:footer-props="{
+							'items-per-page-text': 'Consultantes por página',
+						}"
+						no-data-text="No hay consultantes"
+						@click:row="setSelected"
+					>
+						<template #[`item.name`]="{ item }">
+							<div>
+								<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
+								<span class="ml-2 body-2">
+									{{ item.name }}
+									{{ item.lastName ? item.lastName : '' }}
+								</span>
+							</div>
+						</template>
+						<template #[`item.actions`]="{ item }">
+							<div>
+								<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
+									<icon
+										:icon="mdiCalendarClockOutline"
+										small
+										color="primary"
+									></icon>
+								</v-btn>
+								<v-btn icon :to="`chat?client=${item._id}`">
+									<icon
+										:icon="mdiChatProcessingOutline"
+										small
+										color="primary"
+									></icon>
+								</v-btn>
+							</div>
+						</template>
+					</v-data-table>
+				</v-col>
+			</v-expand-transition>
 		</v-row>
 		<v-dialog
 			v-if="dialog"
@@ -388,6 +408,7 @@ import {
 	mdiChatProcessingOutline,
 	mdiClose,
 	mdiCalendarClockOutline,
+	mdiChevronLeft,
 } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
@@ -405,6 +426,7 @@ export default {
 	middleware: ['auth'],
 	data: () => ({
 		selected: null,
+		mdiChevronLeft,
 		dialogComission: false,
 		loadingCreatedUser: false,
 		dialog: false,
