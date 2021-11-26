@@ -3,7 +3,8 @@
 		<v-card
 			:loading="!psychologist"
 			outlined
-			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '640px' : '100%' }"
+			class="mx-auto"
+			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
 		>
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
