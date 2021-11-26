@@ -429,7 +429,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		{ _id: id, 'plan._id': idPlan },
 		{
 			$set: {
-				'plan.$.remainingSessions': payload.remainingSessions - 1,
+				'plan.$.remainingSessions': payload.remainingSessions,
 			},
 			$push: { 'plan.$.session': payload },
 		},
