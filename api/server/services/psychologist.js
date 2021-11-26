@@ -769,12 +769,12 @@ const getLastSession = item => {
 	return item.plan
 		.flatMap(plan =>
 			plan.session.map(session =>
-				moment(session.date, 'MM/DD/YYYY HH:mm').format('L')
+				moment(session.date, 'MM/DD/YYYY HH:mm').format('DD-MM-YYYY')
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
 		.find(sessionDate =>
-			moment(sessionDate, 'MM/DD/YYYY HH:mm').isSameOrBefore(moment())
+			moment(sessionDate, 'DD-MM-YYYY').isSameOrBefore(moment())
 		);
 };
 
@@ -1014,6 +1014,7 @@ const paymentsInfo = async user => {
 					amount: plans.sessionPrice,
 					percentage: percentage,
 					total: plans.sessionPrice * (1 - comission),
+					user: item.user._id,
 				};
 			});
 		});

@@ -191,6 +191,7 @@ export default {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
 			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
 			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
 			return '';
