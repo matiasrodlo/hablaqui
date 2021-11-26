@@ -769,12 +769,12 @@ const getLastSession = item => {
 	return item.plan
 		.flatMap(plan =>
 			plan.session.map(session =>
-				moment(session.date, 'MM/DD/YYYY HH:mm').format('DD-MM-YYYY')
+				moment(session.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY')
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
 		.find(sessionDate =>
-			moment(sessionDate, 'DD-MM-YYYY').isSameOrBefore(moment())
+			moment(sessionDate, 'DD/MM/YYYY').isSameOrBefore(moment())
 		);
 };
 

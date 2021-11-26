@@ -13,7 +13,10 @@
 					:append-icon="mdiMagnify"
 				></v-text-field>
 			</v-col>
-			<v-col cols="12" md="4" lg="3">
+			<v-col v-else cols="12" md="8" lg="9">
+				<span class="pl-3 body-1 font-weight-bold secondary--text">Historial de pagos</span>
+			</v-col>
+			<v-col cols="12" md="4" lg="3" class="text-right">
 				<v-menu
 					ref="menu"
 					v-model="menu"

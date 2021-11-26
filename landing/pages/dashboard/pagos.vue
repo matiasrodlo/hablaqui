@@ -2,8 +2,7 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
 		<div class="tex-h5 secondary--text font-weight-bold mb-4">Transacciones</div>
-		<table-pagos :items="payments" :loading="loading"></table-pagos>
-		<!-- <div class="ma-6 text-right secondary--text body-1 font-weight-bold">total: $10000</div> -->
+		<table-pagos hide-search :items="payments" :loading="loading"></table-pagos>
 	</v-container>
 </template>
 
