@@ -229,7 +229,6 @@ export default {
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
 	mounted() {
-		console.log(this.$auth.$state.user);
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 	},
