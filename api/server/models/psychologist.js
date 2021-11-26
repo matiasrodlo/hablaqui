@@ -3,11 +3,11 @@
 import { Schema, model } from 'mongoose';
 
 let defaultSchedule = {
-	monday: [['09:00', '17:00']],
-	tuesday: [['09:00', '17:00']],
-	wednesday: [['09:00', '17:00']],
-	thursday: [['09:00', '17:00']],
-	friday: [['09:00', '17:00']],
+	monday: [['09:00', '18:00']],
+	tuesday: [['09:00', '18:00']],
+	wednesday: [['09:00', '18:00']],
+	thursday: [['09:00', '18:00']],
+	friday: [['09:00', '18:00']],
 	saturday: 'busy',
 	sunday: 'busy',
 };

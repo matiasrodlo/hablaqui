@@ -560,48 +560,51 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
+	let response;
+	console.log('dentro', user.email);
 	// Si el user es un psicologo
 	if (user.psychologist) {
-		let foundPsychologist = await Psychologist.findByIdAndUpdate(
+		response = await Psychologist.findByIdAndUpdate(
 			user.psychologist,
 			{
-				schedule: {
-					monday: payload.monday,
-					tuesday: payload.tuesday,
-					wednesday: payload.wednesday,
-					thursday: payload.thursday,
-					friday: payload.friday,
-					saturday: payload.saturday,
-					sunday: payload.sunday,
+				$set: {
+					schedule: {
+						monday: payload.monday,
+						tuesday: payload.tuesday,
+						wednesday: payload.wednesday,
+						thursday: payload.thursday,
+						friday: payload.friday,
+						saturday: payload.saturday,
+						sunday: payload.sunday,
+					},
 				},
 			},
 			{ new: true }
 		);
-		return okResponse('Horario actualizado', {
-			psychologist: foundPsychologist,
-		});
 	}
 	// Si el user es un postulante (psychologist === undefined), pero no un user
 	else {
-		let foundRecruited = await Recruitment.findOneAndUpdate(
-			user.email,
+		response = await Recruitment.findOneAndUpdate(
+			{ email: user.email },
 			{
-				schedule: {
-					monday: payload.monday,
-					tuesday: payload.tuesday,
-					wednesday: payload.wednesday,
-					thursday: payload.thursday,
-					friday: payload.friday,
-					saturday: payload.saturday,
-					sunday: payload.sunday,
+				$set: {
+					schedule: {
+						monday: payload.monday,
+						tuesday: payload.tuesday,
+						wednesday: payload.wednesday,
+						thursday: payload.thursday,
+						friday: payload.friday,
+						saturday: payload.saturday,
+						sunday: payload.sunday,
+					},
 				},
 			},
 			{ new: true }
 		);
-		return okResponse('Horario actualizado', {
-			psychologist: foundRecruited,
-		});
 	}
+	return okResponse('Horario actualizado', {
+		psychologist: response,
+	});
 };
 
 const cancelSession = async (user, planId, sessionsId, id) => {
