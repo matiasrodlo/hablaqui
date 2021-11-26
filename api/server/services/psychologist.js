@@ -630,24 +630,33 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 const updatePaymentMethod = async (user, payload) => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres un psicologo.');
-
-	let foundPsychologist = await Psychologist.findById(user.psychologist);
-	const newPaymentMethod = {
-		bank: payload.bank || foundPsychologist.paymentMethod.bank,
-		accountType:
-			payload.accountType || foundPsychologist.paymentMethod.accountType,
-		accountNumber:
-			payload.accountNumber ||
-			foundPsychologist.paymentMethod.accountNumber,
-		rut: payload.rut || foundPsychologist.paymentMethod.rut,
-		name: payload.name || foundPsychologist.paymentMethod.name,
-		email: payload.email || foundPsychologist.paymentMethod.email,
-	};
-	foundPsychologist.paymentMethod = newPaymentMethod;
-	await foundPsychologist.save();
-	return okResponse('Metodo de pago actualizado', {
-		psychologist: foundPsychologist,
-	});
+	else {
+		let foundPsychologist;
+		if (user.psychologist) {
+			foundPsychologist = await Psychologist.findById(user.psychologist);
+		} else {
+			foundPsychologist = await Recruitment.findOne({
+				email: user.email,
+			});
+		}
+		const newPaymentMethod = {
+			bank: payload.bank || foundPsychologist.paymentMethod.bank,
+			accountType:
+				payload.accountType ||
+				foundPsychologist.paymentMethod.accountType,
+			accountNumber:
+				payload.accountNumber ||
+				foundPsychologist.paymentMethod.accountNumber,
+			rut: payload.rut || foundPsychologist.paymentMethod.rut,
+			name: payload.name || foundPsychologist.paymentMethod.name,
+			email: payload.email || foundPsychologist.paymentMethod.email,
+		};
+		foundPsychologist.paymentMethod = newPaymentMethod;
+		await foundPsychologist.save();
+		return okResponse('Metodo de pago actualizado', {
+			psychologist: foundPsychologist,
+		});
+	}
 };
 
 const updatePsychologist = async (user, profile) => {

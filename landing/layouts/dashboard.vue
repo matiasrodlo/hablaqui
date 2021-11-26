@@ -78,8 +78,8 @@
 			<template v-if="!isMini" #append>
 				<div class="pa-2 white--text">
 					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
-					contactarnos
+					Nuestra plataforma aún está en construcción. Si presentas algún problema, 
+					no dudes en contactarnos
 				</div>
 			</template>
 		</v-navigation-drawer>
