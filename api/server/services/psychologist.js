@@ -3,6 +3,7 @@
 import { logInfo } from '../config/pino';
 import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import mailService from './mail';
@@ -348,7 +349,7 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
-		logInfo(JSON.stringify(payload));
+
 		analytics.track({
 			userId: payload.user._id,
 			event: 'user-purchase-plan',
@@ -444,7 +445,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			userpsyId: id,
 		},
 	});
-	logInfo(userLogged.psychologist);
+
 	analytics.track({
 		userId: userLogged.psychologist.toString(),
 		event: 'psy-new-session',
@@ -559,24 +560,50 @@ const getByData = async username => {
 };
 
 const setSchedule = async (user, payload) => {
-	let foundPsychologist = await Psychologist.findByIdAndUpdate(
-		user.psychologist,
-		{
-			schedule: {
-				monday: payload.monday,
-				tuesday: payload.tuesday,
-				wednesday: payload.wednesday,
-				thursday: payload.thursday,
-				friday: payload.friday,
-				saturday: payload.saturday,
-				sunday: payload.sunday,
+	let response;
+	console.log('dentro', user.email);
+	// Si el user es un psicologo
+	if (user.psychologist) {
+		response = await Psychologist.findByIdAndUpdate(
+			user.psychologist,
+			{
+				$set: {
+					schedule: {
+						monday: payload.monday,
+						tuesday: payload.tuesday,
+						wednesday: payload.wednesday,
+						thursday: payload.thursday,
+						friday: payload.friday,
+						saturday: payload.saturday,
+						sunday: payload.sunday,
+					},
+				},
 			},
-		},
-		{ new: true }
-	);
-
+			{ new: true }
+		);
+	}
+	// Si el user es un postulante (psychologist === undefined), pero no un user
+	else {
+		response = await Recruitment.findOneAndUpdate(
+			{ email: user.email },
+			{
+				$set: {
+					schedule: {
+						monday: payload.monday,
+						tuesday: payload.tuesday,
+						wednesday: payload.wednesday,
+						thursday: payload.thursday,
+						friday: payload.friday,
+						saturday: payload.saturday,
+						sunday: payload.sunday,
+					},
+				},
+			},
+			{ new: true }
+		);
+	}
 	return okResponse('Horario actualizado', {
-		psychologist: foundPsychologist,
+		psychologist: response,
 	});
 };
 
@@ -606,44 +633,86 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 const updatePaymentMethod = async (user, payload) => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres un psicologo.');
-
-	let foundPsychologist = await Psychologist.findById(user.psychologist);
-	const newPaymentMethod = {
-		bank: payload.bank || foundPsychologist.paymentMethod.bank,
-		accountType:
-			payload.accountType || foundPsychologist.paymentMethod.accountType,
-		accountNumber:
-			payload.accountNumber ||
-			foundPsychologist.paymentMethod.accountNumber,
-		rut: payload.rut || foundPsychologist.paymentMethod.rut,
-		name: payload.name || foundPsychologist.paymentMethod.name,
-		email: payload.email || foundPsychologist.paymentMethod.email,
-	};
-	foundPsychologist.paymentMethod = newPaymentMethod;
-	await foundPsychologist.save();
-	return okResponse('Metodo de pago actualizado', {
-		psychologist: foundPsychologist,
-	});
+	else {
+		let foundPsychologist;
+		if (user.psychologist) {
+			foundPsychologist = await Psychologist.findById(user.psychologist);
+		} else {
+			foundPsychologist = await Recruitment.findOne({
+				email: user.email,
+			});
+		}
+		const newPaymentMethod = {
+			bank: payload.bank || foundPsychologist.paymentMethod.bank,
+			accountType:
+				payload.accountType ||
+				foundPsychologist.paymentMethod.accountType,
+			accountNumber:
+				payload.accountNumber ||
+				foundPsychologist.paymentMethod.accountNumber,
+			rut: payload.rut || foundPsychologist.paymentMethod.rut,
+			name: payload.name || foundPsychologist.paymentMethod.name,
+			email: payload.email || foundPsychologist.paymentMethod.email,
+		};
+		foundPsychologist.paymentMethod = newPaymentMethod;
+		await foundPsychologist.save();
+		return okResponse('Metodo de pago actualizado', {
+			psychologist: foundPsychologist,
+		});
+	}
 };
 
 const updatePsychologist = async (user, profile) => {
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
-	const updated = await Psychologist.findByIdAndUpdate(profile._id, profile, {
-		new: true,
-		runValidators: true,
-		context: 'query',
-	});
+	if (user.psychologist) {
+		try {
+			const updated = await Psychologist.findByIdAndUpdate(
+				profile._id,
+				profile,
+				{
+					new: true,
+					runValidators: true,
+					context: 'query',
+				}
+			);
 
-	const data = {
-		user: user._id,
-		psychologistId: updated._id,
-		username: updated.username,
-	};
+			const data = {
+				user: user._id,
+				psychologistId: updated._id,
+				username: updated.username,
+			};
 
-	pusher.trigger('psychologist', 'update', data, pusherCallback);
+			pusher.trigger('psychologist', 'update', data, pusherCallback);
 
-	logInfo(user.email, 'actualizo su perfil de psicologo');
-	return okResponse('Actualizado exitosamente', { psychologist: updated });
+			logInfo(user.email, 'actualizo su perfil de psicologo');
+			return okResponse('Actualizado exitosamente', {
+				psychologist: updated,
+			});
+		} catch (err) {
+			logInfo(err.stack);
+			return conflictResponse(
+				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
+			);
+		}
+	} else {
+		try {
+			const updated = await Recruitment.findByIdAndUpdate(
+				profile._id,
+				profile,
+				{
+					new: true,
+				}
+			);
+			return okResponse('Actualizado exitosamente', {
+				psychologist: updated,
+			});
+		} catch (err) {
+			logInfo(err.stack);
+			return conflictResponse(
+				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
+			);
+		}
+	}
 };
 
 const deleteOne = async (user, id) => {

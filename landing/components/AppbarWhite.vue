@@ -363,7 +363,9 @@ export default {
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: `https://cdn.hablaqui.cl/static/home.png`,
-					visible,
+					visible:
+						(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+						(this.$auth.$state.loggedIn && this.$auth.user.role === 'user'),
 				},
 				{
 					name: 'Panel de control',

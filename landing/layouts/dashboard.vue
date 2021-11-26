@@ -78,8 +78,8 @@
 			<template v-if="!isMini" #append>
 				<div class="pa-2 white--text">
 					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
-					contactarnos
+					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
+					dudes en contactarnos
 				</div>
 			</template>
 		</v-navigation-drawer>
@@ -94,6 +94,34 @@
 			class="primary"
 			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '140px' }"
 		>
+			<v-overlay :value="overlay" color="white" :opacity="0.8">
+				<v-card light>
+					<div class="text-right">
+						<v-btn text>
+							<span class="secondary--text" @click="changeStateOnboarding"> x </span>
+						</v-btn>
+					</div>
+					<v-card-text class="py-0 text-center body-1 px-6">
+						Bienveido a hablaquí office
+					</v-card-text>
+					<v-card-text class="text-center body-2 px-6">
+						Agenda un tour por tu oficina y aclara todas tus dudas
+					</v-card-text>
+					<v-card-actions class="text-center body-2 px-6">
+						<v-spacer></v-spacer>
+						<v-btn
+							rounded
+							color="primary"
+							href="https://calendly.com/daniel-hablaqui/30min"
+							target="_blank"
+							:loading="loadingOnboarding"
+							@click="changeStateOnboarding"
+							>Agendar demo
+						</v-btn>
+						<v-spacer></v-spacer>
+					</v-card-actions>
+				</v-card>
+			</v-overlay>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -108,7 +136,7 @@
 <script>
 import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -117,6 +145,8 @@ export default {
 	},
 	data() {
 		return {
+			overlay: false,
+			loadingOnboarding: false,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
@@ -198,12 +228,28 @@ export default {
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
 	},
+	mounted() {
+		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+			this.overlay = true;
+	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		async changeStateOnboarding() {
+			this.loadingOnboarding = true;
+			await this.updateOne({
+				_id: this.$auth.$state.user._id,
+				onboarding: true,
+			});
+			this.loadingOnboarding = false;
+			this.overlay = false;
+		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
+		...mapActions({
+			updateOne: 'User/updateOne',
+		}),
 	},
 };
 </script>
