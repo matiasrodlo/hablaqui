@@ -78,8 +78,8 @@
 			<template v-if="!isMini" #append>
 				<div class="pa-2 white--text">
 					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún está en construcción. Si presentas algún problema, 
-					no dudes en contactarnos
+					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
+					dudes en contactarnos
 				</div>
 			</template>
 		</v-navigation-drawer>
@@ -221,6 +221,7 @@ export default {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
 			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
 			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
 			return '';

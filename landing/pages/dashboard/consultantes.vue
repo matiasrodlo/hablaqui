@@ -12,33 +12,69 @@
 			</v-expand-transition>
 			<v-expand-transition>
 				<v-col v-if="selected" cols="12" class="d-flex algin-center">
-					<span style="flex: 2; align-self: center">
-						<avatar size="70" :name="selected.name" :url="selected.avatarThumbnail" />
-						<span class="ml-4 secondary--text text-h6">
-							{{ selected.name }}
-							{{ selected.lastName ? selected.lastName : '' }}
-						</span>
-					</span>
-					<span style="flex: 1" class="text-right">
-						<v-btn icon :to="`chat?client=${selected._id}`">
-							<icon size="30" :icon="mdiChatProcessingOutline" color="primary"></icon>
-						</v-btn>
-						<v-btn icon :to="`agenda?dialog=${true}&client=${selected._id}`">
-							<icon size="30" :icon="mdiCalendarClockOutline" color="primary"></icon>
-						</v-btn>
-					</span>
-				</v-col>
-			</v-expand-transition>
-			<v-expand-transition>
-				<v-col v-if="selected" cols="12" class="d-flex algin-center">
 					<v-expansion-panels accordion class="rounded-xl">
 						<v-expansion-panel>
 							<v-expansion-panel-header>
-								<span class="text-h6 secondary--text">Datos del consultante</span>
+								<span style="flex: 2; align-self: center">
+									<avatar
+										size="40"
+										:name="selected.name"
+										:url="selected.avatarThumbnail"
+									/>
+									<span class="ml-4 secondary--text text-h6">
+										{{ selected.name }}
+										{{ selected.lastName ? selected.lastName : '' }}
+									</span>
+								</span>
+								<span style="flex: 1" class="text-right">
+									<v-tooltip bottom>
+										<template #activator="{ on, attrs }">
+											<v-btn
+												v-bind="attrs"
+												icon
+												:to="`chat?client=${selected._id}`"
+												v-on="on"
+											>
+												<icon
+													size="30"
+													:icon="mdiChatProcessingOutline"
+													color="primary"
+												></icon>
+											</v-btn>
+										</template>
+										<span>Chatear con {{ selected.name }}</span>
+									</v-tooltip>
+									<v-tooltip bottom>
+										<template #activator="{ on, attrs }">
+											<v-btn
+												icon
+												v-bind="attrs"
+												:to="`agenda?dialog=${true}&client=${selected._id}`"
+												v-on="on"
+											>
+												<icon
+													size="30"
+													:icon="mdiCalendarClockOutline"
+													color="primary"
+												></icon>
+											</v-btn>
+										</template>
+										<span>Agregar sesión con {{ selected.name }}</span>
+									</v-tooltip>
+								</span>
+								<template #actions>
+									<v-btn icon>
+										<icon
+											size="30"
+											:icon="mdiChevronDown"
+											color="primary"
+										></icon>
+									</v-btn>
+								</template>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content>
 								<v-row>
-									<v-col cols="6">
+									<v-col cols="12" sm="6">
 										<v-text-field
 											v-model="selected.name"
 											disabled
@@ -130,8 +166,8 @@
 											outlined
 										></v-text-field>
 									</v-col>
-									<v-divider vertical></v-divider>
-									<v-col cols="6">
+									<v-divider class="hidden-sm-and-down" vertical></v-divider>
+									<v-col cols="12" sm="6">
 										<v-text-field
 											v-model="selected.email"
 											disabled
@@ -174,8 +210,15 @@
 					</v-expansion-panels>
 				</v-col>
 			</v-expand-transition>
+			<v-expand-transition>
+				<v-col v-if="selected" cols="12">
+					<table-pagos
+						:items="payments.filter(item => item.user === selected._id)"
+					></table-pagos>
+				</v-col>
+			</v-expand-transition>
 			<template v-if="!selected">
-				<v-col cols="8" md="4">
+				<v-col cols="12" sm="6" md="4" class="mt-10">
 					<v-text-field
 						v-model="search"
 						hide-details
@@ -187,7 +230,12 @@
 						label="Nombre del consultante"
 					/>
 				</v-col>
-				<v-col class="d-flex align-center mt-2" cols="4">
+				<v-col
+					class="d-flex align-center justify-center justify-sm-start mt-sm-12"
+					cols="12"
+					sm="6"
+					md="4"
+				>
 					<span class="pointer" @click="dialog = true">
 						<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 							<icon :icon="mdiPlus" color="white" small />
@@ -200,7 +248,7 @@
 				<v-alert prominent text color="info">
 					<div
 						style="color: #0079ff"
-						class="font-weight-medium pointer"
+						class="text-center text-sm-left font-weight-medium pointer"
 						@click="() => (dialogComission = true)"
 					>
 						Paga 0% de comisión con los consultantes nuevos que invites.
@@ -236,20 +284,40 @@
 						</template>
 						<template #[`item.actions`]="{ item }">
 							<div>
-								<v-btn icon :to="`agenda?dialog=${true}&client=${item._id}`">
-									<icon
-										:icon="mdiCalendarClockOutline"
-										small
-										color="primary"
-									></icon>
-								</v-btn>
-								<v-btn icon :to="`chat?client=${item._id}`">
-									<icon
-										:icon="mdiChatProcessingOutline"
-										small
-										color="primary"
-									></icon>
-								</v-btn>
+								<v-tooltip bottom>
+									<template #activator="{ on, attrs }">
+										<v-btn
+											icon
+											:to="`agenda?dialog=${true}&client=${item._id}`"
+											v-bind="attrs"
+											v-on="on"
+										>
+											<icon
+												:icon="mdiCalendarClockOutline"
+												small
+												color="primary"
+											></icon>
+										</v-btn>
+									</template>
+									<span>Agendar sesión con {{ item.name }}</span>
+								</v-tooltip>
+								<v-tooltip bottom>
+									<template #activator="{ on, attrs }">
+										<v-btn
+											icon
+											:to="`chat?client=${item._id}`"
+											v-bind="attrs"
+											v-on="on"
+										>
+											<icon
+												:icon="mdiChatProcessingOutline"
+												small
+												color="primary"
+											></icon>
+										</v-btn>
+									</template>
+									<span>Chatear con {{ item.name }}</span>
+								</v-tooltip>
 							</div>
 						</template>
 					</v-data-table>
@@ -281,7 +349,7 @@
 				</v-card-text>
 				<v-card-text class="mt-4">
 					<v-row>
-						<v-col cols="6">
+						<v-col cols="12" sm="6">
 							<v-text-field
 								v-model="form.name"
 								type="text"
@@ -293,7 +361,7 @@
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="6">
+						<v-col cols="12" sm="6">
 							<v-text-field
 								v-model="form.rut"
 								type="text"
@@ -304,7 +372,7 @@
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="6">
+						<v-col cols="12" sm="6">
 							<v-text-field
 								v-model="form.email"
 								type="email"
@@ -316,7 +384,7 @@
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="6">
+						<v-col cols="12" sm="6">
 							<v-text-field
 								v-model="form.phone"
 								type="text"
@@ -330,7 +398,7 @@
 						</v-col>
 					</v-row>
 					<v-row justify="center">
-						<v-col cols="6">
+						<v-col cols="12" class="text-center">
 							<v-btn text @click="closeDialog"> Cancelar </v-btn>
 							<v-btn
 								:loading="loadingCreatedUser"
@@ -409,6 +477,7 @@ import {
 	mdiClose,
 	mdiCalendarClockOutline,
 	mdiChevronLeft,
+	mdiChevronDown,
 } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
@@ -418,6 +487,7 @@ import moment from 'moment';
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
+		TablePagos: () => import('~/components/dashboard/TablePagos'),
 		Avatar: () => import('~/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
 	},
@@ -426,6 +496,7 @@ export default {
 	middleware: ['auth'],
 	data: () => ({
 		selected: null,
+		mdiChevronDown,
 		mdiChevronLeft,
 		dialogComission: false,
 		loadingCreatedUser: false,
@@ -467,7 +538,7 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ clients: 'Psychologist/clients' }),
+		...mapGetters({ clients: 'Psychologist/clients', payments: 'Psychologist/payments' }),
 	},
 	watch: {
 		bmenu(val) {
@@ -500,6 +571,7 @@ export default {
 		async initFetch() {
 			this.loading = true;
 			await this.getClients(this.$auth.$state.user.psychologist);
+			await this.getPayments();
 			this.loading = false;
 		},
 		async submitUser() {
@@ -539,6 +611,7 @@ export default {
 			updateSessions: 'Psychologist/updateSessions',
 			registerUser: 'User/registerUser',
 			updateOne: 'User/updateOne',
+			getPayments: 'Psychologist/getPayments',
 		}),
 	},
 	validations: {
@@ -554,5 +627,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped></style>
