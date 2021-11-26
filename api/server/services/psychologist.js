@@ -349,7 +349,7 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
-		logInfo(JSON.stringify(payload));
+
 		analytics.track({
 			userId: payload.user._id,
 			event: 'user-purchase-plan',
@@ -445,7 +445,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			userpsyId: id,
 		},
 	});
-	logInfo(userLogged.psychologist);
+
 	analytics.track({
 		userId: userLogged.psychologist.toString(),
 		event: 'psy-new-session',
@@ -660,7 +660,6 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updatePsychologist = async (user, profile) => {
-	logInfo(JSON.stringify(profile));
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
 	if (user.psychologist) {
 		try {
