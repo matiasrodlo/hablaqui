@@ -176,9 +176,16 @@ export default {
 			}
 			return { psychologist: null };
 		} else {
-			const { psychologist } = await $axios.$get(
-				`/psychologists/one/${$auth.$state.user.psychologist}`
-			);
+			let psychologist;
+			if ($auth.$state.user.psychologist) {
+				const res = await $axios.$get(
+					`/psychologists/one/${$auth.$state.user.psychologist}`
+				);
+				psychologist = res.psychologist;
+			} else {
+				const res = await $axios.$get(`/recruitment/${$auth.user.email}`);
+				psychologist = res.recruited;
+			}
 			if (!psychologist.formation.length) {
 				psychologist.formation.push({
 					formationType: '',
@@ -211,7 +218,7 @@ export default {
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
-			if (this.$auth.user.role === 'psychologist')
+			if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist)
 				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
 		setAvatarObject(file) {

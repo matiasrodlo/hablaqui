@@ -11,6 +11,24 @@
 				Psicólogos
 			</router-link>
 		</div>
+		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+			<a
+				style="text-decoration: none"
+				href="https://calendly.com/daniel-hablaqui/30min"
+				target="_blank"
+			>
+				<div class="d-flex align-center">
+					<v-img
+						src="https://cdn.hablaqui.cl/static/demo.png"
+						contain
+						height="30"
+						width="30"
+						class="mx-2"
+					></v-img>
+					Agendar demo
+				</div>
+			</a>
+		</div>
 		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">

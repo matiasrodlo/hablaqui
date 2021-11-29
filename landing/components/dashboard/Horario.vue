@@ -3,7 +3,8 @@
 		<v-card
 			:loading="!psychologist"
 			outlined
-			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '640px' : '100%' }"
+			class="mx-auto"
+			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
 		>
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
@@ -274,34 +275,59 @@ export default {
 			this.items = this.items.map((item, index) => {
 				let active = true;
 				if (index === 0) {
-					intervals = payload.monday === 'busy' ? [['9:00', '18:00']] : payload.monday;
+					intervals =
+						payload.monday === 'busy' ||
+						payload.monday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.monday;
 					active = payload.monday !== 'busy';
 				}
 				if (index === 1) {
-					intervals = payload.tuesday === 'busy' ? [['9:00', '18:00']] : payload.tuesday;
+					intervals =
+						payload.tuesday === 'busy' ||
+						payload.tuesday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.tuesday;
 					active = payload.tuesday !== 'busy';
 				}
 				if (index === 2) {
 					intervals =
-						payload.wednesday === 'busy' ? [['9:00', '18:00']] : payload.wednesday;
+						payload.wednesday === 'busy' ||
+						payload.wednesday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.wednesday;
 					active = payload.wednesday !== 'busy';
 				}
 				if (index === 3) {
 					intervals =
-						payload.thursday === 'busy' ? [['9:00', '18:00']] : payload.thursday;
+						payload.thursday === 'busy' ||
+						payload.thursday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.thursday;
 					active = payload.thursday !== 'busy';
 				}
 				if (index === 4) {
-					intervals = payload.friday === 'busy' ? [['9:00', '18:00']] : payload.friday;
+					intervals =
+						payload.friday === 'busy' ||
+						payload.friday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.friday;
 					active = payload.friday !== 'busy';
 				}
 				if (index === 5) {
 					intervals =
-						payload.saturday === 'busy' ? [['9:00', '18:00']] : payload.saturday;
+						payload.saturday === 'busy' ||
+						payload.saturday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.saturday;
 					active = payload.saturday !== 'busy';
 				}
 				if (index === 6) {
-					intervals = payload.sunday === 'busy' ? [['9:00', '18:00']] : payload.sunday;
+					intervals =
+						payload.sunday === 'busy' ||
+						payload.sunday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.sunday;
 					active = payload.sunday !== 'busy';
 				}
 				return { ...item, intervals, active };

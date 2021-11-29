@@ -101,7 +101,7 @@ export default {
 							response.data.user.role === 'psychologist' &&
 							!response.data.user.psychologist
 						) {
-							this.$router.push({ name: 'postulacion' });
+							this.$router.push({ name: 'dashboard-perfil' });
 						} else if (response.data.user.role === 'superuser') {
 							this.$router.push({ name: 'dashboard-panel' });
 						} else if (!this.isDialog) {

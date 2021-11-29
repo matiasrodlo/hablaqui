@@ -2,6 +2,7 @@
 
 import User from '../models/user';
 import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcrypt';
 import servicesAuth from './auth';
@@ -53,14 +54,13 @@ const usersService = {
 			return conflictResponse('no puede ser la misma contraseña');
 		else return await this.changeActualPassword(foundUser, newPassword);
 	},
-	async updateProfile(user, profile) {
-		const updated = await User.findByIdAndUpdate(user._id, profile, {
+	async updateProfile(id, profile) {
+		const updated = await User.findByIdAndUpdate(id, profile, {
 			new: true,
 			runValidators: true,
 			context: 'query',
 		});
 
-		logInfo(actionInfo(user.email, 'actualizo su perfil'));
 		return okResponse('Actualizado exitosamente', { user: updated });
 	},
 
@@ -123,16 +123,30 @@ const usersService = {
 			userID = userSelected._id;
 		}
 
-		if (userRole === 'psychologist')
-			psychologist = await Psychologist.findByIdAndUpdate(
-				idPsychologist,
-				{
-					avatar,
-					avatarThumbnail,
-					approveAvatar: false,
-				},
-				{ new: true }
-			);
+		if (userRole === 'psychologist') {
+			const userData = await User.findById(userID);
+			if (userData.psychologist) {
+				psychologist = await Psychologist.findByIdAndUpdate(
+					idPsychologist,
+					{
+						avatar,
+						avatarThumbnail,
+						approveAvatar: false,
+					},
+					{ new: true }
+				);
+			} else {
+				psychologist = await Recruitment.findByIdAndUpdate(
+					userID,
+					{
+						avatar,
+						avatarThumbnail,
+						approveAvatar: false,
+					},
+					{ new: true }
+				);
+			}
+		}
 
 		const profile = await User.findByIdAndUpdate(
 			userID,

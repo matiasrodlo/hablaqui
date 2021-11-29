@@ -62,15 +62,21 @@ let plan = new Schema(
 	{ timestamps: true }
 );
 let sessionSchema = new Schema({
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'User',
+	observation: {
+		type: String,
 	},
+	plan: [plan],
 	psychologist: {
 		type: Schema.Types.ObjectId,
 		ref: 'psychologist',
 	},
-	plan: [plan],
+	roomsUrl: {
+		type: String,
+	},
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+	},
 });
 
 export default model('session', sessionSchema);

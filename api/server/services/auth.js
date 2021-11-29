@@ -45,6 +45,8 @@ const generateUser = async user => {
 		_id: user._id,
 		avatar: user.avatar,
 		avatarThumbnail: user.avatarThumbnail,
+		birthDate: user.birthDate,
+		direction: user.direction,
 		email: user.email,
 		finishedSessions: user.finishedSessions,
 		google: user.google,
@@ -53,14 +55,15 @@ const generateUser = async user => {
 		inviteCode: user.inviteCode,
 		lastName: user.lastName,
 		name: user.name,
+		onboarding: user.onboarding,
 		phone: user.phone,
 		plan: user.plan,
 		psychologist: user.psychologist,
 		role: user.role,
 		rut: user.rut,
+		sessions: await getSessions(user),
 		state: user.state,
 		timeZone: user.timeZone,
-		sessions: await getSessions(user),
 	};
 };
 
