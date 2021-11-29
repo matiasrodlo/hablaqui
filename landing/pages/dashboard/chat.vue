@@ -153,6 +153,14 @@
 										Psicólogo · Activo(a)
 									</v-list-item-subtitle>
 								</v-list-item-content>
+								<v-list-item-action>
+									<v-badge
+										color="primary"
+										:content="getMyPsy.countMessagesUnRead"
+										:value="getMyPsy.countMessagesUnRead"
+									>
+									</v-badge>
+								</v-list-item-action>
 							</v-list-item>
 						</v-list>
 						<!-- usuario sin psicologo -->
@@ -531,6 +539,9 @@ export default {
 			return this.allPsychologists.map(item => ({
 				...item,
 				hasMessage: this.hasMessage(item),
+				countMessagesUnRead: this.setCountMessagesUnread(
+					this.chats.find(chat => chat.psychologist._id === item._id)
+				),
 			}));
 		},
 		subHeader() {
