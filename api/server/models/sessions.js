@@ -71,9 +71,6 @@ let sessionSchema = new Schema({
 		ref: 'psychologist',
 	},
 	plan: [plan],
-	roomsUrl: {
-		type: String,
-	},
 });
 
 export default model('session', sessionSchema);

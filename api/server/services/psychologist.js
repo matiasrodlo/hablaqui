@@ -411,6 +411,7 @@ const createPlan = async ({ payload }) => {
  * @param {Object} payload - data to save
  * @returns sessions actualizada
  */
+//Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
 	const { psychologist } = await Sessions.findOne({ _id: id });
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
@@ -496,7 +497,8 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
-
+	console.log(sessionsId);
+	console.log(id);
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -509,6 +511,13 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		},
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
+	//Probarlos/probar
+	mailService.sendRescheduleToUser(
+		sessions.user,
+		sessions.psychologist,
+		date
+	);
+	mailService.sendRescheduleToPsy(sessions.user, sessions.psychologist, date);
 
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -560,7 +569,7 @@ const setSchedule = async (user, payload) => {
 		psychologist: foundPsychologist,
 	});
 };
-
+//Reprogramación sesiones para psicologos
 const cancelSession = async (user, planId, sessionsId, id) => {
 	await Sessions.updateOne(
 		{
@@ -574,7 +583,6 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 			},
 		}
 	);
-
 	const sessions = await Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('psychologist user');
