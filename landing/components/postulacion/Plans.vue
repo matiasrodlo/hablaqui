@@ -62,11 +62,21 @@
 					</v-card-text>
 				</v-card>
 				<v-btn
+					v-if="currentPlan && currentPlan.tier === 'free'"
 					class="mt-4 elevation-12"
 					color="white"
 					rounded
 					block
-					:disabled="currentPlan && currentPlan.tier === 'free'"
+					@click="goToStep"
+				>
+					<span class="primary--text">Ir a mi cuenta</span>
+				</v-btn>
+				<v-btn
+					v-else
+					class="mt-4 elevation-12"
+					color="white"
+					rounded
+					block
 					@click="setPreferences('free')"
 				>
 					<span class="primary--text">Continuar con plan básico</span>
@@ -153,13 +163,23 @@
 						</v-card-text>
 					</v-card>
 					<v-btn
+						v-if="currentPlan.tier === 'premium'"
 						class="mt-4 elevation-12"
 						color="primary"
 						rounded
 						block
-						:disabled="currentPlan.tier === 'premium'"
+						@click="goToStep"
+					>
+						Ir a mi cuenta
+					</v-btn>
+					<v-btn
+						class="mt-4 elevation-12"
+						color="primary"
+						rounded
+						block
 						@click="setPreferences('premium')"
-						>Suscríbete al plan premium
+					>
+						Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
 			</v-col>
@@ -181,15 +201,12 @@ export default {
 			type: Function,
 			required: true,
 		},
-		recruitedId: {
-			type: String,
-			default: '',
-		},
 	},
 	data() {
 		return {
 			recruited: null,
 			psychologist: null,
+			recruitedId: '',
 			mdiCheck,
 			period: 'mensual',
 			itemsPremiun: [
@@ -237,9 +254,9 @@ export default {
 				`/psychologists/one/${this.$auth.$state.user.psychologist}`
 			);
 			this.psychologist = psychologist;
-		}
-		if (this.recruitedId) {
+		} else {
 			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+			this.recruitedId = recruited._id;
 			this.recruited = recruited;
 		}
 	},
@@ -265,6 +282,10 @@ export default {
 				if (plan === 'premium') window.location.href = res.preference.init_point;
 				else this.$router.push({ name: 'dashboard-perfil' });
 			}
+		},
+		goToStep() {
+			if (this.$route.name === 'postulacion') this.next();
+			else this.$router.push({ name: 'dashboard-perfil' });
 		},
 		...mapActions({
 			setPaymentPreferences: 'Psychologist/setPaymentPreferences',

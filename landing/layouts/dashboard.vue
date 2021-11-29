@@ -102,7 +102,7 @@
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
-						Bienveido a hablaquí office
+						Bienveido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
 						Agenda un tour por tu oficina y aclara todas tus dudas
@@ -245,6 +245,7 @@ export default {
 			});
 			this.loadingOnboarding = false;
 			this.overlay = false;
+			this.$auth.fetchUser();
 		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 		...mapActions({

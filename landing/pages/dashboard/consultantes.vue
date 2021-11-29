@@ -178,7 +178,7 @@
 										></v-text-field>
 										<v-text-field
 											v-model="selected.direction"
-											label="Direccion"
+											label="Dirección"
 											dense
 											filled
 											outlined
