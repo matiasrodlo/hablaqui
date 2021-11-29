@@ -279,10 +279,12 @@ const createPlan = async ({ payload }) => {
 	const date = `${payload.date} ${payload.start}`;
 	const psychologist = await Psychologist.findById(payload.psychologist);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
-	// check whether the date is after the current date plus the minimum time
 	if (
-		moment(date, 'MM/DD/YYYY HH:mm').isAfter(
-			moment().subtract(minimumNewSession, 'hours')
+		moment().isAfter(
+			moment(date, 'MM/DD/YYYY HH:mm').subtract(
+				minimumNewSession,
+				'hours'
+			)
 		)
 	) {
 		return conflictResponse(
@@ -417,8 +419,11 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
-		moment(payload.date, 'MM/DD/YYYY HH:mm').isAfter(
-			moment().subtract(minimumNewSession, 'hours')
+		moment().isAfter(
+			moment(payload.date, 'MM/DD/YYYY HH:mm').subtract(
+				minimumNewSession,
+				'hours'
+			)
 		)
 	) {
 		return conflictResponse(
