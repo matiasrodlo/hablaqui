@@ -231,11 +231,12 @@
 			</template>
 			<template v-else>
 				<v-card
-					v-for="item in items"
-					:key="item.id"
+					v-for="(item, i) in items"
+					:key="i"
 					class="my-3"
 					elevation="6"
-					:to="`perfil/horario?day=${item.title}`"
+					:child-number="i + 1"
+					@click.stop="() => $router.push(`perfil/horario?day=${item.title}`)"
 				>
 					<v-card-text class="d-flex justify-space-between">
 						<div>
@@ -246,7 +247,13 @@
 								{{ item.active ? 'Abierto' : 'Cerrado' }}
 							</div>
 						</div>
-						<v-btn color="primary" small rounded depressed>Cambiar</v-btn>
+						<v-switch
+							v-model="item.active"
+							hide-details
+							dense
+							class="mt-0 pb-0 d-inline-block"
+							@click.stop="schedule"
+						></v-switch>
 					</v-card-text>
 					<v-card-text>
 						<div v-for="(intervals, e) in item.intervals" :key="e">
