@@ -83,16 +83,19 @@
 				</div>
 			</template>
 		</v-navigation-drawer>
-		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
-			<h1 class="white--text">{{ routeName }}</h1>
+		<v-app-bar absolute flat dense color="white" dark class="hidden-md-and-up">
+			<v-btn icon @click="() => $router.go(-1)">
+				<icon v-if="goBack" size="30" color="primary" :icon="mdiChevronLeft" />
+			</v-btn>
+			<h1 class="primary--text text-h5 font-weight-bold">{{ routeName }}</h1>
 			<v-spacer></v-spacer>
 			<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
-				<icon color="white" :icon="mdiMenu" />
+				<icon color="primary" :icon="mdiMenu" />
 			</v-btn>
 		</v-app-bar>
 		<v-main
-			class="primary"
-			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '140px' }"
+			:class="$vuetify.breakpoint.mdAndUp ? 'primary' : 'white'"
+			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
@@ -134,7 +137,7 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert, mdiChevronLeft } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
@@ -147,6 +150,7 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
+			mdiChevronLeft,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
@@ -159,6 +163,14 @@ export default {
 	computed: {
 		expand() {
 			return true;
+		},
+		goBack() {
+			return (
+				this.$route.name === 'dashboard-perfil-configuracion-personal' ||
+				this.$route.name === 'dashboard-perfil-datos-bancarios' ||
+				this.$route.name === 'dashboard-perfil-experiencia-formacion' ||
+				this.$route.name === 'dashboard-perfil-informacion-general'
+			);
 		},
 		links() {
 			const visible =
@@ -224,6 +236,13 @@ export default {
 			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
+			if (this.$route.name === 'dashboard-perfil-configuracion-personal')
+				return 'Configuración personal';
+			if (this.$route.name === 'dashboard-perfil-datos-bancarios') return 'Datos bancarios';
+			if (this.$route.name === 'dashboard-perfil-experiencia-formacion')
+				return 'Experiencia y formación';
+			if (this.$route.name === 'dashboard-perfil-informacion-general')
+				return 'Informacion general';
 			return '';
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),

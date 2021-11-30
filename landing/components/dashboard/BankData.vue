@@ -14,8 +14,9 @@
 				depressed
 				color="primary"
 				style="border-radius: 10px"
-				class="px-16"
+				class="hidden-sm-and-down px-16"
 				:disabled="hasChanges"
+				:loading="loading"
 				@click="handleSubmit"
 			>
 				Guardar
@@ -170,6 +171,18 @@
 				</div>
 			</div>
 		</v-col>
+		<v-col cols="12" class="text-center hidden-md-and-up">
+			<v-btn
+				depressed
+				color="primary"
+				style="border-radius: 10px"
+				:disabled="hasChanges"
+				:loading="loading"
+				@click="handleSubmit"
+			>
+				Guardar
+			</v-btn>
+		</v-col>
 	</v-row>
 </template>
 
@@ -201,6 +214,7 @@ export default {
 				name: '',
 				email: '',
 			},
+			loading: false,
 			banks: [],
 		};
 	},
@@ -259,9 +273,11 @@ export default {
 		async handleSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
+				this.loading = true;
 				const psychologist = await this.updatePaymentMethod(this.bankData);
 				this.setPsychologist(psychologist);
 				this.bankData = cloneDeep(psychologist.paymentMethod);
+				this.loading = false;
 			}
 		},
 		...mapActions({

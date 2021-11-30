@@ -1,97 +1,55 @@
 <template>
-	<v-container fluid>
-		<appbar class="hidden-sm-and-down" title="Chat" />
-		<v-card
-			v-if="initLoading"
-			style="height: calc(100vh - 135px)"
-			class="mt-4 mt-md-0 d-flex justify-center align-center"
-		>
-			<v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
-		</v-card>
-		<v-row v-else>
-			<v-col cols="12" md="4" lg="3">
-				<v-card
-					:elevation="!$vuetify.breakpoint.smAndDown ? '6' : '0'"
-					style="
-						height: calc(100vh - 135px);
-						display: flex;
-						flex-direction: column;
-						border-radius: 15px;
-					"
-					class="py-4 mt-md-0"
-				>
-					<v-card-text class="py-0">
-						<v-text-field
-							v-model="search"
-							style="border-radius: 25px"
-							hide-details
-							filled
-							dense
-							outlined
-							single-line
-							append-icon="mdi-magnify"
-							label="Buscar"
-						/>
-					</v-card-text>
-					<!-- barra lateral role psychologist -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'">
-						<!-- sin consultantes -->
+	<div>
+		<v-overlay :value="initLoading">
+			<v-progress-circular indeterminate size="64"></v-progress-circular>
+		</v-overlay>
+		<v-container fluid style="height: 100vh">
+			<appbar class="hidden-sm-and-down" title="Chat" />
+			<v-row v-show="!initLoading">
+				<v-col cols="12" md="4" lg="3">
+					<v-card
+						:elevation="!$vuetify.breakpoint.smAndDown ? '6' : '0'"
+						style="display: flex; flex-direction: column; border-radius: 15px"
+						:style="$vuetify.breakpoint.smAndDown ? '' : 'height: calc(100vh - 135px)'"
+						class="py-4 mt-md-0"
+					>
 						<v-card-text class="py-0">
-							<v-subheader class="primary--text body-1 px-0">
-								Mis consultantes
-							</v-subheader>
-							<v-divider style="border-color: #5eb3e4" class="pa-0"></v-divider>
-						</v-card-text>
-						<v-sheet
-							v-if="!clients.length"
-							class="primary white--text pa-4 mx-4"
-							style="border-radius: 20px"
-						>
-							Aún no tienes consultantes
-						</v-sheet>
-						<!-- consultantes -->
-						<v-list v-else two-line style="overflow-y: auto; min-height: 100px">
-							<v-list-item
-								v-for="(user, e) in listClients"
-								:key="e"
+							<v-text-field
+								v-model="search"
+								style="border-radius: 25px"
+								hide-details
+								filled
 								dense
-								@click="setSelectedUser(user)"
-							>
-								<v-list-item-avatar
-									style="border-radius: 50%"
-									:style="user.hasMessageUser ? 'border: 3px solid #2070E5' : ''"
-									size="40"
-								>
-									<avatar :url="user.avatar" :name="user.name" size="40" />
-								</v-list-item-avatar>
-
-								<v-list-item-content>
-									<v-list-item-title v-html="user.name"></v-list-item-title>
-									<v-list-item-subtitle>
-										Usuario · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-								<v-list-item-action>
-									<v-badge
-										color="primary"
-										:content="user.countMessagesUnRead"
-										:value="user.countMessagesUnRead"
-									>
-									</v-badge>
-								</v-list-item-action>
-							</v-list-item>
-						</v-list>
-						<!-- general lista usuarios -->
-						<template v-if="listUsers.length">
+								outlined
+								single-line
+								append-icon="mdi-magnify"
+								label="Buscar"
+							/>
+						</v-card-text>
+						<!-- barra lateral role psychologist -->
+						<template
+							v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'"
+						>
+							<!-- sin consultantes -->
 							<v-card-text class="py-0">
-								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
-								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
+								<v-subheader class="primary--text body-1 px-0">
+									Mis consultantes
+								</v-subheader>
+								<v-divider style="border-color: #5eb3e4" class="pa-0"></v-divider>
 							</v-card-text>
-							<!-- usuarios -->
-							<v-list dense two-line style="overflow-y: auto">
+							<v-sheet
+								v-if="!clients.length"
+								class="primary white--text pa-4 mx-4"
+								style="border-radius: 20px"
+							>
+								Aún no tienes consultantes
+							</v-sheet>
+							<!-- consultantes -->
+							<v-list v-else two-line style="overflow-y: auto; min-height: 100px">
 								<v-list-item
-									v-for="(user, w) in listUsers"
-									:key="w"
+									v-for="(user, e) in listClients"
+									:key="e"
+									dense
 									@click="setSelectedUser(user)"
 								>
 									<v-list-item-avatar
@@ -105,9 +63,7 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title>
-											{{ user.name }}
-										</v-list-item-title>
+										<v-list-item-title v-html="user.name"></v-list-item-title>
 										<v-list-item-subtitle>
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
@@ -122,102 +78,88 @@
 									</v-list-item-action>
 								</v-list-item>
 							</v-list>
-						</template>
-					</template>
-					<!-- barra lateral role user -->
-					<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
-						<v-card-text v-if="plan" class="py-0">
-							<v-subheader class="primary--text body-1 px-0">
-								Mi Psicólogo
-							</v-subheader>
-							<v-divider style="border-color: #5eb3e4"></v-divider>
-						</v-card-text>
-						<!-- usuario mi psicologo -->
-						<v-list v-if="plan" dense two-line class="py-0">
-							<v-list-item @click="setSelectedPsy(getMyPsy)">
-								<v-list-item-avatar
-									style="border-radius: 50%"
-									:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-									size="40"
-								>
-									<avatar
-										:url="getMyPsy.avatar"
-										:name="getMyPsy.name"
-										size="40"
-									/>
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title v-html="getMyPsy.name"></v-list-item-title>
-									<v-list-item-subtitle>
-										Psicólogo · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-								<v-list-item-action>
-									<v-badge
-										color="primary"
-										:content="getMyPsy.countMessagesUnRead"
-										:value="getMyPsy.countMessagesUnRead"
+							<!-- general lista usuarios -->
+							<template v-if="listUsers.length">
+								<v-card-text class="py-0">
+									<v-subheader class="primary--text body-1 px-0"
+										>General</v-subheader
 									>
-									</v-badge>
-								</v-list-item-action>
-							</v-list-item>
-						</v-list>
-						<!-- usuario sin psicologo -->
-						<v-list
-							v-else-if="!$auth.$state.user && !plan && listPsychologist.length"
-							link
-							two-line
-							class="py-0 primary"
-							dark
-							style="border-radius: 10px"
-						>
-							<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
-								<v-list-item-avatar style="border-radius: 40px" size="50">
-									<v-img
-										height="50"
-										width="50"
-										class="mx-auto"
-										src="/img/Lupa.png"
-									></v-img>
-								</v-list-item-avatar>
+									<v-divider
+										style="border-color: #5eb3e4"
+										class="mb-2"
+									></v-divider>
+								</v-card-text>
+								<!-- usuarios -->
+								<v-list dense two-line style="overflow-y: auto">
+									<v-list-item
+										v-for="(user, w) in listUsers"
+										:key="w"
+										@click="setSelectedUser(user)"
+									>
+										<v-list-item-avatar
+											style="border-radius: 50%"
+											:style="
+												user.hasMessageUser
+													? 'border: 3px solid #2070E5'
+													: ''
+											"
+											size="40"
+										>
+											<avatar
+												:url="user.avatar"
+												:name="user.name"
+												size="40"
+											/>
+										</v-list-item-avatar>
 
-								<v-list-item-content>
-									<v-list-item-title class="caption">
-										Aun no tienes psicólogo
-									</v-list-item-title>
-									<v-list-item-title class="caption">
-										Encuentra uno aquí
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
-						<!-- lista de psicologos "chat iniciado" -->
-						<template v-if="listPsychologist.length || plan">
-							<v-card-text v-if="listPsychologist.length" class="py-0">
-								<v-subheader class="primary--text body-1 px-0">General</v-subheader>
-								<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
+										<v-list-item-content>
+											<v-list-item-title>
+												{{ user.name }}
+											</v-list-item-title>
+											<v-list-item-subtitle>
+												Usuario · Activo(a)
+											</v-list-item-subtitle>
+										</v-list-item-content>
+										<v-list-item-action>
+											<v-badge
+												color="primary"
+												:content="user.countMessagesUnRead"
+												:value="user.countMessagesUnRead"
+											>
+											</v-badge>
+										</v-list-item-action>
+									</v-list-item>
+								</v-list>
+							</template>
+						</template>
+						<!-- barra lateral role user -->
+						<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
+							<v-card-text v-if="plan" class="py-0">
+								<v-subheader class="primary--text body-1 px-0">
+									Mi Psicólogo
+								</v-subheader>
+								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
-							<v-list
-								v-if="listPsychologist.length"
-								two-line
-								dense
-								style="overflow-y: auto"
-							>
-								<v-list-item
-									v-for="(psy, e) in listPsychologist"
-									:key="e"
-									@click="setSelectedPsy(psy)"
-								>
+							<!-- usuario mi psicologo -->
+							<v-list v-if="plan" dense two-line class="py-0">
+								<v-list-item @click="setSelectedPsy(getMyPsy)">
 									<v-list-item-avatar
 										style="border-radius: 50%"
-										:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+										:style="
+											getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''
+										"
 										size="40"
 									>
-										<avatar :url="psy.avatar" :name="psy.name" size="40" />
+										<avatar
+											:url="getMyPsy.avatar"
+											:name="getMyPsy.name"
+											size="40"
+										/>
 									</v-list-item-avatar>
-
 									<v-list-item-content>
-										<v-list-item-title v-html="psy.name"></v-list-item-title>
+										<v-list-item-title
+											v-html="getMyPsy.name"
+										></v-list-item-title>
 										<v-list-item-subtitle>
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
@@ -225,73 +167,153 @@
 									<v-list-item-action>
 										<v-badge
 											color="primary"
-											:content="psy.countMessagesUnRead"
-											:value="psy.countMessagesUnRead"
+											:content="getMyPsy.countMessagesUnRead"
+											:value="getMyPsy.countMessagesUnRead"
 										>
 										</v-badge>
 									</v-list-item-action>
 								</v-list-item>
 							</v-list>
-						</template>
-						<!-- lista de psicologos "sin chats iniciados" -->
-						<template v-else>
-							<div style="flex: 1" class="d-flex justify-center align-center">
-								<div class="text-center">
-									<span
-										class="body-1 primary--text font-weight-bold"
-										style="max-width: 220px"
+							<!-- usuario sin psicologo -->
+							<v-list
+								v-else-if="!$auth.$state.user && !plan && listPsychologist.length"
+								link
+								two-line
+								class="py-0 primary"
+								dark
+								style="border-radius: 10px"
+							>
+								<v-list-item class="px-0" :to="{ name: 'evaluacion' }">
+									<v-list-item-avatar style="border-radius: 40px" size="50">
+										<v-img
+											height="50"
+											width="50"
+											class="mx-auto"
+											src="/img/Lupa.png"
+										></v-img>
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+										<v-list-item-title class="caption">
+											Aun no tienes psicólogo
+										</v-list-item-title>
+										<v-list-item-title class="caption">
+											Encuentra uno aquí
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+							<!-- lista de psicologos "chat iniciado" -->
+							<template v-if="listPsychologist.length || plan">
+								<v-card-text v-if="listPsychologist.length" class="py-0">
+									<v-subheader class="primary--text body-1 px-0"
+										>General</v-subheader
 									>
-										Comienza a hablar con nuestros psicólogos
-									</span>
-									<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
-										Orientación psicológica en cualquier momento y lugar.
-										Comienza a mejorar tu vida hoy.
+									<v-divider
+										style="border-color: #5eb3e4"
+										class="mb-2"
+									></v-divider>
+								</v-card-text>
+								<v-list
+									v-if="listPsychologist.length"
+									two-line
+									dense
+									style="overflow-y: auto"
+								>
+									<v-list-item
+										v-for="(psy, e) in listPsychologist"
+										:key="e"
+										@click="setSelectedPsy(psy)"
+									>
+										<v-list-item-avatar
+											style="border-radius: 50%"
+											:style="
+												psy.hasMessage ? 'border: 3px solid #2070E5' : ''
+											"
+											size="40"
+										>
+											<avatar :url="psy.avatar" :name="psy.name" size="40" />
+										</v-list-item-avatar>
+
+										<v-list-item-content>
+											<v-list-item-title
+												v-html="psy.name"
+											></v-list-item-title>
+											<v-list-item-subtitle>
+												Psicólogo · Activo(a)
+											</v-list-item-subtitle>
+										</v-list-item-content>
+										<v-list-item-action>
+											<v-badge
+												color="primary"
+												:content="psy.countMessagesUnRead"
+												:value="psy.countMessagesUnRead"
+											>
+											</v-badge>
+										</v-list-item-action>
+									</v-list-item>
+								</v-list>
+							</template>
+							<!-- lista de psicologos "sin chats iniciados" -->
+							<template v-else>
+								<div style="flex: 1" class="d-flex justify-center align-center">
+									<div class="text-center">
+										<span
+											class="body-1 primary--text font-weight-bold"
+											style="max-width: 220px"
+										>
+											Comienza a hablar con nuestros psicólogos
+										</span>
+										<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
+											Orientación psicológica en cualquier momento y lugar.
+											Comienza a mejorar tu vida hoy.
+										</div>
+										<v-btn
+											class="mt-5 px-8"
+											color="primary"
+											rounded
+											:to="{ name: 'psicologos' }"
+										>
+											Buscar ahora
+										</v-btn>
 									</div>
-									<v-btn
-										class="mt-5 px-8"
-										color="primary"
-										rounded
-										:to="{ name: 'psicologos' }"
-									>
-										Buscar ahora
-									</v-btn>
 								</div>
-							</div>
+							</template>
 						</template>
-					</template>
-				</v-card>
-			</v-col>
-			<!-- CHAT/CHANNEL -->
-			<template v-if="selected">
-				<v-dialog v-if="$vuetify.breakpoint.smAndDown" v-model="dialog" fullscreen>
-					<v-sheet>
-						<v-toolbar color="primary" dense height="30">
-							<v-spacer></v-spacer>
-							<v-btn dark text @click="dialog = false">Cerrar x</v-btn>
-						</v-toolbar>
+					</v-card>
+				</v-col>
+				<!-- CHAT/CHANNEL -->
+				<template v-if="selected">
+					<v-dialog v-if="$vuetify.breakpoint.smAndDown" v-model="dialog" fullscreen>
+						<v-sheet>
+							<v-toolbar color="primary" dense height="30">
+								<v-spacer></v-spacer>
+								<v-btn dark text @click="dialog = false">Cerrar x</v-btn>
+							</v-toolbar>
+							<channel
+								style="height: calc(100vh - 30px)"
+								:selected="selected"
+								:sub-header="subHeader"
+								:loading-chat="loadingChat"
+								:chat="chat"
+								:scroll-to-element="scrollToElement"
+							/>
+						</v-sheet>
+					</v-dialog>
+					<v-col v-else cols="12" md="8" lg="9">
 						<channel
-							style="height: calc(100vh - 30px)"
+							style="height: calc(100vh - 135px)"
 							:selected="selected"
 							:sub-header="subHeader"
 							:loading-chat="loadingChat"
 							:chat="chat"
 							:scroll-to-element="scrollToElement"
 						/>
-					</v-sheet>
-				</v-dialog>
-				<v-col v-else cols="12" md="8" lg="9">
-					<channel
-						style="height: calc(100vh - 135px)"
-						:selected="selected"
-						:sub-header="subHeader"
-						:loading-chat="loadingChat"
-						:chat="chat"
-						:scroll-to-element="scrollToElement"
-					/>
-				</v-col>
-			</template>
-		</v-row>
-	</v-container>
+					</v-col>
+				</template>
+			</v-row>
+		</v-container>
+	</div>
 </template>
 
 <script>
