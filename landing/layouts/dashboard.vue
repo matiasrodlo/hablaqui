@@ -171,7 +171,8 @@ export default {
 				this.$route.name === 'dashboard-perfil-experiencia-formacion' ||
 				this.$route.name === 'dashboard-perfil-informacion-general' ||
 				this.$route.name === 'dashboard-perfil-horario' ||
-				this.$route.name === 'dashboard-perfil-services'
+				this.$route.name === 'dashboard-perfil-services' ||
+				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
 			);
 		},
 		links() {
@@ -247,6 +248,8 @@ export default {
 				return 'Informacion general';
 			if (this.$route.name === 'dashboard-perfil-horario') return 'Horarios';
 			if (this.$route.name === 'dashboard-perfil-services') return 'Servicios';
+			if (this.$route.name === 'dashboard-consultantes-consultante-seleccionado')
+				return 'Consultante';
 			return '';
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
