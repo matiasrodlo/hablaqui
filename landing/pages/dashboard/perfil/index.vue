@@ -160,7 +160,12 @@
 								</div>
 							</div>
 						</v-expansion-panel-header>
-						<v-expansion-panel-content> </v-expansion-panel-content>
+						<v-expansion-panel-content>
+							<horario
+								:psychologist="psychologist"
+								:set-psychologist="setPsychologist"
+							/>
+						</v-expansion-panel-content>
 					</v-expansion-panel>
 					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
 						<v-expansion-panel-header>

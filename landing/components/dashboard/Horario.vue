@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<v-card
+			class="hidden-sm-and-down mx-auto"
 			:loading="!psychologist"
 			outlined
-			class="mx-auto"
 			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
 		>
 			<v-card-text>
@@ -125,13 +125,32 @@
 				<v-divider v-if="item.divider" class="mt-2"></v-divider>
 			</v-card-text>
 		</v-card>
+		<div class="hidden-md-and-up">
+			<v-card v-for="item in items" :key="item.id" class="my-3" elevation="6">
+				<v-card-text class="d-flex justify-space-between">
+					<div>
+						<div class="primary--text font-weight-bold body-1">{{ item.titulo }}</div>
+						<div class="secondary--text body-2">
+							{{ item.active ? 'Abierto' : 'Cerrado' }}
+						</div>
+					</div>
+					<v-btn color="primary" small rounded depressed>Cambiar</v-btn>
+				</v-card-text>
+				<v-card-text>
+					<div v-for="(intervals, e) in item.intervals" :key="e">
+						<icon size="20" color="primary" :icon="mdiClockOutline" />
+						<span class="ml-2 pt-2">{{ intervals[0] }} {{ intervals[1] }}</span>
+					</div>
+				</v-card-text>
+			</v-card>
+		</div>
 	</div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
-import { mdiPlus, mdiMinus, mdiAlert } from '@mdi/js';
+import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import moment from 'moment';
 
 export default {
@@ -245,6 +264,7 @@ export default {
 			mdiPlus,
 			mdiMinus,
 			mdiAlert,
+			mdiClockOutline,
 		};
 	},
 	computed: {
