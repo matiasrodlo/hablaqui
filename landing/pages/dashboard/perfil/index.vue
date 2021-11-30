@@ -176,7 +176,20 @@
 								</div>
 							</div>
 						</v-expansion-panel-header>
-						<v-expansion-panel-content> </v-expansion-panel-content>
+						<v-expansion-panel-content>
+							<v-card elevation="6" to="perfil/services">
+								<v-card-title>
+									<div class="my-6" style="width: 100%">
+										<div class="text-h6" style="color: #3c3c3b">
+											Configuración de servicios
+										</div>
+										<div class="text--secondary body-2">
+											Configura los servicios ofrecidos por medio de Hablaquí
+										</div>
+									</div>
+								</v-card-title>
+							</v-card>
+						</v-expansion-panel-content>
 					</v-expansion-panel>
 				</v-expansion-panels>
 			</v-col>
