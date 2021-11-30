@@ -368,6 +368,7 @@ export default {
 		},
 		listClients() {
 			return this.clients
+				.filter(item => item.name.toLowerCase().includes(this.search.toLowerCase()))
 				.map(item => ({
 					...item,
 					countMessagesUnRead: this.setCountMessagesUnread(
