@@ -31,7 +31,7 @@
 							v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'"
 						>
 							<!-- sin consultantes -->
-							<v-card-text class="py-0">
+							<v-card-text v-if="listClients.length" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">
 									Mis consultantes
 								</v-subheader>
@@ -39,13 +39,17 @@
 							</v-card-text>
 							<v-sheet
 								v-if="!clients.length"
-								class="primary white--text pa-4 mx-4"
+								class="primary white--text pa-4 mt-2 mx-4"
 								style="border-radius: 20px"
 							>
 								Aún no tienes consultantes
 							</v-sheet>
 							<!-- consultantes -->
-							<v-list v-else two-line style="overflow-y: auto; min-height: 100px">
+							<v-list
+								v-if="listClients.length"
+								two-line
+								style="overflow-y: auto; min-height: 100px"
+							>
 								<v-list-item
 									v-for="(user, e) in listClients"
 									:key="e"
