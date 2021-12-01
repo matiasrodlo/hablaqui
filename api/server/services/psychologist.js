@@ -628,6 +628,12 @@ const setSchedule = async (user, payload) => {
 };
 //Reprogramación sesiones para psicologos
 const cancelSession = async (user, planId, sessionsId, id) => {
+	const cancelSessions = await Sessions.find({
+		_id: sessionsId,
+		'plan._id': planId,
+		'plan.session._id': id,
+	}).populate('psychologist user');
+
 	await Sessions.updateOne(
 		{
 			_id: sessionsId,
@@ -640,20 +646,17 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 			},
 		}
 	);
-
 	const sessions = await Sessions.find({
-		_id: sessionsId,
-		'plan._id': planId,
-		'plan.session._id': id,
+		psychologist: user.psychologist,
 	}).populate('psychologist user');
 
 	await mailService.sendCancelSessionPsy(
-		sessions[0].user,
-		sessions[0].psychologist
+		cancelSessions[0].user,
+		cancelSessions[0].psychologist
 	);
 	await mailService.sendCancelSessionUser(
-		sessions[0].user,
-		sessions[0].psychologist
+		cancelSessions[0].user,
+		cancelSessions[0].psychologist
 		//sessionCancel.plan[0].session[0].date
 	);
 
