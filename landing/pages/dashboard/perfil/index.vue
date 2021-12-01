@@ -127,9 +127,13 @@
 								<div class="text-h6" style="color: #3c3c3b">
 									Configuración personal
 								</div>
-								<div class="text--secondary">
+								<div
+									v-if="$auth.$state.user.role === 'psychologist'"
+									class="text--secondary"
+								>
 									Datos bancarios, información profesional, etc
 								</div>
+								<div v-else class="text--secondary">Configura tu perfil</div>
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
@@ -141,15 +145,28 @@
 					</v-expansion-panel>
 					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
 						<v-expansion-panel-header>
-							<div class="text-h6" style="color: #3c3c3b">Mis planes</div>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Mis planes</div>
+								<div class="text--secondary">Tus planes contratados</div>
+							</div>
 						</v-expansion-panel-header>
-						<v-expansion-panel-content> </v-expansion-panel-content>
+						<v-expansion-panel-content>
+							<my-plans />
+						</v-expansion-panel-content>
 					</v-expansion-panel>
 					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
 						<v-expansion-panel-header>
-							<div class="text-h6" style="color: #3c3c3b">Mi psicologo</div>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Mi psicologo</div>
+								<div class="text--secondary">Psicólogo actual</div>
+							</div>
 						</v-expansion-panel-header>
-						<v-expansion-panel-content> </v-expansion-panel-content>
+						<v-expansion-panel-content>
+							<psicologo
+								:psychologist="psychologist"
+								:set-psychologist="setPsychologist"
+							/>
+						</v-expansion-panel-content>
 					</v-expansion-panel>
 					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
 						<v-expansion-panel-header>

@@ -260,7 +260,10 @@
 							</template>
 							<!-- lista de psicologos "sin chats iniciados" -->
 							<template v-else>
-								<div style="flex: 1" class="d-flex justify-center align-center">
+								<div
+									style="flex: 1"
+									class="my-2 d-flex justify-center align-center"
+								>
 									<div class="text-center">
 										<span
 											class="body-1 primary--text font-weight-bold"
