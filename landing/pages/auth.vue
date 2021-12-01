@@ -80,7 +80,7 @@
 								color="primary"
 								@click="setStep"
 							>
-								Entra
+								Ingresar
 							</v-btn>
 							<v-btn
 								v-show="step == 1"
