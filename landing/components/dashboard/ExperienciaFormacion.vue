@@ -236,7 +236,7 @@
 									() =>
 										setPsychologist({
 											...psychologist,
-											experience: form.experience.filter(
+											experience: psychologist.experience.filter(
 												(el, index) => index !== t
 											),
 										})
