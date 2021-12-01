@@ -61,7 +61,9 @@ const usersService = {
 			context: 'query',
 		});
 
-		return okResponse('Actualizado exitosamente', { user: updated });
+		return okResponse('Actualizado exitosamente', {
+			user: await servicesAuth.generateUser(updated),
+		});
 	},
 
 	async updatePlan(user, newPlan) {

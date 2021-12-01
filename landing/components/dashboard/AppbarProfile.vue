@@ -1,5 +1,8 @@
 <template>
 	<v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
+		<v-btn icon @click="() => $router.go(-1)">
+			<icon v-if="goBack" size="30" color="primary" :icon="mdiChevronLeft" />
+		</v-btn>
 		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
 		<div class="mx-5 body-1 primary--text">
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import { mdiLogout } from '@mdi/js';
+import { mdiLogout, mdiChevronLeft } from '@mdi/js';
 
 export default {
 	components: {
@@ -69,8 +72,22 @@ export default {
 	},
 	data() {
 		return {
+			mdiChevronLeft,
 			mdiLogout,
 		};
+	},
+	computed: {
+		goBack() {
+			return (
+				this.$route.name === 'dashboard-perfil-configuracion-personal' ||
+				this.$route.name === 'dashboard-perfil-datos-bancarios' ||
+				this.$route.name === 'dashboard-perfil-experiencia-formacion' ||
+				this.$route.name === 'dashboard-perfil-informacion-general' ||
+				this.$route.name === 'dashboard-perfil-horario' ||
+				this.$route.name === 'dashboard-perfil-services' ||
+				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
+			);
+		},
 	},
 	methods: {
 		logout() {
