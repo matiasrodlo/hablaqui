@@ -105,7 +105,7 @@
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
-						Bienveido a Hablaquí Office
+						Bienvenido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
 						Agenda un tour por tu oficina y aclara todas tus dudas
