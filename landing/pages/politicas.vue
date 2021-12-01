@@ -140,6 +140,7 @@
 							class="pl-0 text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'politicas' }"
+							target="_blank"
 							>Aviso de privacidad
 						</v-btn>
 						y
@@ -148,6 +149,7 @@
 							class="text--disabled"
 							style="text-decoration: none"
 							:to="{ name: 'condiciones' }"
+							target="_blank"
 						>
 							Términos y Condiciones
 						</v-btn>
