@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh">
-		<appbar class="hidden-sm-and-down mb-16" title="Configuración personal" />
+		<appbar class="hidden-sm-and-down mb-16" title="Horario" />
 		<horario :psychologist="psychologist" :set-psychologist="setPsychologist" />
 	</v-container>
 </template>
