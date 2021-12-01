@@ -2,7 +2,7 @@
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Consultantes" />
 		<v-row align="start" style="overflow-y: auto">
-			<v-col cols="12" sm="6" md="4" class="mt-10">
+			<v-col cols="12" sm="6" md="4" class="hidden-sm-and-down mt-10">
 				<v-text-field
 					v-model="search"
 					hide-details
@@ -14,12 +14,7 @@
 					label="Nombre del consultante"
 				/>
 			</v-col>
-			<v-col
-				class="d-flex align-center justify-center justify-sm-start mt-sm-12"
-				cols="12"
-				sm="6"
-				md="4"
-			>
+			<v-col class="hidden-sm-and-down mt-sm-12" cols="12" sm="6" md="4">
 				<span class="pointer" @click="dialog = true">
 					<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 						<icon :icon="mdiPlus" color="white" small />
@@ -39,35 +34,122 @@
 					</div>
 				</v-alert>
 			</v-col>
-			<v-expand-transition>
-				<v-col cols="12">
-					<v-data-table
-						:search="search"
-						:loading="loading"
-						:headers="headers"
-						:items="items"
-						item-key="_id"
-						class="elevation-2"
-						loading-text="Cargando..."
-						:items-per-page="5"
-						:footer-props="{
-							'items-per-page-text': 'Consultantes por página',
-						}"
-						no-data-text="No hay consultantes"
-						@click:row="
-							e => $router.push(`consultantes/consultante-seleccionado?id=${e._id}`)
-						"
-					>
-						<template #[`item.name`]="{ item }">
-							<div>
+			<v-col cols="12">
+				<v-data-table
+					:loading="loading"
+					:headers="headers"
+					:items="items"
+					item-key="_id"
+					class="elevation-2 hidden-sm-and-down"
+					loading-text="Cargando..."
+					:items-per-page="5"
+					:footer-props="{
+						'items-per-page-text': 'Consultantes por página',
+					}"
+					no-data-text="No hay consultantes"
+					@click:row="
+						e => $router.push(`consultantes/consultante-seleccionado?id=${e._id}`)
+					"
+				>
+					<template #[`item.name`]="{ item }">
+						<div>
+							<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
+							<span class="ml-2 body-2">
+								{{ item.name }}
+								{{ item.lastName ? item.lastName : '' }}
+							</span>
+						</div>
+					</template>
+					<template #[`item.actions`]="{ item }">
+						<div>
+							<v-tooltip bottom>
+								<template #activator="{ on, attrs }">
+									<v-btn
+										icon
+										:to="`agenda?dialog=${true}&client=${item._id}`"
+										v-bind="attrs"
+										v-on="on"
+									>
+										<icon
+											:icon="mdiCalendarClockOutline"
+											small
+											color="primary"
+										></icon>
+									</v-btn>
+								</template>
+								<span>Agendar sesión con {{ item.name }}</span>
+							</v-tooltip>
+							<v-tooltip bottom>
+								<template #activator="{ on, attrs }">
+									<v-btn
+										icon
+										:to="`chat?client=${item._id}`"
+										v-bind="attrs"
+										v-on="on"
+									>
+										<icon
+											:icon="mdiChatProcessingOutline"
+											small
+											color="primary"
+										></icon>
+									</v-btn>
+								</template>
+								<span>Chatear con {{ item.name }}</span>
+							</v-tooltip>
+						</div>
+					</template>
+				</v-data-table>
+				<v-row v-if="items.length">
+					<v-col cols="9" class="hidden-md-and-up">
+						<v-text-field
+							v-model="search"
+							hide-details
+							filled
+							dense
+							outlined
+							single-line
+							:append-icon="mdiMagnify"
+							label="Nombre del consultante"
+						/>
+					</v-col>
+					<v-col cols="3" class="hidden-md-and-up">
+						<v-btn small fab depressed color="primary" @click="dialog = true">
+							<icon :icon="mdiPlus" color="white" small />
+							<icon :icon="mdiAccount" color="white" small />
+						</v-btn>
+					</v-col>
+				</v-row>
+				<div v-if="!items.length" class="hidden-md-and-up">
+					<v-skeleton-loader class="my-4 mx-auto" type="card-heading"></v-skeleton-loader>
+					<v-skeleton-loader
+						v-for="el in [1, 2, 3]"
+						:key="el"
+						class="my-4 mx-auto"
+						height="60"
+						type="image"
+					></v-skeleton-loader>
+				</div>
+				<v-card
+					v-for="item in items"
+					:key="item._id"
+					class="hidden-md-and-up my-4 elevation-4"
+					@click="
+						() => $router.push(`consultantes/consultante-seleccionado?id=${item._id}`)
+					"
+				>
+					<v-card-text>
+						<div class="d-flex align-center justify-space-between">
+							<div class="d-flex align-center">
 								<avatar size="30" :name="item.name" :url="item.avatarThumbnail" />
-								<span class="ml-2 body-2">
-									{{ item.name }}
-									{{ item.lastName ? item.lastName : '' }}
+								<span class="d-inline-block ml-2 body-2">
+									<span>
+										{{ item.name }} {{ item.lastName ? item.lastName : '' }}
+									</span>
+									<div v-if="item.lastSession" class="secondary--text caption">
+										Última sesión {{ item.lastSession }}
+									</div>
 								</span>
 							</div>
-						</template>
-						<template #[`item.actions`]="{ item }">
 							<div>
 								<v-tooltip bottom>
 									<template #activator="{ on, attrs }">
@@ -104,10 +186,10 @@
 									<span>Chatear con {{ item.name }}</span>
 								</v-tooltip>
 							</div>
-						</template>
-					</v-data-table>
-				</v-col>
-			</v-expand-transition>
+						</div>
+					</v-card-text>
+				</v-card>
+			</v-col>
 		</v-row>
 		<v-dialog
 			v-if="dialog"
@@ -263,6 +345,7 @@ import {
 	mdiCalendarClockOutline,
 	mdiChevronLeft,
 	mdiChevronDown,
+	mdiAccount,
 } from '@mdi/js';
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
@@ -284,6 +367,7 @@ export default {
 		dialogComission: false,
 		loadingCreatedUser: false,
 		dialog: false,
+		mdiAccount,
 		mdiClose,
 		mdiMagnify,
 		mdiPlus,
@@ -301,9 +385,10 @@ export default {
 	computed: {
 		items() {
 			return this.clients
-				.map(item => ({
-					...item,
-				}))
+				.filter(item => {
+					// eslint-disable-next-line unicorn/prefer-includes
+					return item.fullname.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+				})
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
 		emailErrors() {
