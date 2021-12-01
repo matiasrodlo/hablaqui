@@ -76,7 +76,7 @@
 				</v-list-item>
 			</v-list>
 			<template v-if="!isMini" #append>
-				<div class="pa-2 white--text">
+				<div class="pa-2 caption white--text">
 					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
 					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
 					dudes en contactarnos
