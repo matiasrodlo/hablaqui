@@ -178,18 +178,18 @@ const successPay = async params => {
 		});
 		const user = await User.findById(foundPlan.user);
 		const psy = await Psychologist.findById(foundPlan.psychologist);
-		//updatePlan.plan[0].session[0]
 		// Send appointment confirmation for user and psychologist
 		await mailService.sendAppConfirmationUser(
 			user,
+			psy,
 			dateFormatted,
-			foundPlan.plan[0].session[0].roomsUrl
+			foundPlan.roomsUrl
 		);
 		await mailService.sendAppConfirmationPsy(
 			psy,
 			user,
 			dateFormatted,
-			foundPlan.plan[0].session[0].roomsUrl
+			foundPlan.roomsUrl
 		);
 
 		logInfo('Se ha realizado un pago');
@@ -237,7 +237,6 @@ const psychologistPay = async (params, query) => {
 //Para correo de evento confirmacion de pago
 const customSessionPay = async params => {
 	const { userId, psyId, planId } = params;
-
 	const updatePlan = await Sessions.findOneAndUpdate(
 		{
 			'plan._id': planId,
@@ -252,20 +251,20 @@ const customSessionPay = async params => {
 		},
 		{ new: true }
 	).populate('psychologist user');
-	//updatePlan.plan[0].session[0]
-	//Probar/probar
+	console.log(updatePlan.user.name);
+
 	await mailService.sendSuccessCustomSessionPaymentPsy(
 		updatePlan.user,
 		updatePlan.psychologist,
 		updatePlan.plan[0].sessionPrice,
-		updatePlan.plan[0].session[0].roomsUrl,
+		updatePlan.roomsUrl,
 		updatePlan.plan[0].session[0].date
 	);
 	await mailService.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
 		updatePlan.psychologist,
 		updatePlan.plan[0].sessionPrice,
-		updatePlan.plan[0].session[0].roomsUrl,
+		updatePlan.roomsUrl,
 		updatePlan.plan[0].session[0].date
 	);
 	return okResponse('plan actualizado', { body: updatePlan });

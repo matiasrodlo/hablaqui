@@ -517,14 +517,20 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		},
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
-	//Probarlos/probar
-	mailService.sendRescheduleToUser(
+
+	console.log(sessions.user.name);
+	await mailService.sendRescheduleToUser(
 		sessions.user,
 		sessions.psychologist,
-		date
+		newDate
 	);
-	mailService.sendRescheduleToPsy(sessions.user, sessions.psychologist, date);
+	await mailService.sendRescheduleToPsy(
+		sessions.user,
+		sessions.psychologist,
+		newDate
+	);
 
+	console.log(sessions.psychologist.name);
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
@@ -634,9 +640,22 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 			},
 		}
 	);
+
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		_id: sessionsId,
+		'plan._id': planId,
+		'plan.session._id': id,
 	}).populate('psychologist user');
+
+	await mailService.sendCancelSessionPsy(
+		sessions[0].user,
+		sessions[0].psychologist
+	);
+	await mailService.sendCancelSessionUser(
+		sessions[0].user,
+		sessions[0].psychologist
+		//sessionCancel.plan[0].session[0].date
+	);
 
 	return okResponse('Sesion cancelada', {
 		sessions: setSession(user.role, sessions),

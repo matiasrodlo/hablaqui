@@ -213,7 +213,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationUser(user, date, url) {
+	async sendAppConfirmationUser(user, psy, date, url) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
@@ -225,6 +225,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
+				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
@@ -397,7 +398,7 @@ const mailService = {
 	},
 	async sendRescheduleToUser(user, psy, sessionDate) {
 		const dataPayload = {
-			from: 'Hablaquí <reprogramación@mail.hablaqui.cl>',
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
 			subject: `Has reprogramado con éxito tu sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
@@ -407,8 +408,9 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				sessionDate: sessionDate,
-				psy_name: psy.name,
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name + ' ' + psy.lastName,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -425,8 +427,8 @@ const mailService = {
 	},
 	async sendRescheduleToPsy(user, psy, sessionDate) {
 		const dataPayload = {
-			from: 'Hablaquí <reprogramación@mail.hablaqui.cl>',
-			to: user.name + '<' + user.email + '>',
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
 			subject: `Un cliente a reprogramado una sesión contigo`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-b336c59aa9d74750b13414954f7daee0',
@@ -434,8 +436,10 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				user_name: user.name,
-				sessionDate: sessionDate,
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				date: sessionDate.date,
+				hour: sessionDate.hour,
 				psy_name: psy.name,
 			},
 		};
@@ -465,7 +469,7 @@ const mailService = {
 				user_name: user.name,
 				paid: paid,
 				roomsUrl: roomsUrl,
-				psy_name: psy.name,
+				psy_name: psy.name + ' ' + psy.lastName,
 				date: date,
 			},
 		};
@@ -492,11 +496,67 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				user_name: user.name,
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				paid: paid,
 				roomsUrl: roomsUrl,
 				psy_name: psy.name,
 				date: date,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCancelSessionPsy(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has pedido una reprogramación de una sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: psy.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCancelSessionUser(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Has pedido una reprogramación de una sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 			},
 		};
 		return new Promise((resolve, reject) => {
