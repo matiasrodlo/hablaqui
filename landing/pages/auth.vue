@@ -93,15 +93,23 @@
 								Crea una cuenta
 							</v-btn>
 							<div class="mt-16">
-								<v-btn class="px-0" text color="primary" :to="{ name: 'politicas' }"
+								<v-btn
+									class="px-0"
+									text
+									nuxt
+									color="primary"
+									target="_blank"
+									:to="{ name: 'politicas' }"
 									>Aviso de privacidad</v-btn
 								>
 								<span class="primary--text mx-1">y</span>
 								<v-btn
 									class="px-0"
 									text
+									nuxt
 									color="primary"
 									:to="{ name: 'condiciones' }"
+									target="_blank"
 								>
 									Términos y Condiciones</v-btn
 								>

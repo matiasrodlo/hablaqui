@@ -60,11 +60,19 @@
 				<v-checkbox v-model="accept" class="d-inline-block"></v-checkbox>
 				<span class="body-2 text-left" style="max-width: 300px">
 					<span class="text--secondary">He leído y acepto los</span>
-					<nuxt-link style="text-decoration: none" :to="{ name: 'condiciones' }">
+					<nuxt-link
+						style="text-decoration: none"
+						:to="{ name: 'condiciones' }"
+						target="_blank"
+					>
 						Términos y condiciones
 					</nuxt-link>
 					<span class="primary--text">y</span>
-					<nuxt-link style="text-decoration: none" :to="{ name: 'politicas' }">
+					<nuxt-link
+						style="text-decoration: none"
+						:to="{ name: 'politicas' }"
+						target="_blank"
+					>
 						la Política de privacidad.
 					</nuxt-link>
 				</span>
