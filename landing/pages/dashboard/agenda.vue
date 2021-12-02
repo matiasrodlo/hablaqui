@@ -484,7 +484,7 @@
 							</v-col>
 							<v-col cols="12" sm="6" md="3">
 								<v-btn text @click="() => setFilter('pending')">
-									<v-avatar color="blue-grey lighten-4" size="20">
+									<v-avatar color="#78909C" size="20">
 										<icon small :icon="mdiCheck" color="white" />
 									</v-avatar>
 									<span class="ml-1 caption">
@@ -903,7 +903,7 @@ export default {
 			}
 		},
 		getEventColor(event) {
-			if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
+			if (event.statusPlan === 'pending') return 'blue-grey lighten-1';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
