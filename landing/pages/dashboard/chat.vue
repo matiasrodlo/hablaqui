@@ -6,7 +6,7 @@
 		<v-container fluid style="height: 100vh">
 			<appbar class="hidden-sm-and-down" title="Chat" />
 			<v-row v-show="!initLoading">
-				<v-col cols="12" md="4" lg="3" class="px-0">
+				<v-col cols="12" md="4" lg="3" class="px-0 px-md-4">
 					<v-card
 						:elevation="!$vuetify.breakpoint.smAndDown ? '6' : '0'"
 						style="display: flex; flex-direction: column; border-radius: 15px"
