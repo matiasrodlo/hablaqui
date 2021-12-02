@@ -117,6 +117,16 @@ const setSession = (role, sessions) => {
 	});
 };
 
+const getEverySessions = async psy => {
+	const sessions = await Sessions.find({
+		psychologist: psy,
+	}).populate('psychologist user');
+
+	return okResponse('Sesiones obtenidas', {
+		sessions: setSession('psychologist', sessions),
+	});
+};
+
 // Utilizado en modal agenda cita online
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
@@ -1151,6 +1161,7 @@ const psychologistsService = {
 	uploadProfilePicture,
 	usernameAvailable,
 	deleteCommitment,
+	getEverySessions,
 };
 
 export default Object.freeze(psychologistsService);
