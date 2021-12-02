@@ -6,7 +6,10 @@
 	>
 		<v-card-text style="flex: 0">
 			<!-- cabecera -->
-			<v-list-item>
+			<v-list-item class="px-0">
+				<v-btn class="hidden-md-and-up" icon @click="close">
+					<icon size="30" :icon="mdiChevronLeft" />
+				</v-btn>
 				<v-list-item-avatar size="50">
 					<avatar :url="selected.avatar" size="50" :name="selected.name" />
 				</v-list-item-avatar>
@@ -206,9 +209,13 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { mdiChevronLeft } from '@mdi/js';
 import moment from 'moment';
 
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		selected: {
 			type: Object,
@@ -230,11 +237,16 @@ export default {
 			type: String,
 			default: '',
 		},
+		close: {
+			type: Function,
+			default: () => null,
+		},
 	},
 	data() {
 		return {
 			message: '',
 			loadingMessage: false,
+			mdiChevronLeft,
 		};
 	},
 	methods: {

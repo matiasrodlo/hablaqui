@@ -4,7 +4,11 @@
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
-					<div class="hidden-md-and-up">
+					<div
+						v-if="$auth.$state.user.role === 'user'"
+						class="hidden-md-and-up"
+						style="margin-top: 10px"
+					>
 						<div class="d-flex justify-center">
 							<div>
 								<div class="body-2 text-center text--secondary font-weight-bold">
@@ -899,13 +903,13 @@ export default {
 			}
 		},
 		getEventColor(event) {
-			// if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
+			if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
 		},
 		getEventTextColor(event) {
-			if (event.statusPlan === 'pending') return 'error';
+			//	if (event.statusPlan === 'pending') return 'error';
 			return 'white';
 		},
 		async submitUser() {

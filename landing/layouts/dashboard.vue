@@ -83,14 +83,14 @@
 				</div>
 			</template>
 		</v-navigation-drawer>
-		<v-app-bar absolute flat dense color="white" dark class="hidden-md-and-up">
-			<v-btn icon @click="() => $router.go(-1)">
-				<icon v-if="goBack" size="30" color="primary" :icon="mdiChevronLeft" />
+		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
+			<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
+				<icon size="30" color="primary" :icon="mdiChevronLeft" />
 			</v-btn>
 			<h1 class="primary--text text-h5 font-weight-bold">{{ routeName }}</h1>
 			<v-spacer></v-spacer>
 			<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
-				<icon color="primary" :icon="mdiMenu" />
+				<icon size="30" color="primary" :icon="mdiMenu" />
 			</v-btn>
 		</v-app-bar>
 		<v-main

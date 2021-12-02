@@ -1,7 +1,9 @@
 <template>
 	<v-container style="height: 100vh">
 		<appbar class="hidden-sm-and-down mb-16" title="Datos bancarios" />
-		<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
+		<div class="mt-1 mt-md-0">
+			<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
+		</div>
 	</v-container>
 </template>
 

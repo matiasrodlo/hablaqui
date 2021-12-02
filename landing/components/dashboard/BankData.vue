@@ -2,10 +2,7 @@
 	<v-row class="mb-16">
 		<v-col cols="12" class="d-flex justify-space-between align-center">
 			<div>
-				<div
-					class="font-weight-medium"
-					style="color: #3c3c3b; line-height: 1.32; font-size: 18px"
-				>
+				<div class="font-weight-medium caption text-md-h6" style="color: #3c3c3b">
 					Los siguientes datos serán utilizados para transferir <br />
 					el dinero de los servicios vendidos por medio de Hablaquí.
 				</div>

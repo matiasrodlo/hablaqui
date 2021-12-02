@@ -69,7 +69,16 @@
 						Valor por sesión
 						<v-tooltip right max-width="300" color="white">
 							<template #activator="{ on, attrs }">
-								<v-btn icon v-bind="attrs" v-on="on">
+								<v-btn
+									icon
+									v-bind="attrs"
+									v-on="on"
+									@click="
+										() => {
+											if ($vuetify.breakpoint.smAndDown) tooltip = true;
+										}
+									"
+								>
 									<icon :icon="mdiInformationOutline" />
 								</v-btn>
 							</template>
@@ -79,6 +88,13 @@
 								</span>
 							</div>
 						</v-tooltip>
+						<v-dialog v-model="tooltip" max-width="400">
+							<v-card>
+								<v-card-title class="caption">
+									Aqui podras configurar el precio de tus sesiones
+								</v-card-title>
+							</v-card>
+						</v-dialog>
 					</v-col>
 					<v-col cols="12">
 						<v-alert prominent text color="info">
@@ -217,6 +233,7 @@ export default {
 	data() {
 		return {
 			mdiInformationOutline,
+			tooltip: false,
 			hours: [
 				{ value: 1, text: '1 hora' },
 				{ value: 2, text: '2 horas' },

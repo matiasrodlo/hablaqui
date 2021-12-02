@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
-		<v-list two-line color="transparent" style="margin-top: 60px; height: 150px">
+		<v-list two-line color="transparent" style="margin-top: 100px; height: 150px">
 			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
 					id="upload"
@@ -89,7 +89,7 @@
 				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
 			</v-tab>
 		</v-tabs>
-		<v-row>
+		<v-row no-gutters>
 			<v-col cols="12">
 				<v-tabs-items v-model="tabs" class="hidden-sm-and-down">
 					<v-tab-item :transition="false">

@@ -2,7 +2,7 @@
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down mb-16" title="Consultante" />
 		<v-row v-if="selected">
-			<v-col cols="12" class="d-flex algin-center">
+			<v-col cols="12" class="d-flex algin-center px-0">
 				<v-expansion-panels
 					:flat="$vuetify.breakpoint.smAndDown"
 					accordion
@@ -29,7 +29,7 @@
 										<v-btn
 											v-bind="attrs"
 											icon
-											:to="`chat?client=${selected._id}`"
+											:to="`/dashboard/chat?client=${selected._id}`"
 											v-on="on"
 										>
 											<icon
@@ -46,7 +46,9 @@
 										<v-btn
 											icon
 											v-bind="attrs"
-											:to="`agenda?dialog=${true}&client=${selected._id}`"
+											:to="`/dashboard/agenda?dialog=${true}&client=${
+												selected._id
+											}`"
 											v-on="on"
 										>
 											<icon
@@ -289,5 +291,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>

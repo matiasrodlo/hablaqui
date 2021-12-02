@@ -6,7 +6,7 @@
 		<v-container fluid style="height: 100vh">
 			<appbar class="hidden-sm-and-down" title="Chat" />
 			<v-row v-show="!initLoading">
-				<v-col cols="12" md="4" lg="3">
+				<v-col cols="12" md="4" lg="3" class="px-0">
 					<v-card
 						:elevation="!$vuetify.breakpoint.smAndDown ? '6' : '0'"
 						style="display: flex; flex-direction: column; border-radius: 15px"
@@ -293,17 +293,14 @@
 				<template v-if="selected">
 					<v-dialog v-if="$vuetify.breakpoint.smAndDown" v-model="dialog" fullscreen>
 						<v-sheet>
-							<v-toolbar color="primary" dense height="30">
-								<v-spacer></v-spacer>
-								<v-btn dark text @click="dialog = false">Cerrar x</v-btn>
-							</v-toolbar>
 							<channel
-								style="height: calc(100vh - 30px)"
+								style="height: 100vh"
 								:selected="selected"
 								:sub-header="subHeader"
 								:loading-chat="loadingChat"
 								:chat="chat"
 								:scroll-to-element="scrollToElement"
+								:close="() => (dialog = false)"
 							/>
 						</v-sheet>
 					</v-dialog>
