@@ -1,5 +1,9 @@
 <template>
-	<v-overlay v-if="$auth.$state.user.role === 'psychologist' && !$auth.$state.user.psychologist">
+	<v-overlay
+		v-if="$auth.$state.user.role === 'psychologist' && !$auth.$state.user.psychologist"
+		color="white"
+		:opacity="0.6"
+	>
 		<v-card light :max-width="$vuetify.breakpoint.smAndDown ? '350' : ''">
 			<v-card-text class="body-1 font-weight-medium">
 				Configura tu cuenta para activar tu perfil y ten acceso a cada sección.
