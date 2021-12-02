@@ -1,7 +1,7 @@
 <template>
 	<v-container fluid style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Consultantes" />
-		<v-row align="start" style="overflow-y: auto">
+		<v-row align="start">
 			<v-col cols="12" sm="6" md="4" class="hidden-sm-and-down mt-10">
 				<v-text-field
 					v-model="search"
