@@ -657,6 +657,7 @@
 		<v-overlay :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
+		<recruited-overlay />
 	</div>
 </template>
 
@@ -682,6 +683,7 @@ export default {
 		Calendar: () => import('~/components/Calendar.vue'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
+		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -876,16 +878,18 @@ export default {
 		this.idClient = this.$route.query.client;
 	},
 	async mounted() {
-		this.overlay = true;
-		moment.locale('es');
-		await this.$auth.fetchUser();
 		await this.initFetch();
-		await this.successPayment();
-		this.$refs.calendar?.checkChange();
-		this.overlay = false;
 	},
 	methods: {
 		async initFetch() {
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				!this.$auth.$state.user.psychologist
+			)
+				return null;
+			this.overlay = true;
+			moment.locale('es');
+			await this.$auth.fetchUser();
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
 					idPsychologist: this.plan.psychologist,
@@ -901,6 +905,9 @@ export default {
 					idPsychologist: this.$auth.$state.user.psychologist,
 				});
 			}
+			await this.successPayment();
+			this.$refs.calendar?.checkChange();
+			this.overlay = false;
 		},
 		getEventColor(event) {
 			if (event.statusPlan === 'pending') return 'blue-grey lighten-1';

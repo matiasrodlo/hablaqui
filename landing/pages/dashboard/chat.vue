@@ -317,6 +317,7 @@
 				</template>
 			</v-row>
 		</v-container>
+		<recruited-overlay />
 	</div>
 </template>
 
@@ -327,9 +328,10 @@ import Pusher from 'pusher-js';
 
 export default {
 	components: {
+		avatar: () => import('~/components/Avatar'),
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Channel: () => import('~/components/chat/Channel'),
-		avatar: () => import('~/components/Avatar'),
+		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -341,7 +343,7 @@ export default {
 			selected: null,
 			pusher: null,
 			channel: null,
-			initLoading: true,
+			initLoading: false,
 		};
 	},
 	computed: {
@@ -501,30 +503,45 @@ export default {
 			}
 		});
 	},
-	async mounted() {
-		moment.locale('es');
-		await this.getPsychologists();
-		await this.getMessages();
-		if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
-			await this.getClients(this.$auth.$state.user.psychologist);
-			if ('client' in this.$route.query) {
-				this.setSelectedUser(
-					this.clients.find(client => client._id === this.$route.query.client)
-				);
-				if ('client' in this.$route.query) this.$router.replace({ query: null });
-			} else {
-				// SELECT DEFAULT
-				this.selected = {
+	mounted() {
+		this.initFetch();
+	},
+	methods: {
+		async initFetch() {
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				!this.$auth.$state.user.psychologist
+			) {
+				return (this.selected = {
 					name: 'Habi',
 					assistant: true,
 					avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 					url: '',
-				};
+				});
 			}
-		}
-		this.initLoading = false;
-	},
-	methods: {
+			this.initLoading = true;
+			moment.locale('es');
+			await this.getPsychologists();
+			await this.getMessages();
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+				await this.getClients(this.$auth.$state.user.psychologist);
+				if ('client' in this.$route.query) {
+					this.setSelectedUser(
+						this.clients.find(client => client._id === this.$route.query.client)
+					);
+					if ('client' in this.$route.query) this.$router.replace({ query: null });
+				} else {
+					// SELECT DEFAULT
+					this.selected = {
+						name: 'Habi',
+						assistant: true,
+						avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+						url: '',
+					};
+				}
+			}
+			this.initLoading = false;
+		},
 		async pusherCallback(data) {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });

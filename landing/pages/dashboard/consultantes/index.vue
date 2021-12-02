@@ -333,6 +333,7 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
+		<recruited-overlay />
 	</v-container>
 </template>
 
@@ -357,6 +358,7 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Avatar: () => import('~/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
+		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -419,6 +421,11 @@ export default {
 	},
 	methods: {
 		async initFetch() {
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				!this.$auth.$state.user.psychologist
+			)
+				return null;
 			this.loading = true;
 			await this.getClients(this.$auth.$state.user.psychologist);
 			this.loading = false;
