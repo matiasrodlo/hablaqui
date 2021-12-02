@@ -129,10 +129,16 @@ export default {
 	computed: {
 		payments: {
 			get() {
-				let result = this.items.filter(
-					item =>
-						moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') === this.findByDate
-				);
+				let result = this.items
+					.filter(
+						item =>
+							moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') ===
+							this.findByDate
+					)
+					.map(item => ({
+						...item,
+						date: moment(item.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+					}));
 				if (this.search)
 					result = this.items.filter(
 						item =>
