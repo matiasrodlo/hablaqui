@@ -40,13 +40,13 @@
 					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
 						<v-img
 							contain
-							width="240"
+							width="230"
 							class="mx-auto"
 							:src="`https://cdn.hablaqui.cl/static/Startup.png`"
 						></v-img>
 						<v-img
 							contain
-							height="60"
+							height="55"
 							width="220"
 							class="mt-3 mx-auto"
 							:src="`https://cdn.hablaqui.cl/static/Adolfo_Ibanez.png`"
@@ -55,7 +55,7 @@
 					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
 						<v-img
 							contain
-							height="90"
+							height="65"
 							:src="`https://cdn.hablaqui.cl/static/digevo.png`"
 						/>
 					</v-col>
