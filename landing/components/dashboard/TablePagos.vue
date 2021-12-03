@@ -29,7 +29,7 @@
 				>
 					<template #activator="{ on, attrs }">
 						<v-text-field
-							:value="findByDate"
+							:value="formatedFindByDate"
 							placeholder="Buscar por fecha"
 							:append-icon="mdiMagnify"
 							readonly
@@ -66,24 +66,80 @@
 			no-data-text="No hay pagos"
 		>
 		</v-data-table>
-		<v-card v-for="(item, i) in payments" :key="i" class="hidden-md-and-up my-4">
-			<v-card-text class="pb-0 d-flex justify-space-between">
-				<div>
-					<div class="secondary--text font-weight-bold">{{ item.name }}</div>
-					<div class="caption">Nº Sesión:{{ item.sessionsNumber }}</div>
-				</div>
-				<div>
-					<div class="primary--text">{{ item.plan }}</div>
-				</div>
-			</v-card-text>
-			<v-card-actions>
-				<v-chip color="primary" small> Monto {{ item.amount }} </v-chip>
-				<v-spacer></v-spacer>
-				<v-chip color="primary" small> % Hablaquí {{ item.percentage }} </v-chip>
-				<v-spacer></v-spacer>
-				<v-chip color="primary" small> Monto final {{ item.total }} </v-chip>
-			</v-card-actions>
-		</v-card>
+		<v-expansion-panels flat accordion class="hidden-md-and-up">
+			<v-expansion-panel
+				v-for="(item, i) in payments"
+				:key="i"
+				class="elevation-4 rounded-lg my-4"
+			>
+				<v-expansion-panel-header hide-actions>
+					<div>
+						<div class="primary--text font-weight-bold">{{ item.name }}</div>
+						<div class="font-weight-medium secondary--text caption mt-1">
+							Sesión:{{ item.sessionsNumber }}
+						</div>
+					</div>
+					<div>
+						<div class="text-right primary--text font-weight-bold">
+							${{ item.total }}
+						</div>
+						<div class="font-weight-medium caption secondary--text text-right mt-1">
+							{{ formatDate(item.date) }}
+						</div>
+					</div>
+				</v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<div
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
+					>
+						<span>Tipo de plan</span>
+						<span>{{ item.plan }}</span>
+					</div>
+					<div
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
+					>
+						<span>Monto</span>
+						<span>${{ item.amount }}</span>
+					</div>
+					<div
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
+					>
+						<span>% Hablaquí</span>
+						<span>${{ item.percentage }}</span>
+					</div>
+					<div
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
+					>
+						<span>Monto final</span>
+						<span>${{ item.total }}</span>
+					</div>
+				</v-expansion-panel-content>
+			</v-expansion-panel>
+		</v-expansion-panels>
 	</div>
 </template>
 
@@ -150,6 +206,17 @@ export default {
 			set(item) {
 				return item;
 			},
+		},
+		formatedFindByDate() {
+			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
+		},
+	},
+	mounted() {
+		moment.locale('es');
+	},
+	methods: {
+		formatDate(item) {
+			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
 		},
 	},
 };
