@@ -370,11 +370,13 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
-	async getEverySessions(req, res) {
+	async getAllSessions(req, res) {
 		try {
 			const { psy } = req.params;
-			const { data, code } = await psychologistsService.getEverySessions(
-				psy
+			const { startDate } = req.body;
+			const { data, code } = await psychologistsService.getAllSessions(
+				psy,
+				startDate
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

@@ -395,7 +395,7 @@ psychologistsRouter.patch(
 
 psychologistsRouter.get(
 	'/psychologist/get-sessions/:psy',
-	psychologistsController.getEverySessions
+	psychologistsController.getAllSessions
 );
 
 export default psychologistsRouter;

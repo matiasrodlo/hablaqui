@@ -99,6 +99,8 @@ const setSession = (role, sessions) => {
 					date: session.date,
 					title: plan.title,
 					details: `Sesion con ${name}`,
+					totalPrice: plan.totalPrice,
+					sessionPrice: plan.sessionPrice,
 					end,
 					idPsychologist: item.psychologist._id,
 					idUser,
@@ -117,13 +119,29 @@ const setSession = (role, sessions) => {
 	});
 };
 
-const getEverySessions = async psy => {
-	const sessions = await Sessions.find({
+const getAllSessions = async (psy, startDate) => {
+	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
 
+	sessions = setSession('psychologist', sessions);
+
+	sessions = sessions.filter(session => {
+		return (
+			session.paidToPsychologist &&
+			session.statusPlan === 'success' &&
+			//moment().isBefore(moment(session.expiration)) &&
+			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
+				moment(startDate, 'MM/DD/YYYY HH:mm'),
+				moment(startDate, 'MM/DD/YYYY HH:mm').add(1, 'months')
+			)
+		);
+	});
+	console.log(sessions.length);
+	//let newSessions = setSession('psychologist', sessions);
+	//console.log(newSessions.length);
 	return okResponse('Sesiones obtenidas', {
-		sessions: setSession('psychologist', sessions),
+		sessions: sessions,
 	});
 };
 
@@ -1161,7 +1179,7 @@ const psychologistsService = {
 	uploadProfilePicture,
 	usernameAvailable,
 	deleteCommitment,
-	getEverySessions,
+	getAllSessions,
 };
 
 export default Object.freeze(psychologistsService);
