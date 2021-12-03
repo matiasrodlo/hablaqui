@@ -44,10 +44,16 @@
 									{{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
 									<div
-										v-if="!$vuetify.breakpoint.mdAndUp && psychologist.code"
-										class="caption text--secondary"
+										class="
+											text--secondary
+											caption
+											text-md-h6
+											font-weight-medium
+											pa-2
+										"
+										style="color: #424242"
 									>
-										Código {{ psychologist.code }}
+										${{ psychologist.sessionPrices.video }} / 50 min
 									</div>
 								</v-col>
 								<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">
