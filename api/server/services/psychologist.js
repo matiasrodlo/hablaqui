@@ -123,12 +123,12 @@ const setSession = (role, sessions) => {
 const getAllSessions = async (psy, startDate) => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
-	}).populate('psychologist user');
+	}).populate('psychologist');
 
 	let comission = 0;
 	let percentage = '0%';
 
-	let { psyPlans } = await Psychologist.findById(user.psychologist);
+	let { psyPlans } = await Psychologist.findById(psy);
 	const currentPlan = psyPlans[psyPlans.length - 1];
 	if (currentPlan.tier === 'premium') {
 		comission = currentPlan.paymentFee;
@@ -137,32 +137,44 @@ const getAllSessions = async (psy, startDate) => {
 		comission = currentPlan.hablaquiFee;
 		percentage = '20%';
 	}
-
 	sessions = sessions.flatMap(item => {
-		return item.plan.flatMap(plans => {
-			return plans.session.map(session => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+		return item.plan.flatMap(plan => {
+			return plan.session.map(session => {
 				return {
-					idPlan: plans._id,
-					sessionsId: item._id,
-					name: `${item.user.name} ${
-						item.user.lastName ? item.user.lastName : ''
-					}`,
+					_id: session._id,
 					date: session.date,
-					plan: plans.title,
-					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
-					amount: plans.sessionPrice,
+					sessionPrice: plan.sessionPrice,
+					idPsychologist: item.psychologist._id,
+					name: `${name} ${lastName}`,
+					paidToPsychologist: session.paidToPsychologist,
+					sessionsNumber: `${session.sessionNumber} de ${plan.totalSessions}`,
+					sessionsId: item._id,
+					status: session.status,
+					statusPlan: plan.payment,
+					idPlan: plan._id,
+					total: plan.sessionPrice * (1 - comission),
 					percentage: percentage,
-					total: plans.sessionPrice * (1 - comission),
-					user: item.user._id,
 				};
 			});
 		});
 	});
+
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
 		return (
-			session.paidToPsychologist &&
-			session.statusPlan === 'success' &&
+			!session.paidToPsychologist &&
+			session.statusPlan !== 'success' &&
 			//moment().isBefore(moment(session.expiration)) &&
 			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
 				moment(startDate, 'MM/DD/YYYY HH:mm'),
@@ -170,7 +182,13 @@ const getAllSessions = async (psy, startDate) => {
 			)
 		);
 	});
+
 	return okResponse('Sesiones obtenidas', {
+		total: sessions.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		),
 		sessions: sessions,
 	});
 };
