@@ -429,7 +429,8 @@
 											class="font-weight-medium pa-2"
 											style="color: #424242"
 										>
-											${{ item.sessionPrices.video }} / 50 min
+											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+											/ 50 min
 										</v-card-text>
 										<v-card-text>
 											<div>
@@ -617,8 +618,13 @@
 																class="font-weight-medium pa-2"
 																style="color: #424242"
 															>
-																${{ item.sessionPrices.video }} / 50
-																min
+																${{
+																	Math.ceil(
+																		item.sessionPrices.video /
+																			100
+																	) * 100
+																}}
+																/ 50 min
 															</div>
 														</v-col>
 														<v-col
