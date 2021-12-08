@@ -190,7 +190,7 @@ const getFormattedSessions = async idPsychologist => {
 		);
 
 	sessions = length.map(el => {
-		const day = moment().add(el, 'days');
+		const day = moment(Date.now()).add(el, 'days');
 
 		return {
 			id: el,
