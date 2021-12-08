@@ -18,6 +18,7 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+import user from '../models/user';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -124,8 +125,40 @@ const getAllSessions = async (psy, startDate) => {
 		psychologist: psy,
 	}).populate('psychologist user');
 
-	sessions = setSession('psychologist', sessions);
+	let comission = 0;
+	let percentage = '0%';
 
+	let { psyPlans } = await Psychologist.findById(user.psychologist);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
+
+	sessions = sessions.flatMap(item => {
+		return item.plan.flatMap(plans => {
+			return plans.session.map(session => {
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: `${item.user.name} ${
+						item.user.lastName ? item.user.lastName : ''
+					}`,
+					date: session.date,
+					plan: plans.title,
+					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+					amount: plans.sessionPrice,
+					percentage: percentage,
+					total: plans.sessionPrice * (1 - comission),
+					user: item.user._id,
+				};
+			});
+		});
+	});
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
 		return (
 			session.paidToPsychologist &&
@@ -137,9 +170,6 @@ const getAllSessions = async (psy, startDate) => {
 			)
 		);
 	});
-	console.log(sessions.length);
-	//let newSessions = setSession('psychologist', sessions);
-	//console.log(newSessions.length);
 	return okResponse('Sesiones obtenidas', {
 		sessions: sessions,
 	});
