@@ -121,18 +121,21 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
-const readMessage = async messageId => {
-	const updatedChat = await Chat.findOneAndUpdate(
-		{ 'messages._id': messageId },
+const readMessage = async (user, chatId) => {
+	// obtemos el id de la otra persona con que chateamos
+	const chat = await Chat.findById(chatId);
+	const id = user.role == 'psychologist' ? chat.user : user.psychologist;
+
+	// marcamos como leido todos los mensajes
+	await Chat.updateOne(
+		{ _id: chatId, sentBy: id },
 		{
-			$set: {
-				'messages.$.read': true,
-			},
+			$set: { 'messages.$[].read': true },
 		},
 		{ new: true }
 	);
 
-	return okResponse('Mensaje visto', { chat: updatedChat });
+	return okResponse('Mensajes leidos', {});
 };
 
 const chatService = {

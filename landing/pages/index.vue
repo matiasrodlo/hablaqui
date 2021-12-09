@@ -26,7 +26,6 @@
 						</div>
 						<v-btn
 							id="quiero-comenzar-1"
-							accesskey="p"
 							style="border-radius: 15px"
 							color="white"
 							x-large
@@ -287,7 +286,6 @@
 							x-large
 							class="pa-4"
 							to="/psicologos"
-							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -368,7 +366,6 @@
 						class="font-weight-bold pa-8"
 						nuxt
 						to="/psicologos"
-						accesskey="p"
 					>
 						Quiero empezar
 					</v-btn>
@@ -652,7 +649,6 @@
 						id="comenzar-4"
 						style="border-radius: 15px"
 						color="primary"
-						accesskey="p"
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
@@ -772,9 +768,7 @@
 				</v-carousel-item>
 			</v-carousel>
 		</section>
-		<v-container tag="footer">
-			<Footer />
-		</v-container>
+		<Footer />
 		<div class="primary-color" style="height: 30px"></div>
 	</div>
 </template>
@@ -1000,7 +994,21 @@ export default {
 			],
 		};
 	},
+	jsonld() {
+		return {
+			'@context': 'http://www.schema.org',
+			'@type': 'Organization',
+			name: 'Hablaqui',
+			url: this.$config.LANDING_URL,
+			logo: this.$config.LANDING_URL,
+			description:
+				'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+		};
+	},
 	head() {
+		const { path } = this.$route;
+		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
+		const canonical = `${this.$config.LANDING_URL}${pathWithSlash}`;
 		return {
 			title: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
 			meta: [
@@ -1011,7 +1019,7 @@ export default {
 						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
 				},
 			],
-			link: [{ rel: 'canonical', href: this.$config.LANDING_URL }],
+			link: [{ rel: 'canonical', href: canonical }],
 		};
 	},
 };

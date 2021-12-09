@@ -19,9 +19,19 @@ const userController = {
 			const { user } = req;
 			const profile = req.body;
 			const { data, code } = await userService.updateProfile(
-				user,
+				user.id,
 				profile
 			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando perfil');
+		}
+	},
+	async updateOne(req, res) {
+		try {
+			const { id } = req.params;
+			const profile = req.body;
+			const { data, code } = await userService.updateProfile(id, profile);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando perfil');

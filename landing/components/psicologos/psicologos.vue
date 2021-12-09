@@ -307,7 +307,7 @@
 												: 'text-transform: none !important;'
 										"
 										:class="hover ? 'elevation-6' : 'elevation-3'"
-										height="350"
+										height="400"
 										style="border-radius: 15px; transition: transform 0.7s"
 										class="text-center"
 										color="primary"
@@ -351,8 +351,9 @@
 												<span class="text--secondary">Comenzar</span>
 											</v-btn>
 											<v-spacer></v-spacer>
-										</v-card-actions> </v-card
-								></v-hover>
+										</v-card-actions>
+									</v-card>
+								</v-hover>
 							</v-col>
 							<v-col
 								v-if="!loading && !filterLevelThree.length"
@@ -378,7 +379,7 @@
 										"
 										:class="hover ? 'elevation-3' : 'elevation-1'"
 										style="border-radius: 15px; transition: transform 0.6s"
-										height="350"
+										height="400"
 										class="text-center"
 									>
 										<v-card-text style="height: 250px">
@@ -423,6 +424,13 @@
 														: item.professionalDescription
 												}}
 											</div>
+										</v-card-text>
+										<v-card-text
+											class="font-weight-medium pa-2"
+											style="color: #424242"
+										>
+											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+											/ 50 min
 										</v-card-text>
 										<v-card-text>
 											<div>
@@ -606,6 +614,18 @@
 																	}}
 																</span>
 															</nuxt-link>
+															<div
+																class="font-weight-medium pa-2"
+																style="color: #424242"
+															>
+																${{
+																	Math.ceil(
+																		item.sessionPrices.video /
+																			100
+																	) * 100
+																}}
+																/ 50 min
+															</div>
 														</v-col>
 														<v-col
 															cols="12"

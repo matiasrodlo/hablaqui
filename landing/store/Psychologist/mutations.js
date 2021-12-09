@@ -8,6 +8,9 @@ export default {
 	setSessions(state, value) {
 		state.sessions = value;
 	},
+	setPayments(state, value) {
+		state.payments = value;
+	},
 	setCustomSessions(state, value) {
 		state.sessions.push(value);
 	},
