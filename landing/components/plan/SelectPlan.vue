@@ -99,7 +99,7 @@
 								</v-list-item-title>
 								<v-list-item-subtitle>
 									<span class="caption font-weight-bold secondary--text">
-										${{ deal.weekPrice }}
+										${{ deal.weekPrice }}/{{ el.mode }}
 									</span>
 									<span class="caption primary--text">
 										{{ deal.lapse }}
@@ -160,21 +160,21 @@ export default {
 					deals: [
 						{
 							id: 1,
-							lapse: '/por sesión',
+							lapse: '',
 							total: '17500',
 							price: '17500',
 							type: 'Pago semanal',
 						},
 						{
 							id: 2,
-							lapse: '/por sesión ($63.000 mensual)',
+							lapse: '($63.000)',
 							price: '15750',
 							total: '63000',
 							type: 'Pago mensual',
 						},
 						{
 							id: 3,
-							lapse: '/por sesión ($168.000 trimestral)',
+							lapse: '($168.000)',
 							price: '14000',
 							total: '168000',
 							type: 'Pago cada tres meses',
@@ -195,21 +195,21 @@ export default {
 					deals: [
 						{
 							id: 4,
-							lapse: '/por sesión',
+							lapse: '',
 							price: '14000',
 							total: '14000',
 							type: 'Pago semanal',
 						},
 						{
 							id: 5,
-							lapse: '/por sesión ($50.400 mensual)',
+							lapse: '($50.400)',
 							total: '50400',
 							price: '12600',
 							type: 'Pago mensual',
 						},
 						{
 							id: 6,
-							lapse: '/por sesión ($134.400 trimestral)',
+							lapse: '($134.400)',
 							total: '134400',
 							price: '11200',
 							type: 'Pago cada tres meses',
@@ -230,21 +230,21 @@ export default {
 					deals: [
 						{
 							id: 7,
-							lapse: '/por sesión',
+							lapse: '',
 							price: '22000',
 							total: '22000',
 							type: 'Pago semanal',
 						},
 						{
 							id: 8,
-							lapse: '/por sesión ($79.200 mensual)',
+							lapse: '($79.200)',
 							total: '79200',
 							price: '19800',
 							type: 'Pago mensual',
 						},
 						{
 							id: 9,
-							lapse: '/por sesión ($211.200 trimestral)',
+							lapse: '($211.200)',
 							total: '211200',
 							price: '17600',
 							type: 'Pago cada tres meses',
@@ -319,7 +319,7 @@ export default {
 				weekPrice = priceWithDiscount / 4;
 				weekPrice = Math.ceil(weekPrice / 100) * 100;
 				price = weekPrice * 4;
-				lapse = `/por sesión ($${price} mensual)`;
+				lapse = `($${price})`;
 			}
 			if (deal.type === 'Pago cada tres meses') {
 				const priceWithDiscount =
@@ -328,7 +328,7 @@ export default {
 				weekPrice = priceWithDiscount / 12;
 				weekPrice = Math.ceil(weekPrice / 100) * 100;
 				price = weekPrice * 12;
-				lapse = `/por sesión ($${price} trimestral)`;
+				lapse = `($${price})`;
 			}
 			return {
 				...deal,

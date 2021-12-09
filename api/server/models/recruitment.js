@@ -35,13 +35,19 @@ let session = new Schema({
 });
 
 let defaultSchedule = {
-	monday: ['09:00', '17:00'],
-	tuesday: ['09:00', '17:00'],
-	wednesday: ['09:00', '17:00'],
-	thursday: ['09:00', '17:00'],
-	friday: ['09:00', '17:00'],
-	saturday: ['busy', 'busy'],
-	sunday: ['busy', 'busy'],
+	monday: [['09:00', '18:00']],
+	tuesday: [['09:00', '18:00']],
+	wednesday: [['09:00', '18:00']],
+	thursday: [['09:00', '18:00']],
+	friday: [['09:00', '18:00']],
+	saturday: 'busy',
+	sunday: 'busy',
+};
+
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
 };
 
 let defaultPreferences = {
@@ -110,9 +116,14 @@ let psyPlan = new Schema({
 		enum: ['free', 'premium'],
 		default: 'free',
 	},
-	payment: {
+	paymentStatus: {
 		type: String,
 		enum: ['success', 'pending'],
+		default: 'pending',
+	},
+	planStatus: {
+		type: String,
+		enum: ['active', 'expired', 'pending'],
 		default: 'pending',
 	},
 	expirationDate: {
@@ -121,7 +132,6 @@ let psyPlan = new Schema({
 	},
 	subscriptionPeriod: {
 		type: String,
-		enum: ['monthly', 'yearly'],
 	},
 	price: {
 		type: Number,
@@ -239,6 +249,10 @@ let recruitment = new Schema(
 			type: Object,
 			default: defaultPreferences,
 		},
+		sessionPrices: {
+			type: Object,
+			default: defaultPrices,
+		},
 		paymentMethod: {
 			type: Object,
 			required: false,
@@ -308,7 +322,7 @@ let recruitment = new Schema(
 			default: Date.now,
 		},
 		ratings: [rating],
-		psyPlans: psyPlan,
+		psyPlans: [psyPlan],
 		sessions: [session],
 		timeZone: {
 			type: String,

@@ -5,7 +5,6 @@ import Chat from '../models/chat';
 import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
-import Sessions from '../models/sessions';
 
 const startConversation = async (psychologistId, user) => {
 	const hasChats = await Chat.findOne({
@@ -23,13 +22,19 @@ const startConversation = async (psychologistId, user) => {
 };
 
 const getMessages = async (user, psy) => {
-	const sessions = Sessions.find({ user: user._id, psychologist: psy._id });
-	return okResponse('Mensajes conseguidos', {
-		messages: await Chat.findOne({
-			psychologist: psy,
+	let messages = await await Chat.findOne({
+		psychologist: psy,
+		user: user,
+	}).populate('user psychologist');
+
+	if (!messages)
+		messages = await Chat.create({
 			user: user,
-		}).populate('user psychologist'),
-		url: sessions.mongoUrl,
+			psychologist: psy,
+		});
+
+	return okResponse('Mensajes conseguidos', {
+		messages,
 	});
 };
 
@@ -116,18 +121,21 @@ const createReport = async (
 	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
-const readMessage = async messageId => {
-	const updatedChat = await Chat.findOneAndUpdate(
-		{ 'messages._id': messageId },
+const readMessage = async (user, chatId) => {
+	// obtemos el id de la otra persona con que chateamos
+	const chat = await Chat.findById(chatId);
+	const id = user.role == 'psychologist' ? chat.user : user.psychologist;
+
+	// marcamos como leido todos los mensajes
+	await Chat.updateOne(
+		{ _id: chatId, sentBy: id },
 		{
-			$set: {
-				'messages.$.read': true,
-			},
+			$set: { 'messages.$[].read': true },
 		},
 		{ new: true }
 	);
 
-	return okResponse('Mensaje visto', { chat: updatedChat });
+	return okResponse('Mensajes leidos', {});
 };
 
 const chatService = {

@@ -49,6 +49,10 @@ let userSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		onboarding: {
+			type: Boolean,
+			default: false,
+		},
 		hasPaid: {
 			type: Boolean,
 			default: 'false',

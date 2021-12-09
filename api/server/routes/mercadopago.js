@@ -29,43 +29,13 @@ mercadopagoRouter.get(
 );
 
 /**
-
- * MERCADOPAGO PLANES DE PSICOLOGO 
-
- * @description: Ruta para crear una preferencia (URL de pago) de un plan de psicologo
- * @body {Object} datos de la preferencia (precio, periodo, id del psicologo)
- * {
- * 		"title": "Premium mensual" o  "Premium anual",
- * 		"description": "Plan Premium de Hablaqui",
- * 		"price": "{PRECIO DEL PLAN}",
- * 		"period": "anual" o "mensual",
- * 		"psychologistId": "{ID DEL PSICOLOGO}",
- * }
- * @returns {String} URL para pagar 
+ * Mercadopago
+ * @description crear preferencias para generar ruta de pago
+ * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
 	'/mercadopago/psychologist-preference',
 	mercadopagoController.createPsychologistPreference
-);
-
-/**
- *
- * MERCADOPAGO PLANES DE POSTULANTE
- *
- * Crea una preferencia de mercadopago para pago de plan de postulante
- * @body {Object} datos de la preferencia (precio, periodo, id del postulante)
- * {
- * 		"title": "Premium mensual" o  "Premium anual",
- * 		"description": "Plan Premium de Hablaqui",
- * 		"price": "{PRECIO DEL PLAN}",
- * 		"period": "anual" o "mensual",
- * 		"recruitmentId": "{ID DEL POSTULANTE}",
- * }
- * @returns {String} URL para pagar
- */
-mercadopagoRouter.post(
-	'/mercadopago/recruited-preference',
-	mercadopagoController.createRecruitedPreference
 );
 
 /**

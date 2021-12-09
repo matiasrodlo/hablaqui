@@ -1,9 +1,10 @@
 <template>
 	<div>
 		<v-card
+			class="hidden-sm-and-down mx-auto"
 			:loading="!psychologist"
 			outlined
-			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '640px' : '100%' }"
+			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
 		>
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
@@ -124,16 +125,156 @@
 				<v-divider v-if="item.divider" class="mt-2"></v-divider>
 			</v-card-text>
 		</v-card>
+		<div class="hidden-md-and-up">
+			<template v-if="query.day">
+				<template v-for="(item, index) in items">
+					<v-card v-show="item.title == query.day" :key="item.id" class="py-2 px-0">
+						<v-row align="start" class="px-8">
+							<v-col cols="9">
+								<div class="primary--text text-h5 font-weight-medium">
+									{{ item.titulo }}
+								</div>
+								<div class="body-1 font-weight-medium" style="color: #3c3c3b">
+									{{ item.active ? 'Abierto' : 'Cerrado' }}
+								</div>
+							</v-col>
+							<v-col cols="3" class="text-right">
+								<v-switch
+									v-model="item.active"
+									hide-details
+									dense
+									class="mt-0 pb-0 d-inline-block"
+								></v-switch>
+							</v-col>
+							<v-col cols="12">
+								<v-row v-for="(intervals, i) in item.intervals" :key="i">
+									<v-col cols="5" class="text-center py-2">
+										<v-select
+											v-model="intervals[0]"
+											:disabled="!item.active"
+											full-width
+											outlined
+											dense
+											hide-details
+											:error="
+												item.error &&
+												item.error.start &&
+												item.error.start.includes(i)
+											"
+											:items="hours"
+											@change="e => validateInput(index, i, e, 'start')"
+										></v-select>
+									</v-col>
+									<v-col cols="5" class="text-center py-2">
+										<v-select
+											v-model="intervals[1]"
+											:disabled="!item.active"
+											full-width
+											outlined
+											dense
+											:error="
+												item.error &&
+												item.error.end &&
+												item.error.end.includes(i)
+											"
+											hide-details
+											:items="hours"
+											@change="e => validateInput(index, i, e, 'end')"
+										></v-select>
+									</v-col>
+									<v-col v-if="i !== 0" align-self="center" cols="2">
+										<v-btn
+											fab
+											depressed
+											outlined
+											color="error"
+											width="25"
+											height="25"
+											@click="rmInterval(index, i)"
+										>
+											<icon color="error" :icon="mdiMinus"
+										/></v-btn>
+									</v-col>
+									<v-col v-if="i == 0" cols="2">
+										<v-btn
+											fab
+											depressed
+											outlined
+											color="primary"
+											width="25"
+											height="25"
+											@click="addInterval(index)"
+										>
+											<icon color="primary" :icon="mdiPlus"
+										/></v-btn>
+									</v-col>
+								</v-row>
+							</v-col>
+						</v-row>
+						<v-card-actions class="mt-2">
+							<v-spacer></v-spacer>
+							<v-btn
+								v-if="psychologist"
+								:disabled="hasChanges || hasOverlay"
+								:loading="loading"
+								color="primary"
+								rounded
+								depressed
+								@click="schedule"
+							>
+								Guardar
+							</v-btn>
+							<v-spacer></v-spacer>
+						</v-card-actions>
+					</v-card>
+				</template>
+			</template>
+			<template v-else>
+				<v-card
+					v-for="(item, i) in items"
+					:key="i"
+					class="my-3"
+					elevation="6"
+					:child-number="i + 1"
+					@click.stop="() => $router.push(`perfil/horario?day=${item.title}`)"
+				>
+					<v-card-text class="d-flex justify-space-between">
+						<div>
+							<div class="primary--text font-weight-bold body-1">
+								{{ item.titulo }}
+							</div>
+							<div class="secondary--text body-2">
+								{{ item.active ? 'Abierto' : 'Cerrado' }}
+							</div>
+						</div>
+						<v-switch
+							v-model="item.active"
+							hide-details
+							dense
+							class="mt-0 pb-0 d-inline-block"
+							@click.stop="schedule"
+						></v-switch>
+					</v-card-text>
+					<v-card-text>
+						<div v-for="(intervals, e) in item.intervals" :key="e">
+							<icon size="20" color="primary" :icon="mdiClockOutline" />
+							<span class="ml-2 pt-2">{{ intervals[0] }} {{ intervals[1] }}</span>
+						</div>
+					</v-card-text>
+				</v-card>
+			</template>
+		</div>
 	</div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
-import { mdiPlus, mdiMinus, mdiAlert } from '@mdi/js';
+import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import moment from 'moment';
 
 export default {
+	name: 'Horario',
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
@@ -171,7 +312,7 @@ export default {
 				},
 				{
 					title: 'wednesday',
-					titulo: 'Miercoles',
+					titulo: 'Miércoles',
 					intervals: [['8:00', '18:00']],
 					active: true,
 					divider: true,
@@ -198,7 +339,7 @@ export default {
 				},
 				{
 					title: 'saturday',
-					titulo: 'Sabado',
+					titulo: 'Sábado',
 					intervals: [['8:00', '18:00']],
 					active: false,
 					divider: true,
@@ -244,6 +385,9 @@ export default {
 			mdiPlus,
 			mdiMinus,
 			mdiAlert,
+			mdiClockOutline,
+			query: null,
+			daySelected: null,
 		};
 	},
 	computed: {
@@ -265,6 +409,9 @@ export default {
 			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
 		},
 	},
+	created() {
+		this.query = this.$route.query;
+	},
 	mounted() {
 		this.setDay(cloneDeep(this.psychologist.schedule));
 	},
@@ -274,34 +421,59 @@ export default {
 			this.items = this.items.map((item, index) => {
 				let active = true;
 				if (index === 0) {
-					intervals = payload.monday === 'busy' ? [['9:00', '18:00']] : payload.monday;
+					intervals =
+						payload.monday === 'busy' ||
+						payload.monday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.monday;
 					active = payload.monday !== 'busy';
 				}
 				if (index === 1) {
-					intervals = payload.tuesday === 'busy' ? [['9:00', '18:00']] : payload.tuesday;
+					intervals =
+						payload.tuesday === 'busy' ||
+						payload.tuesday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.tuesday;
 					active = payload.tuesday !== 'busy';
 				}
 				if (index === 2) {
 					intervals =
-						payload.wednesday === 'busy' ? [['9:00', '18:00']] : payload.wednesday;
+						payload.wednesday === 'busy' ||
+						payload.wednesday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.wednesday;
 					active = payload.wednesday !== 'busy';
 				}
 				if (index === 3) {
 					intervals =
-						payload.thursday === 'busy' ? [['9:00', '18:00']] : payload.thursday;
+						payload.thursday === 'busy' ||
+						payload.thursday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.thursday;
 					active = payload.thursday !== 'busy';
 				}
 				if (index === 4) {
-					intervals = payload.friday === 'busy' ? [['9:00', '18:00']] : payload.friday;
+					intervals =
+						payload.friday === 'busy' ||
+						payload.friday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.friday;
 					active = payload.friday !== 'busy';
 				}
 				if (index === 5) {
 					intervals =
-						payload.saturday === 'busy' ? [['9:00', '18:00']] : payload.saturday;
+						payload.saturday === 'busy' ||
+						payload.saturday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.saturday;
 					active = payload.saturday !== 'busy';
 				}
 				if (index === 6) {
-					intervals = payload.sunday === 'busy' ? [['9:00', '18:00']] : payload.sunday;
+					intervals =
+						payload.sunday === 'busy' ||
+						payload.sunday.some(interval => !Array.isArray(interval))
+							? [['9:00', '18:00']]
+							: payload.sunday;
 					active = payload.sunday !== 'busy';
 				}
 				return { ...item, intervals, active };
@@ -360,6 +532,7 @@ export default {
 						undefined,
 						[]
 					);
+				else if (item[0] === item[1]) return true;
 				else return false;
 			});
 			if (!result) {

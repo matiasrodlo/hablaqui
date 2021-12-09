@@ -262,6 +262,16 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async updateSessions(req, res) {
+		try {
+			const { data, code } = await psychologistsService.updateSessions(
+				req.body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 	async usernameAvailable(req, res) {
 		try {
 			const { username } = req.body;
@@ -348,21 +358,25 @@ const psychologistsController = {
 			);
 		}
 	},
-	async freePlan(req, res) {
-		try {
-			const { psyId } = req.params;
-			const { data, code } = await psychologistsService.freePlan(psyId);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
 	async deleteCommitment(req, res) {
 		try {
 			const { psyId, planId } = req.params;
 			const { data, code } = await psychologistsService.deleteCommitment(
 				planId,
 				psyId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getAllSessions(req, res) {
+		try {
+			const { psy } = req.params;
+			const { startDate } = req.body;
+			const { data, code } = await psychologistsService.getAllSessions(
+				psy,
+				startDate
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

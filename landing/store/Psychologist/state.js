@@ -1,10 +1,11 @@
 const initialState = {
-	psychologists: [],
 	clients: [],
+	loading: true,
+	payments: [],
+	psychologists: [],
+	resumeView: false,
 	sessions: [],
 	sessionsFormatted: [],
-	resumeView: false,
-	loading: true,
 };
 
 export default () => initialState;

@@ -64,6 +64,12 @@ psychologistsRouter.get(
 	psychologistsController.getByData
 );
 
+psychologistsRouter.put(
+	'/psychologists/update/sessions',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updateSessions
+);
+
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
@@ -371,21 +377,9 @@ psychologistsRouter.put(
  * @description: Consigue los datos (y la tabla) de pagos del psicologo.
  */
 psychologistsRouter.get(
-	'/psychologist/payments',
+	'/psychologist/payments/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfo
-);
-
-/**
- * @description: Crea un plan gratuito para el psicologo (si es que no tiene plan vigente)
- * @route {POST} /api/v1/psychologist/create-free-plan
- * @param {String} psyId id del psicologo
- * @returns {object} psicologo con plan free creado
- * */
-psychologistsRouter.post(
-	'/psychologist/create-free-plan/:psyId',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.freePlan
 );
 
 /**
@@ -397,6 +391,11 @@ psychologistsRouter.post(
 psychologistsRouter.patch(
 	'/psychologist/delete-commitment/:psyId/:planId',
 	psychologistsController.deleteCommitment
+);
+
+psychologistsRouter.get(
+	'/psychologist/get-sessions/:psy',
+	psychologistsController.getAllSessions
 );
 
 export default psychologistsRouter;

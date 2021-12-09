@@ -49,18 +49,6 @@ const mercadopagoController = {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
 	},
-	async createRecruitedPreference(req, res) {
-		try {
-			const { body } = req;
-			const {
-				data,
-				code,
-			} = await mercadopagoService.createRecruitedPreference(body);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error creando el pago en MercadoPago');
-		}
-	},
 	async recruitedPay(req, res) {
 		try {
 			const { params, query } = req;

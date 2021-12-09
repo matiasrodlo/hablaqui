@@ -3,11 +3,11 @@
 import { Schema, model } from 'mongoose';
 
 let defaultSchedule = {
-	monday: [['09:00', '17:00']],
-	tuesday: [['09:00', '17:00']],
-	wednesday: [['09:00', '17:00']],
-	thursday: [['09:00', '17:00']],
-	friday: [['09:00', '17:00']],
+	monday: [['09:00', '18:00']],
+	tuesday: [['09:00', '18:00']],
+	wednesday: [['09:00', '18:00']],
+	thursday: [['09:00', '18:00']],
+	friday: [['09:00', '18:00']],
 	saturday: 'busy',
 	sunday: 'busy',
 };
@@ -32,6 +32,9 @@ let formationSchema = new Schema({
 	description: {
 		type: String,
 	},
+	intitucion: {
+		type: String,
+	},
 	start: {
 		type: String,
 	},
@@ -52,6 +55,10 @@ let experienceSchema = new Schema({
 	},
 	end: {
 		type: String,
+	},
+	current: {
+		type: Boolean,
+		defautl: false,
 	},
 });
 
@@ -93,7 +100,6 @@ let psyPlan = new Schema({
 	},
 	subscriptionPeriod: {
 		type: String,
-		enum: ['mensual', 'anual'],
 	},
 	price: {
 		type: Number,
