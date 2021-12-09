@@ -1,4 +1,4 @@
-import axios from '@nuxtjs/axios';
+import axios from 'axios';
 const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
