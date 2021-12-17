@@ -51,7 +51,6 @@ export default {
 				.filter(psychologist => psychologist.username)
 				.map(psychologist => ({
 					route: `/${psychologist.username}`,
-					payload: psychologist,
 				}));
 
 			// generate routes comunas
