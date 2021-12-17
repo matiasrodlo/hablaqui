@@ -30,7 +30,7 @@ export default {
 	generate: {
 		fallback: '404.html',
 		// genera las rutas dinamicas
-		async routes() {
+		async routes(callback) {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
@@ -51,6 +51,7 @@ export default {
 				.filter(psychologist => psychologist.username)
 				.map(psychologist => ({
 					route: `/${psychologist.username}`,
+					payload: psychologist,
 				}));
 
 			// generate routes comunas
@@ -60,7 +61,8 @@ export default {
 				payload: el.comuna,
 			}));
 
-			return blogs.concat(psicologos).concat(comunas);
+			const routes = blogs.concat(psicologos).concat(comunas);
+			callback(null, routes);
 		},
 	},
 	loading: {
