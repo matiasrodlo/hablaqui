@@ -355,14 +355,14 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 	},
-	async asyncData({ $axios, params, redirect }) {
+	async asyncData({ $axios, params, error }) {
 		try {
 			const { article } = await $axios.$get(`/blog/${params.slug}`);
 			return {
 				article,
 			};
 		} catch (e) {
-			redirect('/psicologos');
+			error({ statusCode: 404, message: 'Post not found' });
 		}
 	},
 	data() {
