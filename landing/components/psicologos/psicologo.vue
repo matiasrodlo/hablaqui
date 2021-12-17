@@ -46,7 +46,7 @@
 									<div
 										class="
 											text--secondary
-											caption
+											body-1
 											text-md-h6
 											font-weight-medium
 											pa-2
