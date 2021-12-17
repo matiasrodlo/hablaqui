@@ -118,7 +118,7 @@ export default {
 			{
 				hid: 'twitter:image',
 				name: 'twitter:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 
 			// Open Graph
@@ -144,12 +144,12 @@ export default {
 			{
 				hid: 'og:image',
 				property: 'og:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:secure_url',
 				property: 'og:image:secure_url',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:alt',
