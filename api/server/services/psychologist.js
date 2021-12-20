@@ -303,6 +303,9 @@ const createPlan = async ({ payload }) => {
 	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
 	}
+	const sessions = await Sessions.find({
+		user: payload.user,
+	});
 	// valido MM/DD/YYYY HH:mm
 	const date = `${payload.date} ${payload.start}`;
 	const psychologist = await Psychologist.findById(payload.psychologist);
@@ -344,6 +347,7 @@ const createPlan = async ({ payload }) => {
 		date,
 		sessionNumber: 1,
 		paidToPsychologist: false,
+		freeFirstSession: sessions ? false : psychologist.freeFirstSession,
 	};
 
 	const newPlan = {

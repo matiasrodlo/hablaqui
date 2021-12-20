@@ -4,6 +4,10 @@ let session = new Schema({
 	date: {
 		type: String,
 	},
+	freeFirstSession: {
+		type: Boolean,
+		default: 'false',
+	},
 	sessionNumber: {
 		type: String,
 	},

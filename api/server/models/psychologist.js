@@ -211,6 +211,10 @@ let psychologist = new Schema({
 		type: String,
 		default: 'America/Santiago',
 	},
+	freeFirstSession: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 export default model('psychologist', psychologist);
