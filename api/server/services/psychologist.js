@@ -347,9 +347,9 @@ const createPlan = async ({ payload }) => {
 		date,
 		sessionNumber: 1,
 		paidToPsychologist: false,
-		freeFirstSession: sessions ? false : psychologist.freeFirstSession,
+		freeFirstSession: !sessions ? false : psychologist.freeFirstSession,
 	};
-
+	//console.log(newSession);
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
