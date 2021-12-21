@@ -46,10 +46,15 @@
 				</div>
 			</nuxt-link>
 		</div>
-		<div class="mx-5 body-1 primary--text">
+		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
 				Centro de ayuda
 			</a>
+		</div>
+		<div v-else class="mx-5 body-1 primary--text">
+			<nuxt-link style="text-decoration: none" to="/faq" target="_blank">
+				Centro de ayuda
+			</nuxt-link>
 		</div>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />

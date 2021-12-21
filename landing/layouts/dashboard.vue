@@ -74,10 +74,21 @@
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
+					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
 					href="https://soporte.hablaqui.cl/hc"
 				>
+					<v-list-item-avatar size="40">
+						<v-img height="50" width="50" src="" alt="soporte" />
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
 					<v-list-item-avatar size="40">
 						<v-img height="50" width="50" src="" alt="soporte" />
 					</v-list-item-avatar>
