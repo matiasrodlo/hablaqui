@@ -29,7 +29,6 @@ export default {
 	},
 	generate: {
 		fallback: '404.html',
-		cache: false,
 		// genera las rutas dinamicas
 		async routes(callback) {
 			const baseURL = process.env.VUE_APP_URL

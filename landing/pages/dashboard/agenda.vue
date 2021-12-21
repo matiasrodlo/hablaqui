@@ -448,17 +448,22 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Se le ha enviado un email al consultante, La fecha y hora
-										estará disponible hasta que el consultante cancele
+										Hemos enviado un email al consultante. La fecha y hora
+										estará disponible hasta que el consultante pague su sesión.
 									</v-card-text>
 								</template>
 							</v-card>
 						</v-dialog>
-						<v-row
-							v-if="$auth.$state.user.role === 'psychologist'"
-							class="text-md-right pt-4"
-						>
-							<v-col cols="12" sm="6" md="3">
+						<v-row justify="end" class="text-md-right pt-4">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('sesion online')">
 									<v-avatar size="20" color="primary">
 										<icon small :icon="mdiCheck" color="white" />
@@ -466,7 +471,15 @@
 									<span class="ml-1 caption">Sesiones online</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text depressed @click="() => setFilter('sesion presencial')">
 									<v-avatar color="#00c6ea" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -474,7 +487,12 @@
 									<span class="ml-1 caption">Sesiones presenciales</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="$auth.$state.user.role === 'psychologist'"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('compromiso privado')">
 									<v-avatar color="#efb908" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -482,7 +500,15 @@
 									<span class="ml-1 caption">Compromiso privado</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('pending')">
 									<v-avatar color="#78909C" size="20">
 										<icon small :icon="mdiCheck" color="white" />
