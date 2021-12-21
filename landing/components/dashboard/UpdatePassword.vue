@@ -7,9 +7,11 @@
 				filled
 				outlined
 				dense
+				:type="showCurrentPassword ? 'text' : 'password'"
+				:append-icon="showCurrentPassword ? mdiEye : mdiEyeOff"
 				:error-messages="oldPasswordErrors"
 				label="Contraseña actual"
-				type="password"
+				@click:append="showCurrentPassword = !showCurrentPassword"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" md="6">
@@ -20,7 +22,9 @@
 				dense
 				:error-messages="newPasswordErrors"
 				label="Nueva Contraseña"
-				type="password"
+				:type="showNewPassword ? 'text' : 'password'"
+				:append-icon="showNewPassword ? mdiEye : mdiEyeOff"
+				@click:append="showNewPassword = !showNewPassword"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" md="6">
@@ -31,7 +35,9 @@
 				dense
 				:error-messages="repeatNewPasswordErrors"
 				label="Repite la nueva contraseña"
-				type="password"
+				:type="showNewRepeatPassword ? 'text' : 'password'"
+				:append-icon="showNewRepeatPassword ? mdiEye : mdiEyeOff"
+				@click:append="showNewRepeatPassword = !showNewRepeatPassword"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" class="text-center">
@@ -54,11 +60,17 @@
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 export default {
 	mixins: [validationMixin],
 	data() {
 		return {
+			mdiEyeOff,
+			mdiEye,
+			showCurrentPassword: false,
+			showNewPassword: false,
+			showNewRepeatPassword: false,
 			formPassword: {
 				newPassword: '',
 				repeatNewPassword: '',

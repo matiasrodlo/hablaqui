@@ -19,7 +19,7 @@
 					outlined
 					:dense="isDialog"
 					:type="showPassword ? 'text' : 'password'"
-					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+					:append-icon="showPassword ? mdiEye : mdiEyeOff"
 					:error-messages="passwordErrors"
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
@@ -49,6 +49,7 @@ import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 export default {
 	name: 'SignIn',
@@ -64,11 +65,7 @@ export default {
 		},
 	},
 	data() {
-		return {
-			showPassword: false,
-			form: null,
-			loading: false,
-		};
+		return { mdiEye, mdiEyeOff, showPassword: false, form: null, loading: false };
 	},
 	computed: {
 		emailErrors() {
