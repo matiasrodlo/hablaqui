@@ -1,7 +1,7 @@
 <template>
 	<v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
-		<v-btn icon @click="() => $router.go(-1)">
-			<icon v-if="goBack" size="30" color="primary" :icon="mdiChevronLeft" />
+		<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
+			<icon size="30" color="primary" :icon="mdiChevronLeft" />
 		</v-btn>
 		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
