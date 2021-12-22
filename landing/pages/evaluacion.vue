@@ -738,14 +738,6 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 		}),
 	},
-	created() {
-		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.length) {
-				this.matchedPsychologists = psi;
-			}
-		}
-	},
 	mounted() {
 		this.getPsychologists();
 		this.getAppointments();
@@ -793,7 +785,6 @@ export default {
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
-					localStorage.setItem('psi', JSON.stringify(response.filter((el, i) => i < 3)));
 					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
