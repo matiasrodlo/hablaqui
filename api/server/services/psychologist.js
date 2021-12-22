@@ -173,7 +173,6 @@ const getAllSessions = async (psy, startDate) => {
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
 		return (
-			!session.paidToPsychologist &&
 			session.statusPlan !== 'success' &&
 			//moment().isBefore(moment(session.expiration)) &&
 			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
@@ -184,11 +183,15 @@ const getAllSessions = async (psy, startDate) => {
 	});
 
 	return okResponse('Sesiones obtenidas', {
-		total: sessions.reduce(
-			(sum, value) =>
-				typeof value.total == 'number' ? sum + value.total : sum,
-			0
-		),
+		total: sessions
+			.filter(session => {
+				return session.paidToPsychologist;
+			})
+			.reduce(
+				(sum, value) =>
+					typeof value.total == 'number' ? sum + value.total : sum,
+				0
+			),
 		sessions: sessions,
 	});
 };
