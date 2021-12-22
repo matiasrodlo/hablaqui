@@ -17,7 +17,7 @@
 					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaquí"
-					class="my-16"
+					class="mt-10"
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
@@ -59,6 +59,45 @@
 						</v-list-item-content>
 					</v-list-item>
 				</template>
+				<v-list-item
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://calendly.com/daniel-hablaqui/30min"
+				>
+					<v-list-item-avatar size="40">
+						<v-img height="50" width="50" src="" alt="soporte" />
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Agendar demo
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-if="$auth.user.role === 'psychologist'"
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://soporte.hablaqui.cl/hc"
+				>
+					<v-list-item-avatar size="40">
+						<v-img height="50" width="50" src="" alt="soporte" />
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
+					<v-list-item-avatar size="40">
+						<v-img height="50" width="50" src="" alt="soporte" />
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
 					<v-list-item-avatar size="40">
 						<v-img
@@ -215,6 +254,14 @@ export default {
 					visible,
 				},
 				{
+					name: 'Mi plan premium',
+					link: { name: 'dashboard-planes' },
+					img: '',
+					visible:
+						this.$vuetify.breakpoint.smAndDown &&
+						this.$auth.$state.user.role === 'psychologist',
+				},
+				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
 					img: `https://cdn.hablaqui.cl/static/apps.png`,
@@ -230,6 +277,7 @@ export default {
 		},
 		routeName() {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-planes') return 'Planes';
 			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
 			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
 			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';

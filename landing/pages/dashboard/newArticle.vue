@@ -18,7 +18,7 @@
 					<v-file-input
 						accept="image/png, image/jpeg, image/bmp"
 						placeholder="Foto de portada"
-						prepend-icon="mdi-camera"
+						:prepend-icon="mdiCamera"
 						label="Foto de portada"
 						@change="setThumbnail"
 					/>
@@ -88,6 +88,7 @@
 <script>
 import { VueEditor } from 'vue2-editor';
 import { mapActions } from 'vuex';
+import { mdiCamera } from '@mdi/js';
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -96,7 +97,7 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data() {
-		return { loading: false, form: null, thumbnailUrl: '' };
+		return { mdiCamera, loading: false, form: null, thumbnailUrl: '' };
 	},
 	created() {
 		this.defaultForm();

@@ -107,7 +107,7 @@
 							:items="appointments"
 							item-value="value"
 							label="Motivo de consulta"
-							append-icon="mdi-chevron-down"
+							:append-icon="mdiChevronDown"
 							hide-details
 							clearable
 							:menu-props="{
@@ -137,7 +137,7 @@
 							outlined
 							:items="itemsSearch"
 							label="Busca tu psicólogo"
-							append-icon="mdi-chevron-down"
+							:append-icon="mdiChevronDown"
 							hide-details
 							:menu-props="{
 								closeOnClick: true,
@@ -166,7 +166,7 @@
 						>
 							<v-expansion-panel>
 								<v-expansion-panel-header
-									expand-icon="mdi-filter"
+									:expand-icon="mdiFilter"
 									disable-icon-rotate
 									class="px-3"
 								>
@@ -429,7 +429,8 @@
 											class="font-weight-medium pa-2"
 											style="color: #424242"
 										>
-											${{ item.sessionPrices.video }} / 50 min
+											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+											/ 50 min
 										</v-card-text>
 										<v-card-text>
 											<div>
@@ -617,8 +618,13 @@
 																class="font-weight-medium pa-2"
 																style="color: #424242"
 															>
-																${{ item.sessionPrices.video }} / 50
-																min
+																${{
+																	Math.ceil(
+																		item.sessionPrices.video /
+																			100
+																	) * 100
+																}}
+																/ 50 min
 															</div>
 														</v-col>
 														<v-col
@@ -689,7 +695,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import { mdiMenu, mdiViewGridOutline } from '@mdi/js';
+import { mdiMenu, mdiViewGridOutline, mdiChevronDown, mdiFilter } from '@mdi/js';
 
 export default {
 	name: 'AllPsicologos',
@@ -700,6 +706,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiFilter,
+			mdiChevronDown,
 			mdiMenu,
 			mdiViewGridOutline,
 			view: 1,

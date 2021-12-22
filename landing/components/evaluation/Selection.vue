@@ -41,6 +41,13 @@
 											{{ item.name }}
 											{{ item.lastName && item.lastName }}
 										</nuxt-link>
+										<div
+											class="text--secondary body-1 font-weight-medium"
+											style="color: #424242"
+										>
+											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+											/ 50 min
+										</div>
 									</v-col>
 									<v-col cols="12" sm="6" class="text-center text-md-right">
 										<dialog-agenda-cita-online :psy="item" :mode="'3'" />

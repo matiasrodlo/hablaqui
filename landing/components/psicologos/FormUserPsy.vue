@@ -70,7 +70,10 @@
 							<template #label>
 								<div class="caption">
 									He leído y
-									<nuxt-link to="condiciones" style="text-decoration: none">
+									<nuxt-link
+										to="terminos-y-condiciones-especialista"
+										style="text-decoration: none"
+									>
 										acepto los Términos y condiciones </nuxt-link
 									>y
 									<nuxt-link to="politicas" style="text-decoration: none">

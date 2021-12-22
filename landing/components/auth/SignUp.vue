@@ -39,23 +39,11 @@
 					outlined
 					dense
 					:type="showPassword ? 'text' : 'password'"
-					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+					:append-icon="showPassword ? mdiEye : mdiEyeOff"
 					:error-messages="passwordErrors"
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
-			<!-- <v-col cols="12">
-				<v-text-field
-					v-model="form.repeatPassword"
-					label="Repite contraseña"
-					outlined
-					dense
-					:error-messages="repeatPasswordErrors"
-					:type="showRepeatPassword ? 'text' : 'password'"
-					:append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
-					@click:append="showRepeatPassword = !showRepeatPassword"
-				></v-text-field>
-			</v-col> -->
 			<v-col cols="12" class="d-flex align-center">
 				<v-checkbox v-model="accept" class="d-inline-block"></v-checkbox>
 				<span class="body-2 text-left" style="max-width: 300px">
@@ -101,6 +89,7 @@ import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 export default {
 	name: 'SignUp',
@@ -113,6 +102,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiEye,
+			mdiEyeOff,
 			form: null,
 			loading: false,
 			showPassword: false,

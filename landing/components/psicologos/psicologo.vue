@@ -46,14 +46,17 @@
 									<div
 										class="
 											text--secondary
-											caption
+											body-1
 											text-md-h6
 											font-weight-medium
 											pa-2
 										"
 										style="color: #424242"
 									>
-										${{ psychologist.sessionPrices.video }} / 50 min
+										${{
+											Math.ceil(psychologist.sessionPrices.video / 100) * 100
+										}}
+										/ 50 min
 									</div>
 								</v-col>
 								<v-col cols="12" md="5" lg="4" class="text-center text-lg-right">

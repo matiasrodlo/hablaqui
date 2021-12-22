@@ -51,7 +51,7 @@ CUALQUIER PERSONA
 									id="avatar"
 									label="File input"
 									filled
-									prepend-icon="mdi-camera"
+									:prepend-icon="mdiCamera"
 									class="d-none"
 									@change="setAvatar"
 								></v-file-input>
@@ -136,7 +136,7 @@ CUALQUIER PERSONA
 									outlined
 									:error-messages="passwordErrors"
 									:type="showPassword ? 'text' : 'password'"
-									:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+									:append-icon="showPassword ? mdiEye : mdiEyeOff"
 									@click:append="showPassword = !showPassword"
 								></v-text-field>
 								<v-text-field
@@ -145,7 +145,7 @@ CUALQUIER PERSONA
 									outlined
 									:error-messages="repeatPasswordErrors"
 									:type="showRepeatPassword ? 'text' : 'password'"
-									:append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
+									:append-icon="showRepeatPassword ? mdiEye : mdiEyeOff"
 									@click:append="showRepeatPassword = !showRepeatPassword"
 								></v-text-field>
 								<v-btn outlined rounded color="primary" @click="step = 2">
@@ -358,7 +358,7 @@ CUALQUIER PERSONA
 import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions, mapGetters } from 'vuex';
-import { mdiAccount } from '@mdi/js';
+import { mdiAccount, mdiCamera, mdiEye, mdiEyeOff } from '@mdi/js';
 
 export default {
 	components: {
@@ -367,7 +367,10 @@ export default {
 	mixins: [validationMixin],
 	data() {
 		return {
+			mdiCamera,
 			mdiAccount,
+			mdiEye,
+			mdiEyeOff,
 			carousel: 0,
 			step: 1,
 			onboarding: 0,

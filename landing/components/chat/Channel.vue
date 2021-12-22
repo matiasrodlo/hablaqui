@@ -13,7 +13,7 @@
 				<v-list-item-avatar size="50">
 					<avatar :url="selected.avatar" size="50" :name="selected.name" />
 				</v-list-item-avatar>
-				<v-list-item-title class="title d-flex">
+				<v-list-item-title class="pl-3 title d-flex">
 					<div>
 						<span class="secondary--text">
 							{{ selected.shortName || selected.name }}
@@ -26,7 +26,7 @@
 						</div>
 					</div>
 				</v-list-item-title>
-				<div v-if="!selected.assistant" style="min-width: 150px" class="text-right">
+				<div v-show="!selected.assistant" style="min-width: 150px" class="text-right">
 					<!-- <v-btn id="callheaher" icon >
                         <v-img
                             contain
@@ -49,7 +49,7 @@
 							:src="`https://cdn.hablaqui.cl/static/camara.png`"
 						></v-img>
 					</v-btn>
-					<v-btn v-show="false" id="addheader" icon>
+					<v-btn v-if="false" id="addheader" icon>
 						<v-img
 							contain
 							width="25"

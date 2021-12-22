@@ -35,7 +35,6 @@
 							Atención a clientes
 						</div>
 						<div class="body-1 my-4">soporte@hablaqui.cl</div>
-						<div class="body-1 my-4">09:00am - 18:30pm</div>
 					</v-col>
 					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
 						<v-img
