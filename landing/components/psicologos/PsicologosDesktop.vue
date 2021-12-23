@@ -1,11 +1,13 @@
 <template>
-	<div style="height: 3000px">
+	<div>
+		<!-- filter name -->
 		<v-container>
 			<v-row>
 				<v-col
 					cols="12"
 					tag="h1"
-					class="text-left font-weight-bold text-h6 text-md-h3 text--secondary"
+					class="text-left font-weight-bold text-h6 text-md-h3"
+					style="color: #54565a"
 				>
 					Encuentra a tu psicólogo online
 				</v-col>
@@ -41,11 +43,12 @@
 				</v-col>
 			</v-row>
 		</v-container>
-
+		<!-- filters -->
 		<v-app-bar
 			:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
+			style="z-index: 1"
 			class="sticky scroll"
-			:class="scrollHeight > 300 ? 'elevation-6' : 'elevation-0'"
+			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container>
 				<v-row>
@@ -117,21 +120,145 @@
 							@change="filterPanel"
 						></v-select>
 					</v-col>
-					<v-col cols="2"> {{ scrollHeight }} </v-col>
+					<v-col cols="2">
+						<v-select
+							v-model="gender"
+							class="white"
+							multiple
+							:items="[
+								{ text: 'Mujer', value: 'female' },
+								{ text: 'Hombre', value: 'male' },
+								{ text: 'Transgénero', value: 'transgender' },
+							]"
+							:disabled="loading"
+							outlined
+							dense
+							label="Precios"
+							hide-details
+							@change="filterPanel"
+						></v-select>
+					</v-col>
 				</v-row>
 			</v-container>
 		</v-app-bar>
+		<!-- pychologist -->
+		<v-container>
+			<v-row>
+				<v-col v-for="(item, i) in filterLevelThree" :key="i" cols="12">
+					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
+						<v-row>
+							<v-col
+								cols="3"
+								class="d-flex align-center justify-center"
+								style="height: 350px"
+							>
+								<div class="text-center">
+									<avatar
+										:url="avatar(item, true)"
+										:name="item.name"
+										:last-name="item.lastName ? item.lastName : ''"
+										size="170"
+										loading-color="white"
+									></avatar>
+									<div
+										v-if="item.code"
+										class="text-capitalize py-4"
+										style="color: #706f6f; font-size: 14px"
+									>
+										código {{ item.code }}
+									</div>
+								</div>
+							</v-col>
+							<v-col
+								cols="5"
+								style="display: flex; flex-direction: column; height: 350px"
+							>
+								<div style="flex: 1">
+									<nuxt-link
+										style="text-decoration: none"
+										:to="{
+											path: `/${item.username}`,
+										}"
+									>
+										<div
+											class="text-left font-weight-bold"
+											style="color: #3c3c3b; font-size: 28px"
+										>
+											{{ item.name }}
+											{{ item.lastName && item.lastName }}
+										</div>
+									</nuxt-link>
+								</div>
+								<div
+									class="text-left font-weight-medium pa-2"
+									style="color: #3c3c3b; font-size: 16px; flex: 1"
+								>
+									${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+									/ 50 min
+								</div>
+								<div style="flex: 1">
+									<v-chip-group
+										v-model="specialties"
+										:next-icon="mdiPlus"
+										:prev-icon="mdiMinus"
+										show-arrows
+									>
+										<template v-for="(tag, s) in item.specialties">
+											<v-chip
+												:key="s"
+												:value="tag"
+												class="ma-2"
+												small
+												:color="specialties == tag ? 'primary--text' : ''"
+											>
+												<span>
+													{{ tag }}
+												</span>
+											</v-chip>
+										</template>
+									</v-chip-group>
+								</div>
+								<div style="flex: 5">
+									<div class="text-left" style="color: #54565a; font-size: 14px">
+										{{
+											item.professionalDescription.length > 210
+												? item.professionalDescription
+														.slice(0, 210)
+														.concat('...')
+												: item.professionalDescription
+										}}
+									</div>
+								</div>
+								<div style="flex: 2" class="text-left">
+									<v-btn
+										small
+										rounded
+										color="primary"
+										:to="{ path: `/${item.username}` }"
+									>
+										Quiero saber más
+									</v-btn>
+								</div>
+							</v-col>
+							<v-col cols="4"></v-col>
+						</v-row>
+					</v-card>
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import { mdiChevronDown } from '@mdi/js';
+import { mdiChevronDown, mdiPlus, mdiMinus } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	name: 'PsicologosDesktop',
 	data() {
 		return {
+			mdiPlus,
+			mdiMinus,
 			mdiChevronDown,
 			view: 1,
 			specialties: '',
@@ -289,5 +416,17 @@ export default {
 	position: -webkit-sticky !important;
 	position: sticky !important;
 	top: 0 !important;
+}
+.shadowAppBar {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+}
+
+.item {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+	transition: transform 0.6s !important;
+}
+
+.item:hover {
+	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
 }
 </style>
