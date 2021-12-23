@@ -79,25 +79,36 @@
 							</template>
 						</v-img>
 					</v-col>
-					<v-col class="text-center" cols="12" sm="1">
-						<v-avatar
-							class="my-3 d-block"
-							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
+					<v-col class="text-sm-center text-left" cols="12" sm="1">
+						<a
+							style="text-decoration: none"
+							href="https://www.facebook.com/hablaquicom"
+							target="_blank"
 						>
-							<v-img :src="`https://cdn.hablaqui.cl/static/instagram.png`"></v-img>
-						</v-avatar>
-						<v-avatar
-							class="my-3 d-block"
-							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
+							<v-avatar :size="$vuetify.breakpoint.mdAndUp ? '70' : '40'">
+								<v-img :src="`https://cdn.hablaqui.cl/static/facebook.png`"></v-img>
+							</v-avatar>
+						</a>
+						<a
+							style="text-decoration: none"
+							href="https://www.instagram.com/hablaqui"
+							target="_blank"
 						>
-							<v-img :src="`https://cdn.hablaqui.cl/static/facebook.png`"></v-img>
-						</v-avatar>
-						<v-avatar
-							class="my-3 d-block"
-							:size="$vuetify.breakpoint.mdAndUp ? '70' : '40'"
+							<v-avatar :size="$vuetify.breakpoint.mdAndUp ? '70' : '40'">
+								<v-img
+									:src="`https://cdn.hablaqui.cl/static/instagram.png`"
+								></v-img>
+							</v-avatar>
+						</a>
+						<a
+							style="text-decoration: none"
+							href="https://www.tiktok.com/@hablaqui"
+							target="_blank"
 						>
-							<v-img :src="`https://cdn.hablaqui.cl/static/tiktop.png`"></v-img>
-						</v-avatar>
+							<v-avatar :size="$vuetify.breakpoint.mdAndUp ? '50' : '30'">
+								<v-img :src="`https://cdn.hablaqui.cl/static/tiktop.png`"></v-img>
+							</v-avatar>
+						</a>
 					</v-col>
 					<v-col cols="12" sm="11">
 						<div class="font-weight-light" v-html="article.HTMLbody"></div>
@@ -344,14 +355,14 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 	},
-	async asyncData({ $axios, params, redirect }) {
+	async asyncData({ $axios, params, error }) {
 		try {
 			const { article } = await $axios.$get(`/blog/${params.slug}`);
 			return {
 				article,
 			};
 		} catch (e) {
-			redirect('/psicologos');
+			error({ statusCode: 404, message: 'Post not found' });
 		}
 	},
 	data() {

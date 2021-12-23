@@ -11,9 +11,22 @@
 				/>
 			</nuxt-link>
 			<span class="hidden-sm-and-down text--secondary text-h6">
-				¿Necesitas ayuda? <b class="primary--text">Contáctanos</b>
+				¿Necesitas ayuda?
+				<a
+					style="text-decoration: none"
+					class="primary--text"
+					href="https://soporte.hablaqui.cl/hc"
+					target="_blank"
+				>
+					Contáctanos
+				</a>
 			</span>
-			<span class="hidden-md-and-up">
+			<a
+				style="text-decoration: none"
+				class="hidden-md-and-up"
+				href="https://soporte.hablaqui.cl/hc"
+				target="_blank"
+			>
 				<v-img
 					style="max-width: 30px"
 					alt="Ayuda"
@@ -21,7 +34,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/help.png`"
 					contain
 				/>
-			</span>
+			</a>
 		</div>
 		<v-row justify="center">
 			<v-col cols="12" :md="step === 4 ? '10' : '8'" :lg="step === 4 ? '8' : '6'">
@@ -1051,7 +1064,7 @@
 						</v-stepper-content>
 						<v-stepper-content step="4">
 							<plans
-								:recruited-id="form._id"
+								v-if="form._id"
 								:next="
 									() => {
 										step = 5;
@@ -1096,9 +1109,9 @@
 												class="mx-2"
 												color="primary"
 												rounded
-												@click="step = 1"
+												:to="{ name: 'dashboard-perfil' }"
 											>
-												Editar postulación
+												Ir a mi cuenta
 											</v-btn>
 										</div>
 									</v-col>

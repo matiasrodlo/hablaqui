@@ -49,6 +49,10 @@ let userSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		onboarding: {
+			type: Boolean,
+			default: false,
+		},
 		hasPaid: {
 			type: Boolean,
 			default: 'false',
@@ -66,6 +70,15 @@ let userSchema = new Schema(
 			type: String,
 			default: 'user',
 			enum: ['user', 'psychologist', 'superuser'],
+		},
+		gender: {
+			type: String,
+		},
+		direction: {
+			type: String,
+		},
+		birthDate: {
+			type: String,
 		},
 	},
 	{

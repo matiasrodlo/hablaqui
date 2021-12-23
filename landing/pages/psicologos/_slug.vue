@@ -10,14 +10,14 @@ export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	async asyncData({ params, $config, redirect }) {
+	async asyncData({ params, $config, error }) {
 		try {
 			const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
 			const comunas = await response.json();
 			const item = comunas.find(el => el.comuna.slug === params.slug);
 			return { comuna: item.comuna };
 		} catch (e) {
-			redirect('/psicologos');
+			error({ statusCode: 404, message: 'Post not found' });
 		}
 	},
 	head() {

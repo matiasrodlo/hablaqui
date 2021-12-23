@@ -17,6 +17,7 @@
 							>
 								Tu plan actual
 							</div>
+							<div v-else style="height: 22px"></div>
 							<div
 								class="headline font-weight-bold text-left d-block"
 								style="color: #15314a"
@@ -29,7 +30,7 @@
 						</div>
 						<div
 							style="flex: 1; font-size: 84px; color: #15314a"
-							class="font-weight-bold"
+							class="font-weight-bold text-right"
 						>
 							$0
 						</div>
@@ -61,11 +62,21 @@
 					</v-card-text>
 				</v-card>
 				<v-btn
+					v-if="currentPlan && currentPlan.tier === 'free'"
 					class="mt-4 elevation-12"
 					color="white"
 					rounded
 					block
-					:disabled="currentPlan.tier === 'free'"
+					@click="goToStep"
+				>
+					<span class="primary--text">Ir a mi cuenta</span>
+				</v-btn>
+				<v-btn
+					v-else
+					class="mt-4 elevation-12"
+					color="white"
+					rounded
+					block
 					@click="setPreferences('free')"
 				>
 					<span class="primary--text">Continuar con plan básico</span>
@@ -76,11 +87,12 @@
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
-								v-if="currentPlan.tier === 'premium'"
+								v-if="currentPlan && currentPlan.tier === 'premium'"
 								class="primary--text text-left body-1 font-weight-bold d-block"
 							>
 								Tu plan actual
 							</div>
+							<div v-else style="height: 22px"></div>
 							<div class="primary--text text-left headline font-weight-bold d-block">
 								Premium
 							</div>
@@ -91,12 +103,12 @@
 						</div>
 						<div
 							style="flex: 1; font-size: 44px; color: #15314a"
-							class="font-weight-bold"
+							class="font-weight-bold text-right"
 						>
 							$69.990
 						</div>
 					</v-card-text>
-					<v-card-text class="pt-10">
+					<v-card-text>
 						<v-divider></v-divider>
 						<v-divider></v-divider>
 					</v-card-text>
@@ -151,13 +163,23 @@
 						</v-card-text>
 					</v-card>
 					<v-btn
+						v-if="currentPlan.tier === 'premium'"
 						class="mt-4 elevation-12"
 						color="primary"
 						rounded
 						block
-						:disabled="currentPlan.tier === 'premium'"
+						@click="goToStep"
+					>
+						Ir a mi cuenta
+					</v-btn>
+					<v-btn
+						class="mt-4 elevation-12"
+						color="primary"
+						rounded
+						block
 						@click="setPreferences('premium')"
-						>Suscríbete al plan premium
+					>
+						Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
 			</v-col>
@@ -179,20 +201,17 @@ export default {
 			type: Function,
 			required: true,
 		},
-		recruitedId: {
-			type: String,
-			default: '',
-		},
 	},
 	data() {
 		return {
 			recruited: null,
 			psychologist: null,
+			recruitedId: '',
 			mdiCheck,
 			period: 'mensual',
 			itemsPremiun: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares',
+				'0% de comisión por clientes particulares y hablaquí',
 				'Sala de videollamada encriptada',
 				'Posicionamiento, visibilidad y clientes',
 				'Soporte prioritario y asesoramiento estratégico',
@@ -208,13 +227,22 @@ export default {
 	},
 	computed: {
 		currentPlan() {
+			if (this.$auth.$state.user.role !== 'psychologist') return false;
 			if (!this.psychologist && !this.recruited) return false;
-			if (this.recruited) return this.recruited.psyPlans[this.recruited.psyPlans.length - 1];
-			return this.psychologist.psyPlans[this.psychologist.psyPlans.length - 1];
+			if (
+				this.psychologist &&
+				this.psychologist.psyPlans &&
+				this.psychologist.psyPlans.length
+			)
+				return this.psychologist.psyPlans[this.psychologist.psyPlans.length - 1];
+			if (this.recruited && this.recruited.psyPlans && this.recruited.psyPlans.length)
+				return this.recruited.psyPlans[this.recruited.psyPlans.length - 1];
+			else return false;
 		},
 		hasPremiunPlan() {
 			if (!this.currentPlan) return false;
 			return (
+				this.currentPlan &&
 				this.currentPlan.tier === 'premium' &&
 				moment(this.currentPlan.expirationDate).isAfter(moment())
 			);
@@ -226,9 +254,9 @@ export default {
 				`/psychologists/one/${this.$auth.$state.user.psychologist}`
 			);
 			this.psychologist = psychologist;
-		}
-		if (this.recruitedId) {
+		} else {
 			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+			this.recruitedId = recruited._id;
 			this.recruited = recruited;
 		}
 	},
@@ -254,6 +282,10 @@ export default {
 				if (plan === 'premium') window.location.href = res.preference.init_point;
 				else this.$router.push({ name: 'dashboard-perfil' });
 			}
+		},
+		goToStep() {
+			if (this.$route.name === 'postulacion') this.next();
+			else this.$router.push({ name: 'dashboard-perfil' });
 		},
 		...mapActions({
 			setPaymentPreferences: 'Psychologist/setPaymentPreferences',

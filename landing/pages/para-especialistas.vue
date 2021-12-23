@@ -88,7 +88,7 @@
 				</v-row>
 			</v-container>
 		</v-img>
-		<v-container class="hidden-md-and-up primary pb-16">
+		<v-container id="form-psy2" class="hidden-md-and-up primary pb-16">
 			<v-row>
 				<v-col>
 					<form-user-psy />
@@ -358,7 +358,12 @@
 					</v-card>
 				</v-col>
 				<v-col cols="12" class="text-center">
-					<v-btn to="#form-psy" color="primary" x-large rounded>Regístrate ahora</v-btn>
+					<v-btn class="hidden-sm-and-down" to="#form-psy" color="primary" x-large rounded
+						>Regístrate ahora</v-btn
+					>
+					<v-btn class="hidden-md-and-up" to="#form-psy2" color="primary" x-large rounded
+						>Regístrate ahora</v-btn
+					>
 				</v-col>
 			</v-row>
 		</v-container>

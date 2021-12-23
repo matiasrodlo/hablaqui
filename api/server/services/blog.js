@@ -64,6 +64,10 @@ const getAllArticles = async () => {
 
 const getArticle = async slug => {
 	const article = await Article.findOne({ slug });
+	if (!article)
+		return conflictResponse(
+			'Ha ocurrido un error intentando recuperar el articulo'
+		);
 	return okResponse(`articulo encontrado ${slug}`, { article });
 };
 

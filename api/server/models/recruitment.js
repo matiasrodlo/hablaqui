@@ -35,13 +35,19 @@ let session = new Schema({
 });
 
 let defaultSchedule = {
-	monday: ['09:00', '17:00'],
-	tuesday: ['09:00', '17:00'],
-	wednesday: ['09:00', '17:00'],
-	thursday: ['09:00', '17:00'],
-	friday: ['09:00', '17:00'],
-	saturday: ['busy', 'busy'],
-	sunday: ['busy', 'busy'],
+	monday: [['09:00', '18:00']],
+	tuesday: [['09:00', '18:00']],
+	wednesday: [['09:00', '18:00']],
+	thursday: [['09:00', '18:00']],
+	friday: [['09:00', '18:00']],
+	saturday: 'busy',
+	sunday: 'busy',
+};
+
+const defaultPrices = {
+	text: 38000,
+	full: 62500,
+	video: 50000,
 };
 
 let defaultPreferences = {
@@ -242,6 +248,10 @@ let recruitment = new Schema(
 		preferences: {
 			type: Object,
 			default: defaultPreferences,
+		},
+		sessionPrices: {
+			type: Object,
+			default: defaultPrices,
 		},
 		paymentMethod: {
 			type: Object,

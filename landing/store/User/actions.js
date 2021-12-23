@@ -14,6 +14,19 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async updateOne({ commit }, payload) {
+		try {
+			delete payload.finishedSessions;
+			const { data } = await this.$axios(`/user/update-one/${payload._id}`, {
+				method: 'put',
+				data: payload,
+			});
+			snackBarSuccess(data.message)(commit);
+			return data.user;
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 	async registerUser({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/user/register', {
