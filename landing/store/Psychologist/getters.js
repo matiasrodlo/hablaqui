@@ -10,6 +10,7 @@ export default {
 	sessions: state => state.sessions,
 	payments: state => state.payments,
 	sessionsFormatted: state => state.sessionsFormatted,
+	sessionsFormattedAll: state => state.sessionsFormattedAll,
 	clients: state => {
 		const clients = [...state.clients];
 		return clients.sort((a, b) => {

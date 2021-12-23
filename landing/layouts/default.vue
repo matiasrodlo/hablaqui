@@ -35,10 +35,12 @@ export default {
 		async initialFetch() {
 			await this.getPsychologists();
 			await this.getAppointments();
+			await this.getFormattedSessionsAll();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
 		...mapMutations({
 			setListenerUserOnline: 'User/setListenerUserOnline',

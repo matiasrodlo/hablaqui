@@ -27,6 +27,13 @@ export default {
 			text: moment(session.value).format('ddd'),
 		}));
 	},
+	setSessionsFormattedAll(state, sessions) {
+		moment.locale('es');
+		state.sessionsFormattedAll = sessions.map(session => ({
+			...session,
+			text: moment(session.value).format('ddd'),
+		}));
+	},
 	setClients(state, value) {
 		state.clients = value;
 	},

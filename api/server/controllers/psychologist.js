@@ -43,6 +43,21 @@ const psychologistsController = {
 			);
 		}
 	},
+	async formattedSessionsAll(req, res) {
+		try {
+			const {
+				data,
+				code,
+			} = await psychologistsService.formattedSessionsAll();
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
 	async match(req, res) {
 		try {
 			const { body } = req;

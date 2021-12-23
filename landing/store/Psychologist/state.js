@@ -6,6 +6,7 @@ const initialState = {
 	resumeView: false,
 	sessions: [],
 	sessionsFormatted: [],
+	sessionsFormattedAll: [],
 };
 
 export default () => initialState;

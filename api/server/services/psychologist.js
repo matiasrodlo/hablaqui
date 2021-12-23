@@ -13,6 +13,7 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import mercadopagoService from './mercadopago';
+import _ from 'lodash';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -145,7 +146,7 @@ const getAllSessions = async (psy, startDate) => {
 	});
 };
 
-// Utilizado en modal agenda cita online
+// Utilizado para traer las sessiones de un psicologo para el selector
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
@@ -212,6 +213,96 @@ const getFormattedSessions = async idPsychologist => {
 		};
 	});
 	return okResponse('sesiones obtenidas', { sessions });
+};
+
+// Utilizado para traer las sessiones de todos los psicologos para el selector
+const formattedSessionsAll = async () => {
+	let sessions = [];
+	// creamos un array con la cantidad de dias
+	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+	// Obtenemos sessiones del psicologo
+	let allSessions = await Sessions.find({}).populate(
+		'psychologist',
+		'schedule'
+	);
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
+	// Formato de array debe ser [date, date, ...date]
+	const setDaySessions = sessions =>
+		sessions
+			.flatMap(item => {
+				return item.plan.flatMap(plan => {
+					return plan.session.length
+						? plan.session.map(session => session.date)
+						: [];
+				});
+			})
+			.filter(date =>
+				moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+			);
+
+	const groupByPsychologist = _(allSessions)
+		.groupBy(x => x.psychologist._id)
+		.map((value, key) => ({
+			psychologist: key,
+			schedule: value.find(
+				item => item.psychologist._id.toString() === key.toString()
+			).psychologist.schedule,
+			sessions: setDaySessions(value),
+		}))
+		.value();
+
+	// {
+	//     _id: new ObjectId("61bcec8df9d9bf214b06350d"),
+	//     plan: [ [Object] ],
+	//     psychologist: {
+	//       _id: new ObjectId("61bcdf27340f2791c2366037"),
+	//       schedule: [Object]
+	//     },
+	//     roomsUrl: 'https://rooms.hablaqui.cl/room/3ae9e9bffe6420d72585b5bfc04337b4',
+	//     user: new ObjectId("61bcec80f9d9bf214b0634fe"),
+	//     __v: 0
+	//   },
+
+	// sessions = length.map(el => {
+	// 	const day = moment(Date.now()).add(el, 'days');
+
+	// 	return {
+	// 		id: el,
+	// 		value: day,
+	// 		day: day.format('DD MMM'),
+	// 		date: day.format('L'),
+	// 		available: hours.filter(hour => {
+	// 			return (
+	// 				formattedSchedule(psychologist.schedule, day, hour) &&
+	// 				!daySessions.some(
+	// 					date =>
+	// 						moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+	// 							moment(day).format('L') &&
+	// 						hour ===
+	// 							moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+	// 				)
+	// 			);
+	// 		}),
+	// 	};
+	// });
+	return okResponse('sesiones obtenidas', { sessions: groupByPsychologist });
 };
 
 const formattedSchedule = (schedule, day, hour) => {
@@ -1162,6 +1253,7 @@ const psychologistsService = {
 	getByData,
 	getClients,
 	getFormattedSessions,
+	formattedSessionsAll,
 	getRating,
 	getSessions,
 	match,
