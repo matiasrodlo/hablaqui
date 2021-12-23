@@ -503,8 +503,6 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
-	console.log(sessionsId);
-	console.log(id);
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -518,7 +516,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
 
-	console.log(sessions.user.name);
 	await mailService.sendRescheduleToUser(
 		sessions.user,
 		sessions.psychologist,
@@ -530,7 +527,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		newDate
 	);
 
-	console.log(sessions.psychologist.name);
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
