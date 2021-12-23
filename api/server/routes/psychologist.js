@@ -393,7 +393,7 @@ psychologistsRouter.patch(
 	psychologistsController.deleteCommitment
 );
 
-psychologistsRouter.post(
+psychologistsRouter.get(
 	'/psychologist/get-sessions/:psy',
 	psychologistsController.getAllSessions
 );
