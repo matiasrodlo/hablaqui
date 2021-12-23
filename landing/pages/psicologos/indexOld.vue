@@ -2,10 +2,8 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<appbar />
-		<!-- desktop -->
-		<psicologos-desktop class="hidden-sm-and-down" />
-		<!-- mobile -->
-		<psicologos-mobile class="hidden-md-and-up" />
+		<!-- routing for child -->
+		<psicologos />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -31,8 +29,7 @@ export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () => import('~/components/psicologos/PsicologosDesktop'),
-		PsicologosMobile: () => import('~/components/psicologos/PsicologosMobile'),
+		psicologos: () => import('~/components/psicologos/psicologos'),
 	},
 	head() {
 		return {
@@ -51,7 +48,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: process.env.VUE_APP_LANDING + '/psicologos/',
+					href: `https://cdn.hablaqui.cl/static/psicologos/`,
 				},
 			],
 		};
