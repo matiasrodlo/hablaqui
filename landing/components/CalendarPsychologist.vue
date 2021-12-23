@@ -1,6 +1,12 @@
 <template>
 	<div :id="idPsy">
-		<v-row v-if="loading" class="ma-0" style="height: 300px" align="center" justify="center">
+		<v-row
+			v-if="!sessions.length"
+			class="ma-0"
+			style="height: 300px"
+			align="center"
+			justify="center"
+		>
 			<v-progress-circular indeterminate color="primary" />
 		</v-row>
 		<template v-else>
@@ -78,7 +84,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight, mdiChevronDown } from '@mdi/js';
 export default {
 	components: {
@@ -92,6 +97,7 @@ export default {
 		titleButton: { type: String, default: 'Agendar una cita online' },
 		idPsy: { type: String, default: '' },
 		loadingBtn: { type: Boolean, default: false },
+		sessions: { type: Array, default: () => [] },
 	},
 	data() {
 		return {
@@ -100,24 +106,7 @@ export default {
 			mdiChevronRight,
 			slide: 0,
 			selected: null,
-			loading: false,
 		};
-	},
-	computed: {
-		...mapGetters({ sessions: 'Psychologist/sessionsFormatted' }),
-	},
-	mounted() {
-		this.getData(this.idPsy);
-	},
-	methods: {
-		getData(id) {
-			this.loading = true;
-			// await this.getFormattedSessions(id);
-			// this.loading = false;
-		},
-		...mapActions({
-			getFormattedSessions: 'Psychologist/getFormattedSessions',
-		}),
 	},
 };
 </script>

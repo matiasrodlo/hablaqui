@@ -243,7 +243,9 @@
 							<v-divider vertical class="my-4"></v-divider>
 							<v-col cols="4" style="height: 350px">
 								<calendar-psychologist
+									v-if="sessions"
 									:id-psy="item._id"
+									:sessions="getSessions(item._id)"
 									:set-date="date => null"
 								/>
 							</v-col>
@@ -339,6 +341,7 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologists',
+			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
 	},
 	created() {
@@ -412,6 +415,14 @@ export default {
 			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
 			if (psychologist.avatar) return psychologist.avatar;
 			return '';
+		},
+		getSessions(id) {
+			const temp = this.sessions.find(element => element.psychologist === id);
+			if (!temp) {
+				console.log(temp);
+				return [];
+			}
+			return temp.sessions;
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

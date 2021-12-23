@@ -218,6 +218,11 @@ const getFormattedSessions = async idPsychologist => {
 // Utilizado para traer las sessiones de todos los psicologos para el selector
 const formattedSessionsAll = async () => {
 	let sessions = [];
+	let psychologist = await Psychologist.find({}).select('schedule');
+	// Para que nos de deje modificar el array de mongo
+	psychologist = JSON.stringify(psychologist);
+	psychologist = JSON.parse(psychologist);
+
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
@@ -226,21 +231,6 @@ const formattedSessionsAll = async () => {
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
-	);
-	// Obtenemos sessiones del psicologo
-	let allSessions = await Sessions.find({}).populate(
-		'psychologist',
-		'schedule'
-	);
-
-	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
-	allSessions = allSessions.filter(item =>
-		item.plan.some(plan => {
-			return (
-				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
-			);
-		})
 	);
 
 	// Formato de array debe ser [date, date, ...date]
@@ -257,52 +247,59 @@ const formattedSessionsAll = async () => {
 				moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 			);
 
-	const groupByPsychologist = _(allSessions)
-		.groupBy(x => x.psychologist._id)
-		.map((value, key) => ({
-			psychologist: key,
-			schedule: value.find(
-				item => item.psychologist._id.toString() === key.toString()
-			).psychologist.schedule,
-			sessions: setDaySessions(value),
-		}))
-		.value();
+	// Obtenemos sessiones del psicologo
+	let allSessions = await Sessions.find({}).populate(
+		'psychologist',
+		'schedule'
+	);
 
-	// {
-	//     _id: new ObjectId("61bcec8df9d9bf214b06350d"),
-	//     plan: [ [Object] ],
-	//     psychologist: {
-	//       _id: new ObjectId("61bcdf27340f2791c2366037"),
-	//       schedule: [Object]
-	//     },
-	//     roomsUrl: 'https://rooms.hablaqui.cl/room/3ae9e9bffe6420d72585b5bfc04337b4',
-	//     user: new ObjectId("61bcec80f9d9bf214b0634fe"),
-	//     __v: 0
-	//   },
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
 
-	// sessions = length.map(el => {
-	// 	const day = moment(Date.now()).add(el, 'days');
+	allSessions = psychologist.map(item => ({
+		...item,
+		sessions: setDaySessions(
+			allSessions.filter(element => element.psychologist === item._id)
+		),
+	}));
 
-	// 	return {
-	// 		id: el,
-	// 		value: day,
-	// 		day: day.format('DD MMM'),
-	// 		date: day.format('L'),
-	// 		available: hours.filter(hour => {
-	// 			return (
-	// 				formattedSchedule(psychologist.schedule, day, hour) &&
-	// 				!daySessions.some(
-	// 					date =>
-	// 						moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
-	// 							moment(day).format('L') &&
-	// 						hour ===
-	// 							moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
-	// 				)
-	// 			);
-	// 		}),
-	// 	};
-	// });
-	return okResponse('sesiones obtenidas', { sessions: groupByPsychologist });
+	sessions = allSessions.map(item => {
+		return {
+			psychologist: item._id,
+			sessions: length.map(el => {
+				const day = moment(Date.now()).add(el, 'days');
+				return {
+					id: item.psychologist,
+					value: day,
+					day: day.format('DD MMM'),
+					date: day.format('L'),
+					available: hours.filter(hour => {
+						return (
+							formattedSchedule(item.schedule, day, hour) &&
+							!item.sessions.some(
+								date =>
+									moment(date, 'MM/DD/YYYY HH:mm').format(
+										'L'
+									) === moment(day).format('L') &&
+									hour ===
+										moment(date, 'MM/DD/YYYY HH:mm').format(
+											'HH:mm'
+										)
+							)
+						);
+					}),
+				};
+			}),
+		};
+	});
+	return okResponse('sesiones obtenidas', { sessions });
 };
 
 const formattedSchedule = (schedule, day, hour) => {
