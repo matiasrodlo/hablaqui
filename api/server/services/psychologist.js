@@ -18,6 +18,7 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+import user from '../models/user';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -119,17 +120,96 @@ const setSession = (role, sessions) => {
 	});
 };
 
+const getRemainingSessions = async psy => {
+	let sessions = await Sessions.find({
+		psychologist: psy,
+	}).populate('psychologist user');
+
+	sessions = sessions.flatMap(item => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+
+		return item.plan.flatMap(plan => {
+			return {
+				idPlan: plan._id,
+				name: `${name} ${lastName}`,
+				remaining: plan.remainingSessions,
+				sessions: `${plan.remainingSessions} de ${plan.totalSessions}`,
+				statusPlan: plan.payment,
+			};
+		});
+	});
+
+	return okResponse('Sesiones restantes obtenidas', {
+		sessions: sessions.filter(session => {
+			return session.remaining > 0;
+		}),
+	});
+};
+
 const getAllSessions = async (psy, startDate) => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
 
-	sessions = setSession('psychologist', sessions);
+	let comission = 0;
+	let percentage = '0%';
 
+	let { psyPlans } = await Psychologist.findById(psy);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
+	sessions = sessions.flatMap(item => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+		return item.plan.flatMap(plan => {
+			return plan.session.map(session => {
+				return {
+					_id: session._id,
+					date: session.date,
+					sessionPrice: plan.sessionPrice,
+					idPsychologist: item.psychologist._id,
+					name: `${name} ${lastName}`,
+					paidToPsychologist: session.paidToPsychologist,
+					sessionsNumber: `${session.sessionNumber} de ${plan.totalSessions}`,
+					sessionsId: item._id,
+					status: session.status,
+					statusPlan: plan.payment,
+					idPlan: plan._id,
+					total: plan.sessionPrice * (1 - comission),
+					percentage: percentage,
+				};
+			});
+		});
+	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
 		return (
-			session.paidToPsychologist &&
-			session.statusPlan === 'success' &&
+			session.statusPlan !== 'success' &&
 			//moment().isBefore(moment(session.expiration)) &&
 			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
 				moment(startDate, 'MM/DD/YYYY HH:mm'),
@@ -137,10 +217,17 @@ const getAllSessions = async (psy, startDate) => {
 			)
 		);
 	});
-	console.log(sessions.length);
-	//let newSessions = setSession('psychologist', sessions);
-	//console.log(newSessions.length);
+
 	return okResponse('Sesiones obtenidas', {
+		total: sessions
+			.filter(session => {
+				return session.paidToPsychologist;
+			})
+			.reduce(
+				(sum, value) =>
+					typeof value.total == 'number' ? sum + value.total : sum,
+				0
+			),
 		sessions: sessions,
 	});
 };
@@ -1180,6 +1267,7 @@ const psychologistsService = {
 	usernameAvailable,
 	deleteCommitment,
 	getAllSessions,
+	getRemainingSessions,
 };
 
 export default Object.freeze(psychologistsService);
