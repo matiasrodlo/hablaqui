@@ -398,4 +398,9 @@ psychologistsRouter.post(
 	psychologistsController.getAllSessions
 );
 
+psychologistsRouter.get(
+	'/psychologist/get-remaining-sessions/:psy',
+	psychologistsController.getRemainingSessions
+);
+
 export default psychologistsRouter;

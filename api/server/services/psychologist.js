@@ -120,10 +120,46 @@ const setSession = (role, sessions) => {
 	});
 };
 
+const getRemainingSessions = async psy => {
+	let sessions = await Sessions.find({
+		psychologist: psy,
+	}).populate('psychologist user');
+
+	sessions = sessions.flatMap(item => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+
+		return item.plan.flatMap(plan => {
+			return {
+				idPlan: plan._id,
+				name: `${name} ${lastName}`,
+				remaining: plan.remainingSessions,
+				sessions: `${plan.remainingSessions} de ${plan.totalSessions}`,
+				statusPlan: plan.payment,
+			};
+		});
+	});
+
+	return okResponse('Sesiones restantes obtenidas', {
+		sessions: sessions.filter(session => {
+			return session.remaining > 0;
+		}),
+	});
+};
+
 const getAllSessions = async (psy, startDate) => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
-	}).populate('psychologist');
+	}).populate('psychologist user');
 
 	let comission = 0;
 	let percentage = '0%';
@@ -1231,6 +1267,7 @@ const psychologistsService = {
 	usernameAvailable,
 	deleteCommitment,
 	getAllSessions,
+	getRemainingSessions,
 };
 
 export default Object.freeze(psychologistsService);
