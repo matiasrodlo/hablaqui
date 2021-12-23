@@ -27,7 +27,7 @@
 				>
 					<span>{{ el.title }}</span>
 					<v-btn style="width: 32px" fab depressed color="primary" x-small>
-						<icon :icon="el.done ? mdiCheck : mdiClose" />
+						<icon color="white" :icon="el.done ? mdiCheck : mdiClose" />
 					</v-btn>
 				</div>
 			</v-col>

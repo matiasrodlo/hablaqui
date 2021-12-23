@@ -43,6 +43,12 @@ userRouter.put(
 	userController.updateProfile
 );
 
+userRouter.put(
+	'/user/update-one/:id',
+	[passport.authenticate('jwt', { session: true })],
+	userController.updateOne
+);
+
 // Pasword recovery
 userRouter.patch(
 	'/user/reset-password',

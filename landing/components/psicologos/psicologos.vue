@@ -107,7 +107,7 @@
 							:items="appointments"
 							item-value="value"
 							label="Motivo de consulta"
-							append-icon="mdi-chevron-down"
+							:append-icon="mdiChevronDown"
 							hide-details
 							clearable
 							:menu-props="{
@@ -137,7 +137,7 @@
 							outlined
 							:items="itemsSearch"
 							label="Busca tu psicólogo"
-							append-icon="mdi-chevron-down"
+							:append-icon="mdiChevronDown"
 							hide-details
 							:menu-props="{
 								closeOnClick: true,
@@ -166,7 +166,7 @@
 						>
 							<v-expansion-panel>
 								<v-expansion-panel-header
-									expand-icon="mdi-filter"
+									:expand-icon="mdiFilter"
 									disable-icon-rotate
 									class="px-3"
 								>
@@ -307,7 +307,7 @@
 												: 'text-transform: none !important;'
 										"
 										:class="hover ? 'elevation-6' : 'elevation-3'"
-										height="350"
+										height="400"
 										style="border-radius: 15px; transition: transform 0.7s"
 										class="text-center"
 										color="primary"
@@ -351,8 +351,9 @@
 												<span class="text--secondary">Comenzar</span>
 											</v-btn>
 											<v-spacer></v-spacer>
-										</v-card-actions> </v-card
-								></v-hover>
+										</v-card-actions>
+									</v-card>
+								</v-hover>
 							</v-col>
 							<v-col
 								v-if="!loading && !filterLevelThree.length"
@@ -378,7 +379,7 @@
 										"
 										:class="hover ? 'elevation-3' : 'elevation-1'"
 										style="border-radius: 15px; transition: transform 0.6s"
-										height="350"
+										height="400"
 										class="text-center"
 									>
 										<v-card-text style="height: 250px">
@@ -423,6 +424,13 @@
 														: item.professionalDescription
 												}}
 											</div>
+										</v-card-text>
+										<v-card-text
+											class="font-weight-medium pa-2"
+											style="color: #424242"
+										>
+											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+											/ 50 min
 										</v-card-text>
 										<v-card-text>
 											<div>
@@ -606,6 +614,18 @@
 																	}}
 																</span>
 															</nuxt-link>
+															<div
+																class="font-weight-medium pa-2"
+																style="color: #424242"
+															>
+																${{
+																	Math.ceil(
+																		item.sessionPrices.video /
+																			100
+																	) * 100
+																}}
+																/ 50 min
+															</div>
 														</v-col>
 														<v-col
 															cols="12"
@@ -675,7 +695,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import { mdiMenu, mdiViewGridOutline } from '@mdi/js';
+import { mdiMenu, mdiViewGridOutline, mdiChevronDown, mdiFilter } from '@mdi/js';
 
 export default {
 	name: 'AllPsicologos',
@@ -686,6 +706,8 @@ export default {
 	},
 	data() {
 		return {
+			mdiFilter,
+			mdiChevronDown,
 			mdiMenu,
 			mdiViewGridOutline,
 			view: 1,

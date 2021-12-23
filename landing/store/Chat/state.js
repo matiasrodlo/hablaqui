@@ -1,5 +1,5 @@
 const initialState = {
-	chat: [],
+	chat: null,
 	chats: [],
 	floatingChat: false,
 };

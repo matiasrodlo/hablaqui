@@ -109,6 +109,16 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async updateSessions({ commit }, payload) {
+		try {
+			await this.$axios('/psychologists/update/sessions', {
+				method: 'PUT',
+				data: payload,
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async approveAvatar({ commit }, id) {
 		try {
 			const { data } = await this.$axios(`/psychologist/${id}/approve-avatar`, {

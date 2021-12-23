@@ -4,7 +4,11 @@
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
-					<div class="hidden-md-and-up">
+					<div
+						v-if="$auth.$state.user.role === 'user'"
+						class="hidden-md-and-up"
+						style="margin-top: 10px"
+					>
 						<div class="d-flex justify-center">
 							<div>
 								<div class="body-2 text-center text--secondary font-weight-bold">
@@ -95,7 +99,7 @@
 							</v-menu>
 						</v-toolbar>
 					</v-sheet>
-					<v-sheet :height="$vuetify.breakpoint.mdAndUp ? '80%' : ''">
+					<v-sheet height="600px">
 						<v-calendar
 							ref="calendar"
 							v-model="focus"
@@ -444,17 +448,22 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Se le ha enviado un email al consultante, La fecha y hora
-										estará disponible hasta que el consultante cancele
+										Hemos enviado un email al consultante. La fecha y hora
+										estará disponible hasta que el consultante pague su sesión.
 									</v-card-text>
 								</template>
 							</v-card>
 						</v-dialog>
-						<v-row
-							v-if="$auth.$state.user.role === 'psychologist'"
-							class="text-md-right pt-4"
-						>
-							<v-col cols="6" md="3">
+						<v-row justify="end" class="text-md-right pt-4">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('sesion online')">
 									<v-avatar size="20" color="primary">
 										<icon small :icon="mdiCheck" color="white" />
@@ -462,7 +471,15 @@
 									<span class="ml-1 caption">Sesiones online</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text depressed @click="() => setFilter('sesion presencial')">
 									<v-avatar color="#00c6ea" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -470,7 +487,12 @@
 									<span class="ml-1 caption">Sesiones presenciales</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="6" md="3">
+							<v-col
+								v-if="$auth.$state.user.role === 'psychologist'"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('compromiso privado')">
 									<v-avatar color="#efb908" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -478,9 +500,17 @@
 									<span class="ml-1 caption">Compromiso privado</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('pending')">
-									<v-avatar color="blue-grey lighten-4" size="20">
+									<v-avatar color="#78909C" size="20">
 										<icon small :icon="mdiCheck" color="white" />
 									</v-avatar>
 									<span class="ml-1 caption">
@@ -653,6 +683,7 @@
 		<v-overlay :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
+		<recruited-overlay />
 	</div>
 </template>
 
@@ -678,6 +709,7 @@ export default {
 		Calendar: () => import('~/components/Calendar.vue'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
+		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -872,16 +904,18 @@ export default {
 		this.idClient = this.$route.query.client;
 	},
 	async mounted() {
-		this.overlay = true;
-		moment.locale('es');
-		await this.$auth.fetchUser();
 		await this.initFetch();
-		await this.successPayment();
-		this.$refs.calendar?.checkChange();
-		this.overlay = false;
 	},
 	methods: {
 		async initFetch() {
+			if (
+				this.$auth.$state.user.role === 'psychologist' &&
+				!this.$auth.$state.user.psychologist
+			)
+				return null;
+			this.overlay = true;
+			moment.locale('es');
+			await this.$auth.fetchUser();
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
 					idPsychologist: this.plan.psychologist,
@@ -897,15 +931,18 @@ export default {
 					idPsychologist: this.$auth.$state.user.psychologist,
 				});
 			}
+			await this.successPayment();
+			this.$refs.calendar?.checkChange();
+			this.overlay = false;
 		},
 		getEventColor(event) {
-			// if (event.statusPlan === 'pending') return 'blue-grey lighten-4';
+			if (event.statusPlan === 'pending') return 'blue-grey lighten-1';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
 		},
 		getEventTextColor(event) {
-			if (event.statusPlan === 'pending') return 'error';
+			//	if (event.statusPlan === 'pending') return 'error';
 			return 'white';
 		},
 		async submitUser() {

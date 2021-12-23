@@ -17,7 +17,7 @@
 					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaquí"
-					class="my-16"
+					class="mt-10"
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
@@ -59,11 +59,66 @@
 						</v-list-item-content>
 					</v-list-item>
 				</template>
-				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
-					<v-list-item-avatar size="40">
+				<v-list-item
+					v-if="$auth.$state.user.role === 'psychologist'"
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://calendly.com/daniel-hablaqui/30min"
+				>
+					<v-list-item-avatar size="30">
 						<v-img
-							height="50"
-							width="50"
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/demo-w.png"
+							alt="demo"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Agendar demo
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-if="$auth.user.role === 'psychologist'"
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://soporte.hablaqui.cl/hc"
+				>
+					<v-list-item-avatar size="30">
+						<v-img
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/ayuda.png"
+							alt="soporte"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
+					<v-list-item-avatar size="30">
+						<v-img
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/ayuda.png"
+							alt="soporte"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
+					<v-list-item-avatar size="30">
+						<v-img
+							height="45"
+							width="45"
 							:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 							alt="cerrar sesión"
 						/>
@@ -76,24 +131,55 @@
 				</v-list-item>
 			</v-list>
 			<template v-if="!isMini" #append>
-				<div class="pa-2 white--text">
+				<div class="pa-2 caption white--text">
 					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún se esta construyendo si presentas algún error puedes
-					contactarnos
+					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
+					dudes en contactarnos
 				</div>
 			</template>
 		</v-navigation-drawer>
-		<v-app-bar absolute flat height="85" color="primary" dark class="hidden-md-and-up">
-			<h1 class="white--text">{{ routeName }}</h1>
+		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
+			<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
+				<icon size="30" color="primary" :icon="mdiChevronLeft" />
+			</v-btn>
+			<h1 class="primary--text text-h5 font-weight-bold">{{ routeName }}</h1>
 			<v-spacer></v-spacer>
 			<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
-				<icon color="white" :icon="mdiMenu" />
+				<icon size="30" color="primary" :icon="mdiMenu" />
 			</v-btn>
 		</v-app-bar>
 		<v-main
-			class="primary"
-			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '140px' }"
+			:class="$vuetify.breakpoint.mdAndUp ? 'primary' : 'white'"
+			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
+			<v-overlay :value="overlay" color="white" :opacity="0.8">
+				<v-card light>
+					<div class="text-right">
+						<v-btn text>
+							<span class="secondary--text" @click="changeStateOnboarding"> x </span>
+						</v-btn>
+					</div>
+					<v-card-text class="py-0 text-center body-1 px-6">
+						Bienvenido a Hablaquí Office
+					</v-card-text>
+					<v-card-text class="text-center body-2 px-6">
+						Agenda un tour por tu oficina y aclara todas tus dudas
+					</v-card-text>
+					<v-card-actions class="text-center body-2 px-6">
+						<v-spacer></v-spacer>
+						<v-btn
+							rounded
+							color="primary"
+							href="https://calendly.com/daniel-hablaqui/30min"
+							target="_blank"
+							:loading="loadingOnboarding"
+							@click="changeStateOnboarding"
+							>Agendar demo
+						</v-btn>
+						<v-spacer></v-spacer>
+					</v-card-actions>
+				</v-card>
+			</v-overlay>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -106,9 +192,9 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert } from '@mdi/js';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert, mdiChevronLeft } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -117,6 +203,9 @@ export default {
 	},
 	data() {
 		return {
+			overlay: false,
+			loadingOnboarding: false,
+			mdiChevronLeft,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
@@ -130,79 +219,124 @@ export default {
 		expand() {
 			return true;
 		},
+		goBack() {
+			return (
+				this.$route.name === 'dashboard-perfil-configuracion-personal' ||
+				this.$route.name === 'dashboard-perfil-datos-bancarios' ||
+				this.$route.name === 'dashboard-perfil-experiencia-formacion' ||
+				this.$route.name === 'dashboard-perfil-informacion-general' ||
+				this.$route.name === 'dashboard-perfil-horario' ||
+				this.$route.name === 'dashboard-perfil-services' ||
+				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
+			);
+		},
 		links() {
 			const visible =
-				(this.$auth.$state.loggedIn &&
-					this.$auth.user.role === 'psychologist' &&
-					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `https://cdn.hablaqui.cl/static/chat.png`,
+					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
+					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					img: 'https://cdn.hablaqui.cl/static/pay.png',
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },
-					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
+					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `https://cdn.hablaqui.cl/static/home.png`,
+					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
+				},
+				{
+					name: 'Mi plan premium',
+					link: { name: 'dashboard-planes' },
+					img: 'https://cdn.hablaqui.cl/static/diamond-w.png',
+					visible:
+						this.$vuetify.breakpoint.smAndDown &&
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `https://cdn.hablaqui.cl/static/apps.png`,
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 				{
 					name: 'Nuevo articulo',
 					link: { name: 'dashboard-newArticle' },
-					img: `https://cdn.hablaqui.cl/static/article.png`,
+					img: 'https://cdn.hablaqui.cl/static/article.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
 		},
 		routeName() {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-planes') return 'Planes';
 			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
 			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
 			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
+			if (this.$route.name === 'dashboard-perfil-configuracion-personal')
+				return 'Configuración personal';
+			if (this.$route.name === 'dashboard-perfil-datos-bancarios') return 'Datos bancarios';
+			if (this.$route.name === 'dashboard-perfil-experiencia-formacion')
+				return 'Experiencia y formación';
+			if (this.$route.name === 'dashboard-perfil-informacion-general')
+				return 'Informacion general';
+			if (this.$route.name === 'dashboard-perfil-horario') return 'Horarios';
+			if (this.$route.name === 'dashboard-perfil-services') return 'Servicios';
+			if (this.$route.name === 'dashboard-consultantes-consultante-seleccionado')
+				return 'Consultante';
 			return '';
 		},
 		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+	},
+	mounted() {
+		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+			this.overlay = true;
 	},
 	methods: {
 		logout() {
 			this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		async changeStateOnboarding() {
+			this.loadingOnboarding = true;
+			await this.updateOne({
+				_id: this.$auth.$state.user._id,
+				onboarding: true,
+			});
+			this.loadingOnboarding = false;
+			this.overlay = false;
+			this.$auth.fetchUser();
+		},
 		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
+		...mapActions({
+			updateOne: 'User/updateOne',
+		}),
 	},
 };
 </script>

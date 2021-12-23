@@ -1064,7 +1064,7 @@
 						</v-stepper-content>
 						<v-stepper-content step="4">
 							<plans
-								:recruited-id="form._id"
+								v-if="form._id"
 								:next="
 									() => {
 										step = 5;
@@ -1109,9 +1109,9 @@
 												class="mx-2"
 												color="primary"
 												rounded
-												@click="step = 1"
+												:to="{ name: 'dashboard-perfil' }"
 											>
-												Editar postulación
+												Ir a mi cuenta
 											</v-btn>
 										</div>
 									</v-col>

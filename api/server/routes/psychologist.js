@@ -64,6 +64,12 @@ psychologistsRouter.get(
 	psychologistsController.getByData
 );
 
+psychologistsRouter.put(
+	'/psychologists/update/sessions',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.updateSessions
+);
+
 psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
@@ -385,6 +391,16 @@ psychologistsRouter.get(
 psychologistsRouter.patch(
 	'/psychologist/delete-commitment/:psyId/:planId',
 	psychologistsController.deleteCommitment
+);
+
+psychologistsRouter.post(
+	'/psychologist/get-sessions/:psy',
+	psychologistsController.getAllSessions
+);
+
+psychologistsRouter.get(
+	'/psychologist/get-remaining-sessions/:psy',
+	psychologistsController.getRemainingSessions
 );
 
 export default psychologistsRouter;
