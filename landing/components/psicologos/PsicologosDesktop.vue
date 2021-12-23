@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- filter name -->
-		<v-container>
+		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
 					cols="12"
@@ -50,7 +50,7 @@
 			class="sticky scroll"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
-			<v-container>
+			<v-container fluid style="max-width: 1200px">
 				<v-row>
 					<v-col cols="4">
 						<v-autocomplete
@@ -142,7 +142,7 @@
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
-		<v-container>
+		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col v-for="(item, i) in filterLevelThree" :key="i" cols="12">
 					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
@@ -240,7 +240,13 @@
 									</v-btn>
 								</div>
 							</v-col>
-							<v-col cols="4"></v-col>
+							<v-divider vertical class="my-4"></v-divider>
+							<v-col cols="4" style="height: 350px">
+								<calendar-psychologist
+									:id-psy="item._id"
+									:set-date="date => null"
+								/>
+							</v-col>
 						</v-row>
 					</v-card>
 				</v-col>
@@ -255,6 +261,9 @@ import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	name: 'PsicologosDesktop',
+	components: {
+		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+	},
 	data() {
 		return {
 			mdiPlus,
