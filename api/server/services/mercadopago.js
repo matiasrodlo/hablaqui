@@ -130,6 +130,7 @@ const setPlanFree = async (id, isPsychologist) => {
 
 const successPay = async params => {
 	try {
+		logInfo('success Pay');
 		const { planId } = params;
 		const currentSessions = await Sessions.findById(planId);
 		const plan = currentSessions.plan[
