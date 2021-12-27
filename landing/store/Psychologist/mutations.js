@@ -33,12 +33,17 @@ export default {
 			text: moment(session.value).format('ddd'),
 		}));
 	},
-	setSessionsFormattedAll(state, sessions) {
+	setSessionsFormattedAll(state, items) {
 		moment.locale('es');
-		state.sessionsFormattedAll = sessions.map(session => ({
-			...session,
-			text: moment(session.value).format('ddd'),
-		}));
+		state.sessionsFormattedAll = items.map(item => {
+			return {
+				psychologist: item.psychologist,
+				sessions: item.sessions.map(el => ({
+					...el,
+					text: moment(el.text).format('ddd'),
+				})),
+			};
+		});
 	},
 	setClients(state, value) {
 		state.clients = value;

@@ -302,6 +302,7 @@ const formattedSessionsAll = async () => {
 					value: day,
 					day: day.format('DD MMM'),
 					date: day.format('L'),
+					text: moment(day),
 					available: hours.filter(hour => {
 						return (
 							formattedSchedule(item.schedule, day, hour) &&
