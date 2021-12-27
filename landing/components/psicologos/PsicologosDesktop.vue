@@ -150,8 +150,37 @@
 			</v-app-bar>
 		</client-only>
 		<!-- pychologist -->
-		<v-container fluid style="max-width: 1200px">
+		<v-container fluid style="max-width: 1200px" class="my-4">
 			<v-row>
+				<v-col cols="12">
+					<v-sheet class="item" style="border-radius: 15px">
+						<v-row no-gutters align="center">
+							<v-col cols="3">
+								<v-img
+									style="border-radius: 15px 100% 0 15px"
+									width="250px"
+									height="200px"
+									src="https://cdn.hablaqui.cl/static/Aihnoa_Con.webp"
+									lazy-src="https://cdn.hablaqui.cl/static/Aihnoa_Con.webp"
+								></v-img>
+							</v-col>
+							<v-col>
+								<div class="headline primary--text font-weight-bold">
+									Te ayudamos a encontrar a tu psicólogo ideal
+								</div>
+								<div class="my-2 body-1 primary--text font-weight-regular">
+									Encuentra al psicólogo que necesitas, solo responde las
+									siguientes preguntas.
+								</div>
+								<div class="my-4">
+									<v-btn rounded color="primary" class="px-8 py-2" @click="start">
+										Comenzar
+									</v-btn>
+								</div>
+							</v-col>
+						</v-row>
+					</v-sheet>
+				</v-col>
 				<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
 					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
 						<v-row>
@@ -241,6 +270,7 @@
 										small
 										rounded
 										color="primary"
+										class="px-8 py-2"
 										:to="{ path: `/${item.username}` }"
 									>
 										Quiero saber más
