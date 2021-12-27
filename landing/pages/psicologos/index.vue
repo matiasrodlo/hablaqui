@@ -74,13 +74,13 @@ export default {
 	},
 	methods: {
 		async initialFetch() {
-			await this.getPsychologistsWithPagination(0);
+			await this.getPsychologists();
 			await this.getAppointments();
 			this.getFormattedSessionsAll();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getPsychologistsWithPagination: 'Psychologist/getPsychologistsWithPagination',
+			getPsychologists: 'Psychologist/getPsychologists',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
 	},

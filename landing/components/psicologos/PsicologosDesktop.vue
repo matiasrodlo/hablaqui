@@ -252,7 +252,7 @@
 						</v-row>
 					</v-card>
 				</v-col>
-				<template v-if="loadingPagination || loading">
+				<template v-if="loading">
 					<v-col
 						cols="12"
 						style="height: 400px"
@@ -272,7 +272,7 @@
 
 <script>
 import { mdiChevronDown, mdiPlus, mdiMinus } from '@mdi/js';
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { throttle } from 'lodash';
 
 export default {
@@ -292,8 +292,6 @@ export default {
 			models: [],
 			languages: [],
 			scrollHeight: 0,
-			page: 0,
-			loadingPagination: false,
 		};
 	},
 	computed: {
@@ -355,7 +353,6 @@ export default {
 			return result;
 		},
 		...mapGetters({
-			pageOptions: 'Psychologist/page',
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologists',
 			sessions: 'Psychologist/sessionsFormattedAll',
@@ -398,17 +395,6 @@ export default {
 	methods: {
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
-
-			if (
-				window.innerHeight + Math.ceil(window.pageYOffset) + 700 >=
-					document.body.offsetHeight &&
-				!this.loadingPagination &&
-				this.pageOptions.totalPages > this.page
-			) {
-				this.loadingPagination = true;
-				this.page = this.page + 1;
-				this.getPage();
-			}
 		},
 		getPage: throttle(function () {
 			this.getPsychologistsWithPagination(this.page)
@@ -459,9 +445,6 @@ export default {
 			}
 			return temp.sessions;
 		},
-		...mapActions({
-			getPsychologistsWithPagination: 'Psychologist/getPsychologistsWithPagination',
-		}),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
