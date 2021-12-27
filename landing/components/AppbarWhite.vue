@@ -357,7 +357,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .shadow {
-	-webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
-	filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
+	-webkit-filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
+	filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
 }
 </style>
