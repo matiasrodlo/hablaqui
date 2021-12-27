@@ -1170,7 +1170,21 @@ const paymentsInfo = async user => {
 	let percentage = '0%';
 
 	let { psyPlans } = await Psychologist.findById(user.psychologist);
-	const currentPlan = psyPlans[psyPlans.length - 1];
+	let currentPlan = psyPlans[psyPlans.length - 1];
+
+	if (!currentPlan) {
+		currentPlan = {
+			tier: 'free',
+			paymentStatus: 'success',
+			planStatus: 'active',
+			expirationDate: '',
+			subscriptionPeriod: '',
+			price: 0,
+			hablaquiFee: 0.2,
+			paymentFee: 0.0399,
+		};
+	}
+
 	if (currentPlan.tier === 'premium') {
 		comission = currentPlan.paymentFee;
 		percentage = '3.99%';
