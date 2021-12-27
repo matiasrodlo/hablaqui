@@ -62,23 +62,6 @@
 					</v-slide-item>
 				</v-slide-group>
 			</div>
-			<div class="text-center">
-				<v-btn
-					:loading="loadingBtn"
-					:disabled="!selected"
-					color="primary"
-					text
-					style="width: 200px"
-					class="mt-5"
-					@click="
-						() => {
-							if (selected) setDate(selected);
-						}
-					"
-				>
-					<span class="mr-4">Mas horarios</span> <icon :icon="mdiChevronDown" />
-				</v-btn>
-			</div>
 		</template>
 	</div>
 </template>

@@ -13,6 +13,7 @@
 				</v-col>
 				<v-col cols="12" sm="6">
 					<v-autocomplete
+						id="searchInput"
 						v-model="searchInput"
 						class="white"
 						dense
@@ -44,103 +45,110 @@
 			</v-row>
 		</v-container>
 		<!-- filters -->
-		<v-app-bar
-			:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
-			style="z-index: 1"
-			class="sticky scroll"
-			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
-		>
-			<v-container fluid style="max-width: 1200px">
-				<v-row>
-					<v-col cols="4">
-						<v-autocomplete
-							v-model="specialties"
-							class="white"
-							outlined
-							:items="appointments"
-							item-value="value"
-							label="Motivo de consulta"
-							:append-icon="mdiChevronDown"
-							hide-details
-							dense
-							clearable
-							:menu-props="{
-								closeOnClick: true,
-								closeOnContentClick: true,
-							}"
-							:disabled="loading"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-content>
-										<v-list-item-title>
-											No se encontraron resultados que coincidan con "<strong>
-												{{ specialties }}
-											</strong>
-											" .
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col cols="3">
-						<v-select
-							v-model="gender"
-							class="white"
-							multiple
-							:items="[
-								{ text: 'Mujer', value: 'female' },
-								{ text: 'Hombre', value: 'male' },
-								{ text: 'Transgénero', value: 'transgender' },
-							]"
-							:disabled="loading"
-							outlined
-							dense
-							label="Género"
-							hide-details
-							@change="filterPanel"
-						></v-select>
-					</v-col>
-					<v-col cols="3">
-						<v-select
-							v-model="gender"
-							class="white"
-							multiple
-							:items="[
-								{ text: 'Mujer', value: 'female' },
-								{ text: 'Hombre', value: 'male' },
-								{ text: 'Transgénero', value: 'transgender' },
-							]"
-							:disabled="loading"
-							outlined
-							dense
-							label="Precios"
-							hide-details
-							@change="filterPanel"
-						></v-select>
-					</v-col>
-					<v-col cols="2">
-						<v-select
-							v-model="gender"
-							class="white"
-							multiple
-							:items="[
-								{ text: 'Mujer', value: 'female' },
-								{ text: 'Hombre', value: 'male' },
-								{ text: 'Transgénero', value: 'transgender' },
-							]"
-							:disabled="loading"
-							outlined
-							dense
-							label="Precios"
-							hide-details
-							@change="filterPanel"
-						></v-select>
-					</v-col>
-				</v-row>
-			</v-container>
-		</v-app-bar>
+		<client-only>
+			<v-app-bar
+				:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
+				style="z-index: 1"
+				class="sticky scroll"
+				:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
+			>
+				<v-container fluid style="max-width: 1200px">
+					<v-row>
+						<v-col cols="4">
+							<v-autocomplete
+								id="specialties"
+								v-model="specialties"
+								class="white"
+								outlined
+								:items="appointments"
+								item-value="value"
+								label="Motivo de consulta"
+								:append-icon="mdiChevronDown"
+								hide-details
+								dense
+								clearable
+								:menu-props="{
+									closeOnClick: true,
+									closeOnContentClick: true,
+								}"
+								:disabled="loading"
+							>
+								<template #no-data>
+									<v-list-item>
+										<v-list-item-content>
+											<v-list-item-title>
+												No se encontraron resultados que coincidan con
+												"<strong>
+													{{ specialties }}
+												</strong>
+												" .
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+								</template>
+							</v-autocomplete>
+						</v-col>
+						<v-col cols="3">
+							<v-select
+								id="gender"
+								v-model="gender"
+								class="white"
+								multiple
+								:items="[
+									{ text: 'Mujer', value: 'female' },
+									{ text: 'Hombre', value: 'male' },
+									{ text: 'Transgénero', value: 'transgender' },
+								]"
+								:disabled="loading"
+								outlined
+								dense
+								label="Género"
+								hide-details
+								@change="filterPanel"
+							></v-select>
+						</v-col>
+						<v-col cols="3">
+							<v-select
+								id="price"
+								v-model="gender"
+								class="white"
+								multiple
+								:items="[
+									{ text: 'Mujer', value: 'female' },
+									{ text: 'Hombre', value: 'male' },
+									{ text: 'Transgénero', value: 'transgender' },
+								]"
+								:disabled="loading"
+								outlined
+								dense
+								label="Precios"
+								hide-details
+								@change="filterPanel"
+							></v-select>
+						</v-col>
+						<v-col cols="2">
+							<v-select
+								id="other"
+								v-model="gender"
+								class="white"
+								multiple
+								:items="[
+									{ text: 'Mujer', value: 'female' },
+									{ text: 'Hombre', value: 'male' },
+									{ text: 'Transgénero', value: 'transgender' },
+								]"
+								:disabled="loading"
+								outlined
+								dense
+								label="Precios"
+								hide-details
+								@change="filterPanel"
+							></v-select>
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-app-bar>
+		</client-only>
 		<!-- pychologist -->
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
@@ -161,11 +169,10 @@
 										loading-color="white"
 									></avatar>
 									<div
-										v-if="item.code"
 										class="text-capitalize py-4"
 										style="color: #706f6f; font-size: 14px"
 									>
-										código {{ item.code }}
+										código {{ item.code ? item.code : '' }}
 									</div>
 								</div>
 							</v-col>
@@ -252,19 +259,18 @@
 						</v-row>
 					</v-card>
 				</v-col>
-				<template v-if="loading">
-					<v-col
-						cols="12"
-						style="height: 400px"
-						class="d-flex justify-center align-center"
-					>
-						<v-progress-circular
-							size="40"
-							indeterminate
-							color="primary"
-						></v-progress-circular>
-					</v-col>
-				</template>
+				<v-col
+					v-if="loading"
+					cols="12"
+					style="height: 400px"
+					class="d-flex justify-center align-center"
+				>
+					<v-progress-circular
+						size="40"
+						indeterminate
+						color="primary"
+					></v-progress-circular>
+				</v-col>
 			</v-row>
 		</v-container>
 	</div>
@@ -273,7 +279,6 @@
 <script>
 import { mdiChevronDown, mdiPlus, mdiMinus } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
-import { throttle } from 'lodash';
 
 export default {
 	name: 'PsicologosDesktop',
@@ -396,13 +401,6 @@ export default {
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
-		getPage: throttle(function () {
-			this.getPsychologistsWithPagination(this.page)
-				.then(() => {
-					this.loadingPagination = false;
-				})
-				.catch(e => console.log(e));
-		}, 500),
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else
