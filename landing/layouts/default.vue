@@ -17,36 +17,12 @@
 	</v-app>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
 		Snackbar,
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
-	},
-	computed: {
-		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
-	},
-	mounted() {
-		this.initialFetch();
-	},
-	methods: {
-		async initialFetch() {
-			await this.getPsychologists();
-			await this.getAppointments();
-			await this.getFormattedSessionsAll();
-		},
-		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
-		}),
-		...mapMutations({
-			setListenerUserOnline: 'User/setListenerUserOnline',
-			setLoading: 'Psychologist/setLoading',
-			setPsychologists: 'Psychologist/setPsychologists',
-		}),
 	},
 };
 </script>

@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
@@ -66,6 +68,21 @@ export default {
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
+	},
+	mounted() {
+		this.initialFetch();
+	},
+	methods: {
+		async initialFetch() {
+			await this.getPsychologistsWithPagination(0);
+			await this.getAppointments();
+			this.getFormattedSessionsAll();
+		},
+		...mapActions({
+			getAppointments: 'Appointments/getAppointments',
+			getPsychologistsWithPagination: 'Psychologist/getPsychologistsWithPagination',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+		}),
 	},
 };
 </script>

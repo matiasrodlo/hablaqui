@@ -144,7 +144,7 @@
 		<!-- pychologist -->
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
-				<v-col v-for="(item, i) in filterLevelThree" :key="i" cols="12">
+				<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
 					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
 						<v-row>
 							<v-col
@@ -252,6 +252,19 @@
 						</v-row>
 					</v-card>
 				</v-col>
+				<template v-if="loadingPagination || loading">
+					<v-col
+						cols="12"
+						style="height: 400px"
+						class="d-flex justify-center align-center"
+					>
+						<v-progress-circular
+							size="40"
+							indeterminate
+							color="primary"
+						></v-progress-circular>
+					</v-col>
+				</template>
 			</v-row>
 		</v-container>
 	</div>
@@ -259,7 +272,8 @@
 
 <script>
 import { mdiChevronDown, mdiPlus, mdiMinus } from '@mdi/js';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { throttle } from 'lodash';
 
 export default {
 	name: 'PsicologosDesktop',
@@ -278,6 +292,8 @@ export default {
 			models: [],
 			languages: [],
 			scrollHeight: 0,
+			page: 0,
+			loadingPagination: false,
 		};
 	},
 	computed: {
@@ -339,6 +355,7 @@ export default {
 			return result;
 		},
 		...mapGetters({
+			pageOptions: 'Psychologist/page',
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologists',
 			sessions: 'Psychologist/sessionsFormattedAll',
@@ -381,7 +398,25 @@ export default {
 	methods: {
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
+
+			if (
+				window.innerHeight + Math.ceil(window.pageYOffset) + 700 >=
+					document.body.offsetHeight &&
+				!this.loadingPagination &&
+				this.pageOptions.totalPages > this.page
+			) {
+				this.loadingPagination = true;
+				this.page = this.page + 1;
+				this.getPage();
+			}
 		},
+		getPage: throttle(function () {
+			this.getPsychologistsWithPagination(this.page)
+				.then(() => {
+					this.loadingPagination = false;
+				})
+				.catch(e => console.log(e));
+		}, 500),
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else
@@ -424,6 +459,9 @@ export default {
 			}
 			return temp.sessions;
 		},
+		...mapActions({
+			getPsychologistsWithPagination: 'Psychologist/getPsychologistsWithPagination',
+		}),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),

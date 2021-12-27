@@ -13,6 +13,11 @@ const psychologistsRouter = Router();
  *   name: Psychologists
  */
 
+psychologistsRouter.get(
+	'/psychologists/all/:page',
+	psychologistsController.getAllPagination
+);
+
 /**
  * @swagger
  * /api/v1/psychologists/all:

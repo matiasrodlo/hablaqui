@@ -5,6 +5,12 @@ export default {
 	setPsychologists(state, value) {
 		state.psychologists = value;
 	},
+	setPsychologistsPagination(state, value) {
+		state.psychologists = [...state.psychologists, ...value];
+	},
+	setPage(state, value) {
+		state.page = value;
+	},
 	setSessions(state, value) {
 		state.sessions = value;
 	},

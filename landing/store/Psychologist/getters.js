@@ -8,6 +8,7 @@ export default {
 		});
 	},
 	sessions: state => state.sessions,
+	page: state => state.page,
 	payments: state => state.payments,
 	sessionsFormatted: state => state.sessionsFormatted,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,

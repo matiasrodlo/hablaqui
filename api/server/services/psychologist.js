@@ -13,7 +13,6 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import mercadopagoService from './mercadopago';
-import _ from 'lodash';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -26,6 +25,29 @@ const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
+};
+
+const getAllPagination = async page => {
+	const count = await Psychologist.countDocuments();
+
+	const pageOptions = {
+		totalPages: Math.ceil(count / 10),
+		page: page ? parseInt(page) : 0,
+		limit: 10,
+	};
+
+	if (page > pageOptions.totalPages)
+		return okResponse('ultima pagina obtenida');
+
+	const psychologists = await Psychologist.find()
+		.skip(pageOptions.page * pageOptions.limit)
+		.limit(pageOptions.limit);
+	logInfo('obtuvo la pagina psicologos');
+
+	return okResponse('psicologos obtenidos', {
+		psychologists,
+		page: pageOptions,
+	});
 };
 
 const getSessions = async (userLogged, idUser, idPsy) => {
@@ -1247,6 +1269,7 @@ const psychologistsService = {
 	customNewSession,
 	deleteOne,
 	getAll,
+	getAllPagination,
 	getByData,
 	getClients,
 	getFormattedSessions,

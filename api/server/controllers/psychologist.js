@@ -13,6 +13,17 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getAllPagination(req, res) {
+		try {
+			const { page } = req.params;
+			const { data, code } = await psychologistsService.getAllPagination(
+				page
+			);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo los psicologos');
+		}
+	},
 	async getSessions(req, res) {
 		try {
 			const { idUser, idPsychologist } = req.params;
