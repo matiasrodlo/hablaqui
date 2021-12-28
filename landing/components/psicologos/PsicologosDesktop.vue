@@ -101,7 +101,7 @@
 								offset-y
 								rounded
 								attach="#selectgender"
-								min-width="auto"
+								min-width="200px"
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
@@ -124,92 +124,200 @@
 											v-model="gender"
 											value="male"
 											:disabled="loading"
-											label="Hombre"
-											class="py-3"
+											class="py-2"
 											hide-details
-											@change="filterPanel"
-										></v-checkbox>
+										>
+											<template #label>
+												<span class="caption">Hombre</span>
+											</template>
+										</v-checkbox>
 										<v-checkbox
 											v-model="gender"
 											value="female"
 											:disabled="loading"
-											label="Mujer"
-											class="py-3"
+											class="py-2"
 											hide-details
-											@change="filterPanel"
-										></v-checkbox>
+										>
+											<template #label>
+												<span class="caption">Mujer</span>
+											</template>
+										</v-checkbox>
 										<v-checkbox
 											v-model="gender"
 											value="transgender"
 											:disabled="loading"
-											label="Transgénero"
-											class="py-3"
+											class="py-2"
 											hide-details
-											@change="filterPanel"
-										></v-checkbox>
+										>
+											<template #label>
+												<span class="caption">Transgénero </span>
+											</template>
+										</v-checkbox>
 									</v-card-text>
 								</v-card>
 							</v-menu>
 						</v-col>
-						<v-col cols="3">
-							<v-select
-								id="price"
-								v-model="prices"
-								multiple
-								class="white"
-								:items="[
-									{ text: '$9.990 - $14.990', value: 1 },
-									{ text: '$14.990 - $22.990', value: 2 },
-									{ text: '$22.990 - $29.990', value: 3 },
-									{ text: '+ $29.900', value: 4 },
-								]"
-								:disabled="loading"
-								outlined
-								dense
-								label="Precios"
-								hide-details
-								@change="filterPanel"
+						<v-col id="selectPrices" cols="3" style="position: relative">
+							<v-menu
+								ref="menuPrices"
+								v-model="menuPrices"
+								:close-on-content-click="false"
+								transition="scale-transition"
+								offset-y
+								rounded
+								attach="#selectPrices"
+								min-width="200px"
 							>
-							</v-select>
-						</v-col>
-						<v-col cols="2">
-							<v-select
-								id="other"
-								v-model="others"
-								class="white"
-								:items="[
-									{
-										text: 'Cognitivo-conductual',
-										value: 'Cognitivo-conductual',
-									},
-									{
-										text: 'Contextual',
-										value: 'Contextual',
-									},
-									{
-										text: 'Psicoanálisis',
-										value: 'Psicoanálisis',
-									},
-									{
-										text: 'Humanista',
-										value: 'Humanista',
-									},
-									{
-										text: 'Sistémico',
-										value: 'Sistémico',
-									},
-								]"
-								:disabled="loading"
-								outlined
-								dense
-								label="Otros"
-								hide-details
-								@change="filterPanel"
-							>
-								<template #preprend-inner>
-									<div>div 1</div>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										:value="prices.length > 1 ? prices.length : prices"
+										label="Precios"
+										readonly
+										outlined
+										:prefix="prices.length > 1 ? 'Seleccionados' : ''"
+										dense
+										class="white"
+										hide-details
+										:append-icon="mdiChevronDown"
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
 								</template>
-							</v-select>
+								<v-card rounded width="200px">
+									<v-card-text>
+										<v-checkbox
+											v-model="prices"
+											value="$9.990 - $14.990"
+											:disabled="loading"
+											class="py-2"
+											hide-details
+										>
+											<template #label>
+												<span class="caption">$9.990 - $14.990 </span>
+											</template>
+										</v-checkbox>
+										<v-checkbox
+											v-model="prices"
+											value="$14.990 - $22.990"
+											:disabled="loading"
+											class="py-2"
+											hide-details
+										>
+											<template #label>
+												<span class="caption">$14.990 - $22.990 </span>
+											</template>
+										</v-checkbox>
+										<v-checkbox
+											v-model="prices"
+											value="$22.990 - $29.990"
+											:disabled="loading"
+											class="py-2"
+											hide-details
+										>
+											<template #label>
+												<span class="caption">$22.990 - $29.990 </span>
+											</template>
+										</v-checkbox>
+										<v-checkbox
+											v-model="prices"
+											value="+ $29.900"
+											:disabled="loading"
+											class="py-2"
+											hide-details
+										>
+											<template #label>
+												<span class="caption">+ $29.900 </span>
+											</template>
+										</v-checkbox>
+									</v-card-text>
+								</v-card>
+							</v-menu>
+						</v-col>
+						<v-col id="selectOthers" cols="2" style="position: relative">
+							<v-menu
+								ref="menuOthers"
+								v-model="menuOthers"
+								:close-on-content-click="false"
+								transition="scale-transition"
+								offset-y
+								rounded
+								attach="#selectOthers"
+								min-width="200px"
+							>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										:value="
+											models.length || languages.length
+												? models.length + languages.length
+												: ''
+										"
+										label="Otros"
+										readonly
+										outlined
+										:prefix="
+											models.length || languages.length ? 'Seleccionados' : ''
+										"
+										dense
+										class="white"
+										hide-details
+										:append-icon="mdiChevronDown"
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-card rounded width="200px">
+									<v-card-text
+										><div class="body-2 font-weight-bold">
+											Modelo terapéuticos
+										</div>
+										<template
+											v-for="(item, i) in [
+												'Cognitivo-conductual',
+												'Contextual',
+												'Psicoanálisis',
+												'Humanista',
+												'Sistémico',
+											]"
+										>
+											<v-checkbox
+												:key="`models-${i}`"
+												v-model="models"
+												:value="item"
+												class="py-2"
+												hide-details
+												:label="item"
+											>
+												<template #label>
+													<span class="caption"> {{ item }}</span>
+												</template>
+											</v-checkbox>
+										</template>
+										<div class="body-2 font-weight-bold mt-2">Idioma</div>
+										<v-checkbox
+											v-model="languages"
+											value="spanish"
+											:disabled="loading"
+											hide-details
+											class="py-2"
+										>
+											<template #label>
+												<span class="caption">Español </span>
+											</template>
+										</v-checkbox>
+										<v-checkbox
+											v-model="languages"
+											value="english"
+											:disabled="loading"
+											hide-details
+											class="py-2"
+										>
+											<template #label>
+												<span class="caption">Ingles </span>
+											</template>
+										</v-checkbox>
+									</v-card-text>
+								</v-card>
+							</v-menu>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -388,6 +496,8 @@ export default {
 			mdiMinus,
 			mdiChevronDown,
 			menuGender: false,
+			menuOthers: false,
+			menuPrices: false,
 			view: 1,
 			specialties: '',
 			searchInput: '',
@@ -513,14 +623,6 @@ export default {
 		setView(type) {
 			localStorage.setItem('view', type);
 			this.view = type;
-		},
-		filterPanel() {
-			const panel = {
-				gender: this.gender,
-				models: this.models,
-				languages: this.languages,
-			};
-			localStorage.setItem('panel', JSON.stringify(panel));
 		},
 		filterMatch(payload) {
 			this.languages = [];
