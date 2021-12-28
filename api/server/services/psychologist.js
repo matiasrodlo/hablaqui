@@ -1203,27 +1203,28 @@ const paymentsInfo = async user => {
 		})
 	);
 	const validPayments = allSessions.flatMap(item => {
-		return item.plan.flatMap(plans => {
-			return plans.session.map(session => {
-				return {
-					idPlan: plans._id,
-					sessionsId: item._id,
-					name: `${item.user.name} ${
-						item.user.lastName ? item.user.lastName : ''
-					}`,
-					date: session.date,
-					plan: plans.title,
-					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
-					amount: plans.sessionPrice,
-					percentage: percentage,
-					total: plans.sessionPrice * (1 - comission),
-					user: item.user._id,
-				};
+		if (item.user)
+			return item.plan.flatMap(plans => {
+				return plans.session.map(session => {
+					return {
+						idPlan: plans._id,
+						sessionsId: item._id,
+						name: `${item.user.name ? item.user.name : ''} ${
+							item.user.lastName ? item.user.lastName : ''
+						}`,
+						date: session.date,
+						plan: plans.title,
+						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+						amount: plans.sessionPrice,
+						percentage: percentage,
+						total: plans.sessionPrice * (1 - comission),
+						user: item.user._id,
+					};
+				});
 			});
-		});
 	});
 	const payments = validPayments.filter(item => {
-		return moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+		return item && moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
 	});
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
