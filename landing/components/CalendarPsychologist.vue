@@ -25,7 +25,7 @@
 					<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
 						<v-container class="pb-0 px-4">
 							<div class="sticky text-center" @click="toggle">
-								<div class="body-2 primary--text font-weight-bold">
+								<div class="body-2 font-weight-bold" style="color: #706f6f">
 									{{ item.text }}
 								</div>
 								<div class="caption text--secondary">{{ item.day }}</div>

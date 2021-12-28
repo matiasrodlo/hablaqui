@@ -105,11 +105,12 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
-										:value="gender.length > 1 ? gender.length : gender"
+										:value="
+											gender.length ? `Seleccionados ${gender.length}` : ''
+										"
 										label="Género"
 										readonly
 										outlined
-										:prefix="gender.length > 1 ? 'Seleccionados' : ''"
 										dense
 										class="white"
 										hide-details
@@ -124,6 +125,7 @@
 											v-model="gender"
 											value="male"
 											:disabled="loading"
+											label="Hombre"
 											class="py-2"
 											hide-details
 										>
@@ -134,6 +136,7 @@
 										<v-checkbox
 											v-model="gender"
 											value="female"
+											label="Mujer"
 											:disabled="loading"
 											class="py-2"
 											hide-details
@@ -145,6 +148,7 @@
 										<v-checkbox
 											v-model="gender"
 											value="transgender"
+											label="Transgénero"
 											:disabled="loading"
 											class="py-2"
 											hide-details
@@ -170,11 +174,14 @@
 							>
 								<template #activator="{ on, attrs }">
 									<v-text-field
-										:value="prices.length > 1 ? prices.length : prices"
+										:value="
+											prices.length > 1
+												? `Seleccionados ${prices.length}`
+												: prices
+										"
 										label="Precios"
 										readonly
 										outlined
-										:prefix="prices.length > 1 ? 'Seleccionados' : ''"
 										dense
 										class="white"
 										hide-details
@@ -248,22 +255,22 @@
 									<v-text-field
 										:value="
 											models.length || languages.length
-												? models.length + languages.length
+												? `Seleccionados ${
+														models.length + languages.length
+												  }`
 												: ''
 										"
 										label="Otros"
 										readonly
 										outlined
-										:prefix="
-											models.length || languages.length ? 'Seleccionados' : ''
-										"
 										dense
 										class="white"
 										hide-details
 										:append-icon="mdiChevronDown"
 										v-bind="attrs"
 										v-on="on"
-									></v-text-field>
+									>
+									</v-text-field>
 								</template>
 								<v-card rounded width="200px">
 									<v-card-text
@@ -331,11 +338,10 @@
 						<v-row no-gutters align="center">
 							<v-col cols="3">
 								<v-img
-									style="border-radius: 15px 100% 0 15px"
 									width="250px"
-									height="200px"
-									src="https://cdn.hablaqui.cl/static/Aihnoa_Con.webp"
-									lazy-src="https://cdn.hablaqui.cl/static/Aihnoa_Con.webp"
+									contain
+									src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
+									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
 								></v-img>
 							</v-col>
 							<v-col>
@@ -640,7 +646,6 @@ export default {
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.psychologist === id);
 			if (!temp) {
-				console.log(temp);
 				return [];
 			}
 			return temp.sessions;
