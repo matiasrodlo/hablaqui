@@ -14,11 +14,17 @@
 				<v-col cols="12" sm="6">
 					<v-autocomplete
 						id="searchInput"
-						v-model="searchInput"
+						:value="searchInput"
 						class="white"
 						dense
 						outlined
-						:items="itemsSearch"
+						:items="
+							superFilter.map((item, index) => ({
+								text: `${item.name} ${item.lastName && item.lastName}`,
+								value: item._id,
+								index,
+							}))
+						"
 						label="Busca tu psicólogo"
 						:append-icon="mdiChevronDown"
 						hide-details
@@ -27,6 +33,7 @@
 						}"
 						clearable
 						:disabled="loading"
+						@change="e => (searchInput = e)"
 					>
 						<template #no-data>
 							<v-list-item>
@@ -334,7 +341,7 @@
 		<v-container fluid style="max-width: 1200px" class="my-4">
 			<v-row>
 				<v-col cols="12">
-					<v-sheet class="item" style="border-radius: 15px">
+					<v-sheet class="item" style="border-radius: 15px; height: 182px">
 						<v-row no-gutters align="center">
 							<v-col cols="3">
 								<v-img
@@ -361,7 +368,8 @@
 						</v-row>
 					</v-sheet>
 				</v-col>
-				<v-col v-for="item in filterLevelThree" :key="item._id" cols="12">
+
+				<v-col v-for="item in searchFilter" :key="item._id" cols="12">
 					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
 						<v-row>
 							<v-col
@@ -459,18 +467,18 @@
 							</v-col>
 							<v-divider vertical class="my-4"></v-divider>
 							<v-col cols="4" style="height: 350px">
-								<calendar-psychologist
+								<!-- <calendar-psychologist
 									v-if="sessions"
 									:id-psy="item._id"
 									:sessions="getSessions(item._id)"
 									:set-date="date => null"
-								/>
+								/> -->
 							</v-col>
 						</v-row>
 					</v-card>
 				</v-col>
 				<v-col
-					v-if="loading"
+					v-if="loading || isFiltering"
 					cols="12"
 					style="height: 400px"
 					class="d-flex justify-center align-center"
@@ -493,7 +501,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
 	name: 'PsicologosDesktop',
 	components: {
-		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		// CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
 	},
 	data() {
 		return {
@@ -513,6 +521,7 @@ export default {
 			models: [],
 			languages: [],
 			scrollHeight: 0,
+			isFiltering: false,
 		};
 	},
 	computed: {
@@ -520,20 +529,10 @@ export default {
 			return !this.psychologists.length;
 		},
 		/**
-		 * items for search box
-		 */
-		itemsSearch() {
-			return this.filterLevelThree.map((item, index) => ({
-				text: `${item.name} ${item.lastName && item.lastName}`,
-				value: item._id,
-				index,
-			}));
-		},
-		/**
 		 * filter search box
 		 */
-		filterLevelThree() {
-			return this.filterLevelTwo.filter(item => {
+		searchFilter() {
+			return this.superFilter.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result = result._id.includes(this.searchInput) && result;
@@ -541,36 +540,34 @@ export default {
 			});
 		},
 		/**
-		 * filter specialties
+		 * items for search box
 		 */
-		filterLevelTwo() {
-			if (!this.specialties) return this.filterLevelOne;
-			return this.filterLevelOne.filter(
-				item => item.specialties.length && item.specialties.includes(this.specialties)
-			);
-		},
-		/**
-		 * filter panel checkbox
-		 */
-		filterLevelOne() {
+		superFilter() {
+			// Filtramos que tenga visibilidad en marketplace activado
 			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
-			if (this.gender.length)
-				result = result.filter(item => {
-					const trans = item.isTrans && 'transgender';
-					const gender = [item.gender];
-					trans && gender.push(trans);
-					return gender.some(el => this.gender.some(g => g === el));
-				});
-			if (this.models.length)
-				result = result.filter(item => item.models.some(el => this.models.includes(el)));
-			if (this.languages.length)
-				result = result.filter(item =>
-					item.languages.some(el => this.languages.some(languages => languages === el))
-				);
-			if (this.specialties)
-				result = result.filter(item => item.specialties.includes(this.specialties));
+			// Si no hay nada que filtrar retornamos todo
+			if (
+				!this.gender.length &&
+				!this.models.length &&
+				!this.languages.length &&
+				!this.specialties
+			) {
+				return result;
+			}
+			// Filtro de genero
 
+			result = result.filter(item => {
+				const trans = item.isTrans && 'transgender';
+				const gender = [item.gender];
+				trans && gender.push(trans);
+
+				return (
+					gender.some(el => this.gender.some(g => g === el)) ||
+					item.models.some(el => this.models.includes(el)) ||
+					item.languages.some(el => this.languages.some(languages => languages === el)) ||
+					item.specialties.includes(this.specialties)
+				);
+			});
 			return result;
 		},
 		...mapGetters({
@@ -578,6 +575,13 @@ export default {
 			psychologists: 'Psychologist/psychologists',
 			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
+	},
+	asyncComputed: {},
+	beforeUpdate() {
+		this.$emit('setIsFiltering', true);
+	},
+	updated() {
+		this.$emit('setIsFiltering', false);
 	},
 	created() {
 		this.setFloatingChat(false);

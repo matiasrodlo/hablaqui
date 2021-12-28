@@ -3,7 +3,7 @@ import updateObjectInArray from '@/plugins/updateArray';
 
 export default {
 	setPsychologists(state, value) {
-		state.psychologists = value;
+		state.psychologists = Object.freeze(value);
 	},
 	setPsychologistsPagination(state, value) {
 		state.psychologists = [...state.psychologists, ...value];
