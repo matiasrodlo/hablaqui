@@ -1052,14 +1052,29 @@ const customNewSession = async (user, payload) => {
 		// Validamos que sea psicologo
 		if (user.role !== 'psychologist')
 			return conflictResponse('No eres psicologo');
+		let sessions = [];
+		let hours = 1;
 
+		if (payload.type === 'compromiso privado') {
+			logInfo('custom');
+			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
+			const end = moment(payload.date, 'MM/DD/YYYY HH:mm');
+			hours = Math.abs(end.diff(start, 'hours')) + 1;
+		}
 		// Objeto con la sesion a crear
-		const newSession = {
-			date: payload.date,
-			sessionNumber: 1,
-			paidToPsychologist: false,
-			status: 'pending',
-		};
+		for (let i = 0; i < hours; i++) {
+			const date = moment(payload.date, 'MM/DD/YYYY HH:mm').add(
+				i,
+				'hours'
+			);
+			const newSession = {
+				date: date.format('MM/DD/YYYY HH:mm'),
+				sessionNumber: i + 1,
+				paidToPsychologist: false,
+				status: 'pending',
+			};
+			sessions.push(newSession);
+		}
 
 		// Objeto con el plan a crear
 		const newPlan = {
@@ -1076,7 +1091,7 @@ const customNewSession = async (user, payload) => {
 			usedCoupon: '',
 			totalSessions: 1,
 			remainingSessions: 0,
-			session: [newSession],
+			session: sessions,
 		};
 
 		// Si existe un plan con este titulo lo removemos
@@ -1169,21 +1184,24 @@ const paymentsInfo = async user => {
 	let comission = 0;
 	let percentage = '0%';
 
-	let { psyPlans } = await Psychologist.findById(user.psychologist);
-	let currentPlan = psyPlans[psyPlans.length - 1];
-
-	if (!currentPlan) {
-		currentPlan = {
-			tier: 'free',
-			paymentStatus: 'success',
-			planStatus: 'active',
-			expirationDate: '',
-			subscriptionPeriod: '',
-			price: 0,
-			hablaquiFee: 0.2,
-			paymentFee: 0.0399,
-		};
+	let psy = await Psychologist.findById(user.psychologist);
+	if (!psy.psyPlans || psy.psyPlans == []) {
+		psy.psyPlans = [
+			{
+				tier: 'free',
+				paymentStatus: 'success',
+				planStatus: 'active',
+				expirationDate: '',
+				subscriptionPeriod: '',
+				price: 0,
+				hablaquiFee: 0.2,
+				paymentFee: 0.0399,
+			},
+		];
+		await psy.save();
 	}
+
+	let currentPlan = psy.psyPlans[psy.psyPlans.length - 1];
 
 	if (currentPlan.tier === 'premium') {
 		comission = currentPlan.paymentFee;
