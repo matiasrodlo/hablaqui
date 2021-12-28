@@ -47,6 +47,7 @@
 		<!-- filters -->
 		<client-only>
 			<v-app-bar
+				id="appbarfilter"
 				:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
 				style="z-index: 1"
 				class="sticky scroll"
@@ -55,68 +56,112 @@
 				<v-container fluid style="max-width: 1200px">
 					<v-row>
 						<v-col cols="4">
-							<v-autocomplete
-								id="specialties"
-								v-model="specialties"
-								class="white"
-								outlined
-								:items="appointments"
-								item-value="value"
-								label="Motivo de consulta"
-								:append-icon="mdiChevronDown"
-								hide-details
-								dense
-								clearable
-								:menu-props="{
-									closeOnClick: true,
-									closeOnContentClick: true,
-								}"
-								:disabled="loading"
-							>
-								<template #no-data>
-									<v-list-item>
-										<v-list-item-content>
-											<v-list-item-title>
-												No se encontraron resultados que coincidan con
-												"<strong>
-													{{ specialties }}
-												</strong>
-												" .
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-								</template>
-							</v-autocomplete>
+							<div id="autocompleteSpecialties" style="position: relative">
+								<v-autocomplete
+									id="specialties"
+									v-model="specialties"
+									attach="#autocompleteSpecialties"
+									class="white"
+									outlined
+									:items="appointments"
+									item-value="value"
+									label="Motivo de consulta"
+									:append-icon="mdiChevronDown"
+									hide-details
+									dense
+									clearable
+									:menu-props="{
+										closeOnClick: true,
+										closeOnContentClick: true,
+									}"
+									:disabled="loading"
+								>
+									<template #no-data>
+										<v-list-item>
+											<v-list-item-content>
+												<v-list-item-title>
+													No se encontraron resultados que coincidan con
+													"<strong>
+														{{ specialties }}
+													</strong>
+													" .
+												</v-list-item-title>
+											</v-list-item-content>
+										</v-list-item>
+									</template>
+								</v-autocomplete>
+							</div>
 						</v-col>
-						<v-col cols="3">
-							<v-select
-								id="gender"
-								v-model="gender"
-								class="white"
-								multiple
-								:items="[
-									{ text: 'Mujer', value: 'female' },
-									{ text: 'Hombre', value: 'male' },
-									{ text: 'Transgénero', value: 'transgender' },
-								]"
-								:disabled="loading"
-								outlined
-								dense
-								label="Género"
-								hide-details
-								@change="filterPanel"
-							></v-select>
+						<v-col id="selectgender" cols="3" style="position: relative">
+							<v-menu
+								ref="menuGender"
+								v-model="menuGender"
+								:close-on-content-click="false"
+								transition="scale-transition"
+								offset-y
+								rounded
+								attach="#selectgender"
+								min-width="auto"
+							>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										:value="gender.length > 1 ? gender.length : gender"
+										label="Género"
+										readonly
+										outlined
+										:prefix="gender.length > 1 ? 'Seleccionados' : ''"
+										dense
+										class="white"
+										hide-details
+										:append-icon="mdiChevronDown"
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-card rounded width="200px">
+									<v-card-text>
+										<v-checkbox
+											v-model="gender"
+											value="male"
+											:disabled="loading"
+											label="Hombre"
+											class="py-3"
+											hide-details
+											@change="filterPanel"
+										></v-checkbox>
+										<v-checkbox
+											v-model="gender"
+											value="female"
+											:disabled="loading"
+											label="Mujer"
+											class="py-3"
+											hide-details
+											@change="filterPanel"
+										></v-checkbox>
+										<v-checkbox
+											v-model="gender"
+											value="transgender"
+											:disabled="loading"
+											label="Transgénero"
+											class="py-3"
+											hide-details
+											@change="filterPanel"
+										></v-checkbox>
+									</v-card-text>
+								</v-card>
+							</v-menu>
 						</v-col>
 						<v-col cols="3">
 							<v-select
 								id="price"
-								v-model="gender"
-								class="white"
+								v-model="prices"
 								multiple
+								class="white"
 								:items="[
-									{ text: 'Mujer', value: 'female' },
-									{ text: 'Hombre', value: 'male' },
-									{ text: 'Transgénero', value: 'transgender' },
+									{ text: '$9.990 - $14.990', value: 1 },
+									{ text: '$14.990 - $22.990', value: 2 },
+									{ text: '$22.990 - $29.990', value: 3 },
+									{ text: '+ $29.900', value: 4 },
 								]"
 								:disabled="loading"
 								outlined
@@ -124,26 +169,47 @@
 								label="Precios"
 								hide-details
 								@change="filterPanel"
-							></v-select>
+							>
+							</v-select>
 						</v-col>
 						<v-col cols="2">
 							<v-select
 								id="other"
-								v-model="gender"
+								v-model="others"
 								class="white"
-								multiple
 								:items="[
-									{ text: 'Mujer', value: 'female' },
-									{ text: 'Hombre', value: 'male' },
-									{ text: 'Transgénero', value: 'transgender' },
+									{
+										text: 'Cognitivo-conductual',
+										value: 'Cognitivo-conductual',
+									},
+									{
+										text: 'Contextual',
+										value: 'Contextual',
+									},
+									{
+										text: 'Psicoanálisis',
+										value: 'Psicoanálisis',
+									},
+									{
+										text: 'Humanista',
+										value: 'Humanista',
+									},
+									{
+										text: 'Sistémico',
+										value: 'Sistémico',
+									},
 								]"
 								:disabled="loading"
 								outlined
 								dense
-								label="Precios"
+								label="Otros"
 								hide-details
 								@change="filterPanel"
-							></v-select>
+							>
+								<template #preprend-inner>
+									<div>div 1</div>
+								</template>
+							</v-select>
 						</v-col>
 					</v-row>
 				</v-container>
@@ -307,7 +373,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiPlus, mdiMinus } from '@mdi/js';
+import { mdiChevronDown, mdiPlus, mdiMinus, mdiCloseCircle } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -317,13 +383,17 @@ export default {
 	},
 	data() {
 		return {
+			mdiCloseCircle,
 			mdiPlus,
 			mdiMinus,
 			mdiChevronDown,
+			menuGender: false,
 			view: 1,
 			specialties: '',
 			searchInput: '',
 			gender: [],
+			prices: [],
+			others: [],
 			models: [],
 			languages: [],
 			scrollHeight: 0,
