@@ -82,6 +82,7 @@
 										closeOnContentClick: true,
 									}"
 									:disabled="loading"
+									@change="changeInput"
 								>
 									<template #no-data>
 										<v-list-item>
@@ -135,6 +136,7 @@
 											label="Hombre"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">Hombre</span>
@@ -147,6 +149,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">Mujer</span>
@@ -159,6 +162,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">Transgénero </span>
@@ -205,6 +209,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">$9.990 - $14.990 </span>
@@ -216,6 +221,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">$14.990 - $22.990 </span>
@@ -227,6 +233,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">$22.990 - $29.990 </span>
@@ -238,6 +245,7 @@
 											:disabled="loading"
 											class="py-2"
 											hide-details
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">+ $29.900 </span>
@@ -300,6 +308,7 @@
 												class="py-2"
 												hide-details
 												:label="item"
+												@change="changeInput"
 											>
 												<template #label>
 													<span class="caption"> {{ item }}</span>
@@ -313,6 +322,7 @@
 											:disabled="loading"
 											hide-details
 											class="py-2"
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">Español </span>
@@ -324,6 +334,7 @@
 											:disabled="loading"
 											hide-details
 											class="py-2"
+											@change="changeInput"
 										>
 											<template #label>
 												<span class="caption">Ingles </span>
@@ -556,11 +567,9 @@ export default {
 					trans && gender.push(trans);
 
 					return (
-						gender.some(el => this.gender.some(g => g === el)) ||
+						gender.some(el => this.gender.includes(el)) ||
 						item.models.some(el => this.models.includes(el)) ||
-						item.languages.some(el =>
-							this.languages.some(languages => languages === el)
-						) ||
+						item.languages.some(el => this.languages.includes(el)) ||
 						item.specialties.includes(this.specialties)
 					);
 				});
@@ -651,6 +660,9 @@ export default {
 				return [];
 			}
 			return temp.sessions;
+		},
+		changeInput() {
+			this.searchInput = '';
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
