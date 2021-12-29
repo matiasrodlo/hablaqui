@@ -17,7 +17,8 @@ export default {
 			const item = comunas.find(el => el.comuna.slug === params.slug);
 			return { comuna: item.comuna };
 		} catch (e) {
-			redirect('/psicologos');
+			// redirect comentado para probar blog
+			//redirect('/psicologos');
 		}
 	},
 	head() {

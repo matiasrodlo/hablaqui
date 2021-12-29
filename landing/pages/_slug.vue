@@ -36,7 +36,8 @@ export default {
 			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return { psychologist };
 		} catch (e) {
-			redirect('/psicologos');
+			// redirect comentado para probar blog
+			//redirect('/psicologos');
 		}
 	},
 	head() {

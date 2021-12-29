@@ -362,7 +362,8 @@ export default {
 				article,
 			};
 		} catch (e) {
-			redirect('/psicologos');
+			// redirect comentado para probar blog
+			//redirect('/psicologos');
 		}
 	},
 	data() {
