@@ -1,12 +1,16 @@
 import { cloneDeep } from 'lodash';
 
 export default {
-	psychologists: state => {
+	psychologistsMarketPlace: state => {
 		const psy = cloneDeep(state.psychologists);
-		return psy.sort(function randOrd() {
-			return Math.round(Math.random()) - 0.5;
-		});
+		return psy
+			.sort(function randOrd() {
+				return Math.round(Math.random()) - 0.5;
+			})
+			.filter(item => item.preferences.marketplaceVisibility);
 	},
+	psychologists: state => state.psychologists,
+
 	sessions: state => state.sessions,
 	page: state => state.page,
 	payments: state => state.payments,

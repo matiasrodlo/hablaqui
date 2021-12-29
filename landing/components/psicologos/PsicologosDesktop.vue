@@ -466,13 +466,13 @@
 								</div>
 							</v-col>
 							<v-divider vertical class="my-4"></v-divider>
-							<v-col cols="4" style="height: 350px">
-								<!-- <calendar-psychologist
+							<v-col v-if="false" cols="4" style="height: 350px">
+								<calendar-psychologist
 									v-if="sessions"
 									:id-psy="item._id"
 									:sessions="getSessions(item._id)"
 									:set-date="date => null"
-								/> -->
+								/>
 							</v-col>
 						</v-row>
 					</v-card>
@@ -501,7 +501,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
 	name: 'PsicologosDesktop',
 	components: {
-		// CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
 	},
 	data() {
 		return {
@@ -529,7 +529,8 @@ export default {
 			return !this.psychologists.length;
 		},
 		/**
-		 * filter search box
+		 * Filter search box
+		 * Filtra en base a los resultados del panel
 		 */
 		searchFilter() {
 			return this.superFilter.filter(item => {
@@ -543,36 +544,33 @@ export default {
 		 * items for search box
 		 */
 		superFilter() {
-			// Filtramos que tenga visibilidad en marketplace activado
-			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			// Si no hay nada que filtrar retornamos todo
 			if (
-				!this.gender.length &&
-				!this.models.length &&
-				!this.languages.length &&
-				!this.specialties
+				this.gender.length ||
+				this.models.length ||
+				this.languages.length ||
+				this.specialties
 			) {
-				return result;
+				return this.psychologists.filter(item => {
+					const trans = item.isTrans && 'transgender';
+					const gender = [item.gender];
+					trans && gender.push(trans);
+
+					return (
+						gender.some(el => this.gender.some(g => g === el)) ||
+						item.models.some(el => this.models.includes(el)) ||
+						item.languages.some(el =>
+							this.languages.some(languages => languages === el)
+						) ||
+						item.specialties.includes(this.specialties)
+					);
+				});
 			}
-			// Filtro de genero
 
-			result = result.filter(item => {
-				const trans = item.isTrans && 'transgender';
-				const gender = [item.gender];
-				trans && gender.push(trans);
-
-				return (
-					gender.some(el => this.gender.some(g => g === el)) ||
-					item.models.some(el => this.models.includes(el)) ||
-					item.languages.some(el => this.languages.some(languages => languages === el)) ||
-					item.specialties.includes(this.specialties)
-				);
-			});
-			return result;
+			return this.psychologists;
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			psychologists: 'Psychologist/psychologists',
+			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
 	},
