@@ -76,7 +76,7 @@ export default {
 	},
 	async updatePaymentMethod({ commit }, payload) {
 		try {
-			const { data } = await this.$axios(`/psychologist/update-payment-method`, {
+			const { data } = await this.$axios('/psychologist/update-payment-method', {
 				method: 'PATCH',
 				data: { payload },
 			});
@@ -183,9 +183,9 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
-			if (payload.plan === 'premium')
+			if (payload.plan === 'premium') {
 				snackBarSuccess('Redirigientote a mercado pago')(commit);
-			else snackBarSuccess('Plan basico establecido')(commit);
+			} else snackBarSuccess('Plan basico establecido')(commit);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);

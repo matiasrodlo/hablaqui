@@ -28,11 +28,7 @@
 							<v-col cols="12" sm="9">
 								<v-row justify="space-between">
 									<v-col
-										class="
-											text-center text-sm-left
-											font-weight-bold
-											text-h5 text--secondary
-										"
+										class="text-center text-sm-left font-weight-bold text-h5 text--secondary"
 									>
 										<nuxt-link
 											:to="`psicologo/${item._id}`"

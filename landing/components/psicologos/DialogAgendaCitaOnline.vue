@@ -104,13 +104,7 @@
 							</v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="
-										mb-2
-										text-center
-										subtitle-1
-										font-weight-bold
-										secondary--text
-									"
+									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
 								>
 									<small> ¿No eres parte de Hablaquí? </small>
 								</div>
@@ -145,13 +139,7 @@
 							<v-card-text><signup :is-dialog="true" /></v-card-text>
 							<v-card-text class="pt-0">
 								<div
-									class="
-										mb-2
-										text-center
-										subtitle-1
-										font-weight-bold
-										secondary--text
-									"
+									class="mb-2 text-center subtitle-1 font-weight-bold secondary--text"
 								>
 									<small> ¿Ya tienes cuenta Hablaquí? </small>
 								</div>
@@ -159,13 +147,7 @@
 									Entrar
 								</v-btn>
 								<div
-									class="
-										text-center
-										font-weight-bold
-										caption
-										secondary--text
-										pt-2
-									"
+									class="text-center font-weight-bold caption secondary--text pt-2"
 								>
 									2021 Hablaqui
 								</div>

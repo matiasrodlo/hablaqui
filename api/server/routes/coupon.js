@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import couponController from '../controllers/coupon';
+import { Router } from "express";
+import passport from "passport";
+import couponController from "../controllers/coupon";
 
 const couponRouter = Router();
 
@@ -19,9 +19,9 @@ const couponRouter = Router();
 	}
  */
 couponRouter.post(
-	'/coupons/new-coupon',
-	[passport.authenticate('jwt', { session: true })],
-	couponController.newCoupon
+  "/coupons/new-coupon",
+  [passport.authenticate("jwt", { session: true })],
+  couponController.newCoupon
 );
 
 /**
@@ -29,9 +29,9 @@ couponRouter.post(
  * req.body = { coupon: string }
  */
 couponRouter.post(
-	'/coupons/check-coupon',
-	[passport.authenticate('jwt', { session: true })],
-	couponController.checkCoupon
+  "/coupons/check-coupon",
+  [passport.authenticate("jwt", { session: true })],
+  couponController.checkCoupon
 );
 
 export default couponRouter;

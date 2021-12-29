@@ -26,12 +26,7 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="
-								py-1
-								text-center text-h6 text-lg-h4
-								font-weight-bold
-								text--secondary
-							"
+							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
 							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
 							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>

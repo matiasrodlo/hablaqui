@@ -75,7 +75,7 @@ steps:
     args: ["app", "deploy"]
     dir: "api"
     waitFor: ["envvars-api", "install-api"]
-  
+
 options:
-  machineType: 'N1_HIGHCPU_8'
+  machineType: "N1_HIGHCPU_8"
 timeout: "2600s"

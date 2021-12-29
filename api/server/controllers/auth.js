@@ -1,52 +1,52 @@
-'use strict';
-import authService from '../services/auth';
-import { restResponse } from '../utils/responses/functions';
-import { errorCallback } from '../utils/functions/errorCallback';
+"use strict";
+import authService from "../services/auth";
+import { restResponse } from "../utils/responses/functions";
+import { errorCallback } from "../utils/functions/errorCallback";
 
 const authController = {
-	async register(req, res) {
-		try {
-			const { body } = req;
-			const { data, code } = await authService.register(body, res);
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(error, res, 'Ha ocurrido un error en el registro');
-		}
-	},
-	async login(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await authService.login(user);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res);
-		}
-	},
-	generateJwt(req, res) {
-		const { user } = req;
-		const token = authService.generateJwt(user);
-		const response = {
-			token,
-		};
-		res.json(response);
-	},
-	async sendPasswordRecover(req, res) {
-		try {
-			const { email } = req.params;
-			const { data, code } = await authService.sendPasswordRecover(email);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res);
-		}
-	},
-	changeUserPassword(req, res) {
-		const { password } = req.body;
-		const user = req.user;
-		return authService.changeUserPassword(user, password, res);
-	},
-	googleAuthCallback(req, res) {
-		authService.googleAuthCallback(req, res);
-	},
+  async register(req, res) {
+    try {
+      const { body } = req;
+      const { data, code } = await authService.register(body, res);
+      return restResponse(data, code, res);
+    } catch (error) {
+      errorCallback(error, res, "Ha ocurrido un error en el registro");
+    }
+  },
+  async login(req, res) {
+    try {
+      const { user } = req;
+      const { data, code } = await authService.login(user);
+      return restResponse(data, code, res);
+    } catch (e) {
+      errorCallback(e, res);
+    }
+  },
+  generateJwt(req, res) {
+    const { user } = req;
+    const token = authService.generateJwt(user);
+    const response = {
+      token,
+    };
+    res.json(response);
+  },
+  async sendPasswordRecover(req, res) {
+    try {
+      const { email } = req.params;
+      const { data, code } = await authService.sendPasswordRecover(email);
+      return restResponse(data, code, res);
+    } catch (e) {
+      errorCallback(e, res);
+    }
+  },
+  changeUserPassword(req, res) {
+    const { password } = req.body;
+    const user = req.user;
+    return authService.changeUserPassword(user, password, res);
+  },
+  googleAuthCallback(req, res) {
+    authService.googleAuthCallback(req, res);
+  },
 };
 
 export default Object.freeze(authController);

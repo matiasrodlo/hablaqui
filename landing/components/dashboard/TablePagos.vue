@@ -90,49 +90,25 @@
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Tipo de plan</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto</span>
 						<span>${{ item.amount }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>% Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto final</span>
 						<span>${{ item.total }}</span>

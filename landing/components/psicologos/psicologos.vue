@@ -397,11 +397,7 @@
 													:to="{ path: `/${item.username}` }"
 												>
 													<span
-														class="
-															body-2
-															font-weight-bold
-															secondary--text
-														"
+														class="body-2 font-weight-bold secondary--text"
 													>
 														{{ item.name }}
 														{{ item.lastName && item.lastName }}
@@ -498,11 +494,7 @@
 												>
 													<v-row justify="space-between">
 														<v-col
-															class="
-																headline
-																font-weight-bold
-																white--text
-															"
+															class="headline font-weight-bold white--text"
 														>
 															Encuentra a tu psicólogo ideal
 														</v-col>
@@ -561,22 +553,12 @@
 														loading-color="white"
 													></avatar>
 													<div
-														class="
-															text-center
-															body-2
-															text--secondary
-															mt-3
-															mb-2
-														"
+														class="text-center body-2 text--secondary mt-3 mb-2"
 													>
 														código {{ item.code }}
 													</div>
 													<nuxt-link
-														class="
-															primary--text
-															body-2
-															font-weight-bold
-														"
+														class="primary--text body-2 font-weight-bold"
 														style="text-decoration: none"
 														:to="{ path: `/${item.username}` }"
 													>
@@ -600,12 +582,7 @@
 																}"
 															>
 																<span
-																	class="
-																		body-1
-																		text-lg-h5
-																		font-weight-bold
-																		text--secondary
-																	"
+																	class="body-1 text-lg-h5 font-weight-bold text--secondary"
 																>
 																	{{ item.name }}
 																	{{
@@ -630,10 +607,7 @@
 														<v-col
 															cols="12"
 															sm="6"
-															class="
-																text-center text-sm-right
-																mb-4 mb-sm-0
-															"
+															class="text-center text-sm-right mb-4 mb-sm-0"
 														>
 															<dialog-agenda-cita-online
 																:psy="item"
@@ -663,12 +637,7 @@
 														</template>
 													</v-chip-group>
 													<div
-														class="
-															body-2
-															mt-2
-															mr-4
-															text-center text-sm-left
-														"
+														class="body-2 mt-2 mr-4 text-center text-sm-left"
 													>
 														{{
 															item.professionalDescription.length >

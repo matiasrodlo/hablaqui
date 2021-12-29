@@ -74,11 +74,7 @@
 										</v-col>
 										<v-col cols="12" class="text-center">
 											<div
-												class="
-													text-center
-													align-self-end
-													justify-content-center
-												"
+												class="text-center align-self-end justify-content-center"
 											>
 												<v-btn
 													color="primary"
@@ -149,11 +145,7 @@
 														>
 															<article>
 																<h3
-																	class="
-																		body-1
-																		font-weight-bold
-																		black--text
-																	"
+																	class="body-1 font-weight-bold black--text"
 																>
 																	{{ article.title }}
 																</h3>
@@ -182,10 +174,7 @@
 																			article.author ||
 																			article.originalAuthor
 																		"
-																		class="
-																			font-weight-bold
-																			primary--text
-																		"
+																		class="font-weight-bold primary--text"
 																	>
 																		por
 																		{{
@@ -273,11 +262,7 @@
 															{{ article.categories }}
 														</v-btn>
 														<h3
-															class="
-																body-1
-																font-weight-bold
-																black--text
-															"
+															class="body-1 font-weight-bold black--text"
 														>
 															{{ article.title }}
 														</h3>
@@ -297,10 +282,7 @@
 														<div class="body-1 black--text">
 															<span
 																v-if="article.originalAuthor"
-																class="
-																	font-weight-bold
-																	primary--text
-																"
+																class="font-weight-bold primary--text"
 															>
 																por {{ article.originalAuthor }}
 															</span>
@@ -385,11 +367,7 @@
 				<v-row justify="center">
 					<v-col tag="section" cols="12" class="mb-5">
 						<h2
-							class="
-								white--text
-								font-weight-bold
-								text-h5 text-md-h4 text-lg-h3 text-center
-							"
+							class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center"
 						>
 							Para empresas
 						</h2>
@@ -438,11 +416,7 @@
 											>
 												<article>
 													<h3
-														class="
-															body-1
-															primary--text
-															font-weight-bold
-														"
+														class="body-1 primary--text font-weight-bold"
 													>
 														{{ item.categories }}
 													</h3>
@@ -455,11 +429,7 @@
 												</article>
 												<aside>
 													<span
-														class="
-															caption
-															primary--text
-															font-weight-bold
-														"
+														class="caption primary--text font-weight-bold"
 													>
 														{{ item.originalAuthor }}
 													</span>
@@ -551,12 +521,7 @@
 												</v-img>
 											</v-list-item-avatar>
 											<h2
-												class="
-													text-center
-													body-2
-													font-weight-bold
-													secondary--text
-												"
+												class="text-center body-2 font-weight-bold secondary--text"
 											>
 												{{ element.title }}
 											</h2>

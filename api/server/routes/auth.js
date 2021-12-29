@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import authController from '../controllers/auth';
-import validation from '../middleware/validation';
-import authSchema from '../schemas/auth';
+import { Router } from "express";
+import passport from "passport";
+import authController from "../controllers/auth";
+import validation from "../middleware/validation";
+import authSchema from "../schemas/auth";
 
 const authRouter = Router();
 
@@ -12,32 +12,32 @@ const authRouter = Router();
  * Endpoint de autenticacion.
  */
 authRouter.post(
-	'/auth/login',
-	[validation(authSchema.login, 'body'), passport.authenticate('local')],
-	authController.login
+  "/auth/login",
+  [validation(authSchema.login, "body"), passport.authenticate("local")],
+  authController.login
 );
 
 /**
  * No se usa.
  */
 authRouter.get(
-	'/auth/google',
-	passport.authenticate('google', {
-		scope: [
-			'https://www.googleapis.com/auth/plus.login',
-			'https://www.googleapis.com/auth/userinfo.email',
-		],
-	}),
-	authController.generateJwt
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/plus.login",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ],
+  }),
+  authController.generateJwt
 );
 
 authRouter.get(
-	'/auth/google/callback',
-	passport.authenticate('google', {
-		session: false,
-		failureRedirect: process.env.FRONTEND_URL + '/auth',
-	}),
-	authController.googleAuthCallback
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: process.env.FRONTEND_URL + "/auth",
+  }),
+  authController.googleAuthCallback
 );
 
 /**
@@ -45,9 +45,9 @@ authRouter.get(
  * req.body = { email: string, password: string }
  */
 authRouter.post(
-	'/auth/register',
-	validation(authSchema.register, 'body'),
-	authController.register
+  "/auth/register",
+  validation(authSchema.register, "body"),
+  authController.register
 );
 
 /**
@@ -55,8 +55,8 @@ authRouter.post(
  * req.body = { email: string }
  */
 authRouter.get(
-	'/auth/send-password-recover/:email',
-	authController.sendPasswordRecover
+  "/auth/send-password-recover/:email",
+  authController.sendPasswordRecover
 );
 
 /**
@@ -64,9 +64,9 @@ authRouter.get(
  * req.body = { password: string }
  */
 authRouter.put(
-	'/auth/user/password',
-	passport.authenticate('jwt'),
-	authController.changeUserPassword
+  "/auth/user/password",
+  passport.authenticate("jwt"),
+  authController.changeUserPassword
 );
 
 export default authRouter;

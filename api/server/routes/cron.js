@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import cronController from '../controllers/cron';
+import { Router } from "express";
+import cronController from "../controllers/cron";
 
 const cronRouter = Router();
 
 cronRouter.post(
-	'/cron/email-schedule/:authToken',
-	cronController.scheduleEmails
+  "/cron/email-schedule/:authToken",
+  cronController.scheduleEmails
 );
 
 cronRouter.post(
-	'/cron/session-status/:authToken',
-	cronController.sessionStatus
+  "/cron/session-status/:authToken",
+  cronController.sessionStatus
 );
 
 export default cronRouter;

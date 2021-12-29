@@ -200,14 +200,7 @@
 		>
 			<v-card width="550" rounded="lg">
 				<v-card-text
-					class="
-						d-flex
-						justify-space-between justify-center
-						primary
-						white--text
-						text-h5
-						py-3
-					"
+					class="d-flex justify-space-between justify-center primary white--text text-h5 py-3"
 				>
 					<div class="body-1 font-weight-bold pt-2">Consultante nuevo</div>
 					<v-btn icon @click="closeDialog">

@@ -575,11 +575,7 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="
-																				ma-1
-																				caption
-																				text-capitalize
-																			"
+																			class="ma-1 caption text-capitalize"
 																		>
 																			{{ tag }};
 																		</span>
@@ -623,10 +619,7 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="
-																				ma-1
-																				text-capitalize
-																			"
+																			class="ma-1 text-capitalize"
 																		>
 																			{{ tag }};
 																		</span>

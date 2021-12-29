@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-import { model, Schema } from 'mongoose';
+import { model, Schema } from "mongoose";
 
-let plan = new Schema({
-	name: {
-		type: String,
-	},
-	value: {
-		type: Number,
-	},
+const plan = new Schema({
+  name: {
+    type: String,
+  },
+  value: {
+    type: Number,
+  },
 });
 
-export default model('plan', plan);
+export default model("plan", plan);
