@@ -172,24 +172,27 @@
 								</v-card>
 							</v-menu>
 						</v-col>
-						<v-col id="selectPrices" cols="3" style="position: relative">
-							<v-select
-								ref="menuPrices"
-								v-model="prices"
-								outlined
-								dense
-								class="white"
-								attach="#selectPrices"
-								clearable
-								:items="[
-									{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
-									{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
-									{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
-									{ value: '[29900]', text: '+ $29.900' },
-								]"
-								label="Precios"
-								hide-details
-							></v-select>
+						<v-col cols="3">
+							<div id="selectPrices" style="position: relative">
+								<v-autocomplete
+									ref="menuPrices"
+									v-model="prices"
+									outlined
+									dense
+									class="white"
+									attach="#selectPrices"
+									clearable
+									:append-icon="mdiChevronDown"
+									:items="[
+										{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
+										{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
+										{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
+										{ value: '[29900]', text: '+ $29.900' },
+									]"
+									label="Precios"
+									hide-details
+								></v-autocomplete>
+							</div>
 						</v-col>
 						<v-col id="selectOthers" cols="2" style="position: relative">
 							<v-menu
@@ -258,6 +261,7 @@
 											:disabled="loading"
 											hide-details
 											class="py-2"
+											label="Español"
 											@change="changeInput"
 										>
 											<template #label>
@@ -270,6 +274,7 @@
 											:disabled="loading"
 											hide-details
 											class="py-2"
+											label="Ingles"
 											@change="changeInput"
 										>
 											<template #label>
