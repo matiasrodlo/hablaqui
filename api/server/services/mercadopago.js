@@ -130,24 +130,23 @@ const setPlanFree = async (id, isPsychologist) => {
 
 const successPay = async params => {
 	try {
-		logInfo('success Pay');
 		const { planId } = params;
 		const currentSessions = await Sessions.findById(planId);
 		const plan = currentSessions.plan[
 			currentSessions.plan.length - 1
 		]._id.toString();
-		const foundPlan = await Sessions.findByIdAndUpdate(
+		const foundPlan = await Sessions.findOneAndUpdate(
 			{
 				_id: planId,
 				'plan._id': plan,
 			},
 			{
 				$set: {
-					'plan.$[].payment': 'success',
-					'plan.$[].paymentDate': moment(),
+					'plan.$.payment': 'success',
+					'plan.$.datePayment': moment().toISOString(),
 				},
 			},
-			{ arrayFilters: [{ 'plan._id': plan }], new: true }
+			{ new: true }
 		);
 		const sessionData =
 			foundPlan.plan[foundPlan.plan.length - 1].session[0];

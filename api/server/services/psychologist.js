@@ -433,11 +433,10 @@ const createPlan = async ({ payload }) => {
 		paidToPsychologist: false,
 	};
 
-	logInfo(newSession);
-
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
+		datePayment: '',
 		totalPrice: payload.price,
 		sessionPrice: payload.price / sessionQuantity,
 		expiration: expirationDate,
@@ -518,6 +517,7 @@ const createPlan = async ({ payload }) => {
 			plan: [newPlan],
 			roomsUrl: url,
 		});
+		//const params = { planId: created._id.toString() };
 
 		return okResponse('Plan creado', { plan: created });
 	}
