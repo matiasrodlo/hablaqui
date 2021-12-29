@@ -19,7 +19,7 @@
 						dense
 						outlined
 						:items="
-							superFilter.map((item, index) => ({
+							filterPrice.map((item, index) => ({
 								text: `${item.name} ${item.lastName && item.lastName}`,
 								value: item._id,
 								index,
@@ -173,87 +173,23 @@
 							</v-menu>
 						</v-col>
 						<v-col id="selectPrices" cols="3" style="position: relative">
-							<v-menu
+							<v-select
 								ref="menuPrices"
-								v-model="menuPrices"
-								:close-on-content-click="false"
-								transition="scale-transition"
-								offset-y
-								rounded
+								v-model="prices"
+								outlined
+								dense
+								class="white"
 								attach="#selectPrices"
-								min-width="200px"
-							>
-								<template #activator="{ on, attrs }">
-									<v-text-field
-										:value="
-											prices.length > 1
-												? `Seleccionados ${prices.length}`
-												: prices
-										"
-										label="Precios"
-										readonly
-										outlined
-										dense
-										class="white"
-										hide-details
-										:append-icon="mdiChevronDown"
-										v-bind="attrs"
-										v-on="on"
-									></v-text-field>
-								</template>
-								<v-card rounded width="200px">
-									<v-card-text>
-										<v-checkbox
-											v-model="prices"
-											value="$9.990 - $14.990"
-											:disabled="loading"
-											class="py-2"
-											hide-details
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption">$9.990 - $14.990 </span>
-											</template>
-										</v-checkbox>
-										<v-checkbox
-											v-model="prices"
-											value="$14.990 - $22.990"
-											:disabled="loading"
-											class="py-2"
-											hide-details
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption">$14.990 - $22.990 </span>
-											</template>
-										</v-checkbox>
-										<v-checkbox
-											v-model="prices"
-											value="$22.990 - $29.990"
-											:disabled="loading"
-											class="py-2"
-											hide-details
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption">$22.990 - $29.990 </span>
-											</template>
-										</v-checkbox>
-										<v-checkbox
-											v-model="prices"
-											value="+ $29.900"
-											:disabled="loading"
-											class="py-2"
-											hide-details
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption">+ $29.900 </span>
-											</template>
-										</v-checkbox>
-									</v-card-text>
-								</v-card>
-							</v-menu>
+								clearable
+								:items="[
+									{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
+									{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
+									{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
+									{ value: '[29900]', text: '+ $29.900' },
+								]"
+								label="Precios"
+								hide-details
+							></v-select>
 						</v-col>
 						<v-col id="selectOthers" cols="2" style="position: relative">
 							<v-menu
@@ -526,8 +462,8 @@ export default {
 			view: 1,
 			specialties: '',
 			searchInput: '',
+			prices: '',
 			gender: [],
-			prices: [],
 			others: [],
 			models: [],
 			languages: [],
@@ -544,11 +480,25 @@ export default {
 		 * Filtra en base a los resultados del panel
 		 */
 		searchFilter() {
-			return this.superFilter.filter(item => {
+			return this.filterPrice.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result = result._id.includes(this.searchInput) && result;
 				return result;
+			});
+		},
+		/**
+		 * Filter prices
+		 */
+		filterPrice(item) {
+			if (!this.prices) return this.superFilter;
+			return this.superFilter.filter(item => {
+				const prices = JSON.parse(this.prices);
+				if (prices.length > 1)
+					return (
+						prices[0] < item.sessionPrices.video && prices[1] > item.sessionPrices.video
+					);
+				else return prices[0] < item.sessionPrices.video;
 			});
 		},
 		/**
