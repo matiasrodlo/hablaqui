@@ -34,8 +34,7 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(helmet());
 app.use(cors());
-// app.use(express.static(path.join(__dirname, 'static')));
-app.use('/static', express.static('./static/'));
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
