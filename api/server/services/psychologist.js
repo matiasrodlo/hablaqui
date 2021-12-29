@@ -562,7 +562,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	).populate('psychologist user');
 
 	if (payload.remainingSessions === 0) {
-		const expiration = moment(payload.date)
+		let session = getLastSessionFromPlan(sessions, '', idPlan);
+		const expiration = moment(session.lastSession)
 			.subtract(2, 'hours')
 			.toISOString();
 		sessions = await Sessions.findOneAndUpdate(
@@ -648,9 +649,53 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
 
+	let session = getLastSessionFromPlan(sessions, id, '');
+
+	if (session.remainingSessions === 0) {
+		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
+			.subtract(2, 'hours')
+			.toISOString();
+		await Sessions.findOneAndUpdate(
+			{ _id: sessionsId, 'plan._id': session.plan_id },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		);
+	}
+
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
+};
+
+const getLastSessionFromPlan = (sessions, sessionId, planId) => {
+	let session = sessions.plan
+		.flatMap(plan => {
+			let maxSession = plan.session.map(session =>
+				moment(session.date, 'MM/DD/YYYY HH:mm').format(
+					'YYYY/MM/DD HH:MM'
+				)
+			);
+			maxSession = maxSession.sort((a, b) => new Date(b) - new Date(a));
+			return plan.session.flatMap(session => {
+				return {
+					session_id: session._id,
+					plan_id: plan._id,
+					date: session.date,
+					lastSession: maxSession[0],
+					remainingSessions: plan.remainingSessions,
+				};
+			});
+		})
+		.filter(
+			session =>
+				sessionId === session.session_id.toString() ||
+				planId === session.plan_id.toString()
+		);
+
+	return session[0];
 };
 
 /**
