@@ -433,6 +433,8 @@ const createPlan = async ({ payload }) => {
 		paidToPsychologist: false,
 	};
 
+	logInfo(newSession);
+
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
@@ -530,7 +532,9 @@ const createPlan = async ({ payload }) => {
  * @returns sessions actualizada
  */
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist } = await Sessions.findOne({ _id: id });
+	const { psychologist } = await Sessions.findOne({ _id: id }).populate(
+		'psychologist'
+	);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -545,6 +549,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
 		);
 	}
+
 	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
 		{
@@ -555,6 +560,20 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		},
 		{ new: true }
 	).populate('psychologist user');
+
+	if (payload.remainingSessions === 0) {
+		const expiration = moment(payload.date)
+			.subtract(2, 'hours')
+			.toISOString();
+		sessions = await Sessions.findOneAndUpdate(
+			{ _id: id, 'plan._id': idPlan },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		).populate('psychologist user');
+	}
 
 	analytics.track({
 		userId: userLogged._id.toString(),
@@ -575,8 +594,6 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			userpsyId: id,
 		},
 	});
-
-	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
