@@ -33,8 +33,14 @@ export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () => import('~/components/psicologos/PsicologosDesktop'),
-		PsicologosMobile: () => import('~/components/psicologos/PsicologosMobile'),
+		PsicologosDesktop: () =>
+			import(
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
+			),
+		PsicologosMobile: () =>
+			import(
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
+			),
 	},
 	head() {
 		return {

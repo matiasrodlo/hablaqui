@@ -418,7 +418,7 @@
 								</div>
 							</v-col>
 							<v-divider vertical class="my-4"></v-divider>
-							<v-col v-if="false" cols="4" style="height: 350px">
+							<v-col cols="4" style="height: 350px; position: relative">
 								<calendar-psychologist
 									v-if="sessions"
 									:id-psy="item._id"
@@ -430,9 +430,9 @@
 					</v-card>
 				</v-col>
 				<v-col
-					v-if="loading || isFiltering"
+					v-if="loading"
 					cols="12"
-					style="height: 400px"
+					style="height: 350px"
 					class="d-flex justify-center align-center"
 				>
 					<v-progress-circular
@@ -473,7 +473,6 @@ export default {
 			models: [],
 			languages: [],
 			scrollHeight: 0,
-			isFiltering: false,
 		};
 	},
 	computed: {
@@ -485,12 +484,13 @@ export default {
 		 * Filtra en base a los resultados del panel
 		 */
 		searchFilter() {
-			return this.filterPrice.filter(item => {
+			const search = this.filterPrice.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result = result._id.includes(this.searchInput) && result;
 				return result;
 			});
+			return search;
 		},
 		/**
 		 * Filter prices
@@ -537,13 +537,6 @@ export default {
 			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
-	},
-	asyncComputed: {},
-	beforeUpdate() {
-		this.$emit('setIsFiltering', true);
-	},
-	updated() {
-		this.$emit('setIsFiltering', false);
 	},
 	created() {
 		this.setFloatingChat(false);
