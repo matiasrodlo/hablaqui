@@ -352,6 +352,12 @@
 				<template v-else>
 					<v-col v-for="item in searchFilter" :key="item._id" cols="12">
 						<v-card
+							v-observe-visibility="{
+								rootMargin: 700,
+								callback: (isVisible, entry) =>
+									handleVisivility(isVisible, entry, item._id),
+								once: true,
+							}"
 							style="border-radius: 15px"
 							height="350"
 							class="item text-center mt-6"
@@ -456,13 +462,29 @@
 									</div>
 								</v-col>
 								<v-divider vertical class="my-4"></v-divider>
-								<v-col cols="4" style="height: 350px; position: relative">
-									<calendar-psychologist
-										v-if="sessions"
-										:id-psy="item._id"
-										:sessions="getSessions(item._id)"
-										:set-date="date => null"
-									/>
+								<v-col cols="4">
+									<template v-if="visibles.includes(item._id)">
+										<calendar-psychologist
+											:id-psy="item._id"
+											:sessions="getSessions(item._id)"
+											:set-date="date => null"
+										/>
+									</template>
+									<template v-else>
+										<div
+											class="
+												primary--text
+												caption
+												font-weight-bold
+												d-flex
+												justify-center
+												align-center
+											"
+											style="height: 350px"
+										>
+											Cargando...
+										</div>
+									</template>
 								</v-col>
 							</v-row>
 						</v-card>
@@ -501,6 +523,7 @@ export default {
 			languages: [],
 			scrollHeight: 0,
 			loadingTimeout: false,
+			visibles: [],
 		};
 	},
 	computed: {
@@ -512,15 +535,12 @@ export default {
 		 * Filtra en base a los resultados del panel
 		 */
 		searchFilter() {
-			const search = this.filterPrice.filter(item => {
+			return this.filterPrice.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result = result._id.includes(this.searchInput) && result;
 				return result;
 			});
-			// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-			this.loadingTimeout = false;
-			return search;
 		},
 		/**
 		 * Filter prices
@@ -611,6 +631,11 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		handleVisivility(isVisible, entry, idPsychologist) {
+			if (isVisible) {
+				this.visibles.push(idPsychologist);
+			}
+		},
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
@@ -649,6 +674,7 @@ export default {
 		},
 		changeInput() {
 			this.searchInput = '';
+			this.visibles = [];
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
