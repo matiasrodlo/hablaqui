@@ -39,11 +39,11 @@ export default {
 				: 'http://localhost:3000/';
 
 			// generate routes blogs
-			const { data } = await axios.get(`${baseURL}/blog/all`);
-			const blogs = data.articles.map(item => ({
-				route: `/blog/${item.slug}`,
-				payload: item,
-			}));
+			// const { data } = await axios.get(`${baseURL}/blog/all`);
+			// const blogs = data.articles.map(item => ({
+			// 	route: `/blog/${item.slug}`,
+			// 	payload: item,
+			// }));
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
@@ -61,7 +61,7 @@ export default {
 				payload: el.comuna,
 			}));
 
-			return blogs.concat(psicologos).concat(comunas);
+			return psicologos.concat(comunas);
 		},
 	},
 	loading: {
