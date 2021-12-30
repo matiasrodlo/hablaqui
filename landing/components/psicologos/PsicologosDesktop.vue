@@ -33,7 +33,12 @@
 						}"
 						clearable
 						:disabled="loading"
-						@change="e => (searchInput = e)"
+						@change="
+							e => {
+								loadingTimeout = true;
+								searchInput = e;
+							}
+						"
 					>
 						<template #no-data>
 							<v-list-item>
@@ -82,7 +87,12 @@
 										closeOnContentClick: true,
 									}"
 									:disabled="loading"
-									@change="changeInput"
+									@change="
+										() => {
+											loadingTimeout = true;
+											changeInput();
+										}
+									"
 								>
 									<template #no-data>
 										<v-list-item>
@@ -137,6 +147,7 @@
 											class="py-2"
 											hide-details
 											@change="changeInput"
+											@click="() => (loadingTimeout = true)"
 										>
 											<template #label>
 												<span class="caption">Hombre</span>
@@ -150,6 +161,7 @@
 											class="py-2"
 											hide-details
 											@change="changeInput"
+											@click="() => (loadingTimeout = true)"
 										>
 											<template #label>
 												<span class="caption">Mujer</span>
@@ -163,6 +175,7 @@
 											class="py-2"
 											hide-details
 											@change="changeInput"
+											@click="() => (loadingTimeout = true)"
 										>
 											<template #label>
 												<span class="caption">Transgénero </span>
@@ -191,6 +204,7 @@
 									]"
 									label="Precios"
 									hide-details
+									@change="() => (loadingTimeout = true)"
 								></v-autocomplete>
 							</div>
 						</v-col>
@@ -248,6 +262,7 @@
 												hide-details
 												:label="item"
 												@change="changeInput"
+												@click="() => (loadingTimeout = true)"
 											>
 												<template #label>
 													<span class="caption"> {{ item }}</span>
@@ -263,6 +278,7 @@
 											class="py-2"
 											label="Español"
 											@change="changeInput"
+											@click="() => (loadingTimeout = true)"
 										>
 											<template #label>
 												<span class="caption">Español </span>
@@ -276,6 +292,7 @@
 											class="py-2"
 											label="Ingles"
 											@change="changeInput"
+											@click="() => (loadingTimeout = true)"
 										>
 											<template #label>
 												<span class="caption">Ingles </span>
@@ -320,117 +337,8 @@
 						</v-row>
 					</v-sheet>
 				</v-col>
-
-				<v-col v-for="item in searchFilter" :key="item._id" cols="12">
-					<v-card style="border-radius: 15px" height="350" class="item text-center mt-6">
-						<v-row>
-							<v-col
-								cols="3"
-								class="d-flex align-center justify-center"
-								style="height: 350px"
-							>
-								<div class="text-center">
-									<avatar
-										:url="avatar(item, true)"
-										:name="item.name"
-										:last-name="item.lastName ? item.lastName : ''"
-										size="170"
-										loading-color="white"
-									></avatar>
-									<div
-										class="text-capitalize py-4"
-										style="color: #706f6f; font-size: 14px"
-									>
-										código {{ item.code ? item.code : '' }}
-									</div>
-								</div>
-							</v-col>
-							<v-col
-								cols="5"
-								style="display: flex; flex-direction: column; height: 350px"
-							>
-								<div style="flex: 1">
-									<nuxt-link
-										style="text-decoration: none"
-										:to="{
-											path: `/${item.username}`,
-										}"
-									>
-										<div
-											class="text-left font-weight-bold"
-											style="color: #3c3c3b; font-size: 28px"
-										>
-											{{ item.name }}
-											{{ item.lastName && item.lastName }}
-										</div>
-									</nuxt-link>
-								</div>
-								<div
-									class="text-left font-weight-medium pa-2"
-									style="color: #3c3c3b; font-size: 16px; flex: 1"
-								>
-									${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
-									/ 50 min
-								</div>
-								<div style="flex: 1">
-									<v-chip-group
-										v-model="specialties"
-										:next-icon="mdiPlus"
-										:prev-icon="mdiMinus"
-										show-arrows
-									>
-										<template v-for="(tag, s) in item.specialties">
-											<v-chip
-												:key="s"
-												:value="tag"
-												class="ma-2"
-												small
-												:color="specialties == tag ? 'primary--text' : ''"
-											>
-												<span>
-													{{ tag }}
-												</span>
-											</v-chip>
-										</template>
-									</v-chip-group>
-								</div>
-								<div style="flex: 5">
-									<div class="text-left" style="color: #54565a; font-size: 14px">
-										{{
-											item.professionalDescription.length > 210
-												? item.professionalDescription
-														.slice(0, 210)
-														.concat('...')
-												: item.professionalDescription
-										}}
-									</div>
-								</div>
-								<div style="flex: 2" class="text-left">
-									<v-btn
-										small
-										rounded
-										color="primary"
-										class="px-8 py-2"
-										:to="{ path: `/${item.username}` }"
-									>
-										Quiero saber más
-									</v-btn>
-								</div>
-							</v-col>
-							<v-divider vertical class="my-4"></v-divider>
-							<v-col cols="4" style="height: 350px; position: relative">
-								<calendar-psychologist
-									v-if="sessions"
-									:id-psy="item._id"
-									:sessions="getSessions(item._id)"
-									:set-date="date => null"
-								/>
-							</v-col>
-						</v-row>
-					</v-card>
-				</v-col>
 				<v-col
-					v-if="loading"
+					v-if="loading || loadingTimeout"
 					cols="12"
 					style="height: 350px"
 					class="d-flex justify-center align-center"
@@ -441,6 +349,125 @@
 						color="primary"
 					></v-progress-circular>
 				</v-col>
+				<template v-else>
+					<v-col v-for="item in searchFilter" :key="item._id" cols="12">
+						<v-card
+							style="border-radius: 15px"
+							height="350"
+							class="item text-center mt-6"
+						>
+							<v-row>
+								<v-col
+									cols="3"
+									class="d-flex align-center justify-center"
+									style="height: 350px"
+								>
+									<div class="text-center">
+										<avatar
+											:url="avatar(item, true)"
+											:name="item.name"
+											:last-name="item.lastName ? item.lastName : ''"
+											size="170"
+											loading-color="white"
+										></avatar>
+										<div
+											class="text-capitalize py-4"
+											style="color: #706f6f; font-size: 14px"
+										>
+											código {{ item.code ? item.code : '' }}
+										</div>
+									</div>
+								</v-col>
+								<v-col
+									cols="5"
+									style="display: flex; flex-direction: column; height: 350px"
+								>
+									<div style="flex: 1">
+										<nuxt-link
+											style="text-decoration: none"
+											:to="{
+												path: `/${item.username}`,
+											}"
+										>
+											<div
+												class="text-left font-weight-bold"
+												style="color: #3c3c3b; font-size: 28px"
+											>
+												{{ item.name }}
+												{{ item.lastName && item.lastName }}
+											</div>
+										</nuxt-link>
+									</div>
+									<div
+										class="text-left font-weight-medium pa-2"
+										style="color: #3c3c3b; font-size: 16px; flex: 1"
+									>
+										${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
+										/ 50 min
+									</div>
+									<div style="flex: 1">
+										<v-chip-group
+											v-model="specialties"
+											:next-icon="mdiPlus"
+											:prev-icon="mdiMinus"
+											show-arrows
+										>
+											<template v-for="(tag, s) in item.specialties">
+												<v-chip
+													:key="s"
+													:value="tag"
+													class="ma-2"
+													small
+													:color="
+														specialties == tag ? 'primary--text' : ''
+													"
+												>
+													<span>
+														{{ tag }}
+													</span>
+												</v-chip>
+											</template>
+										</v-chip-group>
+									</div>
+									<div style="flex: 5">
+										<div
+											class="text-left"
+											style="color: #54565a; font-size: 14px"
+										>
+											{{
+												item.professionalDescription.length > 210
+													? item.professionalDescription
+															.slice(0, 210)
+															.concat('...')
+													: item.professionalDescription
+											}}
+										</div>
+									</div>
+									<div style="flex: 2" class="text-left">
+										<v-btn
+											small
+											rounded
+											color="primary"
+											class="px-8 py-2"
+											:to="{ path: `/${item.username}` }"
+										>
+											Quiero saber más
+										</v-btn>
+									</div>
+								</v-col>
+								<v-divider vertical class="my-4"></v-divider>
+								<v-col cols="4" style="height: 350px; position: relative">
+									<calendar-psychologist
+										v-if="sessions"
+										:id-psy="item._id"
+										:sessions="getSessions(item._id)"
+										:set-date="date => null"
+									/>
+								</v-col>
+							</v-row>
+						</v-card>
+					</v-col>
+				</template>
 			</v-row>
 		</v-container>
 	</div>
@@ -473,6 +500,7 @@ export default {
 			models: [],
 			languages: [],
 			scrollHeight: 0,
+			loadingTimeout: false,
 		};
 	},
 	computed: {
@@ -490,6 +518,8 @@ export default {
 					result = result._id.includes(this.searchInput) && result;
 				return result;
 			});
+			// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+			this.loadingTimeout = false;
 			return search;
 		},
 		/**
@@ -537,6 +567,14 @@ export default {
 			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
+	},
+	watch: {
+		loadingTimeout(newValue) {
+			if (newValue)
+				setTimeout(() => {
+					this.loadingTimeout = false;
+				}, 1000);
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
