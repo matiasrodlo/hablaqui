@@ -217,7 +217,7 @@ const psychologistPay = async (params, query) => {
 
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
-		{ $push: { myPlans: newPlan } },
+		{ $push: { psyPlans: newPlan } },
 		{ new: true }
 	);
 	return okResponse('plan actualizado', { foundPsychologist });
