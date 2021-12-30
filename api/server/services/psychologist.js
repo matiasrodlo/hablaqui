@@ -564,8 +564,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
 		const expiration = moment(session.lastSession)
-			.subtract(2, 'hours')
-			.toISOString();
+			.add(1, 'hours')
+			.format();
 		sessions = await Sessions.findOneAndUpdate(
 			{ _id: id, 'plan._id': idPlan },
 			{
@@ -653,8 +653,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	if (session.remainingSessions === 0) {
 		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
-			.subtract(2, 'hours')
-			.toISOString();
+			.add(1, 'hours')
+			.format();
 		await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
 			{
@@ -675,7 +675,7 @@ const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 		.flatMap(plan => {
 			let maxSession = plan.session.map(session =>
 				moment(session.date, 'MM/DD/YYYY HH:mm').format(
-					'YYYY/MM/DD HH:MM'
+					'YYYY/MM/DD HH:mm'
 				)
 			);
 			maxSession = maxSession.sort((a, b) => new Date(b) - new Date(a));
@@ -684,6 +684,7 @@ const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 					session_id: session._id,
 					plan_id: plan._id,
 					date: session.date,
+					datePayment: plan.datePayment,
 					lastSession: maxSession[0],
 					remainingSessions: plan.remainingSessions,
 				};
@@ -798,10 +799,34 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		},
 		{
 			$pull: {
-				'plan.$[].session': { _id: id },
+				'plan.$.session': { _id: id },
 			},
 		}
 	);
+
+	/*session = getLastSessionFromPlan(session, id, planId);
+
+	const date = moment(session.date).format();
+	const lastSession = moment(session.lastSession).format();
+
+	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0
+	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente)
+	if (
+		session.remainingSessions === 0 &&
+		new Date(date).getTime() === new Date(lastSession).getTime()
+	) {
+		const expiration = moment(session.datePayment)
+			.add(1, 'months')
+			.format();
+		await Sessions.findOneAndUpdate(
+			{ _id: sessionsId, 'plan._id': session.plan_id },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		);
+	}*/
 
 	const sessions = await Sessions.find({
 		psychologist: user.psychologist,

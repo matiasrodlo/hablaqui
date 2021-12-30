@@ -143,7 +143,7 @@ const successPay = async params => {
 			{
 				$set: {
 					'plan.$.payment': 'success',
-					'plan.$.datePayment': moment().toISOString(),
+					'plan.$.datePayment': moment().format(),
 				},
 			},
 			{ new: true }
