@@ -3,7 +3,10 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<psicologos-desktop class="hidden-sm-and-down" />
+		<psicologos-desktop
+			:loading-psychologist="loadingPsychologist"
+			class="hidden-sm-and-down"
+		/>
 		<!-- mobile -->
 		<psicologos-mobile class="hidden-md-and-up" />
 		<!-- footer -->
@@ -41,6 +44,11 @@ export default {
 			import(
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
 			),
+	},
+	data() {
+		return {
+			loadingPsychologist: true,
+		};
 	},
 	head() {
 		return {
@@ -82,6 +90,7 @@ export default {
 	methods: {
 		async initialFetch() {
 			await this.getPsychologists();
+			this.loadingPsychologist = false;
 			await this.getAppointments();
 			this.getFormattedSessionsAll();
 		},

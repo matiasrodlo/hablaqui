@@ -32,11 +32,12 @@
 							closeOnClick: true,
 						}"
 						clearable
-						:disabled="loading"
+						:disabled="loadingPsychologist"
 						@change="
 							e => {
 								loadingTimeout = true;
 								searchInput = e;
+								visibles = [];
 							}
 						"
 					>
@@ -86,7 +87,7 @@
 										closeOnClick: true,
 										closeOnContentClick: true,
 									}"
-									:disabled="loading"
+									:disabled="loadingPsychologist"
 									@change="
 										() => {
 											loadingTimeout = true;
@@ -142,7 +143,7 @@
 										<v-checkbox
 											v-model="gender"
 											value="male"
-											:disabled="loading"
+											:disabled="loadingPsychologist"
 											label="Hombre"
 											class="py-2"
 											hide-details
@@ -157,7 +158,7 @@
 											v-model="gender"
 											value="female"
 											label="Mujer"
-											:disabled="loading"
+											:disabled="loadingPsychologist"
 											class="py-2"
 											hide-details
 											@change="changeInput"
@@ -171,7 +172,7 @@
 											v-model="gender"
 											value="transgender"
 											label="Transgénero"
-											:disabled="loading"
+											:disabled="loadingPsychologist"
 											class="py-2"
 											hide-details
 											@change="changeInput"
@@ -273,7 +274,7 @@
 										<v-checkbox
 											v-model="languages"
 											value="spanish"
-											:disabled="loading"
+											:disabled="loadingPsychologist"
 											hide-details
 											class="py-2"
 											label="Español"
@@ -287,7 +288,7 @@
 										<v-checkbox
 											v-model="languages"
 											value="english"
-											:disabled="loading"
+											:disabled="loadingPsychologist"
 											hide-details
 											class="py-2"
 											label="Ingles"
@@ -338,7 +339,7 @@
 					</v-sheet>
 				</v-col>
 				<v-col
-					v-if="loading || loadingTimeout"
+					v-if="loadingPsychologist || loadingTimeout"
 					cols="12"
 					style="height: 350px"
 					class="d-flex justify-center align-center"
@@ -350,10 +351,9 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<v-col v-for="item in searchFilter" :key="item._id" cols="12">
+					<v-col v-for="item in items" :key="item._id" cols="12">
 						<v-card
 							v-observe-visibility="{
-								rootMargin: 700,
 								callback: (isVisible, entry) =>
 									handleVisivility(isVisible, entry, item._id),
 								once: true,
@@ -492,6 +492,7 @@
 				</template>
 			</v-row>
 		</v-container>
+		<div v-observe-visibility="scrollInfinity" />
 	</div>
 </template>
 
@@ -503,6 +504,11 @@ export default {
 	name: 'PsicologosDesktop',
 	components: {
 		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+	},
+	props: {
+		loadingPsychologist: {
+			type: Boolean,
+		},
 	},
 	data() {
 		return {
@@ -524,12 +530,11 @@ export default {
 			scrollHeight: 0,
 			loadingTimeout: false,
 			visibles: [],
+			items: [],
+			page: 0,
 		};
 	},
 	computed: {
-		loading() {
-			return !this.psychologists.length;
-		},
 		/**
 		 * Filter search box
 		 * Filtra en base a los resultados del panel
@@ -595,6 +600,15 @@ export default {
 					this.loadingTimeout = false;
 				}, 1000);
 		},
+		loadingPsychologist(newValue) {
+			if (!newValue.length) {
+				const totalPages = this.searchFilter.length / 10;
+				this.items = this.searchFilter.filter(
+					(item, i) => totalPages > this.page && this.page * 10 >= i
+				);
+				console.log(this.items.length, this.page, totalPages);
+			}
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -631,6 +645,16 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		scrollInfinity(isVisible) {
+			const totalPages = this.searchFilter.length / 10;
+			if (isVisible && this.page !== totalPages) {
+				this.page++;
+				this.items = this.searchFilter.filter(
+					(item, i) => totalPages > this.page && this.page * 10 >= i
+				);
+				console.log(this.items.length, this.page, totalPages);
+			}
+		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible) {
 				this.visibles.push(idPsychologist);
