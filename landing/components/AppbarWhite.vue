@@ -35,7 +35,12 @@
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
+				<v-list-item
+					id="link-blog-drawer"
+					accesskey="b"
+					link
+					href="https://hablaqui.cl/blog/"
+				>
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
@@ -140,15 +145,15 @@
 			>
 				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
 			</nuxt-link>
-			<nuxt-link
+			<a
 				id="blog-appabar"
 				accesskey="b"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				to="/blog"
+				href="https://hablaqui.cl/blog/"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</nuxt-link>
+			</a>
 			<v-spacer></v-spacer>
 			<client-only>
 				<div
