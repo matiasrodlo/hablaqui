@@ -3,7 +3,7 @@
 		<v-row
 			v-if="!sessions.length"
 			class="ma-0"
-			style="height: 300px"
+			style="height: 280px"
 			align="center"
 			justify="center"
 		>
@@ -67,23 +67,23 @@
 					class="mt-5"
 					@click="
 						() => {
-							if (heighCalendar === 'max-height: 280px') {
+							if (heighCalendar === 'max-height: 230px') {
 								heighCalendar = 'max-height: 100%';
 								setFullCard(idPsy);
 							} else {
-								heighCalendar = 'max-height: 280px';
+								heighCalendar = 'max-height: 230px';
 								setMinimalCard();
 							}
 						}
 					"
 				>
 					<span class="mr-2">{{
-						heighCalendar === 'max-height: 280px' ? 'Más horarios' : 'Ver menos'
+						heighCalendar === 'max-height: 230px' ? 'Más horarios' : 'Ver menos'
 					}}</span>
 					<icon
 						color="primary"
 						:icon="
-							heighCalendar === 'max-height: 280px' ? mdiChevronDown : mdiChevronUp
+							heighCalendar === 'max-height: 230px' ? mdiChevronDown : mdiChevronUp
 						"
 					/>
 				</v-btn>
@@ -118,7 +118,7 @@ export default {
 	},
 	data() {
 		return {
-			heighCalendar: 'max-height: 280px',
+			heighCalendar: 'max-height: 230px',
 			mdiChevronDown,
 			mdiChevronUp,
 			mdiChevronLeft,

@@ -333,7 +333,7 @@
 					<v-col
 						v-if="loadingPsychologist"
 						cols="12"
-						style="height: 350px"
+						style="height: 300px"
 						class="d-flex justify-center align-center"
 					>
 						<v-progress-circular
@@ -352,7 +352,7 @@
 										once: true,
 									}"
 									style="border-radius: 15px"
-									:height="fullcard.includes(item._id) ? '100%' : '350px'"
+									:height="fullcard.includes(item._id) ? '100%' : '300px'"
 									:class="fullcard.includes(item._id) ? 'expandCard' : ''"
 									class="item text-center mt-6"
 								>
@@ -360,14 +360,14 @@
 										<v-col
 											cols="3"
 											class="d-flex align-center justify-center"
-											style="height: 350px"
+											style="height: 300px"
 										>
 											<div class="text-center">
 												<avatar
 													:url="avatar(item, true)"
 													:name="item.name"
 													:last-name="item.lastName ? item.lastName : ''"
-													size="170"
+													size="130"
 													loading-color="white"
 												></avatar>
 												<div
@@ -383,7 +383,7 @@
 											style="
 												display: flex;
 												flex-direction: column;
-												height: 350px;
+												height: 300px;
 											"
 										>
 											<div style="flex: 1">
@@ -486,7 +486,7 @@
 														justify-center
 														align-center
 													"
-													style="height: 350px"
+													style="height: 300px"
 												>
 													Cargando...
 												</div>
@@ -708,9 +708,5 @@ export default {
 
 .item:hover {
 	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
-}
-
-.expandCard {
-	transition: transform 1s;
 }
 </style>
