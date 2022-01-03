@@ -10,7 +10,7 @@
 				</div>
 			</v-col>
 			<v-col v-for="(item, r) in match" :key="r" cols="12" class="d-flex justify-center">
-				<v-card color="white" style="border-radius: 15px">
+				<v-card width="100%" color="white" style="border-radius: 15px">
 					<v-card-text>
 						<v-row align="center" justify="center">
 							<v-col cols="12" sm="3" class="text-center">
