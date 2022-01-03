@@ -25,10 +25,15 @@
 					<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
 						<v-container class="pb-0 px-4">
 							<div class="text-center" @click="toggle">
-								<div class="body-2 font-weight-bold" style="color: #706f6f">
+								<div
+									class="body-2 font-weight-bold text-capitalize"
+									style="color: #706f6f"
+								>
 									{{ item.text }}
 								</div>
-								<div class="caption text--secondary">{{ item.day }}</div>
+								<div class="caption text--secondary text-capitalize">
+									{{ item.day }}
+								</div>
 							</div>
 							<div class="mt-3">
 								<v-sheet

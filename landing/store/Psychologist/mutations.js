@@ -41,6 +41,7 @@ export default {
 				sessions: item.sessions.map(el => ({
 					...el,
 					text: moment(el.text).format('ddd'),
+					day: moment(el.day, 'DD MMM').format('DD MMM'),
 				})),
 			};
 		});
