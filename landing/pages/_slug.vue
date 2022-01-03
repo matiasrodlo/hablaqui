@@ -3,9 +3,17 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<profile-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
+		<profile-desktop
+			:psychologist="psychologist"
+			:set-psychologist="setPsychologist"
+			class="hidden-sm-and-down"
+		/>
 		<!-- mobile -->
-		<profile-mobile :psychologist="psychologist" class="hidden-md-and-up" />
+		<profile-mobile
+			:psychologist="psychologist"
+			:set-psychologist="setPsychologist"
+			class="hidden-md-and-up"
+		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
