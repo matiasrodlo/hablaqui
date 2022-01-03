@@ -70,140 +70,101 @@
 						</v-col>
 					</v-row>
 				</v-card>
-				<v-card class="shadowCard mt-6 pb-10">
+				<v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
 					<v-card-text class="text-h5 primary--text font-weight-bold">Perfil</v-card-text>
+					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<v-divider></v-divider>
-					</v-card-text>
-					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Experiencia
-							</v-col>
-							<v-col class="body-1 text-left">
-								<ul
-									v-if="psychologist.experience && psychologist.experience.length"
+						<div class="text-left subtitle-1 primary--text">Especialidades</div>
+						<div
+							v-if="psychologist.specialties && psychologist.specialties.length"
+							class="body-1 text-left mt-3"
+						>
+							<ul>
+								<li
+									v-for="(item, i) in psychologist.specialties"
+									:key="i"
+									class="my-1"
 								>
-									<li v-for="(experience, i) in psychologist.experience" :key="i">
-										{{ experience.title }} - {{ experience.place }}
-										<span v-if="experience.start && experience.end"
-											>({{ experience.start }}, {{ experience.end }})</span
-										>
-									</li>
-								</ul>
-							</v-col>
-						</v-row>
+									{{ item }}
+								</li>
+							</ul>
+						</div>
+						<div v-else class="body-1 text-left text-capitalize">Vacío</div>
 					</v-card-text>
+					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<v-divider></v-divider>
+						<div class="mb-4 text-left subtitle-1 primary--text">Experiencia</div>
+						<div class="body-1 text-left">
+							<ul v-if="psychologist.experience && psychologist.experience.length">
+								<li
+									v-for="(experience, i) in psychologist.experience"
+									:key="i"
+									class="my-1"
+								>
+									{{ experience.title }} - {{ experience.place }}
+									<span v-if="experience.start && experience.end"
+										>({{ experience.start }}, {{ experience.end }})</span
+									>
+								</li>
+							</ul>
+						</div>
 					</v-card-text>
+					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Especialidades
-							</v-col>
-							<v-col
-								v-if="psychologist.specialties && psychologist.specialties.length"
-								class="body-1 text-left"
-							>
-								<ul>
-									<li v-for="(item, i) in psychologist.specialties" :key="i">
-										{{ item }}
-									</li>
-								</ul>
-							</v-col>
-							<v-col v-else class="body-1 text-left text-capitalize"> Vacío </v-col>
-						</v-row>
+						<div class="mb-4 text-left subtitle-1 primary--text">
+							Modelos de trabajo terapéutico
+						</div>
+						<div class="body-1 text-left">
+							<ul v-if="psychologist.models && psychologist.models.length">
+								<li v-for="(model, i) in psychologist.models" :key="i" class="my-1">
+									{{ model }}
+								</li>
+							</ul>
+							<div v-else>Vacío</div>
+						</div>
 					</v-card-text>
+					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<v-divider></v-divider>
+						<div class="mb-4 text-left subtitle-1 primary--text">Formación</div>
+						<div class="body-1 text-left">
+							<ul v-if="psychologist.formation && psychologist.formation.length">
+								<li
+									v-for="(formation, i) in psychologist.formation"
+									:key="i"
+									class="my-1"
+								>
+									{{ formation.formationType }} -
+									{{ formation.description }}
+									<span v-if="formation.start && formation.end">
+										({{ formation.start }}, {{ formation.end }})
+									</span>
+								</li>
+							</ul>
+						</div>
 					</v-card-text>
+					<v-divider></v-divider>
 					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Modelos de trabajo terapéutico
-							</v-col>
-							<v-col class="body-1 text-left">
-								<ul v-if="psychologist.models && psychologist.models.length">
-									<li v-for="(model, i) in psychologist.models" :key="i">
-										{{ model }}
-									</li>
-								</ul>
-								<div v-else>Vacío</div>
-							</v-col>
-						</v-row>
+						<div class="mb-4 text-left subtitle-1 primary--text">
+							Descripción personal
+						</div>
+						<div class="body-1 text-left">
+							{{
+								psychologist.personalDescription
+									? psychologist.personalDescription
+									: 'Sin descripcion'
+							}}
+						</div>
 					</v-card-text>
+					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<v-divider></v-divider>
-					</v-card-text>
-					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Formación
-							</v-col>
-							<v-col class="body-1 text-left">
-								<ul v-if="psychologist.formation && psychologist.formation.length">
-									<li v-for="(formation, i) in psychologist.formation" :key="i">
-										{{ formation.formationType }} -
-										{{ formation.description }}
-										<span v-if="formation.start && formation.end">
-											({{ formation.start }}, {{ formation.end }})
-										</span>
-									</li>
-								</ul>
-							</v-col>
-						</v-row>
-					</v-card-text>
-					<v-card-text><v-divider></v-divider></v-card-text>
-					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Descripción personal
-							</v-col>
-							<v-col class="body-1 text-left">
-								{{
-									psychologist.personalDescription
-										? psychologist.personalDescription
-										: 'Sin descripcion'
-								}}
-							</v-col>
-						</v-row>
-					</v-card-text>
-					<v-card-text>
-						<v-row align="center">
-							<v-col
-								cols="12"
-								md="3"
-								class="align-self-start subtitle-1 primary--text"
-							>
-								Política de reprogramación
-							</v-col>
-							<v-col class="body-1 text-left">
-								Puedes reprogramar tu sesión hasta
-								{{ psychologist.preferences.minimumRescheduleSession }}hora(s) antes
-								sin costo adicional.
-							</v-col>
-						</v-row>
+						<div class="mb-4 text-left subtitle-1 primary--text">
+							Política de reprogramación
+						</div>
+						<div class="body-1 text-left">
+							Puedes reprogramar tu sesión hasta
+							{{ psychologist.preferences.minimumRescheduleSession }}hora(s) antes sin
+							costo adicional.
+						</div>
 					</v-card-text>
 				</v-card>
 			</v-col>
@@ -248,8 +209,6 @@ export default {
 	data() {
 		return {
 			loadingChat: false,
-			dialog: false,
-			tab: 1,
 			pusher: null,
 			channel: null,
 			fullcard: false,
@@ -258,20 +217,8 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			resumeView: 'Psychologist/resumeView',
 			sessions: 'Psychologist/sessionsFormatted',
 		}),
-	},
-	watch: {
-		async resumeView(newValue) {
-			if (newValue && this.dialog) {
-				this.loadingChat = true;
-				this.dialog = false;
-				await this.startConversation(this.psychologist._id);
-				this.loadingChat = false;
-				this.setFloatingChat(true);
-			}
-		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -294,20 +241,24 @@ export default {
 		this.loadingCalendar = true;
 		await this.getFormattedSessions(this.psychologist._id);
 		this.loadingCalendar = false;
+		if (this.$route.query.chat) {
+			this.loadingChat = true;
+			await this.startConversation(this.psychologist._id);
+			this.loadingChat = false;
+			this.setFloatingChat(true);
+			this.$router.replace({ query: null });
+		}
 	},
 	methods: {
 		async getPsychologist(data) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
 			this.setPsychologist(psychologist);
 		},
-		toAuth(item) {
-			localStorage.setItem('psi', JSON.stringify(item));
-			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'plan' });
-			else this.$router.push({ path: '/auth/q=register' });
-		},
 		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
-				this.dialog = true;
+				this.$router.push({
+					path: `/auth/?register=true&psychologist=${this.psychologist.username}`,
+				});
 			} else {
 				this.loadingChat = true;
 				await this.startConversation(this.psychologist._id);
