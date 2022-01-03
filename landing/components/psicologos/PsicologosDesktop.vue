@@ -412,12 +412,7 @@
 												/ 50 min
 											</div>
 											<div style="flex: 1">
-												<v-chip-group
-													v-model="specialties"
-													:next-icon="mdiPlus"
-													:prev-icon="mdiMinus"
-													show-arrows
-												>
+												<v-chip-group v-model="specialties" show-arrows>
 													<template v-for="(tag, s) in item.specialties">
 														<v-chip
 															:key="s"
