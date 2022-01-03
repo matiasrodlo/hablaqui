@@ -630,10 +630,7 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.FilterLevelThree.length / 10) {
-				this.page += 1;
-				console.log(this.page);
-			}
+			if (isVisible && this.page < this.FilterLevelThree.length / 10) this.page += 1;
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible) {
