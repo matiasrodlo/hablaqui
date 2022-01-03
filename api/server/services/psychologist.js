@@ -1055,10 +1055,10 @@ const customNewSession = async (user, payload) => {
 		let sessions = [];
 		let hours = 1;
 
-		if (payload.type === 'compromiso privado') {
+		if (payload.dateEnd && payload.type === 'compromiso privado') {
 			logInfo('custom');
 			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
-			const end = moment(payload.date, 'MM/DD/YYYY HH:mm');
+			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
 		}
 		// Objeto con la sesion a crear
