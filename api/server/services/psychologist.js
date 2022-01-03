@@ -220,6 +220,7 @@ const getFormattedSessions = async idPsychologist => {
 			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
+			text: moment(day),
 			available: hours.filter(hour => {
 				return (
 					formattedSchedule(psychologist.schedule, day, hour) &&

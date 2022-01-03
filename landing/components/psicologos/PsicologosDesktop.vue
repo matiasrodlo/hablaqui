@@ -353,7 +353,6 @@
 									}"
 									style="border-radius: 15px"
 									:height="fullcard.includes(item._id) ? '100%' : '300px'"
-									:class="fullcard.includes(item._id) ? 'expandCard' : ''"
 									class="item text-center mt-6"
 								>
 									<v-row>

@@ -30,7 +30,8 @@ export default {
 		moment.locale('es');
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
-			text: moment(session.value).format('ddd'),
+			text: moment(session.text).format('ddd'),
+			day: moment(session.day, 'DD MMM').format('DD MMM'),
 		}));
 	},
 	setSessionsFormattedAll(state, items) {

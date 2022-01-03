@@ -2,8 +2,10 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<appbar />
-		<!-- routing for child -->
-		<psicologo :psychologist="psychologist" :set-psychologist="setPsychologist" />
+		<!-- desktop -->
+		<profile-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
+		<!-- mobile -->
+		<profile-mobile :psychologist="psychologist" class="hidden-md-and-up" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -29,7 +31,14 @@ export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		psicologo: () => import('~/components/psicologos/psicologo'),
+		ProfileDesktop: () =>
+			import(
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/ProfileDesktop'
+			),
+		ProfileMobile: () =>
+			import(
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
+			),
 	},
 	async asyncData({ $axios, params, error }) {
 		try {
