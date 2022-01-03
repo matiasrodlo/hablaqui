@@ -352,7 +352,8 @@
 										once: true,
 									}"
 									style="border-radius: 15px"
-									height="350"
+									:height="fullcard.includes(item._id) ? '100%' : '350px'"
+									:class="fullcard.includes(item._id) ? 'expandCard' : ''"
 									class="item text-center mt-6"
 								>
 									<v-row>
@@ -469,6 +470,10 @@
 													:id-psy="item._id"
 													:sessions="getSessions(item._id)"
 													:set-date="date => null"
+													:set-full-card="id => fullcard.push(id)"
+													:set-minimal-card="
+														id => fullcard.filter(id => item != id)
+													"
 												/>
 											</template>
 											<template v-else>
@@ -532,6 +537,7 @@ export default {
 			languages: [],
 			scrollHeight: 0,
 			visibles: [],
+			fullcard: [],
 			page: 1,
 		};
 	},
@@ -702,5 +708,9 @@ export default {
 
 .item:hover {
 	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
+}
+
+.expandCard {
+	transition: transform 1s;
 }
 </style>

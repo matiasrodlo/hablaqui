@@ -10,7 +10,7 @@
 			<v-progress-circular indeterminate color="primary" />
 		</v-row>
 		<template v-else>
-			<div style="max-height: 280px; overflow-y: auto">
+			<div :style="heighCalendar" style="overflow-y: clip">
 				<v-slide-group v-model="slide" class="content" center-active show-arrows>
 					<template #prev>
 						<div class="align-self-start mt-4">
@@ -24,56 +24,90 @@
 					</template>
 					<v-slide-item v-for="(item, k) in sessions" :key="k" v-slot="{ toggle }">
 						<v-container class="pb-0 px-4">
-							<div class="sticky text-center" @click="toggle">
+							<div class="text-center" @click="toggle">
 								<div class="body-2 font-weight-bold" style="color: #706f6f">
 									{{ item.text }}
 								</div>
 								<div class="caption text--secondary">{{ item.day }}</div>
 							</div>
-							<div class="mt-3" style="">
-								<template v-if="item.available.length">
-									<v-sheet
-										v-for="(n, r) in item.available"
-										:key="r"
-										rounded
-										class="item text-center my-3 pa-1"
-										style="width: 100%; height: fit-content"
-										:class="
-											selected &&
-											selected.start == n &&
-											selected.date == item.date
-												? 'itemSelected'
-												: ''
-										"
-										@click.stop="
-											selected = {
-												date: item.date,
-												start: n,
-												end: item.available[r + 1],
-											}
-										"
-									>
-										{{ n }}
-									</v-sheet>
-								</template>
-								<template v-else> </template>
+							<div class="mt-3">
+								<v-sheet
+									v-for="(n, r) in item.available"
+									:key="r"
+									rounded
+									class="item text-center my-3 pa-1"
+									style="width: 100%; height: fit-content"
+									:class="
+										selected &&
+										selected.start == n &&
+										selected.date == item.date
+											? 'itemSelected'
+											: ''
+									"
+									@click.stop="
+										selected = {
+											date: item.date,
+											start: n,
+											end: item.available[r + 1],
+										}
+									"
+								>
+									{{ n }}
+								</v-sheet>
 							</div>
 						</v-container>
 					</v-slide-item>
 				</v-slide-group>
+			</div>
+			<div class="text-center">
+				<v-btn
+					small
+					text
+					color="primary"
+					class="mt-5"
+					@click="
+						() => {
+							if (heighCalendar === 'max-height: 280px') {
+								heighCalendar = 'max-height: 100%';
+								setFullCard(idPsy);
+							} else {
+								heighCalendar = 'max-height: 280px';
+								setMinimalCard();
+							}
+						}
+					"
+				>
+					<span class="mr-2">{{
+						heighCalendar === 'max-height: 280px' ? 'Más horarios' : 'Ver menos'
+					}}</span>
+					<icon
+						color="primary"
+						:icon="
+							heighCalendar === 'max-height: 280px' ? mdiChevronDown : mdiChevronUp
+						"
+					/>
+				</v-btn>
 			</div>
 		</template>
 	</div>
 </template>
 
 <script>
-import { mdiChevronLeft, mdiChevronRight, mdiChevronDown } from '@mdi/js';
+import { mdiChevronLeft, mdiChevronRight, mdiChevronDown, mdiChevronUp } from '@mdi/js';
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
 		setDate: {
+			type: Function,
+			required: true,
+		},
+		setFullCard: {
+			type: Function,
+			required: true,
+		},
+		setMinimalCard: {
 			type: Function,
 			required: true,
 		},
@@ -84,7 +118,9 @@ export default {
 	},
 	data() {
 		return {
+			heighCalendar: 'max-height: 280px',
 			mdiChevronDown,
+			mdiChevronUp,
 			mdiChevronLeft,
 			mdiChevronRight,
 			slide: 0,
@@ -130,7 +166,7 @@ export default {
 	box-shadow: rgb(0 133 255) 0px 0px 3px inset;
 }
 
-.content::after {
+/* .content::after {
 	content: '';
 	position: absolute;
 	bottom: 0;
@@ -138,7 +174,7 @@ export default {
 	right: 0;
 	background-image: linear-gradient(to top, #fff, #ffffff80, #fff0);
 	height: 32px;
-}
+} */
 .sticky {
 	position: -webkit-sticky !important;
 	position: sticky !important;
