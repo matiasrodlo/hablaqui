@@ -373,10 +373,8 @@ const psychologistsController = {
 	async getAllSessions(req, res) {
 		try {
 			const { psy } = req.params;
-			const { startDate } = req.body;
 			const { data, code } = await psychologistsService.getAllSessions(
-				psy,
-				startDate
+				psy
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

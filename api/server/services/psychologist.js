@@ -156,7 +156,7 @@ const getRemainingSessions = async psy => {
 	});
 };
 
-const getAllSessions = async (psy, startDate) => {
+const getAllSessions = async psy => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
@@ -186,6 +186,7 @@ const getAllSessions = async (psy, startDate) => {
 			lastName = '';
 		}
 		return item.plan.flatMap(plan => {
+			const invitedComission = plan.invitedByPsychologist ? 0 : 1;
 			return plan.session.map(session => {
 				return {
 					_id: session._id,
@@ -199,8 +200,9 @@ const getAllSessions = async (psy, startDate) => {
 					status: session.status,
 					statusPlan: plan.payment,
 					idPlan: plan._id,
-					total: plan.sessionPrice * (1 - comission),
-					percentage: percentage,
+					total:
+						plan.sessionPrice * (1 - comission * invitedComission),
+					percentage: invitedComission === 0 ? '0%' : percentage,
 				};
 			});
 		});
@@ -208,20 +210,16 @@ const getAllSessions = async (psy, startDate) => {
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
-		return (
-			session.statusPlan !== 'success' &&
-			//moment().isBefore(moment(session.expiration)) &&
-			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
-				moment(startDate, 'MM/DD/YYYY HH:mm'),
-				moment(startDate, 'MM/DD/YYYY HH:mm').add(1, 'months')
-			)
-		);
+		return moment().isBefore(moment(session.expiration));
 	});
 
 	return okResponse('Sesiones obtenidas', {
 		total: sessions
 			.filter(session => {
-				return session.paidToPsychologist;
+				return (
+					session.statusPlan !== 'success' &&
+					!session.paidToPsychologist
+				);
 			})
 			.reduce(
 				(sum, value) =>
