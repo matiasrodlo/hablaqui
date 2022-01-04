@@ -393,6 +393,30 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async createPaymentsRequest(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.createPaymentsRequest(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async completePaymentsRequest(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.completePaymentsRequest(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);

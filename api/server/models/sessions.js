@@ -11,6 +11,17 @@ let session = new Schema({
 		type: Boolean,
 		default: 'false',
 	},
+	request: {
+		type: String,
+		default: 'none',
+		enum: ['none', 'pending', 'paid'],
+	},
+	requestDate: {
+		type: String,
+	},
+	paymentDate: {
+		type: String,
+	},
 	// TODO: en un futuro se puede agregar sistema de mensajeria para confirmar sesion o cancelar
 	status: {
 		type: String,

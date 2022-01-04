@@ -393,7 +393,7 @@ psychologistsRouter.patch(
 	psychologistsController.deleteCommitment
 );
 
-psychologistsRouter.post(
+psychologistsRouter.get(
 	'/psychologist/get-sessions/:psy',
 	psychologistsController.getAllSessions
 );
@@ -401,6 +401,16 @@ psychologistsRouter.post(
 psychologistsRouter.get(
 	'/psychologist/get-remaining-sessions/:psy',
 	psychologistsController.getRemainingSessions
+);
+
+psychologistsRouter.get(
+	'/psychologist/payment-request/:psy',
+	psychologistsController.createPaymentsRequest
+);
+
+psychologistsRouter.get(
+	'/psychologist/complete-payments/:psy',
+	psychologistsController.completePaymentsRequest
 );
 
 export default psychologistsRouter;
