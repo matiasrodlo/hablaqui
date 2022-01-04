@@ -15,4 +15,9 @@ cronRouter.post(
 	cronController.sessionStatus
 );
 
+cronRouter.post(
+	'/cron/email-chat/:authToken',
+	cronController.scheduleChatEmails
+);
+
 export default cronRouter;
