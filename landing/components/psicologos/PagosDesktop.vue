@@ -8,7 +8,7 @@
 						v-for="item in itemsPlan"
 						:key="item.id"
 						class="px-10 pointer d-flex justify-space-between align-center"
-						@click="planSelected = item.id"
+						@click="planSelected = item"
 					>
 						<div>
 							<div class="titleColor body-1 font-weight-bold">{{ item.title }}</div>
@@ -24,8 +24,12 @@
 								fab
 								style="width: 20px; height: 20px"
 								depressed
-								:outlined="planSelected !== item.id"
-								:color="planSelected === item.id ? 'primary' : '#969696'"
+								:outlined="!planSelected || planSelected.id !== item.id"
+								:color="
+									planSelected && planSelected.id === item.id
+										? 'primary'
+										: '#969696'
+								"
 							>
 							</v-btn>
 						</div>
@@ -113,6 +117,70 @@
 						</v-row>
 					</v-card-text>
 				</v-card>
+				<v-card class="shadowCard mt-6" style="border-radius: 15px">
+					<v-card-title class="px-10 titleColor"> Resumen de pago </v-card-title>
+					<v-card-text class="px-10">
+						<div class="my-6 d-flex justify-space-between">
+							<div class="body-1 font-weight-bold">Tipo de pago</div>
+							<div v-if="planSelected" class="body-1">{{ planSelected.title }}</div>
+						</div>
+						<v-divider></v-divider>
+						<div class="my-6 d-flex justify-space-between">
+							<div class="body-1 font-weight-bold">Cantidad de sesiones</div>
+							<div v-if="planSelected" class="body-1">x{{ planSelected.cant }}</div>
+						</div>
+						<v-divider></v-divider>
+						<v-divider></v-divider>
+						<div class="my-6 d-flex justify-space-between">
+							<div class="body-1 font-weight-bold">Valor por sesión</div>
+							<div v-if="planSelected" class="body-1">
+								{{ planSelected.valuePerSession }}
+							</div>
+						</div>
+						<v-divider></v-divider>
+						<v-divider></v-divider>
+						<div class="my-6 d-flex justify-space-between">
+							<div class="body-1 font-weight-bold">Total</div>
+							<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
+						</div>
+						<div>
+							<v-btn rounded block depressed color="rgba(26, 165, 216, 0.16)">
+								<span class="primary--text">Continuar con el pago</span>
+							</v-btn>
+						</div>
+						<div class="body-2 my-6 text-center">
+							Este es un pago seguro con encriptado SSL
+						</div>
+						<div class="body-2 font-weight-bold">Paga seguro con</div>
+						<div class="d-flex justify-space-around">
+							<v-img
+								width="80"
+								contain
+								:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
+							></v-img>
+							<v-img
+								width="80"
+								contain
+								:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
+							></v-img>
+							<v-img
+								width="80"
+								contain
+								:src="`https://cdn.hablaqui.cl/static/surface.png`"
+							></v-img>
+							<v-img
+								width="80"
+								contain
+								:src="`https://cdn.hablaqui.cl/static/american_express.png`"
+							></v-img>
+							<v-img
+								width="80"
+								contain
+								:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
+							></v-img>
+						</div>
+					</v-card-text>
+				</v-card>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -145,21 +213,27 @@ export default {
 					id: 1,
 					title: 'Pago semanal',
 					pricePerSession: '$50.000 / por sesión',
+					valuePerSession: '$50.000',
 					priceTotal: '',
+					cant: 1,
 					price: 50000,
 				},
 				{
 					id: 2,
 					title: 'Pago mensual',
 					pricePerSession: '$45.000 / por sesión',
+					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
+					cant: 4,
 					price: 180000,
 				},
 				{
 					id: 3,
 					title: 'Pago trimestral',
 					pricePerSession: '$40.000 / por sesión',
+					valuePerSession: '$40.000',
 					priceTotal: '($480000)',
+					cant: 12,
 					price: 480000,
 				},
 			],
@@ -168,6 +242,7 @@ export default {
 	},
 	mounted() {
 		this.setPrices();
+		this.planSelected = this.itemsPlan[1];
 	},
 	methods: {
 		async setCoupon() {
@@ -218,6 +293,7 @@ export default {
 				return {
 					...item,
 					pricePerSession: `$${pricePerSession} / por sesión`,
+					valuePerSession: `$${pricePerSession}`,
 					priceTotal: `($${price})`,
 					price,
 				};
