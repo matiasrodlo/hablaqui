@@ -5,6 +5,8 @@ import Chat from '../models/chat';
 import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
+import Email from '../models/email';
+import moment from 'moment';
 
 const startConversation = async (psychologistId, user) => {
 	const hasChats = await Chat.findOne({
@@ -22,7 +24,7 @@ const startConversation = async (psychologistId, user) => {
 };
 
 const getMessages = async (user, psy) => {
-	let messages = await await Chat.findOne({
+	let messages = await Chat.findOne({
 		psychologist: psy,
 		user: user,
 	}).populate('user psychologist');
@@ -85,8 +87,51 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		content: [...updatedChat.messages].pop(),
 	};
 
+	if (user.role === 'user') {
+		await emailChatNotification(data, 'send-by-user');
+	} else if (user.role === 'psychologist')
+		await emailChatNotification(data, 'send-by-psy');
+
 	pusher.trigger('chat', 'update', data, pusherCallback);
 	return okResponse('Mensaje enviado', { chat: updatedChat });
+};
+
+const emailChatNotification = async (data, type) => {
+	const messageId = data.content._id.toString();
+	const createdAt = data.content.createdAt.toString();
+
+	let email = await Email.findOne({
+		userRef: data.userId,
+		psyRef: data.psychologistId,
+		type: type,
+	});
+
+	if (!email) {
+		email = await Email.create({
+			sessionDate: moment(createdAt).format(),
+			wasScheduled: false,
+			type: type,
+			queuedAt: undefined,
+			scheduledAt: undefined,
+			userRef: data.userId,
+			psyRef: data.psychologistId,
+			sessionRef: messageId,
+		});
+	} else {
+		email = await Email.findOneAndUpdate(
+			{
+				userRef: data.userId,
+				psyRef: data.psychologistId,
+				type: type,
+			},
+			{
+				$set: {
+					wasScheduled: false,
+					sessionRef: messageId,
+				},
+			}
+		);
+	}
 };
 
 const createReport = async (

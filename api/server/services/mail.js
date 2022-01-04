@@ -364,6 +364,64 @@ const mailService = {
 			});
 		});
 	},
+	async sendChatNotificationToPsy(user, psychologist, batch) {
+		const dataPayload = {
+			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `${user.name} te está hablando`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
+			sendAt: moment().format(),
+			batchId: batch,
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendChatNotificationToUser(user, psychologist, batch) {
+		const dataPayload = {
+			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
+			sendAt: moment().format(),
+			batchId: batch,
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
