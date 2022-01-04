@@ -349,7 +349,6 @@
 									v-observe-visibility="{
 										callback: (isVisible, entry) =>
 											handleVisivility(isVisible, entry, item._id),
-										once: true,
 									}"
 									style="border-radius: 15px"
 									:height="fullcard.includes(item._id) ? '100%' : '300px'"
@@ -462,6 +461,7 @@
 											<template v-if="visibles.includes(item._id)">
 												<calendar-psychologist
 													:id-psy="item._id"
+													:username="item.username"
 													:sessions="getSessions(item._id)"
 													:set-date="date => null"
 													:set-full-card="id => fullcard.push(id)"
@@ -633,9 +633,8 @@ export default {
 			if (isVisible && this.page < this.FilterLevelThree.length / 10) this.page += 1;
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
-			if (isVisible) {
+			if (isVisible && !this.visibles.includes(idPsychologist))
 				this.visibles.push(idPsychologist);
-			}
 		},
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
@@ -674,6 +673,7 @@ export default {
 			return temp.sessions;
 		},
 		changeInput() {
+			this.page = 0;
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];

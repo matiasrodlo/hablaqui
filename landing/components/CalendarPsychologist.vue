@@ -49,13 +49,7 @@
 											? 'itemSelected'
 											: ''
 									"
-									@click.stop="
-										selected = {
-											date: item.date,
-											start: n,
-											end: item.available[r + 1],
-										}
-									"
+									@click.stop="goPlans(item, n, r)"
 								>
 									{{ n }}
 								</v-sheet>
@@ -118,6 +112,7 @@ export default {
 		},
 		titleButton: { type: String, default: 'Agendar una cita online' },
 		idPsy: { type: String, default: '' },
+		username: { type: String, default: '' },
 		loadingBtn: { type: Boolean, default: false },
 		sessions: { type: Array, default: () => [] },
 	},
@@ -131,6 +126,15 @@ export default {
 			slide: 0,
 			selected: null,
 		};
+	},
+	methods: {
+		goPlans(item, hour, index) {
+			this.$router.push(
+				`/psicologos/pagos/?username=${this.username}&date=${item.date}&start=${hour}&end=${
+					item.available[index + 1]
+				}`
+			);
+		},
 	},
 };
 </script>

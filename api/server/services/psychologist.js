@@ -445,7 +445,7 @@ const createPlan = async ({ payload }) => {
 			.add({ months: 1 })
 			.toISOString();
 	}
-	if (payload.paymentPeriod == 'Pago cada tres meses') {
+	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = moment()
 			.add({ months: 3 })
