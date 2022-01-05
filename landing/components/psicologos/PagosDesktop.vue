@@ -96,7 +96,7 @@
 								>
 									<div
 										class="text-left font-weight-bold"
-										style="color: #3c3c3b; font-size: 28px"
+										style="color: #3c3c3b; font-size: 23px"
 									>
 										{{ psychologist.name }}
 										{{ psychologist.lastName && psychologist.lastName }}
