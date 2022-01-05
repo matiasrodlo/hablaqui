@@ -211,14 +211,14 @@ export default {
 			period: 'mensual',
 			itemsPremiun: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares y hablaquí',
+				'0% de comisión por clientes referidos. El costo de la pasarela de pago está incluido.',
 				'Sala de videollamada encriptada',
 				'Posicionamiento, visibilidad y clientes',
 				'Soporte prioritario y asesoramiento estratégico',
 			],
 			itemsBasico: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares',
+				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%)',
 				'20% de comisión por clientes Hablaquí',
 				'Sala de videollamada encriptada.',
 				'Soporte y atención al cliente',

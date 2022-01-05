@@ -136,18 +136,18 @@ const successPay = async params => {
 		const plan = currentSessions.plan[
 			currentSessions.plan.length - 1
 		]._id.toString();
-		const foundPlan = await Sessions.findByIdAndUpdate(
+		const foundPlan = await Sessions.findOneAndUpdate(
 			{
 				_id: planId,
 				'plan._id': plan,
 			},
 			{
 				$set: {
-					'plan.$[].payment': 'success',
-					'plan.$[].paymentDate': moment(),
+					'plan.$.payment': 'success',
+					'plan.$.datePayment': moment().format(),
 				},
 			},
-			{ arrayFilters: [{ 'plan._id': plan }], new: true }
+			{ new: true }
 		);
 		const sessionData =
 			foundPlan.plan[foundPlan.plan.length - 1].session[0];
@@ -228,7 +228,7 @@ const psychologistPay = async (params, query) => {
 
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
-		{ $push: { myPlans: newPlan } },
+		{ $push: { psyPlans: newPlan } },
 		{ new: true }
 	);
 	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);

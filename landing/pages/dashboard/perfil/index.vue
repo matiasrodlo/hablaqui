@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
-		<v-list two-line color="transparent" style="height: 150px">
+		<v-list two-line color="transparent" style="margin-top: 100px; height: 150px">
 			<v-list-item class="hidden-sm-and-down" style="position: relative">
 				<v-file-input
 					id="upload"
@@ -77,7 +77,7 @@
 				</v-list-item-content>
 			</v-list-item>
 		</v-list>
-		<v-tabs v-model="tabs" grow style="height: 100px">
+		<v-tabs v-model="tabs" class="hidden-sm-and-down" grow style="height: 100px">
 			<v-tabs-slider></v-tabs-slider>
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
@@ -89,9 +89,9 @@
 				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
 			</v-tab>
 		</v-tabs>
-		<v-row>
+		<v-row no-gutters>
 			<v-col cols="12">
-				<v-tabs-items v-model="tabs">
+				<v-tabs-items v-model="tabs" class="hidden-sm-and-down">
 					<v-tab-item :transition="false">
 						<general-information
 							v-if="tabs === 0"
@@ -120,6 +120,95 @@
 						/>
 					</v-tab-item>
 				</v-tabs-items>
+				<v-expansion-panels v-model="panels" flat multiple class="mb-4 hidden-md-and-up">
+					<v-expansion-panel>
+						<v-expansion-panel-header>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">
+									Configuración personal
+								</div>
+								<div
+									v-if="$auth.$state.user.role === 'psychologist'"
+									class="text--secondary"
+								>
+									Datos bancarios, información profesional, etc
+								</div>
+								<div v-else class="text--secondary">Configura tu perfil</div>
+							</div>
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<general-information
+								:psychologist="psychologist"
+								:set-psychologist="setPsychologist"
+							/>
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
+						<v-expansion-panel-header>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Mis planes</div>
+								<div class="text--secondary">Tus planes contratados</div>
+							</div>
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<my-plans />
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
+						<v-expansion-panel-header>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Mi psicologo</div>
+								<div class="text--secondary">Psicólogo actual</div>
+							</div>
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<psicologo
+								:psychologist="psychologist"
+								:set-psychologist="setPsychologist"
+							/>
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+						<v-expansion-panel-header>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Horarios</div>
+								<div class="text--secondary">
+									Configura tu disponibilidad de atención
+								</div>
+							</div>
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<horario
+								:psychologist="psychologist"
+								:set-psychologist="setPsychologist"
+							/>
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+						<v-expansion-panel-header>
+							<div>
+								<div class="text-h6" style="color: #3c3c3b">Servicios</div>
+								<div class="text--secondary">
+									Establece tus precios y política de agendamiento
+								</div>
+							</div>
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<v-card elevation="6" to="perfil/services">
+								<v-card-title>
+									<div class="my-6" style="width: 100%">
+										<div class="text-h6" style="color: #3c3c3b">
+											Configuración de servicios
+										</div>
+										<div class="text--secondary body-2">
+											Configura los servicios ofrecidos por medio de Hablaquí
+										</div>
+									</div>
+								</v-card-title>
+							</v-card>
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+				</v-expansion-panels>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -204,6 +293,7 @@ export default {
 		return {
 			mdiCamera,
 			tabs: 0,
+			panels: [],
 			loadingAvatar: false,
 			sidebar: 0,
 		};

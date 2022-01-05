@@ -768,9 +768,7 @@
 				</v-carousel-item>
 			</v-carousel>
 		</section>
-		<v-container tag="footer">
-			<Footer />
-		</v-container>
+		<Footer />
 		<div class="primary-color" style="height: 30px"></div>
 	</div>
 </template>

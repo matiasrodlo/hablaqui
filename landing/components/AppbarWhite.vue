@@ -290,9 +290,7 @@ export default {
 	computed: {
 		menu() {
 			const visible =
-				(this.$auth.$state.loggedIn &&
-					this.$auth.user.role === 'psychologist' &&
-					!!this.$auth.user.psychologist) ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
@@ -313,8 +311,7 @@ export default {
 					img: `https://cdn.hablaqui.cl/static/pay.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Consultantes',
@@ -322,8 +319,7 @@ export default {
 					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist' &&
-						this.$auth.$state.user.psychologist,
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
