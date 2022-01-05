@@ -130,14 +130,12 @@
 							<div v-if="planSelected" class="body-1">x{{ planSelected.cant }}</div>
 						</div>
 						<v-divider></v-divider>
-						<v-divider></v-divider>
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Valor por sesión</div>
 							<div v-if="planSelected" class="body-1">
 								{{ planSelected.valuePerSession }}
 							</div>
 						</div>
-						<v-divider></v-divider>
 						<v-divider></v-divider>
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Total</div>
