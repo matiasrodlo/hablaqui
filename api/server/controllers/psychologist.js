@@ -88,8 +88,8 @@ const psychologistsController = {
 	async reschedule(req, res) {
 		try {
 			const { id, sessionsId } = req.params;
-			//const { user } = req;
-			const { newDate, user } = req.body;
+			const { user } = req;
+			const { newDate } = req.body;
 			const { data, code } = await psychologistsService.reschedule(
 				user,
 				sessionsId,
