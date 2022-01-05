@@ -129,12 +129,20 @@ export default {
 	},
 	methods: {
 		goPlans(item, hour, index) {
-			this.callback();
-			this.$router.push(
-				`/psicologos/pagos/?username=${this.username}&date=${item.date}&start=${hour}&end=${
-					item.available[index + 1]
-				}`
-			);
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?psychologist=${this.username}&date=${
+						item.date
+					}&start=${hour}&end=${item.available[index + 1]}`,
+				});
+			} else {
+				this.callback();
+				this.$router.push(
+					`/psicologos/pagos/?username=${this.username}&date=${
+						item.date
+					}&start=${hour}&end=${item.available[index + 1]}`
+				);
+			}
 		},
 	},
 };
