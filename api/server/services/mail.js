@@ -370,7 +370,7 @@ const mailService = {
 			to: psychologist.name + '<' + psychologist.email + '>',
 			subject: `${user.name} te está hablando`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
+			templateId: 'd-89f251396ff64c7b8c671a51748b13a9',
 			asm: {
 				group_id: 16321,
 			},
@@ -399,7 +399,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
+			templateId: 'd-becad9021a1e4b34afbd466a84aea4e3',
 			asm: {
 				group_id: 16321,
 			},
