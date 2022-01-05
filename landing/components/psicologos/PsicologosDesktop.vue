@@ -463,7 +463,7 @@
 													:id-psy="item._id"
 													:username="item.username"
 													:sessions="getSessions(item._id)"
-													:set-date="date => null"
+													:callback="date => null"
 													:set-full-card="id => fullcard.push(id)"
 													:set-minimal-card="
 														id => fullcard.filter(id => item != id)

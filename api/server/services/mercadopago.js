@@ -30,8 +30,9 @@ const createPreference = async body => {
 		],
 		back_urls: {
 			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
-			failure: `${landing_url}/pago/failure-pay`,
-			pending: `${landing_url}/pago/pending-pay`,
+			// redirection to profile psychologist
+			failure: `${landing_url}/${body.psychologist}`,
+			pending: `${landing_url}/${body.psychologist}`,
 		},
 		auto_return: 'approved',
 	};

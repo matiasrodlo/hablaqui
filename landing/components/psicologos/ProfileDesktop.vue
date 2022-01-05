@@ -176,8 +176,9 @@
 				>
 					<calendar-psychologist
 						:id-psy="psychologist._id"
+						:username="psychologist.username"
 						:sessions="sessions"
-						:set-date="date => null"
+						:callback="date => null"
 						:set-full-card="id => (fullcard = true)"
 						:set-minimal-card="id => (fullcard = false)"
 					/>

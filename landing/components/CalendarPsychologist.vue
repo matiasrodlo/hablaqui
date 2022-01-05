@@ -98,7 +98,7 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		setDate: {
+		callback: {
 			type: Function,
 			required: true,
 		},
@@ -129,6 +129,7 @@ export default {
 	},
 	methods: {
 		goPlans(item, hour, index) {
+			this.callback();
 			this.$router.push(
 				`/psicologos/pagos/?username=${this.username}&date=${item.date}&start=${hour}&end=${
 					item.available[index + 1]

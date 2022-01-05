@@ -11,7 +11,9 @@
 						@click="planSelected = item"
 					>
 						<div>
-							<div class="titleColor body-1 font-weight-bold">{{ item.title }}</div>
+							<div class="titleColor body-1 font-weight-bold">
+								{{ item.title }}
+							</div>
 							<div class="titleColor body-2">
 								{{ item.pricePerSession }}
 								<span v-if="item.priceTotal" class="primary--text ml-4">
@@ -63,7 +65,11 @@
 				</v-card>
 			</v-col>
 			<v-col cols="6" class="px-2">
-				<v-card height="276" style="border-radius: 15px" class="shadowCard">
+				<v-card
+					:height="fullcard || showCalendar ? 'max-content' : '276px'"
+					style="border-radius: 15px; transition: height 0.4s linear"
+					class="shadowCard"
+				>
 					<v-card-text class="pt-6 px-10">
 						<v-row align="start" justify="center">
 							<v-col cols="4" class="text-center">
@@ -82,13 +88,20 @@
 								</div>
 							</v-col>
 							<v-col cols="8">
-								<div
-									class="text-left font-weight-bold"
-									style="color: #3c3c3b; font-size: 28px"
+								<nuxt-link
+									style="text-decoration: none"
+									:to="{
+										path: `/${psychologist.username}`,
+									}"
 								>
-									{{ psychologist.name }}
-									{{ psychologist.lastName && psychologist.lastName }}
-								</div>
+									<div
+										class="text-left font-weight-bold"
+										style="color: #3c3c3b; font-size: 28px"
+									>
+										{{ psychologist.name }}
+										{{ psychologist.lastName && psychologist.lastName }}
+									</div>
+								</nuxt-link>
 								<div
 									class="text-left font-weight-medium pa-2"
 									style="color: #3c3c3b; font-size: 16px"
@@ -105,11 +118,27 @@
 									<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
 								</div>
 								<div>
-									<v-btn color="primary" text small class="px-0 py-0">
-										<span>Cambiar reserva</span>
+									<v-btn
+										color="primary"
+										text
+										small
+										class="px-0 py-0"
+										@click="showCalendar = !showCalendar"
+									>
+										<span v-if="showCalendar">Ocultar agenda</span>
+										<span v-else>Cambiar reserva</span>
 									</v-btn>
 								</div>
 							</v-col>
+							<v-expand-transition>
+								<v-col v-if="showCalendar" cols="10">
+									<calendar-psychologist
+										:id-psy="psychologist._id"
+										:set-date="changeDate"
+										title-button="Seleccionar"
+									/>
+								</v-col>
+							</v-expand-transition>
 							<v-col cols="12">
 								Sesiones por videollamada (50 min) Habla con un psicólogo por
 								videollamada en cualquier momento, en cualquier lugar.
@@ -122,7 +151,9 @@
 					<v-card-text class="px-10">
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Tipo de pago</div>
-							<div v-if="planSelected" class="body-1">{{ planSelected.title }}</div>
+							<div v-if="planSelected" class="body-1">
+								{{ planSelected.title }}
+							</div>
 						</div>
 						<v-divider></v-divider>
 						<div class="my-6 d-flex justify-space-between">
@@ -142,7 +173,13 @@
 							<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
 						</div>
 						<div>
-							<v-btn rounded block depressed color="rgba(26, 165, 216, 0.16)">
+							<v-btn
+								rounded
+								block
+								depressed
+								color="rgba(26, 165, 216, 0.16)"
+								@click="payButton"
+							>
 								<span class="primary--text">Continuar con el pago</span>
 							</v-btn>
 						</div>
@@ -192,6 +229,7 @@ export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
+		CalendarPsychologist: () => import('~/components/Calendar'),
 	},
 	props: {
 		psychologist: {
@@ -201,6 +239,8 @@ export default {
 	},
 	data() {
 		return {
+			showCalendar: false,
+			fullcard: false,
 			mdiClockOutline,
 			mdiCalendarOutline,
 			PriceWithCoupon: null,
@@ -312,15 +352,16 @@ export default {
 				user: this.$auth.$state.user,
 				psychologist: this.psychologist._id,
 				paymentPeriod: this.planSelected.title,
-				title: 'Sesiones por videollamada',
+				title: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title} `,
 				price: this.PriceWithCoupon ? this.PriceWithCoupon : this.planSelected.price,
 				coupon: this.PriceWithCoupon ? this.coupon : '',
 			};
 			const createdPlan = await this.createSession(planPayload);
 			if (createdPlan) {
 				const mercadopagoPayload = {
+					psychologist: this.psychologist.username,
 					price: this.PriceWithCoupon ? this.PriceWithCoupon : this.planSelected.price,
-					description: this.plan.title,
+					description: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title}`,
 					quantity: 1,
 					plan: createdPlan.plan._id,
 				};
@@ -328,6 +369,12 @@ export default {
 				window.location.href = res.init_point;
 			}
 			this.loading = false;
+		},
+		changeDate(item) {
+			this.$router.push(
+				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+			);
+			this.showCalendar = !this.showCalendar;
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
