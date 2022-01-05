@@ -163,7 +163,7 @@ const completePaymentsRequest = async psy => {
 
 	sessions = sessions.filter(
 		session =>
-			session.statusPlan !== 'success' && session.request === 'pending'
+			session.statusPlan === 'success' && session.request === 'pending'
 	);
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
@@ -270,6 +270,10 @@ const getAllSessions = async psy => {
 				? currentPlan.paymentFee
 				: comission;
 			return plan.session.map(session => {
+				const expiration =
+					plan.payment === 'pending' &&
+					moment().isAfter(moment(plan.expiration));
+
 				return {
 					_id: session._id,
 					date: session.date,
@@ -288,10 +292,14 @@ const getAllSessions = async psy => {
 					request: session.request ? session.request : 'none',
 					total: plan.sessionPrice * (1 - realComission),
 					percentage: realComission === 0.0399 ? '3.99%' : percentage,
+					expiration,
 				};
 			});
 		});
 	});
+
+	//Obtenemos solamente las sesiones que no han expirado, con todo lo que ello implica
+	sessions = sessions.filter(session => !session.expiration);
 
 	return okResponse('Sesiones obtenidas', {
 		total: sessions
