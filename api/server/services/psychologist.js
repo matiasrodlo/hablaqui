@@ -184,7 +184,11 @@ const completePaymentsRequest = async psy => {
 	});
 
 	return okResponse('Peticion hecha', {
-		total: response.data.total,
+		total: sessions.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		),
 		sessions: sessions,
 	});
 };
@@ -217,7 +221,11 @@ const createPaymentsRequest = async psy => {
 	});
 
 	return okResponse('Peticion hecha', {
-		total: response.data.total,
+		total: sessions.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		),
 		sessions: sessions,
 	});
 };
