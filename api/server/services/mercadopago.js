@@ -12,7 +12,6 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
-import mail from '@sendgrid/mail';
 
 mercadopago.configure({
 	access_token: mercadopago_key,
