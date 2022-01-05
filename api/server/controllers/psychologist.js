@@ -409,6 +409,18 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async getRemainingSessions(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.getRemainingSessions(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(psychologistsController);
