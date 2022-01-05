@@ -873,6 +873,18 @@ const updatePsychologist = async (user, profile) => {
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
 	if (user.psychologist) {
 		try {
+			const psy = await Psychologist.findById(profile._id);
+			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
+				if (
+					psy.stampSetPrices &&
+					moment().isBefore(
+						moment(psy.stampSetPrices).add(1, 'months')
+					)
+				)
+					profile.sessionPrices = psy.sessionPrices;
+				else profile.stampSetPrices = moment().format();
+			}
+
 			const updated = await Psychologist.findByIdAndUpdate(
 				profile._id,
 				profile,
@@ -937,6 +949,15 @@ const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
 	if (user.role != 'psychologist')
 		return conflictResponse('No tienes permisos');
+	const psy = await Psychologist.findById(user.psychologist);
+
+	if (
+		psy.stampSetPrices &&
+		moment().isBefore(moment(psy.stampSetPrices).add(1, 'months'))
+	)
+		return conflictResponse(
+			'Tiene que esperar 1 mes para volver a cambiar el precio'
+		);
 	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
 		user.psychologist,
 		{
@@ -945,6 +966,7 @@ const setPrice = async (user, newPrice) => {
 				video: newPrice,
 				full: newPrice * 1.25,
 			},
+			stampSetPrices: moment(),
 		},
 		{ new: true }
 	);
