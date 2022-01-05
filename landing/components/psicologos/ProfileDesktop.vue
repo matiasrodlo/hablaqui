@@ -162,8 +162,10 @@
 						</div>
 						<div class="body-1 text-left">
 							Puedes reprogramar tu sesión hasta
-							{{ psychologist.preferences.minimumRescheduleSession }}hora(s) antes sin
-							costo adicional.
+							<strong>
+								{{ psychologist.preferences.minimumRescheduleSession }} hora(s)
+							</strong>
+							antes sin costo adicional.
 						</div>
 					</v-card-text>
 				</v-card>
