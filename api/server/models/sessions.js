@@ -18,9 +18,11 @@ let session = new Schema({
 	},
 	requestDate: {
 		type: String,
+		default: 'Por cobrar',
 	},
 	paymentDate: {
 		type: String,
+		default: 'Por cobrar',
 	},
 	// TODO: en un futuro se puede agregar sistema de mensajeria para confirmar sesion o cancelar
 	status: {
