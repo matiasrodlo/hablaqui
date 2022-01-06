@@ -448,7 +448,7 @@
 												:callback="date => null"
 												:set-full-card="id => fullcard.push(id)"
 												:set-minimal-card="
-													id => fullcard.filter(id => item != id)
+													id => fullcard.filter(id => item._id != id)
 												"
 											/>
 										</template>

@@ -359,7 +359,10 @@
 										</v-col>
 										<v-col cols="12">
 											<div>
-												<v-chip-group v-model="specialties" show-arrows>
+												<v-chip-group
+													v-model="specialties"
+													show-arrows="false"
+												>
 													<template v-for="(tag, s) in item.specialties">
 														<v-chip
 															:key="s"
@@ -391,12 +394,12 @@
 														: item.professionalDescription
 												}}
 											</div>
-											<div
-												class="my-3 text-left font-weight-medium body-2"
-												style="color: #3c3c3b"
-											>
-												Próxima fecha: Mañana 16 de diciembre
-											</div>
+											<mini-calendar
+												:id-psy="item._id"
+												:username="item.username"
+												:sessions="getSessions(item._id)"
+											/>
+											<!-- <pre class="text-left">{{ item }}</pre> -->
 										</v-col>
 										<!-- <v-col cols="4">
 										<template v-if="visibles.includes(item._id)">
@@ -446,7 +449,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
 	name: 'PsicologosMobile',
 	components: {
-		// CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
