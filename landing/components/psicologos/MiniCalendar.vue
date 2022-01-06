@@ -49,7 +49,7 @@
 							<icon size="30px" color="#717171" :icon="mdiCloseCircle" />
 						</v-btn>
 					</v-card-title>
-					<v-card-text style="flex: 1">
+					<v-card-text style="flex: 1" class="pa-0">
 						<calendar
 							:id-psy="idPsy"
 							:username="username"
@@ -64,6 +64,19 @@
 					</v-card-actions>
 				</v-card>
 			</v-dialog>
+		</div>
+		<div v-if="$route.name === 'slug'">
+			<v-btn
+				block
+				small
+				rounded
+				color="#2680eb"
+				dark
+				class="my-4 px-8 py-2"
+				@click="dialog = true"
+			>
+				Agendar cita online
+			</v-btn>
 		</div>
 	</div>
 </template>

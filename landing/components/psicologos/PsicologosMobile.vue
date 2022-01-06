@@ -140,7 +140,6 @@
 										transition="scale-transition"
 										offset-y
 										rounded
-										min-width="200px"
 									>
 										<template #activator="{ on, attrs }">
 											<v-text-field
@@ -159,7 +158,7 @@
 												v-on="on"
 											></v-text-field>
 										</template>
-										<v-card rounded width="200px">
+										<v-card rounded>
 											<v-card-text>
 												<v-checkbox
 													v-model="gender"
@@ -230,7 +229,7 @@
 										transition="scale-transition"
 										offset-y
 										rounded
-										min-width="200px"
+										min-width="300px"
 									>
 										<template #activator="{ on, attrs }">
 											<v-text-field
@@ -252,7 +251,7 @@
 											>
 											</v-text-field>
 										</template>
-										<v-card rounded width="200px">
+										<v-card rounded width="300px">
 											<v-card-text
 												><div class="body-2 font-weight-bold">
 													Modelo terapéuticos
@@ -424,7 +423,11 @@
 							>
 								<v-card-text>
 									<v-row>
-										<v-col cols="4" class="d-flex align-start justify-center">
+										<v-col
+											cols="3"
+											sm="2"
+											class="d-flex align-start justify-center"
+										>
 											<div class="text-center">
 												<nuxt-link
 													style="text-decoration: none"
@@ -444,7 +447,7 @@
 												</nuxt-link>
 											</div>
 										</v-col>
-										<v-col cols="8">
+										<v-col cols="9" sm="10">
 											<div>
 												<nuxt-link
 													style="text-decoration: none"
@@ -519,37 +522,7 @@
 												:username="item.username"
 												:sessions="getSessions(item._id)"
 											/>
-											<!-- <pre class="text-left">{{ item }}</pre> -->
 										</v-col>
-										<!-- <v-col cols="4">
-										<template v-if="visibles.includes(item._id)">
-											<calendar-psychologist
-												:id-psy="item._id"
-												:username="item.username"
-												:sessions="getSessions(item._id)"
-												:callback="date => null"
-												:set-full-card="id => fullcard.push(id)"
-												:set-minimal-card="
-													id => fullcard.filter(id => item != id)
-												"
-											/>
-										</template>
-										<template v-else>
-											<div
-												class="
-													primary--text
-													caption
-													font-weight-bold
-													d-flex
-													justify-center
-													align-center
-												"
-												style="height: 300px"
-											>
-												Cargando...
-											</div>
-										</template>
-									</v-col> -->
 									</v-row>
 								</v-card-text>
 							</v-card>
