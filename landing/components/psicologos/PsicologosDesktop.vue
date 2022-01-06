@@ -19,7 +19,7 @@
 						dense
 						outlined
 						:items="
-							FilterLevelTwo.map((item, index) => ({
+							filterLevelTwo.map((item, index) => ({
 								text: `${item.name} ${item.lastName && item.lastName}`,
 								value: item._id,
 								index,
@@ -331,7 +331,7 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in FilterLevelThree">
+					<template v-for="(item, index) in filterLevelThree">
 						<v-col v-if="10 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
@@ -473,6 +473,13 @@
 						</v-col>
 					</template>
 				</template>
+				<v-col
+					v-if="psychologists.length && !filterLevelThree.length"
+					cols="12"
+					class="title primary--text"
+				>
+					No se encontraron coincidencias
+				</v-col>
 			</v-row>
 		</v-container>
 		<v-container v-else>
@@ -526,8 +533,8 @@ export default {
 		 * Filter search box
 		 * Filtra en base a los resultados del panel
 		 */
-		FilterLevelThree() {
-			return this.FilterLevelTwo.filter(item => {
+		filterLevelThree() {
+			return this.filterLevelTwo.filter(item => {
 				let result = item;
 				if (this.searchInput !== null)
 					result = result._id.includes(this.searchInput) && result;
@@ -537,9 +544,9 @@ export default {
 		/**
 		 * Filter prices
 		 */
-		FilterLevelTwo(item) {
-			if (!this.prices) return this.FilterLevelOne;
-			return this.FilterLevelOne.filter(item => {
+		filterLevelTwo(item) {
+			if (!this.prices) return this.filterLevelOne;
+			return this.filterLevelOne.filter(item => {
 				const prices = JSON.parse(this.prices);
 				if (prices.length > 1)
 					return (
@@ -551,28 +558,26 @@ export default {
 		/**
 		 * items for search box
 		 */
-		FilterLevelOne() {
-			if (
-				this.gender.length ||
-				this.models.length ||
-				this.languages.length ||
-				this.specialties
-			) {
-				return this.psychologists.filter(item => {
+		filterLevelOne() {
+			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
+			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
+			if (this.gender.length)
+				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
 					const gender = [item.gender];
 					trans && gender.push(trans);
-
-					return (
-						gender.some(el => this.gender.includes(el)) ||
-						item.models.some(el => this.models.includes(el)) ||
-						item.languages.some(el => this.languages.includes(el)) ||
-						item.specialties.includes(this.specialties)
-					);
+					return gender.some(el => this.gender.some(g => g === el));
 				});
-			}
+			if (this.models.length)
+				result = result.filter(item => item.models.some(el => this.models.includes(el)));
+			if (this.languages.length)
+				result = result.filter(item =>
+					item.languages.some(el => this.languages.some(languages => languages === el))
+				);
+			if (this.specialties)
+				result = result.filter(item => item.specialties.includes(this.specialties));
 
-			return this.psychologists;
+			return result;
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
@@ -616,7 +621,7 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.FilterLevelThree.length / 10) this.page += 1;
+			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))
