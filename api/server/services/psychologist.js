@@ -1375,11 +1375,15 @@ const paymentsInfo = async user => {
 						}`,
 						date: session.date,
 						plan: plans.title,
+						payment: plans.payment,
+						suscription: plans.period,
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage:
-							realComission === 0.0399 ? '0%' : '16.01%',
-						mercadoPercentage: '3.99%',
+							realComission === 0.0399
+								? plans.sessionPrice * 0
+								: plans.sessionPrice * 0.1601,
+						mercadoPercentage: plans.sessionPrice * 0.0399,
 						percentage:
 							realComission === 0.0399 ? '3.99%' : percentage,
 						total: plans.sessionPrice * (1 - realComission),
@@ -1390,8 +1394,14 @@ const paymentsInfo = async user => {
 			});
 	});
 	const payments = validPayments.filter(item => {
-		return item && moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+		return (
+			item &&
+			moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment()) &&
+			item.payment === 'success' &&
+			item.plan !== 'compromiso privado'
+		);
 	});
+	logInfo(payments);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
