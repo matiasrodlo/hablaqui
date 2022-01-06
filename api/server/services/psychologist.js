@@ -433,6 +433,10 @@ const getTransactions = async user => {
 				typeof value.total == 'number' ? sum + value.total : sum,
 			0
 		);
+
+	const sessionsReceivable = sessions.filter(
+		session => session.request === 'none'
+	).length;
 	const successSessions = sessions.filter(
 		session => session.status === 'success'
 	).length;
@@ -441,6 +445,7 @@ const getTransactions = async user => {
 		total,
 		totalAvailable,
 		successSessions,
+		sessionsReceivable,
 		sessions,
 		transactions,
 	});
