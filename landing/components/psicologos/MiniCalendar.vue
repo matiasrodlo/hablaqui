@@ -22,6 +22,7 @@
 							? 'itemSelected'
 							: ''
 					"
+					@click.stop="goPlans(sessionsAvailable, n, r)"
 				>
 					{{ n }}
 				</span>
@@ -101,6 +102,21 @@ export default {
 	methods: {
 		formatDate(item) {
 			return moment(item).format('dddd DD MMMM YYYY');
+		},
+		goPlans(item, hour, index) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?psychologist=${this.username}&date=${
+						item.date
+					}&start=${hour}&end=${item.available[index + 1]}`,
+				});
+			} else {
+				this.$router.push(
+					`/psicologos/pagos/?username=${this.username}&date=${
+						item.date
+					}&start=${hour}&end=${item.available[index + 1]}`
+				);
+			}
 		},
 	},
 };
