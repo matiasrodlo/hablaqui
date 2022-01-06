@@ -300,107 +300,105 @@
 										handleVisivility(isVisible, entry, item._id),
 								}"
 								style="border-radius: 15px"
-								:height="fullcard.includes(item._id) ? '100%' : '300px'"
 								class="item text-center mt-6"
 							>
-								<v-row>
-									<v-col
-										cols="3"
-										class="d-flex align-center justify-center"
-										style="height: 300px"
-									>
-										<div class="text-center">
-											<avatar
-												:url="avatar(item, true)"
-												:name="item.name"
-												:last-name="item.lastName ? item.lastName : ''"
-												size="130"
-												loading-color="white"
-											></avatar>
+								<v-card-text>
+									<v-row>
+										<v-col cols="4" class="d-flex align-start justify-center">
+											<div class="text-center">
+												<nuxt-link
+													style="text-decoration: none"
+													:to="{
+														path: `/${item.username}`,
+													}"
+												>
+													<avatar
+														:url="avatar(item, true)"
+														:name="item.name"
+														:last-name="
+															item.lastName ? item.lastName : ''
+														"
+														size="80"
+														loading-color="white"
+													></avatar>
+												</nuxt-link>
+											</div>
+										</v-col>
+										<v-col cols="8">
+											<div>
+												<nuxt-link
+													style="text-decoration: none"
+													:to="{
+														path: `/${item.username}`,
+													}"
+												>
+													<div
+														class="text-left font-weight-bold body-1"
+														style="color: #3c3c3b"
+													>
+														{{ item.name }}
+														{{ item.lastName && item.lastName }}
+													</div>
+												</nuxt-link>
+											</div>
 											<div
-												class="text-capitalize py-4"
-												style="color: #706f6f; font-size: 14px"
+												class="text-capitalize text-left mt-1 mb-2"
+												style="color: #706f6f; font-size: 12px"
 											>
 												código {{ item.code ? item.code : '' }}
 											</div>
-										</div>
-									</v-col>
-									<v-col
-										cols="5"
-										style="display: flex; flex-direction: column; height: 300px"
-									>
-										<div style="flex: 1">
-											<nuxt-link
-												style="text-decoration: none"
-												:to="{
-													path: `/${item.username}`,
-												}"
-											>
-												<div
-													class="text-left font-weight-bold"
-													style="color: #3c3c3b; font-size: 28px"
-												>
-													{{ item.name }}
-													{{ item.lastName && item.lastName }}
-												</div>
-											</nuxt-link>
-										</div>
-										<div
-											class="text-left font-weight-medium pa-2"
-											style="color: #3c3c3b; font-size: 16px; flex: 1"
-										>
-											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
-											/ 50 min
-										</div>
-										<div style="flex: 1">
-											<v-chip-group v-model="specialties" show-arrows>
-												<template v-for="(tag, s) in item.specialties">
-													<v-chip
-														:key="s"
-														:value="tag"
-														class="ma-2"
-														small
-														:color="
-															specialties == tag
-																? 'primary--text'
-																: ''
-														"
-													>
-														<span>
-															{{ tag }}
-														</span>
-													</v-chip>
-												</template>
-											</v-chip-group>
-										</div>
-										<div style="flex: 5">
 											<div
-												class="text-left"
+												class="text-left font-weight-medium body-2"
+												style="color: #3c3c3b"
+											>
+												${{
+													Math.ceil(item.sessionPrices.video / 100) * 100
+												}}
+												/ 50 min
+											</div>
+										</v-col>
+										<v-col cols="12">
+											<div>
+												<v-chip-group v-model="specialties" show-arrows>
+													<template v-for="(tag, s) in item.specialties">
+														<v-chip
+															:key="s"
+															:value="tag"
+															class="ma-1"
+															x-small
+															:color="
+																specialties == tag
+																	? 'primary--text'
+																	: ''
+															"
+														>
+															<span>
+																{{ tag }}
+															</span>
+														</v-chip>
+													</template>
+												</v-chip-group>
+											</div>
+											<div
+												class="mt-3 text-left"
 												style="color: #54565a; font-size: 14px"
 											>
 												{{
-													item.professionalDescription.length > 210
+													item.professionalDescription.length > 110
 														? item.professionalDescription
-																.slice(0, 210)
+																.slice(0, 110)
 																.concat('...')
 														: item.professionalDescription
 												}}
 											</div>
-										</div>
-										<div style="flex: 2" class="text-left">
-											<v-btn
-												small
-												rounded
-												color="primary"
-												class="px-8 py-2"
-												:to="{ path: `/${item.username}` }"
+											<div
+												class="my-3 text-left font-weight-medium body-2"
+												style="color: #3c3c3b"
 											>
-												Quiero saber más
-											</v-btn>
-										</div>
-									</v-col>
-									<v-divider vertical class="my-4"></v-divider>
-									<v-col cols="4">
+												Próxima fecha: Mañana 16 de diciembre
+											</div>
+										</v-col>
+										<!-- <v-col cols="4">
 										<template v-if="visibles.includes(item._id)">
 											<calendar-psychologist
 												:id-psy="item._id"
@@ -428,8 +426,9 @@
 												Cargando...
 											</div>
 										</template>
-									</v-col>
-								</v-row>
+									</v-col> -->
+									</v-row>
+								</v-card-text>
 							</v-card>
 						</v-col>
 					</template>
@@ -447,7 +446,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
 	name: 'PsicologosMobile',
 	components: {
-		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		// CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
