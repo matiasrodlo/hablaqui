@@ -395,11 +395,11 @@ const psychologistsController = {
 	},
 	async createPaymentsRequest(req, res) {
 		try {
-			const { psy } = req.params;
+			const { user } = req;
 			const {
 				data,
 				code,
-			} = await psychologistsService.createPaymentsRequest(psy);
+			} = await psychologistsService.createPaymentsRequest(user);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');
@@ -412,6 +412,17 @@ const psychologistsController = {
 				data,
 				code,
 			} = await psychologistsService.completePaymentsRequest(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getTransactions(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.getTransactions(
+				user
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');

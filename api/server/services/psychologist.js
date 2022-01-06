@@ -19,6 +19,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import user from '../models/user';
+import Transaction from '../models/transaction';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -161,9 +162,22 @@ const completePaymentsRequest = async psy => {
 	let sessions = response.data.sessions;
 	const now = moment().format();
 
+	const transactions = await Transaction.findOne({ psychologist: psy });
+	if (!transactions) {
+		await Transaction.create({
+			psychologist: psy,
+			transactionsRequest: [],
+			transactionCompleted: [],
+		});
+	}
+
+	/*Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante 
+	y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el psicólogo*/
 	sessions = sessions.filter(
 		session =>
-			session.statusPlan === 'success' && session.request === 'pending'
+			session.status === 'success' &&
+			session.statusPlan === 'success' &&
+			session.request === 'pending'
 	);
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
@@ -183,22 +197,50 @@ const completePaymentsRequest = async psy => {
 		);
 	});
 
+	const total = sessions.reduce(
+		(sum, value) =>
+			typeof value.total == 'number' ? sum + value.total : sum,
+		0
+	);
+
+	const transaction = {
+		total,
+		sessionsPaid: sessions.length,
+		trasnactionDate: now,
+	};
+	await Transaction.findOneAndUpdate(
+		{ psychologist: psy },
+		{ $push: { transactionCompleted: transaction } }
+	);
+
 	return okResponse('Peticion hecha', {
-		total: sessions.reduce(
-			(sum, value) =>
-				typeof value.total == 'number' ? sum + value.total : sum,
-			0
-		),
+		total: total,
 		sessions: sessions,
 	});
 };
 
-const createPaymentsRequest = async psy => {
+const createPaymentsRequest = async user => {
+	if (user.role === 'user')
+		return conflictResponse('No estas autorizado para esta operacion');
+	const psy = user.psychologist;
 	const response = await getAllSessions(psy);
 	let sessions = response.data.sessions;
 	const now = moment().format();
+
+	const transactions = await Transaction.findOne({ psychologist: psy });
+	if (!transactions) {
+		await Transaction.create({
+			psychologist: psy,
+			transactionsRequest: [],
+			transactionCompleted: [],
+		});
+	}
+	/*Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante,
+	que este en un estado none (implicando que la solicitud de retiro por parte de un psicólogo no se ha hecho)
+	y que la sesión no sea un Compromiso privado*/
 	sessions = sessions.filter(
 		session =>
+			session.status === 'success' &&
 			session.statusPlan === 'success' &&
 			session.request === 'none' &&
 			session.name !== 'Compromiso privado '
@@ -220,16 +262,28 @@ const createPaymentsRequest = async psy => {
 		);
 	});
 
+	const total = sessions.reduce(
+		(sum, value) =>
+			typeof value.total == 'number' ? sum + value.total : sum,
+		0
+	);
+	const transaction = {
+		total,
+		sessionsPaid: sessions.length,
+		trasnactionDate: now,
+	};
+	await Transaction.findOneAndUpdate(
+		{ psychologist: psy },
+		{ $push: { transactionsRequest: transaction } }
+	);
+
 	return okResponse('Peticion hecha', {
-		total: sessions.reduce(
-			(sum, value) =>
-				typeof value.total == 'number' ? sum + value.total : sum,
-			0
-		),
+		total: total,
 		sessions: sessions,
 	});
 };
 
+//Devuelve todas las sesiones, excepto las expiradas
 const getAllSessions = async psy => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
@@ -281,6 +335,20 @@ const getAllSessions = async psy => {
 				const expiration =
 					plan.payment === 'pending' &&
 					moment().isAfter(moment(plan.expiration));
+				let requestDate = session.requestDate
+					? session.requestDate
+					: 'Por cobrar';
+				if (requestDate !== 'Por cobrar')
+					requestDate = moment(requestDate).format(
+						'YYYY/MM/DD HH:mm'
+					);
+				let paymentDate = session.requestDate
+					? session.requestDate
+					: 'Por cobrar';
+				if (paymentDate !== 'Por cobrar')
+					paymentDate = moment(paymentDate).format(
+						'YYYY/MM/DD HH:mm'
+					);
 
 				return {
 					_id: session._id,
@@ -289,15 +357,24 @@ const getAllSessions = async psy => {
 					idPsychologist: item.psychologist._id,
 					name: `${name} ${lastName}`,
 					paidToPsychologist: session.paidToPsychologist,
-					sessionsNumber: `${session.sessionNumber} de ${plan.totalSessions}`,
+					sessionsNumber: `${session.sessionNumber}/${plan.totalSessions}`,
 					sessionsId: item._id,
 					invited: plan.invitedByPsychologist,
 					status: session.status,
 					statusPlan: plan.payment,
+					suscription: plan.period,
 					idPlan: plan._id,
-					requestDate: session.requestDate ? session.requestDate : '',
-					paymentDate: session.paymentDate ? session.paymentDate : '',
+					paymentPlanDate: moment(plan.datePayment).format(
+						'YYYY/MM/DD HH:mm'
+					),
+					requestDate,
+					paymentDate,
 					request: session.request ? session.request : 'none',
+					hablaquiPercentage:
+						realComission === 0.0399
+							? plan.sessionPrice * 0
+							: plan.sessionPrice * 0.1601,
+					mercadoPercentage: plan.sessionPrice * 0.0399,
 					total: plan.sessionPrice * (1 - realComission),
 					percentage: realComission === 0.0399 ? '3.99%' : percentage,
 					expiration,
@@ -313,9 +390,9 @@ const getAllSessions = async psy => {
 		total: sessions
 			.filter(session => {
 				return (
+					session.status === 'success' &&
 					session.statusPlan === 'success' &&
-					session.name !== 'Compromiso privado ' &&
-					!session.paidToPsychologist
+					session.name !== 'Compromiso privado '
 				);
 			})
 			.reduce(
@@ -324,6 +401,48 @@ const getAllSessions = async psy => {
 				0
 			),
 		sessions: sessions,
+	});
+};
+
+const getTransactions = async user => {
+	if (user.role === 'user')
+		return conflictResponse('No estas autorizado para esta operacion');
+	const psy = user.psychologist;
+
+	const response = await getAllSessions(psy);
+	let sessions = response.data.sessions;
+	let transactions = await Transaction.findOne({ psychologist: psy });
+
+	if (transactions) transactions = transactions.transactionsRequest;
+	else transactions = [];
+
+	sessions = sessions.filter(
+		session =>
+			session.status === 'success' &&
+			session.statusPlan === 'success' &&
+			session.name !== 'Compromiso privado '
+	);
+	const total = response.data.total;
+	const totalAvailable = sessions
+		.filter(
+			session =>
+				session.status === 'success' && session.request === 'none'
+		)
+		.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		);
+	const successSessions = sessions.filter(
+		session => session.status === 'success'
+	).length;
+
+	return okResponse('Transacciones devueltas', {
+		total,
+		totalAvailable,
+		successSessions,
+		sessions,
+		transactions,
 	});
 };
 
@@ -730,7 +849,6 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
-
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -1467,6 +1585,7 @@ const psychologistsService = {
 	getRemainingSessions,
 	createPaymentsRequest,
 	completePaymentsRequest,
+	getTransactions,
 };
 
 export default Object.freeze(psychologistsService);
