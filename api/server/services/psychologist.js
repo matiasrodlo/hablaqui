@@ -1341,7 +1341,14 @@ const paymentsInfo = async user => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
+				const realComission = plans.invitedByPsychologist
+					? currentPlan.paymentFee
+					: comission;
+
 				return plans.session.map(session => {
+					const transDate = session.paymentDate
+						? session.paymentDate
+						: 'Por cobrar';
 					return {
 						idPlan: plans._id,
 						sessionsId: item._id,
@@ -1352,9 +1359,14 @@ const paymentsInfo = async user => {
 						plan: plans.title,
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
-						percentage: percentage,
-						total: plans.sessionPrice * (1 - comission),
+						hablaquiPercentage:
+							realComission === 0.0399 ? '0%' : '16.01%',
+						mercadoPercentage: '3.99%',
+						percentage:
+							realComission === 0.0399 ? '3.99%' : percentage,
+						total: plans.sessionPrice * (1 - realComission),
 						user: item.user._id,
+						transDate,
 					};
 				});
 			});
