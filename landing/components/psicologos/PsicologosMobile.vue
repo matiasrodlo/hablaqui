@@ -361,7 +361,7 @@
 											<div>
 												<v-chip-group
 													v-model="specialties"
-													show-arrows="false"
+													:show-arrows="false"
 												>
 													<template v-for="(tag, s) in item.specialties">
 														<v-chip

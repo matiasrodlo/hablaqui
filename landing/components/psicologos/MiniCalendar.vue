@@ -101,7 +101,7 @@ export default {
 	},
 	methods: {
 		formatDate(item) {
-			return moment(item).format('dddd DD MMMM YYYY');
+			return moment(item, 'MM/DD/YYYY').format('dddd DD MMMM YYYY');
 		},
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {

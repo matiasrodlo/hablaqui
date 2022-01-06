@@ -76,9 +76,9 @@
 						}
 					"
 				>
-					<span class="mr-2">{{
-						heighCalendar === 'max-height: 230px' ? 'Más horarios' : 'Ver menos'
-					}}</span>
+					<span class="mr-2">
+						{{ heighCalendar === 'max-height: 230px' ? 'Más horarios' : 'Ver menos' }}
+					</span>
 					<icon
 						color="primary"
 						:icon="
