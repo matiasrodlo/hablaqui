@@ -627,12 +627,7 @@ export default {
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else
-				this.$router.push({
-					name: 'auth',
-					params: { q: 'register' },
-					query: { from: 'psy' },
-				});
+			else this.$router.push('/auth/?register=true&from=psy');
 		},
 		setView(type) {
 			localStorage.setItem('view', type);

@@ -232,25 +232,45 @@
 		<v-container fluid style="max-width: 1200px" class="my-4">
 			<v-row>
 				<v-col cols="12">
-					<v-sheet class="item" style="border-radius: 15px; height: 182px">
-						<v-row no-gutters align="center">
-							<v-col cols="3">
+					<v-sheet class="item" style="border-radius: 15px">
+						<v-row>
+							<v-col cols="12">
 								<v-img
-									width="250px"
+									width="100px"
+									height="100px"
+									class="mx-auto"
 									contain
-									src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
-									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
+									src="https://cdn.hablaqui.cl/static/banner_comenzar_mobile.png"
+									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar_mobile.png"
 								></v-img>
-							</v-col>
-							<v-col>
-								<div class="headline primary--text font-weight-bold">
+								<div
+									style="width: 290px"
+									class="
+										mx-auto
+										my-3
+										text-center
+										title
+										primary--text
+										font-weight-bold
+									"
+								>
 									Te ayudamos a encontrar a tu psicólogo ideal
 								</div>
-								<div class="my-2 body-1 primary--text font-weight-regular">
+								<div
+									style="max-width: 320px"
+									class="
+										mx-auto
+										text-center
+										my-3
+										body-1
+										primary--text
+										font-weight-regular
+									"
+								>
 									Encuentra al psicólogo que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
-								<div class="my-4">
+								<div class="text-center my-4">
 									<v-btn rounded color="primary" class="px-8 py-2" @click="start">
 										Comenzar
 									</v-btn>
@@ -566,12 +586,7 @@ export default {
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else
-				this.$router.push({
-					name: 'auth',
-					params: { q: 'register' },
-					query: { from: 'psy' },
-				});
+			else this.$router.push('/auth/?register=true&from=psy');
 		},
 		setView(type) {
 			localStorage.setItem('view', type);
