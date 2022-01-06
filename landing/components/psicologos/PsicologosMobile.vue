@@ -85,144 +85,254 @@
 						fullscreen
 						transition="dialog-bottom-transition"
 					>
-						<v-card>
-							<v-card-title class="titleColor d-flex justify-space-between">
+						<v-card style="height: fit-content; display: flex; flex-direction: column">
+							<v-card-title
+								style="flex: 0"
+								class="titleColor d-flex justify-space-between"
+							>
 								<div>Filtros</div>
-								{{ specialties }}
 								<v-btn icon @click="showFilters = false">
 									<icon size="30px" color="#717171" :icon="mdiCloseCircle" />
 								</v-btn>
 							</v-card-title>
-							<v-expansion-panels tag="section" flat multiple>
-								<v-expansion-panel class="pa-0">
-									<v-expansion-panel-header class="py-0">
-										<h4 class="titleColor font-weight-bold body-1">
-											Motivo de consulta
-										</h4>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content>
-										<template v-for="(item, i) in appointments">
-											<v-checkbox
-												v-if="i < 11 || seeMoreSpecialties"
-												:key="`specialties-${i}`"
-												v-model="specialties"
-												:value="item"
-												hide-details
-												:label="item"
-												@change="changeInput"
-											>
-												<template #label>
-													<span class="caption"> {{ item }}</span>
-												</template>
-											</v-checkbox>
+							<div style="flex: 1">
+								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">
+										Motivo de consulta
+									</h4>
+									<v-autocomplete
+										v-model="specialties"
+										class="white"
+										outlined
+										:items="appointments"
+										item-value="value"
+										:append-icon="mdiChevronDown"
+										hide-details
+										dense
+										clearable
+										:menu-props="{
+											closeOnClick: true,
+											closeOnContentClick: true,
+										}"
+										:disabled="loadingPsychologist"
+										@change="changeInput"
+									>
+										<template #no-data>
+											<v-list-item>
+												<v-list-item-content>
+													<v-list-item-title>
+														No se encontraron resultados que coincidan
+														con "<strong>
+															{{ specialties }}
+														</strong>
+														" .
+													</v-list-item-title>
+												</v-list-item-content>
+											</v-list-item>
 										</template>
-										<v-btn
-											text
-											color="primary"
-											class="pa-0"
-											@click="seeMoreSpecialties = !seeMoreSpecialties"
-										>
-											<span v-if="!seeMoreSpecialties">Ver más (10)</span>
-											<span v-else>Ver menos</span>
-										</v-btn>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-								<v-expansion-panel class="pa-0">
-									<v-expansion-panel-header class="py-0">
-										<h4 class="titleColor font-weight-bold body-1">Género</h4>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content>
-										<template v-for="(item, i) in appointments">
-											<v-checkbox
-												v-if="i < 11 || seeMoreSpecialties"
-												:key="`specialties-${i}`"
-												v-model="specialties"
-												:value="item"
+									</v-autocomplete>
+								</v-card-text>
+								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
+									<v-menu
+										v-model="menuGender"
+										:close-on-content-click="false"
+										transition="scale-transition"
+										offset-y
+										rounded
+										min-width="200px"
+									>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												:value="
+													gender.length
+														? `Seleccionados ${gender.length}`
+														: ''
+												"
+												readonly
+												outlined
+												dense
+												class="white"
 												hide-details
-												:label="item"
-												@change="changeInput"
-											>
-												<template #label>
-													<span class="caption"> {{ item }}</span>
-												</template>
-											</v-checkbox>
+												:append-icon="mdiChevronDown"
+												v-bind="attrs"
+												v-on="on"
+											></v-text-field>
 										</template>
-										<v-btn
-											text
-											color="primary"
-											class="pa-0"
-											@click="seeMoreSpecialties = !seeMoreSpecialties"
-										>
-											<span v-if="!seeMoreSpecialties">Ver más (10)</span>
-											<span v-else>Ver menos</span>
-										</v-btn>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-								<v-expansion-panel class="pa-0">
-									<v-expansion-panel-header class="py-0">
-										<h4 class="titleColor font-weight-bold body-1">Precios</h4>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content>
-										<template v-for="(item, i) in appointments">
-											<v-checkbox
-												v-if="i < 11 || seeMoreSpecialties"
-												:key="`specialties-${i}`"
-												v-model="specialties"
-												:value="item"
+										<v-card rounded width="200px">
+											<v-card-text>
+												<v-checkbox
+													v-model="gender"
+													value="male"
+													:disabled="loadingPsychologist"
+													label="Hombre"
+													class="py-2"
+													hide-details
+													@change="changeInput"
+												>
+													<template #label>
+														<span class="caption">Hombre</span>
+													</template>
+												</v-checkbox>
+												<v-checkbox
+													v-model="gender"
+													value="female"
+													label="Mujer"
+													:disabled="loadingPsychologist"
+													class="py-2"
+													hide-details
+													@change="changeInput"
+												>
+													<template #label>
+														<span class="caption">Mujer</span>
+													</template>
+												</v-checkbox>
+												<v-checkbox
+													v-model="gender"
+													value="transgender"
+													label="Transgénero"
+													:disabled="loadingPsychologist"
+													class="py-2"
+													hide-details
+													@change="changeInput"
+												>
+													<template #label>
+														<span class="caption">Transgénero </span>
+													</template>
+												</v-checkbox>
+											</v-card-text>
+										</v-card>
+									</v-menu>
+								</v-card-text>
+								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">Precios</h4>
+									<v-autocomplete
+										v-model="prices"
+										outlined
+										dense
+										class="white"
+										clearable
+										:append-icon="mdiChevronDown"
+										:items="[
+											{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
+											{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
+											{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
+											{ value: '[29900]', text: '+ $29.900' },
+										]"
+										hide-details
+									></v-autocomplete>
+								</v-card-text>
+								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">Otros</h4>
+									<v-menu
+										v-model="menuOthers"
+										:close-on-content-click="false"
+										transition="scale-transition"
+										offset-y
+										rounded
+										min-width="200px"
+									>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												:value="
+													models.length || languages.length
+														? `Seleccionados ${
+																models.length + languages.length
+														  }`
+														: ''
+												"
+												readonly
+												outlined
+												dense
+												class="white"
 												hide-details
-												:label="item"
-												@change="changeInput"
+												:append-icon="mdiChevronDown"
+												v-bind="attrs"
+												v-on="on"
 											>
-												<template #label>
-													<span class="caption"> {{ item }}</span>
-												</template>
-											</v-checkbox>
+											</v-text-field>
 										</template>
-										<v-btn
-											text
-											color="primary"
-											class="pa-0"
-											@click="seeMoreSpecialties = !seeMoreSpecialties"
-										>
-											<span v-if="!seeMoreSpecialties">Ver más (10)</span>
-											<span v-else>Ver menos</span>
-										</v-btn>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-								<v-expansion-panel class="pa-0">
-									<v-expansion-panel-header class="py-0">
-										<h4 class="titleColor font-weight-bold body-1">
-											Modelo terapéutico
-										</h4>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content>
-										<template v-for="(item, i) in appointments">
-											<v-checkbox
-												v-if="i < 11 || seeMoreSpecialties"
-												:key="`specialties-${i}`"
-												v-model="specialties"
-												:value="item"
-												hide-details
-												:label="item"
-												@change="changeInput"
-											>
-												<template #label>
-													<span class="caption"> {{ item }}</span>
+										<v-card rounded width="200px">
+											<v-card-text
+												><div class="body-2 font-weight-bold">
+													Modelo terapéuticos
+												</div>
+												<template
+													v-for="(item, i) in [
+														'Cognitivo-conductual',
+														'Contextual',
+														'Psicoanálisis',
+														'Humanista',
+														'Sistémico',
+													]"
+												>
+													<v-checkbox
+														:key="`models-${i}`"
+														v-model="models"
+														:value="item"
+														class="py-2"
+														hide-details
+														:label="item"
+														@change="changeInput"
+													>
+														<template #label>
+															<span class="caption"> {{ item }}</span>
+														</template>
+													</v-checkbox>
 												</template>
-											</v-checkbox>
-										</template>
-										<v-btn
-											text
-											color="primary"
-											class="pa-0"
-											@click="seeMoreSpecialties = !seeMoreSpecialties"
-										>
-											<span v-if="!seeMoreSpecialties">Ver más (10)</span>
-											<span v-else>Ver menos</span>
-										</v-btn>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-							</v-expansion-panels>
+												<div class="body-2 font-weight-bold mt-2">
+													Idioma
+												</div>
+												<v-checkbox
+													v-model="languages"
+													value="spanish"
+													:disabled="loadingPsychologist"
+													hide-details
+													class="py-2"
+													label="Español"
+													@change="changeInput"
+												>
+													<template #label>
+														<span class="caption">Español </span>
+													</template>
+												</v-checkbox>
+												<v-checkbox
+													v-model="languages"
+													value="english"
+													:disabled="loadingPsychologist"
+													hide-details
+													class="py-2"
+													label="Ingles"
+													@change="changeInput"
+												>
+													<template #label>
+														<span class="caption">Ingles </span>
+													</template>
+												</v-checkbox>
+											</v-card-text>
+										</v-card>
+									</v-menu>
+								</v-card-text>
+							</div>
+							<v-card-actions style="flex: 0">
+								<v-btn
+									rounded
+									depressed
+									color="#E1E1E1"
+									@click="showFilters = false"
+								>
+									<span style="color: #4e4e4e"> Limpiar filtro </span>
+								</v-btn>
+								<v-spacer></v-spacer>
+								<v-btn
+									rounded
+									depressed
+									color="rgba(26, 165, 216, 0.16)"
+									@click="showFilters = false"
+								>
+									<span class="primary--text"> Mostrar resultados </span>
+								</v-btn>
+							</v-card-actions>
 						</v-card>
 					</v-dialog>
 				</v-col>
