@@ -299,11 +299,11 @@ const usersService = {
 	},
 
 	async addEvaluation(user, psyId, payload) {
-		//if (user.role !== 'user') return conflictResponse('No eres usuario');
+		if (user.role !== 'user') return conflictResponse('No eres usuario');
 
 		let sessions = await Sessions.findOne({
 			psychologist: psyId,
-			user: user,
+			user: user._id,
 		});
 
 		sessions = sessions.plan.flatMap(plan => {
@@ -336,7 +336,6 @@ const usersService = {
 			like: payload.like,
 			improve: payload.improve,
 		};
-		console.log(evaluation);
 		let created = {};
 		if (collEvaluation) {
 			created = await Evaluation.findOneAndUpdate(
@@ -345,7 +344,7 @@ const usersService = {
 			);
 		} else {
 			created = await Evaluation.create({
-				user: user,
+				user: user._id,
 				psychologist: psyId,
 				evaluations: [evaluation],
 			});

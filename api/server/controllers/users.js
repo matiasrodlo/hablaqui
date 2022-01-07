@@ -140,8 +140,8 @@ const userController = {
 	},
 	async addEvaluation(req, res) {
 		try {
-			const { psyId, user } = req.params;
-			const { body } = req;
+			const { psyId } = req.params;
+			const { user, body } = req;
 			const { data, code } = await userService.addEvaluation(
 				user,
 				psyId,

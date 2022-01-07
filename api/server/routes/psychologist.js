@@ -403,4 +403,10 @@ psychologistsRouter.get(
 	psychologistsController.getRemainingSessions
 );
 
+psychologistsRouter.get(
+	'/psychologist/get-evaluations',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getEvaluations
+);
+
 export default psychologistsRouter;

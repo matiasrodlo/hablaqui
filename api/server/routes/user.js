@@ -136,8 +136,8 @@ userRouter.post(
  * }
  */
 userRouter.post(
-	'/user/evaluation:/:psyId/:user',
-	//[passport.authenticate('jwt', { session: true })],
+	'/user/evaluation:/:psyId',
+	[passport.authenticate('jwt', { session: true })],
 	userController.addEvaluation
 );
 

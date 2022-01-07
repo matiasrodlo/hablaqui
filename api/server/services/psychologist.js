@@ -13,6 +13,7 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import mercadopagoService from './mercadopago';
+import Evaluation from '../models/evaluation';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -1427,6 +1428,77 @@ const deleteCommitment = async (planId, psyId) => {
 	return okResponse('Sesion eliminada', updatedSessions);
 };
 
+const getEvaluations = async user => {
+	if (user.role !== 'psychologist')
+		return conflictResponse('No eres psicólogo');
+
+	const psy = user.psychologist;
+	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
+		'user'
+	);
+	if (!evaluations)
+		return okResponse('Evaluaciones devueltas', {
+			evaluations: [],
+			global: 0,
+			internet: 0,
+			puntuality: 0,
+			attention: 0,
+		});
+
+	evaluations = evaluations
+		.flatMap(item => {
+			return item.evaluations.map(evaluation => {
+				return {
+					_id: evaluation._id,
+					comment: evaluation.comment,
+					approved: evaluation.approved,
+					global: evaluation.global,
+					puntuality: evaluation.puntuality,
+					attention: evaluation.attention,
+					internet: evaluation.internet,
+					name: item.user.name,
+					userId: item.user._id,
+				};
+			});
+		})
+		.filter(evaluation => evaluation.approved);
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+	const puntuality =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.puntuality == 'number'
+					? sum + value.puntuality
+					: sum,
+			0
+		) / evaluations.length;
+	const attention =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.attention == 'number'
+					? sum + value.attention
+					: sum,
+			0
+		) / evaluations.length;
+	const internet =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.internet == 'number' ? sum + value.internet : sum,
+			0
+		) / evaluations.length;
+	return okResponse('Evaluaciones devueltas', {
+		evaluations,
+		global,
+		internet,
+		puntuality,
+		attention,
+	});
+};
+
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -1459,6 +1531,7 @@ const psychologistsService = {
 	deleteCommitment,
 	getAllSessions,
 	getRemainingSessions,
+	getEvaluations,
 };
 
 export default Object.freeze(psychologistsService);
