@@ -6,9 +6,9 @@ WORKDIR /home/node/app
 
 USER node
 
-COPY package.json ./
-COPY package-lock.json ./
-COPY --chown=node:node . .
+COPY ./api/package.json ./
+COPY ./api/package-lock.json ./
+COPY --chown=node:node ./api/server .
 
 RUN npm install
 RUN npm create-env
