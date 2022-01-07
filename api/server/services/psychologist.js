@@ -408,7 +408,6 @@ const formattedSessionsAll = async () => {
 					date: day.format('L'),
 					text: moment(day),
 					available: hours.filter(hour => {
-						console.log(moment(day).set('hours', hour));
 						return (
 							moment(
 								`${temporal} ${hour}`,
