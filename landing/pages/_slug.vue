@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
+
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
@@ -55,6 +57,12 @@ export default {
 		} catch (e) {
 			error({ statusCode: 404, message: 'Post not found' });
 		}
+	},
+	data() {
+		return {
+			loadingChat: false,
+			loadingCalendar: false,
+		};
 	},
 	head() {
 		return {
@@ -126,10 +134,29 @@ export default {
 			],
 		};
 	},
+	async mounted() {
+		this.loadingCalendar = true;
+		await this.getFormattedSessions(this.psychologist._id);
+		this.loadingCalendar = false;
+		if (this.$route.query.chat) {
+			this.loadingChat = true;
+			await this.startConversation(this.psychologist._id);
+			this.loadingChat = false;
+			this.setFloatingChat(true);
+			this.$router.replace({ query: null });
+		}
+	},
 	methods: {
 		setPsychologist(value) {
 			this.psychologist = value;
 		},
+		...mapActions({
+			startConversation: 'Chat/startConversation',
+			getFormattedSessions: 'Psychologist/getFormattedSessions',
+		}),
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

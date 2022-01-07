@@ -200,11 +200,9 @@ export default {
 	},
 	data() {
 		return {
-			loadingChat: false,
 			pusher: null,
 			channel: null,
 			fullcard: false,
-			loadingCalendar: false,
 		};
 	},
 	computed: {
@@ -228,18 +226,6 @@ export default {
 				this.getPsychologist(data);
 			}
 		});
-	},
-	async mounted() {
-		this.loadingCalendar = true;
-		await this.getFormattedSessions(this.psychologist._id);
-		this.loadingCalendar = false;
-		if (this.$route.query.chat) {
-			this.loadingChat = true;
-			await this.startConversation(this.psychologist._id);
-			this.loadingChat = false;
-			this.setFloatingChat(true);
-			this.$router.replace({ query: null });
-		}
 	},
 	methods: {
 		async getPsychologist(data) {
@@ -266,7 +252,6 @@ export default {
 		},
 		...mapActions({
 			startConversation: 'Chat/startConversation',
-			getFormattedSessions: 'Psychologist/getFormattedSessions',
 		}),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
