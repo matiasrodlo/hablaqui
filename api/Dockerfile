@@ -19,4 +19,4 @@ RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 RUN npm run create-env
 
-CMD ["npm", "run", "dev"]
+ENTRYPOINT ["npm", "run", "dev"]

@@ -12,4 +12,4 @@ COPY --chown=node:node /landing ./
 RUN npm install
 RUN npm run create-env
 
-CMD ["npm", "run", "dev"]
+ENTRYPOINT ["npm", "run", "dev"]
