@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
-RUN apk --no-cache add --virtual builds-deps build-base pytho
+RUN apk --no-cache add --virtual builds-deps build-base python
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
