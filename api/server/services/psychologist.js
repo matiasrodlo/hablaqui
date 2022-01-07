@@ -18,7 +18,6 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-import user from '../models/user';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -260,7 +259,7 @@ const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
-		'schedule'
+		'_id schedule preferences'
 	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
@@ -299,8 +298,14 @@ const getFormattedSessions = async idPsychologist => {
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
 
+	const minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
+
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
 
 		return {
 			id: el,
@@ -310,6 +315,9 @@ const getFormattedSessions = async idPsychologist => {
 			text: moment(day),
 			available: hours.filter(hour => {
 				return (
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
@@ -328,7 +336,9 @@ const getFormattedSessions = async idPsychologist => {
 // Utilizado para traer las sessiones de todos los psicologos para el selector
 const formattedSessionsAll = async () => {
 	let sessions = [];
-	let psychologist = await Psychologist.find({}).select('schedule');
+	let psychologist = await Psychologist.find({}).select(
+		'schedule preferences'
+	);
 	// Para que nos de deje modificar el array de mongo
 	psychologist = JSON.stringify(psychologist);
 	psychologist = JSON.parse(psychologist);
@@ -360,7 +370,7 @@ const formattedSessionsAll = async () => {
 	// Obtenemos sessiones del psicologo
 	let allSessions = await Sessions.find({}).populate(
 		'psychologist',
-		'schedule'
+		'_id schedule preferences'
 	);
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -381,24 +391,35 @@ const formattedSessionsAll = async () => {
 	}));
 
 	sessions = allSessions.map(item => {
+		const minimumNewSession = moment(Date.now()).add(
+			item.preferences.minimumNewSession,
+			'h'
+		);
+
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
 				const day = moment(Date.now()).add(el, 'days');
+				const temporal = moment(day).format('L');
 				return {
-					id: item.psychologist,
+					psychologist: item._id,
 					value: day,
 					day: day.format('DD MMM'),
 					date: day.format('L'),
 					text: moment(day),
 					available: hours.filter(hour => {
+						console.log(moment(day).set('hours', hour));
 						return (
+							moment(
+								`${temporal} ${hour}`,
+								'MM/DD/YYYY HH:mm'
+							).isAfter(minimumNewSession) &&
 							formattedSchedule(item.schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
 									moment(date, 'MM/DD/YYYY HH:mm').format(
 										'L'
-									) === moment(day).format('L') &&
+									) === temporal &&
 									hour ===
 										moment(date, 'MM/DD/YYYY HH:mm').format(
 											'HH:mm'
@@ -856,7 +877,6 @@ const getByData = async username => {
 
 const setSchedule = async (user, payload) => {
 	let response;
-	console.log('dentro', user.email);
 	// Si el user es un psicologo
 	if (user.psychologist) {
 		response = await Psychologist.findByIdAndUpdate(

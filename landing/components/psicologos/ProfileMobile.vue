@@ -53,13 +53,7 @@
 						<div>
 							<v-chip-group :show-arrows="false">
 								<template v-for="(tag, s) in psychologist.specialties">
-									<v-chip
-										:key="s"
-										:value="tag"
-										class="ma-1"
-										x-small
-										:color="specialties == tag ? 'primary--text' : ''"
-									>
+									<v-chip :key="s" :value="tag" class="ma-1" x-small>
 										<span>
 											{{ tag }}
 										</span>
