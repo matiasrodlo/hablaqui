@@ -3,12 +3,9 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<psicologos-desktop
-			:loading-psychologist="loadingPsychologist"
-			class="hidden-sm-and-down"
-		/>
+		<pagos-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
 		<!-- mobile -->
-		<psicologos-mobile :loading-psychologist="loadingPsychologist" class="hidden-md-and-up" />
+		<pagos-mobile :psychologist="psychologist" class="hidden-md-and-up" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -30,20 +27,26 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () =>
+		PagosDesktop: () =>
 			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PagosDesktop'
 			),
-		PsicologosMobile: () =>
+		PagosMobile: () =>
 			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PagosMobile'
 			),
+	},
+	async asyncData({ $axios, query, error }) {
+		try {
+			const { psychologist } = await $axios.$get(`/psychologists/one/${query.username}`);
+			return { psychologist };
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
 	},
 	data() {
 		return {
@@ -85,20 +88,6 @@ export default {
 	},
 	mounted() {
 		window.scrollTo(0, 0);
-		this.initialFetch();
-	},
-	methods: {
-		async initialFetch() {
-			await this.getPsychologists();
-			this.loadingPsychologist = false;
-			await this.getAppointments();
-			this.getFormattedSessionsAll();
-		},
-		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
-		}),
 	},
 };
 </script>

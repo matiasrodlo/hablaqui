@@ -13,6 +13,17 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getAllPagination(req, res) {
+		try {
+			const { page } = req.params;
+			const { data, code } = await psychologistsService.getAllPagination(
+				page
+			);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo los psicologos');
+		}
+	},
 	async getSessions(req, res) {
 		try {
 			const { idUser, idPsychologist } = req.params;
@@ -34,6 +45,21 @@ const psychologistsController = {
 				data,
 				code,
 			} = await psychologistsService.getFormattedSessions(idPsychologist);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
+	async formattedSessionsAll(req, res) {
+		try {
+			const {
+				data,
+				code,
+			} = await psychologistsService.formattedSessionsAll();
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(
