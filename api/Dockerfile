@@ -18,6 +18,5 @@ COPY --chown=node:node /server ./
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 RUN npm run create-env
-EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
