@@ -10,7 +10,7 @@ COPY package.json ./
 COPY --chown=node:node /landing ./
 
 RUN npm install
-RUN npm create-env
+RUN npm run create-env
 EXPOSE 80
 
 CMD ["npm", "run", "dev"]
