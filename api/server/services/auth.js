@@ -50,6 +50,7 @@ const generateUser = async user => {
 		email: user.email,
 		finishedSessions: user.finishedSessions,
 		google: user.google,
+		gender: user.gender,
 		googleId: user.googleId,
 		hasPaid: user.hasPaid,
 		inviteCode: user.inviteCode,

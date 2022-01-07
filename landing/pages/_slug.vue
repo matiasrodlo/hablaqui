@@ -31,12 +31,12 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		psicologo: () => import('~/components/psicologos/psicologo'),
 	},
-	async asyncData({ $axios, params, redirect }) {
+	async asyncData({ $axios, params, error }) {
 		try {
 			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return { psychologist };
 		} catch (e) {
-			redirect('/psicologos');
+			error({ statusCode: 404, message: 'Post not found' });
 		}
 	},
 	head() {

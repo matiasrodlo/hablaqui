@@ -185,7 +185,7 @@
 							dense
 							outlined
 							single-line
-							append-icon="mdi-magnify"
+							:append-icon="mdiMagnify"
 							label="Buscar"
 						/>
 					</v-card-text>
@@ -274,7 +274,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import Pusher from 'pusher-js';
-import { mdiChevronLeft } from '@mdi/js';
+import { mdiChevronLeft, mdiMagnify } from '@mdi/js';
 
 export default {
 	components: {
@@ -284,6 +284,7 @@ export default {
 	data() {
 		return {
 			mdiChevronLeft,
+			mdiMagnify,
 			search: '',
 			selected: null,
 			loadingMessage: false,

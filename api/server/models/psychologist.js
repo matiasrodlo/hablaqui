@@ -201,6 +201,9 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultPrices,
 	},
+	stampSetPrices: {
+		type: String,
+	},
 	paymentMethod: {
 		type: Object,
 		required: false,

@@ -30,7 +30,7 @@ export default {
 	generate: {
 		fallback: '404.html',
 		// genera las rutas dinamicas
-		async routes() {
+		async routes(callback) {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
@@ -61,7 +61,8 @@ export default {
 				payload: el.comuna,
 			}));
 
-			return blogs.concat(psicologos).concat(comunas);
+			const routes = blogs.concat(psicologos).concat(comunas);
+			callback(null, routes);
 		},
 	},
 	loading: {
@@ -118,7 +119,7 @@ export default {
 			{
 				hid: 'twitter:image',
 				name: 'twitter:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 
 			// Open Graph
@@ -144,12 +145,12 @@ export default {
 			{
 				hid: 'og:image',
 				property: 'og:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:secure_url',
 				property: 'og:image:secure_url',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:alt',

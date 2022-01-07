@@ -455,7 +455,6 @@
 						</a>
 					</div>
 					<div class="my-4">Atención a clientes: soporte@hablaqui.cl</div>
-					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>

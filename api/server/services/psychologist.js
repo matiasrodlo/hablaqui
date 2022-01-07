@@ -18,6 +18,7 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+import user from '../models/user';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -119,17 +120,96 @@ const setSession = (role, sessions) => {
 	});
 };
 
+const getRemainingSessions = async psy => {
+	let sessions = await Sessions.find({
+		psychologist: psy,
+	}).populate('psychologist user');
+
+	sessions = sessions.flatMap(item => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+
+		return item.plan.flatMap(plan => {
+			return {
+				idPlan: plan._id,
+				name: `${name} ${lastName}`,
+				remaining: plan.remainingSessions,
+				sessions: `${plan.remainingSessions} de ${plan.totalSessions}`,
+				statusPlan: plan.payment,
+			};
+		});
+	});
+
+	return okResponse('Sesiones restantes obtenidas', {
+		sessions: sessions.filter(session => {
+			return session.remaining > 0;
+		}),
+	});
+};
+
 const getAllSessions = async (psy, startDate) => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
 
-	sessions = setSession('psychologist', sessions);
+	let comission = 0;
+	let percentage = '0%';
 
+	let { psyPlans } = await Psychologist.findById(psy);
+	const currentPlan = psyPlans[psyPlans.length - 1];
+	if (currentPlan.tier === 'premium') {
+		comission = currentPlan.paymentFee;
+		percentage = '3.99%';
+	} else {
+		comission = currentPlan.hablaquiFee;
+		percentage = '20%';
+	}
+	sessions = sessions.flatMap(item => {
+		let name = '';
+		let lastName = '';
+
+		// Establece nombre de quien pertenece cada sesion
+		if (item.user && item.user._id) {
+			name = item.user.name;
+			lastName = item.user.lastName ? item.user.lastName : '';
+		} else {
+			name = 'Compromiso privado';
+			lastName = '';
+		}
+		return item.plan.flatMap(plan => {
+			return plan.session.map(session => {
+				return {
+					_id: session._id,
+					date: session.date,
+					sessionPrice: plan.sessionPrice,
+					idPsychologist: item.psychologist._id,
+					name: `${name} ${lastName}`,
+					paidToPsychologist: session.paidToPsychologist,
+					sessionsNumber: `${session.sessionNumber} de ${plan.totalSessions}`,
+					sessionsId: item._id,
+					status: session.status,
+					statusPlan: plan.payment,
+					idPlan: plan._id,
+					total: plan.sessionPrice * (1 - comission),
+					percentage: percentage,
+				};
+			});
+		});
+	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	sessions = sessions.filter(session => {
 		return (
-			session.paidToPsychologist &&
-			session.statusPlan === 'success' &&
+			session.statusPlan !== 'success' &&
 			//moment().isBefore(moment(session.expiration)) &&
 			moment(session.date, 'MM/DD/YYYY HH:mm').isBetween(
 				moment(startDate, 'MM/DD/YYYY HH:mm'),
@@ -137,10 +217,17 @@ const getAllSessions = async (psy, startDate) => {
 			)
 		);
 	});
-	console.log(sessions.length);
-	//let newSessions = setSession('psychologist', sessions);
-	//console.log(newSessions.length);
+
 	return okResponse('Sesiones obtenidas', {
+		total: sessions
+			.filter(session => {
+				return session.paidToPsychologist;
+			})
+			.reduce(
+				(sum, value) =>
+					typeof value.total == 'number' ? sum + value.total : sum,
+				0
+			),
 		sessions: sessions,
 	});
 };
@@ -349,6 +436,7 @@ const createPlan = async ({ payload }) => {
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
+		datePayment: '',
 		totalPrice: payload.price,
 		sessionPrice: payload.price / sessionQuantity,
 		expiration: expirationDate,
@@ -429,6 +517,7 @@ const createPlan = async ({ payload }) => {
 			plan: [newPlan],
 			roomsUrl: url,
 		});
+		//const params = { planId: created._id.toString() };
 
 		return okResponse('Plan creado', { plan: created });
 	}
@@ -442,8 +531,11 @@ const createPlan = async ({ payload }) => {
  * @param {Object} payload - data to save
  * @returns sessions actualizada
  */
+//Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist } = await Sessions.findOne({ _id: id });
+	const { psychologist } = await Sessions.findOne({ _id: id }).populate(
+		'psychologist'
+	);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -458,6 +550,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
 		);
 	}
+
 	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
 		{
@@ -468,6 +561,21 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		},
 		{ new: true }
 	).populate('psychologist user');
+
+	if (payload.remainingSessions === 0) {
+		let session = getLastSessionFromPlan(sessions, '', idPlan);
+		const expiration = moment(session.lastSession)
+			.add(1, 'hours')
+			.format();
+		sessions = await Sessions.findOneAndUpdate(
+			{ _id: id, 'plan._id': idPlan },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		).populate('psychologist user');
+	}
 
 	analytics.track({
 		userId: userLogged._id.toString(),
@@ -488,8 +596,6 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			userpsyId: id,
 		},
 	});
-
-	logInfo('creo una nueva cita');
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -530,7 +636,6 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
-
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -544,9 +649,65 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
 
+	let session = getLastSessionFromPlan(sessions, id, '');
+
+	if (session.remainingSessions === 0) {
+		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
+			.add(1, 'hours')
+			.format();
+		await Sessions.findOneAndUpdate(
+			{ _id: sessionsId, 'plan._id': session.plan_id },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		);
+	}
+
+	await mailService.sendRescheduleToUser(
+		sessions.user,
+		sessions.psychologist,
+		newDate
+	);
+	await mailService.sendRescheduleToPsy(
+		sessions.user,
+		sessions.psychologist,
+		newDate
+	);
+
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
+};
+
+const getLastSessionFromPlan = (sessions, sessionId, planId) => {
+	let session = sessions.plan
+		.flatMap(plan => {
+			let maxSession = plan.session.map(session =>
+				moment(session.date, 'MM/DD/YYYY HH:mm').format(
+					'YYYY/MM/DD HH:mm'
+				)
+			);
+			maxSession = maxSession.sort((a, b) => new Date(b) - new Date(a));
+			return plan.session.flatMap(session => {
+				return {
+					session_id: session._id,
+					plan_id: plan._id,
+					date: session.date,
+					datePayment: plan.datePayment,
+					lastSession: maxSession[0],
+					remainingSessions: plan.remainingSessions,
+				};
+			});
+		})
+		.filter(
+			session =>
+				sessionId === session.session_id.toString() ||
+				planId === session.plan_id.toString()
+		);
+
+	return session[0];
 };
 
 /**
@@ -639,8 +800,14 @@ const setSchedule = async (user, payload) => {
 		psychologist: response,
 	});
 };
-
+//Reprogramación sesiones para psicologos
 const cancelSession = async (user, planId, sessionsId, id) => {
+	const cancelSessions = await Sessions.find({
+		_id: sessionsId,
+		'plan._id': planId,
+		'plan.session._id': id,
+	}).populate('psychologist user');
+
 	await Sessions.updateOne(
 		{
 			_id: sessionsId,
@@ -649,14 +816,48 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		},
 		{
 			$pull: {
-				'plan.$[].session': { _id: id },
+				'plan.$.session': { _id: id },
 			},
 		}
 	);
 
+	/*session = getLastSessionFromPlan(session, id, planId);
+
+	const date = moment(session.date).format();
+	const lastSession = moment(session.lastSession).format();
+
+	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0
+	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente)
+	if (
+		session.remainingSessions === 0 &&
+		new Date(date).getTime() === new Date(lastSession).getTime()
+	) {
+		const expiration = moment(session.datePayment)
+			.add(1, 'months')
+			.format();
+		await Sessions.findOneAndUpdate(
+			{ _id: sessionsId, 'plan._id': session.plan_id },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		);
+	}*/
+
 	const sessions = await Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('psychologist user');
+
+	await mailService.sendCancelSessionPsy(
+		cancelSessions[0].user,
+		cancelSessions[0].psychologist
+	);
+	await mailService.sendCancelSessionUser(
+		cancelSessions[0].user,
+		cancelSessions[0].psychologist
+		//sessionCancel.plan[0].session[0].date
+	);
 
 	return okResponse('Sesion cancelada', {
 		sessions: setSession(user.role, sessions),
@@ -699,6 +900,18 @@ const updatePsychologist = async (user, profile) => {
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
 	if (user.psychologist) {
 		try {
+			const psy = await Psychologist.findById(profile._id);
+			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
+				if (
+					psy.stampSetPrices &&
+					moment().isBefore(
+						moment(psy.stampSetPrices).add(1, 'months')
+					)
+				)
+					profile.sessionPrices = psy.sessionPrices;
+				else profile.stampSetPrices = moment().format();
+			}
+
 			const updated = await Psychologist.findByIdAndUpdate(
 				profile._id,
 				profile,
@@ -763,6 +976,15 @@ const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
 	if (user.role != 'psychologist')
 		return conflictResponse('No tienes permisos');
+	const psy = await Psychologist.findById(user.psychologist);
+
+	if (
+		psy.stampSetPrices &&
+		moment().isBefore(moment(psy.stampSetPrices).add(1, 'months'))
+	)
+		return conflictResponse(
+			'Tiene que esperar 1 mes para volver a cambiar el precio'
+		);
 	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
 		user.psychologist,
 		{
@@ -771,6 +993,7 @@ const setPrice = async (user, newPrice) => {
 				video: newPrice,
 				full: newPrice * 1.25,
 			},
+			stampSetPrices: moment(),
 		},
 		{ new: true }
 	);
@@ -965,14 +1188,29 @@ const customNewSession = async (user, payload) => {
 		// Validamos que sea psicologo
 		if (user.role !== 'psychologist')
 			return conflictResponse('No eres psicologo');
+		let sessions = [];
+		let hours = 1;
 
+		if (payload.dateEnd && payload.type === 'compromiso privado') {
+			logInfo('custom');
+			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
+			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
+			hours = Math.abs(end.diff(start, 'hours')) + 1;
+		}
 		// Objeto con la sesion a crear
-		const newSession = {
-			date: payload.date,
-			sessionNumber: 1,
-			paidToPsychologist: false,
-			status: 'pending',
-		};
+		for (let i = 0; i < hours; i++) {
+			const date = moment(payload.date, 'MM/DD/YYYY HH:mm').add(
+				i,
+				'hours'
+			);
+			const newSession = {
+				date: date.format('MM/DD/YYYY HH:mm'),
+				sessionNumber: i + 1,
+				paidToPsychologist: false,
+				status: 'pending',
+			};
+			sessions.push(newSession);
+		}
 
 		// Objeto con el plan a crear
 		const newPlan = {
@@ -989,7 +1227,7 @@ const customNewSession = async (user, payload) => {
 			usedCoupon: '',
 			totalSessions: 1,
 			remainingSessions: 0,
-			session: [newSession],
+			session: sessions,
 		};
 
 		// Si existe un plan con este titulo lo removemos
@@ -1082,8 +1320,25 @@ const paymentsInfo = async user => {
 	let comission = 0;
 	let percentage = '0%';
 
-	let { psyPlans } = await Psychologist.findById(user.psychologist);
-	const currentPlan = psyPlans[psyPlans.length - 1];
+	let psy = await Psychologist.findById(user.psychologist);
+	if (!psy.psyPlans || psy.psyPlans == []) {
+		psy.psyPlans = [
+			{
+				tier: 'free',
+				paymentStatus: 'success',
+				planStatus: 'active',
+				expirationDate: '',
+				subscriptionPeriod: '',
+				price: 0,
+				hablaquiFee: 0.2,
+				paymentFee: 0.0399,
+			},
+		];
+		await psy.save();
+	}
+
+	let currentPlan = psy.psyPlans[psy.psyPlans.length - 1];
+
 	if (currentPlan.tier === 'premium') {
 		comission = currentPlan.paymentFee;
 		percentage = '3.99%';
@@ -1102,28 +1357,51 @@ const paymentsInfo = async user => {
 		})
 	);
 	const validPayments = allSessions.flatMap(item => {
-		return item.plan.flatMap(plans => {
-			return plans.session.map(session => {
-				return {
-					idPlan: plans._id,
-					sessionsId: item._id,
-					name: `${item.user.name} ${
-						item.user.lastName ? item.user.lastName : ''
-					}`,
-					date: session.date,
-					plan: plans.title,
-					sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
-					amount: plans.sessionPrice,
-					percentage: percentage,
-					total: plans.sessionPrice * (1 - comission),
-					user: item.user._id,
-				};
+		if (item.user)
+			return item.plan.flatMap(plans => {
+				const realComission = plans.invitedByPsychologist
+					? currentPlan.paymentFee
+					: comission;
+
+				return plans.session.map(session => {
+					const transDate = session.paymentDate
+						? session.paymentDate
+						: 'Por cobrar';
+					return {
+						idPlan: plans._id,
+						sessionsId: item._id,
+						name: `${item.user.name ? item.user.name : ''} ${
+							item.user.lastName ? item.user.lastName : ''
+						}`,
+						date: session.date,
+						plan: plans.title,
+						payment: plans.payment,
+						suscription: plans.period,
+						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+						amount: plans.sessionPrice,
+						hablaquiPercentage:
+							realComission === 0.0399
+								? plans.sessionPrice * 0
+								: plans.sessionPrice * 0.1601,
+						mercadoPercentage: plans.sessionPrice * 0.0399,
+						percentage:
+							realComission === 0.0399 ? '3.99%' : percentage,
+						total: plans.sessionPrice * (1 - realComission),
+						user: item.user._id,
+						transDate,
+					};
+				});
 			});
-		});
 	});
 	const payments = validPayments.filter(item => {
-		return moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment());
+		return (
+			item &&
+			moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment()) &&
+			item.payment === 'success' &&
+			item.plan !== 'compromiso privado'
+		);
 	});
+	logInfo(payments);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
@@ -1180,6 +1458,7 @@ const psychologistsService = {
 	usernameAvailable,
 	deleteCommitment,
 	getAllSessions,
+	getRemainingSessions,
 };
 
 export default Object.freeze(psychologistsService);
