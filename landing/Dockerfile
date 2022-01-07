@@ -6,9 +6,9 @@ WORKDIR /home/node/app
 
 USER node
 
-COPY /landing/package.json .
-COPY /landing/package-lock.json .
-COPY --chown=node:node ./landing .
+COPY package.json .
+COPY package-lock.json .
+COPY --chown=node:node /landing .
 
 RUN npm install
 RUN npm create-env
