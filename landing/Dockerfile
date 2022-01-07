@@ -12,4 +12,6 @@ COPY --chown=node:node /landing ./
 RUN npm install
 RUN npm run create-env
 
+EXPOSE 80
+
 ENTRYPOINT ["npm", "run", "dev"]
