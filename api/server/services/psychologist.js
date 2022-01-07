@@ -477,6 +477,7 @@ const createPlan = async ({ payload }) => {
 				price: payload.price,
 				expiration: expirationDate,
 				totalSessions: sessionQuantity,
+				email: payload.user.email,
 			},
 		});
 		analytics.track({
@@ -584,6 +585,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			user: userLogged._id,
 			planId: idPlan,
 			userpsyId: id,
+			email: userLogged.email,
 		},
 	});
 
