@@ -441,7 +441,7 @@
 														:last-name="
 															item.lastName ? item.lastName : ''
 														"
-														size="80"
+														size="70"
 														loading-color="white"
 													></avatar>
 												</nuxt-link>

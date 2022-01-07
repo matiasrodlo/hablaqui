@@ -3,7 +3,7 @@
 		<v-card style="border-radius: 15px" class="shadowCard">
 			<v-card-text>
 				<v-row>
-					<v-col cols="3" sm="2" class="d-flex align-start justify-center">
+					<v-col cols="4" sm="2" class="d-flex align-start justify-center">
 						<div class="text-center">
 							<nuxt-link
 								style="text-decoration: none"
@@ -15,13 +15,13 @@
 									:url="avatar(psychologist, true)"
 									:name="psychologist.name"
 									:last-name="psychologist.lastName ? psychologist.lastName : ''"
-									size="80"
+									size="70"
 									loading-color="white"
 								></avatar>
 							</nuxt-link>
 						</div>
 					</v-col>
-					<v-col cols="9" sm="10">
+					<v-col cols="8" sm="10">
 						<div>
 							<nuxt-link
 								style="text-decoration: none"
@@ -30,7 +30,7 @@
 								}"
 							>
 								<div
-									class="text-left font-weight-bold body-1"
+									class="text-left font-weight-bold body-2"
 									style="color: #3c3c3b"
 								>
 									{{ psychologist.name }}

@@ -2,7 +2,7 @@
 	<div class="my-3">
 		<div class="d-flex">
 			<icon size="24px" color="#3c3c3b" :icon="mdiCalendarOutline" />
-			<span class="pt-1 ml-2 body-2 font-weight-medium" style="color: #3c3c3b">
+			<span class="pt-1 ml-2 caption font-weight-medium" style="color: #3c3c3b">
 				Próxima fecha:
 				<span v-if="sessionsAvailable" class="text-capitalize">
 					{{ formatDate(sessionsAvailable.date) }}
