@@ -4,6 +4,7 @@
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
+					v-if="$route.name === 'psicologos'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h6 text-md-h3"

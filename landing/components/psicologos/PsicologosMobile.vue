@@ -4,6 +4,7 @@
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
+					v-if="$route.name === 'psicologos'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h5"
@@ -348,7 +349,7 @@
 			</v-row>
 		</v-container>
 		<!-- pychologist -->
-		<v-container fluid style="max-width: 1200px" class="my-4">
+		<v-container v-if="psychologists.length" fluid style="max-width: 1200px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px">
@@ -537,6 +538,11 @@
 					No se encontraron coincidencias
 				</v-col>
 			</v-row>
+		</v-container>
+		<v-container v-else>
+			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
+				<v-skeleton-loader type="image" />
+			</v-col>
 		</v-container>
 		<div v-observe-visibility="scrollInfinity" />
 	</div>
