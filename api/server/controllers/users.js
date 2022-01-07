@@ -138,6 +138,20 @@ const userController = {
 			errorCallback(e, res, 'Error registrando un usuario');
 		}
 	},
+	async addEvaluation(req, res) {
+		try {
+			const { psyId, user } = req.params;
+			const { body } = req;
+			const { data, code } = await userService.addEvaluation(
+				user,
+				psyId,
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error añadiendo la evaluación');
+		}
+	},
 };
 
 export default userController;
