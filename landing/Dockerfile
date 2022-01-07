@@ -6,8 +6,8 @@ WORKDIR /home/node/app
 
 USER node
 
-COPY ./landing/package.json ./
-COPY ./landing/package-lock.json ./
+COPY /landing/package.json .
+COPY /landing/package-lock.json .
 COPY --chown=node:node ./landing .
 
 RUN npm install
