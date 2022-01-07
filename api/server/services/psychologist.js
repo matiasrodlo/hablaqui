@@ -1433,9 +1433,7 @@ const getEvaluations = async user => {
 		return conflictResponse('No eres psicólogo');
 
 	const psy = user.psychologist;
-	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
-		'user'
-	);
+	let evaluations = await Evaluation.find({ psychologist: psy });
 	if (!evaluations)
 		return okResponse('Evaluaciones devueltas', {
 			evaluations: [],
@@ -1445,23 +1443,9 @@ const getEvaluations = async user => {
 			attention: 0,
 		});
 
-	evaluations = evaluations
-		.flatMap(item => {
-			return item.evaluations.map(evaluation => {
-				return {
-					_id: evaluation._id,
-					comment: evaluation.comment,
-					approved: evaluation.approved,
-					global: evaluation.global,
-					puntuality: evaluation.puntuality,
-					attention: evaluation.attention,
-					internet: evaluation.internet,
-					name: item.user.name,
-					userId: item.user._id,
-				};
-			});
-		})
-		.filter(evaluation => evaluation.approved);
+	evaluations = await getAllEvaluations(psy).filter(
+		evaluation => evaluation.approved === 'approved'
+	);
 	const global =
 		evaluations.reduce(
 			(sum, value) =>
@@ -1499,6 +1483,49 @@ const getEvaluations = async user => {
 	});
 };
 
+const getAllEvaluations = async psy => {
+	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
+		'user'
+	);
+
+	evaluations = evaluations.flatMap(item => {
+		return item.evaluations.map(evaluation => {
+			return {
+				_id: evaluation._id,
+				evaluationsId: item._id,
+				comment: evaluation.comment,
+				approved: evaluation.approved,
+				global: evaluation.global,
+				puntuality: evaluation.puntuality,
+				attention: evaluation.attention,
+				internet: evaluation.internet,
+				name: item.user.name,
+				userId: item.user._id,
+			};
+		});
+	});
+
+	return okResponse('Todas las sesiones devueltas', { evaluations });
+};
+
+const approveEvaluation = async (evaluationsId, evaluationId) => {
+	const evaluations = await Evaluation.findOneAndUpdate(
+		{ _id: evaluationsId, 'evaluations._id': evaluationId },
+		{ $set: { 'evaluations.$.approved': 'approved' } }
+	);
+
+	return okResponse('Sesion aprobada', { evaluations });
+};
+
+const refuseEvaluation = async (evaluationsId, evaluationId) => {
+	const evaluations = await Evaluation.findOneAndUpdate(
+		{ _id: evaluationsId, 'evaluations._id': evaluationId },
+		{ $set: { 'evaluations.$.approved': 'refuse' } }
+	);
+
+	return okResponse('Sesion rechazada', { evaluations });
+};
+
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -1532,6 +1559,9 @@ const psychologistsService = {
 	getAllSessions,
 	getRemainingSessions,
 	getEvaluations,
+	getAllEvaluations,
+	approveEvaluation,
+	refuseEvaluation,
 };
 
 export default Object.freeze(psychologistsService);

@@ -2,8 +2,9 @@ import { Schema, model } from 'mongoose';
 
 let evaluation = new Schema({
 	approved: {
-		type: Boolean,
-		default: false,
+		type: String,
+		default: 'wait',
+		enum: ['refuse', 'waitting', 'approved'],
 	},
 	comment: {
 		type: String,
@@ -20,6 +21,9 @@ let evaluation = new Schema({
 	},
 	internet: {
 		type: Number,
+	},
+	date: {
+		type: String,
 	},
 	like: {
 		type: String,

@@ -409,4 +409,18 @@ psychologistsRouter.get(
 	psychologistsController.getEvaluations
 );
 
+psychologistsRouter.get(
+	'/psychologist/get-all-evaluations/:psy',
+	psychologistsController.getAllEvaluations
+);
+
+psychologistsRouter.get(
+	'/psychologist/approve-evaluation/:evsId/:evId',
+	psychologistsController.approveEvaluation
+);
+psychologistsRouter.get(
+	'/psychologist/refuse-evaluation/:evsId/:evId',
+	psychologistsController.refuseEvaluation
+);
+
 export default psychologistsRouter;
