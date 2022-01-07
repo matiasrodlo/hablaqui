@@ -18,7 +18,6 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-import user from '../models/user';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -26,6 +25,29 @@ const getAll = async () => {
 	const psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
+};
+
+const getAllPagination = async page => {
+	const count = await Psychologist.countDocuments();
+
+	const pageOptions = {
+		totalPages: Math.ceil(count / 10),
+		page: page ? parseInt(page) : 0,
+		limit: 10,
+	};
+
+	if (page > pageOptions.totalPages)
+		return okResponse('ultima pagina obtenida');
+
+	const psychologists = await Psychologist.find()
+		.skip(pageOptions.page * pageOptions.limit)
+		.limit(pageOptions.limit);
+	logInfo('obtuvo la pagina psicologos');
+
+	return okResponse('psicologos obtenidos', {
+		psychologists,
+		page: pageOptions,
+	});
 };
 
 const getSessions = async (userLogged, idUser, idPsy) => {
@@ -232,12 +254,12 @@ const getAllSessions = async (psy, startDate) => {
 	});
 };
 
-// Utilizado en modal agenda cita online
+// Utilizado para traer las sessiones de un psicologo para el selector
 const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
-		'schedule'
+		'_id schedule preferences'
 	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
@@ -276,16 +298,26 @@ const getFormattedSessions = async idPsychologist => {
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
 
+	const minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
+
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
 
 		return {
 			id: el,
 			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
+			text: moment(day),
 			available: hours.filter(hour => {
 				return (
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
@@ -295,6 +327,106 @@ const getFormattedSessions = async idPsychologist => {
 								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
+			}),
+		};
+	});
+	return okResponse('sesiones obtenidas', { sessions });
+};
+
+// Utilizado para traer las sessiones de todos los psicologos para el selector
+const formattedSessionsAll = async () => {
+	let sessions = [];
+	let psychologist = await Psychologist.find({}).select(
+		'schedule preferences'
+	);
+	// Para que nos de deje modificar el array de mongo
+	psychologist = JSON.stringify(psychologist);
+	psychologist = JSON.parse(psychologist);
+
+	// creamos un array con la cantidad de dias
+	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+
+	// Formato de array debe ser [date, date, ...date]
+	const setDaySessions = sessions =>
+		sessions
+			.flatMap(item => {
+				return item.plan.flatMap(plan => {
+					return plan.session.length
+						? plan.session.map(session => session.date)
+						: [];
+				});
+			})
+			.filter(date =>
+				moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+			);
+
+	// Obtenemos sessiones del psicologo
+	let allSessions = await Sessions.find({}).populate(
+		'psychologist',
+		'_id schedule preferences'
+	);
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	allSessions = allSessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
+	allSessions = psychologist.map(item => ({
+		...item,
+		sessions: setDaySessions(
+			allSessions.filter(element => element.psychologist === item._id)
+		),
+	}));
+
+	sessions = allSessions.map(item => {
+		const minimumNewSession = moment(Date.now()).add(
+			item.preferences.minimumNewSession,
+			'h'
+		);
+
+		return {
+			psychologist: item._id,
+			sessions: length.map(el => {
+				const day = moment(Date.now()).add(el, 'days');
+				const temporal = moment(day).format('L');
+				return {
+					psychologist: item._id,
+					value: day,
+					day: day.format('DD MMM'),
+					date: day.format('L'),
+					text: moment(day),
+					available: hours.filter(hour => {
+						return (
+							moment(
+								`${temporal} ${hour}`,
+								'MM/DD/YYYY HH:mm'
+							).isAfter(minimumNewSession) &&
+							formattedSchedule(item.schedule, day, hour) &&
+							!item.sessions.some(
+								date =>
+									moment(date, 'MM/DD/YYYY HH:mm').format(
+										'L'
+									) === temporal &&
+									hour ===
+										moment(date, 'MM/DD/YYYY HH:mm').format(
+											'HH:mm'
+										)
+							)
+						);
+					}),
+				};
 			}),
 		};
 	});
@@ -420,7 +552,7 @@ const createPlan = async ({ payload }) => {
 			.add({ months: 1 })
 			.toISOString();
 	}
-	if (payload.paymentPeriod == 'Pago cada tres meses') {
+	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = moment()
 			.add({ months: 3 })
@@ -757,7 +889,6 @@ const getByData = async username => {
 
 const setSchedule = async (user, payload) => {
 	let response;
-	console.log('dentro', user.email);
 	// Si el user es un psicologo
 	if (user.psychologist) {
 		response = await Psychologist.findByIdAndUpdate(
@@ -1439,9 +1570,11 @@ const psychologistsService = {
 	customNewSession,
 	deleteOne,
 	getAll,
+	getAllPagination,
 	getByData,
 	getClients,
 	getFormattedSessions,
+	formattedSessionsAll,
 	getRating,
 	getSessions,
 	match,
