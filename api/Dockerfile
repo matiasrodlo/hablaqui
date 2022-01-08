@@ -14,7 +14,7 @@ USER node
 
 COPY package.json ./
 COPY server.js ./
-COPY --chown=node:node /server ./
+COPY --chown=node:node /server ./server
 
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source

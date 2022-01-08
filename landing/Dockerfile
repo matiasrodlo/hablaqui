@@ -7,7 +7,7 @@ WORKDIR /home/node/app
 USER node
 
 COPY package.json ./
-COPY --chown=node:node /landing ./
+COPY --chown=node:node /landing ./landing
 
 RUN npm install
 RUN npm run create-env
