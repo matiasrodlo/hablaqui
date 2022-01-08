@@ -7,6 +7,7 @@ WORKDIR /home/node/app
 USER node
 
 COPY package.json ./
+COPY nuxt.config.js ./
 COPY --chown=node:node /landing ./landing
 
 RUN npm install
