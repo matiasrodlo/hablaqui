@@ -12,7 +12,6 @@ COPY --chown=node:node . ./
 
 RUN npm install
 RUN npm run create-env
-RUN npm run generate
 EXPOSE 9000 8080
 
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "generate]
