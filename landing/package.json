@@ -26,11 +26,7 @@
 		"pusher-js": "^7.0.3",
 		"vue2-editor": "^2.10.3",
 		"vuelidate": "^0.7.6",
-		"sass-loader": "^10",
-		"@mdi/js": "^5.9.55",
-		"@nuxtjs/vuetify": "^1.11.3",
-		"@web-types/vuetify": "^2.0.15-1",
-		"nuxt-purgecss": "^1.0.0"
+		"sass-loader": "^10"
 	},
 	"devDependencies": {
 		"@mdi/js": "^5.9.55",

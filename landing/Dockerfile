@@ -30,14 +30,16 @@ RUN export VUE_APP_PUSHER_KEY=$VUE_APP_PUSHER_KEY
 RUN export VUE_APP_URL=$VUE_APP_URL
 
 WORKDIR /home/node/app
-ENV HOST=0.0.0.0
-ENV PORT=8080
-ENV NODE_ENV=production
 USER node
 
 COPY --chown=node:node . ./
 
 RUN npm install
+
+ENV HOST=0.0.0.0
+ENV PORT=8080
+ENV NODE_ENV=production
+
 RUN npm run create-env
 RUN npm run generate
 EXPOSE 9000 8080
