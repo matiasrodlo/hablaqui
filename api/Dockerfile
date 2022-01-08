@@ -13,6 +13,7 @@ WORKDIR /home/node/app
 USER node
 
 COPY package.json ./
+COPY server.js ./
 COPY --chown=node:node /server ./
 
 RUN npm install
