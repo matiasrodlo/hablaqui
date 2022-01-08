@@ -8,7 +8,7 @@ USER node
 
 COPY package.json ./
 COPY nuxt.config.js ./
-COPY --chown=node:node /landing ./landing
+COPY --chown=node:node . ./
 
 RUN npm install
 RUN npm run create-env
