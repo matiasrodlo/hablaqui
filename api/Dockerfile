@@ -10,7 +10,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 
-ARG NODE_ENV=production
+ARG NODE_ENV=development
 ARG NODE_PORT=3000
 ARG API_URL
 ARG BUCKETNAME
@@ -74,4 +74,4 @@ RUN npm run create-env
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "dev"]
