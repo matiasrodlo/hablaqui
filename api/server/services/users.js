@@ -335,7 +335,6 @@ const usersService = {
 			internet: payload.internet,
 			like: payload.like,
 			improve: payload.improve,
-			date: moment().format(),
 		};
 		let created = {};
 		if (collEvaluation) {

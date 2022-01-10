@@ -1,49 +1,52 @@
 import { Schema, model } from 'mongoose';
 
-let evaluation = new Schema({
-	approved: {
-		type: String,
-		default: 'wait',
-		enum: ['refuse', 'waitting', 'approved'],
+let evaluation = new Schema(
+	{
+		approved: {
+			type: String,
+			default: 'wait',
+			enum: ['refuse', 'waitting', 'approved'],
+		},
+		comment: {
+			type: String,
+			default: '',
+		},
+		global: {
+			type: Number,
+		},
+		puntuality: {
+			type: Number,
+		},
+		attention: {
+			type: Number,
+		},
+		internet: {
+			type: Number,
+		},
+		moderatingDate: {
+			type: String,
+		},
+		like: {
+			type: String,
+			enum: [
+				'Dedicación',
+				'Explicaciones claras',
+				'Eficacia del proceso',
+				'Otro',
+			],
+		},
+		improve: {
+			type: String,
+			enum: [
+				'Falta de empatía',
+				'Comunicación',
+				'Retraso en la visita',
+				'Otro',
+			],
+		},
 	},
-	comment: {
-		type: String,
-		default: '',
-	},
-	global: {
-		type: Number,
-	},
-	puntuality: {
-		type: Number,
-	},
-	attention: {
-		type: Number,
-	},
-	internet: {
-		type: Number,
-	},
-	date: {
-		type: String,
-	},
-	like: {
-		type: String,
-		enum: [
-			'Dedicación',
-			'Explicaciones claras',
-			'Eficacia del proceso',
-			'Otro',
-		],
-	},
-	improve: {
-		type: String,
-		enum: [
-			'Falta de empatía',
-			'Comunicación',
-			'Retraso en la visita',
-			'Otro',
-		],
-	},
-});
+	{ timestamps: true }
+);
 
 let evaluations = new Schema({
 	psychologist: {

@@ -1501,6 +1501,10 @@ const getAllEvaluations = async psy => {
 				internet: evaluation.internet,
 				name: item.user.name,
 				userId: item.user._id,
+				moderatingDate: evaluation.moderatingDate,
+				createdAt: moment(evaluation.createdAt)
+					.tz('America/Santiago')
+					.format(),
 			};
 		});
 	});
@@ -1511,8 +1515,15 @@ const getAllEvaluations = async psy => {
 const approveEvaluation = async (evaluationsId, evaluationId) => {
 	const evaluations = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
-		{ $set: { 'evaluations.$.approved': 'approved' } }
-	);
+		{
+			$set: {
+				'evaluations.$.approved': 'approved',
+				'evaluations.$.moderatingDate': moment().format(),
+			},
+		}
+	).populate('psychologist user');
+
+	//enviar correo donde se apruba la evaluación
 
 	return okResponse('Sesion aprobada', { evaluations });
 };
@@ -1520,8 +1531,15 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	const evaluations = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
-		{ $set: { 'evaluations.$.approved': 'refuse' } }
-	);
+		{
+			$set: {
+				'evaluations.$.approved': 'refuse',
+				'evaluations.$.moderatingDate': moment().format(),
+			},
+		}
+	).populate('psychologist user');
+
+	//Enviar correo donde se rechaza la evaluación
 
 	return okResponse('Sesion rechazada', { evaluations });
 };
