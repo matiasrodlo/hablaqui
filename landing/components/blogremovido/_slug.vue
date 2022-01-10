@@ -362,7 +362,8 @@ export default {
 				article,
 			};
 		} catch (e) {
-			error({ statusCode: 404, message: 'Post not found' });
+			// redirect comentado para probar blog
+			// redirect('/psicologos');
 		}
 	},
 	data() {

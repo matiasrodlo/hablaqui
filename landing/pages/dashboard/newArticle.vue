@@ -12,7 +12,9 @@
 					></v-text-field>
 				</v-col>
 				<v-col cols="12">
-					<vue-editor v-model="form.HTMLbody"></vue-editor>
+					<client-only>
+						<vue-editor v-model="form.HTMLbody"></vue-editor>
+					</client-only>
 				</v-col>
 				<v-col cols="12">
 					<v-file-input
@@ -97,10 +99,20 @@ export default {
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data() {
-		return { mdiCamera, loading: false, form: null, thumbnailUrl: '' };
-	},
-	created() {
-		this.defaultForm();
+		return {
+			mdiCamera,
+			loading: false,
+			form: {
+				HTMLbody: '<p> Empieza a escribir </p>',
+				title: '',
+				notOriginal: false,
+				originalAuthor: '',
+				originalBlog: '',
+				thumbnail: '',
+				categories: '',
+			},
+			thumbnailUrl: '',
+		};
 	},
 	methods: {
 		defaultForm() {
