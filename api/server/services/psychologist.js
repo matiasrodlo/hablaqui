@@ -1443,9 +1443,18 @@ const getEvaluations = async user => {
 			attention: 0,
 		});
 
-	evaluations = await getAllEvaluations(psy).filter(
+	evaluations = await getAllEvaluations(psy);
+	evaluations = evaluations.data.evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
+
+	return okResponse('Evaluaciones devueltas', {
+		evaluations,
+		...getScores(evaluations),
+	});
+};
+
+const getScores = evaluations => {
 	const global =
 		evaluations.reduce(
 			(sum, value) =>
@@ -1474,13 +1483,7 @@ const getEvaluations = async user => {
 				typeof value.internet == 'number' ? sum + value.internet : sum,
 			0
 		) / evaluations.length;
-	return okResponse('Evaluaciones devueltas', {
-		evaluations,
-		global,
-		internet,
-		puntuality,
-		attention,
-	});
+	return { global, internet, puntuality, attention };
 };
 
 const getAllEvaluations = async psy => {
@@ -1509,7 +1512,10 @@ const getAllEvaluations = async psy => {
 		});
 	});
 
-	return okResponse('Todas las sesiones devueltas', { evaluations });
+	return okResponse('Todas las sesiones devueltas', {
+		evaluations,
+		...getScores(evaluations),
+	});
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {

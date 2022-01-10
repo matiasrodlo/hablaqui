@@ -13,15 +13,19 @@ let evaluation = new Schema(
 		},
 		global: {
 			type: Number,
+			default: 0,
 		},
 		puntuality: {
 			type: Number,
+			default: 0,
 		},
 		attention: {
 			type: Number,
+			default: 0,
 		},
 		internet: {
 			type: Number,
+			default: 0,
 		},
 		moderatingDate: {
 			type: String,
