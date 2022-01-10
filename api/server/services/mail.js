@@ -378,7 +378,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().format(),
+			sendAt: moment().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
@@ -407,7 +407,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().format(),
+			sendAt: moment().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {

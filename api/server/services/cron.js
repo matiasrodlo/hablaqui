@@ -43,28 +43,36 @@ function generatePayload(date, batch) {
 }
 
 async function sendNotification(emails) {
-	emails.forEach(async email => {
-		if (moment().isAfter(moment(email.sessionDate).add(3, 'hours'))) {
-			const batch = getBatchId();
-			const user = await User.findById(email.userRef);
-			const psy = await psychologist.findById(email.psyRef);
+	emails.forEach(async e => {
+		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
+			const batch = await getBatchId();
+			const user = await User.findById(e.userRef);
+			const psy = await psychologist.findById(e.psyRef);
 			const messages = await Chat.findOne({
-				user: email.userRef,
-				psychologist: email.psyRef,
+				user: e.userRef,
+				psychologist: e.psyRef,
 			});
 			const message = messages.messages.filter(
-				m => m._id.toString() === email.sessionRef.toString()
+				m => m._id.toString() === e.sessionRef.toString()
 			);
-			if (!message.read && message.type === 'send-by-user')
+			if (
+				!message[0].read &&
+				!e.wasScheduled &&
+				e.type === 'send-by-user'
+			)
 				await mailService.sendChatNotificationToPsy(user, psy, batch);
-			else if (!message.read && message.type === 'send-by-psy')
+			else if (
+				!message[0].read &&
+				!e.wasScheduled &&
+				e.type === 'send-by-psy'
+			)
 				await mailService.sendChatNotificationToUser(user, psy, batch);
 			const updatePayload = {
 				wasScheduled: true,
 				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 				batchId: batch,
 			};
-			await email.findByIdAndUpdate(email._id, updatePayload, {
+			await email.findByIdAndUpdate(e._id, updatePayload, {
 				new: true,
 			});
 		}
@@ -102,6 +110,7 @@ const cronService = {
 			wasScheduled: false,
 		});
 		await sendNotification(psyMessage);
+		return okResponse('Se han enviado los correos');
 	},
 	/**
 	 * @description This function is used to schedule emails about an upcoming appoitment
