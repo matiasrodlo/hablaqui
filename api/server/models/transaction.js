@@ -5,7 +5,7 @@ import { Schema, model } from 'mongoose';
 let transaction = new Schema({
 	total: { type: Number },
 	sessionsPaid: { type: Number },
-	trasnactionDate: { type: String },
+	transactionDate: { type: String },
 });
 
 let transactions = new Schema({
