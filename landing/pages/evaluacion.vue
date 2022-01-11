@@ -756,6 +756,14 @@ export default {
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 	},
+	created() {
+		if (process.browser) {
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			if (psi && psi.length) {
+				this.matchedPsychologists = psi;
+			}
+		}
+	},
 	methods: {
 		next() {
 			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
@@ -799,6 +807,7 @@ export default {
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
+					localStorage.setItem('psi', JSON.stringify(response.filter((el, i) => i < 3)));
 					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
