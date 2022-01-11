@@ -1064,7 +1064,7 @@
 						</v-stepper-content>
 						<v-stepper-content step="4">
 							<plans
-								:recruited-id="form._id"
+								v-if="form._id"
 								:next="
 									() => {
 										step = 5;
@@ -1232,6 +1232,7 @@ export default {
 						data: this.form,
 					});
 					this.form = data.recruited;
+					if (step - 1 === 1) this.setUser();
 				} else {
 					// creamos postulacion
 					const { data } = await this.$axios('/recruitment/register', {
@@ -1239,6 +1240,7 @@ export default {
 						data: this.form,
 					});
 					this.form = data.recruited;
+					if (step - 1 === 1) this.setUser();
 				}
 				this.step = step;
 			} else {
@@ -1330,8 +1332,18 @@ export default {
 				};
 			this.dialogFormation = true;
 		},
+		async setUser() {
+			const user = await this.updateUser({
+				...this.$auth.$state.user,
+				phone: this.form.phone.code + this.form.phone.number,
+				gender: this.form.gender,
+				birthDate: this.form.birthDate,
+			});
+			this.$auth.setUser(user);
+		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
+			updateUser: 'User/updateUser',
 		}),
 	},
 };

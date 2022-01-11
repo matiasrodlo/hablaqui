@@ -4,8 +4,13 @@
 		<appbar />
 		<!-- geo psicologos -->
 		<geoPsicologos :location="location" />
-		<!-- routing for child -->
-		<psicologos />
+		<!-- desktop -->
+		<psicologos-desktop
+			:loading-psychologist="loadingPsychologist"
+			class="hidden-sm-and-down"
+		/>
+		<!-- mobile -->
+		<psicologos-mobile :loading-psychologist="loadingPsychologist" class="hidden-md-and-up" />
 		<!-- breadcrubs -->
 		<v-container>
 			<v-row>
@@ -67,18 +72,48 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		psicologos: () => import('~/components/psicologos/psicologos'),
 		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
+		PsicologosDesktop: () =>
+			import(
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
+			),
+		PsicologosMobile: () =>
+			import(
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
+			),
 	},
 	props: {
 		location: {
 			type: Object,
 			default: null,
 		},
+	},
+	data() {
+		return {
+			loadingPsychologist: true,
+		};
+	},
+	mounted() {
+		window.scrollTo(0, 0);
+		this.initialFetch();
+	},
+	methods: {
+		async initialFetch() {
+			await this.getPsychologists();
+			this.loadingPsychologist = false;
+			await this.getAppointments();
+			this.getFormattedSessionsAll();
+		},
+		...mapActions({
+			getAppointments: 'Appointments/getAppointments',
+			getPsychologists: 'Psychologist/getPsychologists',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+		}),
 	},
 };
 </script>

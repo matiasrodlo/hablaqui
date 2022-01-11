@@ -600,39 +600,49 @@
 													<v-card-text>
 														<v-row>
 															<v-col cols="3">
-																<v-avatar size="80">
-																	<v-img
-																		:src="element.avatar"
-																	></v-img>
-																</v-avatar>
-															</v-col>
-															<v-col class="text-left">
-																<div class="title primary--text">
-																	{{ element.name }}
-																	{{
-																		element.lastName &&
+																<avatar
+																	:url="avatar(element, true)"
+																	:name="element.name"
+																	:last-name="
 																		element.lastName
-																	}}
-																</div>
-																Especialidades:
-																<template
-																	v-for="(
-																		tag, k
-																	) in element.specialties"
-																>
-																	<span :key="k">
-																		<span
-																			v-if="k < 5"
-																			class="
-																				ma-1
-																				text-capitalize
-																			"
-																		>
-																			{{ tag }};
-																		</span>
-																	</span>
-																</template>
+																			? element.lastName
+																			: ''
+																	"
+																	size="80"
+																	loading-color="white"
+																></avatar>
 															</v-col>
+															<client-only>
+																<v-col class="text-left">
+																	<div
+																		class="title primary--text"
+																	>
+																		{{ element.name }}
+																		{{
+																			element.lastName &&
+																			element.lastName
+																		}}
+																	</div>
+																	Especialidades:
+																	<template
+																		v-for="(
+																			tag, k
+																		) in element.specialties"
+																	>
+																		<span :key="k">
+																			<span
+																				v-if="k < 5"
+																				class="
+																					ma-1
+																					text-capitalize
+																				"
+																			>
+																				{{ tag }};
+																			</span>
+																		</span>
+																	</template>
+																</v-col>
+															</client-only>
 														</v-row>
 													</v-card-text>
 												</v-card>
@@ -679,7 +689,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarWhite.vue';
 
@@ -690,8 +700,18 @@ export default {
 		Precharge: () => import('~/components/evaluation/Precharge'),
 		Selection: () => import('~/components/evaluation/Selection'),
 		Icon: () => import('~/components/Icon'),
+		Avatar: () => import('~/components/Avatar'),
 	},
 	middleware: ['auth'],
+	async asyncData({ $axios, error }) {
+		try {
+			const { appointments } = await $axios.$get('/appointments/all');
+			const { psychologists } = await $axios.$get('/psychologists/all');
+			return { psychologists, specialties: appointments };
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
+	},
 	data() {
 		return {
 			mdiRecord,
@@ -704,6 +724,8 @@ export default {
 			themes: [],
 			focus: '',
 			genderConfort: '',
+			specialties: [],
+			psychologists: [],
 			matchedPsychologists: [],
 		};
 	},
@@ -733,10 +755,6 @@ export default {
 			}
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
-		...mapGetters({
-			specialties: 'Appointments/specialties',
-			psychologists: 'Psychologist/psychologists',
-		}),
 	},
 	created() {
 		if (process.browser) {
@@ -745,10 +763,6 @@ export default {
 				this.matchedPsychologists = psi;
 			}
 		}
-	},
-	mounted() {
-		this.getPsychologists();
-		this.getAppointments();
 	},
 	methods: {
 		next() {
@@ -798,9 +812,13 @@ export default {
 				}
 			});
 		},
+		avatar(psychologist, thumbnail) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
+		},
 		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
 			matchPsi: 'Psychologist/matchPsi',
 		}),
 	},

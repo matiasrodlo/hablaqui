@@ -15,6 +15,7 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 import { room } from '../config/dotenv';
+import Evaluation from '../models/evaluation';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -61,7 +62,9 @@ const usersService = {
 			context: 'query',
 		});
 
-		return okResponse('Actualizado exitosamente', { user: updated });
+		return okResponse('Actualizado exitosamente', {
+			user: await servicesAuth.generateUser(updated),
+		});
 	},
 
 	async updatePlan(user, newPlan) {
@@ -293,6 +296,60 @@ const usersService = {
 		return okResponse('Nuevo usuario creado', {
 			user: await servicesAuth.generateUser(createdUser),
 		});
+	},
+
+	async addEvaluation(user, psyId, payload) {
+		if (user.role !== 'user') return conflictResponse('No eres usuario');
+
+		let sessions = await Sessions.findOne({
+			psychologist: psyId,
+			user: user._id,
+		});
+
+		sessions = sessions.plan.flatMap(plan => {
+			return plan.session.map(session => {
+				return {
+					_id: session._id,
+					status: session.status,
+				};
+			});
+		});
+
+		const countSessions = sessions.filter(
+			session => session.status === 'success'
+		).length;
+
+		if (countSessions < 3)
+			return conflictResponse('No puede escribir un comentario');
+
+		const collEvaluation = await Evaluation.findOne({
+			psychologist: psyId,
+			user: user._id,
+		});
+
+		const evaluation = {
+			comment: payload.comment,
+			global: payload.global,
+			puntuality: payload.puntuality,
+			attention: payload.attention,
+			internet: payload.internet,
+			like: payload.like,
+			improve: payload.improve,
+		};
+		let created = {};
+		if (collEvaluation) {
+			created = await Evaluation.findOneAndUpdate(
+				{ user: user._id, psychologist: psyId },
+				{ $push: { evaluations: evaluation } }
+			);
+		} else {
+			created = await Evaluation.create({
+				user: user._id,
+				psychologist: psyId,
+				evaluations: [evaluation],
+			});
+		}
+		return okResponse('Evaluación guardada', created);
 	},
 };
 

@@ -156,13 +156,42 @@
 					</div>
 				</v-col>
 				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
-					<img
-						style="height: 40px"
-						:src="`https://cdn.hablaqui.cl/static/redes_sociales.png`"
-						alt="redes sociales"
-					/>
+					<div>
+						<a
+							style="text-decoration: none"
+							href="https://www.facebook.com/hablaquicom"
+							target="_blank"
+						>
+							<img
+								style="height: 40px"
+								:src="`https://cdn.hablaqui.cl/static/logo_facebook.png`"
+								alt="logo facebook"
+							/>
+						</a>
+						<a
+							style="text-decoration: none"
+							href="https://www.instagram.com/hablaqui"
+							target="_blank"
+						>
+							<img
+								style="height: 40px"
+								:src="`https://cdn.hablaqui.cl/static/logo_instagram.png`"
+								alt="logo instagram"
+							/>
+						</a>
+						<a
+							style="text-decoration: none"
+							href="https://www.linkedin.com/company/hablaqui"
+							target="_blank"
+						>
+							<img
+								style="height: 40px"
+								:src="`https://cdn.hablaqui.cl/static/logo_linkedin.png`"
+								alt="logo linkedin"
+							/>
+						</a>
+					</div>
 					<div class="my-4">Atención a clientes: soporte@hablaqui.cl</div>
-					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -239,5 +268,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>

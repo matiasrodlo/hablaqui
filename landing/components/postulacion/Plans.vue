@@ -7,7 +7,7 @@
 				</div>
 			</v-col>
 			<v-col cols="12" md="6" lg="5">
-				<v-card class="rounded-xl elevation-12">
+				<v-card class="box rounded-xl">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
@@ -62,18 +62,28 @@
 					</v-card-text>
 				</v-card>
 				<v-btn
-					class="mt-4 elevation-12"
+					v-if="currentPlan && currentPlan.tier === 'free'"
+					class="mt-4 box"
 					color="white"
 					rounded
 					block
-					:disabled="currentPlan && currentPlan.tier === 'free'"
+					@click="goToStep"
+				>
+					<span class="primary--text">Ir a mi cuenta</span>
+				</v-btn>
+				<v-btn
+					v-else
+					class="mt-4 box"
+					color="white"
+					rounded
+					block
 					@click="setPreferences('free')"
 				>
 					<span class="primary--text">Continuar con plan básico</span>
 				</v-btn>
 			</v-col>
 			<v-col cols="12" md="6" lg="5">
-				<v-card class="rounded-xl elevation-12">
+				<v-card class="box rounded-xl">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
@@ -125,7 +135,7 @@
 					</v-card-text>
 				</v-card>
 				<v-radio-group v-model="period" hide-details>
-					<v-card class="my-2 rounded-xl elevation-12">
+					<v-card class="box my-2 rounded-xl">
 						<v-card-text class="py-1">
 							<v-radio value="mensual">
 								<template #label>
@@ -137,7 +147,7 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-card class="my-2 elevation-12">
+					<v-card class="box my-2">
 						<div class="primary caption text-center white--text" style="height: 20px">
 							Ahorra 20%
 						</div>
@@ -153,13 +163,23 @@
 						</v-card-text>
 					</v-card>
 					<v-btn
-						class="mt-4 elevation-12"
+						v-if="currentPlan.tier === 'premium'"
+						class="box mt-4"
 						color="primary"
 						rounded
 						block
-						:disabled="currentPlan.tier === 'premium'"
+						@click="goToStep"
+					>
+						Ir a mi cuenta
+					</v-btn>
+					<v-btn
+						class="box mt-4"
+						color="primary"
+						rounded
+						block
 						@click="setPreferences('premium')"
-						>Suscríbete al plan premium
+					>
+						Suscríbete al plan premium
 					</v-btn>
 				</v-radio-group>
 			</v-col>
@@ -181,27 +201,24 @@ export default {
 			type: Function,
 			required: true,
 		},
-		recruitedId: {
-			type: String,
-			default: '',
-		},
 	},
 	data() {
 		return {
 			recruited: null,
 			psychologist: null,
+			recruitedId: '',
 			mdiCheck,
 			period: 'mensual',
 			itemsPremiun: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares y hablaquí',
+				'0% de comisión por clientes referidos. El costo de la pasarela de pago está incluido.',
 				'Sala de videollamada encriptada',
 				'Posicionamiento, visibilidad y clientes',
 				'Soporte prioritario y asesoramiento estratégico',
 			],
 			itemsBasico: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares',
+				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%) + IVA',
 				'20% de comisión por clientes Hablaquí',
 				'Sala de videollamada encriptada.',
 				'Soporte y atención al cliente',
@@ -237,9 +254,9 @@ export default {
 				`/psychologists/one/${this.$auth.$state.user.psychologist}`
 			);
 			this.psychologist = psychologist;
-		}
-		if (this.recruitedId) {
+		} else {
 			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+			this.recruitedId = recruited._id;
 			this.recruited = recruited;
 		}
 	},
@@ -266,6 +283,10 @@ export default {
 				else this.$router.push({ name: 'dashboard-perfil' });
 			}
 		},
+		goToStep() {
+			if (this.$route.name === 'postulacion') this.next();
+			else this.$router.push({ name: 'dashboard-perfil' });
+		},
 		...mapActions({
 			setPaymentPreferences: 'Psychologist/setPaymentPreferences',
 		}),
@@ -273,4 +294,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.box {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+	transition: transform 0.6s !important;
+}
+</style>
