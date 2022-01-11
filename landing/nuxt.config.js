@@ -209,13 +209,13 @@ export default {
 		[
 			'@nuxtjs/google-gtag',
 			{
-				id: 'UA-206733202-1',
+				id: 'G-VDW0VD7GBN',
 			},
 		],
 	],
 
 	'google-gtag': {
-		id: 'UA-206733202-1',
+		id: 'G-VDW0VD7GBN',
 		config: {
 			anonimize_ip: true,
 			linker: {
