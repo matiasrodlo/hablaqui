@@ -18,7 +18,6 @@ let email = new Schema({
 	},
 	type: {
 		type: String,
-		enum: ['reminder-user', 'reminder-psy'],
 	},
 	queuedAt: {
 		type: String,
