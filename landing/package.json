@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"dev": "nuxt",
+		"dev": "DEPLOY_ENV=DEV nuxt",
 		"build": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js build",
 		"start": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js start",
 		"generate": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js generate",
@@ -26,7 +26,8 @@
 		"pusher-js": "^7.0.3",
 		"sass-loader": "^10",
 		"vue2-editor": "^2.10.3",
-		"vuelidate": "^0.7.6"
+		"vuelidate": "^0.7.6",
+		"@nuxtjs/google-analytics": "^2.4.0"
 	},
 	"devDependencies": {
 		"@mdi/js": "^5.9.55",
