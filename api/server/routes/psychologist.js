@@ -409,11 +409,23 @@ psychologistsRouter.patch(
 	psychologistsController.deleteCommitment
 );
 
-psychologistsRouter.post(
+/**
+ * @description Devuelve todas las sesiones que no hayan expirado
+ * @route {PATCH} /api/v1/psychologist/get-sessions
+ * @param {String} psy id del psicólogo
+ * @returns {Array} Lista con todas las sesiones del psicólogo en cuestión
+ */
+psychologistsRouter.get(
 	'/psychologist/get-sessions/:psy',
 	psychologistsController.getAllSessions
 );
 
+/**
+ * @description Devuelve todas las sesiones faltantes de un psicólogo
+ * @route {PATCH} /api/v1/psychologist/get-remaining-sessions
+ * @param {String} psy id del psicólogo
+ * @returns {Array} Lista con todas las sesiones faltantes del psicólogo en cuestión
+ */
 psychologistsRouter.get(
 	'/psychologist/get-remaining-sessions/:psy',
 	psychologistsController.getRemainingSessions
@@ -437,6 +449,34 @@ psychologistsRouter.get(
 psychologistsRouter.get(
 	'/psychologist/refuse-evaluation/:evsId/:evId',
 	psychologistsController.refuseEvaluation
+);
+
+/**
+ * @description Crea una solicitud de retiro de dinero
+ * @route {PATCH} /api/v1/psychologist/payment-request
+ * @returns {Object} Lista con todas las sesiones que se quieren retirar y el monto total a retirar
+ */
+psychologistsRouter.get(
+	'/psychologist/payment-request',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.createPaymentsRequest
+);
+
+/**
+ * @description Completa las solicitudes de retiro de dinero
+ * @route {PATCH} /api/v1/psychologist/complete-request
+ * @param {String} psy id del psicólogo
+ * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
+ */
+psychologistsRouter.get(
+	'/psychologist/complete-payments/:psy',
+	psychologistsController.completePaymentsRequest
+);
+
+psychologistsRouter.get(
+	'/psychologist/transactions',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getTransactions
 );
 
 export default psychologistsRouter;

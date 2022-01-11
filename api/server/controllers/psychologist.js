@@ -399,10 +399,8 @@ const psychologistsController = {
 	async getAllSessions(req, res) {
 		try {
 			const { psy } = req.params;
-			const { startDate } = req.body;
 			const { data, code } = await psychologistsService.getAllSessions(
-				psy,
-				startDate
+				psy
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -469,6 +467,41 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error rechazando la evaluación');
+		}
+	},
+	async createPaymentsRequest(req, res) {
+		try {
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.createPaymentsRequest(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async completePaymentsRequest(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.completePaymentsRequest(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getTransactions(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.getTransactions(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 };
