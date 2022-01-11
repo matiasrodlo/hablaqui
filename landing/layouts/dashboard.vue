@@ -283,12 +283,6 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
-				{
-					name: 'Nuevo articulo',
-					link: { name: 'dashboard-newArticle' },
-					img: 'https://cdn.hablaqui.cl/static/article.png',
-					visible: this.$auth.$state.user?.role === 'superuser',
-				},
 			];
 		},
 		routeName() {

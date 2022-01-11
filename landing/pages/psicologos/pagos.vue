@@ -3,9 +3,11 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<pagos-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
-		<!-- mobile -->
-		<pagos-mobile :psychologist="psychologist" class="hidden-md-and-up" />
+		<template v-if="!loadingPsychologist">
+			<pagos-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
+			<!-- mobile -->
+			<pagos-mobile :psychologist="psychologist" class="hidden-md-and-up" />
+		</template>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -40,17 +42,10 @@ export default {
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PagosMobile'
 			),
 	},
-	async asyncData({ $axios, query, error }) {
-		try {
-			const { psychologist } = await $axios.$get(`/psychologists/one/${query.username}`);
-			return { psychologist };
-		} catch (e) {
-			error({ statusCode: 404, message: 'Page not found' });
-		}
-	},
 	data() {
 		return {
 			loadingPsychologist: true,
+			psychologist: null,
 		};
 	},
 	head() {
@@ -86,8 +81,13 @@ export default {
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
 	},
-	mounted() {
+	async mounted() {
 		window.scrollTo(0, 0);
+		const { psychologist } = await this.$axios.$get(
+			`/psychologists/one/${this.$route.query.username}`
+		);
+		this.loadingPsychologist = false;
+		this.psychologist = psychologist;
 	},
 };
 </script>

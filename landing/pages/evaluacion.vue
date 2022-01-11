@@ -709,7 +709,7 @@ export default {
 			const { psychologists } = await $axios.$get('/psychologists/all');
 			return { psychologists, specialties: appointments };
 		} catch (e) {
-			error({ statusCode: 404, message: 'Post not found' });
+			error({ statusCode: 404, message: 'Page not found' });
 		}
 	},
 	data() {

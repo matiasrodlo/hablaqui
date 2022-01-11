@@ -55,7 +55,7 @@ export default {
 			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return { psychologist };
 		} catch (e) {
-			error({ statusCode: 404, message: 'Post not found' });
+			error({ statusCode: 404, message: 'Page not found' });
 		}
 	},
 	data() {

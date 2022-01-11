@@ -10,14 +10,19 @@ export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	async asyncData({ params, $config, error }) {
+	async asyncData({ params, $config, error, payload }) {
 		try {
-			const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, { method: 'get' });
-			const comunas = await response.json();
-			const item = comunas.find(el => el.comuna.slug === params.slug);
-			return { comuna: item.comuna };
+			if (payload) return { comuna: payload };
+			else {
+				const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, {
+					method: 'get',
+				});
+				const comunas = await response.json();
+				const item = comunas.find(el => el.comuna.slug === params.slug);
+				return { comuna: item.comuna };
+			}
 		} catch (e) {
-			error({ statusCode: 404, message: 'Post not found' });
+			error({ statusCode: 404, message: 'Page not found' });
 		}
 	},
 	head() {
