@@ -166,12 +166,12 @@ const cronService = {
 
 		if (toUpdateUpnext.length > 1) {
 			try {
-				console.log('A' + toUpdateSuccess.length);
 				await Promise.allSettled(
 					toUpdateUpnext.forEach(async item => {
 						await Sessions.findOneAndUpdate(
 							{
 								'plan.session._id': item.id,
+								'plan.payment': 'success',
 							},
 							{
 								$set: {
@@ -190,10 +190,10 @@ const cronService = {
 			}
 		} else if (toUpdateUpnext.length === 1) {
 			try {
-				console.log('B' + toUpdateSuccess.length);
 				await Sessions.findOneAndUpdate(
 					{
 						'plan.session._id': toUpdateUpnext[0].id,
+						'plan.payment': 'success',
 					},
 					{
 						$set: {
@@ -212,12 +212,12 @@ const cronService = {
 
 		if (toUpdateSuccess.length > 1) {
 			try {
-				console.log('C' + toUpdateSuccess.length);
 				await Promise.allSettled(
 					toUpdateSuccess.forEach(async item => {
 						await Sessions.findOneAndUpdate(
 							{
 								'plan.session._id': item.id,
+								'plan.payment': 'success',
 							},
 							{
 								$set: {
@@ -239,6 +239,7 @@ const cronService = {
 				await Sessions.findOneAndUpdate(
 					{
 						'plan.session._id': toUpdateSuccess[0].id,
+						'plan.payment': 'success',
 					},
 					{
 						$set: {
