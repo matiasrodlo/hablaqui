@@ -189,6 +189,7 @@ export default {
 		'@nuxtjs/eslint-module',
 		// https://github.com/Developmint/nuxt-purgecss
 		// 'nuxt-purgecss',
+		'@nuxtjs/google-analytics',
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
@@ -204,13 +205,15 @@ export default {
 				sv: '6',
 			},
 		],
-		[
-			'@nuxtjs/google-gtag',
-			{
-				id: 'G-VDW0VD7GBN',
-			},
-		],
+		'@nuxtjs/google-analytics',
 	],
+
+	googleAnalytics: {
+		id: 'UA-206733202-1',
+		autoTracking: {
+			screenview: true,
+		},
+	},
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
