@@ -218,7 +218,6 @@ export default {
 		id: 'UA-206733202-1',
 		config: {
 			anonimize_ip: true,
-			send_page_view: false,
 			linker: {
 				domains: ['hablaqui.cl', 'www.hablaqui.cl'],
 			},
