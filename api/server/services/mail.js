@@ -573,7 +573,7 @@ const mailService = {
 	},
 	async sendChatNotificationToPsy(user, psychologist, batch) {
 		const dataPayload = {
-			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
 			subject: `${user.name} te está hablando`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
@@ -602,7 +602,7 @@ const mailService = {
 	},
 	async sendChatNotificationToUser(user, psychologist, batch) {
 		const dataPayload = {
-			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
 			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
