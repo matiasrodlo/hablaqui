@@ -431,6 +431,26 @@ psychologistsRouter.get(
 	psychologistsController.getRemainingSessions
 );
 
+psychologistsRouter.get(
+	'/psychologist/get-evaluations',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.getEvaluations
+);
+
+psychologistsRouter.get(
+	'/psychologist/get-all-evaluations/:psy',
+	psychologistsController.getAllEvaluations
+);
+
+psychologistsRouter.get(
+	'/psychologist/approve-evaluation/:evsId/:evId',
+	psychologistsController.approveEvaluation
+);
+psychologistsRouter.get(
+	'/psychologist/refuse-evaluation/:evsId/:evId',
+	psychologistsController.refuseEvaluation
+);
+
 /**
  * @description Crea una solicitud de retiro de dinero
  * @route {PATCH} /api/v1/psychologist/payment-request

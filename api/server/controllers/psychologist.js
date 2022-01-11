@@ -419,6 +419,56 @@ const psychologistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async getEvaluations(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.getEvaluations(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error devolviendo las evaluaciones');
+		}
+	},
+	async getAllEvaluations(req, res) {
+		try {
+			const { psy } = req.params;
+			const { data, code } = await psychologistsService.getAllEvaluations(
+				psy
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error devolviendo todas las evaluaciones'
+			);
+		}
+	},
+	async approveEvaluation(req, res) {
+		try {
+			const { evsId, evId } = req.params;
+			const { data, code } = await psychologistsService.approveEvaluation(
+				evsId,
+				evId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error aprobando la evaluación');
+		}
+	},
+	async refuseEvaluation(req, res) {
+		try {
+			const { evsId, evId } = req.params;
+			const { data, code } = await psychologistsService.refuseEvaluation(
+				evsId,
+				evId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error rechazando la evaluación');
+		}
+	},
 	async createPaymentsRequest(req, res) {
 		try {
 			const { user } = req;
