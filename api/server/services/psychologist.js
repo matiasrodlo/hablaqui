@@ -13,11 +13,13 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import mercadopagoService from './mercadopago';
+import Evaluation from '../models/evaluation';
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -1560,6 +1562,128 @@ const deleteCommitment = async (planId, psyId) => {
 	return okResponse('Sesion eliminada', updatedSessions);
 };
 
+const getEvaluations = async user => {
+	if (user.role !== 'psychologist')
+		return conflictResponse('No eres psicólogo');
+
+	const psy = user.psychologist;
+	let evaluations = await Evaluation.find({ psychologist: psy });
+	if (!evaluations)
+		return okResponse('Evaluaciones devueltas', {
+			evaluations: [],
+			global: 0,
+			internet: 0,
+			puntuality: 0,
+			attention: 0,
+		});
+
+	evaluations = await getAllEvaluations(psy);
+	evaluations = evaluations.data.evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	return okResponse('Evaluaciones devueltas', {
+		evaluations,
+		...getScores(evaluations),
+	});
+};
+
+const getScores = evaluations => {
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+	const puntuality =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.puntuality == 'number'
+					? sum + value.puntuality
+					: sum,
+			0
+		) / evaluations.length;
+	const attention =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.attention == 'number'
+					? sum + value.attention
+					: sum,
+			0
+		) / evaluations.length;
+	const internet =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.internet == 'number' ? sum + value.internet : sum,
+			0
+		) / evaluations.length;
+	return { global, internet, puntuality, attention };
+};
+
+const getAllEvaluations = async psy => {
+	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
+		'user'
+	);
+
+	evaluations = evaluations.flatMap(item => {
+		return item.evaluations.map(evaluation => {
+			return {
+				_id: evaluation._id,
+				evaluationsId: item._id,
+				comment: evaluation.comment,
+				approved: evaluation.approved,
+				global: evaluation.global,
+				puntuality: evaluation.puntuality,
+				attention: evaluation.attention,
+				internet: evaluation.internet,
+				name: item.user.name,
+				userId: item.user._id,
+				moderatingDate: evaluation.moderatingDate,
+				createdAt: moment(evaluation.createdAt)
+					.tz('America/Santiago')
+					.format(),
+			};
+		});
+	});
+
+	return okResponse('Todas las sesiones devueltas', {
+		evaluations,
+		...getScores(evaluations),
+	});
+};
+
+const approveEvaluation = async (evaluationsId, evaluationId) => {
+	const evaluations = await Evaluation.findOneAndUpdate(
+		{ _id: evaluationsId, 'evaluations._id': evaluationId },
+		{
+			$set: {
+				'evaluations.$.approved': 'approved',
+				'evaluations.$.moderatingDate': moment().format(),
+			},
+		}
+	).populate('psychologist user');
+
+	//enviar correo donde se apruba la evaluación
+
+	return okResponse('Sesion aprobada', { evaluations });
+};
+
+const refuseEvaluation = async (evaluationsId, evaluationId) => {
+	const evaluations = await Evaluation.findOneAndUpdate(
+		{ _id: evaluationsId, 'evaluations._id': evaluationId },
+		{
+			$set: {
+				'evaluations.$.approved': 'refuse',
+				'evaluations.$.moderatingDate': moment().format(),
+			},
+		}
+	).populate('psychologist user');
+
+	//Enviar correo donde se rechaza la evaluación
+
+	return okResponse('Sesion rechazada', { evaluations });
+};
+
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -1594,6 +1718,10 @@ const psychologistsService = {
 	deleteCommitment,
 	getAllSessions,
 	getRemainingSessions,
+	getEvaluations,
+	getAllEvaluations,
+	approveEvaluation,
+	refuseEvaluation,
 };
 
 export default Object.freeze(psychologistsService);
