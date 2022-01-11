@@ -9,6 +9,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getPsychologistsWithPagination({ commit }, nextPage) {
+		try {
+			const { psychologists, page } = await this.$axios.$get(
+				`/psychologists/all/${nextPage}`
+			);
+			commit('setPage', page);
+			commit('setPsychologistsPagination', psychologists);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getSessions({ commit }, { idPsychologist, idUser }) {
 		try {
 			const { sessions } = await this.$axios.$get(
@@ -27,6 +38,14 @@ export default {
 			);
 			commit('setSessionsFormatted', sessions);
 			return sessions;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getFormattedSessionsAll({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get('/psychologists/formattedSessionsAll');
+			commit('setSessionsFormattedAll', sessions);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
