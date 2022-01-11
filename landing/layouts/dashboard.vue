@@ -155,8 +155,8 @@
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text>
-							<span class="secondary--text" @click="changeStateOnboarding"> x </span>
+						<v-btn text @click="changeStateOnboarding">
+							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
