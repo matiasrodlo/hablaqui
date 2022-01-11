@@ -237,7 +237,10 @@ const completePaymentsRequest = async psy => {
 		{ $push: { transactionCompleted: transaction } }
 	);
 
-	return okResponse('Peticion hecha', {
+	//Enviar correo de dinero depositado a psy
+	await mailService.sendPaymentRequest(user, total, now);
+
+	return okResponse('Peticion completada', {
 		total: total,
 		sessions: sessions,
 	});
@@ -300,6 +303,9 @@ const createPaymentsRequest = async user => {
 		{ psychologist: psy },
 		{ $push: { transactionsRequest: transaction } }
 	);
+
+	//Crear correo de petición de retiro de dinero
+	await mailService.sendPaymentRequest(user, total, now);
 
 	return okResponse('Peticion hecha', {
 		total: total,
@@ -1883,6 +1889,15 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	//enviar correo donde se apruba la evaluación
+	await mailService.sendApproveEvaluationToUser(
+		evaluations.user,
+		evaluations.psychologist
+	);
+
+	await mailService.sendApproveEvaluationToPsy(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
 	return okResponse('Sesion aprobada', { evaluations });
 };
@@ -1899,6 +1914,10 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	//Enviar correo donde se rechaza la evaluación
+	await mailService.sendRefuseEvaluation(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
 	return okResponse('Sesion rechazada', { evaluations });
 };
