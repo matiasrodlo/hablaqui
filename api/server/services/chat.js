@@ -128,6 +128,7 @@ const emailChatNotification = async (data, type) => {
 				$set: {
 					wasScheduled: false,
 					sessionRef: messageId,
+					sessionDate: moment(createdAt).format(),
 				},
 			}
 		);
