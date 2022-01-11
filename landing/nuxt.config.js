@@ -206,8 +206,24 @@ export default {
 			},
 		],
 		'@nuxtjs/google-analytics',
+		[
+			'@nuxtjs/google-gtag',
+			{
+				id: 'UA-206733202-1',
+			},
+		],
 	],
 
+	'google-gtag': {
+		id: 'UA-206733202-1',
+		config: {
+			anonimize_ip: true,
+			send_page_view: false,
+			linker: {
+				domains: ['hablaqui.cl', 'www.hablaqui.cl'],
+			},
+		},
+	},
 	googleAnalytics: {
 		id: 'UA-206733202-1',
 		autoTracking: {
