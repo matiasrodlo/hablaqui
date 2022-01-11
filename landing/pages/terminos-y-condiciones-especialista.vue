@@ -166,7 +166,7 @@
 					Si el Profesional tiene dificultades para reprogramar la cita con el Usuario,
 					este podrá recurrir a Hablaquí para recibir asistencia a través de la
 					aplicación, la página web http://www.hablaqui.com o por correo electrónico
-					especialistas@hablaqui.com.
+					soporte@hablaqui.cl
 					<br />
 					<br />
 					En caso de inasistencia del Profesional a la cita programada, el importe cobrado

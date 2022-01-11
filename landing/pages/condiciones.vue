@@ -243,7 +243,7 @@
 					Si el Usuario desea proceder a la cancelación y recibir el reembolso, será
 					necesario que se ponga en contacto con Hablaquí a través de la Plataforma, de la
 					página web http://www.hablaqui.com o por correo electrónico de soporte:
-					ayuda@hablaqui.com.
+					soporte@hablaqui.cl
 					<br />
 					<br />
 					Si el Usuario ha realizado el pago mediante tarjeta de crédito, transferencia

@@ -13,6 +13,11 @@ const psychologistsRouter = Router();
  *   name: Psychologists
  */
 
+psychologistsRouter.get(
+	'/psychologists/all/:page',
+	psychologistsController.getAllPagination
+);
+
 /**
  * @swagger
  * /api/v1/psychologists/all:
@@ -51,9 +56,20 @@ psychologistsRouter.get(
 	psychologistsController.getSessions
 );
 
+/**
+ * obtiene la session de un psicologo formateada para el selector
+ */
 psychologistsRouter.get(
 	'/psychologists/formattedSessions/:idPsychologist',
 	psychologistsController.getFormattedSessions
+);
+
+/**
+ * obtiene las sessiones de todos los psicologos formateada para el selector
+ */
+psychologistsRouter.get(
+	'/psychologists/formattedSessionsAll',
+	psychologistsController.formattedSessionsAll
 );
 
 /**
