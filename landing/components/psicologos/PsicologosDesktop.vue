@@ -119,7 +119,7 @@
 						>
 							<template #activator="{ on, attrs }">
 								<v-text-field
-									:value="gender.length ? `Seleccionados ${gender.length}` : ''"
+									:value="gender.length ? `Géneros·${gender.length}` : ''"
 									label="Género"
 									readonly
 									outlined
@@ -213,7 +213,7 @@
 								<v-text-field
 									:value="
 										models.length || languages.length
-											? `Seleccionados ${models.length + languages.length}`
+											? `Otros·${models.length + languages.length}`
 											: ''
 									"
 									label="Otros"
@@ -293,7 +293,7 @@
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px; height: 182px">
-						<v-row no-gutters align="center">
+						<v-row no-gutters align="center" style="height: 182px">
 							<v-col cols="3">
 								<v-img
 									width="250px"
@@ -302,11 +302,13 @@
 									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
 								></v-img>
 							</v-col>
-							<v-col>
-								<div class="headline primary--text font-weight-bold">
+							<v-col class="pl-4">
+								<div class="text-lg-h4 text-h5 primary--text font-weight-bold">
 									Te ayudamos a encontrar a tu psicólogo ideal
 								</div>
-								<div class="my-2 body-1 primary--text font-weight-regular">
+								<div
+									class="my-2 text-lg-h5 body-1 primary--text font-weight-regular"
+								>
 									Encuentra al psicólogo que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
@@ -346,97 +348,116 @@
 								<v-row>
 									<v-col
 										cols="3"
-										class="d-flex align-center justify-center"
 										style="height: 300px"
+										class="d-flex align-center justify-center"
 									>
-										<div class="text-center">
-											<avatar
-												:url="avatar(item, true)"
-												:name="item.name"
-												:last-name="item.lastName ? item.lastName : ''"
-												size="130"
-												loading-color="white"
-											></avatar>
-											<div
-												class="text-capitalize py-4"
-												style="color: #706f6f; font-size: 14px"
-											>
-												código {{ item.code ? item.code : '' }}
-											</div>
-										</div>
-									</v-col>
-									<v-col
-										cols="5"
-										style="display: flex; flex-direction: column; height: 300px"
-									>
-										<div style="flex: 1">
-											<nuxt-link
-												style="text-decoration: none"
-												:to="{
-													path: `/${item.username}`,
-												}"
-											>
-												<div
-													class="text-left font-weight-bold"
-													style="color: #3c3c3b; font-size: 28px"
-												>
-													{{ item.name }}
-													{{ item.lastName && item.lastName }}
-												</div>
-											</nuxt-link>
-										</div>
-										<div
-											class="text-left font-weight-medium pa-2"
-											style="color: #3c3c3b; font-size: 16px; flex: 1"
+										<nuxt-link
+											style="text-decoration: none"
+											:to="{
+												path: `/${item.username}`,
+											}"
 										>
-											${{ Math.ceil(item.sessionPrices.video / 100) * 100 }}
-											/ 50 min
-										</div>
-										<div style="flex: 1">
-											<v-chip-group v-model="specialties" show-arrows>
-												<template v-for="(tag, s) in item.specialties">
-													<v-chip
-														:key="s"
-														:value="tag"
-														class="ma-2"
-														small
-														:color="
-															specialties == tag
-																? 'primary--text'
-																: ''
-														"
-													>
-														<span>
-															{{ tag }}
-														</span>
-													</v-chip>
-												</template>
-											</v-chip-group>
-										</div>
-										<div style="flex: 5">
-											<div
-												class="text-left"
-												style="color: #54565a; font-size: 14px"
-											>
-												{{
-													item.professionalDescription.length > 210
-														? item.professionalDescription
-																.slice(0, 210)
-																.concat('...')
-														: item.professionalDescription
-												}}
+											<div class="text-center">
+												<avatar
+													:url="avatar(item, true)"
+													:name="item.name"
+													:last-name="item.lastName ? item.lastName : ''"
+													size="160"
+													loading-color="white"
+												></avatar>
+												<div
+													class="text-capitalize py-4"
+													style="color: #706f6f; font-size: 14px"
+												>
+													código {{ item.code ? item.code : '' }}
+												</div>
 											</div>
-										</div>
-										<div style="flex: 2" class="text-left">
-											<v-btn
-												small
-												rounded
-												color="primary"
-												class="px-8 py-2"
-												:to="{ path: `/${item.username}` }"
-											>
-												Quiero saber más
-											</v-btn>
+										</nuxt-link>
+									</v-col>
+									<v-col cols="5" style="height: 300px">
+										<div
+											style="height: 260px; flex-direction: column"
+											class="d-flex justify-center"
+										>
+											<div style="flex: 0">
+												<nuxt-link
+													style="text-decoration: none"
+													:to="{
+														path: `/${item.username}`,
+													}"
+												>
+													<div
+														class="pt-2 text-left font-weight-bold"
+														style="color: #3c3c3b; font-size: 28px"
+													>
+														{{ item.name }}
+														{{ item.lastName && item.lastName }}
+													</div>
+													<div
+														class="text-left font-weight-medium pa-2"
+														style="color: #3c3c3b; font-size: 16px"
+													>
+														${{
+															Math.ceil(
+																item.sessionPrices.video / 100
+															) * 100
+														}}
+														/ 50 min
+													</div>
+												</nuxt-link>
+											</div>
+											<div style="flex: 1">
+												<v-chip-group v-model="specialties" show-arrows>
+													<template v-for="(tag, s) in item.specialties">
+														<v-chip
+															:key="s"
+															:value="tag"
+															class="ma-2"
+															small
+															:color="
+																specialties == tag
+																	? 'primary--text'
+																	: ''
+															"
+														>
+															<span>
+																{{ tag }}
+															</span>
+														</v-chip>
+													</template>
+												</v-chip-group>
+												<nuxt-link
+													style="text-decoration: none"
+													:to="{
+														path: `/${item.username}`,
+													}"
+												>
+													<div
+														class="text-left"
+														style="color: #54565a; font-size: 14px"
+													>
+														{{
+															item.professionalDescription.length >
+															210
+																? item.professionalDescription
+																		.slice(0, 210)
+																		.concat('...')
+																: item.professionalDescription
+														}}
+													</div>
+												</nuxt-link>
+											</div>
+											<div style="flex: 0" class="text-left">
+												<v-btn
+													small
+													rounded
+													color="primary"
+													class="px-8 py-2"
+													:to="{ path: `/${item.username}` }"
+												>
+													Quiero saber más
+												</v-btn>
+											</div>
 										</div>
 									</v-col>
 									<v-divider vertical class="my-4"></v-divider>
