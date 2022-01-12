@@ -65,7 +65,7 @@
 					class="mt-5"
 					@click="
 						() => {
-							if (selected) setDate(selected);
+							if ($auth.user.role !== 'psychologist' && selected) setDate(selected);
 						}
 					"
 				>
