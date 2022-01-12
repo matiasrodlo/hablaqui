@@ -1,8 +1,8 @@
 <template>
 	<div class="my-3">
-		<div class="d-flex">
+		<div class="d-flex mb-2">
 			<icon size="24px" color="#3c3c3b" :icon="mdiCalendarOutline" />
-			<span class="pt-1 ml-2 caption font-weight-medium" style="color: #3c3c3b">
+			<span class="pt-1 ml-2 body-2 font-weight-medium" style="color: #3c3c3b">
 				Próxima fecha:
 				<span v-if="sessionsAvailable" class="text-capitalize">
 					{{ formatDate(sessionsAvailable.date) }}
@@ -72,7 +72,7 @@
 				rounded
 				color="#2680eb"
 				dark
-				class="my-4 px-8 py-2"
+				class="my-6 px-8 py-2"
 				@click="dialog = true"
 			>
 				Agendar cita online

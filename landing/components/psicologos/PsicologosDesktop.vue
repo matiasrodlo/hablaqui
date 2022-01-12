@@ -76,6 +76,7 @@
 								attach="#autocompleteSpecialties"
 								class="white"
 								outlined
+								multiple
 								:items="appointments"
 								item-value="value"
 								label="Motivo de consulta"
@@ -313,7 +314,12 @@
 									siguientes preguntas.
 								</div>
 								<div class="my-4">
-									<v-btn rounded color="primary" class="px-8 py-2" @click="start">
+									<v-btn
+										rounded
+										color="primary"
+										class="px-8 py-2"
+										@click="goEvaluation"
+									>
 										Comenzar
 									</v-btn>
 								</div>
@@ -407,18 +413,13 @@
 												</nuxt-link>
 											</div>
 											<div style="flex: 1">
-												<v-chip-group v-model="specialties" show-arrows>
+												<v-chip-group show-arrows>
 													<template v-for="(tag, s) in item.specialties">
 														<v-chip
 															:key="s"
 															:value="tag"
 															class="ma-2"
 															small
-															:color="
-																specialties == tag
-																	? 'primary--text'
-																	: ''
-															"
 														>
 															<span>
 																{{ tag }}
@@ -514,7 +515,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiPlus, mdiMinus, mdiCloseCircle } from '@mdi/js';
+import { mdiChevronDown } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -529,15 +530,11 @@ export default {
 	},
 	data() {
 		return {
-			mdiCloseCircle,
-			mdiPlus,
-			mdiMinus,
 			mdiChevronDown,
 			menuGender: false,
 			menuOthers: false,
 			menuPrices: false,
-			view: 1,
-			specialties: '',
+			specialties: [],
 			searchInput: '',
 			prices: '',
 			gender: [],
@@ -596,8 +593,11 @@ export default {
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages === el))
 				);
-			if (this.specialties)
-				result = result.filter(item => item.specialties.includes(this.specialties));
+			if (this.specialties.length) {
+				result = result.filter(item =>
+					item.specialties.some(el => this.specialties.includes(el))
+				);
+			}
 
 			return result;
 		},
@@ -615,25 +615,6 @@ export default {
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });
-
-		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
-		if (process.browser) {
-			if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
-			else {
-				const view = localStorage.getItem('view');
-				if (view) {
-					this.view = view;
-				}
-			}
-
-			// Establece los filtros guardados en localstorage
-			const panel = JSON.parse(localStorage.getItem('panel'));
-			if (panel) {
-				if (panel.gender.length) this.gender = panel.gender;
-				if (panel.models.length) this.models = panel.models;
-				if (panel.languages.length) this.languages = panel.languages;
-			}
-		}
 	},
 	mounted() {
 		window.addEventListener('scroll', this.onScroll);
@@ -652,20 +633,9 @@ export default {
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
-		start() {
+		goEvaluation() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else this.$router.push('/auth/?register=true&from=psy');
-		},
-		setView(type) {
-			localStorage.setItem('view', type);
-			this.view = type;
-		},
-		filterMatch(payload) {
-			this.languages = [];
-			this.searchInput = '';
-			this.gender = payload.gender;
-			this.models = [payload.model];
-			this.specialties = payload.themes;
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
