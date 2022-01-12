@@ -483,7 +483,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container v-else>
+		<v-container v-else fluid style="max-width: 1200px">
 			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
 				<v-skeleton-loader type="image" />
 			</v-col>
