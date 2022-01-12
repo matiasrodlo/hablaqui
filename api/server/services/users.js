@@ -13,6 +13,7 @@ import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
@@ -350,6 +351,32 @@ const usersService = {
 			});
 		}
 		return okResponse('Evaluación guardada', created);
+	},
+	async changePsychologist(userId) {
+		const user = await User.findById(userId);
+		const foundPlan = await Sessions.findOne({
+			user: userId,
+			psychologist: user.psychologist,
+		});
+		const planData = foundPlan.plan[foundPlan.plan.length - 1];
+		let remainings = planData.remainingSessions;
+		const sessionsData = planData.session.filter(
+			session => session.status !== 'success'
+		);
+		remainings += sessionsData.length;
+
+		const now = new Date();
+		const newCoupon = {
+			code: user.name + now.getTime(),
+			discount: planData.sessionPrice * remainings,
+			discountType: 'static',
+			restrictions: {
+				user: user._id,
+			},
+			expiration: now.toISOString(),
+		};
+		await Coupon.create(newCoupon);
+		return okResponse('Cupón hecho');
 	},
 };
 

@@ -30,7 +30,11 @@ const checkCoupon = async (code, user) => {
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
 	if (moment().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
-	if (foundCoupon.restrictions.firstTimeOnly && user.hasPaid)
+	if (
+		foundCoupon.restrictions &&
+		foundCoupon.restrictions.firstTimeOnly &&
+		user.hasPaid
+	)
 		return conflictResponse('Este usuario ya ha comprado alguna vez');
 	return okResponse('el cupon es valido', { coupon: foundCoupon });
 };

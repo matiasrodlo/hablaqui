@@ -11,6 +11,7 @@ import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
 import moment from 'moment';
 
 mercadopago.configure({
@@ -178,7 +179,7 @@ const successPay = async params => {
 		});
 		const user = await User.findById(foundPlan.user);
 		const psy = await Psychologist.findById(foundPlan.psychologist);
-		// Send appointment confirmation for user and psychologist
+		//const coupon = await Coupon.findOneAndUpdate({'restrictions'}); // Send appointment confirmation for user and psychologist
 		await mailService.sendAppConfirmationUser(
 			user,
 			psy,
