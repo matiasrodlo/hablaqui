@@ -272,7 +272,7 @@ export default {
 				{
 					name: 'Mi plan premium',
 					link: { name: 'dashboard-planes' },
-					img: 'https://cdn.hablaqui.cl/static/diamond-w.png',
+					img: 'https://cdn.hablaqui.cl/static/diamante.png',
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
