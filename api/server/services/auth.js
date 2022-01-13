@@ -84,23 +84,25 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	// Segment identification
-	analytics.identify({
-		userId: user._id.toString(),
-		traits: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
-	analytics.track({
-		userId: user._id.toString(),
-		event: 'organic-user-signup',
-		properties: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
+	if (!process.env.API_URL.includes('hablaqui.cl')) {
+		analytics.identify({
+			userId: user._id.toString(),
+			traits: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+			},
+		});
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'organic-user-signup',
+			properties: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+			},
+		});
+	}
 
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {

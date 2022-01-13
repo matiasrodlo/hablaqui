@@ -29,17 +29,18 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
-
-		analytics.track({
-			userId: user._id,
-			event: 'psy-new-application',
-			properties: {
-				email: user.email,
-				name: user.name,
-				lastName: user.lastName,
-				rut: user.rut,
-			},
-		});
+		if (!process.env.API_URL.includes('hablaqui.cl')) {
+			analytics.track({
+				userId: user._id,
+				event: 'psy-new-application',
+				properties: {
+					email: user.email,
+					name: user.name,
+					lastName: user.lastName,
+					rut: user.rut,
+				},
+			});
+		}
 
 		const recruited = await Recruitment.create(payload);
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
@@ -121,18 +122,19 @@ const recruitmentService = {
 			{ $set: { psychologist: newProfile._id } },
 			{ new: true }
 		);
-
-		analytics.track({
-			userId: userUpdated._id.toString(),
-			event: 'new-psy-onboard',
-			properties: {
-				email: payload.email,
-				name: payload.name,
-				lastName: payload.lastName,
-				rut: payload.rut,
-				psyId: newProfile._id,
-			},
-		});
+		if (!process.env.API_URL.includes('hablaqui.cl')) {
+			analytics.track({
+				userId: userUpdated._id.toString(),
+				event: 'new-psy-onboard',
+				properties: {
+					email: payload.email,
+					name: payload.name,
+					lastName: payload.lastName,
+					rut: payload.rut,
+					psyId: newProfile._id,
+				},
+			});
+		}
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')

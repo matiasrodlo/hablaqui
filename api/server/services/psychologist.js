@@ -819,31 +819,32 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
-
-		analytics.track({
-			userId: payload.user._id,
-			event: 'user-purchase-plan',
-			properties: {
-				plan: payload.title,
-				period: payload.paymentPeriod,
-				price: payload.price,
-				expiration: expirationDate,
-				totalSessions: sessionQuantity,
-				email: payload.user.email,
-			},
-		});
-		analytics.track({
-			userId: payload.psychologist,
-			event: 'psy-new-plan',
-			properties: {
-				plan: payload.title,
-				period: payload.paymentPeriod,
-				price: payload.price,
-				expiration: expirationDate,
-				totalSessions: sessionQuantity,
-				user: payload.user._id,
-			},
-		});
+		if (!process.env.API_URL.includes('hablaqui.cl')) {
+			analytics.track({
+				userId: payload.user._id,
+				event: 'user-purchase-plan',
+				properties: {
+					plan: payload.title,
+					period: payload.paymentPeriod,
+					price: payload.price,
+					expiration: expirationDate,
+					totalSessions: sessionQuantity,
+					email: payload.user.email,
+				},
+			});
+			analytics.track({
+				userId: payload.psychologist,
+				event: 'psy-new-plan',
+				properties: {
+					plan: payload.title,
+					period: payload.paymentPeriod,
+					price: payload.price,
+					expiration: expirationDate,
+					totalSessions: sessionQuantity,
+					user: payload.user._id,
+				},
+			});
+		}
 	}
 
 	if (userSessions) {
@@ -929,27 +930,28 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			}
 		).populate('psychologist user');
 	}
+	if (!process.env.API_URL.includes('hablaqui.cl')) {
+		analytics.track({
+			userId: userLogged._id.toString(),
+			event: 'user-new-session',
+			properties: {
+				user: userLogged._id,
+				planId: idPlan,
+				userpsyId: id,
+				email: userLogged.email,
+			},
+		});
 
-	analytics.track({
-		userId: userLogged._id.toString(),
-		event: 'user-new-session',
-		properties: {
-			user: userLogged._id,
-			planId: idPlan,
-			userpsyId: id,
-			email: userLogged.email,
-		},
-	});
-
-	analytics.track({
-		userId: userLogged.psychologist.toString(),
-		event: 'psy-new-session',
-		properties: {
-			user: userLogged._id,
-			planId: idPlan,
-			userpsyId: id,
-		},
-	});
+		analytics.track({
+			userId: userLogged.psychologist.toString(),
+			event: 'psy-new-session',
+			properties: {
+				user: userLogged._id,
+				planId: idPlan,
+				userpsyId: id,
+			},
+		});
+	}
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),

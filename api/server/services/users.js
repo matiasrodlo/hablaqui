@@ -232,28 +232,29 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
-
-		analytics.identify({
-			userId: createdUser._id.toString(),
-			traits: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
-		analytics.track({
-			userId: createdUser._id,
-			event: 'referral-user-signup',
-			properties: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
+		if (process.env.API_URL.includes('hablaqui.cl')) {
+			analytics.identify({
+				userId: createdUser._id.toString(),
+				traits: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user._id,
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+			analytics.track({
+				userId: createdUser._id,
+				event: 'referral-user-signup',
+				properties: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user._id,
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+		}
 
 		const roomId = require('crypto')
 			.createHash('md5')
