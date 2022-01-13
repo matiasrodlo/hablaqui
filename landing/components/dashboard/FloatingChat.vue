@@ -124,7 +124,10 @@
 													: 'talkbubble__two'
 											"
 										>
-											<div style="max-height: 75px; overflow-y: auto body-2">
+											<div
+												style="max-height: 75px; overflow-y: auto"
+												class="body-2"
+											>
 												{{ item.message }}
 											</div>
 										</div>
@@ -161,7 +164,13 @@
 											width="30"
 										></v-img>
 									</v-btn> -->
-									<v-btn class="ml-2 mr-2" depressed icon type="submit">
+									<v-btn
+										:disabled="!message"
+										class="pb-2 pl-2 pr-2"
+										depressed
+										icon
+										type="submit"
+									>
 										<v-img
 											height="25"
 											contain
@@ -399,21 +408,21 @@ export default {
 		},
 		async selectedPsy(psy) {
 			if (this.selected && this.selected._id === psy._id) return;
-			// inicamos carga del seleccionado
+			// iniciamos carga del seleccionado
 			this.loadingChat = true;
 			this.selected = psy;
-			// obeteners chat del seleccciona
+			// obtener chat del selecciona
 			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			// scroll hasta el final para ver los ultimos mensajes
+			// scroll hasta el final para ver los ultimo mensajes
 			setTimeout(() => {
 				this.scrollToElement();
 			}, 10);
-			// si no el usuario no tiene una conversacion enviamos una intencion de chat para notificar el pys
+			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
 			if (!this.chat) await this.startConversation(psy._id);
-			// Si ya tiene un chat con el psy, marcamos mensaje como leido y actualizamos el psy
-			if (psy.hasMessage) {
+			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
+			if (psy.countMessagesUnRead) {
 				await this.updateMessage(psy.hasMessage);
 				await this.getMessages();
 			}
@@ -426,7 +435,6 @@ export default {
 		},
 		async onSubmit() {
 			this.loadingMessage = true;
-			if (!this.message) return;
 			const payload = {
 				payload: this.message,
 				psychologistId:
@@ -440,9 +448,9 @@ export default {
 			};
 			await this.sendMessage(payload);
 			this.message = '';
-			this.loadingMessage = false;
 			this.$nextTick(() => this.$refs.msj.focus());
 			this.scrollToElement();
+			this.loadingMessage = false;
 		},
 		hasMessage(psy) {
 			let temp = {

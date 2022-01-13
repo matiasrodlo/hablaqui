@@ -345,7 +345,7 @@ export default {
 			selected: null,
 			pusher: null,
 			channel: null,
-			initLoading: false,
+			initLoading: true,
 		};
 	},
 	computed: {
@@ -505,15 +505,16 @@ export default {
 			}
 		});
 	},
-	mounted() {
-		this.initFetch();
+	async mounted() {
+		await this.initFetch();
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			) {
+			moment.locale('es');
+			await this.getPsychologists();
+			await this.getMessages();
+			if (this.$auth.$state.user.role === 'user') {
+				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
 					assistant: true,
@@ -521,11 +522,7 @@ export default {
 					url: '',
 				});
 			}
-			this.initLoading = true;
-			moment.locale('es');
-			await this.getPsychologists();
-			await this.getMessages();
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'psychologist') {
 				await this.getClients(this.$auth.$state.user.psychologist);
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
