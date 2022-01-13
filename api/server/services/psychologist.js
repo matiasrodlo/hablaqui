@@ -20,6 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
+import Coupon from '../models/coupons';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -55,7 +56,6 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
-
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -797,7 +797,7 @@ const createPlan = async ({ payload }) => {
 		remainingSessions: sessionQuantity - 1,
 		session: [newSession],
 	};
-
+	logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -846,6 +846,7 @@ const createPlan = async ({ payload }) => {
 		});
 	}
 
+	let created = null;
 	if (userSessions) {
 		if (
 			userSessions.plan.some(
@@ -857,23 +858,32 @@ const createPlan = async ({ payload }) => {
 			return conflictResponse('El usuario ya tiene un plan vigente');
 		}
 
-		const created = await Sessions.findOneAndUpdate(
+		created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
 			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
 		);
-
-		return okResponse('Plan creado', { plan: created });
 	} else {
-		const created = await Sessions.create({
+		created = await Sessions.create({
 			user: payload.user,
 			psychologist: payload.psychologist,
 			plan: [newPlan],
 			roomsUrl: url,
 		});
 		//const params = { planId: created._id.toString() };
-
-		return okResponse('Plan creado', { plan: created });
 	}
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
+
+	if (foundCoupon) {
+		let discount = -payload.price;
+		if (foundCoupon.discountType === 'static') {
+			if (payload.price >= 0) discount = 0;
+			await Coupon.findOneAndUpdate(
+				{ _id: foundCoupon._id },
+				{ $set: { discount: discount } }
+			);
+		}
+	}
+	return okResponse('Plan creado', { plan: created });
 };
 
 /**
@@ -1199,7 +1209,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}*/
 
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
 	await mailService.sendCancelSessionPsy(

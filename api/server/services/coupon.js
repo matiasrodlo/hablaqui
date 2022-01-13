@@ -30,12 +30,19 @@ const checkCoupon = async (code, user) => {
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
 	if (moment().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
-	if (
-		foundCoupon.restrictions &&
-		foundCoupon.restrictions.firstTimeOnly &&
-		user.hasPaid
-	)
-		return conflictResponse('Este usuario ya ha comprado alguna vez');
+	if (foundCoupon.discountType === 'static' && foundCoupon.discount === 0)
+		return conflictResponse('Cupón con saldo 0');
+	if (foundCoupon.restrictions) {
+		if (foundCoupon.restrictions.firstTimeOnly && user.hasPaid)
+			return conflictResponse('Este usuario ya ha comprado alguna vez');
+		if (
+			foundCoupon.restrictions.user &&
+			foundCoupon.restrictions.user.toString() !== user._id.toString()
+		)
+			return conflictResponse('Usuario no habilitado para este cupón');
+	}
+
+	logInfo('aplicado');
 	return okResponse('el cupon es valido', { coupon: foundCoupon });
 };
 

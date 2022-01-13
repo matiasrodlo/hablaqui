@@ -352,30 +352,63 @@ const usersService = {
 		}
 		return okResponse('Evaluación guardada', created);
 	},
-	async changePsychologist(userId) {
-		const user = await User.findById(userId);
-		const foundPlan = await Sessions.findOne({
-			user: userId,
-			psychologist: user.psychologist,
-		});
-		const planData = foundPlan.plan[foundPlan.plan.length - 1];
+	async changePsychologist(sessionsId) {
+		const foundPlan = await Sessions.findOne({ _id: sessionsId }).populate(
+			'user'
+		);
+		const planData = foundPlan.plan.filter(
+			plan =>
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+		)[0];
 		let remainings = planData.remainingSessions;
 		const sessionsData = planData.session.filter(
 			session => session.status !== 'success'
 		);
+
+		await Sessions.updateOne(
+			{
+				_id: sessionsId,
+				'plan._id': planData._id,
+			},
+			{
+				$set: {
+					'plan.$.payment': 'failed',
+				},
+			}
+		);
 		remainings += sessionsData.length;
 
+		sessionsData.forEach(async session => {
+			await Sessions.updateOne(
+				{
+					_id: sessionsId,
+					'plan._id': planData._id,
+					'plan.session._id': session._id,
+				},
+				{
+					$pull: {
+						'plan.$.session': { _id: session._id },
+					},
+				}
+			);
+		});
+
 		const now = new Date();
+		let expiration = now;
+		expiration.setDate(expiration.getDate() + 3);
+
 		const newCoupon = {
-			code: user.name + now.getTime(),
+			code: foundPlan.user.name + now.getTime(),
 			discount: planData.sessionPrice * remainings,
 			discountType: 'static',
 			restrictions: {
-				user: user._id,
+				user: foundPlan.user._id,
 			},
-			expiration: now.toISOString(),
+			expiration: expiration.toISOString(),
 		};
 		await Coupon.create(newCoupon);
+		console.log(newCoupon);
 		return okResponse('Cupón hecho');
 	},
 };

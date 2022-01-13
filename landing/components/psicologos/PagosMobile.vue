@@ -257,7 +257,8 @@ export default {
 					this.PriceWithCoupon = totalValue.toFixed(0);
 				}
 				if (coupon.discountType === 'static') {
-					this.PriceWithCoupon = this.planSelected.price - coupon.discountType;
+					this.PriceWithCoupon = this.planSelected.price - coupon.discount;
+					if (this.PriceWithCoupon < 0) this.PriceWithCoupon = 0;
 				}
 			} catch (error) {
 				this.PriceWithCoupon = null;
@@ -329,8 +330,13 @@ export default {
 					quantity: 1,
 					plan: createdPlan.plan._id,
 				};
-				const res = await this.mercadopagoPay(mercadopagoPayload);
-				window.location.href = res.init_point;
+				if (this.PriceWithCoupon && this.PriceWithCoupon === 0) {
+					await this.$axios.$get(`/mercadopago/success-pay/${mercadopagoPayload.plan}`);
+					this.$router.push(`/dashboard/agenda`);
+				} else {
+					const res = await this.mercadopagoPay(mercadopagoPayload);
+					window.location.href = res.init_point;
+				}
 			}
 			this.loading = false;
 		},
