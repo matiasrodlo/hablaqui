@@ -8,6 +8,9 @@ export default {
 	setPsychologistsPagination(state, value) {
 		state.psychologists = [...state.psychologists, ...value];
 	},
+	setLoadingPsychologist(state, value) {
+		state.loadingPsychologist = value;
+	},
 	setPage(state, value) {
 		state.page = value;
 	},
