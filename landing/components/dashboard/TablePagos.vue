@@ -56,16 +56,36 @@
 		<v-data-table
 			class="hidden-sm-and-down"
 			:loading="loading"
-			:headers="headers"
+			:headers="header"
 			:items="payments"
 			loading-text="Cargando..."
 			:items-per-page="5"
+			:single-expand="true"
+			item-key="id"
+			:expanded.sync="expanded"
+			show-expand
 			:footer-props="{
 				'items-per-page-text': 'Pagos por página',
 			}"
 			no-results-text="Sin pagos registrados"
 			no-data-text="No hay pagos"
 		>
+			<template #expanded-item="{ item }">
+				<td :colspan="header.length">
+					<div v-for="(element, r) in item.sessions" :key="r" style="display: flex">
+						<td style="width: 14%" class="text-left py-4">{{ element.date }}</td>
+						<td style="width: 24%" class="text-left py-4">{{ element.name }}</td>
+						<td style="width: 16%" class="text-left py-4">
+							{{ element.sessionsNumber }}
+						</td>
+						<td style="width: 10%" class="text-left py-4">{{ element.amount }}</td>
+						<td style="width: 14%" class="text-left py-4">{{ element.total }}</td>
+						<td style="width: 14%" class="text-left py-4">
+							{{ element.transDate }}
+						</td>
+					</div>
+				</td>
+			</template>
 		</v-data-table>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
@@ -168,21 +188,23 @@ export default {
 	},
 	data() {
 		return {
+			expanded: [],
 			menu: false,
 			findByDate: moment().format('YYYY-MM'),
 			mdiMagnify,
 			search: '',
-			headers: [
+			header: [
 				{
 					text: 'Fecha de pago',
 					sortable: false,
-					value: 'date',
+					value: 'datePayment',
 				},
 				{ text: 'Nombre', value: 'name', sortable: false },
 				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
-				{ text: 'Monto final', value: 'total', sortable: false },
+				{ text: 'Monto final', value: 'finalAmount', sortable: false },
 				{ text: 'Fecha de transferencia', value: 'transDate', sortable: false },
+				{ text: '', value: 'data-table-expand' },
 			],
 		};
 	},
@@ -190,11 +212,12 @@ export default {
 		payments: {
 			get() {
 				let result = this.items
-					// .filter(item => moment(item.datePayment).format('YYYY-MM') === this.findByDate)
-					.map(item => ({
-						...item,
-						date: item.datePayment,
-					}));
+					.filter(
+						item =>
+							moment(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
+							this.findByDate
+					)
+					.map((item, index) => ({ ...item, id: index }));
 				if (this.search)
 					result = this.items.filter(
 						item =>
@@ -221,5 +244,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped></style>
