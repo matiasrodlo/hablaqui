@@ -89,6 +89,7 @@ export default {
 	async getPayments({ commit }) {
 		try {
 			const { payments } = await this.$axios.$get('/psychologist/payments/all');
+			console.log(payments);
 			commit('setPayments', payments);
 		} catch (e) {
 			snackBarError(e)(commit);
