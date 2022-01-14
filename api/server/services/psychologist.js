@@ -1729,7 +1729,7 @@ const paymentsInfo = async user => {
 				const realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
-				const sessions = plans.session.map(session => {
+				let sessions = plans.session.map(session => {
 					const transDate = session.paymentDate
 						? session.paymentDate
 						: 'Por cobrar';
@@ -1755,6 +1755,13 @@ const paymentsInfo = async user => {
 						transDate,
 					};
 				});
+				sessions = sessions.filter(
+					session => session.status === 'success'
+				);
+
+				const receivable = sessions.filter(
+					session => session.transDate === 'Por cobrar'
+				).length;
 
 				return {
 					idPlan: plans._id,
@@ -1768,10 +1775,12 @@ const paymentsInfo = async user => {
 					user: item.user._id,
 					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
 					amount: plans.totalPrice,
-					finalAmount: plans.totalPrice * (1 - realComission),
-					sessions: sessions.filter(
-						session => session.status === 'success'
-					),
+					finalAmount: (
+						plans.totalPrice *
+						(1 - realComission)
+					).toFixed(2),
+					sessions,
+					transState: receivable > 0 ? 'Por cobrar' : 'Cobrado',
 				};
 			});
 	});
