@@ -13,9 +13,8 @@ export default {
 	},
 	async getTransactions({ commit }) {
 		try {
-			const data = await this.$axios.$get('/psychologist/transactions/all');
-			console.log(data);
-			commit('setTransactions', []);
+			const { transactions } = await this.$axios.$get('/psychologist/transactions/all');
+			commit('setTransactions', transactions);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

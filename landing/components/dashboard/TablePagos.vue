@@ -1,6 +1,7 @@
 <template>
 	<div class="pb-10">
 		<v-row align="center">
+			{{ items }}
 			<v-col v-if="hideSearch" cols="12" md="4" lg="3">
 				<v-text-field
 					v-model="search"
@@ -179,7 +180,6 @@ export default {
 					value: 'date',
 				},
 				{ text: 'Nombre', value: 'name', sortable: false },
-				{ text: 'sesion', value: 'sessionsNumber', sortable: false },
 				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
 				{ text: 'Monto final', value: 'total', sortable: false },
@@ -191,14 +191,10 @@ export default {
 		payments: {
 			get() {
 				let result = this.items
-					.filter(
-						item =>
-							moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') ===
-							this.findByDate
-					)
+					.filter(item => moment(item.datePayment).format('YYYY-MM') === this.findByDate)
 					.map(item => ({
 						...item,
-						date: moment(item.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+						date: item.datePayment,
 					}));
 				if (this.search)
 					result = this.items.filter(
@@ -216,7 +212,7 @@ export default {
 			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
 		},
 	},
-	mounted() {
+	created() {
 		moment.locale('es');
 	},
 	methods: {
