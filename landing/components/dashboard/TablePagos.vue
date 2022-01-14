@@ -1,7 +1,6 @@
 <template>
 	<div class="pb-10">
 		<v-row align="center">
-			{{ items }}
 			<v-col v-if="hideSearch" cols="12" md="4" lg="3">
 				<v-text-field
 					v-model="search"
