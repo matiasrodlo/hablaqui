@@ -474,7 +474,7 @@ psychologistsRouter.get(
 );
 
 psychologistsRouter.get(
-	'/psychologist/transactions',
+	'/psychologist/transactions/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getTransactions
 );
