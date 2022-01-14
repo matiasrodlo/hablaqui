@@ -11,6 +11,15 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getTransactions({ commit }) {
+		try {
+			const data = await this.$axios.$get('/psychologist/transactions');
+			console.log(data);
+			commit('setTransactions', []);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getPsychologistsWithPagination({ commit }, nextPage) {
 		try {
 			commit('setLoadingPsychologist', true);

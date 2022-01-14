@@ -2,7 +2,14 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
 		<div class="tex-h5 secondary--text font-weight-bold mb-4 mt-1">Transacciones</div>
-		<table-pagos hide-search :items="payments" :loading="loading"></table-pagos>
+		<template v-if="payments.length">
+			<table-pagos
+				hide-search
+				:items="payments"
+				:transactions="transactions"
+				:loading="loading"
+			></table-pagos>
+		</template>
 		<recruited-overlay />
 	</v-container>
 </template>
@@ -26,6 +33,7 @@ export default {
 	computed: {
 		...mapGetters({
 			payments: 'Psychologist/payments',
+			transactions: 'Psychologist/transactions',
 		}),
 	},
 	mounted() {
@@ -40,10 +48,12 @@ export default {
 				return null;
 			this.loading = true;
 			await this.getPayments();
+			await this.getTransactions();
 			this.loading = false;
 		},
 		...mapActions({
 			getPayments: 'Psychologist/getPayments',
+			getTransactions: 'Psychologist/getTransactions',
 		}),
 	},
 };

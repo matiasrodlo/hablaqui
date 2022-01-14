@@ -45,6 +45,7 @@
 						v-model="findByDate"
 						type="month"
 						no-title
+						locale="es"
 						scrollable
 						@change="$refs.menu.save(findByDate)"
 					>
@@ -152,6 +153,10 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		transactions: {
+			type: Array,
+			default: () => [],
+		},
 		loading: {
 			type: Boolean,
 			default: false,
@@ -169,16 +174,16 @@ export default {
 			search: '',
 			headers: [
 				{
-					text: 'Fecha',
+					text: 'Fecha de pago',
 					sortable: false,
 					value: 'date',
 				},
 				{ text: 'Nombre', value: 'name', sortable: false },
-				{ text: 'Tipo de plan', value: 'plan', sortable: false },
-				{ text: 'Nº Sesión', value: 'sessionsNumber', sortable: false },
+				{ text: 'sesion', value: 'sessionsNumber', sortable: false },
+				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
-				{ text: '% Hablaquí', value: 'percentage', sortable: false },
 				{ text: 'Monto final', value: 'total', sortable: false },
+				{ text: 'Fecha de transferencia', value: 'transDate', sortable: false },
 			],
 		};
 	},
