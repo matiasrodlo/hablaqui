@@ -190,7 +190,7 @@ export default {
 		payments: {
 			get() {
 				let result = this.items
-					.filter(item => moment(item.datePayment).format('YYYY-MM') === this.findByDate)
+					// .filter(item => moment(item.datePayment).format('YYYY-MM') === this.findByDate)
 					.map(item => ({
 						...item,
 						date: item.datePayment,
