@@ -25,16 +25,19 @@ const generateJwt = user => {
 };
 
 const login = async user => {
-	analytics.track({
-		userId: user._id.toString(),
-		event: 'login',
-		properties: {
-			name: user.name,
-			lastName: user.lastName,
-			email: user.email,
-			timestamp: new Date(),
-		},
-	});
+	if (!process.env.API_URL.includes('hablaqui.cl')) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'login',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				timestamp: new Date(),
+				role: user.role,
+			},
+		});
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),

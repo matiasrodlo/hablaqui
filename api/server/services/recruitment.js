@@ -29,6 +29,8 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
+
+		const recruited = await Recruitment.create(payload);
 		if (!process.env.API_URL.includes('hablaqui.cl')) {
 			analytics.track({
 				userId: user._id,
@@ -37,12 +39,16 @@ const recruitmentService = {
 					email: user.email,
 					name: user.name,
 					lastName: user.lastName,
-					rut: user.rut,
+					source: recruited.howFindOut,
+					isExclusiveActivity: recruited.isExclusiveActivity,
+					isUnderSupervision: recruited.isUnderSupervision,
+					isSupervisor: recruited.isSupervisor,
+					isContentCreator: recruited.isContentCreator,
+					isAffiliateExternal: recruited.isAffiliateExternal,
+					isInterestedBusiness: recruited.isInterestedBusiness,
 				},
 			});
 		}
-
-		const recruited = await Recruitment.create(payload);
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
 		mailService.sendRecruitmentConfirmation(recruited);
 		mailService.sendRecruitmentConfirmationAdmin(recruited);
