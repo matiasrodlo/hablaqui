@@ -1733,6 +1733,11 @@ const paymentsInfo = async user => {
 					const transDate = session.paymentDate
 						? session.paymentDate
 						: 'Por cobrar';
+					const hablaquiPercentage =
+						realComission === 0.0399
+							? plans.sessionPrice * 0
+							: plans.sessionPrice * 0.1601;
+
 					return {
 						datePayment: moment(plans.datePayment).format(
 							'DD/MM/YYYY'
@@ -1743,14 +1748,16 @@ const paymentsInfo = async user => {
 						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
-						hablaquiPercentage:
-							realComission === 0.0399
-								? plans.sessionPrice * 0
-								: plans.sessionPrice * 0.1601,
-						mercadoPercentage: plans.sessionPrice * 0.0399,
+						hablaquiPercentage: hablaquiPercentage.toFixed(2),
+						mercadoPercentage: (
+							plans.sessionPrice * 0.0399
+						).toFixed(2),
 						percentage:
 							realComission === 0.0399 ? '3.99%' : percentage,
-						total: plans.sessionPrice * (1 - realComission),
+						total: (
+							plans.sessionPrice *
+							(1 - realComission)
+						).toFixed(2),
 						status: session.status,
 						transDate,
 					};
