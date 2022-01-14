@@ -13,7 +13,7 @@ export default {
 	},
 	async getTransactions({ commit }) {
 		try {
-			const data = await this.$axios.$get('/psychologist/transactions');
+			const data = await this.$axios.$get('/psychologist/transactions/all');
 			console.log(data);
 			commit('setTransactions', []);
 		} catch (e) {
