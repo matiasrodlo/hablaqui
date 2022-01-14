@@ -1734,11 +1734,13 @@ const paymentsInfo = async user => {
 						? session.paymentDate
 						: 'Por cobrar';
 					return {
-						datePayment: plans.datePayment,
+						datePayment: moment(plans.datePayment).format(
+							'DD/MM/YYYY'
+						),
 						name: `${item.user.name ? item.user.name : ''} ${
 							item.user.lastName ? item.user.lastName : ''
 						}`,
-						date: session.date,
+						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage:
@@ -1764,7 +1766,7 @@ const paymentsInfo = async user => {
 					payment: plans.payment,
 					suscription: plans.period,
 					user: item.user._id,
-					datePayment: plans.datePayment,
+					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
 					amount: plans.totalPrice,
 					finalAmount: plans.totalPrice * (1 - realComission),
 					sessions: sessions.filter(
@@ -1780,7 +1782,7 @@ const paymentsInfo = async user => {
 			item.plan !== 'compromiso privado'
 		);
 	});
-	logInfo(payments);
+	//logInfo(payments);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
