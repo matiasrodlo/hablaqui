@@ -368,11 +368,13 @@ export default {
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user &&
+				this.$auth.$state.user.role === 'psychologist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
-			return 'Usuario de hablaquí';
+			return this.$auth.$state.user.role === 'user'
+				? 'Psicólogo de hablaquí'
+				: 'No es un consultane';
 		},
 		listClients() {
 			return this.clients
