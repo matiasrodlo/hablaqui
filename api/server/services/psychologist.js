@@ -1799,8 +1799,8 @@ const getEvaluations = async user => {
 			attention: 0,
 		});
 
-	evaluations = await getAllEvaluations(psy);
-	evaluations = evaluations.data.evaluations.filter(
+	evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
 
@@ -1843,6 +1843,13 @@ const getScores = evaluations => {
 };
 
 const getAllEvaluations = async psy => {
+	const evaluations = await getAllEvaluationsFunction(psy);
+	return okResponse('Todas las sesiones devueltas', {
+		...evaluations,
+	});
+};
+
+const getAllEvaluationsFunction = async psy => {
 	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
 		'user'
 	);
@@ -1868,10 +1875,7 @@ const getAllEvaluations = async psy => {
 		});
 	});
 
-	return okResponse('Todas las sesiones devueltas', {
-		evaluations,
-		...getScores(evaluations),
-	});
+	return { evaluations, ...getScores(evaluations) };
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
