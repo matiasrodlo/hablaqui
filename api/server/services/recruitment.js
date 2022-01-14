@@ -132,7 +132,12 @@ const recruitmentService = {
 			analytics.track({
 				userId: userUpdated._id.toString(),
 				event: 'new-psy-onboard',
-				properties: {
+			});
+			analytics.identify({
+				userId: userUpdated._id.toString(),
+				traits: {
+					role: userUpdated.role,
+					psychologist: newProfile._id,
 					email: payload.email,
 					name: payload.name,
 					lastName: payload.lastName,
