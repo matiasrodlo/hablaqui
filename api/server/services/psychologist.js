@@ -181,7 +181,7 @@ const getRemainingSessions = async psy => {
 };
 
 const completePaymentsRequest = async psy => {
-	const response = await getAllSessions(psy);
+	const response = await getAllSessionsFunction(psy);
 	let sessions = response.data.sessions;
 	const now = moment().format();
 
@@ -246,7 +246,7 @@ const createPaymentsRequest = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
-	const response = await getAllSessions(psy);
+	const response = await getAllSessionsFunction(psy);
 	let sessions = response.data.sessions;
 	const now = moment().format();
 
@@ -306,8 +306,7 @@ const createPaymentsRequest = async user => {
 	});
 };
 
-//Devuelve todas las sesiones, excepto las expiradas
-const getAllSessions = async psy => {
+const getAllSessionsFunction = async psy => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
@@ -405,25 +404,30 @@ const getAllSessions = async psy => {
 			});
 		});
 	});
+	return sessions.filter(session => !session.expiration);
+};
 
+//Devuelve todas las sesiones, excepto las expiradas
+const getAllSessions = async psy => {
 	//Obtenemos solamente las sesiones que no han expirado, con todo lo que ello implica
-	sessions = sessions.filter(session => !session.expiration);
+	const sessions = await getAllSessionsFunction(psy);
+	const total = sessions
+		.filter(session => {
+			return (
+				session.status === 'success' &&
+				session.statusPlan === 'success' &&
+				session.name !== 'Compromiso privado '
+			);
+		})
+		.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		);
 
 	return okResponse('Sesiones obtenidas', {
-		total: sessions
-			.filter(session => {
-				return (
-					session.status === 'success' &&
-					session.statusPlan === 'success' &&
-					session.name !== 'Compromiso privado '
-				);
-			})
-			.reduce(
-				(sum, value) =>
-					typeof value.total == 'number' ? sum + value.total : sum,
-				0
-			),
-		sessions: sessions,
+		total,
+		sessions,
 	});
 };
 
@@ -432,7 +436,7 @@ const getTransactions = async user => {
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
 
-	const response = await getAllSessions(psy);
+	const response = await getAllSessionsFunction(psy);
 	let sessions = response.data.sessions;
 	let transactions = await Transaction.findOne({ psychologist: psy });
 
