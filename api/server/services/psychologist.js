@@ -181,8 +181,7 @@ const getRemainingSessions = async psy => {
 };
 
 const completePaymentsRequest = async psy => {
-	const response = await getAllSessionsFunction(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -246,8 +245,7 @@ const createPaymentsRequest = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
-	const response = await getAllSessionsFunction(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -436,8 +434,7 @@ const getTransactions = async user => {
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
 
-	const response = await getAllSessionsFunction(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	let transactions = await Transaction.findOne({ psychologist: psy });
 
 	if (transactions) transactions = transactions.transactionsRequest;
@@ -449,7 +446,20 @@ const getTransactions = async user => {
 			session.statusPlan === 'success' &&
 			session.name !== 'Compromiso privado '
 	);
-	const total = response.data.total;
+	const total = sessions
+		.filter(session => {
+			return (
+				session.status === 'success' &&
+				session.statusPlan === 'success' &&
+				session.name !== 'Compromiso privado '
+			);
+		})
+		.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		);
+
 	const totalAvailable = sessions
 		.filter(
 			session =>
@@ -1800,7 +1810,7 @@ const getEvaluations = async user => {
 		});
 
 	evaluations = await getAllEvaluationsFunction(psy);
-	evaluations = evaluations.evaluations.filter(
+	evaluations = evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
 
@@ -1845,7 +1855,8 @@ const getScores = evaluations => {
 const getAllEvaluations = async psy => {
 	const evaluations = await getAllEvaluationsFunction(psy);
 	return okResponse('Todas las sesiones devueltas', {
-		...evaluations,
+		evaluations,
+		...getScores(evaluations),
 	});
 };
 
@@ -1875,7 +1886,7 @@ const getAllEvaluationsFunction = async psy => {
 		});
 	});
 
-	return { evaluations, ...getScores(evaluations) };
+	return evaluations;
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
