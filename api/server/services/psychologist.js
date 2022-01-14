@@ -1729,21 +1729,16 @@ const paymentsInfo = async user => {
 				const realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
-
-				return plans.session.map(session => {
+				const sessions = plans.session.map(session => {
 					const transDate = session.paymentDate
 						? session.paymentDate
 						: 'Por cobrar';
 					return {
-						idPlan: plans._id,
-						sessionsId: item._id,
+						datePayment: plans.datePayment,
 						name: `${item.user.name ? item.user.name : ''} ${
 							item.user.lastName ? item.user.lastName : ''
 						}`,
 						date: session.date,
-						plan: plans.title,
-						payment: plans.payment,
-						suscription: plans.period,
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage:
@@ -1754,16 +1749,33 @@ const paymentsInfo = async user => {
 						percentage:
 							realComission === 0.0399 ? '3.99%' : percentage,
 						total: plans.sessionPrice * (1 - realComission),
-						user: item.user._id,
+						status: session.status,
 						transDate,
 					};
 				});
+
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: `${item.user.name ? item.user.name : ''} ${
+						item.user.lastName ? item.user.lastName : ''
+					}`,
+					plan: plans.title,
+					payment: plans.payment,
+					suscription: plans.period,
+					user: item.user._id,
+					datePayment: plans.datePayment,
+					amount: plans.totalPrice,
+					finalAmount: plans.totalPrice * (1 - realComission),
+					sessions: sessions.filter(
+						session => session.status === 'success'
+					),
+				};
 			});
 	});
 	const payments = validPayments.filter(item => {
 		return (
 			item &&
-			moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment()) &&
 			item.payment === 'success' &&
 			item.plan !== 'compromiso privado'
 		);
