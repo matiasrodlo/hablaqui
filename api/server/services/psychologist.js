@@ -1729,10 +1729,15 @@ const paymentsInfo = async user => {
 				const realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
-				const sessions = plans.session.map(session => {
+				let sessions = plans.session.map(session => {
 					const transDate = session.paymentDate
 						? session.paymentDate
 						: 'Por cobrar';
+					const hablaquiPercentage =
+						realComission === 0.0399
+							? plans.sessionPrice * 0
+							: plans.sessionPrice * 0.1601;
+
 					return {
 						datePayment: moment(plans.datePayment).format(
 							'DD/MM/YYYY'
@@ -1743,18 +1748,27 @@ const paymentsInfo = async user => {
 						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
-						hablaquiPercentage:
-							realComission === 0.0399
-								? plans.sessionPrice * 0
-								: plans.sessionPrice * 0.1601,
-						mercadoPercentage: plans.sessionPrice * 0.0399,
+						hablaquiPercentage: hablaquiPercentage.toFixed(2),
+						mercadoPercentage: (
+							plans.sessionPrice * 0.0399
+						).toFixed(2),
 						percentage:
 							realComission === 0.0399 ? '3.99%' : percentage,
-						total: plans.sessionPrice * (1 - realComission),
+						total: (
+							plans.sessionPrice *
+							(1 - realComission)
+						).toFixed(2),
 						status: session.status,
 						transDate,
 					};
 				});
+				sessions = sessions.filter(
+					session => session.status === 'success'
+				);
+
+				const receivable = sessions.filter(
+					session => session.transDate === 'Por cobrar'
+				).length;
 
 				return {
 					idPlan: plans._id,
@@ -1768,10 +1782,12 @@ const paymentsInfo = async user => {
 					user: item.user._id,
 					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
 					amount: plans.totalPrice,
-					finalAmount: plans.totalPrice * (1 - realComission),
-					sessions: sessions.filter(
-						session => session.status === 'success'
-					),
+					finalAmount: (
+						plans.totalPrice *
+						(1 - realComission)
+					).toFixed(2),
+					sessions,
+					transState: receivable > 0 ? 'Por cobrar' : 'Cobrado',
 				};
 			});
 	});
