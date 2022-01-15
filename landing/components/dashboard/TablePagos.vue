@@ -53,67 +53,68 @@
 				</v-menu>
 			</v-col>
 		</v-row>
-		<v-data-table
-			class="hidden-sm-and-down"
-			:loading="loading"
-			:headers="header"
-			:items="payments"
-			loading-text="Cargando..."
-			:items-per-page="5"
-			:single-expand="true"
-			item-key="id"
-			:expanded.sync="expanded"
-			show-expand
-			:footer-props="{
-				'items-per-page-text': 'Pagos por página',
-			}"
-			no-results-text="Sin pagos registrados"
-			no-data-text="No hay pagos"
-		>
-			<!-- <template #header>
-				<tr>
-					<th
-						v-for="h in header"
-						:key="h"
-						colspan="1"
-						class="secondary--text body-2 font-weight-bold text-left"
-					>
-						{{ h.text }}
-					</th>
-				</tr>
-			</template> -->
-			<template #expanded-item="{ item }">
-				<td :colspan="header.length" class="px-0">
-					<v-simple-table>
-						<template #default>
-							<tbody>
-								<tr v-for="element in item.sessions" :key="element.id">
-									<td width="14.3%" class="text-start">
-										{{ element.date }}
-									</td>
-									<td width="23.6%" class="text-left">
-										{{ element.name }}
-									</td>
-									<td width="15.5%" class="text-start">
-										{{ element.sessionsNumber }}
-									</td>
-									<td width="9.5%" class="text-start">
-										{{ element.amount }}
-									</td>
-									<td width="12%" class="text-start">
-										{{ element.total }}
-									</td>
-									<td width="15%" class="text-start">
-										{{ element.transDate }}
-									</td>
-									<td width="auto" class="text-start"></td>
-								</tr>
-							</tbody>
-						</template>
-					</v-simple-table>
-				</td>
-			</template>
-		</v-data-table>
+		<v-row class="hidden-sm-and-down">
+			<v-col cols="9">
+				<v-data-table
+					class="mt-6 pointer elevation-1"
+					:loading="loading"
+					:headers="header"
+					:items="payments"
+					loading-text="Cargando..."
+					:items-per-page="5"
+					:single-expand="true"
+					item-key="id"
+					:expanded.sync="expanded"
+					:footer-props="{
+						'items-per-page-text': 'Pagos por página',
+					}"
+					no-results-text="Sin pagos registrados"
+					no-data-text="No hay pagos"
+					@click:row="
+						(item, { expand, isExpanded }) => {
+							isExpanded ? (expanded = []) : expand();
+						}
+					"
+				>
+					<template #expanded-item="{ item }">
+						<td :colspan="header.length" class="px-0">
+							<v-simple-table>
+								<template #default>
+									<tbody>
+										<tr v-for="element in item.sessions" :key="element.id">
+											<td width="15%" class="text-start">
+												{{ element.date }}
+											</td>
+											<td width="24.5%" class="text-left">
+												{{ element.name }}
+											</td>
+											<td width="16.9%" class="text-start">
+												{{ element.sessionsNumber }}
+											</td>
+											<td width="9.5%" class="text-start">
+												{{ element.amount }}
+											</td>
+											<td width="13%" class="text-start">
+												{{ element.total }}
+											</td>
+											<td width="auto" class="text-start">
+												{{ element.transDate }}
+											</td>
+											<td width="auto" class="text-start"></td>
+										</tr>
+									</tbody>
+								</template>
+							</v-simple-table>
+						</td>
+					</template>
+				</v-data-table>
+			</v-col>
+			<v-col cols="3">
+				<v-card class="elevation-1">
+					<v-card-text>hola</v-card-text>
+				</v-card>
+			</v-col>
+		</v-row>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
 				v-for="(item, i) in payments"
@@ -216,6 +217,7 @@ export default {
 	data() {
 		return {
 			expanded: [],
+			selected: [],
 			menu: false,
 			findByDate: moment().format('YYYY-MM'),
 			mdiMagnify,
@@ -231,7 +233,6 @@ export default {
 				{ text: 'Monto', value: 'amount', sortable: false },
 				{ text: 'Monto final', value: 'finalAmount', sortable: false },
 				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
-				{ text: '', value: 'data-table-expand' },
 			],
 		};
 	},
@@ -271,3 +272,5 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped></style>
