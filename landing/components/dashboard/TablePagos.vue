@@ -88,10 +88,10 @@
 						<template #default>
 							<tbody>
 								<tr v-for="element in item.sessions" :key="element.id">
-									<td width="14%" class="text-start">
+									<td width="14.3%" class="text-start">
 										{{ element.date }}
 									</td>
-									<td width="24%" class="text-left">
+									<td width="23.6%" class="text-left">
 										{{ element.name }}
 									</td>
 									<td width="15.5%" class="text-start">
@@ -230,7 +230,7 @@ export default {
 				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
 				{ text: 'Monto final', value: 'finalAmount', sortable: false },
-				{ text: 'Fecha de transferencia', value: 'transDate', sortable: false },
+				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
 				{ text: '', value: 'data-table-expand' },
 			],
 		};
