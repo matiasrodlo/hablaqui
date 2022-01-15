@@ -134,6 +134,30 @@
 						</v-btn>
 					</v-card-actions>
 				</v-card>
+				<v-card style="border-radius: 15px" class="elevation-1 mt-4">
+					<v-card-text>
+						<div class="primary--text title">Última transacción</div>
+						<div class="text-h4 my-3">${{ transactions.totalAvailable }}</div>
+						<div class="body-1 my-3">
+							Sesiones realizadas: {{ transactions.successSessions }}
+						</div>
+						<div class="body-1 my-3">
+							Sesiones por cobrar: {{ transactions.sessionsReceivable }}
+						</div>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-actions>
+						<v-btn
+							block
+							color="rgba(26, 165, 216, 0.16)"
+							rounded
+							depressed
+							class="primary--text"
+						>
+							Retirar dinero
+						</v-btn>
+					</v-card-actions>
+				</v-card>
 			</v-col>
 		</v-row>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
