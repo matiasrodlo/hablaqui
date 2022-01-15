@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<div class="tex-h5 secondary--text font-weight-bold mb-4 mt-1">Transacciones</div>
+		<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
 		<template v-if="payments.length">
 			<table-pagos
 				hide-search

@@ -53,10 +53,10 @@
 				</v-menu>
 			</v-col>
 		</v-row>
-		<v-row class="hidden-sm-and-down">
+		<v-row class="hidden-sm-and-down mt-10">
 			<v-col cols="9">
 				<v-data-table
-					class="mt-6 pointer elevation-1"
+					class="pointer elevation-1"
 					:loading="loading"
 					:headers="header"
 					:items="payments"
@@ -110,8 +110,29 @@
 				</v-data-table>
 			</v-col>
 			<v-col cols="3">
-				<v-card class="elevation-1">
-					<v-card-text>hola</v-card-text>
+				<v-card style="border-radius: 15px" class="elevation-1">
+					<v-card-text>
+						<div class="primary--text title">Tu dinero disponible</div>
+						<div class="text-h4 my-3">${{ transactions.totalAvailable }}</div>
+						<div class="body-1 my-3">
+							Sesiones realizadas: {{ transactions.successSessions }}
+						</div>
+						<div class="body-1 my-3">
+							Sesiones por cobrar: {{ transactions.sessionsReceivable }}
+						</div>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-actions>
+						<v-btn
+							block
+							color="rgba(26, 165, 216, 0.16)"
+							rounded
+							depressed
+							class="primary--text"
+						>
+							Retirar dinero
+						</v-btn>
+					</v-card-actions>
 				</v-card>
 			</v-col>
 		</v-row>
