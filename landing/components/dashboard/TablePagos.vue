@@ -70,20 +70,47 @@
 			no-results-text="Sin pagos registrados"
 			no-data-text="No hay pagos"
 		>
+			<!-- <template #header>
+				<tr>
+					<th
+						v-for="h in header"
+						:key="h"
+						colspan="1"
+						class="secondary--text body-2 font-weight-bold text-left"
+					>
+						{{ h.text }}
+					</th>
+				</tr>
+			</template> -->
 			<template #expanded-item="{ item }">
-				<td :colspan="header.length">
-					<div v-for="(element, r) in item.sessions" :key="r" style="display: flex">
-						<td style="width: 14%" class="text-left py-4">{{ element.date }}</td>
-						<td style="width: 24%" class="text-left py-4">{{ element.name }}</td>
-						<td style="width: 16%" class="text-left py-4">
-							{{ element.sessionsNumber }}
-						</td>
-						<td style="width: 10%" class="text-left py-4">{{ element.amount }}</td>
-						<td style="width: 14%" class="text-left py-4">{{ element.total }}</td>
-						<td style="width: 14%" class="text-left py-4">
-							{{ element.transDate }}
-						</td>
-					</div>
+				<td :colspan="header.length" class="px-0">
+					<v-simple-table>
+						<template #default>
+							<tbody>
+								<tr v-for="element in item.sessions" :key="element.id">
+									<td width="14%" class="text-start">
+										{{ element.date }}
+									</td>
+									<td width="24%" class="text-left">
+										{{ element.name }}
+									</td>
+									<td width="15.5%" class="text-start">
+										{{ element.sessionsNumber }}
+									</td>
+									<td width="9.5%" class="text-start">
+										{{ element.amount }}
+									</td>
+									<td width="12%" class="text-start">
+										{{ element.total }}
+									</td>
+									<td width="15%" class="text-start">
+										{{ element.transDate }}
+									</td>
+									<td width="auto" class="text-start"></td>
+								</tr>
+							</tbody>
+						</template>
+					</v-simple-table>
 				</td>
 			</template>
 		</v-data-table>
