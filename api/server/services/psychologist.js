@@ -860,8 +860,36 @@ const createPlan = async ({ payload }) => {
 
 		const created = await Sessions.findOneAndUpdate(
 			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
+			{ new: true }
 		);
+
+		let planData = [
+			{
+				product_id: created._id.toString(),
+				order_id: created.plan[created.plan.length - 1]._id.toString,
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+
+		analytics.track({
+			userId: payload.user._id,
+			event: 'new-user-purchase-plan',
+			properties: {
+				products: planData,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist,
+			event: 'new-user-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+			},
+		});
 
 		return okResponse('Plan creado', { plan: created });
 	} else {
@@ -872,6 +900,32 @@ const createPlan = async ({ payload }) => {
 			roomsUrl: url,
 		});
 		//const params = { planId: created._id.toString() };
+
+		let planData = [
+			{
+				product_id: created._id.toString(),
+				order_id: created.plan[created.plan.length - 1]._id.toString,
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+		analytics.track({
+			userId: payload.user._id,
+			event: 'current-user-purchase-plan',
+			properties: {
+				products: planData,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist,
+			event: 'current-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+			},
+		});
 
 		return okResponse('Plan creado', { plan: created });
 	}
