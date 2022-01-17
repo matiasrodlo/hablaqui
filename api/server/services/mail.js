@@ -629,6 +629,37 @@ const mailService = {
 			});
 		});
 	},
+	async sendChangePsycologistToUser(user, psy, coupon) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Has cancelado tu plan`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-efbfc3aba77142fcaf1a24f693d71429',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: psy.name,
+				code: coupon.code,
+				amount: coupon.discount,
+				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;

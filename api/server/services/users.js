@@ -353,7 +353,9 @@ const usersService = {
 		return okResponse('Evaluación guardada', created);
 	},
 	async changePsychologist(sessionsId) {
-		const foundPlan = await Sessions.findById(sessionsId).populate('user');
+		const foundPlan = await Sessions.findById(sessionsId).populate(
+			'psychologist user'
+		);
 		if (!foundPlan) return conflictResponse('No hay planes');
 		const planData = foundPlan.plan.filter(
 			plan =>
@@ -410,8 +412,12 @@ const usersService = {
 			},
 			expiration: expiration.toISOString(),
 		};
+		await mailService.sendChangePsycologistToUser(
+			foundPlan.user,
+			foundPlan.psychologist,
+			newCoupon
+		);
 		await Coupon.create(newCoupon);
-		console.log(newCoupon);
 		return okResponse('Cupón hecho');
 	},
 };

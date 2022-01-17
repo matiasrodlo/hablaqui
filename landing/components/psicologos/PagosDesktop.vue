@@ -376,6 +376,7 @@ export default {
 				if (this.PriceWithCoupon <= 0) {
 					await this.$axios.$get(`/mercadopago/success-pay/${mercadopagoPayload.plan}`);
 					// this.$router.push(`/dashboard/agenda`);
+					// this.$router.push({ name: 'dashboard-agenda' });
 				} else {
 					const res = await this.mercadopagoPay(mercadopagoPayload);
 					window.location.href = res.init_point;
