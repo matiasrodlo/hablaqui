@@ -17,6 +17,8 @@ authRouter.post(
 	authController.login
 );
 
+authRouter.post('/auth/logout', authController.logout);
+
 /**
  * No se usa.
  */

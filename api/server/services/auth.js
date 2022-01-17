@@ -47,6 +47,26 @@ const login = async user => {
 	});
 };
 
+const logout = async user => {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'logout',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				timestamp: new Date(),
+				role: user.role,
+			},
+		});
+	}
+	return okResponse('Sesión cerrada exitosamente');
+};
+
 const getSessions = async user => {
 	if (user.role === 'user') return await Sessions.find({ user: user._id });
 
@@ -195,6 +215,7 @@ const googleAuthCallback = (req, res) => {
 
 const authService = {
 	login,
+	logout,
 	generateJwt,
 	generateUser,
 	register,
