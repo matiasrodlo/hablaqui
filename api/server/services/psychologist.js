@@ -856,6 +856,7 @@ const createPlan = async ({ payload }) => {
 				userId: payload.user._id,
 				event: 'new-user-purchase-plan',
 				properties: {
+					currency: 'CLP',
 					products: planData,
 				},
 			});
@@ -863,6 +864,7 @@ const createPlan = async ({ payload }) => {
 				userId: payload.psychologist,
 				event: 'new-user-psy-new-plan',
 				properties: {
+					currency: 'CLP',
 					products: planData,
 					user: payload.user._id,
 				},
