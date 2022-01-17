@@ -25,7 +25,10 @@ const generateJwt = user => {
 };
 
 const login = async user => {
-	if (!process.env.API_URL.includes('hablaqui.cl')) {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
 		analytics.track({
 			userId: user._id.toString(),
 			event: 'login',
@@ -97,7 +100,10 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	// Segment identification
-	if (!process.env.API_URL.includes('hablaqui.cl')) {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
 		analytics.identify({
 			userId: user._id.toString(),
 			traits: {

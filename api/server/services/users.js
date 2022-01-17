@@ -232,7 +232,10 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
-		if (process.env.API_URL.includes('hablaqui.cl')) {
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
 			analytics.identify({
 				userId: createdUser._id.toString(),
 				traits: {

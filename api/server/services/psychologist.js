@@ -819,32 +819,6 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
-		if (!process.env.API_URL.includes('hablaqui.cl')) {
-			analytics.track({
-				userId: payload.user._id,
-				event: 'user-purchase-plan',
-				properties: {
-					plan: payload.title,
-					period: payload.paymentPeriod,
-					price: payload.price,
-					expiration: expirationDate,
-					totalSessions: sessionQuantity,
-					email: payload.user.email,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist,
-				event: 'psy-new-plan',
-				properties: {
-					plan: payload.title,
-					period: payload.paymentPeriod,
-					price: payload.price,
-					expiration: expirationDate,
-					totalSessions: sessionQuantity,
-					user: payload.user._id,
-				},
-			});
-		}
 	}
 
 	if (userSessions) {
@@ -874,23 +848,26 @@ const createPlan = async ({ payload }) => {
 				quantity: sessionQuantity,
 			},
 		];
-
-		analytics.track({
-			userId: payload.user._id,
-			event: 'new-user-purchase-plan',
-			properties: {
-				products: planData,
-			},
-		});
-		analytics.track({
-			userId: payload.psychologist,
-			event: 'new-user-psy-new-plan',
-			properties: {
-				products: planData,
-				user: payload.user._id,
-			},
-		});
-
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.track({
+				userId: payload.user._id,
+				event: 'new-user-purchase-plan',
+				properties: {
+					products: planData,
+				},
+			});
+			analytics.track({
+				userId: payload.psychologist,
+				event: 'new-user-psy-new-plan',
+				properties: {
+					products: planData,
+					user: payload.user._id,
+				},
+			});
+		}
 		return okResponse('Plan creado', { plan: created });
 	} else {
 		const created = await Sessions.create({
@@ -899,7 +876,6 @@ const createPlan = async ({ payload }) => {
 			plan: [newPlan],
 			roomsUrl: url,
 		});
-		//const params = { planId: created._id.toString() };
 
 		let planData = [
 			{
@@ -984,7 +960,10 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			}
 		).populate('psychologist user');
 	}
-	if (!process.env.API_URL.includes('hablaqui.cl')) {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
 		analytics.track({
 			userId: userLogged._id.toString(),
 			event: 'user-new-session',

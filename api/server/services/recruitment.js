@@ -31,7 +31,10 @@ const recruitmentService = {
 		}
 
 		const recruited = await Recruitment.create(payload);
-		if (!process.env.API_URL.includes('hablaqui.cl')) {
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
 			analytics.track({
 				userId: user._id,
 				event: 'psy-new-application',
@@ -128,7 +131,10 @@ const recruitmentService = {
 			{ $set: { psychologist: newProfile._id } },
 			{ new: true }
 		);
-		if (!process.env.API_URL.includes('hablaqui.cl')) {
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
 			analytics.track({
 				userId: userUpdated._id.toString(),
 				event: 'new-psy-onboard',
