@@ -154,8 +154,10 @@ const userController = {
 	},
 	async changePsychologist(req, res) {
 		try {
-			const { userId } = req.params;
-			const { data, code } = await userService.changePsychologist(userId);
+			const { sessionId } = req.params;
+			const { data, code } = await userService.changePsychologist(
+				sessionId
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error añadiendo la evaluación');

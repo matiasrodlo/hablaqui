@@ -353,14 +353,16 @@ const usersService = {
 		return okResponse('Evaluación guardada', created);
 	},
 	async changePsychologist(sessionsId) {
-		const foundPlan = await Sessions.findOne({ _id: sessionsId }).populate(
-			'user'
-		);
+		const foundPlan = await Sessions.findById(sessionsId).populate('user');
+		if (!foundPlan) return conflictResponse('No hay planes');
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
 				moment().isBefore(moment(plan.expiration))
 		)[0];
+
+		if (!planData) return conflictResponse('No hay planes para cancelar');
+
 		let remainings = planData.remainingSessions;
 		const sessionsData = planData.session.filter(
 			session => session.status !== 'success'
@@ -374,6 +376,7 @@ const usersService = {
 			{
 				$set: {
 					'plan.$.payment': 'failed',
+					'plan.$.remainingSessions': 0,
 				},
 			}
 		);

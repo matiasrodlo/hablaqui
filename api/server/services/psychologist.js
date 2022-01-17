@@ -784,20 +784,25 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	let price = payload.price < 0 ? 0 : payload.price;
+
+	if (foundCoupon && foundCoupon.discountType === 'static')
+		price = payload.originalPrice;
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
 		datePayment: '',
-		totalPrice: payload.price,
-		sessionPrice: payload.price / sessionQuantity,
+		totalPrice: price,
+		sessionPrice: price / sessionQuantity,
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
 		session: [newSession],
 	};
-	logInfo(newPlan);
+	//logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -847,31 +852,35 @@ const createPlan = async ({ payload }) => {
 	}
 
 	let created = null;
-	if (userSessions) {
-		if (
-			userSessions.plan.some(
+
+	const userPlans = await Sessions.find({ user: payload.user });
+
+	if (
+		userPlans.some(sessions => {
+			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
 					moment().isBefore(moment(plan.expiration))
-			)
-		) {
-			return conflictResponse('El usuario ya tiene un plan vigente');
+			);
+		})
+	)
+		return conflictResponse('El usuario ya tiene un plan vigente');
+	else {
+		if (userSessions) {
+			created = await Sessions.findOneAndUpdate(
+				{ user: payload.user, psychologist: payload.psychologist },
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			);
+		} else {
+			created = await Sessions.create({
+				user: payload.user,
+				psychologist: payload.psychologist,
+				plan: [newPlan],
+				roomsUrl: url,
+			});
+			//const params = { planId: created._id.toString() };
 		}
-
-		created = await Sessions.findOneAndUpdate(
-			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
-		);
-	} else {
-		created = await Sessions.create({
-			user: payload.user,
-			psychologist: payload.psychologist,
-			plan: [newPlan],
-			roomsUrl: url,
-		});
-		//const params = { planId: created._id.toString() };
 	}
-	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
 	if (foundCoupon) {
 		let discount = -payload.price;

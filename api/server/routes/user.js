@@ -142,7 +142,7 @@ userRouter.post(
 );
 
 userRouter.post(
-	'/user/change/:userId',
+	'/user/change/psychologist/:sessionId',
 	//[passport.authenticate('jwt', { session: true })],
 	userController.changePsychologist
 );

@@ -1009,15 +1009,9 @@ export default {
 
 				// con psicologo - con sesiones por agendar
 				this.dialogHasSessions =
-					this.plan &&
-					this.plan.psychologist &&
-					this.plan.session.length < this.plan.totalSessions;
+					this.plan && this.plan.psychologist && this.plan.remainingSessions > 0;
 				// con psicologo - sin sesiones por agendar
-				if (
-					this.plan &&
-					this.plan.psychologist &&
-					this.plan.totalSessions <= this.plan.session.length
-				) {
+				if (this.plan && this.plan.psychologist && this.plan.remainingSessions <= 0) {
 					this.overlay = true;
 					this.psychologist = await this.getPsychologist(this.plan.psychologist);
 					this.overlay = false;
