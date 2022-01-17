@@ -153,7 +153,8 @@
 							</div>
 						</div>
 					</v-card-text>
-					<v-card-actions v-else>
+					<v-divider v-if="lastTransaction"> </v-divider>
+					<v-card-actions>
 						<v-btn
 							block
 							color="Primary"
