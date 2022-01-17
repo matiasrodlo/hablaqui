@@ -111,7 +111,7 @@
 			</v-col>
 			<v-col cols="3">
 				<v-card style="border-radius: 15px" class="elevation-1">
-					<v-card-text>
+					<v-card-text v-if="transactions">
 						<div class="primary--text title">Tu dinero disponible</div>
 						<div class="text-h4 my-3">${{ transactions.totalAvailable }}</div>
 						<div class="body-1 my-3">
@@ -135,20 +135,36 @@
 					</v-card-actions>
 				</v-card>
 				<v-card style="border-radius: 15px" class="elevation-1 mt-4">
-					<v-card-text>
+					<v-card-text v-if="lastTransaction">
 						<div class="title">Última transacción</div>
-						<div class="body-1 my-3 d-flex justify-space-between algn-center">
+						<div class="body-1 my-3 d-flex justify-space-between align-center">
 							<v-img
-								width="30"
-								contain
-								height="30"
+								max-width="50px"
 								:src="`https://cdn.hablaqui.cl/static/retiro.png`"
 							/>
-							<div class="body-1 my-3">
-								Sesiones por cobrar: {{ transactions.sessionsReceivable }}
+							<div>
+								<div class="body-1 text-right">
+									$ {{ lastTransaction.total }} -
+									{{ lastTransaction.sessionsPaid }}
+								</div>
+								<div class="body-1 text-right">
+									{{ lastTransaction.transactionDate }}
+								</div>
 							</div>
 						</div>
 					</v-card-text>
+					<v-card-actions v-else>
+						<v-btn
+							block
+							color="Primary"
+							rounded
+							depressed
+							class="primary--text"
+							to="pagos/historial"
+						>
+							Ver trasacciones
+						</v-btn>
+					</v-card-actions>
 				</v-card>
 			</v-col>
 		</v-row>
@@ -239,8 +255,8 @@ export default {
 			default: () => [],
 		},
 		transactions: {
-			type: Array,
-			default: () => [],
+			type: Object,
+			default: null,
 		},
 		loading: {
 			type: Boolean,
@@ -274,6 +290,10 @@ export default {
 		};
 	},
 	computed: {
+		lastTransaction() {
+			if (!this.transactions || !this.transactions.transactions.length) return null;
+			return this.transactions.transactions[this.transactions.transactions.length - 1];
+		},
 		payments: {
 			get() {
 				let result = this.items
