@@ -1730,9 +1730,11 @@ const paymentsInfo = async user => {
 					? currentPlan.paymentFee
 					: comission;
 				let sessions = plans.session.map(session => {
-					const transDate = session.paymentDate
-						? moment(session.paymentDate).format('DD/MM/YYYY')
-						: 'Por cobrar';
+					const transDate =
+						session.paymentDate &&
+						moment(session.paymentDate).isValid()
+							? moment(session.paymentDate).format('DD/MM/YYYY')
+							: 'Por cobrar';
 					const hablaquiPercentage =
 						realComission === 0.0399
 							? plans.sessionPrice * 0
