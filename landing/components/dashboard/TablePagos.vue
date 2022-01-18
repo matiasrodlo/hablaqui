@@ -197,8 +197,11 @@
 									$ {{ lastTransaction.total }} -
 									{{ lastTransaction.sessionsPaid }} Sesiones
 								</div>
-								<div class="body-1 text-right pt-2">
-									{{ formatDateMoment(lastTransaction.trasnactionDate) }}
+								<div
+									v-if="lastTransaction.trasactionDate"
+									class="body-1 text-right pt-2"
+								>
+									{{ formatDateMoment(lastTransaction.trasactionDate) }}
 								</div>
 							</div>
 						</div>
