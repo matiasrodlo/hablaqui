@@ -3,8 +3,23 @@ import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 export default {
 	async getPsychologists({ commit }) {
 		try {
+			commit('setLoadingPsychologist', true);
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			commit('setPsychologists', psychologists);
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getPsychologistsWithPagination({ commit }, nextPage) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const { psychologists, page } = await this.$axios.$get(
+				`/psychologists/all/${nextPage}`
+			);
+			commit('setPage', page);
+			commit('setPsychologistsPagination', psychologists);
+			commit('setLoadingPsychologist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -27,6 +42,14 @@ export default {
 			);
 			commit('setSessionsFormatted', sessions);
 			return sessions;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getFormattedSessionsAll({ commit }, idPsychologist) {
+		try {
+			const { sessions } = await this.$axios.$get('/psychologists/formattedSessionsAll');
+			commit('setSessionsFormattedAll', sessions);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

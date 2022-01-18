@@ -13,6 +13,17 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getAllPagination(req, res) {
+		try {
+			const { page } = req.params;
+			const { data, code } = await psychologistsService.getAllPagination(
+				page
+			);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo los psicologos');
+		}
+	},
 	async getSessions(req, res) {
 		try {
 			const { idUser, idPsychologist } = req.params;
@@ -34,6 +45,21 @@ const psychologistsController = {
 				data,
 				code,
 			} = await psychologistsService.getFormattedSessions(idPsychologist);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
+	async formattedSessionsAll(req, res) {
+		try {
+			const {
+				data,
+				code,
+			} = await psychologistsService.formattedSessionsAll();
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(
@@ -373,10 +399,8 @@ const psychologistsController = {
 	async getAllSessions(req, res) {
 		try {
 			const { psy } = req.params;
-			const { startDate } = req.body;
 			const { data, code } = await psychologistsService.getAllSessions(
-				psy,
-				startDate
+				psy
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -390,6 +414,91 @@ const psychologistsController = {
 				data,
 				code,
 			} = await psychologistsService.getRemainingSessions(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getEvaluations(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.getEvaluations(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error devolviendo las evaluaciones');
+		}
+	},
+	async getAllEvaluations(req, res) {
+		try {
+			const { psy } = req.params;
+			const { data, code } = await psychologistsService.getAllEvaluations(
+				psy
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error devolviendo todas las evaluaciones'
+			);
+		}
+	},
+	async approveEvaluation(req, res) {
+		try {
+			const { evsId, evId } = req.params;
+			const { data, code } = await psychologistsService.approveEvaluation(
+				evsId,
+				evId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error aprobando la evaluación');
+		}
+	},
+	async refuseEvaluation(req, res) {
+		try {
+			const { evsId, evId } = req.params;
+			const { data, code } = await psychologistsService.refuseEvaluation(
+				evsId,
+				evId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error rechazando la evaluación');
+		}
+	},
+	async createPaymentsRequest(req, res) {
+		try {
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.createPaymentsRequest(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async completePaymentsRequest(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.completePaymentsRequest(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getTransactions(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await psychologistsService.getTransactions(
+				user
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');

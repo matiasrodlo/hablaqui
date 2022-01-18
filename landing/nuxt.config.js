@@ -38,13 +38,6 @@ export default {
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/';
 
-			// generate routes blogs
-			const { data } = await axios.get(`${baseURL}/blog/all`);
-			const blogs = data.articles.map(item => ({
-				route: `/blog/${item.slug}`,
-				payload: item,
-			}));
-
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
 			const psicologos = res.data.psychologists
@@ -61,7 +54,7 @@ export default {
 				payload: el.comuna,
 			}));
 
-			const routes = blogs.concat(psicologos).concat(comunas);
+			const routes = psicologos.concat(comunas);
 			callback(null, routes);
 		},
 	},
@@ -177,7 +170,7 @@ export default {
 	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ['~/plugins/jsonld'],
+	plugins: ['~/plugins/jsonld', '~/plugins/interceptor'],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,

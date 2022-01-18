@@ -23,6 +23,15 @@ const cronController = {
 			errorCallback(res, err);
 		}
 	},
+	async scheduleChatEmails(req, res) {
+		try {
+			const token = req.params.authToken;
+			const { data, code } = await cronService.scheduleChatEmails(token);
+			return restResponse(data, code, res);
+		} catch (err) {
+			errorCallback(res, err);
+		}
+	},
 };
 
 export default Object.freeze(cronController);

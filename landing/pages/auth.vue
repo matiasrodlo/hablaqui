@@ -261,6 +261,7 @@ export default {
 	},
 	created() {
 		if (this.$route.params.q) this.step = 2;
+		if (this.$route.query.register) this.step = 2;
 	},
 	methods: {
 		setStep() {

@@ -345,7 +345,7 @@ export default {
 			selected: null,
 			pusher: null,
 			channel: null,
-			initLoading: false,
+			initLoading: true,
 		};
 	},
 	computed: {
@@ -368,11 +368,13 @@ export default {
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user &&
+				this.$auth.$state.user.role === 'psychologist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
-			return 'Usuario de hablaquí';
+			return this.$auth.$state.user.role === 'user'
+				? 'Psicólogo de hablaquí'
+				: 'No es un consultane';
 		},
 		listClients() {
 			return this.clients
@@ -505,15 +507,16 @@ export default {
 			}
 		});
 	},
-	mounted() {
-		this.initFetch();
+	async mounted() {
+		await this.initFetch();
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			) {
+			moment.locale('es');
+			await this.getPsychologists();
+			await this.getMessages();
+			if (this.$auth.$state.user.role === 'user') {
+				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
 					assistant: true,
@@ -521,11 +524,7 @@ export default {
 					url: '',
 				});
 			}
-			this.initLoading = true;
-			moment.locale('es');
-			await this.getPsychologists();
-			await this.getMessages();
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'psychologist') {
 				await this.getClients(this.$auth.$state.user.psychologist);
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(

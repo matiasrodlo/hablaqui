@@ -3,12 +3,11 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<psicologos-desktop
-			:loading-psychologist="loadingPsychologist"
-			class="hidden-sm-and-down"
-		/>
-		<!-- mobile -->
-		<psicologos-mobile :loading-psychologist="loadingPsychologist" class="hidden-md-and-up" />
+		<template v-if="!loadingPsychologist">
+			<pagos-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
+			<!-- mobile -->
+			<pagos-mobile :psychologist="psychologist" class="hidden-md-and-up" />
+		</template>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -30,20 +29,24 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () =>
+		PagosDesktop: () =>
 			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PagosDesktop'
 			),
-		PsicologosMobile: () =>
+		PagosMobile: () =>
 			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PagosMobile'
 			),
+	},
+	data() {
+		return {
+			loadingPsychologist: true,
+			psychologist: null,
+		};
 	},
 	head() {
 		return {
@@ -78,22 +81,13 @@ export default {
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
 	},
-	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
-	},
-	mounted() {
+	async mounted() {
 		window.scrollTo(0, 0);
-		this.initialFetch();
-	},
-	methods: {
-		async initialFetch() {
-			await this.getAppointments();
-			this.getFormattedSessionsAll();
-		},
-		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
-		}),
+		const { psychologist } = await this.$axios.$get(
+			`/psychologists/one/${this.$route.query.username}`
+		);
+		this.loadingPsychologist = false;
+		this.psychologist = psychologist;
 	},
 };
 </script>

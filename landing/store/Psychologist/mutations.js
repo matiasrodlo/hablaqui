@@ -3,7 +3,16 @@ import updateObjectInArray from '@/plugins/updateArray';
 
 export default {
 	setPsychologists(state, value) {
-		state.psychologists = value;
+		state.psychologists = Object.freeze(value);
+	},
+	setPsychologistsPagination(state, value) {
+		state.psychologists = [...state.psychologists, ...value];
+	},
+	setLoadingPsychologist(state, value) {
+		state.loadingPsychologist = value;
+	},
+	setPage(state, value) {
+		state.page = value;
 	},
 	setSessions(state, value) {
 		state.sessions = value;
@@ -24,8 +33,22 @@ export default {
 		moment.locale('es');
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
-			text: moment(session.value).format('ddd'),
+			text: moment(session.text).format('ddd'),
+			day: moment(session.day, 'DD MMM').format('DD MMM'),
 		}));
+	},
+	setSessionsFormattedAll(state, items) {
+		moment.locale('es');
+		state.sessionsFormattedAll = items.map(item => {
+			return {
+				psychologist: item.psychologist,
+				sessions: item.sessions.map(el => ({
+					...el,
+					text: moment(el.text).format('ddd'),
+					day: moment(el.day, 'DD MMM').format('DD MMM'),
+				})),
+			};
+		});
 	},
 	setClients(state, value) {
 		state.clients = value;

@@ -26,7 +26,8 @@ const generateJwt = user => {
 
 const login = async user => {
 	//el objeto user debe contener, ahora, un elemento isVerified que indica si la cuenta está o no verificada
-	if (!user.isVerified) return conflictResponse('Verifica tu correo');
+	if (user.role === 'user' && !user.isVerified)
+		return conflictResponse('Verifica tu correo');
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),
