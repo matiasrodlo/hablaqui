@@ -76,6 +76,44 @@
 						}
 					"
 				>
+					<template #[`item.datePayment`]="{ item }">
+						<span class="caption">
+							{{ item.datePayment }}
+						</span>
+					</template>
+					<template #[`item.amount`]="{ item }">
+						<span class="caption">
+							{{ item.amount }}
+						</span>
+					</template>
+					<template #[`item.finalAmount`]="{ item }">
+						<span class="caption">
+							{{ item.finalAmount }}
+						</span>
+					</template>
+					<template #[`item.transState`]="{ item }">
+						<span class="caption">
+							{{ item.transState }}
+						</span>
+					</template>
+					<template #[`item.name`]="{ item }">
+						<div style="width: 100px">
+							<span style="width: 100px" class="caption">
+								{{
+									item.name.length > 12
+										? item.name.slice(0, 12) + '...'
+										: item.name
+								}}
+							</span>
+						</div>
+					</template>
+					<template #[`item.suscription`]="{ item }">
+						<div style="width: 120px">
+							<span style="width: 120px !important" class="caption">
+								{{ item.suscription }}
+							</span>
+						</div>
+					</template>
 					<template #expanded-item="{ item }">
 						<td
 							:colspan="header.length"
@@ -91,25 +129,28 @@
 								<template #default>
 									<tbody>
 										<tr v-for="element in item.sessions" :key="element.id">
-											<td width="15%" class="text-start">
+											<td style="width: 15.5%" class="caption text-start">
 												{{ element.date }}
 											</td>
-											<td width="24.5%" class="text-left">
-												{{ element.name }}
+											<td style="width: 18.5%" class="caption text-start">
+												{{
+													element.name.length > 12
+														? element.name.slice(0, 12) + '...'
+														: element.name
+												}}
 											</td>
-											<td width="16.9%" class="text-start">
+											<td style="width: 21.5%" class="caption text-start">
 												{{ element.sessionsNumber }}
 											</td>
-											<td width="9.5%" class="text-start">
+											<td style="width: 9.5%" class="caption text-start">
 												{{ element.amount }}
 											</td>
-											<td width="13%" class="text-start">
+											<td style="width: 13%" class="caption text-start">
 												{{ element.total }}
 											</td>
-											<td width="auto" class="text-start">
+											<td style="width: auto" class="caption text-start">
 												{{ element.transDate }}
 											</td>
-											<td width="auto" class="text-start"></td>
 										</tr>
 									</tbody>
 								</template>
