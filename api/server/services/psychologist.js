@@ -313,7 +313,7 @@ const createPaymentsRequest = async user => {
 		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.track({
-			userId: psy,
+			userId: psy.toString(),
 			event: 'psy-withdrawal-request',
 			properties: {
 				total: total,
@@ -873,7 +873,7 @@ const createPlan = async ({ payload }) => {
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
 			analytics.track({
-				userId: payload.user._id,
+				userId: payload.user._id.toString(),
 				event: 'new-user-purchase-plan',
 				properties: {
 					currency: 'CLP',
@@ -882,7 +882,7 @@ const createPlan = async ({ payload }) => {
 				},
 			});
 			analytics.track({
-				userId: payload.psychologist,
+				userId: payload.psychologist.toString(),
 				event: 'new-user-psy-new-plan',
 				properties: {
 					currency: 'CLP',
@@ -911,7 +911,7 @@ const createPlan = async ({ payload }) => {
 			},
 		];
 		analytics.track({
-			userId: payload.user._id,
+			userId: payload.user._id.toString(),
 			event: 'current-user-purchase-plan',
 			properties: {
 				products: planData,
@@ -919,7 +919,7 @@ const createPlan = async ({ payload }) => {
 			},
 		});
 		analytics.track({
-			userId: payload.psychologist,
+			userId: payload.psychologist.toString(),
 			event: 'current-psy-new-plan',
 			properties: {
 				products: planData,
@@ -1721,7 +1721,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.id,
+					userId: user.id.toString(),
 					event: 'psy-scheduled-user-session',
 					properties: {
 						products: planData,
@@ -1741,7 +1741,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.id,
+					userId: user.id.toString(),
 					event: 'psy-scheduled-onsite-user-session',
 					properties: {
 						products: planData,
@@ -1753,7 +1753,7 @@ const customNewSession = async (user, payload) => {
 			}
 			else if (payload.type === 'compromiso privado') {
 				analytics.track({
-					userId: user.id,
+					userId: user.id.toString(),
 					event: 'psy-scheduled-private-hours',
 				}
 			);

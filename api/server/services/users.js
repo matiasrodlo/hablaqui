@@ -247,7 +247,7 @@ const usersService = {
 				},
 			});
 			analytics.track({
-				userId: createdUser._id,
+				userId: createdUser._id.toString(),
 				event: 'referral-user-signup',
 				properties: {
 					name: user.name,

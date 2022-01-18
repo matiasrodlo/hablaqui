@@ -141,7 +141,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			},
 		];
 		analytics.track({
-			userId: id,
+			userId: id.toString(),
 			event: 'psy-free-plan',
 			properties: {
 				currency: 'CLP',
@@ -271,7 +271,7 @@ const psychologistPay = async (params, query) => {
 			},
 		];
 		analytics.track({
-			userId: psychologistId,
+			userId: psychologistId.toString(),
 			event: 'psy-premium-plan',
 			properties: {
 				currency: 'CLP',
