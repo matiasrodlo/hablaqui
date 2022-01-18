@@ -848,7 +848,6 @@ const createPlan = async ({ payload }) => {
 		let planData = [
 			{
 				product_id: created._id.toString(),
-				order_id: created.plan[created.plan.length - 1]._id.toString,
 				item_name: payload.title,
 				coupon: payload.coupon || '',
 				price: payload.price / sessionQuantity,
@@ -865,6 +864,7 @@ const createPlan = async ({ payload }) => {
 				properties: {
 					currency: 'CLP',
 					products: planData,
+					order_id: created.plan[created.plan.length - 1]._id.toString,
 				},
 			});
 			analytics.track({
@@ -874,6 +874,7 @@ const createPlan = async ({ payload }) => {
 					currency: 'CLP',
 					products: planData,
 					user: payload.user._id,
+					order_id: created.plan[created.plan.length - 1]._id.toString,
 				},
 			});
 		}
@@ -889,7 +890,6 @@ const createPlan = async ({ payload }) => {
 		let planData = [
 			{
 				product_id: created._id.toString(),
-				order_id: created.plan[created.plan.length - 1]._id.toString,
 				item_name: payload.title,
 				coupon: payload.coupon || '',
 				price: payload.price / sessionQuantity,
@@ -901,6 +901,7 @@ const createPlan = async ({ payload }) => {
 			event: 'current-user-purchase-plan',
 			properties: {
 				products: planData,
+				order_id: created.plan[created.plan.length - 1]._id.toString,
 			},
 		});
 		analytics.track({
@@ -909,6 +910,7 @@ const createPlan = async ({ payload }) => {
 			properties: {
 				products: planData,
 				user: payload.user._id,
+				order_id: created.plan[created.plan.length - 1]._id.toString,
 			},
 		});
 
@@ -1691,7 +1693,58 @@ const customNewSession = async (user, payload) => {
 				data.init_point
 			);
 		}
-
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			if (payload.type === 'online') {
+				let planData = [
+					{
+						item_id: 3,
+						item_name: 'Plan/sesión personalizada agendada por psicólogo',
+						item_price: payload.price,
+						item_quantity: 1,
+					},
+				];
+				analytics.track({
+					userId: user.id,
+					event: 'psy-scheduled-user-session',
+					properties: {
+						products: planData,
+						currency: 'CLP',
+						order_id: updatedSession.plan[updatedSession.plan.length - 1]._id.toString(),
+					},
+					total: 0,		
+				});		
+			}
+			else if (payload.type === 'presencial') {
+				let planData = [
+					{
+						item_id: 4,
+						item_name: 'Plan/sesión personalizada agendada por psicólogo presencialmente',
+						item_price: payload.price,
+						item_quantity: 1,
+					},
+				];
+				analytics.track({
+					userId: user.id,
+					event: 'psy-scheduled-onsite-user-session',
+					properties: {
+						products: planData,
+						currency: 'CLP',
+						order_id: updatedSession.plan[updatedSession.plan.length - 1]._id.toString(),
+					},
+					total: 0,
+				});
+			}
+			else if (payload.type === 'compromiso privado') {
+				analytics.track({
+					userId: user.id,
+					event: 'psy-scheduled-private-hours',
+				}
+			);
+			}
+		}
 		// respondemos con la sesion creada
 		return okResponse('sesion creada', {
 			sessions: setSession(user.role, [updatedSession]).pop(),
