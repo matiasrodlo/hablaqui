@@ -77,7 +77,16 @@
 					"
 				>
 					<template #expanded-item="{ item }">
-						<td :colspan="header.length" class="px-0">
+						<td
+							:colspan="header.length"
+							class="px-0"
+							@click="
+								() => {
+									selected = item;
+									dialog = true;
+								}
+							"
+						>
 							<v-simple-table>
 								<template #default>
 									<tbody>
@@ -134,8 +143,8 @@
 						</v-btn>
 					</v-card-actions>
 				</v-card>
-				<v-card style="border-radius: 15px" class="elevation-1 mt-4">
-					<v-card-text v-if="lastTransaction">
+				<v-card v-if="lastTransaction" style="border-radius: 15px" class="elevation-1 mt-4">
+					<v-card-text>
 						<div class="title">Última transacción</div>
 						<div class="body-1 my-3 d-flex justify-space-between align-center">
 							<v-img
@@ -153,7 +162,7 @@
 							</div>
 						</div>
 					</v-card-text>
-					<v-divider v-if="lastTransaction"> </v-divider>
+					<v-divider> </v-divider>
 					<v-card-actions>
 						<v-btn
 							block
@@ -243,13 +252,38 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 		</v-expansion-panels>
+		<v-dialog v-model="dialog" persistent max-width="400">
+			<v-card max-width="400">
+				<v-card-title class="d-flex">
+					<div class="primary--text" style="flex: 1">Detalles</div>
+					<div style="flex: 0">
+						<v-btn
+							icon
+							@click="
+								() => {
+									dialog = false;
+									seledted = null;
+								}
+							"
+						>
+							<icon size="30" color="#b1b1b1" :icon="mdiClose" />
+						</v-btn>
+					</div>
+				</v-card-title>
+				<v-card-text>detalle de session</v-card-text>
+				<v-card-text>{{ selected }}</v-card-text>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
-import { mdiMagnify } from '@mdi/js';
+import { mdiMagnify, mdiClose } from '@mdi/js';
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		items: {
 			type: Array,
@@ -271,10 +305,12 @@ export default {
 	data() {
 		return {
 			expanded: [],
-			selected: [],
+			selected: null,
+			dialog: false,
 			menu: false,
 			findByDate: moment().format('YYYY-MM'),
 			mdiMagnify,
+			mdiClose,
 			search: '',
 			header: [
 				{
