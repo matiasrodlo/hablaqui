@@ -479,8 +479,8 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		total,
-		totalAvailable,
+		total: total.toFixed(2),
+		totalAvailable: totalAvailable.toFixed(2),
 		successSessions,
 		sessionsReceivable,
 		sessions,
@@ -1731,7 +1731,7 @@ const paymentsInfo = async user => {
 					: comission;
 				let sessions = plans.session.map(session => {
 					const transDate = session.paymentDate
-						? session.paymentDate
+						? moment(session.paymentDate).format('DD/MM/YYYY')
 						: 'Por cobrar';
 					const hablaquiPercentage =
 						realComission === 0.0399
@@ -1742,9 +1742,8 @@ const paymentsInfo = async user => {
 						datePayment: moment(plans.datePayment).format(
 							'DD/MM/YYYY'
 						),
-						name: `${item.user.name ? item.user.name : ''} ${
-							item.user.lastName ? item.user.lastName : ''
-						}`,
+						name: item.user.name ? item.user.name : '',
+						lastname: item.user.lastName ? item.user.lastName : '',
 						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
@@ -1773,9 +1772,8 @@ const paymentsInfo = async user => {
 				return {
 					idPlan: plans._id,
 					sessionsId: item._id,
-					name: `${item.user.name ? item.user.name : ''} ${
-						item.user.lastName ? item.user.lastName : ''
-					}`,
+					name: item.user.name ? item.user.name : '',
+					lastname: item.user.lastName ? item.user.lastName : '',
 					plan: plans.title,
 					payment: plans.payment,
 					suscription: plans.period,
