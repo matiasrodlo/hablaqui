@@ -1954,6 +1954,96 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	return okResponse('Sesion rechazada', { evaluations });
 };
 
+const changeToInmediateAttention = async psy => {
+	let sessions = await getAllSessionsFunction(psy);
+	let now = Date.now();
+	sessions = sessions.filter(session => {
+		const date = moment(session.date).format('DD/MM/YYYY HH:mm');
+		return (
+			session.status !== 'success' &&
+			moment(date).isBefore(moment(now).add(3, 'hours')) &&
+			moment(date)
+				.add(50, 'minutes')
+				.isAfter(moment(now))
+		);
+	});
+
+	if (sessions.length !== 0)
+		return conflictResponse('Tiene sesiones próximas');
+
+	const psychologist = await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				inmediateAttention: {
+					acitvated: true,
+					expiration: moment(now)
+						.add(1, 'hour')
+						.format(),
+				},
+			},
+		}
+	);
+	/*let hours = [moment(now).format('HH:mm')];
+	for (let i = 1; i < 3; i++)
+		hours.push(
+			moment(now)
+				.add(i, 'hours')
+				.format('HH:mm')
+		);*/
+
+	return okResponse('Estado cambiado', { psychologist });
+};
+
+const getAllSessionsInmediateAttention = async () => {
+	let psychologist = await Psychologist.find({}).select(
+		'_id inmediateAttention'
+	);
+	// Para que nos de deje modificar el array de mongo
+	psychologist = JSON.stringify(psychologist);
+	psychologist = JSON.parse(psychologist);
+	psychologist = psychologist.filter(
+		psy => psy.inmediateAttention.acitvated === true
+	);
+
+	let allSessions = await Sessions.find().populate(
+		'psychologist',
+		'_id inmediateAttention'
+	);
+
+	let now = Date.now();
+	// Formato de array debe ser [date, date, ...date]
+	const setDaySessions = sessions =>
+		sessions.flatMap(item => {
+			return item.plan
+				.flatMap(plan => {
+					return plan.session.length
+						? plan.session.map(session => session.date)
+						: [];
+				})
+				.filter(session => {
+					const date = moment(session.date).format(
+						'DD/MM/YYYY HH:mm'
+					);
+					return (
+						session.status !== 'success' &&
+						moment(date).isBefore(moment(now).add(3, 'hours')) &&
+						moment(date)
+							.add(50, 'minutes')
+							.isAfter(moment(now))
+					);
+				});
+		});
+
+	allSessions = psychologist.map(item => ({
+		...item,
+		sessions: setDaySessions(
+			allSessions.filter(element => element.psychologist === item._id)
+		).length,
+	}));
+
+	return okResponse('Sesiones', { allSessions });
+};
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -1995,6 +2085,8 @@ const psychologistsService = {
 	createPaymentsRequest,
 	completePaymentsRequest,
 	getTransactions,
+	changeToInmediateAttention,
+	getAllSessionsInmediateAttention,
 };
 
 export default Object.freeze(psychologistsService);

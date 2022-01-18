@@ -19,6 +19,11 @@ let defaultPreferences = {
 	corporativeSessions: true,
 };
 
+let defaultInmediateAttention = {
+	acitvated: { type: Boolean, default: false },
+	expiration: { type: String, default: '' },
+};
+
 const defaultPrices = {
 	text: 38000,
 	full: 62500,
@@ -213,6 +218,10 @@ let psychologist = new Schema({
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',
+	},
+	inmediateAttention: {
+		type: Object,
+		default: defaultInmediateAttention,
 	},
 });
 
