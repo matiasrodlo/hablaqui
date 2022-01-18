@@ -7,7 +7,9 @@
 				hide-search
 				:items="payments"
 				:transactions="transactions"
+				:psychologist="psychologist"
 				:loading="loading"
+				:fetch-data="initFetch"
 			></table-pagos>
 		</template>
 		<recruited-overlay />
@@ -28,6 +30,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			psychologist: null,
 		};
 	},
 	computed: {
@@ -49,6 +52,10 @@ export default {
 			this.loading = true;
 			await this.getPayments();
 			await this.getTransactions();
+			const { psychologist } = await this.$axios.$get(
+				`/psychologists/one/${this.$auth.$state.user.psychologist}`
+			);
+			this.psychologist = await psychologist;
 			this.loading = false;
 		},
 		...mapActions({

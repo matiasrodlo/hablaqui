@@ -179,6 +179,7 @@
 							rounded
 							depressed
 							class="primary--text"
+							@click="dialogPayment = true"
 						>
 							Retirar dinero
 						</v-btn>
@@ -344,11 +345,87 @@
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
+		<v-dialog v-model="dialogPayment" persistent max-width="400">
+			<v-card max-width="400">
+				<template v-if="step === 1">
+					<v-card-title class="d-flex">
+						<div style="flex: 1">Revisa si todo esta bien</div>
+						<div style="flex: 0">
+							<v-btn
+								icon
+								@click="
+									() => {
+										dialogPayment = false;
+										step = 1;
+									}
+								"
+							>
+								<icon size="30" color="#b1b1b1" :icon="mdiClose" />
+							</v-btn>
+						</div>
+					</v-card-title>
+					<v-card-text class="pt-6">
+						<div v-if="transactions" class="d-flex justify-space-between align-center">
+							<div>Se acreditara el {{ dayWithdraw }}</div>
+							<div class="title">${{ transactions.totalAvailable }}</div>
+						</div>
+					</v-card-text>
+					<v-card-text class="py-0">
+						<v-divider> </v-divider>
+					</v-card-text>
+					<v-card-text v-if="psychologist" class="pb-0 pt-2">
+						<div class="d-flex justify-space-between align-center">
+							<div>
+								<div class="title">
+									{{ psychologist.paymentMethod.bank }}
+								</div>
+								<v-btn color="primary" text class="pa-0" to="perfil">
+									Cambiar de cuenta
+								</v-btn>
+							</div>
+							<div class="subtitle-2 text-right">
+								<div>{{ psychologist.paymentMethod.name }}</div>
+								<div>{{ psychologist.paymentMethod.accountNumber }}</div>
+							</div>
+						</div>
+					</v-card-text>
+					<v-card-text class="py-0">
+						<v-divider></v-divider>
+					</v-card-text>
+					<v-card-actions class="py-6">
+						<v-spacer></v-spacer>
+						<v-btn
+							:loading="loadingPayment"
+							rounded
+							color="primary"
+							class="px-10"
+							@click="submitPayment"
+						>
+							Continuar
+						</v-btn>
+					</v-card-actions>
+				</template>
+				<template v-else>
+					<v-card-title v-if="transactions" class="text-center">
+						Transferiremos los {{ transactions.totalAvailable }} dentro de 7 dias
+						habiles
+					</v-card-title>
+					<v-card-text class="text-center">
+						<div v-if="psychologist" class="body-1">
+							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
+							{{ psychologist.paymentMethod.bank }}
+						</div>
+						<v-btn rounded color="primary" to="/" class="mt-4 px-6">Ir a inicio</v-btn>
+					</v-card-text>
+				</template>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
+import { mapActions } from 'vuex';
 import { mdiMagnify, mdiClose } from '@mdi/js';
 export default {
 	components: {
@@ -363,6 +440,10 @@ export default {
 			type: Object,
 			default: null,
 		},
+		psychologist: {
+			type: Object,
+			default: null,
+		},
 		loading: {
 			type: Boolean,
 			default: false,
@@ -371,15 +452,22 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		fetchData: {
+			type: Function,
+			default: () => null,
+		},
 	},
 	data() {
 		return {
 			expanded: [],
 			selected: null,
+			step: 1,
 			dialog: false,
+			dialogPayment: false,
 			menu: false,
 			findByDate: moment().format('YYYY-MM'),
 			mdiMagnify,
+			loadingPayment: false,
 			mdiClose,
 			search: '',
 			header: [
@@ -397,6 +485,10 @@ export default {
 		};
 	},
 	computed: {
+		dayWithdraw() {
+			const day = moment().add('7', 'days');
+			return moment(day).format('DD/MM/YYYY');
+		},
 		lastTransaction() {
 			if (!this.transactions || !this.transactions.transactions.length) return null;
 			return this.transactions.transactions[this.transactions.transactions.length - 1];
@@ -436,6 +528,16 @@ export default {
 		formatDateMoment(item) {
 			return moment(item).format('DD MMMM, YYYY');
 		},
+		async submitPayment() {
+			this.loadingPayment = true;
+			await this.paymentRequest();
+			await this.fetchData();
+			this.loadingPayment = false;
+			this.step = 2;
+		},
+		...mapActions({
+			paymentRequest: 'Psychologist/paymentRequest',
+		}),
 	},
 };
 </script>

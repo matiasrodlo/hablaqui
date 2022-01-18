@@ -89,7 +89,6 @@ export default {
 	async getPayments({ commit }) {
 		try {
 			const { payments } = await this.$axios.$get('/psychologist/payments/all');
-			console.log(payments);
 			commit('setPayments', payments);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -125,6 +124,16 @@ export default {
 				data: { username },
 			});
 			return data.available;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async paymentRequest({ commit }, username) {
+		try {
+			await this.$axios('/psychologist/payment-request', {
+				method: 'POST',
+			});
+			snackBarSuccess('Pago solicitado')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
