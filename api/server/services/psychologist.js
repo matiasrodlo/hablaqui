@@ -1797,7 +1797,8 @@ const paymentsInfo = async user => {
 		return (
 			item &&
 			item.payment === 'success' &&
-			item.plan !== 'compromiso privado'
+			item.plan !== 'compromiso privado' &&
+			item.suscription !== 'Plan inicial'
 		);
 	});
 	//logInfo(payments);
