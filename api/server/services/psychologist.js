@@ -268,6 +268,18 @@ const createPaymentsRequest = async user => {
 			session.request === 'none' &&
 			session.name !== 'Compromiso privado '
 	);
+
+	const total = sessions.reduce(
+		(sum, value) =>
+			typeof value.total == 'number' ? sum + value.total : sum,
+		0
+	);
+
+	if (total === 0)
+		return conflictResponse(
+			'No puedes hacer una petición con saldo 0 disponible'
+		);
+
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
 			{
@@ -285,11 +297,6 @@ const createPaymentsRequest = async user => {
 		);
 	});
 
-	const total = sessions.reduce(
-		(sum, value) =>
-			typeof value.total == 'number' ? sum + value.total : sum,
-		0
-	);
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
