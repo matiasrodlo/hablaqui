@@ -115,20 +115,20 @@
 						</div>
 					</template>
 					<template #expanded-item="{ item }">
-						<td
-							:colspan="header.length"
-							class="px-0"
-							@click="
-								() => {
-									selected = item;
-									dialog = true;
-								}
-							"
-						>
+						<td :colspan="header.length" class="px-0">
 							<v-simple-table>
 								<template #default>
 									<tbody>
-										<tr v-for="element in item.sessions" :key="element.id">
+										<tr
+											v-for="element in item.sessions"
+											:key="element.id"
+											@click="
+												() => {
+													selected = element;
+													dialog = true;
+												}
+											"
+										>
 											<td style="width: 15.5%" class="caption text-start">
 												{{ element.date }}
 											</td>
@@ -195,10 +195,10 @@
 							<div>
 								<div class="body-1 text-right">
 									$ {{ lastTransaction.total }} -
-									{{ lastTransaction.sessionsPaid }}
+									{{ lastTransaction.sessionsPaid }} Sesiones
 								</div>
-								<div class="body-1 text-right">
-									{{ lastTransaction.transactionDate }}
+								<div class="body-1 text-right pt-2">
+									{{ formatDateMoment(lastTransaction.trasnactionDate) }}
 								</div>
 							</div>
 						</div>
@@ -311,8 +311,34 @@
 						</v-btn>
 					</div>
 				</v-card-title>
-				<v-card-text>detalle de session</v-card-text>
-				<v-card-text>{{ selected }}</v-card-text>
+				<v-card-text v-if="selected">
+					<div class="d-flex justify-space-between my-2">
+						<div>Fecha de sesión:</div>
+						<div>{{ selected.date }}</div>
+					</div>
+					<div class="d-flex justify-space-between my-2">
+						<div>N° de sesión:</div>
+						<div>{{ selected.sessionsNumber }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">Monto:</div>
+						<div style="flex: 0">{{ selected.amount }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">%Hablaqui:</div>
+						<div style="flex: 0">{{ selected.hablaquiPercentage }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">%Mercadopago:</div>
+						<div style="flex: 0">{{ selected.mercadoPercentage }}</div>
+					</div>
+				</v-card-text>
+				<v-divider></v-divider>
+				<v-card-actions v-if="selected" class="py-6">
+					<span class="secondary--text">Total:</span>
+					<v-spacer></v-spacer>
+					<span class="secondary--text">{{ selected.total }}</span>
+				</v-card-actions>
 			</v-card>
 		</v-dialog>
 	</div>
@@ -403,6 +429,9 @@ export default {
 	methods: {
 		formatDate(item) {
 			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
+		},
+		formatDateMoment(item) {
+			return moment(item).format('DD MMMM, YYYY');
 		},
 	},
 };
