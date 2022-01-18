@@ -229,7 +229,7 @@ const completePaymentsRequest = async psy => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
@@ -279,6 +279,7 @@ const createPaymentsRequest = async user => {
 		return conflictResponse(
 			'No puedes hacer una petición con saldo 0 disponible'
 		);
+	
 
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
@@ -300,13 +301,26 @@ const createPaymentsRequest = async user => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
 		{ $push: { transactionsRequest: transaction } }
 	);
 
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: psy,
+			event: 'psy-withdrawal-request',
+			properties: {
+				total: total,
+				sessions: sessions.length,
+			}
+		}
+		);
 	return okResponse('Peticion hecha', {
 		total: total,
 		sessions: sessions,
