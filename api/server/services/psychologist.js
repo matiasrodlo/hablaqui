@@ -1067,6 +1067,19 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		newDate
 	);
 
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: userLogged._id.toString(),
+			event: 'user-reschedule-session',
+			properties: {
+				user: userLogged._id,
+				psychologistId: sessions.psychologist._id.toString(),
+			},
+		});
+
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
