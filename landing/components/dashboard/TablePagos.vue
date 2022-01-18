@@ -179,6 +179,7 @@
 							rounded
 							depressed
 							class="primary--text"
+							:disabled="transactions.sessionsReceivable <= 0"
 							@click="dialogPayment = true"
 						>
 							Retirar dinero
