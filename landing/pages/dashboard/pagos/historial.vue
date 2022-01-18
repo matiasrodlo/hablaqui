@@ -30,7 +30,46 @@
 					</v-card-actions>
 				</v-card>
 			</v-col>
-			<v-col cols="8"> </v-col>
+			<v-col cols="8">
+				<v-card v-if="transactions" style="border-radius: 15px" class="elevation-1">
+					<v-card-title>
+						<div>
+							<div class="title">movimientos de tu dinero</div>
+							<div class="body-1 secondary--text">
+								Conoce el detalle de los dineros retirados por ti
+							</div>
+						</div>
+					</v-card-title>
+					<v-divider></v-divider>
+					<v-card-text class="pt-0">
+						<v-list>
+							<div v-for="(item, i) in transactions.transactions" :key="i">
+								<v-list-item class="d-flex justify-space-between align-center">
+									<v-list-item-avatar>
+										<v-img
+											max-width="40px"
+											contain
+											:src="`https://cdn.hablaqui.cl/static/retiro.png`"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content> </v-list-item-content>
+									<v-list-item-action class="text-right">
+										<div class="font-weight-bold secondary--text">
+											$ {{ item.total }} - {{ item.sessionsPaid }} Sesiones
+										</div>
+										<div v-if="item.trasactionDate" class="secondary--text">
+											{{ formatDateMoment(item.trasactionDate) }}
+										</div>
+									</v-list-item-action>
+								</v-list-item>
+								<v-divider
+									v-if="transactions.transactions.length - 1 !== i"
+								></v-divider>
+							</div>
+						</v-list>
+					</v-card-text>
+				</v-card>
+			</v-col>
 		</v-row>
 		<v-dialog v-model="dialogPayment" persistent max-width="420">
 			<v-card max-width="450">
@@ -113,6 +152,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiClose } from '@mdi/js';
+import moment from 'moment';
 export default {
 	name: 'Pagos',
 	components: {
@@ -125,16 +165,24 @@ export default {
 		return {
 			mdiClose,
 			dialogPayment: false,
+			loadingPayment: false,
 			loading: false,
 			psychologist: null,
 			step: 1,
 		};
 	},
 	computed: {
+		dayWithdraw() {
+			const day = moment().add('7', 'days');
+			return moment(day).format('DD/MM/YYYY');
+		},
 		...mapGetters({
 			payments: 'Psychologist/payments',
 			transactions: 'Psychologist/transactions',
 		}),
+	},
+	created() {
+		moment.locale('es');
 	},
 	mounted() {
 		this.initFetch();
@@ -155,7 +203,18 @@ export default {
 			this.psychologist = await psychologist;
 			this.loading = false;
 		},
+		formatDateMoment(item) {
+			return moment(item).format('DD MMMM, YYYY');
+		},
+		async submitPayment() {
+			this.loadingPayment = true;
+			await this.paymentRequest();
+			await this.initFetch();
+			this.loadingPayment = false;
+			this.step = 2;
+		},
 		...mapActions({
+			paymentRequest: 'Psychologist/paymentRequest',
 			getPayments: 'Psychologist/getPayments',
 			getTransactions: 'Psychologist/getTransactions',
 		}),
