@@ -54,7 +54,7 @@
 			</v-col>
 		</v-row>
 		<v-row class="hidden-sm-and-down mt-10">
-			<v-col cols="9">
+			<v-col :cols="$route.name === 'dashboard-pagos' ? '9' : '12'">
 				<v-data-table
 					class="pointer elevation-1"
 					:loading="loading"
@@ -159,7 +159,7 @@
 					</template>
 				</v-data-table>
 			</v-col>
-			<v-col cols="3">
+			<v-col v-if="$route.name === 'dashboard-pagos'" cols="3">
 				<v-card style="border-radius: 15px" class="elevation-1">
 					<v-card-text v-if="transactions">
 						<div class="primary--text title">Tu dinero disponible</div>
