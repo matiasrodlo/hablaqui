@@ -228,7 +228,7 @@ const completePaymentsRequest = async psy => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
@@ -291,7 +291,7 @@ const createPaymentsRequest = async user => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
