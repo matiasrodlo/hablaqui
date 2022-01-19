@@ -67,6 +67,8 @@ const recruitmentService = {
 					isContentCreator: recruited.isContentCreator,
 					isAffiliateExternal: recruited.isAffiliateExternal,
 					isInterestedBusiness: recruited.isInterestedBusiness,
+					professionalDescription: recruited.professionalDescription,
+					personalDescription: recruited.personalDescription,
 				},
 			});
 		}
