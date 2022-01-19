@@ -99,7 +99,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		userId: user._id.toString(),
 		event: 'message-sent',
 		properties: {
-			timestamp: Date(),
+			timestamp: moment().format(),
 		},
 	});
 

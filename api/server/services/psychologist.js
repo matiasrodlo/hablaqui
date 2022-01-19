@@ -318,7 +318,7 @@ const createPaymentsRequest = async user => {
 			properties: {
 				total: total,
 				sessions: sessions.length,
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			}
 		}
 		);
@@ -880,7 +880,7 @@ const createPlan = async ({ payload }) => {
 					currency: 'CLP',
 					products: planData,
 					order_id: created.plan[created.plan.length - 1]._id.toString,
-					timestamp: new Date(),
+					timestamp: moment().format(),
 				},
 			});
 			analytics.track({
@@ -891,7 +891,7 @@ const createPlan = async ({ payload }) => {
 					products: planData,
 					user: payload.user._id,
 					order_id: created.plan[created.plan.length - 1]._id.toString,
-					timestamp: new Date(),
+					timestamp: moment().format(),
 				},
 			});
 		}
@@ -919,7 +919,7 @@ const createPlan = async ({ payload }) => {
 			properties: {
 				products: planData,
 				order_id: created.plan[created.plan.length - 1]._id.toString,
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			},
 		});
 		analytics.track({
@@ -929,7 +929,7 @@ const createPlan = async ({ payload }) => {
 				products: planData,
 				user: payload.user._id,
 				order_id: created.plan[created.plan.length - 1]._id.toString,
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			},
 		});
 
@@ -1002,7 +1002,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				planId: idPlan,
 				userpsyId: id,
 				email: userLogged.email,
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			},
 		});
 
@@ -1013,7 +1013,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				user: userLogged._id,
 				planId: idPlan,
 				userpsyId: id,
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			},
 		});
 	}
@@ -1107,7 +1107,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			properties: {
 				user: userLogged._id,
 				psychologistId: sessions.psychologist._id.toString(),
-				timestamp: new Date(),
+				timestamp: moment().format(),
 			},
 		});
 
@@ -1362,7 +1362,7 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: psy._id.toString(),
 					event: 'psy-updated-profile',
-					timestamp: new Date(),
+					timestamp: moment().format(),
 				});
 				analytics.identify({
 					userId: psy._id.toString(),
@@ -1424,7 +1424,7 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: user.id.toString(),
 					event: 'recruited-updated-profile',
-					timestamp: new Date(),
+					timestamp: moment().format(),
 				});
 				analytics.identify({
 					userId: user.id.toString(),
@@ -1649,7 +1649,7 @@ const updateFormationExperience = async (user, payload) => {
 
 const uploadProfilePicture = async (psyID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const { name, lastName } = await User.findById(psyID);
+	const { name, lastName, psychologist } = await User.findById(psyID);
 	const gcsname = `${psyID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	const stream = file.createWriteStream({
@@ -1665,6 +1665,15 @@ const uploadProfilePicture = async (psyID, picture) => {
 		logInfo(`${gcsname}` + ' subido exitosamente');
 	});
 	stream.end(picture.buffer);
+
+	analytics.track({
+		userId: psychologist.toString(),
+		event: 'updated-profile-picture',
+		properties: {
+			avatar: getPublicUrlAvatar(gcsname),
+			timestamp: moment().format(),
+		}
+	}
 
 	await Psychologist.findByIdAndUpdate(psyID, {
 		avatar: getPublicUrlAvatar(gcsname),
@@ -1804,7 +1813,7 @@ const customNewSession = async (user, payload) => {
 						products: planData,
 						currency: 'CLP',
 						order_id: updatedSession.plan[updatedSession.plan.length - 1]._id.toString(),
-						timestamp: new Date(),
+						timestamp: moment().format(),
 					},
 					total: 0,		
 				});		
@@ -1825,7 +1834,7 @@ const customNewSession = async (user, payload) => {
 						products: planData,
 						currency: 'CLP',
 						order_id: updatedSession.plan[updatedSession.plan.length - 1]._id.toString(),
-						timestamp: new Date(),
+						timestamp: moment().format(),
 					},
 					total: 0,
 				});
@@ -1834,7 +1843,7 @@ const customNewSession = async (user, payload) => {
 				analytics.track({
 					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-private-hours',
-					timestamp: new Date(),
+					timestamp: moment().format(),
 				}
 			);
 			}
