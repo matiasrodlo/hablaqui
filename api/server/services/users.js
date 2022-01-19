@@ -361,42 +361,60 @@ const usersService = {
 			plan =>
 				plan.payment === 'success' &&
 				moment().isBefore(moment(plan.expiration))
-		)[0];
+		);
 
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 
-		let remainings = planData.remainingSessions;
-		const sessionsData = planData.session.filter(
-			session => session.status !== 'success'
-		);
+		let sessionsData = [];
+		planData.forEach(plan => {
+			const sessions = {
+				plan: plan._id,
+				remainingSessions: plan.remainingSessions,
+				price: plan.sessionPrice,
+				session: plan.session.filter(
+					session => session.status !== 'success'
+				),
+			};
+			sessionsData.push(sessions);
+		});
 
-		await Sessions.updateOne(
-			{
-				_id: sessionsId,
-				'plan._id': planData._id,
-			},
-			{
-				$set: {
-					'plan.$.payment': 'failed',
-					'plan.$.remainingSessions': 0,
-				},
-			}
-		);
-		remainings += sessionsData.length;
+		let discount = 0;
+		let sessionsToDelete = [];
+		sessionsData.forEach(data => {
+			const remaining = data.session.length + data.remainingSessions;
+			discount += remaining * data.price;
+			sessionsToDelete.push(data.session);
+		});
+		console.log(discount);
+		console.log(sessionsToDelete);
 
-		sessionsData.forEach(async session => {
+		planData.forEach(async plan => {
 			await Sessions.updateOne(
 				{
 					_id: sessionsId,
-					'plan._id': planData._id,
-					'plan.session._id': session._id,
+					'plan._id': plan._id,
 				},
 				{
-					$pull: {
-						'plan.$.session': { _id: session._id },
+					$set: {
+						'plan.$.payment': 'failed',
+						'plan.$.remainingSessions': 0,
 					},
 				}
 			);
+			plan.session.forEach(async session => {
+				await Sessions.updateOne(
+					{
+						_id: sessionsId,
+						'plan._id': plan._id,
+						'plan.session._id': session._id,
+					},
+					{
+						$pull: {
+							'plan.$.session': { _id: session._id },
+						},
+					}
+				);
+			});
 		});
 
 		const now = new Date();
@@ -405,7 +423,7 @@ const usersService = {
 
 		const newCoupon = {
 			code: foundPlan.user.name + now.getTime(),
-			discount: planData.sessionPrice * remainings,
+			discount,
 			discountType: 'static',
 			restrictions: {
 				user: foundPlan.user._id,
