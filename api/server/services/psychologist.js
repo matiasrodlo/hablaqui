@@ -1348,6 +1348,35 @@ const updatePsychologist = async (user, profile) => {
 				}
 			);
 
+			analytics.track({
+				userId: user.id.toString(),
+				event: 'psy-updated-profile',
+			});
+			analytics.identify({
+				userId: user.id.toString(),
+				traits: {
+					email: updated.email,
+					name: updated.name,
+					lastName: updated.lastName,
+					username: updated.username,
+					code: updated.code,
+					avatar: updated.avatar,
+					country: updated.country,
+					marketplaceVisibility: updated.preferences.marketplaceVisibility,
+					birthDate: updated.birthDate,
+					comuna: updated.comuna,
+					region: updated.region,
+					isVerified: updated.isVerified,
+					approveAvatar: updated.approveAvatar,
+					freeFirstSession: updated.freeFirstSession,
+					hasPersonalDescription: updated.personalDescription == "" ? false : true,
+					hasProfessionalDescription: updated.professionalDescription == "" ? false : true,
+					personalDescription: updated.personalDescription,
+					professionalDescription: updated.professionalDescription,
+					role: 'psychologist',
+				}
+			});
+
 			const data = {
 				user: user._id,
 				psychologistId: updated._id,
