@@ -31,7 +31,7 @@ const recruitmentService = {
 		}
 
 		analytics.track({
-			userId: user._id,
+			userId: user._id.toString(),
 			event: 'psy-new-application',
 			properties: {
 				email: user.email,

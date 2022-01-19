@@ -381,7 +381,7 @@ const createPlan = async ({ payload }) => {
 		});
 
 		analytics.track({
-			userId: payload.user._id,
+			userId: payload.user._id.toString(),
 			event: 'user-purchase-plan',
 			properties: {
 				plan: payload.title,
@@ -392,7 +392,7 @@ const createPlan = async ({ payload }) => {
 			},
 		});
 		analytics.track({
-			userId: payload.psychologist,
+			userId: payload.psychologist.toString(),
 			event: 'psy-new-plan',
 			properties: {
 				plan: payload.title,
