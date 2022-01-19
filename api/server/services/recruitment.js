@@ -151,11 +151,11 @@ const recruitmentService = {
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
 			analytics.track({
-				userId: userUpdated._id.toString(),
+				userId: newProfile._id.toString(),
 				event: 'new-psy-onboard',
 			});
 			analytics.identify({
-				userId: userUpdated._id.toString(),
+				userId: newProfile._id.toString(),
 				traits: {
 					role: userUpdated.role,
 					psychologist: newProfile._id,

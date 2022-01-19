@@ -1352,11 +1352,11 @@ const updatePsychologist = async (user, profile) => {
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				analytics.track({
-					userId: user.id.toString(),
+					userId: psy._id.toString(),
 					event: 'psy-updated-profile',
 				});
 				analytics.identify({
-					userId: user.id.toString(),
+					userId: psy._id.toString(),
 					traits: {
 						email: updated.email,
 						name: updated.name,
@@ -1788,7 +1788,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.id.toString(),
+					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-user-session',
 					properties: {
 						products: planData,
@@ -1808,7 +1808,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.id.toString(),
+					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-onsite-user-session',
 					properties: {
 						products: planData,
@@ -1820,7 +1820,7 @@ const customNewSession = async (user, payload) => {
 			}
 			else if (payload.type === 'compromiso privado') {
 				analytics.track({
-					userId: user.id.toString(),
+					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-private-hours',
 				}
 			);
