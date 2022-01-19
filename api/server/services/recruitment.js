@@ -51,6 +51,21 @@ const recruitmentService = {
 					isInterestedBusiness: recruited.isInterestedBusiness,
 				},
 			});
+			analytics.identify({
+				userId: user._id.toString(),
+				traits: {
+					email: user.email,
+					name: user.name,
+					lastName: user.lastName,
+					source: recruited.howFindOut,
+					isExclusiveActivity: recruited.isExclusiveActivity,
+					isUnderSupervision: recruited.isUnderSupervision,
+					isSupervisor: recruited.isSupervisor,
+					isContentCreator: recruited.isContentCreator,
+					isAffiliateExternal: recruited.isAffiliateExternal,
+					isInterestedBusiness: recruited.isInterestedBusiness,
+				},
+			});
 		}
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
 		mailService.sendRecruitmentConfirmation(recruited);
