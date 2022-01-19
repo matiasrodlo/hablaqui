@@ -253,8 +253,9 @@ const usersService = {
 					name: user.name,
 					email: user.email,
 					type: user.role,
-					referencerId: user._id,
+					referencerId: user.psychologist.toString(),
 					referencerName: `${user.name} ${user.lastName}`,
+					timestamp: new Date(),
 				},
 			});
 		}

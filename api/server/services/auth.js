@@ -139,6 +139,7 @@ const register = async payload => {
 				name: user.name,
 				email: user.email,
 				type: user.role,
+				timestamp: new Date(),
 			},
 		});
 	}

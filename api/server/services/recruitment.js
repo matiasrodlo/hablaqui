@@ -49,6 +49,9 @@ const recruitmentService = {
 					isContentCreator: recruited.isContentCreator,
 					isAffiliateExternal: recruited.isAffiliateExternal,
 					isInterestedBusiness: recruited.isInterestedBusiness,
+					professionalDescription: recruited.professionalDescription,
+					personalDescription: recruited.personalDescription,
+					timestamp: new Date(),
 				},
 			});
 			analytics.identify({
@@ -153,6 +156,7 @@ const recruitmentService = {
 			analytics.track({
 				userId: newProfile._id.toString(),
 				event: 'new-psy-onboard',
+				timestamp: new Date(),
 			});
 			analytics.identify({
 				userId: newProfile._id.toString(),
