@@ -5,8 +5,7 @@ on: pull_request
 jobs:
   build-and-deploy-back:
     runs-on: ubuntu-latest
-    if: >- 
-      {github.event.pull_request.user.login} == "Fairplaay"
+    if: github.event.pull_request.user.login == "Fairplaay"
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
