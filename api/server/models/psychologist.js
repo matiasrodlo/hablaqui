@@ -20,7 +20,7 @@ let defaultPreferences = {
 };
 
 let defaultInmediateAttention = {
-	acitvated: false,
+	activated: false,
 	expiration: '',
 };
 

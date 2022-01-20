@@ -20,4 +20,8 @@ cronRouter.post(
 	cronController.scheduleChatEmails
 );
 
+cronRouter.post(
+	'/cron/status/attention/:authToken',
+	cronController.statusInmediateAttention
+);
 export default cronRouter;

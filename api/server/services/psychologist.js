@@ -653,7 +653,7 @@ const formattedSessionsAll = async () => {
 
 	allSessions = psychologist.map(item => {
 		let preferences = item.preferences;
-		preferences.minimumNewSession = item.inmediateAttention.acitvated
+		preferences.minimumNewSession = item.inmediateAttention.activated
 			? 0
 			: preferences.minimumNewSession;
 		return {
@@ -667,8 +667,6 @@ const formattedSessionsAll = async () => {
 		};
 	});
 
-	logInfo(allSessions.filter(s => s.inmediateAttention.acitvated));
-
 	sessions = allSessions.map(item => {
 		const minimumNewSession = moment(Date.now()).add(
 			item.preferences.minimumNewSession,
@@ -681,7 +679,7 @@ const formattedSessionsAll = async () => {
 			sessions: length.map(el => {
 				const day = moment(Date.now()).add(el, 'days');
 				const temporal = moment(day).format('L');
-				if (item.inmediateAttention.acitvated && el === 0)
+				if (item.inmediateAttention.activated && el === 0)
 					schedule = findWeekDay(schedule, day);
 				return {
 					psychologist: item._id,
@@ -809,7 +807,7 @@ const createPlan = async ({ payload }) => {
 	const psychologist = await Psychologist.findById(payload.psychologist);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	if (
-		!psychologist.inmediateAttention.acitvated &&
+		!psychologist.inmediateAttention.activated &&
 		moment().isAfter(
 			moment(date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumNewSession,
@@ -2002,46 +2000,53 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 };
 
 const changeToInmediateAttention = async psy => {
-	let sessions = await getAllSessionsFunction(psy);
-	let now = Date.now();
-	sessions = sessions.filter(session => {
-		const date = moment(session.date).format('DD/MM/YYYY HH:mm');
-		return (
-			session.status !== 'success' &&
-			moment(date).isBefore(moment(now).add(3, 'hours')) &&
-			moment(date)
-				.add(50, 'minutes')
-				.isAfter(moment(now))
-		);
-	});
-
-	if (sessions.length !== 0)
-		return conflictResponse('Tiene sesiones próximas');
-
-	const psychologist = await Psychologist.findOneAndUpdate(
-		{ _id: psy },
-		{
-			$set: {
-				inmediateAttention: {
-					acitvated: true,
-					expiration: moment(now)
-						.add(1, 'hour')
-						.format(),
+	let psychologist = await Psychologist.findById(psy);
+	if (psychologist.inmediateAttention.activated) {
+		psychologist = await Psychologist.findOneAndUpdate(
+			{ _id: psy },
+			{
+				$set: {
+					inmediateAttention: {
+						activated: false,
+						expiration: '',
+					},
 				},
-			},
-		}
-	);
-	/*let hours = [moment(now).format('HH:mm')];
-	for (let i = 1; i < 3; i++)
-		hours.push(
-			moment(now)
-				.add(i, 'hours')
-				.format('HH:mm')
-		);*/
+			}
+		);
+	} else {
+		let sessions = await getAllSessionsFunction(psy);
+		let now = Date.now();
+		sessions = sessions.filter(session => {
+			const date = moment(session.date).format('DD/MM/YYYY HH:mm');
+			return (
+				session.status !== 'success' &&
+				moment(date).isBefore(moment(now).add(3, 'hours')) &&
+				moment(date)
+					.add(50, 'minutes')
+					.isAfter(moment(now))
+			);
+		});
 
+		if (sessions.length !== 0)
+			return conflictResponse('Tiene sesiones próximas');
+
+		psychologist = await Psychologist.findOneAndUpdate(
+			{ _id: psy },
+			{
+				$set: {
+					inmediateAttention: {
+						activated: true,
+						expiration: moment(now)
+							.add(1, 'hour')
+							.format(),
+					},
+				},
+			}
+		);
+	}
 	return okResponse('Estado cambiado', { psychologist });
 };
-/*
+
 const getAllSessionsInmediateAttention = async () => {
 	let psychologist = await Psychologist.find({}).select(
 		'_id inmediateAttention'
@@ -2050,7 +2055,7 @@ const getAllSessionsInmediateAttention = async () => {
 	psychologist = JSON.stringify(psychologist);
 	psychologist = JSON.parse(psychologist);
 	psychologist = psychologist.filter(
-		psy => psy.inmediateAttention.acitvated === true
+		psy => psy.inmediateAttention.activated === true
 	);
 
 	let allSessions = await Sessions.find().populate(
@@ -2090,7 +2095,7 @@ const getAllSessionsInmediateAttention = async () => {
 	}));
 
 	return okResponse('Sesiones', { allSessions });
-};*/
+};
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -2133,7 +2138,7 @@ const psychologistsService = {
 	completePaymentsRequest,
 	getTransactions,
 	changeToInmediateAttention,
-	//getAllSessionsInmediateAttention,
+	getAllSessionsInmediateAttention,
 };
 
 export default Object.freeze(psychologistsService);
