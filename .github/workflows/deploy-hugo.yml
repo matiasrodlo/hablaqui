@@ -7,7 +7,7 @@ on:
 jobs:
   build-and-deploy-back:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'HugoCL'
+    if: ${{ github.event.pull_request.user.login }} == 'HugoCL'
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
