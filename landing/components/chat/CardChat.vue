@@ -3,7 +3,7 @@
 		<template v-if="selected">
 			<v-card-text>
 				<!-- cabecera -->
-				<v-list-item class="px-0">
+				<v-list-item class="pl-0">
 					<v-btn icon @click="setSelected(null)">
 						<icon :icon="mdiChevronLeft" />
 					</v-btn>
@@ -25,32 +25,28 @@
 							</span>
 						</nuxt-link>
 					</v-list-item-title>
-					<!-- <v-list-item-action>
-								<v-btn icon>
-									<v-img
-										contain
-										height="25"
-										:src="`https://cdn.hablaqui.cl/static/llamada.png`"
-									></v-img>
-								</v-btn>
-							</v-list-item-action>
-							<v-list-item-action>
-								<v-btn icon class="ml-4">
-									<v-img
-										contain
-										height="25"
-										:src="`https://cdn.hablaqui.cl/static/camara.png`"
-									></v-img>
-								</v-btn>
-							</v-list-item-action> -->
 					<v-list-item-action>
-						<v-btn icon class="ml-1">
+						<v-btn
+							v-if="selected.roomsUrl"
+							id="camheader"
+							icon
+							:href="selected.roomsUrl"
+							target="_blank"
+						>
+							<v-img
+								contain
+								height="25"
+								width="25"
+								:src="`https://cdn.hablaqui.cl/static/camara.png`"
+							></v-img>
+						</v-btn>
+						<!-- <v-btn icon class="ml-1">
 							<v-img
 								contain
 								height="25"
 								:src="`https://cdn.hablaqui.cl/static/agregar.png`"
-							></v-img>
-						</v-btn>
+							></v-img> 
+						</v-btn> -->
 					</v-list-item-action>
 				</v-list-item>
 				<v-divider></v-divider>
