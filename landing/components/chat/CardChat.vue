@@ -40,13 +40,6 @@
 								:src="`https://cdn.hablaqui.cl/static/camara.png`"
 							></v-img>
 						</v-btn>
-						<!-- <v-btn icon class="ml-1">
-							<v-img
-								contain
-								height="25"
-								:src="`https://cdn.hablaqui.cl/static/agregar.png`"
-							></v-img> 
-						</v-btn> -->
 					</v-list-item-action>
 				</v-list-item>
 				<v-divider></v-divider>
