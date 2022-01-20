@@ -11,16 +11,29 @@
 			@input="resetChat"
 		>
 			<template #activator="{ on, attrs }">
-				<v-img
+				<v-badge
+					color="red"
+					bordered
+					offset-x="15"
+					offset-y="15"
+					dot
+					:value="
+						getMyPsy.countMessagesUnRead > 0 ||
+						(psyFromChats && psyFromChats.some(item => item.countMessagesUnRead > 0))
+					"
 					class="open-button pointer"
-					accesskey="b"
-					v-bind="attrs"
-					width="65"
-					height="65"
-					:src="`https://cdn.hablaqui.cl/static/icono_chat.png`"
-					contain
-					v-on="on"
-				></v-img>
+				>
+					<v-img
+						v-bind="attrs"
+						accesskey="b"
+						width="65"
+						height="65"
+						:src="`https://cdn.hablaqui.cl/static/icono_chat.png`"
+						contain
+						v-on="on"
+					>
+					</v-img>
+				</v-badge>
 			</template>
 			<v-card width="400">
 				<template v-if="selected">
@@ -401,12 +414,13 @@ export default {
 	},
 	watch: {
 		async floatingChat(newValue) {
-			if (newValue) {
+			if (newValue && this.$route.query.chat) {
 				this.setResumeView(false);
 				if (this.$route.params.slug) {
 					const psychologist = this.psychologists.find(
 						item => item.username === this.$route.params.slug
 					);
+					console.log('selecyed psy');
 					await this.selectedPsy(psychologist);
 					await this.getMessages();
 				}
@@ -427,8 +441,7 @@ export default {
 		this.$on('updateChat', data => {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
-				(this.$auth.$state.user._id === data.userId ||
-					this.$auth.$state.user.psychologist === data.psychologistId)
+				this.$auth.$state.user._id === data.userId
 			) {
 				this.pusherCallback(data);
 			}
