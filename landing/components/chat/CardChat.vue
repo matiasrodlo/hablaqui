@@ -144,7 +144,7 @@
 					single-line
 					:append-icon="mdiMagnify"
 					label="Buscar"
-					@change="e => setSearch(e)"
+					@input="e => setSearch(e)"
 				/>
 			</v-card-text>
 			<!-- todos los psicologos -->
@@ -155,7 +155,7 @@
 				</v-card-text>
 				<v-list two-line style="height: 400px; overflow: auto">
 					<!-- mi psicologo -->
-					<template v-if="$auth.$state.user.role === 'user' && plan">
+					<template v-if="$auth.$state.user.role === 'user' && plan && !search">
 						<v-list-item @click="selectedPsy(getMyPsy)">
 							<v-list-item-avatar
 								style="border-radius: 50%"
@@ -219,7 +219,9 @@
 							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
 							tu vida hoy.
 						</div>
-						<v-btn class="mt-5 px-8 py-6" color="primary" rounded> Buscar ahora </v-btn>
+						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos">
+							Buscar ahora
+						</v-btn>
 					</div>
 				</div>
 			</template>
