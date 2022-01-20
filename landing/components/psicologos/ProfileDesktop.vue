@@ -255,6 +255,7 @@ export default {
 				await this.startConversation(this.psychologist._id);
 				this.loadingChat = false;
 				this.setFloatingChat(true);
+				this.$router.push(`/${this.$route.params.slug}/?chat=true`);
 			}
 		},
 		avatar(psychologist) {

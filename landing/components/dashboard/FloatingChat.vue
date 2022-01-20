@@ -1,6 +1,49 @@
 <template>
 	<div>
+		<v-badge
+			v-if="$vuetify.breakpoint.smAndDown"
+			color="red"
+			bordered
+			offset-x="15"
+			offset-y="15"
+			dot
+			:value="
+				(getMyPsy && getMyPsy.countMessagesUnRead > 0) ||
+				(psyFromChats && psyFromChats.some(item => item.countMessagesUnRead > 0))
+			"
+			class="open-button pointer"
+		>
+			<v-img
+				accesskey="b"
+				width="65"
+				height="65"
+				:src="`https://cdn.hablaqui.cl/static/icono_chat.png`"
+				contain
+				@click="dialog = true"
+			>
+			</v-img>
+			<v-dialog v-model="dialog" fullscreen>
+				<v-sheet>
+					<chat
+						ref="cardChat"
+						style="height: 100vh"
+						:set-search="e => (search = e)"
+						:selected="selected"
+						:chat="chat"
+						:plan="plan"
+						:get-my-psy="getMyPsy"
+						:psy-from-chats="psyFromChats"
+						:set-selected="e => (selected = e)"
+						:selected-psy="e => selectedPsy(e)"
+						:loading-chat="loadingChat"
+						:search="search"
+						:close="() => (dialog = false)"
+					/>
+				</v-sheet>
+			</v-dialog>
+		</v-badge>
 		<v-menu
+			v-else
 			v-model="menu"
 			:close-on-content-click="false"
 			transition="slide-x-transition"
@@ -108,6 +151,14 @@ export default {
 				this.setFloatingChat(value);
 			},
 		},
+		dialog: {
+			get() {
+				return this.floatingChat;
+			},
+			set(value) {
+				this.setFloatingChat(value);
+			},
+		},
 		getMyPsy() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
 				const psy = this.plan.psychologist;
@@ -161,7 +212,6 @@ export default {
 					const psychologist = this.psychologists.find(
 						item => item.username === this.$route.params.slug
 					);
-					console.log('selecyed psy');
 					await this.selectedPsy(psychologist);
 					await this.getMessages();
 				}

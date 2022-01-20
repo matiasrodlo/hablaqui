@@ -1,7 +1,12 @@
 <template>
 	<v-card width="400">
-		<template v-if="selected">
-			<v-card-text>
+		<div
+			v-if="selected"
+			class="d-flex"
+			style="flex-direction: column"
+			:style="$vuetify.breakpoint.smAndDown ? 'height: 100vh' : 'height: 580px'"
+		>
+			<v-card-text style="flex: 0" class="py-1">
 				<!-- cabecera -->
 				<v-list-item class="pl-0">
 					<v-btn icon @click="setSelected(null)">
@@ -42,16 +47,20 @@
 						</v-btn>
 					</v-list-item-action>
 				</v-list-item>
-				<v-divider></v-divider>
 			</v-card-text>
+			<v-divider></v-divider>
 			<v-card-text
 				v-if="loadingChat"
-				style="height: 400px; overflow-y: auto"
+				style="flex: 1; overflow-y: auto"
 				class="d-flex justify-center align-center"
 			>
 				<v-progress-circular indeterminate color="primary" />
 			</v-card-text>
-			<v-card-text v-else ref="scrollToMe" style="height: 400px; overflow-y: auto">
+			<v-card-text
+				v-else
+				ref="scrollToMe"
+				style="flex: 1; overflow-y: auto; overflow-x: none"
+			>
 				<!-- Burbujas de chat -->
 				<template v-if="chat && chat.messages && chat.messages.length">
 					<div v-for="item in chat.messages" :key="item._id">
@@ -87,7 +96,7 @@
 					</div>
 				</template>
 			</v-card-text>
-			<v-card-text>
+			<v-card-text style="flex: 0">
 				<v-form @submit.prevent="onSubmit">
 					<v-text-field
 						ref="msj"
@@ -118,9 +127,14 @@
 					</v-text-field>
 				</v-form>
 			</v-card-text>
-		</template>
+		</div>
 		<template v-else>
-			<v-card-title class="primary--text"> Chat </v-card-title>
+			<v-card-title class="primary--text d-flex justify-space-between">
+				Chat
+				<v-btn icon @click="close">
+					<icon v-if="$vuetify.breakpoint.smAndDown" :icon="mdiCloseCircle" />
+				</v-btn>
+			</v-card-title>
 			<v-card-text>
 				<v-text-field
 					:value="search"
@@ -219,7 +233,7 @@
 </template>
 
 <script>
-import { mdiChevronLeft, mdiMagnify } from '@mdi/js';
+import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
 import moment from 'moment';
 import { mapActions } from 'vuex';
 
@@ -269,11 +283,16 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		close: {
+			type: Function,
+			default: () => null,
+		},
 	},
 	data() {
 		return {
 			mdiChevronLeft,
 			mdiMagnify,
+			mdiCloseCircle,
 			message: '',
 			loadingMessage: false,
 		};
