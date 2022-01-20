@@ -858,25 +858,23 @@ const createPlan = async ({ payload }) => {
 			{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
 			{ new: true }
 		);
-
-		let planData = [
-			{
-				product_id: created._id.toString(),
-				item_name: payload.title,
-				coupon: payload.coupon || '',
-				price: payload.price / sessionQuantity,
-				quantity: sessionQuantity,
-			},
-		];
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
+			let planData = [
+				{
+					product_id: created._id.toString(),
+					item_name: payload.title,
+					coupon: payload.coupon || '',
+					price: payload.price / sessionQuantity,
+					quantity: sessionQuantity,
+				},
+			];
 			analytics.track({
 				userId: payload.user._id.toString(),
-				event: 'new-user-purchase-plan',
+				event: 'current-user-purchase-plan',
 				properties: {
-					currency: 'CLP',
 					products: planData,
 					order_id:
 						created.plan[created.plan.length - 1]._id.toString,
@@ -885,9 +883,8 @@ const createPlan = async ({ payload }) => {
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
-				event: 'new-user-psy-new-plan',
+				event: 'current-psy-new-plan',
 				properties: {
-					currency: 'CLP',
 					products: planData,
 					user: payload.user._id,
 					order_id:
@@ -919,8 +916,9 @@ const createPlan = async ({ payload }) => {
 			];
 			analytics.track({
 				userId: payload.user._id.toString(),
-				event: 'current-user-purchase-plan',
+				event: 'new-user-purchase-plan',
 				properties: {
+					currency: 'CLP',
 					products: planData,
 					order_id:
 						created.plan[created.plan.length - 1]._id.toString,
@@ -929,8 +927,9 @@ const createPlan = async ({ payload }) => {
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
-				event: 'current-psy-new-plan',
+				event: 'new-user-psy-new-plan',
 				properties: {
+					currency: 'CLP',
 					products: planData,
 					user: payload.user._id,
 					order_id:
