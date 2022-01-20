@@ -5,7 +5,7 @@ import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
