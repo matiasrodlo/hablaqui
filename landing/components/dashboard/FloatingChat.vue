@@ -33,16 +33,16 @@
 							<v-list-item-avatar size="50">
 								<nuxt-link
 									:to="{ name: 'dashboard-perfil' }"
-									style="text-decoration: none; height: 50px; height: 50px"
+									style="text-decoration: none; height: 40px; height: 40px"
 								>
 									<avatar
 										:url="selected.avatar"
-										size="50"
+										size="40"
 										:name="selected.name"
 									/>
 								</nuxt-link>
 							</v-list-item-avatar>
-							<v-list-item-title class="title d-flex ml-2">
+							<v-list-item-title class="subtitle-1 font-weight-bold d-flex ml-2">
 								<nuxt-link
 									:to="`/${selected.username}`"
 									style="text-decoration: none"
@@ -198,54 +198,59 @@
 							label="Buscar"
 						/>
 					</v-card-text>
-					<template v-if="$auth.$state.user && $auth.$state.user.psychologist">
-						<v-card-text>
-							<v-subheader class="primary--text body-1 px-0">
-								Mi Psicólogo
-							</v-subheader>
-							<v-divider style="border-color: #5eb3e4"></v-divider>
-						</v-card-text>
-						<v-list two-line class="py-0">
-							<v-list-item>
-								<v-list-item-avatar
-									style="border: 3px solid #2070e5; border-radius: 40px"
-									size="60"
-								>
-									<avatar
-										:url="$auth.$state.user.avatar"
-										:name="$auth.$state.user.name"
-										size="60"
-									/>
-								</v-list-item-avatar>
-
-								<v-list-item-content>
-									<v-list-item-title
-										v-html="$auth.$state.user.name"
-									></v-list-item-title>
-									<v-list-item-subtitle>
-										Psicólogo · Activo(a)
-									</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
-					</template>
+					<!-- todos los psicologos -->
 					<template v-if="psyFromChats.length">
 						<v-card-text class="py-0">
-							<v-subheader class="primary--text body-1 px-0">General</v-subheader>
+							<v-subheader class="primary--text body-1 px-0">Psicólogos</v-subheader>
 							<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 						</v-card-text>
 						<v-list two-line style="height: 400px; overflow: auto">
+							<!-- mi psicologo -->
+							<template v-if="$auth.$state.user.role === 'user' && plan">
+								<v-list-item @click="selectedPsy(getMyPsy)">
+									<v-list-item-avatar
+										style="border-radius: 50%"
+										:style="
+											getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''
+										"
+										size="50"
+									>
+										<avatar
+											:url="getMyPsy.avatar"
+											:name="getMyPsy.name"
+											size="50"
+										/>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title
+											v-html="getMyPsy.name"
+										></v-list-item-title>
+										<v-list-item-subtitle class="primary--text">
+											Mi Psicólogo
+										</v-list-item-subtitle>
+									</v-list-item-content>
+									<v-list-item-action>
+										<v-badge
+											color="primary"
+											:content="getMyPsy.countMessagesUnRead"
+											:value="getMyPsy.countMessagesUnRead"
+										>
+										</v-badge>
+									</v-list-item-action>
+								</v-list-item>
+							</template>
+							<!-- resto de psicologo -->
 							<v-list-item
 								v-for="(psy, e) in psyFromChats"
 								:key="e"
 								@click="selectedPsy(psy)"
 							>
 								<v-list-item-avatar
-									style="border-radius: 40px"
+									style="border-radius: 50%"
 									:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
-									size="60"
+									size="50"
 								>
-									<avatar :url="psy.avatar" :name="psy.name" size="60" />
+									<avatar :url="psy.avatar" :name="psy.name" size="50" />
 								</v-list-item-avatar>
 
 								<v-list-item-content>
@@ -254,6 +259,14 @@
 										Psicólogo · Activo(a)
 									</v-list-item-subtitle>
 								</v-list-item-content>
+								<v-list-item-action>
+									<v-badge
+										color="primary"
+										:content="psy.countMessagesUnRead"
+										:value="psy.countMessagesUnRead"
+									>
+									</v-badge>
+								</v-list-item-action>
 							</v-list-item>
 						</v-list>
 					</template>
@@ -308,17 +321,30 @@ export default {
 			return this.allPsychologists.map(item => ({
 				...item,
 				hasMessage: this.hasMessage(item),
+				countMessagesUnRead: this.setCountMessagesUnread(
+					this.chats.find(chat => chat.psychologist._id === item._id)
+				),
 			}));
 		},
 		psyFromChats() {
-			let filterArray = this.chats.filter(el =>
+			let filterArray = this.chats;
+
+			filterArray = this.chats.filter(el =>
 				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
 			);
-			if (!filterArray.length) filterArray = this.chats;
-			return filterArray.map(item => ({
-				...item.psychologist,
-				hasMessage: this.hasMessage(item.psychologist),
-			}));
+
+			if (this.getMyPsy) {
+				filterArray = filterArray.filter(item => {
+					return this.getMyPsy._id !== item.psychologist._id;
+				});
+			}
+			return filterArray
+				.map(item => ({
+					...item.psychologist,
+					countMessagesUnRead: this.setCountMessagesUnread(item),
+					hasMessage: this.hasMessage(item.psychologist),
+				}))
+				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
 		menu: {
 			get() {
@@ -327,6 +353,43 @@ export default {
 			set(value) {
 				this.setFloatingChat(value);
 			},
+		},
+		getMyPsy() {
+			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
+				const psy = this.plan.psychologist;
+				if (psy)
+					return {
+						...this.getPsy(psy),
+						roomsUrl: this.plan.roomsUrl,
+					};
+				else return null;
+			}
+			return null;
+		},
+		// retorna el plan act o el ultimo expirado
+		plan() {
+			if (!this.$auth.$state.user || this.$auth.$state.user.role !== 'user') return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					idSessions: item._id,
+					roomsUrl: item.roomsUrl,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
@@ -390,7 +453,7 @@ export default {
 			) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
 		},
@@ -453,14 +516,29 @@ export default {
 			this.loadingMessage = false;
 		},
 		hasMessage(psy) {
-			let temp = {
+			const temp = {
 				...this.chats.find(item => item.psychologist && item.psychologist._id === psy._id),
 			};
 			if (temp && temp.messages && temp.messages.length) {
-				temp = temp.messages[temp.messages.length - 1];
-				if (temp && !temp.read && temp.sentBy !== this.$auth.$state.user._id)
-					return temp._id;
+				const hasMessage = temp.messages.some(
+					message =>
+						message && !message.read && message.sentBy !== this.$auth.$state.user._id
+				);
+				if (hasMessage) return temp._id;
 			}
+		},
+		setCountMessagesUnread(item) {
+			let count = 0;
+			if (!item || !item.messages) return count;
+			item.messages.forEach(el => {
+				if (!el.read && el.sentBy !== this.$auth.$state.user._id) {
+					count += 1;
+				}
+			});
+			return count;
+		},
+		getPsy(id) {
+			return this.psychologists.find(item => item._id === id);
 		},
 		...mapActions({
 			getChat: 'Chat/getChat',

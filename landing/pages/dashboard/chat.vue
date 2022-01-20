@@ -473,14 +473,6 @@ export default {
 			if (!plan) plan = plans.find(item => item.diff === max);
 			return plan;
 		},
-		// retorna verdadero si el usurio tiene plan activo
-		isActivePlan() {
-			if (!this.plan) return false;
-			return (
-				this.plan.remainingSessions > 0 ||
-				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
-			);
-		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
