@@ -373,7 +373,7 @@ export default {
 					plan: createdPlan.plan._id,
 				};
 				console.log('price with coupon: ' + this.PriceWithCoupon);
-				if (this.PriceWithCoupon <= 0) {
+				if (this.PriceWithCoupon !== null && this.PriceWithCoupon <= 0) {
 					await this.$axios.$get(`/mercadopago/success-pay/${mercadopagoPayload.plan}`);
 					// this.$router.push(`/dashboard/agenda`);
 					// this.$router.push({ name: 'dashboard-agenda' });
