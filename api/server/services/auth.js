@@ -9,6 +9,7 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+import moment from 'moment';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
