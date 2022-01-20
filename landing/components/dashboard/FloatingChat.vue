@@ -18,7 +18,7 @@
 					offset-y="15"
 					dot
 					:value="
-						getMyPsy.countMessagesUnRead > 0 ||
+						(getMyPsy && getMyPsy.countMessagesUnRead > 0) ||
 						(psyFromChats && psyFromChats.some(item => item.countMessagesUnRead > 0))
 					"
 					class="open-button pointer"
