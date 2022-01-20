@@ -5,6 +5,7 @@
 	"main": "server.js",
 	"scripts": {
 		"start": "node -r esm server.js",
+		"container": "node -r esm server.js --quiet --no-colors",
 		"dev": "nodemon -r esm --inspect server.js",
 		"test": "jest",
 		"create-env": "printenv > .env && cat .env"
