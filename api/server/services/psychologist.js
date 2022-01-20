@@ -569,11 +569,43 @@ const getFormattedSessions = async idPsychologist => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
+const findWeekDay = (day, schedule) => {
+	const week = [
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+		'sunday',
+	];
+	const now = moment().format('H');
+	const hours = [
+		`${now}:00`,
+		`${moment(now, 'H')
+			.add(1, 'hours')
+			.format('H')}:00`,
+		`${moment(now, 'H')
+			.add(2, 'hours')
+			.format('H')}:00`,
+		`${moment(now, 'H')
+			.add(3, 'hours')
+			.format('H')}:00`,
+	];
+
+	day = moment(day).format('dddd');
+	week.forEach(weekDay => {
+		if (day.toLowerCase() === weekDay)
+			if (Array.isArray(schedule[weekDay])) console.log();
+			else if (schedule[weekDay] === 'busy') schedule[weekDay] = hours;
+	});
+};
+
 // Utilizado para traer las sessiones de todos los psicologos para el selector
 const formattedSessionsAll = async () => {
 	let sessions = [];
 	let psychologist = await Psychologist.find({}).select(
-		'schedule preferences'
+		'schedule preferences inmediateAttention'
 	);
 	// Para que nos de deje modificar el array de mongo
 	psychologist = JSON.stringify(psychologist);
@@ -606,7 +638,7 @@ const formattedSessionsAll = async () => {
 	// Obtenemos sessiones del psicologo
 	let allSessions = await Sessions.find({}).populate(
 		'psychologist',
-		'_id schedule preferences'
+		'_id schedule preferences inmediateAttention'
 	);
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -619,24 +651,38 @@ const formattedSessionsAll = async () => {
 		})
 	);
 
-	allSessions = psychologist.map(item => ({
-		...item,
-		sessions: setDaySessions(
-			allSessions.filter(element => element.psychologist === item._id)
-		),
-	}));
+	allSessions = psychologist.map(item => {
+		let preferences = item.preferences;
+		preferences.minimumNewSession = item.inmediateAttention.acitvated
+			? 0
+			: preferences.minimumNewSession;
+		return {
+			_id: item._id,
+			inmediateAttention: item.inmediateAttention,
+			schedule: item.schedule,
+			preferences,
+			sessions: setDaySessions(
+				allSessions.filter(element => element.psychologist === item._id)
+			),
+		};
+	});
+
+	logInfo(allSessions.filter(s => s.inmediateAttention.acitvated));
 
 	sessions = allSessions.map(item => {
 		const minimumNewSession = moment(Date.now()).add(
 			item.preferences.minimumNewSession,
 			'h'
 		);
+		let schedule = item.schedule;
 
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
 				const day = moment(Date.now()).add(el, 'days');
 				const temporal = moment(day).format('L');
+				if (item.inmediateAttention.acitvated && el === 0)
+					schedule = findWeekDay(schedule, day);
 				return {
 					psychologist: item._id,
 					value: day,
@@ -649,7 +695,7 @@ const formattedSessionsAll = async () => {
 								`${temporal} ${hour}`,
 								'MM/DD/YYYY HH:mm'
 							).isAfter(minimumNewSession) &&
-							formattedSchedule(item.schedule, day, hour) &&
+							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
 									moment(date, 'MM/DD/YYYY HH:mm').format(
@@ -763,6 +809,7 @@ const createPlan = async ({ payload }) => {
 	const psychologist = await Psychologist.findById(payload.psychologist);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	if (
+		!psychologist.inmediateAttention.acitvated &&
 		moment().isAfter(
 			moment(date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumNewSession,
@@ -1994,7 +2041,7 @@ const changeToInmediateAttention = async psy => {
 
 	return okResponse('Estado cambiado', { psychologist });
 };
-
+/*
 const getAllSessionsInmediateAttention = async () => {
 	let psychologist = await Psychologist.find({}).select(
 		'_id inmediateAttention'
@@ -2043,7 +2090,7 @@ const getAllSessionsInmediateAttention = async () => {
 	}));
 
 	return okResponse('Sesiones', { allSessions });
-};
+};*/
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -2086,7 +2133,7 @@ const psychologistsService = {
 	completePaymentsRequest,
 	getTransactions,
 	changeToInmediateAttention,
-	getAllSessionsInmediateAttention,
+	//getAllSessionsInmediateAttention,
 };
 
 export default Object.freeze(psychologistsService);

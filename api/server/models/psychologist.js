@@ -20,8 +20,8 @@ let defaultPreferences = {
 };
 
 let defaultInmediateAttention = {
-	acitvated: { type: Boolean, default: false },
-	expiration: { type: String, default: '' },
+	acitvated: false,
+	expiration: '',
 };
 
 const defaultPrices = {
