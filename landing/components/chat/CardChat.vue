@@ -6,7 +6,7 @@
 			style="flex-direction: column"
 			:style="$vuetify.breakpoint.smAndDown ? 'height: 100vh' : 'height: 580px'"
 		>
-			<v-card-text style="flex: 0" class="py-1">
+			<v-card-text style="flex: 0" class="px-1 py-1">
 				<!-- cabecera -->
 				<v-list-item class="pl-0">
 					<v-btn icon @click="setSelected(null)">
@@ -128,14 +128,19 @@
 				</v-form>
 			</v-card-text>
 		</div>
-		<template v-else>
-			<v-card-title class="primary--text d-flex justify-space-between">
+		<div
+			v-else
+			class="d-flex"
+			style="flex-direction: column"
+			:style="$vuetify.breakpoint.smAndDown ? 'height: 100vh' : 'height: 580px'"
+		>
+			<v-card-title style="flex: 0" class="primary--text d-flex justify-space-between">
 				Chat
 				<v-btn icon @click="close">
 					<icon v-if="$vuetify.breakpoint.smAndDown" :icon="mdiCloseCircle" />
 				</v-btn>
 			</v-card-title>
-			<v-card-text>
+			<v-card-text style="flex: 0">
 				<v-text-field
 					:value="search"
 					style="border-radius: 25px"
@@ -152,11 +157,11 @@
 			</v-card-text>
 			<!-- todos los psicologos -->
 			<template v-if="psyFromChats.length">
-				<v-card-text class="py-0">
+				<v-card-text style="flex: 0" class="py-0">
 					<v-subheader class="primary--text body-1 px-0">Psicólogos</v-subheader>
 					<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 				</v-card-text>
-				<v-list two-line style="height: 400px; overflow: auto">
+				<v-list style="flex: 1; overflow: auto" two-line>
 					<!-- mi psicologo -->
 					<template v-if="$auth.$state.user.role === 'user' && plan && !search">
 						<v-list-item @click="selectedPsy(getMyPsy)">
@@ -213,7 +218,7 @@
 				</v-list>
 			</template>
 			<template v-else>
-				<div class="d-flex justify-center align-center" style="height: 400px">
+				<div class="d-flex justify-center align-center" style="flex: 1">
 					<div class="text-center pa-4" style="max-width: 300px">
 						<span class="body-1 primary--text font-weight-bold">
 							Comienza a hablar con nuestros psicólogos
@@ -228,7 +233,7 @@
 					</div>
 				</div>
 			</template>
-		</template>
+		</div>
 	</v-card>
 </template>
 
