@@ -1,7 +1,10 @@
 FROM node:14-alpine
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-RUN apk add --no-cache python3 python3-dev
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /home/node/app
 
