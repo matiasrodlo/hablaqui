@@ -390,16 +390,19 @@ export default {
 		},
 		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
-			let filterArray = this.chats.filter(el =>
-				el.user.name.toLowerCase().includes(this.search.toLowerCase())
-			);
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (!filterArray.length) filterArray = this.chats;
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.user.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+			if (this.$auth.$state.user.role === 'psychologist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -411,15 +414,19 @@ export default {
 		},
 		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
-			let filterArray = this.chats.filter(el =>
-				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
-			);
-			if (!filterArray.length) filterArray = this.chats;
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
+
+			if (this.$auth.$state.user.role === 'user' && this.getMyPsy) {
 				filterArray = filterArray.filter(item => {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -547,7 +554,7 @@ export default {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
 		},

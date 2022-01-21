@@ -390,7 +390,7 @@ export default {
 			) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
 		},

@@ -1,7 +1,7 @@
 'use strict';
 
 import '../config/config.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import Sessions from '../models/sessions';
 import { sign } from 'jsonwebtoken';
