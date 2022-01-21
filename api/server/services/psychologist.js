@@ -897,6 +897,7 @@ const createPlan = async ({ payload }) => {
 					]._id.toString(),
 					timestamp: moment().format(),
 				},
+				total: payload.price / sessionQuantity,
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
@@ -943,6 +944,7 @@ const createPlan = async ({ payload }) => {
 					]._id.toString(),
 					timestamp: moment().format(),
 				},
+				total: payload.price / sessionQuantity,
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
