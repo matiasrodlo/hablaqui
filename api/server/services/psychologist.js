@@ -5,7 +5,7 @@ import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
@@ -138,6 +138,7 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
 					activePlan:
 						plan.payment === 'success' &&
 						moment(plan.expiration).isBefore(moment(Date.now())),
@@ -184,8 +185,7 @@ const getRemainingSessions = async psy => {
 };
 
 const completePaymentsRequest = async psy => {
-	const response = await getAllSessions(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -232,7 +232,7 @@ const completePaymentsRequest = async psy => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
@@ -249,8 +249,7 @@ const createPaymentsRequest = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
-	const response = await getAllSessions(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -296,7 +295,7 @@ const createPaymentsRequest = async user => {
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
-		trasnactionDate: now,
+		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
@@ -309,8 +308,7 @@ const createPaymentsRequest = async user => {
 	});
 };
 
-//Devuelve todas las sesiones, excepto las expiradas
-const getAllSessions = async psy => {
+const getAllSessionsFunction = async psy => {
 	let sessions = await Sessions.find({
 		psychologist: psy,
 	}).populate('psychologist user');
@@ -408,25 +406,30 @@ const getAllSessions = async psy => {
 			});
 		});
 	});
+	return sessions.filter(session => !session.expiration);
+};
 
+//Devuelve todas las sesiones, excepto las expiradas
+const getAllSessions = async psy => {
 	//Obtenemos solamente las sesiones que no han expirado, con todo lo que ello implica
-	sessions = sessions.filter(session => !session.expiration);
+	const sessions = await getAllSessionsFunction(psy);
+	const total = sessions
+		.filter(session => {
+			return (
+				session.status === 'success' &&
+				session.statusPlan === 'success' &&
+				session.name !== 'Compromiso privado '
+			);
+		})
+		.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		);
 
 	return okResponse('Sesiones obtenidas', {
-		total: sessions
-			.filter(session => {
-				return (
-					session.status === 'success' &&
-					session.statusPlan === 'success' &&
-					session.name !== 'Compromiso privado '
-				);
-			})
-			.reduce(
-				(sum, value) =>
-					typeof value.total == 'number' ? sum + value.total : sum,
-				0
-			),
-		sessions: sessions,
+		total,
+		sessions,
 	});
 };
 
@@ -435,8 +438,7 @@ const getTransactions = async user => {
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
 
-	const response = await getAllSessions(psy);
-	let sessions = response.data.sessions;
+	let sessions = await getAllSessionsFunction(psy);
 	let transactions = await Transaction.findOne({ psychologist: psy });
 
 	if (transactions) transactions = transactions.transactionsRequest;
@@ -448,7 +450,20 @@ const getTransactions = async user => {
 			session.statusPlan === 'success' &&
 			session.name !== 'Compromiso privado '
 	);
-	const total = response.data.total;
+	const total = sessions
+		.filter(session => {
+			return (
+				session.status === 'success' &&
+				session.statusPlan === 'success' &&
+				session.name !== 'Compromiso privado '
+			);
+		})
+		.reduce(
+			(sum, value) =>
+				typeof value.total == 'number' ? sum + value.total : sum,
+			0
+		);
+
 	const totalAvailable = sessions
 		.filter(
 			session =>
@@ -468,12 +483,14 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		total,
-		totalAvailable,
-		successSessions,
-		sessionsReceivable,
-		sessions,
-		transactions,
+		payments: {
+			total: total.toFixed(2),
+			totalAvailable: totalAvailable.toFixed(2),
+			successSessions,
+			sessionsReceivable,
+			sessions,
+			transactions,
+		},
 	});
 };
 
@@ -1738,46 +1755,77 @@ const paymentsInfo = async user => {
 				const realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
+				let sessions = plans.session.map(session => {
+					const transDate =
+						session.paymentDate &&
+						moment(session.paymentDate).isValid()
+							? moment(session.paymentDate).format('DD/MM/YYYY')
+							: 'Por cobrar';
+					const hablaquiPercentage =
+						realComission === 0.0399
+							? plans.sessionPrice * 0
+							: plans.sessionPrice * 0.1601;
 
-				return plans.session.map(session => {
-					const transDate = session.paymentDate
-						? session.paymentDate
-						: 'Por cobrar';
 					return {
-						idPlan: plans._id,
-						sessionsId: item._id,
-						name: `${item.user.name ? item.user.name : ''} ${
-							item.user.lastName ? item.user.lastName : ''
-						}`,
-						date: session.date,
-						plan: plans.title,
-						payment: plans.payment,
-						suscription: plans.period,
+						datePayment: moment(plans.datePayment).format(
+							'DD/MM/YYYY'
+						),
+						name: item.user.name ? item.user.name : '',
+						lastname: item.user.lastName ? item.user.lastName : '',
+						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
-						hablaquiPercentage:
-							realComission === 0.0399
-								? plans.sessionPrice * 0
-								: plans.sessionPrice * 0.1601,
-						mercadoPercentage: plans.sessionPrice * 0.0399,
+						hablaquiPercentage: hablaquiPercentage.toFixed(2),
+						mercadoPercentage: (
+							plans.sessionPrice * 0.0399
+						).toFixed(2),
 						percentage:
 							realComission === 0.0399 ? '3.99%' : percentage,
-						total: plans.sessionPrice * (1 - realComission),
-						user: item.user._id,
+						total: (
+							plans.sessionPrice *
+							(1 - realComission)
+						).toFixed(2),
+						status: session.status,
 						transDate,
 					};
 				});
+				sessions = sessions.filter(
+					session => session.status === 'success'
+				);
+
+				const receivable = sessions.filter(
+					session => session.transDate === 'Por cobrar'
+				).length;
+
+				return {
+					idPlan: plans._id,
+					sessionsId: item._id,
+					name: item.user.name ? item.user.name : '',
+					lastname: item.user.lastName ? item.user.lastName : '',
+					plan: plans.title,
+					payment: plans.payment,
+					suscription: plans.period,
+					user: item.user._id,
+					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
+					amount: plans.totalPrice,
+					finalAmount: (
+						plans.totalPrice *
+						(1 - realComission)
+					).toFixed(2),
+					sessions,
+					transState: receivable > 0 ? 'Por cobrar' : 'Cobrado',
+				};
 			});
 	});
 	const payments = validPayments.filter(item => {
 		return (
 			item &&
-			moment(item.date, 'MM/DD/YYYY HH:mm').isBefore(moment()) &&
 			item.payment === 'success' &&
-			item.plan !== 'compromiso privado'
+			item.plan !== 'compromiso privado' &&
+			item.suscription !== 'Plan inicial'
 		);
 	});
-	logInfo(payments);
+	//logInfo(payments);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
@@ -1818,8 +1866,8 @@ const getEvaluations = async user => {
 			attention: 0,
 		});
 
-	evaluations = await getAllEvaluations(psy);
-	evaluations = evaluations.data.evaluations.filter(
+	evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
 
@@ -1862,6 +1910,14 @@ const getScores = evaluations => {
 };
 
 const getAllEvaluations = async psy => {
+	const evaluations = await getAllEvaluationsFunction(psy);
+	return okResponse('Todas las sesiones devueltas', {
+		evaluations,
+		...getScores(evaluations),
+	});
+};
+
+const getAllEvaluationsFunction = async psy => {
 	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
 		'user'
 	);
@@ -1887,10 +1943,7 @@ const getAllEvaluations = async psy => {
 		});
 	});
 
-	return okResponse('Todas las sesiones devueltas', {
-		evaluations,
-		...getScores(evaluations),
-	});
+	return evaluations;
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {

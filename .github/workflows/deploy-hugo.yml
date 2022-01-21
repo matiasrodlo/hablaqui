@@ -1,0 +1,54 @@
+name: Deploy-Hugo-PR
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  build-and-deploy-back:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'HugoCL'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build --no-cache -t us.gcr.io/hablaqui/hablaqui-repository/development-api:latest --build-arg API_URL=https://development-api-kupnj545ra-uc.a.run.app/ --build-arg BUCKETNAME=hablaqui-content --build-arg FRONTEND_URL=https://dev.intranet.hablaqui.cl/# --build-arg GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com --build-arg GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success --build-arg GOOGLE_CLIENT_SECRET=Jw1CJ__C-XKfJnmnf7GuVBrn --build-arg LANDING_URL= --build-arg MAILGUN_API_KEY=fc917172a2231c7c6d37404375a2e3fb-156db0f1-227d351b --build-arg MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603 --build-arg NO_REPLY_EMAIL= --build-arg NO_REPLY_PASSWORD= --build-arg PUSHER_APP_ID=1060488 --build-arg PUSHER_CLUSTER=us2 --build-arg PUSHER_KEY=f7e1381e2482c3db4a61 --build-arg PUSHER_SECRET=c08a99204ecbfb188b06 --build-arg VUE_APP_LANDING= --build-arg VUE_APP_PUSHER_BEAMS_INSTANCE= --build-arg VUE_APP_PUSHER_CLUSTER= --build-arg VUE_APP_PUSHER_KEY= --build-arg VUE_APP_URL= --build-arg URLDB=mongodb+srv://mongoHablaqui:yPVJRqcTdWCYYzk5@hablaqui-staging.opinc.mongodb.net/hablaqui --build-arg SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK --build-arg SENDGRID_API_KEY=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 api -f api/Dockerfile
+    - name: Google Cloud Container Registry
+      uses: mattes/gce-docker-push-action@v1.0.0
+      with:
+        creds: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+        registry: us.gcr.io
+        src: us.gcr.io/hablaqui/hablaqui-repository/development-api:latest
+        dst: us.gcr.io/hablaqui/hablaqui-repository/development-api:latest
+    - name: Deploy to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v0.3.0
+      with:
+        image: us.gcr.io/hablaqui/hablaqui-repository/development-api:latest
+        service: development-api
+        project_id: hablaqui
+        tag: hugo
+        credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+    
+
+  build-and-deploy-front:
+
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'HugoCL'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build --no-cache -t us.gcr.io/hablaqui/hablaqui-repository/development-front:latest --build-arg API_ABSOLUTE=https://development-api-kupnj545ra-uc.a.run.app --build-arg FRONTEND_URL=https://development-front-kupnj545ra-uc.a.run.app/# --build-arg MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603 --build-arg PUSHER_APP_ID=1060488 --build-arg PUSHER_CLUSTER=us2 --build-arg PUSHER_KEY=f7e1381e2482c3db4a61 --build-arg PUSHER_SECRET=c08a99204ecbfb188b06 --build-arg VUE_APP_LANDING=https://development-front-kupnj545ra-uc.a.run.app --build-arg VUE_APP_PUSHER_BEAMS_INSTANCE=5648b657-9d6e-478d-b642-654320c7c838 --build-arg VUE_APP_PUSHER_CLUSTER=us2 --build-arg VUE_APP_PUSHER_KEY=f7e1381e2482c3db4a61 --build-arg VUE_APP_URL=https://development-api-kupnj545ra-uc.a.run.app/api/v1 landing -f landing/Dockerfile
+    - name: Google Cloud Container Registry
+      uses: mattes/gce-docker-push-action@v1.0.0
+      with:
+        creds: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+        registry: us.gcr.io
+        src: us.gcr.io/hablaqui/hablaqui-repository/development-front:latest
+        dst: us.gcr.io/hablaqui/hablaqui-repository/development-front:latest
+    - name: Deploy to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v0.3.0
+      with:
+        image: us.gcr.io/hablaqui/hablaqui-repository/development-front:latest
+        service: development-front
+        project_id: hablaqui
+        tag: hugo
+        credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}

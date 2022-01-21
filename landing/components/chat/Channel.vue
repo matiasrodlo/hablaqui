@@ -187,7 +187,7 @@
 										></v-img>
 									</v-btn> -->
 							<v-btn
-								class="ml-2 mr-2"
+								class="pl-2 pr-2 pb-2"
 								depressed
 								icon
 								type="submit"

@@ -6,6 +6,7 @@ const initialState = {
 		page: 0,
 		limit: 10,
 	},
+	loadingPsychologist: false,
 	payments: [],
 	psychologists: [],
 	resumeView: false,

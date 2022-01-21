@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	components: {
@@ -44,11 +44,6 @@ export default {
 			import(
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
 			),
-	},
-	data() {
-		return {
-			loadingPsychologist: true,
-		};
 	},
 	head() {
 		return {
@@ -83,20 +78,20 @@ export default {
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
 	},
+	computed: {
+		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+	},
 	mounted() {
 		window.scrollTo(0, 0);
 		this.initialFetch();
 	},
 	methods: {
 		async initialFetch() {
-			await this.getPsychologists();
-			this.loadingPsychologist = false;
 			await this.getAppointments();
 			this.getFormattedSessionsAll();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
 	},
