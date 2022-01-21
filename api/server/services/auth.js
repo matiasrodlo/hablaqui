@@ -54,6 +54,7 @@ const getFormattedSessions = sessions => {
 			psychologist: item.psychologist,
 			roomsUrl: item.roomsUrl,
 			user: item.user,
+			numberSessionSuccess: item.numberSessionSuccess,
 			plan: item.plan.map(plan => {
 				return {
 					...plan,
