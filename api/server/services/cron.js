@@ -42,6 +42,30 @@ function generatePayload(date, batch) {
 	};
 }
 
+async function getNumberSuccess() {
+	const users = await User.find().select('_id');
+	users.forEach(async user => {
+		const sessions = await Sessions.find({ user: user._id });
+		sessions.forEach(async item => {
+			let successSessions = 0;
+			const plans = item.plan.filter(plan => plan.payment === 'success');
+			plans.forEach(plan => {
+				successSessions += plan.session.filter(
+					session => session.status === 'success'
+				).length;
+			});
+			await Sessions.findOneAndUpdate(
+				{
+					_id: item._id,
+				},
+				{
+					$set: { numberSessionSuccess: successSessions },
+				}
+			);
+		});
+	});
+}
+
 async function sendNotification(emails) {
 	emails.forEach(async e => {
 		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
@@ -312,6 +336,7 @@ const cronService = {
 				logInfo(error);
 			}
 		}
+		await getNumberSuccess();
 		return okResponse('Sesiones actualizadas');
 	},
 };

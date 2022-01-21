@@ -138,6 +138,7 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
 				};
 			});
 		});

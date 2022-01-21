@@ -83,6 +83,10 @@ let sessionSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'psychologist',
 	},
+	numberSessionSuccess: {
+		type: Number,
+		default: 0,
+	},
 	roomsUrl: {
 		type: String,
 	},
