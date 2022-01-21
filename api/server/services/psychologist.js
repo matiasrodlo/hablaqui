@@ -892,8 +892,9 @@ const createPlan = async ({ payload }) => {
 				event: 'current-user-purchase-plan',
 				properties: {
 					products: planData,
-					order_id:
-						created.plan[created.plan.length - 1]._id.toString,
+					order_id: created.plan[
+						created.plan.length - 1
+					]._id.toString(),
 					timestamp: moment().format(),
 				},
 			});
@@ -903,8 +904,9 @@ const createPlan = async ({ payload }) => {
 				properties: {
 					products: planData,
 					user: payload.user._id,
-					order_id:
-						created.plan[created.plan.length - 1]._id.toString,
+					order_id: created.plan[
+						created.plan.length - 1
+					]._id.toString(),
 					timestamp: moment().format(),
 				},
 			});
@@ -936,8 +938,9 @@ const createPlan = async ({ payload }) => {
 				properties: {
 					currency: 'CLP',
 					products: planData,
-					order_id:
-						created.plan[created.plan.length - 1]._id.toString,
+					order_id: created.plan[
+						created.plan.length - 1
+					]._id.toString(),
 					timestamp: moment().format(),
 				},
 			});
@@ -948,8 +951,9 @@ const createPlan = async ({ payload }) => {
 					currency: 'CLP',
 					products: planData,
 					user: payload.user._id,
-					order_id:
-						created.plan[created.plan.length - 1]._id.toString,
+					order_id: created.plan[
+						created.plan.length - 1
+					]._id.toString(),
 					timestamp: moment().format(),
 				},
 			});
