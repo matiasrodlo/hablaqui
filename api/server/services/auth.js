@@ -9,6 +9,7 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+import moment from 'moment';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -32,12 +33,38 @@ const login = async user => {
 };
 
 const getSessions = async user => {
-	if (user.role === 'user') return await Sessions.find({ user: user._id });
+	if (user.role === 'user') {
+		return getFormattedSessions(await Sessions.find({ user: user._id }));
+	}
 
 	if (user.role === 'psychologist')
-		return await Sessions.find({ psychologist: user.psychologist });
+		return getFormattedSessions(
+			await Sessions.find({ psychologist: user.psychologist })
+		);
 
 	return null;
+};
+
+const getFormattedSessions = sessions => {
+	sessions = JSON.stringify(sessions);
+	sessions = JSON.parse(sessions);
+	sessions = sessions.map(item => {
+		return {
+			_id: item._id,
+			psychologist: item.psychologist,
+			roomsUrl: item.roomsUrl,
+			user: item.user,
+			plan: item.plan.map(plan => {
+				return {
+					...plan,
+					activePlan: moment(plan.expiration).isBefore(
+						moment(Date.now())
+					),
+				};
+			}),
+		};
+	});
+	return sessions;
 };
 
 const generateUser = async user => {
@@ -181,6 +208,7 @@ const authService = {
 	changeUserPassword,
 	googleAuthCallback,
 	getSessions,
+	getFormattedSessions,
 };
 
 export default Object.freeze(authService);

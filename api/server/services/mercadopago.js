@@ -11,7 +11,6 @@ import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
-import Coupon from '../models/coupons';
 import moment from 'moment';
 
 mercadopago.configure({
