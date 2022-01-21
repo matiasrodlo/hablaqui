@@ -186,9 +186,7 @@ export default {
 			return alert('Proximante podras cambiar tu psicologo desde aqui');
 		},
 		goToReview() {
-			return this.$router.push(
-				`/review?psychologist=${this.psychologist._id}&user=${this.$auth.user._id}`
-			);
+			return this.$router.push(`/review?psychologist=${this.psychologist._id}`);
 		},
 	},
 };
