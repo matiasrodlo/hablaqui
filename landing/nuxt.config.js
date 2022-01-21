@@ -249,10 +249,10 @@ export default {
 				endpoints: {
 					// login endpoint
 					login: { url: '/auth/login', method: 'post' },
+					// logout endpoint
+					logout: { url: '/auth/logout', method: 'post' },
 					// get user endpoint
 					user: { url: '/user/profile', method: 'get' },
-					// logout endpoint
-					logout: false,
 				},
 			},
 		},
