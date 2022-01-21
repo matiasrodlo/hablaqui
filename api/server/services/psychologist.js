@@ -880,7 +880,7 @@ const createPlan = async ({ payload }) => {
 		) {
 			let planData = [
 				{
-					product_id: created._id.toString(),
+					item_id: created._id.toString(),
 					item_name: payload.title,
 					coupon: payload.coupon || '',
 					price: payload.price / sessionQuantity,
@@ -923,7 +923,7 @@ const createPlan = async ({ payload }) => {
 		) {
 			let planData = [
 				{
-					product_id: created._id.toString(),
+					item_id: created._id.toString(),
 					item_name: payload.title,
 					coupon: payload.coupon || '',
 					price: payload.price / sessionQuantity,

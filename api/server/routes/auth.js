@@ -16,7 +16,9 @@ authRouter.post(
 	[validation(authSchema.login, 'body'), passport.authenticate('local')],
 	authController.login
 );
-
+/**
+ * Endpoint de logout.
+ */
 authRouter.post('/auth/logout', authController.logout);
 
 /**
