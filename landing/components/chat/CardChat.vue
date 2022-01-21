@@ -204,7 +204,9 @@
 
 						<v-list-item-content>
 							<v-list-item-title v-html="psy.name"></v-list-item-title>
-							<v-list-item-subtitle> Psicólogo · Activo(a) </v-list-item-subtitle>
+							<v-list-item-subtitle v-show="false">
+								Psicólogo · Activo(a)
+							</v-list-item-subtitle>
 						</v-list-item-content>
 						<v-list-item-action>
 							<v-badge

@@ -68,7 +68,7 @@
 
 									<v-list-item-content>
 										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -120,7 +120,7 @@
 											<v-list-item-title>
 												{{ user.name }}
 											</v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -164,7 +164,7 @@
 										<v-list-item-title
 											v-html="getMyPsy.name"
 										></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -243,7 +243,7 @@
 											<v-list-item-title
 												v-html="psy.name"
 											></v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
