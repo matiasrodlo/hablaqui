@@ -44,11 +44,19 @@ export default {
 		};
 	},
 	created() {
-		this.idPlan = this.$route.query.plan;
+		if (this.$route.query.plan) {
+			this.idPlan = this.$route.query.plan;
+			this.$router.replace({ query: null });
+		}
 	},
 	async mounted() {
-		await this.mercadopagoSuccess(this.idPlan);
-		this.overlay = false;
+		if (this.idPlan) {
+			await this.mercadopagoSuccess(this.idPlan);
+			this.overlay = false;
+		} else {
+			this.overlay = false;
+			this.$router.push('/');
+		}
 	},
 	methods: {
 		...mapActions({
