@@ -200,6 +200,16 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async mercadopagoSuccess({ commit }, planId) {
+		try {
+			await this.$axios(`/mercadopago/success-pay/${planId}`, {
+				method: 'get',
+			});
+			snackBarSuccess('Pago aprobado')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async setPaymentPreferences({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
