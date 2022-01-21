@@ -138,9 +138,9 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
-					activePlan: moment(plan.expiration).isBefore(
-						moment(Date.now())
-					),
+					activePlan:
+						plan.payment === 'success' &&
+						moment(plan.expiration).isBefore(moment(Date.now())),
 				};
 			});
 		});

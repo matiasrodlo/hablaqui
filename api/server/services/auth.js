@@ -57,9 +57,9 @@ const getFormattedSessions = sessions => {
 			plan: item.plan.map(plan => {
 				return {
 					...plan,
-					activePlan: moment(plan.expiration).isBefore(
-						moment(Date.now())
-					),
+					activePlan:
+						plan.payment === 'success' &&
+						moment(plan.expiration).isBefore(moment(Date.now())),
 				};
 			}),
 		};
