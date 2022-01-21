@@ -136,6 +136,7 @@ const recruitmentService = {
 			{ isVerified: true },
 			{ new: true }
 		);
+		let id = payload._id;
 
 		// Formateamos el payload para que nos deje editar
 		payload = JSON.stringify(payload);
@@ -172,6 +173,10 @@ const recruitmentService = {
 					rut: payload.rut,
 					psyId: newProfile._id,
 				},
+			});
+			analytics.alias({
+				previousId: id.toString(),
+				userId: newProfile._id.toString(),
 			});
 		}
 
