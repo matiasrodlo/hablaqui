@@ -17,27 +17,13 @@
 		<v-card-text v-if="psychologist && !loading">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="3" class="text-center">
-					<v-avatar
-						:size="$vuetify.breakpoint.lgAndUp ? '200' : '140'"
-						:color="psychologist.avatar ? 'trasnparent' : 'primary'"
-					>
-						<v-img
-							v-if="psychologist.avatar"
-							:src="psychologist.avatar"
-							:lazy-src="psychologist.avatar"
-							:width="$vuetify.breakpoint.lgAndUp ? '200' : '140'"
-							:height="$vuetify.breakpoint.lgAndUp ? '200' : '140'"
-						>
-							<template #placeholder>
-								<v-row class="fill-height ma-0" align="center" justify="center">
-									<v-progress-circular indeterminate color="primary" />
-								</v-row>
-							</template>
-						</v-img>
-						<span v-else class="white--text headline font-weight-bold">
-							{{ psychologist.name.substr(0, 1) }}
-						</span>
-					</v-avatar>
+					<avatar
+						:url="avatar(psychologist, true)"
+						:name="psychologist.name"
+						:last-name="psychologist.lastName ? psychologist.lastName : ''"
+						size="130"
+						loading-color="white"
+					></avatar>
 					<div class="text-center body-2 text--secondary mt-3 mb-2">
 						Código {{ psychologist.code }}
 					</div>
@@ -51,7 +37,7 @@
 				</v-col>
 				<v-col cols="12" sm="9">
 					<v-row justify-md="space-between" align="center">
-						<v-col cols="12" sm="6" class="text-center text-sm-left">
+						<v-col cols="12" sm="7" md="9" class="text-center text-sm-left">
 							<nuxt-link
 								style="text-decoration: none"
 								:to="{
@@ -64,7 +50,40 @@
 								</span>
 							</nuxt-link>
 						</v-col>
-						<v-col cols="12" sm="6" class="text-center text-sm-right mb-4 mb-sm-0">
+						<v-col
+							cols="12"
+							sm="5"
+							md="3"
+							class="text-center text-sm-right mb-4 mb-sm-0"
+						>
+							<v-btn
+								v-if="
+									(plan &&
+										plan.numberSessionSuccess &&
+										plan.numberSessionSuccess >= 3) ||
+									true
+								"
+								depressed
+								block
+								small
+								color="primary"
+								rounded
+								class="ma-2"
+								@click="goToReview"
+							>
+								Añadir evaluación
+							</v-btn>
+							<v-btn
+								depressed
+								block
+								small
+								text
+								rounded
+								class="ma-2"
+								@click="changePsychologist"
+							>
+								Cambiar psicológo
+							</v-btn>
 						</v-col>
 					</v-row>
 					<v-chip-group v-model="specialties" show-arrows>
@@ -109,6 +128,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
 	props: {
 		psychologist: {
@@ -125,6 +145,51 @@ export default {
 			loading: false,
 			specialties: '',
 		};
+	},
+	computed: {
+		// Filtramos que sea de usuarios con pagos success y no hayan expirado
+		plan() {
+			if (!this.$auth.$state.user) return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					idSessions: item._id,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+			const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === min);
+			// retornamos el siguiente plan pendiente
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
+		},
+	},
+	methods: {
+		avatar(psychologist, thumbnail) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
+		},
+		changePsychologist() {
+			return alert('Proximante podras cambiar tu psicologo desde aqui');
+		},
+		goToReview() {
+			return this.$router.push(
+				`/review?psychologist=${this.psychologist._id}&user=${this.$auth.user._id}`
+			);
+		},
 	},
 };
 </script>
