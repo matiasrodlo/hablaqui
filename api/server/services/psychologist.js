@@ -896,8 +896,8 @@ const createPlan = async ({ payload }) => {
 						created.plan.length - 1
 					]._id.toString(),
 					timestamp: moment().format(),
+					total: payload.price / sessionQuantity,
 				},
-				total: payload.price / sessionQuantity,
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
@@ -943,8 +943,8 @@ const createPlan = async ({ payload }) => {
 						created.plan.length - 1
 					]._id.toString(),
 					timestamp: moment().format(),
+					total: payload.price / sessionQuantity,
 				},
-				total: payload.price / sessionQuantity,
 			});
 			analytics.track({
 				userId: payload.psychologist.toString(),
@@ -1859,8 +1859,8 @@ const customNewSession = async (user, payload) => {
 							updatedSession.plan.length - 1
 						]._id.toString(),
 						timestamp: moment().format(),
+						total: 0,
 					},
-					total: 0,
 				});
 			} else if (payload.type === 'presencial') {
 				let planData = [
@@ -1882,8 +1882,8 @@ const customNewSession = async (user, payload) => {
 							updatedSession.plan.length - 1
 						]._id.toString(),
 						timestamp: moment().format(),
+						total: 0,
 					},
-					total: 0,
 				});
 			} else if (payload.type === 'compromiso privado') {
 				analytics.track({
