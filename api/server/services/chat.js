@@ -87,6 +87,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 	const data = {
 		userId,
 		psychologistId,
+		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
 
