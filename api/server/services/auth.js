@@ -60,7 +60,7 @@ const getFormattedSessions = sessions => {
 					...plan,
 					activePlan:
 						plan.payment === 'success' &&
-						moment(plan.expiration).isBefore(moment(Date.now())),
+						moment().isBefore(moment(plan.expiration)),
 				};
 			}),
 		};

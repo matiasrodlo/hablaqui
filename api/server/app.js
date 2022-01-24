@@ -30,7 +30,7 @@ const limiter = rateLimit({
 	max: 1000, // limit each IP to 1000 requests per windowMs
 });
 //limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
-const whitelist = [process.env.VUE_APP_LANDING];
+const whitelist = [process.env.VUE_APP_LANDING, 'https://hablaqui.retool.com/'];
 let corsOptions = {
 	origin: function(origin, callback) {
 		if (whitelist.indexOf(origin) !== -1) callback(null, true);
