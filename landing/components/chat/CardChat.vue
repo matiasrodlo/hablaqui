@@ -23,10 +23,7 @@
 					<v-list-item-title class="subtitle-1 font-weight-bold d-flex ml-2">
 						<nuxt-link :to="`/${selected.username}`" style="text-decoration: none">
 							<span class="secondary--text">
-								{{ selected.shortName || selected.name }}
-							</span>
-							<span v-if="selected.lastName" class="secondary--text">
-								{{ selected.lastName }}
+								{{ selected.name }} {{ selected.lastName }}
 							</span>
 						</nuxt-link>
 					</v-list-item-title>
@@ -68,13 +65,14 @@
 							class="d-flex mt-3"
 							:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
 						>
-							<div style="width: 50%">
+							<div style="width: 70%">
 								<div style="display: flex; justify-content: space-between">
 									<span v-if="sentBy(item.sentBy)" class="text--disabled body-2">
 										{{ $auth.$state.user.name }}
 									</span>
 									<span v-else class="text--disabled body-2">
-										{{ selected.shortName || selected.name }}
+										{{ selected.name }}
+										{{ selected.lastName }}
 									</span>
 									<span class="text--disabled body-2">
 										{{ setDate(item.createdAt) }}
@@ -87,7 +85,7 @@
 										sentBy(item.sentBy) ? 'talkbubble__one' : 'talkbubble__two'
 									"
 								>
-									<div style="max-height: 75px; overflow-y: auto" class="body-2">
+									<div class="body-2">
 										{{ item.message }}
 									</div>
 								</div>
@@ -96,18 +94,30 @@
 					</div>
 				</template>
 			</v-card-text>
-			<v-card-text style="flex: 0">
+			<v-card-text style="flex: 0" class="pb-0">
 				<v-form @submit.prevent="onSubmit">
-					<v-text-field
+					<v-textarea
 						ref="msj"
 						v-model="message"
 						outlined
 						dense
 						:label="`Mensaje a ${selected.name}`"
-						hide-details
+						hide-details="auto"
 						:disabled="loadingMessage"
 						:loader-height="3"
 						:loading="loadingMessage"
+						no-resize
+						auto-grow
+						rows="1"
+						maxlength="140"
+						style="max-height: 250px; overflow-y: auto; overflow-x: hidden"
+						counter
+						single-line
+						@input="
+							() => {
+								scrollToElement();
+							}
+						"
 					>
 						<template #append>
 							<v-btn
@@ -124,7 +134,7 @@
 								></v-img>
 							</v-btn>
 						</template>
-					</v-text-field>
+					</v-textarea>
 				</v-form>
 			</v-card-text>
 		</div>
@@ -173,7 +183,9 @@
 								<avatar :url="getMyPsy.avatar" :name="getMyPsy.name" size="50" />
 							</v-list-item-avatar>
 							<v-list-item-content>
-								<v-list-item-title v-html="getMyPsy.name"></v-list-item-title>
+								<v-list-item-title>
+									{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+								</v-list-item-title>
 								<v-list-item-subtitle class="primary--text">
 									Mi Psicólogo
 								</v-list-item-subtitle>
@@ -203,7 +215,9 @@
 						</v-list-item-avatar>
 
 						<v-list-item-content>
-							<v-list-item-title v-html="psy.name"></v-list-item-title>
+							<v-list-item-title>
+								{{ psy.name }} {{ psy.lastName }}
+							</v-list-item-title>
 							<v-list-item-subtitle v-show="false">
 								Psicólogo · Activo(a)
 							</v-list-item-subtitle>
@@ -246,8 +260,8 @@ import { mapActions } from 'vuex';
 
 export default {
 	components: {
-		avatar: () => import('~/components/Avatar'),
-		Icon: () => import('~/components/Icon'),
+		avatar: () => import('~/components/Avatar.vue'),
+		Icon: () => import('~/components/Icon.vue'),
 	},
 	props: {
 		search: {
@@ -348,8 +362,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color__one: #bdbdbd;
-$color__two: #2070e5;
+$color__one: rgba(189, 189, 189, 0.7);
+$color__two: rgba(32, 112, 229, 0.7);
 $font__color_one: #424242;
 $font__color_two: #ffffff;
 
@@ -363,14 +377,14 @@ $font__color_two: #ffffff;
 	&__one {
 		color: $font__color_two;
 		align-self: flex-end;
-		border: solid $color__two;
+		border: solid rgba(32, 112, 229, 0.1);
 		background: $color__two;
 	}
 
 	&__two {
 		color: $font__color_one;
 		align-self: flex-start;
-		border: solid $color__one;
+		border: solid rgba(189, 189, 189, 0.1);
 		background: $color__one;
 	}
 }

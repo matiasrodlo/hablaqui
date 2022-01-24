@@ -67,7 +67,9 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
+										<v-list-item-title>
+											{{ user.name }} {{ user.lastName }}
+										</v-list-item-title>
 										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
@@ -85,9 +87,9 @@
 							<!-- general lista usuarios -->
 							<template v-if="listUsers.length">
 								<v-card-text class="py-0">
-									<v-subheader class="primary--text body-1 px-0"
-										>General</v-subheader
-									>
+									<v-subheader class="primary--text body-1 px-0">
+										General
+									</v-subheader>
 									<v-divider
 										style="border-color: #5eb3e4"
 										class="mb-2"
@@ -118,7 +120,7 @@
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ user.name }}
+												{{ user.name }} {{ user.lastName }}
 											</v-list-item-title>
 											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
@@ -161,9 +163,9 @@
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title
-											v-html="getMyPsy.name"
-										></v-list-item-title>
+										<v-list-item-title>
+											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+										</v-list-item-title>
 										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
@@ -240,9 +242,9 @@
 										</v-list-item-avatar>
 
 										<v-list-item-content>
-											<v-list-item-title
-												v-html="psy.name"
-											></v-list-item-title>
+											<v-list-item-title>
+												{{ psy.name }} {{ psy.lastName }}
+											</v-list-item-title>
 											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
