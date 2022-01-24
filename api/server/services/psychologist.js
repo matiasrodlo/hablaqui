@@ -801,6 +801,12 @@ const createPlan = async ({ payload }) => {
 		paidToPsychologist: false,
 	};
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
@@ -811,6 +817,7 @@ const createPlan = async ({ payload }) => {
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: randomCode() + randomCode(),
 		session: [newSession],
 	};
 
