@@ -660,6 +660,34 @@ const mailService = {
 			});
 		});
 	},
+	async sendEnabledEvaluation(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Puedes evaluar a tu psicólogo`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: psy.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;

@@ -43,9 +43,12 @@ function generatePayload(date, batch) {
 }
 
 async function getNumberSuccess() {
-	const users = await User.find().select('_id');
+	const users = await User.find();
 	users.forEach(async user => {
-		const sessions = await Sessions.find({ user: user._id });
+		const sessions = await Sessions.find({ user: user._id }).populate(
+			'psychologist',
+			'name'
+		);
 		sessions.forEach(async item => {
 			let successSessions = 0;
 			const plans = item.plan.filter(plan => plan.payment === 'success');
@@ -62,6 +65,11 @@ async function getNumberSuccess() {
 					$set: { numberSessionSuccess: successSessions },
 				}
 			);
+			if (successSessions === 3)
+				await mailService.sendEnabledEvaluation(
+					user,
+					item.psychologist
+				);
 		});
 	});
 }
