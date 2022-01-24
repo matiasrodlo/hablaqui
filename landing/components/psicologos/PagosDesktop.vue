@@ -359,18 +359,11 @@ export default {
 				price: this.PriceWithCoupon ? this.PriceWithCoupon : this.planSelected.price,
 				coupon: this.PriceWithCoupon ? this.coupon : '',
 			};
-			const createdPlan = await this.createSession(planPayload);
-			if (createdPlan) {
-				const mercadopagoPayload = {
-					psychologist: this.psychologist.username,
-					price: this.PriceWithCoupon ? this.PriceWithCoupon : this.planSelected.price,
-					description: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title}`,
-					quantity: 1,
-					plan: createdPlan.plan._id,
-				};
-				const res = await this.mercadopagoPay(mercadopagoPayload);
-				window.location.href = res.init_point;
-			}
+			const res = await this.createSession(planPayload);
+			// const res = await this.mercadopagoPay(mercadopagoPayload);
+			console.log(res);
+			if (res) window.location.href = res.init_point;
+
 			this.loading = false;
 		},
 		changeDate(item) {

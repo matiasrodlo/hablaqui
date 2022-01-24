@@ -807,6 +807,7 @@ const createPlan = async ({ payload }) => {
 			.substring(2);
 	};
 
+	const token = randomCode() + randomCode();
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
@@ -817,7 +818,7 @@ const createPlan = async ({ payload }) => {
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
-		tokenToPay: randomCode() + randomCode(),
+		tokenToPay: token,
 		session: [newSession],
 	};
 
@@ -868,7 +869,6 @@ const createPlan = async ({ payload }) => {
 			},
 		});
 	}
-
 	if (userSessions) {
 		if (
 			userSessions.plan.some(
@@ -885,7 +885,20 @@ const createPlan = async ({ payload }) => {
 			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
 		);
 
-		return okResponse('Plan creado', { plan: created });
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			token,
+			plan: created._id,
+		};
+
+		const responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+
+		return okResponse('Plan y preferencias creadas', responseBody);
 	} else {
 		const created = await Sessions.create({
 			user: payload.user,
@@ -895,7 +908,20 @@ const createPlan = async ({ payload }) => {
 		});
 		//const params = { planId: created._id.toString() };
 
-		return okResponse('Plan creado', { plan: created });
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			token,
+			plan: created._id,
+		};
+
+		const responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+
+		return okResponse('Plan y preferencias creadas', responseBody);
 	}
 };
 

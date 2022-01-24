@@ -29,7 +29,7 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${landing_url}/dashboard/pagos/success?plan=${body.plan}`,
+			success: `${landing_url}/dashboard/pagos/success?plan=${body.plan}&token=${body.token}`,
 			// redirection to profile psychologist
 			failure: `${landing_url}/${body.psychologist}`,
 			pending: `${landing_url}/${body.psychologist}`,
@@ -39,7 +39,7 @@ const createPreference = async body => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	return resBody;
 };
 
 /**
