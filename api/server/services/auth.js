@@ -9,6 +9,7 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+import moment from 'moment';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -25,10 +26,46 @@ const generateJwt = user => {
 };
 
 const login = async user => {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'login',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				timestamp: moment().format(),
+				role: user.role,
+			},
+		});
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),
 	});
+};
+
+const logout = async user => {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'logout',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				timestamp: moment().format(),
+				role: user.role,
+			},
+		});
+	}
+	return okResponse('Sesión cerrada exitosamente');
 };
 
 const getSessions = async user => {
@@ -84,23 +121,29 @@ const register = async payload => {
 	};
 	const user = await User.create(newUser);
 	// Segment identification
-	analytics.identify({
-		userId: user._id.toString(),
-		traits: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
-	analytics.track({
-		userId: user._id.toString(),
-		event: 'organic-user-signup',
-		properties: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.identify({
+			userId: user._id.toString(),
+			traits: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+			},
+		});
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'organic-user-signup',
+			properties: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+				timestamp: moment().format(),
+			},
+		});
+	}
 
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
@@ -174,6 +217,7 @@ const googleAuthCallback = (req, res) => {
 
 const authService = {
 	login,
+	logout,
 	generateJwt,
 	generateUser,
 	register,
