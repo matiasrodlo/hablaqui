@@ -210,7 +210,7 @@
 									6. ¿Qué es lo que el psicólogo necesita mejorar?
 								</div>
 								<v-chip-group
-									v-model="like"
+									v-model="improve"
 									active-class="primary--text"
 									class="mt-4"
 									column
