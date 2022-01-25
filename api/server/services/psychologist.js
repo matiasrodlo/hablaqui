@@ -921,18 +921,24 @@ const createPlan = async ({ payload }) => {
 			);
 		}
 	}
-	const mercadopagoPayload = {
-		psychologist: psychologist.username,
-		price: payload.price,
-		description: payload.title,
-		quantity: 1,
-		plan: created._id,
-		token,
-	};
 
-	const responseBody = await mercadopagoService.createPreference(
-		mercadopagoPayload
-	);
+	let responseBody = { init_point: null };
+
+	if (payload.price <= 0) {
+		await mercadopagoService.successPay({ planId: created._id });
+	} else {
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			plan: created._id,
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
 };

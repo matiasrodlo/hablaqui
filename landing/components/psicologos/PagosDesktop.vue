@@ -362,11 +362,22 @@ export default {
 					(this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
 						? this.PriceWithCoupon
 						: this.planSelected.price,
-				coupon: this.PriceWithCoupon || this.PriceWithCoupon <= 0 ? this.coupon : '',
+				coupon:
+					this.PriceWithCoupon ||
+					(this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
+						? this.coupon
+						: '',
 			};
+			console.log(
+				this.PriceWithCoupon || (this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
+					? this.PriceWithCoupon
+					: this.planSelected.price
+			);
 			const res = await this.createSession(planPayload);
 
-			if (res) window.location.href = res.init_point;
+			if (res)
+				if (res.init_point === null) this.$router.push(`/dashboard/agenda`);
+				else window.location.href = res.init_point;
 			this.loading = false;
 		},
 		changeDate(item) {
