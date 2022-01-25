@@ -70,6 +70,7 @@ let plan = new Schema(
 		remainingSessions: {
 			type: Number,
 		},
+		tokenToPay: { type: String, default: '' },
 		session: [session],
 	},
 	{ timestamps: true }

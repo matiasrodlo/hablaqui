@@ -806,6 +806,13 @@ const createPlan = async ({ payload }) => {
 	};
 	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+
 	let price = payload.price < 0 ? 0 : payload.price;
 
 	if (foundCoupon && foundCoupon.discountType === 'static')
@@ -820,6 +827,7 @@ const createPlan = async ({ payload }) => {
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: token,
 		session: [newSession],
 	};
 	//logInfo(newPlan);
@@ -913,7 +921,20 @@ const createPlan = async ({ payload }) => {
 			);
 		}
 	}
-	return okResponse('Plan creado', { plan: created });
+	const mercadopagoPayload = {
+		psychologist: psychologist.username,
+		price: payload.price,
+		description: payload.title,
+		quantity: 1,
+		plan: created._id,
+		token,
+	};
+
+	const responseBody = await mercadopagoService.createPreference(
+		mercadopagoPayload
+	);
+
+	return okResponse('Plan y preferencias creadas', responseBody);
 };
 
 /**
