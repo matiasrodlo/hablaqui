@@ -352,13 +352,8 @@
 								class="item text-center mt-6"
 							>
 								<div
-									style="
-										width: 50px;
-										height: 50px;
-										position: absolute;
-										top: 30px;
-										left: 0;
-									"
+									v-if="item.rating > 0"
+									style="position: absolute; top: 30px; left: 0"
 								>
 									<div
 										class="
@@ -371,7 +366,7 @@
 										"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
-											width: 60px;
+											width: 70px;
 										"
 									>
 										<v-img
@@ -382,8 +377,8 @@
 										></v-img>
 										<span
 											class="body-1"
-											style="width: 20px; height: 20px; color: #484848"
-											>5</span
+											style="width: 30px; height: 20px; color: #484848"
+											>{{ item.rating.toFixed(1) }}</span
 										>
 									</div>
 								</div>
