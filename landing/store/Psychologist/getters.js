@@ -7,6 +7,9 @@ export default {
 			.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			})
+			.sort(function randOrd(a, b) {
+				return b.rating - a.rating;
+			})
 			.filter(item => item.preferences.marketplaceVisibility);
 	},
 	psychologists: state => state.psychologists,
