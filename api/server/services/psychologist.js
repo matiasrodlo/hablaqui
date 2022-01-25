@@ -643,7 +643,10 @@ const formattedSessionsAll = async () => {
 	allSessions = psychologist.map(item => ({
 		...item,
 		sessions: setDaySessions(
-			allSessions.filter(element => element.psychologist === item._id)
+			allSessions.filter(
+				element =>
+					element.psychologist._id.toString() === item._id.toString()
+			)
 		),
 	}));
 
