@@ -351,6 +351,42 @@
 								:height="fullcard.includes(item._id) ? '100%' : '300px'"
 								class="item text-center mt-6"
 							>
+								<div
+									style="
+										width: 50px;
+										height: 50px;
+										position: absolute;
+										top: 30px;
+										left: 0;
+									"
+								>
+									<div
+										class="
+											d-flex
+											justify-space-between
+											align-center
+											info
+											rounded-r-lg
+											pa-2
+										"
+										style="
+											background-color: rgba(0, 121, 255, 0.23) !important;
+											width: 60px;
+										"
+									>
+										<v-img
+											style="width: 20px; height: 20px"
+											contain
+											src="https://cdn.hablaqui.cl/static/start-2.png"
+											lazy-src="https://cdn.hablaqui.cl/static/start-2.png"
+										></v-img>
+										<span
+											class="body-1"
+											style="width: 20px; height: 20px; color: #484848"
+											>5</span
+										>
+									</div>
+								</div>
 								<v-row>
 									<v-col
 										cols="3"
