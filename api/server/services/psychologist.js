@@ -977,7 +977,7 @@ const createPlan = async ({ payload }) => {
  */
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist } = await Sessions.findOne({ _id: id }).populate(
+	const { psychologist, plan } = await Sessions.findOne({ _id: id }).populate(
 		'psychologist'
 	);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
@@ -994,6 +994,13 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
 		);
 	}
+
+	const myPlan = plan.filter(
+		plan => plan._id.toString() === idPlan.toString()
+	)[0];
+
+	if (myPlan.payment !== 'success')
+		return conflictResponse('No puedes agendar un plan sin pagar');
 
 	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
