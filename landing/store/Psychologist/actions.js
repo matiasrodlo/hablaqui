@@ -165,6 +165,19 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+
+	async ratingPsychologist({ commit }, { id, payload }) {
+		try {
+			const response = await this.$axios(`/user/evaluation:/${id}`, {
+				method: 'POST',
+				data: payload,
+			});
+			snackBarSuccess('Tu evaluacion ha sido envida')(commit);
+			return response;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async setReschedule({ commit }, { id, sessionsId, newDate }) {
 		try {
 			const { data } = await this.$axios(`/psychologists/reschedule/${sessionsId}/${id}`, {

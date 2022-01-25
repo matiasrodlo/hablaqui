@@ -57,12 +57,7 @@
 							class="text-center text-sm-right mb-4 mb-sm-0"
 						>
 							<v-btn
-								v-if="
-									(plan &&
-										plan.numberSessionSuccess &&
-										plan.numberSessionSuccess >= 3) ||
-									true
-								"
+								v-if="plan && plan.success && plan.success >= 3"
 								depressed
 								block
 								small
@@ -157,6 +152,8 @@ export default {
 					idSessions: item._id,
 					psychologist: item.psychologist,
 					user: item.user,
+					// numero de sessiones concluidas
+					success: item.numberSessionSuccess,
 					// dias de diferencia entre el dia que expiró y hoy
 					diff: moment(plan.expiration).diff(moment(), 'days'),
 				}))
