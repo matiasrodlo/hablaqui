@@ -313,8 +313,8 @@ export default {
 			this.overlay = true;
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
 		async changeStateOnboarding() {

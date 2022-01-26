@@ -67,8 +67,10 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ user.name }} {{ user.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -85,9 +87,9 @@
 							<!-- general lista usuarios -->
 							<template v-if="listUsers.length">
 								<v-card-text class="py-0">
-									<v-subheader class="primary--text body-1 px-0"
-										>General</v-subheader
-									>
+									<v-subheader class="primary--text body-1 px-0">
+										General
+									</v-subheader>
 									<v-divider
 										style="border-color: #5eb3e4"
 										class="mb-2"
@@ -118,9 +120,9 @@
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ user.name }}
+												{{ user.name }} {{ user.lastName }}
 											</v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -161,10 +163,10 @@
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title
-											v-html="getMyPsy.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -240,10 +242,10 @@
 										</v-list-item-avatar>
 
 										<v-list-item-content>
-											<v-list-item-title
-												v-html="psy.name"
-											></v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-title>
+												{{ psy.name }} {{ psy.lastName }}
+											</v-list-item-title>
+											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -472,14 +474,6 @@ export default {
 			// retornamos el ultimo plan succes y que expiro
 			if (!plan) plan = plans.find(item => item.diff === max);
 			return plan;
-		},
-		// retorna verdadero si el usurio tiene plan activo
-		isActivePlan() {
-			if (!this.plan) return false;
-			return (
-				this.plan.remainingSessions > 0 ||
-				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
-			);
 		},
 		...mapGetters({
 			chat: 'Chat/chat',

@@ -10,7 +10,7 @@
 				$auth.$state.user.role == 'user'
 			"
 		>
-			<client-only v-if="$route.name !== 'psicologos'">
+			<client-only>
 				<floating-chat />
 			</client-only>
 		</template>

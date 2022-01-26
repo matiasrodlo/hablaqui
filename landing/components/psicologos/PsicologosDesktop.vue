@@ -304,12 +304,10 @@
 								></v-img>
 							</v-col>
 							<v-col class="pl-4">
-								<div class="text-lg-h4 text-h5 primary--text font-weight-bold">
+								<div class="text-h5 primary--text font-weight-bold">
 									Te ayudamos a encontrar a tu psicólogo ideal
 								</div>
-								<div
-									class="my-2 text-lg-h5 body-1 primary--text font-weight-regular"
-								>
+								<div class="my-2 text-h6 primary--text font-weight-regular">
 									Encuentra al psicólogo que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
