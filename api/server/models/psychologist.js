@@ -62,22 +62,6 @@ let experienceSchema = new Schema({
 	},
 });
 
-let rating = new Schema(
-	{
-		author: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-		},
-		comment: {
-			type: String,
-		},
-		stars: {
-			type: Number,
-		},
-	},
-	{ timestamps: true }
-);
-
 let psyPlan = new Schema({
 	tier: {
 		type: String,
@@ -208,7 +192,10 @@ let psychologist = new Schema({
 		type: Object,
 		required: false,
 	},
-	ratings: [rating],
+	rating: {
+		type: Number,
+		default: 0,
+	},
 	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
