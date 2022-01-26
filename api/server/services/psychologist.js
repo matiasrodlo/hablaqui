@@ -894,6 +894,7 @@ const createPlan = async ({ payload }) => {
 				userId: payload.user._id.toString(),
 				event: 'current-user-purchase-plan',
 				properties: {
+					currency: 'CLP',
 					products: planData,
 					order_id: created.plan[
 						created.plan.length - 1
