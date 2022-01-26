@@ -15,7 +15,13 @@
 				/>
 			</v-col>
 			<v-col class="hidden-sm-and-down mt-sm-12" cols="12" sm="6" md="4">
-				<span class="pointer" @click="dialog = true">
+				<span
+					v-if="
+						$auth.$state.user.role === 'psychologist' && $auth.$state.user.psychologist
+					"
+					class="pointer"
+					@click="dialog = true"
+				>
 					<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 						<icon :icon="mdiPlus" color="white" small />
 					</v-btn>
@@ -333,7 +339,6 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
-		<recruited-overlay />
 	</v-container>
 </template>
 
@@ -358,7 +363,6 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Avatar: () => import('~/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',

@@ -2,17 +2,14 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
 		<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
-		<template v-if="payments.length">
-			<table-pagos
-				hide-search
-				:items="payments"
-				:transactions="transactions"
-				:psychologist="psychologist"
-				:loading="loading"
-				:fetch-data="initFetch"
-			></table-pagos>
-		</template>
-		<recruited-overlay />
+		<table-pagos
+			hide-search
+			:items="payments"
+			:transactions="transactions"
+			:psychologist="psychologist"
+			:loading="loading"
+			:fetch-data="initFetch"
+		></table-pagos>
 	</v-container>
 </template>
 
@@ -23,7 +20,6 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		TablePagos: () => import('~/components/dashboard/TablePagos'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
