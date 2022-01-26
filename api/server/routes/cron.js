@@ -20,4 +20,6 @@ cronRouter.post(
 	cronController.scheduleChatEmails
 );
 
+cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
+
 export default cronRouter;
