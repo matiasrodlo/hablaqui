@@ -315,7 +315,7 @@ const createPaymentsRequest = async user => {
 			properties: {
 				total: total,
 				sessions: sessions.length,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -899,7 +899,7 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 					total: payload.price / sessionQuantity,
 				},
 			});
@@ -912,7 +912,7 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				},
 			});
 		}
@@ -946,7 +946,7 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 					total: payload.price / sessionQuantity,
 				},
 			});
@@ -960,7 +960,7 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				},
 			});
 		}
@@ -1040,7 +1040,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				planId: idPlan,
 				userpsyId: id,
 				email: userLogged.email,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 
@@ -1051,7 +1051,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				user: userLogged._id,
 				planId: idPlan,
 				userpsyId: id,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -1145,7 +1145,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			properties: {
 				user: userLogged._id,
 				psychologistId: sessions.psychologist._id.toString(),
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -1400,7 +1400,7 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: psy._id.toString(),
 					event: 'psy-updated-profile',
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				});
 				analytics.identify({
 					userId: psy._id.toString(),
@@ -1468,7 +1468,7 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: user.id.toString(),
 					event: 'recruited-updated-profile',
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				});
 				analytics.identify({
 					userId: user.id.toString(),
@@ -1723,7 +1723,7 @@ const uploadProfilePicture = async (psyID, picture) => {
 			event: 'updated-profile-picture',
 			properties: {
 				avatar: getPublicUrlAvatar(gcsname),
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -1869,7 +1869,7 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().format(),
+						timestamp: moment().toISOString(),
 						total: 0,
 					},
 				});
@@ -1892,7 +1892,7 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().format(),
+						timestamp: moment().toISOString(),
 						total: 0,
 					},
 				});
@@ -1900,7 +1900,7 @@ const customNewSession = async (user, payload) => {
 				analytics.track({
 					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-private-hours',
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				});
 			}
 		}
