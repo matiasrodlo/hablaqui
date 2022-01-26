@@ -11,6 +11,7 @@ const initialState = {
 	psychologists: [],
 	resumeView: false,
 	sessions: [],
+	transactions: null,
 	sessionsFormatted: [],
 	sessionsFormattedAll: [],
 };

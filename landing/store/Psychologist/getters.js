@@ -12,6 +12,7 @@ export default {
 	psychologists: state => state.psychologists,
 
 	sessions: state => state.sessions,
+	transactions: state => state.transactions,
 	page: state => state.page,
 	payments: state => state.payments,
 	loadingPsychologist: state => state.loadingPsychologist,
