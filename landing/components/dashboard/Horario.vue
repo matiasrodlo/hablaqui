@@ -413,6 +413,7 @@ export default {
 		this.query = this.$route.query;
 	},
 	mounted() {
+		console.log(JSON.stringify(this.psychologist.schedule));
 		this.setDay(cloneDeep(this.psychologist.schedule));
 	},
 	methods: {

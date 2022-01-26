@@ -319,7 +319,6 @@
 				</template>
 			</v-row>
 		</v-container>
-		<recruited-overlay />
 	</div>
 </template>
 
@@ -334,7 +333,6 @@ export default {
 		avatar: () => import('~/components/Avatar'),
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Channel: () => import('~/components/chat/Channel'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -515,8 +513,8 @@ export default {
 		async initFetch() {
 			moment.locale('es');
 			await this.getPsychologists();
-			await this.getMessages();
 			if (this.$auth.$state.user.role === 'user') {
+				await this.getMessages();
 				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
@@ -526,7 +524,10 @@ export default {
 				});
 			}
 			if (this.$auth.$state.user.role === 'psychologist') {
-				await this.getClients(this.$auth.$state.user.psychologist);
+				if (this.$auth.$state.user.psychologist) {
+					await this.getMessages();
+					await this.getClients(this.$auth.$state.user.psychologist);
+				}
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
 						this.clients.find(client => client._id === this.$route.query.client)

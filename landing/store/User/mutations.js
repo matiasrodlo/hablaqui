@@ -5,6 +5,10 @@ export default {
 	setToken(state, value) {
 		state.token = value;
 	},
+	setOnBoarding(state, value) {
+		if (value) state.onBoarding = value;
+		else state.onBoarding = !state.onBoarding;
+	},
 	setLoggedIn(state) {
 		state.loggedIn = !!state.user && !!state.token;
 	},

@@ -683,7 +683,6 @@
 		<v-overlay :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
-		<recruited-overlay />
 	</div>
 </template>
 
@@ -709,7 +708,6 @@ export default {
 		Calendar: () => import('~/components/Calendar.vue'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -1023,7 +1021,7 @@ export default {
 					this.overlay = false;
 					this.dialogWithoutSessions = true;
 				}
-			} else if (this.$auth.user.role === 'psychologist') {
+			} else if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist) {
 				this.date = date;
 				this.dialogAppointment = true;
 			}

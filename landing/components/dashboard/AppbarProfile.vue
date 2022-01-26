@@ -56,6 +56,15 @@
 				Centro de ayuda
 			</nuxt-link>
 		</div>
+		<v-btn class="ml-2" small elevation="1" fab color="white" @click="() => setOnBoarding()">
+			<v-img
+				src="https://cdn.hablaqui.cl/static/flag.png"
+				contain
+				height="25"
+				width="25"
+				class="mx-2"
+			></v-img>
+		</v-btn>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />
 		</v-btn>
@@ -63,7 +72,8 @@
 </template>
 
 <script>
-import { mdiLogout, mdiChevronLeft } from '@mdi/js';
+import { mdiLogout, mdiChevronLeft, mdiFlag } from '@mdi/js';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -79,6 +89,7 @@ export default {
 		return {
 			mdiChevronLeft,
 			mdiLogout,
+			mdiFlag,
 		};
 	},
 	computed: {
@@ -99,6 +110,7 @@ export default {
 			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		...mapMutations({ setOnBoarding: 'User/setOnBoarding' }),
 	},
 };
 </script>

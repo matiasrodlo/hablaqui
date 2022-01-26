@@ -138,6 +138,66 @@
 				</div>
 			</template>
 		</v-navigation-drawer>
+		<v-navigation-drawer
+			v-if="$auth.$state.user.role === 'psychologist'"
+			:value="onBoarding"
+			width="400"
+			class="elevation-12"
+			disable-resize-watcher
+			app
+			right
+		>
+			<v-list-item style="height: 120px" class="primary" dark>
+				<v-list-item-avatar size="35" @click="() => setOnBoarding()">
+					<v-btn icon>
+						<icon color="white" size="35" :icon="mdiChevronRight" />
+					</v-btn>
+				</v-list-item-avatar>
+				<v-list-item-content>
+					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
+					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
+						Da tus primeros pasos en Hablaquí Office.
+					</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+			<v-expansion-panels flat>
+				<v-expansion-panel v-for="(step, i) in stepOnboarding" :key="i">
+					<v-expansion-panel-header>
+						<div class="text-left">
+							<icon v-if="step.done" size="35" :icon="mdiCheckCircle" />
+							<icon v-else size="35" color="#bfbfbf" :icon="mdiCircle" />
+							<span class="ml-2">
+								{{ step.title }}
+							</span>
+						</div>
+					</v-expansion-panel-header>
+					<v-expansion-panel-content>
+						<v-list>
+							<v-list-item
+								v-for="(item, key) in step.items"
+								:key="key"
+								active-class="primary--text"
+								link
+							>
+								<v-list-item-icon>
+									<icon v-if="item.done" size="20" :icon="mdiCheckCircle" />
+									<icon v-else size="20" color="#bfbfbf" :icon="mdiCircle" />
+								</v-list-item-icon>
+
+								<v-list-item-content>
+									<v-list-item-title class="body-2">
+										{{ item.title }}
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+					</v-expansion-panel-content>
+				</v-expansion-panel>
+			</v-expansion-panels>
+			<template #append>
+				<div class="pointer my-6 primary--text text-center">Completar tareas (saltar)</div>
+			</template>
+		</v-navigation-drawer>
 		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
 			<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
 				<icon size="30" color="primary" :icon="mdiChevronLeft" />
@@ -152,6 +212,9 @@
 			:class="$vuetify.breakpoint.mdAndUp ? 'primary' : 'white'"
 			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
+			<!-- overlay onboarding -->
+			<v-overlay :value="onBoarding" color="white" :opacity="0.5" z-index="2"></v-overlay>
+			<!-- overlay loading -->
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
 					<div class="text-right">
@@ -192,7 +255,17 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert, mdiChevronLeft } from '@mdi/js';
+import {
+	mdiMenu,
+	mdiAccount,
+	mdiAccountOff,
+	mdiAlert,
+	mdiChevronLeft,
+	mdiCheckCircle,
+	mdiChevronRight,
+	mdiChevronDown,
+	mdiCircle,
+} from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
@@ -205,14 +278,90 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
+			mdiChevronRight,
 			mdiChevronLeft,
+			mdiChevronDown,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
+			mdiCheckCircle,
+			mdiCircle,
 			drawer: true,
 			online: true,
 			isMini: true,
+			stepOnboarding: [
+				{
+					title: 'Configura tu cuenta',
+					route: '/dashboard/perfil',
+					items: [
+						{
+							title: 'Sube tu foto de perfil',
+							tab: '0',
+							card: {
+								title: 'Editamos tu fotografía',
+								description:
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
+								link: '',
+							},
+							done: false,
+						},
+						{ title: 'Añade tus datos bancarios', tab: '0', done: false },
+						{ title: 'Configura tus horarios', tab: '1', done: false },
+						{
+							title: 'Configura el tiempo dereprogramación y agenda',
+							tab: '2',
+							done: false,
+						},
+						{ title: 'Añade el precio de tus sesiones', tab: '2', done: false },
+					],
+					done: false,
+				},
+				{
+					title: 'Añade a tus consultantes',
+					route: '/dashboard/consultantes',
+					items: [
+						{
+							title: 'Consultante nuevo',
+							card: {
+								title: 'Que no queden fuera tus consultantes',
+								description:
+									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+								link: '',
+							},
+							done: false,
+						},
+					],
+					done: false,
+				},
+				{
+					title: 'Añade eventos o bloquea horas',
+					route: '/dashboard/agenda',
+					items: [
+						{ title: 'Nuevo evento', done: false },
+						{ title: 'Agendar evento', done: false },
+					],
+					done: false,
+				},
+				// {
+				// 	title: 'Conoce la sala de videollamadas',
+				// 	route: '/dashboard/chat',
+				// 	items: [
+				// 		{ title: '', tab: '0' },
+				// 		{ title: 'Añade tus datos bancarios', tab: '0' },
+				// 		{ title: 'Configura tus horarios', tab: '1' },
+				// 		{ title: 'Configura el tiempo dereprogramación y agenda', tab: '2' },
+				// 		{ title: 'Añade el precio de tus sesiones', tab: '2' },
+				// 	],
+				// done: false,
+				// },
+				{
+					title: 'Explora las secciones',
+					route: '/dashboard/perfil',
+					items: [{ title: 'Seccion x' }],
+					done: false,
+				},
+			],
 		};
 	},
 	computed: {
@@ -306,7 +455,10 @@ export default {
 				return 'Consultante';
 			return '';
 		},
-		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+		...mapGetters({
+			listenerUserOnline: 'User/listenerUserOnline',
+			onBoarding: 'User/onBoarding',
+		}),
 	},
 	mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
@@ -327,7 +479,10 @@ export default {
 			this.overlay = false;
 			this.$auth.fetchUser();
 		},
-		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
+		...mapMutations({
+			setListenerUserOnline: 'User/setListenerUserOnline',
+			setOnBoarding: 'User/setOnBoarding',
+		}),
 		...mapActions({
 			updateOne: 'User/updateOne',
 		}),
