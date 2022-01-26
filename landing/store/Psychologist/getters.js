@@ -13,7 +13,7 @@ export default {
 			.filter(item => item.preferences.marketplaceVisibility);
 	},
 	psychologists: state => state.psychologists,
-
+	psychologist: state => state.psychologist,
 	sessions: state => state.sessions,
 	transactions: state => state.transactions,
 	page: state => state.page,

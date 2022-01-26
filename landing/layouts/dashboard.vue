@@ -162,7 +162,7 @@
 			</v-list-item>
 			<v-expansion-panels flat>
 				<v-expansion-panel v-for="(step, i) in stepOnboarding" :key="i">
-					<v-expansion-panel-header>
+					<v-expansion-panel-header v-if="step.visible" @click="$router.push(step.route)">
 						<div class="text-left">
 							<icon v-if="step.done" size="35" :icon="mdiCheckCircle" />
 							<icon v-else size="35" color="#bfbfbf" :icon="mdiCircle" />
@@ -268,6 +268,7 @@ import {
 } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -290,78 +291,6 @@ export default {
 			drawer: true,
 			online: true,
 			isMini: true,
-			stepOnboarding: [
-				{
-					title: 'Configura tu cuenta',
-					route: '/dashboard/perfil',
-					items: [
-						{
-							title: 'Sube tu foto de perfil',
-							tab: '0',
-							card: {
-								title: 'Editamos tu fotografía',
-								description:
-									'Aquí puedes subir tu foto para editarla, consulta el manual',
-								link: '',
-							},
-							done: false,
-						},
-						{ title: 'Añade tus datos bancarios', tab: '0', done: false },
-						{ title: 'Configura tus horarios', tab: '1', done: false },
-						{
-							title: 'Configura el tiempo dereprogramación y agenda',
-							tab: '2',
-							done: false,
-						},
-						{ title: 'Añade el precio de tus sesiones', tab: '2', done: false },
-					],
-					done: false,
-				},
-				{
-					title: 'Añade a tus consultantes',
-					route: '/dashboard/consultantes',
-					items: [
-						{
-							title: 'Consultante nuevo',
-							card: {
-								title: 'Que no queden fuera tus consultantes',
-								description:
-									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-								link: '',
-							},
-							done: false,
-						},
-					],
-					done: false,
-				},
-				{
-					title: 'Añade eventos o bloquea horas',
-					route: '/dashboard/agenda',
-					items: [
-						{ title: 'Nuevo evento', done: false },
-						{ title: 'Agendar evento', done: false },
-					],
-					done: false,
-				},
-				// {
-				// 	title: 'Conoce la sala de videollamadas',
-				// 	route: '/dashboard/chat',
-				// 	items: [
-				// 		{ title: '', tab: '0' },
-				// 		{ title: 'Añade tus datos bancarios', tab: '0' },
-				// 		{ title: 'Configura tus horarios', tab: '1' },
-				// 		{ title: 'Configura el tiempo dereprogramación y agenda', tab: '2' },
-				// 		{ title: 'Añade el precio de tus sesiones', tab: '2' },
-				// 	],
-				// done: false,
-				// },
-				{
-					title: 'Explora las secciones',
-					route: '/dashboard/perfil',
-					items: [{ title: 'Seccion x' }],
-					done: false,
-				},
-			],
 		};
 	},
 	computed: {
@@ -455,14 +384,158 @@ export default {
 				return 'Consultante';
 			return '';
 		},
+		stepOnboarding() {
+			return [
+				{
+					title: 'Configura tu cuenta',
+					route: '/dashboard/perfil',
+					items: [
+						{
+							title: 'Sube tu foto de perfil',
+							tab: '0',
+							card: {
+								title: 'Editamos tu fotografía',
+								description:
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
+								link: '',
+							},
+							done: false,
+						},
+						{ title: 'Añade tus datos bancarios', tab: '0', done: false },
+						{ title: 'Configura tus horarios', tab: '1', done: false },
+						{
+							title: 'Configura el tiempo dereprogramación y agenda',
+							tab: '2',
+							done: false,
+						},
+						{ title: 'Añade el precio de tus sesiones', tab: '2', done: false },
+					],
+					visible: true,
+					done: false,
+				},
+				{
+					title: 'Añade a tus consultantes',
+					route: '/dashboard/consultantes',
+					items: [
+						{
+							title: 'Consultante nuevo',
+							card: {
+								title: 'Que no queden fuera tus consultantes',
+								description:
+									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+								link: '',
+							},
+							done: false,
+						},
+					],
+					visible:
+						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
+					done: false,
+				},
+				{
+					title: 'Añade eventos o bloquea horas',
+					route: '/dashboard/agenda',
+					items: [
+						{ title: 'Nuevo evento', done: false },
+						{ title: 'Agendar evento', done: false },
+					],
+					visible:
+						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
+					done: false,
+				},
+				// {
+				// 	title: 'Conoce la sala de videollamadas',
+				// 	route: '/dashboard/chat',
+				// 	items: [
+				// 		{ title: '', tab: '0' },
+				// 		{ title: 'Añade tus datos bancarios', tab: '0' },
+				// 		{ title: 'Configura tus horarios', tab: '1' },
+				// 		{ title: 'Configura el tiempo dereprogramación y agenda', tab: '2' },
+				// 		{ title: 'Añade el precio de tus sesiones', tab: '2' },
+				// 	],
+				// done: false,
+				// },
+				{
+					title: 'Explora las secciones',
+					route: '/dashboard/chat',
+					items: [
+						{ title: 'Chat' },
+						{ title: 'Mi agenda' },
+						{ title: 'Mis consultantes' },
+						{ title: 'Mis pagos' },
+						{ title: 'Mi perfil publico' },
+					],
+					visible: true,
+					done: false,
+				},
+			];
+		},
 		...mapGetters({
 			listenerUserOnline: 'User/listenerUserOnline',
 			onBoarding: 'User/onBoarding',
 		}),
 	},
-	mounted() {
+	async mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
+
+		if (this.$auth.$state.user.role === 'user') {
+			if (this.$auth.$state.user.sessions.length) {
+				// Obtenemos un array con todo los planes solamente
+				const plans = this.$auth.$state.user.sessions.flatMap(item =>
+					item.plan.map(plan => ({
+						...plan,
+						psychologist: item.psychologist,
+						user: item.user,
+						// dias de diferencia entre el dia que expiró y hoy
+						diff: moment(plan.expiration).diff(moment(), 'days'),
+					}))
+				);
+				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+				const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
+
+				// retornamos el plan success y sin expirar
+				let plan = plans.find(
+					item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+				);
+				// retornamos el siguiente plan pendiente
+				if (!plan) plan = plans.find(item => item.diff === max);
+				// retornamos el ultimo plan succes y que expiro
+				if (!plan) plan = plans.find(item => item.diff === min);
+
+				if (plan.psychologist) {
+					const { psychologist } = await this.$axios.$get(
+						`/psychologists/one/${plan.psychologist}`
+					);
+					this.setPsychologist(psychologist);
+				}
+			}
+			this.setPsychologist(null);
+		}
+		if (this.$auth.$state.user.role === 'psychologist') {
+			let psychologist;
+			if (this.$auth.$state.user.psychologist) {
+				const res = await this.$axios.$get(
+					`/psychologists/one/${this.$auth.$state.user.psychologist}`
+				);
+				psychologist = res.psychologist;
+			} else {
+				const res = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+				psychologist = res.recruited;
+			}
+			if (!psychologist.formation.length) {
+				psychologist.formation.push({
+					formationType: '',
+					description: '',
+					start: '',
+					end: '',
+				});
+			}
+			if (!psychologist.experience.length) {
+				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			}
+			this.setPsychologist(psychologist);
+		}
 	},
 	methods: {
 		async logout() {
@@ -482,6 +555,7 @@ export default {
 		...mapMutations({
 			setListenerUserOnline: 'User/setListenerUserOnline',
 			setOnBoarding: 'User/setOnBoarding',
+			setPsychologist: 'Psychologist/setPsychologist',
 		}),
 		...mapActions({
 			updateOne: 'User/updateOne',

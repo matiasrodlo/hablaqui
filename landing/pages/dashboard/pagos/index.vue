@@ -26,13 +26,13 @@ export default {
 	data() {
 		return {
 			loading: false,
-			psychologist: null,
 		};
 	},
 	computed: {
 		...mapGetters({
 			payments: 'Psychologist/payments',
 			transactions: 'Psychologist/transactions',
+			psychologist: 'Psychologist/psychologist',
 		}),
 	},
 	mounted() {
@@ -48,10 +48,6 @@ export default {
 			this.loading = true;
 			await this.getPayments();
 			await this.getTransactions();
-			const { psychologist } = await this.$axios.$get(
-				`/psychologists/one/${this.$auth.$state.user.psychologist}`
-			);
-			this.psychologist = await psychologist;
 			this.loading = false;
 		},
 		...mapActions({
