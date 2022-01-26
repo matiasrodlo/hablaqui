@@ -34,38 +34,13 @@ const login = async user => {
 
 const getSessions = async user => {
 	if (user.role === 'user') {
-		return getFormattedSessions(await Sessions.find({ user: user._id }));
+		return await Sessions.find({ user: user._id });
 	}
 
 	if (user.role === 'psychologist')
-		return getFormattedSessions(
-			await Sessions.find({ psychologist: user.psychologist })
-		);
+		return await Sessions.find({ psychologist: user.psychologist });
 
 	return null;
-};
-
-const getFormattedSessions = sessions => {
-	sessions = JSON.stringify(sessions);
-	sessions = JSON.parse(sessions);
-	sessions = sessions.map(item => {
-		return {
-			_id: item._id,
-			psychologist: item.psychologist,
-			roomsUrl: item.roomsUrl,
-			user: item.user,
-			numberSessionSuccess: item.numberSessionSuccess,
-			plan: item.plan.map(plan => {
-				return {
-					...plan,
-					activePlan:
-						plan.payment === 'success' &&
-						moment().isBefore(moment(plan.expiration)),
-				};
-			}),
-		};
-	});
-	return sessions;
 };
 
 const generateUser = async user => {
@@ -209,7 +184,6 @@ const authService = {
 	changeUserPassword,
 	googleAuthCallback,
 	getSessions,
-	getFormattedSessions,
 };
 
 export default Object.freeze(authService);

@@ -888,8 +888,8 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					moment().isBefore(moment(plan.expiration)) &&
-					sessions.psychologist.toString() !== payload.psychologist
+					moment().isBefore(moment(plan.expiration))
+				//sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
 	)
