@@ -213,7 +213,13 @@
 			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
 			<!-- overlay onboarding -->
-			<v-overlay :value="onBoarding" color="white" :opacity="0.5" z-index="2"></v-overlay>
+			<v-overlay
+				v-if="$auth.user.role === 'psychologist'"
+				:value="onBoarding"
+				color="white"
+				:opacity="0.5"
+				z-index="2"
+			></v-overlay>
 			<!-- overlay loading -->
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
@@ -249,6 +255,7 @@
 			>
 				<snackbar />
 				<nuxt />
+				<pre>{{ psychologist }}</pre>
 			</div>
 		</v-main>
 	</v-app>
@@ -399,16 +406,51 @@ export default {
 									'Aquí puedes subir tu foto para editarla, consulta el manual',
 								link: '',
 							},
-							done: false,
+							done: this.psychologist && this.psychologist.avatar,
 						},
-						{ title: 'Añade tus datos bancarios', tab: '0', done: false },
-						{ title: 'Configura tus horarios', tab: '1', done: false },
+						{
+							title: 'Añade tus datos bancarios',
+							tab: '0',
+							done:
+								this.psychologist &&
+								this.psychologist.paymentMethod &&
+								this.psychologist.paymentMethod.bank &&
+								this.psychologist.paymentMethod.accountType &&
+								this.psychologist.paymentMethod.email &&
+								this.psychologist.paymentMethod.rut &&
+								this.psychologist.paymentMethod.name,
+						},
+						{
+							title: 'Configura tus horarios',
+							tab: '1',
+							done:
+								this.psychologist &&
+								this.psychologist.schedule &&
+								(this.psychologist.schedule.monday !== 'busy' ||
+									this.psychologist.schedule.tuesday !== 'busy' ||
+									this.psychologist.schedule.wednesday !== 'busy' ||
+									this.psychologist.schedule.thursday !== 'busy' ||
+									this.psychologist.schedule.friday !== 'busy' ||
+									this.psychologist.schedule.saturday !== 'busy' ||
+									this.psychologist.schedule.sunday !== 'busy'),
+						},
 						{
 							title: 'Configura el tiempo dereprogramación y agenda',
 							tab: '2',
-							done: false,
+							done:
+								this.psychologist &&
+								this.psychologist.preferences &&
+								this.psychologist.preferences.minimumNewSession > 0 &&
+								this.psychologist.preferences.minimumRescheduleSession > 0,
 						},
-						{ title: 'Añade el precio de tus sesiones', tab: '2', done: false },
+						{
+							title: 'Añade el precio de tus sesiones',
+							tab: '2',
+							done:
+								this.psychologist &&
+								this.psychologist.sessionPrices &&
+								this.psychologist.sessionPrices.video > 0,
+						},
 					],
 					visible: true,
 					done: false,
@@ -473,6 +515,7 @@ export default {
 		...mapGetters({
 			listenerUserOnline: 'User/listenerUserOnline',
 			onBoarding: 'User/onBoarding',
+			psychologist: 'Psychologist/psychologist',
 		}),
 	},
 	async mounted() {

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-card
-			class="hidden-sm-and-down mx-auto"
+			class="hidden-sm-and-down mx-auto mb-16"
 			:loading="!psychologist"
 			outlined
 			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"

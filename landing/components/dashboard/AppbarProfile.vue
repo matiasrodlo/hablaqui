@@ -56,7 +56,15 @@
 				Centro de ayuda
 			</nuxt-link>
 		</div>
-		<v-btn class="ml-2" small elevation="1" fab color="white" @click="() => setOnBoarding()">
+		<v-btn
+			v-if="$auth.user.role === 'psychologist'"
+			class="ml-2"
+			small
+			elevation="1"
+			fab
+			color="white"
+			@click="() => setOnBoarding()"
+		>
 			<v-img
 				src="https://cdn.hablaqui.cl/static/flag.png"
 				contain

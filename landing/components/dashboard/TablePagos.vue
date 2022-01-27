@@ -383,7 +383,10 @@
 					<v-card-text class="py-0">
 						<v-divider> </v-divider>
 					</v-card-text>
-					<v-card-text v-if="psychologist" class="pb-0 pt-2">
+					<v-card-text
+						v-if="psychologist && psychologist.paymentMethod"
+						class="pb-0 pt-2"
+					>
 						<div class="d-flex justify-space-between align-center">
 							<div>
 								<div class="title">
@@ -421,7 +424,7 @@
 						habiles
 					</v-card-title>
 					<v-card-text class="text-center">
-						<div v-if="psychologist" class="body-1">
+						<div v-if="psychologist && psychologist.paymentMethod" class="body-1">
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
 							{{ psychologist.paymentMethod.bank }}
 						</div>
