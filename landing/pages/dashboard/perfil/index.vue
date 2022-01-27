@@ -7,7 +7,11 @@
 			style="height: 150px"
 			class="mt-16 pt-10 pt-md-0 mt-md-0"
 		>
-			<v-list-item class="hidden-sm-and-down" style="position: relative">
+			<v-list-item
+				class="hidden-sm-and-down"
+				style="position: relative"
+				:style="step && step.title === 'Sube tu foto de perfil' ? 'z-index: 3' : ''"
+			>
 				<v-file-input
 					id="upload"
 					ref="avatar"
@@ -253,7 +257,7 @@ export default {
 				this.setPsychologist(value);
 			},
 		},
-		...mapGetters({ item: 'Psychologist/psychologist' }),
+		...mapGetters({ item: 'Psychologist/psychologist', step: 'User/step' }),
 	},
 	methods: {
 		setPsychologist(value) {

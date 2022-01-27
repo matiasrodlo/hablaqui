@@ -142,7 +142,7 @@
 			v-if="$auth.$state.user.role === 'psychologist'"
 			:value="onBoarding"
 			width="400"
-			class="elevation-12"
+			class="elevation-6"
 			disable-resize-watcher
 			app
 			right
@@ -162,9 +162,28 @@
 			</v-list-item>
 			<v-expansion-panels flat>
 				<v-expansion-panel v-for="(step, i) in stepOnboarding" :key="i">
-					<v-expansion-panel-header v-if="step.visible" @click="$router.push(step.route)">
+					<v-expansion-panel-header v-if="step.visible">
 						<div class="text-left">
-							<icon v-if="step.done" size="35" :icon="mdiCheckCircle" />
+							<icon
+								v-if="step.title === 'Explora las secciones'"
+								size="35"
+								:icon="mdiMapMarkerStar"
+							/>
+							<icon
+								v-else-if="step.title === 'Configura tu cuenta'"
+								size="35"
+								:icon="mdiCog"
+							/>
+							<icon
+								v-else-if="step.title === 'Añade a tus consultantes'"
+								size="35"
+								:icon="mdiAccountSupervisor"
+							/>
+							<icon
+								v-else-if="step.title === 'Añade eventos o bloquea horas'"
+								size="35"
+								:icon="mdiCalendar"
+							/>
 							<icon v-else size="35" color="#bfbfbf" :icon="mdiCircle" />
 							<span class="ml-2">
 								{{ step.title }}
@@ -172,24 +191,26 @@
 						</div>
 					</v-expansion-panel-header>
 					<v-expansion-panel-content>
-						<v-list>
-							<v-list-item
-								v-for="(item, key) in step.items"
-								:key="key"
-								active-class="primary--text"
-								link
-							>
-								<v-list-item-icon>
-									<icon v-if="item.done" size="20" :icon="mdiCheckCircle" />
-									<icon v-else size="20" color="#bfbfbf" :icon="mdiCircle" />
-								</v-list-item-icon>
+						<v-list dense>
+							<v-list-item-group v-model="onSelectedStep" color="primary">
+								<v-list-item
+									v-for="(item, key) in step.items"
+									:key="key"
+									:value="item"
+									@click="$router.push({ name: item.route })"
+								>
+									<v-list-item-icon>
+										<icon v-if="item.done" size="20" :icon="mdiCheckCircle" />
+										<icon v-else size="20" color="#bfbfbf" :icon="mdiCircle" />
+									</v-list-item-icon>
 
-								<v-list-item-content>
-									<v-list-item-title class="body-2">
-										{{ item.title }}
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
+									<v-list-item-content>
+										<v-list-item-title class="body-2 font-weight-regular">
+											{{ item.title }}
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list-item-group>
 						</v-list>
 					</v-expansion-panel-content>
 				</v-expansion-panel>
@@ -214,7 +235,7 @@
 		>
 			<!-- overlay onboarding -->
 			<v-overlay
-				v-if="$auth.user.role === 'psychologist'"
+				v-if="selectedStep"
 				:value="onBoarding"
 				color="white"
 				:opacity="0.5"
@@ -255,7 +276,6 @@
 			>
 				<snackbar />
 				<nuxt />
-				<pre>{{ psychologist }}</pre>
 			</div>
 		</v-main>
 	</v-app>
@@ -272,6 +292,10 @@ import {
 	mdiChevronRight,
 	mdiChevronDown,
 	mdiCircle,
+	mdiMapMarkerStar,
+	mdiCog,
+	mdiAccountSupervisor,
+	mdiCalendar,
 } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
@@ -286,7 +310,11 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
+			mdiAccountSupervisor,
+			mdiCalendar,
+			mdiCog,
 			mdiChevronRight,
+			mdiMapMarkerStar,
 			mdiChevronLeft,
 			mdiChevronDown,
 			mdiAlert,
@@ -303,6 +331,14 @@ export default {
 	computed: {
 		expand() {
 			return true;
+		},
+		onSelectedStep: {
+			get() {
+				return this.selectedStep;
+			},
+			set(value) {
+				return this.setStep(value);
+			},
 		},
 		goBack() {
 			return (
@@ -391,6 +427,51 @@ export default {
 				return 'Consultante';
 			return '';
 		},
+		hasAvatar() {
+			return this.psychologist && this.psychologist.avatar;
+		},
+		hasBankdata() {
+			return (
+				this.psychologist &&
+				this.psychologist.paymentMethod &&
+				this.psychologist.paymentMethod.bank &&
+				this.psychologist.paymentMethod.accountType &&
+				this.psychologist.paymentMethod.email &&
+				this.psychologist.paymentMethod.rut &&
+				this.psychologist.paymentMethod.name
+			);
+		},
+		hasSchedule() {
+			return (
+				this.psychologist &&
+				this.psychologist.schedule &&
+				(this.psychologist.schedule.monday !== 'busy' ||
+					this.psychologist.schedule.tuesday !== 'busy' ||
+					this.psychologist.schedule.wednesday !== 'busy' ||
+					this.psychologist.schedule.thursday !== 'busy' ||
+					this.psychologist.schedule.friday !== 'busy' ||
+					this.psychologist.schedule.saturday !== 'busy' ||
+					this.psychologist.schedule.sunday !== 'busy')
+			);
+		},
+		hasPreferences() {
+			return (
+				this.psychologist &&
+				this.psychologist.preferences &&
+				this.psychologist.preferences.minimumNewSession > 0 &&
+				this.psychologist.preferences.minimumRescheduleSession > 0
+			);
+		},
+		hasSessionPrice() {
+			return (
+				this.psychologist &&
+				this.psychologist.sessionPrices &&
+				this.psychologist.sessionPrices.video > 0
+			);
+		},
+		hasConsultantes() {
+			return true;
+		},
 		stepOnboarding() {
 			return [
 				{
@@ -406,54 +487,41 @@ export default {
 									'Aquí puedes subir tu foto para editarla, consulta el manual',
 								link: '',
 							},
-							done: this.psychologist && this.psychologist.avatar,
+							route: 'dashboard-perfil',
+							done: this.hasAvatar,
 						},
 						{
 							title: 'Añade tus datos bancarios',
 							tab: '0',
-							done:
-								this.psychologist &&
-								this.psychologist.paymentMethod &&
-								this.psychologist.paymentMethod.bank &&
-								this.psychologist.paymentMethod.accountType &&
-								this.psychologist.paymentMethod.email &&
-								this.psychologist.paymentMethod.rut &&
-								this.psychologist.paymentMethod.name,
+							done: this.hasBankdata,
+							route: 'dashboard-perfil',
 						},
 						{
 							title: 'Configura tus horarios',
 							tab: '1',
-							done:
-								this.psychologist &&
-								this.psychologist.schedule &&
-								(this.psychologist.schedule.monday !== 'busy' ||
-									this.psychologist.schedule.tuesday !== 'busy' ||
-									this.psychologist.schedule.wednesday !== 'busy' ||
-									this.psychologist.schedule.thursday !== 'busy' ||
-									this.psychologist.schedule.friday !== 'busy' ||
-									this.psychologist.schedule.saturday !== 'busy' ||
-									this.psychologist.schedule.sunday !== 'busy'),
+							done: this.hasSchedule,
+							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Configura el tiempo dereprogramación y agenda',
+							title: 'Configura el tiempo de reprogramación y agenda',
 							tab: '2',
-							done:
-								this.psychologist &&
-								this.psychologist.preferences &&
-								this.psychologist.preferences.minimumNewSession > 0 &&
-								this.psychologist.preferences.minimumRescheduleSession > 0,
+							done: this.hasPreferences,
+							route: 'dashboard-perfil',
 						},
 						{
 							title: 'Añade el precio de tus sesiones',
 							tab: '2',
-							done:
-								this.psychologist &&
-								this.psychologist.sessionPrices &&
-								this.psychologist.sessionPrices.video > 0,
+							done: this.hasSessionPrice,
+							route: 'dashboard-perfil',
 						},
 					],
 					visible: true,
-					done: false,
+					done:
+						this.hasSessionPrice &&
+						this.hasPreferences &&
+						this.hasSchedule &&
+						this.hasBankdata &&
+						this.hasAvatar,
 				},
 				{
 					title: 'Añade a tus consultantes',
@@ -467,7 +535,8 @@ export default {
 									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
 								link: '',
 							},
-							done: false,
+							route: 'dashboard-consultantes',
+							done: this.hasConsultantes,
 						},
 					],
 					visible:
@@ -478,8 +547,8 @@ export default {
 					title: 'Añade eventos o bloquea horas',
 					route: '/dashboard/agenda',
 					items: [
-						{ title: 'Nuevo evento', done: false },
-						{ title: 'Agendar evento', done: false },
+						{ title: 'Nuevo evento', done: false, route: 'dashboard-agenda' },
+						{ title: 'Agendar evento', done: false, route: 'dashboard-agenda' },
 					],
 					visible:
 						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
@@ -501,20 +570,20 @@ export default {
 					title: 'Explora las secciones',
 					route: '/dashboard/chat',
 					items: [
-						{ title: 'Chat' },
-						{ title: 'Mi agenda' },
-						{ title: 'Mis consultantes' },
-						{ title: 'Mis pagos' },
-						{ title: 'Mi perfil publico' },
+						{ title: 'Chat', route: 'dashboard-chat' },
+						{ title: 'Mi agenda', route: 'dashboard-agenda' },
+						{ title: 'Mis consultantes', route: 'dashboard-consultantes' },
+						{ title: 'Mis pagos', route: 'dashboard-pagos' },
 					],
 					visible: true,
-					done: false,
+					done: true,
 				},
 			];
 		},
 		...mapGetters({
 			listenerUserOnline: 'User/listenerUserOnline',
 			onBoarding: 'User/onBoarding',
+			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
 		}),
 	},
@@ -598,6 +667,7 @@ export default {
 		...mapMutations({
 			setListenerUserOnline: 'User/setListenerUserOnline',
 			setOnBoarding: 'User/setOnBoarding',
+			setStep: 'User/setStep',
 			setPsychologist: 'Psychologist/setPsychologist',
 		}),
 		...mapActions({

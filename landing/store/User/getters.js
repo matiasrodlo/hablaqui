@@ -3,5 +3,6 @@ export default {
 	token: state => state.token,
 	loggedIn: state => state.loggedIn,
 	onBoarding: state => state.onBoarding,
+	step: state => state.step,
 	listenerUserOnline: state => state.listenerUserOnline,
 };
