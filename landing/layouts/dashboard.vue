@@ -299,7 +299,6 @@ import {
 } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import moment from 'moment';
 
 export default {
 	components: {
@@ -585,6 +584,7 @@ export default {
 			onBoarding: 'User/onBoarding',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
+			plan: 'User/plan',
 		}),
 	},
 	async mounted() {
@@ -593,36 +593,15 @@ export default {
 
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
-				// Obtenemos un array con todo los planes solamente
-				const plans = this.$auth.$state.user.sessions.flatMap(item =>
-					item.plan.map(plan => ({
-						...plan,
-						psychologist: item.psychologist,
-						user: item.user,
-						// dias de diferencia entre el dia que expiró y hoy
-						diff: moment(plan.expiration).diff(moment(), 'days'),
-					}))
-				);
-				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-				const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
-
-				// retornamos el plan success y sin expirar
-				let plan = plans.find(
-					item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-				);
-				// retornamos el siguiente plan pendiente
-				if (!plan) plan = plans.find(item => item.diff === max);
-				// retornamos el ultimo plan succes y que expiro
-				if (!plan) plan = plans.find(item => item.diff === min);
-
-				if (plan.psychologist) {
+				if (this.plan.psychologist) {
 					const { psychologist } = await this.$axios.$get(
-						`/psychologists/one/${plan.psychologist}`
+						`/psychologists/one/${this.plan.psychologist}`
 					);
 					this.setPsychologist(psychologist);
 				}
+			} else {
+				this.setPsychologist(null);
 			}
-			this.setPsychologist(null);
 		}
 		if (this.$auth.$state.user.role === 'psychologist') {
 			await this.getClients(this.$auth.$state.user.psychologist);

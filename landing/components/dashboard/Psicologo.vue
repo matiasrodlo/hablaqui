@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import { mapGetters } from 'vuex';
 export default {
 	props: {
 		psychologist: {
@@ -142,35 +142,9 @@ export default {
 		};
 	},
 	computed: {
-		// Filtramos que sea de usuarios con pagos success y no hayan expirado
-		plan() {
-			if (!this.$auth.$state.user) return null;
-			// Obtenemos un array con todo los planes solamente
-			const plans = this.$auth.$state.user.sessions.flatMap(item =>
-				item.plan.map(plan => ({
-					...plan,
-					idSessions: item._id,
-					psychologist: item.psychologist,
-					user: item.user,
-					// numero de sessiones concluidas
-					success: item.numberSessionSuccess,
-					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
-				}))
-			);
-			const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-			const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
-
-			// retornamos el plan success y sin expirar
-			let plan = plans.find(
-				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-			);
-			// retornamos el ultimo plan succes y que expiro
-			if (!plan) plan = plans.find(item => item.diff === min);
-			// retornamos el siguiente plan pendiente
-			if (!plan) plan = plans.find(item => item.diff === max);
-			return plan;
-		},
+		...mapGetters({
+			plan: 'User/plan',
+		}),
 	},
 	methods: {
 		avatar(psychologist, thumbnail) {
