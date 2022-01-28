@@ -526,7 +526,6 @@ export default {
 			if (this.$auth.$state.user.role === 'psychologist') {
 				if (this.$auth.$state.user.psychologist) {
 					await this.getMessages();
-					await this.getClients(this.$auth.$state.user.psychologist);
 				}
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
@@ -637,7 +636,6 @@ export default {
 			return count;
 		},
 		...mapActions({
-			getClients: 'Psychologist/getClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',

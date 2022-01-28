@@ -924,7 +924,6 @@ export default {
 				this.$auth.$state.user.role === 'psychologist' &&
 				this.$auth.$state.user.sessions.length
 			) {
-				await this.getClients(this.$auth.$state.user.psychologist);
 				await this.getSessions({
 					idPsychologist: this.$auth.$state.user.psychologist,
 				});

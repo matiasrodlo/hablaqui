@@ -625,6 +625,7 @@ export default {
 			this.setPsychologist(null);
 		}
 		if (this.$auth.$state.user.role === 'psychologist') {
+			await this.getClients(this.$auth.$state.user.psychologist);
 			let psychologist;
 			if (this.$auth.$state.user.psychologist) {
 				const res = await this.$axios.$get(
@@ -671,6 +672,7 @@ export default {
 			setPsychologist: 'Psychologist/setPsychologist',
 		}),
 		...mapActions({
+			getClients: 'Psychologist/getClients',
 			updateOne: 'User/updateOne',
 		}),
 	},

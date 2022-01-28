@@ -420,20 +420,7 @@ export default {
 	created() {
 		this.resetForm();
 	},
-	mounted() {
-		this.initFetch();
-	},
 	methods: {
-		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			)
-				return null;
-			this.loading = true;
-			await this.getClients(this.$auth.$state.user.psychologist);
-			this.loading = false;
-		},
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -441,7 +428,9 @@ export default {
 				await this.registerUser(this.form);
 				this.loadingCreatedUser = false;
 				this.closeDialog();
-				await this.initFetch();
+				this.loading = true;
+				await this.getClients(this.$auth.$state.user.psychologist);
+				this.loading = false;
 			}
 		},
 		resetForm() {
