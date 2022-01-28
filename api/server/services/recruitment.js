@@ -52,7 +52,7 @@ const recruitmentService = {
 					isInterestedBusiness: recruited.isInterestedBusiness,
 					professionalDescription: recruited.professionalDescription,
 					personalDescription: recruited.personalDescription,
-					timestamp: moment().format(),
+					timestamp: moment().toISOString(),
 				},
 			});
 			analytics.identify({
@@ -160,7 +160,7 @@ const recruitmentService = {
 			analytics.track({
 				userId: newProfile._id.toString(),
 				event: 'new-psy-onboard',
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			});
 			analytics.identify({
 				userId: newProfile._id.toString(),

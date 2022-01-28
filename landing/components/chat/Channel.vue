@@ -155,25 +155,23 @@
 					</nuxt-link>
 				</div>
 			</v-card-text>
-			<v-card-text v-else style="flex: 0">
+			<v-card-text v-else style="flex: 0" class="pb-0">
 				<v-form @submit.prevent="onSubmit">
 					<v-textarea
 						ref="messagechat"
-						v-model="message"
+						v-model.trim="message"
 						outlined
 						dense
 						:label="`Mensaje a ${selected.name}`"
-						hide-details
 						:disabled="loadingMessage"
 						:loader-height="3"
 						:loading="loadingMessage"
 						no-resize
-						auto-grow
-						rows="1"
-						maxlength="140"
-						style="max-height: 250px; overflow-y: auto; overflow-x: hidden"
-						counter
-						single-line
+						:rows="row"
+						hint="Shift + enter para enviar"
+						:auto-grow="grow"
+						@keydown="e => setGrow(e)"
+						@keypress.shift.enter="onSubmit"
 						@input="
 							() => {
 								scrollToElement();
@@ -206,6 +204,7 @@
 import { mapActions } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
 import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 export default {
 	components: {
@@ -242,12 +241,14 @@ export default {
 			message: '',
 			loadingMessage: false,
 			mdiChevronLeft,
+			grow: true,
+			row: 1,
 		};
 	},
 	methods: {
 		async onSubmit() {
+			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
-			if (!this.message) return;
 			const payload = {
 				payload: this.message,
 				psychologistId:
@@ -263,6 +264,7 @@ export default {
 			this.message = '';
 			this.loadingMessage = false;
 			this.$nextTick(() => this.$refs.messagechat.focus());
+			this.row = 1;
 			this.scrollToElement();
 		},
 		sentBy(sentBy) {
@@ -272,6 +274,10 @@ export default {
 			if (time) return moment(time).calendar();
 			return moment().format('llll');
 		},
+		setGrow(e) {
+			const height = parseInt(e.target.style.height.replace('px', ''));
+			this.grow = height < 140;
+		},
 		...mapActions({
 			sendMessage: 'Chat/sendMessage',
 		}),
@@ -280,8 +286,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color__one: rgba(189, 189, 189, 0.7);
-$color__two: rgba(32, 112, 229, 0.7);
+$color__one: rgba(189, 189, 189, 1);
+$color__two: rgba(32, 112, 229, 1);
 $font__color_one: #424242;
 $font__color_two: #ffffff;
 
@@ -299,14 +305,14 @@ $font__color_two: #ffffff;
 	&__one {
 		color: $font__color_two;
 		align-self: flex-end;
-		border: solid rgba(32, 112, 229, 0.1);
+		border: solid rgba(32, 112, 229, 1);
 		background: $color__two;
 	}
 
 	&__two {
 		color: $font__color_one;
 		align-self: flex-start;
-		border: solid rgba(189, 189, 189, 0.1);
+		border: solid rgba(189, 189, 189, 1);
 		background: $color__one;
 	}
 }

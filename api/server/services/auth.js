@@ -37,7 +37,7 @@ const login = async user => {
 				name: user.name,
 				lastName: user.lastName,
 				email: user.email,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 				role: user.role,
 			},
 		});
@@ -60,7 +60,7 @@ const logout = async user => {
 				name: user.name,
 				lastName: user.lastName,
 				email: user.email,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 				role: user.role,
 			},
 		});
@@ -140,7 +140,7 @@ const register = async payload => {
 				name: user.name,
 				email: user.email,
 				type: user.role,
-				timestamp: moment().format(),
+				timestamp: moment().toISOString(),
 			},
 		});
 	}
