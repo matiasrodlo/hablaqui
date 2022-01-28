@@ -973,9 +973,9 @@ const createPlan = async ({ payload }) => {
  */
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist, plan } = await Sessions.findOne({ _id: id }).populate(
-		'psychologist'
-	);
+	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
+		_id: id,
+	}).populate('psychologist');
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -1048,6 +1048,18 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			},
 		});
 	}
+	await mailService.sendAppConfirmationUser(
+		userLogged,
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
+	await mailService.sendAppConfirmationPsy(
+		psychologist,
+		userLogged,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1828,7 +1840,7 @@ const customNewSession = async (user, payload) => {
 				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
-			// Enviamos email a el user con el link para pagar
+			// Enviamos email al user con el link para pagar
 			await mailService.sendCustomSessionPaymentURL(
 				updatedSession.user,
 				updatedSession.psychologist,
