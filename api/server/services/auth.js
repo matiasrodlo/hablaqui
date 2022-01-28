@@ -9,7 +9,6 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
-import moment from 'moment';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -37,7 +36,6 @@ const login = async user => {
 				name: user.name,
 				lastName: user.lastName,
 				email: user.email,
-				timestamp: moment().toISOString(),
 				role: user.role,
 			},
 		});
@@ -60,7 +58,6 @@ const logout = async user => {
 				name: user.name,
 				lastName: user.lastName,
 				email: user.email,
-				timestamp: moment().toISOString(),
 				role: user.role,
 			},
 		});
@@ -140,7 +137,6 @@ const register = async payload => {
 				name: user.name,
 				email: user.email,
 				type: user.role,
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
