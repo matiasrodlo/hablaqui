@@ -469,7 +469,10 @@ export default {
 			);
 		},
 		hasConsultantes() {
-			return true;
+			return this.consultantes.length;
+		},
+		hasEvents() {
+			return this.$auth.user.sessions.length;
 		},
 		stepOnboarding() {
 			return [
@@ -546,25 +549,17 @@ export default {
 					title: 'Añade eventos o bloquea horas',
 					route: '/dashboard/agenda',
 					items: [
-						{ title: 'Nuevo evento', done: false, route: 'dashboard-agenda' },
-						{ title: 'Agendar evento', done: false, route: 'dashboard-agenda' },
+						{ title: 'Nuevo evento', done: this.hasEvents, route: 'dashboard-agenda' },
+						{
+							title: 'Agendar evento',
+							done: this.hasEvents,
+							route: 'dashboard-agenda',
+						},
 					],
 					visible:
 						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
 					done: false,
 				},
-				// {
-				// 	title: 'Conoce la sala de videollamadas',
-				// 	route: '/dashboard/chat',
-				// 	items: [
-				// 		{ title: '', tab: '0' },
-				// 		{ title: 'Añade tus datos bancarios', tab: '0' },
-				// 		{ title: 'Configura tus horarios', tab: '1' },
-				// 		{ title: 'Configura el tiempo dereprogramación y agenda', tab: '2' },
-				// 		{ title: 'Añade el precio de tus sesiones', tab: '2' },
-				// 	],
-				// done: false,
-				// },
 				{
 					title: 'Explora las secciones',
 					route: '/dashboard/chat',
@@ -585,6 +580,7 @@ export default {
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
 			plan: 'User/plan',
+			consultantes: 'Psychologist/clients',
 		}),
 	},
 	async mounted() {
@@ -604,9 +600,9 @@ export default {
 			}
 		}
 		if (this.$auth.$state.user.role === 'psychologist') {
-			await this.getClients(this.$auth.$state.user.psychologist);
 			let psychologist;
 			if (this.$auth.$state.user.psychologist) {
+				await this.getClients(this.$auth.$state.user.psychologist);
 				const res = await this.$axios.$get(
 					`/psychologists/one/${this.$auth.$state.user.psychologist}`
 				);
