@@ -7,6 +7,7 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Email from '../models/email';
 import moment from 'moment';
+import dayjs from 'dayjs-with-plugins';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -100,7 +101,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		userId: user._id.toString(),
 		event: 'message-sent',
 		properties: {
-			timestamp: moment().toISOString(),
+			timestamp: dayjs().toISOString(),
 		},
 	});
 
@@ -120,7 +121,7 @@ const emailChatNotification = async (data, type) => {
 
 	if (!email) {
 		email = await Email.create({
-			sessionDate: moment(createdAt).format(),
+			sessionDate: dayjs(createdAt).format(),
 			wasScheduled: false,
 			type: type,
 			queuedAt: undefined,
@@ -140,7 +141,7 @@ const emailChatNotification = async (data, type) => {
 				$set: {
 					wasScheduled: false,
 					sessionRef: messageId,
-					sessionDate: moment(createdAt).format(),
+					sessionDate: dayjs(createdAt).format(),
 				},
 			}
 		);

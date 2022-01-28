@@ -1,7 +1,6 @@
 'use strict';
 
-import moment from 'moment';
-import momentz from 'moment-timezone';
+import dayjs from 'dayjs-with-plugins';
 import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
 
@@ -145,13 +144,13 @@ const mailService = {
 				first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date, 'America/Santiago').format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
@@ -187,13 +186,13 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date, 'America/Santiago').format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
@@ -228,8 +227,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date, 'America/Santiago').format('HH:mm'),
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -266,8 +265,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date, 'America/Santiago').format('HH:mm'),
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -585,7 +584,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
@@ -614,7 +613,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {

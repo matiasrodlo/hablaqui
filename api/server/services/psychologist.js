@@ -605,7 +605,6 @@ const formattedSessionsAll = async () => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	logInfo(hours);
 	// Formato de array debe ser [date, date, ...date]
 	const setDaySessions = sessions =>
 		sessions

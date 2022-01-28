@@ -8,6 +8,7 @@ import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
+import dayjs from 'dayjs-with-plugins';
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 const sgClient = require('@sendgrid/client');
@@ -15,19 +16,19 @@ sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
  * @description Checks wheter the email is schedulable (3 days or less before the appointment)
- * @param {moment} date Is the date of the appointment
+ * @param {dayjs} date Is the date of the appointment
  * @returns
  */
 
 function isSchedulableEmail(date) {
-	return moment()
+	return dayjs()
 		.add(3, 'days')
 		.isAfter(date);
 }
 
 /**
  * @description Creates the payload to update the email scheduling object
- * @param {moment} date Date when the email will be scheduled (1 hour before the appointment)
+ * @param {dayjs} date Date when the email will be scheduled (1 hour before the appointment)
  * @param {string} mailId Mailgun ID to identify the email internally
  * @returns an object with the payload
  */
@@ -35,7 +36,7 @@ function isSchedulableEmail(date) {
 function generatePayload(date, batch) {
 	return {
 		wasScheduled: true,
-		scheduledAt: moment(date)
+		scheduledAt: dayjs(date)
 			.subtract(1, 'hour')
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
@@ -44,7 +45,7 @@ function generatePayload(date, batch) {
 
 async function sendNotification(emails) {
 	emails.forEach(async e => {
-		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
+		if (dayjs().isAfter(dayjs(e.sessionDate).add(3, 'hours'))) {
 			const batch = await getBatchId();
 			const user = await User.findById(e.userRef);
 			const psy = await psychologist.findById(e.psyRef);
@@ -69,7 +70,7 @@ async function sendNotification(emails) {
 				await mailService.sendChatNotificationToUser(user, psy, batch);
 			const updatePayload = {
 				wasScheduled: true,
-				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+				scheduledAt: dayjs().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 				batchId: batch,
 			};
 			await email.findByIdAndUpdate(e._id, updatePayload, {
@@ -127,7 +128,7 @@ const cronService = {
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = moment(emailInfo.sessionDate);
+				const sessionDate = dayjs(emailInfo.sessionDate);
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
@@ -185,18 +186,18 @@ const cronService = {
 				const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
 						if (
 							session.status === 'pending' &&
-							moment(date)
+							dayjs(date)
 								.subtract(
 									psyInfo.preferences
 										.minimumRescheduleSession,
 									'hours'
 								)
-								.isBefore(moment()) &&
-							moment().isBefore(date) &&
-							moment().isBefore(plan.expiration)
+								.isBefore(dayjs()) &&
+							dayjs().isBefore(date) &&
+							dayjs().isBefore(plan.expiration)
 						) {
 							session.status = 'upnext';
 							toUpdateUpnext.push({
@@ -206,7 +207,7 @@ const cronService = {
 						} else if (
 							(session.status === 'upnext' ||
 								session.status === 'pending') &&
-							moment().isAfter(date)
+							dayjs().isAfter(date)
 						) {
 							session.status = 'success';
 							toUpdateSuccess.push({

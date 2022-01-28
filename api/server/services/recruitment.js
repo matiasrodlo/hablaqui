@@ -7,7 +7,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
 import mailService from './mail';
-import moment from 'moment';
+import dayjs from 'dayjs-with-plugins';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -52,7 +52,7 @@ const recruitmentService = {
 					isInterestedBusiness: recruited.isInterestedBusiness,
 					professionalDescription: recruited.professionalDescription,
 					personalDescription: recruited.personalDescription,
-					timestamp: moment().toISOString(),
+					timestamp: dayjs().toISOString(),
 				},
 			});
 			analytics.identify({
@@ -160,7 +160,7 @@ const recruitmentService = {
 			analytics.track({
 				userId: newProfile._id.toString(),
 				event: 'new-psy-onboard',
-				timestamp: moment().toISOString(),
+				timestamp: dayjs().toISOString(),
 			});
 			analytics.identify({
 				userId: newProfile._id.toString(),

@@ -11,7 +11,7 @@ import User from '../models/user';
 import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
-import moment from 'moment';
+import dayjs from 'dayjs-with-plugins';
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -104,7 +104,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
 			currentPlan.tier === 'premium' &&
-			moment(currentPlan.expirationDate).isAfter(moment())
+			dayjs(currentPlan.expirationDate).isAfter(dayjs())
 		) {
 			return okResponse('Tienes un plan premium vigente');
 		} else
@@ -150,7 +150,7 @@ const setPlanFree = async (id, isPsychologist) => {
 					response.psyPlans.length - 1
 				]._id.toString(),
 				total: 0,
-				timestamp: moment().toISOString(),
+				timestamp: dayjs().toISOString(),
 			},
 		});
 	}
@@ -172,7 +172,7 @@ const successPay = async params => {
 			{
 				$set: {
 					'plan.$.payment': 'success',
-					'plan.$.datePayment': moment().format(),
+					'plan.$.datePayment': dayjs().format(),
 				},
 			},
 			{ new: true }
@@ -233,13 +233,13 @@ const psychologistPay = async (params, query) => {
 	const { period } = query;
 	let expirationDate;
 	if (period === 'anual') {
-		expirationDate = moment()
-			.add({ months: 12 })
+		expirationDate = dayjs()
+			.add(1, 'month')
 			.toISOString();
 	}
 	if (period === 'mensual') {
-		expirationDate = moment()
-			.add({ months: 1 })
+		expirationDate = dayjs()
+			.add(1, 'month')
 			.toISOString();
 	}
 	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;
@@ -281,7 +281,7 @@ const psychologistPay = async (params, query) => {
 					foundPsychologist.psyPlans.length - 1
 				]._id.toString(),
 				total: pricePaid,
-				timestamp: moment().toISOString(),
+				timestamp: dayjs().toISOString(),
 			},
 		});
 	}
@@ -300,7 +300,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': moment(),
+				'plan.$.datePayment': dayjs(),
 			},
 		},
 		{ new: true }
@@ -362,13 +362,13 @@ const recruitedPay = async (params, query) => {
 	const { period } = query;
 	let expirationDate;
 	if (period == 'anual') {
-		expirationDate = moment()
-			.add({ months: 12 })
+		expirationDate = dayjs()
+			.add(12, 'month')
 			.toISOString();
 	}
 	if (period == 'mensual') {
-		expirationDate = moment()
-			.add({ months: 1 })
+		expirationDate = dayjs()
+			.add(1, 'month')
 			.toISOString();
 	}
 	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;

@@ -3,7 +3,7 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
-import moment from 'moment';
+import dayjs from 'dayjs-with-plugins';
 
 const newCoupon = async (user, payload) => {
 	if (user.role !== 'superuser')
@@ -16,7 +16,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: moment(payload.expiration).toISOString(),
+		expiration: dayjs(payload.expiration).toISOString(),
 	};
 
 	await Coupon.create(coupon);
@@ -28,7 +28,7 @@ const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (moment().isAfter(foundCoupon.expiration))
+	if (dayjs().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
 	if (foundCoupon.restrictions.firstTimeOnly && user.hasPaid)
 		return conflictResponse('Este usuario ya ha comprado alguna vez');

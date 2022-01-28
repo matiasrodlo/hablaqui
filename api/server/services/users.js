@@ -13,9 +13,10 @@ import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
-import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
+import dayjs from 'dayjs-with-plugins';
+
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -255,7 +256,7 @@ const usersService = {
 					type: user.role,
 					referencerId: user.psychologist.toString(),
 					referencerName: `${user.name} ${user.lastName}`,
-					timestamp: moment().toISOString(),
+					timestamp: dayjs().toISOString(),
 				},
 			});
 		}
@@ -271,7 +272,7 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: dayjs('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
