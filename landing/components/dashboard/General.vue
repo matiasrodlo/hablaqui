@@ -43,7 +43,10 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
-			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+			<v-expansion-panel
+				v-if="$auth.$state.user.role === 'psychologist'"
+				:style="step && step.title === 'Añade tus datos bancarios' ? 'z-index: 3' : ''"
+			>
 				<v-expansion-panel-header>
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
@@ -63,6 +66,11 @@
 				<v-expansion-panel-content v-if="psychologist">
 					<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
 				</v-expansion-panel-content>
+				<card-onboarding
+					v-if="step && step.title === 'Añade tus datos bancarios'"
+					style="position: absolute; top: 20%"
+					arrow="arrow-left"
+				/>
 			</v-expansion-panel>
 
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
@@ -119,6 +127,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
 	components: {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),
@@ -145,6 +154,9 @@ export default {
 		return {
 			panel: [],
 		};
+	},
+	computed: {
+		...mapGetters({ step: 'User/step' }),
 	},
 };
 </script>

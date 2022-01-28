@@ -8,6 +8,7 @@
 			class="mt-16 pt-10 pt-md-0 mt-md-0"
 		>
 			<v-list-item
+				id="itemAvatar"
 				class="hidden-sm-and-down"
 				style="position: relative"
 				:style="step && step.title === 'Sube tu foto de perfil' ? 'z-index: 3' : ''"
@@ -46,6 +47,11 @@
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
+					<card-onboarding
+						v-if="step && step.title === 'Sube tu foto de perfil'"
+						style="position: absolute; top: 20%"
+						arrow="arrow-left"
+					/>
 					<v-list-item-title class="text-capitalize font-weight-bold title">
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>

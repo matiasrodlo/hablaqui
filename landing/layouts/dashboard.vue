@@ -238,7 +238,7 @@
 				v-if="selectedStep"
 				:value="onBoarding"
 				color="white"
-				:opacity="0.5"
+				:opacity="0.7"
 				z-index="2"
 			></v-overlay>
 			<!-- overlay loading -->
@@ -487,7 +487,7 @@ export default {
 								title: 'Editamos tu fotografía',
 								description:
 									'Aquí puedes subir tu foto para editarla, consulta el manual',
-								link: '',
+								link: 'https://calendly.com/daniel-hablaqui/30min',
 							},
 							route: 'dashboard-perfil',
 							done: this.hasAvatar,
@@ -495,6 +495,11 @@ export default {
 						{
 							title: 'Añade tus datos bancarios',
 							tab: '0',
+							card: {
+								title: 'Editamos tu fotografía',
+								description:
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
+							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
