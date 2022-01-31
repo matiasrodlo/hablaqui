@@ -320,10 +320,9 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		const sessions = await Sessions.find();
+		const sessions = await Sessions.find().populate('user psychologist');
 		sessions.forEach(item => {
 			const plans = item.plan.filter(plan => plan.payment === 'pending');
-			console.log(plans);
 			plans.forEach(async plan => {
 				if (
 					moment().isSameOrAfter(
@@ -342,6 +341,10 @@ const cronService = {
 								'plan.$.session': [],
 							},
 						}
+					);
+					await mailService.sendPaymentFailed(
+						item.user,
+						item.psychologist
 					);
 				}
 			});
