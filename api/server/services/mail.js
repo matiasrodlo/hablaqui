@@ -691,7 +691,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `¡Has completado una evaluación!`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-478ea4a5f440447db1d7ec9dc0361b55',
+			templateId: 'd-451461690169414ba91a86ee4c439c2a',
 			asm: {
 				group_id: 16321,
 			},
