@@ -770,7 +770,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `¡Se ha aprobado una evaluación tuya!`,
+			subject: `Se ha rechazado tu evaluación`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-c88421c7ff9e4165b883255b9a35a701',
 			asm: {

@@ -182,6 +182,7 @@ const getRemainingSessions = async psy => {
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);
+	const user = await Psychologist.findById(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -236,7 +237,7 @@ const completePaymentsRequest = async psy => {
 	);
 
 	//Enviar correo de dinero depositado a psy
-	await mailService.sendPaymentRequest(user, total, now);
+	await mailService.sendCompletePaymentRequest(user, total, now);
 
 	return okResponse('Peticion completada', {
 		total: total,
