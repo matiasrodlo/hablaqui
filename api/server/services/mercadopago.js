@@ -13,6 +13,9 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 mercadopago.configure({
 	access_token: mercadopago_key,
 });
@@ -112,7 +115,6 @@ const setPlanFree = async (id, isPsychologist) => {
 	}
 
 	if (!response.psyPlans) response.psyPlans = [];
-
 	response.psyPlans = [
 		...response.psyPlans,
 		{
@@ -126,6 +128,31 @@ const setPlanFree = async (id, isPsychologist) => {
 			paymentFee: 0.0399,
 		},
 	];
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: 1,
+				item_name: 'Plan de psicólogo gratuito',
+				item_price: 0,
+				item_quantity: 1,
+			},
+		];
+		analytics.track({
+			userId: id.toString(),
+			event: 'psy-free-plan',
+			properties: {
+				currency: 'CLP',
+				products: planData,
+				order_id: response.psyPlans[
+					response.psyPlans.length - 1
+				]._id.toString(),
+				total: 0,
+			},
+		});
+	}
 	return await response.save();
 };
 
@@ -231,6 +258,31 @@ const psychologistPay = async (params, query) => {
 		{ $push: { psyPlans: newPlan } },
 		{ new: true }
 	);
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: 2,
+				item_name: 'Plan de psicólogo premium',
+				item_price: pricePaid,
+				item_quantity: 1,
+			},
+		];
+		analytics.track({
+			userId: psychologistId.toString(),
+			event: 'psy-premium-plan',
+			properties: {
+				currency: 'CLP',
+				products: planData,
+				order_id: foundPsychologist.psyPlans[
+					foundPsychologist.psyPlans.length - 1
+				]._id.toString(),
+				total: pricePaid,
+			},
+		});
+	}
 	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
 	return okResponse('plan actualizado', { foundPsychologist });
 };

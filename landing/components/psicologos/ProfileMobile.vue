@@ -1,27 +1,25 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
-		<v-card style="border-radius: 15px" class="shadowCard">
-			<v-card-text>
-				<v-row>
-					<v-col cols="4" sm="2" class="d-flex align-start justify-center">
-						<div class="text-center">
-							<nuxt-link
-								style="text-decoration: none"
-								:to="{
-									path: `/${psychologist.username}`,
-								}"
-							>
-								<avatar
-									:url="avatar(psychologist, true)"
-									:name="psychologist.name"
-									:last-name="psychologist.lastName ? psychologist.lastName : ''"
-									size="70"
-									loading-color="white"
-								></avatar>
-							</nuxt-link>
-						</div>
+	<v-container fluid style="max-width: 600px">
+		<v-card style="border-radius: 15px" class="shadowCard pt-6">
+			<v-card-text class="px-6">
+				<v-row no-gutters>
+					<v-col cols="4" sm="3" class="pb-4 d-flex align-start justify-center">
+						<nuxt-link
+							style="text-decoration: none"
+							:to="{
+								path: `/${psychologist.username}`,
+							}"
+						>
+							<avatar
+								:url="avatar(psychologist, true)"
+								:name="psychologist.name"
+								:last-name="psychologist.lastName ? psychologist.lastName : ''"
+								size="110"
+								loading-color="white"
+							></avatar>
+						</nuxt-link>
 					</v-col>
-					<v-col cols="8" sm="10">
+					<v-col cols="8" sm="9" class="pb-4 pl-4 pt-5">
 						<div>
 							<nuxt-link
 								style="text-decoration: none"
@@ -69,7 +67,7 @@
 							:username="psychologist.username"
 							:sessions="sessions"
 						/>
-						<div class="mt-2 text-left">
+						<div class="mt-2 mb-6 text-left">
 							<v-btn
 								v-if="!$auth.$state.loggedIn || $auth.$state.user.role === 'user'"
 								block
@@ -238,6 +236,8 @@ export default {
 					path: `/auth/?register=true&psychologist=${this.psychologist.username}`,
 				});
 			} else {
+				if (!this.$route.query.chat)
+					this.$router.replace(`/${this.$route.params.slug}/?chat=true`);
 				this.loadingChat = true;
 				await this.startConversation(this.psychologist._id);
 				this.loadingChat = false;

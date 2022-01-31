@@ -109,6 +109,7 @@
 										item-value="value"
 										:append-icon="mdiChevronDown"
 										hide-details
+										multiple
 										dense
 										clearable
 										:menu-props="{
@@ -145,9 +146,7 @@
 										<template #activator="{ on, attrs }">
 											<v-text-field
 												:value="
-													gender.length
-														? `Seleccionados ${gender.length}`
-														: ''
+													gender.length ? `Géneros·${gender.length}` : ''
 												"
 												readonly
 												outlined
@@ -219,6 +218,9 @@
 											{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
 											{ value: '[29900]', text: '+ $29.900' },
 										]"
+										:menu-props="{
+											closeOnClick: true,
+										}"
 										hide-details
 									></v-autocomplete>
 								</v-card-text>
@@ -236,7 +238,7 @@
 											<v-text-field
 												:value="
 													models.length || languages.length
-														? `Seleccionados ${
+														? `Otros·${
 																models.length + languages.length
 														  }`
 														: ''
@@ -322,7 +324,7 @@
 									@click="
 										() => {
 											others = [];
-											specialties = '';
+											specialties = [];
 											gender = [];
 											languages = [];
 											models = [];
@@ -349,7 +351,7 @@
 			</v-row>
 		</v-container>
 		<!-- pychologist -->
-		<v-container v-if="psychologists.length" fluid style="max-width: 1200px" class="my-4">
+		<v-container v-if="psychologists.length" fluid style="max-width: 600px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px">
@@ -422,11 +424,11 @@
 								style="border-radius: 15px"
 								class="item text-center mt-6"
 							>
-								<v-card-text>
+								<v-card-title class="pt-8">
 									<v-row>
 										<v-col
-											cols="3"
-											sm="2"
+											cols="4"
+											sm="3"
 											class="d-flex align-start justify-center"
 										>
 											<div class="text-center">
@@ -442,20 +444,20 @@
 														:last-name="
 															item.lastName ? item.lastName : ''
 														"
-														size="70"
+														size="110"
 														loading-color="white"
 													></avatar>
 												</nuxt-link>
 											</div>
 										</v-col>
-										<v-col cols="9" sm="10">
-											<div>
-												<nuxt-link
-													style="text-decoration: none"
-													:to="{
-														path: `/${item.username}`,
-													}"
-												>
+										<v-col cols="8" sm="9">
+											<nuxt-link
+												style="text-decoration: none"
+												:to="{
+													path: `/${item.username}`,
+												}"
+											>
+												<div class="mt-4">
 													<div
 														class="text-left font-weight-bold body-1"
 														style="color: #3c3c3b"
@@ -463,41 +465,38 @@
 														{{ item.name }}
 														{{ item.lastName && item.lastName }}
 													</div>
-												</nuxt-link>
-											</div>
-											<div
-												class="text-capitalize text-left mt-1 mb-2"
-												style="color: #706f6f; font-size: 12px"
-											>
-												código {{ item.code ? item.code : '' }}
-											</div>
-											<div
-												class="text-left font-weight-medium body-2"
-												style="color: #3c3c3b"
-											>
-												${{
-													Math.ceil(item.sessionPrices.video / 100) * 100
-												}}
-												/ 50 min
-											</div>
+												</div>
+												<div
+													class="text-capitalize text-left mt-1 mb-2"
+													style="color: #706f6f; font-size: 12px"
+												>
+													código {{ item.code ? item.code : '' }}
+												</div>
+												<div
+													class="text-left font-weight-medium body-2"
+													style="color: #3c3c3b"
+												>
+													${{
+														Math.ceil(item.sessionPrices.video / 100) *
+														100
+													}}
+													/ 50 min
+												</div>
+											</nuxt-link>
 										</v-col>
+									</v-row>
+								</v-card-title>
+								<v-card-text>
+									<v-row>
 										<v-col cols="12">
 											<div>
-												<v-chip-group
-													v-model="specialties"
-													:show-arrows="false"
-												>
+												<v-chip-group :show-arrows="false">
 													<template v-for="(tag, s) in item.specialties">
 														<v-chip
 															:key="s"
 															:value="tag"
 															class="ma-1"
 															x-small
-															:color="
-																specialties == tag
-																	? 'primary--text'
-																	: ''
-															"
 														>
 															<span>
 																{{ tag }}
@@ -506,18 +505,25 @@
 													</template>
 												</v-chip-group>
 											</div>
-											<div
-												class="mt-3 text-left"
-												style="color: #54565a; font-size: 14px"
+											<nuxt-link
+												style="text-decoration: none"
+												:to="{
+													path: `/${item.username}`,
+												}"
 											>
-												{{
-													item.professionalDescription.length > 110
-														? item.professionalDescription
-																.slice(0, 110)
-																.concat('...')
-														: item.professionalDescription
-												}}
-											</div>
+												<div
+													class="mt-3 text-left"
+													style="color: #54565a; font-size: 14px"
+												>
+													{{
+														item.professionalDescription.length > 110
+															? item.professionalDescription
+																	.slice(0, 110)
+																	.concat('...')
+															: item.professionalDescription
+													}}
+												</div>
+											</nuxt-link>
 											<mini-calendar
 												:id-psy="item._id"
 												:username="item.username"
@@ -539,7 +545,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container v-else>
+		<v-container v-else fluid style="max-width: 600px">
 			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
 				<v-skeleton-loader type="image" />
 			</v-col>
@@ -549,7 +555,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiPlus, mdiMinus, mdiCloseCircle } from '@mdi/js';
+import { mdiChevronDown, mdiCloseCircle } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -565,17 +571,12 @@ export default {
 	},
 	data() {
 		return {
-			seeMoreSpecialties: false,
 			showFilters: false,
 			mdiCloseCircle,
-			mdiPlus,
-			mdiMinus,
 			mdiChevronDown,
 			menuGender: false,
 			menuOthers: false,
-			menuPrices: false,
-			view: 1,
-			specialties: '',
+			specialties: [],
 			searchInput: '',
 			prices: '',
 			gender: [],
@@ -620,7 +621,13 @@ export default {
 		 */
 		filterLevelOne() {
 			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
+			if (
+				!this.gender.length &&
+				!this.models.length &&
+				!this.languages.length &&
+				!this.specialties.length
+			)
+				return result;
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
@@ -634,8 +641,11 @@ export default {
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages === el))
 				);
-			if (this.specialties)
-				result = result.filter(item => item.specialties.includes(this.specialties));
+			if (this.specialties.length) {
+				result = result.filter(item =>
+					item.specialties.some(el => this.specialties.includes(el))
+				);
+			}
 
 			return result;
 		},
@@ -653,25 +663,6 @@ export default {
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });
-
-		// Establece la vista cuadricula en mobile device, si no la que tenga en local storage
-		if (process.browser) {
-			if (this.$vuetify.breakpoint.smAndDown) this.setView(1);
-			else {
-				const view = localStorage.getItem('view');
-				if (view) {
-					this.view = view;
-				}
-			}
-
-			// Establece los filtros guardados en localstorage
-			const panel = JSON.parse(localStorage.getItem('panel'));
-			if (panel) {
-				if (panel.gender.length) this.gender = panel.gender;
-				if (panel.models.length) this.models = panel.models;
-				if (panel.languages.length) this.languages = panel.languages;
-			}
-		}
 	},
 	mounted() {
 		window.addEventListener('scroll', this.onScroll);
@@ -693,17 +684,6 @@ export default {
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
 			else this.$router.push('/auth/?register=true&from=psy');
-		},
-		setView(type) {
-			localStorage.setItem('view', type);
-			this.view = type;
-		},
-		filterMatch(payload) {
-			this.languages = [];
-			this.searchInput = '';
-			this.gender = payload.gender;
-			this.models = [payload.model];
-			this.specialties = payload.themes;
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';

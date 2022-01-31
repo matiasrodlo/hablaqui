@@ -4,7 +4,7 @@ import User from '../models/user';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -232,28 +232,32 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
-
-		analytics.identify({
-			userId: createdUser._id.toString(),
-			traits: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
-		analytics.track({
-			userId: createdUser._id,
-			event: 'referral-user-signup',
-			properties: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.identify({
+				userId: createdUser._id.toString(),
+				traits: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user._id,
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+			analytics.track({
+				userId: createdUser._id.toString(),
+				event: 'referral-user-signup',
+				properties: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user.psychologist.toString(),
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+		}
 
 		const roomId = require('crypto')
 			.createHash('md5')

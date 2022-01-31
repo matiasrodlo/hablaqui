@@ -10,7 +10,7 @@
 				$auth.$state.user.role == 'user'
 			"
 		>
-			<client-only v-if="$route.name !== 'psicologos'">
+			<client-only>
 				<floating-chat />
 			</client-only>
 		</template>
@@ -18,11 +18,20 @@
 </template>
 <script>
 import Snackbar from '@/components/Snackbar';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
 		Snackbar,
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
+	},
+	async mounted() {
+		await this.getPsychologists();
+	},
+	methods: {
+		...mapActions({
+			getPsychologists: 'Psychologist/getPsychologists',
+		}),
 	},
 };
 </script>

@@ -218,7 +218,7 @@ export default {
 			],
 			itemsBasico: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%)',
+				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%) + IVA',
 				'20% de comisión por clientes Hablaquí',
 				'Sala de videollamada encriptada.',
 				'Soporte y atención al cliente',

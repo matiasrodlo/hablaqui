@@ -111,7 +111,9 @@
 								</div>
 								<div class="body-2 d-flex align-center">
 									<icon size="20px" :icon="mdiCalendarOutline" />
-									<span class="ml-3 pt-1">Fecha: {{ $route.query.date }}</span>
+									<span class="ml-3 pt-1">
+										Fecha: {{ formatDate($route.query.date) }}
+									</span>
 								</div>
 								<div class="my-3 body-2 d-flex align-center">
 									<icon size="20px" :icon="mdiClockOutline" />
@@ -189,12 +191,12 @@
 						<div class="body-2 font-weight-bold">Paga seguro con</div>
 						<div class="d-flex justify-space-around">
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="40"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
 							></v-img>
@@ -224,6 +226,7 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -375,6 +378,9 @@ export default {
 				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 			this.showCalendar = !this.showCalendar;
+		},
+		formatDate(date) {
+			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

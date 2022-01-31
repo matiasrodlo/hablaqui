@@ -5,7 +5,7 @@
 			<appbar />
 			<!-- content -->
 			<div
-				v-if="!matchedPsychologists.length && !dialogPrecharge"
+				v-show="!matchedPsychologists.length && !dialogPrecharge"
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px 0; height: 500px"
 			>
@@ -675,15 +675,15 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="dialogPrecharge" style="height: 100vh">
+		<div v-show="dialogPrecharge" style="height: 100vh">
 			<v-card flat color="transparent">
 				<v-card-text>
 					<Precharge :avatar="psychologists.map(el => el.avatar)" />
 				</v-card-text>
 			</v-card>
 		</div>
-		<div v-if="!dialogPrecharge && matchedPsychologists.length">
-			<Selection :match="matchedPsychologists" :reset-match="resetMatch" />
+		<div v-show="!dialogPrecharge && matchedPsychologists.length">
+			<selection :match="matchedPsychologists" :reset-match="resetMatch" />
 		</div>
 	</div>
 </template>
@@ -756,6 +756,17 @@ export default {
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 	},
+	created() {
+		if (process.browser) {
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
+				this.matchedPsychologists = psi.match;
+			}
+		}
+	},
+	mounted() {
+		this.getFormattedSessionsAll();
+	},
 	methods: {
 		next() {
 			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
@@ -799,6 +810,13 @@ export default {
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
+					localStorage.setItem(
+						'psi',
+						JSON.stringify({
+							match: response.filter((el, i) => i < 3),
+							_id: this.$auth.$state.user._id,
+						})
+					);
 					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
@@ -811,6 +829,7 @@ export default {
 		},
 		...mapActions({
 			matchPsi: 'Psychologist/matchPsi',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
 	},
 };

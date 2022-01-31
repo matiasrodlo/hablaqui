@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { node_env } from './dotenv';
 
 const { createLogger, format, transports } = require('winston');
@@ -5,7 +6,7 @@ const MESSAGE = Symbol.for('message');
 
 const jsonFormatter = logEntry => {
 	const base = {
-		timestamp: new Date(),
+		timestamp: moment().format(),
 		severity: logEntry.level.toUpperCase(),
 	};
 	const json = Object.assign(base, logEntry);

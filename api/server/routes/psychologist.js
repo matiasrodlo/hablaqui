@@ -442,11 +442,11 @@ psychologistsRouter.get(
 	psychologistsController.getAllEvaluations
 );
 
-psychologistsRouter.get(
+psychologistsRouter.post(
 	'/psychologist/approve-evaluation/:evsId/:evId',
 	psychologistsController.approveEvaluation
 );
-psychologistsRouter.get(
+psychologistsRouter.post(
 	'/psychologist/refuse-evaluation/:evsId/:evId',
 	psychologistsController.refuseEvaluation
 );
@@ -456,7 +456,7 @@ psychologistsRouter.get(
  * @route {PATCH} /api/v1/psychologist/payment-request
  * @returns {Object} Lista con todas las sesiones que se quieren retirar y el monto total a retirar
  */
-psychologistsRouter.get(
+psychologistsRouter.post(
 	'/psychologist/payment-request',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.createPaymentsRequest
@@ -468,13 +468,13 @@ psychologistsRouter.get(
  * @param {String} psy id del psicólogo
  * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
  */
-psychologistsRouter.get(
+psychologistsRouter.post(
 	'/psychologist/complete-payments/:psy',
 	psychologistsController.completePaymentsRequest
 );
 
 psychologistsRouter.get(
-	'/psychologist/transactions',
+	'/psychologist/transactions/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getTransactions
 );

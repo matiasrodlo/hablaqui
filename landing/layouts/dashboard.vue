@@ -155,8 +155,8 @@
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text>
-							<span class="secondary--text" @click="changeStateOnboarding"> x </span>
+						<v-btn text @click="changeStateOnboarding">
+							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
@@ -272,7 +272,7 @@ export default {
 				{
 					name: 'Mi plan premium',
 					link: { name: 'dashboard-planes' },
-					img: 'https://cdn.hablaqui.cl/static/diamond-w.png',
+					img: 'https://cdn.hablaqui.cl/static/diamante.png',
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
@@ -313,8 +313,8 @@ export default {
 			this.overlay = true;
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
 		async changeStateOnboarding() {
