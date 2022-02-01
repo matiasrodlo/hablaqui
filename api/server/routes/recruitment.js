@@ -3,6 +3,10 @@
 import { Router } from 'express';
 import recruitmentController from '../controllers/recruitment';
 import passport from 'passport';
+import permission from '../middleware/permission';
+import cors from 'cors';
+
+const { corsApi } = permission;
 
 const recruitmentRouter = Router();
 /**
@@ -13,7 +17,7 @@ const recruitmentRouter = Router();
  */
 recruitmentRouter.post(
 	'/recruitment/register',
-	[passport.authenticate('jwt', { session: true })],
+	[cors(corsApi), passport.authenticate('jwt', { session: true })],
 	recruitmentController.register
 );
 /**
@@ -24,7 +28,7 @@ recruitmentRouter.post(
  */
 recruitmentRouter.put(
 	'/recruitment/update',
-	[passport.authenticate('jwt', { session: true })],
+	[cors(corsApi), passport.authenticate('jwt', { session: true })],
 	recruitmentController.update
 );
 /**
@@ -35,7 +39,7 @@ recruitmentRouter.put(
  */
 recruitmentRouter.get(
 	'/recruitment/:email',
-	[passport.authenticate('jwt', { session: true })],
+	[cors(corsApi), passport.authenticate('jwt', { session: true })],
 	recruitmentController.get
 );
 /**
@@ -46,7 +50,7 @@ recruitmentRouter.get(
  */
 recruitmentRouter.get(
 	'/recruitment',
-	[passport.authenticate('jwt', { session: true })],
+	[cors(corsApi), passport.authenticate('jwt', { session: true })],
 	recruitmentController.getAll
 );
 /**
@@ -58,7 +62,7 @@ recruitmentRouter.get(
  **/
 recruitmentRouter.post(
 	'/recruitment/approve/:email',
-	[passport.authenticate('jwt', { session: true })],
+	[cors(corsApi), passport.authenticate('jwt', { session: true })],
 	recruitmentController.approve
 );
 

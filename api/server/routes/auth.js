@@ -5,6 +5,10 @@ import passport from 'passport';
 import authController from '../controllers/auth';
 import validation from '../middleware/validation';
 import authSchema from '../schemas/auth';
+import permission from '../middleware/permission';
+import cors from 'cors';
+
+const { corsApi } = permission;
 
 const authRouter = Router();
 
@@ -13,34 +17,44 @@ const authRouter = Router();
  */
 authRouter.post(
 	'/auth/login',
-	[validation(authSchema.login, 'body'), passport.authenticate('local')],
+	[
+		cors(corsApi),
+		validation(authSchema.login, 'body'),
+		passport.authenticate('local'),
+	],
 	authController.login
 );
 /**
  * Endpoint de logout.
  */
-authRouter.post('/auth/logout', authController.logout);
+authRouter.post('/auth/logout', [cors(corsApi)], authController.logout);
 
 /**
  * No se usa.
  */
 authRouter.get(
 	'/auth/google',
-	passport.authenticate('google', {
-		scope: [
-			'https://www.googleapis.com/auth/plus.login',
-			'https://www.googleapis.com/auth/userinfo.email',
-		],
-	}),
+	[
+		cors(corsApi),
+		passport.authenticate('google', {
+			scope: [
+				'https://www.googleapis.com/auth/plus.login',
+				'https://www.googleapis.com/auth/userinfo.email',
+			],
+		}),
+	],
 	authController.generateJwt
 );
 
 authRouter.get(
 	'/auth/google/callback',
-	passport.authenticate('google', {
-		session: false,
-		failureRedirect: process.env.FRONTEND_URL + '/auth',
-	}),
+	[
+		cors(corsApi),
+		passport.authenticate('google', {
+			session: false,
+			failureRedirect: process.env.FRONTEND_URL + '/auth',
+		}),
+	],
 	authController.googleAuthCallback
 );
 
@@ -50,7 +64,7 @@ authRouter.get(
  */
 authRouter.post(
 	'/auth/register',
-	validation(authSchema.register, 'body'),
+	[cors(corsApi), validation(authSchema.register, 'body')],
 	authController.register
 );
 
@@ -60,6 +74,7 @@ authRouter.post(
  */
 authRouter.get(
 	'/auth/send-password-recover/:email',
+	[cors(corsApi)],
 	authController.sendPasswordRecover
 );
 
@@ -69,7 +84,7 @@ authRouter.get(
  */
 authRouter.put(
 	'/auth/user/password',
-	passport.authenticate('jwt'),
+	[cors(corsApi), passport.authenticate('jwt')],
 	authController.changeUserPassword
 );
 
