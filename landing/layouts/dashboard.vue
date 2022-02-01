@@ -192,7 +192,15 @@
 					</v-expansion-panel-header>
 					<v-expansion-panel-content>
 						<v-list dense>
-							<v-list-item-group v-model="onSelectedStep" color="primary">
+							<v-list-item-group
+								v-model="onSelectedStep"
+								color="primary"
+								@change="
+									() => {
+										if (onSelectedStep) setOnBoarding(false);
+									}
+								"
+							>
 								<v-list-item
 									v-for="(item, key) in step.items"
 									:key="key"
@@ -236,11 +244,14 @@
 			<!-- overlay onboarding -->
 			<v-overlay
 				v-if="selectedStep"
-				:value="onBoarding"
+				:value="!!selectedStep"
 				color="white"
 				:opacity="0.7"
 				z-index="2"
-			></v-overlay>
+				class="d-flex align-start justify-end"
+			>
+				<div class="primary--text">Presione esc para salir</div>
+			</v-overlay>
 			<!-- overlay loading -->
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
@@ -665,6 +676,19 @@ export default {
 			}
 			this.setPsychologist(psychologist);
 		}
+
+		document.body.addEventListener('keyup', evt => {
+			evt = evt || window.event;
+			let isEscape = false;
+			if ('key' in evt) {
+				isEscape = evt.key === 'Escape' || evt.key === 'Esc';
+			} else {
+				isEscape = evt.keyCode === 27;
+			}
+			if (isEscape && this.selectedStep) {
+				this.setStep(null);
+			}
+		});
 	},
 	methods: {
 		async logout() {

@@ -12,7 +12,17 @@
 				<a v-if="step.card.link" :href="step.card.link">Enlace</a>
 			</div>
 			<div style="flex: 1" class="text-right">
-				<icon size="30" color="primary" :icon="mdiChevronRightCircle" />
+				<v-btn
+					icon
+					@click.stop="
+						() => {
+							setOnBoarding();
+							setStep(null);
+						}
+					"
+				>
+					<icon size="30" color="primary" :icon="mdiChevronRightCircle" />
+				</v-btn>
 			</div>
 		</v-card-text>
 	</v-card>
@@ -20,7 +30,7 @@
 
 <script>
 import { mdiChevronRightCircle } from '@mdi/js';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
 	props: {
@@ -52,6 +62,12 @@ export default {
 			},
 			immediate: true,
 		},
+	},
+	methods: {
+		...mapMutations({
+			setOnBoarding: 'User/setOnBoarding',
+			setStep: 'User/setStep',
+		}),
 	},
 };
 </script>
