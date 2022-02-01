@@ -549,6 +549,11 @@ export default {
 						{
 							title: 'Añade el precio de tus sesiones',
 							tab: 2,
+							card: {
+								title: 'Ingresa el valor de tus sesiones',
+								description:
+									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
 						},

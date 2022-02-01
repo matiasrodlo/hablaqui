@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-card flat class="mb-16">
+		<v-card flat class="mb-16 mt-3">
 			<v-card-title>
 				<div class="my-6" style="width: 100%">
 					<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
@@ -12,7 +12,13 @@
 			<v-divider></v-divider>
 			<v-card-text>
 				<v-row>
-					<v-col cols="12" md="6">
+					<v-col
+						cols="12"
+						md="6"
+						:style="
+							step && step.title === 'Anticipación para agendar' ? 'z-index: 3' : ''
+						"
+					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
 							Anticipación para agendar:
 						</div>
@@ -36,8 +42,21 @@
 								"
 							></v-select>
 						</div>
+						<card-onboarding
+							v-if="step && step.title === 'Anticipación para agendar'"
+							style="position: absolute; top: -20px; left: 40px; z-index: 3"
+							arrow="arrow-bottom"
+						/>
 					</v-col>
-					<v-col cols="12" md="6">
+					<v-col
+						cols="12"
+						md="6"
+						:style="
+							step && step.title === 'Configura el tiempo de reprogramación y agenda'
+								? 'z-index: 3'
+								: ''
+						"
+					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
 							Anticipación para reprogramar:
 						</div>
@@ -64,6 +83,14 @@
 								"
 							></v-select>
 						</div>
+						<card-onboarding
+							v-if="
+								step &&
+								step.title === 'Configura el tiempo de reprogramación y agenda'
+							"
+							style="position: absolute; top: -20px; left: 52%; z-index: 3"
+							arrow="arrow-bottom"
+						/>
 					</v-col>
 					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 						Valor por sesión
@@ -96,15 +123,28 @@
 							</v-card>
 						</v-dialog>
 					</v-col>
-					<v-col cols="12">
+					<v-col cols="12" style="position: relative">
 						<v-alert prominent text color="info">
 							<div style="color: #0079ff" class="px-md-6 py-4 font-weight-medium">
 								Puede establecer el precio de su sesión solo por primera vez. Para
 								cambiar tendrás que contactarnos.
 							</div>
 						</v-alert>
+						<card-onboarding
+							v-if="step && step.title === 'Añade el precio de tus sesiones'"
+							style="position: absolute; top: -40px; left: 40px; z-index: 3"
+							arrow="arrow-bottom"
+						/>
 					</v-col>
-					<v-col cols="12" md="4">
+					<v-col
+						cols="12"
+						md="4"
+						:style="
+							step && step.title === 'Añade el precio de tus sesiones'
+								? 'z-index: 3'
+								: ''
+						"
+					>
 						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
 							Sesión 50 min
 						</div>
@@ -182,7 +222,7 @@
 
 <script>
 import { mdiInformationOutline } from '@mdi/js';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -214,6 +254,9 @@ export default {
 			loading: false,
 			marketplaceVisibility: false,
 		};
+	},
+	computed: {
+		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {
 		this.video = this.psychologist.sessionPrices.video;

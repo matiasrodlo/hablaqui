@@ -31,12 +31,20 @@
 			:style="step && step.title === 'Añade tus datos bancarios' ? 'z-index: 3' : ''"
 		>
 			<v-expansion-panel
-				:disabled="step"
+				:disabled="!!step"
 				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>
 					<div>
-						<div class="text-h6" style="color: #3c3c3b">Configuración personal</div>
+						<div class="text-h6" style="color: #3c3c3b">
+							Configuración personal
+							<v-progress-circular
+								v-if="!psychologist && $auth.$state.user.role === 'psychologist'"
+								size="20"
+								indeterminate
+								color="primary"
+							></v-progress-circular>
+						</div>
 						<div class="text--secondary">
 							Revisa aquí tu nombre, apellido, zona horaria contraseña, entre otros.
 						</div>
@@ -68,7 +76,7 @@
 						</div>
 						<card-onboarding
 							v-if="step && step.title === 'Añade tus datos bancarios'"
-							style="position: absolute; top: -30%; left: 20%; z-index: 3"
+							style="position: absolute; top: -65px; left: 30%; z-index: 3"
 							arrow="arrow-left"
 						/>
 					</div>
@@ -80,7 +88,7 @@
 
 			<v-expansion-panel
 				v-if="$auth.$state.user.role === 'psychologist'"
-				:disabled="step"
+				:disabled="!!step"
 				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>
@@ -109,7 +117,7 @@
 
 			<v-expansion-panel
 				v-if="$auth.$state.user.role === 'psychologist'"
-				:disabled="step"
+				:disabled="!!step"
 				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>

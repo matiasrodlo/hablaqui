@@ -14,7 +14,14 @@
 					label="Nombre del consultante"
 				/>
 			</v-col>
-			<v-col class="hidden-sm-and-down mt-sm-12" cols="12" sm="6" md="4">
+			<v-col
+				class="hidden-sm-and-down mt-sm-12"
+				cols="12"
+				sm="6"
+				md="4"
+				style="position: relative"
+				:style="step && step.title === 'Consultante nuevo' ? 'z-index: 3' : ''"
+			>
 				<span
 					v-if="
 						$auth.$state.user.role === 'psychologist' && $auth.$state.user.psychologist
@@ -27,6 +34,11 @@
 					</v-btn>
 					<span class="primary--text ml-2"> Consultante nuevo </span>
 				</span>
+				<card-onboarding
+					v-if="step && step.title === 'Consultante nuevo'"
+					style="position: absolute; top: -40px; right: -25%; z-index: 3"
+					arrow="arrow-left"
+				/>
 			</v-col>
 			<v-col cols="12" md="6">
 				<v-alert prominent text color="info">
@@ -410,7 +422,7 @@ export default {
 			!this.$v.form.name.required && errors.push('Se requiere rut');
 			return errors;
 		},
-		...mapGetters({ clients: 'Psychologist/clients' }),
+		...mapGetters({ clients: 'Psychologist/clients', step: 'User/step' }),
 	},
 	watch: {
 		bmenu(val) {
