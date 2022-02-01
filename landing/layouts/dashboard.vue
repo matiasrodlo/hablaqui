@@ -482,7 +482,7 @@ export default {
 					items: [
 						{
 							title: 'Sube tu foto de perfil',
-							tab: '0',
+							tab: 0,
 							card: {
 								title: 'Editamos tu fotografía',
 								description:
@@ -494,30 +494,61 @@ export default {
 						},
 						{
 							title: 'Añade tus datos bancarios',
-							tab: '0',
+							tab: 0,
 							card: {
-								title: 'Editamos tu fotografía',
+								title: 'No te preocupes, cobramos por ti',
 								description:
-									'Aquí puedes subir tu foto para editarla, consulta el manual',
+									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
 							title: 'Configura tus horarios',
-							tab: '1',
+							tab: 1,
+							card: {
+								title: 'Tu horario de trabajo diario',
+								description:
+									'Selecciona los horarios que tendrás disponible para atender.',
+							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
+							title: 'Intervalos en tu horario',
+							tab: 1,
+							card: {
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
+							},
+							done: this.hasSchedule,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Anticipación para agendar',
+							tab: 2,
+							card: {
+								title: 'Ya no más sesiones muy encima',
+								description:
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+							},
+							done: this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
 							title: 'Configura el tiempo de reprogramación y agenda',
-							tab: '2',
+							tab: 2,
+							card: {
+								title: 'No pierdas tu tiempo',
+								description:
+									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
 							title: 'Añade el precio de tus sesiones',
-							tab: '2',
+							tab: 2,
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
 						},

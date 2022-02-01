@@ -265,6 +265,11 @@ export default {
 		},
 		...mapGetters({ item: 'Psychologist/psychologist', step: 'User/step' }),
 	},
+	watch: {
+		step(newValue) {
+			if (newValue) this.tabs = newValue.tab;
+		},
+	},
 	methods: {
 		setPsychologist(value) {
 			this.psychologist = value;
