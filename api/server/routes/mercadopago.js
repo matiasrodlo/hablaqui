@@ -3,7 +3,6 @@
 import { Router } from 'express';
 import mercadopagoController from '../controllers/mercadopago';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const { corsApi } = permission;
 

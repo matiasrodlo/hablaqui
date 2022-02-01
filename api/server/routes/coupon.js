@@ -4,7 +4,6 @@ import { Router } from 'express';
 import passport from 'passport';
 import couponController from '../controllers/coupon';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const { corsApi } = permission;
 
@@ -24,7 +23,7 @@ const couponRouter = Router();
  */
 couponRouter.post(
 	'/coupons/new-coupon',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	couponController.newCoupon
 );
 
@@ -34,7 +33,7 @@ couponRouter.post(
  */
 couponRouter.post(
 	'/coupons/check-coupon',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	couponController.checkCoupon
 );
 

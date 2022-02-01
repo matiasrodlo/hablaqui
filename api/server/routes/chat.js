@@ -4,7 +4,6 @@ import { Router } from 'express';
 import passport from 'passport';
 import chatController from '../controllers/chat';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const { corsApi } = permission;
 
@@ -19,7 +18,7 @@ const chatRouter = Router();
  */
 chatRouter.post(
 	'/chat/start-conversation/:psychologistId',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.startConversation
 );
 
@@ -30,7 +29,7 @@ chatRouter.post(
  */
 chatRouter.get(
 	'/chat/get-chats',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.getChats
 );
 
@@ -42,7 +41,7 @@ chatRouter.get(
  */
 chatRouter.get(
 	'/chat/get-messages/:psy/:user',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.getMessages
 );
 
@@ -54,7 +53,7 @@ chatRouter.get(
  */
 chatRouter.post(
 	'/chat/send-message/:psychologistId/:userId',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.sendMessage
 );
 
@@ -63,7 +62,7 @@ chatRouter.post(
  */
 chatRouter.post(
 	'/chat/create-report/:psychologistId/:userId',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.createReport
 );
 
@@ -75,7 +74,7 @@ chatRouter.post(
  */
 chatRouter.patch(
 	'/chat/read-message/:messageId',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	chatController.readMessage
 );
 

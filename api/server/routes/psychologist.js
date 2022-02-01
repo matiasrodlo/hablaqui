@@ -5,7 +5,6 @@ import passport from 'passport';
 import psychologistsController from '../controllers/psychologist';
 import multer from '../middleware/multer';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const psychologistsRouter = Router();
 const { corsApi } = permission;
@@ -17,7 +16,7 @@ const { corsApi } = permission;
 
 psychologistsRouter.get(
 	'/psychologists/all/:page',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getAllPagination
 );
 
@@ -34,7 +33,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologists/all',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getAll
 );
 
@@ -59,7 +58,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologists/sessions/:idPsychologist/:idUser',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.getSessions
 );
 
@@ -68,7 +67,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologists/formattedSessions/:idPsychologist',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getFormattedSessions
 );
 
@@ -77,7 +76,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologists/formattedSessionsAll',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.formattedSessionsAll
 );
 
@@ -86,26 +85,26 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologists/one/:info',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getByData
 );
 
 psychologistsRouter.put(
 	'/psychologists/update/sessions',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateSessions
 );
 
 psychologistsRouter.post(
 	'/psychologists/match',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
 );
 
 /** Register psychologist */
 psychologistsRouter.post(
 	'/psychologists/register',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.register
 );
 
@@ -122,7 +121,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.post(
 	'/psychologists/session/create',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.createPlan
 );
 /**
@@ -136,7 +135,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.put(
 	'/psychologists/session/:id/plan/:idPlan',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.createSession
 );
 /**
@@ -145,7 +144,7 @@ psychologistsRouter.put(
  */
 psychologistsRouter.post(
 	'/psychologists/reschedule/:sessionsId/:id',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.reschedule
 );
 
@@ -160,7 +159,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.patch(
 	'/psychologist/set-schedule',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.setSchedule
 );
 
@@ -170,7 +169,7 @@ psychologistsRouter.patch(
  */
 psychologistsRouter.delete(
 	'/psychologist/cancel-session',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.cancelSession
 );
 
@@ -179,7 +178,7 @@ psychologistsRouter.delete(
  */
 psychologistsRouter.patch(
 	'/psychologist/update-payment-method',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePaymentMethod
 );
 
@@ -235,7 +234,7 @@ psychologistsRouter.patch(
  */
 psychologistsRouter.put(
 	'/psychologist/update-profile',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.updatePsychologist
 );
 
@@ -245,7 +244,7 @@ psychologistsRouter.put(
  */
 psychologistsRouter.delete(
 	'/psychologist/:id',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.deleteOne
 );
 
@@ -269,7 +268,7 @@ psychologistsRouter.delete(
  */
 psychologistsRouter.post(
 	'/psychologist/update-prices',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.setPrice
 );
 
@@ -279,7 +278,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.post(
 	'/psychologist/add-rating/:psychologist',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.addRating
 );
 
@@ -288,12 +287,12 @@ psychologistsRouter.post(
  */
 psychologistsRouter.get(
 	'/psychologist/get-rating/:psychologist',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getRating
 );
 psychologistsRouter.get(
 	'/psychologist/plan-task',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.checkPlanTask
 );
 /**
@@ -301,7 +300,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologist/clients/:psychologist',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.getClients
 );
 
@@ -312,7 +311,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologist/:search',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.searchClients
 );
 /**
@@ -336,7 +335,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.post(
 	'/psychologist/check-username',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.usernameAvailable
 );
 
@@ -363,7 +362,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.post(
 	'/psychologist/update-experience',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.updateFormationExperience
 );
 
@@ -374,7 +373,7 @@ psychologistsRouter.post(
  * @body {file} file
  */
 psychologistsRouter.put('/psychologist/avatar/:id', [
-	cors(corsApi),
+	corsApi,
 	passport.authenticate('jwt', { session: true }),
 	multer.single('avatar'),
 	psychologistsController.uploadProfilePicture,
@@ -391,7 +390,7 @@ psychologistsRouter.put('/psychologist/avatar/:id', [
  */
 psychologistsRouter.post(
 	'/psychologist/new-custom-session',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.customNewSession
 );
 
@@ -400,7 +399,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.put(
 	'/psychologist/:id/approve-avatar',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.approveAvatar
 );
 
@@ -409,7 +408,7 @@ psychologistsRouter.put(
  */
 psychologistsRouter.get(
 	'/psychologist/payments/all',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfo
 );
 
@@ -421,7 +420,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.patch(
 	'/psychologist/delete-commitment/:psyId/:planId',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.deleteCommitment
 );
 
@@ -433,7 +432,7 @@ psychologistsRouter.patch(
  */
 psychologistsRouter.get(
 	'/psychologist/get-sessions/:psy',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getAllSessions
 );
 
@@ -445,30 +444,30 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologist/get-remaining-sessions/:psy',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getRemainingSessions
 );
 
 psychologistsRouter.get(
 	'/psychologist/get-evaluations',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.getEvaluations
 );
 
 psychologistsRouter.get(
 	'/psychologist/get-all-evaluations/:psy',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.getAllEvaluations
 );
 
 psychologistsRouter.post(
 	'/psychologist/approve-evaluation/:evsId/:evId',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.approveEvaluation
 );
 psychologistsRouter.post(
 	'/psychologist/refuse-evaluation/:evsId/:evId',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.refuseEvaluation
 );
 
@@ -479,7 +478,7 @@ psychologistsRouter.post(
  */
 psychologistsRouter.post(
 	'/psychologist/payment-request',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.createPaymentsRequest
 );
 
@@ -491,13 +490,13 @@ psychologistsRouter.post(
  */
 psychologistsRouter.post(
 	'/psychologist/complete-payments/:psy',
-	[cors(corsApi)],
+	[corsApi],
 	psychologistsController.completePaymentsRequest
 );
 
 psychologistsRouter.get(
 	'/psychologist/transactions/all',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	psychologistsController.getTransactions
 );
 

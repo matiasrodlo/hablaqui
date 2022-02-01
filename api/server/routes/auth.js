@@ -6,7 +6,6 @@ import authController from '../controllers/auth';
 import validation from '../middleware/validation';
 import authSchema from '../schemas/auth';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const { corsApi } = permission;
 
@@ -18,7 +17,7 @@ const authRouter = Router();
 authRouter.post(
 	'/auth/login',
 	[
-		cors(corsApi),
+		corsApi,
 		validation(authSchema.login, 'body'),
 		passport.authenticate('local'),
 	],
@@ -27,7 +26,7 @@ authRouter.post(
 /**
  * Endpoint de logout.
  */
-authRouter.post('/auth/logout', [cors(corsApi)], authController.logout);
+authRouter.post('/auth/logout', [corsApi], authController.logout);
 
 /**
  * No se usa.
@@ -35,7 +34,7 @@ authRouter.post('/auth/logout', [cors(corsApi)], authController.logout);
 authRouter.get(
 	'/auth/google',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('google', {
 			scope: [
 				'https://www.googleapis.com/auth/plus.login',
@@ -49,7 +48,7 @@ authRouter.get(
 authRouter.get(
 	'/auth/google/callback',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('google', {
 			session: false,
 			failureRedirect: process.env.FRONTEND_URL + '/auth',
@@ -64,7 +63,7 @@ authRouter.get(
  */
 authRouter.post(
 	'/auth/register',
-	[cors(corsApi), validation(authSchema.register, 'body')],
+	[corsApi, validation(authSchema.register, 'body')],
 	authController.register
 );
 
@@ -74,7 +73,7 @@ authRouter.post(
  */
 authRouter.get(
 	'/auth/send-password-recover/:email',
-	[cors(corsApi)],
+	[corsApi],
 	authController.sendPasswordRecover
 );
 
@@ -84,7 +83,7 @@ authRouter.get(
  */
 authRouter.put(
 	'/auth/user/password',
-	[cors(corsApi), passport.authenticate('jwt')],
+	[corsApi, passport.authenticate('jwt')],
 	authController.changeUserPassword
 );
 

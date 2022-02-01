@@ -8,7 +8,6 @@ import validation from '../middleware/validation';
 import multer from '../middleware/multer';
 import storageAvatar from '../middleware/avatar/storage';
 import permission from '../middleware/permission';
-import cors from 'cors';
 
 const { corsApi } = permission;
 
@@ -25,7 +24,7 @@ const userRouter = Router();
 userRouter.post(
 	'/user/register',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.newUserByPsy, 'body'),
 	],
@@ -34,14 +33,14 @@ userRouter.post(
 
 userRouter.get(
 	'/user/profile',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.getUser
 );
 
 userRouter.put(
 	'/user/update/profile',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		/*grantAccess('updateOwn', 'profile'),*/
 		validation(userSchema.updateProfile, 'body'),
@@ -51,21 +50,21 @@ userRouter.put(
 
 userRouter.put(
 	'/user/update-one/:id',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.updateOne
 );
 
 // Pasword recovery
 userRouter.patch(
 	'/user/reset-password',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.passwordRecovery
 );
 
 userRouter.patch(
 	'/user/update/password',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.updatePassword, 'body'),
 	],
@@ -75,7 +74,7 @@ userRouter.patch(
 userRouter.put(
 	'/user/update/plan',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.updatePlan, 'body'),
 	],
@@ -85,7 +84,7 @@ userRouter.put(
 userRouter.put(
 	'/user/update/psychologist',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		validation(userSchema.updatePsychologist, 'body'),
 	],
@@ -105,7 +104,7 @@ userRouter.put(
 userRouter.put(
 	'/user/upload/avatar',
 	[
-		cors(corsApi),
+		corsApi,
 		passport.authenticate('jwt', { session: true }),
 		multer.single('avatar'),
 		storageAvatar,
@@ -119,7 +118,7 @@ userRouter.put(
  */
 userRouter.post(
 	'/user/set-status/online',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.setUserOnline
 );
 
@@ -129,7 +128,7 @@ userRouter.post(
  */
 userRouter.post(
 	'/user/set-status/offline',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.setUserOffline
 );
 
@@ -147,7 +146,7 @@ userRouter.post(
  */
 userRouter.post(
 	'/user/evaluation:/:psyId',
-	[cors(corsApi), passport.authenticate('jwt', { session: true })],
+	[corsApi, passport.authenticate('jwt', { session: true })],
 	userController.addEvaluation
 );
 
