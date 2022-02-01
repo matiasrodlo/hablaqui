@@ -30,10 +30,17 @@ const limiter = rateLimit({
 	max: 1000, // limit each IP to 1000 requests per windowMs
 });
 //limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
+const whitelist = [process.env.VUE_APP_LANDING];
+let corsOptions = {
+	origin: function(origin, callback) {
+		if (whitelist.indexOf(origin) !== -1) callback(null, true);
+		else callback('Not allowed by CORS: ' + origin);
+	},
+};
 
 app.use(limiter);
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
