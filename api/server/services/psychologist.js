@@ -319,7 +319,6 @@ const createPaymentsRequest = async user => {
 			properties: {
 				total: total,
 				sessions: sessions.length,
-				timestamp: moment().format(),
 			},
 		});
 	}
@@ -906,7 +905,6 @@ const createPlan = async ({ payload }) => {
 				plan: [newPlan],
 				roomsUrl: url,
 			});
-			//const params = { planId: created._id.toString() };
 		}
 	}
 
@@ -988,9 +986,9 @@ const createPlan = async ({ payload }) => {
  */
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist, plan } = await Sessions.findOne({ _id: id }).populate(
-		'psychologist'
-	);
+	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
+		_id: id,
+	}).populate('psychologist');
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -1050,7 +1048,6 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				planId: idPlan,
 				userpsyId: id,
 				email: userLogged.email,
-				timestamp: moment().format(),
 			},
 		});
 
@@ -1061,10 +1058,21 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				user: userLogged._id,
 				planId: idPlan,
 				userpsyId: id,
-				timestamp: moment().format(),
 			},
 		});
 	}
+	await mailService.sendAppConfirmationUser(
+		userLogged,
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
+	await mailService.sendAppConfirmationPsy(
+		psychologist,
+		userLogged,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1155,7 +1163,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			properties: {
 				user: userLogged._id,
 				psychologistId: sessions.psychologist._id.toString(),
-				timestamp: moment().format(),
 			},
 		});
 	}
@@ -1410,7 +1417,6 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: psy._id.toString(),
 					event: 'psy-updated-profile',
-					timestamp: moment().format(),
 				});
 				analytics.identify({
 					userId: psy._id.toString(),
@@ -1478,7 +1484,6 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: user.id.toString(),
 					event: 'recruited-updated-profile',
-					timestamp: moment().format(),
 				});
 				analytics.identify({
 					userId: user.id.toString(),
@@ -1733,7 +1738,6 @@ const uploadProfilePicture = async (psyID, picture) => {
 			event: 'updated-profile-picture',
 			properties: {
 				avatar: getPublicUrlAvatar(gcsname),
-				timestamp: moment().format(),
 			},
 		});
 	}
@@ -1849,7 +1853,7 @@ const customNewSession = async (user, payload) => {
 				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
-			// Enviamos email a el user con el link para pagar
+			// Enviamos email al user con el link para pagar
 			await mailService.sendCustomSessionPaymentURL(
 				updatedSession.user,
 				updatedSession.psychologist,
@@ -1879,7 +1883,6 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().format(),
 						total: 0,
 					},
 				});
@@ -1902,7 +1905,6 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().format(),
 						total: 0,
 					},
 				});
@@ -1910,7 +1912,6 @@ const customNewSession = async (user, payload) => {
 				analytics.track({
 					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-private-hours',
-					timestamp: moment().format(),
 				});
 			}
 		}

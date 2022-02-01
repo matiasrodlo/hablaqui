@@ -98,21 +98,20 @@
 				<v-form @submit.prevent="onSubmit">
 					<v-textarea
 						ref="msj"
-						v-model="message"
+						v-model.trim="message"
 						outlined
 						dense
 						:label="`Mensaje a ${selected.name}`"
-						hide-details="auto"
 						:disabled="loadingMessage"
 						:loader-height="3"
 						:loading="loadingMessage"
+						hint="Shift + enter para enviar"
 						no-resize
-						auto-grow
-						rows="1"
-						maxlength="140"
-						style="max-height: 250px; overflow-y: auto; overflow-x: hidden"
-						counter
+						:auto-grow="grow"
+						:rows="row"
 						single-line
+						@keydown="e => setGrow(e)"
+						@keypress.shift.enter="onSubmit"
 						@input="
 							() => {
 								scrollToElement();
@@ -166,7 +165,9 @@
 				/>
 			</v-card-text>
 			<!-- todos los psicologos -->
-			<template v-if="psyFromChats.length">
+			<template
+				v-if="psyFromChats.length || ($auth.$state.user.role === 'user' && plan && !search)"
+			>
 				<v-card-text style="flex: 0" class="py-0">
 					<v-subheader class="primary--text body-1 px-0">Psicólogos</v-subheader>
 					<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
@@ -257,6 +258,7 @@
 import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
 import moment from 'moment';
 import { mapActions } from 'vuex';
+import { isEmpty } from 'lodash';
 
 export default {
 	components: {
@@ -316,6 +318,8 @@ export default {
 			mdiCloseCircle,
 			message: '',
 			loadingMessage: false,
+			grow: true,
+			row: 1,
 		};
 	},
 	created() {
@@ -336,6 +340,7 @@ export default {
 			}
 		},
 		async onSubmit() {
+			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
 			const payload = {
 				payload: this.message,
@@ -350,9 +355,16 @@ export default {
 			};
 			await this.sendMessage(payload);
 			this.message = '';
-			this.$nextTick(() => this.$refs.msj.focus());
+			this.$nextTick(() => {
+				this.$refs.msj.focus();
+				this.row = 1;
+			});
 			this.scrollToElement();
 			this.loadingMessage = false;
+		},
+		setGrow(e) {
+			const height = parseInt(e.target.style.height.replace('px', ''));
+			this.grow = height < 140;
 		},
 		...mapActions({
 			sendMessage: 'Chat/sendMessage',
@@ -362,8 +374,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color__one: rgba(189, 189, 189, 0.7);
-$color__two: rgba(32, 112, 229, 0.7);
+$color__one: rgba(189, 189, 189, 1);
+$color__two: rgba(32, 112, 229, 1);
 $font__color_one: #424242;
 $font__color_two: #ffffff;
 
@@ -377,14 +389,14 @@ $font__color_two: #ffffff;
 	&__one {
 		color: $font__color_two;
 		align-self: flex-end;
-		border: solid rgba(32, 112, 229, 0.1);
+		border: solid rgba(32, 112, 229, 1);
 		background: $color__two;
 	}
 
 	&__two {
 		color: $font__color_one;
 		align-self: flex-start;
-		border: solid rgba(189, 189, 189, 0.1);
+		border: solid rgba(189, 189, 189, 1);
 		background: $color__one;
 	}
 }

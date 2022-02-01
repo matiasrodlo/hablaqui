@@ -99,9 +99,6 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 	analytics.track({
 		userId: user._id.toString(),
 		event: 'message-sent',
-		properties: {
-			timestamp: moment().format(),
-		},
 	});
 
 	pusher.trigger('chat', 'update', data, pusherCallback);
