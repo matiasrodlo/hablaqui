@@ -971,6 +971,8 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
+		const user = await User.findById(payload.user);
+		await mailService.pendingPlanPayment(user, psychologist, payload.price);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
