@@ -397,6 +397,7 @@ const getAllSessionsFunction = async psy => {
 					idPsychologist: item.psychologist._id,
 					name: `${name} ${lastName}`,
 					paidToPsychologist: session.paidToPsychologist,
+					totalSessionsPlan: plan.totalSessions,
 					sessionsNumber: `${session.sessionNumber}/${plan.totalSessions}`,
 					sessionsId: item._id,
 					invited: plan.invitedByPsychologist,
@@ -1932,7 +1933,6 @@ const approveAvatar = async (user, id) => {
 const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
-
 	let allSessions = await Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('user');
