@@ -147,7 +147,7 @@
 										color="primary"
 										text
 									>
-										Ir a video llamada
+										Ir a videollamada
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
