@@ -46,6 +46,18 @@
 							v-if="step && step.title === 'Anticipación para agendar'"
 							style="position: absolute; top: -20px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
+							:next="
+								() => ({
+									title: 'Configura el tiempo de reprogramación y agenda',
+									tab: 2,
+									card: {
+										title: 'No pierdas tu tiempo',
+										description:
+											'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+									},
+									route: 'dashboard-perfil',
+								})
+							"
 						/>
 					</v-col>
 					<v-col
@@ -90,6 +102,19 @@
 							"
 							style="position: absolute; top: -20px; left: 52%; z-index: 3"
 							arrow="arrow-bottom"
+							:next="
+								() => ({
+									title: 'Añade el precio de tus sesiones',
+									tab: 2,
+									card: {
+										title: 'Ingresa el valor de tus sesiones',
+										description:
+											'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+									},
+									done: hasSessionPrice,
+									route: 'dashboard-perfil',
+								})
+							"
 						/>
 					</v-col>
 					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
@@ -134,6 +159,21 @@
 							v-if="step && step.title === 'Añade el precio de tus sesiones'"
 							style="position: absolute; top: -40px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
+							:next="
+								() => {
+									$router.push({ name: 'dashboard-consultantes' });
+									return {
+										title: 'Consultante nuevo',
+										card: {
+											title: 'Que no queden fuera tus consultantes',
+											description:
+												'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+											link: '',
+										},
+										route: 'dashboard-consultantes',
+									};
+								}
+							"
 						/>
 					</v-col>
 					<v-col

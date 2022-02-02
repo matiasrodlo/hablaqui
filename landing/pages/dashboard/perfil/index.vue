@@ -51,6 +51,18 @@
 						v-if="step && step.title === 'Sube tu foto de perfil'"
 						style="position: absolute; top: 20%"
 						arrow="arrow-left"
+						:next="
+							() => ({
+								title: 'Añade tus datos bancarios',
+								tab: 0,
+								card: {
+									title: 'No te preocupes, cobramos por ti',
+									description:
+										'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+								},
+								route: 'dashboard-perfil',
+							})
+						"
 					/>
 					<v-list-item-title class="text-capitalize font-weight-bold title">
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}

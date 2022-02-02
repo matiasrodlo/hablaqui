@@ -12,15 +12,7 @@
 				<a v-if="step.card.link" :href="step.card.link">Enlace</a>
 			</div>
 			<div style="flex: 1" class="text-right">
-				<v-btn
-					icon
-					@click.stop="
-						() => {
-							setOnBoarding();
-							setStep(null);
-						}
-					"
-				>
+				<v-btn icon @click.stop="setStep(next())">
 					<icon size="30" color="primary" :icon="mdiChevronRightCircle" />
 				</v-btn>
 			</div>
@@ -40,6 +32,10 @@ export default {
 		},
 		arrow: {
 			type: String,
+			required: true,
+		},
+		next: {
+			type: Function,
 			required: true,
 		},
 	},

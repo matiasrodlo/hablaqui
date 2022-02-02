@@ -38,6 +38,18 @@
 					v-if="step && step.title === 'Consultante nuevo'"
 					style="position: absolute; top: -40px; right: -25%; z-index: 3"
 					arrow="arrow-left"
+					:next="
+						() => ({
+							title: 'Añade tus datos bancarios',
+							tab: 0,
+							card: {
+								title: 'No te preocupes, cobramos por ti',
+								description:
+									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+							},
+							route: 'dashboard-perfil',
+						})
+					"
 				/>
 			</v-col>
 			<v-col cols="12" md="6">

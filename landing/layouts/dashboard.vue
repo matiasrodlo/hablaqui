@@ -250,7 +250,7 @@
 				z-index="2"
 				class="d-flex align-start justify-end"
 			>
-				<div class="primary--text">Presione esc para salir</div>
+				<div class="primary--text pa-2">Presione esc para salir</div>
 			</v-overlay>
 			<!-- overlay loading -->
 			<v-overlay :value="overlay" color="white" :opacity="0.8">

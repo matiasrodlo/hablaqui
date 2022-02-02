@@ -78,6 +78,20 @@
 							v-if="step && step.title === 'Añade tus datos bancarios'"
 							style="position: absolute; top: -65px; left: 30%; z-index: 3"
 							arrow="arrow-left"
+							:next="
+								() => {
+									return {
+										title: 'Configura tus horarios',
+										tab: 1,
+										card: {
+											title: 'Tu horario de trabajo diario',
+											description:
+												'Selecciona los horarios que tendrás disponible para atender.',
+										},
+										route: 'dashboard-perfil',
+									};
+								}
+							"
 						/>
 					</div>
 				</v-expansion-panel-header>

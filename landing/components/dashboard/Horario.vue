@@ -44,6 +44,17 @@
 					v-if="step && step.title === 'Configura tus horarios'"
 					style="position: absolute; top: -7%; right: 20%; z-index: 3"
 					arrow="arrow-bottom"
+					:next="
+						() => ({
+							title: 'Intervalos en tu horario',
+							tab: 1,
+							card: {
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
+							},
+							route: 'dashboard-perfil',
+						})
+					"
 				/>
 			</v-card-text>
 			<v-divider></v-divider>
@@ -57,6 +68,18 @@
 					v-if="index === 0 && step && step.title === 'Intervalos en tu horario'"
 					style="position: absolute; top: -140px; right: -40px; z-index: 3"
 					arrow="arrow-bottom"
+					:next="
+						() => ({
+							title: 'Anticipación para agendar',
+							tab: 2,
+							card: {
+								title: 'Ya no más sesiones muy encima',
+								description:
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+							},
+							route: 'dashboard-perfil',
+						})
+					"
 				/>
 				<v-row align="start" class="px-8">
 					<v-col cols="3">
