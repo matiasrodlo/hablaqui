@@ -212,7 +212,14 @@ export default {
 				id: 'UA-206733202-1',
 			},
 		],
+		'@dansmaculotte/nuxt-segment',
 	],
+
+	segment: {
+		writeKey: 'cfhCuLuHi3QH8paFuAqbs3fvc7X2gqh5',
+		disabled: false,
+		userRouter: true,
+	},
 
 	'google-gtag': {
 		id: 'UA-206733202-1',
