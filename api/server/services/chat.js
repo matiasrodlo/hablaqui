@@ -6,7 +6,6 @@ import { logInfo } from '../config/pino';
 import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Email from '../models/email';
-import moment from 'moment';
 import dayjs from 'dayjs-with-plugins';
 
 var Analytics = require('analytics-node');
@@ -100,9 +99,6 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 	analytics.track({
 		userId: user._id.toString(),
 		event: 'message-sent',
-		properties: {
-			timestamp: dayjs().toISOString(),
-		},
 	});
 
 	pusher.trigger('chat', 'update', data, pusherCallback);

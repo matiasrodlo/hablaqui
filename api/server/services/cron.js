@@ -4,7 +4,6 @@ import Chat from '../models/chat';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
-import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';

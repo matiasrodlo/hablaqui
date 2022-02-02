@@ -204,6 +204,7 @@
 												:id-psy="selectedEvent.idPsychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
+												type="reschedule"
 												:loading-btn="loagindReschedule"
 											/>
 										</v-card-text>

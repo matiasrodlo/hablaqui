@@ -242,7 +242,7 @@ const mailService = {
 		});
 	},
 	/**
-	 * @description Send an appointmet purchase confirmation to a user
+	 * @description Send an appointmet purchase confirmation to a psy
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
