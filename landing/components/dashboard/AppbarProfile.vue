@@ -57,7 +57,12 @@
 			</nuxt-link>
 		</div>
 		<v-btn
-			v-if="$auth.user.role === 'psychologist'"
+			v-if="
+				$auth.user.role === 'psychologist' &&
+				$auth.user.psychologist &&
+				$vuetify.breakpoint.mdAndUp &&
+				psychologist
+			"
 			class="ml-2"
 			small
 			elevation="1"
@@ -81,7 +86,7 @@
 
 <script>
 import { mdiLogout, mdiChevronLeft, mdiFlag } from '@mdi/js';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
 	components: {
@@ -112,6 +117,9 @@ export default {
 				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
 			);
 		},
+		...mapGetters({
+			psychologist: 'Psychologist/psychologist',
+		}),
 	},
 	methods: {
 		async logout() {

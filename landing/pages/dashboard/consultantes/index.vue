@@ -1,5 +1,25 @@
 <template>
 	<v-container fluid style="height: 100vh; max-width: 1200px">
+		<card-onboarding
+			v-if="step && step.title === 'Mis consultantes'"
+			style="position: absolute; top: 130px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-agenda' });
+					return {
+						title: 'Nuevo evento',
+						card: {
+							title: 'Despreocúpate y organiza tu agenda',
+							description:
+								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+							link: '',
+						},
+						route: 'dashboard-agenda',
+					};
+				}
+			"
+		/>
 		<appbar class="hidden-sm-and-down" title="Consultantes" />
 		<v-row align="start">
 			<v-col cols="12" sm="6" md="4" class="hidden-sm-and-down mt-10">
@@ -39,16 +59,19 @@
 					style="position: absolute; top: -40px; right: -25%; z-index: 3"
 					arrow="arrow-left"
 					:next="
-						() => ({
-							title: 'Añade tus datos bancarios',
-							tab: 0,
-							card: {
-								title: 'No te preocupes, cobramos por ti',
-								description:
-									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
-							},
-							route: 'dashboard-perfil',
-						})
+						() => {
+							$router.push({ name: 'dashboard-agenda' });
+							return {
+								title: 'Nuevo evento',
+								card: {
+									title: 'Despreocúpate y organiza tu agenda',
+									description:
+										'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+									link: '',
+								},
+								route: 'dashboard-agenda',
+							};
+						}
 					"
 				/>
 			</v-col>

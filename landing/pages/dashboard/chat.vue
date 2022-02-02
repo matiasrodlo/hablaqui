@@ -1,5 +1,25 @@
 <template>
 	<div>
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Chat'"
+			style="position: absolute; top: 130px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-agenda' });
+					return {
+						title: 'Nuevo evento',
+						card: {
+							title: 'Despreocúpate y organiza tu agenda',
+							description:
+								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+							link: '',
+						},
+						route: 'dashboard-agenda',
+					};
+				}
+			"
+		/>
 		<v-overlay :value="initLoading">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
@@ -454,6 +474,7 @@ export default {
 			allPsychologists: 'Psychologist/psychologists',
 			clients: 'Psychologist/clients',
 			plan: 'User/plan',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	watch: {

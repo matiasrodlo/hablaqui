@@ -1,9 +1,37 @@
 <template>
 	<div>
-		<v-container fluid style="height: 100vh; max-width: 1200px">
+		<v-container fluid style="height: 100vh; max-width: 1200px; position: relative">
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
+			<card-onboarding
+				v-if="stepOnboarding && stepOnboarding.title === 'Nuevo evento'"
+				arrow="arrow-right"
+				style="z-index: 3; position: absolute; top: 40%; left: 2%"
+				:next="
+					() => {
+						$router.push({ name: 'dashboard-agenda' });
+						return {
+							title: 'Agendar evento',
+							card: {
+								title: 'Tus conversaciones en un solo lugar',
+								description:
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+						};
+					}
+				"
+			/>
 			<v-row justify="center" style="height: calc(100vh - 110px)">
-				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
+				<v-col
+					cols="12"
+					:md="$auth.$state.user.role === 'user' ? '10' : '12'"
+					:style="
+						stepOnboarding && stepOnboarding.title === 'Nuevo evento'
+							? 'z-index: 2'
+							: ''
+					"
+				>
 					<div
 						v-if="$auth.$state.user.role === 'user'"
 						class="hidden-md-and-up"
@@ -101,6 +129,7 @@
 					</v-sheet>
 					<v-sheet height="600px">
 						<v-calendar
+							id="calendar-agenda"
 							ref="calendar"
 							v-model="focus"
 							:events="events"
@@ -114,7 +143,8 @@
 							@click:more="viewDay"
 							@click:day="addAppointment"
 							@click:date="addAppointment"
-						></v-calendar>
+						>
+						</v-calendar>
 						<v-menu
 							v-model="selectedOpen"
 							:activator="selectedElement"
@@ -852,6 +882,7 @@ export default {
 			allSessions: 'Psychologist/sessions',
 			clients: 'Psychologist/clients',
 			plan: 'User/plan',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	watch: {

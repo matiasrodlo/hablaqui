@@ -1,12 +1,12 @@
 <template>
 	<v-card v-if="step" elevation="24" rounded="xl" :class="arrow">
-		<v-card-title class="py-2 caption font-weight-bold primary--text">
+		<v-card-title class="pt-0 pb-1 caption font-weight-bold primary--text">
 			{{ step.card.title }}
 		</v-card-title>
 
 		<v-divider></v-divider>
 
-		<v-card-text class="caption py-2 d-flex" style="width: 250px">
+		<v-card-text class="caption pb-0 pt-1 d-flex" style="width: 250px">
 			<div style="flex: 5">
 				{{ step.card.description }}
 				<a v-if="step.card.link" :href="step.card.link">Enlace</a>

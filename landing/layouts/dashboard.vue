@@ -21,7 +21,16 @@
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
-			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
+			<v-list
+				id="listdrawer"
+				style="flex: 2"
+				dark
+				color="primary"
+				class="pt-0"
+				left
+				shaped
+				top
+			>
 				<v-list-item v-if="false" class="my-4" link>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
@@ -42,7 +51,14 @@
 					</v-list-item-content>
 				</v-list-item>
 				<template v-for="(item, i) in links">
-					<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
+					<v-list-item
+						v-if="item.visible"
+						:id="item.name"
+						:key="i"
+						class="my-4"
+						link
+						:to="item.link"
+					>
 						<v-list-item-avatar size="35">
 							<v-img
 								height="35"
@@ -53,7 +69,7 @@
 							/>
 						</v-list-item-avatar>
 						<v-list-item-content>
-							<v-list-item-title class="font-weight-bold body-2">
+							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -601,9 +617,14 @@ export default {
 					title: 'Añade eventos o bloquea horas',
 					route: '/dashboard/agenda',
 					items: [
-						{ title: 'Nuevo evento', done: this.hasEvents, route: 'dashboard-agenda' },
 						{
-							title: 'Agendar evento',
+							title: 'Nuevo evento',
+							card: {
+								title: 'Despreocúpate y organiza tu agenda',
+								description:
+									'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+								link: '',
+							},
 							done: this.hasEvents,
 							route: 'dashboard-agenda',
 						},
@@ -616,8 +637,28 @@ export default {
 					title: 'Explora las secciones',
 					route: '/dashboard/chat',
 					items: [
-						{ title: 'Chat', route: 'dashboard-chat' },
-						{ title: 'Mi agenda', route: 'dashboard-agenda' },
+						{
+							title: 'Chat',
+							route: 'dashboard-chat',
+							card: {
+								title: 'Tus conversaciones en un solo lugar',
+								description:
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+						},
+						{
+							title: 'Mi agenda',
+							card: {
+								title: 'Tus conversaciones en un solo lugar',
+								description:
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-agenda',
+						},
 						{ title: 'Mis consultantes', route: 'dashboard-consultantes' },
 						{ title: 'Mis pagos', route: 'dashboard-pagos' },
 					],
