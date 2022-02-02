@@ -35,10 +35,10 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getFormattedSessions({ commit }, idPsychologist) {
+	async getFormattedSessions({ commit }, payload) {
 		try {
 			const { sessions } = await this.$axios.$get(
-				`/psychologists/formattedSessions/${idPsychologist}`
+				`/psychologists/formattedSessions/${payload.id}/${payload.type}`
 			);
 			commit('setSessionsFormatted', sessions);
 			return sessions;

@@ -514,8 +514,9 @@ const getTransactions = async user => {
 	});
 };
 
+//type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
-const getFormattedSessions = async idPsychologist => {
+const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
@@ -557,11 +558,17 @@ const getFormattedSessions = async idPsychologist => {
 		.filter(date =>
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
-
-	const minimumNewSession = moment(Date.now()).add(
-		psychologist.preferences.minimumNewSession,
-		'h'
-	);
+	let minimumNewSession = 0;
+	if (type === 'schedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumNewSession,
+			'h'
+		);
+	else if (type === 'reschedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumRescheduleSession,
+			'h'
+		);
 
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
