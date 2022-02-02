@@ -267,7 +267,6 @@ export default {
 		},
 		...mapActions({
 			startConversation: 'Chat/startConversation',
-			getFormattedSessions: 'Psychologist/getFormattedSessions',
 		}),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
