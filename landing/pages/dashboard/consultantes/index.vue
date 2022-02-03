@@ -6,16 +6,8 @@
 			arrow="arrow-left"
 			:next="
 				() => {
-					return {
-						title: 'Consultante nuevo',
-						card: {
-							title: 'Que no queden fuera tus consultantes',
-							description:
-								'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-							link: '',
-						},
-						route: 'dashboard-consultantes',
-					};
+					$router.push({ name: 'dashboard-perfil' });
+					setStep(null);
 				}
 			"
 		/>

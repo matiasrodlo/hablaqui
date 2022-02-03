@@ -6,15 +6,17 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					$router.push({ name: 'dashboard-pagos' });
 					return {
-						title: 'Nuevo evento',
+						title: 'Mis pagos',
 						card: {
-							title: 'Despreocúpate y organiza tu agenda',
+							title: 'Gestiona tus pagos',
 							description:
-								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
 							link: '',
+							route: 'dashboard-chat',
 						},
-						route: 'dashboard-agenda',
+						route: 'dashboard-pagos',
 					};
 				}
 			"

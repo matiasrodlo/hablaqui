@@ -659,17 +659,17 @@ export default {
 							},
 							route: 'dashboard-agenda',
 						},
-						{
-							title: 'Nuevo evento',
-							card: {
-								title: 'Despreocúpate y organiza tu agenda',
-								description:
-									'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-								link: '',
-							},
-							done: this.hasEvents,
-							route: 'dashboard-agenda',
-						},
+						// {
+						// 	title: 'Nuevo evento',
+						// 	card: {
+						// 		title: 'Despreocúpate y organiza tu agenda',
+						// 		description:
+						// 			'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+						// 		link: '',
+						// 	},
+						// 	done: this.hasEvents,
+						// 	route: 'dashboard-agenda',
+						// },
 						{
 							title: 'Mis pagos',
 							card: {
@@ -692,17 +692,17 @@ export default {
 							},
 							route: 'dashboard-consultantes',
 						},
-						{
-							title: 'Consultante nuevo',
-							card: {
-								title: 'Que no queden fuera tus consultantes',
-								description:
-									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-								link: '',
-							},
-							route: 'dashboard-consultantes',
-							done: this.hasConsultantes,
-						},
+						// {
+						// 	title: 'Consultante nuevo',
+						// 	card: {
+						// 		title: 'Que no queden fuera tus consultantes',
+						// 		description:
+						// 			'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+						// 		link: '',
+						// 	},
+						// 	route: 'dashboard-consultantes',
+						// 	done: this.hasConsultantes,
+						// },
 					],
 					visible: true,
 					done: true,

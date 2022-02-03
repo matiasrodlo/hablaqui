@@ -161,18 +161,8 @@
 							arrow="arrow-bottom"
 							:next="
 								() => {
-									$router.push({ name: 'dashboard-chat' });
-									return {
-										title: 'Chat',
-										route: 'dashboard-chat',
-										card: {
-											title: 'Tus conversaciones en un solo lugar',
-											description:
-												'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
-											link: '',
-											route: 'dashboard-chat',
-										},
-									};
+									setStep(null);
+									setOnBoarding(true);
 								}
 							"
 						/>
@@ -263,7 +253,7 @@
 
 <script>
 import { mdiInformationOutline } from '@mdi/js';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -330,6 +320,10 @@ export default {
 			const regex = /^[0-9]*$/;
 			return regex.test(value.toString());
 		},
+		...mapMutations({
+			setOnBoarding: 'User/setOnBoarding',
+			setStep: 'User/setStep',
+		}),
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
 		}),
