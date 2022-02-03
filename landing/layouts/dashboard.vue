@@ -157,7 +157,7 @@
 		<v-navigation-drawer
 			v-if="$auth.$state.user.role === 'psychologist'"
 			:value="onBoarding"
-			width="400"
+			width="350"
 			class="elevation-6"
 			disable-resize-watcher
 			app
@@ -593,46 +593,46 @@ export default {
 						this.hasBankdata &&
 						this.hasAvatar,
 				},
-				{
-					title: 'Añade a tus consultantes',
-					route: '/dashboard/consultantes',
-					items: [
-						{
-							title: 'Consultante nuevo',
-							card: {
-								title: 'Que no queden fuera tus consultantes',
-								description:
-									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-								link: '',
-							},
-							route: 'dashboard-consultantes',
-							done: this.hasConsultantes,
-						},
-					],
-					visible:
-						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-					done: false,
-				},
-				{
-					title: 'Añade eventos o bloquea horas',
-					route: '/dashboard/agenda',
-					items: [
-						{
-							title: 'Nuevo evento',
-							card: {
-								title: 'Despreocúpate y organiza tu agenda',
-								description:
-									'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-								link: '',
-							},
-							done: this.hasEvents,
-							route: 'dashboard-agenda',
-						},
-					],
-					visible:
-						this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-					done: false,
-				},
+				// {
+				// 	title: 'Añade a tus consultantes',
+				// 	route: '/dashboard/consultantes',
+				// 	items: [
+				// 		{
+				// 			title: 'Consultante nuevo',
+				// 			card: {
+				// 				title: 'Que no queden fuera tus consultantes',
+				// 				description:
+				// 					'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+				// 				link: '',
+				// 			},
+				// 			route: 'dashboard-consultantes',
+				// 			done: this.hasConsultantes,
+				// 		},
+				// 	],
+				// 	visible:
+				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
+				// 	done: false,
+				// },
+				// {
+				// 	title: 'Añade eventos o bloquea horas',
+				// 	route: '/dashboard/agenda',
+				// 	items: [
+				// 		{
+				// 			title: 'Nuevo evento',
+				// 			card: {
+				// 				title: 'Despreocúpate y organiza tu agenda',
+				// 				description:
+				// 					'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+				// 				link: '',
+				// 			},
+				// 			done: this.hasEvents,
+				// 			route: 'dashboard-agenda',
+				// 		},
+				// 	],
+				// 	visible:
+				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
+				// 	done: false,
+				// },
 				{
 					title: 'Explora las secciones',
 					route: '/dashboard/chat',
@@ -660,6 +660,17 @@ export default {
 							route: 'dashboard-agenda',
 						},
 						{
+							title: 'Nuevo evento',
+							card: {
+								title: 'Despreocúpate y organiza tu agenda',
+								description:
+									'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+								link: '',
+							},
+							done: this.hasEvents,
+							route: 'dashboard-agenda',
+						},
+						{
 							title: 'Mis pagos',
 							card: {
 								title: 'Gestiona tus pagos',
@@ -680,6 +691,17 @@ export default {
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-consultantes',
+						},
+						{
+							title: 'Consultante nuevo',
+							card: {
+								title: 'Que no queden fuera tus consultantes',
+								description:
+									'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+								link: '',
+							},
+							route: 'dashboard-consultantes',
+							done: this.hasConsultantes,
 						},
 					],
 					visible: true,

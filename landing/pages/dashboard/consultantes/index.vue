@@ -6,8 +6,16 @@
 			arrow="arrow-left"
 			:next="
 				() => {
-					$router.push({ name: 'dashboard-consultantes' });
-					setStep(null);
+					return {
+						title: 'Consultante nuevo',
+						card: {
+							title: 'Que no queden fuera tus consultantes',
+							description:
+								'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+							link: '',
+						},
+						route: 'dashboard-consultantes',
+					};
 				}
 			"
 		/>
@@ -53,17 +61,8 @@
 						arrow="arrow-left"
 						:next="
 							() => {
-								$router.push({ name: 'dashboard-agenda' });
-								return {
-									title: 'Nuevo evento',
-									card: {
-										title: 'Despreocúpate y organiza tu agenda',
-										description:
-											'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-										link: '',
-									},
-									route: 'dashboard-agenda',
-								};
+								$router.push({ name: 'dashboard-perfil' });
+								setStep(null);
 							}
 						"
 					/>

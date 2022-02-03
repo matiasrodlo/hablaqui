@@ -161,16 +161,17 @@
 							arrow="arrow-bottom"
 							:next="
 								() => {
-									$router.push({ name: 'dashboard-consultantes' });
+									$router.push({ name: 'dashboard-chat' });
 									return {
-										title: 'Consultante nuevo',
+										title: 'Chat',
+										route: 'dashboard-chat',
 										card: {
-											title: 'Que no queden fuera tus consultantes',
+											title: 'Tus conversaciones en un solo lugar',
 											description:
-												'Añade a todos tus pacientes para y no pagues comisión por ellos.',
+												'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
 											link: '',
+											route: 'dashboard-chat',
 										},
-										route: 'dashboard-consultantes',
 									};
 								}
 							"

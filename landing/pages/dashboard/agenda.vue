@@ -6,22 +6,41 @@
 			arrow="arrow-left"
 			:next="
 				() => {
-					$router.push({ name: 'dashboard-pagos' });
 					return {
-						title: 'Mis pagos',
+						title: 'Nuevo evento',
 						card: {
-							title: 'Gestiona tus pagos',
+							title: 'Despreocúpate y organiza tu agenda',
 							description:
-								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
 							link: '',
-							route: 'dashboard-chat',
 						},
-						route: 'dashboard-pagos',
+						route: 'dashboard-agenda',
 					};
 				}
 			"
 		/>
 		<v-container fluid style="height: 100vh; max-width: 1200px; position: relative">
+			<card-onboarding
+				v-if="stepOnboarding && stepOnboarding.title === 'Nuevo evento'"
+				arrow="arrow-right"
+				style="z-index: 3; position: absolute; top: 40%; left: 2%"
+				:next="
+					() => {
+						$router.push({ name: 'dashboard-pagos' });
+						return {
+							title: 'Mis pagos',
+							card: {
+								title: 'Gestiona tus pagos',
+								description:
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-pagos',
+						};
+					}
+				"
+			/>
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col
