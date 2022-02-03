@@ -53,7 +53,6 @@
 						arrow="arrow-left"
 						:next="
 							() => {
-								$router.push({ name: 'dashboard-perfil' });
 								setStep(null);
 							}
 						"
