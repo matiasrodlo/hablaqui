@@ -1,16 +1,39 @@
 <template>
-	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
-		<table-pagos
-			hide-search
-			:items="payments"
-			:transactions="transactions"
-			:psychologist="psychologist"
-			:loading="loading"
-			:fetch-data="initFetch"
-		></table-pagos>
-	</v-container>
+	<div>
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Mis pagos'"
+			style="position: absolute; top: 250px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-consultantes' });
+					return {
+						title: 'Mis consultantes',
+						card: {
+							title: 'Gestiona los consultantes',
+							description:
+								'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+							link: '',
+							route: 'dashboard-chat',
+						},
+						route: 'dashboard-consultantes',
+					};
+				}
+			"
+		/>
+		<v-container style="height: 100vh; max-width: 1200px">
+			<appbar class="hidden-sm-and-down" title="Pagos" />
+			<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
+			<table-pagos
+				hide-search
+				:items="payments"
+				:transactions="transactions"
+				:psychologist="psychologist"
+				:loading="loading"
+				:fetch-data="initFetch"
+			></table-pagos>
+		</v-container>
+	</div>
 </template>
 
 <script>
@@ -33,6 +56,7 @@ export default {
 			payments: 'Psychologist/payments',
 			transactions: 'Psychologist/transactions',
 			psychologist: 'Psychologist/psychologist',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	mounted() {

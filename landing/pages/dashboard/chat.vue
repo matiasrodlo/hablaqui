@@ -8,7 +8,7 @@
 				() => {
 					$router.push({ name: 'dashboard-agenda' });
 					return {
-						title: 'Nuevo evento',
+						title: 'Mi agenda',
 						card: {
 							title: 'Despreocúpate y organiza tu agenda',
 							description:
@@ -20,7 +20,7 @@
 				}
 			"
 		/>
-		<v-overlay :value="initLoading">
+		<v-overlay z-index="1" :value="initLoading">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
 		<v-container fluid style="height: 100vh">

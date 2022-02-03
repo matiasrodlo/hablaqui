@@ -1,27 +1,28 @@
 <template>
 	<div>
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Mi agenda'"
+			style="position: absolute; top: 190px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-pagos' });
+					return {
+						title: 'Mis pagos',
+						card: {
+							title: 'Gestiona tus pagos',
+							description:
+								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+							link: '',
+							route: 'dashboard-chat',
+						},
+						route: 'dashboard-pagos',
+					};
+				}
+			"
+		/>
 		<v-container fluid style="height: 100vh; max-width: 1200px; position: relative">
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
-			<card-onboarding
-				v-if="stepOnboarding && stepOnboarding.title === 'Nuevo evento'"
-				arrow="arrow-right"
-				style="z-index: 3; position: absolute; top: 40%; left: 2%"
-				:next="
-					() => {
-						$router.push({ name: 'dashboard-agenda' });
-						return {
-							title: 'Agendar evento',
-							card: {
-								title: 'Tus conversaciones en un solo lugar',
-								description:
-									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
-								link: '',
-								route: 'dashboard-chat',
-							},
-						};
-					}
-				"
-			/>
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col
 					cols="12"
@@ -710,7 +711,7 @@
 				</v-card>
 			</v-dialog>
 		</v-container>
-		<v-overlay :value="overlay">
+		<v-overlay z-index="1" :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
 	</div>

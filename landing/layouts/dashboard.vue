@@ -651,16 +651,36 @@ export default {
 						{
 							title: 'Mi agenda',
 							card: {
-								title: 'Tus conversaciones en un solo lugar',
+								title: 'Gestiona tu agenda',
 								description:
-									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-agenda',
 						},
-						{ title: 'Mis consultantes', route: 'dashboard-consultantes' },
-						{ title: 'Mis pagos', route: 'dashboard-pagos' },
+						{
+							title: 'Mis pagos',
+							card: {
+								title: 'Gestiona tus pagos',
+								description:
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-pagos',
+						},
+						{
+							title: 'Mis consultantes',
+							card: {
+								title: 'Gestiona los consultantes',
+								description:
+									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-consultantes',
+						},
 					],
 					visible: true,
 					done: true,
