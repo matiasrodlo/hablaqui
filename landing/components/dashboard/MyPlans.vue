@@ -44,6 +44,18 @@
 						<v-card-text>
 							{{ setSubtitle(item.title) }}
 						</v-card-text>
+						<v-card-actions v-if="item.payment === 'pending'">
+							<v-spacer></v-spacer>
+							<v-btn
+								:loading="loadingPayPending"
+								color="primary"
+								depressed
+								small
+								@click="toPayPending(item)"
+							>
+								Pagar
+							</v-btn>
+						</v-card-actions>
 					</v-card>
 				</v-slide-item>
 			</v-slide-group>
@@ -81,6 +93,18 @@
 					<v-card-text>
 						{{ setSubtitle(item.title) }}
 					</v-card-text>
+					<v-card-actions v-if="item.payment === 'pending'">
+						<v-spacer></v-spacer>
+						<v-btn
+							:loading="loadingPayPending"
+							color="primary"
+							depressed
+							small
+							@click="toPayPending(item)"
+						>
+							Pagar
+						</v-btn>
+					</v-card-actions>
 				</v-card>
 			</template>
 		</template>
@@ -101,16 +125,46 @@
 				</v-card-text>
 			</v-card>
 		</template>
+		<v-dialog v-model="pendingAvailableDialog" max-width="290">
+			<v-card>
+				<v-card-title class="text-h5"> Información </v-card-title>
+
+				<v-card-text>
+					La fecha de esta sesión ya ha sido reservada por otra persona. Puedes agendar
+					una nueva sesión disponible.
+				</v-card-text>
+
+				<v-card-actions>
+					<v-spacer></v-spacer>
+
+					<v-btn color="primary" text @click="pendingAvailableDialog = false">
+						Cerrar
+					</v-btn>
+
+					<v-btn
+						to="/psicologos"
+						color="primary"
+						text
+						@click="pendingAvailableDialog = false"
+					>
+						Agendar
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
+import { mapActions } from 'vuex';
 
 export default {
 	data() {
 		return {
 			slider: null,
+			loadingPayPending: false,
+			pendingAvailableDialog: false,
 		};
 	},
 	computed: {
@@ -165,7 +219,26 @@ export default {
 				moment().isBefore(moment(item.expiration))
 			);
 		},
-		async toPay(item) {},
+		async toPayPending(evt) {
+			this.loadingPayPending = true;
+			const sessions = await this.getFormattedSessions({
+				id: evt.psychologist,
+				type: 'schedule',
+			});
+			const session = sessions.find(
+				session =>
+					session.date ===
+					moment(evt.session[0].date, 'MM/DD/YYYY HH:mm').format('MM/DD/YYYY')
+			);
+			const hour = moment(evt.session[0].date, 'MM/DD/YYYY HH:mm').format('HH:mm');
+
+			const available = session.available.some(hourAvailable => hourAvailable === hour);
+
+			this.loadingPayPending = false;
+			if (available) window.location.href = evt.mercadoPagoUrl;
+			else this.pendingAvailableDialog = true;
+		},
+		...mapActions({ getFormattedSessions: 'Psychologist/getFormattedSessions' }),
 	},
 };
 </script>
