@@ -503,7 +503,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,
@@ -2194,7 +2194,7 @@ const getAllEvaluationsFunction = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
-	const evaluations = await Evaluation.findOneAndUpdate(
+	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
@@ -2203,10 +2203,31 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	const psy = evaluation.psychologist._id;
+	let evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+
+	await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				rating: global.toFixed(2),
+			},
+		}
+	);
 
 	//enviar correo donde se apruba la evaluación
 
-	return okResponse('Sesion aprobada', { evaluations });
+	return okResponse('Sesion aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {

@@ -716,6 +716,33 @@ const mailService = {
 			});
 		});
 	},
+	async sendPaymentFailed(user, psychologist) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `No has pagado tu plan`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
