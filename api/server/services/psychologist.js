@@ -506,7 +506,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,
@@ -517,8 +517,9 @@ const getTransactions = async user => {
 	});
 };
 
+//type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
-const getFormattedSessions = async idPsychologist => {
+const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
@@ -560,11 +561,17 @@ const getFormattedSessions = async idPsychologist => {
 		.filter(date =>
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
-
-	const minimumNewSession = moment(Date.now()).add(
-		psychologist.preferences.minimumNewSession,
-		'h'
-	);
+	let minimumNewSession = 0;
+	if (type === 'schedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumNewSession,
+			'h'
+		);
+	else if (type === 'reschedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumRescheduleSession,
+			'h'
+		);
 
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
@@ -2181,7 +2188,7 @@ const getAllEvaluationsFunction = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
-	const evaluations = await Evaluation.findOneAndUpdate(
+	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
@@ -2190,6 +2197,27 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	const psy = evaluation.psychologist._id;
+	let evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+
+	await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				rating: global.toFixed(2),
+			},
+		}
+	);
 
 	//enviar correo donde se apruba la evaluación
 	await mailService.sendApproveEvaluationToUser(
@@ -2202,7 +2230,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 		evaluations.psychologist
 	);
 
-	return okResponse('Sesion aprobada', { evaluations });
+	return okResponse('Sesion aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {

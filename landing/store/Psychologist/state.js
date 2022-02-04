@@ -9,8 +9,10 @@ const initialState = {
 	loadingPsychologist: false,
 	payments: [],
 	psychologists: [],
+	psychologist: null,
 	resumeView: false,
 	sessions: [],
+	transactions: null,
 	sessionsFormatted: [],
 	sessionsFormattedAll: [],
 };

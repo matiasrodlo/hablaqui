@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div :class="step ? 'mt-10' : ''">
 		<v-card
-			class="hidden-sm-and-down mx-auto"
+			class="hidden-sm-and-down mx-auto mb-16"
 			:loading="!psychologist"
 			outlined
 			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
@@ -33,15 +33,54 @@
 							color="primary"
 							rounded
 							depressed
+							style="z-index: 2"
 							@click="schedule"
 						>
 							Guardar
 						</v-btn>
 					</div>
 				</div>
+				<card-onboarding
+					v-if="step && step.title === 'Configura tus horarios'"
+					style="position: absolute; top: -7%; right: 20%; z-index: 3"
+					arrow="arrow-bottom"
+					:next="
+						() => ({
+							title: 'Intervalos en tu horario',
+							tab: 1,
+							card: {
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
+							},
+							route: 'dashboard-perfil',
+						})
+					"
+				/>
 			</v-card-text>
 			<v-divider></v-divider>
-			<v-card-text v-for="(item, index) in items" :key="item.id" class="py-2 px-0">
+			<v-card-text
+				v-for="(item, index) in items"
+				:key="item.id"
+				class="py-2 px-0"
+				style="position: relative"
+			>
+				<card-onboarding
+					v-if="index === 0 && step && step.title === 'Intervalos en tu horario'"
+					style="position: absolute; top: -140px; right: -40px; z-index: 3"
+					arrow="arrow-bottom"
+					:next="
+						() => ({
+							title: 'Anticipación para agendar',
+							tab: 2,
+							card: {
+								title: 'Ya no más sesiones muy encima',
+								description:
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+							},
+							route: 'dashboard-perfil',
+						})
+					"
+				/>
 				<v-row align="start" class="px-8">
 					<v-col cols="3">
 						<div class="primary--text text-h5 font-weight-medium">
@@ -56,6 +95,7 @@
 							<v-col cols="5" class="text-center py-2">
 								<v-select
 									v-model="intervals[0]"
+									style="z-index: 2"
 									:disabled="!item.active"
 									full-width
 									outlined
@@ -73,6 +113,7 @@
 							<v-col cols="5" class="text-center py-2">
 								<v-select
 									v-model="intervals[1]"
+									style="z-index: 2"
 									:disabled="!item.active"
 									full-width
 									outlined
@@ -93,6 +134,7 @@
 									color="error"
 									width="25"
 									height="25"
+									style="z-index: 2"
 									@click="rmInterval(index, i)"
 								>
 									<icon color="error" :icon="mdiMinus"
@@ -106,6 +148,7 @@
 									color="primary"
 									width="25"
 									height="25"
+									style="z-index: 2"
 									@click="addInterval(index)"
 								>
 									<icon color="primary" :icon="mdiPlus"
@@ -113,7 +156,7 @@
 							</v-col>
 						</v-row>
 					</v-col>
-					<v-col cols="2" class="text-right">
+					<v-col cols="2" class="text-right" style="z-index: 2">
 						<v-switch
 							v-model="item.active"
 							hide-details
@@ -268,7 +311,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import moment from 'moment';
@@ -408,6 +451,7 @@ export default {
 			};
 			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
 		},
+		...mapGetters({ step: 'User/step' }),
 	},
 	created() {
 		this.query = this.$route.query;

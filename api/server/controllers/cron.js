@@ -32,6 +32,15 @@ const cronController = {
 			errorCallback(res, err);
 		}
 	},
+	async limitToPayPlan(req, res) {
+		try {
+			const token = req.params.authToken;
+			const { data, code } = await cronService.limitToPayPlan(token);
+			return restResponse(data, code, res);
+		} catch (err) {
+			errorCallback(res, err);
+		}
+	},
 };
 
 export default Object.freeze(cronController);

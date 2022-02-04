@@ -314,6 +314,43 @@ const cronService = {
 		}
 		return okResponse('Sesiones actualizadas');
 	},
+	async limitToPayPlan(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		const sessions = await Sessions.find().populate('user psychologist');
+		sessions.forEach(item => {
+			const plans = item.plan.filter(plan => plan.payment === 'pending');
+			plans.forEach(async plan => {
+				if (
+					moment().isSameOrAfter(
+						moment(plan.createdAt).add(3, 'hours')
+					)
+				) {
+					await Sessions.findOneAndUpdate(
+						{
+							_id: item._id,
+							'plan._id': plan._id,
+						},
+						{
+							$set: {
+								'plan.$.payment': 'failed',
+								'plan.$.remainingSessions': 0,
+								'plan.$.session': [],
+							},
+						}
+					);
+					await mailService.sendPaymentFailed(
+						item.user,
+						item.psychologist
+					);
+				}
+			});
+		});
+		return okResponse('Planes actualizados');
+	},
 };
 
 export default cronService;
