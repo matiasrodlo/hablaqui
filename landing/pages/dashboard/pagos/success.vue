@@ -1,0 +1,69 @@
+<template>
+	<v-container fluid style="height: 70vh; max-width: 1200px">
+		<v-overlay :value="overlay">
+			<v-progress-circular indeterminate size="64"></v-progress-circular>
+		</v-overlay>
+		<v-row justify="center" align="center" style="height: 100%; overflow-y: auto">
+			<v-col cols="12" class="text-center" style="color: #5c5c5c">
+				<div>
+					<v-img
+						width="200"
+						height="200"
+						class="mx-auto"
+						:src="`https://cdn.hablaqui.cl/static/balloon.png`"
+						:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
+					></v-img>
+				</div>
+				<div class="headline font-weight-bold">¡Ya has terminado!</div>
+				<div class="my-6 text--secondary body-1 mx-auto" style="max-width: 800px">
+					Puedes dirigirte a la agenda y verificar tus sesiones agendadas
+				</div>
+				<div>
+					<v-btn
+						depressed
+						class="mx-2"
+						color="primary"
+						rounded
+						:to="{ name: 'dashboard-agenda' }"
+					>
+						Ir a mi agenda
+					</v-btn>
+				</div>
+			</v-col>
+		</v-row>
+	</v-container>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+export default {
+	data() {
+		return {
+			idPlan: '',
+			overlay: true,
+		};
+	},
+	created() {
+		if (this.$route.query.plan) {
+			this.idPlan = this.$route.query.plan;
+			this.$router.replace({ query: null });
+		}
+	},
+	async mounted() {
+		if (this.idPlan) {
+			await this.mercadopagoSuccess(this.idPlan);
+			this.overlay = false;
+		} else {
+			this.overlay = false;
+			this.$router.push('/');
+		}
+	},
+	methods: {
+		...mapActions({
+			mercadopagoSuccess: 'Psychologist/mercadopagoSuccess',
+		}),
+	},
+};
+</script>
+
+<style lang="scss" scoped></style>
