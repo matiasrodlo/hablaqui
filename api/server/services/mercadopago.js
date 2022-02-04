@@ -150,7 +150,6 @@ const setPlanFree = async (id, isPsychologist) => {
 					response.psyPlans.length - 1
 				]._id.toString(),
 				total: 0,
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -275,7 +274,6 @@ const psychologistPay = async (params, query) => {
 					foundPsychologist.psyPlans.length - 1
 				]._id.toString(),
 				total: pricePaid,
-				timestamp: moment().toISOString(),
 			},
 		});
 	}

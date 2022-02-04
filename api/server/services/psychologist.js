@@ -315,7 +315,6 @@ const createPaymentsRequest = async user => {
 			properties: {
 				total: total,
 				sessions: sessions.length,
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -511,8 +510,9 @@ const getTransactions = async user => {
 	});
 };
 
+//type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
-const getFormattedSessions = async idPsychologist => {
+const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
@@ -554,11 +554,17 @@ const getFormattedSessions = async idPsychologist => {
 		.filter(date =>
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
-
-	const minimumNewSession = moment(Date.now()).add(
-		psychologist.preferences.minimumNewSession,
-		'h'
-	);
+	let minimumNewSession = 0;
+	if (type === 'schedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumNewSession,
+			'h'
+		);
+	else if (type === 'reschedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumRescheduleSession,
+			'h'
+		);
 
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
@@ -899,7 +905,6 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().toISOString(),
 					total: payload.price / sessionQuantity,
 				},
 			});
@@ -912,7 +917,6 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().toISOString(),
 				},
 			});
 		}
@@ -946,7 +950,6 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().toISOString(),
 					total: payload.price / sessionQuantity,
 				},
 			});
@@ -960,7 +963,6 @@ const createPlan = async ({ payload }) => {
 					order_id: created.plan[
 						created.plan.length - 1
 					]._id.toString(),
-					timestamp: moment().toISOString(),
 				},
 			});
 		}
@@ -978,9 +980,9 @@ const createPlan = async ({ payload }) => {
  */
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist, plan } = await Sessions.findOne({ _id: id }).populate(
-		'psychologist'
-	);
+	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
+		_id: id,
+	}).populate('psychologist');
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -1040,7 +1042,6 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				planId: idPlan,
 				userpsyId: id,
 				email: userLogged.email,
-				timestamp: moment().toISOString(),
 			},
 		});
 
@@ -1051,10 +1052,21 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				user: userLogged._id,
 				planId: idPlan,
 				userpsyId: id,
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
+	await mailService.sendAppConfirmationUser(
+		userLogged,
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
+	await mailService.sendAppConfirmationPsy(
+		psychologist,
+		userLogged,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1145,7 +1157,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			properties: {
 				user: userLogged._id,
 				psychologistId: sessions.psychologist._id.toString(),
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -1400,7 +1411,6 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: psy._id.toString(),
 					event: 'psy-updated-profile',
-					timestamp: moment().toISOString(),
 				});
 				analytics.identify({
 					userId: psy._id.toString(),
@@ -1468,7 +1478,6 @@ const updatePsychologist = async (user, profile) => {
 				analytics.track({
 					userId: user.id.toString(),
 					event: 'recruited-updated-profile',
-					timestamp: moment().toISOString(),
 				});
 				analytics.identify({
 					userId: user.id.toString(),
@@ -1723,7 +1732,6 @@ const uploadProfilePicture = async (psyID, picture) => {
 			event: 'updated-profile-picture',
 			properties: {
 				avatar: getPublicUrlAvatar(gcsname),
-				timestamp: moment().toISOString(),
 			},
 		});
 	}
@@ -1839,7 +1847,7 @@ const customNewSession = async (user, payload) => {
 				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
-			// Enviamos email a el user con el link para pagar
+			// Enviamos email al user con el link para pagar
 			await mailService.sendCustomSessionPaymentURL(
 				updatedSession.user,
 				updatedSession.psychologist,
@@ -1869,7 +1877,6 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().toISOString(),
 						total: 0,
 					},
 				});
@@ -1892,7 +1899,6 @@ const customNewSession = async (user, payload) => {
 						order_id: updatedSession.plan[
 							updatedSession.plan.length - 1
 						]._id.toString(),
-						timestamp: moment().toISOString(),
 						total: 0,
 					},
 				});
@@ -1900,7 +1906,6 @@ const customNewSession = async (user, payload) => {
 				analytics.track({
 					userId: user.psychologist.toString(),
 					event: 'psy-scheduled-private-hours',
-					timestamp: moment().toISOString(),
 				});
 			}
 		}

@@ -79,7 +79,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://calendly.com/daniel-hablaqui/30min"
+					href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
