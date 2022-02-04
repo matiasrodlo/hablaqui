@@ -910,6 +910,31 @@ const createPlan = async ({ payload }) => {
 		return conflictResponse('El usuario ya tiene un plan vigente');
 	else {
 		if (userSessions) {
+			// temp establece los planes pendientes como fallidos
+			// Se colocan fallidos porque se creará un nuevo plan pendiente y los anteriores quedan obsoletos
+			let temp = JSON.stringify(userSessions);
+			temp = JSON.parse(temp);
+			temp = temp.plan.map(plan => {
+				if (plan.payment === 'pending')
+					return {
+						...plan,
+						payment: 'failed',
+						session: [],
+					};
+				else return plan;
+			});
+			logInfo(temp);
+			await Sessions.updateOne(
+				{
+					user: payload.user,
+					psychologist: payload.psychologist,
+				},
+				{
+					$set: {
+						plan: temp,
+					},
+				}
+			);
 			created = await Sessions.findOneAndUpdate(
 				{ user: payload.user, psychologist: payload.psychologist },
 				{ $push: { plan: newPlan }, $set: { roomsUrl: url } },

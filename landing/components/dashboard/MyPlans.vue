@@ -132,9 +132,6 @@ export default {
 				.reverse();
 		},
 	},
-	mounted() {
-		console.log('planes');
-	},
 	methods: {
 		status(item) {
 			if (this.itemSuccess(item)) {

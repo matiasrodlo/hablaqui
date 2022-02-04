@@ -314,14 +314,4 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async payPendingPlan({ commit }, { sessionsId, planId }) {
-		try {
-			const { data } = await this.$axios(`/mercadopago/pending-pay/${sessionsId}/${planId}`, {
-				method: 'POST',
-			});
-			return data;
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
 };
