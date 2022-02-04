@@ -142,7 +142,8 @@
 					</v-btn>
 
 					<v-btn
-						to="/psicologos"
+						v-if="psychologist"
+						:to="`/${psychologist.username}`"
 						color="primary"
 						text
 						@click="pendingAvailableDialog = false"
@@ -165,6 +166,7 @@ export default {
 			slider: null,
 			loadingPayPending: false,
 			pendingAvailableDialog: false,
+			psychologist: null,
 		};
 	},
 	computed: {
@@ -236,9 +238,15 @@ export default {
 
 			this.loadingPayPending = false;
 			if (available) window.location.href = evt.mercadoPagoUrl;
-			else this.pendingAvailableDialog = true;
+			else {
+				this.psychologist = await this.getPsychologist(evt.psychologist);
+				this.pendingAvailableDialog = true;
+			}
 		},
-		...mapActions({ getFormattedSessions: 'Psychologist/getFormattedSessions' }),
+		...mapActions({
+			getFormattedSessions: 'Psychologist/getFormattedSessions',
+			getPsychologist: 'Psychologist/getPsychologist',
+		}),
 	},
 };
 </script>
