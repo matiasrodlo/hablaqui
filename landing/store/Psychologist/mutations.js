@@ -5,6 +5,9 @@ export default {
 	setPsychologists(state, value) {
 		state.psychologists = Object.freeze(value);
 	},
+	setPsychologist(state, value) {
+		state.psychologist = value;
+	},
 	setPsychologistsPagination(state, value) {
 		state.psychologists = [...state.psychologists, ...value];
 	},

@@ -1,8 +1,29 @@
 <template>
-	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
-		<template v-if="payments.length">
+	<div>
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Mis pagos'"
+			style="position: absolute; top: 250px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-consultantes' });
+					return {
+						title: 'Mis consultantes',
+						card: {
+							title: 'Gestiona los consultantes',
+							description:
+								'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+							link: '',
+							route: 'dashboard-chat',
+						},
+						route: 'dashboard-consultantes',
+					};
+				}
+			"
+		/>
+		<v-container style="height: 100vh; max-width: 1200px">
+			<appbar class="hidden-sm-and-down" title="Pagos" />
+			<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
 			<table-pagos
 				hide-search
 				:items="payments"
@@ -11,9 +32,8 @@
 				:loading="loading"
 				:fetch-data="initFetch"
 			></table-pagos>
-		</template>
-		<recruited-overlay />
-	</v-container>
+		</v-container>
+	</div>
 </template>
 
 <script>
@@ -23,20 +43,20 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		TablePagos: () => import('~/components/dashboard/TablePagos'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
 	data() {
 		return {
 			loading: false,
-			psychologist: null,
 		};
 	},
 	computed: {
 		...mapGetters({
 			payments: 'Psychologist/payments',
 			transactions: 'Psychologist/transactions',
+			psychologist: 'Psychologist/psychologist',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	mounted() {
@@ -52,10 +72,6 @@ export default {
 			this.loading = true;
 			await this.getPayments();
 			await this.getTransactions();
-			const { psychologist } = await this.$axios.$get(
-				`/psychologists/one/${this.$auth.$state.user.psychologist}`
-			);
-			this.psychologist = await psychologist;
 			this.loading = false;
 		},
 		...mapActions({

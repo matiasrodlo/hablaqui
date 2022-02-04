@@ -55,120 +55,126 @@
 		</v-row>
 		<v-row class="hidden-sm-and-down mt-10">
 			<v-col :cols="$route.name === 'dashboard-pagos' ? '9' : '12'">
-				<v-data-table
-					class="pointer elevation-1"
-					:loading="loading"
-					:headers="header"
-					:items="payments"
-					loading-text="Cargando..."
-					:items-per-page="5"
-					:single-expand="true"
-					item-key="id"
-					:expanded.sync="expanded"
-					:footer-props="{
-						'items-per-page-text': 'Pagos por página',
-					}"
-					no-results-text="Sin pagos registrados"
-					no-data-text="No hay pagos"
-					@click:row="
-						(item, { expand, isExpanded }) => {
-							isExpanded ? (expanded = []) : expand();
-						}
-					"
-				>
-					<template #[`item.datePayment`]="{ item }">
-						<span class="caption">
-							{{ item.datePayment }}
-						</span>
-					</template>
-					<template #[`item.amount`]="{ item }">
-						<span class="caption">
-							{{ item.amount }}
-						</span>
-					</template>
-					<template #[`item.finalAmount`]="{ item }">
-						<span class="caption">
-							{{ item.finalAmount }}
-						</span>
-					</template>
-					<template #[`item.transState`]="{ item }">
-						<span class="caption">
-							{{ item.transState }}
-						</span>
-					</template>
-					<template #[`item.name`]="{ item }">
-						<div style="width: 100px">
-							<span style="width: 100px" class="caption">
-								{{
-									item.name.length > 12
-										? item.name.slice(0, 12) + '...'
-										: item.name
-								}}
+				<client-only>
+					<v-data-table
+						class="pointer elevation-1"
+						:loading="loading"
+						:headers="header"
+						:items="payments"
+						loading-text="Cargando..."
+						:items-per-page="5"
+						:single-expand="true"
+						item-key="id"
+						:expanded.sync="expanded"
+						:footer-props="{
+							'items-per-page-text': 'Pagos por página',
+						}"
+						no-results-text="Sin pagos registrados"
+						no-data-text="No hay pagos"
+						@click:row="
+							(item, { expand, isExpanded }) => {
+								isExpanded ? (expanded = []) : expand();
+							}
+						"
+					>
+						<template #[`item.datePayment`]="{ item }">
+							<span class="caption">
+								{{ item.datePayment }}
 							</span>
-						</div>
-					</template>
-					<template #[`item.suscription`]="{ item }">
-						<div style="width: 120px">
-							<span style="width: 120px !important" class="caption">
-								{{ item.suscription }}
+						</template>
+						<template #[`item.amount`]="{ item }">
+							<span class="caption">
+								{{ item.amount }}
 							</span>
-						</div>
-					</template>
-					<template #expanded-item="{ item }">
-						<td :colspan="header.length" class="px-0">
-							<v-simple-table>
-								<template #default>
-									<tbody>
-										<tr
-											v-for="element in item.sessions"
-											:key="element.id"
-											@click="
-												() => {
-													selected = element;
-													dialog = true;
-												}
-											"
-										>
-											<td style="width: 15.5%" class="caption text-start">
-												{{ element.date }}
-											</td>
-											<td style="width: 18.5%" class="caption text-start">
-												{{
-													element.name.length > 12
-														? element.name.slice(0, 12) + '...'
-														: element.name
-												}}
-											</td>
-											<td style="width: 21.5%" class="caption text-start">
-												{{ element.sessionsNumber }}
-											</td>
-											<td style="width: 9.5%" class="caption text-start">
-												{{ element.amount }}
-											</td>
-											<td style="width: 13%" class="caption text-start">
-												{{ element.total }}
-											</td>
-											<td style="width: auto" class="caption text-start">
-												{{ element.transDate }}
-											</td>
-										</tr>
-									</tbody>
-								</template>
-							</v-simple-table>
-						</td>
-					</template>
-				</v-data-table>
+						</template>
+						<template #[`item.finalAmount`]="{ item }">
+							<span class="caption">
+								{{ item.finalAmount }}
+							</span>
+						</template>
+						<template #[`item.transState`]="{ item }">
+							<span class="caption">
+								{{ item.transState }}
+							</span>
+						</template>
+						<template #[`item.name`]="{ item }">
+							<div style="width: 100px">
+								<span style="width: 100px" class="caption">
+									{{
+										item.name.length > 12
+											? item.name.slice(0, 12) + '...'
+											: item.name
+									}}
+								</span>
+							</div>
+						</template>
+						<template #[`item.suscription`]="{ item }">
+							<div style="width: 120px">
+								<span style="width: 120px !important" class="caption">
+									{{ item.suscription }}
+								</span>
+							</div>
+						</template>
+						<template #expanded-item="{ item }">
+							<td :colspan="header.length" class="px-0">
+								<v-simple-table>
+									<template #default>
+										<tbody>
+											<tr
+												v-for="element in item.sessions"
+												:key="element.id"
+												@click="
+													() => {
+														selected = element;
+														dialog = true;
+													}
+												"
+											>
+												<td style="width: 15.5%" class="caption text-start">
+													{{ element.date }}
+												</td>
+												<td style="width: 18.5%" class="caption text-start">
+													{{
+														element.name.length > 12
+															? element.name.slice(0, 12) + '...'
+															: element.name
+													}}
+												</td>
+												<td style="width: 21.5%" class="caption text-start">
+													{{ element.sessionsNumber }}
+												</td>
+												<td style="width: 9.5%" class="caption text-start">
+													{{ element.amount }}
+												</td>
+												<td style="width: 13%" class="caption text-start">
+													{{ element.total }}
+												</td>
+												<td style="width: auto" class="caption text-start">
+													{{ element.transDate }}
+												</td>
+											</tr>
+										</tbody>
+									</template>
+								</v-simple-table>
+							</td>
+						</template>
+					</v-data-table>
+				</client-only>
 			</v-col>
 			<v-col v-if="$route.name === 'dashboard-pagos'" cols="3">
 				<v-card style="border-radius: 15px" class="elevation-1">
-					<v-card-text v-if="transactions">
+					<v-card-text>
 						<div class="primary--text title">Tu dinero disponible</div>
-						<div class="text-h4 my-3">${{ transactions.totalAvailable }}</div>
-						<div class="body-1 my-3">
-							Sesiones realizadas: {{ transactions.successSessions }}
+						<div class="text-h4 my-3">
+							${{ transactions ? transactions.totalAvailable : 0 }}
 						</div>
 						<div class="body-1 my-3">
-							Sesiones por cobrar: {{ transactions.sessionsReceivable }}
+							Sesiones realizadas:
+							{{ transactions ? transactions.successSessions : 0 }}
+						</div>
+						<div class="body-1 my-3">
+							Sesiones por cobrar:
+							{{ transactions ? transactions.sessionsReceivable : 0 }}
 						</div>
 					</v-card-text>
 					<v-divider></v-divider>
@@ -179,7 +185,10 @@
 							rounded
 							depressed
 							class="primary--text"
-							:disabled="transactions.sessionsReceivable <= 0"
+							:disabled="
+								!transactions ||
+								(transactions && transactions.sessionsReceivable <= 0)
+							"
 							@click="dialogPayment = true"
 						>
 							Retirar dinero
@@ -374,7 +383,10 @@
 					<v-card-text class="py-0">
 						<v-divider> </v-divider>
 					</v-card-text>
-					<v-card-text v-if="psychologist" class="pb-0 pt-2">
+					<v-card-text
+						v-if="psychologist && psychologist.paymentMethod"
+						class="pb-0 pt-2"
+					>
 						<div class="d-flex justify-space-between align-center">
 							<div>
 								<div class="title">
@@ -412,7 +424,7 @@
 						habiles
 					</v-card-title>
 					<v-card-text class="text-center">
-						<div v-if="psychologist" class="body-1">
+						<div v-if="psychologist && psychologist.paymentMethod" class="body-1">
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
 							{{ psychologist.paymentMethod.bank }}
 						</div>

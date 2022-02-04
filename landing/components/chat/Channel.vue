@@ -26,7 +26,7 @@
 						</div>
 					</div>
 				</v-list-item-title>
-				<div v-show="!selected.assistant" style="min-width: 150px" class="text-right">
+				<div style="min-width: 150px" class="text-right">
 					<!-- <v-btn id="callheaher" icon >
                         <v-img
                             contain

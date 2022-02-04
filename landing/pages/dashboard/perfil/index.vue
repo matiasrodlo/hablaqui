@@ -1,8 +1,18 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
-		<v-list two-line color="transparent" style="margin-top: 100px; height: 150px">
-			<v-list-item class="hidden-sm-and-down" style="position: relative">
+		<v-list
+			two-line
+			color="transparent"
+			style="height: 150px"
+			class="mt-16 pt-10 pt-md-0 mt-md-0"
+		>
+			<v-list-item
+				id="itemAvatar"
+				class="hidden-sm-and-down"
+				style="position: relative"
+				:style="step && step.title === 'Sube tu foto de perfil' ? 'z-index: 3' : ''"
+			>
 				<v-file-input
 					id="upload"
 					ref="avatar"
@@ -37,6 +47,23 @@
 					</label>
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
+					<card-onboarding
+						v-if="step && step.title === 'Sube tu foto de perfil'"
+						style="position: absolute; top: 20%"
+						arrow="arrow-left"
+						:next="
+							() => ({
+								title: 'Añade tus datos bancarios',
+								tab: 0,
+								card: {
+									title: 'No te preocupes, cobramos por ti',
+									description:
+										'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+								},
+								route: 'dashboard-perfil',
+							})
+						"
+					/>
 					<v-list-item-title class="text-capitalize font-weight-bold title">
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>
@@ -215,9 +242,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { mdiCamera } from '@mdi/js';
-import moment from 'moment';
 export default {
 	components: {
 		Appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -231,64 +257,6 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
-	async asyncData({ $axios, $auth }) {
-		if ($auth.$state.user.role === 'user') {
-			if ($auth.$state.user.sessions.length) {
-				// Obtenemos un array con todo los planes solamente
-				const plans = $auth.$state.user.sessions.flatMap(item =>
-					item.plan.map(plan => ({
-						...plan,
-						psychologist: item.psychologist,
-						user: item.user,
-						// dias de diferencia entre el dia que expiró y hoy
-						diff: moment(plan.expiration).diff(moment(), 'days'),
-					}))
-				);
-				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-				const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
-
-				// retornamos el plan success y sin expirar
-				let plan = plans.find(
-					item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-				);
-				// retornamos el siguiente plan pendiente
-				if (!plan) plan = plans.find(item => item.diff === max);
-				// retornamos el ultimo plan succes y que expiro
-				if (!plan) plan = plans.find(item => item.diff === min);
-
-				if (plan.psychologist) {
-					const { psychologist } = await $axios.$get(
-						`/psychologists/one/${plan.psychologist}`
-					);
-					return { psychologist };
-				}
-			}
-			return { psychologist: null };
-		} else {
-			let psychologist;
-			if ($auth.$state.user.psychologist) {
-				const res = await $axios.$get(
-					`/psychologists/one/${$auth.$state.user.psychologist}`
-				);
-				psychologist = res.psychologist;
-			} else {
-				const res = await $axios.$get(`/recruitment/${$auth.user.email}`);
-				psychologist = res.recruited;
-			}
-			if (!psychologist.formation.length) {
-				psychologist.formation.push({
-					formationType: '',
-					description: '',
-					start: '',
-					end: '',
-				});
-			}
-			if (!psychologist.experience.length) {
-				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
-			}
-			return { psychologist };
-		}
-	},
 	data() {
 		return {
 			mdiCamera,
@@ -297,6 +265,22 @@ export default {
 			loadingAvatar: false,
 			sidebar: 0,
 		};
+	},
+	computed: {
+		psychologist: {
+			get() {
+				return this.item;
+			},
+			set(value) {
+				this.setPsychologist(value);
+			},
+		},
+		...mapGetters({ item: 'Psychologist/psychologist', step: 'User/step' }),
+	},
+	watch: {
+		step(newValue) {
+			if (newValue) this.tabs = newValue.tab;
+		},
 	},
 	methods: {
 		setPsychologist(value) {
@@ -326,6 +310,9 @@ export default {
 			);
 			return avatar;
 		},
+		...mapMutations({
+			setPsychologist: 'Psychologist/setPsychologist',
+		}),
 		...mapActions({
 			upateAvatar: 'User/upateAvatar',
 		}),
