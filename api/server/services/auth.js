@@ -1,7 +1,7 @@
 'use strict';
 
 import '../config/config.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import Sessions from '../models/sessions';
 import { sign } from 'jsonwebtoken';
@@ -25,6 +25,21 @@ const generateJwt = user => {
 };
 
 const login = async user => {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'login',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				role: user.role,
+			},
+		});
+	}
 	//el objeto user debe contener, ahora, un elemento isVerified que indica si la cuenta está o no verificada
 	if (user.role === 'user' && !user.isVerified)
 		return conflictResponse('Verifica tu correo');
@@ -32,6 +47,25 @@ const login = async user => {
 		token: generateJwt(user),
 		user: await generateUser(user),
 	});
+};
+
+const logout = async user => {
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'logout',
+			properties: {
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				role: user.role,
+			},
+		});
+	}
+	return okResponse('Sesión cerrada exitosamente');
 };
 
 const getSessions = async user => {
@@ -93,23 +127,33 @@ const register = async payload => {
 	else await mailService.sendVerifyEmail(user, verifyurl);
 
 	// Segment identification
-	analytics.identify({
-		userId: user._id.toString(),
-		traits: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
-	analytics.track({
-		userId: user._id.toString(),
-		event: 'organic-user-signup',
-		properties: {
-			name: user.name,
-			email: user.email,
-			type: user.role,
-		},
-	});
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.identify({
+			userId: user._id.toString(),
+			traits: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+			},
+		});
+		analytics.track({
+			userId: user._id.toString(),
+			event: 'organic-user-signup',
+			properties: {
+				name: user.name,
+				email: user.email,
+				type: user.role,
+			},
+		});
+	}
+
+	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
+	if (user.role === 'user') {
+		await mailService.sendWelcomeNewUser(user);
+	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user: await generateUser(user),
 		token: generateJwt(user),
@@ -190,6 +234,7 @@ const googleAuthCallback = (req, res) => {
 
 const authService = {
 	login,
+	logout,
 	generateJwt,
 	generateUser,
 	register,

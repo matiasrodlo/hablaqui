@@ -1,6 +1,26 @@
 <template>
 	<div>
-		<v-overlay :value="initLoading">
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Chat'"
+			style="position: absolute; top: 130px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-agenda' });
+					return {
+						title: 'Mi agenda',
+						card: {
+							title: 'Despreocúpate y organiza tu agenda',
+							description:
+								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+							link: '',
+						},
+						route: 'dashboard-agenda',
+					};
+				}
+			"
+		/>
+		<v-overlay z-index="1" :value="initLoading">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
 		<v-container fluid style="height: 100vh">
@@ -67,8 +87,10 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ user.name }} {{ user.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -85,9 +107,9 @@
 							<!-- general lista usuarios -->
 							<template v-if="listUsers.length">
 								<v-card-text class="py-0">
-									<v-subheader class="primary--text body-1 px-0"
-										>General</v-subheader
-									>
+									<v-subheader class="primary--text body-1 px-0">
+										General
+									</v-subheader>
 									<v-divider
 										style="border-color: #5eb3e4"
 										class="mb-2"
@@ -118,9 +140,9 @@
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ user.name }}
+												{{ user.name }} {{ user.lastName }}
 											</v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -161,10 +183,10 @@
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title
-											v-html="getMyPsy.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -240,10 +262,10 @@
 										</v-list-item-avatar>
 
 										<v-list-item-content>
-											<v-list-item-title
-												v-html="psy.name"
-											></v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-title>
+												{{ psy.name }} {{ psy.lastName }}
+											</v-list-item-title>
+											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -317,7 +339,6 @@
 				</template>
 			</v-row>
 		</v-container>
-		<recruited-overlay />
 	</div>
 </template>
 
@@ -332,7 +353,6 @@ export default {
 		avatar: () => import('~/components/Avatar'),
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Channel: () => import('~/components/chat/Channel'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -390,16 +410,19 @@ export default {
 		},
 		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
-			let filterArray = this.chats.filter(el =>
-				el.user.name.toLowerCase().includes(this.search.toLowerCase())
-			);
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (!filterArray.length) filterArray = this.chats;
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.user.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+			if (this.$auth.$state.user.role === 'psychologist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -411,15 +434,19 @@ export default {
 		},
 		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
-			let filterArray = this.chats.filter(el =>
-				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
-			);
-			if (!filterArray.length) filterArray = this.chats;
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
+
+			if (this.$auth.$state.user.role === 'user' && this.getMyPsy) {
 				filterArray = filterArray.filter(item => {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -441,44 +468,13 @@ export default {
 			}
 			return null;
 		},
-		// retorna el plan act o el ultimo expirado
-		plan() {
-			if (!this.$auth.$state.user || this.$auth.$state.user.role !== 'user') return null;
-			// Obtenemos un array con todo los planes solamente
-			const plans = this.$auth.$state.user.sessions.flatMap(item =>
-				item.plan.map(plan => ({
-					...plan,
-					idSessions: item._id,
-					roomsUrl: item.roomsUrl,
-					psychologist: item.psychologist,
-					user: item.user,
-					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
-				}))
-			);
-			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-
-			// retornamos el plan success y sin expirar
-			let plan = plans.find(
-				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-			);
-			// retornamos el ultimo plan succes y que expiro
-			if (!plan) plan = plans.find(item => item.diff === max);
-			return plan;
-		},
-		// retorna verdadero si el usurio tiene plan activo
-		isActivePlan() {
-			if (!this.plan) return false;
-			return (
-				this.plan.remainingSessions > 0 ||
-				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
-			);
-		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
 			clients: 'Psychologist/clients',
+			plan: 'User/plan',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	watch: {
@@ -514,8 +510,8 @@ export default {
 		async initFetch() {
 			moment.locale('es');
 			await this.getPsychologists();
-			await this.getMessages();
 			if (this.$auth.$state.user.role === 'user') {
+				await this.getMessages();
 				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
@@ -525,7 +521,9 @@ export default {
 				});
 			}
 			if (this.$auth.$state.user.role === 'psychologist') {
-				await this.getClients(this.$auth.$state.user.psychologist);
+				if (this.$auth.$state.user.psychologist) {
+					await this.getMessages();
+				}
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
 						this.clients.find(client => client._id === this.$route.query.client)
@@ -547,7 +545,7 @@ export default {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
 		},
@@ -635,7 +633,6 @@ export default {
 			return count;
 		},
 		...mapActions({
-			getClients: 'Psychologist/getClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',

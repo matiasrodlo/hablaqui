@@ -136,7 +136,7 @@ export default {
 	},
 	async mounted() {
 		this.loadingCalendar = true;
-		await this.getFormattedSessions(this.psychologist._id);
+		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
 		this.loadingCalendar = false;
 		if (this.$route.query.chat) {
 			this.loadingChat = true;

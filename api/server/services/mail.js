@@ -243,7 +243,7 @@ const mailService = {
 		});
 	},
 	/**
-	 * @description Send an appointmet purchase confirmation to a user
+	 * @description Send an appointmet purchase confirmation to a psy
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
@@ -616,6 +616,33 @@ const mailService = {
 			},
 			sendAt: moment().unix(),
 			batchId: batch,
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendPaymentFailed(user, psychologist) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `No has pagado tu plan`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
 		};
 		return new Promise((resolve, reject) => {
 			sgMail.send(dataPayload, function(error, body) {

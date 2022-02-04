@@ -22,6 +22,15 @@ const authController = {
 			errorCallback(e, res);
 		}
 	},
+	async logout(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await authService.logout(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res);
+		}
+	},
 	generateJwt(req, res) {
 		const { user } = req;
 		const token = authService.generateJwt(user);
