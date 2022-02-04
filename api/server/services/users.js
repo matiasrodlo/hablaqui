@@ -353,6 +353,10 @@ const usersService = {
 				evaluations: [evaluation],
 			});
 		}
+
+		const psy = await Psychologist.findById(psyId);
+
+		await mailService.sendAddEvaluation(user, psy);
 		return okResponse('Evaluación guardada', created);
 	},
 };

@@ -656,6 +656,170 @@ const mailService = {
 			});
 		});
 	},
+	async sendPaymentRequest(psy, total, date) {
+		const dataPayload = {
+			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `¡Has realizado una solicitud de retiro!`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-1b7f3153b2e64beca579cf634bcd2b7c',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				total: total,
+				date: date,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCompletePaymentRequest(psy, total, date) {
+		const dataPayload = {
+			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Tu solicitud de retiro ya ha sido completada!`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-478ea4a5f440447db1d7ec9dc0361b55',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				total: total,
+				date: date,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendAddEvaluation(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `¡Has completado una evaluación!`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-451461690169414ba91a86ee4c439c2a',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				user_name: user.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendApproveEvaluationToUser(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `¡Se ha aprobado tu evaluación!`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-2be43052aefe4a51bd7800cdba7155a9',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				user_name: user.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendApproveEvaluationToPsy(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `¡Se ha aprobado una evaluación tuya!`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-39a41d2dc58e4e35a5674cf03a2cb86e',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				user_name: user.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendRefuseEvaluation(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Se ha rechazado tu evaluación`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-c88421c7ff9e4165b883255b9a35a701',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
+				user_name: user.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
