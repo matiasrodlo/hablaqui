@@ -22,7 +22,9 @@
 										<span class="success--text">Tu plan actual</span>
 									</template>
 									<template v-if="item.payment === 'pending'">
-										<span class="warning--text">Pendiente</span>
+										<span class="warning--text" @click="toPay(item)"
+											>Pendiente</span
+										>
 									</template>
 									<template v-if="item.payment === 'failed'">
 										<span class="error--text">Expirado</span>
@@ -106,6 +108,8 @@
 
 <script>
 import moment from 'moment';
+import { mapActions } from 'vuex';
+
 export default {
 	data() {
 		return {
@@ -117,16 +121,22 @@ export default {
 		plans() {
 			if (!this.$auth.$state.user) return [];
 			// Obtenemos un array con todo los planes solamente
-			return this.$auth.$state.user.sessions.flatMap(item =>
-				item.plan.map(plan => ({
-					...plan,
-					psychologist: item.psychologist,
-					user: item.user,
-					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
-				}))
-			);
+			return this.$auth.$state.user.sessions
+				.flatMap(item =>
+					item.plan.map(plan => ({
+						...plan,
+						psychologist: item.psychologist,
+						user: item.user,
+						sessionsId: item._id,
+						// dias de diferencia entre el dia que expiró y hoy
+						diff: moment(plan.expiration).diff(moment(), 'days'),
+					}))
+				)
+				.reverse();
 		},
+	},
+	mounted() {
+		console.log('planes');
 	},
 	methods: {
 		status(item) {
@@ -161,6 +171,14 @@ export default {
 				moment().isBefore(moment(item.expiration))
 			);
 		},
+		async toPay(item) {
+			const res = await this.payPendingPlan({
+				sessionsId: item.sessionsId,
+				planId: item._id,
+			});
+			window.location.href = res.init_point;
+		},
+		...mapActions({ payPendingPlan: 'Psychologist/payPendingPlan' }),
 	},
 };
 </script>

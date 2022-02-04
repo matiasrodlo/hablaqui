@@ -74,6 +74,18 @@ const mercadopagoController = {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
 	},
+	async payPendingPlan(req, res) {
+		try {
+			const { sessionsId, planId } = req.params;
+			const { data, code } = await mercadopagoService.payPendingPlan(
+				sessionsId,
+				planId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error al aprobar pago.');
+		}
+	},
 };
 
 export default Object.freeze(mercadopagoController);

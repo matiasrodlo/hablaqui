@@ -70,4 +70,9 @@ mercadopagoRouter.get(
 	mercadopagoController.customSessionPay
 );
 
+mercadopagoRouter.post(
+	'/mercadopago/pending-pay/:sessionsId/:planId',
+	mercadopagoController.payPendingPlan
+);
+
 export default mercadopagoRouter;

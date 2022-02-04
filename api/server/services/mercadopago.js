@@ -376,6 +376,33 @@ const recruitedPay = async (params, query) => {
 	return okResponse('plan actualizado/creado');
 };
 
+const payPendingPlan = async (sessionsId, planId) => {
+	const sessions = await Sessions.findById(sessionsId).populate(
+		'psychologist'
+	);
+	const plan = sessions.plan.filter(
+		plan => plan._id.toString() === planId.toString()
+	)[0];
+
+	logInfo(plan);
+	if (plan.payment !== 'pending')
+		return conflictResponse(
+			'No puedes pagar un plan que no este pendiente'
+		);
+
+	const mercadopagoPayload = {
+		psychologist: sessions.psychologist.username,
+		price: plan.totalPrice,
+		description: plan.title,
+		quantity: 1,
+		plan: plan._id,
+		token: plan.tokenToPay,
+	};
+
+	const responseBody = await createPreference(mercadopagoPayload);
+	return okResponse('Preferencias creadas', responseBody);
+};
+
 const mercadopagoService = {
 	createPreference,
 	createPsychologistPreference,
@@ -384,6 +411,7 @@ const mercadopagoService = {
 	recruitedPay,
 	createCustomSessionPreference,
 	customSessionPay,
+	payPendingPlan,
 };
 
 export default Object.freeze(mercadopagoService);
