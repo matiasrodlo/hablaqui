@@ -1,8 +1,17 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<div class="tex-h5 secondary--text font-weight-bold mb-4 mt-1">Transacciones</div>
-		<table-pagos hide-search :items="payments" :loading="loading"></table-pagos>
+		<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
+		<template v-if="payments.length">
+			<table-pagos
+				hide-search
+				:items="payments"
+				:transactions="transactions"
+				:psychologist="psychologist"
+				:loading="loading"
+				:fetch-data="initFetch"
+			></table-pagos>
+		</template>
 		<recruited-overlay />
 	</v-container>
 </template>
@@ -21,11 +30,13 @@ export default {
 	data() {
 		return {
 			loading: false,
+			psychologist: null,
 		};
 	},
 	computed: {
 		...mapGetters({
 			payments: 'Psychologist/payments',
+			transactions: 'Psychologist/transactions',
 		}),
 	},
 	mounted() {
@@ -40,10 +51,16 @@ export default {
 				return null;
 			this.loading = true;
 			await this.getPayments();
+			await this.getTransactions();
+			const { psychologist } = await this.$axios.$get(
+				`/psychologists/one/${this.$auth.$state.user.psychologist}`
+			);
+			this.psychologist = await psychologist;
 			this.loading = false;
 		},
 		...mapActions({
 			getPayments: 'Psychologist/getPayments',
+			getTransactions: 'Psychologist/getTransactions',
 		}),
 	},
 };

@@ -499,7 +499,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,

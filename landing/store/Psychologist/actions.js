@@ -11,6 +11,14 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getTransactions({ commit }) {
+		try {
+			const { transactions } = await this.$axios.$get('/psychologist/transactions/all');
+			commit('setTransactions', transactions);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getPsychologistsWithPagination({ commit }, nextPage) {
 		try {
 			commit('setLoadingPsychologist', true);
@@ -116,6 +124,16 @@ export default {
 				data: { username },
 			});
 			return data.available;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async paymentRequest({ commit }, username) {
+		try {
+			await this.$axios('/psychologist/payment-request', {
+				method: 'POST',
+			});
+			snackBarSuccess('Pago solicitado')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

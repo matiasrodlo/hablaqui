@@ -11,6 +11,9 @@ export default {
 	setLoadingPsychologist(state, value) {
 		state.loadingPsychologist = value;
 	},
+	setTransactions(state, value) {
+		state.transactions = value;
+	},
 	setPage(state, value) {
 		state.page = value;
 	},
