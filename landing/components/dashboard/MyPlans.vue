@@ -22,9 +22,7 @@
 										<span class="success--text">Tu plan actual</span>
 									</template>
 									<template v-if="item.payment === 'pending'">
-										<span class="warning--text" @click="toPay(item)"
-											>Pendiente</span
-										>
+										<span class="warning--text">Pendiente</span>
 									</template>
 									<template v-if="item.payment === 'failed'">
 										<span class="error--text">Expirado</span>
@@ -108,7 +106,6 @@
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
 
 export default {
 	data() {
@@ -171,14 +168,7 @@ export default {
 				moment().isBefore(moment(item.expiration))
 			);
 		},
-		async toPay(item) {
-			const res = await this.payPendingPlan({
-				sessionsId: item.sessionsId,
-				planId: item._id,
-			});
-			window.location.href = res.init_point;
-		},
-		...mapActions({ payPendingPlan: 'Psychologist/payPendingPlan' }),
+		async toPay(item) {},
 	},
 };
 </script>

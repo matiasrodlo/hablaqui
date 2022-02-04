@@ -232,6 +232,16 @@
 									class="text--secondary body-2"
 								>
 									Pendiente por pago de consultante
+									<v-spacer></v-spacer>
+									<v-btn
+										:loading="loadingPayPending"
+										color="primary"
+										depressed
+										small
+										@click="toPayPending(selectedEvent)"
+									>
+										Pagar
+									</v-btn>
 								</v-card-actions>
 								<v-card-actions
 									v-if="selectedEvent.title === 'compromiso privado'"
@@ -827,6 +837,7 @@ export default {
 		loadingSession: false,
 		loagindReschedule: false,
 		stepAddAppoinment: 0,
+		loadingPayPending: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -1163,6 +1174,23 @@ export default {
 				this.addAppointment({ date: null });
 			} else this.$router.push({ name: 'psicologos' });
 		},
+		async toPayPending(evt) {
+			this.loadingPayPending = true;
+			const sessions = await this.getFormattedSessions({
+				id: evt.idPsychologist,
+				type: 'schedule',
+			});
+			// console.log(sessions);
+			// console.log(evt);
+			const session = sessions.find(
+				session =>
+					session.date === moment(evt.date, 'MM/DD/YYYY HH:mm').format('MM/DD/YYYY')
+			);
+			const hour = moment(evt.date, 'MM/DD/YYYY HH:mm').format('HH:mm');
+
+			const available = session.available.some(hourAvailable => hourAvailable === hour);
+			this.loadingPayPending = false;
+		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',
 		}),
@@ -1176,6 +1204,7 @@ export default {
 			registerUser: 'User/registerUser',
 			setReschedule: 'Psychologist/setReschedule',
 			updateSession: 'Psychologist/updateSession',
+			getFormattedSessions: 'Psychologist/getFormattedSessions',
 		}),
 	},
 	validations: {
