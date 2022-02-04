@@ -123,4 +123,22 @@ userRouter.post(
 	userController.setUserOffline
 );
 
+/**
+ * Endpoint para subir una evaluación de un usuario sobre un psicólogo
+ * req.body = {
+ * 	comment: comentario del usuario sobre el psicólogo,
+ * 	global: puntuación goblar sobre el psicólogo por parte del usuario,
+ * 	puntuality: puntuación respecto a la puntualidad,
+ * 	attention: puntuación sobre la atención del psicólogo,
+ *  internet: puntuación respecto a la conexión,
+ *  like: comentario sobre lo que le gusto del psicólogo,
+ *  improve: comentario sobre lo que el psicólogo debe mejorar
+ * }
+ */
+userRouter.post(
+	'/user/evaluation:/:psyId',
+	[passport.authenticate('jwt', { session: true })],
+	userController.addEvaluation
+);
+
 export default userRouter;

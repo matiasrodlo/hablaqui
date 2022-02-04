@@ -67,8 +67,10 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ user.name }} {{ user.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -85,9 +87,9 @@
 							<!-- general lista usuarios -->
 							<template v-if="listUsers.length">
 								<v-card-text class="py-0">
-									<v-subheader class="primary--text body-1 px-0"
-										>General</v-subheader
-									>
+									<v-subheader class="primary--text body-1 px-0">
+										General
+									</v-subheader>
 									<v-divider
 										style="border-color: #5eb3e4"
 										class="mb-2"
@@ -118,9 +120,9 @@
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ user.name }}
+												{{ user.name }} {{ user.lastName }}
 											</v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -161,10 +163,10 @@
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title
-											v-html="getMyPsy.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -240,10 +242,10 @@
 										</v-list-item-avatar>
 
 										<v-list-item-content>
-											<v-list-item-title
-												v-html="psy.name"
-											></v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-title>
+												{{ psy.name }} {{ psy.lastName }}
+											</v-list-item-title>
+											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -345,7 +347,7 @@ export default {
 			selected: null,
 			pusher: null,
 			channel: null,
-			initLoading: false,
+			initLoading: true,
 		};
 	},
 	computed: {
@@ -368,11 +370,13 @@ export default {
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user &&
+				this.$auth.$state.user.role === 'psychologist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
-			return 'Usuario de hablaquí';
+			return this.$auth.$state.user.role === 'user'
+				? 'Psicólogo de hablaquí'
+				: 'No es un consultane';
 		},
 		listClients() {
 			return this.clients
@@ -388,16 +392,19 @@ export default {
 		},
 		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
-			let filterArray = this.chats.filter(el =>
-				el.user.name.toLowerCase().includes(this.search.toLowerCase())
-			);
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (!filterArray.length) filterArray = this.chats;
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.user.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+			if (this.$auth.$state.user.role === 'psychologist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -409,15 +416,19 @@ export default {
 		},
 		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
-			let filterArray = this.chats.filter(el =>
-				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
-			);
-			if (!filterArray.length) filterArray = this.chats;
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
+
+			if (this.$auth.$state.user.role === 'user' && this.getMyPsy) {
 				filterArray = filterArray.filter(item => {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -464,14 +475,6 @@ export default {
 			if (!plan) plan = plans.find(item => item.diff === max);
 			return plan;
 		},
-		// retorna verdadero si el usurio tiene plan activo
-		isActivePlan() {
-			if (!this.plan) return false;
-			return (
-				this.plan.remainingSessions > 0 ||
-				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
-			);
-		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
@@ -505,15 +508,16 @@ export default {
 			}
 		});
 	},
-	mounted() {
-		this.initFetch();
+	async mounted() {
+		await this.initFetch();
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			) {
+			moment.locale('es');
+			await this.getPsychologists();
+			await this.getMessages();
+			if (this.$auth.$state.user.role === 'user') {
+				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
 					assistant: true,
@@ -521,11 +525,7 @@ export default {
 					url: '',
 				});
 			}
-			this.initLoading = true;
-			moment.locale('es');
-			await this.getPsychologists();
-			await this.getMessages();
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'psychologist') {
 				await this.getClients(this.$auth.$state.user.psychologist);
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
@@ -548,7 +548,7 @@ export default {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
 		},

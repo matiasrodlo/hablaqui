@@ -243,7 +243,7 @@ const mailService = {
 		});
 	},
 	/**
-	 * @description Send an appointmet purchase confirmation to a user
+	 * @description Send an appointmet purchase confirmation to a psy
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
@@ -558,6 +558,64 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendChatNotificationToPsy(user, psychologist, batch) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `${user.name} te está hablando`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-89f251396ff64c7b8c671a51748b13a9',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
+			sendAt: moment().unix(),
+			batchId: batch,
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendChatNotificationToUser(user, psychologist, batch) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-becad9021a1e4b34afbd466a84aea4e3',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+			},
+			sendAt: moment().unix(),
+			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
 			sgMail.send(dataPayload, function(error, body) {

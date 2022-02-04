@@ -35,7 +35,12 @@
 						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="b" link to="/blog">
+				<v-list-item
+					id="link-blog-drawer"
+					accesskey="b"
+					link
+					href="https://hablaqui.cl/blog/"
+				>
 					<v-list-item-content>
 						<v-list-item-title>Blog</v-list-item-title>
 					</v-list-item-content>
@@ -140,15 +145,15 @@
 			>
 				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
 			</nuxt-link>
-			<nuxt-link
+			<a
 				id="blog-appabar"
 				accesskey="b"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				to="/blog"
+				href="https://hablaqui.cl/blog/"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</nuxt-link>
+			</a>
 			<v-spacer></v-spacer>
 			<client-only>
 				<div
@@ -340,8 +345,8 @@ export default {
 		},
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
@@ -357,7 +362,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .shadow {
-	-webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
-	filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
+	-webkit-filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
+	filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
 }
 </style>

@@ -131,12 +131,16 @@
 		<v-col cols="12" md="6">
 			<v-select
 				v-model="formUser.gender"
-				:items="['Hombre', 'Mujer', 'Transgénero']"
+				:items="[
+					{ text: 'Hombre', value: 'male' },
+					{ text: 'Mujer', value: 'female' },
+					{ text: 'Transgénero', value: 'transgender' },
+				]"
 				filled
 				outlined
 				hide-details
 				dense
-				label="Genero"
+				label="Género"
 			></v-select>
 		</v-col>
 		<v-col cols="12" md="6">

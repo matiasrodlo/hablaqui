@@ -30,18 +30,47 @@ const recruitmentService = {
 			return conflictResponse('Este postulante ya está registrado');
 		}
 
-		analytics.track({
-			userId: user._id,
-			event: 'psy-new-application',
-			properties: {
-				email: user.email,
-				name: user.name,
-				lastName: user.lastName,
-				rut: user.rut,
-			},
-		});
-
 		const recruited = await Recruitment.create(payload);
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.track({
+				userId: user._id.toString(),
+				event: 'psy-new-application',
+				properties: {
+					email: user.email,
+					name: user.name,
+					lastName: user.lastName,
+					source: recruited.howFindOut,
+					isExclusiveActivity: recruited.isExclusiveActivity,
+					isUnderSupervision: recruited.isUnderSupervision,
+					isSupervisor: recruited.isSupervisor,
+					isContentCreator: recruited.isContentCreator,
+					isAffiliateExternal: recruited.isAffiliateExternal,
+					isInterestedBusiness: recruited.isInterestedBusiness,
+					professionalDescription: recruited.professionalDescription,
+					personalDescription: recruited.personalDescription,
+				},
+			});
+			analytics.identify({
+				userId: user._id.toString(),
+				traits: {
+					email: user.email,
+					name: user.name,
+					lastName: user.lastName,
+					source: recruited.howFindOut,
+					isExclusiveActivity: recruited.isExclusiveActivity,
+					isUnderSupervision: recruited.isUnderSupervision,
+					isSupervisor: recruited.isSupervisor,
+					isContentCreator: recruited.isContentCreator,
+					isAffiliateExternal: recruited.isAffiliateExternal,
+					isInterestedBusiness: recruited.isInterestedBusiness,
+					professionalDescription: recruited.professionalDescription,
+					personalDescription: recruited.personalDescription,
+				},
+			});
+		}
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
 		mailService.sendRecruitmentConfirmation(recruited);
 		mailService.sendRecruitmentConfirmationAdmin(recruited);
@@ -105,6 +134,7 @@ const recruitmentService = {
 			{ isVerified: true },
 			{ new: true }
 		);
+		let id = payload._id;
 
 		// Formateamos el payload para que nos deje editar
 		payload = JSON.stringify(payload);
@@ -121,18 +151,31 @@ const recruitmentService = {
 			{ $set: { psychologist: newProfile._id } },
 			{ new: true }
 		);
-
-		analytics.track({
-			userId: userUpdated._id.toString(),
-			event: 'new-psy-onboard',
-			properties: {
-				email: payload.email,
-				name: payload.name,
-				lastName: payload.lastName,
-				rut: payload.rut,
-				psyId: newProfile._id,
-			},
-		});
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.track({
+				userId: newProfile._id.toString(),
+				event: 'new-psy-onboard',
+			});
+			analytics.identify({
+				userId: newProfile._id.toString(),
+				traits: {
+					role: userUpdated.role,
+					psychologist: newProfile._id,
+					email: payload.email,
+					name: payload.name,
+					lastName: payload.lastName,
+					rut: payload.rut,
+					psyId: newProfile._id,
+				},
+			});
+			analytics.alias({
+				previousId: id.toString(),
+				userId: newProfile._id.toString(),
+			});
+		}
 
 		logInfo(
 			actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil')

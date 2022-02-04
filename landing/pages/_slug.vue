@@ -2,8 +2,18 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<appbar />
-		<!-- routing for child -->
-		<psicologo :psychologist="psychologist" :set-psychologist="setPsychologist" />
+		<!-- desktop -->
+		<profile-desktop
+			:psychologist="psychologist"
+			:set-psychologist="setPsychologist"
+			class="hidden-sm-and-down"
+		/>
+		<!-- mobile -->
+		<profile-mobile
+			:psychologist="psychologist"
+			:set-psychologist="setPsychologist"
+			class="hidden-md-and-up"
+		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -25,19 +35,34 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
+
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
-		psicologo: () => import('~/components/psicologos/psicologo'),
+		ProfileDesktop: () =>
+			import(
+				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/ProfileDesktop'
+			),
+		ProfileMobile: () =>
+			import(
+				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
+			),
 	},
 	async asyncData({ $axios, params, error }) {
 		try {
 			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
 			return { psychologist };
 		} catch (e) {
-			error({ statusCode: 404, message: 'Post not found' });
+			error({ statusCode: 404, message: 'Page not found' });
 		}
+	},
+	data() {
+		return {
+			loadingChat: false,
+			loadingCalendar: false,
+		};
 	},
 	head() {
 		return {
@@ -109,10 +134,29 @@ export default {
 			],
 		};
 	},
+	async mounted() {
+		this.loadingCalendar = true;
+		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
+		this.loadingCalendar = false;
+		if (this.$route.query.chat) {
+			this.loadingChat = true;
+			await this.startConversation(this.psychologist._id);
+			this.loadingChat = false;
+			this.setFloatingChat(true);
+			this.$router.replace({ query: null });
+		}
+	},
 	methods: {
 		setPsychologist(value) {
 			this.psychologist = value;
 		},
+		...mapActions({
+			startConversation: 'Chat/startConversation',
+			getFormattedSessions: 'Psychologist/getFormattedSessions',
+		}),
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
 	},
 };
 </script>

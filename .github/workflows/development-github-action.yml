@@ -27,8 +27,6 @@ jobs:
         service: development-api
         project_id: hablaqui
         credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-    
-
   build-and-deploy-front:
 
     runs-on: ubuntu-latest
@@ -51,4 +49,5 @@ jobs:
         service: development-front
         project_id: hablaqui
         credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
   

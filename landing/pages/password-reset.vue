@@ -267,8 +267,8 @@ export default {
 		deleteQueryFromRoute() {
 			this.$router.replace({ query: null });
 		},
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 			this.dialog = true;
 			setTimeout(() => {
 				this.dialog = false;

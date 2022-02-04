@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<snackbar />
-		<nuxt keep-alive />
+		<nuxt :keep-alive="$route.name === 'psicologos'" />
 		<template
 			v-if="
 				$route.name !== 'index' &&
@@ -17,33 +17,20 @@
 	</v-app>
 </template>
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Snackbar from '@/components/Snackbar';
+import { mapActions } from 'vuex';
 
 export default {
 	components: {
 		Snackbar,
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
-	computed: {
-		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
-	},
-	mounted() {
-		this.initialFetch();
+	async mounted() {
+		await this.getPsychologists();
 	},
 	methods: {
-		async initialFetch() {
-			await this.getPsychologists();
-			await this.getAppointments();
-		},
 		...mapActions({
-			getAppointments: 'Appointments/getAppointments',
 			getPsychologists: 'Psychologist/getPsychologists',
-		}),
-		...mapMutations({
-			setListenerUserOnline: 'User/setListenerUserOnline',
-			setLoading: 'Psychologist/setLoading',
-			setPsychologists: 'Psychologist/setPsychologists',
 		}),
 	},
 };

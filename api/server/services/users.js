@@ -4,7 +4,7 @@ import User from '../models/user';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -15,6 +15,7 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 import { room } from '../config/dotenv';
+import Evaluation from '../models/evaluation';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -231,28 +232,32 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
-
-		analytics.identify({
-			userId: createdUser._id.toString(),
-			traits: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
-		analytics.track({
-			userId: createdUser._id,
-			event: 'referral-user-signup',
-			properties: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.identify({
+				userId: createdUser._id.toString(),
+				traits: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user._id,
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+			analytics.track({
+				userId: createdUser._id.toString(),
+				event: 'referral-user-signup',
+				properties: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user.psychologist.toString(),
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+		}
 
 		const roomId = require('crypto')
 			.createHash('md5')
@@ -295,6 +300,60 @@ const usersService = {
 		return okResponse('Nuevo usuario creado', {
 			user: await servicesAuth.generateUser(createdUser),
 		});
+	},
+
+	async addEvaluation(user, psyId, payload) {
+		if (user.role !== 'user') return conflictResponse('No eres usuario');
+
+		let sessions = await Sessions.findOne({
+			psychologist: psyId,
+			user: user._id,
+		});
+
+		sessions = sessions.plan.flatMap(plan => {
+			return plan.session.map(session => {
+				return {
+					_id: session._id,
+					status: session.status,
+				};
+			});
+		});
+
+		const countSessions = sessions.filter(
+			session => session.status === 'success'
+		).length;
+
+		if (countSessions < 3)
+			return conflictResponse('No puede escribir un comentario');
+
+		const collEvaluation = await Evaluation.findOne({
+			psychologist: psyId,
+			user: user._id,
+		});
+
+		const evaluation = {
+			comment: payload.comment,
+			global: payload.global,
+			puntuality: payload.puntuality,
+			attention: payload.attention,
+			internet: payload.internet,
+			like: payload.like,
+			improve: payload.improve,
+		};
+		let created = {};
+		if (collEvaluation) {
+			created = await Evaluation.findOneAndUpdate(
+				{ user: user._id, psychologist: psyId },
+				{ $push: { evaluations: evaluation } }
+			);
+		} else {
+			created = await Evaluation.create({
+				user: user._id,
+				psychologist: psyId,
+				evaluations: [evaluation],
+			});
+		}
+		return okResponse('Evaluación guardada', created);
 	},
 };
 
