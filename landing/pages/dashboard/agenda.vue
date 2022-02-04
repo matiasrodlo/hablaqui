@@ -748,6 +748,33 @@
 					</v-card-text>
 				</v-card>
 			</v-dialog>
+			<v-dialog v-model="pendingAvailableDialog" max-width="290">
+				<v-card>
+					<v-card-title class="text-h5"> Información </v-card-title>
+
+					<v-card-text>
+						La fecha de esta sesión ya ha sido reservada por otra persona. Puedes
+						agendar una nueva sesión disponible.
+					</v-card-text>
+
+					<v-card-actions>
+						<v-spacer></v-spacer>
+
+						<v-btn color="primary" text @click="pendingAvailableDialog = false">
+							Cerrar
+						</v-btn>
+
+						<v-btn
+							:to="`/${selectedEvent.usernamePsy}`"
+							color="primary"
+							text
+							@click="pendingAvailableDialog = false"
+						>
+							Agendar
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-dialog>
 		</v-container>
 		<v-overlay z-index="1" :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -838,6 +865,7 @@ export default {
 		loagindReschedule: false,
 		stepAddAppoinment: 0,
 		loadingPayPending: false,
+		pendingAvailableDialog: false,
 		hours: [
 			'00:00',
 			'1:00',
@@ -1180,8 +1208,6 @@ export default {
 				id: evt.idPsychologist,
 				type: 'schedule',
 			});
-			// console.log(sessions);
-			// console.log(evt);
 			const session = sessions.find(
 				session =>
 					session.date === moment(evt.date, 'MM/DD/YYYY HH:mm').format('MM/DD/YYYY')
@@ -1189,7 +1215,10 @@ export default {
 			const hour = moment(evt.date, 'MM/DD/YYYY HH:mm').format('HH:mm');
 
 			const available = session.available.some(hourAvailable => hourAvailable === hour);
+
 			this.loadingPayPending = false;
+			if (available) window.location.href = evt.mercadoPagoUrl;
+			else this.pendingAvailableDialog = true;
 		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',

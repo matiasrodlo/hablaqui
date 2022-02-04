@@ -128,6 +128,7 @@ const setSession = (role, sessions) => {
 					sessionPrice: plan.sessionPrice,
 					end,
 					idPsychologist: item.psychologist._id,
+					usernamePsy: item.psychologist.username,
 					idUser,
 					name: `${name} ${lastName}`,
 					paidToPsychologist: session.paidToPsychologist,
