@@ -910,7 +910,8 @@ const createPlan = async ({ payload }) => {
 		if (userSessions) {
 			created = await Sessions.findOneAndUpdate(
 				{ user: payload.user, psychologist: payload.psychologist },
-				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
+				{ new: true }
 			);
 		} else {
 			created = await Sessions.create({
@@ -983,6 +984,19 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
+		const planId = created.plan.pop()._id.toString();
+		await Sessions.updateOne(
+			{
+				_id: created._id,
+				'plan._id': planId,
+			},
+			{
+				$set: {
+					'plan.$.mercadoPagoUrl': responseBody.init_point,
+				},
+			}
+		);
+
 		const user = await User.findById(payload.user);
 		await mailService.pendingPlanPayment(user, psychologist, payload.price);
 	}

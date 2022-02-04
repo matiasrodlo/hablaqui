@@ -71,6 +71,7 @@ let plan = new Schema(
 			type: Number,
 		},
 		tokenToPay: { type: String, default: '' },
+		mercadoPagoUrl: { type: String, default: '' },
 		session: [session],
 	},
 	{ timestamps: true }
