@@ -1826,7 +1826,6 @@ const customNewSession = async (user, payload) => {
 		let hours = 1;
 
 		if (payload.dateEnd && payload.type === 'compromiso privado') {
-			logInfo('custom');
 			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
 			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
