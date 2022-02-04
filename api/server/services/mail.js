@@ -629,6 +629,93 @@ const mailService = {
 			});
 		});
 	},
+	async sendChangePsycologistToUser(user, psy, coupon) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Has cancelado tu plan`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-efbfc3aba77142fcaf1a24f693d71429',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: psy.name,
+				code: coupon.code,
+				amount: coupon.discount,
+				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendEnabledEvaluation(user, psy) {
+		const dataPayload = {
+			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Puedes evaluar a tu psicólogo`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: psy.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async pendingPlanPayment(user, psy, amount) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tienes un plan por pagar`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-a9b7fe9d08254e9b91d1cddbe399292c',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
+				amount: amount,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 	async sendPaymentFailed(user, psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',

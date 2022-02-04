@@ -20,6 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
+import Coupon from '../models/coupons';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -55,7 +56,6 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
-
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -138,6 +138,10 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
+					activePlan:
+						plan.payment === 'success' &&
+						moment().isBefore(moment(plan.expiration)),
 				};
 			});
 		});
@@ -837,20 +841,33 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+
+	let price = payload.price < 0 ? 0 : payload.price;
+
+	if (foundCoupon && foundCoupon.discountType === 'static')
+		price = payload.originalPrice;
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
 		datePayment: '',
-		totalPrice: payload.price,
-		sessionPrice: payload.price / sessionQuantity,
+		totalPrice: price,
+		sessionPrice: price / sessionQuantity,
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: token,
 		session: [newSession],
 	};
-
+	//logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -874,107 +891,103 @@ const createPlan = async ({ payload }) => {
 		});
 	}
 
-	if (userSessions) {
-		if (
-			userSessions.plan.some(
+	let created = null;
+
+	const userPlans = await Sessions.find({ user: payload.user });
+
+	if (
+		userPlans.some(sessions => {
+			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
 					moment().isBefore(moment(plan.expiration))
-			)
-		) {
-			return conflictResponse('El usuario ya tiene un plan vigente');
-		}
-
-		const created = await Sessions.findOneAndUpdate(
-			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
-			{ new: true }
-		);
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'current-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'current-psy-new-plan',
-				properties: {
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
+				//sessions.psychologist.toString() !== payload.psychologist
+			);
+		})
+	)
+		return conflictResponse('El usuario ya tiene un plan vigente');
+	else {
+		if (userSessions) {
+			created = await Sessions.findOneAndUpdate(
+				{ user: payload.user, psychologist: payload.psychologist },
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			);
+		} else {
+			created = await Sessions.create({
+				user: payload.user,
+				psychologist: payload.psychologist,
+				plan: [newPlan],
+				roomsUrl: url,
 			});
 		}
-		return okResponse('Plan creado', { plan: created });
-	} else {
-		const created = await Sessions.create({
-			user: payload.user,
-			psychologist: payload.psychologist,
-			plan: [newPlan],
-			roomsUrl: url,
-		});
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'new-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'new-user-psy-new-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
-			});
-		}
-		return okResponse('Plan creado', { plan: created });
 	}
+
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: created._id.toString(),
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'current-user-purchase-plan',
+			properties: {
+				products: planData,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+				total: payload.price / sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'current-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+			},
+		});
+	}
+	if (foundCoupon) {
+		let discount = -payload.price;
+		if (foundCoupon.discountType === 'static') {
+			if (payload.price >= 0) discount = 0;
+			await Coupon.findOneAndUpdate(
+				{ _id: foundCoupon._id },
+				{ $set: { discount: discount } }
+			);
+		}
+	}
+
+	let responseBody = { init_point: null };
+
+	if (payload.price <= 0) {
+		await mercadopagoService.successPay({ planId: created._id });
+	} else {
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			plan: created._id,
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+		const user = await User.findById(payload.user);
+		await mailService.pendingPlanPayment(user, psychologist, payload.price);
+	}
+
+	return okResponse('Plan y preferencias creadas', responseBody);
 };
 
 /**
@@ -1336,7 +1349,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}*/
 
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
 	await mailService.sendCancelSessionPsy(

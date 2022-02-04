@@ -66,7 +66,9 @@ const logout = async user => {
 };
 
 const getSessions = async user => {
-	if (user.role === 'user') return await Sessions.find({ user: user._id });
+	if (user.role === 'user') {
+		return await Sessions.find({ user: user._id });
+	}
 
 	if (user.role === 'psychologist')
 		return await Sessions.find({ psychologist: user.psychologist });
