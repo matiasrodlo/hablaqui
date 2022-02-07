@@ -4,7 +4,7 @@ import User from '../models/user';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -13,6 +13,7 @@ import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
@@ -232,28 +233,32 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
-
-		analytics.identify({
-			userId: createdUser._id.toString(),
-			traits: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
-		analytics.track({
-			userId: createdUser._id,
-			event: 'referral-user-signup',
-			properties: {
-				name: user.name,
-				email: user.email,
-				type: user.role,
-				referencerId: user._id,
-				referencerName: `${user.name} ${user.lastName}`,
-			},
-		});
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			analytics.identify({
+				userId: createdUser._id.toString(),
+				traits: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user._id,
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+			analytics.track({
+				userId: createdUser._id.toString(),
+				event: 'referral-user-signup',
+				properties: {
+					name: user.name,
+					email: user.email,
+					type: user.role,
+					referencerId: user.psychologist.toString(),
+					referencerName: `${user.name} ${user.lastName}`,
+				},
+			});
+		}
 
 		const roomId = require('crypto')
 			.createHash('md5')
@@ -349,7 +354,97 @@ const usersService = {
 				evaluations: [evaluation],
 			});
 		}
+
+		const psy = await Psychologist.findById(psyId);
+
+		await mailService.sendAddEvaluation(user, psy);
 		return okResponse('Evaluación guardada', created);
+	},
+	async changePsychologist(sessionsId) {
+		const foundPlan = await Sessions.findById(sessionsId).populate(
+			'psychologist user'
+		);
+		if (!foundPlan) return conflictResponse('No hay planes');
+		const planData = foundPlan.plan.filter(
+			plan =>
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+		);
+
+		if (!planData) return conflictResponse('No hay planes para cancelar');
+
+		let sessionsData = [];
+		planData.forEach(plan => {
+			const sessions = {
+				plan: plan._id,
+				remainingSessions: plan.remainingSessions,
+				price: plan.sessionPrice,
+				session: plan.session.filter(
+					session => session.status !== 'success'
+				),
+			};
+			sessionsData.push(sessions);
+		});
+
+		let discount = 0;
+		let sessionsToDelete = [];
+		sessionsData.forEach(data => {
+			const remaining = data.session.length + data.remainingSessions;
+			discount += remaining * data.price;
+			sessionsToDelete.push(data.session);
+		});
+		console.log(discount);
+		console.log(sessionsToDelete);
+
+		planData.forEach(async plan => {
+			await Sessions.updateOne(
+				{
+					_id: sessionsId,
+					'plan._id': plan._id,
+				},
+				{
+					$set: {
+						'plan.$.payment': 'failed',
+						'plan.$.remainingSessions': 0,
+					},
+				}
+			);
+			plan.session.forEach(async session => {
+				await Sessions.updateOne(
+					{
+						_id: sessionsId,
+						'plan._id': plan._id,
+						'plan.session._id': session._id,
+					},
+					{
+						$pull: {
+							'plan.$.session': { _id: session._id },
+						},
+					}
+				);
+			});
+		});
+
+		const now = new Date();
+		let expiration = now;
+		expiration.setDate(expiration.getDate() + 3);
+
+		const newCoupon = {
+			code: foundPlan.user.name + now.getTime(),
+			discount,
+			discountType: 'static',
+			restrictions: {
+				user: foundPlan.user._id,
+			},
+			expiration: expiration.toISOString(),
+		};
+		await mailService.sendChangePsycologistToUser(
+			foundPlan.user,
+			foundPlan.psychologist,
+			newCoupon
+		);
+		await Coupon.create(newCoupon);
+		return okResponse('Cupón hecho');
 	},
 };
 

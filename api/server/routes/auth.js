@@ -16,6 +16,10 @@ authRouter.post(
 	[validation(authSchema.login, 'body'), passport.authenticate('local')],
 	authController.login
 );
+/**
+ * Endpoint de logout.
+ */
+authRouter.post('/auth/logout', authController.logout);
 
 /**
  * No se usa.
@@ -67,6 +71,14 @@ authRouter.put(
 	'/auth/user/password',
 	passport.authenticate('jwt'),
 	authController.changeUserPassword
+);
+/**
+ *
+ */
+authRouter.put(
+	'/auth/user/verification/:id',
+	passport.authenticate('jwt'),
+	authController.changeVerifiedStatus
 );
 
 export default authRouter;

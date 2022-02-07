@@ -217,13 +217,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { cloneDeep } from 'lodash';
+
 import {
 	mdiChatProcessingOutline,
 	mdiCalendarClockOutline,
 	mdiChevronDown,
 	mdiChevronLeft,
 } from '@mdi/js';
+import moment from 'moment';
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -250,6 +251,14 @@ export default {
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
+		clients: {
+			handler(newValue) {
+				if (newValue) {
+					this.selected = newValue.find(client => client._id === this.$route.query.id);
+				}
+			},
+			immediate: true,
+		},
 	},
 	mounted() {
 		this.initFetch();
@@ -273,17 +282,16 @@ export default {
 		},
 		async initFetch() {
 			this.loading = true;
-			await this.getClients(this.$auth.$state.user.psychologist);
-			const temp = cloneDeep(this.clients);
-			this.selected = temp.find(client => client._id === this.$route.query.id);
 			await this.getPayments();
 			this.loading = false;
+		},
+		getAge(date) {
+			return moment().diff(date, 'years');
 		},
 		save(date) {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
-			getClients: 'Psychologist/getClients',
 			getPayments: 'Psychologist/getPayments',
 			updateSessions: 'Psychologist/updateSessions',
 			updateOne: 'User/updateOne',

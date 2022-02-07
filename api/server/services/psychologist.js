@@ -5,7 +5,7 @@ import { room } from '../config/dotenv';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
@@ -20,6 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
+import Coupon from '../models/coupons';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -55,7 +56,6 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
-
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -138,6 +138,10 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
+					activePlan:
+						plan.payment === 'success' &&
+						moment().isBefore(moment(plan.expiration)),
 				};
 			});
 		});
@@ -182,6 +186,7 @@ const getRemainingSessions = async psy => {
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);
+	const user = await Psychologist.findById(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -235,7 +240,10 @@ const completePaymentsRequest = async psy => {
 		{ $push: { transactionCompleted: transaction } }
 	);
 
-	return okResponse('Peticion hecha', {
+	//Enviar correo de dinero depositado a psy
+	await mailService.sendCompletePaymentRequest(user, total, now);
+
+	return okResponse('Peticion completada', {
 		total: total,
 		sessions: sessions,
 	});
@@ -266,6 +274,18 @@ const createPaymentsRequest = async user => {
 			session.request === 'none' &&
 			session.name !== 'Compromiso privado '
 	);
+
+	const total = sessions.reduce(
+		(sum, value) =>
+			typeof value.total == 'number' ? sum + value.total : sum,
+		0
+	);
+
+	if (total === 0)
+		return conflictResponse(
+			'No puedes hacer una petición con saldo 0 disponible'
+		);
+
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
 			{
@@ -283,11 +303,6 @@ const createPaymentsRequest = async user => {
 		);
 	});
 
-	const total = sessions.reduce(
-		(sum, value) =>
-			typeof value.total == 'number' ? sum + value.total : sum,
-		0
-	);
 	const transaction = {
 		total,
 		sessionsPaid: sessions.length,
@@ -297,6 +312,22 @@ const createPaymentsRequest = async user => {
 		{ psychologist: psy },
 		{ $push: { transactionsRequest: transaction } }
 	);
+
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: psy.toString(),
+			event: 'psy-withdrawal-request',
+			properties: {
+				total: total,
+				sessions: sessions.length,
+			},
+		});
+	}
+	//Crear correo de petición de retiro de dinero
+	await mailService.sendPaymentRequest(user, total, now);
 
 	return okResponse('Peticion hecha', {
 		total: total,
@@ -479,7 +510,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,
@@ -490,8 +521,9 @@ const getTransactions = async user => {
 	});
 };
 
+//type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
-const getFormattedSessions = async idPsychologist => {
+const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
@@ -533,11 +565,17 @@ const getFormattedSessions = async idPsychologist => {
 		.filter(date =>
 			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 		);
-
-	const minimumNewSession = moment(Date.now()).add(
-		psychologist.preferences.minimumNewSession,
-		'h'
-	);
+	let minimumNewSession = 0;
+	if (type === 'schedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumNewSession,
+			'h'
+		);
+	else if (type === 'reschedule')
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumRescheduleSession,
+			'h'
+		);
 
 	sessions = length.map(el => {
 		const day = moment(Date.now()).add(el, 'days');
@@ -619,14 +657,15 @@ const formattedSessionsAll = async () => {
 		})
 	);
 
-	allSessions = psychologist.map(item => {
-		return {
-			...item,
-			sessions: setDaySessions(
-				allSessions.filter(element => element.psychologist === item._id)
-			),
-		};
-	});
+	allSessions = psychologist.map(item => ({
+		...item,
+		sessions: setDaySessions(
+			allSessions.filter(
+				element =>
+					element.psychologist._id.toString() === item._id.toString()
+			)
+		),
+	}));
 
 	sessions = allSessions.map(item => {
 		const minimumNewSession = moment(Date.now()).add(
@@ -804,20 +843,33 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+
+	let price = payload.price < 0 ? 0 : payload.price;
+
+	if (foundCoupon && foundCoupon.discountType === 'static')
+		price = payload.originalPrice;
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
 		datePayment: '',
-		totalPrice: payload.price,
-		sessionPrice: payload.price / sessionQuantity,
+		totalPrice: price,
+		sessionPrice: price / sessionQuantity,
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: token,
 		session: [newSession],
 	};
-
+	//logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -839,61 +891,105 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
-
-		analytics.track({
-			userId: payload.user._id,
-			event: 'user-purchase-plan',
-			properties: {
-				plan: payload.title,
-				period: payload.paymentPeriod,
-				price: payload.price,
-				expiration: expirationDate,
-				totalSessions: sessionQuantity,
-				email: payload.user.email,
-			},
-		});
-		analytics.track({
-			userId: payload.psychologist,
-			event: 'psy-new-plan',
-			properties: {
-				plan: payload.title,
-				period: payload.paymentPeriod,
-				price: payload.price,
-				expiration: expirationDate,
-				totalSessions: sessionQuantity,
-				user: payload.user._id,
-			},
-		});
 	}
 
-	if (userSessions) {
-		if (
-			userSessions.plan.some(
+	let created = null;
+
+	const userPlans = await Sessions.find({ user: payload.user });
+
+	if (
+		userPlans.some(sessions => {
+			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
 					moment().isBefore(moment(plan.expiration))
-			)
-		) {
-			return conflictResponse('El usuario ya tiene un plan vigente');
+				//sessions.psychologist.toString() !== payload.psychologist
+			);
+		})
+	)
+		return conflictResponse('El usuario ya tiene un plan vigente');
+	else {
+		if (userSessions) {
+			created = await Sessions.findOneAndUpdate(
+				{ user: payload.user, psychologist: payload.psychologist },
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			);
+		} else {
+			created = await Sessions.create({
+				user: payload.user,
+				psychologist: payload.psychologist,
+				plan: [newPlan],
+				roomsUrl: url,
+			});
 		}
-
-		const created = await Sessions.findOneAndUpdate(
-			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
-		);
-
-		return okResponse('Plan creado', { plan: created });
-	} else {
-		const created = await Sessions.create({
-			user: payload.user,
-			psychologist: payload.psychologist,
-			plan: [newPlan],
-			roomsUrl: url,
-		});
-		//const params = { planId: created._id.toString() };
-
-		return okResponse('Plan creado', { plan: created });
 	}
+
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: created._id.toString(),
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'current-user-purchase-plan',
+			properties: {
+				products: planData,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+				total: payload.price / sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'current-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+			},
+		});
+	}
+	if (foundCoupon) {
+		let discount = -payload.price;
+		if (foundCoupon.discountType === 'static') {
+			if (payload.price >= 0) discount = 0;
+			await Coupon.findOneAndUpdate(
+				{ _id: foundCoupon._id },
+				{ $set: { discount: discount } }
+			);
+		}
+	}
+
+	let responseBody = { init_point: null };
+
+	if (payload.price <= 0) {
+		await mercadopagoService.successPay({ planId: created._id });
+	} else {
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			plan: created._id,
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+		const user = await User.findById(payload.user);
+		await mailService.pendingPlanPayment(user, psychologist, payload.price);
+	}
+
+	return okResponse('Plan y preferencias creadas', responseBody);
 };
 
 /**
@@ -906,9 +1002,9 @@ const createPlan = async ({ payload }) => {
  */
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { psychologist } = await Sessions.findOne({ _id: id }).populate(
-		'psychologist'
-	);
+	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
+		_id: id,
+	}).populate('psychologist');
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -923,6 +1019,13 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
 		);
 	}
+
+	const myPlan = plan.filter(
+		plan => plan._id.toString() === idPlan.toString()
+	)[0];
+
+	if (myPlan.payment !== 'success')
+		return conflictResponse('No puedes agendar un plan sin pagar');
 
 	let sessions = await Sessions.findOneAndUpdate(
 		{ _id: id, 'plan._id': idPlan },
@@ -949,27 +1052,43 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			}
 		).populate('psychologist user');
 	}
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: userLogged._id.toString(),
+			event: 'user-new-session',
+			properties: {
+				user: userLogged._id,
+				planId: idPlan,
+				userpsyId: id,
+				email: userLogged.email,
+			},
+		});
 
-	analytics.track({
-		userId: userLogged._id.toString(),
-		event: 'user-new-session',
-		properties: {
-			user: userLogged._id,
-			planId: idPlan,
-			userpsyId: id,
-			email: userLogged.email,
-		},
-	});
-
-	analytics.track({
-		userId: userLogged.psychologist.toString(),
-		event: 'psy-new-session',
-		properties: {
-			user: userLogged._id,
-			planId: idPlan,
-			userpsyId: id,
-		},
-	});
+		analytics.track({
+			userId: userLogged.psychologist.toString(),
+			event: 'psy-new-session',
+			properties: {
+				user: userLogged._id,
+				planId: idPlan,
+				userpsyId: id,
+			},
+		});
+	}
+	await mailService.sendAppConfirmationUser(
+		userLogged,
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
+	await mailService.sendAppConfirmationPsy(
+		psychologist,
+		userLogged,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		roomsUrl
+	);
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1050,6 +1169,19 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		newDate
 	);
 
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: userLogged._id.toString(),
+			event: 'user-reschedule-session',
+			properties: {
+				user: userLogged._id,
+				psychologistId: sessions.psychologist._id.toString(),
+			},
+		});
+	}
 	return okResponse('Hora actualizada', {
 		sessions: setSession(userLogged.role, [sessions]),
 	});
@@ -1219,7 +1351,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}*/
 
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
 	await mailService.sendCancelSessionPsy(
@@ -1294,6 +1426,45 @@ const updatePsychologist = async (user, profile) => {
 					context: 'query',
 				}
 			);
+			if (
+				process.env.API_URL.includes('hablaqui.cl') ||
+				process.env.DEBUG_ANALYTICS === 'true'
+			) {
+				analytics.track({
+					userId: psy._id.toString(),
+					event: 'psy-updated-profile',
+				});
+				analytics.identify({
+					userId: psy._id.toString(),
+					traits: {
+						email: updated.email,
+						name: updated.name,
+						lastName: updated.lastName,
+						username: updated.username,
+						code: updated.code,
+						avatar: updated.avatar,
+						country: updated.country,
+						marketplaceVisibility:
+							updated.preferences.marketplaceVisibility,
+						birthDate: updated.birthDate,
+						comuna: updated.comuna,
+						region: updated.region,
+						isVerified: updated.isVerified,
+						approveAvatar: updated.approveAvatar,
+						freeFirstSession: updated.freeFirstSession,
+						hasPersonalDescription:
+							updated.personalDescription == '' ? false : true,
+						hasProfessionalDescription:
+							updated.professionalDescription == ''
+								? false
+								: true,
+						personalDescription: updated.personalDescription,
+						professionalDescription:
+							updated.professionalDescription,
+						role: 'psychologist',
+					},
+				});
+			}
 
 			const data = {
 				user: user._id,
@@ -1322,6 +1493,45 @@ const updatePsychologist = async (user, profile) => {
 					new: true,
 				}
 			);
+			if (
+				process.env.API_URL.includes('hablaqui.cl') ||
+				process.env.DEBUG_ANALYTICS === 'true'
+			) {
+				analytics.track({
+					userId: user.id.toString(),
+					event: 'recruited-updated-profile',
+				});
+				analytics.identify({
+					userId: user.id.toString(),
+					traits: {
+						email: updated.email,
+						name: updated.name,
+						lastName: updated.lastName,
+						username: updated.username,
+						code: updated.code,
+						avatar: updated.avatar,
+						country: updated.country,
+						marketplaceVisibility:
+							updated.preferences.marketplaceVisibility,
+						birthDate: updated.birthDate,
+						comuna: updated.comuna,
+						region: updated.region,
+						isVerified: updated.isVerified,
+						approveAvatar: updated.approveAvatar,
+						freeFirstSession: updated.freeFirstSession,
+						hasPersonalDescription:
+							updated.personalDescription == '' ? false : true,
+						hasProfessionalDescription:
+							updated.professionalDescription == ''
+								? false
+								: true,
+						personalDescription: updated.personalDescription,
+						professionalDescription:
+							updated.professionalDescription,
+						role: 'recruited',
+					},
+				});
+			}
 			return okResponse('Actualizado exitosamente', {
 				psychologist: updated,
 			});
@@ -1519,7 +1729,7 @@ const updateFormationExperience = async (user, payload) => {
 
 const uploadProfilePicture = async (psyID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const { name, lastName } = await User.findById(psyID);
+	const { name, lastName, psychologist } = await User.findById(psyID);
 	const gcsname = `${psyID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	const stream = file.createWriteStream({
@@ -1535,6 +1745,18 @@ const uploadProfilePicture = async (psyID, picture) => {
 		logInfo(`${gcsname}` + ' subido exitosamente');
 	});
 	stream.end(picture.buffer);
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		analytics.track({
+			userId: psychologist.toString(),
+			event: 'updated-profile-picture',
+			properties: {
+				avatar: getPublicUrlAvatar(gcsname),
+			},
+		});
+	}
 
 	await Psychologist.findByIdAndUpdate(psyID, {
 		avatar: getPublicUrlAvatar(gcsname),
@@ -1647,14 +1869,68 @@ const customNewSession = async (user, payload) => {
 				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
-			// Enviamos email a el user con el link para pagar
+			// Enviamos email al user con el link para pagar
 			await mailService.sendCustomSessionPaymentURL(
 				updatedSession.user,
 				updatedSession.psychologist,
 				data.init_point
 			);
 		}
-
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			if (payload.type === 'online') {
+				let planData = [
+					{
+						item_id: 3,
+						item_name:
+							'Plan/sesión personalizada agendada por psicólogo',
+						item_price: payload.price,
+						item_quantity: 1,
+					},
+				];
+				analytics.track({
+					userId: user.psychologist.toString(),
+					event: 'psy-scheduled-user-session',
+					properties: {
+						products: planData,
+						currency: 'CLP',
+						order_id: updatedSession.plan[
+							updatedSession.plan.length - 1
+						]._id.toString(),
+						total: 0,
+					},
+				});
+			} else if (payload.type === 'presencial') {
+				let planData = [
+					{
+						item_id: 4,
+						item_name:
+							'Plan/sesión personalizada agendada por psicólogo presencialmente',
+						item_price: payload.price,
+						item_quantity: 1,
+					},
+				];
+				analytics.track({
+					userId: user.psychologist.toString(),
+					event: 'psy-scheduled-onsite-user-session',
+					properties: {
+						products: planData,
+						currency: 'CLP',
+						order_id: updatedSession.plan[
+							updatedSession.plan.length - 1
+						]._id.toString(),
+						total: 0,
+					},
+				});
+			} else if (payload.type === 'compromiso privado') {
+				analytics.track({
+					userId: user.psychologist.toString(),
+					event: 'psy-scheduled-private-hours',
+				});
+			}
+		}
 		// respondemos con la sesion creada
 		return okResponse('sesion creada', {
 			sessions: setSession(user.role, [updatedSession]).pop(),
@@ -1927,7 +2203,7 @@ const getAllEvaluationsFunction = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
-	const evaluations = await Evaluation.findOneAndUpdate(
+	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
@@ -1936,10 +2212,40 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	const psy = evaluation.psychologist._id;
+	let evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+
+	await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				rating: global.toFixed(2),
+			},
+		}
+	);
 
 	//enviar correo donde se apruba la evaluación
+	await mailService.sendApproveEvaluationToUser(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
-	return okResponse('Sesion aprobada', { evaluations });
+	await mailService.sendApproveEvaluationToPsy(
+		evaluations.user,
+		evaluations.psychologist
+	);
+
+	return okResponse('Sesion aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
@@ -1954,6 +2260,10 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	//Enviar correo donde se rechaza la evaluación
+	await mailService.sendRefuseEvaluation(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
 	return okResponse('Sesion rechazada', { evaluations });
 };
@@ -2103,5 +2413,4 @@ const psychologistsService = {
 	getTransactions,
 	changeToInmediateAttention,
 };
-
 export default Object.freeze(psychologistsService);

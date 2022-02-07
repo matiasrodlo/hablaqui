@@ -304,12 +304,10 @@
 								></v-img>
 							</v-col>
 							<v-col class="pl-4">
-								<div class="text-lg-h4 text-h5 primary--text font-weight-bold">
+								<div class="text-h5 primary--text font-weight-bold">
 									Te ayudamos a encontrar a tu psicólogo ideal
 								</div>
-								<div
-									class="my-2 text-lg-h5 body-1 primary--text font-weight-regular"
-								>
+								<div class="my-2 text-h6 primary--text font-weight-regular">
 									Encuentra al psicólogo que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
@@ -351,6 +349,37 @@
 								:height="fullcard.includes(item._id) ? '100%' : '300px'"
 								class="item text-center mt-6"
 							>
+								<div
+									v-if="item.rating > 0"
+									style="position: absolute; top: 30px; left: 0"
+								>
+									<div
+										class="
+											d-flex
+											justify-space-between
+											align-center
+											info
+											rounded-r-lg
+											pa-2
+										"
+										style="
+											background-color: rgba(0, 121, 255, 0.23) !important;
+											width: 70px;
+										"
+									>
+										<v-img
+											style="width: 20px; height: 20px"
+											contain
+											src="https://cdn.hablaqui.cl/static/start-2.png"
+											lazy-src="https://cdn.hablaqui.cl/static/start-2.png"
+										></v-img>
+										<span
+											class="body-1"
+											style="width: 30px; height: 20px; color: #484848"
+											>{{ item.rating.toFixed(1) }}</span
+										>
+									</div>
+								</div>
 								<v-row>
 									<v-col
 										cols="3"

@@ -236,6 +236,8 @@ export default {
 					path: `/auth/?register=true&psychologist=${this.psychologist.username}`,
 				});
 			} else {
+				if (!this.$route.query.chat)
+					this.$router.replace(`/${this.$route.params.slug}/?chat=true`);
 				this.loadingChat = true;
 				await this.startConversation(this.psychologist._id);
 				this.loadingChat = false;

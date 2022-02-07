@@ -8,6 +8,9 @@ import { pusherCallback } from '../utils/functions/pusherCallback';
 import Email from '../models/email';
 import moment from 'moment';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 const startConversation = async (psychologistId, user) => {
 	const hasChats = await Chat.findOne({
 		psychologist: psychologistId,
@@ -84,6 +87,7 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 	const data = {
 		userId,
 		psychologistId,
+		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
 
@@ -91,6 +95,11 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		await emailChatNotification(data, 'send-by-user');
 	} else if (user.role === 'psychologist')
 		await emailChatNotification(data, 'send-by-psy');
+
+	analytics.track({
+		userId: user._id.toString(),
+		event: 'message-sent',
+	});
 
 	pusher.trigger('chat', 'update', data, pusherCallback);
 	return okResponse('Mensaje enviado', { chat: updatedChat });

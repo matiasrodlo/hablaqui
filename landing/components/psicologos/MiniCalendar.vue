@@ -60,7 +60,19 @@
 						/>
 					</v-card-text>
 					<v-card-actions style="flex: 0">
-						<v-btn color="primary" block rounded>Mostrar perfil</v-btn>
+						<v-btn
+							color="primary"
+							block
+							rounded
+							@click="
+								() => {
+									if ($route.name === 'psicologos') $router.push(`/${username}`);
+									else dialog = false;
+								}
+							"
+						>
+							Mostrar perfil
+						</v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-dialog>

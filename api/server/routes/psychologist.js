@@ -58,9 +58,10 @@ psychologistsRouter.get(
 
 /**
  * obtiene la session de un psicologo formateada para el selector
+ * type: STRING-será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
  */
 psychologistsRouter.get(
-	'/psychologists/formattedSessions/:idPsychologist',
+	'/psychologists/formattedSessions/:idPsychologist/:type',
 	psychologistsController.getFormattedSessions
 );
 

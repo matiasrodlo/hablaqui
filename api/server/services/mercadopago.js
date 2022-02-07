@@ -13,6 +13,9 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 
+var Analytics = require('analytics-node');
+var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
 mercadopago.configure({
 	access_token: mercadopago_key,
 });
@@ -29,7 +32,7 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
+			success: `${landing_url}/dashboard/pagos/success?plan=${body.plan}&token=${body.token}`,
 			// redirection to profile psychologist
 			failure: `${landing_url}/${body.psychologist}`,
 			pending: `${landing_url}/${body.psychologist}`,
@@ -39,7 +42,7 @@ const createPreference = async body => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	return resBody;
 };
 
 /**
@@ -112,7 +115,6 @@ const setPlanFree = async (id, isPsychologist) => {
 	}
 
 	if (!response.psyPlans) response.psyPlans = [];
-
 	response.psyPlans = [
 		...response.psyPlans,
 		{
@@ -126,78 +128,97 @@ const setPlanFree = async (id, isPsychologist) => {
 			paymentFee: 0.0399,
 		},
 	];
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: 1,
+				item_name: 'Plan de psicólogo gratuito',
+				item_price: 0,
+				item_quantity: 1,
+			},
+		];
+		analytics.track({
+			userId: id.toString(),
+			event: 'psy-free-plan',
+			properties: {
+				currency: 'CLP',
+				products: planData,
+				order_id: response.psyPlans[
+					response.psyPlans.length - 1
+				]._id.toString(),
+				total: 0,
+			},
+		});
+	}
 	return await response.save();
 };
 
 const successPay = async params => {
-	try {
-		const { planId } = params;
-		const currentSessions = await Sessions.findById(planId);
-		const plan = currentSessions.plan[
-			currentSessions.plan.length - 1
-		]._id.toString();
-		const foundPlan = await Sessions.findOneAndUpdate(
-			{
-				_id: planId,
-				'plan._id': plan,
+	const { planId } = params;
+	const currentSessions = await Sessions.findById(planId);
+	const plan = currentSessions.plan[
+		currentSessions.plan.length - 1
+	]._id.toString();
+	const foundPlan = await Sessions.findOneAndUpdate(
+		{
+			_id: planId,
+			'plan._id': plan,
+		},
+		{
+			$set: {
+				'plan.$.payment': 'success',
+				'plan.$.datePayment': moment().format(),
 			},
-			{
-				$set: {
-					'plan.$.payment': 'success',
-					'plan.$.datePayment': moment().format(),
-				},
-			},
-			{ new: true }
-		);
-		const sessionData =
-			foundPlan.plan[foundPlan.plan.length - 1].session[0];
-		const originalDate = sessionData.date.split(' ');
-		const date = originalDate[0].split('/');
-		const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
-		// Email scheduling for appointment reminder for the user
-		await email.create({
-			sessionDate: dateFormatted,
-			wasScheduled: false,
-			type: 'reminder-user',
-			queuedAt: undefined,
-			scheduledAt: undefined,
-			userRef: foundPlan.user,
-			psyRef: foundPlan.psychologist,
-			sessionRef: sessionData._id,
-		});
-		// Email scheduling for appointment reminder for the psychologist
-		await email.create({
-			sessionDate: dateFormatted,
-			wasScheduled: false,
-			type: 'reminder-psy',
-			queuedAt: undefined,
-			scheduledAt: undefined,
-			userRef: foundPlan.user,
-			psyRef: foundPlan.psychologist,
-			sessionRef: sessionData._id,
-		});
-		const user = await User.findById(foundPlan.user);
-		const psy = await Psychologist.findById(foundPlan.psychologist);
-		// Send appointment confirmation for user and psychologist
-		await mailService.sendAppConfirmationUser(
-			user,
-			psy,
-			dateFormatted,
-			foundPlan.roomsUrl
-		);
-		await mailService.sendAppConfirmationPsy(
-			psy,
-			user,
-			dateFormatted,
-			foundPlan.roomsUrl
-		);
+		},
+		{ new: true }
+	);
+	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
+	const originalDate = sessionData.date.split(' ');
+	const date = originalDate[0].split('/');
+	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
+	// Email scheduling for appointment reminder for the user
+	await email.create({
+		sessionDate: dateFormatted,
+		wasScheduled: false,
+		type: 'reminder-user',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await email.create({
+		sessionDate: dateFormatted,
+		wasScheduled: false,
+		type: 'reminder-psy',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	const user = await User.findById(foundPlan.user);
+	const psy = await Psychologist.findById(foundPlan.psychologist);
+	// Send appointment confirmation for user and psychologist
+	await mailService.sendAppConfirmationUser(
+		user,
+		psy,
+		dateFormatted,
+		foundPlan.roomsUrl
+	);
+	await mailService.sendAppConfirmationPsy(
+		psy,
+		user,
+		dateFormatted,
+		foundPlan.roomsUrl
+	);
 
-		logInfo('Se ha realizado un pago');
-		return okResponse('sesion actualizada');
-	} catch (err) {
-		logInfo(err.stack);
-		return conflictResponse('Error al actualizar sesion');
-	}
+	logInfo('Se ha realizado un pago');
+	return okResponse('Pago aprobado');
 };
 
 const psychologistPay = async (params, query) => {
@@ -231,6 +252,31 @@ const psychologistPay = async (params, query) => {
 		{ $push: { psyPlans: newPlan } },
 		{ new: true }
 	);
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: 2,
+				item_name: 'Plan de psicólogo premium',
+				item_price: pricePaid,
+				item_quantity: 1,
+			},
+		];
+		analytics.track({
+			userId: psychologistId.toString(),
+			event: 'psy-premium-plan',
+			properties: {
+				currency: 'CLP',
+				products: planData,
+				order_id: foundPsychologist.psyPlans[
+					foundPsychologist.psyPlans.length - 1
+				]._id.toString(),
+				total: pricePaid,
+			},
+		});
+	}
 	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
 	return okResponse('plan actualizado', { foundPsychologist });
 };

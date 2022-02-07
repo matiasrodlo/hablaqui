@@ -40,11 +40,14 @@ const psychologistsController = {
 	},
 	async getFormattedSessions(req, res) {
 		try {
-			const { idPsychologist } = req.params;
+			const { idPsychologist, type } = req.params;
 			const {
 				data,
 				code,
-			} = await psychologistsService.getFormattedSessions(idPsychologist);
+			} = await psychologistsService.getFormattedSessions(
+				idPsychologist,
+				type
+			);
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { node_env } from './dotenv';
 
 const { createLogger, format, transports } = require('winston');
@@ -5,7 +6,7 @@ const MESSAGE = Symbol.for('message');
 
 const jsonFormatter = logEntry => {
 	const base = {
-		timestamp: new Date(),
+		timestamp: moment().format(),
 		severity: logEntry.level.toUpperCase(),
 	};
 	const json = Object.assign(base, logEntry);
@@ -19,7 +20,7 @@ const isProdEnv = () => {
 	else
 		return new transports.Console({
 			format: format.combine(
-				format.colorize(),
+				// format.colorize(),
 				format.simple(),
 				format.errors({ stack: true })
 			),
@@ -40,11 +41,12 @@ export const requestLogMiddleware = () => {
 		const expressWinston = require('express-winston');
 		return expressWinston.logger({
 			transports: [new transports.Console()],
-			format: format.combine(format.colorize(), format.simple()),
+			// format: format.combine(format.colorize(), format.simple()),
+			format: format.combine(format.simple()),
 			meta: false, // optional: control whether you want to log the meta data about the request (default to true)
 			msg: 'HTTP {{req.method}} {{req.url}}', // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
 			expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-			colorize: true, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
+			colorize: false, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
 			// eslint-disable-next-line no-unused-vars
 			ignoreRoute: function(req, res) {
 				return false;

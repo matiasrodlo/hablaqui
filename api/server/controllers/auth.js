@@ -22,6 +22,15 @@ const authController = {
 			errorCallback(e, res);
 		}
 	},
+	async logout(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await authService.logout(user);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res);
+		}
+	},
 	generateJwt(req, res) {
 		const { user } = req;
 		const token = authService.generateJwt(user);
@@ -43,6 +52,15 @@ const authController = {
 		const { password } = req.body;
 		const user = req.user;
 		return authService.changeUserPassword(user, password, res);
+	},
+	async changeVerifiedStatus(req, res) {
+		try {
+			const { id } = req.params;
+			const { data, code } = await authService.changeVerifiedStatus(id);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Ha ocurrido un error al verificar');
+		}
 	},
 	googleAuthCallback(req, res) {
 		authService.googleAuthCallback(req, res);

@@ -68,6 +68,7 @@ steps:
       - "URLDB=${_URLDB}"
       - "SEGMENT_API_KEY=${_SEGMENT_API_KEY}"
       - "SENDGRID_API_KEY=${_SENDGRID_API_KEY}"
+      - "DEBUG_ANALYTICS=${_DEBUG_ANALYTICS}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
