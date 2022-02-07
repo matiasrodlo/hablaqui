@@ -2318,7 +2318,9 @@ const changeToInmediateAttention = async psy => {
 			{ new: true }
 		);
 	}
-	return okResponse('Estado cambiado', { psychologist });
+	return okResponse('Estaras disponible durante las proxima 3 horas', {
+		psychologist,
+	});
 };
 /*
 const getAllSessionsInmediateAttention = async () => {

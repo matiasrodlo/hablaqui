@@ -509,11 +509,13 @@ const psychologistsController = {
 	},
 	async changeToInmediateAttention(req, res) {
 		try {
-			const { psy } = req.params;
+			const { user } = req;
 			const {
 				data,
 				code,
-			} = await psychologistsService.changeToInmediateAttention(psy);
+			} = await psychologistsService.changeToInmediateAttention(
+				user.psychologist
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');

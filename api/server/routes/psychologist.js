@@ -481,8 +481,8 @@ psychologistsRouter.get(
 );
 
 psychologistsRouter.post(
-	'/psychologist/status/inmediate-attention/:psy',
-	//[passport.authenticate('jwt', { session: true })],
+	'/psychologist/status/inmediate-attention',
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.changeToInmediateAttention
 );
 
