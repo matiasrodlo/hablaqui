@@ -495,7 +495,7 @@ const getFormattedSessions = async idPsychologist => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
-		'_id schedule preferences'
+		'_id schedule preferences inmediateAttention'
 	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
@@ -569,38 +569,6 @@ const getFormattedSessions = async idPsychologist => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
-const findWeekDay = (day, schedule) => {
-	const week = [
-		'monday',
-		'tuesday',
-		'wednesday',
-		'thursday',
-		'friday',
-		'saturday',
-		'sunday',
-	];
-	const now = moment().format('H');
-	const hours = [
-		`${now}:00`,
-		`${moment(now, 'H')
-			.add(1, 'hours')
-			.format('H')}:00`,
-		`${moment(now, 'H')
-			.add(2, 'hours')
-			.format('H')}:00`,
-		`${moment(now, 'H')
-			.add(3, 'hours')
-			.format('H')}:00`,
-	];
-
-	day = moment(day).format('dddd');
-	week.forEach(weekDay => {
-		if (day.toLowerCase() === weekDay)
-			if (Array.isArray(schedule[weekDay])) console.log();
-			else if (schedule[weekDay] === 'busy') schedule[weekDay] = hours;
-	});
-};
-
 // Utilizado para traer las sessiones de todos los psicologos para el selector
 const formattedSessionsAll = async () => {
 	let sessions = [];
@@ -652,15 +620,8 @@ const formattedSessionsAll = async () => {
 	);
 
 	allSessions = psychologist.map(item => {
-		let preferences = item.preferences;
-		preferences.minimumNewSession = item.inmediateAttention.activated
-			? 0
-			: preferences.minimumNewSession;
 		return {
-			_id: item._id,
-			inmediateAttention: item.inmediateAttention,
-			schedule: item.schedule,
-			preferences,
+			...item,
 			sessions: setDaySessions(
 				allSessions.filter(element => element.psychologist === item._id)
 			),
@@ -679,8 +640,6 @@ const formattedSessionsAll = async () => {
 			sessions: length.map(el => {
 				const day = moment(Date.now()).add(el, 'days');
 				const temporal = moment(day).format('L');
-				if (item.inmediateAttention.activated && el === 0)
-					schedule = findWeekDay(schedule, day);
 				return {
 					psychologist: item._id,
 					value: day,
