@@ -485,10 +485,4 @@ psychologistsRouter.post(
 	psychologistsController.changeToInmediateAttention
 );
 
-psychologistsRouter.get(
-	'/psychologist/sessions/inmediate-attention/all',
-	//[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getAllSessionsInmediateAttention
-);
-
 export default psychologistsRouter;

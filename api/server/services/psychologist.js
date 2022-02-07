@@ -2000,6 +2000,9 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 };
 
 const changeToInmediateAttention = async psy => {
+	/*if (user.role !== 'psychologist')
+		return conflictResponse('No tienes permitida esta opción');
+	const psy = user.psychologist;*/
 	let psychologist = await Psychologist.findById(psy);
 	if (psychologist.inmediateAttention.activated) {
 		psychologist = await Psychologist.findOneAndUpdate(
@@ -2011,11 +2014,12 @@ const changeToInmediateAttention = async psy => {
 						expiration: '',
 					},
 				},
-			}
+			},
+			{ new: true }
 		);
 	} else {
 		let sessions = await getAllSessionsFunction(psy);
-		let now = Date.now();
+		let now = new Date();
 		sessions = sessions.filter(session => {
 			const date = moment(session.date).format('DD/MM/YYYY HH:mm');
 			return (
@@ -2041,12 +2045,13 @@ const changeToInmediateAttention = async psy => {
 							.format(),
 					},
 				},
-			}
+			},
+			{ new: true }
 		);
 	}
 	return okResponse('Estado cambiado', { psychologist });
 };
-
+/*
 const getAllSessionsInmediateAttention = async () => {
 	let psychologist = await Psychologist.find({}).select(
 		'_id inmediateAttention'
@@ -2095,7 +2100,7 @@ const getAllSessionsInmediateAttention = async () => {
 	}));
 
 	return okResponse('Sesiones', { allSessions });
-};
+};*/
 const psychologistsService = {
 	addRating,
 	approveAvatar,
@@ -2138,7 +2143,6 @@ const psychologistsService = {
 	completePaymentsRequest,
 	getTransactions,
 	changeToInmediateAttention,
-	getAllSessionsInmediateAttention,
 };
 
 export default Object.freeze(psychologistsService);
