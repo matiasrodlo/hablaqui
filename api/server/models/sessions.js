@@ -88,6 +88,7 @@ let sessionSchema = new Schema({
 		type: Number,
 		default: 0,
 	},
+	evaluationNotifcation: { type: Boolean, default: false },
 	roomsUrl: {
 		type: String,
 	},

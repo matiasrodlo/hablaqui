@@ -57,19 +57,24 @@ async function getNumberSuccess() {
 					session => session.status === 'success'
 				).length;
 			});
-			await Sessions.findOneAndUpdate(
+			await Sessions.updateOne(
 				{
 					_id: item._id,
 				},
 				{
-					$set: { numberSessionSuccess: successSessions },
+					$set: {
+						numberSessionSuccess: successSessions,
+						evaluationNotifcation:
+							successSessions >= 3 ? true : false,
+					},
 				}
 			);
-			if (successSessions === 3)
+			if (!item.evaluationNotifcation && successSessions === 3) {
 				await mailService.sendEnabledEvaluation(
 					user,
 					item.psychologist
 				);
+			}
 		});
 	});
 }
