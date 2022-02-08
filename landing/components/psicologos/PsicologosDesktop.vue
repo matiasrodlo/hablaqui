@@ -116,45 +116,6 @@
 								</v-card-text>
 							</v-card>
 						</v-menu>
-						<!--
-						<div id="autocompleteSpecialties" style="position: relative">
-							<v-autocomplete
-								id="specialties"
-								v-model="specialties"
-								attach="#autocompleteSpecialties"
-								class="white"
-								outlined
-								multiple
-								:items="appointments"
-								item-value="value"
-								label="Motivo de consulta"
-								:append-icon="mdiChevronDown"
-								hide-details
-								dense
-								clearable
-								:menu-props="{
-									closeOnClick: true,
-									closeOnContentClick: true,
-								}"
-								:disabled="loadingPsychologist"
-								@change="changeInput"
-							>
-								<template #no-data>
-									<v-list-item>
-										<v-list-item-content>
-											<v-list-item-title>
-												No se encontraron resultados que coincidan con
-												"<strong>
-													{{ specialties }}
-												</strong>
-												" .
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-								</template>
-							</v-autocomplete>
-						</div>
-                        -->
 					</v-col>
 					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
