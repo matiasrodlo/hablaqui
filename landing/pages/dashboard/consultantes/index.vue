@@ -351,7 +351,8 @@ import {
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

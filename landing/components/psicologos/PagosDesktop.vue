@@ -226,7 +226,8 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

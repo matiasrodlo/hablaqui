@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import { Schema, model } from 'mongoose';
+moment.tz.setDefault('America/Santiago');
 
 let email = new Schema({
 	batchId: {

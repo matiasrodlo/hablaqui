@@ -695,7 +695,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -708,6 +708,7 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

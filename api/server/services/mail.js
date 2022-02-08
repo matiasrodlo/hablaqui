@@ -4,6 +4,7 @@ import moment from 'moment';
 import momentz from 'moment-timezone';
 import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
+moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);

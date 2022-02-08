@@ -1,5 +1,6 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 import updateObjectInArray from '@/plugins/updateArray';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	setPsychologists(state, value) {

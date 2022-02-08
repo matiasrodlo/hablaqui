@@ -12,6 +12,7 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
+moment.tz.setDefault('America/Santiago');
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);

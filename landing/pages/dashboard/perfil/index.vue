@@ -217,7 +217,9 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiCamera } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
+
 export default {
 	components: {
 		Appbar: () => import('~/components/dashboard/AppbarProfile'),

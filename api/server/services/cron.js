@@ -8,6 +8,7 @@ import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
+moment.tz.setDefault('America/Santiago');
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 const sgClient = require('@sendgrid/client');
