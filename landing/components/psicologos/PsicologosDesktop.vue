@@ -68,7 +68,55 @@
 		>
 			<v-container fluid style="max-width: 1200px">
 				<v-row>
-					<v-col cols="4">
+					<v-col id="menuSpecialties" cols="4">
+						<v-menu
+							ref="menuSpecialties"
+							v-model="menuSpecialties"
+							:close-on-content-click="false"
+							transition="scale-transition"
+							offset-y
+							rounded
+							attach="#menuSpecialties"
+							min-width="200px"
+						>
+							<template #activator="{ on, attrs }">
+								<v-text-field
+									:value="
+										specialties.length > 1
+											? `Especialidades ${specialties.length}`
+											: specialties
+									"
+									label="Motivo de consulta"
+									readonly
+									outlined
+									dense
+									class="white"
+									hide-details
+									:append-icon="mdiChevronDown"
+									v-bind="attrs"
+									v-on="on"
+								></v-text-field>
+							</template>
+							<v-card rounded height="300">
+								<v-card-text style="height: 300px; overflow-y: scroll">
+									<v-checkbox
+										v-for="(element, j) in appointments"
+										:key="j"
+										v-model="specialties"
+										:value="element"
+										:label="element"
+										class="py-2"
+										hide-details
+										@change="changeInput"
+									>
+										<template #label="{ item }">
+											<span class="caption">{{ item }}</span>
+										</template>
+									</v-checkbox>
+								</v-card-text>
+							</v-card>
+						</v-menu>
+						<!--
 						<div id="autocompleteSpecialties" style="position: relative">
 							<v-autocomplete
 								id="specialties"
@@ -106,6 +154,7 @@
 								</template>
 							</v-autocomplete>
 						</div>
+                        -->
 					</v-col>
 					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
@@ -530,6 +579,7 @@ export default {
 		return {
 			mdiChevronDown,
 			menuGender: false,
+			menuSpecialties: false,
 			menuOthers: false,
 			menuPrices: false,
 			specialties: [],
