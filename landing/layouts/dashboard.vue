@@ -48,7 +48,7 @@
 					<v-list-item-content>
 						<v-list-item-title class="font-weight-bold body-2">
 							<v-switch
-								v-model="psychologist.inmediateAttention.activated"
+								v-model="online"
 								dense
 								hide-details
 								:loading="loadingStatus"
@@ -733,6 +733,17 @@ export default {
 			consultantes: 'Psychologist/clients',
 		}),
 	},
+	watch: {
+		psychologist(newValue) {
+			if (
+				newValue &&
+				this.$auth.user.psychologist &&
+				this.$auth.user.role === 'psychologist'
+			) {
+				this.online = newValue.inmediateAttention.activated;
+			}
+		},
+	},
 	async mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
@@ -773,7 +784,6 @@ export default {
 				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
 			}
 			this.setPsychologist(psychologist);
-			console.log(this.psychologist);
 		}
 
 		document.body.addEventListener('keyup', evt => {

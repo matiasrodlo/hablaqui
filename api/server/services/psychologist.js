@@ -2318,7 +2318,12 @@ const changeToInmediateAttention = async psy => {
 			{ new: true }
 		);
 	}
-	return okResponse('Estaras disponible durante las proxima 3 horas', {
+
+	const msj = psychologist.inmediateAttention.activated
+		? 'Estaras disponible durante las proxima 3 horas'
+		: 'Atención inmediata desactivada';
+
+	return okResponse(msj, {
 		psychologist,
 	});
 };
