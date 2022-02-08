@@ -1137,16 +1137,29 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		);
 	}
 
-	await mailService.sendRescheduleToUser(
-		sessions.user,
-		sessions.psychologist,
-		newDate
-	);
-	await mailService.sendRescheduleToPsy(
-		sessions.user,
-		sessions.psychologist,
-		newDate
-	);
+	if (userLogged.role === 'user') {
+		await mailService.sendRescheduleToUser(
+			sessions.user,
+			sessions.psychologist,
+			newDate
+		);
+		await mailService.sendRescheduleToPsy(
+			sessions.user,
+			sessions.psychologist,
+			newDate
+		);
+	} else {
+		await mailService.sendRescheduleToUserByPsy(
+			sessions.user,
+			sessions.psychologist,
+			newDate
+		);
+		await mailService.sendRescheduleToPsyByPsy(
+			sessions.user,
+			sessions.psychologist,
+			newDate
+		);
+	}
 
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||

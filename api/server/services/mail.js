@@ -629,6 +629,65 @@ const mailService = {
 			});
 		});
 	},
+	async sendRescheduleToUserByPsy(user, psy, sessionDate) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tu psicólogo ha reprogramado tu sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-89913188fca9405da45caddede56fa54',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name + ' ' + psy.lastName,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendRescheduleToPsyByPsy(user, psy, sessionDate) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has reprogramado la sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-e10aea204d194d78917297b7ec612506',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;
