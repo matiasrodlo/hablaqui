@@ -303,21 +303,22 @@ const customSessionPay = async params => {
 		},
 		{ new: true }
 	).populate('psychologist user');
-	console.log(updatePlan.user.name);
-
+	const plan = updatePlan.plan.filter(
+		plan => plan._id.toString() === planId
+	)[0];
 	await mailService.sendSuccessCustomSessionPaymentPsy(
 		updatePlan.user,
 		updatePlan.psychologist,
-		updatePlan.plan[0].sessionPrice,
+		plan.totalPrice,
 		updatePlan.roomsUrl,
-		updatePlan.plan[0].session[0].date
+		plan.session[0].date
 	);
 	await mailService.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
 		updatePlan.psychologist,
-		updatePlan.plan[0].sessionPrice,
+		plan.totalPrice,
 		updatePlan.roomsUrl,
-		updatePlan.plan[0].session[0].date
+		plan.session[0].date
 	);
 	return okResponse('plan actualizado', { body: updatePlan });
 };
