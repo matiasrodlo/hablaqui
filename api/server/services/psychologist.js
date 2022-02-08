@@ -1107,6 +1107,7 @@ const register = async body => {
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	const date = `${newDate.date} ${newDate.hour}`;
+	newDate.date = moment(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
