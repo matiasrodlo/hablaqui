@@ -188,13 +188,10 @@ export default {
 				let result = this.items
 					.filter(
 						item =>
-							moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') ===
+							moment(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
 							this.findByDate
 					)
-					.map(item => ({
-						...item,
-						date: moment(item.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-					}));
+					.map((item, index) => ({ ...item, id: index }));
 				if (this.search)
 					result = this.items.filter(
 						item =>
@@ -211,7 +208,7 @@ export default {
 			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
 		},
 	},
-	mounted() {
+	created() {
 		moment.locale('es');
 	},
 	methods: {
