@@ -183,8 +183,8 @@ const recruitmentService = {
 		return okResponse('Aprobado exitosamente', { newProfile });
 	},
 	async updatePlan(recruitedId, newPlan) {
-		const recruitedToUpdate = await Recruitment.findById(
-			recruitedId,
+		const recruitedToUpdate = await Recruitment.findOneAndUpdate(
+			{ _id: recruitedId },
 			{
 				$push: {
 					psyPlans: { paymentStatus: 'success', ...newPlan },
