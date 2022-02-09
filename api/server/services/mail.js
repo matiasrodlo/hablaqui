@@ -2,7 +2,6 @@
 
 import moment from 'moment';
 import momentz from 'moment-timezone';
-import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
 
 const sgMail = require('@sendgrid/mail');
