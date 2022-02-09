@@ -340,7 +340,14 @@ const mailService = {
 			});
 		});
 	},
-	async sendCustomSessionPaymentURL(user, psychologist, paymentURL) {
+	async sendCustomSessionToUser(
+		user,
+		psychologist,
+		paymentURL,
+		date,
+		value,
+		type
+	) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -354,6 +361,75 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 				payment_url: paymentURL,
+				value: value,
+				type: type,
+				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCustomSessionToPsy(
+		user,
+		psychologist,
+		paymentURL,
+		date,
+		value,
+		type
+	) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Has creado una sesión para ${user.name}`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-e935d9d8e9d8406581f909863491e41d',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				payment_url: paymentURL,
+				value: value,
+				type: type,
+				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCustomSessionCommitment(psychologist) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Has agendado un compromiso privado`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-c012cf4a84014c31b12c422ac7e20faf',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psychologist.name,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -502,6 +578,32 @@ const mailService = {
 				roomsUrl: roomsUrl,
 				psy_name: psy.name,
 				date: date,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCancelCommitment(psy) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has cancelado una compromiso privado`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-67d67af2cc2a4af08ddf5a11945f0b8b',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
 			},
 		};
 		return new Promise((resolve, reject) => {

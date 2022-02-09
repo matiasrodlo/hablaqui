@@ -1299,13 +1299,7 @@ const setSchedule = async (user, payload) => {
 };
 //Reprogramación sesiones para psicologos
 const cancelSession = async (user, planId, sessionsId, id) => {
-	const cancelSessions = await Sessions.find({
-		_id: sessionsId,
-		'plan._id': planId,
-		'plan.session._id': id,
-	}).populate('psychologist user');
-
-	await Sessions.updateOne(
+	const cancelSessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
 			'plan._id': planId,
@@ -1316,7 +1310,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 				'plan.$.session': { _id: id },
 			},
 		}
-	);
+	).populate('psychologist user');
 
 	/*session = getLastSessionFromPlan(session, id, planId);
 
@@ -1342,19 +1336,24 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		);
 	}*/
 
+	// considera que el usuario es psicologo
 	const sessions = await Sessions.find({
 		psychologist: user.psychologist,
 	}).populate('psychologist user');
 
-	await mailService.sendCancelSessionPsy(
-		cancelSessions[0].user,
-		cancelSessions[0].psychologist
-	);
-	await mailService.sendCancelSessionUser(
-		cancelSessions[0].user,
-		cancelSessions[0].psychologist
-		//sessionCancel.plan[0].session[0].date
-	);
+	if (cancelSessions.user == null) {
+		await mailService.sendCancelCommitment(cancelSessions.psychologist);
+	} else {
+		await mailService.sendCancelSessionPsy(
+			cancelSessions.user,
+			cancelSessions.psychologist
+		);
+		await mailService.sendCancelSessionUser(
+			cancelSessions.user,
+			cancelSessions.psychologist
+			//sessionCancel.plan[0].session[0].date
+		);
+	}
 
 	return okResponse('Sesion cancelada', {
 		sessions: setSession(user.role, sessions),
@@ -1779,7 +1778,6 @@ const customNewSession = async (user, payload) => {
 		let hours = 1;
 
 		if (payload.dateEnd && payload.type === 'compromiso privado') {
-			logInfo('custom');
 			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
 			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
@@ -1852,6 +1850,12 @@ const customNewSession = async (user, payload) => {
 			{ upsert: true, new: true }
 		).populate('user psychologist');
 
+		// correo de compromiso privado
+		if (payload.type === 'compromiso privado')
+			await mailService.sendCustomSessionCommitment(
+				updatedSession.psychologist
+			);
+
 		//validamos precio y que exista user(recordemos que user es null en compromiso privado)
 		if (payload.price && payload.price > 0 && payload.user) {
 			const {
@@ -1861,12 +1865,43 @@ const customNewSession = async (user, payload) => {
 				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
-			// Enviamos email al user con el link para pagar
-			await mailService.sendCustomSessionPaymentURL(
-				updatedSession.user,
-				updatedSession.psychologist,
-				data.init_point
-			);
+			if (payload.type === 'sesion online') {
+				// Enviamos email al user con el link para pagar
+				await mailService.sendCustomSessionToUser(
+					updatedSession.user,
+					updatedSession.psychologist,
+					data.init_point,
+					payload.date,
+					payload.price,
+					'online'
+				);
+				await mailService.sendCustomSessionToPsy(
+					updatedSession.user,
+					updatedSession.psychologist,
+					data.init_point,
+					payload.date,
+					payload.price,
+					'online'
+				);
+			}
+			if (payload.type === 'sesion presencial') {
+				await mailService.sendCustomSessionToUser(
+					updatedSession.user,
+					updatedSession.psychologist,
+					data.init_point,
+					payload.date,
+					payload.price,
+					'presencial'
+				);
+				await mailService.sendCustomSessionToPsy(
+					updatedSession.user,
+					updatedSession.psychologist,
+					data.init_point,
+					payload.date,
+					payload.price,
+					'presencial'
+				);
+			}
 		}
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
