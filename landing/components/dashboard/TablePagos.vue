@@ -171,16 +171,15 @@ export default {
 			search: '',
 			headers: [
 				{
-					text: 'Fecha',
+					text: 'Fecha de pago',
 					sortable: false,
-					value: 'date',
+					value: 'datePayment',
 				},
 				{ text: 'Nombre', value: 'name', sortable: false },
-				{ text: 'Tipo de plan', value: 'plan', sortable: false },
-				{ text: 'Nº Sesión', value: 'sessionsNumber', sortable: false },
+				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
-				{ text: '% Hablaquí', value: 'percentage', sortable: false },
-				{ text: 'Monto final', value: 'total', sortable: false },
+				{ text: 'Monto final', value: 'finalAmount', sortable: false },
+				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
 			],
 		};
 	},
