@@ -311,7 +311,7 @@
 					<p>
 						Por ello, le animamos a liberarse de las cuatro paredes de su consulta
 						atendiendo a todos sus clientes en Hablaquí. Ingresar a sus clientes es cosa
-						de unos clics y lo mejor: cobramos 0% de comisión.
+						de unos click y lo mejor: cobramos 0% de comisión.
 					</p>
 					<p>
 						Al llevar a sus clientes a la plataforma asegura organización y practicidad

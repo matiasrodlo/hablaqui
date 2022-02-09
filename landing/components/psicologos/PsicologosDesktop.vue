@@ -68,44 +68,54 @@
 		>
 			<v-container fluid style="max-width: 1200px">
 				<v-row>
-					<v-col cols="4">
-						<div id="autocompleteSpecialties" style="position: relative">
-							<v-autocomplete
-								id="specialties"
-								v-model="specialties"
-								attach="#autocompleteSpecialties"
-								class="white"
-								outlined
-								multiple
-								:items="appointments"
-								item-value="value"
-								label="Motivo de consulta"
-								:append-icon="mdiChevronDown"
-								hide-details
-								dense
-								clearable
-								:menu-props="{
-									closeOnClick: true,
-									closeOnContentClick: true,
-								}"
-								:disabled="loadingPsychologist"
-								@change="changeInput"
-							>
-								<template #no-data>
-									<v-list-item>
-										<v-list-item-content>
-											<v-list-item-title>
-												No se encontraron resultados que coincidan con
-												"<strong>
-													{{ specialties }}
-												</strong>
-												" .
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-								</template>
-							</v-autocomplete>
-						</div>
+					<v-col id="menuSpecialties" cols="4">
+						<v-menu
+							ref="menuSpecialties"
+							v-model="menuSpecialties"
+							:close-on-content-click="false"
+							transition="scale-transition"
+							offset-y
+							rounded
+							attach="#menuSpecialties"
+							min-width="200px"
+						>
+							<template #activator="{ on, attrs }">
+								<v-text-field
+									:value="
+										specialties.length > 1
+											? `Especialidades ${specialties.length}`
+											: specialties
+									"
+									label="Motivo de consulta"
+									readonly
+									outlined
+									dense
+									class="white"
+									hide-details
+									:append-icon="mdiChevronDown"
+									v-bind="attrs"
+									v-on="on"
+								></v-text-field>
+							</template>
+							<v-card rounded height="300">
+								<v-card-text style="height: 300px; overflow-y: scroll">
+									<v-checkbox
+										v-for="(element, j) in appointments"
+										:key="j"
+										v-model="specialties"
+										:value="element"
+										:label="element"
+										class="py-2"
+										hide-details
+										@change="changeInput"
+									>
+										<template #label="{ item }">
+											<span class="caption">{{ item }}</span>
+										</template>
+									</v-checkbox>
+								</v-card-text>
+							</v-card>
+						</v-menu>
 					</v-col>
 					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
@@ -530,6 +540,7 @@ export default {
 		return {
 			mdiChevronDown,
 			menuGender: false,
+			menuSpecialties: false,
 			menuOthers: false,
 			menuPrices: false,
 			specialties: [],

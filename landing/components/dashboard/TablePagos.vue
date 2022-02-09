@@ -52,20 +52,22 @@
 				</v-menu>
 			</v-col>
 		</v-row>
-		<v-data-table
-			class="hidden-sm-and-down"
-			:loading="loading"
-			:headers="headers"
-			:items="payments"
-			loading-text="Cargando..."
-			:items-per-page="5"
-			:footer-props="{
-				'items-per-page-text': 'Pagos por página',
-			}"
-			no-results-text="Sin pagos registrados"
-			no-data-text="No hay pagos"
-		>
-		</v-data-table>
+		<client-only>
+			<v-data-table
+				class="hidden-sm-and-down"
+				:loading="loading"
+				:headers="headers"
+				:items="payments"
+				loading-text="Cargando..."
+				:items-per-page="5"
+				:footer-props="{
+					'items-per-page-text': 'Pagos por página',
+				}"
+				no-results-text="Sin pagos registrados"
+				no-data-text="No hay pagos"
+			>
+			</v-data-table>
+		</client-only>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
 				v-for="(item, i) in payments"
@@ -171,16 +173,15 @@ export default {
 			search: '',
 			headers: [
 				{
-					text: 'Fecha',
+					text: 'Fecha de pago',
 					sortable: false,
-					value: 'date',
+					value: 'datePayment',
 				},
 				{ text: 'Nombre', value: 'name', sortable: false },
-				{ text: 'Tipo de plan', value: 'plan', sortable: false },
-				{ text: 'Nº Sesión', value: 'sessionsNumber', sortable: false },
+				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
-				{ text: '% Hablaquí', value: 'percentage', sortable: false },
-				{ text: 'Monto final', value: 'total', sortable: false },
+				{ text: 'Monto final', value: 'finalAmount', sortable: false },
+				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
 			],
 		};
 	},
@@ -190,13 +191,10 @@ export default {
 				let result = this.items
 					.filter(
 						item =>
-							moment(item.date, 'MM-DD-YYYY HH:mm').format('YYYY-MM') ===
+							moment(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
 							this.findByDate
 					)
-					.map(item => ({
-						...item,
-						date: moment(item.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-					}));
+					.map((item, index) => ({ ...item, id: index }));
 				if (this.search)
 					result = this.items.filter(
 						item =>
@@ -213,7 +211,7 @@ export default {
 			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
 		},
 	},
-	mounted() {
+	created() {
 		moment.locale('es');
 	},
 	methods: {

@@ -1,6 +1,12 @@
 <template>
 	<v-container fluid style="max-width: 1200px">
-		<v-row>
+		<!-- si tiene sesiones aun agrega la que selecciono y muestra que esta cargando -->
+		<div v-show="hasSessions" style="height: 100%">
+			<v-overlay :value="hasSessions" color="white">
+				<v-progress-circular indeterminate size="64"></v-progress-circular>
+			</v-overlay>
+		</div>
+		<v-row v-show="!hasSessions">
 			<v-col cols="6">
 				<v-card class="shadowCard" style="border-radius: 15px">
 					<v-card-title class="px-10 titleColor"> Seleccionar tipo de pago </v-card-title>
@@ -225,7 +231,7 @@
 
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
@@ -244,6 +250,8 @@ export default {
 	data() {
 		return {
 			showCalendar: false,
+			loadingSession: false,
+			hasSessions: false,
 			fullcard: false,
 			mdiClockOutline,
 			mdiCalendarOutline,
@@ -282,9 +290,23 @@ export default {
 			planSelected: null,
 		};
 	},
-	mounted() {
+	computed: {
+		...mapGetters({
+			plan: 'User/plan',
+		}),
+	},
+	created() {
+		this.hasSessions =
+			this.plan &&
+			this.plan.psychologist === this.psychologist._id &&
+			this.plan.remainingSessions > 0;
+	},
+	async mounted() {
 		this.setPrices();
 		this.planSelected = this.itemsPlan[1];
+		if (this.hasSessions) {
+			await this.newSession();
+		}
 	},
 	methods: {
 		async setCoupon() {
@@ -383,7 +405,24 @@ export default {
 		formatDate(date) {
 			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
+		async newSession() {
+			this.loadingSession = true;
+			const payload = {
+				date: `${this.$route.query.date} ${this.$route.query.start}`,
+				sessionNumber: this.plan.session.length + 1,
+				remainingSessions: (this.plan.remainingSessions -= 1),
+			};
+			await this.addSession({
+				id: this.plan.idSessions,
+				idPlan: this.plan._id,
+				payload,
+			});
+			await this.$auth.fetchUser();
+			this.loadingSession = false;
+			this.$router.push({ name: 'dashboard-agenda' });
+		},
 		...mapActions({
+			addSession: 'Psychologist/addSession',
 			mercadopagoPay: 'Psychologist/mercadopagoPay',
 			createSession: 'Psychologist/createSession',
 		}),

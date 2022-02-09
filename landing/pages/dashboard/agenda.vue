@@ -667,23 +667,6 @@
 							title-button="Continuar"
 						/>
 					</v-card-text>
-					<v-card-text v-if="step == 1">
-						<select-plan
-							v-if="psychologist"
-							:set-plan="setNewPlan"
-							:psychologist="psychologist"
-						/>
-					</v-card-text>
-					<v-card-text v-if="step == 2">
-						<resume-plan
-							v-if="psychologist"
-							:close="() => (dialogWithoutSessions = false)"
-							:go-back="() => (step = 1)"
-							:plan="newPlan"
-							:psy="psychologist"
-							:event="newEvent"
-						/>
-					</v-card-text>
 				</v-card>
 			</v-dialog>
 		</v-container>
@@ -715,8 +698,6 @@ export default {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
-		SelectPlan: () => import('~/components/plan/SelectPlan'),
-		ResumePlan: () => import('~/components/plan/ResumePlan'),
 		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
@@ -992,7 +973,9 @@ export default {
 		},
 		setSchedule(item) {
 			this.newEvent = item;
-			this.step = 1;
+			this.$router.push(
+				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+			);
 		},
 		setNewPlan(newPlan) {
 			this.newPlan = newPlan;
