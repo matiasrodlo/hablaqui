@@ -52,20 +52,22 @@
 				</v-menu>
 			</v-col>
 		</v-row>
-		<v-data-table
-			class="hidden-sm-and-down"
-			:loading="loading"
-			:headers="headers"
-			:items="payments"
-			loading-text="Cargando..."
-			:items-per-page="5"
-			:footer-props="{
-				'items-per-page-text': 'Pagos por página',
-			}"
-			no-results-text="Sin pagos registrados"
-			no-data-text="No hay pagos"
-		>
-		</v-data-table>
+		<client-only>
+			<v-data-table
+				class="hidden-sm-and-down"
+				:loading="loading"
+				:headers="headers"
+				:items="payments"
+				loading-text="Cargando..."
+				:items-per-page="5"
+				:footer-props="{
+					'items-per-page-text': 'Pagos por página',
+				}"
+				no-results-text="Sin pagos registrados"
+				no-data-text="No hay pagos"
+			>
+			</v-data-table>
+		</client-only>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
 				v-for="(item, i) in payments"
