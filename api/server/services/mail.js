@@ -213,7 +213,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationUser(user, psy, date, url) {
+	async sendAppConfirmationUser(user, psy, date, url, price) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
@@ -230,6 +230,7 @@ const mailService = {
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				price: price,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -248,7 +249,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationPsy(psy, user, date, url) {
+	async sendAppConfirmationPsy(psy, user, date, url, price) {
 		const nameUser = user.name;
 		const lastNameUser = user.lastName;
 		const { email, name } = psy;
@@ -268,6 +269,7 @@ const mailService = {
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				price: price,
 			},
 		};
 		return new Promise((resolve, reject) => {

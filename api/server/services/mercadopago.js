@@ -177,8 +177,8 @@ const successPay = async params => {
 			},
 			{ new: true }
 		);
-		const sessionData =
-			foundPlan.plan[foundPlan.plan.length - 1].session[0];
+		const planData = foundPlan.plan[foundPlan.plan.length - 1];
+		const sessionData = planData.session[0];
 		const originalDate = sessionData.date.split(' ');
 		const date = originalDate[0].split('/');
 		const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
@@ -211,15 +211,16 @@ const successPay = async params => {
 			user,
 			psy,
 			dateFormatted,
-			foundPlan.roomsUrl
+			foundPlan.roomsUrl,
+			planData.totalPrice
 		);
 		await mailService.sendAppConfirmationPsy(
 			psy,
 			user,
 			dateFormatted,
-			foundPlan.roomsUrl
+			foundPlan.roomsUrl,
+			planData.totalPrice
 		);
-
 		logInfo('Se ha realizado un pago');
 		return okResponse('sesion actualizada');
 	} catch (err) {
