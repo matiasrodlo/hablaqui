@@ -501,7 +501,7 @@ const mailService = {
 			});
 		});
 	},
-	async sendRescheduleToPsy(user, psy, sessionDate) {
+	async sendRescheduleToPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
@@ -517,6 +517,7 @@ const mailService = {
 				date: sessionDate.date,
 				hour: sessionDate.hour,
 				psy_name: psy.name,
+				url: url,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -731,7 +732,7 @@ const mailService = {
 			});
 		});
 	},
-	async sendRescheduleToUserByPsy(user, psy, sessionDate) {
+	async sendRescheduleToUserByPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -746,6 +747,7 @@ const mailService = {
 				date: sessionDate.date,
 				hour: sessionDate.hour,
 				psy_name: psy.name + ' ' + psy.lastName,
+				url: url,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -760,7 +762,7 @@ const mailService = {
 			});
 		});
 	},
-	async sendRescheduleToPsyByPsy(user, psy, sessionDate) {
+	async sendRescheduleToPsyByPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
@@ -776,6 +778,7 @@ const mailService = {
 				date: sessionDate.date,
 				hour: sessionDate.hour,
 				psy_name: psy.name,
+				url: url,
 			},
 		};
 		return new Promise((resolve, reject) => {

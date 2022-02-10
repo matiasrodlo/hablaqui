@@ -1147,18 +1147,21 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		await mailService.sendRescheduleToPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 	} else {
 		await mailService.sendRescheduleToUserByPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 		await mailService.sendRescheduleToPsyByPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 	}
 
