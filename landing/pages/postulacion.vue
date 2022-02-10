@@ -1040,7 +1040,6 @@
 									</div>
 								</v-col>
 							</v-row>
-
 							<div class="d-flex justify-end mt-4">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
 									Atrás
@@ -1053,8 +1052,7 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											if (form.psyPlans && form.psyPlans.length) saveStep(5);
-											else saveStep(4);
+											saveStep(4);
 										}
 									"
 								>
@@ -1218,7 +1216,7 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
-		if (this.form.isFormCompleted) this.step = 5;
+		// if (this.form.isFormCompleted) this.step = 5;
 		this.loading = false;
 	},
 	methods: {
