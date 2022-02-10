@@ -94,6 +94,7 @@
 									hide-details
 									:append-icon="mdiChevronDown"
 									v-bind="attrs"
+									@click:append="() => (menuSpecialties = !menuSpecialties)"
 									v-on="on"
 								></v-text-field>
 							</template>
@@ -139,10 +140,11 @@
 									hide-details
 									:append-icon="mdiChevronDown"
 									v-bind="attrs"
+									@click:append="() => (menuGender = !menuGender)"
 									v-on="on"
 								></v-text-field>
 							</template>
-							<v-card rounded width="200px">
+							<v-card rounded>
 								<v-card-text>
 									<v-checkbox
 										v-model="gender"
@@ -235,6 +237,7 @@
 									hide-details
 									:append-icon="mdiChevronDown"
 									v-bind="attrs"
+									@click:append="() => (menuOthers = !menuOthers)"
 									v-on="on"
 								>
 								</v-text-field>

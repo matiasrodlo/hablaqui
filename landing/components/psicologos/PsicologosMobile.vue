@@ -122,6 +122,9 @@
 												hide-details
 												:append-icon="mdiChevronDown"
 												v-bind="attrs"
+												@click:append="
+													() => (menuSpecialties = !menuSpecialties)
+												"
 												v-on="on"
 											></v-text-field>
 										</template>
@@ -167,6 +170,7 @@
 												:append-icon="mdiChevronDown"
 												v-bind="attrs"
 												v-on="on"
+												@click:append="() => (menuGender = !menuGender)"
 											></v-text-field>
 										</template>
 										<v-card rounded>
@@ -262,6 +266,7 @@
 												:append-icon="mdiChevronDown"
 												v-bind="attrs"
 												v-on="on"
+												@click:append="() => (menuOthers = !menuOthers)"
 											>
 											</v-text-field>
 										</template>
