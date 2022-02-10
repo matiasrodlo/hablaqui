@@ -675,10 +675,19 @@
 				</div>
 			</div>
 		</div>
-		<div v-show="dialogPrecharge" style="height: 100vh">
+		<div v-if="dialogPrecharge" style="height: 100vh">
 			<v-card flat color="transparent">
 				<v-card-text>
-					<Precharge :avatar="psychologists.map(el => el.avatar)" />
+					<Precharge
+						:close="() => (dialogPrecharge = false)"
+						:avatar="
+							psychologists
+								.map(el => {
+									if (el.avatarThumbnail) return el.avatarThumbnail;
+								})
+								.filter(el => el)
+						"
+					/>
 				</v-card-text>
 			</v-card>
 		</div>
@@ -799,9 +808,6 @@ export default {
 		},
 		openPrecharge() {
 			this.dialogPrecharge = true;
-			setTimeout(() => {
-				this.dialogPrecharge = false;
-			}, 3000);
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
