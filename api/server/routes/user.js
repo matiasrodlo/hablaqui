@@ -141,4 +141,10 @@ userRouter.post(
 	userController.addEvaluation
 );
 
+userRouter.post(
+	'/user/change/psychologist/:sessionId',
+	//[passport.authenticate('jwt', { session: true })],
+	userController.changePsychologist
+);
+
 export default userRouter;

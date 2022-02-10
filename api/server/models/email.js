@@ -1,6 +1,6 @@
 'use strict';
 
-import moment from 'moment';
+import dayjs from 'dayjs-with-plugins';
 import { Schema, model } from 'mongoose';
 
 let email = new Schema({
@@ -21,7 +21,7 @@ let email = new Schema({
 	},
 	queuedAt: {
 		type: String,
-		default: moment()
+		default: dayjs()
 			.locale('es-mx')
 			.format('D MMMM YYYY, h:mm:ss a'),
 	},

@@ -1,9 +1,59 @@
 <template>
 	<div>
-		<v-container fluid style="height: 100vh; max-width: 1200px">
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Mi agenda'"
+			style="position: absolute; top: 190px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-pagos' });
+					return {
+						title: 'Mis pagos',
+						card: {
+							title: 'Gestiona tus pagos',
+							description:
+								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+							link: '',
+							route: 'dashboard-chat',
+						},
+						route: 'dashboard-pagos',
+					};
+				}
+			"
+		/>
+		<v-container fluid style="height: 100vh; max-width: 1200px; position: relative">
+			<card-onboarding
+				v-if="stepOnboarding && stepOnboarding.title === 'Nuevo evento'"
+				arrow="arrow-right"
+				style="z-index: 3; position: absolute; top: 40%; left: 2%"
+				:next="
+					() => {
+						$router.push({ name: 'dashboard-pagos' });
+						return {
+							title: 'Mis pagos',
+							card: {
+								title: 'Gestiona tus pagos',
+								description:
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-pagos',
+						};
+					}
+				"
+			/>
 			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
-				<v-col cols="12" :md="$auth.$state.user.role === 'user' ? '10' : '12'">
+				<v-col
+					cols="12"
+					:md="$auth.$state.user.role === 'user' ? '10' : '12'"
+					:style="
+						stepOnboarding && stepOnboarding.title === 'Nuevo evento'
+							? 'z-index: 2'
+							: ''
+					"
+				>
 					<div
 						v-if="$auth.$state.user.role === 'user'"
 						class="hidden-md-and-up"
@@ -101,6 +151,7 @@
 					</v-sheet>
 					<v-sheet height="600px">
 						<v-calendar
+							id="calendar-agenda"
 							ref="calendar"
 							v-model="focus"
 							:events="events"
@@ -114,7 +165,8 @@
 							@click:more="viewDay"
 							@click:day="addAppointment"
 							@click:date="addAppointment"
-						></v-calendar>
+						>
+						</v-calendar>
 						<v-menu
 							v-model="selectedOpen"
 							:activator="selectedElement"
@@ -141,7 +193,10 @@
 									"
 								>
 									<v-btn
-										v-if="selectedEvent.status === 'pending'"
+										v-if="
+											selectedEvent.status === 'pending' ||
+											selectedEvent.status === 'upnext'
+										"
 										:href="selectedEvent.url"
 										target="_blank"
 										color="primary"
@@ -151,7 +206,10 @@
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
-										v-if="selectedEvent.status === 'pending'"
+										v-if="
+											selectedEvent.status === 'pending' ||
+											selectedEvent.status === 'upnext'
+										"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
@@ -681,10 +739,9 @@
 				</v-card>
 			</v-dialog>
 		</v-container>
-		<v-overlay :value="overlay">
+		<v-overlay z-index="1" :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
-		<recruited-overlay />
 	</div>
 </template>
 
@@ -710,7 +767,6 @@ export default {
 		Calendar: () => import('~/components/Calendar.vue'),
 		SelectPlan: () => import('~/components/plan/SelectPlan'),
 		ResumePlan: () => import('~/components/plan/ResumePlan'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -799,33 +855,6 @@ export default {
 		],
 	}),
 	computed: {
-		// Filtramos que sea de usuarios con pagos success y no hayan expirado
-		plan() {
-			if (!this.$auth.$state.user) return null;
-			// Obtenemos un array con todo los planes solamente
-			const plans = this.$auth.$state.user.sessions.flatMap(item =>
-				item.plan.map(plan => ({
-					...plan,
-					idSessions: item._id,
-					psychologist: item.psychologist,
-					user: item.user,
-					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
-				}))
-			);
-			const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-			const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
-
-			// retornamos el plan success y sin expirar
-			let plan = plans.find(
-				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-			);
-			// retornamos el ultimo plan succes y que expiro
-			if (!plan) plan = plans.find(item => item.diff === min);
-			// retornamos el siguiente plan pendiente
-			if (!plan) plan = plans.find(item => item.diff === max);
-			return plan;
-		},
 		nextSesion() {
 			// Si no hay plan
 			if (!this.plan) return '';
@@ -881,6 +910,8 @@ export default {
 		...mapGetters({
 			allSessions: 'Psychologist/sessions',
 			clients: 'Psychologist/clients',
+			plan: 'User/plan',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	watch: {
@@ -927,7 +958,6 @@ export default {
 				this.$auth.$state.user.role === 'psychologist' &&
 				this.$auth.$state.user.sessions.length
 			) {
-				await this.getClients(this.$auth.$state.user.psychologist);
 				await this.getSessions({
 					idPsychologist: this.$auth.$state.user.psychologist,
 				});
@@ -1010,21 +1040,15 @@ export default {
 
 				// con psicologo - con sesiones por agendar
 				this.dialogHasSessions =
-					this.plan &&
-					this.plan.psychologist &&
-					this.plan.session.length < this.plan.totalSessions;
+					this.plan && this.plan.psychologist && this.plan.remainingSessions > 0;
 				// con psicologo - sin sesiones por agendar
-				if (
-					this.plan &&
-					this.plan.psychologist &&
-					this.plan.totalSessions <= this.plan.session.length
-				) {
+				if (this.plan && this.plan.psychologist && this.plan.remainingSessions <= 0) {
 					this.overlay = true;
 					this.psychologist = await this.getPsychologist(this.plan.psychologist);
 					this.overlay = false;
 					this.dialogWithoutSessions = true;
 				}
-			} else if (this.$auth.user.role === 'psychologist') {
+			} else if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist) {
 				this.date = date;
 				this.dialogAppointment = true;
 			}

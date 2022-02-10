@@ -53,6 +53,15 @@ const authController = {
 		const user = req.user;
 		return authService.changeUserPassword(user, password, res);
 	},
+	async changeVerifiedStatus(req, res) {
+		try {
+			const { id } = req.params;
+			const { data, code } = await authService.changeVerifiedStatus(id);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Ha ocurrido un error al verificar');
+		}
+	},
 	googleAuthCallback(req, res) {
 		authService.googleAuthCallback(req, res);
 	},

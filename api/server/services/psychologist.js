@@ -19,8 +19,8 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
+import Coupon from '../models/coupons';
 import dayjs from 'dayjs-with-plugins';
-
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -56,7 +56,6 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
-
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -139,6 +138,10 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
+					activePlan:
+						plan.payment === 'success' &&
+						dayjs().isBefore(dayjs(plan.expiration)),
 				};
 			});
 		});
@@ -183,6 +186,7 @@ const getRemainingSessions = async psy => {
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);
+	const user = await Psychologist.findById(psy);
 	const now = dayjs().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -236,7 +240,10 @@ const completePaymentsRequest = async psy => {
 		{ $push: { transactionCompleted: transaction } }
 	);
 
-	return okResponse('Peticion hecha', {
+	//Enviar correo de dinero depositado a psy
+	await mailService.sendCompletePaymentRequest(user, total, now);
+
+	return okResponse('Peticion completada', {
 		total: total,
 		sessions: sessions,
 	});
@@ -319,6 +326,9 @@ const createPaymentsRequest = async user => {
 			},
 		});
 	}
+	//Crear correo de petición de retiro de dinero
+	await mailService.sendPaymentRequest(user, total, now);
+
 	return okResponse('Peticion hecha', {
 		total: total,
 		sessions: sessions,
@@ -496,7 +506,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,
@@ -832,20 +842,33 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+
+	let price = payload.price < 0 ? 0 : payload.price;
+
+	if (foundCoupon && foundCoupon.discountType === 'static')
+		price = payload.originalPrice;
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
 		datePayment: '',
-		totalPrice: payload.price,
-		sessionPrice: payload.price / sessionQuantity,
+		totalPrice: price,
+		sessionPrice: price / sessionQuantity,
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: token,
 		session: [newSession],
 	};
-
+	//logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -869,107 +892,103 @@ const createPlan = async ({ payload }) => {
 		});
 	}
 
-	if (userSessions) {
-		if (
-			userSessions.plan.some(
+	let created = null;
+
+	const userPlans = await Sessions.find({ user: payload.user });
+
+	if (
+		userPlans.some(sessions => {
+			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
 					dayjs().isBefore(dayjs(plan.expiration))
-			)
-		) {
-			return conflictResponse('El usuario ya tiene un plan vigente');
-		}
-
-		const created = await Sessions.findOneAndUpdate(
-			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
-			{ new: true }
-		);
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'current-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'current-psy-new-plan',
-				properties: {
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
+				//sessions.psychologist.toString() !== payload.psychologist
+			);
+		})
+	)
+		return conflictResponse('El usuario ya tiene un plan vigente');
+	else {
+		if (userSessions) {
+			created = await Sessions.findOneAndUpdate(
+				{ user: payload.user, psychologist: payload.psychologist },
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			);
+		} else {
+			created = await Sessions.create({
+				user: payload.user,
+				psychologist: payload.psychologist,
+				plan: [newPlan],
+				roomsUrl: url,
 			});
 		}
-		return okResponse('Plan creado', { plan: created });
-	} else {
-		const created = await Sessions.create({
-			user: payload.user,
-			psychologist: payload.psychologist,
-			plan: [newPlan],
-			roomsUrl: url,
-		});
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'new-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'new-user-psy-new-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
-			});
-		}
-		return okResponse('Plan creado', { plan: created });
 	}
+
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: created._id.toString(),
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'current-user-purchase-plan',
+			properties: {
+				products: planData,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: dayjs().format(),
+				total: payload.price / sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'current-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: dayjs().format(),
+			},
+		});
+	}
+	if (foundCoupon) {
+		let discount = -payload.price;
+		if (foundCoupon.discountType === 'static') {
+			if (payload.price >= 0) discount = 0;
+			await Coupon.findOneAndUpdate(
+				{ _id: foundCoupon._id },
+				{ $set: { discount: discount } }
+			);
+		}
+	}
+
+	let responseBody = { init_point: null };
+
+	if (payload.price <= 0) {
+		await mercadopagoService.successPay({ planId: created._id });
+	} else {
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			plan: created._id,
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+		const user = await User.findById(payload.user);
+		await mailService.pendingPlanPayment(user, psychologist, payload.price);
+	}
+
+	return okResponse('Plan y preferencias creadas', responseBody);
 };
 
 /**
@@ -1331,7 +1350,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}*/
 
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
 	await mailService.sendCancelSessionPsy(
@@ -2182,7 +2201,7 @@ const getAllEvaluationsFunction = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
-	const evaluations = await Evaluation.findOneAndUpdate(
+	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
@@ -2191,10 +2210,40 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	const psy = evaluation.psychologist._id;
+	let evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+
+	await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				rating: global.toFixed(2),
+			},
+		}
+	);
 
 	//enviar correo donde se apruba la evaluación
+	await mailService.sendApproveEvaluationToUser(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
-	return okResponse('Sesion aprobada', { evaluations });
+	await mailService.sendApproveEvaluationToPsy(
+		evaluations.user,
+		evaluations.psychologist
+	);
+
+	return okResponse('Sesion aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
@@ -2209,6 +2258,10 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	//Enviar correo donde se rechaza la evaluación
+	await mailService.sendRefuseEvaluation(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
 	return okResponse('Sesion rechazada', { evaluations });
 };

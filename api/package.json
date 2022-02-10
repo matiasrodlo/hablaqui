@@ -7,6 +7,8 @@
 		"start": "node -r esm server.js",
 		"container": "node -r esm server.js --quiet --no-colors",
 		"dev": "nodemon -r esm --inspect server.js",
+		"container": "node -r esm server.js --quiet --no-colors",
+		"container-dev": "nodemon -r esm --inspect server.js --no-colors",
 		"test": "jest",
 		"create-env": "printenv > .env && cat .env"
 	},
