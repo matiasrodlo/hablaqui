@@ -124,9 +124,6 @@ export default {
 	methods: {
 		async newSession() {
 			this.loadingSession = true;
-			console.log('add session');
-			this.hasSessions = false;
-			this.hasSessions = false;
 			const payload = {
 				date: `${this.$route.query.date} ${this.$route.query.start}`,
 				sessionNumber: this.plan.session.length + 1,
