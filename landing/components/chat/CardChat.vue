@@ -1,5 +1,5 @@
 <template>
-	<v-card width="400">
+	<v-card :style="$vuetify.breakpoint.smAndDown ? 'width: 100%' : 'width: 400px'">
 		<div
 			v-if="selected"
 			class="d-flex"
