@@ -190,7 +190,8 @@
 <script>
 import { mdiCheck } from '@mdi/js';
 import { mapActions } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

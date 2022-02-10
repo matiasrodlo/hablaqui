@@ -22,6 +22,7 @@ import {
 import Transaction from '../models/transaction';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+moment.tz.setDefault('America/Santiago');
 
 const getAll = async () => {
 	const psychologists = await Psychologist.find();
@@ -1146,18 +1147,21 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		await mailService.sendRescheduleToPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 	} else {
 		await mailService.sendRescheduleToUserByPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 		await mailService.sendRescheduleToPsyByPsy(
 			sessions.user,
 			sessions.psychologist,
-			newDate
+			newDate,
+			sessions.roomsUrl
 		);
 	}
 

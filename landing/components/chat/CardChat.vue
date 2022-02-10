@@ -256,9 +256,10 @@
 
 <script>
 import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
