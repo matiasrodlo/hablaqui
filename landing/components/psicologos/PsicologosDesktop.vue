@@ -68,7 +68,7 @@
 		>
 			<v-container fluid style="max-width: 1200px">
 				<v-row>
-					<v-col id="menuSpecialties" cols="4">
+					<v-col id="menuSpecialties" cols="3">
 						<v-menu
 							ref="menuSpecialties"
 							v-model="menuSpecialties"
@@ -118,7 +118,39 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<v-col id="selectgender" cols="3" style="position: relative">
+					<v-col id="selectStatus" cols="2" style="position: relative">
+						<div
+							class="pointer"
+							@click="
+								() => {
+									status = !status;
+									changeInput();
+								}
+							"
+						>
+							<v-text-field
+								disabled
+								outlined
+								readonly
+								style="border-color: #04c396"
+								hide-details
+								dense
+								class="white"
+								value="Online"
+							>
+								<template #prepend-inner>
+									<div>
+										<icon
+											size="25px"
+											:color="status ? '#04c396' : '#54565a'"
+											:icon="mdiAccount"
+										/>
+									</div>
+								</template>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col id="selectgender" cols="2" style="position: relative">
 						<v-menu
 							ref="menuGender"
 							v-model="menuGender"
@@ -574,7 +606,7 @@
 </template>
 
 <script>
-import { mdiChevronDown } from '@mdi/js';
+import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -590,6 +622,7 @@ export default {
 	data() {
 		return {
 			mdiChevronDown,
+			mdiAccount,
 			menuGender: false,
 			menuSpecialties: false,
 			menuOthers: false,
@@ -605,6 +638,7 @@ export default {
 			visibles: [],
 			fullcard: [],
 			page: 1,
+			status: false,
 		};
 	},
 	computed: {
@@ -639,7 +673,14 @@ export default {
 		 */
 		filterLevelOne() {
 			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
+			if (
+				!this.gender.length &&
+				!this.models.length &&
+				!this.languages.length &&
+				!this.status
+			)
+				return result;
+			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';

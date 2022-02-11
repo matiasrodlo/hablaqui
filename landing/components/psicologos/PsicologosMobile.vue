@@ -150,6 +150,39 @@
 									</v-menu>
 								</v-card-text>
 								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">Estado</h4>
+									<div
+										class="pointer"
+										@click="
+											() => {
+												status = !status;
+												changeInput();
+											}
+										"
+									>
+										<v-text-field
+											disabled
+											outlined
+											readonly
+											style="border-color: #04c396"
+											hide-details
+											dense
+											class="white"
+											value="Online"
+										>
+											<template #prepend-inner>
+												<div>
+													<icon
+														size="25px"
+														:color="status ? '#04c396' : '#54565a'"
+														:icon="mdiAccount"
+													/>
+												</div>
+											</template>
+										</v-text-field>
+									</div>
+								</v-card-text>
+								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
 									<v-menu
 										v-model="menuGender"
@@ -627,7 +660,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiCloseCircle } from '@mdi/js';
+import { mdiChevronDown, mdiCloseCircle, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -646,6 +679,8 @@ export default {
 			showFilters: false,
 			mdiCloseCircle,
 			mdiChevronDown,
+			mdiAccount,
+			status: false,
 			menuGender: false,
 			menuSpecialties: false,
 			menuOthers: false,
@@ -698,9 +733,11 @@ export default {
 				!this.gender.length &&
 				!this.models.length &&
 				!this.languages.length &&
-				!this.specialties.length
+				!this.specialties.length &&
+				!this.status
 			)
 				return result;
+			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
