@@ -262,6 +262,18 @@
 											</v-col>
 											<v-col cols="6">
 												<v-text-field
+													v-model="form.lastName"
+													type="text"
+													dense
+													outlined
+													label="Apellido"
+													hide-details="auto"
+													:error-messages="lastNameErrors"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
 													v-model="form.rut"
 													hide-details="auto"
 													type="text"
@@ -849,7 +861,13 @@ export default {
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('Se requiere rut');
+			!this.$v.form.name.required && errors.push('Se requiere nombre');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
 		validatenewCustomSession() {
@@ -947,6 +965,7 @@ export default {
 		resetForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				rut: '',
 				phone: '',
 				email: '',
@@ -1151,6 +1170,9 @@ export default {
 				email,
 			},
 			name: {
+				required,
+			},
+			lastName: {
 				required,
 			},
 		},

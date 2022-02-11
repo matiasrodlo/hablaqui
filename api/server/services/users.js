@@ -226,6 +226,7 @@ const usersService = {
 		const newUser = {
 			psychologist: user._id,
 			name: body.name,
+			lastName: body.lastName,
 			email: body.email,
 			password: bcrypt.hashSync(pass, 10),
 			role: 'user',
