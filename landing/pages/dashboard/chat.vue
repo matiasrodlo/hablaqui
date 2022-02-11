@@ -535,6 +535,7 @@ export default {
 			}
 			if (this.$auth.$state.user.role === 'psychologist') {
 				if (this.$auth.$state.user.psychologist) {
+					await this.getClients(this.$auth.$state.user.psychologist);
 					await this.getMessages();
 				}
 				if ('client' in this.$route.query) {
