@@ -79,6 +79,7 @@
 						:append-icon="mdiChevronDown"
 						dense
 						:outlined="scrollHeight < 300"
+						@click:append="() => (showFilters = !showFilters)"
 						@click="showFilters = true"
 					></v-text-field>
 					<v-dialog
