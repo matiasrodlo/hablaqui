@@ -171,6 +171,17 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async toggleStatus({ commit }) {
+		try {
+			const { data } = await this.$axios(`/psychologist/status/inmediate-attention`, {
+				method: 'POST',
+			});
+			snackBarSuccess(data.message)(commit);
+			commit('setPsychologist', data.psychologist);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async createCustomSession({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/psychologist/new-custom-session', {

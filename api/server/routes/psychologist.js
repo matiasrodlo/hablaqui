@@ -480,4 +480,10 @@ psychologistsRouter.get(
 	psychologistsController.getTransactions
 );
 
+psychologistsRouter.post(
+	'/psychologist/status/inmediate-attention',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.changeToInmediateAttention
+);
+
 export default psychologistsRouter;

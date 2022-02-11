@@ -31,18 +31,32 @@
 				shaped
 				top
 			>
-				<v-list-item v-if="false" class="my-4" link>
+				<v-list-item
+					v-if="
+						psychologist &&
+						$auth.user.role === 'psychologist' &&
+						$auth.user.psychologist
+					"
+					inactive
+				>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
-							<icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
-							<icon v-else size="30" color="red" :icon="mdiAccountOff" />
+							<icon v-if="online" size="30" color="#FFFFFF" :icon="mdiAccount" />
+							<icon v-else size="30" color="#FFFFFF" :icon="mdiAccountOff" />
 						</v-btn>
 					</v-list-item-avatar>
 					<v-list-item-content>
 						<v-list-item-title class="font-weight-bold body-2">
-							<v-switch v-model="online" dense>
+							<v-switch
+								v-model="online"
+								dense
+								hide-details
+								:loading="loadingStatus"
+								class="mt-0"
+								@click="setToggleStatus"
+							>
 								<template #prepend>
-									<div class="pt-1 white--text">
+									<div class="white--text pt-1">
 										{{ online ? 'En linea' : 'Desconectado' }}
 									</div>
 								</template>
@@ -336,6 +350,7 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
+			loadingStatus: false,
 			mdiAccountSupervisor,
 			mdiCalendar,
 			mdiCog,
@@ -718,6 +733,17 @@ export default {
 			consultantes: 'Psychologist/clients',
 		}),
 	},
+	watch: {
+		psychologist(newValue) {
+			if (
+				newValue &&
+				this.$auth.user.psychologist &&
+				this.$auth.user.role === 'psychologist'
+			) {
+				this.online = newValue.inmediateAttention.activated;
+			}
+		},
+	},
 	async mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
@@ -778,6 +804,11 @@ export default {
 			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		async setToggleStatus() {
+			this.loadingStatus = true;
+			await this.toggleStatus();
+			this.loadingStatus = false;
+		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;
 			await this.updateOne({
@@ -797,6 +828,7 @@ export default {
 		...mapActions({
 			getClients: 'Psychologist/getClients',
 			updateOne: 'User/updateOne',
+			toggleStatus: 'Psychologist/toggleStatus',
 		}),
 	},
 };

@@ -132,6 +132,32 @@ async function getBatchId() {
 }
 
 const cronService = {
+	async statusInmediateAttention(token) {
+		if (token !== authToken)
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		const psychologists = await psychologist.find();
+
+		psychologists.forEach(async psy => {
+			if (psy.inmediateAttention.activated) {
+				const expiration = psy.inmediateAttention.expiration;
+				if (moment(expiration).isBefore(moment(Date.now())))
+					await psychologist.findOneAndUpdate(
+						{ _id: psy._id },
+						{
+							$set: {
+								inmediateAttention: {
+									activated: false,
+									expiration: '',
+								},
+							},
+						}
+					);
+			}
+		});
+		return okResponse('Estados cambiados');
+	},
 	async scheduleChatEmails(token) {
 		if (token !== authToken)
 			return conflictResponse(
