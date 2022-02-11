@@ -71,18 +71,20 @@
 						</v-list-item>
 					</template>
 				</template>
-				<v-list-item
-					v-show="$auth.$state.loggedIn"
-					id="logout-drawer"
-					accesskey="x"
-					@click="logout"
-				>
-					<v-list-item-content>
-						<v-list-item-title class="secondary--text font-weight-bold body-2">
-							Cerrar sesión
-						</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
+				<client-only>
+					<v-list-item
+						v-show="$auth.$state.loggedIn"
+						id="logout-drawer"
+						accesskey="x"
+						@click="logout"
+					>
+						<v-list-item-content>
+							<v-list-item-title class="secondary--text font-weight-bold body-2">
+								Cerrar sesión
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</client-only>
 				<v-list-item
 					v-show="!$auth.$state.loggedIn"
 					id="iniciar-sesion-drawer"
