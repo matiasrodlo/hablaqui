@@ -12,6 +12,7 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
+moment.tz.setDefault('America/Santiago');
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -175,7 +176,8 @@ const successPay = async params => {
 		},
 		{ new: true }
 	);
-	const sessionData = foundPlan.plan[foundPlan.plan.length - 1].session[0];
+	const planData = foundPlan.plan[foundPlan.plan.length - 1];
+	const sessionData = planData.session[0];
 	const originalDate = sessionData.date.split(' ');
 	const date = originalDate[0].split('/');
 	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
@@ -208,13 +210,15 @@ const successPay = async params => {
 		user,
 		psy,
 		dateFormatted,
-		foundPlan.roomsUrl
+		foundPlan.roomsUrl,
+		planData.totalPrice
 	);
 	await mailService.sendAppConfirmationPsy(
 		psy,
 		user,
 		dateFormatted,
-		foundPlan.roomsUrl
+		foundPlan.roomsUrl,
+		planData.totalPrice
 	);
 
 	logInfo('Se ha realizado un pago');
@@ -297,21 +301,22 @@ const customSessionPay = async params => {
 		},
 		{ new: true }
 	).populate('psychologist user');
-	console.log(updatePlan.user.name);
-
+	const plan = updatePlan.plan.filter(
+		plan => plan._id.toString() === planId
+	)[0];
 	await mailService.sendSuccessCustomSessionPaymentPsy(
 		updatePlan.user,
 		updatePlan.psychologist,
-		updatePlan.plan[0].sessionPrice,
+		plan.totalPrice,
 		updatePlan.roomsUrl,
-		updatePlan.plan[0].session[0].date
+		plan.session[0].date
 	);
 	await mailService.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
 		updatePlan.psychologist,
-		updatePlan.plan[0].sessionPrice,
+		plan.totalPrice,
 		updatePlan.roomsUrl,
-		updatePlan.plan[0].session[0].date
+		plan.session[0].date
 	);
 	return okResponse('plan actualizado', { body: updatePlan });
 };

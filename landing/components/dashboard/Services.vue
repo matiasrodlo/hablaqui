@@ -298,6 +298,7 @@ export default {
 			this.loading = true;
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
+			this.video = psychologist.sessionPrices.video;
 			this.loading = false;
 		},
 		setPrice(e) {

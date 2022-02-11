@@ -97,8 +97,9 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import Pusher from 'pusher-js';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

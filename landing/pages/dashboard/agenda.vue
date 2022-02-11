@@ -314,6 +314,18 @@
 											</v-col>
 											<v-col cols="6">
 												<v-text-field
+													v-model="form.lastName"
+													type="text"
+													dense
+													outlined
+													label="Apellido"
+													hide-details="auto"
+													:error-messages="lastNameErrors"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
 													v-model="form.rut"
 													hide-details="auto"
 													type="text"
@@ -719,23 +731,6 @@
 							title-button="Continuar"
 						/>
 					</v-card-text>
-					<v-card-text v-if="step == 1">
-						<select-plan
-							v-if="psychologist"
-							:set-plan="setNewPlan"
-							:psychologist="psychologist"
-						/>
-					</v-card-text>
-					<v-card-text v-if="step == 2">
-						<resume-plan
-							v-if="psychologist"
-							:close="() => (dialogWithoutSessions = false)"
-							:go-back="() => (step = 1)"
-							:plan="newPlan"
-							:psy="psychologist"
-							:event="newEvent"
-						/>
-					</v-card-text>
 				</v-card>
 			</v-dialog>
 		</v-container>
@@ -746,7 +741,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -759,14 +754,13 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
-		SelectPlan: () => import('~/components/plan/SelectPlan'),
-		ResumePlan: () => import('~/components/plan/ResumePlan'),
 	},
 	mixins: [validationMixin],
 	layout: 'dashboard',
@@ -890,7 +884,13 @@ export default {
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('Se requiere rut');
+			!this.$v.form.name.required && errors.push('Se requiere nombre');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
 		validatenewCustomSession() {
@@ -989,6 +989,7 @@ export default {
 		resetForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				rut: '',
 				phone: '',
 				email: '',
@@ -1015,7 +1016,9 @@ export default {
 		},
 		setSchedule(item) {
 			this.newEvent = item;
-			this.step = 1;
+			this.$router.push(
+				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+			);
 		},
 		setNewPlan(newPlan) {
 			this.newPlan = newPlan;
@@ -1185,6 +1188,9 @@ export default {
 				email,
 			},
 			name: {
+				required,
+			},
+			lastName: {
 				required,
 			},
 		},

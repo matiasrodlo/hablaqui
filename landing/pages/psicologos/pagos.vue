@@ -4,9 +4,17 @@
 		<appbar />
 		<!-- desktop -->
 		<template v-if="!loadingPsychologist">
-			<pagos-desktop :psychologist="psychologist" class="hidden-sm-and-down" />
+			<pagos-desktop
+				:psychologist="psychologist"
+				:has-sessions="hasSessions"
+				class="hidden-sm-and-down"
+			/>
 			<!-- mobile -->
-			<pagos-mobile :psychologist="psychologist" class="hidden-md-and-up" />
+			<pagos-mobile
+				:psychologist="psychologist"
+				:has-sessions="hasSessions"
+				class="hidden-md-and-up"
+			/>
 		</template>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
@@ -29,6 +37,9 @@
 </template>
 
 <script>
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
@@ -42,9 +53,19 @@ export default {
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PagosMobile'
 			),
 	},
+	async asyncData({ query, $axios, error }) {
+		try {
+			const { psychologist } = await $axios.$get(`/psychologists/one/${query.username}`);
+			return { psychologist };
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
+	},
 	data() {
 		return {
-			loadingPsychologist: true,
+			loadingPsychologist: false,
+			loadingSession: false,
+			hasSessions: false,
 			psychologist: null,
 		};
 	},
@@ -70,6 +91,11 @@ export default {
 			],
 		};
 	},
+	computed: {
+		...mapGetters({
+			plan: 'User/plan',
+		}),
+	},
 	jsonld() {
 		return {
 			'@context': 'https://schema.org',
@@ -81,13 +107,40 @@ export default {
 			logo: 'https://hablaqui.cl/logo_tiny.png',
 		};
 	},
+	created() {
+		this.hasSessions =
+			this.plan &&
+			this.plan.payment === 'success' &&
+			moment().isBefore(moment(this.plan.expiration)) &&
+			this.plan.psychologist === this.psychologist._id &&
+			this.plan.remainingSessions > 0;
+	},
 	async mounted() {
 		window.scrollTo(0, 0);
-		const { psychologist } = await this.$axios.$get(
-			`/psychologists/one/${this.$route.query.username}`
-		);
-		this.loadingPsychologist = false;
-		this.psychologist = psychologist;
+		if (this.hasSessions) {
+			await this.newSession();
+		}
+	},
+	methods: {
+		async newSession() {
+			this.loadingSession = true;
+			const payload = {
+				date: `${this.$route.query.date} ${this.$route.query.start}`,
+				sessionNumber: this.plan.session.length + 1,
+				remainingSessions: (this.plan.remainingSessions -= 1),
+			};
+			await this.addSession({
+				id: this.plan.idSessions,
+				idPlan: this.plan._id,
+				payload,
+			});
+			await this.$auth.fetchUser();
+			this.loadingSession = false;
+			this.$router.push({ name: 'dashboard-agenda' });
+		},
+		...mapActions({
+			addSession: 'Psychologist/addSession',
+		}),
 	},
 };
 </script>

@@ -95,7 +95,8 @@
 
 <script>
 import { mdiCalendarOutline, mdiChevronRight, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

@@ -314,7 +314,8 @@
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Horario',

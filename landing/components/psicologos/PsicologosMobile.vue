@@ -79,6 +79,7 @@
 						:append-icon="mdiChevronDown"
 						dense
 						:outlined="scrollHeight < 300"
+						@click:append="() => (showFilters = !showFilters)"
 						@click="showFilters = true"
 					></v-text-field>
 					<v-dialog
@@ -101,38 +102,52 @@
 									<h4 class="titleColor font-weight-bold body-1 ml-1">
 										Motivo de consulta
 									</h4>
-									<v-autocomplete
-										v-model="specialties"
-										class="white"
-										outlined
-										:items="appointments"
-										item-value="value"
-										:append-icon="mdiChevronDown"
-										hide-details
-										multiple
-										dense
-										clearable
-										:menu-props="{
-											closeOnClick: true,
-											closeOnContentClick: true,
-										}"
-										:disabled="loadingPsychologist"
-										@change="changeInput"
+									<v-menu
+										v-model="menuSpecialties"
+										:close-on-content-click="false"
+										transition="scale-transition"
+										offset-y
+										rounded
 									>
-										<template #no-data>
-											<v-list-item>
-												<v-list-item-content>
-													<v-list-item-title>
-														No se encontraron resultados que coincidan
-														con "<strong>
-															{{ specialties }}
-														</strong>
-														" .
-													</v-list-item-title>
-												</v-list-item-content>
-											</v-list-item>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												:value="
+													specialties.length > 1
+														? `Especialidades ${specialties.length}`
+														: specialties
+												"
+												readonly
+												outlined
+												dense
+												class="white"
+												hide-details
+												:append-icon="mdiChevronDown"
+												v-bind="attrs"
+												@click:append="
+													() => (menuSpecialties = !menuSpecialties)
+												"
+												v-on="on"
+											></v-text-field>
 										</template>
-									</v-autocomplete>
+										<v-card rounded height="300">
+											<v-card-text style="height: 300px; overflow-y: scroll">
+												<v-checkbox
+													v-for="(element, j) in appointments"
+													:key="j"
+													v-model="specialties"
+													:value="element"
+													:label="element"
+													class="py-2"
+													hide-details
+													@change="changeInput"
+												>
+													<template #label="{ item }">
+														<span class="caption">{{ item }}</span>
+													</template>
+												</v-checkbox>
+											</v-card-text>
+										</v-card>
+									</v-menu>
 								</v-card-text>
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
@@ -156,6 +171,7 @@
 												:append-icon="mdiChevronDown"
 												v-bind="attrs"
 												v-on="on"
+												@click:append="() => (menuGender = !menuGender)"
 											></v-text-field>
 										</template>
 										<v-card rounded>
@@ -251,6 +267,7 @@
 												:append-icon="mdiChevronDown"
 												v-bind="attrs"
 												v-on="on"
+												@click:append="() => (menuOthers = !menuOthers)"
 											>
 											</v-text-field>
 										</template>
@@ -613,6 +630,7 @@ export default {
 			mdiCloseCircle,
 			mdiChevronDown,
 			menuGender: false,
+			menuSpecialties: false,
 			menuOthers: false,
 			specialties: [],
 			searchInput: '',

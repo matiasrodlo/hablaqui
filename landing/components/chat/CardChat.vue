@@ -1,5 +1,5 @@
 <template>
-	<v-card width="400">
+	<v-card :style="$vuetify.breakpoint.smAndDown ? 'width: 100%' : 'width: 400px'">
 		<div
 			v-if="selected"
 			class="d-flex"
@@ -256,9 +256,10 @@
 
 <script>
 import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

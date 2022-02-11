@@ -1,193 +1,214 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
-		<v-card style="border-radius: 15px; transition: height 0.4s linear" class="shadowCard">
-			<v-card-text class="text-center">
-				<avatar
-					:url="avatar(psychologist, true)"
-					:name="psychologist.name"
-					:last-name="psychologist.lastName ? psychologist.lastName : ''"
-					size="80"
-					loading-color="white"
-				></avatar>
-				<nuxt-link
-					style="text-decoration: none"
-					:to="{
-						path: `/${psychologist.username}`,
-					}"
-				>
-					<div class="my-2 font-weight-bold" style="color: #3c3c3b; font-size: 19px">
-						{{ psychologist.name }}
-						{{ psychologist.lastName && psychologist.lastName }}
-					</div>
-					<div class="font-weight-medium pa-2" style="color: #3c3c3b; font-size: 14px">
-						${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
-						/ 50 min
-					</div>
-				</nuxt-link>
-				<div class="d-flex justify-center">
-					<div class="mx-2 body-2 d-flex align-center">
-						<icon size="20px" :icon="mdiCalendarOutline" />
-						<span class="ml-3 pt-1">Fecha: {{ $route.query.date }}</span>
-					</div>
-					<div class="mx-2 body-2 d-flex align-center">
-						<icon size="20px" :icon="mdiClockOutline" />
-						<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
-					</div>
-				</div>
-				<div class="my-3">
-					Sesiones por videollamada (50 min) Habla con un psicólogo por videollamada en
-					cualquier momento, en cualquier lugar.
-				</div>
-				<div class="mt-3">
-					<v-btn
-						color="primary"
-						text
-						small
-						class="px-0 py-0"
-						@click="showCalendar = !showCalendar"
+	<div>
+		<div v-show="hasSessions" style="height: 100%">
+			<v-overlay :value="hasSessions" color="white">
+				<v-progress-circular indeterminate size="64"></v-progress-circular>
+			</v-overlay>
+		</div>
+		<v-container v-show="!hasSessions" fluid style="max-width: 1200px">
+			<v-card style="border-radius: 15px; transition: height 0.4s linear" class="shadowCard">
+				<v-card-text class="text-center">
+					<avatar
+						:url="avatar(psychologist, true)"
+						:name="psychologist.name"
+						:last-name="psychologist.lastName ? psychologist.lastName : ''"
+						size="80"
+						loading-color="white"
+					></avatar>
+					<nuxt-link
+						style="text-decoration: none"
+						:to="{
+							path: `/${psychologist.username}`,
+						}"
 					>
-						<span v-if="showCalendar">Ocultar agenda</span>
-						<span v-else>Cambiar reserva</span>
-					</v-btn>
-				</div>
-			</v-card-text>
-			<v-expand-transition>
-				<v-col v-if="showCalendar" cols="12">
-					<calendar-psychologist
-						:id-psy="psychologist._id"
-						:set-date="changeDate"
-						title-button="Seleccionar"
-					/>
-				</v-col>
-			</v-expand-transition>
-		</v-card>
-		<v-card class="shadowCard mt-6" style="border-radius: 15px">
-			<v-card-title class="titleColor"> Seleccionar tipo de pago </v-card-title>
-			<v-card-text
-				v-for="item in itemsPlan"
-				:key="item.id"
-				class="pointer d-flex justify-space-between align-center"
-				@click="planSelected = item"
-			>
-				<div>
-					<div class="titleColor body-1 font-weight-bold">
-						{{ item.title }}
+						<div class="my-2 font-weight-bold" style="color: #3c3c3b; font-size: 19px">
+							{{ psychologist.name }}
+							{{ psychologist.lastName && psychologist.lastName }}
+						</div>
+						<div
+							class="font-weight-medium pa-2"
+							style="color: #3c3c3b; font-size: 14px"
+						>
+							${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
+							/ 50 min
+						</div>
+					</nuxt-link>
+					<div class="d-flex justify-center">
+						<div class="mx-2 body-2 d-flex align-center">
+							<icon size="20px" :icon="mdiCalendarOutline" />
+							<span class="ml-3 pt-1"
+								>Fecha: {{ formatDate($route.query.date) }}</span
+							>
+						</div>
+						<div class="mx-2 body-2 d-flex align-center">
+							<icon size="20px" :icon="mdiClockOutline" />
+							<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
+						</div>
 					</div>
-					<div class="titleColor body-2">
-						{{ item.pricePerSession }}
-						<span v-if="item.priceTotal" class="primary--text ml-4">
-							{{ item.priceTotal }}
-						</span>
+					<div class="my-3">
+						Sesiones por videollamada (50 min) Habla con un psicólogo por videollamada
+						en cualquier momento, en cualquier lugar.
 					</div>
-				</div>
-				<div>
-					<v-btn
-						fab
-						style="width: 20px; height: 20px"
-						depressed
-						:outlined="!planSelected || planSelected.id !== item.id"
-						:color="planSelected && planSelected.id === item.id ? 'primary' : '#969696'"
-					>
-					</v-btn>
-				</div>
-			</v-card-text>
-		</v-card>
-		<v-card class="shadowCard mt-6" style="border-radius: 15px">
-			<v-card-title class="titleColor"> Cupón </v-card-title>
-			<v-card-text class="">
-				<v-text-field
-					v-model="coupon"
-					outlined
-					class="rounded-xl"
-					fill
-					dense
-					hide-details
-					placeholder="Introduzca el código"
-				>
-					<template #append>
-						<v-btn small :disabled="!coupon" color="primary" rounded @click="setCoupon">
-							Aplicar
+					<div class="mt-3">
+						<v-btn
+							color="primary"
+							text
+							small
+							class="px-0 py-0"
+							@click="showCalendar = !showCalendar"
+						>
+							<span v-if="showCalendar">Ocultar agenda</span>
+							<span v-else>Cambiar reserva</span>
 						</v-btn>
-					</template>
-				</v-text-field>
-			</v-card-text>
-		</v-card>
-		<v-card class="shadowCard mt-6" style="border-radius: 15px">
-			<v-card-title class="titleColor"> Resumen de pago </v-card-title>
-			<v-card-text class="">
-				<div class="my-6 d-flex justify-space-between">
-					<div class="body-1 font-weight-bold">Tipo de pago</div>
-					<div v-if="planSelected" class="body-1">
-						{{ planSelected.title }}
 					</div>
-				</div>
-				<v-divider></v-divider>
-				<div class="my-6 d-flex justify-space-between">
-					<div class="body-1 font-weight-bold">Cantidad de sesiones</div>
-					<div v-if="planSelected" class="body-1">x{{ planSelected.cant }}</div>
-				</div>
-				<v-divider></v-divider>
-				<div class="my-6 d-flex justify-space-between">
-					<div class="body-1 font-weight-bold">Valor por sesión</div>
-					<div v-if="planSelected" class="body-1">
-						{{ planSelected.valuePerSession }}
+				</v-card-text>
+				<v-expand-transition>
+					<v-col v-if="showCalendar" cols="12">
+						<calendar-psychologist
+							:id-psy="psychologist._id"
+							:set-date="changeDate"
+							title-button="Seleccionar"
+						/>
+					</v-col>
+				</v-expand-transition>
+			</v-card>
+			<v-card class="shadowCard mt-6" style="border-radius: 15px">
+				<v-card-title class="titleColor"> Seleccionar tipo de pago </v-card-title>
+				<v-card-text
+					v-for="item in itemsPlan"
+					:key="item.id"
+					class="pointer d-flex justify-space-between align-center"
+					@click="planSelected = item"
+				>
+					<div>
+						<div class="titleColor body-1 font-weight-bold">
+							{{ item.title }}
+						</div>
+						<div class="titleColor body-2">
+							{{ item.pricePerSession }}
+							<span v-if="item.priceTotal" class="primary--text ml-4">
+								{{ item.priceTotal }}
+							</span>
+						</div>
 					</div>
-				</div>
-				<v-divider></v-divider>
-				<div class="my-6 d-flex justify-space-between">
-					<div class="body-1 font-weight-bold">Total</div>
-					<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
-				</div>
-				<div>
-					<v-btn
-						rounded
-						block
-						depressed
-						color="rgba(26, 165, 216, 0.16)"
-						@click="payButton"
+					<div>
+						<v-btn
+							fab
+							style="width: 20px; height: 20px"
+							depressed
+							:outlined="!planSelected || planSelected.id !== item.id"
+							:color="
+								planSelected && planSelected.id === item.id ? 'primary' : '#969696'
+							"
+						>
+						</v-btn>
+					</div>
+				</v-card-text>
+			</v-card>
+			<v-card class="shadowCard mt-6" style="border-radius: 15px">
+				<v-card-title class="titleColor"> Cupón </v-card-title>
+				<v-card-text class="">
+					<v-text-field
+						v-model="coupon"
+						outlined
+						class="rounded-xl"
+						fill
+						dense
+						hide-details
+						placeholder="Introduzca el código"
 					>
-						<span class="primary--text">Continuar con el pago</span>
-					</v-btn>
-				</div>
-				<div class="caption my-6 text-center">
-					Este es un pago seguro con encriptado SSL
-				</div>
-				<div class="caption font-weight-bold">Paga seguro con</div>
-				<div class="d-flex justify-space-around">
-					<v-img
-						width="50"
-						contain
-						:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
-					></v-img>
-					<v-img
-						width="50"
-						contain
-						:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
-					></v-img>
-					<v-img
-						width="50"
-						contain
-						:src="`https://cdn.hablaqui.cl/static/surface.png`"
-					></v-img>
-					<v-img
-						width="50"
-						contain
-						:src="`https://cdn.hablaqui.cl/static/american_express.png`"
-					></v-img>
-					<v-img
-						width="50"
-						contain
-						:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
-					></v-img>
-				</div>
-			</v-card-text>
-		</v-card>
-	</v-container>
+						<template #append>
+							<v-btn
+								small
+								:disabled="!coupon"
+								color="primary"
+								rounded
+								@click="setCoupon"
+							>
+								Aplicar
+							</v-btn>
+						</template>
+					</v-text-field>
+				</v-card-text>
+			</v-card>
+			<v-card class="shadowCard mt-6" style="border-radius: 15px">
+				<v-card-title class="titleColor"> Resumen de pago </v-card-title>
+				<v-card-text class="">
+					<div class="my-6 d-flex justify-space-between">
+						<div class="body-1 font-weight-bold">Tipo de pago</div>
+						<div v-if="planSelected" class="body-1">
+							{{ planSelected.title }}
+						</div>
+					</div>
+					<v-divider></v-divider>
+					<div class="my-6 d-flex justify-space-between">
+						<div class="body-1 font-weight-bold">Cantidad de sesiones</div>
+						<div v-if="planSelected" class="body-1">x{{ planSelected.cant }}</div>
+					</div>
+					<v-divider></v-divider>
+					<div class="my-6 d-flex justify-space-between">
+						<div class="body-1 font-weight-bold">Valor por sesión</div>
+						<div v-if="planSelected" class="body-1">
+							{{ planSelected.valuePerSession }}
+						</div>
+					</div>
+					<v-divider></v-divider>
+					<div class="my-6 d-flex justify-space-between">
+						<div class="body-1 font-weight-bold">Total</div>
+						<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
+					</div>
+					<div>
+						<v-btn
+							rounded
+							block
+							depressed
+							color="rgba(26, 165, 216, 0.16)"
+							@click="payButton"
+						>
+							<span class="primary--text">Continuar con el pago</span>
+						</v-btn>
+					</div>
+					<div class="caption my-6 text-center">
+						Este es un pago seguro con encriptado SSL
+					</div>
+					<div class="caption font-weight-bold">Paga seguro con</div>
+					<div class="d-flex justify-space-around">
+						<v-img
+							width="50"
+							contain
+							:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
+						></v-img>
+						<v-img
+							width="50"
+							contain
+							:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
+						></v-img>
+						<v-img
+							width="50"
+							contain
+							:src="`https://cdn.hablaqui.cl/static/surface.png`"
+						></v-img>
+						<v-img
+							width="50"
+							contain
+							:src="`https://cdn.hablaqui.cl/static/american_express.png`"
+						></v-img>
+						<v-img
+							width="50"
+							contain
+							:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
+						></v-img>
+					</div>
+				</v-card-text>
+			</v-card>
+		</v-container>
+	</div>
 </template>
 
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
+import moment from 'moment';
 
 export default {
 	components: {
@@ -199,6 +220,10 @@ export default {
 		psychologist: {
 			type: Object,
 			default: null,
+		},
+		hasSessions: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -348,6 +373,9 @@ export default {
 				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 			this.showCalendar = !this.showCalendar;
+		},
+		formatDate(date) {
+			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

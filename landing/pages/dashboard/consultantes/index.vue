@@ -399,7 +399,8 @@ import {
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -450,7 +451,13 @@ export default {
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('Se requiere rut');
+			!this.$v.form.name.required && errors.push('Se requiere nombre');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
 		...mapGetters({ clients: 'Psychologist/clients', step: 'User/step' }),
@@ -479,6 +486,7 @@ export default {
 		resetForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				rut: '',
 				phone: '',
 				email: '',
@@ -511,6 +519,9 @@ export default {
 				email,
 			},
 			name: {
+				required,
+			},
+			lastName: {
 				required,
 			},
 		},

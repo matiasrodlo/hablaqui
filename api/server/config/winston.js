@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { node_env } from './dotenv';
+moment.tz.setDefault('America/Santiago');
 
 const { createLogger, format, transports } = require('winston');
 const MESSAGE = Symbol.for('message');

@@ -1,4 +1,5 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	user: (state, getters, rootState) => rootState.auth.user,

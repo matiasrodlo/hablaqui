@@ -1,6 +1,12 @@
 <template>
 	<v-container fluid style="max-width: 1200px">
-		<v-row>
+		<!-- si tiene sesiones aun agrega la que selecciono y muestra que esta cargando -->
+		<div v-show="hasSessions" style="height: 100%">
+			<v-overlay :value="hasSessions" color="white">
+				<v-progress-circular indeterminate size="64"></v-progress-circular>
+			</v-overlay>
+		</div>
+		<v-row v-show="!hasSessions">
 			<v-col cols="6">
 				<v-card class="shadowCard" style="border-radius: 15px">
 					<v-card-title class="px-10 titleColor"> Seleccionar tipo de pago </v-card-title>
@@ -226,7 +232,8 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -238,6 +245,10 @@ export default {
 		psychologist: {
 			type: Object,
 			default: null,
+		},
+		hasSessions: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {

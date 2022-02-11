@@ -2,8 +2,8 @@
 
 import moment from 'moment';
 import momentz from 'moment-timezone';
-import { room } from '../config/dotenv';
 import { logInfo } from '../config/pino';
+moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -213,7 +213,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationUser(user, psy, date, url) {
+	async sendAppConfirmationUser(user, psy, date, url, price) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
@@ -230,6 +230,7 @@ const mailService = {
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				price: price,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -248,7 +249,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationPsy(psy, user, date, url) {
+	async sendAppConfirmationPsy(psy, user, date, url, price) {
 		const nameUser = user.name;
 		const lastNameUser = user.lastName;
 		const { email, name } = psy;
@@ -268,6 +269,7 @@ const mailService = {
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
 				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				price: price,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -340,7 +342,14 @@ const mailService = {
 			});
 		});
 	},
-	async sendCustomSessionPaymentURL(user, psychologist, paymentURL) {
+	async sendCustomSessionToUser(
+		user,
+		psychologist,
+		paymentURL,
+		date,
+		value,
+		type
+	) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -354,6 +363,75 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 				payment_url: paymentURL,
+				value: value,
+				type: type,
+				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCustomSessionToPsy(
+		user,
+		psychologist,
+		paymentURL,
+		date,
+		value,
+		type
+	) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Has creado una sesión para ${user.name}`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-e935d9d8e9d8406581f909863491e41d',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				payment_url: paymentURL,
+				value: value,
+				type: type,
+				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCustomSessionCommitment(psychologist) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Has agendado un compromiso privado`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-c012cf4a84014c31b12c422ac7e20faf',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psychologist.name,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -425,7 +503,7 @@ const mailService = {
 			});
 		});
 	},
-	async sendRescheduleToPsy(user, psy, sessionDate) {
+	async sendRescheduleToPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
@@ -441,6 +519,7 @@ const mailService = {
 				date: sessionDate.date,
 				hour: sessionDate.hour,
 				psy_name: psy.name,
+				url: url,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -502,6 +581,32 @@ const mailService = {
 				roomsUrl: roomsUrl,
 				psy_name: psy.name,
 				date: date,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendCancelCommitment(psy) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has cancelado una compromiso privado`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-67d67af2cc2a4af08ddf5a11945f0b8b',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psy.name,
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -616,6 +721,67 @@ const mailService = {
 			},
 			sendAt: moment().unix(),
 			batchId: batch,
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendRescheduleToUserByPsy(user, psy, sessionDate, url) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tu psicólogo ha reprogramado tu sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-89913188fca9405da45caddede56fa54',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name + ' ' + psy.lastName,
+				url: url,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+					logInfo(error);
+				} else {
+					resolve(body);
+					logInfo(body);
+				}
+			});
+		});
+	},
+	async sendRescheduleToPsyByPsy(user, psy, sessionDate, url) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has reprogramado la sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-e10aea204d194d78917297b7ec612506',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name,
+				url: url,
+			},
 		};
 		return new Promise((resolve, reject) => {
 			sgMail.send(dataPayload, function(error, body) {

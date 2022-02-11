@@ -59,6 +59,7 @@ const userSchema = {
 			.email()
 			.required(),
 		name: Joi.string().required(),
+		lastName: Joi.string().allow(''),
 		rut: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
 	}),

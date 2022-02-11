@@ -440,6 +440,8 @@
 import moment from 'moment';
 import { mapActions } from 'vuex';
 import { mdiMagnify, mdiClose } from '@mdi/js';
+moment.tz.setDefault('America/Santiago');
+
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),

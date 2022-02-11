@@ -7,6 +7,7 @@ import pusher from '../config/pusher';
 import { pusherCallback } from '../utils/functions/pusherCallback';
 import Email from '../models/email';
 import moment from 'moment';
+moment.tz.setDefault('America/Santiago');
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);

@@ -19,6 +19,7 @@ import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+moment.tz.setDefault('America/Santiago');
 
 const usersService = {
 	async getProfile(id) {
@@ -226,6 +227,7 @@ const usersService = {
 		const newUser = {
 			psychologist: user._id,
 			name: body.name,
+			lastName: body.lastName,
 			email: body.email,
 			password: bcrypt.hashSync(pass, 10),
 			role: 'user',

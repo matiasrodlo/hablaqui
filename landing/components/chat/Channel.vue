@@ -11,22 +11,20 @@
 					<icon size="30" :icon="mdiChevronLeft" />
 				</v-btn>
 				<v-list-item-avatar size="50">
-					<avatar :url="selected.avatar" size="50" :name="selected.name" />
+					<avatar :url="selected.avatar" size="40" :name="selected.name" />
 				</v-list-item-avatar>
 				<v-list-item-title class="pl-3 title d-flex">
 					<div>
-						<span class="secondary--text">
+						<span class="subtitle-1 secondary--text">
 							{{ selected.shortName || selected.name }}
 						</span>
-						<span v-if="selected.lastName" class="secondary--text">
+						<span v-if="selected.lastName" class="subtitle-1 secondary--text">
 							{{ selected.lastName }}
 						</span>
-						<div class="secondary--text caption text--disabled">
-							{{ subHeader }}
-						</div>
+						<div class="caption secondary--text text--disabled">{{ subHeader }}</div>
 					</div>
 				</v-list-item-title>
-				<div style="min-width: 150px" class="text-right">
+				<v-list-item-action v-show="!selected.assistant" class="text-right">
 					<!-- <v-btn id="callheaher" icon >
                         <v-img
                             contain
@@ -57,7 +55,7 @@
 							:src="`https://cdn.hablaqui.cl/static/agregar.png`"
 						></v-img>
 					</v-btn>
-				</div>
+				</v-list-item-action>
 			</v-list-item>
 			<v-divider></v-divider>
 		</v-card-text>
@@ -109,7 +107,11 @@
 								class="d-flex mt-3"
 								:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
 							>
-								<div style="width: 50%">
+								<div
+									:style="
+										$vuetify.breakpoint.smAndDown ? 'width: 70%' : 'width: 50%'
+									"
+								>
 									<div style="display: flex; justify-content: space-between">
 										<span
 											v-if="sentBy(item.sentBy)"
@@ -203,10 +205,12 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { isEmpty } from 'lodash';
+moment.tz.setDefault('America/Santiago');
 
 export default {
+	name: 'Channel',
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
@@ -218,10 +222,6 @@ export default {
 		chat: {
 			type: Object,
 			default: null,
-		},
-		scrollToElement: {
-			type: Function,
-			required: true,
 		},
 		loadingChat: {
 			type: Boolean,
@@ -277,6 +277,12 @@ export default {
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));
 			this.grow = height < 140;
+		},
+		scrollToElement() {
+			const el = this.$el.getElementsByClassName('scroll')[0];
+			if (el) {
+				el.scrollTop = el.scrollHeight;
+			}
 		},
 		...mapActions({
 			sendMessage: 'Chat/sendMessage',
