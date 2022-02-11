@@ -442,11 +442,28 @@
 								class="item text-center mt-6"
 							>
 								<div
+									v-if="item.inmediateAttention.activated"
+									style="position: absolute; bottom: 0; left: 0"
+								>
+									<div
+										style="background-color: #04c396"
+										class="
+											white--text
+											rounded-tr-xl rounded-bl-lg
+											pr-4
+											pl-6
+											caption
+										"
+									>
+										¡Disponible para atender ahora!
+									</div>
+								</div>
+								<div
 									style="
 										width: 50px;
 										height: 50px;
 										position: absolute;
-										top: 30px;
+										top: 10px;
 										right: 20px;
 									"
 								>

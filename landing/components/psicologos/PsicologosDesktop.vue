@@ -393,6 +393,23 @@
 										>
 									</div>
 								</div>
+								<div
+									v-if="item.inmediateAttention.activated"
+									style="position: absolute; top: 0; right: 0"
+								>
+									<div
+										style="background-color: #04c396"
+										class="
+											white--text
+											rounded-bl-xl rounded-tr-lg
+											pr-4
+											pl-6
+											caption
+										"
+									>
+										¡Disponible para atender ahora!
+									</div>
+								</div>
 								<v-row>
 									<v-col
 										cols="3"
