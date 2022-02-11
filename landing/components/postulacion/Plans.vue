@@ -162,7 +162,8 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-btn
+					<!-- Muestra boton ir a mi cuenta en debajo de la tarjeta premiun -->
+					<!-- <v-btn
 						v-if="currentPlan.tier === 'premium'"
 						class="box mt-4"
 						color="primary"
@@ -171,7 +172,7 @@
 						@click="goToStep"
 					>
 						Ir a mi cuenta
-					</v-btn>
+					</v-btn> -->
 					<v-btn
 						class="box mt-4"
 						color="primary"

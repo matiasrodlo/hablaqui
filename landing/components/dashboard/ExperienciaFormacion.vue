@@ -247,7 +247,7 @@
 						</v-list-item-icon>
 					</v-list-item>
 				</v-list>
-				<v-btn depressed color="#ecf5ff" rounded block @click="setExperience">
+				<v-btn depressed color="#ecf5ff" rounded block @click="() => setExperience()">
 					<span class="primary--text">Agregar experiencia</span>
 				</v-btn>
 			</v-sheet>
@@ -442,6 +442,7 @@ export default {
 			if (item) {
 				this.hiddenInput = item.current;
 				this.selectedExperience = item;
+				console.log(item);
 			} else {
 				this.hiddenInput = false;
 				this.selectedExperience = {

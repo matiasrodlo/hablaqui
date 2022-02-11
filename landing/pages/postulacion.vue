@@ -607,7 +607,7 @@
 										color="#ecf5ff"
 										rounded
 										block
-										@click="setExperience"
+										@click="() => setExperience()"
 									>
 										<span class="primary--text">Agregar experiencia</span>
 									</v-btn>
