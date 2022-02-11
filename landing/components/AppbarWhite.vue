@@ -60,17 +60,21 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<template v-if="$auth.$state.loggedIn">
-					<template v-for="(item, i) in menu">
-						<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
-							<v-list-item-content>
-								<v-list-item-title class="secondary--text font-weight-bold body-2">
-									{{ item.name }}
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
+				<client-only>
+					<template v-if="$auth.$state.loggedIn">
+						<template v-for="(item, i) in menu">
+							<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
+								<v-list-item-content>
+									<v-list-item-title
+										class="secondary--text font-weight-bold body-2"
+									>
+										{{ item.name }}
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</template>
 					</template>
-				</template>
+				</client-only>
 				<v-list-item
 					v-show="$auth.$state.loggedIn"
 					id="logout-drawer"
