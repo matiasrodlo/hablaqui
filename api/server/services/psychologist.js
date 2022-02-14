@@ -2070,12 +2070,14 @@ const paymentsInfo = async user => {
 						moment(session.paymentDate).isValid()
 							? moment(session.paymentDate).format('DD/MM/YYYY')
 							: 'Por cobrar';
+
 					const hablaquiPercentage =
 						realComission === 0.0399
 							? plans.sessionPrice * 0
 							: plans.sessionPrice * 0.1601;
 
 					return {
+						_id: session._id,
 						datePayment: moment(plans.datePayment).format(
 							'DD/MM/YYYY'
 						),
@@ -2084,7 +2086,7 @@ const paymentsInfo = async user => {
 						date: moment(session.date).format('DD/MM/YYYY'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
-						hablaquiPercentage: hablaquiPercentage.toFixed(2),
+						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
 							plans.sessionPrice * 0.0399
 						).toFixed(2),
@@ -2098,13 +2100,13 @@ const paymentsInfo = async user => {
 						transDate,
 					};
 				});
-				sessions = sessions.filter(
-					session => session.status === 'success'
-				);
-
 				const receivable = sessions.filter(
 					session => session.transDate === 'Por cobrar'
 				).length;
+
+				sessions = sessions.filter(
+					session => session.status === 'success'
+				);
 
 				return {
 					idPlan: plans._id,
@@ -2120,7 +2122,7 @@ const paymentsInfo = async user => {
 					finalAmount: (
 						plans.totalPrice *
 						(1 - realComission)
-					).toFixed(2),
+					).toFixed(0),
 					sessions,
 					transState: receivable > 0 ? 'Por cobrar' : 'Cobrado',
 				};
@@ -2134,7 +2136,6 @@ const paymentsInfo = async user => {
 			item.suscription !== 'Plan inicial'
 		);
 	});
-	//logInfo(payments);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
