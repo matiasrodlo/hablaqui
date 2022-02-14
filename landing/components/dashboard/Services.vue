@@ -111,7 +111,6 @@
 										description:
 											'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
 									},
-									done: hasSessionPrice,
 									route: 'dashboard-perfil',
 								})
 							"
