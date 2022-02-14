@@ -4,23 +4,19 @@
 
 ## Table of Contents
 
-1. [Auth](#general-info)
-2. [Chat](#technologies)
-3. [Dashboard](#installation)
+1. [Auth](#auth)
+2. [Chat](#chat)
+3. [Dashboard](#dashboard)
 4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
+5.
 
-### General Info
-
----
-
-Write down general information about your project. It is a good idea to always put a project status in the readme file. This is where you can add it.
+### AUTH
 
 ---
 
-## AUTH
+-   GoogleBtn.vue: Botón para logearte con google, pero actualmente no se utiliza
 
-### GoogleBtn.vue: Botón para logearte con google, pero actualmente no se utiliza
+---
 
 ### SendPasswordRecovery.vue: Formulario para enviar email de recuperación de contraseña/cuenta
 
