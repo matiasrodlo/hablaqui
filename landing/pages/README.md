@@ -3,9 +3,11 @@
 ## Table of Contents
 
 1. [Dashboard](#dashboard)
-   1.1. [Consultantes](#consultantes)
-   1.2. [Pagos](#pagos)
-   1.3. [Perfil](#perfil)
+
+    - [Consultantes](#consultantes)
+    - [Pagos](#pagos)
+    - [Perfil](#perfil)
+
 2. [Psicologos](#psicologos)
 3. [Raíz](#raiz)
 
