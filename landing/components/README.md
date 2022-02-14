@@ -14,7 +14,7 @@
 
 ---
 
--   GoogleBtn.vue: Botón para logearte con google, pero actualmente no se utiliza
+-   **GoogleBtn.vue**: Botón para logearte con google, pero actualmente no se utiliza
 
 ---
 
