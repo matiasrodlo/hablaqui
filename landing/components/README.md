@@ -88,16 +88,14 @@
 
 ---
 
--   **AppbarBlue.vue**:
--   **AppbarWhite.vue**:
--   **Avatar.vue**:
--   **Calendar.vue**:
--   **CalendarPsychologist.vue**:
--   **CardOnboarding.vue**:
--   **Footer.vue**:
--   **Icon.vue**:
--   **Logo.vue**:
--   **RecruitedOverlay.vue**:
--   **Snackbar.vue**:
+-   **AppbarBlue.vue**: Menú de navegación (ondulación azul con enlaces) antigüamente usado en blog
+-   **AppbarWhite.vue**: Menú de navegación (ondulación blanca con enlaces)
+-   **Avatar.vue**: Permite visualizar el avatar de un usuario de acuerdo a los estilos
+-   **Calendar.vue**: Selector de hora con scroll
+-   **CalendarPsychologist.vue**: Selector de hora expandible
+-   **CardOnboarding.vue**: Tarjeta para el mensaje de onboarding
+-   **Footer.vue**: Pie de página
+-   **Icon.vue**: Permite visualizar los iconos
+-   **Snackbar.vue**: Permite mostrar mensajes de estado
 
 ---
