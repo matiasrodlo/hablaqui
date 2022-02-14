@@ -277,6 +277,18 @@
 							</v-col>
 							<v-col cols="12" sm="6">
 								<v-text-field
+									v-model="form.lastName"
+									type="text"
+									dense
+									hide-details="auto"
+									outlined
+									label="Nombre"
+									:error-messages="nameErrors"
+								>
+								</v-text-field>
+							</v-col>
+							<v-col cols="12" sm="6">
+								<v-text-field
 									v-model="form.rut"
 									type="text"
 									dense
