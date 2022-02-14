@@ -3,6 +3,9 @@
 ## Table of Contents
 
 1. [Dashboard](#dashboard)
+   1.1. [Consultantes](#consultantes)
+   1.2. [Pagos](#pagos)
+   1.3. [Perfil](#perfil)
 2. [Psicologos](#psicologos)
 3. [Raíz](#raiz)
 
@@ -10,18 +13,18 @@
 
 ---
 
--   **consultantes**:
+-   ##### consultantes:
 
     -   **consultante-seleccionado.vue**:
     -   **index.vue**:
 
--   **pagos**:
+-   ##### pagos:
 
     -   **historial.vue**:
     -   **index.vue**:
     -   **success.vue**:
 
--   **perfil**:
+-   ##### perfil:
 
     -   **configuracion-personal.vue**:
     -   **dattos-bancarios.vue**:
