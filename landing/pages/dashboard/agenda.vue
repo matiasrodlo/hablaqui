@@ -2,7 +2,7 @@
 	<div>
 		<card-onboarding
 			v-if="stepOnboarding && stepOnboarding.title === 'Mi agenda'"
-			style="position: absolute; top: 190px; left: 10px; z-index: 3"
+			style="position: absolute; top: 240px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {

@@ -2,7 +2,7 @@
 	<div>
 		<card-onboarding
 			v-if="stepOnboarding && stepOnboarding.title === 'Mis pagos'"
-			style="position: absolute; top: 250px; left: 10px; z-index: 3"
+			style="position: absolute; top: 310px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {
