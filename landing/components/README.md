@@ -2,36 +2,24 @@
 
 **This directory is not required, you can delete it if you don't want to use it.**
 
-The components directory contains your Vue.js Components.
-
-_Nuxt.js doesn't supercharge these components._
-
-## Table of Contents
-
-1. [General Info](#general-info)
-2. [Technologies](#technologies)
-3. [Installation](#installation)
-4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
-
 ## AUTH
 
 ### GoogleBtn.vue: Botón para logearte con google, pero actualmente no se utiliza
 
-### SendPasswordRecovery.vue:
+### SendPasswordRecovery.vue: Formulario para enviar email de recuperación de contraseña/cuenta
 
-### SignIn.vue:
+### SignIn.vue: Componente con todo lo relaciona al login
 
-### SignUp.vue:
+### SignUp.vue: Componente con todo lo relacionado al registro de una cuenta de usuario role user
 
 ## CHAT
 
-### CardChat.vue:
+### CardChat.vue: Componente de chat utilizado en FloatingChat (este es solamente para usuarios: user)
 
-### Channel.vue:
+### Channel.vue: Comoponente en la página de chat. Este es el del chat completo (este es para ambos tipos de usurios: user y psychologist)
 
 ## DASHBOARD
 
-### AppbarProfile.vue:
+### AppbarProfile.vue: Este es la navegación ubicada en la parte superior en el dashboard (Mi plan premium; Agenda demo; etc)
 
-### BankData.vue:
+### BankData.vue: Formulario para rellenar con información de la cuenta bancaria de un psicólogo
