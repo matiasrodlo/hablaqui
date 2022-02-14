@@ -300,7 +300,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': moment(),
+				'plan.$.datePayment': moment().format(),
 			},
 		},
 		{ new: true }
@@ -332,7 +332,6 @@ const createCustomSessionPreference = async params => {
 		user: userId,
 		psychologist: psyId,
 	});
-	logInfo('el' + JSON.stringify(foundPlan));
 	const planData = foundPlan.plan[foundPlan.plan.length - 1];
 	let newPreference = {
 		items: [
