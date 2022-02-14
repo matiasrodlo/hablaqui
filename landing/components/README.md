@@ -2,6 +2,22 @@
 
 **This directory is not required, you can delete it if you don't want to use it.**
 
+## Table of Contents
+
+1. [Auth](#general-info)
+2. [Chat](#technologies)
+3. [Dashboard](#installation)
+4. [Collaboration](#collaboration)
+5. [FAQs](#faqs)
+
+### General Info
+
+---
+
+Write down general information about your project. It is a good idea to always put a project status in the readme file. This is where you can add it.
+
+---
+
 ## AUTH
 
 ### GoogleBtn.vue: Botón para logearte con google, pero actualmente no se utiliza
