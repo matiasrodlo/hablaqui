@@ -183,6 +183,7 @@ export default {
 		'@nuxtjs/eslint-module',
 		// https://github.com/Developmint/nuxt-purgecss
 		// 'nuxt-purgecss',
+		'@nuxtjs/google-analytics',
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
@@ -198,13 +199,37 @@ export default {
 				sv: '6',
 			},
 		],
+		'@nuxtjs/google-analytics',
 		[
 			'@nuxtjs/google-gtag',
 			{
-				id: 'G-VDW0VD7GBN',
+				id: 'UA-206733202-1',
 			},
 		],
+		'@dansmaculotte/nuxt-segment',
 	],
+
+	segment: {
+		writeKey: 'cfhCuLuHi3QH8paFuAqbs3fvc7X2gqh5',
+		disabled: false,
+		userRouter: true,
+	},
+
+	'google-gtag': {
+		id: 'UA-206733202-1',
+		config: {
+			anonimize_ip: true,
+			linker: {
+				domains: ['hablaqui.cl', 'www.hablaqui.cl'],
+			},
+		},
+	},
+	googleAnalytics: {
+		id: 'UA-206733202-1',
+		autoTracking: {
+			screenview: true,
+		},
+	},
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {

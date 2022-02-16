@@ -1229,6 +1229,13 @@ export default {
 						method: 'put',
 						data: this.form,
 					});
+					this.$segment.track(this.form._id.toString(), {
+						event: 'psy-application-step',
+						properties: {
+							step: step,
+							email: this.$auth.user.email,
+						},
+					});
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
 				} else {
@@ -1240,6 +1247,13 @@ export default {
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
 				}
+				this.$segment.identify(this.form._id.toString(), {
+					email: this.$auth.user.email,
+					name: this.$auth.user.name,
+					lastName: this.$auth.user.lastName,
+					phone: this.form.phone.number,
+					lastCompletedStep: step,
+				});
 				this.step = step;
 			} else {
 				alert('Por favor complete el formulario');

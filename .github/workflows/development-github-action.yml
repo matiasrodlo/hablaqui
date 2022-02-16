@@ -49,5 +49,4 @@ jobs:
         service: development-front
         project_id: hablaqui
         credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-
   

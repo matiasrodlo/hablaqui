@@ -866,6 +866,29 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'user-purchase-plan',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'psy-new-plan',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+				user: payload.user._id,
+			},
+		});
 	}
 
 	if (userSessions) {

@@ -39,6 +39,7 @@ const createPreference = async body => {
 			pending: `${landing_url}/${body.psychologist}`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
@@ -84,6 +85,7 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
@@ -361,6 +363,7 @@ const createCustomSessionPreference = async params => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
