@@ -39,7 +39,7 @@
 					<br /><br />
 					Los pagos realizados por transferencia bancaria solo podrán realizarse en día
 					hábil y la confirmación se realizará mediante el envío del referido recibo de la
-					transacción por parte del Usuario al correo electrónico ayuda@hablaqui.com. El
+					transacción por parte del Usuario al correo electrónico soporte@hablaqui.com. El
 					plazo de validación será de hasta 24 horas tras su recepción por parte de
 					Hablaquí.
 					<br /><br />
@@ -243,7 +243,7 @@
 					Si el Usuario desea proceder a la cancelación y recibir el reembolso, será
 					necesario que se ponga en contacto con Hablaquí a través de la Plataforma, de la
 					página web http://www.hablaqui.com o por correo electrónico de soporte:
-					ayuda@hablaqui.com.
+					soporte@hablaqui.cl
 					<br />
 					<br />
 					Si el Usuario ha realizado el pago mediante tarjeta de crédito, transferencia
@@ -681,7 +681,6 @@
 						</a>
 					</div>
 					<div class="my-4">Atención a clientes: soporte@hablaqui.cl</div>
-					<div>Horario de atención: 09:00 am - 18:30 pm</div>
 				</v-col>
 			</v-row>
 		</v-container>

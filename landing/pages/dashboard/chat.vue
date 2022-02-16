@@ -22,7 +22,7 @@
 								dense
 								outlined
 								single-line
-								append-icon="mdi-magnify"
+								:append-icon="mdiMagnify"
 								label="Buscar"
 							/>
 						</v-card-text>
@@ -67,8 +67,10 @@
 									</v-list-item-avatar>
 
 									<v-list-item-content>
-										<v-list-item-title v-html="user.name"></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ user.name }} {{ user.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Usuario · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -85,9 +87,9 @@
 							<!-- general lista usuarios -->
 							<template v-if="listUsers.length">
 								<v-card-text class="py-0">
-									<v-subheader class="primary--text body-1 px-0"
-										>General</v-subheader
-									>
+									<v-subheader class="primary--text body-1 px-0">
+										General
+									</v-subheader>
 									<v-divider
 										style="border-color: #5eb3e4"
 										class="mb-2"
@@ -118,9 +120,9 @@
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ user.name }}
+												{{ user.name }} {{ user.lastName }}
 											</v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-subtitle v-show="false">
 												Usuario · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -161,10 +163,10 @@
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
-										<v-list-item-title
-											v-html="getMyPsy.name"
-										></v-list-item-title>
-										<v-list-item-subtitle>
+										<v-list-item-title>
+											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+										</v-list-item-title>
+										<v-list-item-subtitle v-show="false">
 											Psicólogo · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
@@ -240,10 +242,10 @@
 										</v-list-item-avatar>
 
 										<v-list-item-content>
-											<v-list-item-title
-												v-html="psy.name"
-											></v-list-item-title>
-											<v-list-item-subtitle>
+											<v-list-item-title>
+												{{ psy.name }} {{ psy.lastName }}
+											</v-list-item-title>
+											<v-list-item-subtitle v-show="false">
 												Psicólogo · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -294,24 +296,24 @@
 					<v-dialog v-if="$vuetify.breakpoint.smAndDown" v-model="dialog" fullscreen>
 						<v-sheet>
 							<channel
+								ref="channel1"
 								style="height: 100vh"
 								:selected="selected"
 								:sub-header="subHeader"
 								:loading-chat="loadingChat"
 								:chat="chat"
-								:scroll-to-element="scrollToElement"
-								:close="() => (dialog = false)"
+								:close="() => (selected = null)"
 							/>
 						</v-sheet>
 					</v-dialog>
 					<v-col v-else cols="12" md="8" lg="9">
 						<channel
+							ref="channel2"
 							style="height: calc(100vh - 135px)"
 							:selected="selected"
 							:sub-header="subHeader"
 							:loading-chat="loadingChat"
 							:chat="chat"
-							:scroll-to-element="scrollToElement"
 						/>
 					</v-col>
 				</template>
@@ -323,8 +325,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import Pusher from 'pusher-js';
+import { mdiMagnify } from '@mdi/js';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -337,13 +341,14 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
+			mdiMagnify,
 			search: '',
 			loadingChat: false,
 			dialog: false,
 			selected: null,
 			pusher: null,
 			channel: null,
-			initLoading: false,
+			initLoading: true,
 		};
 	},
 	computed: {
@@ -366,11 +371,13 @@ export default {
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user &&
+				this.$auth.$state.user.role === 'psychologist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
-			return 'Usuario de hablaquí';
+			return this.$auth.$state.user.role === 'user'
+				? 'Psicólogo de hablaquí'
+				: 'No es un consultane';
 		},
 		listClients() {
 			return this.clients
@@ -386,16 +393,19 @@ export default {
 		},
 		// lista de usuarios/clientes con los que podría chatear el psicólogo
 		listUsers() {
-			let filterArray = this.chats.filter(el =>
-				el.user.name.toLowerCase().includes(this.search.toLowerCase())
-			);
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (!filterArray.length) filterArray = this.chats;
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.user.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist')
+			if (this.$auth.$state.user.role === 'psychologist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -407,15 +417,19 @@ export default {
 		},
 		// lista de psicólogos con los que podría chatear el usuario
 		listPsychologist() {
-			let filterArray = this.chats.filter(el =>
-				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
-			);
-			if (!filterArray.length) filterArray = this.chats;
+			let filterArray = this.chats.filter(item => item.psychologist && item.user);
 
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.getMyPsy)
+			if (this.search) {
+				filterArray = this.chats.filter(el =>
+					el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+				);
+			}
+
+			if (this.$auth.$state.user.role === 'user' && this.getMyPsy) {
 				filterArray = filterArray.filter(item => {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
+			}
 
 			return filterArray
 				.map(item => ({
@@ -462,14 +476,6 @@ export default {
 			if (!plan) plan = plans.find(item => item.diff === max);
 			return plan;
 		},
-		// retorna verdadero si el usurio tiene plan activo
-		isActivePlan() {
-			if (!this.plan) return false;
-			return (
-				this.plan.remainingSessions > 0 ||
-				(this.plan.payment === 'success' && moment().isBefore(moment(this.plan.expiration)))
-			);
-		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
@@ -479,11 +485,18 @@ export default {
 	},
 	watch: {
 		selected(newValue) {
-			if (newValue._id) this.dialog = true;
-			else this.dialog = false;
+			if (newValue && newValue._id) {
+				this.dialog = true;
+			} else this.dialog = false;
 		},
 	},
 	created() {
+		this.selected = {
+			name: 'Habi',
+			assistant: true,
+			avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
+			url: '',
+		};
 		// PUSHER
 		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
 			cluster: this.$config.PUSHER_CLUSTER,
@@ -503,15 +516,16 @@ export default {
 			}
 		});
 	},
-	mounted() {
-		this.initFetch();
+	async mounted() {
+		await this.initFetch();
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			) {
+			moment.locale('es');
+			await this.getPsychologists();
+			if (this.$auth.$state.user.role === 'user') {
+				await this.getMessages();
+				this.initLoading = false;
 				return (this.selected = {
 					name: 'Habi',
 					assistant: true,
@@ -519,12 +533,11 @@ export default {
 					url: '',
 				});
 			}
-			this.initLoading = true;
-			moment.locale('es');
-			await this.getPsychologists();
-			await this.getMessages();
-			if (this.$auth.$state.user && this.$auth.$state.user.role === 'psychologist') {
-				await this.getClients(this.$auth.$state.user.psychologist);
+			if (this.$auth.$state.user.role === 'psychologist') {
+				if (this.$auth.$state.user.psychologist) {
+					await this.getClients(this.$auth.$state.user.psychologist);
+					await this.getMessages();
+				}
 				if ('client' in this.$route.query) {
 					this.setSelectedUser(
 						this.clients.find(client => client._id === this.$route.query.client)
@@ -545,16 +558,15 @@ export default {
 		async pusherCallback(data) {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
-				this.scrollToElement();
-				await this.updateMessage(data.content._id);
+				// scroll to end
+				setTimeout(() => {
+					if (this.$vuetify.breakpoint.smAndDown) {
+						this.$refs.channel1.scrollToElement();
+					} else this.$refs.channel2.scrollToElement();
+				}, 100);
+				await this.updateMessage(data._id);
 			}
 			await this.getMessages();
-		},
-		scrollToElement() {
-			const el = this.$el.getElementsByClassName('scroll')[0];
-			if (el) {
-				el.scrollTop = el.scrollHeight;
-			}
 		},
 		async setSelectedUser(user) {
 			this.loadingChat = true;
@@ -567,9 +579,12 @@ export default {
 			};
 			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
 			this.loadingChat = false;
+			// scroll to end
 			setTimeout(() => {
-				this.scrollToElement();
-			}, 10);
+				if (this.$vuetify.breakpoint.smAndDown) {
+					this.$refs.channel1.scrollToElement();
+				} else this.$refs.channel2.scrollToElement();
+			}, 100);
 			if (user.countMessagesUnRead) {
 				await this.updateMessage(user.hasMessageUser);
 				await this.getMessages();
@@ -584,12 +599,14 @@ export default {
 			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
-			// scroll hasta el final para ver los ultimo mensajes
-			setTimeout(() => {
-				this.scrollToElement();
-			}, 10);
 			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
 			if (!this.chat) await this.startConversation(psy._id);
+			// scroll to end
+			setTimeout(() => {
+				if (this.$vuetify.breakpoint.smAndDown) {
+					this.$refs.channel1.scrollToElement();
+				} else this.$refs.channel2.scrollToElement();
+			}, 100);
 			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
 			if (psy.countMessagesUnRead) {
 				await this.updateMessage(psy.hasMessage);

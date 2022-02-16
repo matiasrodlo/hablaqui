@@ -7,7 +7,7 @@
 				</div>
 			</v-col>
 			<v-col cols="12" md="6" lg="5">
-				<v-card class="rounded-xl elevation-12">
+				<v-card class="box rounded-xl">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
@@ -63,7 +63,7 @@
 				</v-card>
 				<v-btn
 					v-if="currentPlan && currentPlan.tier === 'free'"
-					class="mt-4 elevation-12"
+					class="mt-4 box"
 					color="white"
 					rounded
 					block
@@ -73,7 +73,7 @@
 				</v-btn>
 				<v-btn
 					v-else
-					class="mt-4 elevation-12"
+					class="mt-4 box"
 					color="white"
 					rounded
 					block
@@ -83,7 +83,7 @@
 				</v-btn>
 			</v-col>
 			<v-col cols="12" md="6" lg="5">
-				<v-card class="rounded-xl elevation-12">
+				<v-card class="box rounded-xl">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
@@ -135,7 +135,7 @@
 					</v-card-text>
 				</v-card>
 				<v-radio-group v-model="period" hide-details>
-					<v-card class="my-2 rounded-xl elevation-12">
+					<v-card class="box my-2 rounded-xl">
 						<v-card-text class="py-1">
 							<v-radio value="mensual">
 								<template #label>
@@ -147,7 +147,7 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-card class="my-2 elevation-12">
+					<v-card class="box my-2">
 						<div class="primary caption text-center white--text" style="height: 20px">
 							Ahorra 20%
 						</div>
@@ -162,18 +162,19 @@
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-btn
+					<!-- Muestra boton ir a mi cuenta en debajo de la tarjeta premiun -->
+					<!-- <v-btn
 						v-if="currentPlan.tier === 'premium'"
-						class="mt-4 elevation-12"
+						class="box mt-4"
 						color="primary"
 						rounded
 						block
 						@click="goToStep"
 					>
 						Ir a mi cuenta
-					</v-btn>
+					</v-btn> -->
 					<v-btn
-						class="mt-4 elevation-12"
+						class="box mt-4"
 						color="primary"
 						rounded
 						block
@@ -190,7 +191,8 @@
 <script>
 import { mdiCheck } from '@mdi/js';
 import { mapActions } from 'vuex';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -211,14 +213,14 @@ export default {
 			period: 'mensual',
 			itemsPremiun: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares y hablaquí',
+				'0% de comisión por clientes referidos. El costo de la pasarela de pago está incluido.',
 				'Sala de videollamada encriptada',
 				'Posicionamiento, visibilidad y clientes',
 				'Soporte prioritario y asesoramiento estratégico',
 			],
 			itemsBasico: [
 				'Agenda, cobros y recordatorios en piloto automático',
-				'0% de comisión por clientes particulares',
+				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%) + IVA',
 				'20% de comisión por clientes Hablaquí',
 				'Sala de videollamada encriptada.',
 				'Soporte y atención al cliente',
@@ -294,4 +296,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.box {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+	transition: transform 0.6s !important;
+}
+</style>

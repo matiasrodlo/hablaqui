@@ -70,7 +70,10 @@
 							<template #label>
 								<div class="caption">
 									He leído y
-									<nuxt-link to="condiciones" style="text-decoration: none">
+									<nuxt-link
+										to="terminos-y-condiciones-especialista"
+										style="text-decoration: none"
+									>
 										acepto los Términos y condiciones </nuxt-link
 									>y
 									<nuxt-link to="politicas" style="text-decoration: none">
@@ -123,6 +126,46 @@ export default {
 				email: '',
 				password: '',
 				role: 'psychologist',
+			},
+			recruitmentForm: {
+				avgPatients: '',
+				birthDate: '',
+				comuna: '',
+				country: 'Chile',
+				experience: [],
+				formation: [],
+				gender: '',
+				instagram: '',
+				isExclusiveActivity: false,
+				isSupervisor: false,
+				isUnderSupervision: false,
+				languages: ['spanish'],
+				linkedin: '',
+				models: [],
+				personalDescription: '',
+				phone: { code: '+56', number: '', flag: '' },
+				professionalDescription: '',
+				region: '',
+				specialties: [],
+				timeZone: 'America/Santiago',
+				yearsExpPsychologist: '',
+				yearsExpVideocalls: '',
+				howFindOut: 'Búsqueda de internet',
+				isContentCreator: false,
+				isAffiliateExternal: false,
+				isInterestedBusiness: false,
+				psyPlans: [
+					{
+						tier: 'free',
+						paymentStatus: 'pending',
+						planStatus: 'pending',
+						expirationDate: '',
+						subscriptionPeriod: '',
+						price: 0,
+						hablaquiFee: 0.2,
+						paymentFee: 0.0399,
+					},
+				],
 			},
 			terminos: false,
 			dialog: false,
@@ -186,6 +229,11 @@ export default {
 						data: { email: this.formData.email, password: this.formData.password },
 					});
 					this.$auth.setUser(response.data.user);
+
+					await this.$axios('/recruitment/register', {
+						method: 'post',
+						data: this.recruitmentForm,
+					});
 
 					// redireccionamos a postulacion como psicologo
 					this.$router.push({ name: 'postulacion' });

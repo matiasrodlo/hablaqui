@@ -224,6 +224,7 @@ export default {
 	},
 	computed: {
 		maxWidth() {
+			if (this.step === 0) return '600';
 			if (this.step === 1) return '700';
 			if (this.step === 2) return '500';
 			else if (this.step === 3) return '800';

@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import { Schema, model } from 'mongoose';
+moment.tz.setDefault('America/Santiago');
 
 let email = new Schema({
 	batchId: {
@@ -18,7 +19,6 @@ let email = new Schema({
 	},
 	type: {
 		type: String,
-		enum: ['reminder-user', 'reminder-psy'],
 	},
 	queuedAt: {
 		type: String,

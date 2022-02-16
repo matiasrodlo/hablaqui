@@ -65,7 +65,8 @@
 					class="mt-5"
 					@click="
 						() => {
-							if (selected) setDate(selected);
+							if (/*$auth.user.role !== 'psychologist' &&*/ selected)
+								setDate(selected);
 						}
 					"
 				>
@@ -91,6 +92,7 @@ export default {
 		titleButton: { type: String, default: 'Agendar una cita online' },
 		idPsy: { type: String, default: '' },
 		loadingBtn: { type: Boolean, default: false },
+		type: { type: String, default: 'schedule' },
 	},
 	data() {
 		return {
@@ -115,7 +117,7 @@ export default {
 	methods: {
 		async getData(id) {
 			this.loading = true;
-			await this.getFormattedSessions(id);
+			await this.getFormattedSessions({ id, type: this.type });
 			this.loading = false;
 		},
 		...mapActions({

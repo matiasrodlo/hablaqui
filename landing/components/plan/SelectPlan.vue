@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-row class="my-6">
-			<v-col v-for="(el, j) in plans" :key="j" cols="12" md="4">
+			<v-col v-for="(el, j) in plans" :key="j" cols="12" md="6">
 				<v-sheet
 					v-if="!el.expandCard"
 					class="pa-y elevation-3"
@@ -189,41 +189,6 @@ export default {
 					image: `https://cdn.hablaqui.cl/static/planOne.png`,
 					description:
 						'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.',
-				},
-				{
-					id: 2,
-					deals: [
-						{
-							id: 4,
-							lapse: '',
-							price: '14000',
-							total: '14000',
-							type: 'Pago semanal',
-						},
-						{
-							id: 5,
-							lapse: '($50.400)',
-							total: '50400',
-							price: '12600',
-							type: 'Pago mensual',
-						},
-						{
-							id: 6,
-							lapse: '($134.400)',
-							total: '134400',
-							price: '11200',
-							type: 'Pago cada tres meses',
-						},
-					],
-					recommended: false,
-					expandCard: false,
-					price: '14000',
-					mode: 'por sesión',
-					title: 'Acompañamiento vía mensajería',
-					subtitle: 'Terapia vía mensajes de texto',
-					image: `https://cdn.hablaqui.cl/static/planTwo.png`,
-					description:
-						'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.',
 				},
 				{
 					id: 3,

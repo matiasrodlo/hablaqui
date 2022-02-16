@@ -14,25 +14,25 @@
 				/>
 			</v-list-item>
 			<v-list dense>
-				<v-list-item
-					id="link-psi-drawer"
-					accesskey="p"
-					link
-					active-class="primary white--text"
-					:to="{ name: 'psicologos' }"
-				>
+				<v-list-item id="link-psi-drawer" accesskey="p" link :to="{ name: 'psicologos' }">
 					<v-list-item-content>
-						<v-list-item-title>Psicólogos</v-list-item-title>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Psicólogos
+						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
 					<v-list-item-content>
-						<v-list-item-title>Para especialistas</v-list-item-title>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Para especialistas
+						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
 					<v-list-item-content>
-						<v-list-item-title>Preguntas frecuentes</v-list-item-title>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Preguntas frecuentes
+						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -42,28 +42,9 @@
 					href="https://hablaqui.cl/blog/"
 				>
 					<v-list-item-content>
-						<v-list-item-title>Blog</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item
-					v-show="$auth.$state.loggedIn"
-					id="logout-drawer"
-					accesskey="x"
-					@click="logout"
-				>
-					<v-list-item-content>
-						<v-list-item-title>Cerrar sesión</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item
-					v-show="!$auth.$state.loggedIn"
-					id="iniciar-sesion-drawer"
-					accesskey="s"
-					link
-					to="/auth"
-				>
-					<v-list-item-content>
-						<v-list-item-title>Iniciar sesión</v-list-item-title>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Blog
+						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -74,25 +55,52 @@
 					@click="start"
 				>
 					<v-list-item-content>
-						<v-list-item-title>Comenzar</v-list-item-title>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Comenzar
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<client-only>
+					<template v-if="$auth.$state.loggedIn">
+						<template v-for="(item, i) in menu">
+							<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
+								<v-list-item-content>
+									<v-list-item-title
+										class="secondary--text font-weight-bold body-2"
+									>
+										{{ item.name }}
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</template>
+					</template>
+				</client-only>
+				<v-list-item
+					v-show="$auth.$state.loggedIn"
+					id="logout-drawer"
+					accesskey="x"
+					@click="logout"
+				>
+					<v-list-item-content>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Cerrar sesión
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-show="!$auth.$state.loggedIn"
+					id="iniciar-sesion-drawer"
+					accesskey="s"
+					link
+					to="/auth"
+				>
+					<v-list-item-content>
+						<v-list-item-title class="secondary--text font-weight-bold body-2">
+							Iniciar sesión
+						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
-			<v-divider></v-divider>
-			<client-only>
-				<v-list v-if="$auth.$state.loggedIn">
-					<v-subheader>Mi secciones</v-subheader>
-					<template v-for="(item, i) in menu">
-						<v-list-item v-show="item.visible" id="i" :key="i" link :to="item.link">
-							<v-list-item-content>
-								<v-list-item-title class="secondary--text font-weight-bold body-2">
-									{{ item.name }}
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</template>
-				</v-list>
-			</client-only>
 		</v-navigation-drawer>
 		<div style="height: 180px; overflow: hidden">
 			<svg
@@ -305,7 +313,7 @@ export default {
 					visible,
 				},
 				{
-					name: 'Mis sesiones',
+					name: 'Mi agenda',
 					link: { name: 'dashboard-agenda' },
 					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
@@ -345,8 +353,8 @@ export default {
 		},
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
@@ -362,7 +370,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .shadow {
-	-webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
-	filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, 0.1));
+	-webkit-filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
+	filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
 }
 </style>

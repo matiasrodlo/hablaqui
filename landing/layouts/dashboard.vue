@@ -17,7 +17,7 @@
 					:src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaquí"
-					class="my-16"
+					class="mt-10"
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
@@ -59,11 +59,66 @@
 						</v-list-item-content>
 					</v-list-item>
 				</template>
-				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
-					<v-list-item-avatar size="40">
+				<v-list-item
+					v-if="$auth.$state.user.role === 'psychologist'"
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+				>
+					<v-list-item-avatar size="30">
 						<v-img
-							height="50"
-							width="50"
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/demo-w.png"
+							alt="demo"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Agendar demo
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item
+					v-if="$auth.user.role === 'psychologist'"
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://soporte.hablaqui.cl/hc"
+				>
+					<v-list-item-avatar size="30">
+						<v-img
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/ayuda.png"
+							alt="soporte"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
+					<v-list-item-avatar size="30">
+						<v-img
+							height="30"
+							width="30"
+							src="https://cdn.hablaqui.cl/static/ayuda.png"
+							alt="soporte"
+						/>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="font-weight-bold body-2">
+							Centro de ayuda
+						</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
+					<v-list-item-avatar size="30">
+						<v-img
+							height="45"
+							width="45"
 							:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
 							alt="cerrar sesión"
 						/>
@@ -100,8 +155,8 @@
 			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text>
-							<span class="secondary--text" @click="changeStateOnboarding"> x </span>
+						<v-btn text @click="changeStateOnboarding">
+							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
@@ -183,19 +238,19 @@ export default {
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					img: `https://cdn.hablaqui.cl/static/chat.png`,
+					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
-					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
+					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					img: `https://cdn.hablaqui.cl/static/pay.png`,
+					img: 'https://cdn.hablaqui.cl/static/pay.png',
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
@@ -203,7 +258,7 @@ export default {
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },
-					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
+					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
@@ -211,25 +266,28 @@ export default {
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					img: `https://cdn.hablaqui.cl/static/home.png`,
+					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
+				},
+				{
+					name: 'Mi plan premium',
+					link: { name: 'dashboard-planes' },
+					img: 'https://cdn.hablaqui.cl/static/diamante.png',
+					visible:
+						this.$vuetify.breakpoint.smAndDown &&
+						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					img: `https://cdn.hablaqui.cl/static/apps.png`,
-					visible: this.$auth.$state.user?.role === 'superuser',
-				},
-				{
-					name: 'Nuevo articulo',
-					link: { name: 'dashboard-newArticle' },
-					img: `https://cdn.hablaqui.cl/static/article.png`,
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
 		},
 		routeName() {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-planes') return 'Planes';
 			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
 			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
 			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
@@ -255,8 +313,8 @@ export default {
 			this.overlay = true;
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
 		async changeStateOnboarding() {

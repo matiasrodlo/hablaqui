@@ -230,6 +230,18 @@
 						</v-col>
 						<v-col cols="12" sm="6">
 							<v-text-field
+								v-model="form.lastName"
+								type="text"
+								dense
+								hide-details="auto"
+								outlined
+								label="Apellido"
+								:error-messages="lastNameErrors"
+							>
+							</v-text-field>
+						</v-col>
+						<v-col cols="12" sm="6">
+							<v-text-field
 								v-model="form.rut"
 								type="text"
 								dense
@@ -311,7 +323,7 @@
 					<p>
 						Por ello, le animamos a liberarse de las cuatro paredes de su consulta
 						atendiendo a todos sus clientes en Hablaquí. Ingresar a sus clientes es cosa
-						de unos clics y lo mejor: cobramos 0% de comisión.
+						de unos click y lo mejor: cobramos 0% de comisión.
 					</p>
 					<p>
 						Al llevar a sus clientes a la plataforma asegura organización y practicidad
@@ -351,7 +363,8 @@ import {
 import { mapActions, mapGetters } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -403,7 +416,13 @@ export default {
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('Se requiere rut');
+			!this.$v.form.name.required && errors.push('Se requiere nombre');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
 		...mapGetters({ clients: 'Psychologist/clients' }),
@@ -443,6 +462,7 @@ export default {
 		resetForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				rut: '',
 				phone: '',
 				email: '',
@@ -471,6 +491,9 @@ export default {
 				email,
 			},
 			name: {
+				required,
+			},
+			lastName: {
 				required,
 			},
 		},

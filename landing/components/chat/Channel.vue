@@ -11,22 +11,20 @@
 					<icon size="30" :icon="mdiChevronLeft" />
 				</v-btn>
 				<v-list-item-avatar size="50">
-					<avatar :url="selected.avatar" size="50" :name="selected.name" />
+					<avatar :url="selected.avatar" size="40" :name="selected.name" />
 				</v-list-item-avatar>
 				<v-list-item-title class="pl-3 title d-flex">
 					<div>
-						<span class="secondary--text">
+						<span class="subtitle-1 secondary--text">
 							{{ selected.shortName || selected.name }}
 						</span>
-						<span v-if="selected.lastName" class="secondary--text">
+						<span v-if="selected.lastName" class="subtitle-1 secondary--text">
 							{{ selected.lastName }}
 						</span>
-						<div class="secondary--text caption text--disabled">
-							{{ subHeader }}
-						</div>
+						<div class="caption secondary--text text--disabled">{{ subHeader }}</div>
 					</div>
 				</v-list-item-title>
-				<div v-show="!selected.assistant" style="min-width: 150px" class="text-right">
+				<v-list-item-action v-show="!selected.assistant" class="text-right">
 					<!-- <v-btn id="callheaher" icon >
                         <v-img
                             contain
@@ -57,7 +55,7 @@
 							:src="`https://cdn.hablaqui.cl/static/agregar.png`"
 						></v-img>
 					</v-btn>
-				</div>
+				</v-list-item-action>
 			</v-list-item>
 			<v-divider></v-divider>
 		</v-card-text>
@@ -92,7 +90,7 @@
 						<span class="text--disabled">{{ setDate() }}</span>
 					</div>
 					<div class="talkbubble talkbubble__two" style="margin-top: 2px">
-						<p style="max-height: 75px; overflow-y: auto" class="body-2">
+						<p class="body-2">
 							{{
 								$auth.$state.user.role === 'user'
 									? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
@@ -109,7 +107,11 @@
 								class="d-flex mt-3"
 								:class="sentBy(item.sentBy) ? 'justify-end' : 'justify-start'"
 							>
-								<div style="width: 50%">
+								<div
+									:style="
+										$vuetify.breakpoint.smAndDown ? 'width: 70%' : 'width: 50%'
+									"
+								>
 									<div style="display: flex; justify-content: space-between">
 										<span
 											v-if="sentBy(item.sentBy)"
@@ -133,10 +135,7 @@
 												: 'talkbubble__two'
 										"
 									>
-										<div
-											class="body-2"
-											style="max-height: 75px; overflow-y: auto"
-										>
+										<div class="body-2">
 											{{ item.message }}
 										</div>
 									</div>
@@ -158,36 +157,32 @@
 					</nuxt-link>
 				</div>
 			</v-card-text>
-			<v-card-text v-else style="flex: 0">
+			<v-card-text v-else style="flex: 0" class="pb-0">
 				<v-form @submit.prevent="onSubmit">
-					<v-text-field
+					<v-textarea
 						ref="messagechat"
-						v-model="message"
+						v-model.trim="message"
 						outlined
 						dense
 						:label="`Mensaje a ${selected.name}`"
-						hide-details
 						:disabled="loadingMessage"
 						:loader-height="3"
 						:loading="loadingMessage"
+						no-resize
+						:rows="row"
+						hint="Shift + enter para enviar"
+						:auto-grow="grow"
+						@keydown="e => setGrow(e)"
+						@keypress.shift.enter="onSubmit"
+						@input="
+							() => {
+								scrollToElement();
+							}
+						"
 					>
-						<!-- <template #prepend-inner>
-									<v-img
-										:src="`https://cdn.hablaqui.cl/static/adjuntar.png`"
-										height="25"
-										width="25"
-									></v-img>
-								</template> -->
 						<template #append>
-							<!-- <v-btn depressed icon>
-										<v-img
-											:src="`https://cdn.hablaqui.cl/static/voz.png`"
-											height="30"
-											width="30"
-										></v-img>
-									</v-btn> -->
 							<v-btn
-								class="ml-2 mr-2"
+								class="pl-2 pr-2 pb-2"
 								depressed
 								icon
 								type="submit"
@@ -200,7 +195,7 @@
 								></v-img>
 							</v-btn>
 						</template>
-					</v-text-field>
+					</v-textarea>
 				</v-form>
 			</v-card-text>
 		</template>
@@ -210,9 +205,12 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment-timezone';
+import { isEmpty } from 'lodash';
+moment.tz.setDefault('America/Santiago');
 
 export default {
+	name: 'Channel',
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
@@ -224,10 +222,6 @@ export default {
 		chat: {
 			type: Object,
 			default: null,
-		},
-		scrollToElement: {
-			type: Function,
-			required: true,
 		},
 		loadingChat: {
 			type: Boolean,
@@ -247,12 +241,14 @@ export default {
 			message: '',
 			loadingMessage: false,
 			mdiChevronLeft,
+			grow: true,
+			row: 1,
 		};
 	},
 	methods: {
 		async onSubmit() {
+			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
-			if (!this.message) return;
 			const payload = {
 				payload: this.message,
 				psychologistId:
@@ -268,6 +264,7 @@ export default {
 			this.message = '';
 			this.loadingMessage = false;
 			this.$nextTick(() => this.$refs.messagechat.focus());
+			this.row = 1;
 			this.scrollToElement();
 		},
 		sentBy(sentBy) {
@@ -277,6 +274,16 @@ export default {
 			if (time) return moment(time).calendar();
 			return moment().format('llll');
 		},
+		setGrow(e) {
+			const height = parseInt(e.target.style.height.replace('px', ''));
+			this.grow = height < 140;
+		},
+		scrollToElement() {
+			const el = this.$el.getElementsByClassName('scroll')[0];
+			if (el) {
+				el.scrollTop = el.scrollHeight;
+			}
+		},
 		...mapActions({
 			sendMessage: 'Chat/sendMessage',
 		}),
@@ -285,8 +292,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color__one: #bdbdbd;
-$color__two: #2070e5;
+$color__one: rgba(189, 189, 189, 1);
+$color__two: rgba(32, 112, 229, 1);
 $font__color_one: #424242;
 $font__color_two: #ffffff;
 
@@ -304,14 +311,14 @@ $font__color_two: #ffffff;
 	&__one {
 		color: $font__color_two;
 		align-self: flex-end;
-		border: solid $color__two;
+		border: solid rgba(32, 112, 229, 1);
 		background: $color__two;
 	}
 
 	&__two {
 		color: $font__color_one;
 		align-self: flex-start;
-		border: solid $color__one;
+		border: solid rgba(189, 189, 189, 1);
 		background: $color__one;
 	}
 }

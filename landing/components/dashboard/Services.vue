@@ -121,38 +121,6 @@
 							</v-text-field>
 						</div>
 					</v-col>
-					<v-col cols="12" md="4">
-						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
-							Sesión mensajería
-						</div>
-						<div>
-							<v-text-field
-								:value="psychologist.sessionPrices.text"
-								readonly
-								disabled
-								outlined
-								filled
-								suffix="CLP"
-							>
-							</v-text-field>
-						</div>
-					</v-col>
-					<v-col cols="12" md="4">
-						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
-							Mensajería y videollamada
-						</div>
-						<div>
-							<v-text-field
-								:value="psychologist.sessionPrices.full"
-								readonly
-								disabled
-								outlined
-								filled
-								suffix="CLP"
-							>
-							</v-text-field>
-						</div>
-					</v-col>
 					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 						<div>
 							Nuevos clientes
@@ -256,6 +224,7 @@ export default {
 			this.loading = true;
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
+			this.video = psychologist.sessionPrices.video;
 			this.loading = false;
 		},
 		setPrice(e) {

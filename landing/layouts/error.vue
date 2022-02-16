@@ -1,18 +1,24 @@
 <template>
 	<v-app dark>
 		<div style="height: 100vh" class="d-flex align-center justify-center">
-			<v-card color="primary" rounded width="600">
+			<v-card flat rounded width="600">
 				<v-card-text class="text-center">
-					<h1 v-if="error.statusCode === 404" class="white--text bady-1">
-						{{ pageNotFound }}
-					</h1>
+					<div v-if="error.statusCode === 404" class="body-1">
+						<v-img src="https://cdn.hablaqui.cl/static/404.png" contain></v-img>
+						<div class="mt-4 font-weight-bold">
+							¡Oops! No pudimos encontrar la página
+						</div>
+						<div class="mb-4">
+							Quizá escribiste mal la dirección o tienes un link malo o muy viejo.
+						</div>
+					</div>
 					<h1 v-else>
 						{{ otherError }}
 					</h1>
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn to="/" depressed light> Ir a página de inicio </v-btn>
+					<v-btn rounded color="primary" class="px-16" to="/" depressed>Ir a casa </v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
 			</v-card>
@@ -32,7 +38,7 @@ export default {
 	data() {
 		return {
 			pageNotFound: '404 Página no encontrada',
-			otherError: 'Ha ocurrido un error',
+			otherError: '¡Oops! ha ocurrido un error indesperado.',
 		};
 	},
 	head() {

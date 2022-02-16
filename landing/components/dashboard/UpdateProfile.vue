@@ -128,15 +128,19 @@
 				label="Dirección"
 			></v-text-field>
 		</v-col>
-		<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
+		<v-col cols="12" md="6">
 			<v-select
-				v-model="gender"
-				:items="['Hombre', 'Mujer', 'Transgénero']"
+				v-model="formUser.gender"
+				:items="[
+					{ text: 'Hombre', value: 'male' },
+					{ text: 'Mujer', value: 'female' },
+					{ text: 'Transgénero', value: 'transgender' },
+				]"
 				filled
 				outlined
 				hide-details
 				dense
-				label="Genero"
+				label="Género"
 			></v-select>
 		</v-col>
 		<v-col cols="12" md="6">
@@ -215,10 +219,11 @@ export default {
 				timeZone: '',
 				address: '',
 				birthDate: '',
+				direction: '',
+				gender: '',
 			},
 			region: '',
 			comuna: '',
-			gender: '',
 			timezone: [],
 			loadingUser: false,
 			regiones: [],
@@ -244,7 +249,7 @@ export default {
 					email: this.formUser.email,
 					direction: this.formUser.direction,
 					timeZone: this.formUser.timeZone,
-					gender: this.gender,
+					gender: this.formUser.gender,
 					birthDate: this.formUser.birthDate,
 					region: this.region,
 					comuna: this.comuna,
@@ -256,8 +261,8 @@ export default {
 					email: this.$auth.$state.user.email,
 					direction: this.$auth.$state.user.direction,
 					timeZone: this.$auth.$state.user.timeZone,
-					gender: this.psychologist ? this.psychologist.gender : '',
-					birthDate: this.psychologist ? this.psychologist.birthDate : '',
+					gender: this.$auth.$state.user.gender,
+					birthDate: this.$auth.$state.user.birthDate,
 					region: this.psychologist ? this.psychologist.region : '',
 					comuna: this.psychologist ? this.psychologist.comuna : '',
 				})
@@ -286,7 +291,6 @@ export default {
 		this.regiones = response.data.map(i => i.region);
 		this.timezone = data;
 		if (this.psychologist && this.$auth.$state.user.role === 'psychologist') {
-			this.gender = this.psychologist.gender;
 			this.comuna = this.psychologist.comuna;
 			this.region = this.psychologist.region;
 		}
@@ -300,14 +304,13 @@ export default {
 				if (this.$auth.$state.user.role === 'psychologist') {
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
-						gender: this.gender,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
 						birthDate: this.formUser.birthDate,
+						gender: this.formUser.gender,
 						comuna: this.comuna,
 						region: this.region,
 					});
-					this.gender = psychologist.gender;
 					this.username = psychologist.username;
 					this.comuna = psychologist.comuna;
 					this.region = psychologist.region;

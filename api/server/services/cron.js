@@ -1,5 +1,6 @@
 'use-strict';
 import email from '../models/email';
+import Chat from '../models/chat';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailService from '../services/mail';
@@ -7,6 +8,7 @@ import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
+moment.tz.setDefault('America/Santiago');
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 const sgClient = require('@sendgrid/client');
@@ -41,6 +43,43 @@ function generatePayload(date, batch) {
 	};
 }
 
+async function sendNotification(emails) {
+	emails.forEach(async e => {
+		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
+			const batch = await getBatchId();
+			const user = await User.findById(e.userRef);
+			const psy = await psychologist.findById(e.psyRef);
+			const messages = await Chat.findOne({
+				user: e.userRef,
+				psychologist: e.psyRef,
+			});
+			const message = messages.messages.filter(
+				m => m._id.toString() === e.sessionRef.toString()
+			);
+			if (
+				!message[0].read &&
+				!e.wasScheduled &&
+				e.type === 'send-by-user'
+			)
+				await mailService.sendChatNotificationToPsy(user, psy, batch);
+			else if (
+				!message[0].read &&
+				!e.wasScheduled &&
+				e.type === 'send-by-psy'
+			)
+				await mailService.sendChatNotificationToUser(user, psy, batch);
+			const updatePayload = {
+				wasScheduled: true,
+				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+				batchId: batch,
+			};
+			await email.findByIdAndUpdate(e._id, updatePayload, {
+				new: true,
+			});
+		}
+	});
+}
+
 async function getBatchId() {
 	const result = await sgClient
 		.request({
@@ -57,6 +96,23 @@ async function getBatchId() {
 }
 
 const cronService = {
+	async scheduleChatEmails(token) {
+		if (token !== authToken)
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		const userMessage = await email.find({
+			type: 'send-by-user',
+			wasScheduled: false,
+		});
+		await sendNotification(userMessage);
+		const psyMessage = await email.find({
+			type: 'send-by-psy',
+			wasScheduled: false,
+		});
+		await sendNotification(psyMessage);
+		return okResponse('Se han enviado los correos');
+	},
 	/**
 	 * @description This function is used to schedule emails about an upcoming appoitment
 	 * @returns {object} The response about the scheduling system

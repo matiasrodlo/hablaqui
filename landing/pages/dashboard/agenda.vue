@@ -141,7 +141,10 @@
 									"
 								>
 									<v-btn
-										v-if="selectedEvent.status === 'pending'"
+										v-if="
+											selectedEvent.status === 'pending' ||
+											selectedEvent.status === 'upnext'
+										"
 										:href="selectedEvent.url"
 										target="_blank"
 										color="primary"
@@ -151,7 +154,10 @@
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
-										v-if="selectedEvent.status === 'pending'"
+										v-if="
+											selectedEvent.status === 'pending' ||
+											selectedEvent.status === 'upnext'
+										"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
@@ -204,6 +210,7 @@
 												:id-psy="selectedEvent.idPsychologist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
+												type="reschedule"
 												:loading-btn="loagindReschedule"
 											/>
 										</v-card-text>
@@ -250,6 +257,18 @@
 													label="Nombre"
 													hide-details="auto"
 													:error-messages="nameErrors"
+												>
+												</v-text-field>
+											</v-col>
+											<v-col cols="6">
+												<v-text-field
+													v-model="form.lastName"
+													type="text"
+													dense
+													outlined
+													label="Apellido"
+													hide-details="auto"
+													:error-messages="lastNameErrors"
 												>
 												</v-text-field>
 											</v-col>
@@ -448,17 +467,22 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Se le ha enviado un email al consultante, La fecha y hora
-										estará disponible hasta que el consultante cancele
+										Hemos enviado un email al consultante. La fecha y hora
+										estará disponible hasta que el consultante pague su sesión.
 									</v-card-text>
 								</template>
 							</v-card>
 						</v-dialog>
-						<v-row
-							v-if="$auth.$state.user.role === 'psychologist'"
-							class="text-md-right pt-4"
-						>
-							<v-col cols="12" sm="6" md="3">
+						<v-row justify="end" class="text-md-right pt-4">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('sesion online')">
 									<v-avatar size="20" color="primary">
 										<icon small :icon="mdiCheck" color="white" />
@@ -466,7 +490,15 @@
 									<span class="ml-1 caption">Sesiones online</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text depressed @click="() => setFilter('sesion presencial')">
 									<v-avatar color="#00c6ea" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -474,7 +506,12 @@
 									<span class="ml-1 caption">Sesiones presenciales</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="$auth.$state.user.role === 'psychologist'"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('compromiso privado')">
 									<v-avatar color="#efb908" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -482,7 +519,15 @@
 									<span class="ml-1 caption">Compromiso privado</span>
 								</v-btn>
 							</v-col>
-							<v-col cols="12" sm="6" md="3">
+							<v-col
+								v-if="
+									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'user'
+								"
+								cols="12"
+								sm="6"
+								md="3"
+							>
 								<v-btn text @click="() => setFilter('pending')">
 									<v-avatar color="#78909C" size="20">
 										<icon small :icon="mdiCheck" color="white" />
@@ -634,23 +679,6 @@
 							title-button="Continuar"
 						/>
 					</v-card-text>
-					<v-card-text v-if="step == 1">
-						<select-plan
-							v-if="psychologist"
-							:set-plan="setNewPlan"
-							:psychologist="psychologist"
-						/>
-					</v-card-text>
-					<v-card-text v-if="step == 2">
-						<resume-plan
-							v-if="psychologist"
-							:close="() => (dialogWithoutSessions = false)"
-							:go-back="() => (step = 1)"
-							:plan="newPlan"
-							:psy="psychologist"
-							:event="newEvent"
-						/>
-					</v-card-text>
 				</v-card>
 			</v-dialog>
 		</v-container>
@@ -662,7 +690,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -675,14 +703,13 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Icon: () => import('~/components/Icon'),
 		Calendar: () => import('~/components/Calendar.vue'),
-		SelectPlan: () => import('~/components/plan/SelectPlan'),
-		ResumePlan: () => import('~/components/plan/ResumePlan'),
 		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	mixins: [validationMixin],
@@ -834,7 +861,13 @@ export default {
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('Se requiere rut');
+			!this.$v.form.name.required && errors.push('Se requiere nombre');
+			return errors;
+		},
+		lastNameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
 		validatenewCustomSession() {
@@ -932,6 +965,7 @@ export default {
 		resetForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				rut: '',
 				phone: '',
 				email: '',
@@ -958,7 +992,9 @@ export default {
 		},
 		setSchedule(item) {
 			this.newEvent = item;
-			this.step = 1;
+			this.$router.push(
+				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+			);
 		},
 		setNewPlan(newPlan) {
 			this.newPlan = newPlan;
@@ -1134,6 +1170,9 @@ export default {
 				email,
 			},
 			name: {
+				required,
+			},
+			lastName: {
 				required,
 			},
 		},

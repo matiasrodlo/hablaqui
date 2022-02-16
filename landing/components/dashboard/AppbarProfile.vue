@@ -1,7 +1,7 @@
 <template>
 	<v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
-		<v-btn icon @click="() => $router.go(-1)">
-			<icon v-if="goBack" size="30" color="primary" :icon="mdiChevronLeft" />
+		<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
+			<icon size="30" color="primary" :icon="mdiChevronLeft" />
 		</v-btn>
 		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
@@ -17,7 +17,7 @@
 		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://calendly.com/daniel-hablaqui/30min"
+				href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 				target="_blank"
 			>
 				<div class="d-flex align-center">
@@ -46,10 +46,15 @@
 				</div>
 			</nuxt-link>
 		</div>
-		<div class="mx-5 body-1 primary--text">
+		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
 				Centro de ayuda
 			</a>
+		</div>
+		<div v-else class="mx-5 body-1 primary--text">
+			<nuxt-link style="text-decoration: none" to="/faq" target="_blank">
+				Centro de ayuda
+			</nuxt-link>
 		</div>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />
@@ -90,8 +95,8 @@ export default {
 		},
 	},
 	methods: {
-		logout() {
-			this.$auth.logout();
+		async logout() {
+			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
 	},

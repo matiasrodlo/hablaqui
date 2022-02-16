@@ -4,6 +4,7 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
 import moment from 'moment';
+moment.tz.setDefault('America/Santiago');
 
 const newCoupon = async (user, payload) => {
 	if (user.role !== 'superuser')

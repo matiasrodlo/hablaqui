@@ -607,7 +607,7 @@
 										color="#ecf5ff"
 										rounded
 										block
-										@click="setExperience"
+										@click="() => setExperience()"
 									>
 										<span class="primary--text">Agregar experiencia</span>
 									</v-btn>
@@ -1040,7 +1040,6 @@
 									</div>
 								</v-col>
 							</v-row>
-
 							<div class="d-flex justify-end mt-4">
 								<v-btn class="mx-2" rounded color="primary" @click="step = 2">
 									Atrás
@@ -1053,8 +1052,7 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											if (form.psyPlans && form.psyPlans.length) saveStep(5);
-											else saveStep(4);
+											saveStep(4);
 										}
 									"
 								>
@@ -1218,7 +1216,7 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
-		if (this.form.isFormCompleted) this.step = 5;
+		// if (this.form.isFormCompleted) this.step = 5;
 		this.loading = false;
 	},
 	methods: {
@@ -1239,6 +1237,7 @@ export default {
 						},
 					});
 					this.form = data.recruited;
+					if (step - 1 === 1) this.setUser();
 				} else {
 					// creamos postulacion
 					const { data } = await this.$axios('/recruitment/register', {
@@ -1246,7 +1245,7 @@ export default {
 						data: this.form,
 					});
 					this.form = data.recruited;
-					
+					if (step - 1 === 1) this.setUser();
 				}
 				this.$segment.identify(this.form._id.toString(), {
 					email: this.$auth.user.email,
@@ -1345,8 +1344,18 @@ export default {
 				};
 			this.dialogFormation = true;
 		},
+		async setUser() {
+			const user = await this.updateUser({
+				...this.$auth.$state.user,
+				phone: this.form.phone.code + this.form.phone.number,
+				gender: this.form.gender,
+				birthDate: this.form.birthDate,
+			});
+			this.$auth.setUser(user);
+		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
+			updateUser: 'User/updateUser',
 		}),
 	},
 };

@@ -71,6 +71,15 @@ let userSchema = new Schema(
 			default: 'user',
 			enum: ['user', 'psychologist', 'superuser'],
 		},
+		gender: {
+			type: String,
+		},
+		direction: {
+			type: String,
+		},
+		birthDate: {
+			type: String,
+		},
 	},
 	{
 		timestamps: true,

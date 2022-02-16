@@ -30,20 +30,13 @@ export default {
 	generate: {
 		fallback: '404.html',
 		// genera las rutas dinamicas
-		async routes() {
+		async routes(callback) {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
 			const baseApi = process.env.API_ABSOLUTE
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/';
-
-			// generate routes blogs
-			// const { data } = await axios.get(`${baseURL}/blog/all`);
-			// const blogs = data.articles.map(item => ({
-			// 	route: `/blog/${item.slug}`,
-			// 	payload: item,
-			// }));
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
@@ -61,7 +54,8 @@ export default {
 				payload: el.comuna,
 			}));
 
-			return psicologos.concat(comunas);
+			const routes = psicologos.concat(comunas);
+			callback(null, routes);
 		},
 	},
 	loading: {
@@ -118,7 +112,7 @@ export default {
 			{
 				hid: 'twitter:image',
 				name: 'twitter:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 
 			// Open Graph
@@ -144,12 +138,12 @@ export default {
 			{
 				hid: 'og:image',
 				property: 'og:image',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:secure_url',
 				property: 'og:image:secure_url',
-				content: process.env.VUE_APP_LANDING + '/logo_tiny.png',
+				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
 			{
 				hid: 'og:image:alt',
@@ -176,7 +170,7 @@ export default {
 	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ['~/plugins/jsonld'],
+	plugins: ['~/plugins/jsonld', '~/plugins/interceptor'],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -280,10 +274,10 @@ export default {
 				endpoints: {
 					// login endpoint
 					login: { url: '/auth/login', method: 'post' },
+					// logout endpoint
+					logout: { url: '/auth/logout', method: 'post' },
 					// get user endpoint
 					user: { url: '/user/profile', method: 'get' },
-					// logout endpoint
-					logout: false,
 				},
 			},
 		},

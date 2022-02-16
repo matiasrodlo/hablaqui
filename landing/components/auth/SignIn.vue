@@ -19,7 +19,7 @@
 					outlined
 					:dense="isDialog"
 					:type="showPassword ? 'text' : 'password'"
-					:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+					:append-icon="showPassword ? mdiEye : mdiEyeOff"
 					:error-messages="passwordErrors"
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
@@ -49,6 +49,7 @@ import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 export default {
 	name: 'SignIn',
@@ -64,11 +65,7 @@ export default {
 		},
 	},
 	data() {
-		return {
-			showPassword: false,
-			form: null,
-			loading: false,
-		};
+		return { mdiEye, mdiEyeOff, showPassword: false, form: null, loading: false };
 	},
 	computed: {
 		emailErrors() {
@@ -96,24 +93,43 @@ export default {
 					this.loading = true;
 					const response = await this.$auth.loginWith('local', { data: this.form });
 					this.$auth.setUser(response.data.user);
-					if (this.$auth.$state.loggedIn)
+					if (this.$auth.$state.loggedIn) {
+						if (this.$route.query.from === 'psy')
+							return this.$router.push({ name: 'evaluacion' });
 						if (
 							response.data.user.role === 'psychologist' &&
-							!response.data.user.psychologist
+							this.$auth.$state.user.psychologist
 						) {
-							this.$router.push({ name: 'dashboard-perfil' });
-						} else if (response.data.user.role === 'superuser') {
-							this.$router.push({ name: 'dashboard-panel' });
-						} else if (!this.isDialog) {
-							if (this.$route.query.from === 'psy')
-								this.$router.push({ name: 'evaluacion' });
-							else if (
-								this.$route.name !== 'psicologos' &&
-								this.$route.name !== 'psicologos-id'
-							)
-								this.$router.push({ name: 'dashboard-chat' });
-							else this.$router.push({ name: 'psicologos' });
-						} else this.setResumeView(true);
+							return this.$router.push({ name: 'dashboard-chat' });
+						}
+						if (
+							response.data.user.role === 'psychologist' &&
+							!this.$auth.$state.user.psychologist
+						) {
+							return this.$router.push({ name: 'dashboard-perfil' });
+						}
+						if (response.data.user.role === 'superuser')
+							return this.$router.push({ name: 'dashboard-panel' });
+						if (response.data.user.role === 'user') {
+							// redirecionamos de nuevo a pagos luego de ingresar
+							if (
+								this.$route.query.date &&
+								this.$route.query.start &&
+								this.$route.query.end
+							) {
+								return this.$router.push(
+									`/psicologos/pagos/?username=${this.$route.query.psychologist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
+								);
+							}
+							// redirecionamos de nuevo a chat luego de ingresar
+							if (this.$route.query.psychologist) {
+								return this.$router.push(
+									`/${this.$route.query.psychologist}/?chat=true`
+								);
+							}
+							return this.$router.push({ name: 'dashboard-chat' });
+						}
+					}
 				} catch (error) {
 					if (error.response.status === 401) {
 						alert('Correo o contraseña invalida');

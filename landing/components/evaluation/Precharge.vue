@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container v-show="image">
 		<v-row align="center" justify="center">
 			<v-col cols="12">
 				<div class="text-center text-h4 font-weight-bold mt-4">
@@ -27,7 +27,7 @@
 				>
 					<span>{{ el.title }}</span>
 					<v-btn style="width: 32px" fab depressed color="primary" x-small>
-						<icon :icon="el.done ? mdiCheck : mdiClose" />
+						<icon color="white" :icon="el.done ? mdiCheck : mdiClose" />
 					</v-btn>
 				</div>
 			</v-col>
@@ -47,6 +47,10 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		close: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -61,23 +65,27 @@ export default {
 			],
 		};
 	},
-	created() {
+	mounted() {
 		setTimeout(() => {
 			this.image = this.avatar[0];
 			this.items[0].done = true;
-		}, 800);
-		setTimeout(() => {
-			this.image = this.avatar[1];
-			this.items[1].done = true;
-		}, 1600);
-		setTimeout(() => {
-			this.image = this.avatar[2];
-			this.items[2].done = true;
-		}, 2500);
-		setTimeout(() => {
-			this.image = this.avatar[3];
-			this.items[3].done = true;
-		}, 3500);
+			setTimeout(() => {
+				this.image = this.avatar[1];
+				this.items[1].done = true;
+				setTimeout(() => {
+					this.image = this.avatar[2];
+					this.items[2].done = true;
+					setTimeout(() => {
+						this.image = this.avatar[3];
+						this.items[3].done = true;
+						setTimeout(() => {
+							this.image = this.avatar[4];
+							this.close();
+						}, 1500);
+					}, 1500);
+				}, 1500);
+			}, 1500);
+		}, 50);
 	},
 };
 </script>

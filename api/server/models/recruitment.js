@@ -328,6 +328,9 @@ let recruitment = new Schema(
 			type: String,
 			default: 'America/Santiago',
 		},
+		stampSetPrices: {
+			type: String,
+		},
 	},
 	{
 		timestamps: true,
