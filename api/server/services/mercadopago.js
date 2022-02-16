@@ -210,17 +210,29 @@ const successPay = async params => {
 		await mailService.sendAppConfirmationUser(
 			user,
 			psy,
-			dateFormatted,
-			foundPlan.roomsUrl,
 			planData.totalPrice
 		);
 		await mailService.sendAppConfirmationPsy(
 			psy,
 			user,
-			dateFormatted,
-			foundPlan.roomsUrl,
 			planData.totalPrice
 		);
+
+		await mailService.sendScheduleToUser(
+			user,
+			psy,
+			dateFormatted,
+			foundPlan.roomsUrl,
+			`1/${planData.totalSessions}`
+		);
+		await mailService.sendScheduleToPsy(
+			user,
+			psy,
+			dateFormatted,
+			foundPlan.roomsUrl,
+			`1/${planData.totalSessions}`
+		);
+
 		logInfo('Se ha realizado un pago');
 		return okResponse('sesion actualizada');
 	} catch (err) {
