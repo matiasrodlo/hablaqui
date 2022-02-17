@@ -2095,7 +2095,7 @@ const paymentsInfo = async user => {
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
-						).toFixed(2),
+						).toFixed(0),
 						status: session.status,
 						transDate,
 					};
@@ -2104,9 +2104,9 @@ const paymentsInfo = async user => {
 					session => session.transDate === 'Por cobrar'
 				).length;
 
-				sessions = sessions.filter(
+				/*sessions = sessions.filter(
 					session => session.status === 'success'
-				);
+				);*/
 
 				return {
 					idPlan: plans._id,
