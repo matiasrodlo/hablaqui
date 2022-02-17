@@ -27,6 +27,7 @@ jobs:
         project_id: hablaqui
         tag: hugo
         credentials: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+        
     
 
   build-and-deploy-front:

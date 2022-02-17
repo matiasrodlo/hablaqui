@@ -39,6 +39,7 @@ const createPreference = async body => {
 			pending: `${landing_url}/${body.psychologist}`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
@@ -84,6 +85,7 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
@@ -206,19 +208,22 @@ const successPay = async params => {
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(
+	await mailService.sendAppConfirmationUser(user, psy, planData.totalPrice);
+	await mailService.sendAppConfirmationPsy(psy, user, planData.totalPrice);
+
+	await mailService.sendScheduleToUser(
 		user,
 		psy,
 		dateFormatted,
 		foundPlan.roomsUrl,
-		planData.totalPrice
+		`1/${planData.totalSessions}`
 	);
-	await mailService.sendAppConfirmationPsy(
-		psy,
+	await mailService.sendScheduleToPsy(
 		user,
+		psy,
 		dateFormatted,
 		foundPlan.roomsUrl,
-		planData.totalPrice
+		`1/${planData.totalSessions}`
 	);
 
 	logInfo('Se ha realizado un pago');
@@ -296,7 +301,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': moment(),
+				'plan.$.datePayment': moment().format(),
 			},
 		},
 		{ new: true }
@@ -328,7 +333,6 @@ const createCustomSessionPreference = async params => {
 		user: userId,
 		psychologist: psyId,
 	});
-	logInfo('el' + JSON.stringify(foundPlan));
 	const planData = foundPlan.plan[foundPlan.plan.length - 1];
 	let newPreference = {
 		items: [
@@ -346,6 +350,7 @@ const createCustomSessionPreference = async params => {
 			pending: `${landing_url}/pago/pending-pay`,
 		},
 		auto_return: 'approved',
+		binary_mode: true,
 	};
 
 	const responseBody = await mercadopago.preferences.create(newPreference);

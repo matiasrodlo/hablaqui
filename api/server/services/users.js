@@ -261,7 +261,6 @@ const usersService = {
 				},
 			});
 		}
-
 		const roomId = require('crypto')
 			.createHash('md5')
 			.update(`${createdUser._id}${user._id}`)

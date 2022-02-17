@@ -892,6 +892,29 @@ const createPlan = async ({ payload }) => {
 				psychologist: payload.psychologist,
 			},
 		});
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'user-purchase-plan',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'psy-new-plan',
+			properties: {
+				plan: payload.title,
+				period: payload.paymentPeriod,
+				price: payload.price,
+				expiration: expirationDate,
+				totalSessions: sessionQuantity,
+				user: payload.user._id,
+			},
+		});
 	}
 
 	let created = null;
@@ -1078,17 +1101,23 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			},
 		});
 	}
-	await mailService.sendAppConfirmationUser(
+	await mailService.sendScheduleToUser(
 		userLogged,
 		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
-		roomsUrl
+		roomsUrl,
+		`${myPlan.totalSessions - payload.remainingSessions}/${
+			myPlan.totalSessions
+		}`
 	);
-	await mailService.sendAppConfirmationPsy(
-		psychologist,
+	await mailService.sendScheduleToPsy(
 		userLogged,
+		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
-		roomsUrl
+		roomsUrl,
+		`${myPlan.totalSessions - payload.remainingSessions}/${
+			myPlan.totalSessions
+		}`
 	);
 
 	return okResponse('sesion creada', {
@@ -1218,6 +1247,7 @@ const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 				return {
 					session_id: session._id,
 					plan_id: plan._id,
+					totalSessions: plan.totalSessions,
 					date: session.date,
 					datePayment: plan.datePayment,
 					lastSession: maxSession[0],
