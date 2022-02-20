@@ -63,7 +63,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+					href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -170,7 +170,7 @@
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/daniel-hablaqui/30min"
+							href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"

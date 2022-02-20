@@ -17,7 +17,7 @@
 		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+				href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 				target="_blank"
 			>
 				<div class="d-flex align-center">
