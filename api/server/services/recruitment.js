@@ -166,11 +166,11 @@ const recruitmentService = {
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
 			analytics.track({
-				userId: newProfile._id.toString(),
+				userId: userUpdated._id.toString(),
 				event: 'new-psy-onboard',
 			});
 			analytics.identify({
-				userId: newProfile._id.toString(),
+				userId: userUpdated._id.toString(),
 				traits: {
 					role: userUpdated.role,
 					psychologist: newProfile._id,
@@ -180,10 +180,6 @@ const recruitmentService = {
 					rut: payload.rut,
 					psyId: newProfile._id,
 				},
-			});
-			analytics.alias({
-				previousId: id.toString(),
-				userId: newProfile._id.toString(),
 			});
 		}
 

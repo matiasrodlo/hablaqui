@@ -311,7 +311,7 @@ const createPaymentsRequest = async user => {
 		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.track({
-			userId: psy.toString(),
+			userId: user._id.toString(),
 			event: 'psy-withdrawal-request',
 			properties: {
 				total: total,
@@ -877,8 +877,9 @@ const createPlan = async ({ payload }) => {
 				totalSessions: sessionQuantity,
 			},
 		});
+		const psyID = User.findOne({ email: psychologist.email })._id;
 		analytics.track({
-			userId: payload.psychologist.toString(),
+			userId: psyID.toString(),
 			event: 'psy-new-plan',
 			properties: {
 				plan: payload.title,
@@ -932,8 +933,9 @@ const createPlan = async ({ payload }) => {
 					total: payload.price / sessionQuantity,
 				},
 			});
+			const psyID = User.findOne({ email: psychologist.email })._id;
 			analytics.track({
-				userId: payload.psychologist.toString(),
+				userId: psyID.toString(),
 				event: 'current-psy-new-plan',
 				properties: {
 					products: planData,
@@ -977,8 +979,9 @@ const createPlan = async ({ payload }) => {
 					total: payload.price / sessionQuantity,
 				},
 			});
+			const psyID = User.findOne({ email: psychologist.email })._id;
 			analytics.track({
-				userId: payload.psychologist.toString(),
+				userId: psyID.toString(),
 				event: 'new-user-psy-new-plan',
 				properties: {
 					currency: 'CLP',
@@ -1068,9 +1071,9 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				email: userLogged.email,
 			},
 		});
-
+		const userID = User.findOne({ email: psychologist.email })._id;
 		analytics.track({
-			userId: userLogged.psychologist.toString(),
+			userId: userID.toString(),
 			event: 'psy-new-session',
 			properties: {
 				user: userLogged._id,
@@ -1455,12 +1458,13 @@ const updatePsychologist = async (user, profile) => {
 				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
+				var id = User.findOne({ email: user.email })._id;
 				analytics.track({
-					userId: psy._id.toString(),
+					userId: id.toString(),
 					event: 'psy-updated-profile',
 				});
 				analytics.identify({
-					userId: psy._id.toString(),
+					userId: id.toString(),
 					traits: {
 						email: updated.email,
 						name: updated.name,
@@ -1754,7 +1758,7 @@ const updateFormationExperience = async (user, payload) => {
 
 const uploadProfilePicture = async (psyID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const { name, lastName, psychologist } = await User.findById(psyID);
+	const { name, lastName, _id } = await User.findById(psyID);
 	const gcsname = `${psyID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	const stream = file.createWriteStream({
@@ -1775,7 +1779,7 @@ const uploadProfilePicture = async (psyID, picture) => {
 		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.track({
-			userId: psychologist.toString(),
+			userId: _id.toString(),
 			event: 'updated-profile-picture',
 			properties: {
 				avatar: getPublicUrlAvatar(gcsname),
@@ -1952,7 +1956,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.psychologist.toString(),
+					userId: user._id.toString(),
 					event: 'psy-scheduled-user-session',
 					properties: {
 						products: planData,
@@ -1974,7 +1978,7 @@ const customNewSession = async (user, payload) => {
 					},
 				];
 				analytics.track({
-					userId: user.psychologist.toString(),
+					userId: user._id.toString(),
 					event: 'psy-scheduled-onsite-user-session',
 					properties: {
 						products: planData,
@@ -1987,7 +1991,7 @@ const customNewSession = async (user, payload) => {
 				});
 			} else if (payload.type === 'compromiso privado') {
 				analytics.track({
-					userId: user.psychologist.toString(),
+					userId: user._id.toString(),
 					event: 'psy-scheduled-private-hours',
 				});
 			}

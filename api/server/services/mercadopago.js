@@ -143,8 +143,9 @@ const setPlanFree = async (id, isPsychologist) => {
 				item_quantity: 1,
 			},
 		];
+		const userID = User.findOne({ email: response.email })._id;
 		analytics.track({
-			userId: id.toString(),
+			userId: userID.toString(),
 			event: 'psy-free-plan',
 			properties: {
 				currency: 'CLP',
@@ -286,8 +287,9 @@ const psychologistPay = async (params, query) => {
 				item_quantity: 1,
 			},
 		];
+		const userID = User.findOne({ email: foundPsychologist.email })._id;
 		analytics.track({
-			userId: psychologistId.toString(),
+			userId: userID.toString(),
 			event: 'psy-premium-plan',
 			properties: {
 				currency: 'CLP',
