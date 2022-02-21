@@ -52,6 +52,13 @@ const recruitmentService = {
 					personalDescription: recruited.personalDescription,
 				},
 			});
+			analytics.track({
+				userId: user._id.toString(),
+				event: 'psy-application-step',
+				properties: {
+					step: 1,
+				},
+			});
 			analytics.identify({
 				userId: user._id.toString(),
 				traits: {
@@ -81,9 +88,24 @@ const recruitmentService = {
 	 * @param {Object} body - The body of the request with the new values
 	 * @returns The response code, message and the updated recruitment profile (if any)
 	 */
-	async update(body) {
+	async update(body, step) {
 		if (!(await Recruitment.exists({ email: body.email }))) {
 			return conflictResponse('Este postulante no existe');
+		}
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			if (step !== undefined && step !== null && step !== '') {
+				const psyID = await User.findOne({ email: body.email });
+				analytics.track({
+					userId: psyID._id.toString(),
+					event: 'psy-application-step',
+					properties: {
+						step: step,
+					},
+				});
+			}
 		}
 		const recruited = await Recruitment.findOneAndUpdate(
 			{ email: body.email },
@@ -133,7 +155,6 @@ const recruitmentService = {
 			{ isVerified: true },
 			{ new: true }
 		);
-		let id = payload._id;
 
 		// Formateamos el payload para que nos deje editar
 		payload = JSON.stringify(payload);
