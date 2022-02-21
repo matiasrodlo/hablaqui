@@ -33,7 +33,7 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${landing_url}/dashboard/pagos/success?plan=${body.plan}&token=${body.token}`,
+			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
 			// redirection to profile psychologist
 			failure: `${landing_url}/${body.psychologist}`,
 			pending: `${landing_url}/${body.psychologist}`,
@@ -160,15 +160,11 @@ const setPlanFree = async (id, isPsychologist) => {
 };
 
 const successPay = async params => {
-	const { planId } = params;
-	const currentSessions = await Sessions.findById(planId);
-	const plan = currentSessions.plan[
-		currentSessions.plan.length - 1
-	]._id.toString();
+	const { sessionsId, planId } = params;
 	const foundPlan = await Sessions.findOneAndUpdate(
 		{
-			_id: planId,
-			'plan._id': plan,
+			_id: sessionsId,
+			'plan._id': planId,
 		},
 		{
 			$set: {
@@ -178,7 +174,9 @@ const successPay = async params => {
 		},
 		{ new: true }
 	);
-	const planData = foundPlan.plan[foundPlan.plan.length - 1];
+	const planData = foundPlan.plan.filter(
+		plan => plan._id.toString() === planId
+	)[0];
 	const sessionData = planData.session[0];
 	const originalDate = sessionData.date.split(' ');
 	const date = originalDate[0].split('/');

@@ -242,9 +242,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async mercadopagoSuccess({ commit }, planId) {
+	async mercadopagoSuccess({ commit }, { sessionsId, planId }) {
 		try {
-			await this.$axios(`/mercadopago/success-pay/${planId}`, {
+			await this.$axios(`/mercadopago/success-pay/${sessionsId}/${planId}`, {
 				method: 'get',
 			});
 			snackBarSuccess('Pago aprobado')(commit);

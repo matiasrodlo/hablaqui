@@ -39,19 +39,21 @@ import { mapActions } from 'vuex';
 export default {
 	data() {
 		return {
-			idPlan: '',
+			sessionsId: '',
+			planId: '',
 			overlay: true,
 		};
 	},
 	created() {
-		if (this.$route.query.plan) {
-			this.idPlan = this.$route.query.plan;
+		if (this.$route.query.sessionsId && this.$route.query.planId) {
+			this.sessionsId = this.$route.query.sessionsId;
+			this.planId = this.$route.query.planId;
 			this.$router.replace({ query: null });
 		}
 	},
 	async mounted() {
-		if (this.idPlan) {
-			await this.mercadopagoSuccess(this.idPlan);
+		if (this.sessionsId && this.planId) {
+			await this.mercadopagoSuccess({ sessionsId: this.sessionsId, planId: this.planId });
 			this.overlay = false;
 		} else {
 			this.overlay = false;

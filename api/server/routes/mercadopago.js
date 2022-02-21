@@ -24,7 +24,7 @@ const mercadopagoRouter = Router();
  * @description: Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
  */
 mercadopagoRouter.get(
-	'/mercadopago/success-pay/:planId',
+	'/mercadopago/success-pay/:sessionsId/:planId',
 	mercadopagoController.successPay
 );
 

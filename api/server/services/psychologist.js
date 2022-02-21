@@ -998,12 +998,14 @@ const createPlan = async ({ payload }) => {
 	if (payload.price <= 0) {
 		await mercadopagoService.successPay({ planId: created._id });
 	} else {
+		const plan = created.plan.pop();
 		const mercadopagoPayload = {
 			psychologist: psychologist.username,
 			price: payload.price,
 			description: payload.title,
 			quantity: 1,
-			plan: created._id,
+			sessionsId: created._id,
+			planId: plan._id,
 			token,
 		};
 		responseBody = await mercadopagoService.createPreference(
