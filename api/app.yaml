@@ -1,9 +1,8 @@
 runtime: nodejs14
 instance_class: B1
 basic_scaling:
-    min_instances: 1
     max_instances: 3
-    idle_timeout: 20m
+    idle_timeout: 720m
 
 service: api
 handlers:
