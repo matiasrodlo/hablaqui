@@ -29,17 +29,6 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
-
-		analytics.track({
-			userId: user._id.toString(),
-			event: 'psy-new-application',
-			properties: {
-				email: user.email,
-				name: user.name,
-				lastName: user.lastName,
-				rut: user.rut,
-			},
-		});
 		const recruited = await Recruitment.create(payload);
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
