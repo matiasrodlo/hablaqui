@@ -2023,14 +2023,26 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
+	const payments = await paymentInfoFunction(user.psychologist);
+	return okResponse('Obtuvo todo sus pagos', { payments });
+};
+
+const paymentsInfoFromId = async psy => {
+	const user = await Psychologist.findById(psy);
+	if (!user) return conflictResponse('No es psicologo');
+	const payments = await paymentInfoFunction(psy);
+	return okResponse('Obtuvo todo sus pagos', { payments });
+};
+
+const paymentInfoFunction = async psyId => {
 	let allSessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: psyId,
 	}).populate('user');
 
 	let comission = 0;
 	let percentage = '0%';
 
-	let psy = await Psychologist.findById(user.psychologist);
+	let psy = await Psychologist.findById(psyId);
 	if (!psy.psyPlans || psy.psyPlans == []) {
 		psy.psyPlans = [
 			{
@@ -2144,7 +2156,7 @@ const paymentsInfo = async user => {
 			item.suscription !== 'Plan inicial'
 		);
 	});
-	return okResponse('Obtuvo todo sus pagos', { payments });
+	return payments;
 };
 
 const deleteCommitment = async (planId, psyId) => {
@@ -2337,5 +2349,6 @@ const psychologistsService = {
 	createPaymentsRequest,
 	completePaymentsRequest,
 	getTransactions,
+	paymentsInfoFromId,
 };
 export default Object.freeze(psychologistsService);
