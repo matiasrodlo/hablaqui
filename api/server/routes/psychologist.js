@@ -404,7 +404,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologist/payments/:psy',
-	//[passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfoFromId
 );
 
