@@ -338,8 +338,8 @@ import {
 	mdiAccountSupervisor,
 	mdiCalendar,
 } from '@mdi/js';
-import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
@@ -529,7 +529,7 @@ export default {
 								title: 'Editamos tu fotografía',
 								description:
 									'Aquí puedes subir tu foto para editarla, consulta el manual',
-								link: 'https://calendly.com/daniel-hablaqui/30min',
+								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
 							done: this.hasAvatar,
