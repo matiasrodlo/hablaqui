@@ -17,6 +17,7 @@ import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
+import Auth from './auth';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -235,6 +236,10 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
+		const token = Auth.generateJwt(createdUser);
+		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
+		await mailService.sendVerifyEmail(createdUser, verifyurl);
+
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
