@@ -2108,17 +2108,17 @@ const paymentInfoFunction = async psyId => {
 				const realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
+				const hablaquiPercentage =
+					realComission === 0.0399
+						? plans.sessionPrice * 0
+						: plans.sessionPrice * 0.1601;
+
 				let sessions = plans.session.map(session => {
 					const transDate =
 						session.paymentDate &&
 						moment(session.paymentDate).isValid()
 							? moment(session.paymentDate).format('DD/MM/YYYY')
 							: 'Por cobrar';
-
-					const hablaquiPercentage =
-						realComission === 0.0399
-							? plans.sessionPrice * 0
-							: plans.sessionPrice * 0.1601;
 
 					return {
 						_id: session._id,
@@ -2144,9 +2144,41 @@ const paymentInfoFunction = async psyId => {
 						transDate,
 					};
 				});
+
 				const receivable = sessions.filter(
 					session => session.transDate === 'Por cobrar'
 				).length;
+
+				for (
+					let i = sessions.length + 1;
+					i <= plans.totalSessions;
+					i++
+				) {
+					const session = {
+						_id: null,
+						datePayment: moment(plans.datePayment).format(
+							'DD/MM/YYYY'
+						),
+						name: item.user.name ? item.user.name : '',
+						lastname: item.user.lastName ? item.user.lastName : '',
+						date: '---',
+						sessionsNumber: `${i} de ${plans.totalSessions}`,
+						amount: plans.sessionPrice,
+						hablaquiPercentage: hablaquiPercentage.toFixed(0),
+						mercadoPercentage: (
+							plans.sessionPrice * 0.0399
+						).toFixed(2),
+						percentage:
+							realComission === 0.0399 ? '3.99%' : percentage,
+						total: (
+							plans.sessionPrice *
+							(1 - realComission)
+						).toFixed(0),
+						status: 'Pendiente',
+						transDate: 'Pendiente',
+					};
+					sessions.push(session);
+				}
 
 				/*sessions = sessions.filter(
 					session => session.status === 'success'
