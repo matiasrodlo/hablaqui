@@ -2112,6 +2112,9 @@ const paymentInfoFunction = async psyId => {
 					realComission === 0.0399
 						? plans.sessionPrice * 0
 						: plans.sessionPrice * 0.1601;
+				const paymentPlanDate = moment(plans.datePayment).format(
+					'DD/MM/YYYY'
+				);
 
 				let sessions = plans.session.map(session => {
 					const transDate =
@@ -2122,12 +2125,10 @@ const paymentInfoFunction = async psyId => {
 
 					return {
 						_id: session._id,
-						datePayment: moment(plans.datePayment).format(
-							'DD/MM/YYYY'
-						),
+						datePayment: paymentPlanDate,
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: moment(session.date).format('DD/MM/YYYY'),
+						date: paymentPlanDate,
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
@@ -2193,7 +2194,7 @@ const paymentInfoFunction = async psyId => {
 					payment: plans.payment,
 					suscription: plans.period,
 					user: item.user._id,
-					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
+					datePayment: paymentPlanDate,
 					amount: plans.totalPrice,
 					finalAmount: (
 						plans.totalPrice *
