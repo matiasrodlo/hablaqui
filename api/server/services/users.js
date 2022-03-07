@@ -224,7 +224,8 @@ const usersService = {
 				.slice(2);
 
 		const newUser = {
-			psychologist: user._id,
+			//psychologist: user._id,
+			isInvited: true,
 			name: body.name,
 			lastName: body.lastName,
 			email: body.email,
