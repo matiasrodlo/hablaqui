@@ -20,6 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
+import Coupon from '../models/coupons';
 import { logger } from '../config/winston';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
