@@ -364,7 +364,8 @@ const usersService = {
 
 		evaluations = evaluations.flatMap(e => {
 			return {
-				psychologistId: e._id,
+				_id: e._id,
+				psychologistId: e.psychologist._id,
 				name: e.psychologist.name,
 				lastname: e.psychologist.lastName,
 				code: e.psychologist.code,
