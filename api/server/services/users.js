@@ -356,6 +356,24 @@ const usersService = {
 		}
 		return okResponse('Evaluación guardada', created);
 	},
+	async getEvaluations(userId) {
+		let evaluations = await Evaluation.find({ user: userId }).populate(
+			'psychologist',
+			'_id name lastname code'
+		);
+
+		evaluations = evaluations.flatMap(e => {
+			return {
+				psychologistId: e._id,
+				name: e.psychologist.name,
+				lastname: e.psychologist.lastName,
+				code: e.psychologist.code,
+				evaluations: e.evaluations,
+			};
+		});
+
+		return okResponse('evaluaciones', { evaluations });
+	},
 };
 
 export default usersService;

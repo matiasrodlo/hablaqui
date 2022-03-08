@@ -141,4 +141,6 @@ userRouter.post(
 	userController.addEvaluation
 );
 
+userRouter.get('/user/get/evaluations/:userId', userController.getEvaluations);
+
 export default userRouter;

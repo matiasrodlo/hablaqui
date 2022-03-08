@@ -152,6 +152,15 @@ const userController = {
 			errorCallback(e, res, 'Error añadiendo la evaluación');
 		}
 	},
+	async getEvaluations(req, res) {
+		try {
+			const { userId } = req.params;
+			const { data, code } = await userService.getEvaluations(userId);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error añadiendo la evaluación');
+		}
+	},
 };
 
 export default userController;
