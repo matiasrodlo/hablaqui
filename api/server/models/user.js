@@ -80,6 +80,10 @@ let userSchema = new Schema(
 		birthDate: {
 			type: String,
 		},
+		isInvited: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,

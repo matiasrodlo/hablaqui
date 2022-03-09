@@ -113,6 +113,7 @@ const register = async payload => {
 
 	const newUser = {
 		...payload,
+		isInvited: false,
 		email: payload.email.toLowerCase(),
 		password: bcrypt.hashSync(payload.password, 10),
 	};

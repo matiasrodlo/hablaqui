@@ -20,7 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
-import { logger } from '../config/winston';
+import Coupon from '../models/coupons';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
