@@ -20,7 +20,6 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
-import { logger } from '../config/winston';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -2079,8 +2078,10 @@ const paymentsInfo = async user => {
 						session.paymentDate &&
 						moment(session.paymentDate).isValid()
 							? moment(session.paymentDate).format('DD/MM/YYYY')
+							: session.requestDate &&
+							  moment(session.requestDate).isValid()
+							? 'Pendiente'
 							: 'Por cobrar';
-
 					const hablaquiPercentage =
 						realComission === 0.0399
 							? plans.sessionPrice * 0
@@ -2110,6 +2111,11 @@ const paymentsInfo = async user => {
 						transDate,
 					};
 				});
+
+				const pendings = sessions.filter(
+					s => s.transDate === 'Pendiente'
+				).length;
+
 				const receivable = sessions.filter(
 					session => session.transDate === 'Por cobrar'
 				).length;
@@ -2134,7 +2140,12 @@ const paymentsInfo = async user => {
 						(1 - realComission)
 					).toFixed(0),
 					sessions,
-					transState: receivable > 0 ? 'Por cobrar' : 'Cobrado',
+					transState:
+						pendings > 0
+							? 'Pendiente'
+							: receivable > 0
+							? 'Por cobrar'
+							: 'Cobrado',
 				};
 			});
 	});
