@@ -2112,6 +2112,10 @@ const paymentInfoFunction = async psyId => {
 				const paymentPlanDate = moment(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
+				const hablaquiPercentage =
+					realComission === 0.0399
+						? plans.sessionPrice * 0
+						: plans.sessionPrice * 0.1601;
 
 				let sessions = plans.session.map(session => {
 					const transDate =
@@ -2122,10 +2126,6 @@ const paymentInfoFunction = async psyId => {
 							  moment(session.requestDate).isValid()
 							? 'Pendiente'
 							: 'Por cobrar';
-					const hablaquiPercentage =
-						realComission === 0.0399
-							? plans.sessionPrice * 0
-							: plans.sessionPrice * 0.1601;
 
 					return {
 						_id: session._id,
@@ -2184,7 +2184,7 @@ const paymentInfoFunction = async psyId => {
 							(1 - realComission)
 						).toFixed(0),
 						status: 'Pendiente',
-						transDate: 'Pendiente',
+						transDate: 'Por realizar',
 					};
 					sessions.push(session);
 				}
