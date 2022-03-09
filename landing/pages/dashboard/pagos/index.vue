@@ -1,10 +1,39 @@
 <template>
-	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Pagos" />
-		<div class="tex-h5 secondary--text font-weight-bold mb-4 mt-1">Transacciones</div>
-		<table-pagos hide-search :items="payments" :loading="loading"></table-pagos>
-		<recruited-overlay />
-	</v-container>
+	<div>
+		<card-onboarding
+			v-if="stepOnboarding && stepOnboarding.title === 'Mis pagos'"
+			style="position: absolute; top: 310px; left: 10px; z-index: 3"
+			arrow="arrow-left"
+			:next="
+				() => {
+					$router.push({ name: 'dashboard-consultantes' });
+					return {
+						title: 'Mis consultantes',
+						card: {
+							title: 'Gestiona los consultantes',
+							description:
+								'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+							link: '',
+							route: 'dashboard-chat',
+						},
+						route: 'dashboard-consultantes',
+					};
+				}
+			"
+		/>
+		<v-container style="height: 100vh; max-width: 1200px">
+			<appbar class="hidden-sm-and-down" title="Pagos" />
+			<div class="title secondary--text font-weight-bold mb-4 mt-10">Transacciones</div>
+			<table-pagos
+				hide-search
+				:items="payments"
+				:transactions="transactions"
+				:psychologist="psychologist"
+				:loading="loading"
+				:fetch-data="initFetch"
+			></table-pagos>
+		</v-container>
+	</div>
 </template>
 
 <script>
@@ -14,7 +43,6 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		TablePagos: () => import('~/components/dashboard/TablePagos'),
-		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -26,6 +54,9 @@ export default {
 	computed: {
 		...mapGetters({
 			payments: 'Psychologist/payments',
+			transactions: 'Psychologist/transactions',
+			psychologist: 'Psychologist/psychologist',
+			stepOnboarding: 'User/step',
 		}),
 	},
 	mounted() {
@@ -40,10 +71,12 @@ export default {
 				return null;
 			this.loading = true;
 			await this.getPayments();
+			await this.getTransactions();
 			this.loading = false;
 		},
 		...mapActions({
 			getPayments: 'Psychologist/getPayments',
+			getTransactions: 'Psychologist/getTransactions',
 		}),
 	},
 };

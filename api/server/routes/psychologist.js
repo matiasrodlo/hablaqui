@@ -400,6 +400,15 @@ psychologistsRouter.get(
 );
 
 /**
+ * @description: Consigue los datos (y la tabla) de pagos del psicologo.
+ */
+psychologistsRouter.get(
+	'/psychologist/payments/:psy',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.paymentsInfoFromId
+);
+
+/**
  * @description: Elimina un compromiso privado de un psicologo
  * @route {PATCH} /api/v1/psychologist/delete-private-commitment
  * @param {String} psyId id del compromiso y planId es el id del plan
@@ -478,6 +487,12 @@ psychologistsRouter.get(
 	'/psychologist/transactions/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getTransactions
+);
+
+psychologistsRouter.post(
+	'/psychologist/status/inmediate-attention',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.changeToInmediateAttention
 );
 
 export default psychologistsRouter;

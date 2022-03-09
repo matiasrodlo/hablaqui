@@ -387,6 +387,22 @@ const psychologistsController = {
 			);
 		}
 	},
+	async paymentsInfoFromId(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.paymentsInfoFromId(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
+		}
+	},
 	async deleteCommitment(req, res) {
 		try {
 			const { psyId, planId } = req.params;
@@ -501,6 +517,20 @@ const psychologistsController = {
 			const { user } = req;
 			const { data, code } = await psychologistsService.getTransactions(
 				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async changeToInmediateAttention(req, res) {
+		try {
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.changeToInmediateAttention(
+				user.psychologist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

@@ -45,6 +45,7 @@
 						v-model="findByDate"
 						type="month"
 						no-title
+						locale="es"
 						scrollable
 						@change="$refs.menu.save(findByDate)"
 					>
@@ -52,22 +53,186 @@
 				</v-menu>
 			</v-col>
 		</v-row>
-		<client-only>
-			<v-data-table
-				class="hidden-sm-and-down"
-				:loading="loading"
-				:headers="headers"
-				:items="payments"
-				loading-text="Cargando..."
-				:items-per-page="5"
-				:footer-props="{
-					'items-per-page-text': 'Pagos por página',
-				}"
-				no-results-text="Sin pagos registrados"
-				no-data-text="No hay pagos"
-			>
-			</v-data-table>
-		</client-only>
+		<v-row class="hidden-sm-and-down mt-10">
+			<v-col :cols="$route.name === 'dashboard-pagos' ? '9' : '12'">
+				<client-only>
+					<v-data-table
+						class="pointer elevation-1"
+						:loading="loading"
+						:headers="header"
+						:items="payments"
+						loading-text="Cargando..."
+						:items-per-page="5"
+						:single-expand="true"
+						item-key="id"
+						:expanded.sync="expanded"
+						:footer-props="{
+							'items-per-page-text': 'Pagos por página',
+						}"
+						no-results-text="Sin pagos registrados"
+						no-data-text="No hay pagos"
+						@click:row="
+							(item, { expand, isExpanded }) => {
+								isExpanded ? (expanded = []) : expand();
+							}
+						"
+					>
+						<template #[`item.datePayment`]="{ item }">
+							<span class="caption">
+								{{ item.datePayment }}
+							</span>
+						</template>
+						<template #[`item.amount`]="{ item }">
+							<span class="caption">
+								{{ item.amount }}
+							</span>
+						</template>
+						<template #[`item.finalAmount`]="{ item }">
+							<span class="caption">
+								{{ item.finalAmount }}
+							</span>
+						</template>
+						<template #[`item.transState`]="{ item }">
+							<span class="caption">
+								{{ item.transState }}
+							</span>
+						</template>
+						<template #[`item.name`]="{ item }">
+							<div style="width: 100px">
+								<span style="width: 100px" class="caption">
+									{{
+										item.name.length > 12
+											? item.name.slice(0, 12) + '...'
+											: item.name
+									}}
+								</span>
+							</div>
+						</template>
+						<template #[`item.suscription`]="{ item }">
+							<div style="width: 120px">
+								<span style="width: 120px !important" class="caption">
+									{{ item.suscription }}
+								</span>
+							</div>
+						</template>
+						<template #expanded-item="{ item }">
+							<td :colspan="header.length" class="px-0">
+								<v-simple-table>
+									<template #default>
+										<tbody>
+											<tr
+												v-for="element in item.sessions"
+												:key="element.id"
+												@click="
+													() => {
+														selected = element;
+														dialog = true;
+													}
+												"
+											>
+												<td style="width: 15.5%" class="caption text-start">
+													{{ element.date }}
+												</td>
+												<td style="width: 18.5%" class="caption text-start">
+													{{
+														element.name.length > 12
+															? element.name.slice(0, 12) + '...'
+															: element.name
+													}}
+												</td>
+												<td style="width: 21.5%" class="caption text-start">
+													{{ element.sessionsNumber }}
+												</td>
+												<td style="width: 9.5%" class="caption text-start">
+													{{ element.amount }}
+												</td>
+												<td style="width: 13%" class="caption text-start">
+													{{ element.total }}
+												</td>
+												<td style="width: auto" class="caption text-start">
+													{{ element.transDate }}
+												</td>
+											</tr>
+										</tbody>
+									</template>
+								</v-simple-table>
+							</td>
+						</template>
+					</v-data-table>
+				</client-only>
+			</v-col>
+			<v-col v-if="$route.name === 'dashboard-pagos'" cols="3">
+				<v-card style="border-radius: 15px" class="elevation-1">
+					<v-card-text>
+						<div class="primary--text title">Tu dinero disponible</div>
+						<div class="text-h4 my-3">
+							${{ transactions ? transactions.totalAvailable : 0 }}
+						</div>
+						<div class="body-1 my-3">
+							Sesiones realizadas:
+							{{ transactions ? transactions.successSessions : 0 }}
+						</div>
+						<div class="body-1 my-3">
+							Sesiones por cobrar:
+							{{ transactions ? transactions.sessionsReceivable : 0 }}
+						</div>
+					</v-card-text>
+					<v-divider></v-divider>
+					<v-card-actions>
+						<v-btn
+							block
+							color="rgba(26, 165, 216, 0.16)"
+							rounded
+							depressed
+							class="primary--text"
+							:disabled="
+								!transactions ||
+								(transactions && transactions.sessionsReceivable <= 0)
+							"
+							@click="dialogPayment = true"
+						>
+							Retirar dinero
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+				<v-card v-if="lastTransaction" style="border-radius: 15px" class="elevation-1 mt-4">
+					<v-card-text>
+						<div class="title">Última transacción</div>
+						<div class="body-1 my-3 d-flex justify-space-between align-center">
+							<v-img
+								max-width="50px"
+								:src="`https://cdn.hablaqui.cl/static/retiro.png`"
+							/>
+							<div>
+								<div class="body-1 text-right">
+									$ {{ lastTransaction.total }} -
+									{{ lastTransaction.sessionsPaid }} Sesiones
+								</div>
+								<div
+									v-if="lastTransaction.trasactionDate"
+									class="body-1 text-right pt-2"
+								>
+									{{ formatDateMoment(lastTransaction.trasactionDate) }}
+								</div>
+							</div>
+						</div>
+					</v-card-text>
+					<v-divider> </v-divider>
+					<v-card-actions>
+						<v-btn
+							block
+							color="Primary"
+							rounded
+							depressed
+							class="primary--text"
+							to="pagos/historial"
+						>
+							Ver trasacciones
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
 				v-for="(item, i) in payments"
@@ -142,19 +307,157 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 		</v-expansion-panels>
+		<v-dialog v-model="dialog" persistent max-width="400">
+			<v-card max-width="400">
+				<v-card-title class="d-flex">
+					<div class="primary--text" style="flex: 1">Detalles</div>
+					<div style="flex: 0">
+						<v-btn
+							icon
+							@click="
+								() => {
+									dialog = false;
+									seledted = null;
+								}
+							"
+						>
+							<icon size="30" color="#b1b1b1" :icon="mdiClose" />
+						</v-btn>
+					</div>
+				</v-card-title>
+				<v-card-text v-if="selected">
+					<div class="d-flex justify-space-between my-2">
+						<div>Fecha de sesión:</div>
+						<div>{{ selected.date }}</div>
+					</div>
+					<div class="d-flex justify-space-between my-2">
+						<div>N° de sesión:</div>
+						<div>{{ selected.sessionsNumber }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">Monto:</div>
+						<div style="flex: 0">{{ selected.amount }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">%Hablaqui:</div>
+						<div style="flex: 0">{{ selected.hablaquiPercentage }}</div>
+					</div>
+					<div class="d-flex my-2">
+						<div style="flex: 1">%Mercadopago:</div>
+						<div style="flex: 0">{{ selected.mercadoPercentage }}</div>
+					</div>
+				</v-card-text>
+				<v-divider></v-divider>
+				<v-card-actions v-if="selected" class="py-6">
+					<span class="secondary--text">Total:</span>
+					<v-spacer></v-spacer>
+					<span class="secondary--text">{{ selected.total }}</span>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+		<v-dialog v-model="dialogPayment" persistent max-width="400">
+			<v-card max-width="400">
+				<template v-if="step === 1">
+					<v-card-title class="d-flex">
+						<div style="flex: 1">Revisa si todo esta bien</div>
+						<div style="flex: 0">
+							<v-btn
+								icon
+								@click="
+									() => {
+										dialogPayment = false;
+										step = 1;
+									}
+								"
+							>
+								<icon size="30" color="#b1b1b1" :icon="mdiClose" />
+							</v-btn>
+						</div>
+					</v-card-title>
+					<v-card-text class="pt-6">
+						<div v-if="transactions" class="d-flex justify-space-between align-center">
+							<div>Se acreditara el {{ dayWithdraw }}</div>
+							<div class="title">${{ transactions.totalAvailable }}</div>
+						</div>
+					</v-card-text>
+					<v-card-text class="py-0">
+						<v-divider> </v-divider>
+					</v-card-text>
+					<v-card-text
+						v-if="psychologist && psychologist.paymentMethod"
+						class="pb-0 pt-2"
+					>
+						<div class="d-flex justify-space-between align-center">
+							<div>
+								<div class="title">
+									{{ psychologist.paymentMethod.bank }}
+								</div>
+								<v-btn color="primary" text class="pa-0" to="perfil">
+									Cambiar de cuenta
+								</v-btn>
+							</div>
+							<div class="subtitle-2 text-right">
+								<div>{{ psychologist.paymentMethod.name }}</div>
+								<div>{{ psychologist.paymentMethod.accountNumber }}</div>
+							</div>
+						</div>
+					</v-card-text>
+					<v-card-text class="py-0">
+						<v-divider></v-divider>
+					</v-card-text>
+					<v-card-actions class="py-6">
+						<v-spacer></v-spacer>
+						<v-btn
+							:loading="loadingPayment"
+							rounded
+							color="primary"
+							class="px-10"
+							@click="submitPayment"
+						>
+							Continuar
+						</v-btn>
+					</v-card-actions>
+				</template>
+				<template v-else>
+					<v-card-title v-if="transactions" class="text-center">
+						Transferiremos los {{ transactions.totalAvailable }} dentro de 7 dias
+						habiles
+					</v-card-title>
+					<v-card-text class="text-center">
+						<div v-if="psychologist && psychologist.paymentMethod" class="body-1">
+							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
+							{{ psychologist.paymentMethod.bank }}
+						</div>
+						<v-btn rounded color="primary" to="/" class="mt-4 px-6">Ir a inicio</v-btn>
+					</v-card-text>
+				</template>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
-import moment from 'moment-timezone';
-import { mdiMagnify } from '@mdi/js';
+import moment from 'moment';
+import { mapActions } from 'vuex';
+import { mdiMagnify, mdiClose } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
 
 export default {
+	components: {
+		Icon: () => import('~/components/Icon'),
+	},
 	props: {
 		items: {
 			type: Array,
 			default: () => [],
+		},
+		transactions: {
+			type: Object,
+			default: null,
+		},
+		psychologist: {
+			type: Object,
+			default: null,
 		},
 		loading: {
 			type: Boolean,
@@ -164,14 +467,25 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		fetchData: {
+			type: Function,
+			default: () => null,
+		},
 	},
 	data() {
 		return {
+			expanded: [],
+			selected: null,
+			step: 1,
+			dialog: false,
+			dialogPayment: false,
 			menu: false,
 			findByDate: moment().format('YYYY-MM'),
 			mdiMagnify,
+			loadingPayment: false,
+			mdiClose,
 			search: '',
-			headers: [
+			header: [
 				{
 					text: 'Fecha de pago',
 					sortable: false,
@@ -186,6 +500,14 @@ export default {
 		};
 	},
 	computed: {
+		dayWithdraw() {
+			const day = moment().add('7', 'days');
+			return moment(day).format('DD/MM/YYYY');
+		},
+		lastTransaction() {
+			if (!this.transactions || !this.transactions.transactions.length) return null;
+			return this.transactions.transactions[this.transactions.transactions.length - 1];
+		},
 		payments: {
 			get() {
 				let result = this.items
@@ -218,6 +540,19 @@ export default {
 		formatDate(item) {
 			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
 		},
+		formatDateMoment(item) {
+			return moment(item).format('DD MMMM, YYYY');
+		},
+		async submitPayment() {
+			this.loadingPayment = true;
+			await this.paymentRequest();
+			await this.fetchData();
+			this.loadingPayment = false;
+			this.step = 2;
+		},
+		...mapActions({
+			paymentRequest: 'Psychologist/paymentRequest',
+		}),
 	},
 };
 </script>

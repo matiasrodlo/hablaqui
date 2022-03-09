@@ -41,6 +41,10 @@ let userSchema = new Schema(
 			type: Boolean,
 			default: true,
 		},
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
 		avatar: { type: String, default: '' },
 		avatarThumbnail: {
 			type: String,
