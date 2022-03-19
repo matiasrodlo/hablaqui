@@ -673,6 +673,10 @@ export default {
 		loadingPsychologist: {
 			type: Boolean,
 		},
+		getSessionsLimit: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -762,7 +766,7 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsFormattedAll',
+			sessions: 'Psychologist/sessionsLimit',
 		}),
 	},
 	created() {

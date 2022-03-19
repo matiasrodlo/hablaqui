@@ -13,6 +13,7 @@ const initialState = {
 	resumeView: false,
 	sessions: [],
 	transactions: null,
+	sessionsLimit: [],
 	sessionsFormatted: [],
 	sessionsFormattedAll: [],
 };

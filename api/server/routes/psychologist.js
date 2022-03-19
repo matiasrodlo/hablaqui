@@ -74,6 +74,14 @@ psychologistsRouter.get(
 );
 
 /**
+ * obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
+ */
+psychologistsRouter.post(
+	'/psychologists/sessionsLimit',
+	psychologistsController.sessionsLimit
+);
+
+/**
  * get psychologist bt username or _id
  */
 psychologistsRouter.get(
