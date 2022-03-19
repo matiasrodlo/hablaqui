@@ -698,7 +698,7 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: 1,
+			page: null,
 		};
 	},
 	computed: {
@@ -768,6 +768,14 @@ export default {
 			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsLimit',
 		}),
+	},
+	watch: {
+		page(value, oldValue) {
+			let prev = 0;
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
+			this.getSessionsLimit(ids);
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
