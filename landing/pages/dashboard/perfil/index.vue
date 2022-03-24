@@ -67,8 +67,11 @@
 					<v-list-item-title class="text-capitalize font-weight-bold title">
 						{{ $auth.$state.user.name }} {{ $auth.$state.user.lastName }}
 					</v-list-item-title>
-					<v-list-item-subtitle class="body-1">
-						Bienvenido a Hablaquí
+					<v-list-item-subtitle>
+						<div class="body-1">Bienvenido a Hablaquí</div>
+						<small v-if="!$auth.$state.user.isVerified" class="error--text">
+							Verifica tu correo electronico
+						</small>
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
