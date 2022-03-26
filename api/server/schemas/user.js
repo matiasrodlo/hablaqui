@@ -20,6 +20,7 @@ const userSchema = {
 		plan: Joi.array(),
 		psychologist: Joi.string().allow(''),
 		onboarding: Joi.boolean(),
+		isVerified: Joi.boolean(),
 		role: Joi.string().allow(''),
 		rut: Joi.string().allow(''),
 		sessions: Joi.array(),
