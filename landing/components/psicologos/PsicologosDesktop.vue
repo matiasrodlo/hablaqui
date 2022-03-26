@@ -549,6 +549,20 @@
 												>
 													Quiero saber más
 												</v-btn>
+												<v-btn
+													v-if="
+														!$auth.$state.loggedIn ||
+														$auth.$state.user.role === 'user'
+													"
+													small
+													rounded
+													color="#56b5fc"
+													dark
+													class="px-4 py-2"
+													@click="() => goChat(item)"
+												>
+													Enviar mensajes
+												</v-btn>
 											</div>
 										</div>
 									</v-col>
@@ -770,6 +784,15 @@ export default {
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
+		},
+		goChat(psychologist) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+				});
+			} else {
+				return this.$router.push(`/${psychologist.username}/?chat=true`);
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
