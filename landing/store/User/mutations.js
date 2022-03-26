@@ -18,6 +18,12 @@ export default {
 	setListenerUserOnline(state, value) {
 		state.listenerUserOnline = value;
 	},
+	setStepLinks(state, value) {
+		state.stepLinks = state.stepLinks.map((el, i) => {
+			if (i === value) return true;
+			return el;
+		});
+	},
 	reset(state) {
 		state.user = {};
 		state.token = '';

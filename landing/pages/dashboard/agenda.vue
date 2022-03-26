@@ -6,6 +6,7 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(1);
 					$router.push({ name: 'dashboard-pagos' });
 					return {
 						title: 'Mis pagos',
@@ -1163,6 +1164,7 @@ export default {
 		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',
+			setStepLinks: 'User/setStepLinks',
 		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',
