@@ -6,6 +6,7 @@ export default {
 	token: state => state.token,
 	loggedIn: state => state.loggedIn,
 	onBoarding: state => state.onBoarding,
+	stepLinks: state => state.stepLinks,
 	step: state => state.step,
 	listenerUserOnline: state => state.listenerUserOnline,
 	plan: (state, getters, rootState) => {

@@ -556,21 +556,31 @@
 											</div>
 										</v-col>
 										<v-col cols="8" sm="9">
+											<div class="mt-4">
+												<div
+													class="text-left font-weight-bold body-1"
+													style="color: #3c3c3b"
+												>
+													<nuxt-link
+														style="text-decoration: none"
+														:to="{
+															path: `/${item.username}`,
+														}"
+													>
+														{{ item.name }}
+														{{ item.lastName && item.lastName }}
+													</nuxt-link>
+													<v-btn icon @click.stop="() => goChat(item)">
+														<icon :icon="mdiChat" />
+													</v-btn>
+												</div>
+											</div>
 											<nuxt-link
 												style="text-decoration: none"
 												:to="{
 													path: `/${item.username}`,
 												}"
 											>
-												<div class="mt-4">
-													<div
-														class="text-left font-weight-bold body-1"
-														style="color: #3c3c3b"
-													>
-														{{ item.name }}
-														{{ item.lastName && item.lastName }}
-													</div>
-												</div>
 												<div
 													class="text-capitalize text-left mt-1 mb-2"
 													style="color: #706f6f; font-size: 12px"
@@ -660,7 +670,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiCloseCircle, mdiAccount } from '@mdi/js';
+import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -673,9 +683,14 @@ export default {
 		loadingPsychologist: {
 			type: Boolean,
 		},
+		getSessionsLimit: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
+			mdiChat,
 			showFilters: false,
 			mdiCloseCircle,
 			mdiChevronDown,
@@ -694,7 +709,7 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: 1,
+			page: null,
 		};
 	},
 	computed: {
@@ -762,8 +777,16 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsFormattedAll',
+			sessions: 'Psychologist/sessionsLimit',
 		}),
+	},
+	watch: {
+		page(value, oldValue) {
+			let prev = 0;
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
+			this.getSessionsLimit(ids);
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -813,6 +836,15 @@ export default {
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
+		},
+		goChat(psychologist) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+				});
+			} else {
+				return this.$router.push(`/${psychologist.username}/?chat=true`);
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

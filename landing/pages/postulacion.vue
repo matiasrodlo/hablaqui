@@ -1232,7 +1232,7 @@ export default {
 					this.$segment.track(this.form._id.toString(), {
 						event: 'psy-application-step',
 						properties: {
-							step: step,
+							step,
 							email: this.$auth.user.email,
 						},
 					});

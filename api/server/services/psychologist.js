@@ -609,11 +609,17 @@ const getFormattedSessions = async (idPsychologist, type) => {
 };
 
 // Utilizado para traer las sessiones de todos los psicologos para el selector
-const formattedSessionsAll = async () => {
+const formattedSessionsAll = async ids => {
 	let sessions = [];
-	let psychologist = await Psychologist.find({}).select(
-		'schedule preferences inmediateAttention'
-	);
+	let psychologist = [];
+	if (ids && Array.isArray(ids) && ids.length) {
+		psychologist = await Psychologist.find({ _id: { $in: ids } }).select(
+			'schedule preferences inmediateAttention'
+		);
+	} else
+		psychologist = await Psychologist.find({}).select(
+			'schedule preferences inmediateAttention'
+		);
 	// Para que nos de deje modificar el array de mongo
 	psychologist = JSON.stringify(psychologist);
 	psychologist = JSON.parse(psychologist);

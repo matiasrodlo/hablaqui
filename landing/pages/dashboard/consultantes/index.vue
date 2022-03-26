@@ -6,6 +6,7 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(3);
 					$router.push({ name: 'dashboard-perfil' });
 					setStep(null);
 				}
@@ -517,6 +518,7 @@ export default {
 		},
 		...mapMutations({
 			setOnBoarding: 'User/setOnBoarding',
+			setStepLinks: 'User/setStepLinks',
 			setStep: 'User/setStep',
 		}),
 		...mapActions({
