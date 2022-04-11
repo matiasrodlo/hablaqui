@@ -11,6 +11,7 @@ import { logError, logger } from './config/pino';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 const app = express();
+require('@google-cloud/debug-agent').start({serviceContext: {enableCanary: true}});
 
 // fisrt connect to data base
 mongoose
