@@ -932,7 +932,8 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					moment().isBefore(moment(plan.expiration))
+					moment().isBefore(moment(plan.expiration)) &&
+					plan.title !== 'Plan inicial'
 				//sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
