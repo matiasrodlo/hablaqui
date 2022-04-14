@@ -1157,6 +1157,30 @@ const mailService = {
 			});
 		});
 	},
+	async sendUploadPicture(psy) {
+		const dataPayload = {
+			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
+			to: 'Hablaquí <soporte@hablaqui.cl>',
+			subject: `Psicologo subió foto`,
+			templateId: 'd-d0ad663db5c64f0f965d5aeab027a7aa',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy: psy.name + ' ' + psy.lastName,
+				email: psy.email,
+			},
+		};
+		return new Promise((resolve, reject) => {
+			sgMail.send(dataPayload, function(error, body) {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(body);
+				}
+			});
+		});
+	},
 };
 
 export default mailService;

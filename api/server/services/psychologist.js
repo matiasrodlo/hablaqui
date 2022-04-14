@@ -2112,13 +2112,15 @@ const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-				const realComission = plans.invitedByPsychologist
+				let realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
+				realComission =
+					realComission === 0.0399 ? 0.0351 : realComission;
 				const hablaquiPercentage =
-					realComission === 0.0399
+					realComission === 0.0351
 						? plans.sessionPrice * 0
-						: plans.sessionPrice * 0.1601;
+						: plans.sessionPrice * 0.1649;
 				const paymentPlanDate = moment(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
@@ -2140,10 +2142,10 @@ const paymentInfoFunction = async psyId => {
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
-							plans.sessionPrice * 0.0399
+							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
-							realComission === 0.0399 ? '3.99%' : percentage,
+							realComission === 0.0351 ? '3.51%' : percentage,
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
@@ -2174,10 +2176,10 @@ const paymentInfoFunction = async psyId => {
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
-							plans.sessionPrice * 0.0399
+							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
-							realComission === 0.0399 ? '3.99%' : percentage,
+							realComission === 0.0351 ? '3.51%' : percentage,
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
