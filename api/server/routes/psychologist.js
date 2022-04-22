@@ -7,6 +7,11 @@ import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
+psychologistsRouter.get(
+	'/psychologist/hide/:idPsy',
+	psychologistsController.hidePsychologist
+);
+
 /**
  * @swagger
  * tags:

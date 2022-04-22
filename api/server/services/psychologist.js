@@ -21,12 +21,14 @@ import {
 } from '../config/bucket';
 import Transaction from '../models/transaction';
 import { logger } from '../config/winston';
+import { exists } from 'fs';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
 
 const getAll = async () => {
-	const psychologists = await Psychologist.find();
+	let psychologists = await Psychologist.find();
+	psychologists = psychologists.filter(psy => !psy.isHide);
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
 };
@@ -2298,7 +2300,21 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	return okResponse('Sesion rechazada', { evaluations });
 };
 
+const hidePsychologist = async idPsy => {
+	let psychologist = await Psychologist.findOne({ _id: idPsy });
+	console.log(psychologist.isHide);
+	psychologist = await Psychologist.findOneAndUpdate(
+		{ _id: idPsy },
+		{ $set: { isHide: !psychologist.isHide } }
+	);
+
+	if (!psychologist) return conflictResponse('Psicologo no encontrado');
+
+	return okResponse('Psicologo ocultado', { psychologist });
+};
+
 const psychologistsService = {
+	hidePsychologist,
 	addRating,
 	approveAvatar,
 	cancelSession,
