@@ -284,10 +284,10 @@
 			>
 				<div class="primary--text pa-2">Presione esc para salir</div>
 			</v-overlay>
-			<v-dialog v-model="overlay" max-width="300">
+			<v-dialog v-model="overlay" persistent max-width="300">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text @click="changeStateOnboarding">
+						<v-btn text @click="welcomeDialog">
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
@@ -295,18 +295,20 @@
 						Bienvenido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
-						Agenda un tour por tu oficina y aclara todas tus dudas
+						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
+						agenda una inducción a la plataforma.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/daniel-hablaqui/30min"
+							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
-							>Agendar demo
+						>
+							Agendar demo
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
@@ -692,6 +694,8 @@ export default {
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
+		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+			this.overlay = true;
 
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
@@ -753,6 +757,11 @@ export default {
 			this.loadingStatus = true;
 			await this.toggleStatus();
 			this.loadingStatus = false;
+		},
+		welcomeDialog() {
+			this.overlay = false;
+			this.setOnBoarding(true);
+			// this.changeStateOnboarding();
 		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;
