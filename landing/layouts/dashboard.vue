@@ -284,8 +284,7 @@
 			>
 				<div class="primary--text pa-2">Presione esc para salir</div>
 			</v-overlay>
-			<!-- comentado porque solapa con el inicio rapido -->
-			<!-- <v-overlay :value="overlay" color="white" :opacity="0.8">
+			<v-dialog v-model="overlay" max-width="300">
 				<v-card light>
 					<div class="text-right">
 						<v-btn text @click="changeStateOnboarding">
@@ -312,7 +311,7 @@
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-overlay> -->
+			</v-dialog>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
