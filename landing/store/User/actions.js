@@ -14,6 +14,15 @@ export default {
 			snackBarError(error)(commit);
 		}
 	},
+	async verifyEmail({ commit }, id) {
+		try {
+			await this.$axios(`/auth/user/verification/${id}`, {
+				method: 'put',
+			});
+		} catch (error) {
+			snackBarError(error)(commit);
+		}
+	},
 	async updateOne({ commit }, payload) {
 		try {
 			delete payload.finishedSessions;

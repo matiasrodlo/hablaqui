@@ -172,34 +172,10 @@ export default {
 			}
 			return null;
 		},
-		// retorna el plan act o el ultimo expirado
-		plan() {
-			if (!this.$auth.$state.user || this.$auth.$state.user.role !== 'user') return null;
-			// Obtenemos un array con todo los planes solamente
-			const plans = this.$auth.$state.user.sessions.flatMap(item =>
-				item.plan.map(plan => ({
-					...plan,
-					idSessions: item._id,
-					roomsUrl: item.roomsUrl,
-					psychologist: item.psychologist,
-					user: item.user,
-					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
-				}))
-			);
-			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
-
-			// retornamos el plan success y sin expirar
-			let plan = plans.find(
-				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
-			);
-			// retornamos el ultimo plan succes y que expiro
-			if (!plan) plan = plans.find(item => item.diff === max);
-			return plan;
-		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
+			plan: 'User/plan',
 			floatingChat: 'Chat/floatingChat',
 			allPsychologists: 'Psychologist/psychologists',
 			resumeView: 'Psychologist/resumeView',

@@ -13,9 +13,11 @@ import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
+import Auth from './auth';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -129,6 +131,7 @@ const usersService = {
 
 		if (userRole === 'psychologist') {
 			const userData = await User.findById(userID);
+			await mailService.sendUploadPicture(userData);
 			if (userData.psychologist) {
 				psychologist = await Psychologist.findByIdAndUpdate(
 					idPsychologist,
@@ -234,6 +237,10 @@ const usersService = {
 			phone: body.phone,
 		};
 		const createdUser = await User.create(newUser);
+		const token = Auth.generateJwt(createdUser);
+		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
+		await mailService.sendVerifyEmail(createdUser, verifyurl);
+
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
@@ -354,7 +361,97 @@ const usersService = {
 				evaluations: [evaluation],
 			});
 		}
+
+		const psy = await Psychologist.findById(psyId);
+
+		await mailService.sendAddEvaluation(user, psy);
 		return okResponse('Evaluación guardada', created);
+	},
+	async changePsychologist(sessionsId) {
+		const foundPlan = await Sessions.findById(sessionsId).populate(
+			'psychologist user'
+		);
+		if (!foundPlan) return conflictResponse('No hay planes');
+		const planData = foundPlan.plan.filter(
+			plan =>
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+		);
+
+		if (!planData) return conflictResponse('No hay planes para cancelar');
+
+		let sessionsData = [];
+		planData.forEach(plan => {
+			const sessions = {
+				plan: plan._id,
+				remainingSessions: plan.remainingSessions,
+				price: plan.sessionPrice,
+				session: plan.session.filter(
+					session => session.status !== 'success'
+				),
+			};
+			sessionsData.push(sessions);
+		});
+
+		let discount = 0;
+		let sessionsToDelete = [];
+		sessionsData.forEach(data => {
+			const remaining = data.session.length + data.remainingSessions;
+			discount += remaining * data.price;
+			sessionsToDelete.push(data.session);
+		});
+		console.log(discount);
+		console.log(sessionsToDelete);
+
+		planData.forEach(async plan => {
+			await Sessions.updateOne(
+				{
+					_id: sessionsId,
+					'plan._id': plan._id,
+				},
+				{
+					$set: {
+						'plan.$.payment': 'failed',
+						'plan.$.remainingSessions': 0,
+					},
+				}
+			);
+			plan.session.forEach(async session => {
+				await Sessions.updateOne(
+					{
+						_id: sessionsId,
+						'plan._id': plan._id,
+						'plan.session._id': session._id,
+					},
+					{
+						$pull: {
+							'plan.$.session': { _id: session._id },
+						},
+					}
+				);
+			});
+		});
+
+		const now = new Date();
+		let expiration = now;
+		expiration.setDate(expiration.getDate() + 3);
+
+		const newCoupon = {
+			code: foundPlan.user.name + now.getTime(),
+			discount,
+			discountType: 'static',
+			restrictions: {
+				user: foundPlan.user._id,
+			},
+			expiration: expiration.toISOString(),
+		};
+		await mailService.sendChangePsycologistToUser(
+			foundPlan.user,
+			foundPlan.psychologist,
+			newCoupon
+		);
+		await Coupon.create(newCoupon);
+		return okResponse('Cupón hecho');
 	},
 };
 

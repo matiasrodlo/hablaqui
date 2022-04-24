@@ -20,8 +20,7 @@ import {
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
 import Transaction from '../models/transaction';
-import { logger } from '../config/winston';
-import { exists } from 'fs';
+import Coupon from '../models/coupons';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -59,7 +58,6 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
-
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -142,6 +140,10 @@ const setSession = (role, sessions) => {
 					statusPlan: plan.payment,
 					idPlan: plan._id,
 					url: item.roomsUrl,
+					numberSessionSuccess: item.numberSessionSuccess,
+					activePlan:
+						plan.payment === 'success' &&
+						moment().isBefore(moment(plan.expiration)),
 				};
 			});
 		});
@@ -186,6 +188,7 @@ const getRemainingSessions = async psy => {
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);
+	const user = await Psychologist.findById(psy);
 	const now = moment().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -239,7 +242,10 @@ const completePaymentsRequest = async psy => {
 		{ $push: { transactionCompleted: transaction } }
 	);
 
-	return okResponse('Peticion hecha', {
+	//Enviar correo de dinero depositado a psy
+	await mailService.sendCompletePaymentRequest(user, total, now);
+
+	return okResponse('Peticion completada', {
 		total: total,
 		sessions: sessions,
 	});
@@ -322,6 +328,9 @@ const createPaymentsRequest = async user => {
 			},
 		});
 	}
+	//Crear correo de petición de retiro de dinero
+	await mailService.sendPaymentRequest(user, total, now);
+
 	return okResponse('Peticion hecha', {
 		total: total,
 		sessions: sessions,
@@ -503,7 +512,7 @@ const getTransactions = async user => {
 	).length;
 
 	return okResponse('Transacciones devueltas', {
-		payments: {
+		transactions: {
 			total: total.toFixed(2),
 			totalAvailable: totalAvailable.toFixed(2),
 			successSessions,
@@ -520,7 +529,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
 	// obtenemos el psicologo
 	const psychologist = await Psychologist.findById(idPsychologist).select(
-		'_id schedule preferences'
+		'_id schedule preferences inmediateAttention'
 	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
@@ -601,11 +610,17 @@ const getFormattedSessions = async (idPsychologist, type) => {
 };
 
 // Utilizado para traer las sessiones de todos los psicologos para el selector
-const formattedSessionsAll = async () => {
+const formattedSessionsAll = async ids => {
 	let sessions = [];
-	let psychologist = await Psychologist.find({}).select(
-		'schedule preferences'
-	);
+	let psychologist = [];
+	if (ids && Array.isArray(ids) && ids.length) {
+		psychologist = await Psychologist.find({ _id: { $in: ids } }).select(
+			'schedule preferences inmediateAttention'
+		);
+	} else
+		psychologist = await Psychologist.find({}).select(
+			'schedule preferences inmediateAttention'
+		);
 	// Para que nos de deje modificar el array de mongo
 	psychologist = JSON.stringify(psychologist);
 	psychologist = JSON.parse(psychologist);
@@ -637,7 +652,7 @@ const formattedSessionsAll = async () => {
 	// Obtenemos sessiones del psicologo
 	let allSessions = await Sessions.find({}).populate(
 		'psychologist',
-		'_id schedule preferences'
+		'_id schedule preferences inmediateAttention'
 	);
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -665,6 +680,7 @@ const formattedSessionsAll = async () => {
 			item.preferences.minimumNewSession,
 			'h'
 		);
+		let schedule = item.schedule;
 
 		return {
 			psychologist: item._id,
@@ -683,7 +699,7 @@ const formattedSessionsAll = async () => {
 								`${temporal} ${hour}`,
 								'MM/DD/YYYY HH:mm'
 							).isAfter(minimumNewSession) &&
-							formattedSchedule(item.schedule, day, hour) &&
+							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
 									moment(date, 'MM/DD/YYYY HH:mm').format(
@@ -797,6 +813,7 @@ const createPlan = async ({ payload }) => {
 	const psychologist = await Psychologist.findById(payload.psychologist);
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	if (
+		!psychologist.inmediateAttention.activated &&
 		moment().isAfter(
 			moment(date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumNewSession,
@@ -834,20 +851,33 @@ const createPlan = async ({ payload }) => {
 		sessionNumber: 1,
 		paidToPsychologist: false,
 	};
+	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+
+	let price = payload.price < 0 ? 0 : payload.price;
+
+	if (foundCoupon && foundCoupon.discountType === 'static')
+		price = payload.originalPrice;
 	const newPlan = {
 		title: payload.title,
 		period: payload.paymentPeriod,
 		datePayment: '',
-		totalPrice: payload.price,
-		sessionPrice: payload.price / sessionQuantity,
+		totalPrice: price,
+		sessionPrice: price / sessionQuantity,
 		expiration: expirationDate,
 		usedCoupon: payload.coupon,
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
+		tokenToPay: token,
 		session: [newSession],
 	};
-
+	//logInfo(newPlan);
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		psychologist: payload.psychologist,
@@ -894,107 +924,106 @@ const createPlan = async ({ payload }) => {
 		});
 	}
 
-	if (userSessions) {
-		if (
-			userSessions.plan.some(
+	let created = null;
+
+	const userPlans = await Sessions.find({ user: payload.user });
+
+	if (
+		userPlans.some(sessions => {
+			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					moment().isBefore(moment(plan.expiration))
-			)
-		) {
-			return conflictResponse('El usuario ya tiene un plan vigente');
-		}
-
-		const created = await Sessions.findOneAndUpdate(
-			{ user: payload.user, psychologist: payload.psychologist },
-			{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
-			{ new: true }
-		);
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'current-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'current-psy-new-plan',
-				properties: {
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
+					moment().isBefore(moment(plan.expiration)) &&
+					plan.title !== 'Plan inicial'
+				//sessions.psychologist.toString() !== payload.psychologist
+			);
+		})
+	)
+		return conflictResponse('El usuario ya tiene un plan vigente');
+	else {
+		if (userSessions) {
+			created = await Sessions.findOneAndUpdate(
+				{ user: payload.user, psychologist: payload.psychologist },
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+			);
+		} else {
+			created = await Sessions.create({
+				user: payload.user,
+				psychologist: payload.psychologist,
+				plan: [newPlan],
+				roomsUrl: url,
 			});
 		}
-		return okResponse('Plan creado', { plan: created });
-	} else {
-		const created = await Sessions.create({
-			user: payload.user,
-			psychologist: payload.psychologist,
-			plan: [newPlan],
-			roomsUrl: url,
-		});
-		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
-		) {
-			let planData = [
-				{
-					item_id: created._id.toString(),
-					item_name: payload.title,
-					coupon: payload.coupon || '',
-					price: payload.price / sessionQuantity,
-					quantity: sessionQuantity,
-				},
-			];
-			analytics.track({
-				userId: payload.user._id.toString(),
-				event: 'new-user-purchase-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-					total: payload.price / sessionQuantity,
-				},
-			});
-			analytics.track({
-				userId: payload.psychologist.toString(),
-				event: 'new-user-psy-new-plan',
-				properties: {
-					currency: 'CLP',
-					products: planData,
-					user: payload.user._id,
-					order_id: created.plan[
-						created.plan.length - 1
-					]._id.toString(),
-				},
-			});
-		}
-		return okResponse('Plan creado', { plan: created });
 	}
+
+	if (
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
+	) {
+		let planData = [
+			{
+				item_id: created._id.toString(),
+				item_name: payload.title,
+				coupon: payload.coupon || '',
+				price: payload.price / sessionQuantity,
+				quantity: sessionQuantity,
+			},
+		];
+		analytics.track({
+			userId: payload.user._id.toString(),
+			event: 'current-user-purchase-plan',
+			properties: {
+				products: planData,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+				total: payload.price / sessionQuantity,
+			},
+		});
+		analytics.track({
+			userId: payload.psychologist.toString(),
+			event: 'current-psy-new-plan',
+			properties: {
+				products: planData,
+				user: payload.user._id,
+				order_id: created.plan[created.plan.length - 1]._id.toString(),
+				timestamp: moment().format(),
+			},
+		});
+	}
+	if (foundCoupon) {
+		let discount = -payload.price;
+		if (foundCoupon.discountType === 'static') {
+			if (payload.price >= 0) discount = 0;
+			await Coupon.findOneAndUpdate(
+				{ _id: foundCoupon._id },
+				{ $set: { discount: discount } }
+			);
+		}
+	}
+
+	let responseBody = { init_point: null };
+
+	if (payload.price <= 0) {
+		await mercadopagoService.successPay({ planId: created._id });
+	} else {
+		const plan = created.plan.pop();
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description: payload.title,
+			quantity: 1,
+			sessionsId: created._id,
+			planId: plan._id,
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
+		const user = await User.findById(payload.user);
+		await mailService.pendingPlanPayment(user, psychologist, payload.price);
+	}
+
+	return okResponse('Plan y preferencias creadas', responseBody);
 };
 
 /**
@@ -1375,7 +1404,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 
 	// considera que el usuario es psicologo
 	const sessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
 	if (cancelSessions.user == null) {
@@ -2027,14 +2056,26 @@ const paymentsInfo = async user => {
 	if (user.role != 'psychologist')
 		return conflictResponse('No eres psicologo');
 
+	const payments = await paymentInfoFunction(user.psychologist);
+	return okResponse('Obtuvo todo sus pagos', { payments });
+};
+
+const paymentsInfoFromId = async psy => {
+	const user = await Psychologist.findById(psy);
+	if (!user) return conflictResponse('No es psicologo');
+	const payments = await paymentInfoFunction(psy);
+	return okResponse('Obtuvo todo sus pagos', { payments });
+};
+
+const paymentInfoFunction = async psyId => {
 	let allSessions = await Sessions.find({
-		psychologist: user.psychologist,
+		psychologist: psyId,
 	}).populate('user');
 
 	let comission = 0;
 	let percentage = '0%';
 
-	let psy = await Psychologist.findById(user.psychologist);
+	let psy = await Psychologist.findById(psyId);
 	if (!psy.psyPlans || psy.psyPlans == []) {
 		psy.psyPlans = [
 			{
@@ -2073,9 +2114,19 @@ const paymentsInfo = async user => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-				const realComission = plans.invitedByPsychologist
+				let realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
+				realComission =
+					realComission === 0.0399 ? 0.0351 : realComission;
+				const hablaquiPercentage =
+					realComission === 0.0351
+						? plans.sessionPrice * 0
+						: plans.sessionPrice * 0.1649;
+				const paymentPlanDate = moment(plans.datePayment).format(
+					'DD/MM/YYYY'
+				);
+
 				let sessions = plans.session.map(session => {
 					const transDate =
 						session.paymentDate &&
@@ -2083,42 +2134,67 @@ const paymentsInfo = async user => {
 							? moment(session.paymentDate).format('DD/MM/YYYY')
 							: 'Por cobrar';
 
-					const hablaquiPercentage =
-						realComission === 0.0399
-							? plans.sessionPrice * 0
-							: plans.sessionPrice * 0.1601;
-
 					return {
 						_id: session._id,
+						datePayment: paymentPlanDate,
+						name: item.user.name ? item.user.name : '',
+						lastname: item.user.lastName ? item.user.lastName : '',
+						date: session.date,
+						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+						amount: plans.sessionPrice,
+						hablaquiPercentage: hablaquiPercentage.toFixed(0),
+						mercadoPercentage: (
+							plans.sessionPrice * 0.0351
+						).toFixed(2),
+						percentage:
+							realComission === 0.0351 ? '3.51%' : percentage,
+						total: (
+							plans.sessionPrice *
+							(1 - realComission)
+						).toFixed(0),
+						status: session.status,
+						transDate,
+					};
+				});
+
+				const receivable = sessions.filter(
+					session => session.transDate === 'Por cobrar'
+				).length;
+
+				for (
+					let i = sessions.length + 1;
+					i <= plans.totalSessions;
+					i++
+				) {
+					const session = {
+						_id: null,
 						datePayment: moment(plans.datePayment).format(
 							'DD/MM/YYYY'
 						),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: moment(session.date).format('DD/MM/YYYY'),
-						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
+						date: '---',
+						sessionsNumber: `${i} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
-							plans.sessionPrice * 0.0399
+							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
-							realComission === 0.0399 ? '3.99%' : percentage,
+							realComission === 0.0351 ? '3.51%' : percentage,
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
-						).toFixed(2),
-						status: session.status,
-						transDate,
+						).toFixed(0),
+						status: 'Pendiente',
+						transDate: 'Pendiente',
 					};
-				});
-				const receivable = sessions.filter(
-					session => session.transDate === 'Por cobrar'
-				).length;
+					sessions.push(session);
+				}
 
-				sessions = sessions.filter(
+				/*sessions = sessions.filter(
 					session => session.status === 'success'
-				);
+				);*/
 
 				return {
 					idPlan: plans._id,
@@ -2129,7 +2205,7 @@ const paymentsInfo = async user => {
 					payment: plans.payment,
 					suscription: plans.period,
 					user: item.user._id,
-					datePayment: moment(plans.datePayment).format('DD/MM/YYYY'),
+					datePayment: paymentPlanDate,
 					amount: plans.totalPrice,
 					finalAmount: (
 						plans.totalPrice *
@@ -2148,7 +2224,7 @@ const paymentsInfo = async user => {
 			item.suscription !== 'Plan inicial'
 		);
 	});
-	return okResponse('Obtuvo todo sus pagos', { payments });
+	return payments;
 };
 
 const deleteCommitment = async (planId, psyId) => {
@@ -2269,7 +2345,7 @@ const getAllEvaluationsFunction = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
-	const evaluations = await Evaluation.findOneAndUpdate(
+	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
@@ -2278,10 +2354,40 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	const psy = evaluation.psychologist._id;
+	let evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.filter(
+		evaluation => evaluation.approved === 'approved'
+	);
+
+	const global =
+		evaluations.reduce(
+			(sum, value) =>
+				typeof value.global == 'number' ? sum + value.global : sum,
+			0
+		) / evaluations.length;
+
+	await Psychologist.findOneAndUpdate(
+		{ _id: psy },
+		{
+			$set: {
+				rating: global.toFixed(2),
+			},
+		}
+	);
 
 	//enviar correo donde se apruba la evaluación
+	await mailService.sendApproveEvaluationToUser(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
-	return okResponse('Sesion aprobada', { evaluations });
+	await mailService.sendApproveEvaluationToPsy(
+		evaluations.user,
+		evaluations.psychologist
+	);
+
+	return okResponse('Sesion aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
@@ -2296,13 +2402,125 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	//Enviar correo donde se rechaza la evaluación
+	await mailService.sendRefuseEvaluation(
+		evaluations.user,
+		evaluations.psychologist
+	);
 
 	return okResponse('Sesion rechazada', { evaluations });
 };
 
+const changeToInmediateAttention = async psy => {
+	/*if (user.role !== 'psychologist')
+		return conflictResponse('No tienes permitida esta opción');
+	const psy = user.psychologist;*/
+	let psychologist = await Psychologist.findById(psy);
+	if (psychologist.inmediateAttention.activated) {
+		psychologist = await Psychologist.findOneAndUpdate(
+			{ _id: psy },
+			{
+				$set: {
+					inmediateAttention: {
+						activated: false,
+						expiration: '',
+					},
+				},
+			},
+			{ new: true }
+		);
+	} else {
+		let sessions = await getAllSessionsFunction(psy);
+		let now = new Date();
+		sessions = sessions.filter(session => {
+			const date = moment(session.date).format('DD/MM/YYYY HH:mm');
+			return (
+				session.status !== 'success' &&
+				moment(date).isBefore(moment(now).add(3, 'hours')) &&
+				moment(date)
+					.add(50, 'minutes')
+					.isAfter(moment(now))
+			);
+		});
+
+		if (sessions.length !== 0)
+			return conflictResponse('Tiene sesiones próximas');
+
+		psychologist = await Psychologist.findOneAndUpdate(
+			{ _id: psy },
+			{
+				$set: {
+					inmediateAttention: {
+						activated: true,
+						expiration: moment(now)
+							.add(1, 'hour')
+							.format(),
+					},
+				},
+			},
+			{ new: true }
+		);
+	}
+
+	const msj = psychologist.inmediateAttention.activated
+		? 'Estaras disponible durante las proxima 3 horas'
+		: 'Atención inmediata desactivada';
+
+	return okResponse(msj, {
+		psychologist,
+	});
+};
+/*
+const getAllSessionsInmediateAttention = async () => {
+	let psychologist = await Psychologist.find({}).select(
+		'_id inmediateAttention'
+	);
+	// Para que nos de deje modificar el array de mongo
+	psychologist = JSON.stringify(psychologist);
+	psychologist = JSON.parse(psychologist);
+	psychologist = psychologist.filter(
+		psy => psy.inmediateAttention.activated === true
+	);
+
+	let allSessions = await Sessions.find().populate(
+		'psychologist',
+		'_id inmediateAttention'
+	);
+
+	let now = Date.now();
+	// Formato de array debe ser [date, date, ...date]
+	const setDaySessions = sessions =>
+		sessions.flatMap(item => {
+			return item.plan
+				.flatMap(plan => {
+					return plan.session.length
+						? plan.session.map(session => session.date)
+						: [];
+				})
+				.filter(session => {
+					const date = moment(session.date).format(
+						'DD/MM/YYYY HH:mm'
+					);
+					return (
+						session.status !== 'success' &&
+						moment(date).isBefore(moment(now).add(3, 'hours')) &&
+						moment(date)
+							.add(50, 'minutes')
+							.isAfter(moment(now))
+					);
+				});
+		});
+
+	allSessions = psychologist.map(item => ({
+		...item,
+		sessions: setDaySessions(
+			allSessions.filter(element => element.psychologist === item._id)
+		).length,
+	}));
+
+	return okResponse('Sesiones', { allSessions });
+};*/
 const hidePsychologist = async idPsy => {
 	let psychologist = await Psychologist.findOne({ _id: idPsy });
-	console.log(psychologist.isHide);
 	psychologist = await Psychologist.findOneAndUpdate(
 		{ _id: idPsy },
 		{ $set: { isHide: !psychologist.isHide } }
@@ -2355,5 +2573,7 @@ const psychologistsService = {
 	createPaymentsRequest,
 	completePaymentsRequest,
 	getTransactions,
+	paymentsInfoFromId,
+	changeToInmediateAttention,
 };
 export default Object.freeze(psychologistsService);

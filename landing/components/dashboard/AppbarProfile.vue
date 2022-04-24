@@ -56,6 +56,23 @@
 				Centro de ayuda
 			</nuxt-link>
 		</div>
+		<v-btn
+			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"
+			class="mx-2"
+			small
+			elevation="1"
+			fab
+			color="white"
+			@click="() => setOnBoarding()"
+		>
+			<v-img
+				src="https://cdn.hablaqui.cl/static/flag.png"
+				contain
+				height="25"
+				width="25"
+				class="mx-2"
+			></v-img>
+		</v-btn>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />
 		</v-btn>
@@ -63,7 +80,8 @@
 </template>
 
 <script>
-import { mdiLogout, mdiChevronLeft } from '@mdi/js';
+import { mdiLogout, mdiChevronLeft, mdiFlag } from '@mdi/js';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
 	components: {
@@ -79,6 +97,7 @@ export default {
 		return {
 			mdiChevronLeft,
 			mdiLogout,
+			mdiFlag,
 		};
 	},
 	computed: {
@@ -93,12 +112,16 @@ export default {
 				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
 			);
 		},
+		...mapGetters({
+			psychologist: 'Psychologist/psychologist',
+		}),
 	},
 	methods: {
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
+		...mapMutations({ setOnBoarding: 'User/setOnBoarding' }),
 	},
 };
 </script>
