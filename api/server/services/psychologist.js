@@ -2142,7 +2142,7 @@ const paymentInfoFunction = async psyId => {
 						datePayment: paymentPlanDate,
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: session.date,
+						date: moment(session.date).format('DD/MM/YYYY HH:mm'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
