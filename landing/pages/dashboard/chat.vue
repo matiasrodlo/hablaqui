@@ -6,6 +6,7 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(0);
 					$router.push({ name: 'dashboard-agenda' });
 					return {
 						title: 'Mi agenda',
@@ -655,6 +656,7 @@ export default {
 		...mapMutations({
 			setChat: 'Chat/setChat',
 			setPsychologists: 'Psychologist/setPsychologists',
+			setStepLinks: 'User/setStepLinks',
 		}),
 	},
 };

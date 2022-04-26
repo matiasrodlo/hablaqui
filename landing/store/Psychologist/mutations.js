@@ -57,6 +57,21 @@ export default {
 			};
 		});
 	},
+	setSessionsLimit(state, items) {
+		moment.locale('es');
+		state.sessionsLimit = state.sessionsLimit.concat(
+			items.map(item => {
+				return {
+					psychologist: item.psychologist,
+					sessions: item.sessions.map(el => ({
+						...el,
+						text: moment(el.text).format('ddd'),
+						day: moment(el.day, 'DD MMM').format('DD MMM'),
+					})),
+				};
+			})
+		);
+	},
 	setClients(state, value) {
 		state.clients = value;
 	},

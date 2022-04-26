@@ -6,6 +6,7 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(1);
 					$router.push({ name: 'dashboard-pagos' });
 					return {
 						title: 'Mis pagos',
@@ -850,13 +851,8 @@ export default {
 	}),
 	computed: {
 		nextSesion() {
-			// Si no hay plan
-			if (!this.plan) return '';
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
-			const filterSessions = this.sessions.filter(
-				session => session.idPlan === this.plan._id
-			);
-			const dates = filterSessions.flatMap(session => session.date);
+			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
 				return moment(a, 'MM/DD/YYYY HH:mm').diff(moment(b, 'MM/DD/YYYY HH:mm'));
@@ -1168,6 +1164,7 @@ export default {
 		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',
+			setStepLinks: 'User/setStepLinks',
 		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',

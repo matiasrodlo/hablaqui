@@ -57,13 +57,8 @@
 			</nuxt-link>
 		</div>
 		<v-btn
-			v-if="
-				$auth.user.role === 'psychologist' &&
-				$auth.user.psychologist &&
-				$vuetify.breakpoint.mdAndUp &&
-				psychologist
-			"
-			class="ml-2"
+			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"
+			class="mx-2"
 			small
 			elevation="1"
 			fab

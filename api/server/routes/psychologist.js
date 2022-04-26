@@ -7,6 +7,11 @@ import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
+psychologistsRouter.get(
+	'/psychologist/hide/:idPsy',
+	psychologistsController.hidePsychologist
+);
+
 /**
  * @swagger
  * tags:
@@ -71,6 +76,14 @@ psychologistsRouter.get(
 psychologistsRouter.get(
 	'/psychologists/formattedSessionsAll',
 	psychologistsController.formattedSessionsAll
+);
+
+/**
+ * obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
+ */
+psychologistsRouter.post(
+	'/psychologists/sessionsLimit',
+	psychologistsController.sessionsLimit
 );
 
 /**

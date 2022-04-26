@@ -131,6 +131,7 @@ const usersService = {
 
 		if (userRole === 'psychologist') {
 			const userData = await User.findById(userID);
+			await mailService.sendUploadPicture(userData);
 			if (userData.psychologist) {
 				psychologist = await Psychologist.findByIdAndUpdate(
 					idPsychologist,

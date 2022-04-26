@@ -379,11 +379,6 @@ export default {
 						? this.coupon
 						: '',
 			};
-			console.log(
-				this.PriceWithCoupon || (this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
-					? this.PriceWithCoupon
-					: this.planSelected.price
-			);
 			const res = await this.createSession(planPayload);
 
 			if (res)

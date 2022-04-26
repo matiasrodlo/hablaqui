@@ -254,7 +254,9 @@
 				</v-expansion-panel>
 			</v-expansion-panels>
 			<template #append>
-				<div class="pointer my-6 primary--text text-center">Completar tareas (saltar)</div>
+				<div class="pointer my-6 primary--text text-center" @click="changeStateOnboarding">
+					Completar tareas (saltar)
+				</div>
 			</template>
 		</v-navigation-drawer>
 		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
@@ -282,11 +284,10 @@
 			>
 				<div class="primary--text pa-2">Presione esc para salir</div>
 			</v-overlay>
-			<!-- overlay loading -->
-			<v-overlay :value="overlay" color="white" :opacity="0.8">
+			<v-dialog v-model="overlay" persistent max-width="300">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text @click="changeStateOnboarding">
+						<v-btn text @click="welcomeDialog">
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
@@ -294,23 +295,25 @@
 						Bienvenido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
-						Agenda un tour por tu oficina y aclara todas tus dudas
+						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
+						agenda una inducción a la plataforma.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
+							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
-							>Agendar demo
+						>
+							Agendar demo
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-overlay>
+			</v-dialog>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -532,7 +535,7 @@ export default {
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
-							done: this.hasAvatar,
+							done: this.$auth.user.onboarding || this.hasAvatar,
 						},
 						{
 							title: 'Añade tus datos bancarios',
@@ -542,7 +545,7 @@ export default {
 								description:
 									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
 							},
-							done: this.hasBankdata,
+							done: this.$auth.user.onboarding || this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -553,7 +556,7 @@ export default {
 								description:
 									'Selecciona los horarios que tendrás disponible para atender.',
 							},
-							done: this.hasSchedule,
+							done: this.$auth.user.onboarding || this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -563,7 +566,7 @@ export default {
 								title: 'Agregar más intervalos de tiempo',
 								description: 'Puedes añadir más bloques de horario para atender.',
 							},
-							done: this.hasSchedule,
+							done: this.$auth.user.onboarding || this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -574,7 +577,7 @@ export default {
 								description:
 									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
 							},
-							done: this.hasPreferences,
+							done: this.$auth.user.onboarding || this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -585,7 +588,7 @@ export default {
 								description:
 									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
 							},
-							done: this.hasPreferences,
+							done: this.$auth.user.onboarding || this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -596,7 +599,7 @@ export default {
 								description:
 									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
 							},
-							done: this.hasSessionPrice,
+							done: this.$auth.user.onboarding || this.hasSessionPrice,
 							route: 'dashboard-perfil',
 						},
 					],
@@ -608,46 +611,6 @@ export default {
 						this.hasBankdata &&
 						this.hasAvatar,
 				},
-				// {
-				// 	title: 'Añade a tus consultantes',
-				// 	route: '/dashboard/consultantes',
-				// 	items: [
-				// 		{
-				// 			title: 'Consultante nuevo',
-				// 			card: {
-				// 				title: 'Que no queden fuera tus consultantes',
-				// 				description:
-				// 					'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-				// 				link: '',
-				// 			},
-				// 			route: 'dashboard-consultantes',
-				// 			done: this.hasConsultantes,
-				// 		},
-				// 	],
-				// 	visible:
-				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-				// 	done: false,
-				// },
-				// {
-				// 	title: 'Añade eventos o bloquea horas',
-				// 	route: '/dashboard/agenda',
-				// 	items: [
-				// 		{
-				// 			title: 'Nuevo evento',
-				// 			card: {
-				// 				title: 'Despreocúpate y organiza tu agenda',
-				// 				description:
-				// 					'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-				// 				link: '',
-				// 			},
-				// 			done: this.hasEvents,
-				// 			route: 'dashboard-agenda',
-				// 		},
-				// 	],
-				// 	visible:
-				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-				// 	done: false,
-				// },
 				{
 					title: 'Explora las secciones',
 					route: '/dashboard/chat',
@@ -662,6 +625,7 @@ export default {
 								link: '',
 								route: 'dashboard-chat',
 							},
+							done: this.$auth.user.onboarding || this.stepLinks[0],
 						},
 						{
 							title: 'Mi agenda',
@@ -673,18 +637,8 @@ export default {
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-agenda',
+							done: this.$auth.user.onboarding || this.stepLinks[1],
 						},
-						// {
-						// 	title: 'Nuevo evento',
-						// 	card: {
-						// 		title: 'Despreocúpate y organiza tu agenda',
-						// 		description:
-						// 			'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-						// 		link: '',
-						// 	},
-						// 	done: this.hasEvents,
-						// 	route: 'dashboard-agenda',
-						// },
 						{
 							title: 'Mis pagos',
 							card: {
@@ -695,6 +649,7 @@ export default {
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-pagos',
+							done: this.$auth.user.onboarding || this.stepLinks[2],
 						},
 						{
 							title: 'Mis consultantes',
@@ -706,18 +661,8 @@ export default {
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-consultantes',
+							done: this.$auth.user.onboarding || this.stepLinks[3],
 						},
-						// {
-						// 	title: 'Consultante nuevo',
-						// 	card: {
-						// 		title: 'Que no queden fuera tus consultantes',
-						// 		description:
-						// 			'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-						// 		link: '',
-						// 	},
-						// 	route: 'dashboard-consultantes',
-						// 	done: this.hasConsultantes,
-						// },
 					],
 					visible: true,
 					done: true,
@@ -727,6 +672,7 @@ export default {
 		...mapGetters({
 			listenerUserOnline: 'User/listenerUserOnline',
 			onBoarding: 'User/onBoarding',
+			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
 			plan: 'User/plan',
@@ -745,6 +691,9 @@ export default {
 		},
 	},
 	async mounted() {
+		// lanzar onboarding al cargar
+		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+		// 	this.setOnBoarding(true);
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 
@@ -808,6 +757,11 @@ export default {
 			this.loadingStatus = true;
 			await this.toggleStatus();
 			this.loadingStatus = false;
+		},
+		welcomeDialog() {
+			this.overlay = false;
+			this.setOnBoarding(true);
+			// this.changeStateOnboarding();
 		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;

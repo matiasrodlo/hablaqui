@@ -210,6 +210,10 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultInmediateAttention,
 	},
+	isHide: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 export default model('psychologist', psychologist);

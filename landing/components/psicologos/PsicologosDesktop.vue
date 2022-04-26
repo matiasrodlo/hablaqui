@@ -549,6 +549,20 @@
 												>
 													Quiero saber más
 												</v-btn>
+												<v-btn
+													v-if="
+														!$auth.$state.loggedIn ||
+														$auth.$state.user.role === 'user'
+													"
+													small
+													rounded
+													color="#56b5fc"
+													dark
+													class="px-4 py-2"
+													@click="() => goChat(item)"
+												>
+													Enviar mensajes
+												</v-btn>
 											</div>
 										</div>
 									</v-col>
@@ -618,6 +632,10 @@ export default {
 		loadingPsychologist: {
 			type: Boolean,
 		},
+		getSessionsLimit: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -637,7 +655,7 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: 1,
+			page: null,
 			status: false,
 		};
 	},
@@ -705,8 +723,16 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsFormattedAll',
+			sessions: 'Psychologist/sessionsLimit',
 		}),
+	},
+	watch: {
+		page(value, oldValue) {
+			let prev = 0;
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
+			this.getSessionsLimit(ids);
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -725,7 +751,9 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
+			if (isVisible && this.page < this.filterLevelThree.length / 10) {
+				this.page += 1;
+			}
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))
@@ -756,6 +784,15 @@ export default {
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
+		},
+		goChat(psychologist) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+				});
+			} else {
+				return this.$router.push(`/${psychologist.username}/?chat=true`);
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

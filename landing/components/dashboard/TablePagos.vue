@@ -131,7 +131,7 @@
 												"
 											>
 												<td style="width: 15.5%" class="caption text-start">
-													{{ element.date }}
+													{{ element.datePayment }}
 												</td>
 												<td style="width: 18.5%" class="caption text-start">
 													{{

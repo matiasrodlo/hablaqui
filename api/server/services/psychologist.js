@@ -26,7 +26,8 @@ var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
 
 const getAll = async () => {
-	const psychologists = await Psychologist.find();
+	let psychologists = await Psychologist.find();
+	psychologists = psychologists.filter(psy => !psy.isHide);
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
 };
@@ -425,10 +426,10 @@ const getAllSessionsFunction = async psy => {
 					hablaquiPercentage:
 						realComission === 0.0399
 							? plan.sessionPrice * 0
-							: plan.sessionPrice * 0.1601,
-					mercadoPercentage: plan.sessionPrice * 0.0399,
+							: plan.sessionPrice * 0.1649,
+					mercadoPercentage: plan.sessionPrice * 0.0351,
 					total: plan.sessionPrice * (1 - realComission),
-					percentage: realComission === 0.0399 ? '3.99%' : percentage,
+					percentage: realComission === 0.0399 ? '3.51%' : percentage,
 					expiration,
 				};
 			});
@@ -609,11 +610,17 @@ const getFormattedSessions = async (idPsychologist, type) => {
 };
 
 // Utilizado para traer las sessiones de todos los psicologos para el selector
-const formattedSessionsAll = async () => {
+const formattedSessionsAll = async ids => {
 	let sessions = [];
-	let psychologist = await Psychologist.find({}).select(
-		'schedule preferences inmediateAttention'
-	);
+	let psychologist = [];
+	if (ids && Array.isArray(ids) && ids.length) {
+		psychologist = await Psychologist.find({ _id: { $in: ids } }).select(
+			'schedule preferences inmediateAttention'
+		);
+	} else
+		psychologist = await Psychologist.find({}).select(
+			'schedule preferences inmediateAttention'
+		);
 	// Para que nos de deje modificar el array de mongo
 	psychologist = JSON.stringify(psychologist);
 	psychologist = JSON.parse(psychologist);
@@ -926,7 +933,8 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					moment().isBefore(moment(plan.expiration))
+					moment().isBefore(moment(plan.expiration)) &&
+					plan.title !== 'Plan inicial'
 				//sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
@@ -2106,16 +2114,18 @@ const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-				const realComission = plans.invitedByPsychologist
+				let realComission = plans.invitedByPsychologist
 					? currentPlan.paymentFee
 					: comission;
+				realComission =
+					realComission === 0.0399 ? 0.0351 : realComission;
+				const hablaquiPercentage =
+					realComission === 0.0351
+						? plans.sessionPrice * 0
+						: plans.sessionPrice * 0.1649;
 				const paymentPlanDate = moment(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
-				const hablaquiPercentage =
-					realComission === 0.0399
-						? plans.sessionPrice * 0
-						: plans.sessionPrice * 0.1601;
 
 				let sessions = plans.session.map(session => {
 					const transDate =
@@ -2132,15 +2142,15 @@ const paymentInfoFunction = async psyId => {
 						datePayment: paymentPlanDate,
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: paymentPlanDate,
+						date: session.date,
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
-							plans.sessionPrice * 0.0399
+							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
-							realComission === 0.0399 ? '3.99%' : percentage,
+							realComission === 0.0351 ? '3.51%' : percentage,
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
@@ -2175,10 +2185,10 @@ const paymentInfoFunction = async psyId => {
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
-							plans.sessionPrice * 0.0399
+							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
-							realComission === 0.0399 ? '3.99%' : percentage,
+							realComission === 0.0351 ? '3.51%' : percentage,
 						total: (
 							plans.sessionPrice *
 							(1 - realComission)
@@ -2521,7 +2531,20 @@ const getAllSessionsInmediateAttention = async () => {
 
 	return okResponse('Sesiones', { allSessions });
 };*/
+const hidePsychologist = async idPsy => {
+	let psychologist = await Psychologist.findOne({ _id: idPsy });
+	psychologist = await Psychologist.findOneAndUpdate(
+		{ _id: idPsy },
+		{ $set: { isHide: !psychologist.isHide } }
+	);
+
+	if (!psychologist) return conflictResponse('Psicologo no encontrado');
+
+	return okResponse('Psicologo ocultado', { psychologist });
+};
+
 const psychologistsService = {
+	hidePsychologist,
 	addRating,
 	approveAvatar,
 	cancelSession,

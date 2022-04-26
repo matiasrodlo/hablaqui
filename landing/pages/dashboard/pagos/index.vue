@@ -6,6 +6,7 @@
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(2);
 					$router.push({ name: 'dashboard-consultantes' });
 					return {
 						title: 'Mis consultantes',
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
 	name: 'Pagos',
 	components: {
@@ -74,6 +75,7 @@ export default {
 			await this.getTransactions();
 			this.loading = false;
 		},
+		...mapMutations({ setStepLinks: 'User/setStepLinks' }),
 		...mapActions({
 			getPayments: 'Psychologist/getPayments',
 			getTransactions: 'Psychologist/getTransactions',

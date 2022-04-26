@@ -61,7 +61,6 @@ export default {
 	},
 	methods: {
 		...mapMutations({
-			setOnBoarding: 'User/setOnBoarding',
 			setStep: 'User/setStep',
 		}),
 	},

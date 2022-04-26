@@ -1229,6 +1229,13 @@ export default {
 						method: 'put',
 						data: this.form,
 					});
+					this.$segment.track(this.form._id.toString(), {
+						event: 'psy-application-step',
+						properties: {
+							step,
+							email: this.$auth.user.email,
+						},
+					});
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
 				} else {

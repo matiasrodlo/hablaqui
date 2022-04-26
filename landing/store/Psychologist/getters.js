@@ -19,6 +19,7 @@ export default {
 	page: state => state.page,
 	payments: state => state.payments,
 	loadingPsychologist: state => state.loadingPsychologist,
+	sessionsLimit: state => state.sessionsLimit,
 	sessionsFormatted: state => state.sessionsFormatted,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,
 	clients: state => {
