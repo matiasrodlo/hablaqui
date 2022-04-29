@@ -236,6 +236,7 @@ const usersService = {
 			role: 'user',
 			rut: body.rut,
 			phone: body.phone,
+			invitedBy: body.invitedBy,
 		};
 		const createdUser = await User.create(newUser);
 		const token = Auth.generateJwt(createdUser);

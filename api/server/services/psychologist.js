@@ -862,6 +862,8 @@ const createPlan = async ({ payload }) => {
 
 	let price = payload.price < 0 ? 0 : payload.price;
 
+	const isInvited = await userIsInvited(payload.psychologist, payload.user);
+
 	if (foundCoupon && foundCoupon.discountType === 'static')
 		price = payload.originalPrice;
 	const newPlan = {
@@ -875,6 +877,7 @@ const createPlan = async ({ payload }) => {
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
 		tokenToPay: token,
+		invitedByPsychologist: isInvited,
 		session: [newSession],
 	};
 	//logInfo(newPlan);
@@ -1864,6 +1867,8 @@ const customNewSession = async (user, payload) => {
 			sessions.push(newSession);
 		}
 
+		const isInvited = await userIsInvited(user.psychologist, payload.user);
+
 		// Objeto con el plan a crear
 		const newPlan = {
 			title: payload.type,
@@ -1875,7 +1880,7 @@ const customNewSession = async (user, payload) => {
 			expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
 				.add({ weeks: 1 })
 				.toISOString(),
-			invitedByPsychologist: true,
+			invitedByPsychologist: isInvited,
 			usedCoupon: '',
 			totalSessions: 1,
 			remainingSessions: 0,
@@ -2541,6 +2546,19 @@ const hidePsychologist = async idPsy => {
 	if (!psychologist) return conflictResponse('Psicologo no encontrado');
 
 	return okResponse('Psicologo ocultado', { psychologist });
+};
+
+const userIsInvited = async (psychologist, user) => {
+	const foundUser = await User.findById(user);
+	let isInvited = foundUser.invitedBy.toString() == psychologist.toString();
+	if (isInvited) {
+		const sessions = await Sessions.find({
+			psychologist: { $ne: psychologist },
+			user: foundUser._id,
+		});
+		isInvited = !sessions.length;
+	}
+	return isInvited;
 };
 
 const psychologistsService = {

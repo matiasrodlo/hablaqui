@@ -88,6 +88,11 @@ let userSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		invitedBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'psychologist',
+			required: false,
+		},
 	},
 	{
 		timestamps: true,
