@@ -913,7 +913,7 @@ const mailService = {
 			});
 		});
 	},
-	async pendingPlanPayment(user, psy, amount) {
+	async pendingPlanPayment(user, psy, amount, url) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -927,6 +927,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				amount: amount,
+				url,
 			},
 		};
 		return new Promise((resolve, reject) => {

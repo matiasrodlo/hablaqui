@@ -861,9 +861,7 @@ const createPlan = async ({ payload }) => {
 	const token = randomCode() + randomCode();
 
 	let price = payload.price < 0 ? 0 : payload.price;
-
 	const isInvited = await userIsInvited(payload.psychologist, payload.user);
-
 	if (foundCoupon && foundCoupon.discountType === 'static')
 		price = payload.originalPrice;
 	const newPlan = {
@@ -947,7 +945,8 @@ const createPlan = async ({ payload }) => {
 		if (userSessions) {
 			created = await Sessions.findOneAndUpdate(
 				{ user: payload.user, psychologist: payload.psychologist },
-				{ $push: { plan: newPlan }, $set: { roomsUrl: url } }
+				{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
+				{ new: true }
 			);
 		} else {
 			created = await Sessions.create({
@@ -1003,27 +1002,38 @@ const createPlan = async ({ payload }) => {
 			);
 		}
 	}
-
 	let responseBody = { init_point: null };
-
 	if (payload.price <= 0) {
-		await mercadopagoService.successPay({ planId: created._id });
+		await mercadopagoService.successPay({
+			sessionsId: created._id.toString(),
+			planId: created.plan.pop()._id.toString(),
+		});
 	} else {
+		const user = await User.findById(payload.user);
 		const plan = created.plan.pop();
 		const mercadopagoPayload = {
 			psychologist: psychologist.username,
 			price: payload.price,
-			description: payload.title,
+			description:
+				payload.title +
+				' - Pagado por ' +
+				user.name +
+				' ' +
+				user.lastName,
 			quantity: 1,
-			sessionsId: created._id,
-			planId: plan._id,
+			sessionsId: created._id.toString(),
+			planId: plan._id.toString(),
 			token,
 		};
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		const user = await User.findById(payload.user);
-		await mailService.pendingPlanPayment(user, psychologist, payload.price);
+		await mailService.pendingPlanPayment(
+			user,
+			psychologist,
+			payload.price,
+			responseBody.init_point
+		);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -2549,8 +2559,13 @@ const hidePsychologist = async idPsy => {
 };
 
 const userIsInvited = async (psychologist, user) => {
-	const foundUser = await User.findById(user);
-	let isInvited = foundUser.invitedBy.toString() == psychologist.toString();
+	let foundUser = await User.findById(user);
+	foundUser = JSON.stringify(foundUser);
+	foundUser = JSON.parse(foundUser);
+	let isInvited =
+		// eslint-disable-next-line no-prototype-builtins
+		foundUser.hasOwnProperty('invitedBy') &&
+		foundUser.invitedBy.toString() == psychologist.toString();
 	if (isInvited) {
 		const sessions = await Sessions.find({
 			psychologist: { $ne: psychologist },

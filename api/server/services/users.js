@@ -280,7 +280,7 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
