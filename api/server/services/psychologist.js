@@ -2219,13 +2219,15 @@ const paymentInfoFunction = async psyId => {
 					session => session.status === 'success'
 				);*/
 
+				const lastname = item.user.lastName ? item.user.lastName : '';
+
 				return {
 					idPlan: plans._id,
 					sessionsId: item._id,
 					name: item.user.name
-						? item.user.name + item.user.lastName
-						: '' + item.user.lastName,
-					lastname: item.user.lastName ? item.user.lastName : '',
+						? item.user.name + ' ' + lastname
+						: lastname,
+					lastname,
 					plan: plans.title,
 					payment: plans.payment,
 					suscription: plans.period,
