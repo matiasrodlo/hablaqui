@@ -251,7 +251,7 @@
 							${{ item.total }}
 						</div>
 						<div class="font-weight-medium caption secondary--text text-right mt-1">
-							{{ formatDate(item.date) }}
+							{{ formatDate(item.datePayment) }}
 						</div>
 					</div>
 				</v-expansion-panel-header>
