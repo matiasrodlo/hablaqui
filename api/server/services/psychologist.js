@@ -2175,6 +2175,7 @@ const paymentInfoFunction = async psyId => {
 					};
 				});
 
+				const lastSession = sessions[sessions.length - 1];
 				const pendings = sessions.filter(
 					s => s.transDate === 'Pendiente'
 				).length;
@@ -2221,7 +2222,9 @@ const paymentInfoFunction = async psyId => {
 				return {
 					idPlan: plans._id,
 					sessionsId: item._id,
-					name: item.user.name ? item.user.name : '',
+					name: item.user.name
+						? item.user.name + item.user.lastName
+						: '' + item.user.lastName,
 					lastname: item.user.lastName ? item.user.lastName : '',
 					plan: plans.title,
 					payment: plans.payment,
@@ -2240,6 +2243,9 @@ const paymentInfoFunction = async psyId => {
 							: receivable > 0
 							? 'Por cobrar'
 							: 'Cobrado',
+					sessionsNumber: lastSession
+						? lastSession.sessionsNumber
+						: '- de ' + sessions.length,
 				};
 			});
 	});
