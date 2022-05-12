@@ -2145,8 +2145,10 @@ const paymentInfoFunction = async psyId => {
 				let sessions = plans.session.map(session => {
 					const transDate =
 						session.paymentDate &&
-						moment(session.paymentDate).isValid()
-							? moment(session.paymentDate).format('DD/MM/YYYY')
+						moment(session.paymentDate, 'MM/DD/YYYY').isValid()
+							? moment(session.paymentDate, 'MM/DD/YYYY').format(
+									'DD/MM/YYYY'
+							  )
 							: session.requestDate &&
 							  moment(session.requestDate).isValid()
 							? 'Pendiente'
@@ -2157,7 +2159,9 @@ const paymentInfoFunction = async psyId => {
 						datePayment: paymentPlanDate,
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: moment(session.date).format('DD/MM/YYYY HH:mm'),
+						date: moment(session.date, 'MM/DD/YYYY HH:mm').format(
+							'DD/MM/YYYY HH:mm'
+						),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: plans.sessionPrice,
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
@@ -2176,6 +2180,7 @@ const paymentInfoFunction = async psyId => {
 				});
 
 				const lastSession = sessions[sessions.length - 1];
+				logInfo(lastSession);
 				const pendings = sessions.filter(
 					s => s.transDate === 'Pendiente'
 				).length;
@@ -2191,9 +2196,10 @@ const paymentInfoFunction = async psyId => {
 				) {
 					const session = {
 						_id: null,
-						datePayment: moment(plans.datePayment).format(
-							'DD/MM/YYYY'
-						),
+						datePayment: moment(
+							plans.datePayment,
+							'MM/DD/YYYY'
+						).format('DD/MM/YYYY'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
@@ -2220,7 +2226,6 @@ const paymentInfoFunction = async psyId => {
 				);*/
 
 				const lastname = item.user.lastName ? item.user.lastName : '';
-
 				return {
 					idPlan: plans._id,
 					sessionsId: item._id,
