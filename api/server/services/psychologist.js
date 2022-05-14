@@ -1496,7 +1496,7 @@ const updatePsychologist = async (user, profile) => {
 					context: 'query',
 				}
 			);
-			if (
+			/*if (
 				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
@@ -1535,15 +1535,15 @@ const updatePsychologist = async (user, profile) => {
 						role: 'psychologist',
 					},
 				});
-			}
+			}*/
 
-			/*const data = {
+			const data = {
 				user: user._id,
 				psychologistId: updated._id,
 				username: updated.username,
 			};
 
-			pusher.trigger('psychologist', 'update', data, pusherCallback);*/
+			pusher.trigger('psychologist', 'update', data, pusherCallback);
 
 			logInfo(user.email, 'actualizo su perfil de psicologo');
 			return okResponse('Actualizado exitosamente', {
