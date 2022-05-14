@@ -1537,13 +1537,13 @@ const updatePsychologist = async (user, profile) => {
 				});
 			}
 
-			const data = {
+			/*const data = {
 				user: user._id,
 				psychologistId: updated._id,
 				username: updated.username,
 			};
 
-			pusher.trigger('psychologist', 'update', data, pusherCallback);
+			pusher.trigger('psychologist', 'update', data, pusherCallback);*/
 
 			logInfo(user.email, 'actualizo su perfil de psicologo');
 			return okResponse('Actualizado exitosamente', {
