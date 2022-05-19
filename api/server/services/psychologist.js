@@ -58,6 +58,7 @@ const getAllPagination = async page => {
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
 	let sessions;
+
 	// buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
@@ -1052,6 +1053,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
 		_id: id,
 	}).populate('psychologist');
+
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// check whether the date is after the current date plus the minimum time
 	if (
@@ -1113,7 +1115,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				email: userLogged.email,
 			},
 		});
-		const userID = User.findOne({ email: psychologist.email })._id;
+		const getUser = await User.findOne({ email: psychologist.email });
+		const userID = getUser._id;
 		analytics.track({
 			userId: userID.toString(),
 			event: 'psy-new-session',
@@ -1496,11 +1499,12 @@ const updatePsychologist = async (user, profile) => {
 					context: 'query',
 				}
 			);
-			/*if (
+			if (
 				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
-				var id = User.findOne({ email: user.email })._id;
+				const getUser = await User.findOne({ email: user.email });
+				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
 					event: 'psy-updated-profile',
@@ -1535,7 +1539,7 @@ const updatePsychologist = async (user, profile) => {
 						role: 'psychologist',
 					},
 				});
-			}*/
+			}
 
 			const data = {
 				user: user._id,
