@@ -31,7 +31,8 @@
 				shaped
 				top
 			>
-				<v-list-item
+				<!-- ocultado por peticion de daniel -->
+				<!-- <v-list-item
 					v-if="
 						psychologist &&
 						$auth.user.role === 'psychologist' &&
@@ -63,7 +64,7 @@
 							</v-switch>
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item>
+				</v-list-item> -->
 				<template v-for="(item, i) in links">
 					<v-list-item
 						v-if="item.visible"

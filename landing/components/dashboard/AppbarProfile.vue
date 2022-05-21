@@ -32,7 +32,8 @@
 				</div>
 			</a>
 		</div>
-		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
+		<!-- ocultado por peticion de daniel -->
+		<!-- <div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
 					<v-img
@@ -45,7 +46,7 @@
 					Mi plan premium
 				</div>
 			</nuxt-link>
-		</div>
+		</div> -->
 		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
 				Centro de ayuda

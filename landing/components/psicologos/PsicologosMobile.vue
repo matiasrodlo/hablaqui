@@ -149,7 +149,8 @@
 										</v-card>
 									</v-menu>
 								</v-card-text>
-								<v-card-text class="pa-1">
+								<!-- ocultado por peticion de daniel -->
+								<!-- <v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Estado</h4>
 									<div
 										class="pointer"
@@ -181,7 +182,7 @@
 											</template>
 										</v-text-field>
 									</div>
-								</v-card-text>
+								</v-card-text> -->
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
 									<v-menu
@@ -474,7 +475,8 @@
 								style="border-radius: 15px; position: relative"
 								class="item text-center mt-6"
 							>
-								<div
+								<!-- ocultado por peticion de daniel -->
+								<!-- <div
 									v-if="item.inmediateAttention.activated"
 									style="position: absolute; bottom: 0; left: 0"
 								>
@@ -490,7 +492,7 @@
 									>
 										¡Disponible para atender ahora!
 									</div>
-								</div>
+								</div> -->
 								<div
 									style="
 										width: 50px;

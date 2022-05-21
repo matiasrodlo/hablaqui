@@ -118,7 +118,8 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<v-col id="selectStatus" cols="2" style="position: relative">
+					<!-- ocultado por peticion de daniel -->
+					<!-- <v-col id="selectStatus" cols="2" style="position: relative">
 						<div
 							class="pointer"
 							@click="
@@ -149,8 +150,8 @@
 								</template>
 							</v-text-field>
 						</div>
-					</v-col>
-					<v-col id="selectgender" cols="2" style="position: relative">
+					</v-col> -->
+					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
 							ref="menuGender"
 							v-model="menuGender"
@@ -243,7 +244,7 @@
 							></v-autocomplete>
 						</div>
 					</v-col>
-					<v-col id="selectOthers" cols="2" style="position: relative">
+					<v-col id="selectOthers" cols="3" style="position: relative">
 						<v-menu
 							ref="menuOthers"
 							v-model="menuOthers"
@@ -425,7 +426,8 @@
 										>
 									</div>
 								</div>
-								<div
+								<!-- ocultado por peticion de daniel -->
+								<!-- <div
 									v-if="item.inmediateAttention.activated"
 									style="position: absolute; top: 0; right: 0"
 								>
@@ -441,7 +443,7 @@
 									>
 										¡Disponible para atender ahora!
 									</div>
-								</div>
+								</div> -->
 								<v-row>
 									<v-col
 										cols="3"

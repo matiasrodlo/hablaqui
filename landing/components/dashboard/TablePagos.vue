@@ -54,7 +54,8 @@
 			</v-col>
 		</v-row>
 		<v-row class="hidden-sm-and-down mt-10">
-			<v-col :cols="$route.name === 'dashboard-pagos' ? '9' : '12'">
+			<!-- <v-col :cols="$route.name === 'dashboard-pagos' ? '9' : '12'"> -->
+			<v-col cols="12">
 				<client-only>
 					<v-data-table
 						class="pointer elevation-1"
@@ -161,77 +162,84 @@
 					</v-data-table>
 				</client-only>
 			</v-col>
-			<v-col v-if="$route.name === 'dashboard-pagos'" cols="3">
-				<v-card style="border-radius: 15px" class="elevation-1">
-					<v-card-text>
-						<div class="primary--text title">Tu dinero disponible</div>
-						<div class="text-h4 my-3">
-							${{ transactions ? transactions.totalAvailable : 0 }}
-						</div>
-						<div class="body-1 my-3">
-							Sesiones realizadas:
-							{{ transactions ? transactions.successSessions : 0 }}
-						</div>
-						<div class="body-1 my-3">
-							Sesiones por cobrar:
-							{{ transactions ? transactions.sessionsReceivable : 0 }}
-						</div>
-					</v-card-text>
-					<v-divider></v-divider>
-					<v-card-actions>
-						<v-btn
-							block
-							color="rgba(26, 165, 216, 0.16)"
-							rounded
-							depressed
-							class="primary--text"
-							:disabled="
-								!transactions ||
-								(transactions && transactions.sessionsReceivable <= 0)
-							"
-							@click="dialogPayment = true"
-						>
-							Retirar dinero
-						</v-btn>
-					</v-card-actions>
-				</v-card>
-				<v-card v-if="lastTransaction" style="border-radius: 15px" class="elevation-1 mt-4">
-					<v-card-text>
-						<div class="title">Última transacción</div>
-						<div class="body-1 my-3 d-flex justify-space-between align-center">
-							<v-img
-								max-width="50px"
-								:src="`https://cdn.hablaqui.cl/static/retiro.png`"
-							/>
-							<div>
-								<div class="body-1 text-right">
-									$ {{ lastTransaction.total }} -
-									{{ lastTransaction.sessionsPaid }} Sesiones
-								</div>
-								<div
-									v-if="lastTransaction.trasactionDate"
-									class="body-1 text-right pt-2"
-								>
-									{{ formatDateMoment(lastTransaction.trasactionDate) }}
+			<!-- ocultado por peticion de daniel -->
+			<template v-if="false">
+				<v-col v-if="$route.name === 'dashboard-pagos'" cols="3">
+					<v-card style="border-radius: 15px" class="elevation-1">
+						<v-card-text>
+							<div class="primary--text title">Tu dinero disponible</div>
+							<div class="text-h4 my-3">
+								${{ transactions ? transactions.totalAvailable : 0 }}
+							</div>
+							<div class="body-1 my-3">
+								Sesiones realizadas:
+								{{ transactions ? transactions.successSessions : 0 }}
+							</div>
+							<div class="body-1 my-3">
+								Sesiones por cobrar:
+								{{ transactions ? transactions.sessionsReceivable : 0 }}
+							</div>
+						</v-card-text>
+						<v-divider></v-divider>
+						<v-card-actions>
+							<v-btn
+								block
+								color="rgba(26, 165, 216, 0.16)"
+								rounded
+								depressed
+								class="primary--text"
+								:disabled="
+									!transactions ||
+									(transactions && transactions.sessionsReceivable <= 0)
+								"
+								@click="dialogPayment = true"
+							>
+								Retirar dinero
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+					<v-card
+						v-if="lastTransaction"
+						style="border-radius: 15px"
+						class="elevation-1 mt-4"
+					>
+						<v-card-text>
+							<div class="title">Última transacción</div>
+							<div class="body-1 my-3 d-flex justify-space-between align-center">
+								<v-img
+									max-width="50px"
+									:src="`https://cdn.hablaqui.cl/static/retiro.png`"
+								/>
+								<div>
+									<div class="body-1 text-right">
+										$ {{ lastTransaction.total }} -
+										{{ lastTransaction.sessionsPaid }} Sesiones
+									</div>
+									<div
+										v-if="lastTransaction.trasactionDate"
+										class="body-1 text-right pt-2"
+									>
+										{{ formatDateMoment(lastTransaction.trasactionDate) }}
+									</div>
 								</div>
 							</div>
-						</div>
-					</v-card-text>
-					<v-divider> </v-divider>
-					<v-card-actions>
-						<v-btn
-							block
-							color="Primary"
-							rounded
-							depressed
-							class="primary--text"
-							to="pagos/historial"
-						>
-							Ver trasacciones
-						</v-btn>
-					</v-card-actions>
-				</v-card>
-			</v-col>
+						</v-card-text>
+						<v-divider> </v-divider>
+						<v-card-actions>
+							<v-btn
+								block
+								color="Primary"
+								rounded
+								depressed
+								class="primary--text"
+								to="pagos/historial"
+							>
+								Ver trasacciones
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-col>
+			</template>
 		</v-row>
 		<v-expansion-panels flat accordion class="hidden-md-and-up">
 			<v-expansion-panel
