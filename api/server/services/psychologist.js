@@ -2184,7 +2184,6 @@ const paymentInfoFunction = async psyId => {
 				});
 
 				const lastSession = sessions[sessions.length - 1];
-				logInfo(lastSession);
 				const pendings = sessions.filter(
 					s => s.transDate === 'Pendiente'
 				).length;

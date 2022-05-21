@@ -225,7 +225,6 @@ const usersService = {
 			Math.random()
 				.toString(36)
 				.slice(2);
-
 		const newUser = {
 			//psychologist: user._id,
 			isInvited: true,
@@ -236,7 +235,7 @@ const usersService = {
 			role: 'user',
 			rut: body.rut,
 			phone: body.phone,
-			invitedBy: body.invitedBy,
+			invitedBy: user.psychologist,
 		};
 		const createdUser = await User.create(newUser);
 		const token = Auth.generateJwt(createdUser);

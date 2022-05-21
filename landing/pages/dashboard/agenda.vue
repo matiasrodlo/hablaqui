@@ -976,7 +976,6 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loadingCreatedUser = true;
-				this.form.invitedBy = this.$auth.$state.user.psychologist;
 				await this.registerUser(this.form);
 				await this.getClients(this.$auth.$state.user.psychologist);
 				this.loadingCreatedUser = false;
