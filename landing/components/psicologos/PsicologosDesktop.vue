@@ -385,7 +385,7 @@
 				</v-col>
 				<template v-else>
 					<template v-for="(item, index) in filterLevelThree">
-						<v-col v-if="10 * page > index" :key="item._id" cols="12">
+						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
 									callback: (isVisible, entry) =>
@@ -732,7 +732,7 @@ export default {
 		page(value, oldValue) {
 			let prev = 0;
 			if (oldValue) prev = oldValue;
-			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
 	},
@@ -753,7 +753,7 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.filterLevelThree.length / 10) {
+			if (isVisible && this.page < this.filterLevelThree.length / 5) {
 				this.page += 1;
 			}
 		},
