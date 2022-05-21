@@ -2,11 +2,12 @@
 	<div>
 		<card-onboarding
 			v-if="step && step.title === 'Mis consultantes'"
-			style="position: absolute; top: 370px; left: 10px; z-index: 3"
+			style="position: absolute; top: 320px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {
 					setStepLinks(3);
+					changeStateOnboarding();
 					$router.push({ name: 'dashboard-perfil' });
 					setStep(null);
 				}
@@ -516,6 +517,13 @@ export default {
 		getAge(date) {
 			return moment().diff(date, 'years');
 		},
+		async changeStateOnboarding() {
+			await this.updateOne({
+				_id: this.$auth.$state.user._id,
+				onboarding: true,
+			});
+			this.$auth.fetchUser();
+		},
 		...mapMutations({
 			setOnBoarding: 'User/setOnBoarding',
 			setStepLinks: 'User/setStepLinks',
@@ -524,6 +532,7 @@ export default {
 		...mapActions({
 			getClients: 'Psychologist/getClients',
 			registerUser: 'User/registerUser',
+			updateOne: 'User/updateOne',
 		}),
 	},
 	validations: {

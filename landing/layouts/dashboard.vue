@@ -254,7 +254,7 @@
 					</v-expansion-panel-content>
 				</v-expansion-panel>
 			</v-expansion-panels>
-			<template #append>
+			<template v-if="!$auth.user.onboarding" #append>
 				<div class="pointer my-6 primary--text text-center" @click="changeStateOnboarding">
 					Completar tareas (saltar)
 				</div>

@@ -2,7 +2,7 @@
 	<div>
 		<card-onboarding
 			v-if="stepOnboarding && stepOnboarding.title === 'Chat'"
-			style="position: absolute; top: 180px; left: 10px; z-index: 3"
+			style="position: absolute; top: 130px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {
