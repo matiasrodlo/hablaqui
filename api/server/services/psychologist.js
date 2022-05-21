@@ -383,7 +383,7 @@ const getAllSessionsFunction = async psy => {
 		}
 		return item.plan.flatMap(plan => {
 			const realComission = plan.invitedByPsychologist
-				? currentPlan.paymentFee
+				? 0.0351
 				: comission;
 			return plan.session.map(session => {
 				const expiration =
@@ -403,7 +403,6 @@ const getAllSessionsFunction = async psy => {
 					paymentDate = moment(paymentDate).format(
 						'YYYY/MM/DD HH:mm'
 					);
-
 				return {
 					_id: session._id,
 					date: session.date,
@@ -425,18 +424,19 @@ const getAllSessionsFunction = async psy => {
 					paymentDate,
 					request: session.request ? session.request : 'none',
 					hablaquiPercentage:
-						realComission === 0.0399
+						realComission === 0.0351
 							? plan.sessionPrice * 0
 							: plan.sessionPrice * 0.1649,
 					mercadoPercentage: plan.sessionPrice * 0.0351,
-					total: plan.sessionPrice * (1 - realComission),
-					percentage: realComission === 0.0399 ? '3.51%' : percentage,
+					total: +(plan.sessionPrice * (1 - realComission)).toFixed(),
+					percentage: realComission === 0.0351 ? '3.51%' : percentage,
 					expiration,
 				};
 			});
 		});
 	});
-	return sessions.filter(session => !session.expiration);
+	sessions = sessions.filter(session => !session.expiration);
+	return sessions;
 };
 
 //Devuelve todas las sesiones, excepto las expiradas
@@ -497,7 +497,9 @@ const getTransactions = async user => {
 	const totalAvailable = sessions
 		.filter(
 			session =>
-				session.status === 'success' && session.request === 'none'
+				session.status === 'success' &&
+				session.request === 'none' &&
+				session.name !== 'Compromiso privado '
 		)
 		.reduce(
 			(sum, value) =>
@@ -508,14 +510,15 @@ const getTransactions = async user => {
 	const sessionsReceivable = sessions.filter(
 		session => session.request === 'none'
 	).length;
+
 	const successSessions = sessions.filter(
 		session => session.status === 'success'
 	).length;
 
 	return okResponse('Transacciones devueltas', {
 		transactions: {
-			total: total.toFixed(2),
-			totalAvailable: totalAvailable.toFixed(2),
+			total: total,
+			totalAvailable: totalAvailable,
 			successSessions,
 			sessionsReceivable,
 			sessions,
@@ -2147,7 +2150,7 @@ const paymentInfoFunction = async psyId => {
 				);
 
 				let sessions = plans.session.map(session => {
-					const transDate =
+					let transDate =
 						session.paymentDate &&
 						moment(session.paymentDate, 'MM/DD/YYYY').isValid()
 							? moment(session.paymentDate, 'MM/DD/YYYY').format(
@@ -2157,6 +2160,10 @@ const paymentInfoFunction = async psyId => {
 							  moment(session.requestDate).isValid()
 							? 'Pendiente'
 							: 'Por cobrar';
+					transDate =
+						session.status === 'pending'
+							? 'Por realizar'
+							: transDate;
 
 					return {
 						_id: session._id,
@@ -2174,7 +2181,7 @@ const paymentInfoFunction = async psyId => {
 						).toFixed(2),
 						percentage:
 							realComission === 0.0351 ? '3.51%' : percentage,
-						total: (
+						total: +(
 							plans.sessionPrice *
 							(1 - realComission)
 						).toFixed(0),
@@ -2184,8 +2191,12 @@ const paymentInfoFunction = async psyId => {
 				});
 
 				const lastSession = sessions[sessions.length - 1];
-				const pendings = sessions.filter(
+				const pendingsToPay = sessions.filter(
 					s => s.transDate === 'Pendiente'
+				).length;
+
+				const pendingsToDo = sessions.filter(
+					s => s.transDate === 'Por realizar'
 				).length;
 
 				const receivable = sessions.filter(
@@ -2218,8 +2229,8 @@ const paymentInfoFunction = async psyId => {
 							plans.sessionPrice *
 							(1 - realComission)
 						).toFixed(0),
-						status: 'Pendiente',
-						transDate: 'Por realizar',
+						status: 'pending',
+						transDate: 'Por agendar',
 					};
 					sessions.push(session);
 				}
@@ -2248,10 +2259,12 @@ const paymentInfoFunction = async psyId => {
 					).toFixed(0),
 					sessions,
 					transState:
-						pendings > 0
+						pendingsToPay > 0
 							? 'Pendiente'
 							: receivable > 0
 							? 'Por cobrar'
+							: pendingsToDo > 0
+							? 'Por realizar'
 							: 'Cobrado',
 					sessionsNumber: lastSession
 						? lastSession.sessionsNumber
