@@ -50,10 +50,13 @@ export default {
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
 			),
 	},
-	async asyncData({ $axios, params, error }) {
+	async asyncData({ $axios, params, error, payload }) {
 		try {
-			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
-			return { psychologist };
+			if (payload) return { psychologist: payload, dataCurrent: false };
+			else {
+				const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
+				return { psychologist, dataCurrent: true };
+			}
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
 		}
@@ -135,6 +138,12 @@ export default {
 		};
 	},
 	async mounted() {
+		if (!this.dataCurrent) {
+			const { psychologist } = await this.$axios.$get(
+				`/psychologists/one/${this.$route.params.slug}`
+			);
+			this.psychologist = psychologist;
+		}
 		this.loadingCalendar = true;
 		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
 		this.loadingCalendar = false;
