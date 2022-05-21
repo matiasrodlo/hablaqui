@@ -101,11 +101,7 @@
 						<template #[`item.name`]="{ item }">
 							<div style="width: 100px">
 								<span style="width: 100px" class="caption">
-									{{
-										item.name.length > 12
-											? item.name.slice(0, 12) + '...'
-											: item.name
-									}}
+									{{ `${item.name} ${item.lastname}` }}
 								</span>
 							</div>
 						</template>
@@ -135,11 +131,7 @@
 													{{ element.datePayment }}
 												</td>
 												<td style="width: 18.5%" class="caption text-start">
-													{{
-														element.name.length > 12
-															? element.name.slice(0, 12) + '...'
-															: element.name
-													}}
+													{{ `${item.name} ${item.lastname}` }}
 												</td>
 												<td style="width: 21.5%" class="caption text-start">
 													{{ element.sessionsNumber }}
