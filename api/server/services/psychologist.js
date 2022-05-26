@@ -517,8 +517,8 @@ const getTransactions = async user => {
 
 	return okResponse('Transacciones devueltas', {
 		transactions: {
-			total: total,
-			totalAvailable: totalAvailable,
+			total: priceFormatter(total),
+			totalAvailable: priceFormatter(totalAvailable),
 			successSessions,
 			sessionsReceivable,
 			sessions,
@@ -833,8 +833,8 @@ const createPlan = async ({ payload }) => {
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
-		expirationDate = moment()
-			.add({ weeks: 1 })
+		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
+			.add(50, 'minutes')
 			.toISOString();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
@@ -1093,7 +1093,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
 		const expiration = moment(session.lastSession)
-			.add(1, 'hours')
+			.add(50, 'minutes')
 			.format();
 		sessions = await Sessions.findOneAndUpdate(
 			{ _id: id, 'plan._id': idPlan },
@@ -1206,7 +1206,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	if (session.remainingSessions === 0) {
 		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
-			.add(1, 'hours')
+			.add(50, 'minutes')
 			.format();
 		await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
@@ -2174,17 +2174,18 @@ const paymentInfoFunction = async psyId => {
 							'DD/MM/YYYY HH:mm'
 						),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
-						amount: plans.sessionPrice,
+						amount: priceFormatter(+plans.sessionPrice),
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
 							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
 							realComission === 0.0351 ? '3.51%' : percentage,
-						total: +(
-							plans.sessionPrice *
-							(1 - realComission)
-						).toFixed(0),
+						total: priceFormatter(
+							+(plans.sessionPrice * (1 - realComission)).toFixed(
+								0
+							)
+						),
 						status: session.status,
 						transDate,
 					};
@@ -2218,17 +2219,18 @@ const paymentInfoFunction = async psyId => {
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
 						sessionsNumber: `${i} de ${plans.totalSessions}`,
-						amount: plans.sessionPrice,
+						amount: priceFormatter(+plans.sessionPrice),
 						hablaquiPercentage: hablaquiPercentage.toFixed(0),
 						mercadoPercentage: (
 							plans.sessionPrice * 0.0351
 						).toFixed(2),
 						percentage:
 							realComission === 0.0351 ? '3.51%' : percentage,
-						total: (
-							plans.sessionPrice *
-							(1 - realComission)
-						).toFixed(0),
+						total: priceFormatter(
+							+(plans.sessionPrice * (1 - realComission)).toFixed(
+								0
+							)
+						),
 						status: 'pending',
 						transDate: 'Por agendar',
 					};
@@ -2252,11 +2254,10 @@ const paymentInfoFunction = async psyId => {
 					suscription: plans.period,
 					user: item.user._id,
 					datePayment: paymentPlanDate,
-					amount: plans.totalPrice,
-					finalAmount: (
-						plans.totalPrice *
-						(1 - realComission)
-					).toFixed(0),
+					amount: priceFormatter(+plans.totalPrice),
+					finalAmount: priceFormatter(
+						+(plans.totalPrice * (1 - realComission)).toFixed(0)
+					),
 					sessions,
 					transState:
 						pendingsToPay > 0
@@ -2603,6 +2604,16 @@ const userIsInvited = async (psychologist, user) => {
 		isInvited = !sessions.length;
 	}
 	return isInvited;
+};
+
+const priceFormatter = price => {
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+		minimumFractionDigits: 0,
+	});
+
+	return formatter.format(price);
 };
 
 const psychologistsService = {
