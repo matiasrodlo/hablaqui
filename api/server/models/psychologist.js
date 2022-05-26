@@ -70,7 +70,7 @@ let experienceSchema = new Schema({
 let psyPlan = new Schema({
 	tier: {
 		type: String,
-		enum: ['free', 'premium'],
+		enum: ['free', 'basic', 'premium'],
 		default: 'free',
 	},
 	paymentStatus: {
@@ -93,10 +93,6 @@ let psyPlan = new Schema({
 	price: {
 		type: Number,
 		default: 0,
-	},
-	hablaquiFee: {
-		type: Number,
-		default: 0.2,
 	},
 	paymentFee: {
 		type: Number,

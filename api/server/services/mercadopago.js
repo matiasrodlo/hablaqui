@@ -127,8 +127,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			expirationDate: '',
 			subscriptionPeriod: '',
 			price: 0,
-			hablaquiFee: 0.2,
-			paymentFee: 0.0399,
+			paymentFee: 0.0351,
 		},
 	];
 	if (
@@ -231,9 +230,13 @@ const successPay = async params => {
 
 const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
-	const { period } = query;
-	let expirationDate;
-	if (period === 'anual') {
+	const { period, tier } = query;
+	let expirationDate = moment()
+		.add({ months: 1 })
+		.toISOString();
+
+	const priceTier = tier === 'basic' ? 19900 : 69900;
+	/*if (period === 'anual') {
 		expirationDate = moment()
 			.add({ months: 12 })
 			.toISOString();
@@ -243,15 +246,14 @@ const psychologistPay = async (params, query) => {
 			.add({ months: 1 })
 			.toISOString();
 	}
-	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;
+	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;*/
 	const newPlan = {
-		tier: 'premium',
+		tier,
 		paymentStatus: 'success',
 		planStatus: 'active',
-		hablaquiFee: 0,
-		paymentFee: 0.0399,
+		paymentFee: 0.0351,
 		expirationDate,
-		price: pricePaid,
+		price: priceTier,
 		subscriptionPeriod: period,
 	};
 
@@ -268,7 +270,7 @@ const psychologistPay = async (params, query) => {
 			{
 				item_id: 2,
 				item_name: 'Plan de psicólogo premium',
-				item_price: pricePaid,
+				item_price: priceTier,
 				item_quantity: 1,
 			},
 		];
@@ -282,11 +284,11 @@ const psychologistPay = async (params, query) => {
 				order_id: foundPsychologist.psyPlans[
 					foundPsychologist.psyPlans.length - 1
 				]._id.toString(),
-				total: pricePaid,
+				total: priceTier,
 			},
 		});
 	}
-	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
+	await mailService.sendPsychologistPay(foundPsychologist, period, priceTier);
 	return okResponse('plan actualizado', { foundPsychologist });
 };
 //Para correo de evento confirmacion de pago
@@ -361,25 +363,30 @@ const createCustomSessionPreference = async params => {
 
 const recruitedPay = async (params, query) => {
 	const { recruitedId } = params;
-	const { period } = query;
-	let expirationDate;
-	if (period == 'anual') {
+	const { period, tier } = query;
+	let expirationDate = moment()
+		.add({ months: 1 })
+		.toISOString();
+
+	const priceTier = tier === 'basic' ? 19900 : 69900;
+	/*if (period === 'anual') {
 		expirationDate = moment()
 			.add({ months: 12 })
 			.toISOString();
 	}
-	if (period == 'mensual') {
+	if (period === 'mensual') {
 		expirationDate = moment()
 			.add({ months: 1 })
 			.toISOString();
 	}
-	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
+	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;*/
 	const newPlan = {
-		tier: 'premium',
-		hablaquiFee: 0,
-		paymentFee: 0.0399,
+		tier,
+		paymentStatus: 'success',
+		planStatus: 'active',
+		paymentFee: 0.0351,
 		expirationDate,
-		price: pricePaid,
+		price: priceTier,
 		subscriptionPeriod: period,
 	};
 	await recruitmentService.updatePlan(recruitedId, newPlan);
