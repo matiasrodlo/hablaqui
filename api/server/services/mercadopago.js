@@ -33,7 +33,7 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
+			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
 			// redirection to profile psychologist
 			failure: `${landing_url}/${body.psychologist}`,
 			pending: `${landing_url}/${body.psychologist}`,
@@ -44,7 +44,7 @@ const createPreference = async body => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return okResponse('preference created', resBody);
+	return resBody;
 };
 
 /**
@@ -143,8 +143,9 @@ const setPlanFree = async (id, isPsychologist) => {
 				item_quantity: 1,
 			},
 		];
+		const userID = User.findOne({ email: response.email })._id;
 		analytics.track({
-			userId: id.toString(),
+			userId: userID.toString(),
 			event: 'psy-free-plan',
 			properties: {
 				currency: 'CLP',
@@ -160,87 +161,72 @@ const setPlanFree = async (id, isPsychologist) => {
 };
 
 const successPay = async params => {
-	try {
-		const { planId } = params;
-		const currentSessions = await Sessions.findById(planId);
-		const plan = currentSessions.plan[
-			currentSessions.plan.length - 1
-		]._id.toString();
-		const foundPlan = await Sessions.findOneAndUpdate(
-			{
-				_id: planId,
-				'plan._id': plan,
+	const { sessionsId, planId } = params;
+	const foundPlan = await Sessions.findOneAndUpdate(
+		{
+			_id: sessionsId,
+			'plan._id': planId,
+		},
+		{
+			$set: {
+				'plan.$.payment': 'success',
+				'plan.$.datePayment': moment().format(),
 			},
-			{
-				$set: {
-					'plan.$.payment': 'success',
-					'plan.$.datePayment': moment().format(),
-				},
-			},
-			{ new: true }
-		);
-		const planData = foundPlan.plan[foundPlan.plan.length - 1];
-		const sessionData = planData.session[0];
-		const originalDate = sessionData.date.split(' ');
-		const date = originalDate[0].split('/');
-		const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
-		// Email scheduling for appointment reminder for the user
-		await email.create({
-			sessionDate: dateFormatted,
-			wasScheduled: false,
-			type: 'reminder-user',
-			queuedAt: undefined,
-			scheduledAt: undefined,
-			userRef: foundPlan.user,
-			psyRef: foundPlan.psychologist,
-			sessionRef: sessionData._id,
-		});
-		// Email scheduling for appointment reminder for the psychologist
-		await email.create({
-			sessionDate: dateFormatted,
-			wasScheduled: false,
-			type: 'reminder-psy',
-			queuedAt: undefined,
-			scheduledAt: undefined,
-			userRef: foundPlan.user,
-			psyRef: foundPlan.psychologist,
-			sessionRef: sessionData._id,
-		});
-		const user = await User.findById(foundPlan.user);
-		const psy = await Psychologist.findById(foundPlan.psychologist);
-		// Send appointment confirmation for user and psychologist
-		await mailService.sendAppConfirmationUser(
-			user,
-			psy,
-			planData.totalPrice
-		);
-		await mailService.sendAppConfirmationPsy(
-			psy,
-			user,
-			planData.totalPrice
-		);
+		},
+		{ new: true }
+	);
+	const planData = foundPlan.plan.filter(
+		plan => plan._id.toString() === planId
+	)[0];
+	const sessionData = planData.session[0];
+	const originalDate = sessionData.date.split(' ');
+	const date = originalDate[0].split('/');
+	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
+	// Email scheduling for appointment reminder for the user
+	await email.create({
+		sessionDate: dateFormatted,
+		wasScheduled: false,
+		type: 'reminder-user',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await email.create({
+		sessionDate: dateFormatted,
+		wasScheduled: false,
+		type: 'reminder-psy',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	const user = await User.findById(foundPlan.user);
+	const psy = await Psychologist.findById(foundPlan.psychologist);
+	// Send appointment confirmation for user and psychologist
+	await mailService.sendAppConfirmationUser(user, psy, planData.totalPrice);
+	await mailService.sendAppConfirmationPsy(psy, user, planData.totalPrice);
 
-		await mailService.sendScheduleToUser(
-			user,
-			psy,
-			dateFormatted,
-			foundPlan.roomsUrl,
-			`1/${planData.totalSessions}`
-		);
-		await mailService.sendScheduleToPsy(
-			user,
-			psy,
-			dateFormatted,
-			foundPlan.roomsUrl,
-			`1/${planData.totalSessions}`
-		);
+	await mailService.sendScheduleToUser(
+		user,
+		psy,
+		dateFormatted,
+		foundPlan.roomsUrl,
+		`1/${planData.totalSessions}`
+	);
+	await mailService.sendScheduleToPsy(
+		user,
+		psy,
+		dateFormatted,
+		foundPlan.roomsUrl,
+		`1/${planData.totalSessions}`
+	);
 
-		logInfo('Se ha realizado un pago');
-		return okResponse('sesion actualizada');
-	} catch (err) {
-		logInfo(err.stack);
-		return conflictResponse('Error al actualizar sesion');
-	}
+	logInfo('Se ha realizado un pago');
+	return okResponse('Pago aprobado');
 };
 
 const psychologistPay = async (params, query) => {
@@ -286,8 +272,9 @@ const psychologistPay = async (params, query) => {
 				item_quantity: 1,
 			},
 		];
+		const userID = User.findOne({ email: foundPsychologist.email })._id;
 		analytics.track({
-			userId: psychologistId.toString(),
+			userId: userID.toString(),
 			event: 'psy-premium-plan',
 			properties: {
 				currency: 'CLP',

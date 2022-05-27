@@ -21,28 +21,59 @@
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
-			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
-				<v-list-item v-if="false" class="my-4" link>
+			<v-list
+				id="listdrawer"
+				style="flex: 2"
+				dark
+				color="primary"
+				class="pt-0"
+				left
+				shaped
+				top
+			>
+				<!-- ocultado por peticion de daniel -->
+				<!-- <v-list-item
+					v-if="
+						psychologist &&
+						$auth.user.role === 'psychologist' &&
+						$auth.user.psychologist
+					"
+					inactive
+				>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
-							<icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
-							<icon v-else size="30" color="red" :icon="mdiAccountOff" />
+							<icon v-if="online" size="30" color="#FFFFFF" :icon="mdiAccount" />
+							<icon v-else size="30" color="#FFFFFF" :icon="mdiAccountOff" />
 						</v-btn>
 					</v-list-item-avatar>
 					<v-list-item-content>
 						<v-list-item-title class="font-weight-bold body-2">
-							<v-switch v-model="online" dense>
+							<v-switch
+								v-model="online"
+								dense
+								hide-details
+								:loading="loadingStatus"
+								class="mt-0"
+								@click="setToggleStatus"
+							>
 								<template #prepend>
-									<div class="pt-1 white--text">
+									<div class="white--text pt-1">
 										{{ online ? 'En linea' : 'Desconectado' }}
 									</div>
 								</template>
 							</v-switch>
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item>
+				</v-list-item> -->
 				<template v-for="(item, i) in links">
-					<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
+					<v-list-item
+						v-if="item.visible"
+						:id="item.name"
+						:key="i"
+						class="my-4"
+						link
+						:to="item.link"
+					>
 						<v-list-item-avatar size="35">
 							<v-img
 								height="35"
@@ -53,7 +84,7 @@
 							/>
 						</v-list-item-avatar>
 						<v-list-item-content>
-							<v-list-item-title class="font-weight-bold body-2">
+							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -63,7 +94,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+					href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -138,6 +169,97 @@
 				</div>
 			</template>
 		</v-navigation-drawer>
+		<v-navigation-drawer
+			v-if="$auth.$state.user.role === 'psychologist'"
+			:value="onBoarding"
+			width="350"
+			class="elevation-6"
+			disable-resize-watcher
+			app
+			right
+		>
+			<v-list-item style="height: 120px" class="primary" dark>
+				<v-list-item-avatar size="35" @click="() => setOnBoarding()">
+					<v-btn icon>
+						<icon color="white" size="35" :icon="mdiChevronRight" />
+					</v-btn>
+				</v-list-item-avatar>
+				<v-list-item-content>
+					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
+					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
+						Da tus primeros pasos en Hablaquí Office.
+					</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+			<v-expansion-panels flat>
+				<v-expansion-panel v-for="(step, i) in stepOnboarding" :key="i">
+					<v-expansion-panel-header v-if="step.visible">
+						<div class="text-left">
+							<icon
+								v-if="step.title === 'Explora las secciones'"
+								size="35"
+								:icon="mdiMapMarkerStar"
+							/>
+							<icon
+								v-else-if="step.title === 'Configura tu cuenta'"
+								size="35"
+								:icon="mdiCog"
+							/>
+							<icon
+								v-else-if="step.title === 'Añade a tus consultantes'"
+								size="35"
+								:icon="mdiAccountSupervisor"
+							/>
+							<icon
+								v-else-if="step.title === 'Añade eventos o bloquea horas'"
+								size="35"
+								:icon="mdiCalendar"
+							/>
+							<icon v-else size="35" color="#bfbfbf" :icon="mdiCircle" />
+							<span class="ml-2">
+								{{ step.title }}
+							</span>
+						</div>
+					</v-expansion-panel-header>
+					<v-expansion-panel-content>
+						<v-list dense>
+							<v-list-item-group
+								v-model="onSelectedStep"
+								color="primary"
+								@change="
+									() => {
+										if (onSelectedStep) setOnBoarding(false);
+									}
+								"
+							>
+								<v-list-item
+									v-for="(item, key) in step.items"
+									:key="key"
+									:value="item"
+									@click="$router.push({ name: item.route })"
+								>
+									<v-list-item-icon>
+										<icon v-if="item.done" size="20" :icon="mdiCheckCircle" />
+										<icon v-else size="20" color="#bfbfbf" :icon="mdiCircle" />
+									</v-list-item-icon>
+
+									<v-list-item-content>
+										<v-list-item-title class="body-2 font-weight-regular">
+											{{ item.title }}
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list-item-group>
+						</v-list>
+					</v-expansion-panel-content>
+				</v-expansion-panel>
+			</v-expansion-panels>
+			<template v-if="!$auth.user.onboarding" #append>
+				<div class="pointer my-6 primary--text text-center" @click="changeStateOnboarding">
+					Completar tareas (saltar)
+				</div>
+			</template>
+		</v-navigation-drawer>
 		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
 			<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
 				<icon size="30" color="primary" :icon="mdiChevronLeft" />
@@ -152,10 +274,21 @@
 			:class="$vuetify.breakpoint.mdAndUp ? 'primary' : 'white'"
 			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
-			<v-overlay :value="overlay" color="white" :opacity="0.8">
+			<!-- overlay onboarding -->
+			<v-overlay
+				v-if="selectedStep"
+				:value="!!selectedStep"
+				color="white"
+				:opacity="0.7"
+				z-index="2"
+				class="d-flex align-start justify-end"
+			>
+				<div class="primary--text pa-2">Presione esc para salir</div>
+			</v-overlay>
+			<v-dialog v-model="overlay" persistent max-width="300">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text @click="changeStateOnboarding">
+						<v-btn text @click="welcomeDialog">
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
@@ -163,23 +296,25 @@
 						Bienvenido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
-						Agenda un tour por tu oficina y aclara todas tus dudas
+						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
+						agenda una inducción a la plataforma.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/daniel-hablaqui/30min"
+							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
-							>Agendar demo
+						>
+							Agendar demo
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-overlay>
+			</v-dialog>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -192,9 +327,23 @@
 </template>
 
 <script>
-import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert, mdiChevronLeft } from '@mdi/js';
-import Snackbar from '@/components/Snackbar';
+import {
+	mdiMenu,
+	mdiAccount,
+	mdiAccountOff,
+	mdiAlert,
+	mdiChevronLeft,
+	mdiCheckCircle,
+	mdiChevronRight,
+	mdiChevronDown,
+	mdiCircle,
+	mdiMapMarkerStar,
+	mdiCog,
+	mdiAccountSupervisor,
+	mdiCalendar,
+} from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
@@ -205,11 +354,20 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
+			loadingStatus: false,
+			mdiAccountSupervisor,
+			mdiCalendar,
+			mdiCog,
+			mdiChevronRight,
+			mdiMapMarkerStar,
 			mdiChevronLeft,
+			mdiChevronDown,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
+			mdiCheckCircle,
+			mdiCircle,
 			drawer: true,
 			online: true,
 			isMini: true,
@@ -218,6 +376,14 @@ export default {
 	computed: {
 		expand() {
 			return true;
+		},
+		onSelectedStep: {
+			get() {
+				return this.selectedStep;
+			},
+			set(value) {
+				return this.setStep(value);
+			},
 		},
 		goBack() {
 			return (
@@ -306,16 +472,297 @@ export default {
 				return 'Consultante';
 			return '';
 		},
-		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+		hasAvatar() {
+			return this.psychologist && this.psychologist.avatar;
+		},
+		hasBankdata() {
+			return (
+				this.psychologist &&
+				this.psychologist.paymentMethod &&
+				this.psychologist.paymentMethod.bank &&
+				this.psychologist.paymentMethod.accountType &&
+				this.psychologist.paymentMethod.email &&
+				this.psychologist.paymentMethod.rut &&
+				this.psychologist.paymentMethod.name
+			);
+		},
+		hasSchedule() {
+			return (
+				this.psychologist &&
+				this.psychologist.schedule &&
+				(this.psychologist.schedule.monday !== 'busy' ||
+					this.psychologist.schedule.tuesday !== 'busy' ||
+					this.psychologist.schedule.wednesday !== 'busy' ||
+					this.psychologist.schedule.thursday !== 'busy' ||
+					this.psychologist.schedule.friday !== 'busy' ||
+					this.psychologist.schedule.saturday !== 'busy' ||
+					this.psychologist.schedule.sunday !== 'busy')
+			);
+		},
+		hasPreferences() {
+			return (
+				this.psychologist &&
+				this.psychologist.preferences &&
+				this.psychologist.preferences.minimumNewSession > 0 &&
+				this.psychologist.preferences.minimumRescheduleSession > 0
+			);
+		},
+		hasSessionPrice() {
+			return (
+				this.psychologist &&
+				this.psychologist.sessionPrices &&
+				this.psychologist.sessionPrices.video > 0
+			);
+		},
+		hasConsultantes() {
+			return this.consultantes.length;
+		},
+		hasEvents() {
+			return this.$auth.user.sessions.length;
+		},
+		stepOnboarding() {
+			return [
+				{
+					title: 'Configura tu cuenta',
+					route: '/dashboard/perfil',
+					items: [
+						{
+							title: 'Sube tu foto de perfil',
+							tab: 0,
+							card: {
+								title: 'Editamos tu fotografía',
+								description:
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
+								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
+							},
+							route: 'dashboard-perfil',
+							done: this.$auth.user.onboarding || this.hasAvatar,
+						},
+						{
+							title: 'Añade tus datos bancarios',
+							tab: 0,
+							card: {
+								title: 'No te preocupes, cobramos por ti',
+								description:
+									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+							},
+							done: this.$auth.user.onboarding || this.hasBankdata,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Configura tus horarios',
+							tab: 1,
+							card: {
+								title: 'Tu horario de trabajo diario',
+								description:
+									'Selecciona los horarios que tendrás disponible para atender.',
+							},
+							done: this.$auth.user.onboarding || this.hasSchedule,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Intervalos en tu horario',
+							tab: 1,
+							card: {
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
+							},
+							done: this.$auth.user.onboarding || this.hasSchedule,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Anticipación para agendar',
+							tab: 2,
+							card: {
+								title: 'Ya no más sesiones muy encima',
+								description:
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+							},
+							done: this.$auth.user.onboarding || this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Configura el tiempo de reprogramación y agenda',
+							tab: 2,
+							card: {
+								title: 'No pierdas tu tiempo',
+								description:
+									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+							},
+							done: this.$auth.user.onboarding || this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Añade el precio de tus sesiones',
+							tab: 2,
+							card: {
+								title: 'Ingresa el valor de tus sesiones',
+								description:
+									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+							},
+							done: this.$auth.user.onboarding || this.hasSessionPrice,
+							route: 'dashboard-perfil',
+						},
+					],
+					visible: true,
+					done:
+						this.hasSessionPrice &&
+						this.hasPreferences &&
+						this.hasSchedule &&
+						this.hasBankdata &&
+						this.hasAvatar,
+				},
+				{
+					title: 'Explora las secciones',
+					route: '/dashboard/chat',
+					items: [
+						{
+							title: 'Chat',
+							route: 'dashboard-chat',
+							card: {
+								title: 'Tus conversaciones en un solo lugar',
+								description:
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							done: this.$auth.user.onboarding || this.stepLinks[0],
+						},
+						{
+							title: 'Mi agenda',
+							card: {
+								title: 'Gestiona tu agenda',
+								description:
+									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-agenda',
+							done: this.$auth.user.onboarding || this.stepLinks[1],
+						},
+						{
+							title: 'Mis pagos',
+							card: {
+								title: 'Gestiona tus pagos',
+								description:
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-pagos',
+							done: this.$auth.user.onboarding || this.stepLinks[2],
+						},
+						{
+							title: 'Mis consultantes',
+							card: {
+								title: 'Gestiona los consultantes',
+								description:
+									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-consultantes',
+							done: this.$auth.user.onboarding || this.stepLinks[3],
+						},
+					],
+					visible: true,
+					done: true,
+				},
+			];
+		},
+		...mapGetters({
+			listenerUserOnline: 'User/listenerUserOnline',
+			onBoarding: 'User/onBoarding',
+			stepLinks: 'User/stepLinks',
+			selectedStep: 'User/step',
+			psychologist: 'Psychologist/psychologist',
+			plan: 'User/plan',
+			consultantes: 'Psychologist/clients',
+		}),
 	},
-	mounted() {
+	watch: {
+		psychologist(newValue) {
+			if (
+				newValue &&
+				this.$auth.user.psychologist &&
+				this.$auth.user.role === 'psychologist'
+			) {
+				this.online = newValue.inmediateAttention.activated;
+			}
+		},
+	},
+	async mounted() {
+		// lanzar onboarding al cargar
+		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+		// 	this.setOnBoarding(true);
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
+
+		if (this.$auth.$state.user.role === 'user') {
+			if (this.$auth.$state.user.sessions.length) {
+				if (this.plan.psychologist) {
+					const { psychologist } = await this.$axios.$get(
+						`/psychologists/one/${this.plan.psychologist}`
+					);
+					this.setPsychologist(psychologist);
+				}
+			} else {
+				this.setPsychologist(null);
+			}
+		}
+		if (this.$auth.$state.user.role === 'psychologist') {
+			let psychologist;
+			if (this.$auth.$state.user.psychologist) {
+				await this.getClients(this.$auth.$state.user.psychologist);
+				const res = await this.$axios.$get(
+					`/psychologists/one/${this.$auth.$state.user.psychologist}`
+				);
+				psychologist = res.psychologist;
+			} else {
+				const res = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
+				psychologist = res.recruited;
+			}
+			if (!psychologist.formation.length) {
+				psychologist.formation.push({
+					formationType: '',
+					description: '',
+					start: '',
+					end: '',
+				});
+			}
+			if (!psychologist.experience.length) {
+				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			}
+			this.setPsychologist(psychologist);
+		}
+
+		document.body.addEventListener('keyup', evt => {
+			evt = evt || window.event;
+			let isEscape = false;
+			if ('key' in evt) {
+				isEscape = evt.key === 'Escape' || evt.key === 'Esc';
+			} else {
+				isEscape = evt.keyCode === 27;
+			}
+			if (isEscape && this.selectedStep) {
+				this.setStep(null);
+			}
+		});
 	},
 	methods: {
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');
+		},
+		async setToggleStatus() {
+			this.loadingStatus = true;
+			await this.toggleStatus();
+			this.loadingStatus = false;
+		},
+		welcomeDialog() {
+			this.overlay = false;
+			this.setOnBoarding(true);
+			// this.changeStateOnboarding();
 		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;
@@ -327,9 +774,16 @@ export default {
 			this.overlay = false;
 			this.$auth.fetchUser();
 		},
-		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
+		...mapMutations({
+			setListenerUserOnline: 'User/setListenerUserOnline',
+			setOnBoarding: 'User/setOnBoarding',
+			setStep: 'User/setStep',
+			setPsychologist: 'Psychologist/setPsychologist',
+		}),
 		...mapActions({
+			getClients: 'Psychologist/getClients',
 			updateOne: 'User/updateOne',
+			toggleStatus: 'Psychologist/toggleStatus',
 		}),
 	},
 };

@@ -7,6 +7,11 @@ import multer from '../middleware/multer';
 
 const psychologistsRouter = Router();
 
+psychologistsRouter.get(
+	'/psychologist/hide/:idPsy',
+	psychologistsController.hidePsychologist
+);
+
 /**
  * @swagger
  * tags:
@@ -71,6 +76,14 @@ psychologistsRouter.get(
 psychologistsRouter.get(
 	'/psychologists/formattedSessionsAll',
 	psychologistsController.formattedSessionsAll
+);
+
+/**
+ * obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
+ */
+psychologistsRouter.post(
+	'/psychologists/sessionsLimit',
+	psychologistsController.sessionsLimit
 );
 
 /**
@@ -404,7 +417,7 @@ psychologistsRouter.get(
  */
 psychologistsRouter.get(
 	'/psychologist/payments/:psy',
-	//[passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.paymentsInfoFromId
 );
 
@@ -487,6 +500,12 @@ psychologistsRouter.get(
 	'/psychologist/transactions/all',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.getTransactions
+);
+
+psychologistsRouter.post(
+	'/psychologist/status/inmediate-attention',
+	[passport.authenticate('jwt', { session: true })],
+	psychologistsController.changeToInmediateAttention
 );
 
 export default psychologistsRouter;

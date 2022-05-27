@@ -1052,7 +1052,7 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											saveStep(4);
+											saveStep(5);
 										}
 									"
 								>
@@ -1060,7 +1060,7 @@
 								</v-btn>
 							</div>
 						</v-stepper-content>
-						<v-stepper-content step="4">
+						<!-- <v-stepper-content step="4">
 							<plans
 								v-if="form._id"
 								:next="
@@ -1069,7 +1069,7 @@
 									}
 								"
 							/>
-						</v-stepper-content>
+						</v-stepper-content> -->
 						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -1132,7 +1132,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		plans: () => import('~/components/postulacion/Plans'),
+		// plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -1225,14 +1225,14 @@ export default {
 			if (this.validationStep(step)) {
 				if (this.form && this.form._id) {
 					// actualizamos postulacion
-					const { data } = await this.$axios('/recruitment/update', {
+					const { data } = await this.$axios('/recruitment/update?step=' + this.step, {
 						method: 'put',
 						data: this.form,
 					});
 					this.$segment.track(this.form._id.toString(), {
 						event: 'psy-application-step',
 						properties: {
-							step: step,
+							step,
 							email: this.$auth.user.email,
 						},
 					});
@@ -1247,13 +1247,6 @@ export default {
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
 				}
-				this.$segment.identify(this.form._id.toString(), {
-					email: this.$auth.user.email,
-					name: this.$auth.user.name,
-					lastName: this.$auth.user.lastName,
-					phone: this.form.phone.number,
-					lastCompletedStep: step,
-				});
 				this.step = step;
 			} else {
 				alert('Por favor complete el formulario');

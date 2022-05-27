@@ -7,14 +7,19 @@ export default {
 			.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			})
+			.sort(function randOrd(a, b) {
+				return b.rating - a.rating;
+			})
 			.filter(item => item.preferences.marketplaceVisibility);
 	},
 	psychologists: state => state.psychologists,
-
+	psychologist: state => state.psychologist,
 	sessions: state => state.sessions,
+	transactions: state => state.transactions,
 	page: state => state.page,
 	payments: state => state.payments,
 	loadingPsychologist: state => state.loadingPsychologist,
+	sessionsLimit: state => state.sessionsLimit,
 	sessionsFormatted: state => state.sessionsFormatted,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,
 	clients: state => {

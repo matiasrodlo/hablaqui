@@ -32,7 +32,8 @@ const recruitmentController = {
 	async update(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await recruitmentService.update(body);
+			const step = req.query.step;
+			const { data, code } = await recruitmentService.update(body, step);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando el psicologo');
