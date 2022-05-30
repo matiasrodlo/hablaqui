@@ -536,7 +536,7 @@ export default {
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
-							done: this.$auth.user.onboarding || this.hasAvatar,
+							done: this.hasAvatar,
 						},
 						{
 							title: 'Añade tus datos bancarios',
@@ -546,7 +546,7 @@ export default {
 								description:
 									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
 							},
-							done: this.$auth.user.onboarding || this.hasBankdata,
+							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -557,7 +557,7 @@ export default {
 								description:
 									'Selecciona los horarios que tendrás disponible para atender.',
 							},
-							done: this.$auth.user.onboarding || this.hasSchedule,
+							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -567,7 +567,7 @@ export default {
 								title: 'Agregar más intervalos de tiempo',
 								description: 'Puedes añadir más bloques de horario para atender.',
 							},
-							done: this.$auth.user.onboarding || this.hasSchedule,
+							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -578,7 +578,7 @@ export default {
 								description:
 									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
 							},
-							done: this.$auth.user.onboarding || this.hasPreferences,
+							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -589,7 +589,7 @@ export default {
 								description:
 									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
 							},
-							done: this.$auth.user.onboarding || this.hasPreferences,
+							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
@@ -600,7 +600,7 @@ export default {
 								description:
 									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
 							},
-							done: this.$auth.user.onboarding || this.hasSessionPrice,
+							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
 						},
 					],
