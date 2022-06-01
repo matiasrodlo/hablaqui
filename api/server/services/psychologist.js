@@ -1884,7 +1884,9 @@ const customNewSession = async (user, payload) => {
 			sessions.push(newSession);
 		}
 
-		const isInvited = await userIsInvited(user.psychologist, payload.user);
+		let isInvited = false;
+		if (payload.type !== 'compromiso privado')
+			isInvited = await userIsInvited(user.psychologist, payload.user);
 
 		// Objeto con el plan a crear
 		const newPlan = {
