@@ -347,6 +347,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
 import Pusher from 'pusher-js';
+import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
 
@@ -449,6 +450,10 @@ export default {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
 			}
+
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
 
 			return filterArray
 				.map(item => ({

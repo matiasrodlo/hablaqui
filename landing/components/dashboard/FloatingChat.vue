@@ -98,6 +98,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
+import { uniqBy } from 'lodash';
 import Pusher from 'pusher-js';
 moment.tz.setDefault('America/Santiago');
 
@@ -136,6 +137,11 @@ export default {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
 			}
+
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
+
 			return filterArray
 				.map(item => ({
 					...item.psychologist,
