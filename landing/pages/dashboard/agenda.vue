@@ -425,6 +425,7 @@
 													dense
 													hide-details
 													outlined
+													type="number"
 													suffix="CLP"
 												></v-text-field>
 											</v-col>
