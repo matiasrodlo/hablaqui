@@ -63,6 +63,11 @@ export default {
 					property: 'og:url',
 					content: process.env.VUE_APP_LANDING + '/psicologos',
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
+				},
 			],
 			link: [
 				{

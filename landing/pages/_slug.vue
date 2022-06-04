@@ -128,6 +128,11 @@ export default {
 					property: 'og:image:alt',
 					content: this.psychologist.name,
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
+				},
 			],
 			link: [
 				{
