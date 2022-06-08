@@ -181,7 +181,7 @@ const successPay = async params => {
 	const sessionData = planData.session[0];
 	// Email scheduling for appointment reminder for the user
 	await email.create({
-		sessionDate: moment(sessionData.date).format(),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -192,7 +192,7 @@ const successPay = async params => {
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
-		sessionDate: moment(sessionData.date).format(),
+		sessionDate: sessionData.date,
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
@@ -210,14 +210,14 @@ const successPay = async params => {
 	await mailService.sendScheduleToUser(
 		user,
 		psy,
-		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionData.date,
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
 	await mailService.sendScheduleToPsy(
 		user,
 		psy,
-		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionData.date,
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
