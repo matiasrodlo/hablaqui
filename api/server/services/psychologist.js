@@ -835,19 +835,19 @@ const createPlan = async ({ payload }) => {
 		sessionQuantity = 1;
 		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
 			.add(50, 'minutes')
-			.toISOString();
+			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
 		expirationDate = moment()
 			.add({ months: 1 })
-			.toISOString();
+			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = moment()
 			.add({ months: 3 })
-			.toISOString();
+			.format();
 	}
 
 	const newSession = {
