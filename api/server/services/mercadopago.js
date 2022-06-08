@@ -210,14 +210,14 @@ const successPay = async params => {
 	await mailService.sendScheduleToUser(
 		user,
 		psy,
-		moment(sessionData.date).format(),
+		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
 	await mailService.sendScheduleToPsy(
 		user,
 		psy,
-		moment(sessionData.date).format(),
+		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
