@@ -211,8 +211,6 @@ const recruitmentService = {
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
 	},
 	async flagOnboarding(recruitedId, flags) {
-		console.log(recruitedId);
-		console.log(flags);
 		const recruitedOnboarding = await Recruitment.findOneAndUpdate(
 			{ _id: recruitedId },
 			{
