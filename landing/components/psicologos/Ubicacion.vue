@@ -25,8 +25,8 @@
 				<v-col tag="section" cols="12" class="text-left">
 					<v-expansion-panels v-model="panel" tag="section" light multiple flat>
 						<v-expansion-panel
-							v-for="item in faq"
-							:key="item.id"
+							v-for="(item, i) in faq"
+							:key="i"
 							class="shadowBlue my-2 pa-0"
 						>
 							<v-expansion-panel-header class="py-3 pl-3" light>
@@ -84,30 +84,31 @@ export default {
 	},
 	data() {
 		return {
+			panel: [],
 			faq: [
 				{
 					id: 1,
 					title: '¿A qué tipo de psicólogo online debo acudir?',
-					desc: `Los psicólogos clínicos licenciados son profesionales de la salud mental más frecuentes en ${this.location.slug}. Estos 
-                        tienen la facultad de diagnosticar trastornos mentales y ofrecer terapia especializada. 
-                        La formación y certificaciones difieren en función del profesional. Siendo así que cada psicólogo puede 
+					desc: `Los psicólogos clínicos licenciados son profesionales de la salud mental más frecuentes en ${this.location.slug}. Estos
+                        tienen la facultad de diagnosticar trastornos mentales y ofrecer terapia especializada.
+                        La formación y certificaciones difieren en función del profesional. Siendo así que cada psicólogo puede
                         especializarse en un área concreta, como la depresión, el asesoramiento matrimonial o la ansiedad. `,
 				},
 				{
 					id: 2,
 					title: `¿Cómo puedo encontrar a un psicólogo en ${this.location.slug}?`,
-					desc: `En Hablaquí nos enfocamos exclusivamente en proveer terapia en línea de modo que usted pueda acceder a 
-                        un psicólogo online estando en Localidad o en cualquier parte del mundo. Utilizando los filtros de esta página, 
-                        puede acotar su búsqueda y explorar numerosas categorías para encontrar un psicólogo online con la 
-                        experiencia y especialidad que necesita. Por ejemplo, es posible que desee limitar su búsqueda a un psicólogo 
+					desc: `En Hablaquí nos enfocamos exclusivamente en proveer terapia en línea de modo que usted pueda acceder a
+                        un psicólogo online estando en Localidad o en cualquier parte del mundo. Utilizando los filtros de esta página,
+                        puede acotar su búsqueda y explorar numerosas categorías para encontrar un psicólogo online con la
+                        experiencia y especialidad que necesita. Por ejemplo, es posible que desee limitar su búsqueda a un psicólogo
                         cognitivo conductual para atenderse en línea desde Localidad.`,
 				},
 				{
 					id: 3,
 					title: '¿Qué tipo de terapia en línea es el mejor para mí?',
-					desc: `No existe una “forma correcta”. Cada tipo de orientación o tratamiento tiene el potencial de ayudar a una 
-                        amplia gama de condiciones. Los psicólogos online de Hablaquí le permiten aumentar sus niveles de bienestar 
-                        emocional estando en Localidad, para ello se especializan en diversas técnicas terapéuticas, como la 
+					desc: `No existe una “forma correcta”. Cada tipo de orientación o tratamiento tiene el potencial de ayudar a una
+                        amplia gama de condiciones. Los psicólogos online de Hablaquí le permiten aumentar sus niveles de bienestar
+                        emocional estando en Localidad, para ello se especializan en diversas técnicas terapéuticas, como la
                         psicoanalítica, cognitivo-conductual o sistémica. `,
 				},
 			],

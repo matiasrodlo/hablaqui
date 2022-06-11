@@ -12,14 +12,17 @@
 		<v-card flat color="transparent">
 			<v-card-text class="secondary--text">
 				<div class="body-1">
-					<span class="primary--text font-weight-bold">
+					<h2 class="primary--text font-weight-bold">
 						¿Estás buscando un buen Psicólogo en
 						<span class="text-capitalize">{{ location && location.name }}?</span>
-					</span>
+					</h2>
 					<br />
-					Agenda con un psicólogo en {{ location && location.name }} de forma segura y
-					privada en línea. Agenda con total libertad cuando te resulte más conveniente y
-					conéctate por videollamada desde tu teléfono, tableta o computadora.
+					<p>
+						Agenda con un psicólogo en {{ location && location.name }} de forma segura y
+						privada en línea. Agenda con total libertad cuando te resulte más
+						conveniente y conéctate por videollamada desde tu teléfono, tableta o
+						computadora.
+					</p>
 				</div>
 			</v-card-text>
 		</v-card>
