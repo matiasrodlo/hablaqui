@@ -1133,7 +1133,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	await mailService.sendScheduleToUser(
 		userLogged,
 		psychologist,
-		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		payload.date,
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
@@ -1142,7 +1142,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	await mailService.sendScheduleToPsy(
 		userLogged,
 		psychologist,
-		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		payload.date,
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
