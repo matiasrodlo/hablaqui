@@ -5,7 +5,7 @@ let evaluation = new Schema(
 		approved: {
 			type: String,
 			default: 'wait',
-			enum: ['refuse', 'waitting', 'approved'],
+			enum: ['refuse', 'wait', 'approved'],
 		},
 		comment: {
 			type: String,

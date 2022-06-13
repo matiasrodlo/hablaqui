@@ -2,9 +2,12 @@ import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
 export default {
-	user: state => state.user,
+	user: (state, getters, rootState) => rootState.auth.user,
 	token: state => state.token,
 	loggedIn: state => state.loggedIn,
+	onBoarding: state => state.onBoarding,
+	stepLinks: state => state.stepLinks,
+	step: state => state.step,
 	listenerUserOnline: state => state.listenerUserOnline,
 	plan: (state, getters, rootState) => {
 		const user = rootState.auth.user;
