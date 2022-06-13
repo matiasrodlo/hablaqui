@@ -54,6 +54,11 @@ export default {
 					property: 'og:title',
 					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
+				},
 			],
 			link: [
 				{

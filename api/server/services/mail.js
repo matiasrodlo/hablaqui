@@ -146,7 +146,7 @@ const mailService = {
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
 				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				hour: moment(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
@@ -188,7 +188,7 @@ const mailService = {
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
 				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				hour: moment(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
@@ -808,7 +808,7 @@ const mailService = {
 				psy_first_name: name,
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				hour: moment(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -840,7 +840,7 @@ const mailService = {
 				first_name: name,
 				url: url,
 				date: moment(date).format('DD/MM/YYYY'),
-				hour: momentz.tz(date, 'America/Santiago').format('HH:mm'),
+				hour: moment(date).format('HH:mm'),
 				session,
 			},
 		};

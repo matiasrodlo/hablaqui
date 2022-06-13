@@ -1248,8 +1248,6 @@ export default {
 					if (step - 1 === 1) this.setUser();
 				}
 				this.step = step;
-			} else {
-				alert('Por favor complete el formulario');
 			}
 			this.loadingStep = false;
 		},
@@ -1257,18 +1255,43 @@ export default {
 		validationStep(step) {
 			// validamos el step 1
 			if (step - 1 === 1) {
+				if (
+					!this.form.timeZone ||
+					!this.form.gender ||
+					!this.form.languages.length ||
+					!this.form.birthDate ||
+					!this.form.country ||
+					!this.form.region ||
+					!this.form.comuna ||
+					!this.form.personalDescription ||
+					!this.form.phone.code ||
+					!this.form.phone.number
+				) {
+					alert(`Complete los campos faltantes`);
+				}
 				return (
 					this.form.timeZone &&
 					this.form.gender &&
 					this.form.languages.length &&
 					this.form.birthDate &&
+					this.form.country &&
 					this.form.region &&
 					this.form.comuna &&
-					this.form.personalDescription
+					this.form.personalDescription &&
+					this.form.phone.code &&
+					this.form.phone.number
 				);
 			}
 			// validamos el step 2
 			else if (step - 1 === 2) {
+				if (
+					!this.form.professionalDescription ||
+					!this.form.formation.length ||
+					!this.form.experience.length ||
+					!this.form.specialties.length ||
+					!this.form.models.length
+				)
+					alert('Complete los campo faltantes');
 				return (
 					this.form.professionalDescription &&
 					this.form.formation.length &&

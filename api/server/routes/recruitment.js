@@ -61,5 +61,17 @@ recruitmentRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	recruitmentController.approve
 );
+/**
+ * @description: Route to update oonboarding flag from recruitment
+ * @route: /api/v1/recruitment/update/flags/:recruitmentId
+ * @method: POST
+ * @access: public (authenticated)
+ * @param: recruitmentId
+ **/
+recruitmentRouter.post(
+	'/recruitment/update/flags/:recruitedId',
+	[passport.authenticate('jwt', { session: true })],
+	recruitmentController.flagOnboarding
+);
 
 export default recruitmentRouter;

@@ -168,7 +168,7 @@
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
 							<!-- usuario mi psicologo -->
-							<v-list v-if="plan" dense two-line class="py-0">
+							<v-list v-if="plan && getMyPsy" dense two-line class="py-0">
 								<v-list-item @click="setSelectedPsy(getMyPsy)">
 									<v-list-item-avatar
 										style="border-radius: 50%"
@@ -347,6 +347,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
 import Pusher from 'pusher-js';
+import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
 
@@ -450,6 +451,10 @@ export default {
 				});
 			}
 
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
+
 			return filterArray
 				.map(item => ({
 					...item.psychologist,
@@ -464,7 +469,7 @@ export default {
 				if (psy)
 					return {
 						...this.getPsy(psy),
-						roomsUrl: this.plan.roomsUrl,
+						roomsUrl: this.plan && this.plan.roomsUrl ? this.plan.roomsUrl : '',
 					};
 				else return null;
 			}

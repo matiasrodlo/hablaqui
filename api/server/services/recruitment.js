@@ -210,6 +210,18 @@ const recruitmentService = {
 		);
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
 	},
+	async flagOnboarding(recruitedId, flags) {
+		const recruitedOnboarding = await Recruitment.findOneAndUpdate(
+			{ _id: recruitedId },
+			{
+				$set: {
+					flagOnboarding: flags,
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Onboarding actualizado', { recruitedOnboarding });
+	},
 };
 
 export default recruitmentService;
