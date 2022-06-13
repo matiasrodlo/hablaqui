@@ -72,13 +72,5 @@ authRouter.put(
 	passport.authenticate('jwt'),
 	authController.changeUserPassword
 );
-/**
- *
- */
-authRouter.put(
-	'/auth/user/verification/:id',
-	passport.authenticate('jwt'),
-	authController.changeVerifiedStatus
-);
 
 export default authRouter;

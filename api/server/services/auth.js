@@ -40,10 +40,6 @@ const login = async user => {
 			},
 		});
 	}
-	// comentado por JESUS marzo/24/2022 porque interrumpe el flujo
-	//el objeto user debe contener, ahora, un elemento isVerified que indica si la cuenta está o no verificada
-	// if (user.role === 'user' && !user.isVerified)
-	// 	return conflictResponse('Verifica tu correo');
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),
@@ -70,9 +66,7 @@ const logout = async user => {
 };
 
 const getSessions = async user => {
-	if (user.role === 'user') {
-		return await Sessions.find({ user: user._id });
-	}
+	if (user.role === 'user') return await Sessions.find({ user: user._id });
 
 	if (user.role === 'psychologist')
 		return await Sessions.find({ psychologist: user.psychologist });
@@ -105,7 +99,6 @@ const generateUser = async user => {
 		sessions: await getSessions(user),
 		state: user.state,
 		timeZone: user.timeZone,
-		isVerified: user.isVerified,
 	};
 };
 
@@ -113,24 +106,17 @@ const register = async payload => {
 	if (await User.exists({ email: payload.email })) {
 		return conflictResponse('Correo electronico en uso');
 	}
+
 	if (payload.role === 'psychologist')
 		if (await User.exists({ rut: payload.rut }))
 			return conflictResponse('Rut en uso');
+
 	const newUser = {
 		...payload,
-		isInvited: false,
 		email: payload.email.toLowerCase(),
 		password: bcrypt.hashSync(payload.password, 10),
 	};
 	const user = await User.create(newUser);
-	//Enviar correo de verificación
-	const token = generateJwt(user);
-	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${user._id}&token=${token}`;
-
-	if (process.env.NODE_ENV === 'development')
-		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
-	else await mailService.sendVerifyEmail(user, verifyurl);
-
 	// Segment identification
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
@@ -217,18 +203,6 @@ const changeUserPassword = async (user, newPassword, res) => {
 	}
 };
 
-const changeVerifiedStatus = async id => {
-	const user = await User.findById(id);
-
-	if (!user) return conflictResponse('Este usuario no existe');
-
-	user.isVerified = true;
-	await user.save();
-	if (user.role === 'user') await mailService.sendWelcomeNewUser(user);
-
-	return okResponse('Cuenta verificada');
-};
-
 const googleAuthCallback = (req, res) => {
 	const frontendUrL = process.env.FRONTEND_URL;
 	const jwt = generateJwt(req.user);
@@ -247,7 +221,6 @@ const authService = {
 	changeUserPassword,
 	googleAuthCallback,
 	getSessions,
-	changeVerifiedStatus,
 };
 
 export default Object.freeze(authService);

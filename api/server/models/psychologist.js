@@ -3,11 +3,11 @@
 import { Schema, model } from 'mongoose';
 
 let defaultSchedule = {
-	monday: 'busy',
-	tuesday: 'busy',
-	wednesday: 'busy',
-	thursday: 'busy',
-	friday: 'busy',
+	monday: [['09:00', '18:00']],
+	tuesday: [['09:00', '18:00']],
+	wednesday: [['09:00', '18:00']],
+	thursday: [['09:00', '18:00']],
+	friday: [['09:00', '18:00']],
 	saturday: 'busy',
 	sunday: 'busy',
 };
@@ -17,11 +17,6 @@ let defaultPreferences = {
 	minimumNewSession: 24,
 	minimumRescheduleSession: 24,
 	corporativeSessions: true,
-};
-
-let defaultInmediateAttention = {
-	activated: false,
-	expiration: '',
 };
 
 const defaultPrices = {
@@ -66,6 +61,22 @@ let experienceSchema = new Schema({
 		defautl: false,
 	},
 });
+
+let rating = new Schema(
+	{
+		author: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+		},
+		comment: {
+			type: String,
+		},
+		stars: {
+			type: Number,
+		},
+	},
+	{ timestamps: true }
+);
 
 let psyPlan = new Schema({
 	tier: {
@@ -197,22 +208,11 @@ let psychologist = new Schema({
 		type: Object,
 		required: false,
 	},
-	rating: {
-		type: Number,
-		default: 0,
-	},
+	ratings: [rating],
 	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',
-	},
-	inmediateAttention: {
-		type: Object,
-		default: defaultInmediateAttention,
-	},
-	isHide: {
-		type: Boolean,
-		default: false,
 	},
 });
 

@@ -70,7 +70,6 @@ let plan = new Schema(
 		remainingSessions: {
 			type: Number,
 		},
-		tokenToPay: { type: String, default: '' },
 		session: [session],
 	},
 	{ timestamps: true }
@@ -84,11 +83,6 @@ let sessionSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'psychologist',
 	},
-	numberSessionSuccess: {
-		type: Number,
-		default: 0,
-	},
-	evaluationNotifcation: { type: Boolean, default: false },
 	roomsUrl: {
 		type: String,
 	},

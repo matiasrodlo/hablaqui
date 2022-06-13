@@ -129,9 +129,7 @@
 						<div class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li
-									v-for="(formation, i) in psychologist.formation.filter(
-										el => el !== null
-									)"
+									v-for="(formation, i) in psychologist.formation"
 									:key="i"
 									class="my-1"
 								>

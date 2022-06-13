@@ -442,6 +442,7 @@ export default {
 			if (item) {
 				this.hiddenInput = item.current;
 				this.selectedExperience = item;
+				console.log(item);
 			} else {
 				this.hiddenInput = false;
 				this.selectedExperience = {
