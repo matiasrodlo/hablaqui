@@ -43,43 +43,6 @@ function generatePayload(date, batch) {
 	};
 }
 
-async function getNumberSuccess() {
-	const users = await User.find();
-	users.forEach(async user => {
-		const sessions = await Sessions.find({ user: user._id }).populate(
-			'psychologist',
-			'name'
-		);
-		sessions.forEach(async item => {
-			let successSessions = 0;
-			const plans = item.plan.filter(plan => plan.payment === 'success');
-			plans.forEach(plan => {
-				successSessions += plan.session.filter(
-					session => session.status === 'success'
-				).length;
-			});
-			await Sessions.updateOne(
-				{
-					_id: item._id,
-				},
-				{
-					$set: {
-						numberSessionSuccess: successSessions,
-						evaluationNotifcation:
-							successSessions >= 3 ? true : false,
-					},
-				}
-			);
-			if (!item.evaluationNotifcation && successSessions === 3) {
-				await mailService.sendEnabledEvaluation(
-					user,
-					item.psychologist
-				);
-			}
-		});
-	});
-}
-
 async function sendNotification(emails) {
 	emails.forEach(async e => {
 		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
@@ -133,32 +96,6 @@ async function getBatchId() {
 }
 
 const cronService = {
-	async statusInmediateAttention(token) {
-		if (token !== authToken)
-			return conflictResponse(
-				'ERROR! You are not authorized to use this endpoint.'
-			);
-		const psychologists = await psychologist.find();
-
-		psychologists.forEach(async psy => {
-			if (psy.inmediateAttention.activated) {
-				const expiration = psy.inmediateAttention.expiration;
-				if (moment(expiration).isBefore(moment(Date.now())))
-					await psychologist.findOneAndUpdate(
-						{ _id: psy._id },
-						{
-							$set: {
-								inmediateAttention: {
-									activated: false,
-									expiration: '',
-								},
-							},
-						}
-					);
-			}
-		});
-		return okResponse('Estados cambiados');
-	},
 	async scheduleChatEmails(token) {
 		if (token !== authToken)
 			return conflictResponse(
@@ -373,45 +310,7 @@ const cronService = {
 				logInfo(error);
 			}
 		}
-		await getNumberSuccess();
 		return okResponse('Sesiones actualizadas');
-	},
-	async limitToPayPlan(token) {
-		if (token !== authToken) {
-			return conflictResponse(
-				'ERROR! You are not authorized to use this endpoint.'
-			);
-		}
-		const sessions = await Sessions.find().populate('user psychologist');
-		sessions.forEach(item => {
-			const plans = item.plan.filter(plan => plan.payment === 'pending');
-			plans.forEach(async plan => {
-				if (
-					moment().isSameOrAfter(
-						moment(plan.createdAt).add(3, 'hours')
-					)
-				) {
-					await Sessions.findOneAndUpdate(
-						{
-							_id: item._id,
-							'plan._id': plan._id,
-						},
-						{
-							$set: {
-								'plan.$.payment': 'failed',
-								'plan.$.remainingSessions': 0,
-								'plan.$.session': [],
-							},
-						}
-					);
-					await mailService.sendPaymentFailed(
-						item.user,
-						item.psychologist
-					);
-				}
-			});
-		});
-		return okResponse('Planes actualizados');
 	},
 };
 

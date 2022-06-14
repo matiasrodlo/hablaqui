@@ -21,59 +21,28 @@
 					@click="() => $router.push({ name: 'psicologos' })"
 				/>
 			</v-sheet>
-			<v-list
-				id="listdrawer"
-				style="flex: 2"
-				dark
-				color="primary"
-				class="pt-0"
-				left
-				shaped
-				top
-			>
-				<!-- ocultado por peticion de daniel -->
-				<!-- <v-list-item
-					v-if="
-						psychologist &&
-						$auth.user.role === 'psychologist' &&
-						$auth.user.psychologist
-					"
-					inactive
-				>
+			<v-list style="flex: 2" dark color="primary" class="pt-0" left shaped top>
+				<v-list-item v-if="false" class="my-4" link>
 					<v-list-item-avatar size="35">
 						<v-btn outlined fab color="white">
-							<icon v-if="online" size="30" color="#FFFFFF" :icon="mdiAccount" />
-							<icon v-else size="30" color="#FFFFFF" :icon="mdiAccountOff" />
+							<icon v-if="online" size="30" color="#8BC34A" :icon="mdiAccount" />
+							<icon v-else size="30" color="red" :icon="mdiAccountOff" />
 						</v-btn>
 					</v-list-item-avatar>
 					<v-list-item-content>
 						<v-list-item-title class="font-weight-bold body-2">
-							<v-switch
-								v-model="online"
-								dense
-								hide-details
-								:loading="loadingStatus"
-								class="mt-0"
-								@click="setToggleStatus"
-							>
+							<v-switch v-model="online" dense>
 								<template #prepend>
-									<div class="white--text pt-1">
+									<div class="pt-1 white--text">
 										{{ online ? 'En linea' : 'Desconectado' }}
 									</div>
 								</template>
 							</v-switch>
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item> -->
+				</v-list-item>
 				<template v-for="(item, i) in links">
-					<v-list-item
-						v-if="item.visible"
-						:id="item.name"
-						:key="i"
-						class="my-4"
-						link
-						:to="item.link"
-					>
+					<v-list-item v-if="item.visible" :key="i" class="my-4" link :to="item.link">
 						<v-list-item-avatar size="35">
 							<v-img
 								height="35"
@@ -84,7 +53,7 @@
 							/>
 						</v-list-item-avatar>
 						<v-list-item-content>
-							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
+							<v-list-item-title class="font-weight-bold body-2">
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -169,97 +138,6 @@
 				</div>
 			</template>
 		</v-navigation-drawer>
-		<v-navigation-drawer
-			v-if="$auth.$state.user.role === 'psychologist'"
-			:value="onBoarding"
-			width="350"
-			class="elevation-6"
-			disable-resize-watcher
-			app
-			right
-		>
-			<v-list-item style="height: 120px" class="primary" dark>
-				<v-list-item-avatar size="35" @click="() => setOnBoarding()">
-					<v-btn icon>
-						<icon color="white" size="35" :icon="mdiChevronRight" />
-					</v-btn>
-				</v-list-item-avatar>
-				<v-list-item-content>
-					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
-					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
-						Da tus primeros pasos en Hablaquí Office.
-					</v-list-item-subtitle>
-				</v-list-item-content>
-			</v-list-item>
-			<v-expansion-panels flat>
-				<v-expansion-panel v-for="(step, i) in stepOnboarding" :key="i">
-					<v-expansion-panel-header v-if="step.visible">
-						<div class="text-left">
-							<icon
-								v-if="step.title === 'Explora las secciones'"
-								size="35"
-								:icon="mdiMapMarkerStar"
-							/>
-							<icon
-								v-else-if="step.title === 'Configura tu cuenta'"
-								size="35"
-								:icon="mdiCog"
-							/>
-							<icon
-								v-else-if="step.title === 'Añade a tus consultantes'"
-								size="35"
-								:icon="mdiAccountSupervisor"
-							/>
-							<icon
-								v-else-if="step.title === 'Añade eventos o bloquea horas'"
-								size="35"
-								:icon="mdiCalendar"
-							/>
-							<icon v-else size="35" color="#bfbfbf" :icon="mdiCircle" />
-							<span class="ml-2">
-								{{ step.title }}
-							</span>
-						</div>
-					</v-expansion-panel-header>
-					<v-expansion-panel-content>
-						<v-list dense>
-							<v-list-item-group
-								v-model="onSelectedStep"
-								color="primary"
-								@change="
-									() => {
-										if (onSelectedStep) setOnBoarding(false);
-									}
-								"
-							>
-								<v-list-item
-									v-for="(item, key) in step.items"
-									:key="key"
-									:value="item"
-									@click="$router.push({ name: item.route })"
-								>
-									<v-list-item-icon>
-										<icon v-if="item.done" size="20" :icon="mdiCheckCircle" />
-										<icon v-else size="20" color="#bfbfbf" :icon="mdiCircle" />
-									</v-list-item-icon>
-
-									<v-list-item-content>
-										<v-list-item-title class="body-2 font-weight-regular">
-											{{ item.title }}
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list-item-group>
-						</v-list>
-					</v-expansion-panel-content>
-				</v-expansion-panel>
-			</v-expansion-panels>
-			<template v-if="!$auth.user.onboarding" #append>
-				<div class="pointer my-6 primary--text text-center" @click="changeStateOnboarding">
-					Completar tareas (saltar)
-				</div>
-			</template>
-		</v-navigation-drawer>
 		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
 			<v-btn v-if="goBack" icon @click="() => $router.go(-1)">
 				<icon size="30" color="primary" :icon="mdiChevronLeft" />
@@ -274,21 +152,10 @@
 			:class="$vuetify.breakpoint.mdAndUp ? 'primary' : 'white'"
 			:style="{ 'padding-top': $vuetify.breakpoint.mdAndUp ? '' : '50px' }"
 		>
-			<!-- overlay onboarding -->
-			<v-overlay
-				v-if="selectedStep"
-				:value="!!selectedStep"
-				color="white"
-				:opacity="0.7"
-				z-index="2"
-				class="d-flex align-start justify-end"
-			>
-				<div class="primary--text pa-2">Presione esc para salir</div>
-			</v-overlay>
-			<v-dialog v-model="overlay" persistent max-width="300">
+			<v-overlay :value="overlay" color="white" :opacity="0.8">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text @click="welcomeDialog">
+						<v-btn text @click="changeStateOnboarding">
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
@@ -296,25 +163,23 @@
 						Bienvenido a Hablaquí Office
 					</v-card-text>
 					<v-card-text class="text-center body-2 px-6">
-						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
-						agenda una inducción a la plataforma.
+						Agenda un tour por tu oficina y aclara todas tus dudas
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+							href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
-						>
-							Agendar demo
+							>Agendar demo
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-dialog>
+			</v-overlay>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -327,23 +192,9 @@
 </template>
 
 <script>
-import {
-	mdiMenu,
-	mdiAccount,
-	mdiAccountOff,
-	mdiAlert,
-	mdiChevronLeft,
-	mdiCheckCircle,
-	mdiChevronRight,
-	mdiChevronDown,
-	mdiCircle,
-	mdiMapMarkerStar,
-	mdiCog,
-	mdiAccountSupervisor,
-	mdiCalendar,
-} from '@mdi/js';
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mdiMenu, mdiAccount, mdiAccountOff, mdiAlert, mdiChevronLeft } from '@mdi/js';
 import Snackbar from '@/components/Snackbar';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
 	components: {
@@ -354,20 +205,11 @@ export default {
 		return {
 			overlay: false,
 			loadingOnboarding: false,
-			loadingStatus: false,
-			mdiAccountSupervisor,
-			mdiCalendar,
-			mdiCog,
-			mdiChevronRight,
-			mdiMapMarkerStar,
 			mdiChevronLeft,
-			mdiChevronDown,
 			mdiAlert,
 			mdiAccount,
 			mdiAccountOff,
 			mdiMenu,
-			mdiCheckCircle,
-			mdiCircle,
 			drawer: true,
 			online: true,
 			isMini: true,
@@ -376,14 +218,6 @@ export default {
 	computed: {
 		expand() {
 			return true;
-		},
-		onSelectedStep: {
-			get() {
-				return this.selectedStep;
-			},
-			set(value) {
-				return this.setStep(value);
-			},
 		},
 		goBack() {
 			return (
@@ -691,78 +525,14 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		// lanzar onboarding al cargar
-		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
-		// 	this.setOnBoarding(true);
+	mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
-
-		if (this.$auth.$state.user.role === 'user') {
-			if (this.$auth.$state.user.sessions.length) {
-				if (this.plan.psychologist) {
-					const { psychologist } = await this.$axios.$get(
-						`/psychologists/one/${this.plan.psychologist}`
-					);
-					this.setPsychologist(psychologist);
-				}
-			} else {
-				this.setPsychologist(null);
-			}
-		}
-		if (this.$auth.$state.user.role === 'psychologist') {
-			let psychologist;
-			if (this.$auth.$state.user.psychologist) {
-				await this.getClients(this.$auth.$state.user.psychologist);
-				const res = await this.$axios.$get(
-					`/psychologists/one/${this.$auth.$state.user.psychologist}`
-				);
-				psychologist = res.psychologist;
-			} else {
-				const res = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
-				psychologist = res.recruited;
-			}
-			if (!psychologist.formation.length) {
-				psychologist.formation.push({
-					formationType: '',
-					description: '',
-					start: '',
-					end: '',
-				});
-			}
-			if (!psychologist.experience.length) {
-				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
-			}
-			this.setPsychologist(psychologist);
-		}
-
-		document.body.addEventListener('keyup', evt => {
-			evt = evt || window.event;
-			let isEscape = false;
-			if ('key' in evt) {
-				isEscape = evt.key === 'Escape' || evt.key === 'Esc';
-			} else {
-				isEscape = evt.keyCode === 27;
-			}
-			if (isEscape && this.selectedStep) {
-				this.setStep(null);
-			}
-		});
 	},
 	methods: {
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');
-		},
-		async setToggleStatus() {
-			this.loadingStatus = true;
-			await this.toggleStatus();
-			this.loadingStatus = false;
-		},
-		welcomeDialog() {
-			this.overlay = false;
-			this.setOnBoarding(true);
-			// this.changeStateOnboarding();
 		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;
@@ -774,16 +544,9 @@ export default {
 			this.overlay = false;
 			this.$auth.fetchUser();
 		},
-		...mapMutations({
-			setListenerUserOnline: 'User/setListenerUserOnline',
-			setOnBoarding: 'User/setOnBoarding',
-			setStep: 'User/setStep',
-			setPsychologist: 'Psychologist/setPsychologist',
-		}),
+		...mapMutations({ setListenerUserOnline: 'User/setListenerUserOnline' }),
 		...mapActions({
-			getClients: 'Psychologist/getClients',
 			updateOne: 'User/updateOne',
-			toggleStatus: 'Psychologist/toggleStatus',
 		}),
 	},
 };

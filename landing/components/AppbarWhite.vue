@@ -210,7 +210,7 @@
 										link
 										:to="item.link"
 									>
-										<v-list-item-avatar size="40" :color="item.color">
+										<v-list-item-avatar size="40" color="primary">
 											<v-img
 												contain
 												height="30"
@@ -221,8 +221,7 @@
 										<v-list-item-content>
 											<v-list-item-title
 												class="secondary--text font-weight-bold body-2"
-											>
-												{{ item.name }}
+												>{{ item.name }}
 											</v-list-item-title>
 										</v-list-item-content>
 									</v-list-item>
@@ -308,34 +307,21 @@ export default {
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
-					name: 'Postulación',
-					link: { name: 'postulacion' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/info.png',
-					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.user.role === 'psychologist' &&
-						!this.$auth.user.psychologist,
-				},
-				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/chat.png',
+					img: `https://cdn.hablaqui.cl/static/chat.png`,
 					visible,
 				},
 				{
 					name: 'Mi agenda',
 					link: { name: 'dashboard-agenda' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
+					img: `https://cdn.hablaqui.cl/static/sesiones.png`,
 					visible,
 				},
 				{
 					name: 'Pagos',
 					link: { name: 'dashboard-pagos' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/pay.png',
+					img: `https://cdn.hablaqui.cl/static/pay.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
@@ -343,17 +329,16 @@ export default {
 				{
 					name: 'Consultantes',
 					link: { name: 'dashboard-consultantes' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
+					img: `https://cdn.hablaqui.cl/static/icon-consultante.png`,
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
 				},
+				// { name: 'Diario de bienestar', link: '/dashboard/diario', img: '/img/notas.png' },
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/home.png',
+					img: `https://cdn.hablaqui.cl/static/home.png`,
 					visible:
 						(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 						(this.$auth.$state.loggedIn && this.$auth.user.role === 'user'),
@@ -361,8 +346,7 @@ export default {
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
-					color: 'primary',
-					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					img: `https://cdn.hablaqui.cl/static/apps.png`,
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 			];
