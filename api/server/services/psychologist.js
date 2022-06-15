@@ -810,21 +810,21 @@ const createPlan = async ({ payload }) => {
 	let expirationDate = '';
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
-		expirationDate = moment()
-			.add({ weeks: 1 })
-			.toISOString();
+		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
+			.add(50, 'minutes')
+			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
 		expirationDate = moment()
 			.add({ months: 1 })
-			.toISOString();
+			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = moment()
 			.add({ months: 3 })
-			.toISOString();
+			.format();
 	}
 
 	const newSession = {
@@ -1832,6 +1832,10 @@ const customNewSession = async (user, payload) => {
 			};
 			sessions.push(newSession);
 		}
+
+		let isInvited = false;
+		if (payload.type !== 'compromiso privado')
+			isInvited = await userIsInvited(user.psychologist, payload.user);
 
 		// Objeto con el plan a crear
 		const newPlan = {

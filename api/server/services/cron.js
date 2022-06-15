@@ -138,14 +138,14 @@ const cronService = {
 							await mailService.sendReminderUser(
 								user,
 								psy,
-								emailInfo.sessionDate,
+								sessionDate,
 								batch
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
 							await mailService.sendReminderPsy(
 								user,
 								psy,
-								emailInfo.sessionDate,
+								sessionDate,
 								batch
 							);
 						}

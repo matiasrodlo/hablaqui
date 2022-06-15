@@ -83,7 +83,7 @@
 					</div>
 					<div>
 						<div class="text-right primary--text font-weight-bold">
-							${{ item.total }}
+							{{ item.finalAmount }}
 						</div>
 						<div class="font-weight-medium caption secondary--text text-right mt-1">
 							{{ formatDate(item.date) }}
@@ -113,7 +113,7 @@
 						"
 					>
 						<span>Monto</span>
-						<span>${{ item.amount }}</span>
+						<span>{{ item.amount }}</span>
 					</div>
 					<div
 						class="
@@ -137,7 +137,7 @@
 						"
 					>
 						<span>Monto final</span>
-						<span>${{ item.total }}</span>
+						<span>{{ item.finalAmount }}</span>
 					</div>
 				</v-expansion-panel-content>
 			</v-expansion-panel>

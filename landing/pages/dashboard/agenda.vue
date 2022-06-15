@@ -367,12 +367,14 @@
 												cols="6"
 											>
 												<v-text-field
-													v-model="valueSession"
+													:value="valueSession"
 													label="Valor"
 													dense
 													hide-details
 													outlined
+													type="number"
 													suffix="CLP"
+													@input="setPrice"
 												></v-text-field>
 											</v-col>
 											<v-col
@@ -1147,6 +1149,17 @@ export default {
 			if (this.plan && this.plan.psychologist) {
 				this.addAppointment({ date: null });
 			} else this.$router.push({ name: 'psicologos' });
+		},
+		setPrice(e) {
+			if (this.verifyOnlyNumbers(e)) {
+				this.valueSession = Number(e);
+			} else {
+				this.valueSession = Number(e.split('.').join(''));
+			}
+		},
+		verifyOnlyNumbers(value) {
+			const regex = /^[0-9]*$/;
+			return regex.test(value.toString());
 		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',

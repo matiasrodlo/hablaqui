@@ -34,6 +34,16 @@ let session = new Schema({
 	},
 });
 
+let defaultOnboarding = {
+	photo: false,
+	bankData: false,
+	setSchedule: false,
+	scheduleIntervals: false,
+	timeToSchedule: false,
+	timeToReschedule: false,
+	sessionPrice: false,
+};
+
 let defaultSchedule = {
 	monday: [['09:00', '18:00']],
 	tuesday: [['09:00', '18:00']],
@@ -330,6 +340,10 @@ let recruitment = new Schema(
 		},
 		stampSetPrices: {
 			type: String,
+		},
+		flagOnboarding: {
+			type: Object,
+			default: defaultOnboarding,
 		},
 	},
 	{

@@ -306,7 +306,224 @@ export default {
 				return 'Consultante';
 			return '';
 		},
-		...mapGetters({ listenerUserOnline: 'User/listenerUserOnline' }),
+		hasAvatar() {
+			return this.psychologist && this.psychologist.avatar;
+		},
+		hasBankdata() {
+			return (
+				this.psychologist &&
+				this.psychologist.paymentMethod &&
+				this.psychologist.paymentMethod.bank &&
+				this.psychologist.paymentMethod.accountType &&
+				this.psychologist.paymentMethod.email &&
+				this.psychologist.paymentMethod.rut &&
+				this.psychologist.paymentMethod.name
+			);
+		},
+		hasSchedule() {
+			return (
+				this.psychologist &&
+				this.psychologist.schedule &&
+				(this.psychologist.schedule.monday !== 'busy' ||
+					this.psychologist.schedule.tuesday !== 'busy' ||
+					this.psychologist.schedule.wednesday !== 'busy' ||
+					this.psychologist.schedule.thursday !== 'busy' ||
+					this.psychologist.schedule.friday !== 'busy' ||
+					this.psychologist.schedule.saturday !== 'busy' ||
+					this.psychologist.schedule.sunday !== 'busy')
+			);
+		},
+		hasPreferences() {
+			return (
+				this.psychologist &&
+				this.psychologist.preferences &&
+				this.psychologist.preferences.minimumNewSession > 0 &&
+				this.psychologist.preferences.minimumRescheduleSession > 0
+			);
+		},
+		hasSessionPrice() {
+			return (
+				this.psychologist &&
+				this.psychologist.sessionPrices &&
+				this.psychologist.sessionPrices.video > 0
+			);
+		},
+		hasConsultantes() {
+			return this.consultantes.length;
+		},
+		hasEvents() {
+			return this.$auth.user.sessions.length;
+		},
+		stepOnboarding() {
+			return [
+				{
+					title: 'Configura tu cuenta',
+					route: '/dashboard/perfil',
+					items: [
+						{
+							title: 'Sube tu foto de perfil',
+							tab: 0,
+							card: {
+								title: 'Editamos tu fotografía',
+								description:
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
+								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
+							},
+							route: 'dashboard-perfil',
+							done: this.hasAvatar,
+						},
+						{
+							title: 'Añade tus datos bancarios',
+							tab: 0,
+							card: {
+								title: 'No te preocupes, cobramos por ti',
+								description:
+									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+							},
+							done: this.hasBankdata,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Configura tus horarios',
+							tab: 1,
+							card: {
+								title: 'Tu horario de trabajo diario',
+								description:
+									'Selecciona los horarios que tendrás disponible para atender.',
+							},
+							done: this.hasSchedule,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Intervalos en tu horario',
+							tab: 1,
+							card: {
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
+							},
+							done: this.hasSchedule,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Anticipación para agendar',
+							tab: 2,
+							card: {
+								title: 'Ya no más sesiones muy encima',
+								description:
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+							},
+							done: this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Configura el tiempo de reprogramación y agenda',
+							tab: 2,
+							card: {
+								title: 'No pierdas tu tiempo',
+								description:
+									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+							},
+							done: this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Añade el precio de tus sesiones',
+							tab: 2,
+							card: {
+								title: 'Ingresa el valor de tus sesiones',
+								description:
+									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+							},
+							done: this.hasSessionPrice,
+							route: 'dashboard-perfil',
+						},
+					],
+					visible: true,
+					done:
+						this.hasSessionPrice &&
+						this.hasPreferences &&
+						this.hasSchedule &&
+						this.hasBankdata &&
+						this.hasAvatar,
+				},
+				{
+					title: 'Explora las secciones',
+					route: '/dashboard/chat',
+					items: [
+						{
+							title: 'Chat',
+							route: 'dashboard-chat',
+							card: {
+								title: 'Tus conversaciones en un solo lugar',
+								description:
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							done: this.$auth.user.onboarding || this.stepLinks[0],
+						},
+						{
+							title: 'Mi agenda',
+							card: {
+								title: 'Gestiona tu agenda',
+								description:
+									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-agenda',
+							done: this.$auth.user.onboarding || this.stepLinks[1],
+						},
+						{
+							title: 'Mis pagos',
+							card: {
+								title: 'Gestiona tus pagos',
+								description:
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-pagos',
+							done: this.$auth.user.onboarding || this.stepLinks[2],
+						},
+						{
+							title: 'Mis consultantes',
+							card: {
+								title: 'Gestiona los consultantes',
+								description:
+									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+								link: '',
+								route: 'dashboard-chat',
+							},
+							route: 'dashboard-consultantes',
+							done: this.$auth.user.onboarding || this.stepLinks[3],
+						},
+					],
+					visible: true,
+					done: true,
+				},
+			];
+		},
+		...mapGetters({
+			listenerUserOnline: 'User/listenerUserOnline',
+			onBoarding: 'User/onBoarding',
+			stepLinks: 'User/stepLinks',
+			selectedStep: 'User/step',
+			psychologist: 'Psychologist/psychologist',
+			plan: 'User/plan',
+			consultantes: 'Psychologist/clients',
+		}),
+	},
+	watch: {
+		psychologist(newValue) {
+			if (
+				newValue &&
+				this.$auth.user.psychologist &&
+				this.$auth.user.role === 'psychologist'
+			) {
+				this.online = newValue.inmediateAttention.activated;
+			}
+		},
 	},
 	mounted() {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
