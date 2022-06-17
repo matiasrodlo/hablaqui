@@ -162,8 +162,6 @@ export default {
 						expirationDate: '',
 						subscriptionPeriod: '',
 						price: 0,
-						hablaquiFee: 0.2,
-						paymentFee: 0.0399,
 					},
 				],
 			},
