@@ -1052,7 +1052,7 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											saveStep(4);
+											saveStep(5);
 										}
 									"
 								>
@@ -1060,7 +1060,7 @@
 								</v-btn>
 							</div>
 						</v-stepper-content>
-						<v-stepper-content step="4">
+						<!-- <v-stepper-content step="4">
 							<plans
 								v-if="form._id"
 								:next="
@@ -1069,7 +1069,7 @@
 									}
 								"
 							/>
-						</v-stepper-content>
+						</v-stepper-content> -->
 						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -1132,7 +1132,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		plans: () => import('~/components/postulacion/Plans'),
+		// plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -1228,6 +1228,13 @@ export default {
 					const { data } = await this.$axios('/recruitment/update?step=' + this.step, {
 						method: 'put',
 						data: this.form,
+					});
+					this.$segment.track(this.form._id.toString(), {
+						event: 'psy-application-step',
+						properties: {
+							step,
+							email: this.$auth.user.email,
+						},
 					});
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();

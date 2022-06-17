@@ -45,11 +45,11 @@ let defaultOnboarding = {
 };
 
 let defaultSchedule = {
-	monday: [['09:00', '18:00']],
-	tuesday: [['09:00', '18:00']],
-	wednesday: [['09:00', '18:00']],
-	thursday: [['09:00', '18:00']],
-	friday: [['09:00', '18:00']],
+	monday: 'busy',
+	tuesday: 'busy',
+	wednesday: 'busy',
+	thursday: 'busy',
+	friday: 'busy',
 	saturday: 'busy',
 	sunday: 'busy',
 };

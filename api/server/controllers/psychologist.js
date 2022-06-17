@@ -5,6 +5,17 @@ import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
 const psychologistsController = {
+	async hidePsychologist(req, res) {
+		try {
+			const { idPsy } = req.params;
+			const { data, code } = await psychologistsService.hidePsychologist(
+				idPsy
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 	async getAll(req, res) {
 		try {
 			const { data, code } = await psychologistsService.getAll();
@@ -63,6 +74,22 @@ const psychologistsController = {
 				data,
 				code,
 			} = await psychologistsService.formattedSessionsAll();
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
+	async sessionsLimit(req, res) {
+		try {
+			const { body } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.formattedSessionsAll(body.ids);
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(
@@ -387,6 +414,22 @@ const psychologistsController = {
 			);
 		}
 	},
+	async paymentsInfoFromId(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.paymentsInfoFromId(psy);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
+		}
+	},
 	async deleteCommitment(req, res) {
 		try {
 			const { psyId, planId } = req.params;
@@ -501,6 +544,20 @@ const psychologistsController = {
 			const { user } = req;
 			const { data, code } = await psychologistsService.getTransactions(
 				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async changeToInmediateAttention(req, res) {
+		try {
+			const { user } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.changeToInmediateAttention(
+				user.psychologist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

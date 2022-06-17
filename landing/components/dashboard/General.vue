@@ -24,11 +24,27 @@
 				</v-card>
 			</template>
 		</div>
-		<v-expansion-panels v-model="panel" multiple class="hidden-sm-and-down mb-4">
-			<v-expansion-panel>
+		<v-expansion-panels
+			v-model="panel"
+			multiple
+			class="hidden-sm-and-down mb-4"
+			:style="step && step.title === 'Añade tus datos bancarios' ? 'z-index: 3' : ''"
+		>
+			<v-expansion-panel
+				:disabled="!!step"
+				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+			>
 				<v-expansion-panel-header>
 					<div>
-						<div class="text-h6" style="color: #3c3c3b">Configuración personal</div>
+						<div class="text-h6" style="color: #3c3c3b">
+							Configuración personal
+							<v-progress-circular
+								v-if="!psychologist && $auth.$state.user.role === 'psychologist'"
+								size="20"
+								indeterminate
+								color="primary"
+							></v-progress-circular>
+						</div>
 						<div class="text--secondary">
 							Revisa aquí tu nombre, apellido, zona horaria contraseña, entre otros.
 						</div>
@@ -44,7 +60,7 @@
 			</v-expansion-panel>
 
 			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
-				<v-expansion-panel-header>
+				<v-expansion-panel-header style="position: relative">
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
 							Datos bancarios
@@ -58,6 +74,25 @@
 						<div class="text--secondary">
 							Tus datos de facturación en un solo lugar.
 						</div>
+						<card-onboarding
+							v-if="step && step.title === 'Añade tus datos bancarios'"
+							style="position: absolute; top: -65px; left: 30%; z-index: 3"
+							arrow="arrow-left"
+							:next="
+								() => {
+									return {
+										title: 'Configura tus horarios',
+										tab: 1,
+										card: {
+											title: 'Tu horario de trabajo diario',
+											description:
+												'Selecciona los horarios que tendrás disponible para atender.',
+										},
+										route: 'dashboard-perfil',
+									};
+								}
+							"
+						/>
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content v-if="psychologist">
@@ -65,7 +100,11 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
-			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+			<v-expansion-panel
+				v-if="$auth.$state.user.role === 'psychologist'"
+				:disabled="!!step"
+				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+			>
 				<v-expansion-panel-header>
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
@@ -90,7 +129,11 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
-			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+			<v-expansion-panel
+				v-if="$auth.$state.user.role === 'psychologist'"
+				:disabled="!!step"
+				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+			>
 				<v-expansion-panel-header>
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
@@ -119,6 +162,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
 	components: {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),
@@ -145,6 +189,9 @@ export default {
 		return {
 			panel: [],
 		};
+	},
+	computed: {
+		...mapGetters({ step: 'User/step' }),
 	},
 };
 </script>
