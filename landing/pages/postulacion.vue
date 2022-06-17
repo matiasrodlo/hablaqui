@@ -1052,7 +1052,7 @@
 									@click="
 										() => {
 											form.isFormCompleted = true;
-											saveStep(5);
+											saveStep(4);
 										}
 									"
 								>
@@ -1060,7 +1060,7 @@
 								</v-btn>
 							</div>
 						</v-stepper-content>
-						<!-- <v-stepper-content step="4">
+						<v-stepper-content step="4">
 							<plans
 								v-if="form._id"
 								:next="
@@ -1069,7 +1069,7 @@
 									}
 								"
 							/>
-						</v-stepper-content> -->
+						</v-stepper-content>
 						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -1132,7 +1132,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		// plans: () => import('~/components/postulacion/Plans'),
+		plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -1229,13 +1229,6 @@ export default {
 						method: 'put',
 						data: this.form,
 					});
-					this.$segment.track(this.form._id.toString(), {
-						event: 'psy-application-step',
-						properties: {
-							step,
-							email: this.$auth.user.email,
-						},
-					});
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
 				} else {
@@ -1248,8 +1241,6 @@ export default {
 					if (step - 1 === 1) this.setUser();
 				}
 				this.step = step;
-			} else {
-				alert('Por favor complete el formulario');
 			}
 			this.loadingStep = false;
 		},
@@ -1257,18 +1248,43 @@ export default {
 		validationStep(step) {
 			// validamos el step 1
 			if (step - 1 === 1) {
+				if (
+					!this.form.timeZone ||
+					!this.form.gender ||
+					!this.form.languages.length ||
+					!this.form.birthDate ||
+					!this.form.country ||
+					!this.form.region ||
+					!this.form.comuna ||
+					!this.form.personalDescription ||
+					!this.form.phone.code ||
+					!this.form.phone.number
+				) {
+					alert(`Complete los campos faltantes`);
+				}
 				return (
 					this.form.timeZone &&
 					this.form.gender &&
 					this.form.languages.length &&
 					this.form.birthDate &&
+					this.form.country &&
 					this.form.region &&
 					this.form.comuna &&
-					this.form.personalDescription
+					this.form.personalDescription &&
+					this.form.phone.code &&
+					this.form.phone.number
 				);
 			}
 			// validamos el step 2
 			else if (step - 1 === 2) {
+				if (
+					!this.form.professionalDescription ||
+					!this.form.formation.length ||
+					!this.form.experience.length ||
+					!this.form.specialties.length ||
+					!this.form.models.length
+				)
+					alert('Complete los campo faltantes');
 				return (
 					this.form.professionalDescription &&
 					this.form.formation.length &&

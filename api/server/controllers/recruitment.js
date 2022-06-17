@@ -87,6 +87,24 @@ const recruitmentController = {
 			errorCallback(e, res, 'Error aprobando el postulante');
 		}
 	},
+	/**
+	 * @description - This function is used to update oonboarding flag from recruitment
+	 * @param {object} req - The request object (Recruitment id of the profile and new flags to update)
+	 * @param res - The response object (Response code and the new recruitment profile)
+	 * @returns {object} - The response object
+	 */
+	async flagOnboarding(req, res) {
+		try {
+			const { recruitedId } = req.params;
+			const { data, code } = await recruitmentService.flagOnboarding(
+				recruitedId,
+				req.body
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el postulante');
+		}
+	},
 };
 
 export default Object.freeze(recruitmentController);

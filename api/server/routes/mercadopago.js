@@ -15,16 +15,16 @@ const mercadopagoRouter = Router();
  * @returns: Preferencia, pero lo importante es el init_point (la URL para redireccionar a mercadopago)
 
  */
-/*mercadopagoRouter.post(
+mercadopagoRouter.post(
 	'/mercadopago/create-preference',
 	mercadopagoController.createPreference
-);*/
+);
 
 /**
  * @description: Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
  */
 mercadopagoRouter.get(
-	'/mercadopago/success-pay/:sessionsId/:planId',
+	'/mercadopago/success-pay/:planId',
 	mercadopagoController.successPay
 );
 

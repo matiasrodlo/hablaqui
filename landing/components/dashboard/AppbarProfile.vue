@@ -32,8 +32,7 @@
 				</div>
 			</a>
 		</div>
-		<!-- ocultado por peticion de daniel -->
-		<!-- <div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
+		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
 					<v-img
@@ -46,7 +45,7 @@
 					Mi plan premium
 				</div>
 			</nuxt-link>
-		</div> -->
+		</div>
 		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
 				Centro de ayuda
@@ -57,23 +56,6 @@
 				Centro de ayuda
 			</nuxt-link>
 		</div>
-		<v-btn
-			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"
-			class="mx-2"
-			small
-			elevation="1"
-			fab
-			color="white"
-			@click="() => setOnBoarding()"
-		>
-			<v-img
-				src="https://cdn.hablaqui.cl/static/flag.png"
-				contain
-				height="25"
-				width="25"
-				class="mx-2"
-			></v-img>
-		</v-btn>
 		<v-btn class="ml-2" small elevation="1" fab color="white" @click="logout">
 			<icon :icon="mdiLogout" />
 		</v-btn>
@@ -81,8 +63,7 @@
 </template>
 
 <script>
-import { mdiLogout, mdiChevronLeft, mdiFlag } from '@mdi/js';
-import { mapMutations, mapGetters } from 'vuex';
+import { mdiLogout, mdiChevronLeft } from '@mdi/js';
 
 export default {
 	components: {
@@ -98,7 +79,6 @@ export default {
 		return {
 			mdiChevronLeft,
 			mdiLogout,
-			mdiFlag,
 		};
 	},
 	computed: {
@@ -113,16 +93,12 @@ export default {
 				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
 			);
 		},
-		...mapGetters({
-			psychologist: 'Psychologist/psychologist',
-		}),
 	},
 	methods: {
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
-		...mapMutations({ setOnBoarding: 'User/setOnBoarding' }),
 	},
 };
 </script>

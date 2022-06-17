@@ -5,15 +5,10 @@
 		<!-- desktop -->
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
-			:get-sessions-limit="getSessions"
 			class="hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
-			:loading-psychologist="loadingPsychologist"
-			:get-sessions-limit="getSessions"
-			class="hidden-md-and-up"
-		/>
+		<psicologos-mobile :loading-psychologist="loadingPsychologist" class="hidden-md-and-up" />
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -63,6 +58,11 @@ export default {
 					property: 'og:url',
 					content: process.env.VUE_APP_LANDING + '/psicologos',
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
+				},
 			],
 			link: [
 				{
@@ -93,13 +93,11 @@ export default {
 	methods: {
 		async initialFetch() {
 			await this.getAppointments();
-		},
-		getSessions(ids) {
-			this.getSessionsLimit(ids);
+			this.getFormattedSessionsAll();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
 	},
 };

@@ -6,17 +6,11 @@ export default {
 	setPsychologists(state, value) {
 		state.psychologists = Object.freeze(value);
 	},
-	setPsychologist(state, value) {
-		state.psychologist = value;
-	},
 	setPsychologistsPagination(state, value) {
 		state.psychologists = [...state.psychologists, ...value];
 	},
 	setLoadingPsychologist(state, value) {
 		state.loadingPsychologist = value;
-	},
-	setTransactions(state, value) {
-		state.transactions = value;
 	},
 	setPage(state, value) {
 		state.page = value;
@@ -56,21 +50,6 @@ export default {
 				})),
 			};
 		});
-	},
-	setSessionsLimit(state, items) {
-		moment.locale('es');
-		state.sessionsLimit = state.sessionsLimit.concat(
-			items.map(item => {
-				return {
-					psychologist: item.psychologist,
-					sessions: item.sessions.map(el => ({
-						...el,
-						text: moment(el.text).format('ddd'),
-						day: moment(el.day, 'DD MMM').format('DD MMM'),
-					})),
-				};
-			})
-		);
 	},
 	setClients(state, value) {
 		state.clients = value;

@@ -33,7 +33,7 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
+			success: `${api_url}api/v1/mercadopago/success-pay/${body.plan}`,
 			// redirection to profile psychologist
 			failure: `${landing_url}/${body.psychologist}`,
 			pending: `${landing_url}/${body.psychologist}`,
@@ -44,7 +44,7 @@ const createPreference = async body => {
 
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
-	return resBody;
+	return okResponse('preference created', resBody);
 };
 
 /**
@@ -178,12 +178,9 @@ const successPay = async params => {
 		plan => plan._id.toString() === planId
 	)[0];
 	const sessionData = planData.session[0];
-	const originalDate = sessionData.date.split(' ');
-	const date = originalDate[0].split('/');
-	const dateFormatted = `${date[2]}-${date[0]}-${date[1]}T${originalDate[1]}:00-03:00`;
 	// Email scheduling for appointment reminder for the user
 	await email.create({
-		sessionDate: dateFormatted,
+		sessionDate: moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -194,7 +191,7 @@ const successPay = async params => {
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
-		sessionDate: dateFormatted,
+		sessionDate: moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
@@ -212,14 +209,14 @@ const successPay = async params => {
 	await mailService.sendScheduleToUser(
 		user,
 		psy,
-		dateFormatted,
+		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
 	await mailService.sendScheduleToPsy(
 		user,
 		psy,
-		dateFormatted,
+		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);

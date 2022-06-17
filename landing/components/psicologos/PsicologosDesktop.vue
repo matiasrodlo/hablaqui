@@ -68,7 +68,7 @@
 		>
 			<v-container fluid style="max-width: 1200px">
 				<v-row>
-					<v-col id="menuSpecialties" cols="3">
+					<v-col id="menuSpecialties" cols="4">
 						<v-menu
 							ref="menuSpecialties"
 							v-model="menuSpecialties"
@@ -118,39 +118,6 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<!-- ocultado por peticion de daniel -->
-					<!-- <v-col id="selectStatus" cols="2" style="position: relative">
-						<div
-							class="pointer"
-							@click="
-								() => {
-									status = !status;
-									changeInput();
-								}
-							"
-						>
-							<v-text-field
-								disabled
-								outlined
-								readonly
-								style="border-color: #04c396"
-								hide-details
-								dense
-								class="white"
-								value="Online"
-							>
-								<template #prepend-inner>
-									<div>
-										<icon
-											size="25px"
-											:color="status ? '#04c396' : '#54565a'"
-											:icon="mdiAccount"
-										/>
-									</div>
-								</template>
-							</v-text-field>
-						</div>
-					</v-col> -->
 					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
 							ref="menuGender"
@@ -244,7 +211,7 @@
 							></v-autocomplete>
 						</div>
 					</v-col>
-					<v-col id="selectOthers" cols="3" style="position: relative">
+					<v-col id="selectOthers" cols="2" style="position: relative">
 						<v-menu
 							ref="menuOthers"
 							v-model="menuOthers"
@@ -385,7 +352,7 @@
 				</v-col>
 				<template v-else>
 					<template v-for="(item, index) in filterLevelThree">
-						<v-col v-if="5 * page > index" :key="item._id" cols="12">
+						<v-col v-if="10 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
 									callback: (isVisible, entry) =>
@@ -395,55 +362,6 @@
 								:height="fullcard.includes(item._id) ? '100%' : '300px'"
 								class="item text-center mt-6"
 							>
-								<div
-									v-if="item.rating > 0"
-									style="position: absolute; top: 30px; left: 0"
-								>
-									<div
-										class="
-											d-flex
-											justify-space-between
-											align-center
-											info
-											rounded-r-lg
-											pa-2
-										"
-										style="
-											background-color: rgba(0, 121, 255, 0.23) !important;
-											width: 70px;
-										"
-									>
-										<v-img
-											style="width: 20px; height: 20px"
-											contain
-											src="https://cdn.hablaqui.cl/static/start-2.png"
-											lazy-src="https://cdn.hablaqui.cl/static/start-2.png"
-										></v-img>
-										<span
-											class="body-1"
-											style="width: 30px; height: 20px; color: #484848"
-											>{{ item.rating.toFixed(1) }}</span
-										>
-									</div>
-								</div>
-								<!-- ocultado por peticion de daniel -->
-								<!-- <div
-									v-if="item.inmediateAttention.activated"
-									style="position: absolute; top: 0; right: 0"
-								>
-									<div
-										style="background-color: #04c396"
-										class="
-											white--text
-											rounded-bl-xl rounded-tr-lg
-											pr-4
-											pl-6
-											caption
-										"
-									>
-										¡Disponible para atender ahora!
-									</div>
-								</div> -->
 								<v-row>
 									<v-col
 										cols="3"
@@ -551,20 +469,6 @@
 												>
 													Quiero saber más
 												</v-btn>
-												<v-btn
-													v-if="
-														!$auth.$state.loggedIn ||
-														$auth.$state.user.role === 'user'
-													"
-													small
-													rounded
-													color="#56b5fc"
-													dark
-													class="px-4 py-2"
-													@click="() => goChat(item)"
-												>
-													Enviar mensajes
-												</v-btn>
 											</div>
 										</div>
 									</v-col>
@@ -622,7 +526,7 @@
 </template>
 
 <script>
-import { mdiChevronDown, mdiAccount } from '@mdi/js';
+import { mdiChevronDown } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -634,15 +538,10 @@ export default {
 		loadingPsychologist: {
 			type: Boolean,
 		},
-		getSessionsLimit: {
-			type: Function,
-			required: true,
-		},
 	},
 	data() {
 		return {
 			mdiChevronDown,
-			mdiAccount,
 			menuGender: false,
 			menuSpecialties: false,
 			menuOthers: false,
@@ -657,8 +556,7 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: null,
-			status: false,
+			page: 1,
 		};
 	},
 	computed: {
@@ -693,14 +591,7 @@ export default {
 		 */
 		filterLevelOne() {
 			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			if (
-				!this.gender.length &&
-				!this.models.length &&
-				!this.languages.length &&
-				!this.status
-			)
-				return result;
-			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
+			if (!this.gender.length && !this.models.length && !this.languages.length) return result;
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
@@ -725,16 +616,8 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsLimit',
+			sessions: 'Psychologist/sessionsFormattedAll',
 		}),
-	},
-	watch: {
-		page(value, oldValue) {
-			let prev = 0;
-			if (oldValue) prev = oldValue;
-			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
-			this.getSessionsLimit(ids);
-		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -753,9 +636,7 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.filterLevelThree.length / 5) {
-				this.page += 1;
-			}
+			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))
@@ -786,15 +667,6 @@ export default {
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
-		},
-		goChat(psychologist) {
-			if (!this.$auth.$state.loggedIn) {
-				this.$router.push({
-					path: `/auth/?register=true&psychologist=${psychologist.username}`,
-				});
-			} else {
-				return this.$router.push(`/${psychologist.username}/?chat=true`);
-			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

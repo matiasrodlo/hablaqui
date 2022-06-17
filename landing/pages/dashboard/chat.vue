@@ -1,27 +1,6 @@
 <template>
 	<div>
-		<card-onboarding
-			v-if="stepOnboarding && stepOnboarding.title === 'Chat'"
-			style="position: absolute; top: 130px; left: 10px; z-index: 3"
-			arrow="arrow-left"
-			:next="
-				() => {
-					setStepLinks(0);
-					$router.push({ name: 'dashboard-agenda' });
-					return {
-						title: 'Mi agenda',
-						card: {
-							title: 'Despreocúpate y organiza tu agenda',
-							description:
-								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-							link: '',
-						},
-						route: 'dashboard-agenda',
-					};
-				}
-			"
-		/>
-		<v-overlay z-index="1" :value="initLoading">
+		<v-overlay :value="initLoading">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
 		<v-container fluid style="height: 100vh">
@@ -168,7 +147,7 @@
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
 							<!-- usuario mi psicologo -->
-							<v-list v-if="plan" dense two-line class="py-0">
+							<v-list v-if="plan && getMyPsy" dense two-line class="py-0">
 								<v-list-item @click="setSelectedPsy(getMyPsy)">
 									<v-list-item-avatar
 										style="border-radius: 50%"
@@ -340,6 +319,7 @@
 				</template>
 			</v-row>
 		</v-container>
+		<recruited-overlay />
 	</div>
 </template>
 
@@ -347,6 +327,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
 import Pusher from 'pusher-js';
+import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
 
@@ -355,6 +336,7 @@ export default {
 		avatar: () => import('~/components/Avatar'),
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Channel: () => import('~/components/chat/Channel'),
+		RecruitedOverlay: () => import('~/components/RecruitedOverlay'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -450,6 +432,10 @@ export default {
 				});
 			}
 
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
+
 			return filterArray
 				.map(item => ({
 					...item.psychologist,
@@ -464,19 +450,42 @@ export default {
 				if (psy)
 					return {
 						...this.getPsy(psy),
-						roomsUrl: this.plan.roomsUrl,
+						roomsUrl: this.plan && this.plan.roomsUrl ? this.plan.roomsUrl : '',
 					};
 				else return null;
 			}
 			return null;
+		},
+		// retorna el plan act o el ultimo expirado
+		plan() {
+			if (!this.$auth.$state.user || this.$auth.$state.user.role !== 'user') return null;
+			// Obtenemos un array con todo los planes solamente
+			const plans = this.$auth.$state.user.sessions.flatMap(item =>
+				item.plan.map(plan => ({
+					...plan,
+					idSessions: item._id,
+					roomsUrl: item.roomsUrl,
+					psychologist: item.psychologist,
+					user: item.user,
+					// dias de diferencia entre el dia que expiró y hoy
+					diff: moment(plan.expiration).diff(moment(), 'days'),
+				}))
+			);
+			const max = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
+
+			// retornamos el plan success y sin expirar
+			let plan = plans.find(
+				item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			);
+			// retornamos el ultimo plan succes y que expiro
+			if (!plan) plan = plans.find(item => item.diff === max);
+			return plan;
 		},
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
 			clients: 'Psychologist/clients',
-			plan: 'User/plan',
-			stepOnboarding: 'User/step',
 		}),
 	},
 	watch: {
@@ -531,6 +540,7 @@ export default {
 			}
 			if (this.$auth.$state.user.role === 'psychologist') {
 				if (this.$auth.$state.user.psychologist) {
+					await this.getClients(this.$auth.$state.user.psychologist);
 					await this.getMessages();
 				}
 				if ('client' in this.$route.query) {
@@ -646,6 +656,7 @@ export default {
 			return count;
 		},
 		...mapActions({
+			getClients: 'Psychologist/getClients',
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
 			sendMessage: 'Chat/sendMessage',
@@ -656,7 +667,6 @@ export default {
 		...mapMutations({
 			setChat: 'Chat/setChat',
 			setPsychologists: 'Psychologist/setPsychologists',
-			setStepLinks: 'User/setStepLinks',
 		}),
 	},
 };
