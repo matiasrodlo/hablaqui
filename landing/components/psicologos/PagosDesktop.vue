@@ -390,10 +390,10 @@ export default {
 			const data = {
 				event: 'checkout',
 				plan: plan.title,
-				cantidad_sesiones: plan.cant,
+				'cantidad-sesiones': plan.cant,
 				precio: plan.price,
 				especialista: this.psychologist.name + this.psychologist.lastName,
-				id_especialista: this.psychologist._id,
+				'id-especialista': this.psychologist._id,
 			};
 			window.dataLayer.push(data);
 		},
