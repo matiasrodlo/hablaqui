@@ -380,11 +380,22 @@ export default {
 						: '',
 			};
 			const res = await this.createSession(planPayload);
-
+			this.datalayer(this.planSelected);
 			if (res)
 				if (res.init_point === null) this.$router.push(`/dashboard/agenda`);
 				else window.location.href = res.init_point;
 			this.loading = false;
+		},
+		datalayer(plan) {
+			const data = {
+				event: 'checkout',
+				plan: plan.title,
+				cantidad_sesiones: plan.cant,
+				precio: plan.price,
+				especialista: this.psychologist.name + this.psychologist.lastName,
+				id_especialista: this.psychologist._id,
+			};
+			window.dataLayer.push(data);
 		},
 		changeDate(item) {
 			this.$router.push(
