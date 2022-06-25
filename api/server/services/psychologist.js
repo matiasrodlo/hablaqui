@@ -343,32 +343,6 @@ const getAllSessionsFunction = async psy => {
 		psychologist: psy,
 	}).populate('psychologist user');
 
-	let comission = 0;
-	let percentage = '0%';
-
-	let { psyPlans } = await Psychologist.findById(psy);
-	let currentPlan = psyPlans[psyPlans.length - 1];
-
-	if (!currentPlan) {
-		currentPlan = {
-			tier: 'free',
-			paymentStatus: 'success',
-			planStatus: 'active',
-			expirationDate: '',
-			subscriptionPeriod: '',
-			price: 0,
-			hablaquiFee: 0.2,
-			paymentFee: 0.0399,
-		};
-	}
-
-	if (currentPlan.tier === 'premium') {
-		comission = currentPlan.paymentFee;
-		percentage = '3.99%';
-	} else {
-		comission = currentPlan.hablaquiFee;
-		percentage = '20%';
-	}
 	sessions = sessions.flatMap(item => {
 		let name = '';
 		let lastName = '';
@@ -382,9 +356,6 @@ const getAllSessionsFunction = async psy => {
 			lastName = '';
 		}
 		return item.plan.flatMap(plan => {
-			const realComission = plan.invitedByPsychologist
-				? 0.0351
-				: comission;
 			return plan.session.map(session => {
 				const expiration =
 					plan.payment === 'pending' &&
@@ -412,7 +383,6 @@ const getAllSessionsFunction = async psy => {
 					paidToPsychologist: session.paidToPsychologist,
 					sessionsNumber: `${session.sessionNumber}/${plan.totalSessions}`,
 					sessionsId: item._id,
-					invited: plan.invitedByPsychologist,
 					status: session.status,
 					statusPlan: plan.payment,
 					suscription: plan.period,
@@ -423,13 +393,10 @@ const getAllSessionsFunction = async psy => {
 					requestDate,
 					paymentDate,
 					request: session.request ? session.request : 'none',
-					hablaquiPercentage:
-						realComission === 0.0351
-							? plan.sessionPrice * 0
-							: plan.sessionPrice * 0.1649,
+					hablaquiPercentage: 0,
 					mercadoPercentage: plan.sessionPrice * 0.0351,
-					total: +(plan.sessionPrice * (1 - realComission)).toFixed(),
-					percentage: realComission === 0.0351 ? '3.51%' : percentage,
+					total: +(plan.sessionPrice * (1 - 0.0351)).toFixed(),
+					percentage: '3.51%',
 					expiration,
 				};
 			});
@@ -865,7 +832,6 @@ const createPlan = async ({ payload }) => {
 	const token = randomCode() + randomCode();
 
 	let price = payload.price < 0 ? 0 : payload.price;
-	const isInvited = await userIsInvited(payload.psychologist, payload.user);
 	if (foundCoupon && foundCoupon.discountType === 'static')
 		price = payload.originalPrice;
 	const newPlan = {
@@ -879,7 +845,6 @@ const createPlan = async ({ payload }) => {
 		totalSessions: sessionQuantity,
 		remainingSessions: sessionQuantity - 1,
 		tokenToPay: token,
-		invitedByPsychologist: isInvited,
 		session: [newSession],
 	};
 	//logInfo(newPlan);
@@ -1884,10 +1849,6 @@ const customNewSession = async (user, payload) => {
 			sessions.push(newSession);
 		}
 
-		let isInvited = false;
-		if (payload.type !== 'compromiso privado')
-			isInvited = await userIsInvited(user.psychologist, payload.user);
-
 		// Objeto con el plan a crear
 		const newPlan = {
 			title: payload.type,
@@ -1899,7 +1860,6 @@ const customNewSession = async (user, payload) => {
 			expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
 				.add({ weeks: 1 })
 				.toISOString(),
-			invitedByPsychologist: isInvited,
 			usedCoupon: '',
 			totalSessions: 1,
 			remainingSessions: 0,
@@ -2096,36 +2056,6 @@ const paymentInfoFunction = async psyId => {
 		psychologist: psyId,
 	}).populate('user');
 
-	let comission = 0;
-	let percentage = '0%';
-
-	let psy = await Psychologist.findById(psyId);
-	if (!psy.psyPlans || psy.psyPlans == []) {
-		psy.psyPlans = [
-			{
-				tier: 'free',
-				paymentStatus: 'success',
-				planStatus: 'active',
-				expirationDate: '',
-				subscriptionPeriod: '',
-				price: 0,
-				hablaquiFee: 0.2,
-				paymentFee: 0.0399,
-			},
-		];
-		await psy.save();
-	}
-
-	let currentPlan = psy.psyPlans[psy.psyPlans.length - 1];
-
-	if (currentPlan.tier === 'premium') {
-		comission = currentPlan.paymentFee;
-		percentage = '3.99%';
-	} else {
-		comission = currentPlan.hablaquiFee;
-		percentage = '20%';
-	}
-
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	allSessions = allSessions.filter(item =>
 		item.plan.some(plan => {
@@ -2138,15 +2068,6 @@ const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-				let realComission = plans.invitedByPsychologist
-					? currentPlan.paymentFee
-					: comission;
-				realComission =
-					realComission === 0.0399 ? 0.0351 : realComission;
-				const hablaquiPercentage =
-					realComission === 0.0351
-						? plans.sessionPrice * 0
-						: plans.sessionPrice * 0.1649;
 				const paymentPlanDate = moment(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
@@ -2177,16 +2098,13 @@ const paymentInfoFunction = async psyId => {
 						),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: priceFormatter(+plans.sessionPrice),
-						hablaquiPercentage: hablaquiPercentage.toFixed(0),
+						hablaquiPercentage: 0,
 						mercadoPercentage: (
 							plans.sessionPrice * 0.0351
 						).toFixed(2),
-						percentage:
-							realComission === 0.0351 ? '3.51%' : percentage,
+						percentage: '3.51%',
 						total: priceFormatter(
-							+(plans.sessionPrice * (1 - realComission)).toFixed(
-								0
-							)
+							+(plans.sessionPrice * (1 - 0.0351)).toFixed(0)
 						),
 						status: session.status,
 						transDate,
@@ -2222,16 +2140,13 @@ const paymentInfoFunction = async psyId => {
 						date: '---',
 						sessionsNumber: `${i} de ${plans.totalSessions}`,
 						amount: priceFormatter(+plans.sessionPrice),
-						hablaquiPercentage: hablaquiPercentage.toFixed(0),
+						hablaquiPercentage: 0,
 						mercadoPercentage: (
 							plans.sessionPrice * 0.0351
 						).toFixed(2),
-						percentage:
-							realComission === 0.0351 ? '3.51%' : percentage,
+						percentage: '3.51%',
 						total: priceFormatter(
-							+(plans.sessionPrice * (1 - realComission)).toFixed(
-								0
-							)
+							+(plans.sessionPrice * (1 - 0.0351)).toFixed(0)
 						),
 						status: 'pending',
 						transDate: 'Por agendar',
@@ -2258,7 +2173,7 @@ const paymentInfoFunction = async psyId => {
 					datePayment: paymentPlanDate,
 					amount: priceFormatter(+plans.totalPrice),
 					finalAmount: priceFormatter(
-						+(plans.totalPrice * (1 - realComission)).toFixed(0)
+						+(plans.totalPrice * (1 - 0.0351)).toFixed(0)
 					),
 					sessions,
 					transState:
@@ -2588,24 +2503,6 @@ const hidePsychologist = async idPsy => {
 	if (!psychologist) return conflictResponse('Psicologo no encontrado');
 
 	return okResponse('Psicologo ocultado', { psychologist });
-};
-
-const userIsInvited = async (psychologist, user) => {
-	let foundUser = await User.findById(user);
-	foundUser = JSON.stringify(foundUser);
-	foundUser = JSON.parse(foundUser);
-	let isInvited =
-		// eslint-disable-next-line no-prototype-builtins
-		foundUser.hasOwnProperty('invitedBy') &&
-		foundUser.invitedBy.toString() == psychologist.toString();
-	if (isInvited) {
-		const sessions = await Sessions.find({
-			psychologist: { $ne: psychologist },
-			user: foundUser._id,
-		});
-		isInvited = !sessions.length;
-	}
-	return isInvited;
 };
 
 const priceFormatter = price => {
