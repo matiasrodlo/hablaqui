@@ -204,7 +204,7 @@ let psychologist = new Schema({
 	},
 	isHide: {
 		type: Boolean,
-		default: false,
+		default: true,
 	},
 });
 

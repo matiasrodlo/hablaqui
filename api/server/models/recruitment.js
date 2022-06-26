@@ -337,6 +337,10 @@ let recruitment = new Schema(
 			type: Object,
 			default: defaultOnboarding,
 		},
+		isHide: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	{
 		timestamps: true,

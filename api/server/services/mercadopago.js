@@ -129,6 +129,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			price: 0,
 		},
 	];
+	response.isHide = true;
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -252,6 +253,7 @@ const psychologistPay = async (params, query) => {
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
 		{ $push: { psyPlans: newPlan } },
+		{ $set: { isHide: false } },
 		{ new: true }
 	);
 	if (
