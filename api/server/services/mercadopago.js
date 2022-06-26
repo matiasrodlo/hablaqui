@@ -127,8 +127,6 @@ const setPlanFree = async (id, isPsychologist) => {
 			expirationDate: '',
 			subscriptionPeriod: '',
 			price: 0,
-			hablaquiFee: 0.2,
-			paymentFee: 0.0399,
 		},
 	];
 	if (
@@ -245,8 +243,6 @@ const psychologistPay = async (params, query) => {
 		tier: 'premium',
 		paymentStatus: 'success',
 		planStatus: 'active',
-		hablaquiFee: 0,
-		paymentFee: 0.0399,
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,
@@ -373,8 +369,6 @@ const recruitedPay = async (params, query) => {
 	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
 	const newPlan = {
 		tier: 'premium',
-		hablaquiFee: 0,
-		paymentFee: 0.0399,
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,
