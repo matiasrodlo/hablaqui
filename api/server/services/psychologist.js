@@ -27,6 +27,12 @@ moment.tz.setDefault('America/Santiago');
 
 const getAll = async () => {
 	let psychologists = await Psychologist.find();
+	logInfo('obtuvo todos los psicologos');
+	return okResponse('psicologos obtenidos', { psychologists });
+};
+
+const getPsyMarket = async () => {
+	let psychologists = await Psychologist.find();
 	psychologists = psychologists.filter(psy => !psy.isHide);
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
@@ -2526,6 +2532,7 @@ const psychologistsService = {
 	customNewSession,
 	deleteOne,
 	getAll,
+	getPsyMarket,
 	getAllPagination,
 	getByData,
 	getClients,

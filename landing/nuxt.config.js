@@ -39,7 +39,7 @@ export default {
 				: 'http://localhost:3000/';
 
 			// generate routes psicologos
-			const res = await axios.get(`${baseURL}/psychologists/all`);
+			const res = await axios.get(`${baseURL}/psychologists/marketplace`);
 			const psicologos = res.data.psychologists
 				.filter(psychologist => psychologist.username)
 				.map(psychologist => ({

@@ -813,7 +813,7 @@ export default {
 			});
 		},
 		async getPsychologist() {
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
+			const { psychologists } = await this.$axios.$get('/psychologists/marketplace');
 			this.psychologists = psychologists.sort((a, b) => {
 				const fa = a.name.toLowerCase();
 				const fb = b.name.toLowerCase();
@@ -864,7 +864,7 @@ export default {
 			});
 			const { recruitment } = await this.$axios.$get(`/recruitment`);
 			this.items = recruitment;
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
+			const { psychologists } = await this.$axios.$get('/psychologists/marketplace');
 			this.psychologists = psychologists;
 			this.loadingApprove = false;
 			this.dialog = false;
@@ -873,7 +873,7 @@ export default {
 			this.loadingSubmit = true;
 			if (this.selected.isPsy) {
 				await this.updatePsychologist(this.selected);
-				const { psychologists } = await this.$axios.$get('/psychologists/all');
+				const { psychologists } = await this.$axios.$get('/psychologists/marketplace');
 				this.psychologists = psychologists;
 			} else {
 				await this.checkusername();

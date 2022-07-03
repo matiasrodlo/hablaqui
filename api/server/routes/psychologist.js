@@ -27,7 +27,7 @@ psychologistsRouter.get(
  * @swagger
  * /api/v1/psychologists/all:
  *   get:
- *     summary: Devuelve todos los psicólogos de la base de datos
+ *     summary: Devuelve todos los psicólogos de la base de datos con plan premium
  *     tags: [Psychologists]
  *     responses:
  *       200:
@@ -35,6 +35,22 @@ psychologistsRouter.get(
  *
  */
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
+
+/**
+ * @swagger
+ * /api/v1/psychologists/route/all:
+ *   get:
+ *     summary: Devuelve todos los psicólogos de la base de datos
+ *     tags: [Psychologists]
+ *     responses:
+ *       200:
+ *         description: Todos los psicólogos
+ *
+ */
+psychologistsRouter.get(
+	'/psychologists/marketplace',
+	psychologistsController.getPsyMarket
+);
 
 /**
  * @swagger

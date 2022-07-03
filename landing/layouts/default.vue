@@ -17,8 +17,8 @@
 	</v-app>
 </template>
 <script>
-import Snackbar from '@/components/Snackbar';
 import { mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
@@ -26,11 +26,11 @@ export default {
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	async mounted() {
-		await this.getPsychologists();
+		await this.getMarketplacePsychologists();
 	},
 	methods: {
 		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
+			getMarketplacePsychologists: 'Psychologist/getMarketplacePsychologists',
 		}),
 	},
 };
