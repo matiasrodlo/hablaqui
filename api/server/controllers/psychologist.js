@@ -24,6 +24,14 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
+	async getRouteAll(req, res) {
+		try {
+			const { data, code } = await psychologistsService.getRouteAll();
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(error, res, 'Error obteniendo los psicologos');
+		}
+	},
 	async getAllPagination(req, res) {
 		try {
 			const { page } = req.params;

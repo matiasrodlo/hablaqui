@@ -32,6 +32,12 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
+const getRouteAll = async () => {
+	let psychologists = await Psychologist.find();
+	logInfo('obtuvo todos los psicologos');
+	return okResponse('psicologos obtenidos', { psychologists });
+};
+
 const getAllPagination = async page => {
 	const count = await Psychologist.countDocuments();
 
@@ -2526,6 +2532,7 @@ const psychologistsService = {
 	customNewSession,
 	deleteOne,
 	getAll,
+	getRouteAll,
 	getAllPagination,
 	getByData,
 	getClients,
