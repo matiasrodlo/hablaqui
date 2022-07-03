@@ -48,8 +48,8 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  *
  */
 psychologistsRouter.get(
-	'/psychologists/route/all',
-	psychologistsController.getRouteAll
+	'/psychologists/marketplace',
+	psychologistsController.getPsyMarket
 );
 
 /**

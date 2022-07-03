@@ -24,9 +24,9 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
-	async getRouteAll(req, res) {
+	async getPsyMarket(req, res) {
 		try {
-			const { data, code } = await psychologistsService.getRouteAll();
+			const { data, code } = await psychologistsService.getPsyMarket();
 			return restResponse(data, code, res);
 		} catch (error) {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
