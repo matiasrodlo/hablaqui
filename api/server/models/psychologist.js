@@ -206,6 +206,10 @@ let psychologist = new Schema({
 		type: Boolean,
 		default: true,
 	},
+	points: {
+		type: Number,
+		default: 50,
+	},
 });
 
 export default model('psychologist', psychologist);
