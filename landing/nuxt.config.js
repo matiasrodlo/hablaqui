@@ -199,15 +199,38 @@ export default {
 				sv: '6',
 			},
 		],
-		'@nuxtjs/google-analytics',
-		[
-			'@nuxtjs/google-gtag',
-			{
-				id: 'UA-206733202-1',
-			},
-		],
+		// '@nuxtjs/google-analytics',
+		// [
+		// 	'@nuxtjs/google-gtag',
+		// 	{
+		// 		id: 'UA-206733202-1',
+		// 	},
+		// ],
 		'@dansmaculotte/nuxt-segment',
+		'@nuxtjs/gtm',
 	],
+
+	gtm: {
+		id: 'GTM-KTHDRHV',
+		enabled: true,
+		autoInit: true,
+		respectDoNotTrack: true,
+
+		layer: 'dataLayer',
+		variables: {},
+	
+		pageTracking: true,
+		pageViewEventName: 'nuxtRoute',
+
+		scriptId: 'gtm-script',
+		scriptDefer: false,
+		scriptURL: 'https://www.googletagmanager.com/gtm.js',
+		crossOrigin: false,
+
+		noscript: true,
+		noscriptId: 'gtm-noscript',
+		noscriptURL: 'https://www.googletagmanager.com/ns.html'
+	},
 
 	segment: {
 		writeKey: 'cfhCuLuHi3QH8paFuAqbs3fvc7X2gqh5',
@@ -215,21 +238,21 @@ export default {
 		userRouter: true,
 	},
 
-	'google-gtag': {
-		id: 'UA-206733202-1',
-		config: {
-			anonimize_ip: true,
-			linker: {
-				domains: ['hablaqui.cl', 'www.hablaqui.cl'],
-			},
-		},
-	},
-	googleAnalytics: {
-		id: 'UA-206733202-1',
-		autoTracking: {
-			screenview: true,
-		},
-	},
+	// 'google-gtag': {
+	// 	id: 'UA-206733202-1',
+	// 	config: {
+	// 		anonimize_ip: true,
+	// 		linker: {
+	// 			domains: ['hablaqui.cl', 'www.hablaqui.cl'],
+	// 		},
+	// 	},
+	// },
+	// googleAnalytics: {
+	// 	id: 'UA-206733202-1',
+	// 	autoTracking: {
+	// 		screenview: true,
+	// 	},
+	// },
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
