@@ -392,7 +392,7 @@ export default {
 				plan: plan.title,
 				'cantidad-sesiones': plan.cant,
 				precio: plan.price,
-				especialista: this.psychologist.name + this.psychologist.lastName,
+				especialista: this.psychologist.name + ' ' + this.psychologist.lastName,
 				'id-especialista': this.psychologist._id,
 			};
 			window.dataLayer.push(data);
