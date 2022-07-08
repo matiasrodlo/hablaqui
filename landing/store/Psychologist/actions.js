@@ -11,16 +11,6 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getMarketplacePsychologists({ commit }) {
-		try {
-			commit('setLoadingPsychologist', true);
-			const { psychologists } = await this.$axios.$get('/psychologists/marketplace');
-			commit('setPsychologists', psychologists);
-			commit('setLoadingPsychologist', false);
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
 	async getTransactions({ commit }) {
 		try {
 			const { transactions } = await this.$axios.$get('/psychologist/transactions/all');
