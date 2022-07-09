@@ -31,13 +31,6 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists });
 };
 
-const getPsyMarket = async () => {
-	let psychologists = await Psychologist.find();
-	psychologists = psychologists.filter(psy => !psy.isHide);
-	logInfo('obtuvo todos los psicologos');
-	return okResponse('psicologos obtenidos', { psychologists });
-};
-
 const getAllPagination = async page => {
 	const count = await Psychologist.countDocuments();
 
@@ -2532,7 +2525,6 @@ const psychologistsService = {
 	customNewSession,
 	deleteOne,
 	getAll,
-	getPsyMarket,
 	getAllPagination,
 	getByData,
 	getClients,

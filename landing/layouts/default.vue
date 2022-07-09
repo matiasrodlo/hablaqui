@@ -26,11 +26,11 @@ export default {
 		FloatingChat: () => import('@/components/dashboard/FloatingChat'),
 	},
 	async mounted() {
-		await this.getMarketplacePsychologists();
+		await this.getPsychologists();
 	},
 	methods: {
 		...mapActions({
-			getMarketplacePsychologists: 'Psychologist/getMarketplacePsychologists',
+			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 	},
 };

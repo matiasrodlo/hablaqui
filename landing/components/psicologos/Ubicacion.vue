@@ -130,7 +130,7 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getMarketplacePsychologists: 'Psychologist/getMarketplacePsychologists',
+			getPsychologists: 'Psychologist/getPsychologists',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
 		}),
