@@ -164,6 +164,7 @@ export default {
 						price: 0,
 					},
 				],
+				isHide: true,
 			},
 			terminos: false,
 			dialog: false,

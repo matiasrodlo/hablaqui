@@ -13,7 +13,7 @@ let defaultSchedule = {
 };
 
 let defaultPreferences = {
-	marketplaceVisibility: true,
+	marketplaceVisibility: false,
 	minimumNewSession: 24,
 	minimumRescheduleSession: 24,
 	corporativeSessions: true,
@@ -202,9 +202,9 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultInmediateAttention,
 	},
-	isHide: {
-		type: Boolean,
-		default: false,
+	points: {
+		default: 50,
+		type: Number,
 	},
 });
 

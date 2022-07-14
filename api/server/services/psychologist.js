@@ -27,7 +27,6 @@ moment.tz.setDefault('America/Santiago');
 
 const getAll = async () => {
 	let psychologists = await Psychologist.find();
-	psychologists = psychologists.filter(psy => !psy.isHide);
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
 };

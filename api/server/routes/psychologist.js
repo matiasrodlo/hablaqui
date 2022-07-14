@@ -27,7 +27,7 @@ psychologistsRouter.get(
  * @swagger
  * /api/v1/psychologists/all:
  *   get:
- *     summary: Devuelve todos los psicólogos de la base de datos
+ *     summary: Devuelve todos los psicólogos de la base de datos con plan premium
  *     tags: [Psychologists]
  *     responses:
  *       200:

@@ -17,8 +17,8 @@
 	</v-app>
 </template>
 <script>
-import Snackbar from '@/components/Snackbar';
 import { mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
