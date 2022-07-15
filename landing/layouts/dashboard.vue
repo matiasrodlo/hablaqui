@@ -86,6 +86,19 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
+								<v-tooltip v-if="item.disable" right max-width="300" color="white">
+									<template #activator="{ on, attrs }">
+										<v-btn icon v-bind="attrs" v-on="on">
+											<icon :icon="mdiAlertOutline" color="red" />
+										</v-btn>
+									</template>
+									<div class="elevation-5 pa-3">
+										<span class="black--text">
+											Esta opción se activará contratando un plan premium
+										</span>
+									</div>
+								</v-tooltip>
+
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -342,6 +355,7 @@ import {
 	mdiCog,
 	mdiAccountSupervisor,
 	mdiCalendar,
+	mdiAlertOutline,
 } from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Snackbar from '@/components/Snackbar';
@@ -369,6 +383,7 @@ export default {
 			mdiMenu,
 			mdiCheckCircle,
 			mdiCircle,
+			mdiAlertOutline,
 			drawer: true,
 			online: true,
 			isMini: true,
