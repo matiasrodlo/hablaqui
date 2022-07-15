@@ -70,12 +70,26 @@
 						"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
+							<v-tooltip v-if="isFree" right max-width="300" color="white">
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiAlertOutline" color="red" />
+									</v-btn>
+								</template>
+								<div class="elevation-5 pa-3">
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
+								</div>
+							</v-tooltip>
+
 							Anticipación para reprogramar:
 						</div>
 						<div>
 							<v-select
 								:value="psychologist.preferences.minimumRescheduleSession"
 								filled
+								:disabled="isFree"
 								outlined
 								dense
 								:items="hours"
@@ -191,8 +205,20 @@
 							</v-text-field>
 						</div>
 					</v-col>
-					<v-col v-show="false" cols="12" class="text-h6" style="color: #3c3c3b">
+					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 						<div>
+							<v-tooltip v-if="isFree" right max-width="300" color="white">
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiAlertOutline" color="red" />
+									</v-btn>
+								</template>
+								<div class="elevation-5 pa-3">
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
+								</div>
+							</v-tooltip>
 							Nuevos clientes
 							<v-tooltip right max-width="300" color="white">
 								<template #activator="{ on, attrs }">
@@ -212,6 +238,7 @@
 						<div v-if="psychologist.preferences" class="mt-8">
 							<v-switch
 								v-model="marketplaceVisibility"
+								:disabled="isFree"
 								label="Visibilidad en Marketplace"
 								color="primary"
 								persistent-hint
@@ -251,7 +278,7 @@
 </template>
 
 <script>
-import { mdiInformationOutline } from '@mdi/js';
+import { mdiInformationOutline, mdiAlertOutline } from '@mdi/js';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -270,6 +297,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiAlertOutline,
 			mdiInformationOutline,
 			tooltip: false,
 			hours: [
@@ -286,6 +314,10 @@ export default {
 		};
 	},
 	computed: {
+		isFree() {
+			const length = this.psychologist.psyPlans.length;
+			return this.psychologist.psyPlans[length - 1].tier === 'free';
+		},
 		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {

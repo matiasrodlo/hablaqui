@@ -70,6 +70,7 @@
 						v-if="item.visible"
 						:id="item.name"
 						:key="i"
+						:disabled="item.disable"
 						class="my-4"
 						link
 						:to="item.link"
@@ -85,6 +86,19 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
+								<v-tooltip v-if="item.disable" right max-width="300" color="white">
+									<template #activator="{ on, attrs }">
+										<v-btn icon v-bind="attrs" v-on="on">
+											<icon :icon="mdiAlertOutline" color="red" />
+										</v-btn>
+									</template>
+									<div class="elevation-5 pa-3">
+										<span class="black--text">
+											Esta opción se activará contratando un plan premium
+										</span>
+									</div>
+								</v-tooltip>
+
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -341,6 +355,7 @@ import {
 	mdiCog,
 	mdiAccountSupervisor,
 	mdiCalendar,
+	mdiAlertOutline,
 } from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Snackbar from '@/components/Snackbar';
@@ -368,6 +383,7 @@ export default {
 			mdiMenu,
 			mdiCheckCircle,
 			mdiCircle,
+			mdiAlertOutline,
 			drawer: true,
 			online: true,
 			isMini: true,
@@ -400,18 +416,22 @@ export default {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
+			const disable = false;
+			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Pagos',
@@ -420,6 +440,8 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable:
+						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
 				},
 				{
 					name: 'Consultantes',
@@ -428,12 +450,14 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Mi plan premium',
@@ -442,12 +466,14 @@ export default {
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
 				},
 			];
 		},
