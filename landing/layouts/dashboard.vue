@@ -70,6 +70,7 @@
 						v-if="item.visible"
 						:id="item.name"
 						:key="i"
+						:disabled="item.disable"
 						class="my-4"
 						link
 						:to="item.link"
@@ -400,18 +401,22 @@ export default {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
+			const disable = false;
+			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Pagos',
@@ -420,6 +425,8 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable:
+						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
 				},
 				{
 					name: 'Consultantes',
@@ -428,12 +435,14 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Mi plan premium',
@@ -442,12 +451,14 @@ export default {
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
 				},
 			];
 		},

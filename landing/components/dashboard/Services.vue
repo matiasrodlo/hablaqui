@@ -76,6 +76,7 @@
 							<v-select
 								:value="psychologist.preferences.minimumRescheduleSession"
 								filled
+								:disabled="isFree"
 								outlined
 								dense
 								:items="hours"
@@ -191,7 +192,7 @@
 							</v-text-field>
 						</div>
 					</v-col>
-					<v-col v-show="false" cols="12" class="text-h6" style="color: #3c3c3b">
+					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 						<div>
 							Nuevos clientes
 							<v-tooltip right max-width="300" color="white">
@@ -212,6 +213,7 @@
 						<div v-if="psychologist.preferences" class="mt-8">
 							<v-switch
 								v-model="marketplaceVisibility"
+								:disabled="isFree"
 								label="Visibilidad en Marketplace"
 								color="primary"
 								persistent-hint
@@ -286,6 +288,10 @@ export default {
 		};
 	},
 	computed: {
+		isFree() {
+			const length = this.psychologist.psyPlans.length;
+			return this.psychologist.psyPlans[length - 1].tier === 'free';
+		},
 		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {
