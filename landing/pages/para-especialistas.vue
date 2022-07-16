@@ -82,19 +82,9 @@
 							</v-list-item>
 						</v-list>
 					</v-col>
-					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4" xl="3">
-						<form-user-psy />
-					</v-col>
 				</v-row>
 			</v-container>
 		</v-img>
-		<v-container id="form-psy2" class="hidden-md-and-up primary pb-16">
-			<v-row>
-				<v-col>
-					<form-user-psy />
-				</v-col>
-			</v-row>
-		</v-container>
 		<v-container style="max-width: 1400px">
 			<v-row justify="center">
 				<v-col cols="12">
@@ -488,7 +478,6 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 		Appbar: () => import('@/components/AppbarWhite'),
-		FormUserPsy: () => import('@/components/psicologos/FormUserPsy.vue'),
 	},
 	data() {
 		return {
