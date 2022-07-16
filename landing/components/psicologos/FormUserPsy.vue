@@ -2,7 +2,7 @@
 	<v-form>
 		<v-card flat class="rounded-lg">
 			<v-card-title class="pb-0 mx-2">
-				<h3 class="text--disabled font-weight-bold text-h6">Únete a la red</h3>
+				<h3 class="text--disabled mx-auto font-weight-bold text-h6">Únete a la red</h3>
 			</v-card-title>
 			<v-card-text class="py-0">
 				<h3 class="text--disabled body-1">

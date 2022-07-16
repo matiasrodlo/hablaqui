@@ -118,7 +118,7 @@
 				/>
 			</svg>
 		</div> -->
-		<v-app-bar style="z-index: 1" height="83" color="#ffffff">
+		<v-app-bar class="shadowAppBar" height="83" color="#ffffff">
 			<v-container style="max-width: 1200px">
 				<v-row align="center" justify="space-between" no-gutters>
 					<v-col cols="6" class="d-flex align-center">
@@ -421,5 +421,8 @@ export default {
 	position: -webkit-sticky !important;
 	position: sticky !important;
 	top: 0 !important;
+}
+.shadowAppBar {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
 }
 </style>
