@@ -1,10 +1,10 @@
 <template>
 	<v-form>
 		<v-card flat class="rounded-lg">
-			<v-card-title class="mx-2">
-				<h3 class="primary--text font-weight-bold text-h4">Únete a la red</h3>
+			<v-card-title class="pb-0 mx-2">
+				<h3 class="text--disabled font-weight-bold text-h6">Únete a la red</h3>
 			</v-card-title>
-			<v-card-text class="py-0 mx-2">
+			<v-card-text class="py-0">
 				<h3 class="text--disabled body-1">
 					En solo unos pasos puedes unirte. Comienza creando tu cuenta.
 				</h3>
@@ -88,6 +88,7 @@
 			<v-card-text class="text-center">
 				<v-btn
 					:loading="loading"
+					block
 					color="primary"
 					class="rounded-xl mx-auto px-10"
 					@click="onSubmit"
