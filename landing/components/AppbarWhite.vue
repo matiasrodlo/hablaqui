@@ -303,7 +303,7 @@
 									depressed
 									to="/psicologos"
 								>
-									Burcar Psicólogo
+									Buscar Psicólogo
 								</v-btn>
 							</v-col>
 						</template>
