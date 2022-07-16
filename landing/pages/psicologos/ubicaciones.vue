@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- routing for child -->
-		<v-container>
+		<v-container class="mt-10">
 			<v-row>
 				<v-col cols="12">
 					<h1 class="text-left font-weight-bold text-h6 text-md-h4 text--secondary">

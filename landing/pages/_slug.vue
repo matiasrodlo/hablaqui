@@ -6,13 +6,13 @@
 		<profile-desktop
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-sm-and-down"
+			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<profile-mobile
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-md-and-up"
+			class="mt-10 hidden-md-and-up"
 		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">

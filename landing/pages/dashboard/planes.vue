@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- containt -->
-		<v-container fluid style="max-width: 1200px">
+		<v-container fluid style="max-width: 1200px" class="mt-10">
 			<plans :next="() => $router.push({ name: 'dashboard-perfil' })" />
 		</v-container>
 	</div>

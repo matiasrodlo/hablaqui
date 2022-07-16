@@ -3,7 +3,7 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- geo psicologos -->
-		<geoPsicologos :location="location" />
+		<geoPsicologos class="mt-10" :location="location" />
 		<!-- desktop -->
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"

@@ -138,7 +138,7 @@
 							class="hidden-sm-and-down ml-4"
 							href="https://hablaqui.cl/blog/para-especialistas"
 						>
-							<span class="body-2 text--secondary font-weight-bold">
+							<span class="text-uppercase body-2 text--secondary font-weight-bold">
 								Para especialistas
 							</span>
 						</a>
@@ -150,7 +150,7 @@
 							accesskey="p"
 							class="hidden-sm-and-down ml-4"
 						>
-							<span class="text--secondary body-2 font-weight-bold"
+							<span class="text-uppercase text--secondary body-2 font-weight-bold"
 								>Para empresas</span
 							>
 						</a>
@@ -161,7 +161,9 @@
 							class="hidden-sm-and-down ml-4"
 							href="https://hablaqui.cl/blog/"
 						>
-							<span class="body-2 text--secondary font-weight-bold">Blog</span>
+							<span class="text-uppercase body-2 text--secondary font-weight-bold"
+								>Blog</span
+							>
 						</a>
 					</v-col>
 					<client-only>
@@ -276,7 +278,7 @@
 									</v-menu>
 								</div>
 							</v-col>
-							<v-col v-else class="text-right" cols="5" md="4" lg="3">
+							<v-col v-else class="text-right" cols="5" md="4">
 								<v-btn
 									id="iniciar-sesion-appbar"
 									outlined
@@ -285,7 +287,7 @@
 									rounded
 									accesskey="s"
 									style="text-decoration: none"
-									class="hidden-sm-and-down text--secondary"
+									class="hidden-sm-and-down text--secondary text-uppercase"
 									:to="{ name: 'auth' }"
 								>
 									Iniciar sesión
@@ -296,7 +298,7 @@
 									rounded
 									small
 									accesskey="c"
-									class="mx-2 hidden-sm-and-down"
+									class="mx-2 hidden-sm-and-down text-uppercase"
 									color="primary"
 									depressed
 									to="/psicologos"

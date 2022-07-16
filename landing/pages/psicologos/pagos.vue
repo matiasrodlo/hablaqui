@@ -7,13 +7,13 @@
 			<pagos-desktop
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="hidden-sm-and-down"
+				class="mt-10 hidden-sm-and-down"
 			/>
 			<!-- mobile -->
 			<pagos-mobile
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="hidden-md-and-up"
+				class="mt-10 hidden-md-and-up"
 			/>
 		</template>
 		<!-- footer -->
