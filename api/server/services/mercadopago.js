@@ -227,8 +227,8 @@ const successPay = async params => {
 
 const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
-	//const { period } = query;
-	const period = 'anual';
+	const { period } = query;
+
 	let expirationDate;
 	if (period === 'anual') {
 		expirationDate = moment()
@@ -240,7 +240,7 @@ const psychologistPay = async (params, query) => {
 			.add({ months: 1 })
 			.format();
 	}
-	const pricePaid = 69990 * 12;
+	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
 		paymentStatus: 'success',
@@ -357,8 +357,8 @@ const createCustomSessionPreference = async params => {
 
 const recruitedPay = async (params, query) => {
 	const { recruitedId } = params;
-	//const { period } = query;
-	const period = 'anual';
+	const { period } = query;
+
 	let expirationDate;
 	if (period == 'anual') {
 		expirationDate = moment()
@@ -370,7 +370,7 @@ const recruitedPay = async (params, query) => {
 			.add({ months: 1 })
 			.format();
 	}
-	const pricePaid = 69990 * 12;
+	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
 		expirationDate,
