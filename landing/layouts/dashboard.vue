@@ -128,7 +128,7 @@
 					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://hablaqui.cl/blog/para-psicologos/preguntas-frecuentes/"
+					href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -148,7 +148,7 @@
 					v-else
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://hablaqui.cl/blog/preguntas-frecuentes/"
+					href="https://hablaqui.cl/preguntas-frecuentes/"
 				>
 					<v-list-item-avatar size="30">
 						<v-img

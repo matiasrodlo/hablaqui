@@ -50,7 +50,7 @@
 		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://hablaqui.cl/blog/para-psicologos/preguntas-frecuentes/"
+				href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
 				target="_blank"
 			>
 				Centro de ayuda
@@ -59,7 +59,7 @@
 		<div v-else class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://hablaqui.cl/blog/preguntas-frecuentes/"
+				href="https://hablaqui.cl/preguntas-frecuentes/"
 				target="_blank"
 			>
 				Centro de ayuda
