@@ -186,12 +186,23 @@ export default {
 		'@nuxtjs/google-analytics',
 	],
 
+	io: {
+		// module options
+		sockets: [
+			{
+				name: 'main',
+				url: 'http://localhost:3000',
+			},
+		],
+	},
+
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: [
 		// https://go.nuxtjs.dev/axios
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',
 		'@nuxtjs/sitemap',
+		'nuxt-socket-io',
 		[
 			'@netsells/nuxt-hotjar',
 			{
@@ -218,7 +229,7 @@ export default {
 
 		layer: 'dataLayer',
 		variables: {},
-	
+
 		pageTracking: true,
 		pageViewEventName: 'nuxtRoute',
 
@@ -229,7 +240,7 @@ export default {
 
 		noscript: true,
 		noscriptId: 'gtm-noscript',
-		noscriptURL: 'https://www.googletagmanager.com/ns.html'
+		noscriptURL: 'https://www.googletagmanager.com/ns.html',
 	},
 
 	segment: {
