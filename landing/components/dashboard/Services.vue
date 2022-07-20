@@ -48,12 +48,12 @@
 							arrow="arrow-bottom"
 							:next="
 								() => ({
-									title: 'Configura el tiempo de reprogramación y agenda',
+									title: 'Reprogramación y agenda',
 									tab: 2,
 									card: {
-										title: 'No pierdas tu tiempo',
+										title: 'Reprogramación',
 										description:
-											'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+											'Establezca la anticipación con que le pueden reagendar',
 									},
 									route: 'dashboard-perfil',
 								})
@@ -64,9 +64,7 @@
 						cols="12"
 						md="6"
 						:style="
-							step && step.title === 'Configura el tiempo de reprogramación y agenda'
-								? 'z-index: 3'
-								: ''
+							step && step.title === 'Reprogramación y agenda' ? 'z-index: 3' : ''
 						"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
@@ -96,20 +94,17 @@
 							></v-select>
 						</div>
 						<card-onboarding
-							v-if="
-								step &&
-								step.title === 'Configura el tiempo de reprogramación y agenda'
-							"
+							v-if="step && step.title === 'Reprogramación y agenda'"
 							style="position: absolute; top: -20px; left: 52%; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
 								() => ({
-									title: 'Añade el precio de tus sesiones',
+									title: 'Valor por sesión',
 									tab: 2,
 									card: {
-										title: 'Ingresa el valor de tus sesiones',
+										title: 'Valor por sesión',
 										description:
-											'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+											'Configure el valor por sesiones de 50 minutos.',
 									},
 									route: 'dashboard-perfil',
 								})
@@ -155,7 +150,7 @@
 							</div>
 						</v-alert>
 						<card-onboarding
-							v-if="step && step.title === 'Añade el precio de tus sesiones'"
+							v-if="step && step.title === 'Valor por sesión'"
 							style="position: absolute; top: -40px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
@@ -169,11 +164,7 @@
 					<v-col
 						cols="12"
 						md="4"
-						:style="
-							step && step.title === 'Añade el precio de tus sesiones'
-								? 'z-index: 3'
-								: ''
-						"
+						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
 					>
 						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
 							Sesión 50 min

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<card-onboarding
-			v-if="stepOnboarding && stepOnboarding.title === 'Mis pagos'"
+			v-if="stepOnboarding && stepOnboarding.title === 'Pagos'"
 			style="position: absolute; top: 250px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
@@ -9,11 +9,11 @@
 					setStepLinks(2);
 					$router.push({ name: 'dashboard-consultantes' });
 					return {
-						title: 'Mis consultantes',
+						title: 'Consultantes',
 						card: {
-							title: 'Gestiona los consultantes',
+							title: 'Consultantes',
 							description:
-								'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+								'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
 							link: '',
 							route: 'dashboard-chat',
 						},
