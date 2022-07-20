@@ -9,7 +9,7 @@
 					setStepLinks(0);
 					$router.push({ name: 'dashboard-agenda' });
 					return {
-						title: 'Mi agenda',
+						title: 'Sesiones',
 						card: {
 							title: 'Despreocúpate y organiza tu agenda',
 							description:
