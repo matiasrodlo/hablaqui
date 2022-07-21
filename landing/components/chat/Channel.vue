@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
 import moment from 'moment-timezone';
 import { isEmpty } from 'lodash';
@@ -235,6 +235,10 @@ export default {
 			type: Function,
 			default: () => null,
 		},
+		socket: {
+			type: Object,
+			default: () => {},
+		},
 	},
 	data() {
 		return {
@@ -250,7 +254,6 @@ export default {
 			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
 			const payload = {
-				payload: this.message,
 				psychologistId:
 					this.$auth.$state.user.role === 'psychologist'
 						? this.$auth.$state.user.psychologist
@@ -259,8 +262,13 @@ export default {
 					this.$auth.$state.user.role === 'psychologist'
 						? this.selected._id
 						: this.$auth.$state.user._id,
+				content: this.message,
+				user: { _id: this.$auth.user._id, role: this.$auth.user.role },
 			};
-			await this.sendMessage(payload);
+			await this.socket.emit('sendMessage', payload, response => {
+				this.setChat(response);
+			});
+			// await this.sendMessage(payload);
 			this.message = '';
 			this.loadingMessage = false;
 			this.$nextTick(() => this.$refs.messagechat.focus());
@@ -286,6 +294,9 @@ export default {
 		},
 		...mapActions({
 			sendMessage: 'Chat/sendMessage',
+		}),
+		...mapMutations({
+			setChat: 'Chat/setChat',
 		}),
 	},
 };

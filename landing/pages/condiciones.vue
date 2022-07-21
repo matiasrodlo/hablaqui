@@ -710,14 +710,5 @@ export default {
 			],
 		};
 	},
-	mounted() {
-		this.socket = this.$nuxtSocket({
-			channel: '',
-		});
-		/* Listen for events: */
-		this.socket.on('someEvent', (msg, cb) => {
-			/* Handle event */
-		});
-	},
 };
 </script>

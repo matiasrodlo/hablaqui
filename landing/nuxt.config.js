@@ -191,7 +191,7 @@ export default {
 		sockets: [
 			{
 				name: 'main',
-				url: 'http://localhost:3000',
+				url: process.env.API_ABSOLUTE ? process.env.API_ABSOLUTE : 'http://localhost:3000/',
 			},
 		],
 	},

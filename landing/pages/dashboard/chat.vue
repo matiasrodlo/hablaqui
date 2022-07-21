@@ -323,6 +323,7 @@
 								:sub-header="subHeader"
 								:loading-chat="loadingChat"
 								:chat="chat"
+								:socket="socket"
 								:close="() => (selected = null)"
 							/>
 						</v-sheet>
@@ -335,6 +336,7 @@
 							:sub-header="subHeader"
 							:loading-chat="loadingChat"
 							:chat="chat"
+							:socket="socket"
 						/>
 					</v-col>
 				</template>
@@ -346,7 +348,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
@@ -366,7 +368,7 @@ export default {
 			loadingChat: false,
 			dialog: false,
 			selected: null,
-			pusher: null,
+			// pusher: null,
 			channel: null,
 			initLoading: true,
 		};
@@ -499,21 +501,36 @@ export default {
 			url: '',
 		};
 		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
+		// this.pusher = new Pusher(this.$config.PUSHER_KEY, {
+		// 	cluster: this.$config.PUSHER_CLUSTER,
+		// });
+		// this.pusher.connection.bind('update', function (err) {
+		// 	console.error(err);
+		// });
+		// this.channel = this.pusher.subscribe('chat');
+		// this.channel.bind('update', data => this.$emit('updateChat', data));
+		// this.$on('updateChat', data => {
+		// 	if (
+		// 		data.content.sentBy !== this.$auth.$state.user._id &&
+		// 		(this.$auth.$state.user._id === data.userId ||
+		// 			this.$auth.$state.user.psychologist === data.psychologistId)
+		// 	) {
+		// 		this.pusherCallback(data);
+		// 	}
+		// });
+		this.socket = this.$nuxtSocket({
+			channel: '/liveData',
 		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('chat');
-		this.channel.bind('update', data => this.$emit('updateChat', data));
-		this.$on('updateChat', data => {
+
+		/* Listen for events: */
+		this.socket.on('getMessage', data => {
+			console.log(data);
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
 					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
-				this.pusherCallback(data);
+				this.socketioCallback(data);
 			}
 		});
 	},
@@ -555,7 +572,7 @@ export default {
 			}
 			this.initLoading = false;
 		},
-		async pusherCallback(data) {
+		async socketioCallback(data) {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				// scroll to end
@@ -653,7 +670,6 @@ export default {
 		...mapActions({
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
-			sendMessage: 'Chat/sendMessage',
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
