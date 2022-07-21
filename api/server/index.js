@@ -18,7 +18,7 @@ const io = new webSocketServer(server, {
 	},
 });
 
-const liveData = io.of('//liveData'); // URL which will accept socket
+const liveData = io.of('/liveData'); // URL which will accept socket
 
 // Socket event
 liveData.on('connection', socket => {
