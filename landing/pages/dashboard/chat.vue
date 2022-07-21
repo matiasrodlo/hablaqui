@@ -500,31 +500,12 @@ export default {
 			avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			url: '',
 		};
-		// PUSHER
-		// this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-		// 	cluster: this.$config.PUSHER_CLUSTER,
-		// });
-		// this.pusher.connection.bind('update', function (err) {
-		// 	console.error(err);
-		// });
-		// this.channel = this.pusher.subscribe('chat');
-		// this.channel.bind('update', data => this.$emit('updateChat', data));
-		// this.$on('updateChat', data => {
-		// 	if (
-		// 		data.content.sentBy !== this.$auth.$state.user._id &&
-		// 		(this.$auth.$state.user._id === data.userId ||
-		// 			this.$auth.$state.user.psychologist === data.psychologistId)
-		// 	) {
-		// 		this.pusherCallback(data);
-		// 	}
-		// });
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
 		});
 
 		/* Listen for events: */
 		this.socket.on('getMessage', data => {
-			console.log(data);
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||

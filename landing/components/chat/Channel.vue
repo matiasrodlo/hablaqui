@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
 import moment from 'moment-timezone';
 import { isEmpty } from 'lodash';
@@ -268,7 +268,6 @@ export default {
 			await this.socket.emit('sendMessage', payload, response => {
 				this.setChat(response);
 			});
-			// await this.sendMessage(payload);
 			this.message = '';
 			this.loadingMessage = false;
 			this.$nextTick(() => this.$refs.messagechat.focus());
@@ -292,9 +291,6 @@ export default {
 				el.scrollTop = el.scrollHeight;
 			}
 		},
-		...mapActions({
-			sendMessage: 'Chat/sendMessage',
-		}),
 		...mapMutations({
 			setChat: 'Chat/setChat',
 		}),
