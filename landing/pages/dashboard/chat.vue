@@ -348,7 +348,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
-// import Pusher from 'pusher-js';
 import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
@@ -368,7 +367,6 @@ export default {
 			loadingChat: false,
 			dialog: false,
 			selected: null,
-			// pusher: null,
 			channel: null,
 			initLoading: true,
 		};

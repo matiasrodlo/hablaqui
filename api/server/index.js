@@ -22,7 +22,7 @@ const liveData = io.of('//liveData'); // URL which will accept socket
 
 // Socket event
 liveData.on('connection', socket => {
-	console.log('USUARIO CONECTADO AL CHAT');
+	// actualizar chat
 	socket.on('sendMessage', (data, callback) => {
 		const { psychologistId, userId, content, user } = data;
 		try {

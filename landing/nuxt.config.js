@@ -20,8 +20,6 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/',
-		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
-		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
