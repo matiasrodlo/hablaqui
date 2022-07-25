@@ -31,7 +31,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							to="/psicologos"
+							to="/psicologos/"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -143,7 +143,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
@@ -185,7 +185,7 @@
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
-							to="/psicologos"
+							to="/psicologos/"
 							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
@@ -285,7 +285,7 @@
 							color="white"
 							x-large
 							class="pa-4"
-							to="/psicologos"
+							to="/psicologos/"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -365,7 +365,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
@@ -652,7 +652,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
