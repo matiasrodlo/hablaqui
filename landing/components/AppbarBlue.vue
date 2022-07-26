@@ -15,7 +15,7 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item id="comenzar-blue-drawer" accesskey="c" link nuxt to="/psicologos">
+				<v-list-item id="comenzar-blue-drawer" accesskey="c" link nuxt to="/psicologos/">
 					<v-list-item-content>
 						<v-list-item-title>Quiero comenzar</v-list-item-title>
 					</v-list-item-content>
@@ -50,7 +50,7 @@
 			<v-spacer></v-spacer>
 			<v-btn
 				id="psi-appbar-blue"
-				to="/psicologos"
+				to="/psicologos/"
 				large
 				rounded
 				class="hidden-sm-and-down mx-4 px-8"
