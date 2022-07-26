@@ -1187,6 +1187,34 @@ const register = async body => {
  * @returns sessions
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
+	let currentSession = await Sessions.findOne({
+		_id: sessionsId,
+	}).populate('psychologist', 'preferences');
+	const {
+		minimumRescheduleSession,
+	} = currentSession.psychologist.preferences;
+
+	currentSession = currentSession.plan
+		.flatMap(plan => {
+			return plan.session;
+		})
+		.filter(s => s._id.toString() === id.toString())[0];
+
+	if (
+		moment().isAfter(
+			moment(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
+				minimumRescheduleSession,
+				'hours'
+			)
+		)
+	) {
+		return conflictResponse(
+			'No puede agendar ' +
+				minimumRescheduleSession +
+				' horas antes de la sesión'
+		);
+	}
+
 	const date = `${newDate.date} ${newDate.hour}`;
 	newDate.date = moment(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
