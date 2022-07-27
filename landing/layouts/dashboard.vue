@@ -435,7 +435,7 @@ export default {
 					disable,
 				},
 				{
-					name: 'Mis sesiones',
+					name: 'Sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
