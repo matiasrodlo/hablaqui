@@ -203,10 +203,6 @@ let psychologist = new Schema({
 		default: defaultInmediateAttention,
 	},
 	points: {
-		default: 50,
-		type: Number,
-	},
-	points: {
 		type: Number,
 		default: 50,
 	},
