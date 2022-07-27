@@ -20,7 +20,7 @@
 						"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
-							Anticipación para agendar:
+							Anticipación de agendamiento:
 						</div>
 						<div>
 							<v-select
@@ -81,7 +81,7 @@
 								</div>
 							</v-tooltip>
 
-							Anticipación para reprogramar:
+							Anticipación de reprogramación:
 						</div>
 						<div>
 							<v-select
