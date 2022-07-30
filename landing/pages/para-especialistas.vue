@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary">
+		<div class="primary" style="marigin-bottom: 93px">
 			<Appbar class="hidden-md-and-up" />
 		</div>
 		<v-img
@@ -12,7 +12,12 @@
 			alt="Únete a la red de salud mental y bienestar"
 		>
 			<Appbar class="hidden-sm-and-down" />
-			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
+			<v-container
+				id="form-psy"
+				tag="section"
+				fluid
+				style="height: calc(100% - 180px); max-width: 1080px"
+			>
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="7" xl="5">
 						<h1
@@ -464,7 +469,7 @@
 				</v-row>
 			</v-img>
 		</div>
-		<v-container fluid style="max-width: 1400px" tag="footer">
+		<v-container fluid style="max-width: 1080px" tag="footer">
 			<Footer />
 		</v-container>
 	</div>

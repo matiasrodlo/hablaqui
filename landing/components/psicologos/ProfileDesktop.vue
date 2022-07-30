@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
+	<v-container fluid style="max-width: 1080px">
 		<v-row>
 			<v-col cols="8">
 				<v-card style="border-radius: 15px" class="shadowCard">

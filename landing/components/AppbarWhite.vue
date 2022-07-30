@@ -7,8 +7,8 @@
 					tabindex="0"
 					class="mx-auto my-5"
 					style="max-width: 150px"
-					:src="`https://cdn.hablaqui.cl/static/logo.png`"
-					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
+					src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+					lazy-src="`https://cdn.hablaqui.cl/static/logo.png"
 					alt="hablaqui Logo"
 					accesskey="h"
 				/>
@@ -118,56 +118,63 @@
 				/>
 			</svg>
 		</div> -->
-		<v-app-bar class="shadowAppBar" height="83" color="#ffffff">
-			<v-container style="max-width: 1200px">
+		<v-app-bar
+			class="shadowAppBar"
+			width="100%"
+			height="83"
+			color="#ffffff"
+			style="opacity: 0.9"
+			:elevate-on-scroll="$route.name !== 'psicologos'"
+			:app="$route.name !== 'psicologos'"
+		>
+			<v-container fluid style="max-width: 1080px">
 				<v-row align="center" justify="space-between" no-gutters>
-					<v-col cols="6" class="d-flex align-center">
+					<v-col class="d-flex align-center" md="7" lg="8">
 						<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
 							<v-img
-								style="max-width: 160px"
+								style="max-width: 176px"
 								alt="hablaqui Logo"
-								:src="`https://cdn.hablaqui.cl/static/logo.png`"
-								:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
+								src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+								lazy-src="https://cdn.hablaqui.cl/static/logo.png"
 								contain
 							/>
 						</nuxt-link>
 						<a
 							id="especialistas-appabar"
 							accesskey="r"
-							style="text-decoration: none"
-							class="hidden-sm-and-down ml-4"
+							style="text-decoration: none; font-size: 12.8px"
+							class="hidden-sm-and-down ml-7"
 							href="https://hablaqui.cl/blog/para-especialistas"
 						>
-							<span class="text-uppercase body-2 text--secondary font-weight-bold">
-								Para especialistas
-							</span>
+							<span class="text-uppercase font-nav"> Para especialistas </span>
 						</a>
 
 						<a
 							id="empresas-appbar"
 							href="https://hablaqui.cl/blog/para-empresas"
-							style="text-decoration: none"
+							style="text-decoration: none; font-size: 12.8px"
 							accesskey="p"
 							class="hidden-sm-and-down ml-4"
 						>
-							<span class="text-uppercase text--secondary body-2 font-weight-bold"
-								>Para empresas</span
-							>
+							<span class="text-uppercase font-nav">Para empresas</span>
 						</a>
 						<a
 							id="blog-appabar"
 							accesskey="b"
-							style="text-decoration: none"
+							style="text-decoration: none; font-size: 12.8px"
 							class="hidden-sm-and-down ml-4"
 							href="https://hablaqui.cl/blog/"
 						>
-							<span class="text-uppercase body-2 text--secondary font-weight-bold"
-								>Blog</span
-							>
+							<span class="text-uppercase font-nav">Blog</span>
 						</a>
 					</v-col>
 					<client-only>
-						<v-col v-if="$vuetify.breakpoint.smAndDown" cols="3" class="text-right">
+						<v-col
+							v-if="$vuetify.breakpoint.smAndDown"
+							cols="4"
+							lg="3"
+							class="text-right"
+						>
 							<div class="hidden-md-and-up">
 								<v-btn
 									id="menudrawer-appbar"
@@ -180,7 +187,7 @@
 							</div>
 						</v-col>
 						<template v-else>
-							<v-col v-if="$auth.$state.loggedIn" cols="3" class="text-right">
+							<v-col v-if="$auth.$state.loggedIn" class="text-right">
 								<div class="hidden-sm-and-down body-2 text--secondary" rounded text>
 									<v-menu
 										id="menu-sesion"
@@ -278,16 +285,21 @@
 									</v-menu>
 								</div>
 							</v-col>
-							<v-col v-else class="text-right" cols="5" md="4">
+							<v-col v-else class="text-right">
 								<v-btn
 									id="iniciar-sesion-appbar"
 									outlined
 									small
-									color="#BDBDBD"
+									color="#999999"
 									rounded
 									accesskey="s"
-									style="text-decoration: none"
-									class="hidden-sm-and-down text--secondary text-uppercase"
+									style="
+										text-decoration: none;
+										font-family: 'Lato', sans-serif;
+										font-size: 13.2px;
+										line-height: 1.6;
+									"
+									class="py-4 hidden-sm-and-down text-uppercase font-weight-bold"
 									:to="{ name: 'auth' }"
 								>
 									Iniciar sesión
@@ -298,7 +310,18 @@
 									rounded
 									small
 									accesskey="c"
-									class="mx-2 hidden-sm-and-down text-uppercase"
+									style="
+										font-family: 'Lato', sans-serif;
+										font-size: 13.2px;
+										line-height: 1.6;
+									"
+									class="
+										py-4
+										ml-2
+										hidden-sm-and-down
+										text-uppercase
+										font-weight-bold
+									"
 									color="primary"
 									depressed
 									to="/psicologos"
@@ -316,7 +339,7 @@
 
 <script>
 import { mdiMenu, mdiAccountDetails } from '@mdi/js';
-
+// El logo en VUE carga pixelado y las letras se ven algo distintas, los botones estan desplazados, etc
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),
@@ -424,5 +447,13 @@ export default {
 }
 .shadowAppBar {
 	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+}
+.font-nav {
+	color: #666666d9;
+	line-height: 16px;
+	font-weight: 700;
+	font-family: 'Lato', sans-serif;
+	letter-spacing: 0.02em;
+	// font-size: 0.8em;
 }
 </style>
