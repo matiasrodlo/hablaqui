@@ -341,7 +341,9 @@ export default {
 			return avatar;
 		},
 		copyLink() {
-			navigator.clipboard.writeText(`http://hablaqui.cl/${this.psychologist.username}`);
+			navigator.clipboard.writeText(
+				`${this.$config.LANDING_URL}${this.psychologist.username}`
+			);
 		},
 		...mapMutations({
 			setPsychologist: 'Psychologist/setPsychologist',
