@@ -1002,7 +1002,7 @@ export default {
 			url: this.$config.LANDING_URL,
 			logo: this.$config.LANDING_URL,
 			description:
-				'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+				'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 		};
 	},
 	head() {
@@ -1010,13 +1010,13 @@ export default {
 		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
 		const canonical = `${this.$config.LANDING_URL}${pathWithSlash}`;
 		return {
-			title: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
 					content:
-						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+						'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 				},
 				{
 					hid: 'robots',

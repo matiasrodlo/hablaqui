@@ -97,7 +97,7 @@
 						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
 						vida hoy.
 					</div>
-					<v-btn rounded color="primary" to="/psicologos"> Buscar ahora </v-btn>
+					<v-btn rounded color="primary" to="/psicologos/"> Buscar ahora </v-btn>
 				</v-card-text>
 			</v-card>
 		</template>
