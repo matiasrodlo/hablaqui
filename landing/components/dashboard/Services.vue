@@ -15,9 +15,7 @@
 					<v-col
 						cols="12"
 						md="6"
-						:style="
-							step && step.title === 'Anticipación para agendar' ? 'z-index: 3' : ''
-						"
+						:style="step && step.title === 'Agendamientos' ? 'z-index: 3' : ''"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
 							Anticipación para agendar:
@@ -43,12 +41,12 @@
 							></v-select>
 						</div>
 						<card-onboarding
-							v-if="step && step.title === 'Anticipación para agendar'"
+							v-if="step && step.title === 'Agendamientos'"
 							style="position: absolute; top: -20px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
 								() => ({
-									title: 'Reprogramación y agenda',
+									title: 'Reprogramación',
 									tab: 2,
 									card: {
 										title: 'Reprogramación',
@@ -63,9 +61,7 @@
 					<v-col
 						cols="12"
 						md="6"
-						:style="
-							step && step.title === 'Reprogramación y agenda' ? 'z-index: 3' : ''
-						"
+						:style="step && step.title === 'Reprogramación' ? 'z-index: 3' : ''"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
 							Anticipación para reprogramar:
@@ -94,7 +90,7 @@
 							></v-select>
 						</div>
 						<card-onboarding
-							v-if="step && step.title === 'Reprogramación y agenda'"
+							v-if="step && step.title === 'Reprogramación'"
 							style="position: absolute; top: -20px; left: 52%; z-index: 3"
 							arrow="arrow-bottom"
 							:next="

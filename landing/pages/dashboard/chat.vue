@@ -11,9 +11,9 @@
 					return {
 						title: 'Sesiones',
 						card: {
-							title: 'Despreocúpate y organiza tu agenda',
+							title: 'Sesiones',
 							description:
-								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+								'Las sesiones se añadirán automáticamente a su calendario ',
 							link: '',
 						},
 						route: 'dashboard-agenda',
