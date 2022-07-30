@@ -36,19 +36,24 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
+import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import Footer from '~/components/Footer';
+import Appbar from '~/components/AppbarWhite';
 
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
-		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () =>
-			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
-			),
-		PsicologosMobile: () =>
-			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
-			),
+		Footer,
+		Appbar,
+		PsicologosDesktop,
+		PsicologosMobile,
+	},
+	async asyncData({ error, store }) {
+		try {
+			await store.dispatch('Psychologist/getPsychologists');
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
 	},
 	head() {
 		return {

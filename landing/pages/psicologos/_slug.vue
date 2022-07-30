@@ -10,8 +10,9 @@ export default {
 	components: {
 		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
 	},
-	async asyncData({ params, $config, error, payload }) {
+	async asyncData({ params, store, $config, error, payload }) {
 		try {
+			await store.dispatch('Psychologist/getPsychologists');
 			if (payload) return { comuna: payload };
 			else {
 				const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, {

@@ -62,19 +62,18 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
+import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import Footer from '~/components/Footer';
+import Appbar from '~/components/AppbarWhite';
+
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
-		Appbar: () => import('~/components/AppbarWhite'),
+		Footer,
+		Appbar,
+		PsicologosDesktop,
+		PsicologosMobile,
 		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
-		PsicologosDesktop: () =>
-			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
-			),
-		PsicologosMobile: () =>
-			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
-			),
 	},
 	props: {
 		location: {
@@ -130,7 +129,6 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
 		}),
