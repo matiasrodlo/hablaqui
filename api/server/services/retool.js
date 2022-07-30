@@ -18,6 +18,10 @@ const getNextSessions = async () => {
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
 				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
+				userPhone: s.user.phone,
+				psyPhone: s.psychologist.phone,
+				userEmail: s.user.email,
+				psyEmail: s.psychologist.email,
 				plan,
 				planActived,
 			};
@@ -28,8 +32,14 @@ const getNextSessions = async () => {
 			const plan = p.plan;
 			return plan.session.flatMap(s => {
 				return {
+					_id: s._id,
+					sessionNumber: s.sessionNumber + '/' + plan.totalSessions,
 					date: s.date,
 					user: p.user,
+					userPhone: p.userPhone,
+					psyPhone: p.psyPhone,
+					userEmail: p.userEmail,
+					psyEmail: p.psyEmail,
 					psychologist: p.psy,
 					status: s.status,
 				};
