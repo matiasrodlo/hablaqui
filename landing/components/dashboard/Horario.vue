@@ -71,12 +71,12 @@
 					arrow="arrow-bottom"
 					:next="
 						() => ({
-							title: 'Anticipación para agendar',
+							title: 'Agendamientos',
 							tab: 2,
 							card: {
 								title: 'Agendamientos',
 								description:
-									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+									'Establezca la anticipación con que le pueden reagendar',
 							},
 							route: 'dashboard-perfil',
 						})
