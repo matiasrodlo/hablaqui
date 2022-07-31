@@ -28,7 +28,7 @@
 						width="30"
 						class="mx-2"
 					></v-img>
-					Agendar demo
+					Agendar con ejecutivo
 				</div>
 			</a>
 		</div>
