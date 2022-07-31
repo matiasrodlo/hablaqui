@@ -18,8 +18,8 @@ const getNextSessions = async () => {
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
 				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
-				userPhone: s.user.phone,
-				psyPhone: s.psychologist.phone,
+				userPhone: s.user.phone ? s.user.phone : '--',
+				psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
 				userEmail: s.user.email,
 				psyEmail: s.psychologist.email,
 				plan,
