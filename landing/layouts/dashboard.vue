@@ -610,8 +610,7 @@ export default {
 							tab: 2,
 							card: {
 								title: 'Agendamientos',
-								description:
-									'Establezca la anticipación con que le pueden reagendar',
+								description: 'Establezca la anticipación con que le pueden agendar',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
