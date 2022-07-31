@@ -312,23 +312,24 @@
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
-						Bienvenido a Hablaquí Office
+						Aprenda a usar Hablaquí
 					</v-card-text>
+					<br />
 					<v-card-text class="text-center body-2 px-6">
-						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
-						agenda una inducción a la plataforma.
+						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas en una
+						breve capacitación en línea.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+							href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
 						>
-							Agendar demo
+							Agendar capacitación
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
