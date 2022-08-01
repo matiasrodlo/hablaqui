@@ -28,7 +28,7 @@ export default {
 	},
 	head() {
 		return {
-			title: `Psicólogos en ${this.$route.params.slug} | Hablaquí`,
+			title: `Psicólogos en ${this.$route.params.slug} | Desde $15.500`,
 			meta: [
 				{
 					hid: 'description',

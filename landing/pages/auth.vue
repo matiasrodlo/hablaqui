@@ -236,7 +236,7 @@ export default {
 		return {
 			meta: [
 				{
-					hid:"seo:robots",
+					hid:"robots",
 					name:"robots",
 					content:"noindex",
 				},
