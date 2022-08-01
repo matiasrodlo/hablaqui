@@ -69,9 +69,7 @@ export default {
 	},
 	head() {
 		return {
-			title: `${
-				this.psychologist ? this.psychologist.name + ' ' + this.psychologist.lastName : ''
-			} | Hablaquí`,
+			title: `${this.psychologist ? 'Psicólogo '+ this.psychologist.name + ' ' + this.psychologist.lastName + ' $'+ this.psychologist.sessionPrices.video :''}`,
 			meta: [
 				{
 					hid: 'description',
