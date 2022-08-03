@@ -39,7 +39,7 @@
 					id="link-blog-drawer"
 					accesskey="b"
 					link
-					href="https://hablaqui.cl/blog/"
+					href="https://app.hablaqui.cl/blog/"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
@@ -158,7 +158,7 @@
 				accesskey="b"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				href="https://hablaqui.cl/blog/"
+				href="https://app.hablaqui.cl/blog/"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</a>

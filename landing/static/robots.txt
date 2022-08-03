@@ -10,4 +10,4 @@ Disallow: /blog/carrito/
 Disallow: /blog/mi-cuenta/
 
 
-Sitemap: https://hablaqui.cl/sitemap.xml
+Sitemap: https://app.hablaqui.cl/sitemap.xml

@@ -101,10 +101,10 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://hablaqui.cl/psicologos',
+			url: 'http://app.hablaqui.cl/psicologos',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
-			logo: 'https://hablaqui.cl/logo_tiny.png',
+			logo: 'https://app.hablaqui.cl/logo_tiny.png',
 		};
 	},
 	created() {
