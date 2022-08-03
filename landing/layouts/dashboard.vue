@@ -204,9 +204,11 @@
 					</v-btn>
 				</v-list-item-avatar>
 				<v-list-item-content>
-					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
+					<v-list-item-title class="title text-left">
+						Para especialistas
+					</v-list-item-title>
 					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
-						Da tus primeros pasos en Hablaquí Office.
+						Asistente de configuración
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
@@ -215,12 +217,12 @@
 					<v-expansion-panel-header v-if="step.visible">
 						<div class="text-left">
 							<icon
-								v-if="step.title === 'Explora las secciones'"
+								v-if="step.title === 'Secciones'"
 								size="35"
 								:icon="mdiMapMarkerStar"
 							/>
 							<icon
-								v-else-if="step.title === 'Configura tu cuenta'"
+								v-else-if="step.title === 'Configuración'"
 								size="35"
 								:icon="mdiCog"
 							/>
@@ -555,82 +557,81 @@ export default {
 		stepOnboarding() {
 			return [
 				{
-					title: 'Configura tu cuenta',
+					title: 'Configuración',
 					route: '/dashboard/perfil',
 					items: [
 						{
-							title: 'Sube tu foto de perfil',
+							title: 'Foto de perfil',
 							tab: 0,
 							card: {
-								title: 'Editamos tu fotografía',
+								title: 'Foto de perfil',
 								description:
-									'Aquí puedes subir tu foto para editarla, consulta el manual',
+									'Luzca profesional. Adjunte su foto de perfil, nosotros la retocaremos. Ver manual.',
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
 							done: this.hasAvatar,
 						},
 						{
-							title: 'Añade tus datos bancarios',
+							title: 'Datos bancarios',
 							tab: 0,
 							card: {
-								title: 'No te preocupes, cobramos por ti',
+								title: 'Datos bancarios',
 								description:
-									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+									'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Configura tus horarios',
+							title: 'Horarios',
 							tab: 1,
 							card: {
-								title: 'Tu horario de trabajo diario',
+								title: 'Disponibilidad',
 								description:
-									'Selecciona los horarios que tendrás disponible para atender.',
+									'Establezca fácilmente sus horarios de atención al público.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Intervalos en tu horario',
+							title: 'Disponibilidad',
 							tab: 1,
 							card: {
-								title: 'Agregar más intervalos de tiempo',
-								description: 'Puedes añadir más bloques de horario para atender.',
+								title: 'Intervalos',
+								description:
+									'Establezca intervalos de disponibilidad para cada día.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Anticipación para agendar',
+							title: 'Agendamientos',
 							tab: 2,
 							card: {
-								title: 'Ya no más sesiones muy encima',
-								description:
-									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+								title: 'Agendamientos',
+								description: 'Establezca la anticipación con que le pueden agendar',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Configura el tiempo de reprogramación y agenda',
+							title: 'Reprogramación',
 							tab: 2,
 							card: {
-								title: 'No pierdas tu tiempo',
+								title: 'Reprogramación',
 								description:
-									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+									'Establezca la anticipación con que le pueden reagendar',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Añade el precio de tus sesiones',
+							title: 'Valor por sesión',
 							tab: 2,
 							card: {
-								title: 'Ingresa el valor de tus sesiones',
-								description:
-									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+								title: 'Valor por sesión',
+								description: 'Configure el valor por sesiones de 50 minutos.',
 							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
@@ -645,27 +646,27 @@ export default {
 						this.hasAvatar,
 				},
 				{
-					title: 'Explora las secciones',
+					title: 'Secciones',
 					route: '/dashboard/chat',
 					items: [
 						{
 							title: 'Chat',
 							route: 'dashboard-chat',
 							card: {
-								title: 'Tus conversaciones en un solo lugar',
+								title: 'Chat',
 								description:
-									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+									'Envíe mensajes ilimitados para coordinar y realizar seguimiento.',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							done: this.$auth.user.onboarding || this.stepLinks[0],
 						},
 						{
-							title: 'Mi agenda',
+							title: 'Sesiones',
 							card: {
-								title: 'Gestiona tu agenda',
+								title: 'Sesiones',
 								description:
-									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
+									'Las sesiones se añadirán automáticamente en su calendario.',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -673,11 +674,11 @@ export default {
 							done: this.$auth.user.onboarding || this.stepLinks[1],
 						},
 						{
-							title: 'Mis pagos',
+							title: 'Pagos',
 							card: {
-								title: 'Gestiona tus pagos',
+								title: 'Pagos',
 								description:
-									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -685,11 +686,11 @@ export default {
 							done: this.$auth.user.onboarding || this.stepLinks[2],
 						},
 						{
-							title: 'Mis consultantes',
+							title: 'Consultantes',
 							card: {
-								title: 'Gestiona los consultantes',
+								title: 'Consultantes',
 								description:
-									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+									'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
 								link: '',
 								route: 'dashboard-chat',
 							},

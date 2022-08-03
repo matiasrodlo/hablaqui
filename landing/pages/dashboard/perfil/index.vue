@@ -11,7 +11,7 @@
 				id="itemAvatar"
 				class="hidden-sm-and-down"
 				style="position: relative"
-				:style="step && step.title === 'Sube tu foto de perfil' ? 'z-index: 3' : ''"
+				:style="step && step.title === 'Foto de perfil' ? 'z-index: 3' : ''"
 			>
 				<v-file-input
 					id="upload"
@@ -48,17 +48,17 @@
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
 					<card-onboarding
-						v-if="step && step.title === 'Sube tu foto de perfil'"
+						v-if="step && step.title === 'Foto de perfil'"
 						style="position: absolute; top: 20%"
 						arrow="arrow-left"
 						:next="
 							() => ({
-								title: 'Añade tus datos bancarios',
+								title: 'Datos bancarios',
 								tab: 0,
 								card: {
-									title: 'No te preocupes, cobramos por ti',
+									title: 'Datos bancarios',
 									description:
-										'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+										'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
 								},
 								route: 'dashboard-perfil',
 							})

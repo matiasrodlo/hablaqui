@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<card-onboarding
-			v-if="step && step.title === 'Mis consultantes'"
+			v-if="step && step.title === 'Consultantes'"
 			style="position: absolute; top: 320px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="

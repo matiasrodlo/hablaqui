@@ -41,16 +41,17 @@
 					</div>
 				</div>
 				<card-onboarding
-					v-if="step && step.title === 'Configura tus horarios'"
+					v-if="step && step.title === 'Horarios'"
 					style="position: absolute; top: -7%; right: 20%; z-index: 3"
 					arrow="arrow-bottom"
 					:next="
 						() => ({
-							title: 'Intervalos en tu horario',
+							title: 'Disponibilidad',
 							tab: 1,
 							card: {
-								title: 'Agregar más intervalos de tiempo',
-								description: 'Puedes añadir más bloques de horario para atender.',
+								title: 'Intervalos',
+								description:
+									'Establezca intervalos de disponibilidad para cada día.',
 							},
 							route: 'dashboard-perfil',
 						})
@@ -65,17 +66,16 @@
 				style="position: relative"
 			>
 				<card-onboarding
-					v-if="index === 0 && step && step.title === 'Intervalos en tu horario'"
+					v-if="index === 0 && step && step.title === 'Disponibilidad'"
 					style="position: absolute; top: -140px; right: -40px; z-index: 3"
 					arrow="arrow-bottom"
 					:next="
 						() => ({
-							title: 'Anticipación para agendar',
+							title: 'Agendamientos',
 							tab: 2,
 							card: {
-								title: 'Ya no más sesiones muy encima',
-								description:
-									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+								title: 'Agendamientos',
+								description: 'Establezca la anticipación con que le pueden agendar',
 							},
 							route: 'dashboard-perfil',
 						})
