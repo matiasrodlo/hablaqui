@@ -94,7 +94,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
+					href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
