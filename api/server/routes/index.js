@@ -12,6 +12,7 @@ import chatRouter from './chat';
 import couponRouter from './coupon';
 import recruitmentRouter from './recruitment';
 import cronRouter from './cron';
+import retoolRouter from './retool';
 
 const apiVersion = '/api/v1';
 
@@ -28,4 +29,5 @@ export default app => {
 	app.use(apiVersion, recruitmentRouter);
 	app.use(apiVersion, userRoutes);
 	app.use(apiVersion, cronRouter);
+	app.use(apiVersion, retoolRouter);
 };
