@@ -2,7 +2,9 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
-			<appbar />
+			<div style="margin-bottom: 83px">
+				<Appbar />
+			</div>
 			<!-- content -->
 			<div
 				v-show="!matchedPsychologists.length && !dialogPrecharge"
@@ -17,7 +19,7 @@
 					preguntas. ¡Queremos conocerte!
 				</div>
 				<div>
-					<v-container class="centerCard">
+					<v-container class="centerCard" fluid style="max-width: 1080px">
 						<v-row justify="center">
 							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
 								<v-stepper v-model="step" light style="border-radius: 25px">

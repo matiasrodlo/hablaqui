@@ -147,14 +147,6 @@ let psyPlan = new Schema({
 		type: Number,
 		default: 0,
 	},
-	hablaquiFee: {
-		type: Number,
-		default: 0.2,
-	},
-	paymentFee: {
-		type: Number,
-		default: 0.0399,
-	},
 });
 
 let recruitment = new Schema(
@@ -344,6 +336,10 @@ let recruitment = new Schema(
 		flagOnboarding: {
 			type: Object,
 			default: defaultOnboarding,
+		},
+		isHide: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	{
