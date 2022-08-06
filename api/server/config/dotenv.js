@@ -31,6 +31,12 @@ export const mercadopago_failure_url = process.env.MERCADOPAGO_FAILURE_URL;
 export const mercadopago_pending_url = process.env.MERCADOPAGO_PENDING_URL;
 export const mercadopago_notification_url =
 	process.env.MERCADOPAGO_NOTIFICATION_URL;
+export const pusher_app_id = process.env.PUSHER_APP_ID;
+export const pusher_secret = process.env.PUSHER_SECRET;
+export const pusher_key = process.env.PUSHER_KEY;
+export const pusher_cluster = process.env.PUSHER_CLUSTER;
+export const pusher_beams_instance = process.env.VUE_APP_PUSHER_BEAMS_INSTANCE;
+export const pusher_beams_key = process.env.VUE_APP_PUSHER_BEAMS_KEY;
 export const send_sms_message_service_url =
 	process.env.SEND_SMS_MESSAGE_SERVICE_URL;
 export const send_sms_message_task_queue =

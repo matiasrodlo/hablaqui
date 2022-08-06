@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- filter name -->
-		<v-container fluid style="max-width: 1080px">
+		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
 					v-if="$route.name === 'psicologos'"
@@ -66,7 +66,7 @@
 			class="sticky scroll"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
-			<v-container fluid style="max-width: 1080px">
+			<v-container fluid style="max-width: 1200px">
 				<v-row>
 					<v-col id="menuSpecialties" cols="3">
 						<v-menu
@@ -336,7 +336,7 @@
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
-		<v-container v-if="psychologists.length" fluid style="max-width: 1080px" class="my-4">
+		<v-container v-if="psychologists.length" fluid style="max-width: 1200px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px; height: 182px">
@@ -612,7 +612,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container v-else fluid style="max-width: 1080px">
+		<v-container v-else fluid style="max-width: 1200px">
 			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
 				<v-skeleton-loader type="image" />
 			</v-col>

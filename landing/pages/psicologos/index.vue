@@ -6,13 +6,13 @@
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
-			class="mt-10 hidden-sm-and-down"
+			class="hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<psicologos-mobile
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
-			class="mt-10 hidden-md-and-up"
+			class="hidden-md-and-up"
 		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">

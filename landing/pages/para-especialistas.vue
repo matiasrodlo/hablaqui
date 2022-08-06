@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="primary" style="marigin-bottom: 93px">
+		<div class="primary">
 			<Appbar class="hidden-md-and-up" />
 		</div>
 		<v-img
@@ -12,12 +12,7 @@
 			alt="Únete a la red de salud mental y bienestar"
 		>
 			<Appbar class="hidden-sm-and-down" />
-			<v-container
-				id="form-psy"
-				tag="section"
-				fluid
-				style="height: calc(100% - 180px); max-width: 1080px"
-			>
+			<v-container id="form-psy" tag="section" fluid style="height: calc(100% - 180px)">
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="7" xl="5">
 						<h1
@@ -87,9 +82,19 @@
 							</v-list-item>
 						</v-list>
 					</v-col>
+					<v-col class="hidden-sm-and-down" cols="12" md="5" lg="4" xl="3">
+						<form-user-psy />
+					</v-col>
 				</v-row>
 			</v-container>
 		</v-img>
+		<v-container id="form-psy2" class="hidden-md-and-up primary pb-16">
+			<v-row>
+				<v-col>
+					<form-user-psy />
+				</v-col>
+			</v-row>
+		</v-container>
 		<v-container style="max-width: 1400px">
 			<v-row justify="center">
 				<v-col cols="12">
@@ -469,7 +474,7 @@
 				</v-row>
 			</v-img>
 		</div>
-		<v-container fluid style="max-width: 1080px" tag="footer">
+		<v-container fluid style="max-width: 1400px" tag="footer">
 			<Footer />
 		</v-container>
 	</div>
@@ -483,6 +488,7 @@ export default {
 		Footer: () => import('@/components/Footer'),
 		Icon: () => import('~/components/Icon'),
 		Appbar: () => import('@/components/AppbarWhite'),
+		FormUserPsy: () => import('@/components/psicologos/FormUserPsy.vue'),
 	},
 	data() {
 		return {

@@ -8,6 +8,8 @@ import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import pusher from '../config/pusher';
+import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
@@ -193,20 +195,20 @@ const usersService = {
 	},
 
 	async setUserOnline(user) {
-		// const data = {
-		// 	...user,
-		// 	status: true,
-		// };
-		// pusher.trigger('user-status', 'online', data, pusherCallback);
+		const data = {
+			...user,
+			status: true,
+		};
+		pusher.trigger('user-status', 'online', data, pusherCallback);
 		return okResponse('Usuario conectado', user);
 	},
 
 	async setUserOffline(user) {
-		// const data = {
-		// 	...user,
-		// 	status: false,
-		// };
-		// pusher.trigger('user-status', 'offline', data, pusherCallback);
+		const data = {
+			...user,
+			status: false,
+		};
+		pusher.trigger('user-status', 'offline', data, pusherCallback);
 		return okResponse('Usuario desconectado', user);
 	},
 

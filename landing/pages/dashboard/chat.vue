@@ -9,11 +9,11 @@
 					setStepLinks(0);
 					$router.push({ name: 'dashboard-agenda' });
 					return {
-						title: 'Sesiones',
+						title: 'Mi agenda',
 						card: {
-							title: 'Sesiones',
+							title: 'Despreocúpate y organiza tu agenda',
 							description:
-								'Las sesiones se añadirán automáticamente a su calendario ',
+								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
 							link: '',
 						},
 						route: 'dashboard-agenda',
@@ -323,7 +323,6 @@
 								:sub-header="subHeader"
 								:loading-chat="loadingChat"
 								:chat="chat"
-								:socket="socket"
 								:close="() => (selected = null)"
 							/>
 						</v-sheet>
@@ -336,7 +335,6 @@
 							:sub-header="subHeader"
 							:loading-chat="loadingChat"
 							:chat="chat"
-							:socket="socket"
 						/>
 					</v-col>
 				</template>
@@ -348,6 +346,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
+import Pusher from 'pusher-js';
 import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
@@ -367,6 +366,7 @@ export default {
 			loadingChat: false,
 			dialog: false,
 			selected: null,
+			pusher: null,
 			channel: null,
 			initLoading: true,
 		};
@@ -498,18 +498,22 @@ export default {
 			avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			url: '',
 		};
-		this.socket = this.$nuxtSocket({
-			channel: '/liveData',
+		// PUSHER
+		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
+			cluster: this.$config.PUSHER_CLUSTER,
 		});
-
-		/* Listen for events: */
-		this.socket.on('getMessage', data => {
+		this.pusher.connection.bind('update', function (err) {
+			console.error(err);
+		});
+		this.channel = this.pusher.subscribe('chat');
+		this.channel.bind('update', data => this.$emit('updateChat', data));
+		this.$on('updateChat', data => {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
 					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
-				this.socketioCallback(data);
+				this.pusherCallback(data);
 			}
 		});
 	},
@@ -551,7 +555,7 @@ export default {
 			}
 			this.initLoading = false;
 		},
-		async socketioCallback(data) {
+		async pusherCallback(data) {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				// scroll to end
@@ -649,6 +653,7 @@ export default {
 		...mapActions({
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
+			sendMessage: 'Chat/sendMessage',
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',

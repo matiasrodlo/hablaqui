@@ -1,11 +1,9 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<div style="margin-bottom: 83px">
-			<Appbar />
-		</div>
+		<appbar />
 		<!-- routing for child -->
-		<v-container class="mt-10" fluid style="max-width: 1080px">
+		<v-container>
 			<v-row>
 				<v-col cols="12">
 					<h1 class="text-left font-weight-bold text-h6 text-md-h4 text--secondary">
@@ -141,7 +139,7 @@
 		</v-container>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16" fluid style="max-width: 1080px">
+			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son

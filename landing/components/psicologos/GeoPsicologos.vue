@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="max-width: 1080px">
+	<v-container fluid style="max-width: 1200px">
 		<div class="mb-6">
 			<h1
 				class="d-inline-block text-left font-weight-bold text-h6 text-md-h4 text--secondary"

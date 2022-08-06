@@ -93,25 +93,26 @@ async function sendNotification(emails) {
 			const message = messages.messages.filter(
 				m => m._id.toString() === e.sessionRef.toString()
 			);
-			if (!message[0].read && !e.wasScheduled) {
+			if (
+				!message[0].read &&
+				!e.wasScheduled &&
+				e.type === 'send-by-user'
+			)
+				await mailService.sendChatNotificationToPsy(user, psy, batch);
+			else if (
+				!message[0].read &&
+				!e.wasScheduled &&
 				e.type === 'send-by-psy'
-					? await mailService.sendChatNotificationToUser(
-							user,
-							psy,
-							batch
-					  )
-					: await mailService.sendChatNotificationToPsy(
-							user,
-							psy,
-							batch
-					  );
-			}
+			)
+				await mailService.sendChatNotificationToUser(user, psy, batch);
 			const updatePayload = {
 				wasScheduled: true,
 				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 				batchId: batch,
 			};
-			await email.updateOne({ _id: e._id }, updatePayload);
+			await email.findByIdAndUpdate(e._id, updatePayload, {
+				new: true,
+			});
 		}
 	});
 }

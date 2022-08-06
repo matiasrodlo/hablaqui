@@ -1,16 +1,14 @@
 <template>
 	<div>
 		<div class="primary-color">
-			<div style="margin-bottom: 83px">
-				<Appbar />
-			</div>
+			<Appbar />
 			<div class="text-center font-weight-bold text-h5 text-lg-h3 white--text py-16">
 				Terminos y condiciones de uso
 			</div>
 		</div>
-		<v-container class="mt-16" fluid style="max-width: 1080px">
+		<v-container class="mt-16">
 			<v-row justify="center">
-				<v-col cols="12">
+				<v-col cols="12" md="10">
 					Mediante estas Condiciones Generales de Uso ("Condiciones"), Hablaquí presenta a
 					los usuarios ("Usuarios") las condiciones esenciales para la utilización de los
 					servicios ofrecidos en la Plataforma.
@@ -73,7 +71,7 @@
 					El Profesional se compromete a proporcionar el 100% de los productos disponibles
 					en la Plataforma.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Capacidad civil para el registro en la Plataforma</strong> <br />
 					<br />
 					Los servicios de la Plataforma solo están a disposición de las personas capaces
@@ -89,7 +87,7 @@
 					mismo usuario realice varios registros, Hablaquí se reserva el derecho de
 					desactivar y eliminar el registro sin previo aviso.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Registro</strong> <br /><br />
 					Los usuarios deben registrarse directamente en la Plataforma rellenando la
 					información personal solicitada por Hablaquí.
@@ -120,7 +118,7 @@
 					registros originales hayan sido cancelados por violaciones de las políticas de
 					Hablaquí.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Formas de servicio </strong>
 					<br /><br />
 					Los servicios pueden prestarse por separado o a través de planes contratados por
@@ -140,7 +138,7 @@
 					valores que puedan ser cobrados por incumplimiento del Usuario respecto a la
 					renovación automática del plan.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> Programación de citas </strong> <br /><br />
 					Hablaquí ofrece un servicio para gestionar la programación y el pago de las
 					citas virtuales con los profesionales. Se destaca que Hablaquí no gestiona la
@@ -200,7 +198,7 @@
 					<br />
 					<br />
 					Los Profesionales y Usuarios registrados pueden acceder a sus citas a través de
-					un panel disponible en la Plataforma en "Sesiones".
+					un panel disponible en la Plataforma en "Mis Sesiones".
 					<br />
 					<br />
 					Cualquier retraso por parte del Usuario y/o Profesional, será responsabilidad
@@ -208,7 +206,7 @@
 					responsabiliza de los daños y perjuicios sufridos por la parte afectada por el
 					retraso.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Política de cambios</strong> <br /><br />
 					El Usuario podrá modificar el horario del servicio sin coste alguno, siempre que
 					lo haga con la antelación mínima que cada profesional requiera y quede explícito
@@ -233,7 +231,7 @@
 					Hablaquí se reserva el derecho de revisar en cualquier momento las políticas de
 					reprogramación añadiendo limitaciones a la misma.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Retirada de la ayuda</strong> <br />
 					<br />
 					El Usuario puede renunciar al servicio, siempre y cuando solicite la cancelación
@@ -271,7 +269,7 @@
 					cobrado podrá ser utilizado para la programación de un nuevo servicio o será
 					devuelto en su totalidad al Usuario.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Evaluación del profesional</strong> <br />
 					<br />
 					Hablaquí pone a disposición de los Usuarios una herramienta de evaluación
@@ -318,7 +316,7 @@
 					la moral y a las buenas costumbres o utilizan un lenguaje prohibido en estas
 					Condiciones de Uso.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Renuncias y limitaciones de responsabilidad de Hablaquí</strong>
 					<br /><br />
 					Hablaquí respeta y cumple con todas las leyes y reglamentos aplicables a sus
@@ -449,7 +447,7 @@
 					judicial u organismo gubernamental, pudiendo enviar información de registro de
 					sus Usuarios.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Restricciones</strong> <br /><br />
 					Queda prohibido cualquier intento, directo o indirecto, exitoso o fallido, de
 					realizar cualquiera de las actividades que se enumeran a continuación. La
@@ -547,7 +545,7 @@
 					será responsable de las pérdidas y daños que puedan sufrir las partes
 					involucradas;
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Sanciones</strong> <br />
 					<br />
 					En caso de que algún Usuario incumpla alguna de las disposiciones de estas
@@ -562,7 +560,7 @@
 					cualquier naturaleza con todo el rigor de la ley, pudiendo implicar o cooperar
 					con las autoridades judiciales y policiales.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> Política de cancelación de cuentas </strong>
 					<br /><br />
 					Hablaquí podrá rescindir estas Condiciones, las Cuentas de Usuario o el acceso
@@ -590,7 +588,7 @@
 					efectiva si se realiza por escrito y está firmada por un representante
 					debidamente autorizado de Hablaquí.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Servicio y canal de información</strong> <br />
 					<br />
 					Hablaquí pone a disposición de sus Usuarios y Profesionales un canal de atención
@@ -602,7 +600,7 @@
 					describir detalladamente la situación, para que Hablaquí pueda verificar las
 					medidas aplicables previstas en estas Condiciones.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Avisos</strong> <br />
 					<br />
 					Cualquier notificación u otra comunicación permitida o requerida en virtud del
@@ -621,7 +619,7 @@
 				</v-col>
 			</v-row>
 			<v-row justify="center" align="center" class="mt-16 mb-8">
-				<v-col cols="12" md="6" class="text-center text-md-left">
+				<v-col cols="12" md="5" class="text-center text-md-left">
 					<div style="color: #bdbdbd" class="my-4">
 						<v-btn
 							text
@@ -646,7 +644,7 @@
 						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
+				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
 					<div>
 						<a
 							style="text-decoration: none"

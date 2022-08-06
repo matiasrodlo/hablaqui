@@ -127,9 +127,10 @@ const setPlanFree = async (id, isPsychologist) => {
 			expirationDate: '',
 			subscriptionPeriod: '',
 			price: 0,
+			hablaquiFee: 0.2,
+			paymentFee: 0.0399,
 		},
 	];
-	response.isHide = true;
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -228,23 +229,24 @@ const successPay = async params => {
 const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
 	const { period } = query;
-
 	let expirationDate;
 	if (period === 'anual') {
 		expirationDate = moment()
 			.add({ months: 12 })
-			.format();
+			.toISOString();
 	}
 	if (period === 'mensual') {
 		expirationDate = moment()
 			.add({ months: 1 })
-			.format();
+			.toISOString();
 	}
-	const pricePaid = 69000 * 12;
+	const pricePaid = period === 'mensual' ? 69990 : 55900 * 12;
 	const newPlan = {
 		tier: 'premium',
 		paymentStatus: 'success',
 		planStatus: 'active',
+		hablaquiFee: 0,
+		paymentFee: 0.0399,
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,
@@ -253,7 +255,6 @@ const psychologistPay = async (params, query) => {
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
 		{ $push: { psyPlans: newPlan } },
-		{ $set: { isHide: false } },
 		{ new: true }
 	);
 	if (
@@ -358,21 +359,22 @@ const createCustomSessionPreference = async params => {
 const recruitedPay = async (params, query) => {
 	const { recruitedId } = params;
 	const { period } = query;
-
 	let expirationDate;
 	if (period == 'anual') {
 		expirationDate = moment()
 			.add({ months: 12 })
-			.format();
+			.toISOString();
 	}
 	if (period == 'mensual') {
 		expirationDate = moment()
 			.add({ months: 1 })
-			.format();
+			.toISOString();
 	}
-	const pricePaid = 69000 * 12;
+	const pricePaid = period == 'mensual' ? 39990 : 31920 * 12;
 	const newPlan = {
 		tier: 'premium',
+		hablaquiFee: 0,
+		paymentFee: 0.0399,
 		expirationDate,
 		price: pricePaid,
 		subscriptionPeriod: period,

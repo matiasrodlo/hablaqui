@@ -1,18 +1,16 @@
 <template>
 	<div>
 		<div class="primary-color">
-			<div style="margin-bottom: 83px">
-				<Appbar />
-			</div>
+			<Appbar />
 			<div
 				class="white--text font-weight-bold text-h5 text-md-h4 text-lg-h3 text-center py-16"
 			>
 				Políticas de Privacidad
 			</div>
 		</div>
-		<v-container class="mt-16" fluid style="max-width: 1080px">
+		<v-container class="mt-16">
 			<v-row justify="center" class="mb-16">
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>1.Información general</strong><br />
 					<br />
 					Esta Política de Privacidad contiene información sobre la forma en que tratamos,
@@ -24,7 +22,7 @@
 					actualización normativa, por lo que se invita al usuario a consultar
 					periódicamente esta sección.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>2.Derechos de los usuarios</strong><br />
 					<br />
 					La app se compromete a cumplir con la normativa establecida en el RGPD, respecto
@@ -121,7 +119,7 @@
 						Hablaquí.
 					</div>
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>3.Obligación de no facilitar datos de terceros</strong> <br />
 					<br />
 					La recogida de los datos del usuario se realizará de acuerdo con lo establecido
@@ -129,23 +127,23 @@
 					aplicación utiliza servicios de terceros que pueden recoger información
 					utilizada para identificarle.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>4.Tipos de datos recogidos</strong> <br />
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>4.1.1 Datos de identificación del usuario para el registro</strong>
 					<br /><br />
 					El uso, por parte del usuario, de determinadas funcionalidades de la aplicación
 					dependerá del registro, en cuyo caso, se recogerán y almacenarán sus datos.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>Datos facilitados en el formulario de contacto</strong> <br />
 					<br />
 					Los datos eventualmente informados por el usuario que utiliza el formulario de
 					contacto disponible en la plataforma, incluyendo el contenido del mensaje
 					enviado, serán recogidos y almacenados.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>4.1.4 Datos sensibles</strong> <br />
 					<br />
 					La plataforma puede recoger los siguientes datos sensibles de los usuarios:
@@ -157,14 +155,14 @@
 						<li>Datos relativos a la vida sexual u orientación sexual del usuario</li>
 					</ul>
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>4.1.6. Recogida de datos no previstos expresamente</strong> <br />
 					<br />
 					Ocasionalmente, pueden recogerse otros tipos de datos no previstos expresamente
 					en esta Política de Privacidad, siempre que se faciliten con el consentimiento
 					del usuario, o que la recogida esté permitida o sea exigida por la ley.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 4.2 Base legal para el tratamiento de los datos personales </strong>
 					<br />
 					<br />
@@ -174,7 +172,7 @@
 					personales antes de la retirada. La retirada del consentimiento puede hacerse
 					por correo electrónico: c@hablaqui.com
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 4.3 Finalidades del tratamiento de datos personales </strong>
 					<br />
 					<br />
@@ -204,7 +202,7 @@
 					todo caso, seguirán siendo aplicables los derechos y obligaciones aquí
 					previstos.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 4.4 Plazo de conservación de los datos personales </strong>
 					<br />
 					<br />
@@ -234,7 +232,7 @@
 						</li>
 					</ul>
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong
 						>5. Seguridad en el tratamiento de los datos personales del usuario
 					</strong>
@@ -243,7 +241,7 @@
 					Los datos personales del usuario no serán compartidos con terceros. Por lo
 					tanto, sólo serán procesados por esta plataforma.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>
 						5. Seguridad en el tratamiento de los datos personales del usuario
 					</strong>
@@ -281,7 +279,7 @@
 					Por último, la plataforma se compromete a tratar los datos personales del
 					usuario de forma confidencial, dentro de los límites legales.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong>6. Datos de navegación (cookies) </strong>
 					<br />
 					<br />
@@ -312,7 +310,7 @@
 					usuario es considerada como datos personales. Como tal, todas las normas
 					previstas en esta Política de Privacidad también se aplican a ellos.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 7.0 Cookies de la plataforma </strong>
 					<br />
 					<br />
@@ -328,7 +326,7 @@
 					la aplicación, buscando la mejora de los productos y servicios ofrecidos al
 					usuario.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 7.1 Cookies de redes sociales</strong>
 					<br />
 					<br />
@@ -341,7 +339,7 @@
 					personales, y las personas físicas o jurídicas que las mantienen son
 					responsables de los datos recogidos y de las prácticas de privacidad adoptadas.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 7.2 Gestión de las cookies y de la configuración del navegador</strong>
 					<br />
 					<br />
@@ -360,7 +358,7 @@
 					los navegadores más utilizados, a los que puede acceder el usuario interesado en
 					obtener más información sobre la gestión de las cookies en su navegador:
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 8. Reclamación a una autoridad de control</strong>
 					<br />
 					<br />
@@ -370,7 +368,7 @@
 					plataforma, del país de residencia habitual del usuario, de su lugar de trabajo
 					o del lugar en el que supuestamente se ha cometido la infracción.
 				</v-col>
-				<v-col cols="12" md="12">
+				<v-col cols="12" md="10">
 					<strong> 9. Cambios</strong>
 					<br />
 					<br />
@@ -395,7 +393,7 @@
 				</v-col>
 			</v-row>
 			<v-row justify="center" align="center" class="mb-8">
-				<v-col cols="12" md="6" class="text-center text-md-left">
+				<v-col cols="12" md="5" class="text-center text-md-left">
 					<div style="color: #bdbdbd" class="my-4">
 						<v-btn
 							text
@@ -420,7 +418,7 @@
 						© 2021 Hablaquí · Todos los derechos reservados
 					</div>
 				</v-col>
-				<v-col cols="12" md="6" class="text-center text-md-right text--secondary">
+				<v-col cols="12" md="5" class="text-center text-md-right text--secondary">
 					<div>
 						<a
 							style="text-decoration: none"

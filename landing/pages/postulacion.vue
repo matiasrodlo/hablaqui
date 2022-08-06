@@ -1051,8 +1051,8 @@
 									color="primary"
 									@click="
 										() => {
-											form.isFormCompleted = false;
-											saveStep(4);
+											form.isFormCompleted = true;
+											saveStep(5);
 										}
 									"
 								>
@@ -1060,7 +1060,7 @@
 								</v-btn>
 							</div>
 						</v-stepper-content>
-						<v-stepper-content step="4">
+						<!-- <v-stepper-content step="4">
 							<plans
 								v-if="form._id"
 								:next="
@@ -1069,7 +1069,7 @@
 									}
 								"
 							/>
-						</v-stepper-content>
+						</v-stepper-content> -->
 						<v-stepper-content step="5">
 							<v-container fluid style="height: 70vh; max-width: 1200px">
 								<v-row
@@ -1132,7 +1132,7 @@ export default {
 	name: 'Postulacion',
 	components: {
 		Icon: () => import('~/components/Icon'),
-		plans: () => import('~/components/postulacion/Plans'),
+		// plans: () => import('~/components/postulacion/Plans'),
 	},
 	layout: 'simple',
 	middleware: ['auth'],
@@ -1216,7 +1216,7 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
-		if (this.form.isFormCompleted) this.step = 5;
+		// if (this.form.isFormCompleted) this.step = 5;
 		this.loading = false;
 	},
 	methods: {

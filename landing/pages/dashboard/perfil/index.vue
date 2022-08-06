@@ -11,7 +11,7 @@
 				id="itemAvatar"
 				class="hidden-sm-and-down"
 				style="position: relative"
-				:style="step && step.title === 'Foto de perfil' ? 'z-index: 3' : ''"
+				:style="step && step.title === 'Sube tu foto de perfil' ? 'z-index: 3' : ''"
 			>
 				<v-file-input
 					id="upload"
@@ -48,17 +48,17 @@
 				</v-list-item-avatar>
 				<v-list-item-content v-if="$auth.$state.user">
 					<card-onboarding
-						v-if="step && step.title === 'Foto de perfil'"
+						v-if="step && step.title === 'Sube tu foto de perfil'"
 						style="position: absolute; top: 20%"
 						arrow="arrow-left"
 						:next="
 							() => ({
-								title: 'Datos bancarios',
+								title: 'Añade tus datos bancarios',
 								tab: 0,
 								card: {
-									title: 'Datos bancarios',
+									title: 'No te preocupes, cobramos por ti',
 									description:
-										'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
+										'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
 								},
 								route: 'dashboard-perfil',
 							})
@@ -74,26 +74,6 @@
 						</small>
 					</v-list-item-subtitle>
 				</v-list-item-content>
-				<client-only>
-					<v-list-item-action
-						v-if="canCopy && psychologist && $auth.user.role === 'psychologist'"
-					>
-						<div class="d-flex align-center">
-							<v-text-field
-								readonly
-								style="font-size: 14px"
-								outlined
-								dense
-								hide-details
-								filled
-								:value="`hablaqui.cl/${psychologist.username}`"
-							/>
-							<v-btn class="ml-1" small color="primary" @click="copyLink">
-								Copiar link
-							</v-btn>
-						</div>
-					</v-list-item-action>
-				</client-only>
 			</v-list-item>
 			<v-list-item class="hidden-md-and-up">
 				<div
@@ -290,7 +270,6 @@ export default {
 			panels: [],
 			loadingAvatar: false,
 			sidebar: 0,
-			canCopy: false,
 		};
 	},
 	computed: {
@@ -308,9 +287,6 @@ export default {
 		step(newValue) {
 			if (newValue) this.tabs = newValue.tab;
 		},
-	},
-	mounted() {
-		this.canCopy = !!navigator.clipboard;
 	},
 	methods: {
 		setPsychologist(value) {
@@ -339,11 +315,6 @@ export default {
 				this.$auth.$state.user.avatarThumbnail ? this.$auth.$state.user.avatarThumbnail : ''
 			);
 			return avatar;
-		},
-		copyLink() {
-			navigator.clipboard.writeText(
-				`${this.$config.LANDING_URL}${this.psychologist.username}`
-			);
 		},
 		...mapMutations({
 			setPsychologist: 'Psychologist/setPsychologist',

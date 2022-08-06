@@ -105,7 +105,7 @@
 							style="flex: 1; font-size: 44px; color: #15314a"
 							class="font-weight-bold text-right"
 						>
-							$69.000
+							$69.990
 						</div>
 					</v-card-text>
 					<v-card-text>
@@ -141,13 +141,13 @@
 								<template #label>
 									<div style="width: 100%" class="d-flex justify-space-between">
 										<div class="body-2 text--secondary">Mensual</div>
-										<div class="body-2 text--secondary">$69.000</div>
+										<div class="body-2 text--secondary">$69.990</div>
 									</div>
 								</template>
 							</v-radio>
 						</v-card-text>
 					</v-card>
-					<v-card v-show="false" class="box my-2">
+					<v-card class="box my-2">
 						<div class="primary caption text-center white--text" style="height: 20px">
 							Ahorra 20%
 						</div>
@@ -212,27 +212,18 @@ export default {
 			mdiCheck,
 			period: 'mensual',
 			itemsPremiun: [
-				'Perfil profesional',
-				'Sala de videollamada',
-				'Pagos en línea',
-				'Agendamiento de citas',
-				'Recordatorios automáticos',
-				'Mensajería privada',
-				'Gestión de clientes',
-				'Contabilidad',
-				'Encuestas de satisfacción',
-				'Visibilidad en marketplace',
-				'Adherencia terapéutica',
-				'Asesorías en marketing digital',
+				'Agenda, cobros y recordatorios en piloto automático',
+				'0% de comisión por clientes referidos. El costo de la pasarela de pago está incluido.',
+				'Sala de videollamada encriptada',
+				'Posicionamiento, visibilidad y clientes',
+				'Soporte prioritario y asesoramiento estratégico',
 			],
 			itemsBasico: [
-				'Perfil profesional',
-				'Sala de videollamada',
-				'Pagos en línea',
-				'Agendamiento de citas',
-				'Recordatorios automáticos',
-				'Mensajería privada',
-				'Gestión de clientes',
+				'Agenda, cobros y recordatorios en piloto automático',
+				'0% de comisión por clientes referidos, no incluye costos de pasarela de pago (2,95%) + IVA',
+				'20% de comisión por clientes Hablaquí',
+				'Sala de videollamada encriptada.',
+				'Soporte y atención al cliente',
 			],
 		};
 	},
@@ -273,11 +264,10 @@ export default {
 	},
 	methods: {
 		async setPreferences(plan) {
-			// las preferencias se modificaron para que sean siempre anuales con un precio mensual de $69.990
 			const res = await this.setPaymentPreferences({
 				plan,
-				price: 69000 * 12,
-				period: 'anual',
+				price: this.period === 'mensual' ? 69990 : 55900 * 12,
+				period: this.period === 'mensual' ? this.period : 'anual',
 				description:
 					plan === 'premium' ? 'Plan Premium de Hablaqui' : 'Plan Basico de Hablaqui',
 				title: plan === 'premium' ? 'Plan Premium' : 'Plan Free',

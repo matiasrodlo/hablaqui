@@ -1,11 +1,9 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<div style="margin-bottom: 83px">
-			<Appbar />
-		</div>
+		<appbar />
 		<!-- geo psicologos -->
-		<geoPsicologos class="mt-10" :location="location" />
+		<geoPsicologos :location="location" />
 		<!-- desktop -->
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
@@ -19,7 +17,7 @@
 			class="hidden-md-and-up"
 		/>
 		<!-- expand panels -->
-		<v-container fluid style="max-width: 1080px">
+		<v-container>
 			<v-row>
 				<v-col cols="12" class="text--secondary text-center font-weight-bold text-h6">
 					Preguntas frecuentes sobre terapias desde {{ location.slug }}
@@ -44,7 +42,7 @@
 		</v-container>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16" fluid style="max-width: 1080px">
+			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -71,11 +69,11 @@ import Appbar from '~/components/AppbarWhite';
 
 export default {
 	components: {
+		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
 		Footer,
 		Appbar,
 		PsicologosDesktop,
 		PsicologosMobile,
-		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
 	},
 	props: {
 		location: {

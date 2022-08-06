@@ -1,10 +1,8 @@
 <template>
 	<div>
 		<div class="primary-color pb-16">
-			<div style="margin-bottom: 83px">
-				<Appbar />
-			</div>
-			<v-container fluid style="max-width: 1080px">
+			<Appbar />
+			<v-container>
 				<v-row justify="center" no-gutters>
 					<v-col cols="12" class="white--text text-center py-10">
 						<span class="font-weight-bold my-5 text-h6 text-md-h6">
@@ -27,7 +25,7 @@
 			</v-container>
 		</div>
 		<client-only>
-			<v-container v-if="items.length" class="mt-16" fluid style="max-width: 1080px">
+			<v-container v-if="items.length" class="mt-16">
 				<v-row v-if="itemsFilter.length">
 					<v-col cols="12">
 						<div v-for="(item, g) in itemsFilter" :key="g">
@@ -106,7 +104,7 @@
 					</v-col>
 				</v-row>
 			</v-container>
-			<v-container v-else fluid style="height: 200px; max-width: 1080px">
+			<v-container v-else style="height: 200px">
 				<v-row class="fill-height ma-0" align="center" justify="center">
 					<v-progress-circular
 						width="6"
@@ -118,7 +116,7 @@
 			</v-container>
 		</client-only>
 		<div style="background-color: #0f3860; margin-top: 120px; margin-bottom: 100px">
-			<v-container class="white--text py-16" fluid style="max-width: 1080px">
+			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -132,7 +130,7 @@
 				</v-row>
 			</v-container>
 		</div>
-		<v-container fluid style="max-width: 1080px">
+		<v-container>
 			<v-row justify="center" align="center" class="mb-8">
 				<v-col cols="12" md="6" class="text-center text-md-left">
 					<div style="color: #bdbdbd" class="my-4">

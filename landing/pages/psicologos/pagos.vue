@@ -1,26 +1,24 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<div style="margin-bottom: 140px">
-			<Appbar />
-		</div>
+		<appbar />
 		<!-- desktop -->
 		<template v-if="!loadingPsychologist">
 			<pagos-desktop
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="mt-10 hidden-sm-and-down"
+				class="hidden-sm-and-down"
 			/>
 			<!-- mobile -->
 			<pagos-mobile
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="mt-10 hidden-md-and-up"
+				class="hidden-md-and-up"
 			/>
 		</template>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16" fluid style="max-width: 1080px">
+			<v-container class="white--text py-16">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son

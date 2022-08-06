@@ -70,7 +70,6 @@
 						v-if="item.visible"
 						:id="item.name"
 						:key="i"
-						:disabled="item.disable"
 						class="my-4"
 						link
 						:to="item.link"
@@ -86,19 +85,6 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
-								<v-tooltip v-if="item.disable" right max-width="300" color="white">
-									<template #activator="{ on, attrs }">
-										<v-btn icon v-bind="attrs" v-on="on">
-											<icon :icon="mdiAlertOutline" color="red" />
-										</v-btn>
-									</template>
-									<div class="elevation-5 pa-3">
-										<span class="black--text">
-											Esta opción se activará contratando un plan premium
-										</span>
-									</div>
-								</v-tooltip>
-
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -108,7 +94,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
+					href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -128,7 +114,7 @@
 					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
+					href="https://soporte.hablaqui.cl/hc"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -144,12 +130,7 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item
-					v-else
-					class="my-4 hidden-md-and-up"
-					link
-					href="https://hablaqui.cl/preguntas-frecuentes/"
-				>
+				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
 					<v-list-item-avatar size="30">
 						<v-img
 							height="30"
@@ -204,11 +185,9 @@
 					</v-btn>
 				</v-list-item-avatar>
 				<v-list-item-content>
-					<v-list-item-title class="title text-left">
-						Para especialistas
-					</v-list-item-title>
+					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
 					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
-						Asistente de configuración
+						Da tus primeros pasos en Hablaquí Office.
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
@@ -217,12 +196,12 @@
 					<v-expansion-panel-header v-if="step.visible">
 						<div class="text-left">
 							<icon
-								v-if="step.title === 'Secciones'"
+								v-if="step.title === 'Explora las secciones'"
 								size="35"
 								:icon="mdiMapMarkerStar"
 							/>
 							<icon
-								v-else-if="step.title === 'Configuración'"
+								v-else-if="step.title === 'Configura tu cuenta'"
 								size="35"
 								:icon="mdiCog"
 							/>
@@ -314,24 +293,23 @@
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
-						Aprenda a usar Hablaquí
+						Bienvenido a Hablaquí Office
 					</v-card-text>
-					<br />
 					<v-card-text class="text-center body-2 px-6">
-						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas en una
-						breve capacitación en línea.
+						Es un honor que seas parte de Hablaquí. Termina de configurar tu cuenta y
+						agenda una inducción a la plataforma.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
+							href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
 						>
-							Agendar capacitación
+							Agendar demo
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
@@ -363,7 +341,6 @@ import {
 	mdiCog,
 	mdiAccountSupervisor,
 	mdiCalendar,
-	mdiAlertOutline,
 } from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Snackbar from '@/components/Snackbar';
@@ -391,7 +368,6 @@ export default {
 			mdiMenu,
 			mdiCheckCircle,
 			mdiCircle,
-			mdiAlertOutline,
 			drawer: true,
 			online: true,
 			isMini: true,
@@ -424,22 +400,18 @@ export default {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
-			const disable = false;
-			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
-					disable,
 				},
 				{
-					name: 'Sesiones',
+					name: 'Mis sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
-					disable,
 				},
 				{
 					name: 'Pagos',
@@ -448,8 +420,6 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
-					disable:
-						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
 				},
 				{
 					name: 'Consultantes',
@@ -458,14 +428,12 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
-					disable,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
-					disable,
 				},
 				{
 					name: 'Mi plan premium',
@@ -474,14 +442,12 @@ export default {
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
-					disable,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
-					disable,
 				},
 			];
 		},
@@ -557,81 +523,82 @@ export default {
 		stepOnboarding() {
 			return [
 				{
-					title: 'Configuración',
+					title: 'Configura tu cuenta',
 					route: '/dashboard/perfil',
 					items: [
 						{
-							title: 'Foto de perfil',
+							title: 'Sube tu foto de perfil',
 							tab: 0,
 							card: {
-								title: 'Foto de perfil',
+								title: 'Editamos tu fotografía',
 								description:
-									'Luzca profesional. Adjunte su foto de perfil, nosotros la retocaremos. Ver manual.',
+									'Aquí puedes subir tu foto para editarla, consulta el manual',
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
 							done: this.hasAvatar,
 						},
 						{
-							title: 'Datos bancarios',
+							title: 'Añade tus datos bancarios',
 							tab: 0,
 							card: {
-								title: 'Datos bancarios',
+								title: 'No te preocupes, cobramos por ti',
 								description:
-									'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
+									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Horarios',
+							title: 'Configura tus horarios',
 							tab: 1,
 							card: {
-								title: 'Disponibilidad',
+								title: 'Tu horario de trabajo diario',
 								description:
-									'Establezca fácilmente sus horarios de atención al público.',
+									'Selecciona los horarios que tendrás disponible para atender.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Disponibilidad',
+							title: 'Intervalos en tu horario',
 							tab: 1,
 							card: {
-								title: 'Intervalos',
-								description:
-									'Establezca intervalos de disponibilidad para cada día.',
+								title: 'Agregar más intervalos de tiempo',
+								description: 'Puedes añadir más bloques de horario para atender.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Agendamientos',
+							title: 'Anticipación para agendar',
 							tab: 2,
 							card: {
-								title: 'Agendamientos',
-								description: 'Establezca la anticipación con que le pueden agendar',
-							},
-							done: this.hasPreferences,
-							route: 'dashboard-perfil',
-						},
-						{
-							title: 'Reprogramación',
-							tab: 2,
-							card: {
-								title: 'Reprogramación',
+								title: 'Ya no más sesiones muy encima',
 								description:
-									'Establezca la anticipación con que le pueden reagendar',
+									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Valor por sesión',
+							title: 'Configura el tiempo de reprogramación y agenda',
 							tab: 2,
 							card: {
-								title: 'Valor por sesión',
-								description: 'Configure el valor por sesiones de 50 minutos.',
+								title: 'No pierdas tu tiempo',
+								description:
+									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+							},
+							done: this.hasPreferences,
+							route: 'dashboard-perfil',
+						},
+						{
+							title: 'Añade el precio de tus sesiones',
+							tab: 2,
+							card: {
+								title: 'Ingresa el valor de tus sesiones',
+								description:
+									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
 							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
@@ -646,27 +613,27 @@ export default {
 						this.hasAvatar,
 				},
 				{
-					title: 'Secciones',
+					title: 'Explora las secciones',
 					route: '/dashboard/chat',
 					items: [
 						{
 							title: 'Chat',
 							route: 'dashboard-chat',
 							card: {
-								title: 'Chat',
+								title: 'Tus conversaciones en un solo lugar',
 								description:
-									'Envíe mensajes ilimitados para coordinar y realizar seguimiento.',
+									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							done: this.$auth.user.onboarding || this.stepLinks[0],
 						},
 						{
-							title: 'Sesiones',
+							title: 'Mi agenda',
 							card: {
-								title: 'Sesiones',
+								title: 'Gestiona tu agenda',
 								description:
-									'Las sesiones se añadirán automáticamente en su calendario.',
+									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -674,11 +641,11 @@ export default {
 							done: this.$auth.user.onboarding || this.stepLinks[1],
 						},
 						{
-							title: 'Pagos',
+							title: 'Mis pagos',
 							card: {
-								title: 'Pagos',
+								title: 'Gestiona tus pagos',
 								description:
-									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
+									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -686,11 +653,11 @@ export default {
 							done: this.$auth.user.onboarding || this.stepLinks[2],
 						},
 						{
-							title: 'Consultantes',
+							title: 'Mis consultantes',
 							card: {
-								title: 'Consultantes',
+								title: 'Gestiona los consultantes',
 								description:
-									'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
+									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
 								link: '',
 								route: 'dashboard-chat',
 							},

@@ -1,11 +1,9 @@
 <template>
 	<div style="background-color: #f0f8ff; height: 100%">
 		<!-- appbar -->
-		<div style="margin-bottom: 83px">
-			<Appbar />
-		</div>
+		<appbar />
 		<!-- containt -->
-		<v-container fluid style="max-width: 1080px" class="mt-10">
+		<v-container fluid style="max-width: 1200px">
 			<plans :next="() => $router.push({ name: 'dashboard-perfil' })" />
 		</v-container>
 	</div>

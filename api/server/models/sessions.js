@@ -57,6 +57,10 @@ let plan = new Schema(
 		expiration: {
 			type: String,
 		},
+		invitedByPsychologist: {
+			type: Boolean,
+			default: false,
+		},
 		usedCoupon: {
 			type: String,
 		},
