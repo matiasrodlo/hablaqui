@@ -61,12 +61,12 @@ export default {
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/psicologos/',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/psicologos/',
 				},
 				{
 					hid: 'robots',
@@ -87,7 +87,7 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://app.hablaqui.cl/psicologos',
+			url: 'http://app.hablaqui.cl/psicologos/',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://app.hablaqui.cl/logo_tiny.png',

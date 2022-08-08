@@ -99,7 +99,7 @@ export default {
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+					content: 'https://hablaqui.cl/' + this.$route.params.slug,
 				},
 				{
 					hid: 'og:title',
@@ -135,7 +135,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/${this.psychologist.username}/`,
+					href: 'https://hablaqui.cl/'+this.psychologist.username+'/',
 				},
 			],
 		};
