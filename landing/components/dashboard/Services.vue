@@ -70,7 +70,20 @@
 						"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
-							Anticipación para reprogramar:
+							<v-tooltip v-if="isFree" right max-width="300" color="white">
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiAlertOutline" color="red" />
+									</v-btn>
+								</template>
+								<div class="elevation-5 pa-3">
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
+								</div>
+							</v-tooltip>
+
+							Anticipación de reprogramación:
 						</div>
 						<div>
 							<v-select

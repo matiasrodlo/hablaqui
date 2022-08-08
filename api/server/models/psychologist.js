@@ -210,10 +210,6 @@ let psychologist = new Schema({
 		type: Object,
 		default: defaultInmediateAttention,
 	},
-	isHide: {
-		type: Boolean,
-		default: false,
-	},
 	points: {
 		type: Number,
 		default: 50,
