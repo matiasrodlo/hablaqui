@@ -212,13 +212,13 @@ export default {
 
 	gtm: {
 		id: 'GTM-KTHDRHV',
-		enabled: true,
+		enabled: false,
 		autoInit: true,
 		respectDoNotTrack: true,
 
 		layer: 'dataLayer',
 		variables: {},
-	
+
 		pageTracking: true,
 		pageViewEventName: 'nuxtRoute',
 
@@ -229,7 +229,7 @@ export default {
 
 		noscript: true,
 		noscriptId: 'gtm-noscript',
-		noscriptURL: 'https://www.googletagmanager.com/ns.html'
+		noscriptURL: 'https://www.googletagmanager.com/ns.html',
 	},
 
 	segment: {
