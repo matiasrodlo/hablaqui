@@ -212,7 +212,7 @@ export default {
 
 	gtm: {
 		id: 'GTM-KTHDRHV',
-		enabled: false,
+		enabled: true,
 		autoInit: true,
 		respectDoNotTrack: true,
 
