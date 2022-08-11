@@ -1,7 +1,6 @@
 'use strict';
 
 import moment from 'moment';
-import momentz from 'moment-timezone';
 import { logInfo } from '../config/pino';
 moment.tz.setDefault('America/Santiago');
 

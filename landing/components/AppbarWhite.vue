@@ -7,36 +7,52 @@
 					tabindex="0"
 					class="mx-auto my-5"
 					style="max-width: 150px"
-					:src="`https://cdn.hablaqui.cl/static/logo.png`"
-					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
+					src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+					lazy-src="`https://cdn.hablaqui.cl/static/logo.png"
 					alt="hablaqui Logo"
 					accesskey="h"
 				/>
 			</v-list-item>
 			<v-list dense>
-				<v-list-item id="link-psi-drawer" accesskey="p" link :to="{ name: 'psicologos' }">
+				<v-list-item
+					id="link-psi-drawer"
+					class="primary"
+					accesskey="p"
+					link
+					:to="{ name: 'psicologos' }"
+				>
 					<v-list-item-content>
-						<v-list-item-title class="secondary--text font-weight-bold body-2">
-							Psicólogos
+						<v-list-item-title class="white--text font-weight-bold body-2">
+							Buscar Psicólogo
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+				<v-list-item
+					id="link-blog-drawer"
+					accesskey="r"
+					link
+					href="https://hablaqui.cl/blog/para-especialistas"
+				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
 							Para especialistas
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
+				<v-list-item
+					id="link-para-especialistas-drawer"
+					accesskey="q"
+					link
+					href="https://hablaqui.cl/blog/para-empresas"
+				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
-							Preguntas frecuentes
+							Para empresas
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
-					id="link-blog-drawer"
+					id="link-para-empresas-drawer"
 					accesskey="b"
 					link
 					href="https://hablaqui.cl/blog/"
@@ -44,19 +60,6 @@
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
 							Blog
-						</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item
-					v-show="!$auth.$state.loggedIn"
-					id="comenzar-drawer"
-					accesskey="c"
-					link
-					@click="start"
-				>
-					<v-list-item-content>
-						<v-list-item-title class="secondary--text font-weight-bold body-2">
-							Comenzar
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
@@ -102,7 +105,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<div style="height: 180px; overflow: hidden">
+		<!-- <div style="height: 180px; overflow: hidden">
 			<svg
 				class="shadow"
 				preserveAspectRatio="none"
@@ -114,181 +117,229 @@
 					d="M.16-18.79V122.75c6.88,1,20.8,2.92,38.31,5.1,0,0,215.57,25.78,403,14.18,18.33-1.13,40.69-2.8,83.59-5.21,129.36-7.25,216.16-14.1,298.68-8.34a1547.37,1547.37,0,0,1,256.14,39.69v-187Z"
 				/>
 			</svg>
-		</div>
-		<v-app-bar absolute flat height="115" color="transparent">
-			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
-				<v-img
-					style="max-width: 160px"
-					alt="hablaqui Logo"
-					:src="`https://cdn.hablaqui.cl/static/logo.png`"
-					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
-					contain
-				/>
-			</nuxt-link>
-			<router-link
-				id="psicologo-appbar"
-				:to="{ name: 'psicologos' }"
-				style="text-decoration: none"
-				accesskey="p"
-				class="hidden-sm-and-down ml-7 mr-3"
-			>
-				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
-			</router-link>
-			<nuxt-link
-				v-show="!$auth.$state.loggedIn"
-				id="especialistas-appabar"
-				accesskey="r"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				to="/para-especialistas"
-			>
-				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
-			</nuxt-link>
-			<nuxt-link
-				id="faq-appbar"
-				accesskey="f"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				to="/faq"
-			>
-				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
-			</nuxt-link>
-			<a
-				id="blog-appabar"
-				accesskey="b"
-				style="text-decoration: none"
-				class="hidden-sm-and-down mx-2"
-				href="https://hablaqui.cl/blog/"
-			>
-				<span class="body-2 text--secondary font-weight-bold">Blog</span>
-			</a>
-			<v-spacer></v-spacer>
-			<client-only>
-				<div
-					v-if="$auth.$state.loggedIn"
-					class="hidden-sm-and-down body-2 text--secondary mr-16"
-					rounded
-					text
-				>
-					<v-menu
-						id="menu-sesion"
-						rounded="xl"
-						offset-y
-						offset-x
-						open-on-hover
-						:close-on-content-click="false"
-						:nudge-width="100"
-					>
-						<template #activator="{ on, attrs }">
-							<div
-								id="link-sesion"
-								accesskey="j"
-								class="d-inline-block"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<h3 class="lg-mr-6 secondary--text d-inline-block">
-									Hola {{ $auth.$state.user.name }}
-								</h3>
-								<avatar
-									size="50"
-									:name="$auth.$state.user.name"
-									:last-name="
-										$auth.$state.user.lastName ? $auth.$state.user.lastName : ''
-									"
-									:url="$auth.$state.user.avatarThumbnail"
-								/>
+		</div> -->
+		<v-app-bar
+			class="shadowAppBar"
+			width="100%"
+			height="83"
+			color="#ffffff"
+			style="opacity: 0.9"
+			:elevate-on-scroll="$route.name !== 'psicologos'"
+			:app="$route.name !== 'psicologos'"
+		>
+			<v-container fluid style="max-width: 1080px">
+				<v-row align="center" justify="space-between" no-gutters>
+					<v-col class="d-flex align-center" md="7" lg="8">
+						<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+							<v-img
+								style="max-width: 176px"
+								alt="hablaqui Logo"
+								src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+								lazy-src="https://cdn.hablaqui.cl/static/logo.png"
+								contain
+							/>
+						</nuxt-link>
+						<a
+							id="especialistas-appabar"
+							accesskey="r"
+							style="text-decoration: none; font-size: 12.8px"
+							class="hidden-sm-and-down ml-7"
+							href="https://hablaqui.cl/blog/para-especialistas"
+						>
+							<span class="text-uppercase font-nav"> Para especialistas </span>
+						</a>
+
+						<a
+							id="empresas-appbar"
+							href="https://hablaqui.cl/blog/para-empresas"
+							style="text-decoration: none; font-size: 12.8px"
+							accesskey="p"
+							class="hidden-sm-and-down ml-4"
+						>
+							<span class="text-uppercase font-nav">Para empresas</span>
+						</a>
+						<a
+							id="blog-appabar"
+							accesskey="b"
+							style="text-decoration: none; font-size: 12.8px"
+							class="hidden-sm-and-down ml-4"
+							href="https://hablaqui.cl/blog/"
+						>
+							<span class="text-uppercase font-nav">Blog</span>
+						</a>
+					</v-col>
+					<client-only>
+						<v-col
+							v-if="$vuetify.breakpoint.smAndDown"
+							cols="4"
+							lg="3"
+							class="text-right"
+						>
+							<div class="hidden-md-and-up">
+								<v-btn
+									id="menudrawer-appbar"
+									accesskey="m"
+									icon
+									@click="drawer = !drawer"
+								>
+									<icon :icon="mdiMenu" />
+								</v-btn>
 							</div>
-						</template>
-						<v-card>
-							<v-list>
-								<template v-for="(item, i) in menu">
-									<v-list-item
-										v-show="item.visible"
-										id="i"
-										:key="i"
-										link
-										:to="item.link"
+						</v-col>
+						<template v-else>
+							<v-col v-if="$auth.$state.loggedIn" class="text-right">
+								<div class="hidden-sm-and-down body-2 text--secondary" rounded text>
+									<v-menu
+										id="menu-sesion"
+										rounded="xl"
+										offset-y
+										open-on-hover
+										:close-on-content-click="false"
+										:nudge-width="100"
 									>
-										<v-list-item-avatar size="40" :color="item.color">
-											<v-img
-												contain
-												height="30"
-												:src="item.img"
-												:alt="item.name"
-											/>
-										</v-list-item-avatar>
-										<v-list-item-content>
-											<v-list-item-title
-												class="secondary--text font-weight-bold body-2"
+										<template #activator="{ on, attrs }">
+											<div
+												id="link-sesion"
+												accesskey="j"
+												class="d-inline-block"
+												v-bind="attrs"
+												v-on="on"
 											>
-												{{ item.name }}
-											</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
-								</template>
-								<v-list-item id="logout-appbar" @click="logout">
-									<v-list-item-avatar size="40" color="primary">
-										<v-img
-											contain
-											height="30"
-											:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
-											alt="cerrar sesión"
-										/>
-									</v-list-item-avatar>
-									<v-list-item-content>
-										<v-list-item-title
-											class="secondary--text font-weight-bold body-2"
-										>
-											Cerrar sesion
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-							<v-card-actions class="primary">
-								<v-spacer></v-spacer>
-								<div class="white--text py-1">Hablaquí</div>
-								<v-spacer></v-spacer>
-							</v-card-actions>
-						</v-card>
-					</v-menu>
-				</div>
-			</client-only>
-			<router-link
-				v-show="!$auth.$state.loggedIn"
-				id="iniciar-sesion-appbar"
-				accesskey="s"
-				style="text-decoration: none"
-				class="mr-4 mr-lg-5 hidden-sm-and-down"
-				:to="{ name: 'auth' }"
-			>
-				<span class="body-2 font-weight-bold text--secondary">Iniciar sesión</span>
-			</router-link>
-			<v-btn
-				v-show="!$auth.$state.loggedIn"
-				id="comenzar-appbar"
-				rounded
-				accesskey="c"
-				class="mx-2 py-6 px-lg-10 hidden-sm-and-down"
-				color="primary"
-				depressed
-				@click="start"
-			>
-				<span class="font-weight-bold body-2">Comenzar</span>
-			</v-btn>
-			<div class="hidden-md-and-up">
-				<v-spacer></v-spacer>
-				<v-btn id="menudrawer-appbar" accesskey="m" icon @click="drawer = !drawer">
-					<icon :icon="mdiMenu" />
-				</v-btn>
-			</div>
+												<h3 class="lg-mr-6 secondary--text d-inline-block">
+													Hola {{ $auth.$state.user.name }}
+												</h3>
+												<avatar
+													size="50"
+													:name="$auth.$state.user.name"
+													:last-name="
+														$auth.$state.user.lastName
+															? $auth.$state.user.lastName
+															: ''
+													"
+													:url="$auth.$state.user.avatarThumbnail"
+												/>
+											</div>
+										</template>
+										<v-card>
+											<v-list>
+												<template v-for="(item, i) in menu">
+													<v-list-item
+														v-show="item.visible"
+														id="i"
+														:key="i"
+														link
+														:to="item.link"
+													>
+														<v-list-item-avatar
+															size="40"
+															:color="item.color"
+														>
+															<v-img
+																contain
+																height="30"
+																:src="item.img"
+																:alt="item.name"
+															/>
+														</v-list-item-avatar>
+														<v-list-item-content>
+															<v-list-item-title
+																class="
+																	secondary--text
+																	font-weight-bold
+																	body-2
+																"
+															>
+																{{ item.name }}
+															</v-list-item-title>
+														</v-list-item-content>
+													</v-list-item>
+												</template>
+												<v-list-item id="logout-appbar" @click="logout">
+													<v-list-item-avatar size="40" color="primary">
+														<v-img
+															contain
+															height="30"
+															:src="`https://cdn.hablaqui.cl/static/cerrar_sesion.png`"
+															alt="cerrar sesión"
+														/>
+													</v-list-item-avatar>
+													<v-list-item-content>
+														<v-list-item-title
+															class="
+																secondary--text
+																font-weight-bold
+																body-2
+															"
+														>
+															Cerrar sesion
+														</v-list-item-title>
+													</v-list-item-content>
+												</v-list-item>
+											</v-list>
+											<v-card-actions class="primary">
+												<v-spacer></v-spacer>
+												<div class="white--text py-1">Hablaquí</div>
+												<v-spacer></v-spacer>
+											</v-card-actions>
+										</v-card>
+									</v-menu>
+								</div>
+							</v-col>
+							<v-col v-else class="text-right">
+								<v-btn
+									id="iniciar-sesion-appbar"
+									outlined
+									small
+									color="#999999"
+									rounded
+									accesskey="s"
+									style="
+										text-decoration: none;
+										font-family: 'Lato', sans-serif;
+										font-size: 13.2px;
+										line-height: 1.6;
+									"
+									class="py-4 hidden-sm-and-down text-uppercase font-weight-bold"
+									:to="{ name: 'auth' }"
+								>
+									Iniciar sesión
+								</v-btn>
+								<v-btn
+									v-show="!$auth.$state.loggedIn"
+									id="buscar-psicologo-appbar"
+									rounded
+									small
+									accesskey="c"
+									style="
+										font-family: 'Lato', sans-serif;
+										font-size: 13.2px;
+										line-height: 1.6;
+									"
+									class="
+										py-4
+										ml-2
+										hidden-sm-and-down
+										text-uppercase
+										font-weight-bold
+									"
+									color="primary"
+									depressed
+									to="/psicologos"
+								>
+									Buscar Psicólogo
+								</v-btn>
+							</v-col>
+						</template>
+					</client-only>
+				</v-row>
+			</v-container>
 		</v-app-bar>
 	</div>
 </template>
 
 <script>
 import { mdiMenu, mdiAccountDetails } from '@mdi/js';
-
+// El logo en VUE carga pixelado y las letras se ven algo distintas, los botones estan desplazados, etc
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),
@@ -388,5 +439,21 @@ export default {
 .shadow {
 	-webkit-filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
 	filter: drop-shadow(4px 4px 3px rgba(26, 165, 216, 0.16));
+}
+.sticky {
+	position: -webkit-sticky !important;
+	position: sticky !important;
+	top: 0 !important;
+}
+.shadowAppBar {
+	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
+}
+.font-nav {
+	color: #666666d9;
+	line-height: 16px;
+	font-weight: 700;
+	font-family: 'Lato', sans-serif;
+	letter-spacing: 0.02em;
+	// font-size: 0.8em;
 }
 </style>

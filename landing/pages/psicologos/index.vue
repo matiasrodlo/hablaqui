@@ -6,13 +6,13 @@
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
-			class="hidden-sm-and-down"
+			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<psicologos-mobile
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
-			class="hidden-md-and-up"
+			class="mt-10 hidden-md-and-up"
 		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
@@ -36,19 +36,24 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
+import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import Footer from '~/components/Footer';
+import Appbar from '~/components/AppbarWhite';
 
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
-		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () =>
-			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
-			),
-		PsicologosMobile: () =>
-			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
-			),
+		Footer,
+		Appbar,
+		PsicologosDesktop,
+		PsicologosMobile,
+	},
+	async asyncData({ error, store }) {
+		try {
+			await store.dispatch('Psychologist/getPsychologists');
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
 	},
 	head() {
 		return {

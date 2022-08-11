@@ -9,8 +9,6 @@ import bcrypt from 'bcryptjs';
 import mailService from './mail';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
-import pusher from '../config/pusher';
-import { pusherCallback } from '../utils/functions/pusherCallback';
 import Sessions from '../models/sessions';
 import mercadopagoService from './mercadopago';
 import Evaluation from '../models/evaluation';
@@ -1535,14 +1533,6 @@ const updatePsychologist = async (user, profile) => {
 					},
 				});
 			}
-
-			const data = {
-				user: user._id,
-				psychologistId: updated._id,
-				username: updated.username,
-			};
-
-			pusher.trigger('psychologist', 'update', data, pusherCallback);
 
 			logInfo(user.email, 'actualizo su perfil de psicologo');
 			return okResponse('Actualizado exitosamente', {

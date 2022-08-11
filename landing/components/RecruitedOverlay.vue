@@ -6,8 +6,9 @@
 	>
 		<v-card light :max-width="$vuetify.breakpoint.smAndDown ? '550' : ''">
 			<v-card-text class="body-1 font-weight-medium">
-				Tu perfil se encuentra en proceso de verificación.  <br/><br/>
-				Recibirás un correo de confirmación cuando tu perfil sea verificado y se encuentre activado. <br/><br/> 
+				Tu perfil se encuentra en proceso de verificación. <br /><br />
+				Recibirás un correo de confirmación cuando tu perfil sea verificado y se encuentre
+				activado. <br /><br />
 				Si tienes dudas, puedes escribirnos a soporte@hablaqui.cl
 			</v-card-text>
 			<v-card-actions>

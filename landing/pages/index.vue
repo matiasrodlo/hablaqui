@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<nav class="primary-color">
+		<nav class="primary-color" style="margin-bottom: 93px">
 			<Appbar />
 		</nav>
 		<!-- SECTION 1 / heading -->
 		<section class="primary-color">
-			<v-container class="white--text py-0">
+			<v-container fluid style="max-width: 1080px" class="white--text py-0">
 				<v-row
 					tag="section"
 					justify="center"
@@ -75,7 +75,7 @@
 			alt="Tu psicólogo Online"
 		/>
 		<!-- SECTION 2 / como funciona -->
-		<v-container tag="section" class="pt-md-10">
+		<v-container tag="section" class="pt-md-10" fluid style="max-width: 1080px">
 			<v-row tag="section" justify="center">
 				<v-col
 					tag="h2"

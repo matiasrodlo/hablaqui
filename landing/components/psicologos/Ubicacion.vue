@@ -1,9 +1,11 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<appbar />
+		<div style="margin-bottom: 83px">
+			<Appbar />
+		</div>
 		<!-- geo psicologos -->
-		<geoPsicologos :location="location" />
+		<geoPsicologos class="mt-10" :location="location" />
 		<!-- desktop -->
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
@@ -17,7 +19,7 @@
 			class="hidden-md-and-up"
 		/>
 		<!-- expand panels -->
-		<v-container>
+		<v-container fluid style="max-width: 1080px">
 			<v-row>
 				<v-col cols="12" class="text--secondary text-center font-weight-bold text-h6">
 					Preguntas frecuentes sobre terapias desde {{ location.slug }}
@@ -42,7 +44,7 @@
 		</v-container>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16">
+			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -62,19 +64,18 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
+import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import Footer from '~/components/Footer';
+import Appbar from '~/components/AppbarWhite';
+
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
-		Appbar: () => import('~/components/AppbarWhite'),
+		Footer,
+		Appbar,
+		PsicologosDesktop,
+		PsicologosMobile,
 		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
-		PsicologosDesktop: () =>
-			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
-			),
-		PsicologosMobile: () =>
-			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
-			),
 	},
 	props: {
 		location: {
@@ -130,7 +131,6 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getPsychologists: 'Psychologist/getPsychologists',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
 		}),
