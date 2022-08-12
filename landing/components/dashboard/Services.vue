@@ -15,12 +15,10 @@
 					<v-col
 						cols="12"
 						md="6"
-						:style="
-							step && step.title === 'Anticipación para agendar' ? 'z-index: 3' : ''
-						"
+						:style="step && step.title === 'Agendamientos' ? 'z-index: 3' : ''"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
-							Anticipación para agendar:
+							Anticipación de agendamiento:
 						</div>
 						<div>
 							<v-select
@@ -43,17 +41,17 @@
 							></v-select>
 						</div>
 						<card-onboarding
-							v-if="step && step.title === 'Anticipación para agendar'"
+							v-if="step && step.title === 'Agendamientos'"
 							style="position: absolute; top: -20px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
 								() => ({
-									title: 'Configura el tiempo de reprogramación y agenda',
+									title: 'Reprogramación',
 									tab: 2,
 									card: {
-										title: 'No pierdas tu tiempo',
+										title: 'Reprogramación',
 										description:
-											'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+											'Establezca la anticipación con que le pueden reagendar',
 									},
 									route: 'dashboard-perfil',
 								})
@@ -63,19 +61,29 @@
 					<v-col
 						cols="12"
 						md="6"
-						:style="
-							step && step.title === 'Configura el tiempo de reprogramación y agenda'
-								? 'z-index: 3'
-								: ''
-						"
+						:style="step && step.title === 'Reprogramación' ? 'z-index: 3' : ''"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
-							Anticipación para reprogramar:
+							<v-tooltip v-if="isFree" right max-width="300" color="white">
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiAlertOutline" color="red" />
+									</v-btn>
+								</template>
+								<div class="elevation-5 pa-3">
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
+								</div>
+							</v-tooltip>
+
+							Anticipación de reprogramación:
 						</div>
 						<div>
 							<v-select
 								:value="psychologist.preferences.minimumRescheduleSession"
 								filled
+								:disabled="isFree"
 								outlined
 								dense
 								:items="hours"
@@ -96,20 +104,17 @@
 							></v-select>
 						</div>
 						<card-onboarding
-							v-if="
-								step &&
-								step.title === 'Configura el tiempo de reprogramación y agenda'
-							"
+							v-if="step && step.title === 'Reprogramación'"
 							style="position: absolute; top: -20px; left: 52%; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
 								() => ({
-									title: 'Añade el precio de tus sesiones',
+									title: 'Valor por sesión',
 									tab: 2,
 									card: {
-										title: 'Ingresa el valor de tus sesiones',
+										title: 'Valor por sesión',
 										description:
-											'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+											'Configure el valor por sesiones de 50 minutos.',
 									},
 									route: 'dashboard-perfil',
 								})
@@ -155,7 +160,7 @@
 							</div>
 						</v-alert>
 						<card-onboarding
-							v-if="step && step.title === 'Añade el precio de tus sesiones'"
+							v-if="step && step.title === 'Valor por sesión'"
 							style="position: absolute; top: -40px; left: 40px; z-index: 3"
 							arrow="arrow-bottom"
 							:next="
@@ -169,11 +174,7 @@
 					<v-col
 						cols="12"
 						md="4"
-						:style="
-							step && step.title === 'Añade el precio de tus sesiones'
-								? 'z-index: 3'
-								: ''
-						"
+						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
 					>
 						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
 							Sesión 50 min
@@ -193,6 +194,18 @@
 					</v-col>
 					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
 						<div>
+							<v-tooltip v-if="isFree" right max-width="300" color="white">
+								<template #activator="{ on, attrs }">
+									<v-btn icon v-bind="attrs" v-on="on">
+										<icon :icon="mdiAlertOutline" color="red" />
+									</v-btn>
+								</template>
+								<div class="elevation-5 pa-3">
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
+								</div>
+							</v-tooltip>
 							Nuevos clientes
 							<v-tooltip right max-width="300" color="white">
 								<template #activator="{ on, attrs }">
@@ -212,6 +225,7 @@
 						<div v-if="psychologist.preferences" class="mt-8">
 							<v-switch
 								v-model="marketplaceVisibility"
+								:disabled="isFree"
 								label="Visibilidad en Marketplace"
 								color="primary"
 								persistent-hint
@@ -251,7 +265,7 @@
 </template>
 
 <script>
-import { mdiInformationOutline } from '@mdi/js';
+import { mdiInformationOutline, mdiAlertOutline } from '@mdi/js';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -270,6 +284,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiAlertOutline,
 			mdiInformationOutline,
 			tooltip: false,
 			hours: [
@@ -286,6 +301,10 @@ export default {
 		};
 	},
 	computed: {
+		isFree() {
+			const length = this.psychologist.psyPlans.length;
+			return this.psychologist.psyPlans[length - 1].tier === 'free';
+		},
 		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {

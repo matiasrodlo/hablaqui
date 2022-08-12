@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<card-onboarding
-			v-if="stepOnboarding && stepOnboarding.title === 'Mi agenda'"
+			v-if="stepOnboarding && stepOnboarding.title === 'Sesiones'"
 			style="position: absolute; top: 190px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
@@ -9,11 +9,11 @@
 					setStepLinks(1);
 					$router.push({ name: 'dashboard-pagos' });
 					return {
-						title: 'Mis pagos',
+						title: 'Pagos',
 						card: {
-							title: 'Gestiona tus pagos',
+							title: 'Pagos',
 							description:
-								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 							link: '',
 							route: 'dashboard-chat',
 						},
@@ -31,11 +31,11 @@
 					() => {
 						$router.push({ name: 'dashboard-pagos' });
 						return {
-							title: 'Mis pagos',
+							title: 'Pagos',
 							card: {
-								title: 'Gestiona tus pagos',
+								title: 'Pagos',
 								description:
-									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 								link: '',
 								route: 'dashboard-chat',
 							},

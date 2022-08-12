@@ -198,7 +198,7 @@
 					<br />
 					<br />
 					Los Profesionales y Usuarios registrados pueden acceder a sus citas a través de
-					un panel disponible en la Plataforma en "Mis Sesiones".
+					un panel disponible en la Plataforma en "Sesiones".
 					<br />
 					<br />
 					Cualquier retraso por parte del Usuario y/o Profesional, será responsabilidad
