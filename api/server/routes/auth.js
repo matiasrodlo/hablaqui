@@ -49,8 +49,8 @@ authRouter.get(
 
 /**
  * @description: Registro de usuario
- * @param {string} password - Contraseña de registro
- * @param {string} email - Email de registro
+ * @param {string} body.password - Contraseña de registro
+ * @param {string} body.email - Email de registro
  * @returns: Objeto con token de autenticación y usuario
  */
 authRouter.post(
@@ -61,7 +61,7 @@ authRouter.post(
 
 /**
  * @description: Recuperación de contraseña
- * @param {string} email - Email de recuperación
+ * @param {string} params.email - Email de recuperación
  */
 authRouter.get(
 	'/auth/send-password-recover/:email',
@@ -71,7 +71,7 @@ authRouter.get(
 /**
  * @description: Cambio de contraseña
  * @param {Object} user - Usuario logeado
- * @param {string} password - Nueva contraseña
+ * @param {string} body.password - Nueva contraseña
  * @access: authenticated
  */
 authRouter.put(
@@ -82,7 +82,7 @@ authRouter.put(
 
 /**
  * @description: Verificación del correo del usuario
- * @param {string} id - Identificador único del usuario siendo verificado
+ * @param {string} params.id - Identificador único del usuario siendo verificado
  * @returns: Objeto con token de autenticación y usuario
  * @access: authenticated
  */
