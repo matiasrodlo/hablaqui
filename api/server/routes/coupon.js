@@ -23,10 +23,6 @@ couponRouter.post(
 );
 
 /**
- * Revisa la validez de un cupon.
- * req.body = { coupon: string }
- */
-/**
  * @description: Crea un nuevo cupón
  * @param {Object} user - Usuario logeado
  * @param {string} body.coupon - Código del cupón
