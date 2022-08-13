@@ -21,13 +21,17 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item id="link-blog-drawer" accesskey="r" link to="/para-especialistas">
+				<a
+					id="link-blog-drawer"
+					accesskey="r"
+					href="https://hablaqui.cl/para-especialistas/"
+				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
 							Para especialistas
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item>
+				</a>
 				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
@@ -39,7 +43,7 @@
 					id="link-blog-drawer"
 					accesskey="b"
 					link
-					href="https://app.hablaqui.cl/blog/"
+					href="https://hablaqui.cl/blog/"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
@@ -116,7 +120,7 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+			<a id="logo-appbar" tabindex="0" href="https://hablaqui.cl" exact accesskey="h">
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
@@ -124,7 +128,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
-			</nuxt-link>
+			</a>
 			<router-link
 				id="psicologo-appbar"
 				:to="{ name: 'psicologos' }"
@@ -134,16 +138,16 @@
 			>
 				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
 			</router-link>
-			<nuxt-link
+			<a
 				v-show="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
 				accesskey="r"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				to="/para-especialistas"
+				href="https://hablaqui.cl/para-especialistas/"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Para especialistas</span>
-			</nuxt-link>
+			</a>
 			<nuxt-link
 				id="faq-appbar"
 				accesskey="f"
@@ -158,7 +162,7 @@
 				accesskey="b"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				href="https://app.hablaqui.cl/blog/"
+				href="https://hablaqui.cl/blog/"
 			>
 				<span class="body-2 text--secondary font-weight-bold">Blog</span>
 			</a>
