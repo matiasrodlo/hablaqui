@@ -10,6 +10,7 @@ const authRouter = Router();
 
 /**
  * @description: Autenticación del login
+ * @param {Object} user - Usuario logeado
  * @returns: Objeto con token de autenticación y usuario
  */
 authRouter.post(
@@ -69,7 +70,9 @@ authRouter.get(
 
 /**
  * @description: Cambio de contraseña
+ * @param {Object} user - Usuario logeado
  * @param {string} password - Nueva contraseña
+ * @access: authenticated
  */
 authRouter.put(
 	'/auth/user/password',
@@ -81,6 +84,7 @@ authRouter.put(
  * @description: Verificación del correo del usuario
  * @param {string} id - Identificador único del usuario siendo verificado
  * @returns: Objeto con token de autenticación y usuario
+ * @access: authenticated
  */
 authRouter.put(
 	'/auth/user/verification/:id',
