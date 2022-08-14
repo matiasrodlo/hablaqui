@@ -1,0 +1,853 @@
+<template>
+	<div style="background-color: #f0f8ff">
+		<!-- appbar -->
+		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
+			<appbar />
+			<!-- content -->
+			<div
+				v-show="!matchedPsychologists.length && !dialogPrecharge"
+				class="primary white--text text-center"
+				style="position: relative; padding: 100px 0; height: 500px"
+			>
+				<div class="title text-h5 text-sm-h4 font-weight-bold mb-10">
+					Encuentra a tu especialista
+				</div>
+				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
+					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
+					preguntas. ¡Queremos conocerte!
+				</div>
+				<div>
+					<v-container class="centerCard">
+						<v-row justify="center">
+							<v-col cols="12" md="10" :lg="step == 3 ? '8' : '6'">
+								<v-stepper v-model="step" light style="border-radius: 25px">
+									<!-- items content -->
+									<v-stepper-items>
+										<v-stepper-content step="0">
+											<div class="primary--text font-weight-bold title">
+												¿Cuál es tu género?
+											</div>
+											<v-btn
+												:color="gender === 'female' ? 'primary' : '#BDBDBD'"
+												:outlined="gender !== 'female'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 1;
+														gender = 'female';
+													}
+												"
+											>
+												Mujer
+											</v-btn>
+											<v-btn
+												:color="gender === 'male' ? 'primary' : '#BDBDBD'"
+												:outlined="gender !== 'male'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 1;
+														gender = 'male';
+													}
+												"
+											>
+												Hombre
+											</v-btn>
+											<v-btn
+												:color="
+													gender === 'transgender' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="gender !== 'transgender'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 1;
+														gender = 'transgender';
+													}
+												"
+											>
+												Transgénero
+											</v-btn>
+											<v-btn
+												:color="
+													gender === 'Prefiero no indicarlo'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="gender !== 'Prefiero no indicarlo'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 1;
+														gender = 'Prefiero no indicarlo';
+													}
+												"
+											>
+												Prefiero no indicarlo
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="1">
+											<div class="primary--text font-weight-bold title">
+												¿En qué rango de edad <br />
+												<span>te encuentras?</span>
+											</div>
+
+											<v-btn
+												:color="age === '18-25' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '18-25'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 2;
+														age = '18-25';
+													}
+												"
+											>
+												18 -25
+											</v-btn>
+
+											<v-btn
+												:color="age === '26-35' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '26-35'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 2;
+														age = '26-35';
+													}
+												"
+											>
+												26-35
+											</v-btn>
+
+											<v-btn
+												:color="age === '36-45' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '36-45'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 2;
+														age = '36-45';
+													}
+												"
+											>
+												36-45
+											</v-btn>
+
+											<v-btn
+												:color="age === '+45' ? 'primary' : '#BDBDBD'"
+												:outlined="age !== '+45'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 2;
+														age = '+45';
+													}
+												"
+											>
+												+45
+											</v-btn>
+											<v-btn text color="primary" @click="step = 0">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="2">
+											<div class="primary--text font-weight-bold title">
+												¿Es tu primera vez en terapia?
+											</div>
+
+											<v-btn
+												:color="
+													firstTherapy === 'si' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="firstTherapy != 'si'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 3;
+														firstTherapy = 'si';
+													}
+												"
+											>
+												Si
+											</v-btn>
+
+											<v-btn
+												:color="
+													firstTherapy == 'no' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="firstTherapy != 'no'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														step = 3;
+														firstTherapy = 'no';
+													}
+												"
+											>
+												No
+											</v-btn>
+											<v-btn text color="primary" @click="step = 1">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+
+										<v-stepper-content step="3">
+											<div class="primary--text font-weight-bold title">
+												¿En qué temas te gustaría trabajar? <br />
+												<span class="title font-weight-bold">
+													Selecciona hasta 3 opciones.
+												</span>
+											</div>
+											<v-row>
+												<v-col>
+													<template v-for="(item, i) in specialties">
+														<v-btn
+															v-if="i <= 9"
+															:key="i"
+															:color="
+																themes.includes(item)
+																	? 'primary'
+																	: '#BDBDBD'
+															"
+															:outlined="!themes.includes(item)"
+															block
+															rounded
+															large
+															class="my-4"
+															@click="() => setTheme(item)"
+														>
+															{{ item }}
+														</v-btn>
+													</template>
+												</v-col>
+												<v-col>
+													<template v-for="(item, i) in specialties">
+														<v-btn
+															v-if="i >= 10"
+															:key="i"
+															:color="
+																themes.includes(item)
+																	? 'primary'
+																	: '#BDBDBD'
+															"
+															:outlined="!themes.includes(item)"
+															block
+															rounded
+															large
+															class="my-4"
+															@click="() => setTheme(item)"
+														>
+															{{ item }}
+														</v-btn></template
+													>
+												</v-col>
+											</v-row>
+											<v-btn text color="primary" @click="step = 2">
+												Atras
+											</v-btn>
+											<v-btn text color="primary" @click="step = 4">
+												Siguiente
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="4">
+											<div class="primary--text font-weight-bold title">
+												¿Buscas algún enfoque terapéutico <br />
+												<span>en específico?</span>
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Cognitivo-conductual'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Cognitivo-conductual';
+													}
+												"
+											>
+												Quiero que las sesiones sean estructuradas
+												definiendo metas a cumplir. Me gustaría que mi
+												psicólogo/a tome un rol activo y me deje tareas
+												semanales.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Integrativo'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Integrativo';
+													}
+												"
+											>
+												Quiero que mi psicólogo conozca diferentes modelos
+												de intervención y de acuerdo a mis necesidades me
+												brinde diferentes actividades o herramientas para
+												ponerlas en práctica.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Contextual'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Contextual';
+													}
+												"
+											>
+												Quiero que sea un proceso activo donde aprenda a
+												relacionarme con mis pensamientos, emociones y
+												sensaciones fisicas de una forma distinta en la cual
+												no me impida desarrollar la vida que quiero vivir.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Psicoanálisis'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Psicoanálisis';
+													}
+												"
+											>
+												Quiero que las sesiones sean conversacionales, donde
+												pueda platicar cómo me siento y que mi psicólogo me
+												ayude a explorar cómo mis experiencias pasadas
+												influyen en mi presente.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Humanista'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Humanista';
+													}
+												"
+											>
+												Quiero que a través de la reflexión, mi psicólogo me
+												ayude a conocer el origen de mis emociones y a
+												encontrar un significado personal, contactando con
+												aquellas áreas que tengo que sanar.
+											</div>
+											<div
+												class="pa-2 my-4"
+												:class="
+													focus == 'Sistémico'
+														? 'primary white--text'
+														: 'text--disabled'
+												"
+												style="
+													border-radius: 25px;
+													border: 1px solid #e0e0e0;
+												"
+												@click="
+													() => {
+														step = 5;
+														focus = 'Sistémico';
+													}
+												"
+											>
+												Quiero entender mi forma de interactuar con los
+												demás para mejorar mis relaciones interpersonales,
+												conociendo cómo mi entorno influye en mi conducta y
+												en las distintas áreas de mi vida.
+											</div>
+											<v-btn text color="primary" @click="step = 3">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="5">
+											<div class="primary--text font-weight-bold title">
+												¿Con qué género te sientes más cómodo <br />
+												<span>compartiendo lo que te sucede?</span>
+											</div>
+
+											<v-btn
+												:color="
+													genderConfort === 'female'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'female'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														genderConfort = 'female';
+														openPrecharge();
+													}
+												"
+											>
+												Mujer
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'male' ? 'primary' : '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'male'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														genderConfort = 'male';
+														openPrecharge();
+													}
+												"
+											>
+												Hombre
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'transgender'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'transgender'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														genderConfort = 'transgender';
+														openPrecharge();
+													}
+												"
+											>
+												Transgenero
+											</v-btn>
+											<v-btn
+												:color="
+													genderConfort === 'Me es indiferente'
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="genderConfort !== 'Me es indiferente'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														genderConfort = 'Me es indiferente';
+														openPrecharge();
+													}
+												"
+											>
+												Me es indiferente
+											</v-btn>
+
+											<v-btn text color="primary" @click="step = 4">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+									</v-stepper-items>
+								</v-stepper>
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col cols="12">
+								<v-divider style="border-width: 1px" />
+							</v-col>
+							<v-col cols="12">
+								<v-carousel
+									v-model="onboarding"
+									cycle
+									interval="3000"
+									hide-delimiter-background
+									hide-delimiters
+									:show-arrows="false"
+									light
+									height="200"
+								>
+									<v-carousel-item v-for="(element, i) in psi" :key="i">
+										<div class="text-center d-flex justify-center align-center">
+											<template v-if="$vuetify.breakpoint.mdAndUp">
+												<v-card
+													v-for="(item, l) in element"
+													:key="l"
+													flat
+													color="transparent"
+													max-width="600"
+													max-height="190"
+													class="ma-2"
+													:to="{ path: `/${item.username}` }"
+												>
+													<v-card-text>
+														<v-row align="center">
+															<v-col cols="3">
+																<v-avatar size="100">
+																	<v-img
+																		:src="item.avatar"
+																	></v-img>
+																</v-avatar>
+															</v-col>
+															<v-col class="text-left">
+																<div class="title primary--text">
+																	{{ item.name }}
+																	{{
+																		item.lastName &&
+																		item.lastName
+																	}}
+																</div>
+																<template
+																	v-for="(
+																		tag, k
+																	) in item.specialties"
+																>
+																	<span :key="k">
+																		<span
+																			v-if="k < 5"
+																			class="
+																				ma-1
+																				caption
+																				text-capitalize
+																			"
+																		>
+																			{{ tag }};
+																		</span>
+																	</span>
+																</template>
+															</v-col>
+														</v-row>
+													</v-card-text>
+												</v-card>
+											</template>
+											<template v-else>
+												<v-card
+													width="400"
+													height="180"
+													outlined
+													class="ma-2"
+												>
+													<v-card-text>
+														<v-row>
+															<v-col cols="3">
+																<avatar
+																	:url="avatar(element, true)"
+																	:name="element.name"
+																	:last-name="
+																		element.lastName
+																			? element.lastName
+																			: ''
+																	"
+																	size="80"
+																	loading-color="white"
+																></avatar>
+															</v-col>
+															<client-only>
+																<v-col class="text-left">
+																	<div
+																		class="title primary--text"
+																	>
+																		{{ element.name }}
+																		{{
+																			element.lastName &&
+																			element.lastName
+																		}}
+																	</div>
+																	Especialidades:
+																	<template
+																		v-for="(
+																			tag, k
+																		) in element.specialties"
+																	>
+																		<span :key="k">
+																			<span
+																				v-if="k < 5"
+																				class="
+																					ma-1
+																					text-capitalize
+																				"
+																			>
+																				{{ tag }};
+																			</span>
+																		</span>
+																	</template>
+																</v-col>
+															</client-only>
+														</v-row>
+													</v-card-text>
+												</v-card>
+											</template>
+										</div>
+									</v-carousel-item>
+								</v-carousel>
+								<v-item-group
+									v-if="$vuetify.breakpoint.mdAndUp"
+									v-model="onboarding"
+									class="text-center"
+									mandatory
+								>
+									<v-item
+										v-for="(n, e) in psi"
+										:key="`btn-${e}`"
+										v-slot="{ active, toggle }"
+									>
+										<v-btn icon color="#BDBDBD" @click="toggle">
+											<icon
+												:color="active ? 'primary' : 'info'"
+												:icon="mdiRecord"
+											/>
+										</v-btn>
+									</v-item>
+								</v-item-group>
+							</v-col>
+						</v-row>
+					</v-container>
+				</div>
+			</div>
+		</div>
+		<div v-if="dialogPrecharge" style="height: 100vh">
+			<v-card flat color="transparent">
+				<v-card-text>
+					<Precharge
+						:close="() => (dialogPrecharge = false)"
+						:avatar="
+							psychologists
+								.map(el => {
+									if (el.avatarThumbnail) return el.avatarThumbnail;
+								})
+								.filter(el => el)
+						"
+					/>
+				</v-card-text>
+			</v-card>
+		</div>
+		<div v-show="!dialogPrecharge && matchedPsychologists.length">
+			<selection :match="matchedPsychologists" :reset-match="resetMatch" />
+		</div>
+	</div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+import { mdiRecord } from '@mdi/js';
+import Appbar from '~/components/AppbarWhite.vue';
+
+export default {
+	name: 'Evaluation',
+	components: {
+		Appbar,
+		Precharge: () => import('~/components/evaluation/Precharge'),
+		Selection: () => import('~/components/evaluation/Selection'),
+		Icon: () => import('~/components/Icon'),
+		Avatar: () => import('~/components/Avatar'),
+	},
+	middleware: ['auth'],
+	async asyncData({ $axios, error }) {
+		try {
+			const { appointments } = await $axios.$get('/appointments/all');
+			const { psychologists } = await $axios.$get('/psychologists/all');
+			return { psychologists, specialties: appointments };
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
+	},
+	data() {
+		return {
+			mdiRecord,
+			onboarding: 0,
+			dialogPrecharge: false,
+			step: '0',
+			gender: '',
+			age: '',
+			firstTherapy: null,
+			themes: [],
+			focus: '',
+			genderConfort: '',
+			specialties: [],
+			psychologists: [],
+			matchedPsychologists: [],
+		};
+	},
+	head() {
+		return {
+			link: [
+				{
+					rel: 'canonical',
+					href: `https://cdn.hablaqui.cl/static/evaluacion/`,
+				},
+			],
+		};
+	},
+	computed: {
+		psi() {
+			if (!this.psychologists) return [];
+			const items = this.random();
+			const n = 3;
+			const result = [[], [], []];
+			const wordsPerLine = 2;
+			for (let line = 0; line < n; line++) {
+				for (let i = 0; i < wordsPerLine; i++) {
+					const value = items[i + line * wordsPerLine];
+					if (!value) continue;
+					result[line].push(value);
+				}
+			}
+			return this.$vuetify.breakpoint.mdAndUp ? result : items;
+		},
+	},
+	created() {
+		if (process.browser) {
+			const psi = JSON.parse(localStorage.getItem('psi'));
+			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
+				this.matchedPsychologists = psi.match;
+			}
+		}
+	},
+	mounted() {
+		this.getFormattedSessionsAll();
+	},
+	methods: {
+		next() {
+			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+		},
+		prev() {
+			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+		},
+		random() {
+			return this.psychologists.sort(function randOrd() {
+				return Math.round(Math.random()) - 0.5;
+			});
+		},
+		resetMatch() {
+			localStorage.removeItem('psi');
+			this.gender = '';
+			this.age = '';
+			this.firstTherapy = null;
+			this.themes = [];
+			this.focus = '';
+			this.genderConfort = '';
+			this.matchedPsychologists = [];
+			this.step = '0';
+		},
+		setTheme(value) {
+			if (this.themes.includes(value)) {
+				const index = this.themes.findIndex(item => item === value);
+				this.themes.splice(index, 1);
+			} else if (this.themes.length < 3) this.themes.push(value);
+			if (this.themes.length === 3) this.step = 4;
+		},
+		openPrecharge() {
+			this.dialogPrecharge = true;
+			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
+			const payload = {
+				gender,
+				themes: this.themes,
+				model: this.focus,
+			};
+			this.matchPsi(payload).then(response => {
+				if (response && response.length) {
+					localStorage.setItem(
+						'psi',
+						JSON.stringify({
+							match: response.filter((el, i) => i < 3),
+							_id: this.$auth.$state.user._id,
+						})
+					);
+					this.matchedPsychologists = response.filter((el, i) => i < 3);
+				}
+			});
+		},
+		avatar(psychologist, thumbnail) {
+			if (!psychologist.approveAvatar) return '';
+			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
+			if (psychologist.avatar) return psychologist.avatar;
+			return '';
+		},
+		...mapActions({
+			matchPsi: 'Psychologist/matchPsi',
+			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+		}),
+	},
+};
+</script>
+
+<style lang="scss" scoped>
+.centerCard {
+	position: absolute;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	border-radius: 25px !important;
+}
+</style>

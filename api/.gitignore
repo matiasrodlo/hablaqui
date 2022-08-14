@@ -1,0 +1,4 @@
+uploads/
+
+# App Engine Yaml (to optimize costs)
+app.yaml

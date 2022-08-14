@@ -1,0 +1,104 @@
+{
+	"name": "api-hablaqui",
+	"version": "1.0.0",
+	"description": "Administracion de datos de HABLAQUI",
+	"main": "server.js",
+	"scripts": {
+		"start": "node -r esm server.js",
+		"container": "node -r esm server.js --quiet --no-colors",
+		"dev": "nodemon -r esm --inspect server.js",
+		"container": "node -r esm server.js --quiet --no-colors",
+		"container-dev": "nodemon -r esm --inspect server.js --no-colors",
+		"test": "jest",
+		"create-env": "printenv > .env && cat .env"
+	},
+	"author": "",
+	"dependencies": {
+		"@google-cloud/debug-agent": "^5.2.8",
+		"@google-cloud/storage": "^4.4.0",
+		"@hapi/joi": "^17.1.0",
+		"@sendgrid/client": "^7.6.0",
+		"@sendgrid/mail": "^7.6.0",
+		"accesscontrol": "^2.2.1",
+		"analytics-node": "^5.1.2",
+		"axios": "^0.19.2",
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"csvtojson": "^2.0.10",
+		"dotenv": "^8.2.0",
+		"ejs": "^3.0.2",
+		"esm": "^3.2.25",
+		"express": "^4.17.1",
+		"express-rate-limit": "^5.1.1",
+		"fast-csv": "^4.1.3",
+		"helmet": "^3.22.0",
+		"html-pdf": "^2.2.0",
+		"joi-objectid": "^3.0.1",
+		"jsonwebtoken": "^8.5.1",
+		"lodash": "^4.17.15",
+		"mailgun-js": "^0.22.0",
+		"mercadopago": "^1.5.7",
+		"moment": "^2.24.0",
+		"moment-timezone": "^0.5.33",
+		"moments": "0.0.2",
+		"mongodb": "^4.1.3",
+		"mongoose": "^6.0.12",
+		"multer": "^1.4.2",
+		"nodemailer": "^6.4.2",
+		"passport": "^0.4.1",
+		"passport-google-oauth": "^2.0.0",
+		"passport-jwt": "^4.0.0",
+		"passport-local": "^1.0.0",
+		"pino": "^5.16.0",
+		"pino-pretty": "^3.6.1",
+		"pusher": "^5.0.0",
+		"swagger-jsdoc": "^6.1.0",
+		"swagger-ui-express": "^4.1.6",
+		"twilio": "^3.43.0",
+		"underscore": "^1.9.1",
+		"winston": "^3.3.3"
+	},
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Dhauzur/api-sochamar/issues"
+	},
+	"homepage": "https://github.com/Dhauzur/api-sochamar#readme",
+	"devDependencies": {
+		"@babel/core": "^7.8.4",
+		"@babel/preset-env": "^7.8.4",
+		"babel-jest": "^25.1.0",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.10.0",
+		"eslint-plugin-prettier": "^3.1.2",
+		"jest": "^25.1.0",
+		"nodemon": "^2.0.2",
+		"prettier": "^1.19.1",
+		"supertest": "^4.0.2"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"transform": {
+			"^.+\\.[t|j]sx?$": "babel-jest"
+		},
+		"coveragePathIgnorePatterns": [
+			"/node_modules/"
+		],
+		"moduleNameMapper": {
+			"^anotherRoot/(.*)$": "<rootDir>/server/$1"
+		},
+		"transformIgnorePatterns": []
+	},
+	"babel": {
+		"presets": [
+			[
+				"@babel/preset-env",
+				{
+					"targets": {
+						"node": "current"
+					}
+				}
+			]
+		]
+	}
+}
