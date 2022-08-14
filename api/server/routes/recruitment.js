@@ -7,8 +7,8 @@ import passport from 'passport';
 const recruitmentRouter = Router();
 /**
  * @description: Route to post a new recruitment profile for psychologist
- * @route: /api/v1/recruitment/register
- * @method: POST
+ * @route /api/v1/recruitment/register
+ * @method POST
  * @access: public (authenticated)
  */
 recruitmentRouter.post(
@@ -17,9 +17,9 @@ recruitmentRouter.post(
 	recruitmentController.register
 );
 /**
- * @description: Route to update a recruitment profile for psychologist
- * @route: /api/v1/recruitment/update
- * @method: PUT
+ * @description Route to update a recruitment profile for psychologist
+ * @route /api/v1/recruitment/update
+ * @method PUT
  * @access: public (authenticated)
  */
 recruitmentRouter.put(

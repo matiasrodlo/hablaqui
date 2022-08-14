@@ -10,6 +10,8 @@ const authRouter = Router();
 
 /**
  * @description: Autenticación del login
+ * @method POST
+ * @route /api/v1/auth/login
  * @param {Object} user - Usuario logeado
  * @returns: Objeto con token de autenticación y usuario
  */
@@ -21,6 +23,8 @@ authRouter.post(
 
 /**
  * @description: Logout
+ * @method POST
+ * @route /api/v1/auth/logout
  */
 authRouter.post('/auth/logout', authController.logout);
 
@@ -48,10 +52,12 @@ authRouter.get(
 );
 
 /**
- * @description: Registro de usuario
+ * @description Registro de usuario
+ * @method POST
+ * @route /api/v1/auth/register
  * @param {string} body.password - Contraseña de registro
  * @param {string} body.email - Email de registro
- * @returns: Objeto con token de autenticación y usuario
+ * @returns Objeto con token de autenticación y usuario
  */
 authRouter.post(
 	'/auth/register',
@@ -60,7 +66,9 @@ authRouter.post(
 );
 
 /**
- * @description: Recuperación de contraseña
+ * @description Recuperación de contraseña
+ * @method GET
+ * @route /api/v1/auth/send-password-recover/:email
  * @param {string} params.email - Email de recuperación
  */
 authRouter.get(
@@ -69,10 +77,12 @@ authRouter.get(
 );
 
 /**
- * @description: Cambio de contraseña
+ * @description Cambio de contraseña
+ * @method PUT
+ * @route /api/v1/auth/user/password
  * @param {Object} user - Usuario logeado
  * @param {string} body.password - Nueva contraseña
- * @access: authenticated
+ * @access authenticated
  */
 authRouter.put(
 	'/auth/user/password',
@@ -81,10 +91,12 @@ authRouter.put(
 );
 
 /**
- * @description: Verificación del correo del usuario
+ * @description Verificación del correo del usuario
+ * @method PUT
+ * @route /api/v1/auth/user/verification/:id
  * @param {string} params.id - Identificador único del usuario siendo verificado
- * @returns: Objeto con token de autenticación y usuario
- * @access: authenticated
+ * @returns Objeto con token de autenticación y usuario
+ * @access authenticated
  */
 authRouter.put(
 	'/auth/user/verification/:id',

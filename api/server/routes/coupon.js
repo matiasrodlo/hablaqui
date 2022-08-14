@@ -8,6 +8,8 @@ const couponRouter = Router();
 
 /**
  * @description: Crea un nuevo cupón
+ * @method POST
+ * @route /api/v1/coupons/new-coupon
  * @param {Object} user - Usuario logeado
  * @param {string} body.payload.code - Código del nuevo cupón
  * @param {string} body.payload.discount - Cantidad de descuento del cupón
@@ -24,6 +26,8 @@ couponRouter.post(
 
 /**
  * @description: Crea un nuevo cupón
+ * @method POST
+ * @route /api/v1/coupons/check-coupon
  * @param {Object} user - Usuario logeado
  * @param {string} body.coupon - Código del cupón
  * @returns: Objeto con el cupón encontrado
