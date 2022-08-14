@@ -79,7 +79,7 @@ const userController = {
 		try {
 			const { user } = req;
 			const { newPsychologist } = req.body;
-			const { data, code } = await userService.updatePlan(
+			const { data, code } = await userService.updatePsychologist(
 				user,
 				newPsychologist
 			);

@@ -15,7 +15,6 @@ const mercadopagoRouter = Router();
  * @param {Integer} body.price - Precio a pagar (en CLP)
  * @param {String} body.plan - ObjectId del plan creado previamente
  * @returns: Preferencia, pero lo importante es el init_point (la URL para redireccionar a mercadopago)
-
  */
 /*mercadopagoRouter.post(
 	'/mercadopago/create-preference',
