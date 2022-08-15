@@ -453,7 +453,7 @@
 										<nuxt-link
 											style="text-decoration: none"
 											:to="{
-												path: `/${item.username}`,
+												path: `/${item.username}/`,
 											}"
 										>
 											<div class="text-center">
@@ -482,7 +482,7 @@
 												<nuxt-link
 													style="text-decoration: none"
 													:to="{
-														path: `/${item.username}`,
+														path: `/${item.username}/`,
 													}"
 												>
 													<div
@@ -523,7 +523,7 @@
 												<nuxt-link
 													style="text-decoration: none"
 													:to="{
-														path: `/${item.username}`,
+														path: `/${item.username}/`,
 													}"
 												>
 													<div
@@ -547,7 +547,7 @@
 													rounded
 													color="primary"
 													class="px-8 py-2"
-													:to="{ path: `/${item.username}` }"
+													:to="{ path: `/${item.username}/` }"
 												>
 													Quiero saber más
 												</v-btn>
