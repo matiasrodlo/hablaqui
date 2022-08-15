@@ -1,5 +1,4 @@
 User-agent: *
-
 Disallow: /pagos/
 Disallow: /auth/
 Disallow: /blog/finalizar-compra/
@@ -9,19 +8,6 @@ Disallow: /blog/featured_item/
 Disallow: /blog/blog/
 Disallow: /blog/carrito/
 Disallow: /blog/mi-cuenta/
-Disallow: /psicologos/pagos/
-Disallow: /psicologos/*/
-Disallow: /verificacion-email/
-Disallow: /terminos-y-condiciones-especialista/
-Disallow: /review/
-Disallow: /postulacion/
-Disallow: /politicas/
-Disallow: /password-reset/
-Disallow: /para-especialistas/
-Disallow: /evaluacion/
-Disallow: /condiciones/
 
 
 Sitemap: https://app.hablaqui.cl/sitemap.xml
-
-# robots.txt mod 14/08/2022

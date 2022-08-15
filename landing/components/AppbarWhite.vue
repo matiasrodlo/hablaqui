@@ -32,7 +32,7 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</a>
-				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq/">
+				<v-list-item id="link-faq-drawe" accesskey="f" link to="/faq">
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
 							Preguntas frecuentes
@@ -129,15 +129,15 @@
 					contain
 				/>
 			</a>
-			<nuxt-link
+			<router-link
 				id="psicologo-appbar"
-				to="/psicologos/"
+				:to="{ name: 'psicologos' }"
 				style="text-decoration: none"
 				accesskey="p"
 				class="hidden-sm-and-down ml-7 mr-3"
 			>
 				<span class="text--secondary body-2 font-weight-bold">Psicólogos</span>
-			</nuxt-link>
+			</router-link>
 			<a
 				v-show="!$auth.$state.loggedIn"
 				id="especialistas-appabar"
@@ -153,7 +153,7 @@
 				accesskey="f"
 				style="text-decoration: none"
 				class="hidden-sm-and-down mx-2"
-				to="/faq/"
+				to="/faq"
 			>
 				<span class="text--secondary body-2 font-weight-bold">Preguntas frecuentes</span>
 			</nuxt-link>
