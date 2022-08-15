@@ -4,6 +4,7 @@ landing/package-lock.json
 landing/yarn.lock
 front/package-lock.json
 front/yarn.lock
+.vscode 
 
 # Logs
 logs
