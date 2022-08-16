@@ -1,22 +1,24 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<appbar />
+		<div style="margin-bottom: 150px">
+			<appbar />
+		</div>
 		<!-- desktop -->
 		<profile-desktop
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-sm-and-down"
+			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<profile-mobile
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-md-and-up"
+			class="mt-10 hidden-md-and-up"
 		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16">
+			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son

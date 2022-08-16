@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
+	<v-container fluid style="max-width: 1080px">
 		<v-row>
 			<v-col cols="8">
 				<v-card style="border-radius: 15px" class="shadowCard">
@@ -199,7 +199,6 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -219,7 +218,6 @@ export default {
 	data() {
 		return {
 			loadingChat: false,
-			pusher: null,
 			channel: null,
 			fullcard: false,
 			loadingCalendar: false,
@@ -232,24 +230,18 @@ export default {
 	},
 	created() {
 		this.setFloatingChat(false);
-		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
-		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('psychologist');
-		this.channel.bind('update', data => this.$emit('updatePsychologist', data));
-		this.$on('updatePsychologist', data => {
-			if (data.username === this.psychologist.username) {
-				this.getPsychologist(data);
-			}
-		});
+		// this.socket = this.$nuxtSocket({
+		// 	channel: '/liveData',
+		// });
+		// this.socket.on('getPsychologist', username => {
+		// 	if (username === this.psychologist.username) {
+		// 		this.getPsychologist(username);
+		// 	}
+		// });
 	},
 	methods: {
-		async getPsychologist(data) {
-			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
+		async getPsychologist(username) {
+			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
 			this.setPsychologist(psychologist);
 		},
 		async goChat() {

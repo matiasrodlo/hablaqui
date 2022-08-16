@@ -3,14 +3,8 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Chat from '../models/chat';
 import { logInfo } from '../config/pino';
-import pusher from '../config/pusher';
-import { pusherCallback } from '../utils/functions/pusherCallback';
 import Email from '../models/email';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
-
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+import Analytics from 'analytics-node';
 
 const startConversation = async (psychologistId, user) => {
 	const hasChats = await Chat.findOne({
@@ -66,7 +60,7 @@ const getChats = async user => {
 	);
 };
 
-const sendMessage = async (user, content, userId, psychologistId) => {
+export const sendMessage = async (user, content, userId, psychologistId) => {
 	const newMessage = {
 		sentBy: user._id,
 		message: content,
@@ -92,57 +86,38 @@ const sendMessage = async (user, content, userId, psychologistId) => {
 		content: [...updatedChat.messages].pop(),
 	};
 
-	if (user.role === 'user') {
-		await emailChatNotification(data, 'send-by-user');
-	} else if (user.role === 'psychologist')
-		await emailChatNotification(data, 'send-by-psy');
+	await emailChatNotification(
+		data,
+		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user'
+	);
 
+	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 	analytics.track({
 		userId: user._id.toString(),
 		event: 'message-sent',
 	});
 
-	pusher.trigger('chat', 'update', data, pusherCallback);
-	return okResponse('Mensaje enviado', { chat: updatedChat });
+	return { chat: updatedChat, emit: data };
 };
 
 const emailChatNotification = async (data, type) => {
-	const messageId = data.content._id.toString();
-	const createdAt = data.content.createdAt.toString();
-
-	let email = await Email.findOne({
+	const payload = {
 		userRef: data.userId,
 		psyRef: data.psychologistId,
 		type: type,
-	});
-
-	if (!email) {
-		email = await Email.create({
-			sessionDate: moment(createdAt).format(),
-			wasScheduled: false,
-			type: type,
-			queuedAt: undefined,
-			scheduledAt: undefined,
+		wasScheduled: false,
+		sessionRef: data.content._id.toString(),
+		sessionDate: data.content.createdAt,
+	};
+	await Email.updateOne(
+		{
 			userRef: data.userId,
 			psyRef: data.psychologistId,
-			sessionRef: messageId,
-		});
-	} else {
-		email = await Email.findOneAndUpdate(
-			{
-				userRef: data.userId,
-				psyRef: data.psychologistId,
-				type: type,
-			},
-			{
-				$set: {
-					wasScheduled: false,
-					sessionRef: messageId,
-					sessionDate: moment(createdAt).format(),
-				},
-			}
-		);
-	}
+			type: type,
+		},
+		payload,
+		{ upsert: true }
+	);
 };
 
 const createReport = async (

@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
+	<v-container fluid style="max-width: 1080px">
 		<!-- si tiene sesiones aun agrega la que selecciono y muestra que esta cargando -->
 		<div v-show="hasSessions" style="height: 100%">
 			<v-overlay :value="hasSessions" color="white">
