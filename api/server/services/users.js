@@ -8,8 +8,6 @@ import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import pusher from '../config/pusher';
-import { pusherCallback } from '../utils/functions/pusherCallback';
 import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
@@ -17,6 +15,7 @@ import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
 import Evaluation from '../models/evaluation';
+import Auth from './auth';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -130,6 +129,7 @@ const usersService = {
 
 		if (userRole === 'psychologist') {
 			const userData = await User.findById(userID);
+			await mailService.sendUploadPicture(userData);
 			if (userData.psychologist) {
 				psychologist = await Psychologist.findByIdAndUpdate(
 					idPsychologist,
@@ -193,20 +193,20 @@ const usersService = {
 	},
 
 	async setUserOnline(user) {
-		const data = {
-			...user,
-			status: true,
-		};
-		pusher.trigger('user-status', 'online', data, pusherCallback);
+		// const data = {
+		// 	...user,
+		// 	status: true,
+		// };
+		// pusher.trigger('user-status', 'online', data, pusherCallback);
 		return okResponse('Usuario conectado', user);
 	},
 
 	async setUserOffline(user) {
-		const data = {
-			...user,
-			status: false,
-		};
-		pusher.trigger('user-status', 'offline', data, pusherCallback);
+		// const data = {
+		// 	...user,
+		// 	status: false,
+		// };
+		// pusher.trigger('user-status', 'offline', data, pusherCallback);
 		return okResponse('Usuario desconectado', user);
 	},
 
@@ -223,9 +223,9 @@ const usersService = {
 			Math.random()
 				.toString(36)
 				.slice(2);
-
 		const newUser = {
-			psychologist: user._id,
+			//psychologist: user._id,
+			isInvited: true,
 			name: body.name,
 			lastName: body.lastName,
 			email: body.email,
@@ -233,8 +233,13 @@ const usersService = {
 			role: 'user',
 			rut: body.rut,
 			phone: body.phone,
+			invitedBy: user.psychologist,
 		};
 		const createdUser = await User.create(newUser);
+		const token = Auth.generateJwt(createdUser);
+		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
+		await mailService.sendVerifyEmail(createdUser, verifyurl);
+
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
@@ -261,7 +266,6 @@ const usersService = {
 				},
 			});
 		}
-
 		const roomId = require('crypto')
 			.createHash('md5')
 			.update(`${createdUser._id}${user._id}`)
@@ -273,7 +277,7 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2099', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
@@ -447,6 +451,25 @@ const usersService = {
 		);
 		await Coupon.create(newCoupon);
 		return okResponse('Cupón hecho');
+	},
+	async getEvaluations(userId) {
+		let evaluations = await Evaluation.find({ user: userId }).populate(
+			'psychologist',
+			'_id name lastname code'
+		);
+
+		evaluations = evaluations.flatMap(e => {
+			return {
+				_id: e._id,
+				psychologistId: e.psychologist._id,
+				name: e.psychologist.name,
+				lastname: e.psychologist.lastName,
+				code: e.psychologist.code,
+				evaluations: e.evaluations,
+			};
+		});
+
+		return okResponse('evaluaciones', { evaluations });
 	},
 };
 

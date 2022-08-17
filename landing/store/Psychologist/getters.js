@@ -4,13 +4,16 @@ export default {
 	psychologistsMarketPlace: state => {
 		const psy = cloneDeep(state.psychologists);
 		return psy
+			.filter(item => item.preferences.marketplaceVisibility)
 			.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			})
 			.sort(function randOrd(a, b) {
 				return b.rating - a.rating;
 			})
-			.filter(item => item.preferences.marketplaceVisibility);
+			.sort(function randOrd(a, b) {
+				return b.points - a.points;
+			});
 	},
 	psychologists: state => state.psychologists,
 	psychologist: state => state.psychologist,
@@ -19,6 +22,7 @@ export default {
 	page: state => state.page,
 	payments: state => state.payments,
 	loadingPsychologist: state => state.loadingPsychologist,
+	sessionsLimit: state => state.sessionsLimit,
 	sessionsFormatted: state => state.sessionsFormatted,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,
 	clients: state => {

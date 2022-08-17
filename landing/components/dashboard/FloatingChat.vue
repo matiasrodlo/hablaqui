@@ -38,6 +38,7 @@
 						:loading-chat="loadingChat"
 						:search="search"
 						:close="() => (dialog = false)"
+						:socket="socket"
 					/>
 				</v-sheet>
 			</v-dialog>
@@ -90,6 +91,7 @@
 				:selected-psy="e => selectedPsy(e)"
 				:loading-chat="loadingChat"
 				:search="search"
+				:socket="socket"
 			/>
 		</v-menu>
 	</div>
@@ -98,7 +100,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
-import Pusher from 'pusher-js';
+import { uniqBy } from 'lodash';
 moment.tz.setDefault('America/Santiago');
 
 export default {
@@ -110,7 +112,6 @@ export default {
 			search: '',
 			selected: null,
 			loadingChat: false,
-			pusher: null,
 			channel: null,
 		};
 	},
@@ -136,6 +137,11 @@ export default {
 					return this.getMyPsy._id !== item.psychologist._id;
 				});
 			}
+
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
+
 			return filterArray
 				.map(item => ({
 					...item.psychologist,
@@ -197,21 +203,18 @@ export default {
 	},
 	created() {
 		moment.locale('es');
-		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
+		this.socket = this.$nuxtSocket({
+			channel: '/liveData',
 		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('chat');
-		this.channel.bind('update', data => this.$emit('updateChat', data));
-		this.$on('updateChat', data => {
+
+		/* Listen for events: */
+		this.socket.on('getMessage', data => {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
-				this.$auth.$state.user._id === data.userId
+				(this.$auth.$state.user._id === data.userId ||
+					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
-				this.pusherCallback(data);
+				this.socketioCallback(data);
 			}
 		});
 	},
@@ -227,7 +230,7 @@ export default {
 		await this.getMessages();
 	},
 	methods: {
-		async pusherCallback(data) {
+		async socketioCallback(data) {
 			if (
 				(this.selected && this.selected._id === data.psychologistId) ||
 				(this.selected && this.selected._id === data.userId)

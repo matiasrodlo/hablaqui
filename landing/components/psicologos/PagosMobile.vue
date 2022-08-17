@@ -344,29 +344,33 @@ export default {
 				title: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title} `,
 				originalPrice: this.planSelected.price,
 				price:
-					this.PriceWithCoupon || this.PriceWithCoupon <= 0
+					this.PriceWithCoupon ||
+					(this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
 						? this.PriceWithCoupon
 						: this.planSelected.price,
-				coupon: this.PriceWithCoupon || this.PriceWithCoupon <= 0 ? this.coupon : '',
+				coupon:
+					this.PriceWithCoupon ||
+					(this.PriceWithCoupon <= 0 && this.PriceWithCoupon !== null)
+						? this.coupon
+						: '',
 			};
-			const createdPlan = await this.createSession(planPayload);
-			if (createdPlan) {
-				const mercadopagoPayload = {
-					psychologist: this.psychologist.username,
-					price: this.PriceWithCoupon ? this.PriceWithCoupon : this.planSelected.price,
-					description: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title}`,
-					quantity: 1,
-					plan: createdPlan.plan._id,
-				};
-				if (this.PriceWithCoupon !== null && this.PriceWithCoupon <= 0) {
-					await this.$axios.$get(`/mercadopago/success-pay/${mercadopagoPayload.plan}`);
-					// this.$router.push(`/dashboard/agenda`);
-				} else {
-					const res = await this.mercadopagoPay(mercadopagoPayload);
-					window.location.href = res.init_point;
-				}
-			}
+			const res = await this.createSession(planPayload);
+			this.datalayer(this.planSelected);
+			if (res)
+				if (res.init_point === null) this.$router.push(`/dashboard/agenda`);
+				else window.location.href = res.init_point;
 			this.loading = false;
+		},
+		datalayer(plan) {
+			const data = {
+				event: 'checkout',
+				plan: plan.title,
+				'cantidad-sesiones': plan.cant,
+				precio: plan.price,
+				especialista: this.psychologist.name + ' ' + this.psychologist.lastName,
+				'id-especialista': this.psychologist._id,
+			};
+			window.dataLayer.push(data);
 		},
 		changeDate(item) {
 			this.$router.push(

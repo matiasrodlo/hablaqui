@@ -93,26 +93,25 @@ async function sendNotification(emails) {
 			const message = messages.messages.filter(
 				m => m._id.toString() === e.sessionRef.toString()
 			);
-			if (
-				!message[0].read &&
-				!e.wasScheduled &&
-				e.type === 'send-by-user'
-			)
-				await mailService.sendChatNotificationToPsy(user, psy, batch);
-			else if (
-				!message[0].read &&
-				!e.wasScheduled &&
+			if (!message[0].read && !e.wasScheduled) {
 				e.type === 'send-by-psy'
-			)
-				await mailService.sendChatNotificationToUser(user, psy, batch);
+					? await mailService.sendChatNotificationToUser(
+							user,
+							psy,
+							batch
+					  )
+					: await mailService.sendChatNotificationToPsy(
+							user,
+							psy,
+							batch
+					  );
+			}
 			const updatePayload = {
 				wasScheduled: true,
 				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 				batchId: batch,
 			};
-			await email.findByIdAndUpdate(e._id, updatePayload, {
-				new: true,
-			});
+			await email.updateOne({ _id: e._id }, updatePayload);
 		}
 	});
 }
@@ -201,14 +200,14 @@ const cronService = {
 							await mailService.sendReminderUser(
 								user,
 								psy,
-								emailInfo.sessionDate,
+								sessionDate,
 								batch
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
 							await mailService.sendReminderPsy(
 								user,
 								psy,
-								emailInfo.sessionDate,
+								sessionDate,
 								batch
 							);
 						}
@@ -285,7 +284,6 @@ const cronService = {
 
 		if (toUpdateUpnext.length > 1) {
 			try {
-				console.log('A' + toUpdateSuccess.length);
 				await Promise.allSettled(
 					toUpdateUpnext.forEach(async item => {
 						await Sessions.findOneAndUpdate(
@@ -309,7 +307,6 @@ const cronService = {
 			}
 		} else if (toUpdateUpnext.length === 1) {
 			try {
-				console.log('B' + toUpdateSuccess.length);
 				await Sessions.findOneAndUpdate(
 					{
 						'plan.session._id': toUpdateUpnext[0].id,
@@ -331,7 +328,6 @@ const cronService = {
 
 		if (toUpdateSuccess.length > 1) {
 			try {
-				console.log('C' + toUpdateSuccess.length);
 				await Promise.allSettled(
 					toUpdateSuccess.forEach(async item => {
 						await Sessions.findOneAndUpdate(

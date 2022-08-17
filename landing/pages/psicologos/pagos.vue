@@ -1,24 +1,26 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<appbar />
+		<div style="margin-bottom: 140px">
+			<Appbar />
+		</div>
 		<!-- desktop -->
 		<template v-if="!loadingPsychologist">
 			<pagos-desktop
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="hidden-sm-and-down"
+				class="mt-10 hidden-sm-and-down"
 			/>
 			<!-- mobile -->
 			<pagos-mobile
 				:psychologist="psychologist"
 				:has-sessions="hasSessions"
-				class="hidden-md-and-up"
+				class="mt-10 hidden-md-and-up"
 			/>
 		</template>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16">
+			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -101,10 +103,10 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://hablaqui.cl/psicologos',
+			url: 'http://app.hablaqui.cl/psicologos',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
-			logo: 'https://hablaqui.cl/logo_tiny.png',
+			logo: 'https://app.hablaqui.cl/logo_tiny.png',
 		};
 	},
 	created() {

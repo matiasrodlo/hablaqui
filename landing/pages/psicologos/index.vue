@@ -5,10 +5,15 @@
 		<!-- desktop -->
 		<psicologos-desktop
 			:loading-psychologist="loadingPsychologist"
-			class="hidden-sm-and-down"
+			:get-sessions-limit="getSessions"
+			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile :loading-psychologist="loadingPsychologist" class="hidden-md-and-up" />
+		<psicologos-mobile
+			:loading-psychologist="loadingPsychologist"
+			:get-sessions-limit="getSessions"
+			class="mt-10 hidden-md-and-up"
+		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
 			<v-container class="white--text py-16">
@@ -31,19 +36,24 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
+import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import Footer from '~/components/Footer';
+import Appbar from '~/components/AppbarWhite';
 
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
-		Appbar: () => import('~/components/AppbarWhite'),
-		PsicologosDesktop: () =>
-			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PsicologosDesktop'
-			),
-		PsicologosMobile: () =>
-			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PsicologosMobile'
-			),
+		Footer,
+		Appbar,
+		PsicologosDesktop,
+		PsicologosMobile,
+	},
+	async asyncData({ error, store }) {
+		try {
+			await store.dispatch('Psychologist/getPsychologists');
+		} catch (e) {
+			error({ statusCode: 404, message: 'Page not found' });
+		}
 	},
 	head() {
 		return {
@@ -51,12 +61,17 @@ export default {
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/psicologos/',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/psicologos/',
+				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
 				},
 			],
 			link: [
@@ -72,10 +87,10 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://hablaqui.cl/psicologos',
+			url: 'http://app.hablaqui.cl/psicologos/',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
-			logo: 'https://hablaqui.cl/logo_tiny.png',
+			logo: 'https://app.hablaqui.cl/logo_tiny.png',
 		};
 	},
 	computed: {
@@ -88,11 +103,13 @@ export default {
 	methods: {
 		async initialFetch() {
 			await this.getAppointments();
-			this.getFormattedSessionsAll();
+		},
+		getSessions(ids) {
+			this.getSessionsLimit(ids);
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+			getSessionsLimit: 'Psychologist/getSessionsLimit',
 		}),
 	},
 };

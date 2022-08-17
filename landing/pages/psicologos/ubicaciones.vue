@@ -1,9 +1,11 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<appbar />
+		<div style="margin-bottom: 83px">
+			<Appbar />
+		</div>
 		<!-- routing for child -->
-		<v-container>
+		<v-container class="mt-10" fluid style="max-width: 1080px">
 			<v-row>
 				<v-col cols="12">
 					<h1 class="text-left font-weight-bold text-h6 text-md-h4 text--secondary">
@@ -139,7 +141,7 @@
 		</v-container>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16">
+			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -229,6 +231,11 @@ export default {
 					hid: 'og:url',
 					property: 'og:url',
 					content: process.env.VUE_APP_LANDING + '/psicologos/ubicaciones',
+				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
 				},
 			],
 			link: [

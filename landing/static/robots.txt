@@ -1,3 +1,13 @@
-Sitemap: https://hablaqui.cl/sitemap.xml
 User-agent: *
-Disallow:
+Disallow: /pagos/
+Disallow: /auth/
+Disallow: /blog/finalizar-compra/
+Disallow: /blog/mi-cuenta/
+Disallow: /blog/preguntas-frecuentes-psicologo/
+Disallow: /blog/featured_item/
+Disallow: /blog/blog/
+Disallow: /blog/carrito/
+Disallow: /blog/mi-cuenta/
+
+
+Sitemap: https://app.hablaqui.cl/sitemap.xml

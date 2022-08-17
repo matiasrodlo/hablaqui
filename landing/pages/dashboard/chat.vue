@@ -2,17 +2,18 @@
 	<div>
 		<card-onboarding
 			v-if="stepOnboarding && stepOnboarding.title === 'Chat'"
-			style="position: absolute; top: 180px; left: 10px; z-index: 3"
+			style="position: absolute; top: 130px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(0);
 					$router.push({ name: 'dashboard-agenda' });
 					return {
-						title: 'Mi agenda',
+						title: 'Sesiones',
 						card: {
-							title: 'Despreocúpate y organiza tu agenda',
+							title: 'Sesiones',
 							description:
-								'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
+								'Las sesiones se añadirán automáticamente a su calendario ',
 							link: '',
 						},
 						route: 'dashboard-agenda',
@@ -167,7 +168,7 @@
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
 							<!-- usuario mi psicologo -->
-							<v-list v-if="plan" dense two-line class="py-0">
+							<v-list v-if="plan && getMyPsy" dense two-line class="py-0">
 								<v-list-item @click="setSelectedPsy(getMyPsy)">
 									<v-list-item-avatar
 										style="border-radius: 50%"
@@ -322,6 +323,7 @@
 								:sub-header="subHeader"
 								:loading-chat="loadingChat"
 								:chat="chat"
+								:socket="socket"
 								:close="() => (selected = null)"
 							/>
 						</v-sheet>
@@ -334,6 +336,7 @@
 							:sub-header="subHeader"
 							:loading-chat="loadingChat"
 							:chat="chat"
+							:socket="socket"
 						/>
 					</v-col>
 				</template>
@@ -345,7 +348,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment-timezone';
-import Pusher from 'pusher-js';
+import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
 moment.tz.setDefault('America/Santiago');
 
@@ -364,7 +367,6 @@ export default {
 			loadingChat: false,
 			dialog: false,
 			selected: null,
-			pusher: null,
 			channel: null,
 			initLoading: true,
 		};
@@ -449,6 +451,10 @@ export default {
 				});
 			}
 
+			filterArray = uniqBy(filterArray, function (e) {
+				return e.psychologist._id;
+			});
+
 			return filterArray
 				.map(item => ({
 					...item.psychologist,
@@ -463,7 +469,7 @@ export default {
 				if (psy)
 					return {
 						...this.getPsy(psy),
-						roomsUrl: this.plan.roomsUrl,
+						roomsUrl: this.plan && this.plan.roomsUrl ? this.plan.roomsUrl : '',
 					};
 				else return null;
 			}
@@ -492,22 +498,18 @@ export default {
 			avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			url: '',
 		};
-		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
+		this.socket = this.$nuxtSocket({
+			channel: '/liveData',
 		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('chat');
-		this.channel.bind('update', data => this.$emit('updateChat', data));
-		this.$on('updateChat', data => {
+
+		/* Listen for events: */
+		this.socket.on('getMessage', data => {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
 					this.$auth.$state.user.psychologist === data.psychologistId)
 			) {
-				this.pusherCallback(data);
+				this.socketioCallback(data);
 			}
 		});
 	},
@@ -549,7 +551,7 @@ export default {
 			}
 			this.initLoading = false;
 		},
-		async pusherCallback(data) {
+		async socketioCallback(data) {
 			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
 				await this.getChat({ psy: data.psychologistId, user: data.userId });
 				// scroll to end
@@ -647,7 +649,6 @@ export default {
 		...mapActions({
 			getPsychologists: 'Psychologist/getPsychologists',
 			getChat: 'Chat/getChat',
-			sendMessage: 'Chat/sendMessage',
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
 			startConversation: 'Chat/startConversation',
@@ -655,6 +656,7 @@ export default {
 		...mapMutations({
 			setChat: 'Chat/setChat',
 			setPsychologists: 'Psychologist/setPsychologists',
+			setStepLinks: 'User/setStepLinks',
 		}),
 	},
 };

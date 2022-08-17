@@ -179,7 +179,6 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -198,7 +197,6 @@ export default {
 	},
 	data() {
 		return {
-			pusher: null,
 			channel: null,
 			fullcard: false,
 		};
@@ -210,20 +208,14 @@ export default {
 	},
 	created() {
 		this.setFloatingChat(false);
-		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
-		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('psychologist');
-		this.channel.bind('update', data => this.$emit('updatePsychologist', data));
-		this.$on('updatePsychologist', data => {
-			if (data.username === this.psychologist.username) {
-				this.getPsychologist(data);
-			}
-		});
+		// this.socket = this.$nuxtSocket({
+		// 	channel: '/liveData',
+		// });
+		// this.socket.on('getPsychologist', username => {
+		// 	if (username === this.psychologist.username) {
+		// 		this.getPsychologist(username);
+		// 	}
+		// });
 	},
 	methods: {
 		async getPsychologist(data) {

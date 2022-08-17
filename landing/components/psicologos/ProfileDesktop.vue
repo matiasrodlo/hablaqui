@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid style="max-width: 1200px">
+	<v-container fluid style="max-width: 1080px">
 		<v-row>
 			<v-col cols="8">
 				<v-card style="border-radius: 15px" class="shadowCard">
@@ -23,13 +23,18 @@
 						</v-col>
 						<v-col cols="8">
 							<div>
-								<div
+								<h1 v-if="psychologist.gender == 'male'"
 									class="text-left font-weight-bold"
-									style="color: #3c3c3b; font-size: 28px"
-								>
-									{{ psychologist.name }}
+									style="color: #3c3c3b; font-size: 28px">
+									Psicólogo {{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
-								</div>
+								</h1>
+								<h1 v-else
+									class="text-left font-weight-bold"
+									style="color: #3c3c3b; font-size: 28px">
+									Psicóloga {{ psychologist.name }}
+								{{ psychologist.lastName && psychologist.lastName }}
+								</h1>
 							</div>
 							<div
 								class="text-left font-weight-medium pa-2"
@@ -94,7 +99,7 @@
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
 						<div class="mb-4 text-left subtitle-1 primary--text">Experiencia</div>
-						<div class="body-1 text-left">
+						<h2 class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li
 									v-for="(experience, i) in psychologist.experience"
@@ -107,7 +112,7 @@
 									>
 								</li>
 							</ul>
-						</div>
+						</h2>
 					</v-card-text>
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
@@ -129,7 +134,9 @@
 						<div class="body-1 text-left">
 							<ul v-if="psychologist.formation && psychologist.formation.length">
 								<li
-									v-for="(formation, i) in psychologist.formation"
+									v-for="(formation, i) in psychologist.formation.filter(
+										el => el !== null
+									)"
 									:key="i"
 									class="my-1"
 								>
@@ -192,7 +199,6 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import Pusher from 'pusher-js';
 
 export default {
 	components: {
@@ -212,7 +218,6 @@ export default {
 	data() {
 		return {
 			loadingChat: false,
-			pusher: null,
 			channel: null,
 			fullcard: false,
 			loadingCalendar: false,
@@ -225,24 +230,18 @@ export default {
 	},
 	created() {
 		this.setFloatingChat(false);
-		// PUSHER
-		this.pusher = new Pusher(this.$config.PUSHER_KEY, {
-			cluster: this.$config.PUSHER_CLUSTER,
-		});
-		this.pusher.connection.bind('update', function (err) {
-			console.error(err);
-		});
-		this.channel = this.pusher.subscribe('psychologist');
-		this.channel.bind('update', data => this.$emit('updatePsychologist', data));
-		this.$on('updatePsychologist', data => {
-			if (data.username === this.psychologist.username) {
-				this.getPsychologist(data);
-			}
-		});
+		// this.socket = this.$nuxtSocket({
+		// 	channel: '/liveData',
+		// });
+		// this.socket.on('getPsychologist', username => {
+		// 	if (username === this.psychologist.username) {
+		// 		this.getPsychologist(username);
+		// 	}
+		// });
 	},
 	methods: {
-		async getPsychologist(data) {
-			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
+		async getPsychologist(username) {
+			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
 			this.setPsychologist(psychologist);
 		},
 		async goChat() {

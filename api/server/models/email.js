@@ -1,7 +1,7 @@
 'use strict';
 
-import moment from 'moment';
 import { Schema, model } from 'mongoose';
+import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
 let email = new Schema({

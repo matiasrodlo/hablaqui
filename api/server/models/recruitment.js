@@ -34,6 +34,16 @@ let session = new Schema({
 	},
 });
 
+let defaultOnboarding = {
+	photo: false,
+	bankData: false,
+	setSchedule: false,
+	scheduleIntervals: false,
+	timeToSchedule: false,
+	timeToReschedule: false,
+	sessionPrice: false,
+};
+
 let defaultSchedule = {
 	monday: 'busy',
 	tuesday: 'busy',
@@ -136,14 +146,6 @@ let psyPlan = new Schema({
 	price: {
 		type: Number,
 		default: 0,
-	},
-	hablaquiFee: {
-		type: Number,
-		default: 0.2,
-	},
-	paymentFee: {
-		type: Number,
-		default: 0.0399,
 	},
 });
 
@@ -330,6 +332,14 @@ let recruitment = new Schema(
 		},
 		stampSetPrices: {
 			type: String,
+		},
+		flagOnboarding: {
+			type: Object,
+			default: defaultOnboarding,
+		},
+		isHide: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	{

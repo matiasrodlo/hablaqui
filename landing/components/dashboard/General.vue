@@ -28,11 +28,11 @@
 			v-model="panel"
 			multiple
 			class="hidden-sm-and-down mb-4"
-			:style="step && step.title === 'Añade tus datos bancarios' ? 'z-index: 3' : ''"
+			:style="step && step.title === 'Datos bancarios' ? 'z-index: 3' : ''"
 		>
 			<v-expansion-panel
 				:disabled="!!step"
-				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>
 					<div>
@@ -75,18 +75,18 @@
 							Tus datos de facturación en un solo lugar.
 						</div>
 						<card-onboarding
-							v-if="step && step.title === 'Añade tus datos bancarios'"
+							v-if="step && step.title === 'Datos bancarios'"
 							style="position: absolute; top: -65px; left: 30%; z-index: 3"
 							arrow="arrow-left"
 							:next="
 								() => {
 									return {
-										title: 'Configura tus horarios',
+										title: 'Horarios',
 										tab: 1,
 										card: {
-											title: 'Tu horario de trabajo diario',
+											title: 'Disponibilidad',
 											description:
-												'Selecciona los horarios que tendrás disponible para atender.',
+												'Establezca fácilmente sus horarios de atención al público.',
 										},
 										route: 'dashboard-perfil',
 									};
@@ -103,7 +103,7 @@
 			<v-expansion-panel
 				v-if="$auth.$state.user.role === 'psychologist'"
 				:disabled="!!step"
-				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>
 					<div>
@@ -132,7 +132,7 @@
 			<v-expansion-panel
 				v-if="$auth.$state.user.role === 'psychologist'"
 				:disabled="!!step"
-				:style="step && step.title === 'Añade tus datos bancarios' ? 'opacity: 0.3' : ''"
+				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
 				<v-expansion-panel-header>
 					<div>

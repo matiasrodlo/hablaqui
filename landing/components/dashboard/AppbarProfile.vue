@@ -17,7 +17,7 @@
 		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+				href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
 				target="_blank"
 			>
 				<div class="d-flex align-center">
@@ -28,10 +28,11 @@
 						width="30"
 						class="mx-2"
 					></v-img>
-					Agendar demo
+					Agendar con ejecutivo
 				</div>
 			</a>
 		</div>
+		<!-- ocultado por peticion de daniel -->
 		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
@@ -47,23 +48,26 @@
 			</nuxt-link>
 		</div>
 		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
-			<a style="text-decoration: none" href="https://soporte.hablaqui.cl/hc" target="_blank">
+			<a
+				style="text-decoration: none"
+				href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
+				target="_blank"
+			>
 				Centro de ayuda
 			</a>
 		</div>
 		<div v-else class="mx-5 body-1 primary--text">
-			<nuxt-link style="text-decoration: none" to="/faq" target="_blank">
+			<a
+				style="text-decoration: none"
+				href="https://hablaqui.cl/preguntas-frecuentes/"
+				target="_blank"
+			>
 				Centro de ayuda
-			</nuxt-link>
+			</a>
 		</div>
 		<v-btn
-			v-if="
-				$auth.user.role === 'psychologist' &&
-				$auth.user.psychologist &&
-				$vuetify.breakpoint.mdAndUp &&
-				psychologist
-			"
-			class="ml-2"
+			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"
+			class="mx-2"
 			small
 			elevation="1"
 			fab

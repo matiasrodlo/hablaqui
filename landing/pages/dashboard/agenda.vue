@@ -1,18 +1,19 @@
 <template>
 	<div>
 		<card-onboarding
-			v-if="stepOnboarding && stepOnboarding.title === 'Mi agenda'"
-			style="position: absolute; top: 240px; left: 10px; z-index: 3"
+			v-if="stepOnboarding && stepOnboarding.title === 'Sesiones'"
+			style="position: absolute; top: 190px; left: 10px; z-index: 3"
 			arrow="arrow-left"
 			:next="
 				() => {
+					setStepLinks(1);
 					$router.push({ name: 'dashboard-pagos' });
 					return {
-						title: 'Mis pagos',
+						title: 'Pagos',
 						card: {
-							title: 'Gestiona tus pagos',
+							title: 'Pagos',
 							description:
-								'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+								'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 							link: '',
 							route: 'dashboard-chat',
 						},
@@ -30,11 +31,11 @@
 					() => {
 						$router.push({ name: 'dashboard-pagos' });
 						return {
-							title: 'Mis pagos',
+							title: 'Pagos',
 							card: {
-								title: 'Gestiona tus pagos',
+								title: 'Pagos',
 								description:
-									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -202,7 +203,7 @@
 										color="primary"
 										text
 									>
-										Ir a video llamada
+										Ir a videollamada
 									</v-btn>
 									<v-spacer></v-spacer>
 									<v-btn
@@ -419,12 +420,14 @@
 												cols="6"
 											>
 												<v-text-field
-													v-model="valueSession"
+													:value="valueSession"
 													label="Valor"
 													dense
 													hide-details
 													outlined
+													type="number"
 													suffix="CLP"
+													@input="setPrice"
 												></v-text-field>
 											</v-col>
 											<v-col
@@ -643,7 +646,7 @@
 						</small>
 					</v-card-text>
 					<v-card-text class="text-center">
-						<v-btn color="primary" rounded to="/psicologos">Buscar ahora</v-btn>
+						<v-btn color="primary" rounded to="/psicologos/">Buscar ahora</v-btn>
 					</v-card-text>
 				</v-card>
 			</v-dialog>
@@ -850,13 +853,8 @@ export default {
 	}),
 	computed: {
 		nextSesion() {
-			// Si no hay plan
-			if (!this.plan) return '';
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
-			const filterSessions = this.sessions.filter(
-				session => session.idPlan === this.plan._id
-			);
-			const dates = filterSessions.flatMap(session => session.date);
+			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
 				return moment(a, 'MM/DD/YYYY HH:mm').diff(moment(b, 'MM/DD/YYYY HH:mm'));
@@ -1166,8 +1164,20 @@ export default {
 				this.addAppointment({ date: null });
 			} else this.$router.push({ name: 'psicologos' });
 		},
+		setPrice(e) {
+			if (this.verifyOnlyNumbers(e)) {
+				this.valueSession = Number(e);
+			} else {
+				this.valueSession = Number(e.split('.').join(''));
+			}
+		},
+		verifyOnlyNumbers(value) {
+			const regex = /^[0-9]*$/;
+			return regex.test(value.toString());
+		},
 		...mapMutations({
 			setSessions: 'Psychologist/setSessions',
+			setStepLinks: 'User/setStepLinks',
 		}),
 		...mapActions({
 			addSession: 'Psychologist/addSession',

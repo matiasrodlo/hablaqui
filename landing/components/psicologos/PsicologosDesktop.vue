@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- filter name -->
-		<v-container fluid style="max-width: 1200px">
+		<v-container fluid style="max-width: 1080px">
 			<v-row>
 				<v-col
 					v-if="$route.name === 'psicologos'"
@@ -66,7 +66,7 @@
 			class="sticky scroll"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
-			<v-container fluid style="max-width: 1200px">
+			<v-container fluid style="max-width: 1080px">
 				<v-row>
 					<v-col id="menuSpecialties" cols="3">
 						<v-menu
@@ -118,7 +118,8 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<v-col id="selectStatus" cols="2" style="position: relative">
+					<!-- ocultado por peticion de daniel -->
+					<!-- <v-col id="selectStatus" cols="2" style="position: relative">
 						<div
 							class="pointer"
 							@click="
@@ -149,8 +150,8 @@
 								</template>
 							</v-text-field>
 						</div>
-					</v-col>
-					<v-col id="selectgender" cols="2" style="position: relative">
+					</v-col> -->
+					<v-col id="selectgender" cols="3" style="position: relative">
 						<v-menu
 							ref="menuGender"
 							v-model="menuGender"
@@ -243,7 +244,7 @@
 							></v-autocomplete>
 						</div>
 					</v-col>
-					<v-col id="selectOthers" cols="2" style="position: relative">
+					<v-col id="selectOthers" cols="3" style="position: relative">
 						<v-menu
 							ref="menuOthers"
 							v-model="menuOthers"
@@ -335,7 +336,7 @@
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
-		<v-container v-if="psychologists.length" fluid style="max-width: 1200px" class="my-4">
+		<v-container v-if="psychologists.length" fluid style="max-width: 1080px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px; height: 182px">
@@ -384,7 +385,7 @@
 				</v-col>
 				<template v-else>
 					<template v-for="(item, index) in filterLevelThree">
-						<v-col v-if="10 * page > index" :key="item._id" cols="12">
+						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
 									callback: (isVisible, entry) =>
@@ -425,7 +426,8 @@
 										>
 									</div>
 								</div>
-								<div
+								<!-- ocultado por peticion de daniel -->
+								<!-- <div
 									v-if="item.inmediateAttention.activated"
 									style="position: absolute; top: 0; right: 0"
 								>
@@ -441,7 +443,7 @@
 									>
 										¡Disponible para atender ahora!
 									</div>
-								</div>
+								</div> -->
 								<v-row>
 									<v-col
 										cols="3"
@@ -549,6 +551,20 @@
 												>
 													Quiero saber más
 												</v-btn>
+												<v-btn
+													v-if="
+														!$auth.$state.loggedIn ||
+														$auth.$state.user.role === 'user'
+													"
+													small
+													rounded
+													color="#56b5fc"
+													dark
+													class="px-4 py-2"
+													@click="() => goChat(item)"
+												>
+													Enviar mensajes
+												</v-btn>
 											</div>
 										</div>
 									</v-col>
@@ -596,7 +612,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-container v-else fluid style="max-width: 1200px">
+		<v-container v-else fluid style="max-width: 1080px">
 			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
 				<v-skeleton-loader type="image" />
 			</v-col>
@@ -618,6 +634,10 @@ export default {
 		loadingPsychologist: {
 			type: Boolean,
 		},
+		getSessionsLimit: {
+			type: Function,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -637,7 +657,7 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: 1,
+			page: null,
 			status: false,
 		};
 	},
@@ -705,8 +725,16 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsFormattedAll',
+			sessions: 'Psychologist/sessionsLimit',
 		}),
+	},
+	watch: {
+		page(value, oldValue) {
+			let prev = 0;
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
+			this.getSessionsLimit(ids);
+		},
 	},
 	created() {
 		this.setFloatingChat(false);
@@ -725,7 +753,9 @@ export default {
 	},
 	methods: {
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
+			if (isVisible && this.page < this.filterLevelThree.length / 5) {
+				this.page += 1;
+			}
 		},
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))
@@ -756,6 +786,15 @@ export default {
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
+		},
+		goChat(psychologist) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+				});
+			} else {
+				return this.$router.push(`/${psychologist.username}/?chat=true`);
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

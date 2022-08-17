@@ -29,7 +29,6 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
-
 		const recruited = await Recruitment.create(payload);
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
@@ -51,6 +50,13 @@ const recruitmentService = {
 					isInterestedBusiness: recruited.isInterestedBusiness,
 					professionalDescription: recruited.professionalDescription,
 					personalDescription: recruited.personalDescription,
+				},
+			});
+			analytics.track({
+				userId: user._id.toString(),
+				event: 'psy-application-step',
+				properties: {
+					step: 1,
 				},
 			});
 			analytics.identify({
@@ -82,9 +88,24 @@ const recruitmentService = {
 	 * @param {Object} body - The body of the request with the new values
 	 * @returns The response code, message and the updated recruitment profile (if any)
 	 */
-	async update(body) {
+	async update(body, step) {
 		if (!(await Recruitment.exists({ email: body.email }))) {
 			return conflictResponse('Este postulante no existe');
+		}
+		if (
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
+		) {
+			if (step !== undefined && step !== null && step !== '') {
+				const psyID = await User.findOne({ email: body.email });
+				analytics.track({
+					userId: psyID._id.toString(),
+					event: 'psy-application-step',
+					properties: {
+						step: step,
+					},
+				});
+			}
 		}
 		const recruited = await Recruitment.findOneAndUpdate(
 			{ email: body.email },
@@ -134,7 +155,6 @@ const recruitmentService = {
 			{ isVerified: true },
 			{ new: true }
 		);
-		let id = payload._id;
 
 		// Formateamos el payload para que nos deje editar
 		payload = JSON.stringify(payload);
@@ -156,11 +176,11 @@ const recruitmentService = {
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
 			analytics.track({
-				userId: newProfile._id.toString(),
+				userId: userUpdated._id.toString(),
 				event: 'new-psy-onboard',
 			});
 			analytics.identify({
-				userId: newProfile._id.toString(),
+				userId: userUpdated._id.toString(),
 				traits: {
 					role: userUpdated.role,
 					psychologist: newProfile._id,
@@ -170,10 +190,6 @@ const recruitmentService = {
 					rut: payload.rut,
 					psyId: newProfile._id,
 				},
-			});
-			analytics.alias({
-				previousId: id.toString(),
-				userId: newProfile._id.toString(),
 			});
 		}
 
@@ -193,6 +209,18 @@ const recruitmentService = {
 			{ new: true }
 		);
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
+	},
+	async flagOnboarding(recruitedId, flags) {
+		const recruitedOnboarding = await Recruitment.findOneAndUpdate(
+			{ _id: recruitedId },
+			{
+				$set: {
+					flagOnboarding: flags,
+				},
+			},
+			{ new: true }
+		);
+		return okResponse('Onboarding actualizado', { recruitedOnboarding });
 	},
 };
 

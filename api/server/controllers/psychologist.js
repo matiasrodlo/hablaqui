@@ -72,6 +72,22 @@ const psychologistsController = {
 			);
 		}
 	},
+	async sessionsLimit(req, res) {
+		try {
+			const { body } = req;
+			const {
+				data,
+				code,
+			} = await psychologistsService.formattedSessionsAll(body.ids);
+			return restResponse(data, code, res);
+		} catch (error) {
+			errorCallback(
+				error,
+				res,
+				'Error obteniendo las sesiones formateadas'
+			);
+		}
+	},
 	async match(req, res) {
 		try {
 			const { body } = req;
@@ -378,6 +394,22 @@ const psychologistsController = {
 			const { data, code } = await psychologistsService.paymentsInfo(
 				user
 			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(
+				e,
+				res,
+				'Error procesando la informacion de los pagos'
+			);
+		}
+	},
+	async paymentsInfoFromId(req, res) {
+		try {
+			const { psy } = req.params;
+			const {
+				data,
+				code,
+			} = await psychologistsService.paymentsInfoFromId(psy);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(

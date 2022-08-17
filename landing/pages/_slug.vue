@@ -1,22 +1,24 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<appbar />
+		<div style="margin-bottom: 150px">
+			<appbar />
+		</div>
 		<!-- desktop -->
 		<profile-desktop
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-sm-and-down"
+			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<profile-mobile
 			:psychologist="psychologist"
 			:set-psychologist="setPsychologist"
-			class="hidden-md-and-up"
+			class="mt-10 hidden-md-and-up"
 		/>
 		<!-- footer -->
 		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16">
+			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
 						Importante: Los servicios disponibles a través de Hablaquí son
@@ -50,10 +52,13 @@ export default {
 				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
 			),
 	},
-	async asyncData({ $axios, params, error }) {
+	async asyncData({ $axios, params, error, payload }) {
 		try {
-			const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
-			return { psychologist };
+			if (payload) return { psychologist: payload, dataCurrent: false };
+			else {
+				const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
+				return { psychologist, dataCurrent: true };
+			}
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
 		}
@@ -67,8 +72,15 @@ export default {
 	head() {
 		return {
 			title: `${
-				this.psychologist ? this.psychologist.name + ' ' + this.psychologist.lastName : ''
-			} | Hablaquí`,
+				this.psychologist
+					? 'Psicólogo ' +
+					  this.psychologist.name +
+					  ' ' +
+					  this.psychologist.lastName +
+					  ' $' +
+					  this.psychologist.sessionPrices.video
+					: ''
+			}`,
 			meta: [
 				{
 					hid: 'description',
@@ -125,16 +137,27 @@ export default {
 					property: 'og:image:alt',
 					content: this.psychologist.name,
 				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
+				},
 			],
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/${this.psychologist.username}/`,
+					href: `https://hablaqui.cl/${this.psychologist.username}/`,
 				},
 			],
 		};
 	},
 	async mounted() {
+		if (!this.dataCurrent) {
+			const { psychologist } = await this.$axios.$get(
+				`/psychologists/one/${this.$route.params.slug}`
+			);
+			this.psychologist = psychologist;
+		}
 		this.loadingCalendar = true;
 		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
 		this.loadingCalendar = false;

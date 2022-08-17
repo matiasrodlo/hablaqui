@@ -15,7 +15,7 @@
 				<a
 					style="text-decoration: none"
 					class="primary--text"
-					href="https://soporte.hablaqui.cl/hc"
+					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
 					target="_blank"
 				>
 					Contáctanos
@@ -1051,7 +1051,7 @@
 									color="primary"
 									@click="
 										() => {
-											form.isFormCompleted = true;
+											form.isFormCompleted = false;
 											saveStep(4);
 										}
 									"
@@ -1216,7 +1216,7 @@ export default {
 		await this.getAppointments();
 		const responseRecruitment = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 		if (responseRecruitment.recruited) this.form = responseRecruitment.recruited;
-		// if (this.form.isFormCompleted) this.step = 5;
+		if (this.form.isFormCompleted) this.step = 5;
 		this.loading = false;
 	},
 	methods: {
@@ -1225,9 +1225,16 @@ export default {
 			if (this.validationStep(step)) {
 				if (this.form && this.form._id) {
 					// actualizamos postulacion
-					const { data } = await this.$axios('/recruitment/update', {
+					const { data } = await this.$axios('/recruitment/update?step=' + this.step, {
 						method: 'put',
 						data: this.form,
+					});
+					this.$segment.track(this.form._id.toString(), {
+						event: 'psy-application-step',
+						properties: {
+							step,
+							email: this.$auth.user.email,
+						},
 					});
 					this.form = data.recruited;
 					if (step - 1 === 1) this.setUser();
@@ -1241,8 +1248,6 @@ export default {
 					if (step - 1 === 1) this.setUser();
 				}
 				this.step = step;
-			} else {
-				alert('Por favor complete el formulario');
 			}
 			this.loadingStep = false;
 		},
@@ -1250,18 +1255,43 @@ export default {
 		validationStep(step) {
 			// validamos el step 1
 			if (step - 1 === 1) {
+				if (
+					!this.form.timeZone ||
+					!this.form.gender ||
+					!this.form.languages.length ||
+					!this.form.birthDate ||
+					!this.form.country ||
+					!this.form.region ||
+					!this.form.comuna ||
+					!this.form.personalDescription ||
+					!this.form.phone.code ||
+					!this.form.phone.number
+				) {
+					alert(`Complete los campos faltantes`);
+				}
 				return (
 					this.form.timeZone &&
 					this.form.gender &&
 					this.form.languages.length &&
 					this.form.birthDate &&
+					this.form.country &&
 					this.form.region &&
 					this.form.comuna &&
-					this.form.personalDescription
+					this.form.personalDescription &&
+					this.form.phone.code &&
+					this.form.phone.number
 				);
 			}
 			// validamos el step 2
 			else if (step - 1 === 2) {
+				if (
+					!this.form.professionalDescription ||
+					!this.form.formation.length ||
+					!this.form.experience.length ||
+					!this.form.specialties.length ||
+					!this.form.models.length
+				)
+					alert('Complete los campo faltantes');
 				return (
 					this.form.professionalDescription &&
 					this.form.formation.length &&

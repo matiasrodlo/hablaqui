@@ -20,8 +20,6 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/',
-		PUSHER_KEY: process.env.VUE_APP_PUSHER_KEY || 'f7e1381e2482c3db4a61',
-		PUSHER_CLUSTER: process.env.VUE_APP_PUSHER_CLUSTER || 'us2',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
@@ -65,7 +63,7 @@ export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
 		titleTemplate: '%s',
-		title: 'Psicología online | Hablaquí',
+		title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -85,7 +83,7 @@ export default {
 				hid: 'description',
 				name: 'description',
 				content:
-					'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
+									'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 			},
 			{
 				hid: 'twitter:card',
@@ -183,7 +181,21 @@ export default {
 		'@nuxtjs/eslint-module',
 		// https://github.com/Developmint/nuxt-purgecss
 		// 'nuxt-purgecss',
+		'@nuxtjs/google-analytics',
 	],
+
+	io: {
+		// module options
+		sockets: [
+			{
+				name: 'main',
+				url:
+					process.env.NODE_ENV === 'production'
+						? process.env.API_ABSOLUTE
+						: 'http://localhost:3000',
+			},
+		],
+	},
 
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: [
@@ -191,6 +203,7 @@ export default {
 		'@nuxtjs/axios',
 		'@nuxtjs/auth-next',
 		'@nuxtjs/sitemap',
+		'nuxt-socket-io',
 		[
 			'@netsells/nuxt-hotjar',
 			{
@@ -198,13 +211,60 @@ export default {
 				sv: '6',
 			},
 		],
-		[
-			'@nuxtjs/google-gtag',
-			{
-				id: 'G-VDW0VD7GBN',
-			},
-		],
+		// '@nuxtjs/google-analytics',
+		// [
+		// 	'@nuxtjs/google-gtag',
+		// 	{
+		// 		id: 'UA-206733202-1',
+		// 	},
+		// ],
+		'@dansmaculotte/nuxt-segment',
+		'@nuxtjs/gtm',
 	],
+
+	gtm: {
+		id: 'GTM-KTHDRHV',
+		enabled: true,
+		autoInit: true,
+		respectDoNotTrack: true,
+
+		layer: 'dataLayer',
+		variables: {},
+
+		pageTracking: true,
+		pageViewEventName: 'nuxtRoute',
+
+		scriptId: 'gtm-script',
+		scriptDefer: false,
+		scriptURL: 'https://www.googletagmanager.com/gtm.js',
+		crossOrigin: false,
+
+		noscript: true,
+		noscriptId: 'gtm-noscript',
+		noscriptURL: 'https://www.googletagmanager.com/ns.html',
+	},
+
+	segment: {
+		writeKey: 'cfhCuLuHi3QH8paFuAqbs3fvc7X2gqh5',
+		disabled: false,
+		userRouter: true,
+	},
+
+	// 'google-gtag': {
+	// 	id: 'UA-206733202-1',
+	// 	config: {
+	// 		anonimize_ip: true,
+	// 		linker: {
+	// 			domains: ['hablaqui.cl', 'www.hablaqui.cl'],
+	// 		},
+	// 	},
+	// },
+	// googleAnalytics: {
+	// 	id: 'UA-206733202-1',
+	// 	autoTracking: {
+	// 		screenview: true,
+	// 	},
+	// },
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
@@ -250,7 +310,8 @@ export default {
 					// login endpoint
 					login: { url: '/auth/login', method: 'post' },
 					// logout endpoint
-					logout: { url: '/auth/logout', method: 'post' },
+					logout: false,
+					// logout: { url: '/auth/logout', method: 'post' },
 					// get user endpoint
 					user: { url: '/user/profile', method: 'get' },
 				},

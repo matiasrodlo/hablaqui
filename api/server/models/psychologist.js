@@ -13,7 +13,7 @@ let defaultSchedule = {
 };
 
 let defaultPreferences = {
-	marketplaceVisibility: true,
+	marketplaceVisibility: false,
 	minimumNewSession: 24,
 	minimumRescheduleSession: 24,
 	corporativeSessions: true,
@@ -93,14 +93,6 @@ let psyPlan = new Schema({
 	price: {
 		type: Number,
 		default: 0,
-	},
-	hablaquiFee: {
-		type: Number,
-		default: 0.2,
-	},
-	paymentFee: {
-		type: Number,
-		default: 0.0399,
 	},
 });
 
@@ -209,6 +201,10 @@ let psychologist = new Schema({
 	inmediateAttention: {
 		type: Object,
 		default: defaultInmediateAttention,
+	},
+	points: {
+		type: Number,
+		default: 50,
 	},
 });
 

@@ -10,13 +10,16 @@ import storageAvatar from '../middleware/avatar/storage';
 
 const userRouter = Router();
 
-/** register consultante
- * req.body = {
- * 	name = string(requerido),
- * 	email = string(requerido),
- * 	rut = string,
- * 	phone = string
- * }
+/**
+ * @description Registro de consultante hecho por el psicólogo
+ * @method POST
+ * @route /api/v1/user/register
+ * @param {String} body.name - Nombre del consultante (requerido)
+ * @param {String} body.email - Email del consultante (requerido)
+ * @param {String} body.rut - Rut del consultante
+ * @param {String} body.phone - Número de telefono del consultante
+ * @return Objeto con el usuario
+ * @access authenticated (psychologist)
  */
 userRouter.post(
 	'/user/register',
@@ -27,12 +30,27 @@ userRouter.post(
 	userController.registerUser
 );
 
+/**
+ * @description Devuelve los datos del usuario logeado
+ * @method GET
+ * @route /api/v1/user/profile
+ * @return Objeto con el usuario
+ * @access authenticated (user)
+ */
 userRouter.get(
 	'/user/profile',
 	[passport.authenticate('jwt', { session: true })],
 	userController.getUser
 );
 
+/**
+ * @description Actualiza la información de un usuario logeado
+ * @method PUT
+ * @route /api/v1/user/update/profile
+ * @param {Object} body.profile - Objeto con la información actulizada del perfil del usuario
+ * @return Objeto usuario con nueva información
+ * @access authenticated (user)
+ */
 userRouter.put(
 	'/user/update/profile',
 	[
@@ -43,19 +61,42 @@ userRouter.put(
 	userController.updateProfile
 );
 
+/**
+ * @description Actualiza la información de un usuario a través de us Id
+ * @method PUT
+ * @route /api/v1/user/update-one/:id
+ * @param {String} params.id - ID del usuario al que se le actualizará su perfil
+ * @param {Object} body.profile - Objeto con la información actulizada del perfil del usuario
+ * @return Objeto usuario con nueva información
+ * @access authenticated
+ */
 userRouter.put(
 	'/user/update-one/:id',
 	[passport.authenticate('jwt', { session: true })],
 	userController.updateOne
 );
 
-// Pasword recovery
+/**
+ * @description Permite cambiar la contraseña de la cuenta de un usuario logeado desde un correo
+ * @method PATCH
+ * @route /api/v1/user/reset-password
+ * @param {String} body.password - Contraseña nueva
+ * @access authenticated (user)
+ */
 userRouter.patch(
 	'/user/reset-password',
 	[passport.authenticate('jwt', { session: true })],
 	userController.passwordRecovery
 );
 
+/**
+ * @description Permite cambiar la contraseña de la cuenta de un usuario logeado desde su perfil
+ * @method PATCH
+ * @route /api/v1/user/update/password
+ * @param {String} body.oldPassword - Contraseña antigua
+ * @param {String} body.newPassword - Contraseña nueva
+ * @access authenticated (user)
+ */
 userRouter.patch(
 	'/user/update/password',
 	[
@@ -65,6 +106,14 @@ userRouter.patch(
 	userController.updatePassword
 );
 
+/**
+ * @description -----No comentado, pues no estoy seguro si está siendo usado ------
+ * @method PUT
+ * @route /api/v1/user/update/plan
+ * @param {}
+ * @return
+ * @access authenticated ()
+ */
 userRouter.put(
 	'/user/update/plan',
 	[
@@ -74,6 +123,14 @@ userRouter.put(
 	userController.updatePlan
 );
 
+/**
+ * @description -- No está siendo usado --
+ * @method PUT
+ * @route /api/v1/user/update/psychologist
+ * @param {}
+ * @return
+ * @access authenticated ()
+ */
 userRouter.put(
 	'/user/update/psychologist',
 	[
@@ -84,14 +141,17 @@ userRouter.put(
 );
 
 /**
- * Nuevo endpoint para actualizar/subir foto de perfil
- * after parser by multer req.body = {
- * 	_id: id de del usuario a actualizar avatar,
- * 	role: role del usuario a actualizar avatar,
- * 	name: nombre del usuario a actualizar avatar,
- * 	lastName: apellido del usuario a actualizar avatar,
- *  idPsychologist: Para actualizar elavatar del psicologo
- * }
+ * @description Actualiza/sube foto de perfil del usuario psicólogo principalmente
+ * @method PUT
+ * @route /api/v1/user/upload/avatar
+ * @param {String} body._id - id de del usuario a actualizar avatar
+ * @param {String} body.role - role del usuario a actualizar avatar
+ * @param {String} body.name - nombre del usuario a actualizar avatar
+ * @param {String} body.lastName - apellido del usuario a actualizar avatar
+ * @param {String} body.idPsychologist - Para actualizar elavatar del psicologo
+ * @param {Object} file - Contiene los avatar o fotos de perfil del usuario
+ * @return Objeto con el perfil del usuario y sus características de psicólog
+ * @access authenticated
  */
 userRouter.put(
 	'/user/upload/avatar',
@@ -104,8 +164,11 @@ userRouter.put(
 );
 
 /**
- * Pone al usuario loggeado como "en linea"
- * NECESITA AUTENTICACION.
+ * @description Pone al usuario loggeado como "en linea"
+ * @method POST
+ * @route /api/v1/user/set-status/online
+ * @return El objeto del usuario actualizado
+ * @access authenticated
  */
 userRouter.post(
 	'/user/set-status/online',
@@ -114,8 +177,11 @@ userRouter.post(
 );
 
 /**
- * Pone al usuario loggeado como "desconectado"
- * NECESITA AUTENTICACION.
+ * @description Pone al usuario loggeado como "desconectado"
+ * @method POST
+ * @route /api/v1/user/set-status/offline
+ * @return El objeto del usuario actualizado
+ * @access authenticated
  */
 userRouter.post(
 	'/user/set-status/offline',
@@ -124,27 +190,45 @@ userRouter.post(
 );
 
 /**
- * Endpoint para subir una evaluación de un usuario sobre un psicólogo
- * req.body = {
- * 	comment: comentario del usuario sobre el psicólogo,
- * 	global: puntuación goblar sobre el psicólogo por parte del usuario,
- * 	puntuality: puntuación respecto a la puntualidad,
- * 	attention: puntuación sobre la atención del psicólogo,
- *  internet: puntuación respecto a la conexión,
- *  like: comentario sobre lo que le gusto del psicólogo,
- *  improve: comentario sobre lo que el psicólogo debe mejorar
- * }
+ * @description Sube una evaluación de un usuario sobre un psicólogo
+ * @method POST
+ * @route /api/v1/user/evaluation/:psyId
+ * @param {String} params.psyId - Id del psicólogo
+ * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
+ * @param {Number} body.puntuality - puntuación respecto a la puntualidad
+ * @param {Number} body.attention - puntuación sobre la atención del psicólogo
+ * @param {Number} body.internet - puntuación respecto a la conexión
+ * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
+ * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
+ * @param {String} body.comment - comentario del usuario sobre el psicólogo
+ * @return Objeto con los datos de la evaluación recién creada
+ * @access authenticated (user)
  */
 userRouter.post(
-	'/user/evaluation:/:psyId',
+	'/user/evaluation/:psyId',
 	[passport.authenticate('jwt', { session: true })],
 	userController.addEvaluation
 );
 
+/**
+ * @description Permite la desvinculación de un psicólogo antes de terminar el plan
+ * @method POST
+ * @route /api/v1/user/change/psychologist/:sessionId
+ * @param {String} params.sessionId - Id del objeto de la sesión con el plan activo
+ * @access authenticated ()
+ */
 userRouter.post(
 	'/user/change/psychologist/:sessionId',
-	//[passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	userController.changePsychologist
 );
+
+/**
+ * @description Devuelve las evaluaciones hechas de un usuario particular
+ * @method GET
+ * @route /api/v1/user/get/evaluations/:userId
+ * @param {String} params.userId - Id del usuario del que obtendremos las evaluaciones
+ */
+userRouter.get('/user/get/evaluations/:userId', userController.getEvaluations);
 
 export default userRouter;

@@ -32,7 +32,8 @@ const recruitmentController = {
 	async update(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await recruitmentService.update(body);
+			const step = req.query.step;
+			const { data, code } = await recruitmentService.update(body, step);
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando el psicologo');
@@ -80,6 +81,24 @@ const recruitmentController = {
 			const { data, code } = await recruitmentService.approve(
 				user,
 				email
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error aprobando el postulante');
+		}
+	},
+	/**
+	 * @description - This function is used to update oonboarding flag from recruitment
+	 * @param {object} req - The request object (Recruitment id of the profile and new flags to update)
+	 * @param res - The response object (Response code and the new recruitment profile)
+	 * @returns {object} - The response object
+	 */
+	async flagOnboarding(req, res) {
+		try {
+			const { recruitedId } = req.params;
+			const { data, code } = await recruitmentService.flagOnboarding(
+				recruitedId,
+				req.body
 			);
 			restResponse(data, code, res);
 		} catch (e) {

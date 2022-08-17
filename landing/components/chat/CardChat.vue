@@ -244,7 +244,7 @@
 							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
 							tu vida hoy.
 						</div>
-						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos">
+						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos/">
 							Buscar ahora
 						</v-btn>
 					</div>
@@ -257,7 +257,7 @@
 <script>
 import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
 import moment from 'moment-timezone';
-import { mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
 moment.tz.setDefault('America/Santiago');
 
@@ -311,6 +311,10 @@ export default {
 			type: Function,
 			default: () => null,
 		},
+		socket: {
+			type: Object,
+			default: () => {},
+		},
 	},
 	data() {
 		return {
@@ -344,7 +348,6 @@ export default {
 			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
 			const payload = {
-				payload: this.message,
 				psychologistId:
 					this.$auth.$state.user.role === 'psychologist'
 						? this.$auth.$state.user.psychologist
@@ -353,8 +356,12 @@ export default {
 					this.$auth.$state.user.role === 'psychologist'
 						? this.selected._id
 						: this.$auth.$state.user._id,
+				content: this.message,
+				user: { _id: this.$auth.user._id, role: this.$auth.user.role },
 			};
-			await this.sendMessage(payload);
+			await this.socket.emit('sendMessage', payload, response => {
+				this.setChat(response);
+			});
 			this.message = '';
 			this.$nextTick(() => {
 				this.$refs.msj.focus();
@@ -367,8 +374,8 @@ export default {
 			const height = parseInt(e.target.style.height.replace('px', ''));
 			this.grow = height < 140;
 		},
-		...mapActions({
-			sendMessage: 'Chat/sendMessage',
+		...mapMutations({
+			setChat: 'Chat/setChat',
 		}),
 	},
 };

@@ -31,7 +31,8 @@
 				shaped
 				top
 			>
-				<v-list-item
+				<!-- ocultado por peticion de daniel -->
+				<!-- <v-list-item
 					v-if="
 						psychologist &&
 						$auth.user.role === 'psychologist' &&
@@ -63,12 +64,13 @@
 							</v-switch>
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item>
+				</v-list-item> -->
 				<template v-for="(item, i) in links">
 					<v-list-item
 						v-if="item.visible"
 						:id="item.name"
 						:key="i"
+						:disabled="item.disable"
 						class="my-4"
 						link
 						:to="item.link"
@@ -84,6 +86,19 @@
 						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title :id="item.name" class="font-weight-bold body-2">
+								<v-tooltip v-if="item.disable" right max-width="300" color="white">
+									<template #activator="{ on, attrs }">
+										<v-btn icon v-bind="attrs" v-on="on">
+											<icon :icon="mdiAlertOutline" color="red" />
+										</v-btn>
+									</template>
+									<div class="elevation-5 pa-3">
+										<span class="black--text">
+											Esta opción se activará contratando un plan premium
+										</span>
+									</div>
+								</v-tooltip>
+
 								{{ item.name }}
 							</v-list-item-title>
 						</v-list-item-content>
@@ -93,7 +108,7 @@
 					v-if="$auth.$state.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://calendly.com/aranramirez/hablaqui-demo?month=2022-01"
+					href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -113,7 +128,7 @@
 					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://soporte.hablaqui.cl/hc"
+					href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -129,7 +144,12 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-else class="my-4 hidden-md-and-up" link to="/faq">
+				<v-list-item
+					v-else
+					class="my-4 hidden-md-and-up"
+					link
+					href="https://hablaqui.cl/preguntas-frecuentes/"
+				>
 					<v-list-item-avatar size="30">
 						<v-img
 							height="30"
@@ -184,9 +204,11 @@
 					</v-btn>
 				</v-list-item-avatar>
 				<v-list-item-content>
-					<v-list-item-title class="title text-left"> Inicio rápido </v-list-item-title>
+					<v-list-item-title class="title text-left">
+						Para especialistas
+					</v-list-item-title>
 					<v-list-item-subtitle class="mt-3 text-left font-weight-bold">
-						Da tus primeros pasos en Hablaquí Office.
+						Asistente de configuración
 					</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
@@ -195,12 +217,12 @@
 					<v-expansion-panel-header v-if="step.visible">
 						<div class="text-left">
 							<icon
-								v-if="step.title === 'Explora las secciones'"
+								v-if="step.title === 'Secciones'"
 								size="35"
 								:icon="mdiMapMarkerStar"
 							/>
 							<icon
-								v-else-if="step.title === 'Configura tu cuenta'"
+								v-else-if="step.title === 'Configuración'"
 								size="35"
 								:icon="mdiCog"
 							/>
@@ -253,8 +275,10 @@
 					</v-expansion-panel-content>
 				</v-expansion-panel>
 			</v-expansion-panels>
-			<template #append>
-				<div class="pointer my-6 primary--text text-center">Completar tareas (saltar)</div>
+			<template v-if="!$auth.user.onboarding" #append>
+				<div class="pointer my-6 primary--text text-center" @click="changeStateOnboarding">
+					Completar tareas (saltar)
+				</div>
 			</template>
 		</v-navigation-drawer>
 		<v-app-bar absolute height="70" flat color="white" dark class="hidden-md-and-up">
@@ -282,35 +306,37 @@
 			>
 				<div class="primary--text pa-2">Presione esc para salir</div>
 			</v-overlay>
-			<!-- overlay loading -->
-			<v-overlay :value="overlay" color="white" :opacity="0.8">
+			<v-dialog v-model="overlay" persistent max-width="300">
 				<v-card light>
 					<div class="text-right">
-						<v-btn text @click="changeStateOnboarding">
+						<v-btn text @click="welcomeDialog">
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
 					<v-card-text class="py-0 text-center body-1 px-6">
-						Bienvenido a Hablaquí Office
+						Aprenda a usar Hablaquí
 					</v-card-text>
+					<br />
 					<v-card-text class="text-center body-2 px-6">
-						Agenda un tour por tu oficina y aclara todas tus dudas
+						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas en una
+						breve capacitación en línea.
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
 						<v-btn
 							rounded
 							color="primary"
-							href="https://calendly.com/daniel-hablaqui/30min"
+							href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
 							target="_blank"
 							:loading="loadingOnboarding"
 							@click="changeStateOnboarding"
-							>Agendar demo
+						>
+							Agendar capacitación
 						</v-btn>
 						<v-spacer></v-spacer>
 					</v-card-actions>
 				</v-card>
-			</v-overlay>
+			</v-dialog>
 			<div
 				:class="$vuetify.breakpoint.mdAndUp ? 'border-desktop' : 'border-mobile'"
 				class="white"
@@ -337,9 +363,10 @@ import {
 	mdiCog,
 	mdiAccountSupervisor,
 	mdiCalendar,
+	mdiAlertOutline,
 } from '@mdi/js';
-import Snackbar from '@/components/Snackbar';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar';
 
 export default {
 	components: {
@@ -364,6 +391,7 @@ export default {
 			mdiMenu,
 			mdiCheckCircle,
 			mdiCircle,
+			mdiAlertOutline,
 			drawer: true,
 			online: true,
 			isMini: true,
@@ -396,18 +424,22 @@ export default {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
+			const disable = false;
+			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
 			return [
 				{
 					name: 'Chat',
 					link: { name: 'dashboard-chat' },
 					img: 'https://cdn.hablaqui.cl/static/chat.png',
 					visible,
+					disable,
 				},
 				{
-					name: 'Mis sesiones',
+					name: 'Sesiones',
 					link: { name: 'dashboard-agenda' },
 					img: 'https://cdn.hablaqui.cl/static/sesiones.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Pagos',
@@ -416,6 +448,8 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable:
+						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
 				},
 				{
 					name: 'Consultantes',
@@ -424,12 +458,14 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Mi cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
+					disable,
 				},
 				{
 					name: 'Mi plan premium',
@@ -438,12 +474,14 @@ export default {
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
 						this.$auth.$state.user.role === 'psychologist',
+					disable,
 				},
 				{
 					name: 'Panel de control',
 					link: { name: 'dashboard-panel' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
 				},
 			];
 		},
@@ -519,82 +557,81 @@ export default {
 		stepOnboarding() {
 			return [
 				{
-					title: 'Configura tu cuenta',
+					title: 'Configuración',
 					route: '/dashboard/perfil',
 					items: [
 						{
-							title: 'Sube tu foto de perfil',
+							title: 'Foto de perfil',
 							tab: 0,
 							card: {
-								title: 'Editamos tu fotografía',
+								title: 'Foto de perfil',
 								description:
-									'Aquí puedes subir tu foto para editarla, consulta el manual',
-								link: 'https://calendly.com/daniel-hablaqui/30min',
+									'Luzca profesional. Adjunte su foto de perfil, nosotros la retocaremos. Ver manual.',
+								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
 							done: this.hasAvatar,
 						},
 						{
-							title: 'Añade tus datos bancarios',
+							title: 'Datos bancarios',
 							tab: 0,
 							card: {
-								title: 'No te preocupes, cobramos por ti',
+								title: 'Datos bancarios',
 								description:
-									'Ingresa tus datos bancarios para transferir el dinero a tu cuenta.',
+									'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Configura tus horarios',
+							title: 'Horarios',
 							tab: 1,
 							card: {
-								title: 'Tu horario de trabajo diario',
+								title: 'Disponibilidad',
 								description:
-									'Selecciona los horarios que tendrás disponible para atender.',
+									'Establezca fácilmente sus horarios de atención al público.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Intervalos en tu horario',
+							title: 'Disponibilidad',
 							tab: 1,
 							card: {
-								title: 'Agregar más intervalos de tiempo',
-								description: 'Puedes añadir más bloques de horario para atender.',
+								title: 'Intervalos',
+								description:
+									'Establezca intervalos de disponibilidad para cada día.',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Anticipación para agendar',
+							title: 'Agendamientos',
 							tab: 2,
 							card: {
-								title: 'Ya no más sesiones muy encima',
-								description:
-									'Determina la anticipación horaria para que tus consultantes agenden una sesión',
+								title: 'Agendamientos',
+								description: 'Establezca la anticipación con que le pueden agendar',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Configura el tiempo de reprogramación y agenda',
+							title: 'Reprogramación',
 							tab: 2,
 							card: {
-								title: 'No pierdas tu tiempo',
+								title: 'Reprogramación',
 								description:
-									'Determina el tiempo para que tus consultantes reprogramen una sesión.',
+									'Establezca la anticipación con que le pueden reagendar',
 							},
 							done: this.hasPreferences,
 							route: 'dashboard-perfil',
 						},
 						{
-							title: 'Añade el precio de tus sesiones',
+							title: 'Valor por sesión',
 							tab: 2,
 							card: {
-								title: 'Ingresa el valor de tus sesiones',
-								description:
-									'Determina y calcula el valor de tus sesiones en las diferentes modalidades que ofrece Hablaquí.',
+								title: 'Valor por sesión',
+								description: 'Configure el valor por sesiones de 50 minutos.',
 							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
@@ -608,116 +645,58 @@ export default {
 						this.hasBankdata &&
 						this.hasAvatar,
 				},
-				// {
-				// 	title: 'Añade a tus consultantes',
-				// 	route: '/dashboard/consultantes',
-				// 	items: [
-				// 		{
-				// 			title: 'Consultante nuevo',
-				// 			card: {
-				// 				title: 'Que no queden fuera tus consultantes',
-				// 				description:
-				// 					'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-				// 				link: '',
-				// 			},
-				// 			route: 'dashboard-consultantes',
-				// 			done: this.hasConsultantes,
-				// 		},
-				// 	],
-				// 	visible:
-				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-				// 	done: false,
-				// },
-				// {
-				// 	title: 'Añade eventos o bloquea horas',
-				// 	route: '/dashboard/agenda',
-				// 	items: [
-				// 		{
-				// 			title: 'Nuevo evento',
-				// 			card: {
-				// 				title: 'Despreocúpate y organiza tu agenda',
-				// 				description:
-				// 					'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-				// 				link: '',
-				// 			},
-				// 			done: this.hasEvents,
-				// 			route: 'dashboard-agenda',
-				// 		},
-				// 	],
-				// 	visible:
-				// 		this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist,
-				// 	done: false,
-				// },
 				{
-					title: 'Explora las secciones',
+					title: 'Secciones',
 					route: '/dashboard/chat',
 					items: [
 						{
 							title: 'Chat',
 							route: 'dashboard-chat',
 							card: {
-								title: 'Tus conversaciones en un solo lugar',
+								title: 'Chat',
 								description:
-									'Habla con tus consultantes por medio del chat y responde las dudas que puedan tener.',
+									'Envíe mensajes ilimitados para coordinar y realizar seguimiento.',
 								link: '',
 								route: 'dashboard-chat',
 							},
+							done: this.$auth.user.onboarding || this.stepLinks[0],
 						},
 						{
-							title: 'Mi agenda',
+							title: 'Sesiones',
 							card: {
-								title: 'Gestiona tu agenda',
+								title: 'Sesiones',
 								description:
-									'Administra tu agenda y añade eventos. También puedes bloquear horarios a través de un compromiso privado.',
+									'Las sesiones se añadirán automáticamente en su calendario.',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-agenda',
+							done: this.$auth.user.onboarding || this.stepLinks[1],
 						},
-						// {
-						// 	title: 'Nuevo evento',
-						// 	card: {
-						// 		title: 'Despreocúpate y organiza tu agenda',
-						// 		description:
-						// 			'Selecciona el día que quieras agregar un evento o bloquear un horario con un compromiso privado.',
-						// 		link: '',
-						// 	},
-						// 	done: this.hasEvents,
-						// 	route: 'dashboard-agenda',
-						// },
 						{
-							title: 'Mis pagos',
+							title: 'Pagos',
 							card: {
-								title: 'Gestiona tus pagos',
+								title: 'Pagos',
 								description:
-									'Aquí podrás conocer los ingresos, las transacciones y la cantidad de sesiones que has tenido en el mes.',
+									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-pagos',
+							done: this.$auth.user.onboarding || this.stepLinks[2],
 						},
 						{
-							title: 'Mis consultantes',
+							title: 'Consultantes',
 							card: {
-								title: 'Gestiona los consultantes',
+								title: 'Consultantes',
 								description:
-									'La lista de todos tus clientes en un solo lugar. Administra sus datos y consulta su historial de pago.',
+									'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
 								link: '',
 								route: 'dashboard-chat',
 							},
 							route: 'dashboard-consultantes',
+							done: this.$auth.user.onboarding || this.stepLinks[3],
 						},
-						// {
-						// 	title: 'Consultante nuevo',
-						// 	card: {
-						// 		title: 'Que no queden fuera tus consultantes',
-						// 		description:
-						// 			'Añade a todos tus pacientes para y no pagues comisión por ellos.',
-						// 		link: '',
-						// 	},
-						// 	route: 'dashboard-consultantes',
-						// 	done: this.hasConsultantes,
-						// },
 					],
 					visible: true,
 					done: true,
@@ -727,6 +706,7 @@ export default {
 		...mapGetters({
 			listenerUserOnline: 'User/listenerUserOnline',
 			onBoarding: 'User/onBoarding',
+			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
 			plan: 'User/plan',
@@ -745,6 +725,9 @@ export default {
 		},
 	},
 	async mounted() {
+		// lanzar onboarding al cargar
+		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+		// 	this.setOnBoarding(true);
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 
@@ -808,6 +791,11 @@ export default {
 			this.loadingStatus = true;
 			await this.toggleStatus();
 			this.loadingStatus = false;
+		},
+		welcomeDialog() {
+			this.overlay = false;
+			this.setOnBoarding(true);
+			// this.changeStateOnboarding();
 		},
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;

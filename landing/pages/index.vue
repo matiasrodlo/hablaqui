@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<nav class="primary-color">
+		<nav class="primary-color" style="margin-bottom: 93px">
 			<Appbar />
 		</nav>
 		<!-- SECTION 1 / heading -->
 		<section class="primary-color">
-			<v-container class="white--text py-0">
+			<v-container fluid style="max-width: 1080px" class="white--text py-0">
 				<v-row
 					tag="section"
 					justify="center"
@@ -31,7 +31,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							to="/psicologos"
+							to="/psicologos/"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -75,7 +75,7 @@
 			alt="Tu psicólogo Online"
 		/>
 		<!-- SECTION 2 / como funciona -->
-		<v-container tag="section" class="pt-md-10">
+		<v-container tag="section" class="pt-md-10" fluid style="max-width: 1080px">
 			<v-row tag="section" justify="center">
 				<v-col
 					tag="h2"
@@ -143,7 +143,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
@@ -185,7 +185,7 @@
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
-							to="/psicologos"
+							to="/psicologos/"
 							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
@@ -285,7 +285,7 @@
 							color="white"
 							x-large
 							class="pa-4"
-							to="/psicologos"
+							to="/psicologos/"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
 								Ver más psicólogos
@@ -365,7 +365,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
@@ -652,7 +652,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						to="/psicologos"
+						to="/psicologos/"
 					>
 						Quiero empezar
 					</v-btn>
@@ -1002,7 +1002,7 @@ export default {
 			url: this.$config.LANDING_URL,
 			logo: this.$config.LANDING_URL,
 			description:
-				'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+				'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 		};
 	},
 	head() {
@@ -1010,13 +1010,18 @@ export default {
 		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
 		const canonical = `${this.$config.LANDING_URL}${pathWithSlash}`;
 		return {
-			title: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+			title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
 					content:
-						'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+						'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
+				},
+				{
+					hid: 'robots',
+					name: 'robots',
+					content: 'index,follow',
 				},
 			],
 			link: [{ rel: 'canonical', href: canonical }],

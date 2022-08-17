@@ -79,7 +79,7 @@ const userController = {
 		try {
 			const { user } = req;
 			const { newPsychologist } = req.body;
-			const { data, code } = await userService.updatePlan(
+			const { data, code } = await userService.updatePsychologist(
 				user,
 				newPsychologist
 			);
@@ -158,6 +158,15 @@ const userController = {
 			const { data, code } = await userService.changePsychologist(
 				sessionId
 			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error añadiendo la evaluación');
+		}
+	},
+	async getEvaluations(req, res) {
+		try {
+			const { userId } = req.params;
+			const { data, code } = await userService.getEvaluations(userId);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error añadiendo la evaluación');

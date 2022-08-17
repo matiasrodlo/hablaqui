@@ -24,96 +24,10 @@
 								/>
 							</nuxt-link>
 						</v-col>
-						<v-col
-							cols="12"
-							class="
-								py-1
-								text-center text-h6 text-lg-h4
-								font-weight-bold
-								text--secondary
-							"
-						>
-							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
-							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>
-							<span v-show="step === 3">Recupera tu contraseña</span>
-						</v-col>
-						<v-col
-							cols="12"
-							sm="9"
-							lg="6"
-							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
-						>
-							<span v-show="step === 1"
-								>Ingresa y continúa tu viaje de desarrollo personal ahora
-								mismo.</span
-							>
-							<span v-show="step === 2"
-								>Regístrate para iniciar tu camino de desarrollo personal</span
-							>
-							<span v-show="step === 3">
-								Continua disfrutando de los beneficios de hablaquí
-							</span>
-						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
-							<v-window v-model="step">
-								<v-window-item :value="1">
-									<sign-in :set-reset-password="() => (step = 3)" />
-								</v-window-item>
-								<v-window-item :value="2">
-									<sign-up />
-								</v-window-item>
-								<v-window-item :value="3">
-									<Send-password-recovery :go-back="() => (step = 1)" />
-								</v-window-item>
-							</v-window>
-							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
-								<small v-if="step == 1"> ¿No eres parte de Hablaquí? </small>
-								<small v-else>¿Ya tienes cuenta Hablaquí?</small>
-							</div>
-							<v-btn
-								v-show="step == 2 || step === 3"
-								outlined
-								block
-								rounded
-								color="primary"
-								@click="setStep"
-							>
-								Ingresar
-							</v-btn>
-							<v-btn
-								v-show="step == 1"
-								outlined
-								block
-								rounded
-								color="primary"
-								@click="setStep"
-							>
-								Crea una cuenta
-							</v-btn>
-							<div class="mt-16">
-								<v-btn
-									class="px-0"
-									text
-									nuxt
-									color="primary"
-									target="_blank"
-									:to="{ name: 'politicas' }"
-									>Aviso de privacidad</v-btn
-								>
-								<span class="primary--text mx-1">y</span>
-								<v-btn
-									class="px-0"
-									text
-									nuxt
-									color="primary"
-									:to="{ name: 'condiciones' }"
-									target="_blank"
-								>
-									Términos y Condiciones</v-btn
-								>
-							</div>
+							<sign-up />
 							<div class="font-weight-bold caption secondary--text">
 								2021 Hablaqui
 							</div>
@@ -195,9 +109,7 @@ import { mdiRecord } from '@mdi/js';
 
 export default {
 	components: {
-		SignIn: () => import('~/components/auth/SignIn'),
-		SignUp: () => import('~/components/auth/SignUp'),
-		SendPasswordRecovery: () => import('~/components/auth/SendPasswordRecovery'),
+		SignUp: () => import('@/components/psicologos/FormUserPsy.vue'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'simple',
@@ -236,14 +148,9 @@ export default {
 		return {
 			meta: [
 				{
-					hid:"robots",
-					name:"robots",
-					content:"noindex",
-				},
-				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/auth',
+					content: process.env.VUE_APP_LANDING + '/registrar-especialista',
 				},
 				{
 					hid: 'twitter:title',
@@ -253,7 +160,7 @@ export default {
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/auth',
+					content: process.env.VUE_APP_LANDING + '/registrar-especialista',
 				},
 				{
 					hid: 'og:title',
@@ -261,21 +168,20 @@ export default {
 					content: `Ingresa o registrate | Hablaquí`,
 				},
 			],
-			link: [{ rel: 'canonical', href: `https://cdn.hablaqui.cl/static/auth/` }],
+			link: [
+				{
+					rel: 'canonical',
+					href: `https://cdn.hablaqui.cl/static/registrar-especialista/`,
+				},
+			],
 		};
 	},
 	created() {
 		if (this.$auth.loggedIn) {
 			this.$router.go(1);
 		}
-		if (this.$route.params.q) this.step = 2;
-		if (this.$route.query.register) this.step = 2;
 	},
 	methods: {
-		setStep() {
-			if (this.step === 1) this.step = 2;
-			else this.step = 1;
-		},
 		next() {
 			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
 		},

@@ -54,6 +54,18 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	// Obtiene solo agendas de los psicologos soliciotados
+	async getSessionsLimit({ commit }, ids) {
+		try {
+			const { data } = await this.$axios('/psychologists/sessionsLimit', {
+				method: 'POST',
+				data: { ids },
+			});
+			commit('setSessionsLimit', data.sessions);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getFormattedSessionsAll({ commit }, idPsychologist) {
 		try {
 			const { sessions } = await this.$axios.$get('/psychologists/formattedSessionsAll');
@@ -242,9 +254,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async mercadopagoSuccess({ commit }, planId) {
+	async mercadopagoSuccess({ commit }, { sessionsId, planId }) {
 		try {
-			await this.$axios(`/mercadopago/success-pay/${planId}`, {
+			await this.$axios(`/mercadopago/success-pay/${sessionsId}/${planId}`, {
 				method: 'get',
 			});
 			snackBarSuccess('Pago aprobado')(commit);
