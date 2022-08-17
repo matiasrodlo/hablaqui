@@ -23,13 +23,18 @@
 						</v-col>
 						<v-col cols="8">
 							<div>
-								<div
+								<h1 v-if="psychologist.gender == 'male'"
 									class="text-left font-weight-bold"
-									style="color: #3c3c3b; font-size: 28px"
-								>
-									{{ psychologist.name }}
+									style="color: #3c3c3b; font-size: 28px">
+									Psicólogo {{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
-								</div>
+								</h1>
+								<h1 v-else
+									class="text-left font-weight-bold"
+									style="color: #3c3c3b; font-size: 28px">
+									Psicóloga {{ psychologist.name }}
+								{{ psychologist.lastName && psychologist.lastName }}
+								</h1>
 							</div>
 							<div
 								class="text-left font-weight-medium pa-2"
@@ -94,7 +99,7 @@
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
 						<div class="mb-4 text-left subtitle-1 primary--text">Experiencia</div>
-						<div class="body-1 text-left">
+						<h2 class="body-1 text-left">
 							<ul v-if="psychologist.experience && psychologist.experience.length">
 								<li
 									v-for="(experience, i) in psychologist.experience"
@@ -107,7 +112,7 @@
 									>
 								</li>
 							</ul>
-						</div>
+						</h2>
 					</v-card-text>
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>

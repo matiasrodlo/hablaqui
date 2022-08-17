@@ -646,7 +646,7 @@
 						</small>
 					</v-card-text>
 					<v-card-text class="text-center">
-						<v-btn color="primary" rounded to="/psicologos">Buscar ahora</v-btn>
+						<v-btn color="primary" rounded to="/psicologos/">Buscar ahora</v-btn>
 					</v-card-text>
 				</v-card>
 			</v-dialog>

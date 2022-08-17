@@ -244,7 +244,7 @@
 							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
 							tu vida hoy.
 						</div>
-						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos">
+						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos/">
 							Buscar ahora
 						</v-btn>
 					</div>

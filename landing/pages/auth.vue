@@ -236,6 +236,11 @@ export default {
 		return {
 			meta: [
 				{
+					hid:"robots",
+					name:"robots",
+					content:"noindex",
+				},
+				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
 					content: process.env.VUE_APP_LANDING + '/auth',

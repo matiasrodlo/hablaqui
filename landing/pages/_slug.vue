@@ -72,8 +72,15 @@ export default {
 	head() {
 		return {
 			title: `${
-				this.psychologist ? this.psychologist.name + ' ' + this.psychologist.lastName : ''
-			} | Hablaquí`,
+				this.psychologist
+					? 'Psicólogo ' +
+					  this.psychologist.name +
+					  ' ' +
+					  this.psychologist.lastName +
+					  ' $' +
+					  this.psychologist.sessionPrices.video
+					: ''
+			}`,
 			meta: [
 				{
 					hid: 'description',
@@ -139,7 +146,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/${this.psychologist.username}/`,
+					href: `https://hablaqui.cl/${this.psychologist.username}/`,
 				},
 			],
 		};

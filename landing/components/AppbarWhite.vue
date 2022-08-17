@@ -27,18 +27,17 @@
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item
+				<a
 					id="link-blog-drawer"
 					accesskey="r"
-					link
-					href="https://hablaqui.cl/blog/para-especialistas"
+					href="https://hablaqui.cl/para-especialistas/"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
 							Para especialistas
 						</v-list-item-title>
 					</v-list-item-content>
-				</v-list-item>
+				</a>
 				<v-list-item
 					id="link-para-especialistas-drawer"
 					accesskey="q"

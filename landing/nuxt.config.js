@@ -63,7 +63,7 @@ export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
 		titleTemplate: '%s',
-		title: 'Psicología online | Hablaquí',
+		title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -83,7 +83,7 @@ export default {
 				hid: 'description',
 				name: 'description',
 				content:
-					'Encuentra un psicólogo online y cuida tu salud emocional sin salir de casa. Contamos con terapeutas y entrenadores de todas las especialidades. ¡Empezar ahora!',
+									'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 			},
 			{
 				hid: 'twitter:card',
