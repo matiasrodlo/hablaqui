@@ -5,17 +5,6 @@ import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
 const psychologistsController = {
-	async hidePsychologist(req, res) {
-		try {
-			const { idPsy } = req.params;
-			const { data, code } = await psychologistsService.hidePsychologist(
-				idPsy
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
 	async getAll(req, res) {
 		try {
 			const { data, code } = await psychologistsService.getAll();

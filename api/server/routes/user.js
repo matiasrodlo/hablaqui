@@ -194,10 +194,10 @@ userRouter.post(
  * @method POST
  * @route /api/v1/user/evaluation/:psyId
  * @param {String} params.psyId - Id del psicólogo
- * @param {Integer} body.global - puntuación goblar sobre el psicólogo por parte del usuario
- * @param {Integer} body.puntuality - puntuación respecto a la puntualidad
- * @param {Integer} body.attention - puntuación sobre la atención del psicólogo
- * @param {Integer} body.internet - puntuación respecto a la conexión
+ * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
+ * @param {Number} body.puntuality - puntuación respecto a la puntualidad
+ * @param {Number} body.attention - puntuación sobre la atención del psicólogo
+ * @param {Number} body.internet - puntuación respecto a la conexión
  * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
  * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
  * @param {String} body.comment - comentario del usuario sobre el psicólogo

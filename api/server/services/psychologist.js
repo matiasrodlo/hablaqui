@@ -1835,7 +1835,7 @@ const uploadProfilePicture = async (psyID, picture) => {
  * @param {Object} user Usuario logeado
  * @param {string} payload.date Fecha de la sesion
  * @param {string} payload.type Tipo de la sesion ['online', 'presencial', 'commitment', etc...]
- * @param {integer} payload.price Precio que se cobrara
+ * @param {Number} payload.price Precio que se cobrara
  * @returns sessions
  */
 const customNewSession = async (user, payload) => {
@@ -2378,7 +2378,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 		evaluations.psychologist
 	);
 
-	return okResponse('Sesion aprobada', { evaluation });
+	return okResponse('Evaluación aprobada', { evaluation });
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
@@ -2510,17 +2510,6 @@ const getAllSessionsInmediateAttention = async () => {
 
 	return okResponse('Sesiones', { allSessions });
 };*/
-const hidePsychologist = async idPsy => {
-	let psychologist = await Psychologist.findOne({ _id: idPsy });
-	psychologist = await Psychologist.findOneAndUpdate(
-		{ _id: idPsy },
-		{ $set: { isHide: !psychologist.isHide } }
-	);
-
-	if (!psychologist) return conflictResponse('Psicologo no encontrado');
-
-	return okResponse('Psicologo ocultado', { psychologist });
-};
 
 const priceFormatter = price => {
 	const formatter = new Intl.NumberFormat('en-US', {
@@ -2533,7 +2522,6 @@ const priceFormatter = price => {
 };
 
 const psychologistsService = {
-	hidePsychologist,
 	addRating,
 	approveAvatar,
 	cancelSession,
