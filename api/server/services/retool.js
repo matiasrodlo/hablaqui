@@ -80,7 +80,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 		else auxFlatSession[auxFlatSession.indexOf(resp)].price += s.price;
 	});
 
-	return okResponse('psicologos obtenidos', { auxFlatSession });
+	return okResponse('psicologos obtenidos', { psyPayments: auxFlatSession });
 };
 
 const retoolService = {
