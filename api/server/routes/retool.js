@@ -14,10 +14,15 @@ const retoolRouter = Router();
 retoolRouter.get('/retool/sessions/next', retoolController.getNextSessions);
 
 /**
- * @description Devuelve la paga de los psicologos en la semana actual
+ * @description Devuelve la paga de los psicologos dentro de un intervalo de tiempo
  * @method GET
- * @route /api/v1/retool/payments/next
+ * @param {String} params.startDate - Fecha de inicio del intervalo
+ * @param {String} params.endDate - Fecha de término del intervalo
+ * @route /api/v1/retool/payments/next/:startDate/:endDate
  * @return Array con los montos a pagar por psicólogo
  */
-retoolRouter.get('/retool/payments/next', retoolController.getSessionsPayment);
+retoolRouter.get(
+	'/retool/payments/next/:startDate/:endDate',
+	retoolController.getSessionsPayment
+);
 export default retoolRouter;

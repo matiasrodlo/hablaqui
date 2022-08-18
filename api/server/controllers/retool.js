@@ -15,7 +15,7 @@ const retoolController = {
 	},
 	async getSessionsPayment(req, res) {
 		try {
-			const { startDate, endDate } = req.body;
+			const { startDate, endDate } = req.params;
 			const { data, code } = await retoolService.getSessionsPayment(
 				startDate,
 				endDate
