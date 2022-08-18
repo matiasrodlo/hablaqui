@@ -15,7 +15,11 @@ const retoolController = {
 	},
 	async getSessionsPayment(req, res) {
 		try {
-			const { data, code } = await retoolService.getSessionsPayment();
+			const { startDate, endDate } = req.body;
+			const { data, code } = await retoolService.getSessionsPayment(
+				startDate,
+				endDate
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');

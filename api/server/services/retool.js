@@ -50,20 +50,9 @@ const getNextSessions = async () => {
 	return okResponse('psicologos obtenidos', { nextSessions });
 };
 
-const getSessionsPayment = async () => {
+const getSessionsPayment = async (startDate, endDate) => {
 	let sessions = await Sessions.find().populate('psychologist user');
-	const dayOfWeek = moment().day();
-	let day;
 	sessions = sessions.filter(s => !!s.psychologist);
-
-	if (dayOfWeek <= 3)
-		day = moment()
-			.startOf('week')
-			.subtract(4, 'days');
-	else
-		day = moment()
-			.endOf('week')
-			.subtract(3, 'days');
 
 	let flatSession = sessions.flatMap(s => {
 		const plan = s.plan.pop();
@@ -81,7 +70,7 @@ const getSessionsPayment = async () => {
 	});
 
 	flatSession = flatSession.filter(s =>
-		moment(s.date).isBetween(day, day.add(7, 'days'))
+		moment(s.date).isBetween(moment(startDate), moment(endDate))
 	);
 
 	let auxFlatSession = [];
