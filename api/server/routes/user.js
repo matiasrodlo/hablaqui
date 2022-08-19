@@ -107,6 +107,7 @@ userRouter.patch(
 );
 
 /**
+ * No se usa
  * @description -----No comentado, pues no estoy seguro si está siendo usado ------
  * @method PUT
  * @route /api/v1/user/update/plan
@@ -124,6 +125,7 @@ userRouter.put(
 );
 
 /**
+ * No se usa
  * @description -- No está siendo usado --
  * @method PUT
  * @route /api/v1/user/update/psychologist

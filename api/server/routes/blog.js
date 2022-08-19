@@ -7,7 +7,9 @@ import storage from '../middleware/storage';
 import blogController from '../controllers/blog';
 
 const blogRouter = Router();
-
+/**
+ * No se usa
+ */
 /**
  * Crea un nuevo articulo
  * NECESITA AUTENTICACION
@@ -33,15 +35,24 @@ blogRouter.post(
 );
 
 /**
+ * No se usa
+ */
+/**
  * Consigue todos los articulos
  */
 blogRouter.get('/blog/all', blogController.getAllArticles);
 
 /**
+ * No se usa
+ */
+/**
  * Consigue el articulo con el slug especificado
  */
 blogRouter.get('/blog/:slug', blogController.getArticle);
 
+/**
+ * No se usa
+ */
 /**
  * Actualiza las valoraciones del articulo.
  * slug: string, newRating: integer

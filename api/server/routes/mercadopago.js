@@ -61,7 +61,7 @@ mercadopagoRouter.get(
  */
 
 /**
- * @description Pasa una plan de postulante a pagado.
+ * @description Pasa una plan de psicólogo a pagado.
  * @method POST
  * @route /api/v1/mercadopago/psychologist-pay/:psychologistId
  * @param {String} params.psychologistId el id del psicólogo

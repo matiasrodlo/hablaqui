@@ -8,6 +8,7 @@ import multer from '../middleware/multer';
 const psychologistsRouter = Router();
 
 /**
+ * No se usa
  * @swagger
  * tags:
  *   name: Psychologists
@@ -150,6 +151,7 @@ psychologistsRouter.post(
 );
 
 /**
+ * No se usa
  * @description Registra un psicólogo
  * @method POST
  * @route /api/v1/psychologists/register
@@ -419,7 +421,7 @@ psychologistsRouter.get(
 );
 
 /**
- * @description Creo No usada
+ * @description Creo No se usa
  * @method
  * @route /api/v1
  * @param {} -
