@@ -31,6 +31,8 @@ const getNextSessions = async () => {
 		.flatMap(p => {
 			const plan = p.plan;
 			return plan.session.flatMap(s => {
+				const isNextSession =
+					s.status !== 'success' && moment(s.date).isAfter(moment());
 				return {
 					_id: s._id,
 					sessionNumber: s.sessionNumber + '/' + plan.totalSessions,
@@ -42,10 +44,11 @@ const getNextSessions = async () => {
 					psyEmail: p.psyEmail,
 					psychologist: p.psy,
 					status: s.status,
+					isNextSession,
 				};
 			});
 		})
-		.filter(ns => ns.status !== 'success')
+		.filter(ns => ns.isNextSession)
 		.sort((a, b) => new Date(a.date) - new Date(b.date));
 	return okResponse('psicologos obtenidos', { nextSessions });
 };
