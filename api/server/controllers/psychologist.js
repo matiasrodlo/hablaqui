@@ -24,70 +24,6 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
-	async getSessions(req, res) {
-		try {
-			const { idUser, idPsychologist } = req.params;
-			const { user } = req;
-			const { data, code } = await psychologistsService.getSessions(
-				user,
-				idUser,
-				idPsychologist
-			);
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(error, res, 'Error obteniendo las sesiones');
-		}
-	},
-	async getFormattedSessions(req, res) {
-		try {
-			const { idPsychologist, type } = req.params;
-			const {
-				data,
-				code,
-			} = await psychologistsService.getFormattedSessions(
-				idPsychologist,
-				type
-			);
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(
-				error,
-				res,
-				'Error obteniendo las sesiones formateadas'
-			);
-		}
-	},
-	async formattedSessionsAll(req, res) {
-		try {
-			const {
-				data,
-				code,
-			} = await psychologistsService.formattedSessionsAll();
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(
-				error,
-				res,
-				'Error obteniendo las sesiones formateadas'
-			);
-		}
-	},
-	async sessionsLimit(req, res) {
-		try {
-			const { body } = req;
-			const {
-				data,
-				code,
-			} = await psychologistsService.formattedSessionsAll(body.ids);
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(
-				error,
-				res,
-				'Error obteniendo las sesiones formateadas'
-			);
-		}
-	},
 	async match(req, res) {
 		try {
 			const { body } = req;
@@ -104,46 +40,6 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error registrando un psicologo');
-		}
-	},
-	async createSession(req, res) {
-		try {
-			const { body, user } = req;
-			const { id, idPlan } = req.params;
-			const { data, code } = await psychologistsService.createSession(
-				user,
-				id,
-				idPlan,
-				body
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error creando una sessión');
-		}
-	},
-	async createPlan(req, res) {
-		try {
-			const { body } = req;
-			const { data, code } = await psychologistsService.createPlan(body);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error creando una plan');
-		}
-	},
-	async reschedule(req, res) {
-		try {
-			const { id, sessionsId } = req.params;
-			const { user } = req;
-			const { newDate } = req.body;
-			const { data, code } = await psychologistsService.reschedule(
-				user,
-				sessionsId,
-				id,
-				newDate
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error actualizando la cita');
 		}
 	},
 	async getByUsername(req, res) {
@@ -168,21 +64,6 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error actualizando tus horarios');
-		}
-	},
-	async cancelSession(req, res) {
-		try {
-			const { user } = req;
-			const { sessionsId, planId, id } = req.body;
-			const { data, code } = await psychologistsService.cancelSession(
-				user,
-				planId,
-				sessionsId,
-				id
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error cancelando la sesion');
 		}
 	},
 	async updatePaymentMethod(req, res) {
@@ -277,14 +158,6 @@ const psychologistsController = {
 			errorCallback(e, res, 'error consiguiendo el psicologo');
 		}
 	},
-	async checkPlanTask(req, res) {
-		try {
-			const { data, code } = await psychologistsService.checkPlanTask();
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'error');
-		}
-	},
 	async getClients(req, res) {
 		try {
 			const { psychologist } = req.params;
@@ -301,16 +174,6 @@ const psychologistsController = {
 			const { search } = req.params;
 			const { data, code } = await psychologistsService.searchClients(
 				search
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
-	async updateSessions(req, res) {
-		try {
-			const { data, code } = await psychologistsService.updateSessions(
-				req.body
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -358,19 +221,6 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error aprobando el avatar');
 		}
 	},
-
-	async customNewSession(req, res) {
-		try {
-			const { user, body } = req;
-			const { data, code } = await psychologistsService.customNewSession(
-				user,
-				body
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error creando la sesion');
-		}
-	},
 	async uploadProfilePicture(req, res) {
 		try {
 			const id = req.params.id;
@@ -386,72 +236,6 @@ const psychologistsController = {
 				res,
 				'Error actualizando/subiendo imágen de perfil'
 			);
-		}
-	},
-	async paymentsInfo(req, res) {
-		try {
-			const { user } = req;
-			const { data, code } = await psychologistsService.paymentsInfo(
-				user
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(
-				e,
-				res,
-				'Error procesando la informacion de los pagos'
-			);
-		}
-	},
-	async paymentsInfoFromId(req, res) {
-		try {
-			const { psy } = req.params;
-			const {
-				data,
-				code,
-			} = await psychologistsService.paymentsInfoFromId(psy);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(
-				e,
-				res,
-				'Error procesando la informacion de los pagos'
-			);
-		}
-	},
-	async deleteCommitment(req, res) {
-		try {
-			const { psyId, planId } = req.params;
-			const { data, code } = await psychologistsService.deleteCommitment(
-				planId,
-				psyId
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
-	async getAllSessions(req, res) {
-		try {
-			const { psy } = req.params;
-			const { data, code } = await psychologistsService.getAllSessions(
-				psy
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
-		}
-	},
-	async getRemainingSessions(req, res) {
-		try {
-			const { psy } = req.params;
-			const {
-				data,
-				code,
-			} = await psychologistsService.getRemainingSessions(psy);
-			return restResponse(data, code, res);
-		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
 	async getEvaluations(req, res) {
