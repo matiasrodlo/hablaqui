@@ -42,6 +42,9 @@ authRouter.get(
 	authController.generateJwt
 );
 
+/**
+ * No se usa
+ */
 authRouter.get(
 	'/auth/google/callback',
 	passport.authenticate('google', {

@@ -8,7 +8,9 @@ import storage from '../middleware/storage';
 
 const dataRouter = Router();
 
-/** Meh */
+/**
+ * No se usa
+ */
 dataRouter.post(
 	'/data/upload',
 	[
