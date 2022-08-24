@@ -4,7 +4,6 @@ export default {
 	psychologistsMarketPlace: state => {
 		const psy = cloneDeep(state.psychologists);
 		return psy
-			.filter(item => item.preferences.marketplaceVisibility)
 			.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			})

@@ -61,7 +61,7 @@ const defaultPrices = {
 };
 
 let defaultPreferences = {
-	marketplaceVisibility: true,
+	marketplaceVisibility: false,
 	minimumNewSession: 24,
 	minimumRescheduleSession: 24,
 	corporativeSessions: true,
@@ -336,10 +336,6 @@ let recruitment = new Schema(
 		flagOnboarding: {
 			type: Object,
 			default: defaultOnboarding,
-		},
-		isHide: {
-			type: Boolean,
-			default: true,
 		},
 	},
 	{

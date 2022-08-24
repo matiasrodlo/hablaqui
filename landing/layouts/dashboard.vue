@@ -70,7 +70,7 @@
 						v-if="item.visible"
 						:id="item.name"
 						:key="i"
-						:disabled="item.disable"
+						:inactive="item.disable"
 						class="my-4"
 						link
 						:to="item.link"
@@ -92,11 +92,9 @@
 											<icon :icon="mdiAlertOutline" color="red" />
 										</v-btn>
 									</template>
-									<div class="elevation-5 pa-3">
-										<span class="black--text">
-											Esta opción se activará contratando un plan premium
-										</span>
-									</div>
+									<span class="black--text">
+										Esta opción se activará contratando un plan premium
+									</span>
 								</v-tooltip>
 
 								{{ item.name }}
