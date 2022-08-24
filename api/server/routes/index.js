@@ -13,6 +13,8 @@ import couponRouter from './coupon';
 import recruitmentRouter from './recruitment';
 import cronRouter from './cron';
 import retoolRouter from './retool';
+import sessionsRouter from './sessions';
+import evaluationRouter from './evaluation';
 
 const apiVersion = '/api/v1';
 
@@ -30,4 +32,6 @@ export default app => {
 	app.use(apiVersion, userRoutes);
 	app.use(apiVersion, cronRouter);
 	app.use(apiVersion, retoolRouter);
+	app.use(apiVersion, sessionsRouter);
+	app.use(apiVersion, evaluationRouter);
 };
