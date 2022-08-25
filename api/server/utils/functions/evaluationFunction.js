@@ -1,4 +1,4 @@
-import Evaluation from '../models/evaluation';
+import Evaluation from '../../models/evaluation';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 

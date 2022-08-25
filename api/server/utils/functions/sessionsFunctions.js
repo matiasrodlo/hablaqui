@@ -1,5 +1,5 @@
-import Sessions from '../models/sessions';
-import { priceFormatter } from '../utils/functions/priceFormatter';
+import Sessions from '../../models/sessions';
+import { priceFormatter } from './priceFormatter';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 

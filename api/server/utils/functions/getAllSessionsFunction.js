@@ -1,4 +1,4 @@
-import Sessions from '../models/sessions';
+import Sessions from '../../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 

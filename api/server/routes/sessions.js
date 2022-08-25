@@ -76,7 +76,7 @@ sessionsRouter.delete(
  * @returns
  * @access
  */
-sessionsRouter.get('/psychologist/plan-task', sessionsRouter.checkPlanTask);
+sessionsRouter.get('/psychologist/plan-task', sessionsController.checkPlanTask);
 
 /**
  * @description Crea un plan
