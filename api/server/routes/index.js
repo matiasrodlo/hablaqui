@@ -15,6 +15,7 @@ import cronRouter from './cron';
 import retoolRouter from './retool';
 import sessionsRouter from './sessions';
 import evaluationRouter from './evaluation';
+import transactionRouter from './transaction';
 
 const apiVersion = '/api/v1';
 
@@ -34,4 +35,5 @@ export default app => {
 	app.use(apiVersion, retoolRouter);
 	app.use(apiVersion, sessionsRouter);
 	app.use(apiVersion, evaluationRouter);
+	app.use(apiVersion, transactionRouter);
 };

@@ -353,44 +353,6 @@ psychologistsRouter.put(
 );
 
 /**
- * @description Crea una solicitud de retiro de dinero
- * @method PACTH
- * @route /api/v1/psychologist/payment-request
- * @returns {Object} Lista con todas las sesiones que se quieren retirar y el monto total a retirar
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologist/payment-request',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createPaymentsRequest
-);
-
-/**
- * @description Completa las solicitudes de retiro de dinero
- * @method PATCH
- * @route /api/v1/psychologist/complete-request
- * @param {String} params.psy - id del psicólogo
- * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
- */
-psychologistsRouter.post(
-	'/psychologist/complete-payments/:psy',
-	psychologistsController.completePaymentsRequest
-);
-
-/**
- * @description Devuelve todas las transacciones del psicólogo logeado
- * @method GET
- * @route /api/v1/psychologist/transactions/all
- * @returns {Object} Lista con todas las transacciones
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologist/transactions/all',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getTransactions
-);
-
-/**
  * @description Cambia el estado de atención inmediata
  * @method POST
  * @route /api/v1/psychologist/status/inmediate-attention
