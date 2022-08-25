@@ -2,7 +2,12 @@
 
 import Psychologist from '../models/psychologist';
 import Evaluation from '../models/evaluation';
+import Sessions from '../models/sessions';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import {
+	getScores,
+	getAllEvaluationsFunction,
+} from '../utils/functions/evaluationFunction';
 import mailService from './mail';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -43,7 +48,7 @@ const getRating = async psychologist => {
 	});
 };
 
-const getEvaluations = async user => {
+const getEvaluationsPsy = async user => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres psicólogo');
 
@@ -142,75 +147,92 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 
 	return okResponse('Sesion rechazada', { evaluations });
 };
+const addEvaluation = async (user, psyId, payload) => {
+	if (user.role !== 'user') return conflictResponse('No eres usuario');
 
-//funciones
-const getAllEvaluationsFunction = async psy => {
-	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
-		'user'
-	);
+	let sessions = await Sessions.findOne({
+		psychologist: psyId,
+		user: user._id,
+	});
 
-	evaluations = evaluations.flatMap(item => {
-		return item.evaluations.map(evaluation => {
+	sessions = sessions.plan.flatMap(plan => {
+		return plan.session.map(session => {
 			return {
-				_id: evaluation._id,
-				evaluationsId: item._id,
-				comment: evaluation.comment,
-				approved: evaluation.approved,
-				global: evaluation.global,
-				puntuality: evaluation.puntuality,
-				attention: evaluation.attention,
-				internet: evaluation.internet,
-				name: item.user.name,
-				userId: item.user._id,
-				moderatingDate: evaluation.moderatingDate,
-				createdAt: moment(evaluation.createdAt)
-					.tz('America/Santiago')
-					.format(),
+				_id: session._id,
+				status: session.status,
 			};
 		});
 	});
 
-	return evaluations;
+	const countSessions = sessions.filter(
+		session => session.status === 'success'
+	).length;
+
+	if (countSessions < 3)
+		return conflictResponse('No puede escribir un comentario');
+
+	const collEvaluation = await Evaluation.findOne({
+		psychologist: psyId,
+		user: user._id,
+	});
+
+	const evaluation = {
+		comment: payload.comment,
+		global: payload.global,
+		puntuality: payload.puntuality,
+		attention: payload.attention,
+		internet: payload.internet,
+		like: payload.like,
+		improve: payload.improve,
+	};
+	let created = {};
+	if (collEvaluation) {
+		created = await Evaluation.findOneAndUpdate(
+			{ user: user._id, psychologist: psyId },
+			{ $push: { evaluations: evaluation } }
+		);
+	} else {
+		created = await Evaluation.create({
+			user: user._id,
+			psychologist: psyId,
+			evaluations: [evaluation],
+		});
+	}
+
+	const psy = await Psychologist.findById(psyId);
+
+	await mailService.sendAddEvaluation(user, psy);
+	return okResponse('Evaluación guardada', created);
 };
 
-const getScores = evaluations => {
-	const global =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.global == 'number' ? sum + value.global : sum,
-			0
-		) / evaluations.length;
-	const puntuality =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.puntuality == 'number'
-					? sum + value.puntuality
-					: sum,
-			0
-		) / evaluations.length;
-	const attention =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.attention == 'number'
-					? sum + value.attention
-					: sum,
-			0
-		) / evaluations.length;
-	const internet =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.internet == 'number' ? sum + value.internet : sum,
-			0
-		) / evaluations.length;
-	return { global, internet, puntuality, attention };
+const getEvaluationsById = async userId => {
+	let evaluations = await Evaluation.find({ user: userId }).populate(
+		'psychologist',
+		'_id name lastname code'
+	);
+
+	evaluations = evaluations.flatMap(e => {
+		return {
+			_id: e._id,
+			psychologistId: e.psychologist._id,
+			name: e.psychologist.name,
+			lastname: e.psychologist.lastName,
+			code: e.psychologist.code,
+			evaluations: e.evaluations,
+		};
+	});
+
+	return okResponse('evaluaciones', { evaluations });
 };
 
 const evaluationService = {
 	addRating,
 	getRating,
-	getEvaluations,
+	getEvaluationsPsy,
 	getAllEvaluations,
 	approveEvaluation,
 	refuseEvaluation,
+	addEvaluation,
+	getEvaluationsById,
 };
 export default Object.freeze(evaluationService);

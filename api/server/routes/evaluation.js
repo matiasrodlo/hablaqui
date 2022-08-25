@@ -38,7 +38,7 @@ evaluationRouter.get(
 );
 
 /**
- * @description Devuelve todas las evaluaciones del psic´logo logeado
+ * @description Devuelve todas las evaluaciones del psicólogo logeado
  * @method GET
  * @route /api/v1/psychologist/get-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
@@ -47,7 +47,7 @@ evaluationRouter.get(
 evaluationRouter.get(
 	'/psychologist/get-evaluations',
 	[passport.authenticate('jwt', { session: true })],
-	evaluationController.getEvaluations
+	evaluationController.getEvaluationsPsy
 );
 
 /**
@@ -86,6 +86,37 @@ evaluationRouter.post(
 evaluationRouter.post(
 	'/psychologist/refuse-evaluation/:evsId/:evId',
 	evaluationController.refuseEvaluation
+);
+
+/**
+ * @description Sube una evaluación de un usuario sobre un psicólogo
+ * @method POST
+ * @route /api/v1/user/evaluation/:psyId
+ * @param {String} params.psyId - Id del psicólogo
+ * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
+ * @param {Number} body.puntuality - puntuación respecto a la puntualidad
+ * @param {Number} body.attention - puntuación sobre la atención del psicólogo
+ * @param {Number} body.internet - puntuación respecto a la conexión
+ * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
+ * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
+ * @param {String} body.comment - comentario del usuario sobre el psicólogo
+ * @return Objeto con los datos de la evaluación recién creada
+ * @access authenticated (user)
+ */
+evaluationRouter.post(
+	'/user/evaluation/:psyId',
+	[passport.authenticate('jwt', { session: true })],
+	evaluationController.addEvaluation
+);
+/**
+ * @description Devuelve las evaluaciones hechas de un usuario particular
+ * @method GET
+ * @route /api/v1/user/get/evaluations/:userId
+ * @param {String} params.userId - Id del usuario del que obtendremos las evaluaciones
+ */
+evaluationRouter.get(
+	'/user/get/evaluations/:userId',
+	evaluationController.getEvaluationsById
 );
 
 export default evaluationRouter;

@@ -192,27 +192,6 @@ userRouter.post(
 );
 
 /**
- * @description Sube una evaluación de un usuario sobre un psicólogo
- * @method POST
- * @route /api/v1/user/evaluation/:psyId
- * @param {String} params.psyId - Id del psicólogo
- * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
- * @param {Number} body.puntuality - puntuación respecto a la puntualidad
- * @param {Number} body.attention - puntuación sobre la atención del psicólogo
- * @param {Number} body.internet - puntuación respecto a la conexión
- * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
- * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
- * @param {String} body.comment - comentario del usuario sobre el psicólogo
- * @return Objeto con los datos de la evaluación recién creada
- * @access authenticated (user)
- */
-userRouter.post(
-	'/user/evaluation/:psyId',
-	[passport.authenticate('jwt', { session: true })],
-	userController.addEvaluation
-);
-
-/**
  * @description Permite la desvinculación de un psicólogo antes de terminar el plan
  * @method POST
  * @route /api/v1/user/change/psychologist/:sessionId
@@ -224,13 +203,5 @@ userRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	userController.changePsychologist
 );
-
-/**
- * @description Devuelve las evaluaciones hechas de un usuario particular
- * @method GET
- * @route /api/v1/user/get/evaluations/:userId
- * @param {String} params.userId - Id del usuario del que obtendremos las evaluaciones
- */
-userRouter.get('/user/get/evaluations/:userId', userController.getEvaluations);
 
 export default userRouter;

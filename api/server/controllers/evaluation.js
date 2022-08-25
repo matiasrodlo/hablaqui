@@ -32,10 +32,12 @@ const evaluationController = {
 			return errorCallback(e, res, 'error consiguiendo el rating');
 		}
 	},
-	async getEvaluations(req, res) {
+	async getEvaluationsPsy(req, res) {
 		try {
 			const { user } = req;
-			const { data, code } = await evaluationService.getEvaluations(user);
+			const { data, code } = await evaluationService.getEvaluationsPsy(
+				user
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error devolviendo las evaluaciones');
@@ -78,6 +80,31 @@ const evaluationController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error rechazando la evaluación');
+		}
+	},
+	async addEvaluation(req, res) {
+		try {
+			const { psyId } = req.params;
+			const { user, body } = req;
+			const { data, code } = await evaluationService.addEvaluation(
+				user,
+				psyId,
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error añadiendo la evaluación');
+		}
+	},
+	async getEvaluationsById(req, res) {
+		try {
+			const { userId } = req.params;
+			const { data, code } = await evaluationService.getEvaluationsById(
+				userId
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error añadiendo la evaluación');
 		}
 	},
 };
