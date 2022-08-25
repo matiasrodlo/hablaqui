@@ -1,4 +1,4 @@
-import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
+import { snackBarError } from '@/utils/snackbar';
 
 export default {
 	async startConversation({ commit }, idPsychologist) {
@@ -35,17 +35,6 @@ export default {
 				method: 'GET',
 			});
 			commit('setChat', { ...data.messages, url: data.url });
-		} catch (e) {
-			snackBarError(e)(commit);
-		}
-	},
-	async createReport({ commit }, { reportType, issue, psychologistId, userId }) {
-		try {
-			await this.$axios(`/chat/create-report/${psychologistId}/${userId}`, {
-				method: 'POST',
-				data: { reportType, issue },
-			});
-			snackBarSuccess('Reporte enviado')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

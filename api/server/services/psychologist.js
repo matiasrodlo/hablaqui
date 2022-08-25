@@ -5,7 +5,6 @@ import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunctio
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
-import bcrypt from 'bcryptjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
 import Sessions from '../models/sessions';
@@ -22,29 +21,6 @@ const getAll = async () => {
 	let psychologists = await Psychologist.find();
 	logInfo('obtuvo todos los psicologos');
 	return okResponse('psicologos obtenidos', { psychologists });
-};
-
-const getAllPagination = async page => {
-	const count = await Psychologist.countDocuments();
-
-	const pageOptions = {
-		totalPages: Math.ceil(count / 10),
-		page: page ? parseInt(page) : 0,
-		limit: 10,
-	};
-
-	if (page > pageOptions.totalPages)
-		return okResponse('ultima pagina obtenida');
-
-	const psychologists = await Psychologist.find()
-		.skip(pageOptions.page * pageOptions.limit)
-		.limit(pageOptions.limit);
-	logInfo('obtuvo la pagina psicologos');
-
-	return okResponse('psicologos obtenidos', {
-		psychologists,
-		page: pageOptions,
-	});
 };
 
 const match = async body => {
@@ -91,30 +67,6 @@ const match = async body => {
 			perfectMatch: true,
 		});
 	}
-};
-
-const register = async body => {
-	if (await User.exists({ email: body.email })) {
-		return conflictResponse('Correo electronico en uso');
-	}
-
-	if (await Psychologist.exists({ username: body.username })) {
-		return conflictResponse('Este nombre de usuario ya esta ocupado');
-	}
-
-	const psychologist = await Psychologist.create(body);
-	const newUser = {
-		name: body.name,
-		rut: body.rut,
-		role: 'psychologist',
-		email: body.email,
-		password: bcrypt.hashSync(body.password, 10),
-		psychologist: psychologist._id,
-	};
-
-	User.create(newUser);
-
-	return okResponse('psicologo creado');
 };
 
 const updatePlan = async (psychologistId, planInfo) => {
@@ -663,11 +615,9 @@ const psychologistsService = {
 	approveAvatar,
 	deleteOne,
 	getAll,
-	getAllPagination,
 	getByData,
 	getClients,
 	match,
-	register,
 	searchClients,
 	setPrice,
 	setSchedule,

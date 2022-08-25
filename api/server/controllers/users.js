@@ -64,30 +64,6 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando contraseña');
 		}
 	},
-	async updatePlan(req, res) {
-		try {
-			const { user } = req;
-			const { newPlan } = req.body;
-			const { data, code } = await userService.updatePlan(user, newPlan);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el plan');
-		}
-	},
-
-	async updatePsychologist(req, res) {
-		try {
-			const { user } = req;
-			const { newPsychologist } = req.body;
-			const { data, code } = await userService.updatePsychologist(
-				user,
-				newPsychologist
-			);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el psicologo');
-		}
-	},
 	async uploadAvatar(req, res) {
 		try {
 			const { body, file, user } = req;

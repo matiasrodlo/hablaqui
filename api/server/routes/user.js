@@ -107,42 +107,6 @@ userRouter.patch(
 );
 
 /**
- * No se usa
- * @description -----No comentado, pues no estoy seguro si está siendo usado ------
- * @method PUT
- * @route /api/v1/user/update/plan
- * @param {}
- * @return
- * @access authenticated ()
- */
-userRouter.put(
-	'/user/update/plan',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePlan, 'body'),
-	],
-	userController.updatePlan
-);
-
-/**
- * No se usa
- * @description -- No está siendo usado --
- * @method PUT
- * @route /api/v1/user/update/psychologist
- * @param {}
- * @return
- * @access authenticated ()
- */
-userRouter.put(
-	'/user/update/psychologist',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePsychologist, 'body'),
-	],
-	userController.updatePsychologist
-);
-
-/**
  * @description Actualiza/sube foto de perfil del usuario psicólogo principalmente
  * @method PUT
  * @route /api/v1/user/upload/avatar

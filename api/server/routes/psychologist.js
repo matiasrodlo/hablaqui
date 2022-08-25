@@ -8,18 +8,6 @@ import multer from '../middleware/multer';
 const psychologistsRouter = Router();
 
 /**
- * No se usa
- * @swagger
- * tags:
- *   name: Psychologists
- */
-
-psychologistsRouter.get(
-	'/psychologists/all/:page',
-	psychologistsController.getAllPagination
-);
-
-/**
  * @swagger
  * /api/v1/psychologists/all:
  *   get:
@@ -63,18 +51,6 @@ psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
-);
-
-/**
- * No se usa
- * @description Registra un psicólogo
- * @method POST
- * @route /api/v1/psychologists/register
- * @param {} - Me falta info sobre los parametros
- */
-psychologistsRouter.post(
-	'/psychologists/register',
-	psychologistsController.register
 );
 
 /**

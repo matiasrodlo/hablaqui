@@ -13,17 +13,6 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
-	async getAllPagination(req, res) {
-		try {
-			const { page } = req.params;
-			const { data, code } = await psychologistsService.getAllPagination(
-				page
-			);
-			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(error, res, 'Error obteniendo los psicologos');
-		}
-	},
 	async match(req, res) {
 		try {
 			const { body } = req;
@@ -31,15 +20,6 @@ const psychologistsController = {
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error haciendo match');
-		}
-	},
-	async register(req, res) {
-		try {
-			const { body } = req;
-			const { data, code } = await psychologistsService.register(body);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error registrando un psicologo');
 		}
 	},
 	async getByUsername(req, res) {

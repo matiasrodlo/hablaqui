@@ -14,7 +14,6 @@ import Sessions from '../models/sessions';
 import Coupon from '../models/coupons';
 import moment from 'moment';
 import { room } from '../config/dotenv';
-import Evaluation from '../models/evaluation';
 import Auth from './auth';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -67,39 +66,6 @@ const usersService = {
 			user: await servicesAuth.generateUser(updated),
 		});
 	},
-
-	async updatePlan(user, newPlan) {
-		let updated = null;
-		updated = await User.findByIdAndUpdate(
-			user._id,
-			{ myPlan: newPlan },
-			{
-				new: true,
-				runValidators: true,
-				context: 'query',
-			}
-		);
-
-		logInfo(actionInfo(user.email, 'actualizo su plan'));
-		return okResponse('plan actualizado', { profile: updated });
-	},
-
-	async updatePsychologist(user, newPsychologist) {
-		let updated = null;
-		updated = await User.findByIdAndUpdate(
-			user._id,
-			{ psychologist: newPsychologist },
-			{
-				new: true,
-				runValidators: true,
-				context: 'query',
-			}
-		);
-
-		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
-		return okResponse('psicologo actualizado', { profile: updated });
-	},
-
 	async uploadAvatar({
 		userLogged,
 		avatar,

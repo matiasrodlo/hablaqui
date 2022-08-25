@@ -229,23 +229,13 @@ const changeVerifiedStatus = async id => {
 	return okResponse('Cuenta verificada');
 };
 
-const googleAuthCallback = (req, res) => {
-	const frontendUrL = process.env.FRONTEND_URL;
-	const jwt = generateJwt(req.user);
-	//Esta es la unica manera segura de enviarle el jwt al front
-	//La otra forma era enviar un html con js incluido, pero el jwt se quedaba asignado en la ruta de la api.
-	res.redirect(frontendUrL + '/?token=' + jwt);
-};
-
 const authService = {
 	login,
 	logout,
-	generateJwt,
 	generateUser,
 	register,
 	sendPasswordRecover,
 	changeUserPassword,
-	googleAuthCallback,
 	getSessions,
 	changeVerifiedStatus,
 };
