@@ -50,8 +50,42 @@ const getNextSessions = async () => {
 	return okResponse('psicologos obtenidos', { nextSessions });
 };
 
+const getSessionsPayment = async (startDate, endDate) => {
+	let sessions = await Sessions.find().populate('psychologist user');
+	sessions = sessions.filter(s => !!s.psychologist);
+
+	let flatSession = sessions.flatMap(s => {
+		const plan = s.plan.pop();
+		return plan.session.flatMap(ss => {
+			return {
+				_id: s.psychologist._id.toString(),
+				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
+				psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
+				psyEmail: s.psychologist.email,
+				price: plan.sessionPrice,
+				date: ss.date,
+				status: ss.status,
+			};
+		});
+	});
+
+	flatSession = flatSession.filter(s =>
+		moment(s.date).isBetween(moment(startDate), moment(endDate))
+	);
+
+	let auxFlatSession = [];
+	flatSession.forEach(s => {
+		const resp = auxFlatSession.find(e => e && e._id === s._id);
+		if (!resp) auxFlatSession.push(s);
+		else auxFlatSession[auxFlatSession.indexOf(resp)].price += s.price;
+	});
+
+	return okResponse('psicologos obtenidos', { psyPayments: auxFlatSession });
+};
+
 const retoolService = {
 	getNextSessions,
+	getSessionsPayment,
 };
 
 export default Object.freeze(retoolService);
