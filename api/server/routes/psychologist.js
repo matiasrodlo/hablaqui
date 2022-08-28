@@ -9,17 +9,6 @@ const psychologistsRouter = Router();
 
 /**
  * @swagger
- * tags:
- *   name: Psychologists
- */
-
-psychologistsRouter.get(
-	'/psychologists/all/:page',
-	psychologistsController.getAllPagination
-);
-
-/**
- * @swagger
  * /api/v1/psychologists/all:
  *   get:
  *     summary: Devuelve todos los psicólogos de la base de datos con plan premium
@@ -37,78 +26,6 @@ psychologistsRouter.get(
 psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
 
 /**
- * @swagger
- * /api/v1/psychologists/sessions/{id}:
- *  get:
- *    summary: Devuelve todas las sesiones del psicólogo
- *    tags: [Psychologists]
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: string
- *        required: true
- *        description: Id del psicólogo
- *    responses:
- *      200:
- *        description: Las sesiones segue el id
- *      400:
- *        description: Psicólogo no encontrado
- */
-/**
- * @description Devuelve todas las sesiones del psicólogo
- * @method GET
- * @route /api/v1/psychologists/sessions/:idPsychologist/:idUser
- * @param {String} params.idPsychologist - Id pertenciente al psicólogo
- * @param {String} params.idUser - Id perteneciente al usuario/consultante
- * @returns Objeto con la información de todas las sesiones del usuario
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologists/sessions/:idPsychologist/:idUser',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getSessions
-);
-
-/**
- * @description Obtiene la session de un psicologo formateada para el selector
- * @method GET
- * @route /api/v1/psychologists/formattedSessions/:idPsychologist/:type
- * @param {String} params.idPsychologist - Id del psicólogo
- * @param {String} params.type - será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
- * @returns Objeto listado de las sesiones del psicólogo
- */
-psychologistsRouter.get(
-	'/psychologists/formattedSessions/:idPsychologist/:type',
-	psychologistsController.getFormattedSessions
-);
-
-/**
- * obtiene las sessiones de todos los psicologos formateada para el selector
- */
-/**
- * @description Obtiene las sessiones de todos los psicologos formateada para el selector
- * @method GET
- * @route /api/v1/psychologists/formattedSessionsAll
- * @returns Objeto listado de todas las sesiones de cada uno de los psicólogos
- */
-psychologistsRouter.get(
-	'/psychologists/formattedSessionsAll',
-	psychologistsController.formattedSessionsAll
-);
-
-/**
- * @description Obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
- * @method POST
- * @route /api/v1/psychologists/sessionsLimit
- * @returns Objeto con las sesiones formateadas
- */
-psychologistsRouter.post(
-	'/psychologists/sessionsLimit',
-	psychologistsController.sessionsLimit
-);
-
-/**
  * @description Obtiene al psicólogo a través del username o su Id
  * @method GET
  * @route /api/v1/psychologists/one/:info
@@ -118,19 +35,6 @@ psychologistsRouter.post(
 psychologistsRouter.get(
 	'/psychologists/one/:info',
 	psychologistsController.getByData
-);
-
-/**
- * @description Actualiza una sessions (Me falta información del endpoint)
- * @method PUT
- * @route /api/v1/psychologists/update/sessions
- * @param {Object} body - Contiene toda la información de una sessions
- * @access authenticated
- */
-psychologistsRouter.put(
-	'/psychologists/update/sessions',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.updateSessions
 );
 
 /**
@@ -147,75 +51,6 @@ psychologistsRouter.post(
 	'/psychologists/match',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
-);
-
-/**
- * @description Registra un psicólogo
- * @method POST
- * @route /api/v1/psychologists/register
- * @param {} - Me falta info sobre los parametros
- */
-psychologistsRouter.post(
-	'/psychologists/register',
-	psychologistsController.register
-);
-
-/**
- * @description Crea un plan
- * @method POST
- * @route /api/v1/psychologists/session/create
- * @param {String} body.payload.date - Fecha de la primera sesión
- * @param {String} body.payload.title - Título del plan
- * @param {String} body.payload.paymentPeriod - Período de pago (mensual o anual)
- * @param {Number} body.payload.price - Precio de la plan
- * @param {String} payload.coupon - Cupon usado, caso contrario es ''
- * @returns Devuelve objeto con las preferencias para deribar a mercadopago
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologists/session/create',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createPlan
-);
-/**
- * Create a session
- * req.body.payload = {
- *	user: ObjectId,
-	psychologist: ObjectId,
-	date: String,
-	start: String,
- * }
- */
-/**
- * @description Create a session en un plan específico
- * @method PUT
- * @route /api/v1/psychologists/session/:id/plan/:idPlan
- * @param {String} params.id - Id del objeto sessions
- * @param {String} params.idPlan - Id del objeto plan
- * @param {Object} body.payload - información respecto al plan
- * @returns Objeto con las sesiones actualizadas
- * @access authenticated
- */
-psychologistsRouter.put(
-	'/psychologists/session/:id/plan/:idPlan',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createSession
-);
-
-/**
- * @description Cambia la hora de una session específica
- * @method POST
- * @route /api/v1/psychologists/reschedule/:sessionsId/:id
- * @param {String} params.id - Id de la sesión especifica
- * @param {String} params.sessionsId - Id del objeto/esquema de sessions
- * @param {String} body.newDate - Nueva fecha de la sesión
- * @returns Objeto con las sesiones actualizadas
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologists/reschedule/:sessionsId/:id',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.reschedule
 );
 
 /**
@@ -239,22 +74,6 @@ psychologistsRouter.patch(
 	'/psychologist/set-schedule',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.setSchedule
-);
-
-/**
- * @description Cancela una sesión específica
- * @method DELETE
- * @route /api/v1/psychologist/cancel-session
- * @param {ObjectId} body.sessionId - Id del esquema de sessions
- * @param {ObjectId} body.planId - Id del plan que contiene la sesión a cancelar
- * @param {ObjectId} body.id - Id de la sesión a cancelar
- * @returns Objeto con las sesiones actualizadas
- * @access authenticated
- */
-psychologistsRouter.delete(
-	'/psychologist/cancel-session',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.cancelSession
 );
 
 /**
@@ -387,50 +206,6 @@ psychologistsRouter.post(
 );
 
 /**
- * Add new rating
- * req.body = { newRating: number, comment: string }
- */
-/**
- * @description Añade una nueva evaluación al perfil del psicólogo
- * @method POST
- * @route /api/v1/psychologist/add-rating/:psychologist
- * @param {ObjectId} params.psychologist - Id del psicólogo que es referenciado en la evaluación
- * @param {String} body.newRating - Puntaje de la evaluación
- * @param {String} body.comment - Comentario de la evaluación
- * @returns {Object} psicólogo con los datos actualizados
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologist/add-rating/:psychologist',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.addRating
-);
-
-/**
- * @description Consigue las calificaciones de un psicólogo en específico
- * @method GET
- * @route /api/v1/psychologist/get-rating/:psychologist
- * @param {ObjectId} params.psychologist - Id del psicólogo de quien queremos las evaluaciones o ratings
- * @returns {Number} puntuación promedio del psicólogo
- */
-psychologistsRouter.get(
-	'/psychologist/get-rating/:psychologist',
-	psychologistsController.getRating
-);
-
-/**
- * @description Creo No usada
- * @method
- * @route /api/v1
- * @param {} -
- * @returns
- * @access
- */
-psychologistsRouter.get(
-	'/psychologist/plan-task',
-	psychologistsController.checkPlanTask
-);
-/**
  * get all clients('consultantes') the psychologist
  */
 /**
@@ -540,22 +315,6 @@ psychologistsRouter.put('/psychologist/avatar/:id', [
 ]);
 
 /**
- * @description Crea una nueva sesion custom, un poco mas libre y menos estandarizada
- * @method POST
- * @route /api/v1/psychologist/new-custom-session
- * @param {string} body.date - Fecha de la sesion
- * @param {string} body.type - Tipo de la sesion ['online', 'presencial', 'commitment', etc...]
- * @param {Number} body.price - Precio que se cobrara
- * @returns {Object} última sesión creada
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologist/new-custom-session',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.customNewSession
-);
-
-/**
  * @description Actualiza la propiedad approveAvatar
  * @method PUT
  * @route /api/v1/psychologist/:id/approve-avatar
@@ -567,159 +326,6 @@ psychologistsRouter.put(
 	'/psychologist/:id/approve-avatar',
 	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.approveAvatar
-);
-
-/**
- * @description Consigue los datos (y la tabla) de pagos del psicologo.
- * @method GET
- * @route /api/v1/psychologist/payments/all
- * @returns {Object} datos de los pagos
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologist/payments/all',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.paymentsInfo
-);
-
-/**
- * @description Consigue los datos (y la tabla) de pagos del psicologo
- * @method GET
- * @route /api/v1/psychologist/payments/:psy
- * @param {ObjectId} params.psy - Id del psicólogo
- * @returns {Object} datos de los pagos del psicólogo
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologist/payments/:psy',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.paymentsInfoFromId
-);
-
-/**
- * @description: Elimina un compromiso privado de un psicologo
- * @method PATCH
- * @route /api/v1/psychologist/delete-private-commitment
- * @param {String} params.psyId - id del psicólogo
- * @param {String} params.planId - id del plan
- * @returns {Object} Objecto Session con el compromiso eliminado
- */
-psychologistsRouter.patch(
-	'/psychologist/delete-commitment/:psyId/:planId',
-	psychologistsController.deleteCommitment
-);
-
-/**
- * @description Devuelve todas las sesiones que no hayan expirado
- * @method PATCH
- * @route /api/v1/psychologist/get-sessions
- * @param {String} params.psy - id del psicólogo
- * @returns {Array} Lista con todas las sesiones del psicólogo en cuestión
- */
-psychologistsRouter.get(
-	'/psychologist/get-sessions/:psy',
-	psychologistsController.getAllSessions
-);
-
-/**
- * @description Devuelve todas las sesiones faltantes de un psicólogo
- * @method PATCH
- * @route /api/v1/psychologist/get-remaining-sessions
- * @param {String} params.psy - id del psicólogo
- * @returns {Array} Lista con todas las sesiones faltantes del psicólogo en cuestión
- */
-psychologistsRouter.get(
-	'/psychologist/get-remaining-sessions/:psy',
-	psychologistsController.getRemainingSessions
-);
-
-/**
- * @description Devuelve todas las evaluaciones del psic´logo logeado
- * @method GET
- * @route /api/v1/psychologist/get-evaluations
- * @returns {Object} Evaluaciones hechas y sus puntajes
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologist/get-evaluations',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getEvaluations
-);
-
-/**
- * @description Obtiene las evaluaciones de un psicólogo en particular
- * @method GET
- * @route /api/v1/psychologist/get-all-evaluations/:psy
- * @param {ObjectId} params.psy - Id del psicólogo
- * @returns {Object} Evaluaciones hechas y sus puntajes
- */
-psychologistsRouter.get(
-	'/psychologist/get-all-evaluations/:psy',
-	psychologistsController.getAllEvaluations
-);
-
-/**
- * @description Permite aprobar una evaluación hecha por un consultante
- * @method POST
- * @route /api/v1/psychologist/approve-evaluation/:evsId/:evId
- * @param {ObjectId} params.evsId - Id del esquema de evaluaciones
- * @param {ObjectId} params.evId - Id de la evaluación
- * @returns {Object} Evaluación aprobada
- */
-psychologistsRouter.post(
-	'/psychologist/approve-evaluation/:evsId/:evId',
-	psychologistsController.approveEvaluation
-);
-
-/**
- * @description Permite rechazar una evaluación hecha por un consultante
- * @method POST
- * @route /api/v1/psychologist/refuse-evaluation/:evsId/:evId
- * @param {ObjectId} params.evsId - Id del esquema de evaluaciones
- * @param {ObjectId} params.evId - Id de la evaluación
- * @returns {Object} Evaluación rechazada
- */
-psychologistsRouter.post(
-	'/psychologist/refuse-evaluation/:evsId/:evId',
-	psychologistsController.refuseEvaluation
-);
-
-/**
- * @description Crea una solicitud de retiro de dinero
- * @method PACTH
- * @route /api/v1/psychologist/payment-request
- * @returns {Object} Lista con todas las sesiones que se quieren retirar y el monto total a retirar
- * @access authenticated
- */
-psychologistsRouter.post(
-	'/psychologist/payment-request',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.createPaymentsRequest
-);
-
-/**
- * @description Completa las solicitudes de retiro de dinero
- * @method PATCH
- * @route /api/v1/psychologist/complete-request
- * @param {String} params.psy - id del psicólogo
- * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
- */
-psychologistsRouter.post(
-	'/psychologist/complete-payments/:psy',
-	psychologistsController.completePaymentsRequest
-);
-
-/**
- * @description Devuelve todas las transacciones del psicólogo logeado
- * @method GET
- * @route /api/v1/psychologist/transactions/all
- * @returns {Object} Lista con todas las transacciones
- * @access authenticated
- */
-psychologistsRouter.get(
-	'/psychologist/transactions/all',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getTransactions
 );
 
 /**
