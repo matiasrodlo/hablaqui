@@ -16,6 +16,7 @@ import moment from 'moment'; // moment.js es una librería para el manejo de fec
 import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
 import Evaluation from '../models/evaluation'; // evaluation.js contiene la definición del modelo de evaluaciones para mongodb
 import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
+
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
@@ -308,64 +309,6 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
-
-	async addEvaluation(user, psyId, payload) {
-		if (user.role !== 'user') return conflictResponse('No eres usuario');
-
-		let sessions = await Sessions.findOne({
-			psychologist: psyId,
-			user: user._id,
-		});
-
-		sessions = sessions.plan.flatMap(plan => {
-			return plan.session.map(session => {
-				return {
-					_id: session._id,
-					status: session.status,
-				};
-			});
-		});
-
-		const countSessions = sessions.filter(
-			session => session.status === 'success'
-		).length;
-
-		if (countSessions < 3)
-			return conflictResponse('No puede escribir un comentario');
-
-		const collEvaluation = await Evaluation.findOne({
-			psychologist: psyId,
-			user: user._id,
-		});
-
-		const evaluation = {
-			comment: payload.comment,
-			global: payload.global,
-			puntuality: payload.puntuality,
-			attention: payload.attention,
-			internet: payload.internet,
-			like: payload.like,
-			improve: payload.improve,
-		};
-		let created = {};
-		if (collEvaluation) {
-			created = await Evaluation.findOneAndUpdate(
-				{ user: user._id, psychologist: psyId },
-				{ $push: { evaluations: evaluation } }
-			);
-		} else {
-			created = await Evaluation.create({
-				user: user._id,
-				psychologist: psyId,
-				evaluations: [evaluation],
-			});
-		}
-
-		const psy = await Psychologist.findById(psyId);
-
-		await mailService.sendAddEvaluation(user, psy);
-		return okResponse('Evaluación guardada', created);
-	},
 	async changePsychologist(sessionsId) {
 		const foundPlan = await Sessions.findById(sessionsId).populate(
 			'psychologist user'
@@ -451,25 +394,6 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		);
 		await Coupon.create(newCoupon);
 		return okResponse('Cupón hecho');
-	},
-	async getEvaluations(userId) {
-		let evaluations = await Evaluation.find({ user: userId }).populate(
-			'psychologist',
-			'_id name lastname code'
-		);
-
-		evaluations = evaluations.flatMap(e => {
-			return {
-				_id: e._id,
-				psychologistId: e.psychologist._id,
-				name: e.psychologist.name,
-				lastname: e.psychologist.lastName,
-				code: e.psychologist.code,
-				evaluations: e.evaluations,
-			};
-		});
-
-		return okResponse('evaluaciones', { evaluations });
 	},
 };
 

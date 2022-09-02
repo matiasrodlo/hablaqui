@@ -246,7 +246,6 @@ const authService = { // authService es un objeto que contiene las funciones de 
 	register,
 	sendPasswordRecover,
 	changeUserPassword,
-	googleAuthCallback,
 	getSessions,
 	changeVerifiedStatus,
 };
