@@ -1,8 +1,8 @@
 'use strict';
 
-import { logInfo } from '../config/pino';
-import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
-import Psychologist from '../models/psychologist';
+import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
+import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction'; // Funcion para obtener todas las sesiones de un psicologo
+import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de chat para mongodb
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
