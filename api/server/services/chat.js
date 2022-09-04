@@ -72,6 +72,10 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 			psychologist: psychologistId,
 		},
 		{
+			$set: {
+				isLastRead: false,
+				lastMessageSendBy: user.role,
+			},
 			$push: {
 				messages: newMessage,
 			},
@@ -86,11 +90,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		content: [...updatedChat.messages].pop(),
 	};
 
-	await emailChatNotification(
-		data,
-		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user'
-	);
-
 	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 	analytics.track({
 		userId: user._id.toString(),
@@ -98,26 +97,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	});
 
 	return { chat: updatedChat, emit: data };
-};
-
-const emailChatNotification = async (data, type) => {
-	const payload = {
-		userRef: data.userId,
-		psyRef: data.psychologistId,
-		type: type,
-		wasScheduled: false,
-		sessionRef: data.content._id.toString(),
-		sessionDate: data.content.createdAt,
-	};
-	await Email.updateOne(
-		{
-			userRef: data.userId,
-			psyRef: data.psychologistId,
-			type: type,
-		},
-		payload,
-		{ upsert: true }
-	);
 };
 
 const createReport = async (
@@ -161,7 +140,10 @@ const readMessage = async (user, chatId) => {
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },
 		{
-			$set: { 'messages.$[].read': true },
+			$set: {
+				'messages.$[].read': true,
+				isLastRead: true,
+			},
 		},
 		{ new: true }
 	);
