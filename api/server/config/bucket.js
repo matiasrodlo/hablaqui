@@ -1,8 +1,8 @@
-import { Storage } from '@google-cloud/storage';
+import { Storage } from '@google-cloud/storage'; // Se importa para poder usar el servicio de Cloud Storage
 
 const gcs = new Storage();
 
-const bucketName = process.env.BUCKETNAME;
+const bucketName = process.env.BUCKETNAME
 
 const bucket = gcs.bucket(bucketName);
 
