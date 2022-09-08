@@ -26,6 +26,7 @@ const authSchema = {
 			.max(100)
 			.required(),
 		inviteCode: Joi.string().allow(''),
+		phone: Joi.string().required(),
 	}),
 	login: Joi.object({
 		email: Joi.string()
