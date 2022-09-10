@@ -12,7 +12,7 @@ import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
-} from '../config/bucket'; //  duda
+} from '../config/bucket'; // Funciones que devuelven URL's
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago'); // Se configura la zona horaria de la aplicación
@@ -23,25 +23,25 @@ const getAll = async () => { // Funcion para obtener todos los psicologos
 	return okResponse('psicologos obtenidos', { psychologists }); // Se retorna una respuesta con los psicologos
 };
 
-const match = async body => { // Funcion para hacer match con un psicologo
-	const { payload } = body; // Se obtienen los datos del payload, un payload es un objeto con los datos del psicologo
-	let matchedPsychologists = []; // Se crea un arreglo para almacenar los psicologos que coinciden con el payload
-	if (payload.gender == 'transgender') { //
+const match = async body => { // Funcion para hacer match con un psicologo, recibe las respuestas y comienza el proceso (matchmaking)
+	const { payload } = body; // Se obtienen los datos del payload, un payload es un objeto con las respuestas del cliente.
+	let matchedPsychologists = []; // Los psicologos que coinciden con el cliente
+	if (payload.gender == 'transgender') { // Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
-			models: payload.model,
+			models: payload.model, // Modelo terapeutico, la forma en que el cliente quiere afrontar las sesiones. (metas, formas de intervencion, etc)
 			isTrans: true,
-			specialties: { $in: payload.themes },
+			specialties: { $in: payload.themes }, // Filtra por especialidades
 		});
-	} else {
+	} else { // Si no es transgenero
 		matchedPsychologists = await Psychologist.find({
-			gender: payload.gender || {
+			gender: payload.gender || { // Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			models: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	}
-	if (matchedPsychologists.length == 0) {
+	if (matchedPsychologists.length == 0) { // Si no se encuentra psicologos
 		let newMatchedPsychologists = [];
 		if (payload.gender == 'transgender') {
 			newMatchedPsychologists = await Psychologist.find({
@@ -453,7 +453,7 @@ const uploadProfilePicture = async (psyID, picture) => { // Funcion para subir u
 	});
 	stream.on('error', err => { // Se crea un evento para manejar el error
 		picture.cloudStorageError = err; // Se le asigna el error al archivo
-		conflictResponse('Error al subir la imagen'); // Se retorna una respuesta de error duda: creo que le falta el return
+		conflictResponse('Error al subir la imagen'); // Se retorna una respuesta de error
 	});
 	stream.on('finish', () => { // Se crea un evento para manejar el fin de la escritura
 		logInfo(`${gcsname}` + ' subido exitosamente'); // Se loguea la subida exitosa
