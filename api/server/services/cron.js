@@ -11,29 +11,27 @@ import { logInfo } from '../config/pino';
 moment.tz.setDefault('America/Santiago');
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
-const sgClient = require('@sendgrid/client');
+const sgClient = require('@sendgrid/client'); // sendgrid es una api que permite enviar correos masivos
 sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
-/**
- * @description Checks wheter the email is schedulable (3 days or less before the appointment)
- * @param {moment} date Is the date of the appointment
- * @returns
- */
-
 function isSchedulableEmail(date) {
+	/**
+ 	* @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
+ 	* @param {moment} date es la fecha de la cita
+ 	* @returns
+ 	*/
 	return moment()
 		.add(3, 'days')
 		.isAfter(date);
 }
 
-/**
- * @description Creates the payload to update the email scheduling object
- * @param {moment} date Date when the email will be scheduled (1 hour before the appointment)
- * @param {string} mailId Mailgun ID to identify the email internally
- * @returns an object with the payload
- */
-
 function generatePayload(date, batch) {
+	/**
+	* @description Crea el payload para actualizar el objeto de programación de correo electrónico
+	* @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
+	* @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
+	* @returns un objeto con el payload
+	*/
 	return {
 		wasScheduled: true,
 		scheduledAt: moment(date)
@@ -44,6 +42,9 @@ function generatePayload(date, batch) {
 }
 
 async function getNumberSuccess() {
+	/**
+ 	* @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
+ 	*/
 	const users = await User.find();
 	users.forEach(async user => {
 		const sessions = await Sessions.find({ user: user._id }).populate(
@@ -52,12 +53,14 @@ async function getNumberSuccess() {
 		);
 		sessions.forEach(async item => {
 			let successSessions = 0;
+			// Se filtran las citas que no hayan sido canceladas y se suman las sesiones exitosas
 			const plans = item.plan.filter(plan => plan.payment === 'success');
 			plans.forEach(plan => {
 				successSessions += plan.session.filter(
 					session => session.status === 'success'
 				).length;
 			});
+			// Se actualiza el número de sesiones exitosas
 			await Sessions.updateOne(
 				{
 					_id: item._id,
@@ -71,6 +74,7 @@ async function getNumberSuccess() {
 				}
 			);
 			if (!item.evaluationNotifcation && successSessions === 3) {
+				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del psicólogo
 				await mailService.sendEnabledEvaluation(
 					user,
 					item.psychologist
@@ -81,8 +85,13 @@ async function getNumberSuccess() {
 }
 
 async function sendNotification(emails) {
+	/**
+ 	* @description Envía un correo electrónico a los usuarios que no han sido notificados
+ 	* @param {array} emails array de correos electrónicos
+ 	*/
 	emails.forEach(async e => {
 		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
+			// Si la cita ya pasó 3 horas, entonces se obtiene el batchId, se obtiene el usuario, el psicologo, y el chat.
 			const batch = await getBatchId();
 			const user = await User.findById(e.userRef);
 			const psy = await psychologist.findById(e.psyRef);
@@ -90,9 +99,13 @@ async function sendNotification(emails) {
 				user: e.userRef,
 				psychologist: e.psyRef,
 			});
+
+			// Se filtra el chat para obtener los mensajes que sean del correo electrónico
 			const message = messages.messages.filter(
 				m => m._id.toString() === e.sessionRef.toString()
 			);
+
+			// Si el correo electrónico no ha sido leído y no ha sido programado, entonces se envía el correo electrónico
 			if (!message[0].read && !e.wasScheduled) {
 				e.type === 'send-by-psy'
 					? await mailService.sendChatNotificationToUser(
@@ -106,6 +119,8 @@ async function sendNotification(emails) {
 							batch
 					  );
 			}
+
+			// Se actualiza el objeto de programación de correo electrónico
 			const updatePayload = {
 				wasScheduled: true,
 				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
@@ -117,6 +132,10 @@ async function sendNotification(emails) {
 }
 
 async function getBatchId() {
+	/**
+	* @description Se obtiene un batchId para el envío de correos electrónicos
+	* @returns {string} batchId
+	*/
 	const result = await sgClient
 		.request({
 			method: 'POST',
@@ -133,12 +152,19 @@ async function getBatchId() {
 
 const cronService = {
 	async statusInmediateAttention(token) {
+		/**
+		* @description Cambia el estado de atención inmediata
+		* @param {string} token Token de autenticación
+		* @returns
+		*/
 		if (token !== authToken)
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		const psychologists = await psychologist.find();
 
+		// Se recorre el array de psicólogos si el estado de la atención inmediata
+		// esta activo y la fecha de expiracion es antes de la fecha actual 
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
@@ -159,10 +185,16 @@ const cronService = {
 		return okResponse('Estados cambiados');
 	},
 	async scheduleChatEmails(token) {
+		/**
+		* @description Envia los correos electrónicos de chat
+		* @param {string} token Token de autenticación
+		* @returns
+		*/
 		if (token !== authToken)
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
+		// Encuentra los correos enviados a los usuarios y psicologos, envia los correos
 		const userMessage = await email.find({
 			type: 'send-by-user',
 			wasScheduled: false,
@@ -175,27 +207,31 @@ const cronService = {
 		await sendNotification(psyMessage);
 		return okResponse('Se han enviado los correos');
 	},
-	/**
-	 * @description This function is used to schedule emails about an upcoming appoitment
-	 * @returns {object} The response about the scheduling system
-	 **/
 	async scheduleEmails(token) {
+		/**
+		* @description Esta función se utiliza para programar correos electrónicos sobre una próxima cita
+		* @param {string} token Token de autenticación
+		* @returns {object} La respuesta sobre el sistema de programación
+		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
+		// Busca los correos electrónicos que no han sido programados
 		const pendingEmails = await email.find({
 			wasScheduled: false,
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
 				const sessionDate = moment(emailInfo.sessionDate);
+				// Si es correo programado, busca el usuario y el psicologo.
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
 					try {
 						let batch = await getBatchId();
+						// Se envía el correo electrónico al usuario o psicólogo
 						if (emailInfo.type === 'reminder-user') {
 							await mailService.sendReminderUser(
 								user,
@@ -211,6 +247,7 @@ const cronService = {
 								batch
 							);
 						}
+						// Se genera el payload y se actualiza el email
 						const updatePayload = generatePayload(
 							sessionDate,
 							batch
@@ -235,6 +272,11 @@ const cronService = {
 		);
 	},
 	async sessionStatus(token) {
+		/**
+		* @description Cambia el estado de la sesión
+		* @param {string} token Token de autenticación
+		* @returns {object} La respuesta sobre el sistema de cambio de estado
+		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
@@ -243,6 +285,7 @@ const cronService = {
 		const pendingSessions = await Sessions.find();
 		var toUpdateUpnext = [];
 		var toUpdateSuccess = [];
+		
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
 				const psyInfo = await psychologist.findOne(item.psychologist);
@@ -376,6 +419,11 @@ const cronService = {
 		return okResponse('Sesiones actualizadas');
 	},
 	async limitToPayPlan(token) {
+		/**
+		* @description 
+		* @param {string} token Token de autenticación
+		* @returns {object} La respuesta sobre el sistema de cambio de estado
+		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
@@ -383,13 +431,16 @@ const cronService = {
 		}
 		const sessions = await Sessions.find().populate('user psychologist');
 		sessions.forEach(item => {
+			// Filtro de sesiones que están en estado pending
 			const plans = item.plan.filter(plan => plan.payment === 'pending');
+
 			plans.forEach(async plan => {
 				if (
 					moment().isSameOrAfter(
 						moment(plan.createdAt).add(3, 'hours')
 					)
 				) {
+					// Se actualiza el estado el pago a cancelado
 					await Sessions.findOneAndUpdate(
 						{
 							_id: item._id,
@@ -403,6 +454,7 @@ const cronService = {
 							},
 						}
 					);
+					// Se actualiza el estado de la sesión a cancelada
 					await mailService.sendPaymentFailed(
 						item.user,
 						item.psychologist
