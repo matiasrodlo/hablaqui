@@ -80,42 +80,6 @@ async function getNumberSuccess() {
 	});
 }
 
-async function sendNotification(emails) {
-	emails.forEach(async e => {
-		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
-			const batch = await getBatchId();
-			const user = await User.findById(e.userRef);
-			const psy = await psychologist.findById(e.psyRef);
-			const messages = await Chat.findOne({
-				user: e.userRef,
-				psychologist: e.psyRef,
-			});
-			const message = messages.messages.filter(
-				m => m._id.toString() === e.sessionRef.toString()
-			);
-			if (!message[0].read && !e.wasScheduled) {
-				e.type === 'send-by-psy'
-					? await mailService.sendChatNotificationToUser(
-							user,
-							psy,
-							batch
-					  )
-					: await mailService.sendChatNotificationToPsy(
-							user,
-							psy,
-							batch
-					  );
-			}
-			const updatePayload = {
-				wasScheduled: true,
-				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-				batchId: batch,
-			};
-			await email.updateOne({ _id: e._id }, updatePayload);
-		}
-	});
-}
-
 async function getBatchId() {
 	const result = await sgClient
 		.request({
@@ -163,16 +127,25 @@ const cronService = {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
-		const userMessage = await email.find({
-			type: 'send-by-user',
-			wasScheduled: false,
+		const dontReadMess = await Chat.find({ isLastRead: false }).populate(
+			'user psychologist'
+		);
+
+		dontReadMess.forEach(async mess => {
+			const user = mess.user;
+			const psy = mess.psychologist;
+			const batch = await getBatchId();
+			if (mess.lastMessageSendBy === 'user')
+				await mailService.sendChatNotificationToPsy(user, psy, batch);
+			else if (mess.lastMessageSendBy === 'psychologist')
+				await mailService.sendChatNotificationToUser(user, psy, batch);
 		});
-		await sendNotification(userMessage);
-		const psyMessage = await email.find({
-			type: 'send-by-psy',
-			wasScheduled: false,
-		});
-		await sendNotification(psyMessage);
+		await Chat.updateMany(
+			{ isLastRead: false },
+			{
+				isLastRead: true,
+			}
+		);
 		return okResponse('Se han enviado los correos');
 	},
 	/**
