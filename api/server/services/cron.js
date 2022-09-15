@@ -399,11 +399,6 @@ const cronService = {
 		return okResponse('Sesiones actualizadas');
 	},
 	async limitToPayPlan(token) {
-		/**
-		* @description 
-		* @param {string} token Token de autenticación
-		* @returns {object} La respuesta sobre el sistema de cambio de estado
-		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
