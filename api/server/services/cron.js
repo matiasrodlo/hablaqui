@@ -152,11 +152,6 @@ async function getBatchId() {
 
 const cronService = {
 	async statusInmediateAttention(token) {
-		/**
-		* @description Cambia el estado de atención inmediata
-		* @param {string} token Token de autenticación
-		* @returns
-		*/
 		if (token !== authToken)
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
@@ -185,11 +180,6 @@ const cronService = {
 		return okResponse('Estados cambiados');
 	},
 	async scheduleChatEmails(token) {
-		/**
-		* @description Envia los correos electrónicos de chat
-		* @param {string} token Token de autenticación
-		* @returns
-		*/
 		if (token !== authToken)
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
@@ -208,11 +198,6 @@ const cronService = {
 		return okResponse('Se han enviado los correos');
 	},
 	async scheduleEmails(token) {
-		/**
-		* @description Esta función se utiliza para programar correos electrónicos sobre una próxima cita
-		* @param {string} token Token de autenticación
-		* @returns {object} La respuesta sobre el sistema de programación
-		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
@@ -272,11 +257,6 @@ const cronService = {
 		);
 	},
 	async sessionStatus(token) {
-		/**
-		* @description Cambia el estado de la sesión
-		* @param {string} token Token de autenticación
-		* @returns {object} La respuesta sobre el sistema de cambio de estado
-		**/
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
