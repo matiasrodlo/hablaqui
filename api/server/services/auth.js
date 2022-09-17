@@ -8,7 +8,7 @@ import { sign } from 'jsonwebtoken'; // el nombre lo dice todo
 import { logError, logInfo } from '../config/pino'; // pino.js es un logger para nodejs
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
-import mailService from '../services/mail'; // mail.js contiene la definición de los servicios de envío de correo
+import mailService from '../utils/functions/mails/mail'; // mail.js contiene la definición de los servicios de envío de correo
 
 // estaba pensando cambiar los var por let. Además me llama la ateción que se importe de una manera distinta que en chat.js
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.

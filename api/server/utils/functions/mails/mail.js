@@ -1,7 +1,7 @@
 'use strict';
 
 import moment from 'moment';
-import { logInfo } from '../config/pino';
+import { logInfo } from '../../../config/pino';
 moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');

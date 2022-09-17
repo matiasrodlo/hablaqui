@@ -9,7 +9,7 @@ import servicesAuth from './auth'; // auth.js contiene la lógica para la autent
 import { actionInfo } from '../utils/logger/infoMessages'; // infoMessages.js contiene los mensajes de información para el logging
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // functions.js contiene las funciones para las respuestas
 import { bucket } from '../config/bucket'; // bucket.js contiene la configuración de la conexión con el bucket de google cloud storage
-import mailService from './mail'; // mail.js contiene la lógica para el envío de correos electrónicos
+import mailService from '../utils/functions/mails/mail'; // mail.js contiene la lógica para el envío de correos electrónicos
 import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
 import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
 import moment from 'moment'; // moment.js es una librería para el manejo de fechas
