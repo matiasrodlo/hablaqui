@@ -14,7 +14,6 @@ import Sessions from '../models/sessions'; // sessions.js contiene la definició
 import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
 import moment from 'moment'; // moment.js es una librería para el manejo de fechas
 import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
-import Evaluation from '../models/evaluation'; // evaluation.js contiene la definición del modelo de evaluaciones para mongodb
 import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
 
 var Analytics = require('analytics-node');
@@ -84,23 +83,33 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		logInfo(actionInfo(user.email, 'actualizo su plan')); // Se registra el evento en el log
 		return okResponse('plan actualizado', { profile: updated }); // Se retorna un mensaje de éxito
 	},
-	
-	async updatePsychologist(user, newPsychologist) { // updatePsychologist actualiza el psicólogo de un usuario
-		let updated = null; // Se inicializa la variable updated
-		updated = await User.findByIdAndUpdate( // Se actualiza el psicólogo del usuario
-			user._id, // Se busca el usuario por su id
-			{ psychologist: newPsychologist }, // Se actualiza el psicólogo del usuario
+	async updatePsychologist(user, newPsychologist, oldPsychologist) {
+		let updated = null;
+		// Se actualiza el psicólogo del usuario
+		updated = await User.findByIdAndUpdate(
+			user,
+			{ psychologist: newPsychologist },
 			{ 
-				new: true, // que sea new quiere decir que se retorna el objeto actualizado
-				runValidators: true, // valida los datos de entrada, en este caso, el id del psicólogo
-				context: 'query', // query es el contexto de la actualización, el contexto es el tipo de operación que se realiza
+				new: true,
+				runValidators: true,
+				context: 'query',
 			}
 		);
-
-		logInfo(actionInfo(user.email, 'actualizo su psicologo')); // Se registra el evento en el log
-		return okResponse('psicologo actualizado', { profile: updated }); // Se retorna un mensaje de éxito
+		// Se modifica la sesión del usuario
+		await Sessions.findOneAndUpdate(
+			{
+				user: user,
+				psychologist: oldPsychologist,
+			},
+			{
+				psychologist: newPsychologist,
+			}
+		);
+		// Se registra el evento en el log
+		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
+		return okResponse('psicologo actualizado', { profile: updated });
+		
 	},
-	// Sugerencia: Este método está un poco largo, podría dividirse aún más bajo mi criterio.
 	async uploadAvatar({ // uploadAvatar sube el avatar de un usuario
 		userLogged, // usuario que está logueado
 		avatar, // avatar del usuario
