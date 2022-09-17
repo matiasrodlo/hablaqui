@@ -84,31 +84,48 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		return okResponse('plan actualizado', { profile: updated }); // Se retorna un mensaje de éxito
 	},
 	async updatePsychologist(user, newPsychologist, oldPsychologist) {
-		let updated = null;
-		// Se actualiza el psicólogo del usuario
-		updated = await User.findByIdAndUpdate(
-			user,
-			{ psychologist: newPsychologist },
-			{ 
-				new: true,
-				runValidators: true,
-				context: 'query',
-			}
-		);
-		// Se modifica la sesión del usuario
-		await Sessions.findOneAndUpdate(
-			{
-				user: user,
-				psychologist: oldPsychologist,
-			},
-			{
+		// Se realiza una busqueda del plan del consultante
+		const oldSession = await Sessions.findOne({
+			psychologist: oldPsychologist,
+			user: user,
+		});
+
+		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
+		const newPlan = {
+			title: oldSession.plan.title, 
+			period: oldSession.plan.period, 
+			totalPrice: oldSession.plan.totalPrice,
+			sessionPrice: oldSession.plan.sessionPrice,
+			payment: oldSession.plan.payment,
+			expiration: oldSession.plan.expiration,
+			invitedByPsychologist: oldSession.plan.invitedByPsychologist,
+			usedCoupon: oldSession.plan.usedCoupon,
+			totalSessions: oldSession.plan.totalSessions,
+			remainingSessions: oldSession.plan.remainingSessions,
+			session: oldSession.plan.session,
+		};
+
+		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
+		const newSession = await Sessions.findOne({
+			psychologist: newPsychologist,
+			user: user,
+		});
+		if (newSession == null) {
+			const newSession = await Sessions.create({
 				psychologist: newPsychologist,
-			}
-		);
-		// Se registra el evento en el log
-		logInfo(actionInfo(user.email, 'actualizo su psicologo'));
-		return okResponse('psicologo actualizado', { profile: updated });
-		
+				user: user,
+				plan: [newPlan],
+				room: oldSession.room,
+			});	
+		} else {
+			newSession.plan.push(newPlan);
+		}
+
+		// Se cambia el plan de expiración del plan antiguo y se guardan los cambios
+		oldSession.plan.expiration = moment().subtract(1, 'days').format('YYYY-MM-DD');
+		await newSession.save();
+		await oldSession.save();
+		return okResponse('plan actualizado', { profile: user });
 	},
 	async uploadAvatar({ // uploadAvatar sube el avatar de un usuario
 		userLogged, // usuario que está logueado
