@@ -6,7 +6,7 @@ import Psychologist from '../models/psychologist';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
-import mailService from './mail';
+import mailService from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');

@@ -8,7 +8,7 @@ import {
 	getScores,
 	getAllEvaluationsFunction,
 } from '../utils/functions/evaluationFunction';
-import mailService from './mail';
+import mailService from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 

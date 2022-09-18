@@ -14,7 +14,9 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailService from './mail';
+import mailService1 from '../utils/functions/mails/psychologistStatus';
+import mailService2 from '../utils/functions/mails/reminder';
+import mailService3 from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -131,13 +133,13 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}).populate('psychologist user');
 
 	if (cancelSessions.user == null) {
-		await mailService.sendCancelCommitment(cancelSessions.psychologist);
+		await mailService2.sendCancelCommitment(cancelSessions.psychologist);
 	} else {
-		await mailService.sendCancelSessionPsy(
+		await mailService2.sendCancelSessionPsy(
 			cancelSessions.user,
 			cancelSessions.psychologist
 		);
-		await mailService.sendCancelSessionUser(
+		await mailService2.sendCancelSessionUser(
 			cancelSessions.user,
 			cancelSessions.psychologist
 			//sessionCancel.plan[0].session[0].date
@@ -397,7 +399,7 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailService.pendingPlanPayment(
+		await mailService1.pendingPlanPayment(
 			user,
 			psychologist,
 			payload.price,
@@ -495,7 +497,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			},
 		});
 	}
-	await mailService.sendScheduleToUser(
+	await mailService3.sendScheduleToUser(
 		userLogged,
 		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -504,7 +506,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			myPlan.totalSessions
 		}`
 	);
-	await mailService.sendScheduleToPsy(
+	await mailService3.sendScheduleToPsy(
 		userLogged,
 		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -609,7 +611,7 @@ const customNewSession = async (user, payload) => {
 
 		// correo de compromiso privado
 		if (payload.type === 'compromiso privado')
-			await mailService.sendCustomSessionCommitment(
+			await mailService2.sendCustomSessionCommitment(
 				updatedSession.psychologist
 			);
 
@@ -624,7 +626,7 @@ const customNewSession = async (user, payload) => {
 			});
 			if (payload.type === 'sesion online') {
 				// Enviamos email al user con el link para pagar
-				await mailService.sendCustomSessionToUser(
+				await mailService3.sendCustomSessionToUser(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -632,7 +634,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'online'
 				);
-				await mailService.sendCustomSessionToPsy(
+				await mailService3.sendCustomSessionToPsy(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -642,7 +644,7 @@ const customNewSession = async (user, payload) => {
 				);
 			}
 			if (payload.type === 'sesion presencial') {
-				await mailService.sendCustomSessionToUser(
+				await mailService3.sendCustomSessionToUser(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -650,7 +652,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'presencial'
 				);
-				await mailService.sendCustomSessionToPsy(
+				await mailService3.sendCustomSessionToPsy(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -997,25 +999,25 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	}
 
 	if (userLogged.role === 'user') {
-		await mailService.sendRescheduleToUser(
+		await mailService3.sendRescheduleToUser(
 			sessions.user,
 			sessions.psychologist,
 			newDate
 		);
-		await mailService.sendRescheduleToPsy(
+		await mailService3.sendRescheduleToPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
 	} else {
-		await mailService.sendRescheduleToUserByPsy(
+		await mailService3.sendRescheduleToUserByPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
-		await mailService.sendRescheduleToPsyByPsy(
+		await mailService3.sendRescheduleToPsyByPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,

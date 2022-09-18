@@ -9,7 +9,8 @@ import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
 import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
-import mailService from './mail';
+import mailService1 from '../utils/functions/mails/payments';
+import mailService2 from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -203,17 +204,17 @@ const successPay = async params => {
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(user, psy, planData.totalPrice);
-	await mailService.sendAppConfirmationPsy(psy, user, planData.totalPrice);
+	await mailService2.sendAppConfirmationUser(user, psy, planData.totalPrice);
+	await mailService2.sendAppConfirmationPsy(psy, user, planData.totalPrice);
 
-	await mailService.sendScheduleToUser(
+	await mailService2.sendScheduleToUser(
 		user,
 		psy,
 		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
-	await mailService.sendScheduleToPsy(
+	await mailService2.sendScheduleToPsy(
 		user,
 		psy,
 		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
@@ -282,7 +283,7 @@ const psychologistPay = async (params, query) => {
 			},
 		});
 	}
-	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
+	await mailService1.sendPsychologistPay(foundPsychologist, period, pricePaid);
 	return okResponse('plan actualizado', { foundPsychologist });
 };
 //Para correo de evento confirmacion de pago
@@ -305,14 +306,14 @@ const customSessionPay = async params => {
 	const plan = updatePlan.plan.filter(
 		plan => plan._id.toString() === planId
 	)[0];
-	await mailService.sendSuccessCustomSessionPaymentPsy(
+	await mailService1.sendSuccessCustomSessionPaymentPsy(
 		updatePlan.user,
 		updatePlan.psychologist,
 		plan.totalPrice,
 		updatePlan.roomsUrl,
 		plan.session[0].date
 	);
-	await mailService.sendSuccessCustomSessionPaymentUser(
+	await mailService1.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
 		updatePlan.psychologist,
 		plan.totalPrice,

@@ -3,7 +3,8 @@ import email from '../models/email';
 import Chat from '../models/chat';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
-import mailService from '../services/mail';
+import mailService1 from '../utils/mails/reminder';
+import mailService2 from '../utils/mails/psychologistStatus';
 import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
@@ -75,7 +76,7 @@ async function getNumberSuccess() {
 			);
 			if (!item.evaluationNotifcation && successSessions === 3) {
 				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del psicólogo
-				await mailService.sendEnabledEvaluation(
+				await mailService2.sendEnabledEvaluation(
 					user,
 					item.psychologist
 				);
@@ -108,12 +109,12 @@ async function sendNotification(emails) {
 			// Si el correo electrónico no ha sido leído y no ha sido programado, entonces se envía el correo electrónico
 			if (!message[0].read && !e.wasScheduled) {
 				e.type === 'send-by-psy'
-					? await mailService.sendChatNotificationToUser(
+					? await mailService1.sendChatNotificationToUser(
 							user,
 							psy,
 							batch
 					  )
-					: await mailService.sendChatNotificationToPsy(
+					: await mailService1.sendChatNotificationToPsy(
 							user,
 							psy,
 							batch
@@ -218,14 +219,14 @@ const cronService = {
 						let batch = await getBatchId();
 						// Se envía el correo electrónico al usuario o psicólogo
 						if (emailInfo.type === 'reminder-user') {
-							await mailService.sendReminderUser(
+							await mailService1.sendReminderUser(
 								user,
 								psy,
 								sessionDate,
 								batch
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
-							await mailService.sendReminderPsy(
+							await mailService1.sendReminderPsy(
 								user,
 								psy,
 								sessionDate,
@@ -430,7 +431,7 @@ const cronService = {
 						}
 					);
 					// Se actualiza el estado de la sesión a cancelada
-					await mailService.sendPaymentFailed(
+					await mailService2.sendPaymentFailed(
 						item.user,
 						item.psychologist
 					);
