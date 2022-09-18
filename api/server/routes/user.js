@@ -57,10 +57,6 @@ userRouter.get(
 
 userRouter.put(
 	'/dashboard/update/psychologist',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePsychologist, 'body'),
-	],
 	userController.updatePsychologist
 );
 

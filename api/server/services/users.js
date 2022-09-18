@@ -89,40 +89,46 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			psychologist: oldPsychologist,
 			user: user,
 		});
+		// Se declara un array de planes
+		const newPlan = [];
 
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
-		const newPlan = {
-			title: oldSession.plan.title, 
-			period: oldSession.plan.period, 
-			totalPrice: oldSession.plan.totalPrice,
-			sessionPrice: oldSession.plan.sessionPrice,
-			payment: oldSession.plan.payment,
-			expiration: oldSession.plan.expiration,
-			invitedByPsychologist: oldSession.plan.invitedByPsychologist,
-			usedCoupon: oldSession.plan.usedCoupon,
-			totalSessions: oldSession.plan.totalSessions,
-			remainingSessions: oldSession.plan.remainingSessions,
-			session: oldSession.plan.session,
-		};
+		for(let i = 0; i < oldSession.plan.length; i++) {
+			const Plan = {
+				title: oldSession.plan[i].title, 
+				period: oldSession.plan[i].period, 
+				totalPrice: oldSession.plan[i].totalPrice,
+				sessionPrice: oldSession.plan[i].sessionPrice,
+				payment: oldSession.plan[i].payment,
+				datePayment: oldSession.plan[i].datePayment,
+				expiration: oldSession.plan[i].expiration,
+				usedCoupon: oldSession.plan[i].usedCoupon,
+				totalSessions: oldSession.plan[i].totalSessions,
+				remainingSessions: oldSession.plan[i].remainingSessions,
+				tokenToPay: oldSession.plan[i].tokenToPay,
+				session: oldSession.plan[i].session,
+			};
+			newPlan.push(Plan);
+			// Se cambia el plan de expiración del plan antiguo 
+			oldSession.plan[i].expiration = moment().subtract(1, 'days').format('YYYY-MM-DD');
+		}
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
-		const newSession = await Sessions.findOne({
+		let newSession = await Sessions.findOne({
 			psychologist: newPsychologist,
 			user: user,
 		});
-		if (newSession == null) {
-			const newSession = await Sessions.create({
+		if (newSession === null) {
+			newSession = await Sessions.create({
 				psychologist: newPsychologist,
 				user: user,
-				plan: [newPlan],
-				room: oldSession.room,
-			});	
+				plan: newPlan,
+				roomsUrl: oldSession.roomsUrl,
+			});
 		} else {
-			newSession.plan.push(newPlan);
+			newSession.plan = newPlan;
 		}
 
-		// Se cambia el plan de expiración del plan antiguo y se guardan los cambios
-		oldSession.plan.expiration = moment().subtract(1, 'days').format('YYYY-MM-DD');
 		await newSession.save();
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
