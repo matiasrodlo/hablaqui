@@ -112,8 +112,7 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			// Se cambia el plan de expiración del plan antiguo
 			oldSession.plan[i].expiration = moment()
 											.subtract(1, 'days')
-											.format('YYYY-MM-DD HH:mm')
-											.toISOString();
+											.format('YYYY-MM-DD HH:mm');
 		}
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
