@@ -89,31 +89,27 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			psychologist: oldPsychologist,
 			user: user,
 		});
-		// Se declara un array de planes
-		const newPlan = [];
-
+	
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
-		for(let i = 0; i < oldSession.plan.length; i++) {
-			const Plan = {
-				title: oldSession.plan[i].title, 
-				period: oldSession.plan[i].period, 
-				totalPrice: oldSession.plan[i].totalPrice,
-				sessionPrice: oldSession.plan[i].sessionPrice,
-				payment: oldSession.plan[i].payment,
-				datePayment: oldSession.plan[i].datePayment,
-				expiration: oldSession.plan[i].expiration,
-				usedCoupon: oldSession.plan[i].usedCoupon,
-				totalSessions: oldSession.plan[i].totalSessions,
-				remainingSessions: oldSession.plan[i].remainingSessions,
-				tokenToPay: oldSession.plan[i].tokenToPay,
-				session: oldSession.plan[i].session,
-			};
-			newPlan.push(Plan);
-			// Se cambia el plan de expiración del plan antiguo
-			oldSession.plan[i].expiration = moment()
-											.subtract(1, 'days')
-											.format('YYYY-MM-DD HH:mm');
-		}
+		const newPlan = {
+			title: oldSession.plan[oldSession.plan.length - 1].title, 
+			period: oldSession.plan[oldSession.plan.length - 1].period, 
+			totalPrice: oldSession.plan[oldSession.plan.length - 1].totalPrice,
+			sessionPrice: oldSession.plan[oldSession.plan.length - 1].sessionPrice,
+			payment: oldSession.plan[oldSession.plan.length - 1].payment,
+			datePayment: oldSession.plan[oldSession.plan.length - 1].datePayment,
+			expiration: oldSession.plan[oldSession.plan.length - 1].expiration,
+			usedCoupon: oldSession.plan[oldSession.plan.length - 1].usedCoupon,
+			totalSessions: oldSession.plan[oldSession.plan.length - 1].totalSessions,
+			remainingSessions: oldSession.plan[oldSession.plan.length - 1].remainingSessions,
+			tokenToPay: oldSession.plan[oldSession.plan.length - 1].tokenToPay,
+			session: oldSession.plan[oldSession.plan.length - 1].session,
+		};
+		
+		// Se cambia el plan de expiración del plan antiguo
+		oldSession.plan[oldSession.plan.length - 1].expiration = moment()
+																.subtract(1, 'days')
+																.format();
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
@@ -124,11 +120,11 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			newSession = await Sessions.create({
 				psychologist: newPsychologist,
 				user: user,
-				plan: newPlan,
+				plan: [newPlan],
 				roomsUrl: oldSession.roomsUrl,
 			});
 		} else {
-			newSession.plan = newPlan;
+			newSession.plan.push(newPlan);
 		}
 
 		await newSession.save();
