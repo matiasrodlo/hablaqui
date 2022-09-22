@@ -104,6 +104,9 @@ let psychologist = new Schema({
 	avatarThumbnail: {
 		type: String,
 	},
+	prevision: {
+		type: String,
+	},
 	approveAvatar: {
 		type: Boolean,
 		default: false,

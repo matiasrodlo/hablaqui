@@ -1482,7 +1482,9 @@ const updatePsychologist = async (user, profile) => {
 					profile.sessionPrices = psy.sessionPrices;
 				else profile.stampSetPrices = moment().format();
 			}
-
+			if (psy.prevision !== profile.prevision) {
+				profile.prevision = psy.prevision;
+			}
 			const updated = await Psychologist.findByIdAndUpdate(
 				profile._id,
 				profile,
@@ -1509,6 +1511,7 @@ const updatePsychologist = async (user, profile) => {
 						name: updated.name,
 						lastName: updated.lastName,
 						username: updated.username,
+						prevision: updated.prevision,
 						code: updated.code,
 						avatar: updated.avatar,
 						country: updated.country,
@@ -1568,6 +1571,7 @@ const updatePsychologist = async (user, profile) => {
 						name: updated.name,
 						lastName: updated.lastName,
 						username: updated.username,
+						prevision: updated.prevision,
 						code: updated.code,
 						avatar: updated.avatar,
 						country: updated.country,
