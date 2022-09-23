@@ -27,6 +27,19 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando perfil');
 		}
 	},
+	async updatePsychologist(req, res) {
+		try {
+			const { user, newPsychologist, oldPsychologist } = req.body;
+			const { data, code } = await userService.updatePsychologist(
+				user,
+				newPsychologist,
+				oldPsychologist,
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando psicólogo');
+		}
+	},
 	async updateOne(req, res) {
 		try {
 			const { id } = req.params;
@@ -62,30 +75,6 @@ const userController = {
 			restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error actualizando contraseña');
-		}
-	},
-	async updatePlan(req, res) {
-		try {
-			const { user } = req;
-			const { newPlan } = req.body;
-			const { data, code } = await userService.updatePlan(user, newPlan);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el plan');
-		}
-	},
-
-	async updatePsychologist(req, res) {
-		try {
-			const { user } = req;
-			const { newPsychologist } = req.body;
-			const { data, code } = await userService.updatePsychologist(
-				user,
-				newPsychologist
-			);
-			restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el psicologo');
 		}
 	},
 	async uploadAvatar(req, res) {
@@ -138,35 +127,12 @@ const userController = {
 			errorCallback(e, res, 'Error registrando un usuario');
 		}
 	},
-	async addEvaluation(req, res) {
-		try {
-			const { psyId } = req.params;
-			const { user, body } = req;
-			const { data, code } = await userService.addEvaluation(
-				user,
-				psyId,
-				body
-			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error añadiendo la evaluación');
-		}
-	},
 	async changePsychologist(req, res) {
 		try {
 			const { sessionId } = req.params;
 			const { data, code } = await userService.changePsychologist(
 				sessionId
 			);
-			return restResponse(data, code, res);
-		} catch (e) {
-			errorCallback(e, res, 'Error añadiendo la evaluación');
-		}
-	},
-	async getEvaluations(req, res) {
-		try {
-			const { userId } = req.params;
-			const { data, code } = await userService.getEvaluations(userId);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error añadiendo la evaluación');
