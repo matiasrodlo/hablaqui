@@ -44,7 +44,7 @@
 			</v-row>
 			<v-card-actions>
 				<v-spacer />
-				<v-btn type="submit">Cambiar psicólogo</v-btn>
+				<v-btn :loading="loadingChange" type="submit">Cambiar psicólogo</v-btn>
 				<v-spacer />
 			</v-card-actions>
 			<v-row class="pa-5">
@@ -55,9 +55,10 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { validationMixin } from 'vuelidate';
+import { mapMutations } from 'vuex';
 import { required } from 'vuelidate/lib/validators';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 export default {
 	name: 'Cambio',
 	components: {
@@ -70,6 +71,7 @@ export default {
 			userId: '',
 			currentPsyId: '',
 			newPsyId: '',
+			loadingChange: false,
 		};
 	},
 	computed: {
@@ -93,12 +95,29 @@ export default {
 		},
 	},
 	methods: {
-		change() {
+		async change() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
-				return true;
+				try {
+					this.loadingChange = true;
+					await this.$axios(`/dashboard/update/psychologist`, {
+						method: 'PUT',
+						data: {
+							newPsychologist: this.newPsyId,
+							oldPsychologist: this.currentPsyId,
+							user: this.userId,
+						},
+					});
+				} catch (error) {
+					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+				} finally {
+					this.loadingChange = false;
+				}
 			}
 		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 	},
 	validations: {
 		userId: {

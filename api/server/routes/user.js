@@ -43,7 +43,6 @@ userRouter.get(
 	userController.getUser
 );
 
-
 /**
  * @description Actualiza el psicológo del usuario desde la intranet
  * @method PUT
