@@ -20,57 +20,74 @@ var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
 
-const usersService = { // usersService contiene la lógica para los servicios de usuarios
-	async getProfile(id) { // getProfile obtiene el perfil de un usuario
+const usersService = {
+	// usersService contiene la lógica para los servicios de usuarios
+	async getProfile(id) {
+		// getProfile obtiene el perfil de un usuario
 		const user = await User.findById(id); // Se busca el usuario en la base de datos
-		if (!user) { // Si no se encuentra el usuario
+		if (!user) {
+			// Si no se encuentra el usuario
 			return conflictResponse('perfil no encontrado'); // Se retorna un error
 		}
-		return okResponse('perfil obtenido', { // Se retorna el perfil del usuario
+		return okResponse('perfil obtenido', {
+			// Se retorna el perfil del usuario
 			user: await servicesAuth.generateUser(user), // Se genera el perfil del usuario
 		});
 	},
-	async changeActualPassword(user, newPassword) { // changeActualPassword cambia la contraseña actual de un usuario
+	async changeActualPassword(user, newPassword) {
+		// changeActualPassword cambia la contraseña actual de un usuario
 		user.password = bcrypt.hashSync(newPassword, 10); // Se encripta la nueva contraseña
 		await user.save(); // Se guarda el usuario en la base de datos
 		logInfo(actionInfo(user.email, 'actualizo su contraseña')); // Se registra el evento en el log
 		return okResponse('Actualizó su contraseña'); // Se retorna un mensaje de éxito
 	},
-	async updatePassword(user, oldPassword, newPassword) { // updatePassword actualiza la contraseña de un usuario
+	async updatePassword(user, oldPassword, newPassword) {
+		// updatePassword actualiza la contraseña de un usuario
 		const foundUser = await User.findById(user._id); // Se busca el usuario en la base de datos
 		// if the password is te same we cancel the update 	// Si la contraseña es la misma se cancela la actualización
 		const samePassword = oldPassword === newPassword; // Se verifica si la contraseña es la misma
-		if (samePassword) // Si la contraseña es la misma
+		if (samePassword)
+			// Si la contraseña es la misma
 			return conflictResponse('no puede ser la misma contraseña'); // Se retorna un error
 		const isEqual = bcrypt.compareSync(oldPassword, foundUser.password); // Se verifica si la contraseña es correcta
 		//if the password doesn't match, we cancel the update
-		if (!isEqual) // Si la contraseña no es correcta
-			return conflictResponse('la contraseña anterior no es correcta'); // Se retorna un error
+		if (!isEqual)
+			// Si la contraseña no es correcta
+			return conflictResponse('la contraseña anterior no es correcta');
+		// Se retorna un error
 		else return await this.changeActualPassword(foundUser, newPassword); // Se actualiza la contraseña
 	},
-	async passwordRecovery(user, newPassword) { // passwordRecovery recupera la contraseña de un usuario
+	async passwordRecovery(user, newPassword) {
+		// passwordRecovery recupera la contraseña de un usuario
 		const foundUser = await User.findById(user._id); // Se busca el usuario en la base de datos
 		const isEqual = bcrypt.compareSync(newPassword, foundUser.password); // Se verifica si la contraseña es correcta
 		//if the password is the same, we cancel the update with this
-		if (isEqual) // Si la contraseña es la misma
-			return conflictResponse('no puede ser la misma contraseña'); // Se retorna un error
+		if (isEqual)
+			// Si la contraseña es la misma
+			return conflictResponse('no puede ser la misma contraseña');
+		// Se retorna un error
 		else return await this.changeActualPassword(foundUser, newPassword); // Se actualiza la contraseña
 	},
-	async updateProfile(id, profile) { // updateProfile actualiza el perfil de un usuario
-		const updated = await User.findByIdAndUpdate(id, profile, { // Se actualiza el perfil del usuario
+	async updateProfile(id, profile) {
+		// updateProfile actualiza el perfil de un usuario
+		const updated = await User.findByIdAndUpdate(id, profile, {
+			// Se actualiza el perfil del usuario
 			new: true, // Se retorna el nuevo perfil
 			runValidators: true, // es true para que se ejecuten las validaciones
 			context: 'query', // query es el contexto de mongoose
 		});
 
-		return okResponse('Actualizado exitosamente', { // Se retorna un mensaje de éxito
+		return okResponse('Actualizado exitosamente', {
+			// Se retorna un mensaje de éxito
 			user: await servicesAuth.generateUser(updated), // Se genera el perfil del usuario
 		});
 	},
 
-	async updatePlan(user, newPlan) { // updatePlan actualiza el plan de un usuario
+	async updatePlan(user, newPlan) {
+		// updatePlan actualiza el plan de un usuario
 		let updated = null; // Se inicializa la variable updated
-		updated = await User.findByIdAndUpdate( // Se actualiza el plan del usuario
+		updated = await User.findByIdAndUpdate(
+			// Se actualiza el plan del usuario
 			user._id, // Se busca el usuario por su id
 			{ myPlan: newPlan }, // Se actualiza el plan del usuario
 			{
@@ -89,27 +106,31 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			psychologist: oldPsychologist,
 			user: user,
 		});
-	
+
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
-			title: oldSession.plan[oldSession.plan.length - 1].title, 
-			period: oldSession.plan[oldSession.plan.length - 1].period, 
+			title: oldSession.plan[oldSession.plan.length - 1].title,
+			period: oldSession.plan[oldSession.plan.length - 1].period,
 			totalPrice: oldSession.plan[oldSession.plan.length - 1].totalPrice,
-			sessionPrice: oldSession.plan[oldSession.plan.length - 1].sessionPrice,
+			sessionPrice:
+				oldSession.plan[oldSession.plan.length - 1].sessionPrice,
 			payment: oldSession.plan[oldSession.plan.length - 1].payment,
-			datePayment: oldSession.plan[oldSession.plan.length - 1].datePayment,
+			datePayment:
+				oldSession.plan[oldSession.plan.length - 1].datePayment,
 			expiration: oldSession.plan[oldSession.plan.length - 1].expiration,
 			usedCoupon: oldSession.plan[oldSession.plan.length - 1].usedCoupon,
-			totalSessions: oldSession.plan[oldSession.plan.length - 1].totalSessions,
-			remainingSessions: oldSession.plan[oldSession.plan.length - 1].remainingSessions,
+			totalSessions:
+				oldSession.plan[oldSession.plan.length - 1].totalSessions,
+			remainingSessions:
+				oldSession.plan[oldSession.plan.length - 1].remainingSessions,
 			tokenToPay: oldSession.plan[oldSession.plan.length - 1].tokenToPay,
 			session: oldSession.plan[oldSession.plan.length - 1].session,
 		};
-		
+
 		// Se cambia el plan de expiración del plan antiguo
 		oldSession.plan[oldSession.plan.length - 1].expiration = moment()
-																.subtract(1, 'days')
-																.format();
+			.subtract(1, 'days')
+			.format();
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
@@ -131,7 +152,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
 	},
-	async uploadAvatar({ // uploadAvatar sube el avatar de un usuario
+	async uploadAvatar({
+		// uploadAvatar sube el avatar de un usuario
 		userLogged, // usuario que está logueado
 		avatar, // avatar del usuario
 		avatarThumbnail, // avatar del usuario en miniatura
@@ -145,12 +167,15 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		let userRole = role; // Se inicializa la variable userRole
 		let userID = _id; // Se inicializa la variable userID
 
-		if (!avatar && !avatarThumbnail) // Si no hay avatar ni avatar en miniatura
+		if (!avatar && !avatarThumbnail)
+			// Si no hay avatar ni avatar en miniatura
 			return conflictResponse('Ha ocurrido un error inesperado'); // Se retorna un error
 
-		if (userLogged.role === 'superuser') { // Si el usuario logueado es un superusuario
+		if (userLogged.role === 'superuser') {
+			// Si el usuario logueado es un superusuario
 			const psy = await Psychologist.findById(idPsychologist); // Se busca el psicólogo en la base de datos
-			const userSelected = await User.findOne({ // Se busca el usuario en la base de datos
+			const userSelected = await User.findOne({
+				// Se busca el usuario en la base de datos
 				email: psy.email, // Se busca el usuario por su email
 				role: 'psychologist', // Se busca el usuario por su rol
 			});
@@ -158,11 +183,14 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			userID = userSelected._id; // Se asigna el id del usuario
 		}
 
-		if (userRole === 'psychologist') { // Si el rol del usuario es psicólogo
+		if (userRole === 'psychologist') {
+			// Si el rol del usuario es psicólogo
 			const userData = await User.findById(userID); // Se busca el usuario en la base de datos
 			await mailService.sendUploadPicture(userData); // Se sube la foto del usuario
-			if (userData.psychologist) { // Si el usuario tiene un psicólogo
-				psychologist = await Psychologist.findByIdAndUpdate( // Se encuentra por ID y se actualiza el avatar del psicólogo
+			if (userData.psychologist) {
+				// Si el usuario tiene un psicólogo
+				psychologist = await Psychologist.findByIdAndUpdate(
+					// Se encuentra por ID y se actualiza el avatar del psicólogo
 					idPsychologist, // Se busca el psicólogo por su id
 					{
 						avatar, // Se actualiza el avatar del psicólogo
@@ -171,8 +199,10 @@ const usersService = { // usersService contiene la lógica para los servicios de
 					},
 					{ new: true } // que sea new quiere decir que se retorna el objeto actualizado
 				);
-			} else { // Si el usuario no tiene un psicólogo
-				psychologist = await Recruitment.findByIdAndUpdate( // Se encuentra por ID y se actualiza el avatar del psicólogo
+			} else {
+				// Si el usuario no tiene un psicólogo
+				psychologist = await Recruitment.findByIdAndUpdate(
+					// Se encuentra por ID y se actualiza el avatar del psicólogo
 					userID,
 					{
 						avatar, // Se actualiza el avatar del psicólogo
@@ -184,7 +214,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			}
 		}
 
-		const profile = await User.findByIdAndUpdate( // Se encuentra por ID y se actualiza el avatar del usuario
+		const profile = await User.findByIdAndUpdate(
+			// Se encuentra por ID y se actualiza el avatar del usuario
 			userID, // Se busca el usuario por su id
 			{
 				avatar, // Se actualiza el avatar del usuario
@@ -196,26 +227,32 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		);
 
 		// delete old image
-		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch( // Se elimina el avatar anterior del usuario
+		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch(
+			// Se elimina el avatar anterior del usuario
 			console.error
 		);
 
 		logInfo(`${userLogged.email} actualizo su avatar`); // Se registra el evento en el log
 
-		return okResponse('Avatar actualizado', { // Se retorna un mensaje de éxito
+		return okResponse('Avatar actualizado', {
+			// Se retorna un mensaje de éxito
 			user: profile,
 			psychologist,
 		});
 	},
 
-	async deleteFile(oldAvatar, oldAvatarThumbnail) { // deleteFile elimina el avatar anterior del usuario
-		if (oldAvatar) // Si hay un avatar anterior
+	async deleteFile(oldAvatar, oldAvatarThumbnail) {
+		// deleteFile elimina el avatar anterior del usuario
+		if (oldAvatar)
+			// Si hay un avatar anterior
 			await bucket // Se elimina el avatar anterior del usuario
 				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join('')) // Se elimina el avatar anterior del usuario
 				.delete(); // Se elimina el avatar anterior del usuario
-		if (oldAvatarThumbnail) // Si hay un avatar anterior en miniatura
+		if (oldAvatarThumbnail)
+			// Si hay un avatar anterior en miniatura
 			await bucket // Se elimina el avatar anterior del usuario en miniatura
-				.file( // Se elimina el avatar anterior del usuario en miniatura
+				.file(
+					// Se elimina el avatar anterior del usuario en miniatura
 					oldAvatarThumbnail // Se elimina el avatar anterior del usuario en miniatura
 						.split('https://cdn.hablaqui.cl/') // Se elimina el avatar anterior del usuario en miniatura
 						.join('') // Se elimina el avatar anterior del usuario en miniatura
@@ -223,7 +260,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 				.delete(); // Se elimina el avatar anterior del usuario en miniatura
 	},
 
-	async setUserOnline(user) { // setUserOnline establece el estado de un usuario como en línea
+	async setUserOnline(user) {
+		// setUserOnline establece el estado de un usuario como en línea
 		// const data = {
 		// 	...user,
 		// 	status: true,
@@ -232,7 +270,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		return okResponse('Usuario conectado', user); // Se retorna un mensaje de éxito
 	},
 
-	async setUserOffline(user) { // setUserOffline establece el estado de un usuario como desconectado
+	async setUserOffline(user) {
+		// setUserOffline establece el estado de un usuario como desconectado
 		// const data = {
 		// 	...user,
 		// 	status: false,
@@ -241,10 +280,13 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		return okResponse('Usuario desconectado', user); // Se retorna un mensaje de éxito
 	},
 	// Sugerencia: Siento también que este metodo podría dividirse en otras funciones mas pequeñas
-	async registerUser(user, body) { // registerUser registra un usuario
-		if (user.role !== 'psychologist') // Si el usuario no es psicólogo
+	async registerUser(user, body) {
+		// registerUser registra un usuario
+		if (user.role !== 'psychologist')
+			// Si el usuario no es psicólogo
 			return conflictResponse('Usuario activo no es psicologo'); // Se retorna un mensaje de error
-		if (await User.exists({ email: body.email })) // Si el email ya está registrado
+		if (await User.exists({ email: body.email }))
+			// Si el email ya está registrado
 			return conflictResponse('Correo electronico en uso'); // Se retorna un mensaje de error
 
 		const pass = // Se crea una contraseña aleatoria
@@ -254,7 +296,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			Math.random()
 				.toString(36)
 				.slice(2);
-		const newUser = { // Se crea un nuevo usuario
+		const newUser = {
+			// Se crea un nuevo usuario
 			//psychologist: user._id,
 			isInvited: true, // Se establece que el usuario es invitado
 			name: body.name, // Se establece el nombre del usuario
@@ -275,9 +318,11 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			process.env.API_URL.includes('hablaqui.cl') || // Si la url de la api es de hablaqui.cl
 			process.env.DEBUG_ANALYTICS === 'true' // Si el modo debug está activado
 		) {
-			analytics.identify({ // Se identifica al usuario
+			analytics.identify({
+				// Se identifica al usuario
 				userId: createdUser._id.toString(), // Se establece el id del usuario
-				traits: { // Se establecen las características del usuario
+				traits: {
+					// Se establecen las características del usuario
 					name: user.name, // Se establece el nombre del usuario
 					email: user.email, // Se establece el email del usuario
 					type: user.role, // Se establece el rol del usuario
@@ -285,10 +330,12 @@ const usersService = { // usersService contiene la lógica para los servicios de
 					referencerName: `${user.name} ${user.lastName}`, // Se establece el nombre del usuario
 				},
 			});
-			analytics.track({ // Se registra la acción
+			analytics.track({
+				// Se registra la acción
 				userId: createdUser._id.toString(), // Se establece el id del usuario
 				event: 'referral-user-signup', // Se establece la acción
-				properties: { // Se establecen las propiedades
+				properties: {
+					// Se establecen las propiedades
 					name: user.name, // Se establece el nombre del usuario
 					email: user.email, // Se establece el email del usuario
 					type: user.role, // Se establece el rol del usuario
@@ -302,7 +349,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			.update(`${createdUser._id}${user._id}`) // .update se utiliza para encriptar
 			.digest('hex'); // Se obtiene el hash, digest se utiliza para obtener el hash en hexadecimal
 
-		const newPlan = { // Se crea un nuevo plan
+		const newPlan = {
+			// Se crea un nuevo plan
 			title: 'Plan inicial', // Se establece el título del plan
 			period: 'Plan inicial', // Se establece el periodo del plan
 			totalPrice: 0, // Se establece el precio total del plan
@@ -316,17 +364,22 @@ const usersService = { // usersService contiene la lógica para los servicios de
 			session: [], // Se establecen las sesiones
 		};
 
-		if (user.role === 'psychologist' && createdUser.role === 'user') // Si el usuario es un psicólogo y el usuario creado es un usuario
-			await Sessions.create({ // Se crea una sesión
+		if (user.role === 'psychologist' && createdUser.role === 'user')
+			// Si el usuario es un psicólogo y el usuario creado es un usuario
+			await Sessions.create({
+				// Se crea una sesión
 				plan: [newPlan], // Se establecen los planes
 				user: createdUser._id, // Se establece el usuario
 				psychologist: user.psychologist, // Se establece el psicólogo
 				roomsUrl: `${room}room/${roomId}`, // Se establece la url de la sala
 			});
 
-		if (process.env.NODE_ENV === 'development') // Si el entorno es de desarrollo
-			logInfo( // Se registra la acción
-				actionInfo( // Se establece la información de la acción
+		if (process.env.NODE_ENV === 'development')
+			// Si el entorno es de desarrollo
+			logInfo(
+				// Se registra la acción
+				actionInfo(
+					// Se establece la información de la acción
 					user.email, // Se establece el email del usuario
 					`Usuario registrado ${newUser.email} ${pass}` // Se establece el mensaje
 				)
@@ -335,18 +388,24 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		// Sending email with user information
 		await mailService.sendGuestNewUser(user, newUser, pass); // Se envia el email con la información del usuario
 
-		return okResponse('Nuevo usuario creado', { // Se retorna una respuesta de éxito
+		return okResponse('Nuevo usuario creado', {
+			// Se retorna una respuesta de éxito
 			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
 	// Sugerencia: Se podría reducir un poco más el código de la función
-	async changePsychologist(sessionsId) { // Función para cambiar el psicólogo de una sesión
-		const foundPlan = await Sessions.findById(sessionsId).populate( // Se busca por id la sesión
+	async changePsychologist(sessionsId) {
+		// Función para cambiar el psicólogo de una sesión
+		const foundPlan = await Sessions.findById(sessionsId).populate(
+			// Se busca por id la sesión
 			'psychologist user' // Se establecen los campos a buscar
 		);
 		if (!foundPlan) return conflictResponse('No hay planes'); // Si no hay planes se retorna un error de conflicto
-		const planData = foundPlan.plan.filter( // Se filtran los planes
-			plan => // Se establecen las condiciones
+		const planData = foundPlan.plan.filter(
+			// Se filtran los planes
+			(
+				plan // Se establecen las condiciones
+			) =>
 				plan.payment === 'success' && // Se establece que el pago sea exitoso
 				moment().isBefore(moment(plan.expiration)) // Se establece que la fecha de expiración sea anterior a la actual, es decir, que el plan no haya expirado, esto se hace para evitar que se cambie el psicólogo de una sesión que ya haya expirado
 		); // moment se utiliza para obtener la fecha actual
@@ -354,12 +413,15 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		if (!planData) return conflictResponse('No hay planes para cancelar'); // Si no hay planes para cancelar se retorna un error de conflicto
 
 		let sessionsData = []; // Se establece un arreglo de sesiones
-		planData.forEach(plan => { // Se recorren los planes
-			const sessions = { // Se establecen las sesiones
+		planData.forEach(plan => {
+			// Se recorren los planes
+			const sessions = {
+				// Se establecen las sesiones
 				plan: plan._id, // Se establece el plan
 				remainingSessions: plan.remainingSessions, // Se establece el total de sesiones restantes
 				price: plan.sessionPrice, // Se establece el precio de la sesión
-				session: plan.session.filter( // Se filtran las sesiones
+				session: plan.session.filter(
+					// Se filtran las sesiones
 					session => session.status !== 'success' // Se establece que el estado de la sesión no sea exitosa
 				),
 			};
@@ -368,7 +430,8 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		// Sugerencia: Declarar variables al inicio porfavor.
 		let discount = 0; // Se establece el descuento
 		let sessionsToDelete = []; // Se establece un arreglo de sesiones a eliminar
-		sessionsData.forEach(data => { // Se recorren las sesiones
+		sessionsData.forEach(data => {
+			// Se recorren las sesiones
 			const remaining = data.session.length + data.remainingSessions; // Se establece el total de sesiones restantes
 			discount += remaining * data.price; // Se establece el descuento
 			sessionsToDelete.push(data.session); // Se agrega la sesión al arreglo
@@ -376,28 +439,34 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		console.log(discount); // Se imprime el descuento
 		console.log(sessionsToDelete); // Se imprime las sesiones a eliminar
 
-		planData.forEach(async plan => { // Se recorren los planes
-			await Sessions.updateOne( // Se actualiza la sesión
+		planData.forEach(async plan => {
+			// Se recorren los planes
+			await Sessions.updateOne(
+				// Se actualiza la sesión
 				{
 					_id: sessionsId, // Se establece el id de la sesión
 					'plan._id': plan._id, // Se establece el id del plan
 				},
 				{
-					$set: { // set se utiliza para actualizar un documento en la base de datos
+					$set: {
+						// set se utiliza para actualizar un documento en la base de datos
 						'plan.$.payment': 'failed', // Se establece el pago como fallido
 						'plan.$.remainingSessions': 0, // Se establece el total de sesiones restantes
 					},
 				}
 			);
-			plan.session.forEach(async session => { // Se recorren las sesiones
-				await Sessions.updateOne( // Se actualiza la sesión
+			plan.session.forEach(async session => {
+				// Se recorren las sesiones
+				await Sessions.updateOne(
+					// Se actualiza la sesión
 					{
 						_id: sessionsId, // Se establece el id de la sesión
 						'plan._id': plan._id, // Se establece el id del plan
 						'plan.session._id': session._id, // Se establece el id de la sesión
 					},
 					{
-						$pull: { // pull se utiliza para eliminar un documento en la base de datos
+						$pull: {
+							// pull se utiliza para eliminar un documento en la base de datos
 							'plan.$.session': { _id: session._id }, // Se establece el id de la sesión
 						},
 					}
@@ -409,16 +478,19 @@ const usersService = { // usersService contiene la lógica para los servicios de
 		let expiration = now; // Se establece la fecha de expiración
 		expiration.setDate(expiration.getDate() + 3); // Se establece la fecha de expiración a 3 días después de la fecha actual
 
-		const newCoupon = { // Se establece el nuevo cupón
+		const newCoupon = {
+			// Se establece el nuevo cupón
 			code: foundPlan.user.name + now.getTime(), // Se establece el código del cupón
 			discount, // Se establece el descuento
 			discountType: 'static', // Se establece el tipo de descuento
-			restrictions: { // Se establecen las restricciones del cupón
-				user: foundPlan.user._id, 
+			restrictions: {
+				// Se establecen las restricciones del cupón
+				user: foundPlan.user._id,
 			},
 			expiration: expiration.toISOString(), // Se establece la fecha de expiración
 		};
-		await mailService.sendChangePsycologistToUser( // Se envía el correo al usuario
+		await mailService.sendChangePsycologistToUser(
+			// Se envía el correo al usuario
 			foundPlan.user, // Se envía el plan al usuario
 			foundPlan.psychologist, // Se envía el psicólogo al usuario
 			newCoupon // Se envía el cupón al usuario
