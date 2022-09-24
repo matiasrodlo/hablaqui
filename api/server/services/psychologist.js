@@ -734,6 +734,9 @@ const match = async body => {
 			specialties: { $in: payload.themes },
 		});
 	}
+	// Se filtra los psicologos que no tengan disponibilidad en los proximos 3 días
+	
+
 	if (matchedPsychologists.length == 0) {
 		let newMatchedPsychologists = [];
 		if (payload.gender == 'transgender') {
@@ -749,12 +752,19 @@ const match = async body => {
 				specialties: { $in: payload.themes },
 			});
 		}
-
+		// Se ordena el arreglo por puntuación manual del psicologo
+		newMatchedPsychologists = newMatchedPsychologists.sort(
+			(a, b) => b.points - a.points
+		);
 		return okResponse('Psicologos encontrados', {
 			matchedPsychologists: newMatchedPsychologists,
 			perfectMatch: false,
 		});
 	} else {
+		// Se ordena el arreglo por puntuación manual del psicologo
+		newMatchedPsychologists = newMatchedPsychologists.sort(
+			(a, b) => b.points - a.points
+		);
 		return okResponse('psicologos encontrados', {
 			matchedPsychologists,
 			perfectMatch: true,
