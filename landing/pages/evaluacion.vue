@@ -713,7 +713,6 @@ export default {
 		Icon: () => import('~/components/Icon'),
 		Avatar: () => import('~/components/Avatar'),
 	},
-	middleware: ['auth'],
 	async asyncData({ $axios, error }) {
 		try {
 			const { appointments } = await $axios.$get('/appointments/all');
@@ -769,6 +768,17 @@ export default {
 	},
 	created() {
 		if (process.browser) {
+			const answers = JSON.parse(localStorage.getItem('answers'));
+			if (answers) {
+				this.gender = answers.gender;
+				this.age = answers.age;
+				this.firstTherapy = answers.firstTherapy;
+				this.themes = answers.themes;
+				this.focus = answers.focus;
+				this.genderConfort = answers.genderConfort;
+				localStorage.removeItem('answers');
+				this.openPrecharge();
+			}
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
 				this.matchedPsychologists = psi.match;
@@ -809,6 +819,20 @@ export default {
 			if (this.themes.length === 3) this.step = 4;
 		},
 		openPrecharge() {
+			if (!this.$auth.$state.loggedIn) {
+				localStorage.setItem(
+					'answers',
+					JSON.stringify({
+						genderConfort: this.genderConfort,
+						themes: this.themes,
+						model: this.focus,
+						firstTherapy: this.firstTherapy,
+						age: this.age,
+						gender: this.gender,
+					})
+				);
+				this.$router.push('/auth/?register=true&from=psy');
+			}
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
