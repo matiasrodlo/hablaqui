@@ -24,7 +24,7 @@
 			<a
 				style="text-decoration: none"
 				class="hidden-md-and-up"
-				href="https://soporte.hablaqui.cl/hc"
+				href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1?autoload=1&app_absent=0"
 				target="_blank"
 			>
 				<v-img
@@ -62,12 +62,7 @@
 							<v-row>
 								<v-col cols="12">
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										¡Es un placer conocerte!
 									</div>
@@ -361,12 +356,7 @@
 										¡Estamos ansiosos de saber más de ti!
 									</div>
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										Cuéntanos sobre tu formación profesional
 									</div>
@@ -450,12 +440,7 @@
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="
-																primary--text
-																font-weight-bold
-																body-1
-																pb-2
-															"
+															class="primary--text font-weight-bold body-1 pb-2"
 														>
 															Formación
 														</div>
@@ -628,12 +613,7 @@
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="
-																primary--text
-																font-weight-bold
-																body-1
-																pb-3
-															"
+															class="primary--text font-weight-bold body-1 pb-3"
 														>
 															Experiencia
 														</div>
@@ -846,12 +826,7 @@
 								<v-col cols="12">
 									<div class="primary--text">¡Ya casi terminamos!</div>
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										Háblanos sobre tu trabajo
 									</div>
