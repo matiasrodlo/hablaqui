@@ -139,7 +139,7 @@ psychologistsRouter.put(
  * @route /api/v1/psychologists/match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model - Implica el módelo de atención del psicólogo de preferencia
- * @param {String} body.payload.themes - Implica los temas de interés del psicólogo de preferencia
+ * @param {Array} body.payload.themes - Implica los temas de interés del psicólogo de preferencia
  * @returns Objeto con las coincidencias sobre los psicólogos
  * @access authenticated
  */

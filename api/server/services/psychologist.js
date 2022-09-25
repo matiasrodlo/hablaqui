@@ -716,26 +716,49 @@ const formattedSchedule = (schedule, day, hour) => {
 	return validHour;
 };
 
+const ponderationMatch = async matchedList => {
+	// Disponibilidad en los proximos 3 días
+	matchedList.forEach(psy => {
+		let sessions = getAllSessionsFunction(psy)
+		// Comprobar que tenga disponibilidad en los proximos 3 días
+		sessions.forEach(session => {
+			session.plan.session.forEach(daySession => {
+				if (!moment(daySession.date).isBetween(moment(), moment().add(3, 'days'))) {
+					matchedPsychologists.pop(psy);
+				}
+			});
+		});
+	});
+
+	// Se ordena el arreglo por puntuación manual del psicologo
+	matchedList = matchedList.sort(
+		(a, b) => b.points - a.points
+	);
+	return matchedList;
+}
+
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
-	if (payload.gender == 'transgender') {
-		matchedPsychologists = await Psychologist.find({
-			models: payload.model,
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedPsychologists = await Psychologist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			models: payload.model,
-			specialties: { $in: payload.themes },
-		});
+	let specialties = payload.themes;
+	while(specialties.length != 0 || matchedPsychologists.length == 0){
+		if (payload.gender == 'transgender') {
+			matchedPsychologists = await Psychologist.find({
+				models: payload.model,
+				isTrans: true,
+				specialties: specialties,
+			});
+		} else {
+			matchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					$in: ['male', 'female', 'transgender'],
+				},
+				models: payload.model,
+				specialties: specialties,
+			});
+		}
+		specialties.pop();
 	}
-	// Se filtra los psicologos que no tengan disponibilidad en los proximos 3 días
-	
 
 	if (matchedPsychologists.length == 0) {
 		let newMatchedPsychologists = [];
@@ -752,19 +775,14 @@ const match = async body => {
 				specialties: { $in: payload.themes },
 			});
 		}
-		// Se ordena el arreglo por puntuación manual del psicologo
-		newMatchedPsychologists = newMatchedPsychologists.sort(
-			(a, b) => b.points - a.points
-		);
+		ponderationMatch(newMatchedPsychologists);
+		
 		return okResponse('Psicologos encontrados', {
 			matchedPsychologists: newMatchedPsychologists,
 			perfectMatch: false,
 		});
 	} else {
-		// Se ordena el arreglo por puntuación manual del psicologo
-		newMatchedPsychologists = newMatchedPsychologists.sort(
-			(a, b) => b.points - a.points
-		);
+		ponderationMatch(matchedPsychologists);
 		return okResponse('psicologos encontrados', {
 			matchedPsychologists,
 			perfectMatch: true,
