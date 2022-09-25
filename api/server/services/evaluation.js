@@ -8,7 +8,7 @@ import {
 	getScores,
 	getAllEvaluationsFunction,
 } from '../utils/functions/evaluationFunction';
-import mailService from '../utils/functions/mails/psychologistStatus';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 
@@ -126,12 +126,12 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 	);
 
 	// Envia correo donde se aprueba la evaluación
-	await mailService.sendApproveEvaluationToUser(
+	await mailServicePsy.sendApproveEvaluationToUser(
 		evaluations.user,
 		evaluations.psychologist
 	);
 
-	await mailService.sendApproveEvaluationToPsy(
+	await mailServicePsy.sendApproveEvaluationToPsy(
 		evaluations.user,
 		evaluations.psychologist
 	);
@@ -152,7 +152,7 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 	).populate('psychologist user');
 
 	// Enviar correo donde se rechaza la evaluación
-	await mailService.sendRefuseEvaluation(
+	await mailServicePsy.sendRefuseEvaluation(
 		evaluations.user,
 		evaluations.psychologist
 	);
@@ -217,7 +217,7 @@ const addEvaluation = async (user, psyId, payload) => {
 
 	const psy = await Psychologist.findById(psyId);
 
-	await mailService.sendAddEvaluation(user, psy);
+	await mailServicePsy.sendAddEvaluation(user, psy);
 	return okResponse('Evaluación guardada', created);
 };
 

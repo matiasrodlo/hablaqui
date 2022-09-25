@@ -6,8 +6,8 @@ import { logInfo } from '../config/winston'; // Se importa el log de info para p
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
 import psychologist from '../models/psychologist'; // Contiene la definición del modelo de psychologist para mongodb
-import mailService1 from '../utils/functions/mails/accountsShares'; // Utiliza el servicio de mail
-import mailService2 from '../utils/functions/mails/psychologistStatus'
+import mailServiceAccount from '../utils/functions/mails/accountsShares'; // Utiliza el servicio de mail
+import mailServicePsy from '../utils/functions/mails/psychologistStatus'
 
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
 var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
@@ -79,8 +79,8 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 			});
 		}
 		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
-		mailService2.sendRecruitmentConfirmation(recruited); // Se envía un correo de confirmación al usuario
-		mailService2.sendRecruitmentConfirmationAdmin(recruited); // Se envía un correo de confirmación al administrador
+		mailServicePsy.sendRecruitmentConfirmation(recruited); // Se envía un correo de confirmación al usuario
+		mailServicePsy.sendRecruitmentConfirmationAdmin(recruited); // Se envía un correo de confirmación al administrador
 		logInfo(actionInfo(recruited.email, 'se registró como postulante')); // Se imprime en la consola la acción que realizó el usuario
 		return okResponse('Registrado exitosamente', { recruited }); // Se informa que se registró exitosamente
 	},
@@ -165,7 +165,7 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 		delete payload.__v; // Se elimina el __v del payload
 
 		const newProfile = await psychologist.create(payload); // Se crea un nuevo perfil de psychologist
-		mailService1.sendWelcomeNewPsychologist(payload); // Se envía un correo de bienvenida al nuevo psicólogo
+		mailServiceAccount.sendWelcomeNewPsychologist(payload); // Se envía un correo de bienvenida al nuevo psicólogo
 
 		const userUpdated = await User.findOneAndUpdate( // Se actualiza el perfil de user
 			{ email: payload.email },

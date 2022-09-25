@@ -6,7 +6,7 @@ import Psychologist from '../models/psychologist';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
-import mailService from '../utils/functions/mails/psychologistStatus';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
@@ -69,7 +69,7 @@ const completePaymentsRequest = async psy => {
 	);
 
 	//Enviar correo de dinero depositado a psy
-	await mailService.sendCompletePaymentRequest(user, total, now);
+	await mailServicePsy.sendCompletePaymentRequest(user, total, now);
 
 	return okResponse('Peticion completada', {
 		total: total,
@@ -155,7 +155,7 @@ const createPaymentsRequest = async user => {
 		});
 	}
 	//Crear correo de petición de retiro de dinero
-	await mailService.sendPaymentRequest(user, total, now);
+	await mailServicePsy.sendPaymentRequest(user, total, now);
 
 	return okResponse('Peticion hecha', {
 		total: total,

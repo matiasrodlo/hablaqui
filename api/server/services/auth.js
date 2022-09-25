@@ -8,7 +8,7 @@ import { sign } from 'jsonwebtoken'; // el nombre lo dice todo
 import { logError, logInfo } from '../config/pino'; // pino.js es un logger para nodejs
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
-import mailService from '../utils/functions/mails/accountsShares';
+import mailServiceAccount from '../utils/functions/mails/accountsShares';
 
 // estaba pensando cambiar los var por let. Además me llama la ateción que se importe de una manera distinta que en chat.js
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
@@ -130,7 +130,7 @@ const register = async payload => { // register es una función que registra un 
 
 	if (process.env.NODE_ENV === 'development') // si el entorno es development
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`)); // logInfo es una función que imprime en consola la información del usuario y la url de verificación
-	else await mailService.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
+	else await mailServiceAccount.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
 
 	// Segment identification
 	if (
@@ -158,7 +158,7 @@ const register = async payload => { // register es una función que registra un 
 
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente')); // logInfo es una función que imprime en consola la información del usuario y el mensaje de registro exitoso
 	if (user.role === 'user') { // si el rol del usuario es user
-		await mailService.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
+		await mailServiceAccount.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
 	}
 	return okResponse(`Bienvenido ${user.name}`, { // okResponse es una función que genera una respuesta http con código 200
 		user: await generateUser(user), // el usuario
@@ -195,7 +195,7 @@ const sendPasswordRecover = async email => { // sendPasswordRecover es una funci
 
 	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`; // la url de recuperación de contraseña
 
-	mailService.sendPasswordRecovery(user, recoveryUrl); // envía el correo de recuperación de contraseña
+	mailServiceAccount.sendPasswordRecovery(user, recoveryUrl); // envía el correo de recuperación de contraseña
 
 	if (process.env.NODE_ENV === 'development') // si el entorno es development
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`)); // logInfo es una función que imprime en consola la información del usuario y la url de recuperación de contraseña
@@ -225,7 +225,7 @@ const changeVerifiedStatus = async id => { // changeVerifiedStatus es una funci�
 
 	user.isVerified = true; // cambia el estado de verificación del usuario a true
 	await user.save(); // guarda el usuario
-	if (user.role === 'user') await mailService.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
+	if (user.role === 'user') await mailServiceAccount.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
 
 	return okResponse('Cuenta verificada');
 };
