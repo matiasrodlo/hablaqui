@@ -281,9 +281,9 @@ const mailService = {
 		const lastNameUser = user.lastName;
 		const { name } = psy;
 		const dataPayload = {
-			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Ha reprogramado la sesión`,
+			subject: `Se ha agendado una sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-36c740ffd8aa4b25915861806f0a5fb6',
 			asm: {

@@ -13,6 +13,7 @@ import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 
 const addRating = async (user, newRating, comment, psychologist) => {
+	// Verifica que el usuario sea un psicologo, crea el rating y lo agrega al psicologo
 	if (user.psychologist != psychologist)
 		return conflictResponse('Este no es tu psicologo');
 
@@ -34,6 +35,8 @@ const addRating = async (user, newRating, comment, psychologist) => {
 };
 
 const getRating = async psychologist => {
+	// Obtiene el rating de un psicologo, verifica que el psicologo tenga al 
+	// menos una evaluacion y obtiene el promedio del rating
 	const foundPsychologist = await Psychologist.findById(psychologist);
 	if (!foundPsychologist.ratings || foundPsychologist.ratings.length == 0)
 		return okResponse('El psicologo no tiene evaluaciones aun.');
@@ -52,6 +55,7 @@ const getEvaluationsPsy = async user => {
 	if (user.role !== 'psychologist')
 		return conflictResponse('No eres psicólogo');
 
+	// Verifica que el psicologo tenga evaluaciones, si tiene las obtiene y las devuelve
 	const psy = user.psychologist;
 	let evaluations = await Evaluation.find({ psychologist: psy });
 	if (!evaluations)
@@ -64,6 +68,7 @@ const getEvaluationsPsy = async user => {
 		});
 
 	evaluations = await getAllEvaluationsFunction(psy);
+	// Filtra las que han sido aprobadas
 	evaluations = evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
@@ -75,6 +80,7 @@ const getEvaluationsPsy = async user => {
 };
 
 const getAllEvaluations = async psy => {
+	// Obtiene todas las evaluaciones de un psicologo incluso las que no han sido aprobadas
 	const evaluations = await getAllEvaluationsFunction(psy);
 	return okResponse('Todas las sesiones devueltas', {
 		evaluations,
@@ -83,6 +89,7 @@ const getAllEvaluations = async psy => {
 };
 
 const approveEvaluation = async (evaluationsId, evaluationId) => {
+	// Encuentra la evaluacion y la aprueba
 	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
@@ -92,12 +99,15 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
+	// Obtiene todas las evaluaciones del psicologo y las aprueba
 	const psy = evaluation.psychologist._id;
 	let evaluations = await getAllEvaluationsFunction(psy);
 	evaluations = evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
 	);
 
+	// Recorre todas las evaluaciones y las va acumulando si es un valor numerico,
+	// y lo divide por el total de evaluaciones para obtener el promedio
 	const global =
 		evaluations.reduce(
 			(sum, value) =>
@@ -105,6 +115,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			0
 		) / evaluations.length;
 
+	// Actualiza el rating total del psicologo y lo redondea a 2 decimales
 	await Psychologist.findOneAndUpdate(
 		{ _id: psy },
 		{
@@ -114,7 +125,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 		}
 	);
 
-	//enviar correo donde se apruba la evaluación
+	// Envia correo donde se aprueba la evaluación
 	await mailService.sendApproveEvaluationToUser(
 		evaluations.user,
 		evaluations.psychologist
@@ -129,6 +140,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 };
 
 const refuseEvaluation = async (evaluationsId, evaluationId) => {
+	// Encuentra la evaluacion y la rechaza
 	const evaluations = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
@@ -139,7 +151,7 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 		}
 	).populate('psychologist user');
 
-	//Enviar correo donde se rechaza la evaluación
+	// Enviar correo donde se rechaza la evaluación
 	await mailService.sendRefuseEvaluation(
 		evaluations.user,
 		evaluations.psychologist
@@ -155,6 +167,7 @@ const addEvaluation = async (user, psyId, payload) => {
 		user: user._id,
 	});
 
+	// Obtiene todas las sessiones del usuario que ha tenido con el psicologo
 	sessions = sessions.plan.flatMap(plan => {
 		return plan.session.map(session => {
 			return {
@@ -164,6 +177,7 @@ const addEvaluation = async (user, psyId, payload) => {
 		});
 	});
 
+	// Verifica que la sesion este finalizada
 	const countSessions = sessions.filter(
 		session => session.status === 'success'
 	).length;
@@ -171,6 +185,7 @@ const addEvaluation = async (user, psyId, payload) => {
 	if (countSessions < 3)
 		return conflictResponse('No puede escribir un comentario');
 
+	// Verifica que el usuario no haya escrito una evaluacion
 	const collEvaluation = await Evaluation.findOne({
 		psychologist: psyId,
 		user: user._id,
@@ -186,6 +201,7 @@ const addEvaluation = async (user, psyId, payload) => {
 		improve: payload.improve,
 	};
 	let created = {};
+	// Si no ha escrito una evaluacion crea una nueva, de lo contrario la actualiza
 	if (collEvaluation) {
 		created = await Evaluation.findOneAndUpdate(
 			{ user: user._id, psychologist: psyId },
@@ -206,6 +222,7 @@ const addEvaluation = async (user, psyId, payload) => {
 };
 
 const getEvaluationsById = async userId => {
+	// Obtiene todas las evaluaciones de un psicologo
 	let evaluations = await Evaluation.find({ user: userId }).populate(
 		'psychologist',
 		'_id name lastname code'
