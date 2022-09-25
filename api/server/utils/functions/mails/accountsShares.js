@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import { logInfo } from '../../../config/pino';
+import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
@@ -27,13 +28,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sgMail.send(dataPayload, function(error, body) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log(body);
-			}
-		});
+		sendMails(dataPayload);
 	},
 	/**
 	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
@@ -55,17 +50,11 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sgMail.send(dataPayload, function(error, body) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log(body);
-			}
-		});
+		sendMails(dataPayload);
 	},
     /**
 	 * @description Send a welcome email to a new  user created by a psychologist
-	 * @param {Object} psy - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
 	 * @param {Object} newUser -  A User object from the database, corresponding to the psychologist
 	 * @param {String} pass - Password to login
 	 */
@@ -88,15 +77,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
 	 /**
 	 * @description Send a recovery password email to a user
@@ -118,14 +99,13 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sgMail.send(dataPayload, function(error, body) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log(body);
-			}
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send a verification email to a new user created
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {String} url - URL to verify account
+	 */
     async sendVerifyEmail(user, url) {
 		const dataPayload = {
 			from: 'Hablaquí <verificacion@mail.hablaqui.cl>',
@@ -141,16 +121,12 @@ const mailService = {
 				verify_url: url,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to support to notify that a psychologist has uploaded a photo.
+	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
+	 */
 	async sendUploadPicture(psy) {
 		const dataPayload = {
 			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
@@ -165,16 +141,14 @@ const mailService = {
 				email: psy.email,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user who has cancelled his plan
+	 * @param {Object} user - A User object from the database, corresponding to the psychologist
+	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
+	 * @param {String} coupon - Coupon code
+	 */
 	async sendChangePsycologistToUser(user, psy, coupon) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
@@ -194,17 +168,7 @@ const mailService = {
 				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
 };
 

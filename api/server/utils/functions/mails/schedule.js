@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import { logInfo } from '../../../config/pino';
+import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
@@ -30,15 +31,7 @@ const mailService = {
 				price: price,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
     /**
 	 * @description Send an appointmet purchase confirmation to a psy
@@ -66,16 +59,17 @@ const mailService = {
 				price: price,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them. 
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} paymentURL - The URL to the payment page
+	 * @param {String} date - The date of the appointment
+	 * @param {String} value - The value of the appointment
+	 * @param {String} type - The type of appointment
+	 */
 	async sendCustomSessionToUser(
 		user,
 		psychologist,
@@ -103,18 +97,17 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the psychologist notifying them that a user has scheduled a session with them.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} paymentURL - The URL to the payment page
+	 * @param {String} date - The date of the appointment
+	 * @param {String} value - The value of the appointment
+	 * @param {String} type - The type of appointment
+	 */
     async sendCustomSessionToPsy(
 		user,
 		psychologist,
@@ -142,19 +135,14 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
-    
+    /**
+	 * @description Sends an email to the user notifying them that they have successfully rescheduled.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 */
     async sendRescheduleToUser(user, psy, sessionDate) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -172,18 +160,15 @@ const mailService = {
 				psy_name: psy.name + ' ' + psy.lastName,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the psychologist notifying them that a user has rescheduled.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 * @param {String} url - The URL to the payment page
+	 */
 	async sendRescheduleToPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -203,20 +188,13 @@ const mailService = {
 				url: url,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
-	
-	
+	/**
+	 * @description Sends an email to the user notifying them that they have requested a rescheduled session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 */
 	async sendCancelSessionPsy(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -233,18 +211,15 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user notifying him/her that the psychologist has rescheduled the session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 */
 	async sendRescheduleToUserByPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -263,18 +238,15 @@ const mailService = {
 				url: url,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist notifying him/her that you have rescheduled the session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 */
 	async sendRescheduleToPsyByPsy(user, psy, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -294,18 +266,16 @@ const mailService = {
 				url: url,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user notifying them that a user has scheduled a session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} date - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 * @param {String} session - The session number
+	 */
 	async sendScheduleToPsy(user, psy, date, url, session) {
 		const nameUser = user.name;
 		const lastNameUser = user.lastName;
@@ -313,7 +283,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Has reprogramado la sesión`,
+			subject: `Ha reprogramado la sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-36c740ffd8aa4b25915861806f0a5fb6',
 			asm: {
@@ -329,18 +299,16 @@ const mailService = {
 				session,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user notifying them that they have scheduled a session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} date - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 * @param {String} session - The session number
+	 */
 	async sendScheduleToUser(user, psy, date, url, session) {
 		const { email, name } = user;
 		const dataPayload = {
@@ -361,15 +329,7 @@ const mailService = {
 				session,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
 };
 

@@ -2,12 +2,19 @@
 
 import moment from 'moment';
 import { logInfo } from '../../../config/pino';
+import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {
+	/**
+	 * @description sends an email to the user notifying him/her that the psychologist is talking to him/her.
+	 * @param {Object} user - A user object from the database, corresponding to the user that will be notified
+	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that is talking to the user
+	 * @param {String} batch - A batchID corresponding to the batch of the conversation
+	 */
     async sendChatNotificationToUser(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
@@ -25,18 +32,14 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description sends an email to the psychologist notifying him/her that the user is talking to him/her.
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist that is talking to the psychologist
+	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the user that will be notified
+	 * @param {String} batch - A batchID corresponding to the batch of the conversation
+	 */
     async sendChatNotificationToPsy(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
@@ -54,18 +57,13 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the user reminding them that they have requested a rescheduled session with a psychologist.
+	 * @param {Object} user - A user object from the database, corresponding to the user that will be notified
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that the user has requested a rescheduled session with
+	 */
     async sendCancelSessionUser(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -81,18 +79,12 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the psychologist reminding him that you have cancelled a private engagement.
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be notified 
+	 */
     async sendCancelCommitment(psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
@@ -107,18 +99,12 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Sends an email to the psychologist reminding him/her that you have scheduled a private appointment.
+	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that will be notified
+	 */
     async sendCustomSessionCommitment(psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
@@ -133,17 +119,7 @@ const mailService = {
 				psy_name: psychologist.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
     /**
 	 * @description Send an appointmet reminder to a user about an upcomming session
@@ -174,16 +150,7 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
     /**
 	 * @description Send an appointmet reminder to a psychologist about an upcomming session
@@ -215,15 +182,7 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
 };
 

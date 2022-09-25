@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import { logInfo } from '../../../config/pino';
+import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
 const sgMail = require('@sendgrid/mail');
@@ -29,15 +30,7 @@ const mailService = {
 				psy_email: email,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
     /**
 	 * @description Send an email to a psychologist about his/her new application
@@ -58,16 +51,13 @@ const mailService = {
 				first_name: name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the user to evaluate the psychologist.
+	 * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the psychologist 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be evaluated
+	 */
 	async sendEnabledEvaluation(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
@@ -84,18 +74,15 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist who must pay the plan.
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist who must pay the plan 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who must pay the plan
+	 * @param {String} amount - The amount of the plan
+	 * @param {String} url - The url to pay the plan
+	 */
 	async pendingPlanPayment(user, psy, amount, url) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
@@ -113,18 +100,13 @@ const mailService = {
 				url,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist who has not paid the plan
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist who has not paid the plan
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has not paid the plan
+	 */ 
 	async sendPaymentFailed(user, psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
@@ -140,18 +122,14 @@ const mailService = {
 				psy_name: psychologist.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist informing him/her that you have made a request for withdrawal from the platform.
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request 
+	 * @param {String} total - The total amount of the withdrawal request
+	 * @param {String} date - The date of the withdrawal request
+	 */
 	async sendPaymentRequest(psy, total, date) {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
@@ -168,18 +146,14 @@ const mailService = {
 				date: date,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist informing him/her that the withdrawal request has been completed.
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
+	 * @param {String} total - The total amount of the withdrawal request
+	 * @param {String} date - The date of the withdrawal request
+	 */
 	async sendCompletePaymentRequest(psy, total, date) {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
@@ -196,18 +170,13 @@ const mailService = {
 				date: date,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description sends an email to the user who has completed an evaluation to a psychologist.
+	 * @param {Object} user - A user object from the database, corresponding to the user who has completed an evaluation
+	 * @param {Object} psy - - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 */
 	async sendAddEvaluation(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
@@ -223,18 +192,13 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description sends an e-mail to the user who has passed an evaluation to a psychologist
+	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 */
 	async sendApproveEvaluationToUser(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
@@ -250,18 +214,13 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
+	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 */
 	async sendApproveEvaluationToPsy(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
@@ -277,18 +236,13 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
+	/**
+	 * @description send an email to the psychologist who has refused an evaluation
+	 * @param {Object} user - A user object of the database, corresponding to the user who has made the evaluation
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 */
 	async sendRefuseEvaluation(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
@@ -304,17 +258,7 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		return new Promise((resolve, reject) => {
-			sgMail.send(dataPayload, function(error, body) {
-				if (error) {
-					reject(error);
-					logInfo(error);
-				} else {
-					resolve(body);
-					logInfo(body);
-				}
-			});
-		});
+		sendMails(dataPayload);
 	},
 };
 
