@@ -15,7 +15,7 @@
 				<a
 					style="text-decoration: none"
 					class="primary--text"
-					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
+					href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1?autoload=1&app_absent=0"
 					target="_blank"
 				>
 					Contáctanos
