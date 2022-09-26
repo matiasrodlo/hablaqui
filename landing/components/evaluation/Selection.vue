@@ -1,12 +1,12 @@
 <template>
 	<v-container fluid style="max-width: 1200px">
 		<v-row align="center" justify="center">
-			<v-col cols="12">
-				<div class="text-h5 text-md-h4 font-weight-bold text-center">
-					Conoce a los especialistas
+			<v-col cols="12" style="padding: 30px">
+				<div class="text-h6 text-md-h5 font-weight-bold text-center">
+					Especialistas recomendados
 				</div>
-				<div class="text-center">
-					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
+				<div class="text-center" style="padding: 10px">
+					Hemos seleccionado aquellos que mejor encajan con sus preferencias
 				</div>
 			</v-col>
 		</v-row>
@@ -211,14 +211,11 @@
 		</v-row>
 		<v-row>
 			<v-col cols="12" class="font-weight-regular mt-4 mb-10 text-center">
-				¿No estás satisfecho con estas opciones?
+				¿Desea cambiar sus preferencias?
 				<v-btn text class="primary--text px-0 mx-1" @click="resetMatch">
-					Buscar nuevamente.
+					Realizar evaluación
 				</v-btn>
-				<div>
-					No puede volver a elegir a estos terapeutas si solicita nuevos partidos. ¿No
-					estás satisfecho con estas opciones?
-				</div>
+				<div>Puede no encontrar nuevamente estos especialista si realiza la evaluación</div>
 			</v-col>
 		</v-row>
 	</v-container>
