@@ -1,5 +1,4 @@
-import Psychologist from '../models/psychologist';
-import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
