@@ -9,14 +9,13 @@
 			<div
 				v-show="!matchedPsychologists.length && !dialogPrecharge"
 				class="primary white--text text-center"
-				style="position: relative; padding: 100px 0; height: 500px"
+				style="position: relative; padding: 100px; height: 500px"
 			>
-				<div class="title text-h5 text-sm-h4 font-weight-bold mb-10">
-					Encuentra a tu especialista
+				<div class="title text-h6 text-sm-h4 font-weight-bold mb-5">
+					Encuentre su especialista ideal
 				</div>
-				<div class="d-flex justify-center text-h6 mb-12 mx-auto" style="max-width: 800px">
-					Te ayudamos a encontrar al psicólogo que necesitas, solo responde las siguientes
-					preguntas. ¡Queremos conocerte!
+				<div class="d-flex justify-center text-h7 mb-12 mx-auto" style="max-width: 800px">
+					Responda las siguientes preguntas y nosotros hacemos el resto
 				</div>
 				<div>
 					<v-container class="centerCard" fluid style="max-width: 1080px">
@@ -27,7 +26,7 @@
 									<v-stepper-items>
 										<v-stepper-content step="0">
 											<div class="primary--text font-weight-bold title">
-												¿Cuál es tu género?
+												¿Cuál es su género?
 											</div>
 											<v-btn
 												:color="gender === 'female' ? 'primary' : '#BDBDBD'"
@@ -103,10 +102,8 @@
 
 										<v-stepper-content step="1">
 											<div class="primary--text font-weight-bold title">
-												¿En qué rango de edad <br />
-												<span>te encuentras?</span>
+												¿En qué rango de edad se encuentra?<br />
 											</div>
-
 											<v-btn
 												:color="age === '18-25' ? 'primary' : '#BDBDBD'"
 												:outlined="age !== '18-25'"
@@ -121,7 +118,7 @@
 													}
 												"
 											>
-												18 -25
+												18-25
 											</v-btn>
 
 											<v-btn
@@ -181,7 +178,7 @@
 
 										<v-stepper-content step="2">
 											<div class="primary--text font-weight-bold title">
-												¿Es tu primera vez en terapia?
+												¿Primera vez hablando con un psicólogo?
 											</div>
 
 											<v-btn
@@ -228,9 +225,9 @@
 
 										<v-stepper-content step="3">
 											<div class="primary--text font-weight-bold title">
-												¿En qué temas te gustaría trabajar? <br />
+												¿En qué temas le gustaría trabajar? <br />
 												<span class="title font-weight-bold">
-													Selecciona hasta 3 opciones.
+													Seleccione hasta 3 opciones
 												</span>
 											</div>
 											<v-row>
@@ -286,8 +283,7 @@
 										</v-stepper-content>
 										<v-stepper-content step="4">
 											<div class="primary--text font-weight-bold title">
-												¿Buscas algún enfoque terapéutico <br />
-												<span>en específico?</span>
+												¿Cuales son sus expectativas sobre el proceso?
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -307,10 +303,7 @@
 													}
 												"
 											>
-												Quiero que las sesiones sean estructuradas
-												definiendo metas a cumplir. Me gustaría que mi
-												psicólogo/a tome un rol activo y me deje tareas
-												semanales.
+												Sesiones estructuradas con metas y tareas semanales
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -330,10 +323,7 @@
 													}
 												"
 											>
-												Quiero que mi psicólogo conozca diferentes modelos
-												de intervención y de acuerdo a mis necesidades me
-												brinde diferentes actividades o herramientas para
-												ponerlas en práctica.
+												Deseo conocer herramientas para ponerlas en práctica
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -353,10 +343,8 @@
 													}
 												"
 											>
-												Quiero que sea un proceso activo donde aprenda a
-												relacionarme con mis pensamientos, emociones y
-												sensaciones fisicas de una forma distinta en la cual
-												no me impida desarrollar la vida que quiero vivir.
+												Aprender a relacionarme con mis pensamientos y
+												emociones
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -376,10 +364,8 @@
 													}
 												"
 											>
-												Quiero que las sesiones sean conversacionales, donde
-												pueda platicar cómo me siento y que mi psicólogo me
-												ayude a explorar cómo mis experiencias pasadas
-												influyen en mi presente.
+												Conversar y aprender observando mis experiencias
+												pasadas
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -399,10 +385,7 @@
 													}
 												"
 											>
-												Quiero que a través de la reflexión, mi psicólogo me
-												ayude a conocer el origen de mis emociones y a
-												encontrar un significado personal, contactando con
-												aquellas áreas que tengo que sanar.
+												Reflexionar y conocer el origen de mis emociones
 											</div>
 											<div
 												class="pa-2 my-4"
@@ -422,10 +405,8 @@
 													}
 												"
 											>
-												Quiero entender mi forma de interactuar con los
-												demás para mejorar mis relaciones interpersonales,
-												conociendo cómo mi entorno influye en mi conducta y
-												en las distintas áreas de mi vida.
+												Entender mi forma de interactuar y mejorar mis
+												relaciones
 											</div>
 											<v-btn text color="primary" @click="step = 3">
 												Atras
@@ -433,8 +414,8 @@
 										</v-stepper-content>
 										<v-stepper-content step="5">
 											<div class="primary--text font-weight-bold title">
-												¿Con qué género te sientes más cómodo <br />
-												<span>compartiendo lo que te sucede?</span>
+												¿Con qué género se siente más cómodo <br />
+												<span>compartiendo lo que le sucede?</span>
 											</div>
 
 											<v-btn
@@ -577,11 +558,7 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="
-																				ma-1
-																				caption
-																				text-capitalize
-																			"
+																			class="ma-1 caption text-capitalize"
 																		>
 																			{{ tag }};
 																		</span>
@@ -634,10 +611,7 @@
 																		<span :key="k">
 																			<span
 																				v-if="k < 5"
-																				class="
-																					ma-1
-																					text-capitalize
-																				"
+																				class="ma-1 text-capitalize"
 																			>
 																				{{ tag }};
 																			</span>
