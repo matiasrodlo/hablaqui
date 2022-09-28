@@ -491,6 +491,83 @@ const getTransactions = async user => {
 	});
 };
 
+const getFormattedSessionsForMatch = async idPsychologist => {
+	let sessions = [];
+	// obtenemos el psicologo
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'_id schedule preferences inmediateAttention'
+	);
+	// creamos un array con la cantidad de dias
+	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
+		psychologist: idPsychologist,
+	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	psySessions = psySessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
+	// Formato de array debe ser [date, date, ...date]
+	const daySessions = psySessions
+		.flatMap(item => {
+			return item.plan.flatMap(plan => {
+				return plan.session.length
+					? plan.session.map(session => session.date)
+					: [];
+			});
+		})
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
+	let minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
+
+	sessions = length.map(el => {
+		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
+
+		return {
+			id: el,
+			value: day,
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			text: moment(day),
+			available: hours.filter(hour => {
+				return (
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
+					formattedSchedule(psychologist.schedule, day, hour) &&
+					!daySessions.some(
+						date =>
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								moment(day).format('L') &&
+							hour ===
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
+	return sessions;
+};
+
 //type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
 const getFormattedSessions = async (idPsychologist, type) => {
@@ -716,23 +793,49 @@ const formattedSchedule = (schedule, day, hour) => {
 	return validHour;
 };
 
-const ponderationMatch = async matchedList => {
-	// Disponibilidad en los proximos 3 días
+const ponderationMatch = async (matchedList, payload) => {
 	matchedList.forEach(psy => {
-		let sessions = getAllSessionsFunction(psy);
-		// Comprobar que tenga disponibilidad en los proximos 3 días
-		sessions.forEach(session => {
-			session.plan.session.forEach(daySession => {
+		// Se le asigna un puntaje según la cantidad de coincidencias
+		if (psy.specialties.length == payload.themes.length) {
+			psy.points += 5;
+		} else if (psy.specialties.length == payload.themes.length - 1) {
+			psy.points += 4;
+		} else {
+			psy.points += 3;
+		}
+		// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
+		const dias = getFormattedSessionsForMatch(psy._id);
+		for (let i = 0; i < 3; i++) {
+			// Verifica si la hora es en la mañana, tarde o noche
+			for (let j = 0; j < 3; j++) {
+				// Verifica si el día está disponible
 				if (
-					!moment(daySession.date).isBetween(
-						moment(),
-						moment().add(3, 'days')
-					)
+					dias[i].available[j].isBetween(
+						moment('06:00', 'HH:mm'),
+						moment('12:59', 'HH:mm')
+					) &&
+					payload.schedule == 'mañana'
 				) {
-					//matchedList.pop(psy);
+					psy.points += 1;
+				} else if (
+					dias[i].available[j].isBetween(
+						moment('13:00', 'HH:mm'),
+						moment('15:59', 'HH:mm')
+					) &&
+					payload.schedule == 'mediodia'
+				) {
+					psy.points += 1;
+				} else if (
+					dias[i].available[j].isBetween(
+						moment('16:00', 'HH:mm'),
+						moment('23:00', 'HH:mm')
+					) &&
+					payload.schedule == 'tarde'
+				) {
+					psy.points += 1;
 				}
-			});
-		});
+			}
+		}
 	});
 
 	// Se ordena el arreglo por puntuación manual del psicologo
@@ -743,24 +846,21 @@ const ponderationMatch = async matchedList => {
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
-	let specialties = payload.themes;
-	while (specialties.length != 0 || matchedPsychologists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedPsychologists = await Psychologist.find({
-				models: payload.model,
-				isTrans: true,
-				specialties: specialties,
-			});
-		} else {
-			matchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					$in: ['male', 'female', 'transgender'],
-				},
-				models: payload.model,
-				specialties: specialties,
-			});
-		}
-		specialties.pop();
+
+	if (payload.gender == 'transgender') {
+		matchedPsychologists = await Psychologist.find({
+			models: payload.model,
+			isTrans: true,
+			specialties: { $in: payload.themes },
+		});
+	} else {
+		matchedPsychologists = await Psychologist.find({
+			gender: payload.gender || {
+				$in: ['male', 'female', 'transgender'],
+			},
+			models: payload.model,
+			specialties: { $in: payload.themes },
+		});
 	}
 
 	if (matchedPsychologists.length == 0) {
@@ -778,6 +878,7 @@ const match = async body => {
 				specialties: { $in: payload.themes },
 			});
 		}
+
 		ponderationMatch(newMatchedPsychologists);
 
 		return okResponse('Psicologos encontrados', {
@@ -786,6 +887,7 @@ const match = async body => {
 		});
 	} else {
 		ponderationMatch(matchedPsychologists);
+
 		return okResponse('psicologos encontrados', {
 			matchedPsychologists,
 			perfectMatch: true,
