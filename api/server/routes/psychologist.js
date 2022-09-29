@@ -146,7 +146,7 @@ psychologistsRouter.put(
  */
 psychologistsRouter.post(
 	'/psychologists/match',
-	//[passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	psychologistsController.match
 );
 

@@ -794,58 +794,65 @@ const formattedSchedule = (schedule, day, hour) => {
 };
 
 const ponderationMatch = async (matchedList, payload) => {
-	matchedList.forEach(psy => {
-		// Se le asigna un puntaje según la cantidad de coincidencias
-		if (psy.specialties.length == payload.themes.length) {
-			psy.points += 5;
-		} else if (psy.specialties.length == payload.themes.length - 1) {
-			psy.points += 4;
-		} else {
-			psy.points += 3;
-		}
-		// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
-		const dias = getFormattedSessionsForMatch(psy._id);
-		for (let i = 0; i < 3; i++) {
-			// Verifica si la hora es en la mañana, tarde o noche
-			for (let j = 0; j < 3; j++) {
-				// Verifica si el día está disponible
-				if (
-					dias[i].available[j].isBetween(
-						moment('06:00', 'HH:mm'),
-						moment('12:59', 'HH:mm')
-					) &&
-					payload.schedule == 'mañana'
-				) {
-					psy.points += 1;
-				} else if (
-					dias[i].available[j].isBetween(
-						moment('13:00', 'HH:mm'),
-						moment('15:59', 'HH:mm')
-					) &&
-					payload.schedule == 'mediodia'
-				) {
-					psy.points += 1;
-				} else if (
-					dias[i].available[j].isBetween(
-						moment('16:00', 'HH:mm'),
-						moment('23:00', 'HH:mm')
-					) &&
-					payload.schedule == 'tarde'
-				) {
-					psy.points += 1;
-				}
+	let newMatchedList = await Promise.all(
+		matchedList.map(async psy => {
+			let points = psy.points;
+			// Se le asigna un puntaje según la cantidad de coincidencias (*)
+			if (psy.specialties.length == payload.themes.length) {
+				points += 3;
+			} else if (psy.specialties.length == payload.themes.length - 1) {
+				points += 2;
+			} else {
+				points += 1;
 			}
-		}
-	});
-
+			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
+			const dias = await getFormattedSessionsForMatch(psy._id);
+			for (let i = 0; i < 3; i++) {
+				// Verifica si la hora es en la mañana, tarde o noche
+				dias[i].available.forEach(hora => {
+					// Verifica si el día está disponible
+					if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('06:00', 'HH:mm'),
+							moment('12:59', 'HH:mm')
+						) &&
+						payload.schedule == 'morning'
+					) {
+						points += 10;
+					} else if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('13:00', 'HH:mm'),
+							moment('15:59', 'HH:mm')
+						) &&
+						payload.schedule == 'midday'
+					) {
+						points += 10;
+					} else if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('16:00', 'HH:mm'),
+							moment('23:00', 'HH:mm')
+						) &&
+						payload.schedule == 'afternoon'
+					) {
+						points += 10;
+					}
+				});
+			}
+			// De documento de mongo se pasa a un formato de objeto JSON
+			let psychologist = JSON.stringify(psy);
+			psychologist = JSON.parse(psychologist);
+			return { ...psychologist, points };
+		})
+	);
 	// Se ordena el arreglo por puntuación manual del psicologo
-	matchedList = matchedList.sort((a, b) => b.points - a.points);
-	return matchedList;
+	newMatchedList = newMatchedList.sort((a, b) => b.points - a.points);
+	return newMatchedList;
 };
 
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
+	let perfectMatch = true;
 
 	if (payload.gender == 'transgender') {
 		matchedPsychologists = await Psychologist.find({
@@ -879,20 +886,17 @@ const match = async body => {
 			});
 		}
 
-		ponderationMatch(newMatchedPsychologists);
-
-		return okResponse('Psicologos encontrados', {
-			matchedPsychologists: newMatchedPsychologists,
-			perfectMatch: false,
-		});
-	} else {
-		ponderationMatch(matchedPsychologists);
-
-		return okResponse('psicologos encontrados', {
-			matchedPsychologists,
-			perfectMatch: true,
-		});
+		matchedPsychologists = newMatchedPsychologists;
+		perfectMatch = false;
 	}
+	matchedPsychologists = await ponderationMatch(
+		matchedPsychologists,
+		payload
+	);
+	return okResponse('psicologos encontrados', {
+		matchedPsychologists,
+		perfectMatch,
+	});
 };
 
 /**
