@@ -815,6 +815,7 @@ export default {
 				gender,
 				themes: this.themes,
 				model: this.focus,
+				schedule: "morning",
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
