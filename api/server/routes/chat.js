@@ -64,6 +64,7 @@ chatRouter.post(
 
 /**
  * Ya no deberia de existir.
+ * No se usa
  */
 chatRouter.post(
 	'/chat/create-report/:psychologistId/:userId',
