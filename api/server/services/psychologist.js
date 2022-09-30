@@ -797,9 +797,9 @@ const ponderationMatch = async (matchedList, payload) => {
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			let points = psy.points;
-			// Se le asigna un puntaje según la cantidad de coincidencias (*)
+			// Se le asigna un puntaje según la cantidad de coincidencias
 			for (let j = 0; j < 3; j++) {
-				if (psy.preferences[j] === payload.preferences[j]) points += 1;
+				if (psy.specialties[j] === payload.themes[j]) points += 1;
 			}
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
 			const dias = await getFormattedSessionsForMatch(psy._id);
