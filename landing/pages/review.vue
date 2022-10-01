@@ -2,7 +2,7 @@
 	<div>
 		<v-toolbar height="100px" color="white" class="shadow">
 			<v-spacer></v-spacer>
-			<nuxt-link to="/">
+			<a href="https://hablaqui.cl/">
 				<v-img
 					id="logo-drawer"
 					tabindex="0"
@@ -13,7 +13,7 @@
 					alt="hablaqui Logo"
 					accesskey="h"
 				/>
-			</nuxt-link>
+			</a>
 			<v-spacer></v-spacer>
 		</v-toolbar>
 		<v-overlay :value="overlay">
