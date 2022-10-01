@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!loading" style="height: 100vh">
 		<div class="ma-4 d-flex justify-space-between align-center">
-			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+			<a id="logo-appbar" tabindex="0" href="https://hablaqui.cl/" exact accesskey="h">
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
@@ -9,7 +9,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
-			</nuxt-link>
+			</a>
 			<span class="hidden-sm-and-down text--secondary text-h6">
 				¿Necesitas ayuda?
 				<a

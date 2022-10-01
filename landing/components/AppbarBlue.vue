@@ -2,7 +2,7 @@
 	<div>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
 			<v-list-item>
-				<nuxt-link to="/" style="width: 100%">
+				<a href="https://hablaqui.cl/" style="width: 100%">
 					<v-img
 						id="logo-blue-drawer"
 						accesskey="h"
@@ -11,7 +11,7 @@
 						:src="`https://cdn.hablaqui.cl/static/logo.png`"
 						alt="hablaqui logo"
 					/>
-				</nuxt-link>
+				</a>
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
@@ -36,7 +36,7 @@
 			</svg>
 		</div>
 		<v-app-bar absolute flat height="115" color="transparent">
-			<nuxt-link to="/" exact>
+			<a href="https://hablaqui.cl/" exact>
 				<v-img
 					id="logo-blue-appbar"
 					accesskey="h"
@@ -46,7 +46,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_white.png`"
 					contain
 				/>
-			</nuxt-link>
+			</a>
 			<v-spacer></v-spacer>
 			<v-btn
 				id="psi-appbar-blue"
