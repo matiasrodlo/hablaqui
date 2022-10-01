@@ -46,14 +46,14 @@ export default {
 				}));
 
 			// generate routes comunas
-			const response = await axios.get(`${baseApi}/comunas.json`);
+			/* const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
 				route: `/psicologos/${el.comuna.slug}`,
 				payload: el.comuna,
 			}));
 
-			const routes = psicologos.concat(comunas);
-			callback(null, routes);
+			const routes = psicologos.concat(comunas); */
+			callback(null, psicologos);
 		},
 	},
 	loading: {
@@ -83,7 +83,7 @@ export default {
 				hid: 'description',
 				name: 'description',
 				content:
-									'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
+					'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
 			},
 			{
 				hid: 'twitter:card',
