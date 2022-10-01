@@ -45,11 +45,29 @@
 				</v-toolbar>
 				<v-card-text class="mt-3">
 					<v-row>
-						<v-col cols="6">
-							<v-data-table :headers="headers" :items="sessions" />
+						<v-col cols="12">
+							<v-data-table
+								:headers="headers"
+								:items="sessions"
+								@click:row="clickSession"
+							/>
 						</v-col>
 					</v-row>
 				</v-card-text>
+				<v-row class="ma-4">
+					<v-col cols="2">
+						<v-subheader>Fecha de sesión: </v-subheader>
+					</v-col>
+
+					<v-col cols="4">
+						<v-text-field
+							v-model="sessionDate"
+							type="datetime-local"
+							label="Fecha de sesión"
+						/>
+						<v-btn :disabled="!selectedSession" @click="clicked"> Guardar </v-btn>
+					</v-col>
+				</v-row>
 			</v-card>
 		</v-dialog>
 	</v-container>
@@ -57,6 +75,8 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
+moment.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Panel',
@@ -69,9 +89,12 @@ export default {
 		return {
 			psychologists: [],
 			clients: [],
+			selectedClient: {},
 			loading: true,
 			dialog: false,
 			sessions: [],
+			selectedSession: null,
+			sessionDate: '',
 			headers: [
 				{
 					text: 'Fecha de sesión',
@@ -136,8 +159,17 @@ export default {
 		},
 		getSession(client) {
 			this.dialog = true;
+			this.selectedClient = client;
 			const plan = client.plan;
 			this.sessions = plan ? plan.session : [];
+		},
+		clickSession(value) {
+			this.selectedSession = value;
+			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDThh:mm');
+		},
+		clicked() {
+			const newDate = moment(this.sessionDate, 'yyyy-MM-DDThh:mm').format('MM/DD/YYYY HH:mm');
+			/* Llamada al endpoint */
 		},
 	},
 };
