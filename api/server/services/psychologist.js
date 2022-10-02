@@ -1253,6 +1253,42 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	});
 };
 
+const rescheduleSession = async (sessionsId, planId, sessionId, date) => {
+	// Se da formato a la fecha
+	date = moment(date).format('MM/DD/YYYY HH:mm');
+	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
+	const sessions = await Sessions.findOneAndUpdate(
+		{
+			_id: sessionsId,
+			'plan._id': planId,
+			'plan.session._id': sessionId,
+		},
+		{
+			$set: {
+				'plan.$[].session.$[session].date': date,
+			},
+		},
+		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
+	).populate('psychologist user');
+	// Se verifica si el plan sigue vigente
+	sessions.plan.forEach(plan => {
+		for (let i = 0; i < plan.session.length; i++) {
+			if (
+				plan.session[i]._id.toString() === sessionId.toString() &&
+				moment().isAfter(plan.expiration) &&
+				plan._id.toString() === planId.toString()
+			) {
+				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
+				plan.expiration = moment(date, 'MM/DD/YYYY HH:mm')
+					.add(50, 'minutes')
+					.format();
+			}
+		}
+	});
+	await sessions.save();
+	return okResponse('Hora actualizada', { sessions });
+};
+
 const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 	let session = sessions.plan
 		.flatMap(plan => {
@@ -2542,6 +2578,7 @@ const psychologistsService = {
 	paymentsInfo,
 	register,
 	reschedule,
+	rescheduleSession,
 	searchClients,
 	setPrice,
 	setSchedule,

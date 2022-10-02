@@ -146,6 +146,20 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando la cita');
 		}
 	},
+	async resheduleSession(req, res) {
+		try {
+			const { sessionsId, planId, sessionId, date } = req.body;
+			const { data, code } = await psychologistsService.rescheduleSession(
+				sessionsId,
+				planId,
+				sessionId,
+				date
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando la cita');
+		}
+	},
 	async getByUsername(req, res) {
 		try {
 			const { username } = req.params;
