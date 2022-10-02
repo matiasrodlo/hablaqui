@@ -10,39 +10,35 @@ import { actionInfo } from '../utils/logger/infoMessages'; // recibe informació
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
 import mailService from '../services/mail'; // mail.js contiene la definición de los servicios de envío de correo
 
-// estaba pensando cambiar los var por let. Además me llama la ateción que se importe de una manera distinta que en chat.js
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
 var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
 
 const generateJwt = user => {
-	// genera el token de autenticación
+	// Se crea el payload para el token, se genera con la clave secreta y el payload, se le asigna la expiración y se devuelve
 	const payload = {
-		// el payload es el objeto que se codifica en el token
-		username: user.name, // el nombre de usuario
-		sub: user._id, // el id del usuario
+		username: user.name,
+		sub: user._id,
 	};
 
 	return sign(payload, process.env.JWT_SECRET, {
-		// sign es una función de jsonwebtoken que genera el token, JTM_SECRET es la clave secreta
-		expiresIn: process.env.JWT_EXPIRATION, // 30d
+		expiresIn: process.env.JWT_EXPIRATION,
 	});
 };
-// async es una función asíncrona, asincrona significa que no se ejecuta en el orden en que se escribe
+
 const login = async user => {
-	// login es una función que recibe un usuario y devuelve un objeto con la información del usuario y el token de autenticación
+	// Hace el trackeo de la acción de login con segment
 	if (
-		process.env.API_URL.includes('hablaqui.cl') || // si la url de la api incluye hablaqui.cl o si la variable de entorno DEBUG_ANALYTICS es true
-		process.env.DEBUG_ANALYTICS === 'true' // Debug_analytics es una variable de entorno que se usa para debuggear
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.track({
-			// track es una función de analytics-node que envía información a segment, segment es una plataforma de analiticas
-			userId: user._id.toString(), // el id del usuario
-			event: 'login', // el evento que se está enviando
+			userId: user._id.toString(),
+			event: 'login',
 			properties: {
-				name: user.name, // el nombre del usuario
-				lastName: user.lastName, // el apellido del usuario
-				email: user.email, // el correo del usuario
-				role: user.role, // el rol del usuario
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				role: user.role,
 			},
 		});
 	}
@@ -51,142 +47,128 @@ const login = async user => {
 	// if (user.role === 'user' && !user.isVerified)
 	// 	return conflictResponse('Verifica tu correo');
 	return okResponse(`Bienvenido ${user.name}`, {
-		// okResponse es una función que genera una respuesta http con código 200
-		token: generateJwt(user), // generateJwt es una función que genera el token de autenticación
-		user: await generateUser(user), // generateUser es una función que genera el objeto user
+		token: generateJwt(user),
+		user: await generateUser(user),
 	});
 };
 
 const logout = async user => {
+	// Hace el trackeo de la acción de logout con segment
 	if (
-		process.env.API_URL.includes('hablaqui.cl') || // si la url de la api incluye hablaqui.cl o si la variable de entorno DEBUG_ANALYTICS es true
-		process.env.DEBUG_ANALYTICS === 'true' // Debug_analytics es una variable de entorno que se usa para debuggear
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.track({
-			// track es una función de analytics-node que envía información a segment, segment es una plataforma de analiticas
-			userId: user._id.toString(), // el id del usuario
-			event: 'logout', // el evento que se está enviando
+			userId: user._id.toString(),
+			event: 'logout',
 			properties: {
-				// las propiedades del evento
-				name: user.name, // el nombre del usuario
-				lastName: user.lastName, // el apellido del usuario
-				email: user.email, // el correo del usuario
-				role: user.role, // el rol del usuario
+				name: user.name,
+				lastName: user.lastName,
+				email: user.email,
+				role: user.role,
 			},
 		});
 	}
-	return okResponse('Sesión cerrada exitosamente'); // okResponse es una función que genera una respuesta http con código 200
+	return okResponse('Sesión cerrada exitosamente');
 };
 
 const getSessions = async user => {
-	// getSessions es una función que devuelve las sesiones de un usuario
+	// Verifica el rol del usuario y devuelve las sesiones correspondientes
 	if (user.role === 'user') {
-		// si el rol del usuario es user
-		return await Sessions.find({ user: user._id }); // devuelve las sesiones del usuario, Sessions es el modelo de sesión siendo user el id del usuario
+		return await Sessions.find({ user: user._id });
 	}
 
 	if (user.role === 'psychologist')
 		return await Sessions.find({ psychologist: user.psychologist });
 
-	return null; // si el rol del usuario no es user o psychologist devuelve null
+	return null;
 };
 
 const generateUser = async user => {
-	// generateUser es una función que genera el objeto user
+	// Genera el objeto de usuario que se devuelve en las respuestas
 	return {
-		_id: user._id, // el id del usuario
-		avatar: user.avatar, // el avatar del usuario
-		avatarThumbnail: user.avatarThumbnail, // el avatarThumbnail del usuario, el avatarThumbnail es una versión más pequeña del avatar
-		birthDate: user.birthDate, // la fecha de nacimiento del usuario
-		direction: user.direction, // la dirección del usuario
-		email: user.email, // el correo del usuario
-		finishedSessions: user.finishedSessions, // las sesiones finalizadas del usuario
-		google: user.google, // si el usuario se registró con google
-		gender: user.gender, // el género del usuario
-		googleId: user.googleId, // el id de google del usuario
-		hasPaid: user.hasPaid, // si el usuario ha pagado
-		inviteCode: user.inviteCode, // el código de invitación del usuario
-		lastName: user.lastName, // el apellido del usuario
-		name: user.name, // el nombre del usuario
+		_id: user._id,
+		avatar: user.avatar,
+		avatarThumbnail: user.avatarThumbnail,
+		birthDate: user.birthDate,
+		direction: user.direction,
+		email: user.email,
+		finishedSessions: user.finishedSessions,
+		google: user.google,
+		gender: user.gender,
+		googleId: user.googleId,
+		hasPaid: user.hasPaid,
+		inviteCode: user.inviteCode,
+		lastName: user.lastName,
+		name: user.name,
 		onboarding: user.onboarding,
-		phone: user.phone, // el teléfono del usuario
-		plan: user.plan, // el plan del usuario
-		psychologist: user.psychologist, // el psicólogo del usuario
-		role: user.role, // el rol del usuario
-		rut: user.rut, // el rut del usuario
-		sessions: await getSessions(user), // las sesiones del usuario
-		state: user.state, // el estado del usuario
-		timeZone: user.timeZone, // la zona horaria del usuario
-		isVerified: user.isVerified, // si el usuario está verificado
+		phone: user.phone,
+		plan: user.plan,
+		psychologist: user.psychologist,
+		role: user.role,
+		rut: user.rut,
+		sessions: await getSessions(user),
+		state: user.state,
+		timeZone: user.timeZone,
+		isVerified: user.isVerified,
 	};
 };
 
 const register = async payload => {
-	// register es una función que registra un usuario
+	// Verifica si el usuario ya existe, si no crea un nuevo usuario
 	if (await User.exists({ email: payload.email })) {
-		// si existe un usuario con el correo del payload
-		return conflictResponse('Correo electronico en uso'); // conflictResponse es una función que genera una respuesta http con código 409
+		return conflictResponse('Correo electronico en uso');
 	}
 	if (payload.role === 'psychologist')
 		if (await User.exists({ rut: payload.rut }))
-			// si el rol del payload es psychologist
-			// si existe un usuario con el rut del payload
-			return conflictResponse('Rut en uso'); // conflictResponse es una función que genera una respuesta http con código 409
+			return conflictResponse('Rut en uso');
 	const newUser = {
-		// newUser es un objeto que contiene los datos del usuario
-		...payload, // los datos del payload
-		isInvited: false, // si el usuario es invitado
-		email: payload.email.toLowerCase(), // el correo del usuario en minúsculas
-		password: bcrypt.hashSync(payload.password, 10), // la contraseña del usuario encriptada
+		...payload,
+		isInvited: false,
+		email: payload.email.toLowerCase(),
+		password: bcrypt.hashSync(payload.password, 10),
 	};
-	const user = await User.create(newUser); // crea un usuario con los datos de newUser, User es el modelo de usuario
+	const user = await User.create(newUser);
 	// Enviar correo de verificación
-	const token = generateJwt(user); // generateJwt es una función que genera el token de autenticación
-	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${user._id}&token=${token}`; // la url de verificación
+	const token = generateJwt(user);
+	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${user._id}&token=${token}`;
 
 	if (process.env.NODE_ENV === 'development')
-		// si el entorno es development
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
-	// logInfo es una función que imprime en consola la información del usuario y la url de verificación
-	else await mailService.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
+	else await mailService.sendVerifyEmail(user, verifyurl);
 
 	// Segment identification
 	if (
-		process.env.API_URL.includes('hablaqui.cl') || // si la url de la api incluye hablaqui.cl
-		process.env.DEBUG_ANALYTICS === 'true' // o si el entorno de debug de analytics es true
+		process.env.API_URL.includes('hablaqui.cl') ||
+		process.env.DEBUG_ANALYTICS === 'true'
 	) {
 		analytics.identify({
-			// identifica al usuario en segment, segment es una herramienta de análisis de datos
-			userId: user._id.toString(), // el id del usuario
+			userId: user._id.toString(),
 			traits: {
-				// las propiedades del usuario
-				name: user.name, // el nombre del usuario
-				email: user.email, // el correo del usuario
-				type: user.role, // el rol del usuario
+				name: user.name,
+				email: user.email,
+				type: user.role,
 			},
 		});
 		analytics.track({
-			// registra el evento de registro en segment
-			userId: user._id.toString(), // el id del usuario
-			event: 'organic-user-signup', // el evento de registro
+			userId: user._id.toString(),
+			event: 'organic-user-signup',
 			properties: {
-				// las propiedades del evento
-				name: user.name, // el nombre del usuario
-				email: user.email, // el correo del usuario
-				type: user.role, // el rol del usuario
+				name: user.name,
+				email: user.email,
+				type: user.role,
 			},
 		});
 	}
 
-	logInfo(actionInfo(user.email, 'Sé registro exitosamente')); // logInfo es una función que imprime en consola la información del usuario y el mensaje de registro exitoso
+	// Se envia el correo de bienvenida
+	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
-		// si el rol del usuario es user
-		await mailService.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
+		await mailService.sendWelcomeNewUser(user);
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
-		// okResponse es una función que genera una respuesta http con código 200
-		user: await generateUser(user), // el usuario
-		token: generateJwt(user), // el token de autenticación
+		user: await generateUser(user),
+		token: generateJwt(user),
 	});
 };
 
@@ -196,77 +178,68 @@ const register = async payload => {
  * @returns string Token
  */
 const generatePasswordRecoverJwt = user => {
-	// generatePasswordRecoverJwt es una función que genera el token de recuperación de contraseña
 	const payload = {
-		// el payload del token
-		username: user.name, // el nombre del usuario
-		sub: user._id, // el id del usuario
+		username: user.name,
+		sub: user._id,
 	};
 
 	return sign(payload, process.env.JWT_SECRET, {
-		// sign es una función de jsonwebtoken que genera el token
-		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION, // la expiración del token
+		expiresIn: process.env.PASSWORD_RECOVERY_JWT_EXPIRATION,
 	});
 };
 
 const getUserByEmail = async email => {
-	// getUserByEmail es una función que obtiene un usuario por su correo
-	return await User.findOne({ email: email }); // User es el modelo de usuario
+	return await User.findOne({ email: email });
 };
 
 const sendPasswordRecover = async email => {
-	// sendPasswordRecover es una función que envía el correo de recuperación de contraseña
-	const user = await getUserByEmail(email); // obtiene el usuario por su correo
+	// Busca el usuario por email y verifica si existe, genera un token y lo envia por correo
+	const user = await getUserByEmail(email);
 	if (!user) {
-		// si no existe el usuario
-		return conflictResponse('Este usuario no existe'); // conflictResponse es una función que genera una respuesta http con código 409
+		return conflictResponse('Este usuario no existe');
 	}
-	const token = generatePasswordRecoverJwt(user); // generatePasswordRecoverJwt es una función que genera el token de recuperación de contraseña
+	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`; // la url de recuperación de contraseña
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
 
-	mailService.sendPasswordRecovery(user, recoveryUrl); // envía el correo de recuperación de contraseña
+	mailService.sendPasswordRecovery(user, recoveryUrl);
 
 	if (process.env.NODE_ENV === 'development')
-		// si el entorno es development
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
-	// logInfo es una función que imprime en consola la información del usuario y la url de recuperación de contraseña
-	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña')); // logInfo es una función que imprime en consola la información del usuario y el mensaje de solicitud de recuperación de contraseña
+	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
 
-	return okResponse('Sé le ha enviado un correo electronico'); // okResponse es una función que genera una respuesta http con código 200
+	return okResponse('Sé le ha enviado un correo electronico');
 };
 
 const changeUserPassword = async (user, newPassword, res) => {
-	// changeUserPassword es una función que cambia la contraseña de un usuario
+	// Cambia la contraseña del usuario
 	try {
-		// intenta
 		await User.findByIdAndUpdate(user._id, {
-			// Encontrar y actualizar el usuario
-			password: bcrypt.hashSync(newPassword, 10), // cambia la contraseña del usuario
+			password: bcrypt.hashSync(newPassword, 10),
 		});
-		logInfo(actionInfo(user.email, 'cambio su contraseña')); // logInfo es una función que imprime en consola la información del usuario y el mensaje de cambio de contraseña
-		res.sendStatus(200); // envía un código 200
+		logInfo(actionInfo(user.email, 'cambio su contraseña'));
+		res.sendStatus(200);
 	} catch (e) {
-		// si ocurre un error
 		/*We handle the possible not found User error*/
-		logError(e); // logError es una función que imprime en consola el error
-		res.sendStatus(404); // envía un código 404
+		logError(e);
+		res.sendStatus(404);
 	}
 };
 
 const changeVerifiedStatus = async id => {
-	// changeVerifiedStatus es una función que cambia el estado de verificación de un usuario
-	const user = await User.findById(id); // obtiene el usuario por su id
+	// Busca el usuario, verifica que exista, cambia el estado de verificación y lo guarda
+	const user = await User.findById(id);
 
-	if (!user) return conflictResponse('Este usuario no existe'); // retorna una respuesta http con código 409 si el usuario no existe
+	if (!user) return conflictResponse('Este usuario no existe');
 
-	user.isVerified = true; // cambia el estado de verificación del usuario a true
-	await user.save(); // guarda el usuario
-	if (user.role === 'user') await mailService.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
+	user.isVerified = true;
+	await user.save();
+	if (user.role === 'user') await mailService.sendWelcomeNewUser(user);
 
 	return okResponse('Cuenta verificada');
 };
 
+/*
 const googleAuthCallback = (req, res) => {
 	// googleAuthCallback es una función que maneja la respuesta de google
 	const frontendUrL = process.env.FRONTEND_URL; // la url del frontend
@@ -275,9 +248,9 @@ const googleAuthCallback = (req, res) => {
 	//La otra forma era enviar un html con js incluido, pero el jwt se quedaba asignado en la ruta de la api.
 	res.redirect(frontendUrL + '/?token=' + jwt); // redirecciona a la url del frontend con el token de autenticación
 };
+*/
 
 const authService = {
-	// authService es un objeto que contiene las funciones de autenticación
 	login,
 	logout,
 	generateJwt,
@@ -289,4 +262,4 @@ const authService = {
 	changeVerifiedStatus,
 };
 
-export default Object.freeze(authService); // exporta authService como un objeto inmutable
+export default Object.freeze(authService);
