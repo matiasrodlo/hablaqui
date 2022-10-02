@@ -127,7 +127,7 @@ const usersService = {
 			totalSessions: ultimoPlan.totalSessions,
 			remainingSessions: ultimoPlan.remainingSessions,
 			tokenToPay: ultimoPlan.tokenToPay,
-			session: ultimoPlan.session,
+			session: [],
 		};
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
