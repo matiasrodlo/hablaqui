@@ -157,6 +157,8 @@ const usersService = {
 			session => Date.parse(session.date) < Date.parse(moment().format())
 		);
 
+		ultimoPlan.remainingSessions = 0;
+
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
 	},
