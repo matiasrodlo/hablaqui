@@ -221,7 +221,7 @@ psychologistsRouter.post(
 /**
  * @description Cambia la fecha de una session específica
  * @method POST
- * @route /api/v1/psychologists/rescheduleSession/
+ * @route /api/v1/dashboard/rescheduleSession/
  * @param {String} body.sessionsId - Id del documento
  * @param {String} body.planId - Id del plan
  * @param {String} body.sessionId - Id de la sesión
