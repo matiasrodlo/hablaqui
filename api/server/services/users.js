@@ -151,7 +151,6 @@ const usersService = {
 			newSession.plan.push(newPlan);
 		}
 
-		await newSession.save();
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
 	},
