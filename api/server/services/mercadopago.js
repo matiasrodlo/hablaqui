@@ -91,8 +91,9 @@ const setPlanFree = async (id, isPsychologist) => {
 			moment(currentPlan.expirationDate).isAfter(moment())
 		) {
 			return okResponse('Tienes un plan premium vigente');
-		} else
-			// Tiene un plan premium pero ya expiro
+		}
+		// Tiene un plan premium pero ya expiro
+		else
 			response.psyPlans = response.psyPlans.map(item => ({
 				...item,
 				planStatus: 'expired',
@@ -189,9 +190,18 @@ const successPay = async params => {
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist
-	await mailServiceSchedule.sendAppConfirmationUser(user, psy, planData.totalPrice);
-	await mailServiceSchedule.sendAppConfirmationPsy(psy, user, planData.totalPrice);
+	await mailServiceSchedule.sendAppConfirmationUser(
+		user,
+		psy,
+		planData.totalPrice
+	);
+	await mailServiceSchedule.sendAppConfirmationPsy(
+		psy,
+		user,
+		planData.totalPrice
+	);
 
+	// --Faltaría indicar estos emails--
 	await mailServiceSchedule.sendScheduleToUser(
 		user,
 		psy,
@@ -270,7 +280,11 @@ const psychologistPay = async (params, query) => {
 			},
 		});
 	}
-	await mailServicePayments.sendPsychologistPay(foundPsychologist, period, pricePaid);
+	await mailServicePayments.sendPsychologistPay(
+		foundPsychologist,
+		period,
+		pricePaid
+	);
 	return okResponse('plan actualizado', { foundPsychologist });
 };
 const customSessionPay = async params => {

@@ -17,7 +17,7 @@ const mailService = {
 	 * @param {String} roomsUrl - A string that contains the URL of the room where the session will take place.
 	 * @param {String} date - A string that contains the date of the session.
 	 */
-    async sendSuccessCustomSessionPaymentUser(user, psy, paid, roomsUrl, date) {
+	async sendSuccessCustomSessionPaymentUser(user, psy, paid, roomsUrl, date) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -44,7 +44,8 @@ const mailService = {
 	 * @param {String} paid - A ID of the payment.
 	 * @param {String} roomsUrl - A string that contains the URL of the room where the session will take place.
 	 * @param {String} date - A string that contains the date of the session.
-	 */ 
+	 */
+
 	async sendSuccessCustomSessionPaymentPsy(user, psy, paid, roomsUrl, date) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
@@ -68,11 +69,11 @@ const mailService = {
 	},
 	/**
 	 * @description Sends an email to the psychologist who has updated the payment account.
-	 * @param {Object} psychologist - A User object from the database, corresponding to the psychologist who has updated the payment account. 
+	 * @param {Object} psychologist - A User object from the database, corresponding to the psychologist who has updated the payment account.
 	 * @param {String} period - A string that contains the period of the payment account.
 	 * @param {String} price - A string that contains the price of the payment account.
 	 */
-    async sendPsychologistPay(psychologist, period, price) {
+	async sendPsychologistPay(psychologist, period, price) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',

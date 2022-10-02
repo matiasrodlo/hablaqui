@@ -9,7 +9,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {
-    /**
+	/**
 	 * @description Send an appointmet purchase confirmation to a user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
@@ -33,7 +33,7 @@ const mailService = {
 		};
 		sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an appointmet purchase confirmation to a psy
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
@@ -62,7 +62,7 @@ const mailService = {
 		sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them. 
+	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them.
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {String} paymentURL - The URL to the payment page
@@ -108,7 +108,7 @@ const mailService = {
 	 * @param {String} value - The value of the appointment
 	 * @param {String} type - The type of appointment
 	 */
-    async sendCustomSessionToPsy(
+	async sendCustomSessionToPsy(
 		user,
 		psychologist,
 		paymentURL,
@@ -137,13 +137,13 @@ const mailService = {
 		};
 		sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Sends an email to the user notifying them that they have successfully rescheduled.
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 */
-    async sendRescheduleToUser(user, psy, sessionDate) {
+	async sendRescheduleToUser(user, psy, sessionDate) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',

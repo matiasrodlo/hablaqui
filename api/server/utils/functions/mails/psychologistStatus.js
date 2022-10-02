@@ -9,7 +9,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {
-    /**
+	/**
 	 * @description Send an internal email about a new psy application
 	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
 	 */
@@ -32,7 +32,7 @@ const mailService = {
 		};
 		sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an email to a psychologist about his/her new application
 	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
 	 */
@@ -55,7 +55,7 @@ const mailService = {
 	},
 	/**
 	 * @description Send an email to the user to evaluate the psychologist.
-	 * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the psychologist 
+	 * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the psychologist
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be evaluated
 	 */
 	async sendEnabledEvaluation(user, psy) {
@@ -78,7 +78,7 @@ const mailService = {
 	},
 	/**
 	 * @description Send an email to the psychologist who must pay the plan.
-	 * @param {Object} user - A user object from the database, corresponding to the psychologist who must pay the plan 
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist who must pay the plan
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who must pay the plan
 	 * @param {String} amount - The amount of the plan
 	 * @param {String} url - The url to pay the plan
@@ -106,7 +106,8 @@ const mailService = {
 	 * @description Send an email to the psychologist who has not paid the plan
 	 * @param {Object} user - A user object from the database, corresponding to the psychologist who has not paid the plan
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has not paid the plan
-	 */ 
+	 */
+
 	async sendPaymentFailed(user, psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
@@ -126,7 +127,7 @@ const mailService = {
 	},
 	/**
 	 * @description Send an email to the psychologist informing him/her that you have made a request for withdrawal from the platform.
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
 	 * @param {String} total - The total amount of the withdrawal request
 	 * @param {String} date - The date of the withdrawal request
 	 */
@@ -196,7 +197,7 @@ const mailService = {
 	},
 	/**
 	 * @description sends an e-mail to the user who has passed an evaluation to a psychologist
-	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation 
+	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
 	 */
 	async sendApproveEvaluationToUser(user, psy) {
@@ -218,7 +219,7 @@ const mailService = {
 	},
 	/**
 	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
-	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation 
+	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
 	 */
 	async sendApproveEvaluationToPsy(user, psy) {

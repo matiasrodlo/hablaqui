@@ -15,7 +15,7 @@ const mailService = {
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that is talking to the user
 	 * @param {String} batch - A batchID corresponding to the batch of the conversation
 	 */
-    async sendChatNotificationToUser(user, psychologist, batch) {
+	async sendChatNotificationToUser(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -40,7 +40,7 @@ const mailService = {
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the user that will be notified
 	 * @param {String} batch - A batchID corresponding to the batch of the conversation
 	 */
-    async sendChatNotificationToPsy(user, psychologist, batch) {
+	async sendChatNotificationToPsy(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
@@ -64,7 +64,7 @@ const mailService = {
 	 * @param {Object} user - A user object from the database, corresponding to the user that will be notified
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that the user has requested a rescheduled session with
 	 */
-    async sendCancelSessionUser(user, psy) {
+	async sendCancelSessionUser(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -83,9 +83,9 @@ const mailService = {
 	},
 	/**
 	 * @description Sends an email to the psychologist reminding him that you have cancelled a private engagement.
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be notified 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be notified
 	 */
-    async sendCancelCommitment(psy) {
+	async sendCancelCommitment(psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
@@ -105,7 +105,7 @@ const mailService = {
 	 * @description Sends an email to the psychologist reminding him/her that you have scheduled a private appointment.
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that will be notified
 	 */
-    async sendCustomSessionCommitment(psychologist) {
+	async sendCustomSessionCommitment(psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
@@ -121,7 +121,7 @@ const mailService = {
 		};
 		sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
@@ -152,7 +152,7 @@ const mailService = {
 		};
 		sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an appointmet reminder to a psychologist about an upcomming session
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
