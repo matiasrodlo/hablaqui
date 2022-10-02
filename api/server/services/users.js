@@ -135,7 +135,7 @@ const usersService = {
 			.subtract(1, 'days')
 			.format();
 
-		// Se eliminan las sesiones del plan antiguo que aun no se han realizado
+		// Se filtran las sesiones del plan antiguo que aun no se han realizado
 		oldSession.plan[oldSession.plan.length - 1].session = oldSession.plan[
 			oldSession.plan.length - 1
 		].session.filter(session => {
