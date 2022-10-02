@@ -9,21 +9,21 @@ const getNextSessions = async () => {
 	Retorna las proximas sesiones de los psicologos.
 	De momento esta función no tiene entradas.
 	*/
-	// Se obtienen las sesiones unido con el psicologo
+	// Se obtienen las sesiones de todos los psicologos
 	let sessions = await Sessions.find().populate('psychologist user');
 
-	// Se filtran las sesiones que no tienen psicologo
+	// Se filtran las sesiones que no tienen psicologo ni usuario
 	sessions = sessions.filter(s => s.user !== null && s.psychologist !== null);
 
-	// Se obtienen los planes que tengan sesiones y se filtran las sesiones que no tienen plan.
+	// Se obtienen el último plan activo con sesiones.
 	const plans = sessions
 		.flatMap(s => {
-			// Se obtiene el plan de la sesion, se verifica que el plan esté pagado y no haya expirado
+			// Se obtiene el último plan de la sesion, se verifica que el plan esté pagado y no haya expirado
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
 				moment(plan.expiration).isAfter(moment());
-			// Devuelve un objeto con la sesion y el plan
+			// Devuelve un objeto con el último plan
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
 				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
@@ -74,11 +74,11 @@ const getSessionsPayment = async (startDate, endDate) => {
 	// Se obtienen las sesiones unido con el psicologo
 	let sessions = await Sessions.find().populate('psychologist user');
 
-	// Se filtran las sesiones que se ha inicializado la variable de psicologo
+	// Se filtran las sesiones que tengan psicologo
 	sessions = sessions.filter(s => !!s.psychologist);
 
 	let flatSession = sessions.flatMap(s => {
-		// Se obtiene el plan de una sesión
+		// Se obtiene el último plan de una sesión
 		const plan = s.plan.pop();
 		return plan.session.flatMap(ss => {
 			// Se deja en un mismo array los datos del psicologo, la sesion y el precio del plan

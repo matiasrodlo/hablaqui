@@ -13,7 +13,7 @@ const startConversation = async (psychologistId, user) => {
 		user: user,
 	});
 	if (!hasChats) {
-		// si no existe un chat con el psicologo y el usuario crea un nuevo chat
+		// si no existe un chat con el psicologo y el usuario, se crea un nuevo chat
 		const newChat = await Chat.create({
 			user: user._id,
 			psychologist: psychologistId,
@@ -24,7 +24,7 @@ const startConversation = async (psychologistId, user) => {
 };
 
 const getMessages = async (user, psy) => {
-	// función para obtener los mensajes de un chat y hace que devuelva del documento de chat el usuario y el psicologo
+	// función para obtener los mensajes de un chat y hace que devuelva del documento de chat del usuario y el psicologo
 	let messages = await Chat.findOne({
 		psychologist: psy,
 		user: user,

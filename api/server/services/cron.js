@@ -216,7 +216,7 @@ const cronService = {
 					const psy = await psychologist.findById(emailInfo.psyRef);
 					try {
 						let batch = await getBatchId();
-						// Se envía el correo electrónico al usuario o psicólogo
+						// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 						if (emailInfo.type === 'reminder-user') {
 							await mailService.sendReminderUser(
 								user,
@@ -429,7 +429,7 @@ const cronService = {
 							},
 						}
 					);
-					// Se actualiza el estado de la sesión a cancelada
+					// Se envia correo notificando la cancelación
 					await mailService.sendPaymentFailed(
 						item.user,
 						item.psychologist

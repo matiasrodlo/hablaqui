@@ -204,6 +204,7 @@ const sendPasswordRecover = async email => {
 
 	mailService.sendPasswordRecovery(user, recoveryUrl);
 
+	//Correo para recuperar contraseña
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(email, `url: ${recoveryUrl}`));
 	else logInfo(actionInfo(email, 'solicito una recuperación de contraseña'));
