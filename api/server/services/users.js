@@ -106,7 +106,10 @@ const usersService = {
 			psychologist: oldPsychologist,
 			user: user,
 		});
-
+		// Se verifica que la sesión exista
+		if (!oldSession) {
+			return conflictResponse('No se encontró la sesión');
+		}
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
 			title: oldSession.plan[oldSession.plan.length - 1].title,
@@ -148,7 +151,6 @@ const usersService = {
 			newSession.plan.push(newPlan);
 		}
 
-		await newSession.save();
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
 	},
