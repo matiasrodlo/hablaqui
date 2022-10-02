@@ -148,12 +148,12 @@ const psychologistsController = {
 	},
 	async resheduleSession(req, res) {
 		try {
-			const { sessionsId, planId, sessionId, date } = req.body;
+			const { sessionsId, planId, sessionId, newDate } = req.body;
 			const { data, code } = await psychologistsService.rescheduleSession(
 				sessionsId,
 				planId,
 				sessionId,
-				date
+				newDate
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

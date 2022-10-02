@@ -1253,9 +1253,9 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	});
 };
 
-const rescheduleSession = async (sessionsId, planId, sessionId, date) => {
+const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	// Se da formato a la fecha
-	date = moment(date).format('MM/DD/YYYY HH:mm');
+	newDate = moment(newDate).format('MM/DD/YYYY HH:mm');
 	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
 	const sessions = await Sessions.findOneAndUpdate(
 		{
@@ -1265,7 +1265,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, date) => {
 		},
 		{
 			$set: {
-				'plan.$[].session.$[session].date': date,
+				'plan.$[].session.$[session].date': newDate,
 			},
 		},
 		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
@@ -1279,7 +1279,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, date) => {
 				plan._id.toString() === planId.toString()
 			) {
 				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
-				plan.expiration = moment(date, 'MM/DD/YYYY HH:mm')
+				plan.expiration = moment(newDate, 'MM/DD/YYYY HH:mm')
 					.add(50, 'minutes')
 					.format();
 			}
