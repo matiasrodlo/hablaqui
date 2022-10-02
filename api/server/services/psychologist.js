@@ -1270,6 +1270,10 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 		},
 		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
 	).populate('psychologist user');
+	// Se verifica que la sesion exista
+	if (!sessions) {
+		return conflictResponse('Sesion no encontrada');
+	}
 	// Se verifica si el plan sigue vigente
 	sessions.plan.forEach(plan => {
 		for (let i = 0; i < plan.session.length; i++) {
