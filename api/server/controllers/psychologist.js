@@ -146,7 +146,7 @@ const psychologistsController = {
 			errorCallback(e, res, 'error actualizando la cita');
 		}
 	},
-	async resheduleSession(req, res) {
+	async rescheduleSession(req, res) {
 		try {
 			const { sessionsId, planId, sessionId, newDate } = req.body;
 			const { data, code } = await psychologistsService.rescheduleSession(
