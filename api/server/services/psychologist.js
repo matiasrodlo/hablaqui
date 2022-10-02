@@ -1279,7 +1279,10 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 		for (let i = 0; i < plan.session.length; i++) {
 			if (
 				plan.session[i]._id.toString() === sessionId.toString() &&
-				moment().isAfter(plan.expiration) &&
+				moment(plan.session[i].date, 'MM/DD/YYYY HH:mm').isAfter(
+					plan.expiration,
+					'MM/DD/YYYY HH:mm'
+				) &&
 				plan._id.toString() === planId.toString()
 			) {
 				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
