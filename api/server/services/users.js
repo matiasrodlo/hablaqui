@@ -135,6 +135,13 @@ const usersService = {
 			.subtract(1, 'days')
 			.format();
 
+		// Se eliminan las sesiones del plan antiguo que aun no se han realizado
+		oldSession.plan[oldSession.plan.length - 1].session = oldSession.plan[
+			oldSession.plan.length - 1
+		].session.filter(session => {
+			return moment(session.date).isBefore(moment());
+		});
+
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
 			psychologist: newPsychologist,
