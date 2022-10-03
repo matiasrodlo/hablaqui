@@ -35,7 +35,7 @@ const addRating = async (user, newRating, comment, psychologist) => {
 };
 
 const getRating = async psychologist => {
-	// Obtiene el rating de un psicologo, verifica que el psicologo tenga al 
+	// Obtiene el rating de un psicologo, verifica que el psicologo tenga al
 	// menos una evaluacion y obtiene el promedio del rating
 	const foundPsychologist = await Psychologist.findById(psychologist);
 	if (!foundPsychologist.ratings || foundPsychologist.ratings.length == 0)
@@ -99,7 +99,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 			},
 		}
 	).populate('psychologist user');
-	// Obtiene todas las evaluaciones del psicologo y las aprueba
+	// Obtiene todas las evaluaciones del psicologo y filtra las aprobadas
 	const psy = evaluation.psychologist._id;
 	let evaluations = await getAllEvaluationsFunction(psy);
 	evaluations = evaluations.filter(
@@ -162,12 +162,13 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 const addEvaluation = async (user, psyId, payload) => {
 	if (user.role !== 'user') return conflictResponse('No eres usuario');
 
+	// Obtiene todas las sessiones del usuario que ha tenido con el psicologo
 	let sessions = await Sessions.findOne({
 		psychologist: psyId,
 		user: user._id,
 	});
 
-	// Obtiene todas las sessiones del usuario que ha tenido con el psicologo
+	// Crea un array con el id y el estatus de las sesiones
 	sessions = sessions.plan.flatMap(plan => {
 		return plan.session.map(session => {
 			return {
@@ -185,7 +186,7 @@ const addEvaluation = async (user, psyId, payload) => {
 	if (countSessions < 3)
 		return conflictResponse('No puede escribir un comentario');
 
-	// Verifica que el usuario no haya escrito una evaluacion
+	// Devuelve las evaluaciones de un usuario en un psicólogo
 	const collEvaluation = await Evaluation.findOne({
 		psychologist: psyId,
 		user: user._id,

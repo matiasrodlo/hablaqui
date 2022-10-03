@@ -30,7 +30,11 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
+<<<<<<< HEAD
 	 * @description Send an appointmet purchsase confirmation to a psy
+=======
+	 * @description Send an appointmet purchase confirmation to a psy
+>>>>>>> c4b10682cb922cad249f617d56e53b6bab4c5dcf
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
