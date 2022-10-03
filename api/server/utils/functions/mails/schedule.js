@@ -1,15 +1,11 @@
 'use strict';
 
 import moment from 'moment';
-import { logInfo } from '../../../config/pino';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 const mailService = {
-    /**
+	/**
 	 * @description Send an appointmet purchase confirmation to a user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
@@ -31,10 +27,10 @@ const mailService = {
 				price: price,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-    /**
-	 * @description Send an appointmet purchase confirmation to a psy
+	/**
+	 * @description Send an appointmet purchsase confirmation to a psy
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
@@ -59,10 +55,10 @@ const mailService = {
 				price: price,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them. 
+	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them.
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {String} paymentURL - The URL to the payment page
@@ -97,7 +93,7 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the psychologist notifying them that a user has scheduled a session with them.
@@ -108,7 +104,7 @@ const mailService = {
 	 * @param {String} value - The value of the appointment
 	 * @param {String} type - The type of appointment
 	 */
-    async sendCustomSessionToPsy(
+	async sendCustomSessionToPsy(
 		user,
 		psychologist,
 		paymentURL,
@@ -135,15 +131,15 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Sends an email to the user notifying them that they have successfully rescheduled.
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 */
-    async sendRescheduleToUser(user, psy, sessionDate) {
+	async sendRescheduleToUser(user, psy, sessionDate) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -160,7 +156,7 @@ const mailService = {
 				psy_name: psy.name + ' ' + psy.lastName,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the psychologist notifying them that a user has rescheduled.
@@ -188,7 +184,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that they have requested a rescheduled session.
@@ -211,7 +207,7 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user notifying him/her that the psychologist has rescheduled the session.
@@ -238,7 +234,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Send an email to the psychologist notifying him/her that you have rescheduled the session.
@@ -266,7 +262,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that a user has scheduled a session.
@@ -299,7 +295,7 @@ const mailService = {
 				session,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that they have scheduled a session.
@@ -329,7 +325,7 @@ const mailService = {
 				session,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 };
 

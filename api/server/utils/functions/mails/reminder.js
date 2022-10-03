@@ -1,12 +1,8 @@
 'use strict';
 
 import moment from 'moment';
-import { logInfo } from '../../../config/pino';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
-
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {
 	/**
@@ -15,7 +11,7 @@ const mailService = {
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that is talking to the user
 	 * @param {String} batch - A batchID corresponding to the batch of the conversation
 	 */
-    async sendChatNotificationToUser(user, psychologist, batch) {
+	async sendChatNotificationToUser(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -32,7 +28,7 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description sends an email to the psychologist notifying him/her that the user is talking to him/her.
@@ -40,7 +36,7 @@ const mailService = {
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the user that will be notified
 	 * @param {String} batch - A batchID corresponding to the batch of the conversation
 	 */
-    async sendChatNotificationToPsy(user, psychologist, batch) {
+	async sendChatNotificationToPsy(user, psychologist, batch) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
@@ -57,14 +53,14 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user reminding them that they have requested a rescheduled session with a psychologist.
 	 * @param {Object} user - A user object from the database, corresponding to the user that will be notified
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that the user has requested a rescheduled session with
 	 */
-    async sendCancelSessionUser(user, psy) {
+	async sendCancelSessionUser(user, psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -79,13 +75,13 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the psychologist reminding him that you have cancelled a private engagement.
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be notified 
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be notified
 	 */
-    async sendCancelCommitment(psy) {
+	async sendCancelCommitment(psy) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
@@ -99,13 +95,13 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the psychologist reminding him/her that you have scheduled a private appointment.
 	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist that will be notified
 	 */
-    async sendCustomSessionCommitment(psychologist) {
+	async sendCustomSessionCommitment(psychologist) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
@@ -119,9 +115,9 @@ const mailService = {
 				psy_name: psychologist.name,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
@@ -150,9 +146,9 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send an appointmet reminder to a psychologist about an upcomming session
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
@@ -182,7 +178,7 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 };
 

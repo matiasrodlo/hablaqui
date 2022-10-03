@@ -1,15 +1,11 @@
 'use strict';
 
 import moment from 'moment';
-import { logInfo } from '../../../config/pino';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 const mailService = {
-    /**
+	/**
 	 * @description Send a welcome email to a new user using the mailgun API with the template 'welcome-new-user'
 	 * @param {Object} user - A User object from the database, corresponding to a new client
 	 */
@@ -28,7 +24,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
@@ -50,9 +46,9 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-    /**
+	/**
 	 * @description Send a welcome email to a new  user created by a psychologist
 	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
 	 * @param {Object} newUser -  A User object from the database, corresponding to the psychologist
@@ -77,14 +73,14 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
-	 /**
+	/**
 	 * @description Send a recovery password email to a user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {String} url - URL to password recovery
 	 */
-	  async sendPasswordRecovery(user, url) {
+	async sendPasswordRecovery(user, url) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recuperacion@mail.hablaqui.cl>',
@@ -99,14 +95,14 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Send a verification email to a new user created
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {String} url - URL to verify account
 	 */
-    async sendVerifyEmail(user, url) {
+	async sendVerifyEmail(user, url) {
 		const dataPayload = {
 			from: 'Hablaquí <verificacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -121,7 +117,7 @@ const mailService = {
 				verify_url: url,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Send an email to support to notify that a psychologist has uploaded a photo.
@@ -141,7 +137,7 @@ const mailService = {
 				email: psy.email,
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user who has cancelled his plan
@@ -168,7 +164,7 @@ const mailService = {
 				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
-		sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 };
 
