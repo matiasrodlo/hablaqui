@@ -106,6 +106,7 @@ const usersService = {
 			psychologist: oldPsychologist,
 			user: user,
 		});
+
 		// Se verifica que la sesión exista
 		if (!oldSession) {
 			return conflictResponse('No se encontró la sesión');
@@ -114,6 +115,11 @@ const usersService = {
 			return conflictResponse('No se encontró el plan');
 		}
 		const ultimoPlan = oldSession.plan[oldSession.plan.length - 1];
+
+		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
+		let sessionesPendientes = ultimoPlan.session.filter(
+			session => Date.parse(session.date) > Date.parse(moment().format())
+		).length;
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
 			title: ultimoPlan.title,
@@ -125,7 +131,9 @@ const usersService = {
 			expiration: ultimoPlan.expiration,
 			usedCoupon: ultimoPlan.usedCoupon,
 			totalSessions: ultimoPlan.totalSessions,
-			remainingSessions: ultimoPlan.remainingSessions,
+			remainingSessions: (
+				Number(ultimoPlan.remainingSessions) + sessionesPendientes
+			).toString(),
 			tokenToPay: ultimoPlan.tokenToPay,
 			session: [],
 		};
