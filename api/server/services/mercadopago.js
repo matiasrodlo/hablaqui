@@ -22,6 +22,32 @@ mercadopago.configure({
 	access_token: mercadopago_key,
 });
 
+const createPreference = async body => {
+	let newPreference = {
+		items: [
+			{
+				title: body.description,
+				description: body.description,
+				currency_id: 'CLP',
+				unit_price: Number(body.price),
+				quantity: 1,
+			},
+		],
+		back_urls: {
+			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
+			// redirection to profile psychologist
+			failure: `${landing_url}/${body.psychologist}`,
+			pending: `${landing_url}/${body.psychologist}`,
+		},
+		auto_return: 'approved',
+		binary_mode: true,
+	};
+
+	const responseBody = await mercadopago.preferences.create(newPreference);
+	const resBody = responseBody.body;
+	return resBody;
+};
+
 /**
  * Casos:
  * 1- postulante o psicologo
@@ -390,6 +416,7 @@ const recruitedPay = async (params, query) => {
 };
 
 const mercadopagoService = {
+	createPreference,
 	createPsychologistPreference,
 	successPay,
 	psychologistPay,
