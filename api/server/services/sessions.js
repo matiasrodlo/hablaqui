@@ -133,7 +133,9 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}).populate('psychologist user');
 
 	if (cancelSessions.user == null) {
-		await mailServiceReminder.sendCancelCommitment(cancelSessions.psychologist);
+		await mailServiceReminder.sendCancelCommitment(
+			cancelSessions.psychologist
+		);
 	} else {
 		await mailServiceReminder.sendCancelSessionPsy(
 			cancelSessions.user,
