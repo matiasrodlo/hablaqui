@@ -1,15 +1,16 @@
 'use strict';
 
-import mercadopago from 'mercadopago';
+import mercadopago from 'mercadopago'; // Se importa el SDK de Mercado Pago
 import { okResponse, conflictResponse } from '../utils/responses/functions';
 import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
-import { api_url, landing_url, mercadopago_key } from '../config/dotenv';
+import { api_url, landing_url, mercadopago_key } from '../config/dotenv'; // dotenv contiene las variables de entorno
 import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
-import mailService from './mail';
+import mailServicePayments from '../utils/functions/mails/payments';
+import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -21,32 +22,6 @@ mercadopago.configure({
 	access_token: mercadopago_key,
 });
 
-const createPreference = async body => {
-	let newPreference = {
-		items: [
-			{
-				title: body.description,
-				description: body.description,
-				currency_id: 'CLP',
-				unit_price: Number(body.price),
-				quantity: 1,
-			},
-		],
-		back_urls: {
-			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
-			// redirection to profile psychologist
-			failure: `${landing_url}/${body.psychologist}`,
-			pending: `${landing_url}/${body.psychologist}`,
-		},
-		auto_return: 'approved',
-		binary_mode: true,
-	};
-
-	const responseBody = await mercadopago.preferences.create(newPreference);
-	const resBody = responseBody.body;
-	return resBody;
-};
-
 /**
  * Casos:
  * 1- postulante o psicologo
@@ -55,6 +30,7 @@ const createPreference = async body => {
  * @returns {Obeject} payment
  */
 const createPsychologistPreference = async body => {
+	// Se crea preferencia para que el psiologo pueda pagar su plan
 	const id = body.psychologistId || body.recruitedId;
 	const isPsychologist = !!body.psychologistId;
 	let preference = {};
@@ -67,6 +43,8 @@ const createPsychologistPreference = async body => {
 };
 
 const setPlanPremium = async (body, isPsychologist, id) => {
+	// Se crea preferencia para el plan premium
+	// Se crea un objeto de preferencia que contiene la información necesaria para crear el pago
 	let newPreference = {
 		items: [
 			{
@@ -87,6 +65,7 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 		auto_return: 'approved',
 		binary_mode: true,
 	};
+	// Se manda a mercado pago y se retorna el link de pago
 	const responseBody = await mercadopago.preferences.create(newPreference);
 	const resBody = responseBody.body;
 	const { init_point } = resBody;
@@ -101,7 +80,9 @@ const setPlanFree = async (id, isPsychologist) => {
 	if (!response)
 		return conflictResponse('No se encontró el postulante o psicologo');
 
+	// Verifica si el psicologo o postulante tiene o tuvo un plan
 	if (response.psyPlans && response.psyPlans.length) {
+		// Se obtiene el ultimo plan y se verifica las distintas situaciones
 		const currentPlan = response.psyPlans.pop();
 		if (currentPlan.tier === 'free') {
 			return okResponse('Ya tienes el plan gratuito');
@@ -110,13 +91,16 @@ const setPlanFree = async (id, isPsychologist) => {
 			moment(currentPlan.expirationDate).isAfter(moment())
 		) {
 			return okResponse('Tienes un plan premium vigente');
-		} else
+		}
+		// Tiene un plan premium pero ya expiro
+		else
 			response.psyPlans = response.psyPlans.map(item => ({
 				...item,
 				planStatus: 'expired',
 			}));
 	}
 
+	// Si no tiene plan o el plan expiro se crea uno nuevo
 	if (!response.psyPlans) response.psyPlans = [];
 	response.psyPlans = [
 		...response.psyPlans,
@@ -130,6 +114,7 @@ const setPlanFree = async (id, isPsychologist) => {
 		},
 	];
 	response.isHide = true;
+	// Se realiza el trackeo de analytics
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -156,10 +141,12 @@ const setPlanFree = async (id, isPsychologist) => {
 			},
 		});
 	}
+	// Se guarda el plan
 	return await response.save();
 };
 
 const successPay = async params => {
+	// Busca y actualiza el pago de la sesion
 	const { sessionsId, planId } = params;
 	const foundPlan = await Sessions.findOneAndUpdate(
 		{
@@ -203,17 +190,26 @@ const successPay = async params => {
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist
-	await mailService.sendAppConfirmationUser(user, psy, planData.totalPrice);
-	await mailService.sendAppConfirmationPsy(psy, user, planData.totalPrice);
+	await mailServiceSchedule.sendAppConfirmationUser(
+		user,
+		psy,
+		planData.totalPrice
+	);
+	await mailServiceSchedule.sendAppConfirmationPsy(
+		psy,
+		user,
+		planData.totalPrice
+	);
 
-	await mailService.sendScheduleToUser(
+	// --Faltaría indicar estos emails--
+	await mailServiceSchedule.sendScheduleToUser(
 		user,
 		psy,
 		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
-	await mailService.sendScheduleToPsy(
+	await mailServiceSchedule.sendScheduleToPsy(
 		user,
 		psy,
 		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
@@ -229,6 +225,7 @@ const psychologistPay = async (params, query) => {
 	const { psychologistId } = params;
 	const { period } = query;
 
+	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period === 'anual') {
 		expirationDate = moment()
@@ -240,6 +237,7 @@ const psychologistPay = async (params, query) => {
 			.add({ months: 1 })
 			.format();
 	}
+	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
 	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
@@ -249,13 +247,13 @@ const psychologistPay = async (params, query) => {
 		price: pricePaid,
 		subscriptionPeriod: period,
 	};
-
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
 		{ $push: { psyPlans: newPlan } },
 		{ $set: { isHide: false } },
 		{ new: true }
 	);
+	// Se realiza el trackeo de analytics
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -282,11 +280,15 @@ const psychologistPay = async (params, query) => {
 			},
 		});
 	}
-	await mailService.sendPsychologistPay(foundPsychologist, period, pricePaid);
+	await mailServicePayments.sendPsychologistPay(
+		foundPsychologist,
+		period,
+		pricePaid
+	);
 	return okResponse('plan actualizado', { foundPsychologist });
 };
-//Para correo de evento confirmacion de pago
 const customSessionPay = async params => {
+	// Busca la sesion y actualiza el pago
 	const { userId, psyId, planId } = params;
 	const updatePlan = await Sessions.findOneAndUpdate(
 		{
@@ -302,17 +304,18 @@ const customSessionPay = async params => {
 		},
 		{ new: true }
 	).populate('psychologist user');
+	// Obtiene el id del plan
 	const plan = updatePlan.plan.filter(
 		plan => plan._id.toString() === planId
 	)[0];
-	await mailService.sendSuccessCustomSessionPaymentPsy(
+	await mailServicePayments.sendSuccessCustomSessionPaymentPsy(
 		updatePlan.user,
 		updatePlan.psychologist,
 		plan.totalPrice,
 		updatePlan.roomsUrl,
 		plan.session[0].date
 	);
-	await mailService.sendSuccessCustomSessionPaymentUser(
+	await mailServicePayments.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
 		updatePlan.psychologist,
 		plan.totalPrice,
@@ -324,12 +327,14 @@ const customSessionPay = async params => {
 
 const createCustomSessionPreference = async params => {
 	const { userId, psyId, planId } = params;
+	// Encuentra la sesion y el plan, utiliza el id del plan para obtener el precio
 	const foundPlan = await Sessions.findOne({
 		'plan._id': planId,
 		user: userId,
 		psychologist: psyId,
 	});
 	const planData = foundPlan.plan[foundPlan.plan.length - 1];
+	// Crea la preferencia de pago de mercado pago
 	let newPreference = {
 		items: [
 			{
@@ -356,9 +361,11 @@ const createCustomSessionPreference = async params => {
 };
 
 const recruitedPay = async (params, query) => {
+	// Se encarga de actualizar el plan del psicologo
 	const { recruitedId } = params;
 	const { period } = query;
 
+	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period == 'anual') {
 		expirationDate = moment()
@@ -370,6 +377,7 @@ const recruitedPay = async (params, query) => {
 			.add({ months: 1 })
 			.format();
 	}
+	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
 	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
@@ -382,7 +390,6 @@ const recruitedPay = async (params, query) => {
 };
 
 const mercadopagoService = {
-	createPreference,
 	createPsychologistPreference,
 	successPay,
 	psychologistPay,

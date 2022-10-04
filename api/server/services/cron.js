@@ -3,7 +3,8 @@ import email from '../models/email';
 import Chat from '../models/chat';
 import User from '../models/user';
 import psychologist from '../models/psychologist';
-import mailService from '../services/mail';
+import mailServiceRemider from '../utils/mails/reminder';
+import mailServicePsy from '../utils/mails/psychologistStatus';
 import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
@@ -16,10 +17,10 @@ sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 function isSchedulableEmail(date) {
 	/**
- 	* @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
- 	* @param {moment} date es la fecha de la cita
- 	* @returns
- 	*/
+	 * @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
+	 * @param {moment} date es la fecha de la cita
+	 * @returns
+	 */
 	return moment()
 		.add(3, 'days')
 		.isAfter(date);
@@ -27,11 +28,11 @@ function isSchedulableEmail(date) {
 
 function generatePayload(date, batch) {
 	/**
-	* @description Crea el payload para actualizar el objeto de programación de correo electrónico
-	* @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
-	* @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
-	* @returns un objeto con el payload
-	*/
+	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
+	 * @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
+	 * @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
+	 * @returns un objeto con el payload
+	 */
 	return {
 		wasScheduled: true,
 		scheduledAt: moment(date)
@@ -43,8 +44,8 @@ function generatePayload(date, batch) {
 
 async function getNumberSuccess() {
 	/**
- 	* @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
- 	*/
+	 * @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
+	 */
 	const users = await User.find();
 	users.forEach(async user => {
 		const sessions = await Sessions.find({ user: user._id }).populate(
@@ -75,7 +76,7 @@ async function getNumberSuccess() {
 			);
 			if (!item.evaluationNotifcation && successSessions === 3) {
 				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del psicólogo
-				await mailService.sendEnabledEvaluation(
+				await mailServicePsy.sendEnabledEvaluation(
 					user,
 					item.psychologist
 				);
@@ -86,9 +87,9 @@ async function getNumberSuccess() {
 
 async function sendNotification(emails) {
 	/**
- 	* @description Envía un correo electrónico a los usuarios que no han sido notificados
- 	* @param {array} emails array de correos electrónicos
- 	*/
+	 * @description Envía un correo electrónico a los usuarios que no han sido notificados
+	 * @param {array} emails array de correos electrónicos
+	 */
 	emails.forEach(async e => {
 		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
 			// Si la cita ya pasó 3 horas, entonces se obtiene el batchId, se obtiene el usuario, el psicologo, y el chat.
@@ -108,12 +109,12 @@ async function sendNotification(emails) {
 			// Si el correo electrónico no ha sido leído y no ha sido programado, entonces se envía el correo electrónico
 			if (!message[0].read && !e.wasScheduled) {
 				e.type === 'send-by-psy'
-					? await mailService.sendChatNotificationToUser(
+					? await mailServiceRemider.sendChatNotificationToUser(
 							user,
 							psy,
 							batch
 					  )
-					: await mailService.sendChatNotificationToPsy(
+					: await mailServiceRemider.sendChatNotificationToPsy(
 							user,
 							psy,
 							batch
@@ -133,9 +134,9 @@ async function sendNotification(emails) {
 
 async function getBatchId() {
 	/**
-	* @description Se obtiene un batchId para el envío de correos electrónicos
-	* @returns {string} batchId
-	*/
+	 * @description Se obtiene un batchId para el envío de correos electrónicos
+	 * @returns {string} batchId
+	 */
 	const result = await sgClient
 		.request({
 			method: 'POST',
@@ -159,7 +160,7 @@ const cronService = {
 		const psychologists = await psychologist.find();
 
 		// Se recorre el array de psicólogos si el estado de la atención inmediata
-		// esta activo y la fecha de expiracion es antes de la fecha actual 
+		// esta activo y la fecha de expiracion es antes de la fecha actual
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
@@ -218,14 +219,14 @@ const cronService = {
 						let batch = await getBatchId();
 						// Se envía el correo electrónico al usuario o psicólogo
 						if (emailInfo.type === 'reminder-user') {
-							await mailService.sendReminderUser(
+							await mailServiceRemider.sendReminderUser(
 								user,
 								psy,
 								sessionDate,
 								batch
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
-							await mailService.sendReminderPsy(
+							await mailServiceRemider.sendReminderPsy(
 								user,
 								psy,
 								sessionDate,
@@ -265,7 +266,7 @@ const cronService = {
 		const pendingSessions = await Sessions.find();
 		var toUpdateUpnext = [];
 		var toUpdateSuccess = [];
-		
+
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
 				const psyInfo = await psychologist.findOne(item.psychologist);
@@ -430,7 +431,7 @@ const cronService = {
 						}
 					);
 					// Se actualiza el estado de la sesión a cancelada
-					await mailService.sendPaymentFailed(
+					await mailServicePsy.sendPaymentFailed(
 						item.user,
 						item.psychologist
 					);
