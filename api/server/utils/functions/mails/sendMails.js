@@ -1,4 +1,5 @@
 import sgMail from '@sendgrid/mail';
+import { logInfo } from '../../../config/pino';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
@@ -10,8 +11,10 @@ const sendMails = async dataPayload => {
 		sgMail.send(dataPayload, function(error, body) {
 			if (error) {
 				reject(error);
+				logInfo(error);
 			} else {
 				resolve(body);
+				logInfo(body);
 			}
 		});
 	});
