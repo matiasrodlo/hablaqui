@@ -41,7 +41,15 @@
 			<v-card max-width="1200px">
 				<v-toolbar flat color="primary" class="white--text">
 					<v-spacer></v-spacer>
-					<v-btn text color="white" @click="dialog = false">Cerrar</v-btn>
+					<v-btn
+						text
+						color="white"
+						@click="
+							dialog = false;
+							selectedSession = null;
+						"
+						>Cerrar</v-btn
+					>
 				</v-toolbar>
 				<v-card-text class="mt-3">
 					<v-row>
@@ -75,7 +83,10 @@
 
 <script>
 import axios from 'axios';
+import { mapMutations } from 'vuex';
 import moment from 'moment';
+import { isEmpty } from 'lodash';
+
 moment.tz.setDefault('America/Santiago');
 
 export default {
@@ -95,6 +106,7 @@ export default {
 			sessions: [],
 			selectedSession: null,
 			sessionDate: '',
+			selectedPlan: null,
 			headers: [
 				{
 					text: 'Fecha de sesión',
@@ -161,16 +173,37 @@ export default {
 			this.dialog = true;
 			this.selectedClient = client;
 			const plan = client.plan;
+			this.selectedPlan = plan;
 			this.sessions = plan ? plan.session : [];
 		},
 		clickSession(value) {
 			this.selectedSession = value;
 			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDThh:mm');
 		},
-		clicked() {
+		async clicked() {
 			const newDate = moment(this.sessionDate, 'yyyy-MM-DDThh:mm').format('MM/DD/YYYY HH:mm');
-			/* Llamada al endpoint */
+			const res = await this.$axios.$post('/dashboard/session/reschedule', {
+				sessionsId: this.selectedClient.sessionsId,
+				planId: this.selectedPlan._id,
+				sessionId: this.selectedSession._id,
+				newDate,
+			});
+			if (res === 409)
+				this.snackBar({
+					content: res.message,
+					color: 'error',
+				});
+			else {
+				this.sessionDate = '';
+				this.snackBar({
+					content: res.message,
+					color: 'success',
+				});
+			}
 		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 	},
 };
 </script>
