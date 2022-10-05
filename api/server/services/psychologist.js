@@ -410,18 +410,6 @@ const getClients = async psychologist => {
 		psychologist: psychologist,
 	}).populate('user');
 
-	// Se filtran los planes que hayan expirado
-	sessions = sessions.filter(session => {
-		session.plan = session.plan.filter(plan => {
-			return moment().isBefore(moment(plan.expiration));
-		});
-		return session.plan;
-	});
-	// Se filtran las sessiones que no tengan planes
-	sessions = sessions.filter(session => {
-		return session.plan.length > 0;
-	});
-
 	return okResponse('Usuarios encontrados', {
 		// Se retorna una respuesta con los clientes
 		users: sessions // Se retorna todos los clientes
@@ -443,12 +431,20 @@ const getClients = async psychologist => {
 				name: item.user.name,
 				observation: item.observation,
 				phone: item.user.phone,
-				plan: item.plan,
+				plan: item.plan.filter(plan => {
+					return (
+						moment().isBefore(moment(plan.expiration)) &&
+						plan.payment === 'success'
+					);
+				}),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
 				sessionsId: item._id,
-			})),
+			}))
+			.filter(session => {
+				return session.plan.length > 0;
+			}),
 	});
 };
 
