@@ -405,10 +405,22 @@ const setPrice = async (user, newPrice) => {
 
 const getClients = async psychologist => {
 	// Funcion para obtener los clientes de un psicologo
-	const sessions = await Sessions.find({
+	let sessions = await Sessions.find({
 		// Se buscan todas las sesiones
 		psychologist: psychologist,
 	}).populate('user');
+
+	// Se filtran los planes que hayan expirado
+	sessions = sessions.filter(session => {
+		session.plan = session.plan.filter(plan => {
+			return moment().isBefore(moment(plan.expiration));
+		});
+		return session.plan;
+	});
+	// Se filtran las sessiones que no tengan planes
+	sessions = sessions.filter(session => {
+		return session.plan.length > 0;
+	});
 
 	return okResponse('Usuarios encontrados', {
 		// Se retorna una respuesta con los clientes
@@ -431,11 +443,7 @@ const getClients = async psychologist => {
 				name: item.user.name,
 				observation: item.observation,
 				phone: item.user.phone,
-				plan: item.plan.find(
-					plan =>
-						plan.payment === 'success' &&
-						moment().isBefore(moment(plan.expiration))
-				),
+				plan: item.plan,
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
