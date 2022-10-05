@@ -286,13 +286,13 @@
 										</v-stepper-content>
 										<v-stepper-content step="4">
 											<div class="primary--text font-weight-bold title">
-												¿Buscas algún enfoque terapéutico <br />
-												<span>en específico?</span>
+												¿En qué momento del día <br />
+												<span>puede asistir a sus citas?</span>
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Cognitivo-conductual'
+													schedule == 'early'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -303,19 +303,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Cognitivo-conductual';
+														schedule = 'early';
 													}
 												"
 											>
-												Quiero que las sesiones sean estructuradas
-												definiendo metas a cumplir. Me gustaría que mi
-												psicólogo/a tome un rol activo y me deje tareas
-												semanales.
+												Temprano: Antes de las 9 am
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Integrativo'
+													schedule == 'morning'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -326,19 +323,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Integrativo';
+														schedule = 'morning';
 													}
 												"
 											>
-												Quiero que mi psicólogo conozca diferentes modelos
-												de intervención y de acuerdo a mis necesidades me
-												brinde diferentes actividades o herramientas para
-												ponerlas en práctica.
+												En la mañana: Entre 9 am y 12 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Contextual'
+													schedule == 'midday'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -349,19 +343,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Contextual';
+														schedule = 'midday';
 													}
 												"
 											>
-												Quiero que sea un proceso activo donde aprenda a
-												relacionarme con mis pensamientos, emociones y
-												sensaciones fisicas de una forma distinta en la cual
-												no me impida desarrollar la vida que quiero vivir.
+												A Medio día: Entre 12 y 2 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Psicoanálisis'
+													schedule == 'afternoon'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -372,19 +363,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Psicoanálisis';
+														schedule = 'afternoon';
 													}
 												"
 											>
-												Quiero que las sesiones sean conversacionales, donde
-												pueda platicar cómo me siento y que mi psicólogo me
-												ayude a explorar cómo mis experiencias pasadas
-												influyen en mi presente.
+												En la tarde: Entre 2 y 6 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Humanista'
+													schedule == 'night'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -395,37 +383,11 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Humanista';
+														schedule = 'night';
 													}
 												"
 											>
-												Quiero que a través de la reflexión, mi psicólogo me
-												ayude a conocer el origen de mis emociones y a
-												encontrar un significado personal, contactando con
-												aquellas áreas que tengo que sanar.
-											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													focus == 'Sistémico'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														focus = 'Sistémico';
-													}
-												"
-											>
-												Quiero entender mi forma de interactuar con los
-												demás para mejorar mis relaciones interpersonales,
-												conociendo cómo mi entorno influye en mi conducta y
-												en las distintas áreas de mi vida.
+												En la noche: Después de las 6 pm
 											</div>
 											<v-btn text color="primary" @click="step = 3">
 												Atras
@@ -732,7 +694,7 @@ export default {
 			age: '',
 			firstTherapy: null,
 			themes: [],
-			focus: '',
+			schedule: '',
 			genderConfort: '',
 			specialties: [],
 			psychologists: [],
@@ -776,7 +738,7 @@ export default {
 					this.age = answers.age;
 					this.firstTherapy = answers.firstTherapy;
 					this.themes = answers.themes;
-					this.focus = answers.focus;
+					this.schedule = answers.schedule;
 					this.genderConfort = answers.genderConfort;
 					this.openPrecharge();
 				}
@@ -808,7 +770,7 @@ export default {
 			this.age = '';
 			this.firstTherapy = null;
 			this.themes = [];
-			this.focus = '';
+			this.schedule = '';
 			this.genderConfort = '';
 			this.matchedPsychologists = [];
 			this.step = '0';
@@ -827,7 +789,7 @@ export default {
 					JSON.stringify({
 						genderConfort: this.genderConfort,
 						themes: this.themes,
-						model: this.focus,
+						schedule: this.schedule,
 						firstTherapy: this.firstTherapy,
 						age: this.age,
 						gender: this.gender,
@@ -840,7 +802,8 @@ export default {
 				const payload = {
 					gender,
 					themes: this.themes,
-					model: this.focus,
+					schedule: this.schedule,
+					model: '',
 				};
 				this.matchPsi(payload).then(response => {
 					if (response && response.length) {
