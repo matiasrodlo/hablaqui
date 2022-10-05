@@ -770,14 +770,16 @@ export default {
 		if (process.browser) {
 			const answers = JSON.parse(localStorage.getItem('answers'));
 			if (answers) {
-				this.gender = answers.gender;
-				this.age = answers.age;
-				this.firstTherapy = answers.firstTherapy;
-				this.themes = answers.themes;
-				this.focus = answers.focus;
-				this.genderConfort = answers.genderConfort;
 				localStorage.removeItem('answers');
-				this.openPrecharge();
+				if (!this.$route.params.clean) {
+					this.gender = answers.gender;
+					this.age = answers.age;
+					this.firstTherapy = answers.firstTherapy;
+					this.themes = answers.themes;
+					this.focus = answers.focus;
+					this.genderConfort = answers.genderConfort;
+					this.openPrecharge();
+				}
 			}
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
@@ -832,26 +834,27 @@ export default {
 					})
 				);
 				this.$router.push('/auth/?register=true&from=psy');
+			} else {
+				this.dialogPrecharge = true;
+				const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
+				const payload = {
+					gender,
+					themes: this.themes,
+					model: this.focus,
+				};
+				this.matchPsi(payload).then(response => {
+					if (response && response.length) {
+						localStorage.setItem(
+							'psi',
+							JSON.stringify({
+								match: response.filter((el, i) => i < 3),
+								_id: this.$auth.$state.user._id,
+							})
+						);
+						this.matchedPsychologists = response.filter((el, i) => i < 3);
+					}
+				});
 			}
-			this.dialogPrecharge = true;
-			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
-			const payload = {
-				gender,
-				themes: this.themes,
-				model: this.focus,
-			};
-			this.matchPsi(payload).then(response => {
-				if (response && response.length) {
-					localStorage.setItem(
-						'psi',
-						JSON.stringify({
-							match: response.filter((el, i) => i < 3),
-							_id: this.$auth.$state.user._id,
-						})
-					);
-					this.matchedPsychologists = response.filter((el, i) => i < 3);
-				}
-			});
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
