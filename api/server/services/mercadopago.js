@@ -22,7 +22,9 @@ mercadopago.configure({
 	access_token: mercadopago_key,
 });
 
+// Esta función se utiliza en sessions.js (en algun futuro no muy lejano, se puede dejar mejor en utils)
 const createPreference = async body => {
+	// la preferencia dentro de mercadopago se refiere un objeto que contiene todos los datos necesarios para realizar el pago
 	let newPreference = {
 		items: [
 			{
