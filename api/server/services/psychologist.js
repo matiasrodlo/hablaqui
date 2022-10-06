@@ -834,6 +834,20 @@ const mayorPonderado = (arrayPonderado, type) => {
 };
 
 /**
+ * @description Asigna puntaje por el precio de la sesión
+ * @param {Number} precio - Precio de la sesión
+ * @returns - Puntaje
+ */
+
+const puntajePrecio = precio => {
+	let puntaje = 0;
+	for (let i = 0; i < precio / 100; i += 10) {
+		puntaje -= 3;
+	}
+	return puntaje;
+};
+
+/**
  * @description Pondera los psicologos según tres criterios,
  * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
  * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
@@ -891,7 +905,7 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 			}
 			criterio++;
 			// Se obtiene el precio del psicologo y se le asigna un puntaje dado por el precio
-			points += (psy.price / 100) * ponderado[criterio];
+			points += puntajePrecio(psy.price) * ponderado[criterio];
 			criterio++;
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let psychologist = JSON.stringify(psy);
