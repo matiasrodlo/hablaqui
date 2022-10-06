@@ -793,20 +793,75 @@ const formattedSchedule = (schedule, day, hour) => {
 	return validHour;
 };
 
-const ponderationMatch = async (matchedList, payload) => {
+/**
+ * @description Genera un array con los ponderados para los criterios
+ * @param {Number} cantidad - Cantidad de criterios
+ * @returns {Array} - Array con los ponderados
+ */
+
+const generarPonderado = cantidad => {
+	let ponderado = 100 / cantidad;
+	let arrayPonderado = [];
+	for (let i = 0; i < cantidad; i++) {
+		arrayPonderado.push(ponderado);
+	}
+	return arrayPonderado;
+};
+
+/**
+ * @description Prioriza los criterios segun el ponderado
+ * @param {Array} arrayPonderado  - Array con los ponderados
+ * @param {Number} type - Tipo de criterio
+ * @returns - Array con los criterios priorizados
+ */
+
+const mayorPonderado = (arrayPonderado, type) => {
+	let mayor = arrayPonderado[type];
+	// Hacer que el ponderado tenga un valor mayor y los demás menores disminuyan su valor en la misma cantidad
+	let cantidad = arrayPonderado.length;
+	let disminuir = mayor / cantidad;
+	for (let i = 0; i < cantidad; i++) {
+		if (i !== type) {
+			arrayPonderado[i] = arrayPonderado[i] - disminuir;
+		} else {
+			arrayPonderado[i] = mayor + disminuir;
+		}
+	}
+	for (let i = 0; i < cantidad; i++) {
+		arrayPonderado[i] /= 100;
+	}
+	return arrayPonderado;
+};
+
+/**
+ * @description Pondera los psicologos según tres criterios,
+ * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
+ * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
+ * @param {Object} payload - Objeto con las preferencias del usuario
+ * @param {Number} type - Tipo de ponderación (0: Especialidad, 1: Disponibilidad, 2: Precio)
+ * @param {Number} cantidad - Cantidad de criterios que existen
+ * @returns {Array} - Lista de psicologos ponderados
+ */
+
+const ponderationMatch = async (matchedList, payload, type, cantidad) => {
+	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
+	let ponderado = generarPonderado(cantidad);
+	ponderado = mayorPonderado(ponderado, type);
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
+			let criterio = 0;
 			let points = psy.points;
-			// Se le asigna un puntaje según la cantidad de coincidencias
+			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			for (let j = 0; j < 3; j++) {
-				if (psy.specialties[j] === payload.themes[j]) points += 1;
+				if (psy.specialties[j] === payload.themes[j])
+					points += 3 * ponderado[criterio];
 			}
+			criterio++;
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
 			const dias = await getFormattedSessionsForMatch(psy._id);
 			for (let i = 0; i < 3; i++) {
-				// Verifica si la hora es en la mañana, tarde o noche
+				// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
 				dias[i].available.forEach(hora => {
-					// Verifica si el día está disponible
 					if (
 						moment(hora, 'HH:mm').isBetween(
 							moment('06:00', 'HH:mm'),
@@ -814,7 +869,7 @@ const ponderationMatch = async (matchedList, payload) => {
 						) &&
 						payload.schedule == 'morning'
 					) {
-						points += 10;
+						points += 3 * ponderado[criterio];
 					} else if (
 						moment(hora, 'HH:mm').isBetween(
 							moment('13:00', 'HH:mm'),
@@ -822,7 +877,7 @@ const ponderationMatch = async (matchedList, payload) => {
 						) &&
 						payload.schedule == 'midday'
 					) {
-						points += 10;
+						points += 3 * ponderado[criterio];
 					} else if (
 						moment(hora, 'HH:mm').isBetween(
 							moment('16:00', 'HH:mm'),
@@ -830,10 +885,14 @@ const ponderationMatch = async (matchedList, payload) => {
 						) &&
 						payload.schedule == 'afternoon'
 					) {
-						points += 10;
+						points += 3 * ponderado[criterio];
 					}
 				});
 			}
+			criterio++;
+			// Se obtiene el precio del psicologo y se le asigna un puntaje dado por el precio
+			points += (psy.price / 100) * ponderado[criterio];
+			criterio++;
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
@@ -847,12 +906,15 @@ const ponderationMatch = async (matchedList, payload) => {
 
 const match = async body => {
 	const { payload } = body;
+	let cantidadDeCriterios = 3;
+	let matched;
 	let matchedPsychologists = [];
+	let matchedList = [];
 	let perfectMatch = true;
 
+	// Se obtiene la lista de psicologos que coinciden con los temas
 	if (payload.gender == 'transgender') {
 		matchedPsychologists = await Psychologist.find({
-			models: payload.model,
 			isTrans: true,
 			specialties: { $in: payload.themes },
 		});
@@ -861,34 +923,21 @@ const match = async body => {
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
-			models: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	}
 
-	if (matchedPsychologists.length == 0) {
-		let newMatchedPsychologists = [];
-		if (payload.gender == 'transgender') {
-			newMatchedPsychologists = await Psychologist.find({
-				isTrans: true,
-				specialties: { $in: payload.themes },
-			});
-		} else {
-			newMatchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					$in: ['male', 'female', 'transgender'],
-				},
-				specialties: { $in: payload.themes },
-			});
-		}
-
-		matchedPsychologists = newMatchedPsychologists;
-		perfectMatch = false;
+	// Se busca el mejor match según criterios (son 3 de momento, pero se pueden agregar más)
+	for (let i = 0; i < cantidadDeCriterios; i++) {
+		matched = await ponderationMatch(
+			matchedPsychologists,
+			payload,
+			i,
+			cantidadDeCriterios
+		);
+		matchedList.push(matched[0]);
 	}
-	matchedPsychologists = await ponderationMatch(
-		matchedPsychologists,
-		payload
-	);
+
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
 		perfectMatch,
