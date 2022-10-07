@@ -819,7 +819,7 @@ const mayorPonderado = (arrayPonderado, type) => {
 	let mayor = arrayPonderado[type];
 	// Hacer que el ponderado tenga un valor mayor y los demás menores disminuyan su valor en la misma cantidad
 	let cantidad = arrayPonderado.length;
-	let disminuir = mayor / cantidad;
+	let disminuir = 60 - mayor;
 	for (let i = 0; i < cantidad; i++) {
 		if (i !== type) {
 			arrayPonderado[i] = arrayPonderado[i] - disminuir;
@@ -852,7 +852,7 @@ const puntajePrecio = precio => {
  * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
  * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @param {Number} type - Tipo de ponderación (0: Especialidad, 1: Disponibilidad, 2: Precio)
+ * @param {Number} type - Tipo de ponderación (0: Points, 1: Especialidad, 2: Disponibilidad, 3: Precio)
  * @param {Number} cantidad - Cantidad de criterios que existen
  * @returns {Array} - Lista de psicologos ponderados
  */
@@ -864,7 +864,7 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			let criterio = 0;
-			let points = psy.points;
+			let points = psy.points * ponderado[criterio];
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			for (let j = 0; j < 3; j++) {
 				if (psy.specialties[j] === payload.themes[j])
@@ -920,12 +920,13 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 
 const match = async body => {
 	const { payload } = body;
-	let cantidadDeCriterios = 3;
+	let cantidadDeCriterios = 4;
 	let matched;
 	let matchedPsychologists = [];
 	let matchedList = [];
 	let perfectMatch = true;
 
+	// Agregar de nuevo modelo terapeutico
 	// Se obtiene la lista de psicologos que coinciden con los temas
 	if (payload.gender == 'transgender') {
 		matchedPsychologists = await Psychologist.find({
