@@ -270,8 +270,8 @@
 															@click="() => setTheme(item)"
 														>
 															{{ item }}
-														</v-btn></template
-													>
+														</v-btn>
+													</template>
 												</v-col>
 											</v-row>
 											<v-btn text color="primary" @click="step = 2">
@@ -392,8 +392,109 @@
 										</v-stepper-content>
 										<v-stepper-content step="5">
 											<div class="primary--text font-weight-bold title">
-												¿Con qué género se siente más cómodo <br />
-												<span>compartiendo lo que le sucede?</span>
+												¿Cuales son sus expectativas sobre el proceso?
+											</div>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Cognitivo-conductual')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Cognitivo-conductual')"
+												block
+												rounded
+												large
+												@click="() => setModels('Cognitivo-conductual')"
+											>
+												Sesiones estructuradas con metas y tareas semanales
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Integrativo')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Integrativo')"
+												block
+												rounded
+												large
+												@click="() => setModels('Integrativo')"
+											>
+												Deseo conocer herramientas para ponerlas en práctica
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Contextual')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Contextual')"
+												block
+												rounded
+												large
+												@click="() => setModels('Contextual')"
+											>
+												Aprender a relacionarme con mis pensamientos y
+												emociones
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Psicoanálisis')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Psicoanálisis')"
+												block
+												rounded
+												large
+												@click="() => setModels('Psicoanálisis')"
+											>
+												Conversar y aprender observando mis experiencias
+												pasadas
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Humanista')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Humanista')"
+												block
+												rounded
+												large
+												@click="() => setModels('Humanista')"
+											>
+												Reflexionar y conocer el origen de mis emociones
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Sistémico')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Sistémico')"
+												block
+												rounded
+												large
+												@click="() => setModels('Sistémico')"
+											>
+												Entender mi forma de interactuar y mejorar mis
+												relaciones
+											</v-btn>
+											<v-btn text color="primary" @click="step = 4">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="6">
+											<div class="primary--text font-weight-bold title">
+												¿Con qué género te sientes más cómodo <br />
+												<span>compartiendo lo que te sucede?</span>
 											</div>
 
 											<v-btn
@@ -475,7 +576,7 @@
 												Me es indiferente
 											</v-btn>
 
-											<v-btn text color="primary" @click="step = 4">
+											<v-btn text color="primary" @click="step = 5">
 												Atras
 											</v-btn>
 										</v-stepper-content>
@@ -687,6 +788,7 @@ export default {
 			schedule: '',
 			genderConfort: '',
 			specialties: [],
+			models: [],
 			psychologists: [],
 			matchedPsychologists: [],
 		};
@@ -770,6 +872,13 @@ export default {
 				this.themes.splice(index, 1);
 			} else if (this.themes.length < 3) this.themes.push(value);
 			if (this.themes.length === 3) this.step = 4;
+		},
+		setModels(model) {
+			if (this.models.includes(model)) {
+				const index = this.models.findIndex(item => item === model);
+				this.models.splice(index, 1);
+			} else if (this.models.length < 3) this.models.push(model);
+			if (this.models.length === 3) this.step = 6;
 		},
 		openPrecharge() {
 			this.dialogPrecharge = true;
