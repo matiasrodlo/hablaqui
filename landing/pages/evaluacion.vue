@@ -283,12 +283,13 @@
 										</v-stepper-content>
 										<v-stepper-content step="4">
 											<div class="primary--text font-weight-bold title">
-												¿Cuales son sus expectativas sobre el proceso?
+												¿En qué momento del día <br />
+												<span>puede asistir a sus citas?</span>
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Cognitivo-conductual'
+													schedule == 'early'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -299,16 +300,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Cognitivo-conductual';
+														schedule = 'early';
 													}
 												"
 											>
-												Sesiones estructuradas con metas y tareas semanales
+												Temprano: Antes de las 9 am
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Integrativo'
+													schedule == 'morning'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -319,16 +320,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Integrativo';
+														schedule = 'morning';
 													}
 												"
 											>
-												Deseo conocer herramientas para ponerlas en práctica
+												En la mañana: Entre 9 am y 12 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Contextual'
+													schedule == 'midday'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -339,17 +340,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Contextual';
+														schedule = 'midday';
 													}
 												"
 											>
-												Aprender a relacionarme con mis pensamientos y
-												emociones
+												A Medio día: Entre 12 y 2 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Psicoanálisis'
+													schedule == 'afternoon'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -360,17 +360,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Psicoanálisis';
+														schedule = 'afternoon';
 													}
 												"
 											>
-												Conversar y aprender observando mis experiencias
-												pasadas
+												En la tarde: Entre 2 y 6 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Humanista'
+													schedule == 'night'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -381,32 +380,11 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Humanista';
+														schedule = 'night';
 													}
 												"
 											>
-												Reflexionar y conocer el origen de mis emociones
-											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													focus == 'Sistémico'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														focus = 'Sistémico';
-													}
-												"
-											>
-												Entender mi forma de interactuar y mejorar mis
-												relaciones
+												En la noche: Después de las 6 pm
 											</div>
 											<v-btn text color="primary" @click="step = 3">
 												Atras
@@ -706,7 +684,7 @@ export default {
 			age: '',
 			firstTherapy: null,
 			themes: [],
-			focus: '',
+			schedule: '',
 			genderConfort: '',
 			specialties: [],
 			psychologists: [],
@@ -742,20 +720,21 @@ export default {
 	},
 	created() {
 		if (process.browser) {
-			const answers = JSON.parse(localStorage.getItem('answers'));
-			if (answers) {
-				this.gender = answers.gender;
-				this.age = answers.age;
-				this.firstTherapy = answers.firstTherapy;
-				this.themes = answers.themes;
-				this.focus = answers.focus;
-				this.genderConfort = answers.genderConfort;
-				localStorage.removeItem('answers');
-				this.openPrecharge();
-			}
 			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
-				this.matchedPsychologists = psi.match;
+			if (psi && psi.match.length) {
+				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
+					this.matchedPsychologists = psi.match;
+				else if (psi._id === null && this.$auth.$state.loggedIn) {
+					localStorage.removeItem('psi');
+					localStorage.setItem(
+						'psi',
+						JSON.stringify({
+							match: psi.match,
+							_id: this.$auth.$state.user._id,
+						})
+					);
+					this.matchedPsychologists = psi.match;
+				}
 			}
 		}
 	},
@@ -780,7 +759,7 @@ export default {
 			this.age = '';
 			this.firstTherapy = null;
 			this.themes = [];
-			this.focus = '';
+			this.schedule = '';
 			this.genderConfort = '';
 			this.matchedPsychologists = [];
 			this.step = '0';
@@ -793,26 +772,13 @@ export default {
 			if (this.themes.length === 3) this.step = 4;
 		},
 		openPrecharge() {
-			if (!this.$auth.$state.loggedIn) {
-				localStorage.setItem(
-					'answers',
-					JSON.stringify({
-						genderConfort: this.genderConfort,
-						themes: this.themes,
-						model: this.focus,
-						firstTherapy: this.firstTherapy,
-						age: this.age,
-						gender: this.gender,
-					})
-				);
-				this.$router.push('/auth/?register=true&from=psy');
-			}
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
 				themes: this.themes,
-				model: this.focus,
+				schedule: this.schedule,
+				model: '',
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
@@ -820,9 +786,11 @@ export default {
 						'psi',
 						JSON.stringify({
 							match: response.filter((el, i) => i < 3),
-							_id: this.$auth.$state.user._id,
+							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
 						})
 					);
+					if (!this.$auth.$state.loggedIn)
+						this.$router.push('/auth/?register=true&from=psy');
 					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
