@@ -431,7 +431,7 @@ const getClients = async psychologist => {
 				name: item.user.name,
 				observation: item.observation,
 				phone: item.user.phone,
-				plan: item.plan.filter(plan => {
+				plan: item.plan.find(plan => {
 					return (
 						moment().isBefore(moment(plan.expiration)) &&
 						plan.payment === 'success'
@@ -441,7 +441,8 @@ const getClients = async psychologist => {
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
 				sessionsId: item._id,
-			})),
+			}))
+			.filter(item => !!item.plan),
 	});
 };
 
