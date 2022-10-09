@@ -822,7 +822,8 @@ const mayorPonderado = (arrayPonderado, type) => {
 	let disminuir = 60 - mayor;
 	for (let i = 0; i < cantidad; i++) {
 		if (i !== type) {
-			arrayPonderado[i] = arrayPonderado[i] - disminuir;
+			arrayPonderado[i] =
+				arrayPonderado[i] - disminuir / (arrayPonderado.length - 1);
 		} else {
 			arrayPonderado[i] = mayor + disminuir;
 		}
@@ -852,12 +853,18 @@ const puntajePrecio = precio => {
  * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
  * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @param {Number} type - Tipo de ponderación (0: Points, 1: Especialidad, 2: Disponibilidad, 3: Precio)
+ * @param {Number} type - Tipo de ponderación (1: Especialidad, 2: Disponibilidad, 3: Precio)
  * @param {Number} cantidad - Cantidad de criterios que existen
  * @returns {Array} - Lista de psicologos ponderados
  */
 
 const ponderationMatch = async (matchedList, payload, type, cantidad) => {
+	const proximosDias = 3;
+	const cantidadDeEspecialidades = 3;
+	const puntosPorCriterio = 3;
+	// Se incrementa en 1 el tipo, para no obtener el mejor psicologo en puntaje, pero ponderandolo
+	type++;
+	cantidad++;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
 	let ponderado = generarPonderado(cantidad);
 	ponderado = mayorPonderado(ponderado, type);
@@ -865,15 +872,16 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 		matchedList.map(async psy => {
 			let criterio = 0;
 			let points = psy.points * ponderado[criterio];
+			criterio++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
-			for (let j = 0; j < 3; j++) {
+			for (let j = 0; j < cantidadDeEspecialidades; j++) {
 				if (psy.specialties[j] === payload.themes[j])
-					points += 3 * ponderado[criterio];
+					points += puntosPorCriterio * ponderado[criterio];
 			}
 			criterio++;
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
 			const dias = await getFormattedSessionsForMatch(psy._id);
-			for (let i = 0; i < 3; i++) {
+			for (let i = 0; i < proximosDias; i++) {
 				// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
 				dias[i].available.forEach(hora => {
 					if (
@@ -883,7 +891,7 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 						) &&
 						payload.schedule == 'morning'
 					) {
-						points += 3 * ponderado[criterio];
+						points += puntosPorCriterio * ponderado[criterio];
 					} else if (
 						moment(hora, 'HH:mm').isBetween(
 							moment('13:00', 'HH:mm'),
@@ -899,7 +907,7 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 						) &&
 						payload.schedule == 'afternoon'
 					) {
-						points += 3 * ponderado[criterio];
+						points += puntosPorCriterio * ponderado[criterio];
 					}
 				});
 			}
@@ -920,17 +928,16 @@ const ponderationMatch = async (matchedList, payload, type, cantidad) => {
 
 const match = async body => {
 	const { payload } = body;
-	let cantidadDeCriterios = 4;
+	let cantidadDeCriterios = 3;
 	let matched;
 	let matchedPsychologists = [];
 	let matchedList = [];
 	let perfectMatch = true;
 
-	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de psicologos que coinciden con los temas
 	if (payload.gender == 'transgender') {
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
+			model: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	} else {
@@ -938,10 +945,32 @@ const match = async body => {
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
+			model: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	}
 
+	// Agregar de nuevo modelo terapeutico
+	// Se obtiene la lista de psicologos que coinciden con los temas
+	if (matchedPsychologists.length === 0) {
+		if (payload.gender == 'transgender') {
+			matchedPsychologists = await Psychologist.find({
+				isTrans: true,
+				specialties: { $in: payload.themes },
+			});
+		} else {
+			matchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					$in: ['male', 'female', 'transgender'],
+				},
+				specialties: { $in: payload.themes },
+			});
+		}
+		if (matchedPsychologists.length === 0) {
+			matchedPsychologists = await Psychologist.find();
+		}
+		perfectMatch = false;
+	}
 	// Se busca el mejor match según criterios (son 3 de momento, pero se pueden agregar más)
 	for (let i = 0; i < cantidadDeCriterios; i++) {
 		matched = await ponderationMatch(
