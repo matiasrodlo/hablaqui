@@ -1,6 +1,7 @@
 'use strict';
 
 import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
+import sessionsFunctions from './sessions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction'; // Funcion para obtener todas las sesiones de un psicologo
 import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologos para mongodb
 import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de recruitment para mongodb
@@ -24,16 +25,155 @@ const getAll = async () => {
 	return okResponse('psicologos obtenidos', { psychologists }); // Se retorna una respuesta con los psicologos
 };
 
+/**
+ * @description Genera un array con los ponderados para los criterios
+ * @param {Number} cantidad - Cantidad de criterios
+ * @returns {Array} - Array con los ponderados
+ */
+
+const generarPonderado = cantidad => {
+	let ponderado = 100 / cantidad;
+	let arrayPonderado = [];
+	for (let i = 0; i < cantidad; i++) {
+		arrayPonderado.push(ponderado);
+	}
+	return arrayPonderado;
+};
+
+/**
+ * @description Prioriza los criterios segun el ponderado
+ * @param {Array} arrayPonderado  - Array con los ponderados
+ * @param {Number} type - Tipo de criterio
+ * @returns - Array con los criterios priorizados
+ */
+
+const mayorPonderado = (arrayPonderado, type) => {
+	let mayor = arrayPonderado[type];
+	// Hacer que el ponderado tenga un valor mayor y los demás menores disminuyan su valor en la misma cantidad
+	let cantidad = arrayPonderado.length;
+	let disminuir = 60 - mayor;
+	for (let i = 0; i < cantidad; i++) {
+		if (i !== type) {
+			arrayPonderado[i] =
+				arrayPonderado[i] - disminuir / (arrayPonderado.length - 1);
+		} else {
+			arrayPonderado[i] = mayor + disminuir;
+		}
+	}
+	for (let i = 0; i < cantidad; i++) {
+		arrayPonderado[i] /= 100;
+	}
+	return arrayPonderado;
+};
+
+/**
+ * @description Asigna puntaje por el precio de la sesión
+ * @param {Number} precio - Precio de la sesión
+ * @returns - Puntaje
+ */
+
+const puntajePrecio = precio => {
+	let puntaje = 0;
+	for (let i = 0; i < precio / 100; i += 10) {
+		puntaje -= 3;
+	}
+	return puntaje;
+};
+
+/**
+ * @description Pondera los psicologos según tres criterios,
+ * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
+ * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
+ * @param {Object} payload - Objeto con las preferencias del usuario
+ * @param {Number} type - Tipo de ponderación (1: Especialidad, 2: Disponibilidad, 3: Precio)
+ * @param {Number} cantidad - Cantidad de criterios que existen
+ * @returns {Array} - Lista de psicologos ponderados
+ */
+
+const ponderationMatch = async (matchedList, payload, type, cantidad) => {
+	const proximosDias = 3;
+	const cantidadDeEspecialidades = 3;
+	const puntosPorCriterio = 3;
+	// Se incrementa en 1 el tipo, para no obtener el mejor psicologo en puntaje, pero ponderandolo
+	type++;
+	cantidad++;
+	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
+	let ponderado = generarPonderado(cantidad);
+	ponderado = mayorPonderado(ponderado, type);
+	let newMatchedList = await Promise.all(
+		matchedList.map(async psy => {
+			let criterio = 0;
+			let points = psy.points * ponderado[criterio];
+			criterio++;
+			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
+			for (let j = 0; j < cantidadDeEspecialidades; j++) {
+				if (psy.specialties[j] === payload.themes[j])
+					points += puntosPorCriterio * ponderado[criterio];
+			}
+			criterio++;
+			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
+			const dias = await sessionsFunctions.getFormattedSessionsForMatch(
+				psy._id
+			);
+			for (let i = 0; i < proximosDias; i++) {
+				// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
+				dias[i].available.forEach(hora => {
+					if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('06:00', 'HH:mm'),
+							moment('12:59', 'HH:mm')
+						) &&
+						payload.schedule == 'morning'
+					) {
+						points += puntosPorCriterio * ponderado[criterio];
+					} else if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('13:00', 'HH:mm'),
+							moment('15:59', 'HH:mm')
+						) &&
+						payload.schedule == 'midday'
+					) {
+						points += 3 * ponderado[criterio];
+					} else if (
+						moment(hora, 'HH:mm').isBetween(
+							moment('16:00', 'HH:mm'),
+							moment('23:00', 'HH:mm')
+						) &&
+						payload.schedule == 'afternoon'
+					) {
+						points += puntosPorCriterio * ponderado[criterio];
+					}
+				});
+			}
+			criterio++;
+			// Se obtiene el precio del psicologo y se le asigna un puntaje dado por el precio
+			points += puntajePrecio(psy.price) * ponderado[criterio];
+			criterio++;
+			// De documento de mongo se pasa a un formato de objeto JSON
+			let psychologist = JSON.stringify(psy);
+			psychologist = JSON.parse(psychologist);
+			return { ...psychologist, points };
+		})
+	);
+	// Se ordena el arreglo por puntuación manual del psicologo
+	newMatchedList = newMatchedList.sort((a, b) => b.points - a.points);
+	return newMatchedList;
+};
+
 const match = async body => {
-	// Funcion para hacer match con un psicologo, recibe las respuestas y comienza el proceso (matchmaking)
-	const { payload } = body; // Se obtienen los datos del payload, un payload es un objeto con las respuestas del cliente.
-	let matchedPsychologists = []; // Los psicologos que coinciden con el cliente
+	const { payload } = body;
+	let cantidadDeCriterios = 3;
+	let matched;
+	let matchedPsychologists = [];
+	let matchedList = [];
+	let perfectMatch = true;
+
 	if (payload.gender == 'transgender') {
 		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
-			models: payload.model, // Modelo terapeutico, la forma en que el cliente quiere afrontar las sesiones. (metas, formas de intervencion, etc)
 			isTrans: true,
-			specialties: { $in: payload.themes }, // Filtra por especialidades
+			model: payload.model,
+			specialties: { $in: payload.themes },
 		});
 	} else {
 		// Si no es transgenero
@@ -42,37 +182,49 @@ const match = async body => {
 				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
-			models: payload.model,
+			model: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	}
-	if (matchedPsychologists.length == 0) {
-		// Si no se encuentra psicologos
-		let newMatchedPsychologists = [];
+
+	// Agregar de nuevo modelo terapeutico
+	// Se obtiene la lista de psicologos que coinciden con los temas
+	if (matchedPsychologists.length === 0) {
 		if (payload.gender == 'transgender') {
-			newMatchedPsychologists = await Psychologist.find({
+			matchedPsychologists = await Psychologist.find({
 				isTrans: true,
 				specialties: { $in: payload.themes },
 			});
 		} else {
-			newMatchedPsychologists = await Psychologist.find({
+			matchedPsychologists = await Psychologist.find({
 				gender: payload.gender || {
 					$in: ['male', 'female', 'transgender'],
 				},
 				specialties: { $in: payload.themes },
 			});
 		}
-
-		return okResponse('Psicologos encontrados', {
-			matchedPsychologists: newMatchedPsychologists,
-			perfectMatch: false,
-		});
-	} else {
-		return okResponse('psicologos encontrados', {
-			matchedPsychologists,
-			perfectMatch: true,
-		});
+		if (matchedPsychologists.length === 0) {
+			matchedPsychologists = await Psychologist.find();
+		}
+		perfectMatch = false;
 	}
+	// Se busca el mejor match según criterios (son 3 de momento, pero se pueden agregar más)
+	for (let i = 0; i < cantidadDeCriterios; i++) {
+		matched = await ponderationMatch(
+			matchedPsychologists,
+			payload,
+			i,
+			cantidadDeCriterios
+		);
+		matchedList.push(matched[0]);
+	}
+
+	console.log(matchedList.length);
+
+	return okResponse('psicologos encontrados', {
+		matchedPsychologists,
+		perfectMatch,
+	});
 };
 
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
