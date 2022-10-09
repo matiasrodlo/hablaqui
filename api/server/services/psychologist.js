@@ -20,9 +20,9 @@ moment.tz.setDefault('America/Santiago'); // Se configura la zona horaria de la 
 
 const getAll = async () => {
 	// Funcion para obtener todos los psicologos
-	let psychologists = await Psychologist.find(); // Se obtienen todos los psicologos
-	logInfo('obtuvo todos los psicologos'); // Se imprime en consola
-	return okResponse('psicologos obtenidos', { psychologists }); // Se retorna una respuesta con los psicologos
+	let psychologists = await Psychologist.find();
+	logInfo('obtuvo todos los psicologos');
+	return okResponse('psicologos obtenidos', { psychologists });
 };
 
 /**
@@ -269,54 +269,47 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 };
 
 const updatePlan = async (psychologistId, planInfo) => {
-	// Funcion para actualizar el plan de un psicologo
+	// Funcion para actualizar el plan de un psicologo, se busca el psicologo por su id y se actualiza
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		// Se busca el psicologo por su id y se actualiza
-		psychologistId, // Se busca el psicologo por su id
+		psychologistId,
 		{
 			$push: {
-				// Se inserta el nuevo plan en la base de datos, se usa el operador $push.
 				psyPlans: { paymentStatus: 'success', ...planInfo },
 			},
 		},
 		{ new: true }
 	);
-	return okResponse('Plan creado', { psychologist: updatedPsychologist }); // Se retorna el psicologo actualizado
+	return okResponse('Plan creado', { psychologist: updatedPsychologist });
 };
 
 const getByData = async username => {
 	// Funcion para obtener un psicologo por su username
-	const usernameSearch = await Psychologist.findOne({ username }); // Se busca el psicologo por su username
+	const usernameSearch = await Psychologist.findOne({ username });
 	if (!usernameSearch) {
-		// Si no se encuentra el psicologo
-		const idSearch = await Psychologist.findOne({ _id: username }); // Se busca el psicologo por su id
+		const idSearch = await Psychologist.findOne({ _id: username });
 		return okResponse('Psicólogo encontrado', {
-			// Se retorna una respuesta con el psicologo
-			psychologist: idSearch, // Se retorna el psicologo por su id
+			psychologist: idSearch,
 		});
 	}
 	return okResponse('Psicólogo encontrado', { psychologist: usernameSearch }); // Se retorna una respuesta con el psicologo
 };
 
 const setSchedule = async (user, payload) => {
-	// Funcion para actualizar el horario de un psicologo
 	let response;
-	// Si el user es un psicologo
+	// Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
 	if (user.psychologist) {
 		response = await Psychologist.findByIdAndUpdate(
-			// Se busca el psicologo por su id y se actualiza
 			user.psychologist,
 			{
 				$set: {
-					// Se actualiza el horario
 					schedule: {
-						monday: payload.monday, // Se actualiza el horario de lunes
-						tuesday: payload.tuesday, // Se actualiza el horario de martes
-						wednesday: payload.wednesday, // Se actualiza el horario de miercoles
-						thursday: payload.thursday, // Se actualiza el horario de jueves
-						friday: payload.friday, // Se actualiza el horario de viernes
-						saturday: payload.saturday, // Se actualiza el horario de sabado
-						sunday: payload.sunday, // Se actualiza el horario de domingo
+						monday: payload.monday,
+						tuesday: payload.tuesday,
+						wednesday: payload.wednesday,
+						thursday: payload.thursday,
+						friday: payload.friday,
+						saturday: payload.saturday,
+						sunday: payload.sunday,
 					},
 				},
 			},
@@ -326,11 +319,9 @@ const setSchedule = async (user, payload) => {
 	// Si el user es un postulante (psychologist === undefined), pero no un user
 	else {
 		response = await Recruitment.findOneAndUpdate(
-			// Se busca el postulante por su id y se actualiza
-			{ email: user.email }, // Se busca el postulante por su email
+			{ email: user.email },
 			{
 				$set: {
-					// Se actualiza el horario
 					schedule: {
 						monday: payload.monday,
 						tuesday: payload.tuesday,
@@ -346,86 +337,72 @@ const setSchedule = async (user, payload) => {
 		);
 	}
 	return okResponse('Horario actualizado', {
-		// Se retorna una respuesta con el horario actualizado
 		psychologist: response,
 	});
 };
 
 const updatePaymentMethod = async (user, payload) => {
-	// Funcion para actualizar el metodo de pago de un psicologo
 	if (user.role !== 'psychologist')
-		// Si el user no es un psicologo
 		return conflictResponse('No eres un psicologo.');
-	// Se retorna una respuesta de conflicto
 	else {
-		// Si el user es un psicologo
-		let foundPsychologist; // Se crea una variable para almacenar el psicologo
+		// Si el user es un psicologo se busca por su id y se actualiza el metodo de pago
+		let foundPsychologist;
 		if (user.psychologist) {
-			// Si el user es un psicologo
-			foundPsychologist = await Psychologist.findById(user.psychologist); // Se busca el psicologo por su id
+			foundPsychologist = await Psychologist.findById(user.psychologist);
 		} else {
 			// Si el user es un postulante
 			foundPsychologist = await Recruitment.findOne({
-				// Se busca el postulante por su email
 				email: user.email,
 			});
 		}
+		// Se crea un nuevo metodo de pago, se agregan los datos y se guarda
 		const newPaymentMethod = {
-			// Se crea un nuevo metodo de pago
-			bank: payload.bank || foundPsychologist.paymentMethod.bank, // Se actualiza el banco
-			// Se actualiza el tipo de cuenta
+			bank: payload.bank || foundPsychologist.paymentMethod.bank,
 			accountType:
 				payload.accountType ||
 				foundPsychologist.paymentMethod.accountType,
-			// Se actualiza el numero de cuenta
 			accountNumber:
 				payload.accountNumber ||
 				foundPsychologist.paymentMethod.accountNumber,
-			rut: payload.rut || foundPsychologist.paymentMethod.rut, // Se actualiza el rut
-			name: payload.name || foundPsychologist.paymentMethod.name, // Se actualiza el nombre
-			email: payload.email || foundPsychologist.paymentMethod.email, // Se actualiza el email
+			rut: payload.rut || foundPsychologist.paymentMethod.rut,
+			name: payload.name || foundPsychologist.paymentMethod.name,
+			email: payload.email || foundPsychologist.paymentMethod.email,
 		};
-		foundPsychologist.paymentMethod = newPaymentMethod; // Se actualiza el metodo de pago
-		await foundPsychologist.save(); // Se guarda el psicologo
+		foundPsychologist.paymentMethod = newPaymentMethod;
+		await foundPsychologist.save();
 		return okResponse('Metodo de pago actualizado', {
-			// Se retorna una respuesta con el metodo de pago actualizado
-			psychologist: foundPsychologist, // Se retorna el psicologo actualizado
+			psychologist: foundPsychologist,
 		});
 	}
 };
 
 const updatePsychologist = async (user, profile) => {
-	// Funcion para actualizar el perfil de un psicologo
-	if (user.role == 'user') return conflictResponse('No tienes poder.'); // Si el user no es un psicologo
+	if (user.role == 'user') return conflictResponse('No tienes poder.');
 	if (user.psychologist) {
-		// Si el user es un psicologo
+		// Si el user es un psicologo intenta actualizar el psicologo
 		try {
-			// Se intenta actualizar el psicologo
-			const psy = await Psychologist.findById(profile._id); // Se busca el psicologo por su id
+			const psy = await Psychologist.findById(profile._id);
 			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
-				// Si el precio de la sesion es diferente
+				// Si el precio de la sesion es diferente y el precio establecido aun no ha expirado
 				if (
-					psy.stampSetPrices && // Si el psicologo tiene un set de precios
+					psy.stampSetPrices &&
 					moment().isBefore(
-						// Y el precio establecido aun no ha expirado
 						moment(psy.stampSetPrices).add(1, 'months')
 					)
 				)
 					profile.sessionPrices = psy.sessionPrices;
-				// Se actualiza el precio de la sesion de video
-				else profile.stampSetPrices = moment().format(); // Se actualiza la fecha de inicio del set de precios
+				else profile.stampSetPrices = moment().format();
 			}
-
 			const updated = await Psychologist.findByIdAndUpdate(
-				// Se busca el psicologo por su id y se actualiza
-				profile._id, // Se busca el psicologo por su id
-				profile, // Se actualiza el perfil
+				profile._id,
+				profile,
 				{
-					new: true, // Se retorna el psicologo actualizado
-					runValidators: true, // Se ejecutan las validaciones
-					context: 'query', // Se ejecutan las validaciones
+					new: true,
+					runValidators: true,
+					context: 'query',
 				}
 			);
+			// Hace el trackeo de segment
 			if (
 				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
@@ -468,30 +445,27 @@ const updatePsychologist = async (user, profile) => {
 				});
 			}
 
-			logInfo(user.email, 'actualizo su perfil de psicologo'); // Se registra la accion en el log
+			logInfo(user.email, 'actualizo su perfil de psicologo');
 			return okResponse('Actualizado exitosamente', {
-				// Se retorna una respuesta con el psicologo actualizado
-				psychologist: updated, // Se retorna el psicologo actualizado
+				psychologist: updated,
 			});
 		} catch (err) {
-			// Si ocurre un error
-			logInfo(err.stack); // Se registra el error en el log
+			logInfo(err.stack);
 			return conflictResponse(
-				'Ocurrió un error al actualizar el perfil. Verifica los campos.' // Se retorna una respuesta de error
+				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
 			);
 		}
 	} else {
-		// Si el user no es un psicologo
 		try {
 			// Se intenta actualizar el psicologo
 			const updated = await Recruitment.findByIdAndUpdate(
-				// Se busca el psicologo por su id y se actualiza
-				profile._id, // Se busca el psicologo por su id
-				profile, // Se actualiza el perfil
+				profile._id,
+				profile,
 				{
 					new: true,
 				}
 			);
+			// Se hace el trackeo de segment
 			if (
 				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
@@ -532,14 +506,11 @@ const updatePsychologist = async (user, profile) => {
 				});
 			}
 			return okResponse('Actualizado exitosamente', {
-				// Se retorna una respuesta con el psicologo actualizado
-				psychologist: updated, // Se retorna el psicologo actualizado
+				psychologist: updated,
 			});
 		} catch (err) {
-			// Si ocurre un error
-			logInfo(err.stack); // Se registra el error en el log
+			logInfo(err.stack);
 			return conflictResponse(
-				// Se retorna una respuesta de error
 				'Ocurrió un error al actualizar el perfil. Verifica los campos.'
 			);
 		}
@@ -547,68 +518,60 @@ const updatePsychologist = async (user, profile) => {
 };
 
 const deleteOne = async (user, id) => {
-	// Funcion para eliminar un psicologo
 	if (user.role !== 'superuser')
-		// Si el user no es superuser
 		return conflictResponse(
-			// Se retorna una respuesta de error
 			'No tienes permisos suficientes para realizar esta acción'
 		);
 
-	await Psychologist.deleteOne({ _id: id }); // Se elimina el psicologo
-	const psychologists = await Psychologist.find(); // Se buscan todos los psicologos
-	return okResponse('Psicologo eliminado', { psychologists }); // Se retorna una respuesta con todos los psicologos
+	// Se elimina el psicologo, se busca por id y se elimina
+	await Psychologist.deleteOne({ _id: id });
+	const psychologists = await Psychologist.find();
+	return okResponse('Psicologo eliminado', { psychologists });
 };
 
 const setPrice = async (user, newPrice) => {
-	// Funcion para cambiar el precio de un psicologo
-	newPrice = Number(newPrice); // Se convierte el precio a numero
+	newPrice = Number(newPrice);
 	if (user.role != 'psychologist')
-		// Si el user no es un psicologo
-		return conflictResponse('No tienes permisos'); // Se retorna una respuesta de error
-	const psy = await Psychologist.findById(user.psychologist); // Se busca el psicologo por su id
+		return conflictResponse('No tienes permisos');
+	const psy = await Psychologist.findById(user.psychologist);
 
+	// Si el psicologo ya esta establecido, y el precio aún no expira
 	if (
-		psy.stampSetPrices && // Si el psicologo ya tiene un precio establecido
-		moment().isBefore(moment(psy.stampSetPrices).add(1, 'months')) // Y el precio establecido aun no ha expirado
+		psy.stampSetPrices &&
+		moment().isBefore(moment(psy.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
-			// Se retorna una respuesta de error
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
 		);
+
+	// Se actualiza el precio
 	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		// Se busca el psicologo por su id y se actualiza
-		user.psychologist, // Se busca el psicologo por su id
+		user.psychologist,
 		{
 			sessionPrices: {
-				// Se actualiza el precio de la sesion
-				text: newPrice * 0.75, // Se calcula el precio de texto
-				video: newPrice, // Se calcula el precio de video
-				full: newPrice * 1.25, // Se calcula el precio de sesion completa
+				text: newPrice * 0.75,
+				video: newPrice,
+				full: newPrice * 1.25,
 			},
-			stampSetPrices: moment(), // Se actualiza la fecha de cuando se establecio el precio
+			stampSetPrices: moment(),
 		},
 		{ new: true }
 	);
 	return okResponse('Precios actualizados', {
-		// Se retorna una respuesta con el psicologo actualizado
-		psychologist: updatedPsychologist, // Se retorna el psicologo actualizado
+		psychologist: updatedPsychologist,
 	});
 };
 
 const getClients = async psychologist => {
-	// Funcion para obtener los clientes de un psicologo
+	// Se busca las sessiones de un psicologo en particular y se filtran por las que estan pagadas
 	let sessions = await Sessions.find({
-		// Se buscan todas las sesiones
 		psychologist: psychologist,
 	}).populate('user');
 
 	return okResponse('Usuarios encontrados', {
-		// Se retorna una respuesta con los clientes
-		users: sessions // Se retorna todos los clientes
-			.filter(item => item.user) // Se filtran los clientes que tienen un usuario
+		users: sessions
+			.filter(item => item.user)
 			.map(item => ({
-				// Se retorna un arreglo con los clientes
 				_id: item.user._id,
 				avatar: item.user.avatar,
 				avatarThumbnail: item.user.avatarThumbnail,
@@ -640,48 +603,40 @@ const getClients = async psychologist => {
 };
 
 const getLastSession = item => {
-	// Funcion para obtener la ultima sesion de un cliente
-	return item.plan // Se retorna la ultima sesion del cliente
-		.flatMap((
-			plan // flatMap se usa para obtener todos los planes del cliente
-		) =>
+	// Se obtiene la ultima sesion de un documento Sessions, se le da formato, se ordena, se filtra y se retorna
+	return item.plan
+		.flatMap(plan =>
 			plan.session.map(session =>
 				moment(session.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY')
 			)
 		)
-		.sort((a, b) => new Date(b) - new Date(a)) // Se ordena de forma descendente
-		.find(
-			(
-				sessionDate // Se busca la ultima sesion
-			) => moment(sessionDate, 'DD/MM/YYYY').isSameOrBefore(moment()) // Se busca la ultima sesion que no ha expirado
+		.sort((a, b) => new Date(b) - new Date(a))
+		.find(sessionDate =>
+			moment(sessionDate, 'DD/MM/YYYY').isSameOrBefore(moment())
 		);
 };
 
 const searchClients = async search => {
-	// Funcion para buscar clientes
-	const foundUser = await User.find({ email: search, name: search }); // Se buscan los clientes por su email o nombre
+	// Se busca un usuario por nombre y correo
+	const foundUser = await User.find({ email: search, name: search });
 	if (!foundUser) {
-		// Si no se encontro ningun cliente
-		return okResponse('No se encontró al usuario', { users: [] }); // Se retorna una respuesta con un arreglo vacio
+		return okResponse('No se encontró al usuario', { users: [] });
 	}
-	return okResponse('Usuario encontrado', { users: foundUser }); // Se retorna una respuesta con el cliente encontrado
+	return okResponse('Usuario encontrado', { users: foundUser });
 };
 
 const usernameAvailable = async username => {
-	// Funcion para verificar si un username esta disponible
-	let available = true; // Se inicializa la variable como disponible
-	if (await Psychologist.exists({ username })) available = false; // Si el username ya existe
+	// Se verifica si el nombre de usuario ya existe para saber si el usuario está disponible
+	let available = true;
+	if (await Psychologist.exists({ username })) available = false;
 	return okResponse(
-		// Se retorna una respuesta con el estado de disponibilidad
 		available ? 'Usuario disponible' : 'Usuario ya esta ocupado',
 		{ available }
 	);
 };
 
 const updateFormationExperience = async (user, payload) => {
-	// Funcion para actualizar la experiencia y la formacion de un psicologo
 	if (user.role != 'psychologist') {
-		// Si el user no es un psicologo
 		return conflictResponse('No eres psicologo');
 	}
 
@@ -695,40 +650,38 @@ const updateFormationExperience = async (user, payload) => {
 	 */
 
 	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		// Se busca el psicologo por su id y se actualiza
-		user.psychologist, // Se busca el psicologo por su id
-		payload, // Se actualiza el psicologo con los datos del payload
+		user.psychologist,
+		payload,
 		{ new: true }
 	);
 	return okResponse('psicologo actualizado', {
-		// Se retorna una respuesta con el psicologo actualizado
-		psychologist: updatedPsychologist, // Se retorna el psicologo actualizado
+		psychologist: updatedPsychologist,
 	});
 };
 
 const uploadProfilePicture = async (psyID, picture) => {
-	// Funcion para subir una foto de perfil
-	if (!picture) return conflictResponse('No se ha enviado ninguna imagen'); // Se retorna una respuesta de error
-	const { name, lastName, _id } = await User.findById(psyID); // Se busca el usuario por su id
-	const gcsname = `${psyID}-${name}-${lastName}`; // Se crea el nombre del archivo en GCS
-	const file = bucket.file(gcsname); // Se crea el archivo en GCS, GCS es un bucket de Google Cloud Storage, un bucket en Google Cloud Storage son contenedores básicos que contienen los datos
+	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
+	const { name, lastName, _id } = await User.findById(psyID);
+	// Se crea el archivo en GCS, GCS es un bucket de Google Cloud Storage, un bucket en Google Cloud Storage son contenedores básicos que contienen los datos
+	const gcsname = `${psyID}-${name}-${lastName}`;
+	const file = bucket.file(gcsname);
+	// Se crea un stream para escribir en el archivo y se escribe el metadato de la imagen
 	const stream = file.createWriteStream({
-		// Se crea un stream para escribir en el archivo
 		metadata: {
-			// Se crea un metadato para el archivo
-			contentType: picture.mimetype, // Se le asigna el tipo de archivo
+			contentType: picture.mimetype,
 		},
 	});
 	stream.on('error', err => {
-		// Se crea un evento para manejar el error
-		picture.cloudStorageError = err; // Se le asigna el error al archivo
-		conflictResponse('Error al subir la imagen'); // Se retorna una respuesta de error
+		picture.cloudStorageError = err;
+		conflictResponse('Error al subir la imagen');
 	});
 	stream.on('finish', () => {
-		// Se crea un evento para manejar el fin de la escritura
-		logInfo(`${gcsname}` + ' subido exitosamente'); // Se loguea la subida exitosa
+		logInfo(`${gcsname}` + ' subido exitosamente');
 	});
-	stream.end(picture.buffer); // Se escribe el archivo en el stream
+	// Se escribe el archivo en el stream
+	stream.end(picture.buffer);
+
+	// Se hace el trackeo de la imagen en segment
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -743,51 +696,44 @@ const uploadProfilePicture = async (psyID, picture) => {
 	}
 
 	await Psychologist.findByIdAndUpdate(psyID, {
-		// Se actualiza el psicologo
-		avatar: getPublicUrlAvatar(gcsname), // Se le asigna la url de la imagen
-		avatarThumbnail: getPublicUrlAvatarThumb(gcsname), // Se le asigna la url de la imagen
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
 	});
 
 	return okResponse('Imagen subida', {
 		// Se retorna una respuesta de exito
-		avatar: getPublicUrlAvatar(gcsname), // Se le asigna la url de la imagen
-		avatarThumbnail: getPublicUrlAvatarThumb(gcsname), // Se le asigna la url de la imagen
+		avatar: getPublicUrlAvatar(gcsname),
+		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
 	});
 };
 
 const approveAvatar = async (user, id) => {
-	// Funcion para aprobar una imagen
 	if (user.role !== 'superuser')
-		// Si el usuario no es superuser
 		return conflictResponse(
-			// Se retorna un error
 			'No tienes permisos suficientes para realizar esta acción'
 		);
 
+	// Se busca el psicologo y se le aprueba la imagen de avatar
 	const psychologist = await Psychologist.findByIdAndUpdate(
-		// Se busca el psicologo
 		id,
 		{
-			approveAvatar: true, // Se actualiza el campo de aprobacion de la imagen
+			approveAvatar: true,
 		},
 		{ new: true }
 	);
 	return okResponse('Avatar aprobado', {
-		// Se retorna un mensaje de exito
 		psychologist,
 	});
 };
 
 const changeToInmediateAttention = async psy => {
-	// Cambia el plan a plan inmediato de atención
 	/*if (user.role !== 'psychologist')
 		return conflictResponse('No tienes permitida esta opción');
 	const psy = user.psychologist;*/
-	let psychologist = await Psychologist.findById(psy); // Se obtiene el psicologo
+	let psychologist = await Psychologist.findById(psy);
+	// Si la atención inmediata está activada, se desactiva
 	if (psychologist.inmediateAttention.activated) {
-		// Si ya esta activado el plan inmediato de atención
 		psychologist = await Psychologist.findOneAndUpdate(
-			// Se actualiza el plan a plan normal
 			{ _id: psy },
 			{
 				$set: {
@@ -801,15 +747,14 @@ const changeToInmediateAttention = async psy => {
 		);
 	} else {
 		// Si no esta activado el plan inmediato de atención
-		let sessions = await getAllSessionsFunction(psy); // Se obtienen todas las sesiones del psicologo
-		let now = new Date(); // Se obtiene la fecha actual
+		let sessions = await getAllSessionsFunction(psy);
+		let now = new Date();
+		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
 		sessions = sessions.filter(session => {
-			// Se filtran las sesiones que ya pasaron
-			const date = moment(session.date).format('DD/MM/YYYY HH:mm'); // Se obtiene la fecha de la sesión
+			const date = moment(session.date).format('DD/MM/YYYY HH:mm');
 			return (
-				// Se retorna la sesión si la fecha de la sesión es mayor a la fecha actual
-				session.status !== 'success' && // Se retorna la sesión si el estado de la sesión no es exitosa
-				moment(date).isBefore(moment(now).add(3, 'hours')) && // y si la fecha de la sesión es menor a la fecha actual mas 3 horas
+				session.status !== 'success' &&
+				moment(date).isBefore(moment(now).add(3, 'hours')) &&
 				moment(date)
 					.add(50, 'minutes')
 					.isAfter(moment(now))
@@ -817,11 +762,10 @@ const changeToInmediateAttention = async psy => {
 		});
 
 		if (sessions.length !== 0)
-			// Si hay sesiones que no han sido atendidas
-			return conflictResponse('Tiene sesiones próximas'); // Se informa que tiene sesiones próximas
+			return conflictResponse('Tiene sesiones próximas');
 
+		// Se activa el plan inmediato de atención
 		psychologist = await Psychologist.findOneAndUpdate(
-			// Se actualiza el plan a plan inmediato de atención
 			{ _id: psy },
 			{
 				$set: {
@@ -837,12 +781,11 @@ const changeToInmediateAttention = async psy => {
 		);
 	}
 
-	const msj = psychologist.inmediateAttention.activated // Se obtiene el estado del plan inmediato de atención
+	const msj = psychologist.inmediateAttention.activated
 		? 'Estaras disponible durante las proxima 3 horas'
 		: 'Atención inmediata desactivada';
 
 	return okResponse(msj, {
-		// Se retorna el estado del plan inmediato de atención
 		psychologist,
 	});
 };
