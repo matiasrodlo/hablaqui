@@ -13,7 +13,6 @@ var Analytics = require('analytics-node'); // Analytics-node sirve para integrar
 var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
 
 const recruitmentService = {
-	// Se crea un objeto que contiene los servicios de recruitment
 	/**
 	 * @description - This controller is used to create a new recruitment profile
 	 * @param {Object} user - The user object with all the details for the profile
@@ -216,7 +215,6 @@ const recruitmentService = {
 			{ _id: recruitedId },
 			{
 				$push: {
-					// Se agrega el nuevo plan
 					psyPlans: { paymentStatus: 'success', ...newPlan },
 				},
 			},
