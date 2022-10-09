@@ -753,6 +753,7 @@
 										type="text"
 										class="pb-0"
 										:items="specialties"
+										@input="limiterSpecialities"
 									>
 										<template #selection>
 											<div></div>
@@ -792,6 +793,7 @@
 											'Humanista',
 											'Sistémico',
 										]"
+										@input="limiterModels"
 									>
 										<template #selection>
 											<div></div>
@@ -1369,6 +1371,13 @@ export default {
 			});
 			this.$auth.setUser(user);
 		},
+		limiterModels(e) {
+			if (e.length > 2) e.pop();
+		},
+		limiterSpecialities(e) {
+			if (e.length > 6) e.pop();
+		},
+
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			updateUser: 'User/updateUser',
