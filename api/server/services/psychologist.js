@@ -219,8 +219,6 @@ const match = async body => {
 		matchedList.push(matched[0]);
 	}
 
-	console.log(matchedList.length);
-
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
 		perfectMatch,
