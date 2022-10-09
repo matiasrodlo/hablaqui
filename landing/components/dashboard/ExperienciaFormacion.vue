@@ -17,6 +17,7 @@
 					]"
 					type="text"
 					:value="psychologist.models"
+					@input="limiterModels"
 					@change="e => setPsychologist({ ...psychologist, models: e })"
 				></v-select>
 			</v-sheet>
@@ -33,6 +34,7 @@
 					type="text"
 					:items="specialties"
 					:value="psychologist.specialties"
+					@input="limiterSpecialities"
 					@change="e => setPsychologist({ ...psychologist, specialties: e })"
 				></v-select>
 			</v-sheet>
@@ -484,6 +486,12 @@ export default {
 					end: '',
 				};
 			this.dialogFormation = true;
+		},
+		limiterModels(e) {
+			if (e.length > 2) e.pop();
+		},
+		limiterSpecialities(e) {
+			if (e.length > 6) e.pop();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
