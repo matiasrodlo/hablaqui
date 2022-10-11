@@ -155,7 +155,7 @@ export default {
 			return '';
 		},
 		changePsychologist() {
-			return alert('Proximante podras cambiar tu psicologo desde aqui');
+			return alert('Por favor, escribanos a nuestro WhatsApp: +569 7132 6467');
 		},
 		goToReview() {
 			return this.$router.push(`/review?psychologist=${this.psychologist._id}`);

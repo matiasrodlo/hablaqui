@@ -37,7 +37,7 @@
 				<v-expansion-panel-header>
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
-							Configuración personal
+							Información personal
 							<v-progress-circular
 								v-if="!psychologist && $auth.$state.user.role === 'psychologist'"
 								size="20"
@@ -46,7 +46,7 @@
 							></v-progress-circular>
 						</div>
 						<div class="text--secondary">
-							Revisa aquí tu nombre, apellido, zona horaria contraseña, entre otros.
+							Nombre, apellido, zona horaria, telefono, contraseña, entre otros
 						</div>
 					</div>
 				</v-expansion-panel-header>
@@ -72,7 +72,7 @@
 							></v-progress-circular>
 						</div>
 						<div class="text--secondary">
-							Tus datos de facturación en un solo lugar.
+							Cada miercoles transferiremos las sesiones de la semana anterior
 						</div>
 						<card-onboarding
 							v-if="step && step.title === 'Datos bancarios'"

@@ -471,7 +471,7 @@
 															v-model="selectedFormation.description"
 															filled
 															outlined
-															placeholder="P. ej: Psicología forense"
+															placeholder="Psicólogo Clinico"
 															dense
 															hide-details
 															type="text"
@@ -485,7 +485,7 @@
 															v-model="selectedFormation.intitucion"
 															filled
 															outlined
-															placeholder="P. ej: universidad de Chile"
+															placeholder="Universidad de Chile"
 															dense
 															hide-details
 															type="text"
@@ -501,7 +501,7 @@
 															outlined
 															dense
 															type="text"
-															placeholder="P. ej: 2019"
+															placeholder="2019"
 															hide-details
 														></v-text-field>
 													</v-col>
@@ -514,7 +514,7 @@
 															filled
 															outlined
 															dense
-															placeholder="P. ej: 2021"
+															placeholder="2021"
 															hide-details
 															type="text"
 														></v-text-field>
@@ -624,7 +624,7 @@
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															placeholder="P. ej: Psicólogo"
+															placeholder="Psicólogo Clinico"
 															dense
 															hide-details
 															type="text"
@@ -640,7 +640,7 @@
 															outlined
 															dense
 															hide-details
-															placeholder="P. ej: Hospital del Cáncer"
+															placeholder="Clinica Las Condes"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -649,7 +649,7 @@
 															v-model="selectedExperience.current"
 															dense
 															hide-details
-															label="Actualmente tengo este cargo"
+															label="Actualmente estoy trabajando aquí"
 															@change="
 																e => {
 																	selectedExperience.end = '';
@@ -669,7 +669,7 @@
 															outlined
 															dense
 															hide-details
-															placeholder="P. ej: 2019"
+															placeholder="2019"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -684,7 +684,7 @@
 																outlined
 																dense
 																hide-details
-																placeholder="P. ej: 2021"
+																placeholder="2021"
 																type="text"
 															></v-text-field>
 														</v-col>

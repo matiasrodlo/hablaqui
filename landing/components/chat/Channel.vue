@@ -147,14 +147,12 @@
 			</v-card-text>
 			<!-- Zona para escribir -->
 			<v-card-text v-if="selected.assistant">
-				<div class="text-center body-2">
-					Hablaquí valora la privacidad. No compartiremos tus mensajes, ni tampoco ningún
-					dato personal.
-				</div>
+				<div class="text-center body-2">Nosotros valoramos y protegemos su privacidad</div>
+
 				<div class="primary--text body-2 text-center">
-					<nuxt-link target="_blank" to="/condiciones" style="text-decoration: none">
-						Ver terminos y condiciones de Chat
-					</nuxt-link>
+					<a href="https://hablaqui.cl/politicas-de-privacidad/" target="_blank"
+						>Políticas de Privacidad</a
+					>
 				</div>
 			</v-card-text>
 			<v-card-text v-else style="flex: 0" class="pb-0">
