@@ -511,7 +511,7 @@
 												@click="
 													() => {
 														genderConfort = 'female';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -529,7 +529,7 @@
 												@click="
 													() => {
 														genderConfort = 'male';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -549,7 +549,7 @@
 												@click="
 													() => {
 														genderConfort = 'transgender';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -569,7 +569,7 @@
 												@click="
 													() => {
 														genderConfort = 'Me es indiferente';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -577,6 +577,80 @@
 											</v-btn>
 
 											<v-btn text color="primary" @click="step = 5">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="7">
+											<div class="primary--text font-weight-bold title">
+												¿Cuál es su presupuesto semanal?
+											</div>
+
+											<v-btn
+												:color="price === 15000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 15000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 15000;
+														openPrecharge();
+													}
+												"
+											>
+												$15.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 20000 ? 'primary' : '#BDBDBD'"
+												:outlined="genderConfort !== 'male'"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 20000;
+														openPrecharge();
+													}
+												"
+											>
+												$20.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 30000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 30000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 30000;
+														openPrecharge();
+													}
+												"
+											>
+												$30.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 40000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 40000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 40000;
+														openPrecharge();
+													}
+												"
+											>
+												$40.000 CLP
+											</v-btn>
+
+											<v-btn text color="primary" @click="step = 6">
 												Atras
 											</v-btn>
 										</v-stepper-content>
@@ -787,6 +861,7 @@ export default {
 			themes: [],
 			schedule: '',
 			genderConfort: '',
+			price: 0,
 			specialties: [],
 			models: [],
 			psychologists: [],
@@ -864,6 +939,8 @@ export default {
 			this.schedule = '';
 			this.genderConfort = '';
 			this.matchedPsychologists = [];
+			this.models = [];
+			this.price = 0;
 			this.step = '0';
 		},
 		setTheme(value) {
@@ -888,6 +965,7 @@ export default {
 				themes: this.themes,
 				schedule: this.schedule,
 				model: '',
+				price: this.price,
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
