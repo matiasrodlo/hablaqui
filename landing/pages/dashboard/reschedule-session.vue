@@ -178,15 +178,14 @@ export default {
 		},
 		clickSession(value) {
 			this.selectedSession = value;
-			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDThh:mm');
+			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDTHH:mm');
 		},
 		async clicked() {
-			const newDate = moment(this.sessionDate, 'yyyy-MM-DDThh:mm').format('MM/DD/YYYY HH:mm');
 			const res = await this.$axios.$post('/dashboard/session/reschedule', {
 				sessionsId: this.selectedClient.sessionsId,
 				planId: this.selectedPlan._id,
 				sessionId: this.selectedSession._id,
-				newDate,
+				newDate: this.sessionDate,
 			});
 			if (res === 409)
 				this.snackBar({
