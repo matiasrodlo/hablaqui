@@ -807,7 +807,9 @@ const normalizar = (valor, min, max) => {
 
 /**
  * @description Asigna puntaje por el precio de la sesión
- * @param {Number} precio - Precio de la sesión
+ * @param {Object} psy - Psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
  * @returns - Puntaje
  */
 
