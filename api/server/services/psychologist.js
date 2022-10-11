@@ -69,6 +69,48 @@ const match = async body => {
 	}
 };
 
+const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
+	// Se da formato a la fecha
+	newDate = moment(newDate).format('MM/DD/YYYY HH:mm');
+	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
+	const sessions = await Sessions.findOneAndUpdate(
+		{
+			_id: sessionsId,
+			'plan._id': planId,
+			'plan.session._id': sessionId,
+		},
+		{
+			$set: {
+				'plan.$[].session.$[session].date': newDate,
+			},
+		},
+		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
+	).populate('psychologist user');
+	// Se verifica que la sesion exista
+	if (!sessions) {
+		return conflictResponse('Sesion no encontrada');
+	}
+	// Se verifica si el plan sigue vigente
+	sessions.plan.forEach(plan => {
+		for (let i = 0; i < plan.session.length; i++) {
+			if (
+				plan.session[i]._id.toString() === sessionId.toString() &&
+				moment(plan.session[i].date, 'MM/DD/YYYY HH:mm').isAfter(
+					plan.expiration,
+					'MM/DD/YYYY HH:mm'
+				) &&
+				plan._id.toString() === planId.toString()
+			) {
+				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
+				plan.expiration = moment(newDate, 'MM/DD/YYYY HH:mm')
+					.add(50, 'minutes')
+					.format();
+			}
+		}
+	});
+	await sessions.save();
+	return okResponse('Hora actualizada', { sessions });
+};
 const updatePlan = async (psychologistId, planInfo) => {
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
 		psychologistId,
@@ -383,7 +425,8 @@ const getClients = async psychologist => {
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
 				sessionsId: item._id,
-			})),
+			}))
+			.filter(item => !!item.plan),
 	});
 };
 
@@ -618,6 +661,7 @@ const psychologistsService = {
 	getByData,
 	getClients,
 	match,
+	rescheduleSession,
 	searchClients,
 	setPrice,
 	setSchedule,

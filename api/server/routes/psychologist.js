@@ -54,6 +54,21 @@ psychologistsRouter.post(
 );
 
 /**
+);
+	psychologistsController.reschedule
+	[passport.authenticate('jwt', { session: true })],
+psychologistsRouter.post(
+	'/psychologists/reschedule/:sessionsId/:id',
+ */
+ * @access authenticated
+ * @returns Objeto con las sesiones actualizadas
+ * @param {String} body.newDate - Nueva fecha de la sesión
+ * @param {String} params.sessionsId - Id del objeto/esquema de sessions
+ * @param {String} params.id - Id de la sesión especifica
+ * @route /api/v1/psychologists/reschedule/:sessionsId/:id
+ * @method POST
+ * @description Cambia la hora de una session específica
+/**
  * change schedule psychologist
  * req.body.payload = {
  * 	monday: [inicio, termino],
