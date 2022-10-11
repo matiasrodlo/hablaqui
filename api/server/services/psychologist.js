@@ -820,6 +820,14 @@ const criterioPrecio = (psy, payload, puntosPorCriterio) => {
 	return puntaje;
 };
 
+/**
+ * @description Asigna puntaje por cantidad de coincidencias de especialidades
+ * @param {Object} psy - Psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @returns - Puntaje normalizado
+ */
+
 const criterioCantidadEspecialidades = (psy, payload, puntosPorCriterio) => {
 	const cantidadDeEspecialidades = 3;
 	let puntos = 0;
@@ -832,6 +840,14 @@ const criterioCantidadEspecialidades = (psy, payload, puntosPorCriterio) => {
 	puntos = normalizar(puntos, 0, maximo);
 	return puntos;
 };
+
+/**
+ * @description Asigna puntaje por la cantidad de sesiones disponibles en un horario
+ * @param {Object} psy - Psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @returns - Puntaje normalizado
+ */
 
 const criterioDisponibilidad = async (psy, payload, puntosPorCriterio) => {
 	let points = 0;
@@ -873,10 +889,19 @@ const criterioDisponibilidad = async (psy, payload, puntosPorCriterio) => {
 	return points;
 };
 
+/**
+ * @description Asigna puntaje por la cantidad de coincidencias de modelo terapeutico
+ * @param {Object} psy - Psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @returns - Puntaje normalizado
+ */
+
 const criterioModeloTeraupetico = (psy, payload, puntosPorCriterio) => {
 	const cantidadModelo = 3;
 	let puntos = 0;
 	let maximo = 0;
+	// Se suma puntos por cada coincidencia y se obtiene el total de puntaje posible
 	for (let j = 0; j < cantidadModelo; j++) {
 		if (psy.model[j] === payload.model[j]) puntos += puntosPorCriterio;
 		maximo += puntosPorCriterio;
@@ -890,17 +915,17 @@ const criterioModeloTeraupetico = (psy, payload, puntosPorCriterio) => {
  * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
  * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @param {Number} type - Tipo de ponderación (1: Best Match, 2: Disponibilidad, 3: Precio)
+ * @param {Number} type - Tipo de ponderación (0: Best Match, 1: Disponibilidad, 2: Precio)
  * @returns {Array} - Lista de psicologos ponderados
  */
 
 const ponderationMatch = async (matchedList, payload, type) => {
 	const puntosPorCriterio = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	let ponderado = [
-		[0.5, 0.2, 0.1, 0.1, 0.1],
-		[0.5, 0.2, 0.1, 0.1, 0.1],
-		[0.5, 0.2, 0.1, 0.1, 0.1],
+	const ponderado = [
+		[0.1, 0.25, 0.25, 0.2, 0.1],
+		[0.05, 0.2, 0.6, 0.1, 0.05],
+		[0.05, 0.2, 0.1, 0.6, 0.05],
 	];
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
