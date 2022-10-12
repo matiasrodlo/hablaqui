@@ -99,12 +99,15 @@ const fixSpecialities = async () => {
 	});
 
 	for (let j = 0; j < psychologists.length; j++) {
-		for (let i = 0; i < psychologists[j].specialties.length - 1; i++) {
+		const arraySpecialities = [];
+		for (let i = 0; i < psychologists[j].specialties.length; i++) {
 			const index = arrayAppointments.indexOf(
 				psychologists[j].specialties[i]
 			);
-			if (index === -1) psychologists[j].specialties.splice(i, 1);
+			if (index !== -1)
+				arraySpecialities.push(psychologists[j].specialties[i]);
 		}
+		psychologists[j].specialties = arraySpecialities;
 		await psychologists[j].save();
 	}
 	return okResponse('app', { psychologists });
