@@ -801,69 +801,70 @@ const formattedSchedule = (schedule, day, hour) => {
  * @returns - Puntaje normalizado
  */
 
-const normalizar = (valor, min, max) => {
-	return (valor - min) / (max - min);
+const normalize = (value, min, max) => {
+	return (value - min) / (max - min);
 };
 
 /**
  * @description Asigna puntaje por el precio de la sesión
  * @param {Object} psy - Psicologo
  * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje
  */
 
-const criterioPrecio = (psy, payload, puntosPorCriterio) => {
-	let puntaje = 0;
+const priceCriterion = (psy, payload, pointsPerCriterion) => {
+	let points = 0;
 	if (payload.price >= psy.price) {
-		puntaje = puntosPorCriterio;
+		points = pointsPerCriterion;
 	}
-	puntaje = normalizar(puntaje, 0, puntosPorCriterio);
-	return puntaje;
+	points = normalize(points, 0, pointsPerCriterion);
+	return points;
 };
 
 /**
  * @description Asigna puntaje por cantidad de coincidencias de especialidades
  * @param {Object} psy - Psicologo
  * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criterioCantidadEspecialidades = (psy, payload, puntosPorCriterio) => {
-	const cantidadDeEspecialidades = 3;
-	let puntos = 0;
-	let maximo = 0;
-	for (let j = 0; j < cantidadDeEspecialidades; j++) {
+const criteriaNumberSpecialties = (psy, payload, pointsPerCriterion) => {
+	const numberOfSpecialities = 3;
+	let points = 0;
+	let maximum = 0;
+	for (let j = 0; j < numberOfSpecialities; j++) {
 		if (psy.specialties[j] === payload.themes[j])
-			puntos += puntosPorCriterio;
-		maximo += puntosPorCriterio;
+			points += pointsPerCriterion;
+		maximum += pointsPerCriterion;
 	}
-	puntos = normalizar(puntos, 0, maximo);
-	return puntos;
+	points = normalize(points, 0, maximum);
+	return points;
 };
 
 /**
  * @description Saca el puntaje maximo de disponibilidad de un psicologo
  * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
- * @returns - Puntaje maximo
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
+ * @returns - Puntaje maximum
  */
 
-const maximoDisponibilidad = (payload, puntosPorCriterio) => {
-	let maximo = 0;
-	if (payload.schedule == 'morning') maximo = (12 - 6) * puntosPorCriterio;
-	if (payload.schedule == 'midday') maximo = (15 - 13) * puntosPorCriterio;
-	if (payload.schedule == 'afternoon') maximo = (23 - 16) * puntosPorCriterio;
-	return maximo;
+const maximumAvailability = (payload, pointsPerCriterion) => {
+	let maximum = 0;
+	if (payload.schedule == 'morning') maximum = (12 - 6) * pointsPerCriterion;
+	if (payload.schedule == 'midday') maximum = (15 - 13) * pointsPerCriterion;
+	if (payload.schedule == 'afternoon')
+		maximum = (23 - 16) * pointsPerCriterion;
+	return maximum;
 };
 
-const puntosDisponibilidad = (dias, payload, puntosPorCriterio) => {
-	const proximosDias = 3;
+const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
+	const nextDays = 3;
 	let points = 0;
-	for (let i = 0; i < proximosDias; i++) {
+	for (let i = 0; i < nextDays; i++) {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
-		dias[i].available.forEach(hora => {
+		days[i].available.forEach(hora => {
 			if (
 				moment(hora, 'HH:mm').isBetween(
 					moment('06:00', 'HH:mm'),
@@ -871,7 +872,7 @@ const puntosDisponibilidad = (dias, payload, puntosPorCriterio) => {
 				) &&
 				payload.schedule == 'morning'
 			) {
-				points += puntosPorCriterio;
+				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
 					moment('13:00', 'HH:mm'),
@@ -879,7 +880,7 @@ const puntosDisponibilidad = (dias, payload, puntosPorCriterio) => {
 				) &&
 				payload.schedule == 'midday'
 			) {
-				points += puntosPorCriterio;
+				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
 					moment('16:00', 'HH:mm'),
@@ -887,7 +888,7 @@ const puntosDisponibilidad = (dias, payload, puntosPorCriterio) => {
 				) &&
 				payload.schedule == 'afternoon'
 			) {
-				points += puntosPorCriterio;
+				points += pointsPerCriterion;
 			}
 		});
 	}
@@ -898,15 +899,15 @@ const puntosDisponibilidad = (dias, payload, puntosPorCriterio) => {
  * @description Asigna puntaje por la cantidad de sesiones disponibles en un horario
  * @param {Object} psy - Psicologo
  * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criterioDisponibilidad = (payload, puntosPorCriterio, dias) => {
+const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 	let points = 0;
-	const maximo = maximoDisponibilidad(payload, puntosPorCriterio);
-	points = puntosDisponibilidad(dias, payload, puntosPorCriterio);
-	points = normalizar(points, 0, maximo);
+	const maximum = maximumAvailability(payload, pointsPerCriterion);
+	points = pointsDisponibilidad(days, payload, pointsPerCriterion);
+	points = normalize(points, 0, maximum);
 	return points;
 };
 
@@ -914,21 +915,21 @@ const criterioDisponibilidad = (payload, puntosPorCriterio, dias) => {
  * @description Asigna puntaje por la cantidad de coincidencias de modelo terapeutico
  * @param {Object} psy - Psicologo
  * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} puntosPorCriterio - Puntos por cada coincidencia
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criterioModeloTeraupetico = (psy, payload, puntosPorCriterio) => {
-	const cantidadModelo = 3;
-	let puntos = 0;
-	let maximo = 0;
-	// Se suma puntos por cada coincidencia y se obtiene el total de puntaje posible
-	for (let j = 0; j < cantidadModelo; j++) {
-		if (psy.model[j] === payload.model[j]) puntos += puntosPorCriterio;
-		maximo += puntosPorCriterio;
+const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
+	const modelQuantity = 3;
+	let points = 0;
+	let maximum = 0;
+	// Se suma points por cada coincidencia y se obtiene el total de puntaje posible
+	for (let j = 0; j < modelQuantity; j++) {
+		if (psy.model[j] === payload.model[j]) points += pointsPerCriterion;
+		maximum += pointsPerCriterion;
 	}
-	puntos = normalizar(puntos, 0, maximo);
-	return puntos;
+	points = normalize(points, 0, maximum);
+	return points;
 };
 
 /**
@@ -940,35 +941,35 @@ const criterioModeloTeraupetico = (psy, payload, puntosPorCriterio) => {
  */
 
 const ponderationMatch = async (matchedList, payload) => {
-	const puntosPorCriterio = 3;
+	const pointsPerCriterion = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	const ponderado = [0.1, 0.25, 0.25, 0.2, 0.1];
+	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
-			let criterio = 0;
-			let points = normalizar(psy.points, 0, 100) * ponderado[criterio];
-			criterio++;
+			let criteria = 0;
+			let points = normalize(psy.points, 0, 100) * weighted[criteria];
+			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
-				ponderado[criterio] *
-				criterioCantidadEspecialidades(psy, payload, puntosPorCriterio);
-			criterio++;
+				weighted[criteria] *
+				criteriaNumberSpecialties(psy, payload, pointsPerCriterion);
+			criteria++;
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
-			const dias = await getFormattedSessionsForMatch(psy._id);
+			const days = await getFormattedSessionsForMatch(psy._id);
 			points +=
-				ponderado[criterio] *
-				criterioDisponibilidad(payload, puntosPorCriterio, dias);
-			criterio++;
+				weighted[criteria] *
+				criterioDisponibilidad(payload, pointsPerCriterion, days);
+			criteria++;
 			// Se obtiene el precio del psicologo y se le asigna un puntaje dado por el precio
 			points +=
-				criterioPrecio(psy, payload, puntosPorCriterio) *
-				ponderado[criterio];
-			criterio++;
+				priceCriterion(psy, payload, pointsPerCriterion) *
+				weighted[criteria];
+			criteria++;
 			// Se obtiene el modelo terapeutico del psicologo y se le asigna un puntaje dado por el modelo
 			points +=
-				criterioModeloTeraupetico(psy, payload, puntosPorCriterio) *
-				ponderado[criterio];
-			criterio++;
+				criterioModeloTeraupetico(psy, payload, pointsPerCriterion) *
+				weighted[criteria];
+			criteria++;
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
@@ -984,12 +985,12 @@ const ponderationMatch = async (matchedList, payload) => {
 const psychologistClasification = async (matchedList, payload) => {
 	let points = 0;
 	let resultList = [];
-	let puntosPorCriterio = 1;
+	let pointsPerCriterion = 1;
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
-			const dias = await getFormattedSessionsForMatch(psy._id);
-			points = puntosDisponibilidad(dias, payload, puntosPorCriterio);
+			const days = await getFormattedSessionsForMatch(psy._id);
+			points = pointsDisponibilidad(days, payload, pointsPerCriterion);
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
 			return { ...psychologist, points };
