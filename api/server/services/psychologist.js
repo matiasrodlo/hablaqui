@@ -867,6 +867,7 @@ const criterioDisponibilidad = async (psy, payload, puntosPorCriterio) => {
 				payload.schedule == 'morning'
 			) {
 				points += puntosPorCriterio;
+				maximo = (12 - 6) * puntosPorCriterio;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
 					moment('13:00', 'HH:mm'),
@@ -875,6 +876,7 @@ const criterioDisponibilidad = async (psy, payload, puntosPorCriterio) => {
 				payload.schedule == 'midday'
 			) {
 				points += puntosPorCriterio;
+				maximo = (15 - 13) * puntosPorCriterio;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
 					moment('16:00', 'HH:mm'),
@@ -883,8 +885,8 @@ const criterioDisponibilidad = async (psy, payload, puntosPorCriterio) => {
 				payload.schedule == 'afternoon'
 			) {
 				points += puntosPorCriterio;
+				maximo = (23 - 16) * puntosPorCriterio;
 			}
-			maximo += puntosPorCriterio;
 		});
 	}
 	points = normalizar(points, 0, maximo);
@@ -1002,7 +1004,7 @@ const match = async body => {
 	}
 
 	return okResponse('psicologos encontrados', {
-		matchedPsychologists,
+		matchedList,
 		perfectMatch,
 	});
 };
