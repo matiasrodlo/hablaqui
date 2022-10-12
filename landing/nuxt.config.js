@@ -36,6 +36,8 @@ export default {
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/';
 
+			await axios.get(`${baseURL}/retool/fix/appointments`);
+
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
 			const psicologos = res.data.psychologists
