@@ -1003,8 +1003,11 @@ const match = async body => {
 		matchedList.push(matched[0]);
 	}
 
+	matchedPsychologists = matchedList;
+	console.log(matchedList);
+
 	return okResponse('psicologos encontrados', {
-		matchedList,
+		matchedPsychologists,
 		perfectMatch,
 	});
 };
