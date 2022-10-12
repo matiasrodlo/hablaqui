@@ -606,7 +606,7 @@
 											</v-btn>
 											<v-btn
 												:color="price === 20000 ? 'primary' : '#BDBDBD'"
-												:outlined="genderConfort !== 'male'"
+												:outlined="price !== 20000"
 												block
 												rounded
 												large
