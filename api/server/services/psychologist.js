@@ -165,8 +165,7 @@ const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
 };
 
 /**
- * @description Pondera los psicologos según tres criterios,
- * quien tenga mejor disponibilidad, quien tenga menor precio y coincidencias de especialidades
+ * @description Pondera los psicologos segun sus puntajes
  * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
  * @returns {Array} - Lista de psicologos ponderados
@@ -215,6 +214,13 @@ const ponderationMatch = async (matchedList, payload) => {
 	// Se imprime los puntajes de cada psicologo
 	return newMatchedList;
 };
+
+/**
+ * @description Clasifica los psicologos si es el mejor match, el mas barato y el con mayor disponibilidad
+ * @param {Array} matchedList - Lista de psicologos matchados que se quiere clasificar
+ * @param {Object} payload - Objeto con las preferencias del usuario
+ * @returns - Lista de psicologos clasificados
+ */
 
 const psychologistClasification = async (matchedList, payload) => {
 	let points = 0;
@@ -276,11 +282,16 @@ const match = async body => {
 		perfectMatch = false;
 	}
 
-	// Se busca el mejor match según criterios (son 3 de momento, pero se pueden agregar más)
+	// Se busca el mejor match según criterios
 	matchedPsychologists = await ponderationMatch(
 		matchedPsychologists,
 		payload
 	);
+
+	// Se deja solo los 3 mejores psicologos
+	while (matchedPsychologists.length > 3) {
+		matchedPsychologists.pop();
+	}
 
 	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
 	matchedPsychologists = await psychologistClasification(
