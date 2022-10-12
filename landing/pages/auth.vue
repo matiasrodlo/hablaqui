@@ -26,16 +26,8 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="
-								py-1
-								text-center text-h6 text-lg-h4
-								font-weight-bold
-								text--secondary
-							"
+							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
-							<span v-show="step === 1">¡Qué gusto verte nuevamente!</span>
-							<span v-show="step === 2">¡Tu bienestar comienza aquí!</span>
-							<span v-show="step === 3">Recupera tu contraseña</span>
 						</v-col>
 						<v-col
 							cols="12"
@@ -43,16 +35,9 @@
 							lg="6"
 							class="py-1 text-center subtitle-1 font-weight-bold text--secondary"
 						>
-							<span v-show="step === 1"
-								>Ingresa y continúa tu viaje de desarrollo personal ahora
-								mismo.</span
-							>
-							<span v-show="step === 2"
-								>Regístrate para iniciar tu camino de desarrollo personal</span
-							>
-							<span v-show="step === 3">
-								Continua disfrutando de los beneficios de hablaquí
-							</span>
+							<span v-show="step === 1">Continúe con su viaje al bienestar</span>
+							<span v-show="step === 2">Inicie su viaje al bienestar</span>
+							<span v-show="step === 3">Recuperar contraseña</span>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
@@ -69,8 +54,8 @@
 								</v-window-item>
 							</v-window>
 							<div class="mt-4 mb-2 subtitle-1 font-weight-bold secondary--text">
-								<small v-if="step == 1"> ¿No eres parte de Hablaquí? </small>
-								<small v-else>¿Ya tienes cuenta Hablaquí?</small>
+								<small v-if="step == 1"> ¿No tiene cuenta? </small>
+								<small v-else>¿Ya tiene cuenta?</small>
 							</div>
 							<v-btn
 								v-show="step == 2 || step === 3"
@@ -92,30 +77,9 @@
 							>
 								Crea una cuenta
 							</v-btn>
-							<div class="mt-16">
-								<v-btn
-									class="px-0"
-									text
-									nuxt
-									color="primary"
-									target="_blank"
-									:to="{ name: 'politicas' }"
-									>Aviso de privacidad</v-btn
-								>
-								<span class="primary--text mx-1">y</span>
-								<v-btn
-									class="px-0"
-									text
-									nuxt
-									color="primary"
-									:to="{ name: 'condiciones' }"
-									target="_blank"
-								>
-									Términos y Condiciones</v-btn
-								>
-							</div>
+							<div class="mt-16"></div>
 							<div class="font-weight-bold caption secondary--text">
-								2021 Hablaqui
+								2022 Hablaqui
 							</div>
 						</v-col>
 					</v-row>
@@ -208,22 +172,17 @@ export default {
 				{
 					id: 1,
 					img: `https://cdn.hablaqui.cl/static/auth.webp`,
-					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Elimine los tiempos de desplazamiento y agendamiento',
 				},
 				{
 					id: 2,
 					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
-					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+					text: 'Altos niveles de seguridad para resguardar su información',
 				},
 				{
 					id: 3,
 					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
-					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
-				},
-				{
-					id: 4,
-					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
-					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+					text: 'Ahorre dinero mientras recibe una atención de alta calidad',
 				},
 			],
 			carousel: 0,
@@ -236,9 +195,9 @@ export default {
 		return {
 			meta: [
 				{
-					hid:"robots",
-					name:"robots",
-					content:"noindex",
+					hid: 'robots',
+					name: 'robots',
+					content: 'noindex',
 				},
 				{
 					hid: 'twitter:url',
