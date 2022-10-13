@@ -14,10 +14,10 @@ var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY e
 
 const recruitmentService = {
 	/**
-	 * @description - This controller is used to create a new recruitment profile
-	 * @param {Object} user - The user object with all the details for the profile
-	 * @param {Object} body - The raw body of the request
-	 * @returns Response code, message and the created recruitment profile
+	 * @description - Este controlador se utiliza para crear un nuevo perfil de contratación
+	 * @param {Object} user - El objeto usuario con todos los detalles del perfil
+	 * @param {Object} body - El cuerpo bruto de la solicitud
+	 * @returns Código de respuesta, mensaje y perfil de contratación creado
 	 */
 	async register(user, body) {
 		// Se crea un objeto que contiene los datos del perfil de recruitment
@@ -81,16 +81,16 @@ const recruitmentService = {
 				},
 			});
 		}
-		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
+		// Se envía un correo electrónico al psicólogo confirmando la solicitud. También se envía la confirmación interna.
 		mailServicePsy.sendRecruitmentConfirmation(recruited);
 		mailServicePsy.sendRecruitmentConfirmationAdmin(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This service is used to update a recruitment profile
-	 * @param {Object} body - The body of the request with the new values
-	 * @returns The response code, message and the updated recruitment profile (if any)
+	 * @description - Este servicio se utiliza para actualizar un perfil de contratación
+	 * @param {Object} body - El cuerpo de la solicitud con los nuevos valores
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación actualizado (si lo hay)
 	 */
 	async update(body, step) {
 		if (!(await Recruitment.exists({ email: body.email }))) {
@@ -122,25 +122,25 @@ const recruitmentService = {
 		return okResponse('Actualizado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This service is used to get a recruitment profile by mail
-	 * @param {Object} mail - The mail of the recruitment profile
-	 * @returns The response code, message and the recruitment profile obtained (if exists)
+	 * @description - Este servicio se utiliza para obtener un perfil de contratación por correo
+	 * @param {Object} mail - El correo del perfil de contratación
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación obtenido (si existe)
 	 */
 	async get(email) {
 		const recruited = await Recruitment.findOne({ email });
 		return okResponse('Postulante obtenido', { recruited });
 	},
 	/**
-	 * @description - This services is used to get all recruitment
-	 * @returns The response code, message and the recruitments profile obtained
+	 * @description - Este servicio se utiliza para obtener toda la contratación
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación obtenidos
 	 */
 	async getAll() {
 		const recruitment = await Recruitment.find({ isVerified: false });
 		return okResponse('Postulantes obtenidos', { recruitment });
 	},
 	/**
-	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
-	 * @returns The response code, message and the new Psychologist profile created succesfully
+	 * @description - Este controlador comprueba si existe un perfil de contratación y no ha sido verificado.
+	 * @returns El código de respuesta, el mensaje y el nuevo perfil de psicólogo creado con éxito
 	 **/
 	async approve(user, email) {
 		if (user.role !== 'superuser')

@@ -175,6 +175,7 @@ const ponderationMatch = async (matchedList, payload) => {
 	const pointsPerCriterion = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
 	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
+	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			let criteria = 0;
@@ -463,7 +464,7 @@ const updatePsychologist = async (user, profile) => {
 		try {
 			const psy = await Psychologist.findById(profile._id);
 			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
-				// Si el precio de la sesion es diferente y el precio establecido aun no ha expirado
+				// Si existe una fecha de vencimiento, y esta está antes de la fecha actual adelantado un mes
 				if (
 					psy.stampSetPrices &&
 					moment().isBefore(
