@@ -50,15 +50,16 @@ psychologistsRouter.get(
 psychologistsRouter.post('/psychologists/match', psychologistsController.match);
 
 /**
- * @description Cambia la fecha de una session específica
+ *
+ * @description Cambia la hora de una session específica
  * @method POST
- * @route /api/v1/dashboard/session/reschedule/
- * @param {String} body.sessionsId - Id del documento
- * @param {String} body.planId - Id del plan
- * @param {String} body.sessionId - Id de la sesión
+ * @route /api/v1/psychologists/reschedule/
  * @param {String} body.newDate - Nueva fecha de la sesión
+ * @param {String} params.sessionsId - Id del objeto/esquema de sessions
+ * @param {String} params.id - Id de la sesión especifica
+ * @returns Objeto con las sesiones actualizadas
+ * @access authenticated
  */
-
 psychologistsRouter.post(
 	'/dashboard/session/reschedule/',
 	psychologistsController.rescheduleSession

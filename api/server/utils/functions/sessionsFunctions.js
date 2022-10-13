@@ -81,7 +81,7 @@ export const paymentInfoFunction = async psyId => {
 					i <= plans.totalSessions;
 					i++
 				) {
-					const session = {
+					let session = {
 						_id: null,
 						datePayment: moment(
 							plans.datePayment,
@@ -103,6 +103,9 @@ export const paymentInfoFunction = async psyId => {
 						status: 'pending',
 						transDate: 'Por agendar',
 					};
+					if (Date.parse(plans.expiration) < Date.now()) {
+						session.transDate = 'Expirado';
+					}
 					sessions.push(session);
 				}
 

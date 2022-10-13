@@ -1180,7 +1180,6 @@ const getAllSessions = async psy => {
 				typeof value.total == 'number' ? sum + value.total : sum,
 			0
 		);
-
 	return okResponse('Sesiones obtenidas', {
 		total,
 		sessions,
