@@ -20,7 +20,7 @@
 					>
 						<div style="position: absolute; top: 0; left: 0">
 							<div
-								style="background-color: #0660ff; font-size: 20px"
+								style="background-color: #3093ff; font-size: 20px"
 								class="white--text rounded-br-xl rounded-tl-lg pl-4 pr-6"
 							>
 								{{ item.type }}
@@ -133,7 +133,7 @@
 						<v-card-text>
 							<div style="position: absolute; top: 0; right: 0">
 								<div
-									style="background-color: #0660ff; font-size: 18px"
+									style="background-color: #3093ff; font-size: 18px"
 									class="white--text rounded-bl-xl rounded-tr-lg pr-4 pl-6"
 								>
 									{{ item.type }}
