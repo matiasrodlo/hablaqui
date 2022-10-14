@@ -1003,6 +1003,7 @@ const psychologistClasification = async (matchedList, payload) => {
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
+			psy.points = 0;
 			const days = await getFormattedSessionsForMatch(psy._id);
 			points = pointsDisponibilidad(days, payload, pointsPerCriterion);
 			let psychologist = JSON.stringify(psy);
