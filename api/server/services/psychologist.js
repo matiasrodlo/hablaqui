@@ -815,7 +815,7 @@ const normalize = (value, min, max) => {
 
 const priceCriterion = (psy, payload, pointsPerCriterion) => {
 	let points = 0;
-	if (payload.price >= psy.price) {
+	if (payload.price >= psy.sessionPrices.video) {
 		points = pointsPerCriterion;
 	}
 	points = normalize(points, 0, pointsPerCriterion);
@@ -859,8 +859,16 @@ const maximumAvailability = (payload, pointsPerCriterion) => {
 	return maximum;
 };
 
+/**
+ * @description Asigna puntaje por cantidad de coincidencias de disponibilidad
+ * @param {Object} days - Días de disponibilidad del psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
+ * @returns - Puntaje
+ */
+
 const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
-	const nextDays = 3;
+	const nextDays = 7;
 	let points = 0;
 	for (let i = 0; i < nextDays; i++) {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
@@ -1005,9 +1013,12 @@ const psychologistClasification = async (matchedList, payload) => {
 	newMatchedList.sort((a, b) => b.points - a.points);
 	resultList.push(newMatchedList[0]);
 	// Se elmina el primer elemento del arreglo
-	newMatchedList.splice(0, 1);
+	newMatchedList.shift(0);
 	// Se obtiene el psicologo que tenga menor precio
-	if (newMatchedList[0].price < newMatchedList[1].price) {
+	if (
+		newMatchedList[0].sessionPrices.video <
+		newMatchedList[1].sessionPrices.video
+	) {
 		resultList.push(newMatchedList[0]);
 		resultList.unshift(newMatchedList[1]);
 	} else {
