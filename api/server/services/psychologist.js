@@ -237,6 +237,7 @@ const psychologistClasification = async (matchedList, payload) => {
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
+			psy.points = 0;
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				psy._id
 			);
@@ -247,9 +248,8 @@ const psychologistClasification = async (matchedList, payload) => {
 		})
 	);
 	newMatchedList.sort((a, b) => b.points - a.points);
-	resultList.push(newMatchedList[0]);
 	// Se elmina el primer elemento del arreglo
-	newMatchedList.shift(0);
+	resultList.push(newMatchedList.shift(0));
 	// Se obtiene el psicologo que tenga menor precio
 	if (
 		newMatchedList[0].sessionPrices.video <
@@ -288,7 +288,7 @@ const match = async body => {
 
 	// Agregar de nuevo modelo terapeutico
 	// Se obtiene la lista de psicologos que coinciden con los temas
-	if (matchedPsychologists.length === 0) {
+	if (matchedPsychologists.length < 3) {
 		matchedPsychologists = await Psychologist.find();
 		perfectMatch = false;
 	}
