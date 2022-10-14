@@ -234,7 +234,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i <= 7"
+															v-if="i <= 5"
 															:key="i"
 															:color="
 																themes.includes(item)
