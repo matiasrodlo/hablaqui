@@ -120,8 +120,11 @@ const usersService = {
 		}
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
-		let sessionesPendientes = ultimoPlan.session.filter(
-			session => Date.parse(session.date) > Date.parse(moment().format())
+		const sessionesPendientes = ultimoPlan.session.filter(
+			session => Date.parse(session.date) >= Date.now()
+		).length;
+		const sessionesRealizadas = ultimoPlan.session.filter(
+			session => Date.parse(session.date) < Date.now()
 		).length;
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
@@ -133,7 +136,9 @@ const usersService = {
 			datePayment: ultimoPlan.datePayment,
 			expiration: ultimoPlan.expiration,
 			usedCoupon: ultimoPlan.usedCoupon,
-			totalSessions: ultimoPlan.totalSessions,
+			totalSessions: (
+				Number(ultimoPlan.totalSessions) - sessionesRealizadas
+			).toString(),
 			remainingSessions: (
 				Number(ultimoPlan.remainingSessions) + sessionesPendientes
 			).toString(),
