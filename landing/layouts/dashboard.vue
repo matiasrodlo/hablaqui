@@ -126,7 +126,7 @@
 					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
+					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -178,13 +178,6 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
-			<template v-if="!isMini" #append>
-				<div class="pa-2 caption white--text">
-					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
-					dudes en contactarnos
-				</div>
-			</template>
 		</v-navigation-drawer>
 		<v-navigation-drawer
 			v-if="$auth.$state.user.role === 'psychologist'"
