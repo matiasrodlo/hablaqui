@@ -143,7 +143,6 @@ export default {
 						user: this.selectedClient._id,
 					},
 				});
-				console.log(data);
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
