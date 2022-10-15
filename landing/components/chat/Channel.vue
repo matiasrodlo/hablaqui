@@ -147,7 +147,7 @@
 			</v-card-text>
 			<!-- Zona para escribir -->
 			<v-card-text v-if="selected.assistant">
-				<div class="text-center body-2">Nosotros valoramos y protegemos su privacidad</div>
+				<div class="text-center body-2">Valoramos y protegemos su privacidad</div>
 
 				<div class="primary--text body-2 text-center">
 					<a href="https://hablaqui.cl/politicas-de-privacidad/" target="_blank"
