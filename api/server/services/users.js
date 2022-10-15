@@ -115,6 +115,9 @@ const usersService = {
 			return conflictResponse('No se encontró el plan');
 		}
 		const ultimoPlan = oldSession.plan[oldSession.plan.length - 1];
+		if (Date.now() > Date.parse(ultimoPlan.expiration)) {
+			return conflictResponse('El plan ha expirado');
+		}
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
 		let sessionesPendientes = ultimoPlan.session.filter(
