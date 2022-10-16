@@ -121,10 +121,13 @@ const usersService = {
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
 		const sessionesPendientes = ultimoPlan.session.filter(
-			session => Date.parse(session.date) >= Date.now()
+			session =>
+				session.status === 'pending' || session.status === 'upnext'
 		).length;
 		const sessionesRealizadas = ultimoPlan.session.filter(
-			session => Date.parse(session.date) < Date.now()
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
 		).length;
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
@@ -170,7 +173,9 @@ const usersService = {
 
 		// Se filtran las sesiones que no a la fecha no se han realizado
 		ultimoPlan.session = ultimoPlan.session.filter(
-			session => Date.parse(session.date) < Date.parse(moment().format())
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
 		);
 
 		ultimoPlan.remainingSessions = 0;
