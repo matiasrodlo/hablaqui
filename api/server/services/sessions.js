@@ -58,7 +58,7 @@ const getRemainingSessions = async psy => {
 		let name = '';
 		let lastName = '';
 
-		// Establece nombre de quien pertenece cada sesion
+		// Establece nombre de quien pertenece cada sesion, verificando si existe el usuario y su id
 		if (item.user && item.user._id) {
 			name = item.user.name;
 			lastName = item.user.lastName ? item.user.lastName : '';
@@ -130,6 +130,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		psychologist: cancelSessions[0].psychologist._id,
 	}).populate('psychologist user');
 
+	// Se verifica si es un compromiso privado
 	if (cancelSessions.user == null) {
 		await mailService.sendCancelCommitment(cancelSessions.psychologist);
 	} else {
@@ -156,6 +157,7 @@ const checkPlanTask = async () => {
 	planUsers.forEach(async userWithPlan => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
+			// Si el plan está vencido, se actualiza el estado del plan a vencido
 			if (moment().isAfter(plan.expiration)) {
 				plan.status = 'expired';
 			}
@@ -274,6 +276,7 @@ const createPlan = async ({ payload }) => {
 			? `${room}room/${roomId}`
 			: '';
 
+	// Se verifica que el precio sea mayor a cero y que el usuario no sea el mismo que el psicologo
 	if (payload.price > 0 && payload.user !== payload.psychologist) {
 		// Se asigna el psicologo al usuario
 		await User.findByIdAndUpdate(payload.user, {
@@ -392,6 +395,7 @@ const createPlan = async ({ payload }) => {
 
 	let responseBody = { init_point: null };
 
+	// Si el precio es menor o igual a cero quiere decir que es un plan gratuito
 	if (payload.price <= 0) {
 		await mercadopagoService.successPay({
 			sessionsId: created._id.toString(),
@@ -973,6 +977,7 @@ const paymentsInfo = async user => {
  * @returns sessions
  */
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
+	// Se obtiene la session a reprogramar, se obtiene el tiempo minimo para reprogramar
 	let currentSession = await Sessions.findOne({
 		_id: sessionsId,
 	}).populate('psychologist', 'preferences');
@@ -980,12 +985,14 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		minimumRescheduleSession,
 	} = currentSession.psychologist.preferences;
 
+	// Se obtiene las sessiones del plan, luego se filtra la session a reprogramar
 	currentSession = currentSession.plan
 		.flatMap(plan => {
 			return plan.session;
 		})
 		.filter(s => s._id.toString() === id.toString())[0];
 
+	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
 		moment().isAfter(
 			moment(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
@@ -1001,6 +1008,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		);
 	}
 
+	// Se le da formato a la fecha nueva, se actualiza la fecha de la session
 	const date = `${newDate.date} ${newDate.hour}`;
 	newDate.date = moment(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
@@ -1016,9 +1024,11 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		{ arrayFilters: [{ 'session._id': id }], new: true }
 	).populate('psychologist user');
 
+	// Se obtiene la ultima session del plan y se verifica si existen sessiones pendientes
 	let session = getLastSessionFromPlan(sessions, id, '');
 
 	if (session.remainingSessions === 0) {
+		// Si no existen sessiones pendientes, se da fecha de expiracion a la session 50 minutos despues de la ultima session
 		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
 			.add(50, 'minutes')
 			.format();
@@ -1032,6 +1042,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		);
 	}
 
+	// Se envia correo de reprogramacion
 	if (userLogged.role === 'user') {
 		await mailService.sendRescheduleToUser(
 			sessions.user,
@@ -1059,6 +1070,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		);
 	}
 
+	// Se hace el trackeo de la reprogramacion en segment
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -1121,7 +1133,8 @@ const deleteCommitment = async (planId, psyId) => {
 
 // Devuelve todas las sesiones, excepto las expiradas
 const getAllSessions = async psy => {
-	// Obtenemos solamente las sesiones que no han expirado, con todo lo que ello implica
+	// Obtenemos solamente las sesiones que no han expirado, se filtran las sesiones
+	// que no sean compromisos, y se suman la cantidad de sesiones restantes
 	const sessions = await getAllSessionsFunction(psy);
 	const total = sessions
 		.filter(session => {
