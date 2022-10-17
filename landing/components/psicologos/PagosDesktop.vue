@@ -9,7 +9,7 @@
 		<v-row v-show="!hasSessions">
 			<v-col cols="6">
 				<v-card class="shadowCard" style="border-radius: 15px">
-					<v-card-title class="px-10 titleColor"> El mejor plan para usted </v-card-title>
+					<v-card-title class="px-10 titleColor"> Suscripciones </v-card-title>
 					<v-card-text
 						v-for="item in itemsPlan"
 						:key="item.id"
@@ -134,7 +134,7 @@
 										@click="showCalendar = !showCalendar"
 									>
 										<span v-if="showCalendar">Ocultar agenda</span>
-										<span v-else>Cambiar reserva</span>
+										<span v-else>Cambiar agendamiento</span>
 									</v-btn>
 								</div>
 							</v-col>
@@ -147,10 +147,6 @@
 									/>
 								</v-col>
 							</v-expand-transition>
-							<v-col cols="12">
-								Sesiones por videollamada (50 min) Habla con un psicólogo por
-								videollamada en cualquier momento, en cualquier lugar.
-							</v-col>
 						</v-row>
 					</v-card-text>
 				</v-card>
@@ -188,33 +184,33 @@
 								color="rgba(26, 165, 216, 0.16)"
 								@click="payButton"
 							>
-								<span class="primary--text">Continuar con el pago</span>
+								<span class="primary--text">Continuar</span>
 							</v-btn>
 						</div>
 						<div class="body-2 my-6 text-center">Pago seguro con encriptado SSL</div>
 						<div class="d-flex justify-space-around">
 							<v-img
-								width="50"
+								width="30"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
 							></v-img>
 							<v-img
-								width="40"
+								width="10"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/surface.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/american_express.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
 							></v-img>
@@ -260,7 +256,7 @@ export default {
 			itemsPlan: [
 				{
 					id: 1,
-					title: 'Pago semanal',
+					title: 'Semanal',
 					pricePerSession: '$50.000 / por sesión',
 					valuePerSession: '$50.000',
 					priceTotal: '',
@@ -269,7 +265,7 @@ export default {
 				},
 				{
 					id: 2,
-					title: 'Pago mensual',
+					title: 'Mensual',
 					pricePerSession: '$45.000 / por sesión',
 					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
@@ -278,7 +274,7 @@ export default {
 				},
 				{
 					id: 3,
-					title: 'Pago trimestral',
+					title: 'Trimestral',
 					pricePerSession: '$40.000 / por sesión',
 					valuePerSession: '$40.000',
 					priceTotal: '($480000)',
