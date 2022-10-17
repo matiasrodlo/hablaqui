@@ -1050,6 +1050,26 @@ const psychologistClasification = async (matchedList, payload) => {
 	return resultList;
 };
 
+/**
+ * @description Hace un array de arrays con la cantidad de psy, para mostrar los mejores match, mas baratos y con mayor disponibilidad,
+ * luego los segundo mejores match, mas baratos y con mayor disponibilidad, etc.
+ * @param {Array} matchedList - Lista de psicologos matchados que se quiere clasificar
+ * @returns - Array de arrays con los mejores match, mas baratos y con mayor disponibilidad
+ */
+
+const arrayGenerator = matchedList => {
+	let finalMatchedList = [];
+	// Se quiere hacer un array de arrays para que se muestren una cantidad de psicologos por pagina (3)
+	for (let i = 0; i < matchedList.length / 3; i++) {
+		let subMatchedList = [];
+		for (let j = 0; j < 3; j++) {
+			subMatchedList.push(matchedList[i + j]);
+		}
+		finalMatchedList.push(subMatchedList);
+	}
+	return finalMatchedList;
+};
+
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
@@ -1072,9 +1092,8 @@ const match = async body => {
 		});
 	}
 
-	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de psicologos que coinciden con los temas
-	if (matchedPsychologists.length < 3) {
+	// Se necesita que la cantidad de psy matcheados sea multiplo de 3 (para hacer el matcheo de 3 en 3)
+	if (matchedPsychologists.length % 3 != 0) {
 		matchedPsychologists = await Psychologist.find();
 		perfectMatch = false;
 	}
@@ -1085,16 +1104,21 @@ const match = async body => {
 		payload
 	);
 
-	// Se deja solo los 3 mejores psicologos
-	while (matchedPsychologists.length > 3) {
+	// Se deja una cantidad multiplo de 3 para hacer el matcheo de 3 en 3
+	while (matchedPsychologists.length % 3 != 0) {
 		matchedPsychologists.pop();
 	}
 
-	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
-	matchedPsychologists = await psychologistClasification(
-		matchedPsychologists,
-		payload
-	);
+	// Se hace un array de arrays para que se muestren una cantidad de psicologos por pagina (3)
+	matchedPsychologists = arrayGenerator(matchedPsychologists);
+
+	for (let i = 0; i < matchedPsychologists.length; i++) {
+		// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
+		matchedPsychologists[i] = await psychologistClasification(
+			matchedPsychologists[i],
+			payload
+		);
+	}
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
