@@ -5,15 +5,6 @@
 		</v-btn>
 		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
-		<div class="mx-5 body-1 primary--text">
-			<router-link
-				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
-				style="text-decoration: none"
-				:to="{ name: 'evaluacion' }"
-			>
-				Psicólogos
-			</router-link>
-		</div>
 		<div v-if="$auth.$state.user.role === 'user'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"

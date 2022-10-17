@@ -178,7 +178,7 @@
 				style="border-radius: 10px"
 				@click="updateProfile"
 			>
-				Editar
+				Guardar
 			</v-btn>
 		</v-col>
 	</v-row>

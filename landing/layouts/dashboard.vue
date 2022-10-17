@@ -452,7 +452,7 @@ export default {
 					disable,
 				},
 				{
-					name: 'Mi cuenta',
+					name: 'Cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
