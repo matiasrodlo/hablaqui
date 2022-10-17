@@ -867,34 +867,49 @@ const maximumAvailability = (payload, pointsPerCriterion) => {
  * @returns - Puntaje
  */
 
-const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
-	const nextDays = 7;
+const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 	let points = 0;
 	for (let i = 0; i < nextDays; i++) {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
 		days[i].available.forEach(hora => {
 			if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('06:00', 'HH:mm'),
-					moment('12:59', 'HH:mm')
+					moment('00:00', 'HH:mm'),
+					moment('08:59', 'HH:mm')
+				) &&
+				payload.schedule == 'early'
+			) {
+				points += pointsPerCriterion;
+			} else if (
+				moment(hora, 'HH:mm').isBetween(
+					moment('09:00', 'HH:mm'),
+					moment('11:59', 'HH:mm')
 				) &&
 				payload.schedule == 'morning'
 			) {
 				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('13:00', 'HH:mm'),
-					moment('15:59', 'HH:mm')
+					moment('12:00', 'HH:mm'),
+					moment('13:59', 'HH:mm')
 				) &&
 				payload.schedule == 'midday'
 			) {
 				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('16:00', 'HH:mm'),
-					moment('23:00', 'HH:mm')
+					moment('14:00', 'HH:mm'),
+					moment('17:59', 'HH:mm')
 				) &&
 				payload.schedule == 'afternoon'
+			) {
+				points += pointsPerCriterion;
+			} else if (
+				moment(hora, 'HH:mm').isBetween(
+					moment('18:00', 'HH:mm'),
+					moment('23:59', 'HH:mm')
+				) &&
+				payload.schedule == 'night'
 			) {
 				points += pointsPerCriterion;
 			}
@@ -913,8 +928,9 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
 
 const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 	let points = 0;
+	const nextDays = 3;
 	const maximum = maximumAvailability(payload, pointsPerCriterion);
-	points = pointsDisponibilidad(days, payload, pointsPerCriterion);
+	points = pointsDisponibilidad(days, payload, pointsPerCriterion, nextDays);
 	points = normalize(points, 0, maximum);
 	return points;
 };
@@ -997,6 +1013,7 @@ const ponderationMatch = async (matchedList, payload) => {
  */
 
 const psychologistClasification = async (matchedList, payload) => {
+	const nextDays = 7;
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
@@ -1005,7 +1022,12 @@ const psychologistClasification = async (matchedList, payload) => {
 		matchedList.map(async psy => {
 			psy.points = 0;
 			const days = await getFormattedSessionsForMatch(psy._id);
-			points = pointsDisponibilidad(days, payload, pointsPerCriterion);
+			points = pointsDisponibilidad(
+				days,
+				payload,
+				pointsPerCriterion,
+				nextDays
+			);
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
 			return { ...psychologist, points };
