@@ -4,9 +4,6 @@
 			<v-card-title>
 				<div class="my-6" style="width: 100%">
 					<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
-					<div class="text--secondary caption">
-						Configura los servicios ofrecidos por medio de Hablaquí.
-					</div>
 				</div>
 			</v-card-title>
 			<v-divider></v-divider>
@@ -18,7 +15,7 @@
 						:style="step && step.title === 'Agendamientos' ? 'z-index: 3' : ''"
 					>
 						<div class="text-h6 mb-5" style="color: #3c3c3b">
-							Anticipación de agendamiento:
+							Anticipación de agendamiento
 						</div>
 						<div>
 							<v-select
@@ -77,7 +74,7 @@
 								</div>
 							</v-tooltip>
 
-							Anticipación de reprogramación:
+							Anticipación de reprogramación
 						</div>
 						<div>
 							<v-select
@@ -140,25 +137,13 @@
 							</template>
 							<div class="elevation-5 pa-3">
 								<span class="primary--text">
-									Aqui podras configurar el precio de tus sesiones
+									Solo puede establecer el precio por sesión una primera vez. Si
+									desea gestionar un cambio tendrá que contactarnos.
 								</span>
 							</div>
 						</v-tooltip>
-						<v-dialog v-model="tooltip" max-width="400">
-							<v-card>
-								<v-card-title class="caption">
-									Aqui podras configurar el precio de tus sesiones
-								</v-card-title>
-							</v-card>
-						</v-dialog>
 					</v-col>
 					<v-col cols="12" style="position: relative">
-						<v-alert prominent text color="info">
-							<div style="color: #0079ff" class="px-md-6 py-4 font-weight-medium">
-								Puede establecer el precio de su sesión solo por primera vez. Para
-								cambiar tendrás que contactarnos.
-							</div>
-						</v-alert>
 						<card-onboarding
 							v-if="step && step.title === 'Valor por sesión'"
 							style="position: absolute; top: -40px; left: 40px; z-index: 3"
@@ -177,7 +162,7 @@
 						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
 					>
 						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
-							Sesión 50 min
+							Sesión de 50 min
 						</div>
 						<div>
 							<v-text-field
@@ -186,7 +171,7 @@
 								filled
 								suffix="CLP"
 								type="number"
-								hint="Precio de la session de video sin puntos ni comas"
+								hint="Ingrese el valor por sesion sin comas, ni puntos"
 								@input="setPrice"
 							>
 							</v-text-field>
@@ -229,7 +214,7 @@
 								label="Visibilidad en Marketplace"
 								color="primary"
 								persistent-hint
-								hint="Los especialistas que aceptan nuevos clientes suelen tener un aumento en el número de sesiones."
+								hint="Los especialistas que visibles en el marketplace suelen tener un aumento en el número de sesiones"
 								@change="
 									e => {
 										const preferences = psychologist.preferences;
@@ -255,7 +240,7 @@
 							class="px-10"
 							@click="onSubmit"
 						>
-							Editar
+							Guardar
 						</v-btn>
 					</v-col>
 				</v-row>
