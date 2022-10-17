@@ -1093,7 +1093,8 @@ const match = async body => {
 	}
 
 	// Se necesita que la cantidad de psy matcheados sea multiplo de 3 (para hacer el matcheo de 3 en 3)
-	if (matchedPsychologists.length % 3 != 0) {
+	if (matchedPsychologists.length < 3) {
+		console.log(matchedPsychologists.length);
 		matchedPsychologists = await Psychologist.find();
 		perfectMatch = false;
 	}
@@ -1105,20 +1106,26 @@ const match = async body => {
 	);
 
 	// Se deja una cantidad multiplo de 3 para hacer el matcheo de 3 en 3
-	while (matchedPsychologists.length % 3 != 0) {
+	while (
+		matchedPsychologists.length % 3 != 0 &&
+		matchedPsychologists.length > 3
+	) {
 		matchedPsychologists.pop();
 	}
 
 	// Se hace un array de arrays para que se muestren una cantidad de psicologos por pagina (3)
 	matchedPsychologists = arrayGenerator(matchedPsychologists);
 
-	for (let i = 0; i < matchedPsychologists.length; i++) {
-		// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
-		matchedPsychologists[i] = await psychologistClasification(
-			matchedPsychologists[i],
-			payload
-		);
-	}
+	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
+	matchedPsychologists = await Promise.all(
+		matchedPsychologists.map(async list => {
+			list = await psychologistClasification(list, payload);
+			return list;
+		})
+	);
+
+	console.log(matchedPsychologists);
+	matchedPsychologists = matchedPsychologists[0];
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
