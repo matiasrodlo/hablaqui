@@ -76,7 +76,7 @@
 						class="mx-auto text-center headline font-weight-bold primary--text my-4"
 						style="max-width: 320px"
 					>
-						Bienvenido al chat confidencial
+						Chat confidencial
 						{{ $auth.$state.user.role === 'user' ? 'con el psicólogo' : '' }}
 					</div>
 					<v-divider

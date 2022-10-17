@@ -9,7 +9,7 @@
 		<v-row v-show="!hasSessions">
 			<v-col cols="6">
 				<v-card class="shadowCard" style="border-radius: 15px">
-					<v-card-title class="px-10 titleColor"> Seleccionar tipo de pago </v-card-title>
+					<v-card-title class="px-10 titleColor"> El mejor plan para usted </v-card-title>
 					<v-card-text
 						v-for="item in itemsPlan"
 						:key="item.id"
@@ -155,10 +155,10 @@
 					</v-card-text>
 				</v-card>
 				<v-card class="shadowCard mt-6" style="border-radius: 15px">
-					<v-card-title class="px-10 titleColor"> Resumen de pago </v-card-title>
+					<v-card-title class="px-10 titleColor">Resumen</v-card-title>
 					<v-card-text class="px-10">
 						<div class="my-6 d-flex justify-space-between">
-							<div class="body-1 font-weight-bold">Tipo de pago</div>
+							<div class="body-1 font-weight-bold">Subscripción</div>
 							<div v-if="planSelected" class="body-1">
 								{{ planSelected.title }}
 							</div>
@@ -191,10 +191,7 @@
 								<span class="primary--text">Continuar con el pago</span>
 							</v-btn>
 						</div>
-						<div class="body-2 my-6 text-center">
-							Este es un pago seguro con encriptado SSL
-						</div>
-						<div class="body-2 font-weight-bold">Paga seguro con</div>
+						<div class="body-2 my-6 text-center">Pago seguro con encriptado SSL</div>
 						<div class="d-flex justify-space-around">
 							<v-img
 								width="50"
