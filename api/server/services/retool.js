@@ -2,8 +2,8 @@ import Psychologist from '../models/psychologist';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+dayjs.locale('es');
 
 const getNextSessions = async () => {
 	let sessions = await Sessions.find().populate('psychologist user');
@@ -14,7 +14,7 @@ const getNextSessions = async () => {
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
-				moment(plan.expiration).isAfter(moment());
+				dayjs(plan.expiration).isAfter(dayjs());
 
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
@@ -33,7 +33,7 @@ const getNextSessions = async () => {
 			const plan = p.plan;
 			return plan.session.flatMap(s => {
 				const isNextSession =
-					s.status !== 'success' && moment(s.date).isAfter(moment());
+					s.status !== 'success' && dayjs(s.date).isAfter(dayjs());
 				return {
 					_id: s._id,
 					sessionNumber: s.sessionNumber + '/' + plan.totalSessions,
@@ -74,7 +74,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 	});
 
 	flatSession = flatSession.filter(s =>
-		moment(s.date).isBetween(moment(startDate), moment(endDate))
+		dayjs(s.date).isBetween(dayjs(startDate), dayjs(endDate))
 	);
 
 	let auxFlatSession = [];

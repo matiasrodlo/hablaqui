@@ -47,7 +47,7 @@
 					</div>
 					<div class="my-3">
 						Sesiones por videollamada (50 min) Habla con un psicólogo por videollamada
-						en cualquier momento, en cualquier lugar.
+						en cualquier dayjso, en cualquier lugar.
 					</div>
 					<div class="mt-3">
 						<v-btn
@@ -208,7 +208,7 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default {
 	components: {
@@ -379,7 +379,7 @@ export default {
 			this.showCalendar = !this.showCalendar;
 		},
 		formatDate(date) {
-			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
+			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

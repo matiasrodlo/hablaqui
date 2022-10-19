@@ -190,8 +190,7 @@ import {
 	mdiChevronDown,
 	mdiChevronLeft,
 } from '@mdi/js';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -253,7 +252,7 @@ export default {
 			this.loading = false;
 		},
 		getAge(date) {
-			return moment().diff(date, 'years');
+			return dayjs().diff(date, 'years');
 		},
 		save(date) {
 			this.$refs.menu.save(date);

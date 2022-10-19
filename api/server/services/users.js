@@ -12,12 +12,12 @@ import { bucket } from '../config/bucket';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import Coupon from '../models/coupons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { room } from '../config/dotenv';
 import Auth from './auth';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago');
+dayjs.locale('es');
 
 const usersService = {
 	async getProfile(id) {
@@ -243,7 +243,7 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: dayjs('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
@@ -282,7 +282,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 		);
 
 		if (!planData) return conflictResponse('No hay planes para cancelar');

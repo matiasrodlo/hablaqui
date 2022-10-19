@@ -256,10 +256,9 @@
 
 <script>
 import { mdiChevronLeft, mdiMagnify, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
-moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -328,12 +327,12 @@ export default {
 		};
 	},
 	created() {
-		moment.locale('es');
+		dayjs.locale('es');
 	},
 	methods: {
 		setDate(time) {
-			if (time) return moment(time).calendar();
-			return moment().format('llll');
+			if (time) return dayjs(time).calendar();
+			return dayjs().format('llll');
 		},
 		sentBy(sentBy) {
 			return sentBy === this.$auth.$state.user._id;

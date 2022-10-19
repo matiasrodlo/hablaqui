@@ -6,7 +6,7 @@ import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Sessions from '../models/sessions';
 import {
 	bucket,
@@ -15,7 +15,7 @@ import {
 } from '../config/bucket';
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago');
+dayjs.locale('es');
 
 const getAll = async () => {
 	let psychologists = await Psychologist.find();
@@ -71,7 +71,7 @@ const match = async body => {
 
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	// Se da formato a la fecha
-	newDate = moment(newDate, 'yyyy-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm');
+	newDate = dayjs(newDate, 'yyyy-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm');
 	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
 	const sessions = await Sessions.findOneAndUpdate(
 		{
@@ -95,14 +95,14 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 		for (let i = 0; i < plan.session.length; i++) {
 			if (
 				plan.session[i]._id.toString() === sessionId.toString() &&
-				moment(plan.session[i].date, 'MM/DD/YYYY HH:mm').isAfter(
+				dayjs(plan.session[i].date, 'MM/DD/YYYY HH:mm').isAfter(
 					plan.expiration,
 					'MM/DD/YYYY HH:mm'
 				) &&
 				plan._id.toString() === planId.toString()
 			) {
 				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
-				plan.expiration = moment(newDate, 'MM/DD/YYYY HH:mm')
+				plan.expiration = dayjs(newDate, 'MM/DD/YYYY HH:mm')
 					.add(50, 'minutes')
 					.format();
 			}
@@ -222,12 +222,10 @@ const updatePsychologist = async (user, profile) => {
 			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
 				if (
 					psy.stampSetPrices &&
-					moment().isBefore(
-						moment(psy.stampSetPrices).add(1, 'months')
-					)
+					dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
 				)
 					profile.sessionPrices = psy.sessionPrices;
-				else profile.stampSetPrices = moment().format();
+				else profile.stampSetPrices = dayjs().format();
 			}
 
 			const updated = await Psychologist.findByIdAndUpdate(
@@ -370,7 +368,7 @@ const setPrice = async (user, newPrice) => {
 
 	if (
 		psy.stampSetPrices &&
-		moment().isBefore(moment(psy.stampSetPrices).add(1, 'months'))
+		dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
@@ -383,7 +381,7 @@ const setPrice = async (user, newPrice) => {
 				video: newPrice,
 				full: newPrice * 1.25,
 			},
-			stampSetPrices: moment(),
+			stampSetPrices: dayjs(),
 		},
 		{ new: true }
 	);
@@ -419,7 +417,7 @@ const getClients = async psychologist => {
 				plan: item.plan.find(
 					plan =>
 						plan.payment === 'success' &&
-						moment().isBefore(moment(plan.expiration))
+						dayjs().isBefore(dayjs(plan.expiration))
 				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
@@ -434,12 +432,12 @@ const getLastSession = item => {
 	return item.plan
 		.flatMap(plan =>
 			plan.session.map(session =>
-				moment(session.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY')
+				dayjs(session.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY')
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
 		.find(sessionDate =>
-			moment(sessionDate, 'DD/MM/YYYY').isSameOrBefore(moment())
+			dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(dayjs())
 		);
 };
 
@@ -566,13 +564,13 @@ const changeToInmediateAttention = async psy => {
 		let sessions = await getAllSessionsFunction(psy);
 		let now = new Date();
 		sessions = sessions.filter(session => {
-			const date = moment(session.date).format('DD/MM/YYYY HH:mm');
+			const date = dayjs(session.date).format('DD/MM/YYYY HH:mm');
 			return (
 				session.status !== 'success' &&
-				moment(date).isBefore(moment(now).add(3, 'hours')) &&
-				moment(date)
+				dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
+				dayjs(date)
 					.add(50, 'minutes')
-					.isAfter(moment(now))
+					.isAfter(dayjs(now))
 			);
 		});
 
@@ -585,7 +583,7 @@ const changeToInmediateAttention = async psy => {
 				$set: {
 					inmediateAttention: {
 						activated: true,
-						expiration: moment(now)
+						expiration: dayjs(now)
 							.add(1, 'hour')
 							.format(),
 					},
@@ -631,15 +629,15 @@ const getAllSessionsInmediateAttention = async () => {
 						: [];
 				})
 				.filter(session => {
-					const date = moment(session.date).format(
+					const date = dayjs(session.date).format(
 						'DD/MM/YYYY HH:mm'
 					);
 					return (
 						session.status !== 'success' &&
-						moment(date).isBefore(moment(now).add(3, 'hours')) &&
-						moment(date)
+						dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
+						dayjs(date)
 							.add(50, 'minutes')
-							.isAfter(moment(now))
+							.isAfter(dayjs(now))
 					);
 				});
 		});

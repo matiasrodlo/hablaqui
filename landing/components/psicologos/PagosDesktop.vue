@@ -149,7 +149,7 @@
 							</v-expand-transition>
 							<v-col cols="12">
 								Sesiones por videollamada (50 min) Habla con un psicólogo por
-								videollamada en cualquier momento, en cualquier lugar.
+								videollamada en cualquier dayjso, en cualquier lugar.
 							</v-col>
 						</v-row>
 					</v-card-text>
@@ -232,8 +232,7 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
 
 export default {
 	components: {
@@ -404,7 +403,7 @@ export default {
 			this.showCalendar = !this.showCalendar;
 		},
 		formatDate(date) {
-			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
+			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

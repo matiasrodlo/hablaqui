@@ -249,14 +249,7 @@
 			>
 				<v-card width="550" rounded="lg">
 					<v-card-text
-						class="
-							d-flex
-							justify-space-between justify-center
-							primary
-							white--text
-							text-h5
-							py-3
-						"
+						class="d-flex justify-space-between justify-center primary white--text text-h5 py-3"
 					>
 						<div class="body-1 font-weight-bold pt-2">Consultante nuevo</div>
 						<v-btn icon @click="closeDialog">
@@ -413,8 +406,7 @@ import {
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
 
 export default {
 	components: {
@@ -453,7 +445,7 @@ export default {
 					// eslint-disable-next-line unicorn/prefer-includes
 					return item.fullname.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
 				})
-				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
+				.sort((a, b) => dayjs(a.createdAt) - dayjs(b.createdAt));
 		},
 		emailErrors() {
 			const errors = [];
@@ -515,7 +507,7 @@ export default {
 			this.$v.$reset();
 		},
 		getAge(date) {
-			return moment().diff(date, 'years');
+			return dayjs().diff(date, 'years');
 		},
 		async changeStateOnboarding() {
 			await this.updateOne({

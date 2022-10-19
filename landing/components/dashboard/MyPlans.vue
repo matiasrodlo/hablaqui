@@ -105,8 +105,7 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import daysjs from 'daysjs';
 
 export default {
 	data() {
@@ -125,7 +124,7 @@ export default {
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
+					diff: daysjs(plan.expiration).diff(daysjs(), 'days'),
 				}))
 			);
 		},
@@ -153,14 +152,14 @@ export default {
 			if (title === 'Acompañamiento vía mensajería') return 'Terapia vía mensajes de texto';
 		},
 		setDate(date) {
-			return moment(date).format('l');
+			return daysjs(date).format('l');
 		},
 		itemSuccess(item) {
 			return (
 				(item.payment === 'success' ||
 					item.payment === 'pending' ||
 					item.payment === 'failed') &&
-				moment().isBefore(moment(item.expiration))
+				daysjs().isBefore(daysjs(item.expiration))
 			);
 		},
 	},

@@ -1,5 +1,4 @@
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
 
 export default {
 	user: (state, getters, rootState) => rootState.auth.user,
@@ -22,7 +21,7 @@ export default {
 				// numero de sessiones concluidas
 				success: item.numberSessionSuccess,
 				// dias de diferencia entre el dia que expiró y hoy
-				diff: moment(plan.expiration).diff(moment(), 'days'),
+				diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
 			}))
 		);
 		const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
@@ -30,7 +29,7 @@ export default {
 
 		// retornamos el plan success y sin expirar
 		let plan = plans.find(
-			item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			item => item.payment === 'success' && dayjs().isBefore(dayjs(item.expiration))
 		);
 		// retornamos el ultimo plan succes y que expiro
 		if (!plan) plan = plans.find(item => item.diff === min);

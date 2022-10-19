@@ -7,15 +7,15 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailService from './mail';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+dayjs.locale('es');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);
 	const user = await Psychologist.findById(psy);
-	const now = moment().format();
+	const now = dayjs().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
 	if (!transactions) {
@@ -82,7 +82,7 @@ const createPaymentsRequest = async user => {
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
 	let sessions = await getAllSessionsFunction(psy);
-	const now = moment().format();
+	const now = dayjs().format();
 
 	const transactions = await Transaction.findOne({ psychologist: psy });
 	if (!transactions) {

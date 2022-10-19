@@ -211,7 +211,7 @@
 										v-if="lastTransaction.trasactionDate"
 										class="body-1 text-right pt-2"
 									>
-										{{ formatDateMoment(lastTransaction.trasactionDate) }}
+										{{ formatDatedayjs(lastTransaction.trasactionDate) }}
 									</div>
 								</div>
 							</div>
@@ -257,49 +257,25 @@
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Tipo de plan</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto</span>
 						<span>{{ item.amount }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>% Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto final</span>
 						<span>{{ item.finalAmount }}</span>
@@ -439,10 +415,9 @@
 </template>
 
 <script>
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { mapActions } from 'vuex';
 import { mdiMagnify, mdiClose } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -482,7 +457,7 @@ export default {
 			dialog: false,
 			dialogPayment: false,
 			menu: false,
-			findByDate: moment().format('YYYY-MM'),
+			findByDate: dayjs().format('YYYY-MM'),
 			mdiMagnify,
 			loadingPayment: false,
 			mdiClose,
@@ -503,8 +478,8 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = moment().add('7', 'days');
-			return moment(day).format('DD/MM/YYYY');
+			const day = dayjs().add('7', 'days');
+			return dayjs(day).format('DD/MM/YYYY');
 		},
 		lastTransaction() {
 			if (!this.transactions || !this.transactions.transactions.length) return null;
@@ -515,7 +490,7 @@ export default {
 				let result = this.items
 					.filter(
 						item =>
-							moment(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
+							dayjs(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
 							this.findByDate
 					)
 					.map((item, index) => ({ ...item, id: index }));
@@ -532,18 +507,18 @@ export default {
 			},
 		},
 		formatedFindByDate() {
-			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
+			return dayjs(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
 		},
 	},
 	created() {
-		moment.locale('es');
+		dayjs.locale('es');
 	},
 	methods: {
 		formatDate(item) {
-			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
+			return dayjs(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
 		},
-		formatDateMoment(item) {
-			return moment(item).format('DD MMMM, YYYY');
+		formatDatedayjs(item) {
+			return dayjs(item).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;

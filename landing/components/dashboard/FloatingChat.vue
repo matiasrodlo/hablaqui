@@ -99,9 +99,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
-moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -202,7 +201,7 @@ export default {
 		},
 	},
 	created() {
-		moment.locale('es');
+		dayjs.locale('es');
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
 		});

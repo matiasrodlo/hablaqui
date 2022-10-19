@@ -1,8 +1,8 @@
 'use strict';
 
 import { Schema, model } from 'mongoose';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+dayjs.locale('es');
 
 let email = new Schema({
 	batchId: {
@@ -22,7 +22,7 @@ let email = new Schema({
 	},
 	queuedAt: {
 		type: String,
-		default: moment()
+		default: dayjs()
 			.locale('es-mx')
 			.format('D MMMM YYYY, h:mm:ss a'),
 	},

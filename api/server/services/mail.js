@@ -1,8 +1,8 @@
 'use strict';
 
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { logInfo } from '../config/pino';
-moment.tz.setDefault('America/Santiago');
+dayjs.locale('es');
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -144,13 +144,13 @@ const mailService = {
 				first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
@@ -186,13 +186,13 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
@@ -358,8 +358,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -397,8 +397,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		return new Promise((resolve, reject) => {
@@ -683,7 +683,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
@@ -712,7 +712,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		return new Promise((resolve, reject) => {
@@ -806,8 +806,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -838,8 +838,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -869,7 +869,7 @@ const mailService = {
 				psy_name: psy.name,
 				code: coupon.code,
 				amount: coupon.discount,
-				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
+				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
 		return new Promise((resolve, reject) => {

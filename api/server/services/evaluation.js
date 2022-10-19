@@ -9,8 +9,8 @@ import {
 	getAllEvaluationsFunction,
 } from '../utils/functions/evaluationFunction';
 import mailService from './mail';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+dayjs.locale('es');
 
 const addRating = async (user, newRating, comment, psychologist) => {
 	if (user.psychologist != psychologist)
@@ -88,7 +88,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
-				'evaluations.$.moderatingDate': moment().format(),
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		}
 	).populate('psychologist user');
@@ -134,7 +134,7 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
-				'evaluations.$.moderatingDate': moment().format(),
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		}
 	).populate('psychologist user');

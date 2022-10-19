@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -113,7 +113,7 @@ export default {
 		this.hasSessions =
 			this.plan &&
 			this.plan.payment === 'success' &&
-			moment().isBefore(moment(this.plan.expiration)) &&
+			dayjs().isBefore(dayjs(this.plan.expiration)) &&
 			this.plan.psychologist === this.psychologist._id &&
 			this.plan.remainingSessions > 0;
 	},

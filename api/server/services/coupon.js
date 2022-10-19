@@ -3,8 +3,8 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+dayjs.locale('es');
 
 const newCoupon = async (user, payload) => {
 	if (user.role !== 'superuser')
@@ -17,7 +17,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: moment(payload.expiration).toISOString(),
+		expiration: dayjs(payload.expiration).toISOString(),
 	};
 
 	await Coupon.create(coupon);
@@ -29,7 +29,7 @@ const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (moment().isAfter(foundCoupon.expiration))
+	if (dayjs().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
 	if (foundCoupon.discountType === 'static' && foundCoupon.discount === 0)
 		return conflictResponse('Cupón con saldo 0');

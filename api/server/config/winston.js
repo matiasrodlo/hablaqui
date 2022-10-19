@@ -1,13 +1,13 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { node_env } from './dotenv';
-moment.tz.setDefault('America/Santiago');
+dayjs.locale('es');
 
 const { createLogger, format, transports } = require('winston');
 const MESSAGE = Symbol.for('message');
 
 const jsonFormatter = logEntry => {
 	const base = {
-		timestamp: moment().format(),
+		timestamp: dayjs.format(),
 		severity: logEntry.level.toUpperCase(),
 	};
 	const json = Object.assign(base, logEntry);

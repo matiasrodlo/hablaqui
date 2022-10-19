@@ -58,7 +58,7 @@
 											$ {{ item.total }} - {{ item.sessionsPaid }} Sesiones
 										</div>
 										<div v-if="item.trasactionDate" class="secondary--text">
-											{{ formatDateMoment(item.trasactionDate) }}
+											{{ formatDatedayjs(item.trasactionDate) }}
 										</div>
 									</v-list-item-action>
 								</v-list-item>
@@ -154,7 +154,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiClose } from '@mdi/js';
-import moment from 'moment';
+import dayjs from 'dayjs';
 export default {
 	name: 'Pagos',
 	components: {
@@ -175,8 +175,8 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = moment().add('7', 'days');
-			return moment(day).format('DD/MM/YYYY');
+			const day = dayjs().add('7', 'days');
+			return dayjs(day).format('DD/MM/YYYY');
 		},
 		...mapGetters({
 			payments: 'Psychologist/payments',
@@ -184,7 +184,7 @@ export default {
 		}),
 	},
 	created() {
-		moment.locale('es');
+		dayjs.locale('es');
 	},
 	mounted() {
 		this.initFetch();
@@ -205,8 +205,8 @@ export default {
 			this.psychologist = await psychologist;
 			this.loading = false;
 		},
-		formatDateMoment(item) {
-			return moment(item).format('DD MMMM, YYYY');
+		formatDatedayjs(item) {
+			return dayjs(item).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;
