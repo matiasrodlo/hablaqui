@@ -522,7 +522,7 @@ export default {
 		},
 	},
 	created() {
-		dayjs.locale(es);
+		dayjs.locale('es');
 	},
 	methods: {
 		formatDate(item) {

@@ -208,7 +208,7 @@ export default {
 		},
 	},
 	created() {
-		dayjs.locale(es);
+		dayjs.locale('es');
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
 		});
