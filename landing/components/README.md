@@ -14,10 +14,10 @@
 
 ---
 
--   **GoogleBtn.vue**: Botón para logearte con google, pero actualmente no se utiliza
--   **SendPasswordRecovery.vue**: Formulario para enviar email de recuperación de contraseña/cuenta
--   **SignIn.vue**: Componente con todo lo relaciona al login
--   **SignUp.vue**: Componente con todo lo relacionado al registro de una cuenta de usuario role user
+-   **GoogleBtn.vue**: Login con Google (No Integrado)
+-   **SendPasswordRecovery.vue**: Recuperación de contraseña (user/psy)
+-   **SignIn.vue**: Login (user/psy)
+-   **SignUp.vue**: Registro (user)
 
 ---
 
@@ -25,8 +25,8 @@
 
 ---
 
--   **CardChat.vue**: Componente de chat utilizado en FloatingChat (este es solamente para usuarios: user)
--   **Channel.vue**: Comoponente en la página de chat. Este es el del chat completo (este es para ambos tipos de usurios: user y psychologist)
+-   **CardChat.vue**: Chat flotante (user)
+-   **Channel.vue**: Chat (user/psy)
 
 ---
 
@@ -39,7 +39,7 @@
 -   **ExperienciaFormacion.vue**: Formulario de experiencia y formación de un psicólogo en "Mi cuenta"
 -   **FloatingChat.vue**: Chat flotante (solamente para usuarios de rol "user")
 -   **General.vue**: Ubicado en "Mi cuenta" que contiene paneles expandibles donde se edita el perfil de un psicólogo
--   **Horario.vue**: Configura el horario de un psicólogo
+-   **Horario.vue**: Disponibilidad (psy)
 -   **InformationGeneralPsi.vue**: Formulario de la información general de un psicólogo (Descripción personal y profesional; código; linkedin)
 -   **MyPlans.vue**: Pestaña de planes contratados pagados, no pagados y expirados de un usuario de rol "user"
 -   **Psicologo.vue**: Pestaña que muestra la información del psicólogo de un usuario de rol "user"
@@ -54,8 +54,8 @@
 
 ---
 
--   **Precharge.vue**: Muestra que aún están cargando los resultados de la evaluación
--   **Selection**: Lista donde se puede seleccionar el resultado de la evaluación
+-   **Precharge.vue**: Precarga en flujo de Matchmaking
+-   **Selection**: Selección de psy en flujo de matchmaking
 
 ---
 
@@ -63,7 +63,7 @@
 
 ---
 
--   **Plans.vue**: Selector de planes de un psicólogo
+-   **Plans.vue**: Planes (psy)
 
 ---
 
@@ -71,15 +71,15 @@
 
 ---
 
--   **FormUserPsy.vue**: Formulario para regitrar a un usuario de rol "psychologist"
+-   **FormUserPsy.vue**: Resgistro (psy)
 -   **GeoPsicologos.vue** : Es la cebecera de psicólgos según la ubicación (/psicologos/santiago)
 -   **MiniCalendar.vue**: Calendario para móviles en el perfil de psicólogo
--   **PagosDesktop.vue**: Pagos de plan para usuarios de rol "user" en vista de escritorio
--   **PagosMobile.vue**: Pagos de plan para usuarios de rol "user" en vista de móviles
--   **ProfileDesktop.vue**: Perfil de psicólogo en vista de escritorio
--   **ProfileMobile.vue**: Perfil de psicólogo en vista de móviles
--   **PsicologosDesktop.vue**: Psicólogos en vista de escritorio
--   **PsicologosMobile.vue**: Psicólogos en vista de móviles
+-   **PagosDesktop.vue**: Checkout user (Escritorio)
+-   **PagosMobile.vue**: Checkout user (Responsive)
+-   **ProfileDesktop.vue**: Perfil de psy (Escritorio)
+-   **ProfileMobile.vue**: Perfil de psy (Resposive)
+-   **PsicologosDesktop.vue**: Marketplace (Escritorio)
+-   **PsicologosMobile.vue**: Marketplace (Resposive)
 -   **Ubicación.vue**: Envoltura para psicólogos por ubicación
 
 ---
@@ -91,11 +91,11 @@
 -   **AppbarBlue.vue**: Menú de navegación (ondulación azul con enlaces) antigüamente usado en blog
 -   **AppbarWhite.vue**: Menú de navegación (ondulación blanca con enlaces)
 -   **Avatar.vue**: Permite visualizar el avatar de un usuario de acuerdo a los estilos
--   **Calendar.vue**: Selector de hora con scroll
--   **CalendarPsychologist.vue**: Selector de hora expandible
+-   **Calendar.vue**: Timepicker scroll
+-   **CalendarPsychologist.vue**: Timepicker expandible
 -   **CardOnboarding.vue**: Tarjeta para el mensaje de onboarding
--   **Footer.vue**: Pie de página
--   **Icon.vue**: Permite visualizar los iconos
+-   **Footer.vue**: Pie de página (General)
+-   **Icon.vue**: Permite visualización de iconos
 -   **Snackbar.vue**: Permite mostrar mensajes de estado
 
 ---
