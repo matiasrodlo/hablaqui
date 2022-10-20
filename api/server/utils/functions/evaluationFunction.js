@@ -1,6 +1,10 @@
 import Evaluation from '../../models/evaluation';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export const getAllEvaluationsFunction = async psy => {
 	let evaluations = await Evaluation.find({ psychologist: psy }).populate(

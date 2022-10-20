@@ -7,15 +7,25 @@ import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import Sessions from '../models/sessions';
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
+dayjs.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-dayjs.locale('es');
 
 const getAll = async () => {
 	let psychologists = await Psychologist.find();

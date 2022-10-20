@@ -155,6 +155,16 @@
 import { mapActions, mapGetters } from 'vuex';
 import { mdiClose } from '@mdi/js';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 export default {
 	name: 'Pagos',
 	components: {

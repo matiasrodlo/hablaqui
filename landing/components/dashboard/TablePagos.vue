@@ -418,6 +418,17 @@
 import dayjs from 'dayjs';
 import { mapActions } from 'vuex';
 import { mdiMagnify, mdiClose } from '@mdi/js';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -511,7 +522,7 @@ export default {
 		},
 	},
 	created() {
-		dayjs.locale('es');
+		dayjs.locale(es);
 	},
 	methods: {
 		formatDate(item) {

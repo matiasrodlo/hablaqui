@@ -12,7 +12,15 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);

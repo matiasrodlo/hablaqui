@@ -311,7 +311,16 @@
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
-import daysjs from 'daysjs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Horario',
@@ -539,14 +548,14 @@ export default {
 						el =>
 							el[0] !== '' ||
 							el[1] !== '' ||
-							daysjs(el[0], 'HH:mm').isSame(daysjs(el[1], 'HH:mm'))
+							dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))
 					)
 					.map(el => {
-						if (daysjs(el[0], 'HH:mm').isBefore(daysjs(el[1], 'HH:mm')))
+						if (dayjs(el[0], 'HH:mm').isBefore(dayjs(el[1], 'HH:mm')))
 							return [el[0], el[1]];
 						else return [el[1], el[0]];
 					})
-					.filter(el => !daysjs(el[0], 'HH:mm').isSame(daysjs(el[1], 'HH:mm'))),
+					.filter(el => !dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))),
 			}));
 
 			const payload = {
@@ -567,9 +576,9 @@ export default {
 		validateInput(indexDay, indexInterval, value, type) {
 			const result = this.items[indexDay].intervals.some((item, i) => {
 				if (indexInterval !== i)
-					return daysjs(value, 'HH:mm').isBetween(
-						daysjs(item[0], 'HH:mm'),
-						daysjs(item[1], 'HH:mm'),
+					return dayjs(value, 'HH:mm').isBetween(
+						dayjs(item[0], 'HH:mm'),
+						dayjs(item[1], 'HH:mm'),
 						undefined,
 						[]
 					);

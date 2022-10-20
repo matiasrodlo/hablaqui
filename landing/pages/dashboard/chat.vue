@@ -350,6 +350,13 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

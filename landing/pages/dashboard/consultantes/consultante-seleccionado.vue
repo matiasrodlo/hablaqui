@@ -191,6 +191,12 @@ import {
 	mdiChevronLeft,
 } from '@mdi/js';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),

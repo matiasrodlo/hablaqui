@@ -1,9 +1,15 @@
 import Psychologist from '../models/psychologist';
 import Appointments from '../models/appointments';
-import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const getNextSessions = async () => {
 	let sessions = await Sessions.find().populate('psychologist user');

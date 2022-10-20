@@ -86,6 +86,13 @@ import axios from 'axios';
 import { mapMutations } from 'vuex';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Panel',

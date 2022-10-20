@@ -1,7 +1,17 @@
 import Sessions from '../../models/sessions';
 import { priceFormatter } from './priceFormatter';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export const paymentInfoFunction = async psyId => {
 	let allSessions = await Sessions.find({

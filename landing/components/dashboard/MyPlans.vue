@@ -105,7 +105,14 @@
 </template>
 
 <script>
-import daysjs from 'daysjs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	data() {
@@ -124,7 +131,7 @@ export default {
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
-					diff: daysjs(plan.expiration).diff(daysjs(), 'days'),
+					diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
 				}))
 			);
 		},
@@ -152,14 +159,14 @@ export default {
 			if (title === 'Acompañamiento vía mensajería') return 'Terapia vía mensajes de texto';
 		},
 		setDate(date) {
-			return daysjs(date).format('l');
+			return dayjs(date).format('l');
 		},
 		itemSuccess(item) {
 			return (
 				(item.payment === 'success' ||
 					item.payment === 'pending' ||
 					item.payment === 'failed') &&
-				daysjs().isBefore(daysjs(item.expiration))
+				dayjs().isBefore(dayjs(item.expiration))
 			);
 		},
 	},

@@ -10,7 +10,11 @@ import {
 } from '../utils/functions/evaluationFunction';
 import mailService from './mail';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const addRating = async (user, newRating, comment, psychologist) => {
 	if (user.psychologist != psychologist)

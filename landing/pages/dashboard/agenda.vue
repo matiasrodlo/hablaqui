@@ -757,6 +757,21 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 export default {
 	components: {

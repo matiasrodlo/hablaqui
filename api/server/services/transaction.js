@@ -8,7 +8,11 @@ import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunctio
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailService from './mail';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 

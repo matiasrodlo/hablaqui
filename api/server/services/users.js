@@ -15,9 +15,15 @@ import Coupon from '../models/coupons';
 import dayjs from 'dayjs';
 import { room } from '../config/dotenv';
 import Auth from './auth';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-dayjs.locale('es');
 
 const usersService = {
 	async getProfile(id) {

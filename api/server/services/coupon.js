@@ -4,7 +4,11 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const newCoupon = async (user, payload) => {
 	if (user.role !== 'superuser')

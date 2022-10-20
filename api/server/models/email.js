@@ -2,7 +2,13 @@
 
 import { Schema, model } from 'mongoose';
 import dayjs from 'dayjs';
-dayjs.locale('es');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 let email = new Schema({
 	batchId: {
@@ -23,7 +29,7 @@ let email = new Schema({
 	queuedAt: {
 		type: String,
 		default: dayjs()
-			.locale('es-mx')
+			.locale('es')
 			.format('D MMMM YYYY, h:mm:ss a'),
 	},
 	scheduledAt: {
