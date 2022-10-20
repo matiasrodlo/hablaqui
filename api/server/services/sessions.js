@@ -1109,12 +1109,12 @@ const updateSessions = async sessions => {
 };
 
 const deleteCommitment = async (planId, psyId) => {
-	// Se busca al psicologo para buscar la session con su id y el planId
+	// Se busca si existe el psicologo
 	const psy = await Psychologist.findById(psyId);
 	if (!psy) {
 		return conflictResponse('No existe el psicólogo');
 	}
-
+	// Se busca en mongo y borra la session agendada del plan
 	const updatedSessions = await Sessions.findOneAndUpdate(
 		{
 			psychologist: psy._id,
