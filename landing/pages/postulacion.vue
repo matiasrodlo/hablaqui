@@ -10,15 +10,15 @@
 					contain
 				/>
 			</a>
-			<span class="hidden-sm-and-down text--secondary text-h6">
-				¿Necesitas ayuda?
+			<span class="hidden-sm-and-down text--secondary text-h7">
+				¿Necesita ayuda?
 				<a
 					style="text-decoration: none"
 					class="primary--text"
 					href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1?autoload=1&app_absent=0"
 					target="_blank"
 				>
-					Contáctanos
+					Contáctenos
 				</a>
 			</span>
 			<a
@@ -41,7 +41,7 @@
 				<v-stepper v-model="step" flat>
 					<v-stepper-header class="elevation-0">
 						<v-stepper-step :complete="step > 1" step="1">
-							Háblanos sobre ti
+							Información personal
 						</v-stepper-step>
 
 						<v-divider></v-divider>
@@ -60,15 +60,8 @@
 					<v-stepper-items>
 						<v-stepper-content step="1">
 							<v-row>
-								<v-col cols="12">
-									<div
-										class="mb-10 primary--text font-weight-bold text-h4 text-left"
-									>
-										¡Es un placer conocerte!
-									</div>
-								</v-col>
 								<v-col cols="6" align-self="center">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Fecha de nacimiento
 									</div>
 								</v-col>
@@ -114,7 +107,7 @@
 									</v-menu>
 								</v-col>
 								<v-col cols="6" align-self="center">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Género
 									</div>
 								</v-col>
@@ -136,7 +129,7 @@
 									></v-select>
 								</v-col>
 								<v-col cols="12" md="4">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										País
 									</div>
 									<v-autocomplete
@@ -165,7 +158,7 @@
 									></v-autocomplete>
 								</v-col>
 								<v-col cols="12" md="4">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Región
 									</div>
 									<v-autocomplete
@@ -182,7 +175,7 @@
 									></v-autocomplete>
 								</v-col>
 								<v-col cols="12" md="4">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Comuna
 									</div>
 									<v-autocomplete
@@ -199,7 +192,7 @@
 									></v-autocomplete>
 								</v-col>
 								<v-col cols="12" md="4">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Zona horaria
 									</div>
 									<v-combobox
@@ -230,7 +223,7 @@
 									</v-combobox>
 								</v-col>
 								<v-col cols="4" md="3" offset-md="1">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Código
 									</div>
 									<v-autocomplete
@@ -255,7 +248,7 @@
 									</v-autocomplete>
 								</v-col>
 								<v-col cols="8" md="4">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Teléfono
 									</div>
 									<v-text-field
@@ -269,8 +262,8 @@
 									></v-text-field>
 								</v-col>
 								<v-col cols="12">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										Idiomas (Requerido)
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
+										Idiomas
 									</div>
 									<div class="d-flex">
 										<v-checkbox
@@ -296,22 +289,23 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Descripción personal
 									</div>
 									<v-textarea
 										id="description-personal"
 										v-model="form.personalDescription"
 										outlined
-										placeholder="Me considero una persona calida, risueña y empatica, a la cual le gusta estar constantemente estudiando y aprendiendo cosas nuevas. Aparte de la psicología me apasionan las artes marciales las cuales practico desde mi adolescencia. También disfruto mucho de pasear en bici, leer y juntarme con amigos."
+										placeholder="Me agrada meditar, disfrutar de los pequeños milagros cotidianos, contemplar la naturaleza,
+agradecer, aprender de las personas, realizar actividades deportivas y reír."
 										filled
 										no-resize
-										hint="El consultante quiere saber un poco más sobre ti más allá de loprofesional. Explica con más detalle el objetivo de tu línea de trabajo, tu trayectoria, tus gustos y pasatiempos. Crea un ambiente acogedor con las palabras."
+										hint="Hablé de usted más alla de lo profesional. Describa sus gustos y pasatiempos creando un ambiente acogedor."
 										counter
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Instagram
 									</div>
 									<v-text-field
@@ -320,16 +314,17 @@
 										outlined
 										dense
 										type="text"
-										placeholder="Inserte link (opcional)"
+										placeholder="instagram.com/usuario
+"
 									></v-text-field>
 								</v-col>
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
-										Linkedin
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
+										LinkedIn
 									</div>
 									<v-text-field
 										v-model="form.linkedin"
-										placeholder="Inserte link (opcional)"
+										placeholder="linkedin.com/in/usuario/"
 										filled
 										outlined
 										dense
@@ -352,17 +347,7 @@
 						<v-stepper-content step="2">
 							<v-row>
 								<v-col cols="12">
-									<div class="primary--text">
-										¡Estamos ansiosos de saber más de ti!
-									</div>
-									<div
-										class="mb-10 primary--text font-weight-bold text-h4 text-left"
-									>
-										Cuéntanos sobre tu formación profesional
-									</div>
-								</v-col>
-								<v-col cols="12">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Descripción profesional
 									</div>
 									<v-textarea
@@ -371,17 +356,17 @@
 										filled
 										outlined
 										dense
-										placeholder="Te acompañare en el proceso en el proceso de conocerte más, exploraremos juntos aquello que te causa malestar, comprendiendolo y aceptandolo. En este proceso aprenderas a relacionarte con tus pensamientos y emociones de una nueva forma en la cual puedas construir una vida valiosa, gratificante y llena de sentido. Esto dentro de un espacio seguro, sin juicios y colaborativo."
-										hint="Cuenta, en pocas palabras, un poco sobre tu experiencia profesional. También puedes hablar sobre el modelo terapéutico que trabajas, y cómo puedes ayudar a tu consultante."
+										placeholder="Realizo psicoterapia familiar, de pareja e individual bajo la premisa de que el ser humano tiene un potencial enorme, colaborando para construir estrategias para solucionar problemas"
+										hint="Describa su metodología de trabajo y cómo puedes ayudar a al consultante."
 										counter
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Formación
 									</div>
 									<div class="text--secondary caption mb-2 font-weight-regular">
-										Tipo, disciplina académica, institución académica, etc
+										Título, disciplina, institución, periodo
 									</div>
 									<v-list>
 										<v-list-item v-for="(item, t) in form.formation" :key="t">
@@ -465,7 +450,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Disciplina académica
+															Disciplina
 														</div>
 														<v-text-field
 															v-model="selectedFormation.description"
@@ -479,7 +464,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Institución académica
+															Institución
 														</div>
 														<v-text-field
 															v-model="selectedFormation.intitucion"
@@ -493,7 +478,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Año de inicio
+															Inicio
 														</div>
 														<v-text-field
 															v-model="selectedFormation.start"
@@ -507,7 +492,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Año de termino
+															Termino
 														</div>
 														<v-text-field
 															v-model="selectedFormation.end"
@@ -550,11 +535,11 @@
 								</v-col>
 								<!-- Experiencia -->
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Experiencia
 									</div>
 									<div class="text--secondary caption mb-2 font-weight-regular">
-										Tipo, disciplina académica, institución académica, etc
+										Cargo, institución, periodo
 									</div>
 									<v-list>
 										<v-list-item v-for="(item, t) in form.experience" :key="t">
@@ -649,7 +634,7 @@
 															v-model="selectedExperience.current"
 															dense
 															hide-details
-															label="Actualmente estoy trabajando aquí"
+															label="Actualmente trabajando aquí"
 															@change="
 																e => {
 																	selectedExperience.end = '';
@@ -661,7 +646,7 @@
 													</v-col>
 													<v-col cols="12">
 														<div class="primary--text body-1 pb-2">
-															Año de inicio
+															Inicio
 														</div>
 														<v-text-field
 															v-model="selectedExperience.start"
@@ -676,7 +661,7 @@
 													<v-expand-transition>
 														<v-col v-show="!hiddenInput" cols="12">
 															<div class="primary--text body-1 pb-2">
-																Año de Termino
+																Termino
 															</div>
 															<v-text-field
 																v-model="selectedExperience.end"
@@ -719,7 +704,7 @@
 									</v-dialog>
 								</v-col>
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Especialidades
 									</div>
 									<v-select
@@ -754,7 +739,7 @@
 									</v-chip>
 								</v-col>
 								<v-col cols="12" md="6">
-									<div class="primary--text text-h6 mb-2 font-weight-regular">
+									<div class="primary--text text-h7 mb-2 font-weight-regular">
 										Modelo terapéutico
 									</div>
 									<v-select
@@ -826,16 +811,8 @@
 						<v-stepper-content step="3">
 							<v-row>
 								<v-col cols="12">
-									<div class="primary--text">¡Ya casi terminamos!</div>
-									<div
-										class="mb-10 primary--text font-weight-bold text-h4 text-left"
-									>
-										Háblanos sobre tu trabajo
-									</div>
-								</v-col>
-								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cuántos años llevas trabajando como psicólogo clínico?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Cuántos años lleva trabajando como psicólogo clínico?
 									</div>
 									<div>
 										<v-text-field
@@ -843,28 +820,29 @@
 											filled
 											outlined
 											dense
+											:rules="rulesTextField"
 											type="text"
 										></v-text-field>
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cuántos años has visto pacientes en línea a través de
-										consultas por video?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Cuántos años lleva atendiendo consultantes en línea?
 									</div>
 									<div>
 										<v-text-field
 											v-model="form.yearsExpVideocalls"
 											filled
 											outlined
+											:rules="rulesTextField"
 											dense
 											type="text"
 										></v-text-field>
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cuál es el número promedio de paciente que ve semanalmente?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Número promedio de consultantes que atiende semanalmente?
 									</div>
 									<div>
 										<v-text-field
@@ -872,13 +850,14 @@
 											filled
 											outlined
 											dense
+											:rules="rulesTextField"
 											type="text"
 										></v-text-field>
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Cómo te enteraste de nosotros?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Cómo nos conocio?
 									</div>
 									<div>
 										<v-select
@@ -899,7 +878,7 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
 										¿Es la atención clínica su actividad exclusiva?
 									</div>
 									<div>
@@ -917,9 +896,8 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Está actualmente bajo la supervisión clínica de otro
-										profesional de la psicología?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Está bajo la supervisión clínica de otro profesional?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isUnderSupervision" row>
@@ -936,7 +914,7 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
 										¿Supervisa actualmente a otros psicólogos?
 									</div>
 									<div>
@@ -954,14 +932,8 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Produce algún tipo de contenido para el público en general?
-									</div>
-									<div class="text--secondary vsption mb-2 font-weight-regular">
-										Ej: artículos en LinkedIn; Columnas en vehículos de
-										comunicación (portales, periódicos, revistas); Artículos en
-										blogs propios o de terceros; Publicación rica en contenido
-										en las redes sociales; etc.
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Produce contenido en redes sociales?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isContentCreator" row>
@@ -978,9 +950,8 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Estás actualmente asociado con otra plataforma de
-										psicología?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Actualmente atiende en alguna otra plataforma?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isAffiliateExternal" row>
@@ -997,10 +968,8 @@
 									</div>
 								</v-col>
 								<v-col cols="12">
-									<div class="text--secondary text-h6 mb-2 font-weight-regular">
-										¿Está interesado en participar en conferencias / paneles /
-										chats en empresas Clientes en el ámbito de Hablaquí
-										Business?
+									<div class="text--secondary text-h7 mb-2 font-weight-regular">
+										¿Le gustaría atender consultantes de la red corporativa?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isInterestedBusiness" row>
@@ -1064,19 +1033,12 @@
 												:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
 											></v-img>
 										</div>
-										<div class="headline font-weight-bold">
-											¡Ya has terminado!
-										</div>
 										<div
 											class="my-6 text--secondary body-1 mx-auto"
 											style="max-width: 800px"
 										>
-											Hemos recibido tu registro y verificaremos tu profesión
-											en la superintendencia de salud. Será un honor para
-											nosotros contar contigo en nuestro equipo de psicólogos,
-											<span class="primary--text">
-												te contactaremos pronto.
-											</span>
+											Hemos recibido su postulación, en breve verificaremos
+											sus datos en la superintendencia de salud.
 										</div>
 										<div>
 											<v-btn
