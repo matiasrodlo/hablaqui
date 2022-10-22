@@ -71,13 +71,12 @@
 			>
 				<!-- burbujas asistente -->
 				<template v-if="selected.assistant">
-					<div class="text-center">hablaquí</div>
+					<div class="text-center">Hablaquí</div>
 					<div
 						class="mx-auto text-center headline font-weight-bold primary--text my-4"
 						style="max-width: 320px"
 					>
-						Chat confidencial
-						{{ $auth.$state.user.role === 'user' ? 'con el psicólogo' : '' }}
+						Mensajería ilimitada
 					</div>
 					<v-divider
 						class="mx-auto mb-10"
