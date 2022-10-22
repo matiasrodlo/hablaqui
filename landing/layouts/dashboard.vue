@@ -304,13 +304,8 @@
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
-					<v-card-text class="py-0 text-center body-1 px-6">
-						Aprenda a usar Hablaquí
-					</v-card-text>
-					<br />
 					<v-card-text class="text-center body-2 px-6">
-						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas en una
-						breve capacitación en línea.
+						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
