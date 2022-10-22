@@ -565,8 +565,7 @@ export default {
 							tab: 0,
 							card: {
 								title: 'Foto de perfil',
-								description:
-									'Luzca profesional. Adjunte su foto de perfil, nosotros la retocaremos. Ver manual.',
+								description: 'Adjunte su foto, nosotros la retocaremos. Ver manual',
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
@@ -578,7 +577,7 @@ export default {
 							card: {
 								title: 'Datos bancarios',
 								description:
-									'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
+									'Ingrese sus datos. Transferimos directamente a su cuenta',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
@@ -588,8 +587,7 @@ export default {
 							tab: 1,
 							card: {
 								title: 'Disponibilidad',
-								description:
-									'Establezca fácilmente sus horarios de atención al público.',
+								description: 'Establezca sus horarios de atención al público',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
@@ -600,7 +598,7 @@ export default {
 							card: {
 								title: 'Intervalos',
 								description:
-									'Establezca intervalos de disponibilidad para cada día.',
+									'Establezca intervalos de disponibilidad para cada día',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
@@ -631,7 +629,7 @@ export default {
 							tab: 2,
 							card: {
 								title: 'Valor por sesión',
-								description: 'Configure el valor por sesiones de 50 minutos.',
+								description: 'Configure el valor por sesiones de 50 minutos',
 							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
@@ -655,7 +653,7 @@ export default {
 							card: {
 								title: 'Chat',
 								description:
-									'Envíe mensajes ilimitados para coordinar y realizar seguimiento.',
+									'Envíe mensajes ilimitados para coordinar y realizar seguimiento',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -666,7 +664,7 @@ export default {
 							card: {
 								title: 'Sesiones',
 								description:
-									'Las sesiones se añadirán automáticamente en su calendario.',
+									'Las sesiones se añadirán automáticamente a su calendario',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -678,7 +676,7 @@ export default {
 							card: {
 								title: 'Pagos',
 								description:
-									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
+									'Lleve el historial de sus ingresos en piloto automático',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -690,7 +688,7 @@ export default {
 							card: {
 								title: 'Consultantes',
 								description:
-									'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
+									'Toda la información de sus consultantes en un solo lugar',
 								link: '',
 								route: 'dashboard-chat',
 							},

@@ -93,8 +93,8 @@
 						<p class="body-2">
 							{{
 								$auth.$state.user.role === 'user'
-									? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-									: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+									? '¡Hola! Soy Habi, su asistente virtual. Mi objetivo es ayudarle con cualquier cosa que necesite. Próximamente podra interactuar conmigo.'
+									: '¡Hola! Soy Habi, su asistente virtual. Mi objetivo es ayudarle con cualquier cosa que necesite. Próximamente podra interactuar conmigo.'
 							}}
 						</p>
 					</div>

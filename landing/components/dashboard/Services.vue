@@ -1,12 +1,6 @@
 <template>
 	<div>
 		<v-card flat class="mb-16 mt-3">
-			<v-card-title>
-				<div class="my-6" style="width: 100%">
-					<div class="text-h6" style="color: #3c3c3b">Configuración de servicios</div>
-				</div>
-			</v-card-title>
-			<v-divider></v-divider>
 			<v-card-text>
 				<v-row>
 					<v-col
@@ -161,9 +155,6 @@
 						md="4"
 						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
 					>
-						<div class="body-1 font-weight-medium mb-3" style="color: #5f5f5f">
-							Sesión de 50 min
-						</div>
 						<div>
 							<v-text-field
 								:value="video"
@@ -186,12 +177,10 @@
 									</v-btn>
 								</template>
 								<div class="elevation-5 pa-3">
-									<span class="black--text">
-										Esta opción se activará contratando un plan premium
-									</span>
+									<span class="black--text"> Funcionalidad premium </span>
 								</div>
 							</v-tooltip>
-							Nuevos clientes
+							Visibilidad
 							<v-tooltip right max-width="300" color="white">
 								<template #activator="{ on, attrs }">
 									<v-btn icon v-bind="attrs" v-on="on">
@@ -200,9 +189,8 @@
 								</template>
 								<div class="elevation-5 pa-3">
 									<span class="primary--text">
-										Al desactivarlo, su perfil dejará de aparecer en la
-										búsqueda. Esto no impide que los clientes antiguos o nuevos
-										accedan a su perfil directamente a través de su enlace.
+										Los especialistas que activan esta funcionalidad suelen
+										tener un aumento en el número de sesiones
 									</span>
 								</div>
 							</v-tooltip>
@@ -214,7 +202,6 @@
 								label="Visibilidad en Marketplace"
 								color="primary"
 								persistent-hint
-								hint="Los especialistas que visibles en el marketplace suelen tener un aumento en el número de sesiones"
 								@change="
 									e => {
 										const preferences = psychologist.preferences;
