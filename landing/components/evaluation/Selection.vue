@@ -18,6 +18,14 @@
 						:height="fullcard.includes(item._id) ? '100%' : '300px'"
 						class="item text-center mt-6"
 					>
+						<div style="position: absolute; top: 0; left: 0">
+							<div
+								style="background-color: #0660ff; font-size: 20px"
+								class="white--text rounded-br-xl rounded-tl-lg pl-4 pr-6"
+							>
+								{{ item.type }}
+							</div>
+						</div>
 						<v-row>
 							<v-col
 								cols="3"
@@ -123,6 +131,14 @@
 				<v-col :key="item._id" cols="12">
 					<v-card style="border-radius: 15px" class="item text-center mt-6">
 						<v-card-text>
+							<div style="position: absolute; top: 0; right: 0">
+								<div
+									style="background-color: #0660ff; font-size: 18px"
+									class="white--text rounded-bl-xl rounded-tr-lg pr-4 pl-6"
+								>
+									{{ item.type }}
+								</div>
+							</div>
 							<v-row>
 								<v-col cols="3" sm="2" class="d-flex align-start justify-center">
 									<div class="text-center">
