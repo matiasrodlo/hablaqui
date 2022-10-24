@@ -8,8 +8,87 @@
 		</div>
 		<v-row v-show="!hasSessions">
 			<v-col cols="6">
-				<v-card class="shadowCard" style="border-radius: 15px">
-					<v-card-title class="px-10 titleColor"> Seleccionar tipo de pago </v-card-title>
+				<v-card
+					:height="fullcard || showCalendar ? 'max-content' : '205px'"
+					style="border-radius: 15px; transition: height 0.4s linear"
+					class="shadowCard"
+				>
+					<v-card-text class="pt-6 px-10">
+						<v-row align="start" justify="center">
+							<v-col cols="4" class="text-center">
+								<avatar
+									:url="avatar(psychologist, true)"
+									:name="psychologist.name"
+									:last-name="psychologist.lastName ? psychologist.lastName : ''"
+									size="125"
+									loading-color="white"
+								></avatar>
+								<div
+									class="text-capitalize py-4"
+									style="color: #706f6f; font-size: 14px"
+								>
+									código {{ psychologist.code ? psychologist.code : '' }}
+								</div>
+							</v-col>
+							<v-col cols="8">
+								<nuxt-link
+									style="text-decoration: none"
+									:to="{
+										path: `/${psychologist.username}`,
+									}"
+								>
+									<div
+										class="text-left font-weight-bold"
+										style="color: #3c3c3b; font-size: 23px"
+									>
+										{{ psychologist.name }}
+										{{ psychologist.lastName && psychologist.lastName }}
+									</div>
+								</nuxt-link>
+								<div
+									class="text-left font-weight-medium pa-2"
+									style="color: #3c3c3b; font-size: 15px"
+								>
+									${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
+									/ 50 min
+								</div>
+								<div class="my-3 body-2 d-flex align-center">
+									<icon size="20px" :icon="mdiCalendarOutline" />
+									<span class="ml-2 pt-1">
+										Fecha: {{ formatDate($route.query.date) }}
+									</span>
+								</div>
+								<div class="my-3 body-2 d-flex align-center">
+									<icon size="20px" :icon="mdiClockOutline" />
+									<span class="ml-2 pt-1">Hora: {{ $route.query.start }}</span>
+								</div>
+								<div>
+									<v-btn
+										color="primary"
+										text
+										small
+										class="px-0 py-0"
+										@click="showCalendar = !showCalendar"
+									>
+										<span v-if="showCalendar">Ocultar agenda</span>
+										<span v-else>Cambio de horario</span>
+									</v-btn>
+								</div>
+							</v-col>
+							<v-expand-transition>
+								<v-col v-if="showCalendar" cols="10">
+									<calendar-psychologist
+										:id-psy="psychologist._id"
+										:set-date="changeDate"
+										title-button="Seleccionar"
+									/>
+								</v-col>
+							</v-expand-transition>
+						</v-row>
+					</v-card-text>
+				</v-card>
+				<v-card class="shadowCard mt-6" style="border-radius: 15px">
+					<v-card-title class="px-10 titleColor"> Suscripciones </v-card-title>
 					<v-card-text
 						v-for="item in itemsPlan"
 						:key="item.id"
@@ -71,94 +150,11 @@
 				</v-card>
 			</v-col>
 			<v-col cols="6" class="px-2">
-				<v-card
-					:height="fullcard || showCalendar ? 'max-content' : '276px'"
-					style="border-radius: 15px; transition: height 0.4s linear"
-					class="shadowCard"
-				>
-					<v-card-text class="pt-6 px-10">
-						<v-row align="start" justify="center">
-							<v-col cols="4" class="text-center">
-								<avatar
-									:url="avatar(psychologist, true)"
-									:name="psychologist.name"
-									:last-name="psychologist.lastName ? psychologist.lastName : ''"
-									size="100"
-									loading-color="white"
-								></avatar>
-								<div
-									class="text-capitalize py-4"
-									style="color: #706f6f; font-size: 14px"
-								>
-									código {{ psychologist.code ? psychologist.code : '' }}
-								</div>
-							</v-col>
-							<v-col cols="8">
-								<nuxt-link
-									style="text-decoration: none"
-									:to="{
-										path: `/${psychologist.username}`,
-									}"
-								>
-									<div
-										class="text-left font-weight-bold"
-										style="color: #3c3c3b; font-size: 23px"
-									>
-										{{ psychologist.name }}
-										{{ psychologist.lastName && psychologist.lastName }}
-									</div>
-								</nuxt-link>
-								<div
-									class="text-left font-weight-medium pa-2"
-									style="color: #3c3c3b; font-size: 16px"
-								>
-									${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
-									/ 50 min
-								</div>
-								<div class="body-2 d-flex align-center">
-									<icon size="20px" :icon="mdiCalendarOutline" />
-									<span class="ml-3 pt-1">
-										Fecha: {{ formatDate($route.query.date) }}
-									</span>
-								</div>
-								<div class="my-3 body-2 d-flex align-center">
-									<icon size="20px" :icon="mdiClockOutline" />
-									<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
-								</div>
-								<div>
-									<v-btn
-										color="primary"
-										text
-										small
-										class="px-0 py-0"
-										@click="showCalendar = !showCalendar"
-									>
-										<span v-if="showCalendar">Ocultar agenda</span>
-										<span v-else>Cambiar reserva</span>
-									</v-btn>
-								</div>
-							</v-col>
-							<v-expand-transition>
-								<v-col v-if="showCalendar" cols="10">
-									<calendar-psychologist
-										:id-psy="psychologist._id"
-										:set-date="changeDate"
-										title-button="Seleccionar"
-									/>
-								</v-col>
-							</v-expand-transition>
-							<v-col cols="12">
-								Sesiones por videollamada (50 min) Habla con un psicólogo por
-								videollamada en cualquier momento, en cualquier lugar.
-							</v-col>
-						</v-row>
-					</v-card-text>
-				</v-card>
-				<v-card class="shadowCard mt-6" style="border-radius: 15px">
-					<v-card-title class="px-10 titleColor"> Resumen de pago </v-card-title>
+				<v-card class="shadowCard" style="border-radius: 15px">
+					<v-card-title class="px-10 titleColor">Resumen</v-card-title>
 					<v-card-text class="px-10">
 						<div class="my-6 d-flex justify-space-between">
-							<div class="body-1 font-weight-bold">Tipo de pago</div>
+							<div class="body-1 font-weight-bold">Subscripción</div>
 							<div v-if="planSelected" class="body-1">
 								{{ planSelected.title }}
 							</div>
@@ -188,36 +184,33 @@
 								color="rgba(26, 165, 216, 0.16)"
 								@click="payButton"
 							>
-								<span class="primary--text">Continuar con el pago</span>
+								<span class="primary--text">Continuar</span>
 							</v-btn>
 						</div>
-						<div class="body-2 my-6 text-center">
-							Este es un pago seguro con encriptado SSL
-						</div>
-						<div class="body-2 font-weight-bold">Paga seguro con</div>
+						<div class="body-2 my-6 text-center">Pago seguro con encriptado SSL</div>
 						<div class="d-flex justify-space-around">
 							<v-img
-								width="50"
+								width="30"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
 							></v-img>
 							<v-img
-								width="40"
+								width="10"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/surface.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/american_express.png`"
 							></v-img>
 							<v-img
-								width="80"
+								width="50"
 								contain
 								:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
 							></v-img>
@@ -263,7 +256,7 @@ export default {
 			itemsPlan: [
 				{
 					id: 1,
-					title: 'Pago semanal',
+					title: 'Semanal',
 					pricePerSession: '$50.000 / por sesión',
 					valuePerSession: '$50.000',
 					priceTotal: '',
@@ -272,7 +265,7 @@ export default {
 				},
 				{
 					id: 2,
-					title: 'Pago mensual',
+					title: 'Mensual',
 					pricePerSession: '$45.000 / por sesión',
 					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
@@ -281,7 +274,7 @@ export default {
 				},
 				{
 					id: 3,
-					title: 'Pago trimestral',
+					title: 'Trimestral',
 					pricePerSession: '$40.000 / por sesión',
 					valuePerSession: '$40.000',
 					priceTotal: '($480000)',

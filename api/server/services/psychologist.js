@@ -26,47 +26,53 @@ const getAll = async () => {
 const match = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
+	let perfectMatch = true;
+
 	if (payload.gender == 'transgender') {
+		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
-			models: payload.model,
 			isTrans: true,
 			specialties: { $in: payload.themes },
 		});
 	} else {
+		// Si no es transgenero
 		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
+				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
-			models: payload.model,
 			specialties: { $in: payload.themes },
 		});
 	}
-	if (matchedPsychologists.length == 0) {
-		let newMatchedPsychologists = [];
-		if (payload.gender == 'transgender') {
-			newMatchedPsychologists = await Psychologist.find({
-				isTrans: true,
-				specialties: { $in: payload.themes },
-			});
-		} else {
-			newMatchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					$in: ['male', 'female', 'transgender'],
-				},
-				specialties: { $in: payload.themes },
-			});
-		}
 
-		return okResponse('Psicologos encontrados', {
-			matchedPsychologists: newMatchedPsychologists,
-			perfectMatch: false,
-		});
-	} else {
-		return okResponse('psicologos encontrados', {
-			matchedPsychologists,
-			perfectMatch: true,
-		});
+	// Agregar de nuevo modelo terapeutico
+	// Se obtiene la lista de psicologos que coinciden con los temas
+	if (matchedPsychologists.length < 3) {
+		matchedPsychologists = await Psychologist.find();
+		perfectMatch = false;
 	}
+
+	// Se busca el mejor match según criterios
+	matchedPsychologists = await ponderationMatch(
+		matchedPsychologists,
+		payload
+	);
+
+	// Se deja solo los 3 mejores psicologos
+	while (matchedPsychologists.length > 3) {
+		matchedPsychologists.pop();
+	}
+
+	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
+	matchedPsychologists = await psychologistClasification(
+		matchedPsychologists,
+		payload
+	);
+
+	return okResponse('psicologos encontrados', {
+		matchedPsychologists,
+		perfectMatch,
+	});
 };
 
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {

@@ -42,16 +42,13 @@ psychologistsRouter.get(
  * @method POST
  * @route /api/v1/psychologists/match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
- * @param {String} body.payload.model -
- * @param {String} body.payload.themes -
+ * @param {String} body.payload.model - Implica el módelo de atención del psicólogo de preferencia
+ * @param {Array} body.payload.themes - Implica los temas de interés del psicólogo de preferencia
+ * @param {String} body.payload.schedule - Implica el horario de atención del psicólogo de preferencia (mañana, tarde, noche)
  * @returns Objeto con las coincidencias sobre los psicólogos
  * @access authenticated
  */
-psychologistsRouter.post(
-	'/psychologists/match',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.match
-);
+psychologistsRouter.post('/psychologists/match', psychologistsController.match);
 
 /**
  *
