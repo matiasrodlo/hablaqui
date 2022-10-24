@@ -2,9 +2,8 @@
 	<v-row class="mb-16">
 		<v-col cols="12" class="d-flex justify-space-between align-center">
 			<div>
-				<div class="font-weight-medium caption text-md-h6" style="color: #3c3c3b">
-					Los siguientes datos serán utilizados para transferir <br />
-					el dinero de los servicios vendidos por medio de Hablaquí.
+				<div class="font-weight-regular caption text-md-h6" style="color: #3c3c3b">
+					Ingrese la cuenta bancaría a la que desea que transfiramos<br />
 				</div>
 			</div>
 			<v-btn

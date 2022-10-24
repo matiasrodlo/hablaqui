@@ -1,13 +1,10 @@
 <template>
 	<v-form>
 		<v-card flat class="rounded-lg">
-			<v-card-title class="pb-0 mx-2">
-				<h3 class="text--disabled mx-auto font-weight-bold text-h6">Únete a la red</h3>
-			</v-card-title>
 			<v-card-text class="py-0">
-				<h3 class="text--disabled body-1">
-					En solo unos pasos puedes unirte. Comienza creando tu cuenta.
-				</h3>
+				<h1 class="py-1 text-center subtitle-1 font-weight-bold text--secondary">
+					Sea parte de nuestra comunidad
+				</h1>
 			</v-card-text>
 			<v-card-text>
 				<v-row no-gutters>
@@ -69,15 +66,12 @@
 						<v-checkbox v-model="terminos" hide-details class="mx-2 my-0">
 							<template #label>
 								<div class="caption">
-									He leído y
+									He leído y acepto los
 									<nuxt-link
 										to="terminos-y-condiciones-especialista"
 										style="text-decoration: none"
 									>
-										acepto los Términos y condiciones </nuxt-link
-									>y
-									<nuxt-link to="politicas" style="text-decoration: none">
-										la Política de privacidad.
+										Términos y condiciones
 									</nuxt-link>
 								</div>
 							</template>
@@ -93,7 +87,7 @@
 					class="rounded-xl mx-auto px-10"
 					@click="onSubmit"
 				>
-					Regístrate ahora
+					Regístrar
 				</v-btn>
 			</v-card-text>
 		</v-card>
@@ -102,8 +96,6 @@
 				<v-alert dense outlined type="error" width="300" height="100">
 					Debes aceptar los
 					<strong>terminos y condiciones</strong>
-					<span class="primary--text">y</span>
-					<strong>politicas de privacidad</strong>
 				</v-alert>
 			</v-sheet>
 		</v-dialog>

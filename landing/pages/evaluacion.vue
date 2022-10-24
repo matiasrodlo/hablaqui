@@ -234,7 +234,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i <= 7"
+															v-if="i <= 5"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -493,8 +493,8 @@
 										</v-stepper-content>
 										<v-stepper-content step="6">
 											<div class="primary--text font-weight-bold title">
-												¿Con qué género se siente más cómodo <br />
-												<span>compartiendo lo que le sucede?</span>
+												¿Con qué género te sientes más cómodo <br />
+												<span>compartiendo lo que te sucede?</span>
 											</div>
 
 											<v-btn

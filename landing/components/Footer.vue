@@ -1,72 +1,91 @@
 <template>
-	<v-container>
-		<v-row v-once justify="center">
-			<v-col cols="12" md="10" xl="8">
-				<v-row align="center" justify="center" class="white--text py-16">
-					<v-col cols="12" sm="5" md="3" class="text-center">
-						<div
-							class="text--secondary font-weight-bold"
-							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
-						>
-							Acuerdos
-						</div>
-						<nuxt-link
-							class="d-block body-1 text--secondary my-4"
-							style="text-decoration: none"
-							to="/politicas"
-							target="_blank"
-						>
-							Políticas de Privacidad
-						</nuxt-link>
-						<nuxt-link
-							class="d-block body-1 text--secondary my-4"
-							style="text-decoration: none"
-							to="/condiciones"
-							target="_blank"
-						>
-							Terminos y Condiciones
-						</nuxt-link>
-					</v-col>
-					<v-col cols="12" sm="5" md="3" class="text-center text--secondary">
-						<div
-							class="font-weight-bold"
-							:class="$vuetify.breakpoint.smOnly ? 'body-2' : 'text-md-h6'"
-						>
-							Atención a clientes
-						</div>
-						<div class="body-1 my-4">soporte@hablaqui.cl</div>
-					</v-col>
-					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
-						<v-img
-							contain
-							width="230"
-							class="mx-auto"
-							:src="`https://cdn.hablaqui.cl/static/Startup.png`"
-						></v-img>
-						<v-img
-							contain
-							height="55"
-							width="220"
-							class="mt-3 mx-auto"
-							:src="`https://cdn.hablaqui.cl/static/Adolfo_Ibanez.png`"
-						></v-img>
-					</v-col>
-					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
-						<v-img
-							contain
-							height="65"
-							:src="`https://cdn.hablaqui.cl/static/digevo.png`"
-						/>
-					</v-col>
-					<v-col cols="12" sm="4" md="2" class="headline text--secondary">
-						<v-img
-							contain
-							height="90"
-							:src="`https://cdn.hablaqui.cl/static/Web_Pay.png`"
-						/>
-					</v-col>
-				</v-row>
-			</v-col>
-		</v-row>
-	</v-container>
+	<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-4">
+		<v-container tag="section">
+			<v-row justify="center">
+				<v-col cols="12" md="10" xl="8">
+					<v-row tag="section" align="center">
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								alt="Vida Tres Isapre"
+								contain
+								height="100"
+								:src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
+							></v-img>
+						</v-col>
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								contain
+								max-height="100"
+								alt="nueva masvida"
+								:src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
+							></v-img>
+						</v-col>
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								contain
+								alt="fonasa"
+								max-height="100"
+								:src="`https://cdn.hablaqui.cl/static/fonasa.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/fonasa.png`"
+							></v-img>
+						</v-col>
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								contain
+								max-height="100"
+								alt="ban medica"
+								:src="`https://cdn.hablaqui.cl/static/banmedica.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/banmedica.png`"
+							></v-img>
+						</v-col>
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								contain
+								max-height="100"
+								alt="colmena"
+								:src="`https://cdn.hablaqui.cl/static/colmena.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/colmena.png`"
+							></v-img>
+						</v-col>
+						<v-col tag="section" cols="6" sm="2">
+							<v-img
+								contain
+								max-height="100"
+								alt="consalud"
+								:src="`https://cdn.hablaqui.cl/static/consalud.png`"
+								:lazy-src="`https://cdn.hablaqui.cl/static/consalud.png`"
+							></v-img>
+						</v-col>
+					</v-row>
+				</v-col>
+			</v-row>
+		</v-container>
+	</section>
+	<section v-else class="mt-4" style="background-color: #e3f2fd">
+		<v-carousel
+			cycle
+			height="140"
+			:show-arrows="false"
+			hide-delimiter-background
+			hide-delimiters
+			reverse-transition="fade-transition"
+			transition="fade-transition"
+		>
+			<v-carousel-item
+				v-for="(item, e) in [
+					`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`,
+					`https://cdn.hablaqui.cl/static/nueva-masvida.png`,
+					`https://cdn.hablaqui.cl/static/fonasa.png`,
+					`https://cdn.hablaqui.cl/static/banmedica.png`,
+					`https://cdn.hablaqui.cl/static/colmena.png`,
+					`https://cdn.hablaqui.cl/static/consalud.png`,
+				]"
+				:key="e"
+			>
+				<v-img height="70" class="mt-8" :src="item" :lazy-src="item" :alt="item" contain />
+			</v-carousel-item>
+		</v-carousel>
+	</section>
 </template>
