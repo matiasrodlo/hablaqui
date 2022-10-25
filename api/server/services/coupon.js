@@ -7,11 +7,16 @@ import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 
 const newCoupon = async (user, payload) => {
+	/*
+	Esta función recibe un usuario y un objeto con los datos del cupon.
+	*/
+	// Verifica si el cupon ya existe y si el usuario tiene autorización para crear cupones
 	if (user.role !== 'superuser')
 		return conflictResponse('No tienes poder aqui.');
 	if (await Coupon.exists({ code: payload.code }))
 		return conflictResponse('Ya hay un cupon con ese codigo');
 
+	// Crea el cupon
 	const coupon = {
 		code: payload.code,
 		discount: payload.discount,
@@ -20,12 +25,18 @@ const newCoupon = async (user, payload) => {
 		expiration: moment(payload.expiration).toISOString(),
 	};
 
+	// Guarda el cupon en la base de datos y retorna la respuesta satisfactoria
 	await Coupon.create(coupon);
 	logInfo(`${user.email} ha creado un cupon con el codigo ${payload.code}`);
 	return okResponse('Cupon creado con exito');
 };
 
 const checkCoupon = async (code, user) => {
+	/*
+	Esta función recibe un codigo de cupon y un usuario.
+	*/
+
+	// Busca el cupon en la base de datos y verifica ciertas condiciones
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
@@ -43,6 +54,7 @@ const checkCoupon = async (code, user) => {
 			return conflictResponse('Usuario no habilitado para este cupón');
 	}
 
+	// Retorna el cupon
 	logInfo('aplicado');
 	return okResponse('el cupon es valido', { coupon: foundCoupon });
 };
