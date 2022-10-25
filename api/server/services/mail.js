@@ -1132,7 +1132,7 @@ const mailService = {
 			});
 		});
 	},
-	async sendVerifyEmail(user, url) {
+	/*async sendVerifyEmail(user, url) {
 		const dataPayload = {
 			from: 'Hablaquí <verificacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -1156,7 +1156,7 @@ const mailService = {
 				}
 			});
 		});
-	},
+	},*/
 	async sendUploadPicture(psy) {
 		const dataPayload = {
 			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',

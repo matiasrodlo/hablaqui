@@ -69,9 +69,9 @@
 					</v-list-item-title>
 					<v-list-item-subtitle>
 						<div class="body-1">Bienvenido a Hablaquí</div>
-						<small v-if="!$auth.$state.user.isVerified" class="error--text">
+						<!-- <small v-if="!$auth.$state.user.isVerified" class="error--text">
 							Verifica tu correo electronico
-						</small>
+						</small> -->
 					</v-list-item-subtitle>
 				</v-list-item-content>
 				<client-only>
