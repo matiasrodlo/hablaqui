@@ -33,7 +33,7 @@ const userController = {
 			const { data, code } = await userService.updatePsychologist(
 				user,
 				newPsychologist,
-				oldPsychologist,
+				oldPsychologist
 			);
 			restResponse(data, code, res);
 		} catch (e) {

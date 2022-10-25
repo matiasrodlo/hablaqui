@@ -11,37 +11,41 @@ import mailService from './mail'; // Utiliza el servicio de mail
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
 var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
 
-const recruitmentService = { // Se crea un objeto que contiene los servicios de recruitment
+const recruitmentService = {
+	// Se crea un objeto que contiene los servicios de recruitment
 	/**
 	 * @description - This controller is used to create a new recruitment profile
 	 * @param {Object} user - The user object with all the details for the profile
 	 * @param {Object} body - The raw body of the request
 	 * @returns Response code, message and the created recruitment profile
 	 */
-	async register(user, body) { // Se crea un servicio para registrar un nuevo perfil de recruitment
-		const payload = { // Se crea un objeto que contiene los datos del perfil de recruitment
+	async register(user, body) {
+		// Se crea un servicio para registrar un nuevo perfil de recruitment
+		const payload = {
+			// Se crea un objeto que contiene los datos del perfil de recruitment
 			...body, // Se agregan los datos del body
 			email: user.email, // Se agrega el email del usuario
 			name: user.name, // Se agrega el nombre del usuario
 			lastName: user.lastName, // Se agrega el apellido del usuario
 			rut: user.rut, // Se agrega el rut del usuario
 		};
-		if (await Recruitment.exists({ rut: payload.rut })) { // Se verifica si el rut del usuario ya existe en la base de datos
+		if (await Recruitment.exists({ rut: payload.rut })) {
+			// Se verifica si el rut del usuario ya existe en la base de datos
 			return conflictResponse('Este postulante ya está registrado'); // Se informa que ya está registrado
 		}
 		const recruited = await Recruitment.create(payload); // Se crea un nuevo perfil de recruitment
 		if (
-			process.env.API_URL.includes('hablaqui.cl') || 
-			process.env.DEBUG_ANALYTICS === 'true' 
+			process.env.API_URL.includes('hablaqui.cl') ||
+			process.env.DEBUG_ANALYTICS === 'true'
 		) {
-			analytics.track({ 
+			analytics.track({
 				userId: user._id.toString(),
-				event: 'psy-new-application', 
-				properties: { 
-					email: user.email, 
+				event: 'psy-new-application',
+				properties: {
+					email: user.email,
 					name: user.name,
-					lastName: user.lastName, 
-					source: recruited.howFindOut, 
+					lastName: user.lastName,
+					source: recruited.howFindOut,
 					isExclusiveActivity: recruited.isExclusiveActivity,
 					isUnderSupervision: recruited.isUnderSupervision,
 					isSupervisor: recruited.isSupervisor,
@@ -88,8 +92,10 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 	 * @param {Object} body - The body of the request with the new values
 	 * @returns The response code, message and the updated recruitment profile (if any)
 	 */
-	async update(body, step) { // Se crea un servicio para actualizar un perfil de recruitment
-		if (!(await Recruitment.exists({ email: body.email }))) { // Se verifica si el email del usuario ya existe en la base de datos
+	async update(body, step) {
+		// Se crea un servicio para actualizar un perfil de recruitment
+		if (!(await Recruitment.exists({ email: body.email }))) {
+			// Se verifica si el email del usuario ya existe en la base de datos
 			return conflictResponse('Este postulante no existe'); // Se informa que no existe
 		}
 		if (
@@ -107,7 +113,8 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 				});
 			}
 		}
-		const recruited = await Recruitment.findOneAndUpdate( // Se actualiza el perfil de recruitment
+		const recruited = await Recruitment.findOneAndUpdate(
+			// Se actualiza el perfil de recruitment
 			{ email: body.email }, // Se busca por el email
 			body, // Se actualizan los datos
 			{ new: true } // Se retorna el nuevo perfil
@@ -120,7 +127,8 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 	 * @param {Object} mail - The mail of the recruitment profile
 	 * @returns The response code, message and the recruitment profile obtained (if exists)
 	 */
-	async get(email) { // Se crea un servicio para obtener un perfil de recruitment
+	async get(email) {
+		// Se crea un servicio para obtener un perfil de recruitment
 		const recruited = await Recruitment.findOne({ email }); // Se busca el perfil de recruitment por el email
 		return okResponse('Postulante obtenido', { recruited }); // Se retorna el perfil de recruitment
 	},
@@ -128,7 +136,8 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 	 * @description - This services is used to get all recruitment
 	 * @returns The response code, message and the recruitments profile obtained
 	 */
-	async getAll() { // Se crea un servicio para obtener todos los perfiles de recruitment
+	async getAll() {
+		// Se crea un servicio para obtener todos los perfiles de recruitment
 		const recruitment = await Recruitment.find({ isVerified: false }); // Se obtienen los perfiles de recruitment y se filtran por los que no están verificados
 		return okResponse('Postulantes obtenidos', { recruitment }); // Se retorna los perfiles de recruitment
 	},
@@ -136,21 +145,28 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
 	 * @returns The response code, message and the new Psychologist profile created succesfully
 	 **/
-	async approve(user, email) { // Se crea un servicio para aprobar un perfil de recruitment
-		if (user.role !== 'superuser') // Se verifica que el usuario que realiza la acción sea un superusuario
+	async approve(user, email) {
+		// Se crea un servicio para aprobar un perfil de recruitment
+		if (user.role !== 'superuser')
+			// Se verifica que el usuario que realiza la acción sea un superusuario
 			return conflictResponse('No tienes los permisos suficientes'); // Se informa que no tiene los permisos suficientes
 
-		if (!(await Recruitment.exists({ email }))) { // Se verifica si el email del usuario ya existe en la base de datos
-			return conflictResponse( // Se informa que no existe
+		if (!(await Recruitment.exists({ email }))) {
+			// Se verifica si el email del usuario ya existe en la base de datos
+			return conflictResponse(
+				// Se informa que no existe
 				'Este postulante no existe y el perfil no puede ser aprobado'
 			);
 		}
-		if (await Recruitment.exists({ email, isVerified: true })) { // Se verifica si el email del usuario ya existe en la base de datos y si está verificado
-			return conflictResponse( // Se informa que el postulante ya está aprobado
+		if (await Recruitment.exists({ email, isVerified: true })) {
+			// Se verifica si el email del usuario ya existe en la base de datos y si está verificado
+			return conflictResponse(
+				// Se informa que el postulante ya está aprobado
 				'Este postulante ya está aprobado y no puede ser aprobado de nuevo'
 			);
 		}
-		let payload = await Recruitment.findOneAndUpdate( // Se actualiza el perfil de recruitment
+		let payload = await Recruitment.findOneAndUpdate(
+			// Se actualiza el perfil de recruitment
 			{ email },
 			{ isVerified: true },
 			{ new: true }
@@ -166,7 +182,8 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 		const newProfile = await psychologist.create(payload); // Se crea un nuevo perfil de psychologist
 		mailService.sendWelcomeNewPsychologist(payload); // Se envía un correo de bienvenida al nuevo psicólogo
 
-		const userUpdated = await User.findOneAndUpdate( // Se actualiza el perfil de user
+		const userUpdated = await User.findOneAndUpdate(
+			// Se actualiza el perfil de user
 			{ email: payload.email },
 			{ $set: { psychologist: newProfile._id } },
 			{ new: true }
@@ -198,11 +215,14 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 		);
 		return okResponse('Aprobado exitosamente', { newProfile });
 	},
-	async updatePlan(recruitedId, newPlan) { // Se crea un servicio para actualizar el plan de un perfil de recruitment
-		const recruitedToUpdate = await Recruitment.findOneAndUpdate( // Se actualiza el perfil de recruitment
+	async updatePlan(recruitedId, newPlan) {
+		// Se crea un servicio para actualizar el plan de un perfil de recruitment
+		const recruitedToUpdate = await Recruitment.findOneAndUpdate(
+			// Se actualiza el perfil de recruitment
 			{ _id: recruitedId },
 			{
-				$push: { // Se agrega el nuevo plan
+				$push: {
+					// Se agrega el nuevo plan
 					psyPlans: { paymentStatus: 'success', ...newPlan },
 				},
 			},
@@ -210,11 +230,14 @@ const recruitmentService = { // Se crea un objeto que contiene los servicios de 
 		);
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate }); // Se retorna el perfil de recruitment
 	},
-	async flagOnboarding(recruitedId, flags) { // Se crea un servicio para actualizar los flags de onboarding de un perfil de recruitment
-		const recruitedOnboarding = await Recruitment.findOneAndUpdate( // Se actualiza el perfil de recruitment
+	async flagOnboarding(recruitedId, flags) {
+		// Se crea un servicio para actualizar los flags de onboarding de un perfil de recruitment
+		const recruitedOnboarding = await Recruitment.findOneAndUpdate(
+			// Se actualiza el perfil de recruitment
 			{ _id: recruitedId },
 			{
-				$set: { // Se actualizan los flags
+				$set: {
+					// Se actualizan los flags
 					flagOnboarding: flags,
 				},
 			},

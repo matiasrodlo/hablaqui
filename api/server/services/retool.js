@@ -74,27 +74,26 @@ const getSessionsPayment = async (startDate, endDate) => {
 	*/
 	// Se obtienen las sesiones unido con el psicologo
 	let sessions = await Sessions.find().populate('psychologist user');
-	
+
 	// Se filtran las sesiones que se ha inicializado la variable de psicologo
 	sessions = sessions.filter(s => !!s.psychologist);
 
-	let flatSession = sessions
-		.flatMap(s => {
-			// Se obtiene el plan de una sesión
-			const plan = s.plan.pop();
-			return plan.session.flatMap(ss => {
-				// Se deja en un mismo array los datos del psicologo, la sesion y el precio del plan
-				return {
-					_id: s.psychologist._id.toString(),
-					psy: s.psychologist.name + ' ' + s.psychologist.lastName,
-					psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
-					psyEmail: s.psychologist.email,
-					price: plan.sessionPrice,
-					date: ss.date,
-					status: ss.status,
-				};
-			});
+	let flatSession = sessions.flatMap(s => {
+		// Se obtiene el plan de una sesión
+		const plan = s.plan.pop();
+		return plan.session.flatMap(ss => {
+			// Se deja en un mismo array los datos del psicologo, la sesion y el precio del plan
+			return {
+				_id: s.psychologist._id.toString(),
+				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
+				psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
+				psyEmail: s.psychologist.email,
+				price: plan.sessionPrice,
+				date: ss.date,
+				status: ss.status,
+			};
 		});
+	});
 
 	// Se filtra de flatSession las sesiones pagadas entre las fechas indicadas
 	flatSession = flatSession.filter(s =>

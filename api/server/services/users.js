@@ -107,30 +107,47 @@ const usersService = {
 			user: user,
 		});
 
+		// Se verifica que la sesión exista
+		if (!oldSession) {
+			return conflictResponse('No se encontró la sesión');
+		}
+		if (oldSession.plan.length === 0) {
+			return conflictResponse('No se encontró el plan');
+		}
+		const ultimoPlan = oldSession.plan[oldSession.plan.length - 1];
+		if (Date.now() > Date.parse(ultimoPlan.expiration)) {
+			return conflictResponse('El plan ha expirado');
+		}
+
+		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
+		const sessionesPendientes = ultimoPlan.session.filter(
+			session =>
+				session.status === 'pending' || session.status === 'upnext'
+		).length;
+		const sessionesRealizadas = ultimoPlan.session.filter(
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
+		).length;
 		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
 		const newPlan = {
-			title: oldSession.plan[oldSession.plan.length - 1].title,
-			period: oldSession.plan[oldSession.plan.length - 1].period,
-			totalPrice: oldSession.plan[oldSession.plan.length - 1].totalPrice,
-			sessionPrice:
-				oldSession.plan[oldSession.plan.length - 1].sessionPrice,
-			payment: oldSession.plan[oldSession.plan.length - 1].payment,
-			datePayment:
-				oldSession.plan[oldSession.plan.length - 1].datePayment,
-			expiration: oldSession.plan[oldSession.plan.length - 1].expiration,
-			usedCoupon: oldSession.plan[oldSession.plan.length - 1].usedCoupon,
-			totalSessions:
-				oldSession.plan[oldSession.plan.length - 1].totalSessions,
-			remainingSessions:
-				oldSession.plan[oldSession.plan.length - 1].remainingSessions,
-			tokenToPay: oldSession.plan[oldSession.plan.length - 1].tokenToPay,
-			session: oldSession.plan[oldSession.plan.length - 1].session,
+			title: ultimoPlan.title,
+			period: ultimoPlan.period,
+			totalPrice: ultimoPlan.totalPrice,
+			sessionPrice: ultimoPlan.sessionPrice,
+			payment: ultimoPlan.payment,
+			datePayment: ultimoPlan.datePayment,
+			expiration: ultimoPlan.expiration,
+			usedCoupon: ultimoPlan.usedCoupon,
+			totalSessions: (
+				Number(ultimoPlan.totalSessions) - sessionesRealizadas
+			).toString(),
+			remainingSessions: (
+				Number(ultimoPlan.remainingSessions) + sessionesPendientes
+			).toString(),
+			tokenToPay: ultimoPlan.tokenToPay,
+			session: [],
 		};
-
-		// Se cambia el plan de expiración del plan antiguo
-		oldSession.plan[oldSession.plan.length - 1].expiration = moment()
-			.subtract(1, 'days')
-			.format();
 
 		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
@@ -146,9 +163,23 @@ const usersService = {
 			});
 		} else {
 			newSession.plan.push(newPlan);
+			await newSession.save();
 		}
 
-		await newSession.save();
+		// Se cambia el plan de expiración del plan antiguo
+		ultimoPlan.expiration = moment()
+			.subtract(1, 'days')
+			.format();
+
+		// Se filtran las sesiones que no a la fecha no se han realizado
+		ultimoPlan.session = ultimoPlan.session.filter(
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
+		);
+
+		ultimoPlan.remainingSessions = 0;
+
 		await oldSession.save();
 		return okResponse('plan actualizado', { profile: user });
 	},
