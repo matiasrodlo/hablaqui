@@ -724,6 +724,83 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
+const getFormattedSessionsForMatch = async idPsychologist => {
+	let sessions = [];
+	// obtenemos el psicologo
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'_id schedule preferences inmediateAttention'
+	);
+	// creamos un array con la cantidad de dias
+	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
+		psychologist: idPsychologist,
+	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	psySessions = psySessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
+	// Formato de array debe ser [date, date, ...date]
+	const daySessions = psySessions
+		.flatMap(item => {
+			return item.plan.flatMap(plan => {
+				return plan.session.length
+					? plan.session.map(session => session.date)
+					: [];
+			});
+		})
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
+	let minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
+
+	sessions = length.map(el => {
+		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
+
+		return {
+			id: el,
+			value: day,
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			text: moment(day),
+			available: hours.filter(hour => {
+				return (
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
+					formattedSchedule(psychologist.schedule, day, hour) &&
+					!daySessions.some(
+						date =>
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								moment(day).format('L') &&
+							hour ===
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
+	return sessions;
+};
+
 //type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
 const getFormattedSessions = async (idPsychologist, type) => {
@@ -1121,6 +1198,7 @@ const sessionsService = {
 	createPlan,
 	createSession,
 	customNewSession,
+	getFormattedSessionsForMatch,
 	getFormattedSessions,
 	formattedSessionsAll,
 	paymentsInfo,
