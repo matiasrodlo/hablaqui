@@ -234,7 +234,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i <= 5"
+															v-if="i <= 7"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -255,7 +255,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i >= 10"
+															v-if="i >= 8"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -711,11 +711,7 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="
-																				ma-1
-																				caption
-																				text-capitalize
-																			"
+																			class="ma-1 caption text-capitalize"
 																		>
 																			{{ tag }};
 																		</span>
@@ -768,10 +764,7 @@
 																		<span :key="k">
 																			<span
 																				v-if="k < 5"
-																				class="
-																					ma-1
-																					text-capitalize
-																				"
+																				class="ma-1 text-capitalize"
 																			>
 																				{{ tag }};
 																			</span>
