@@ -6,32 +6,36 @@ import { logInfo } from '../config/pino';
 import Email from '../models/email';
 import Analytics from 'analytics-node';
 
-const startConversation = async (psychologistId, user) => {
-	const hasChats = await Chat.findOne({
-		psychologist: psychologistId,
+const createChat = async (user, psychologistId) => {
+	const newChat = new Chat({
 		user: user,
+		psychologist: psychologistId,
 	});
-	if (!hasChats) {
-		const newChat = await Chat.create({
-			user: user._id,
-			psychologist: psychologistId,
-		});
-		return okResponse('chat inicializado', { newChat });
+	return newChat;
+};
+
+const buscarChat = async (user, psy) => {
+	const chat = await Chat.findOne({
+		user: user,
+		psychologist: psy,
+	});
+	return chat;
+};
+
+const startConversation = async (psychologistId, user) => {
+	const hasChats = await buscarChat(user, psychologistId);
+	if (hasChats) {
+		return okResponse('chat inicializado anteriormente');
 	}
-	return okResponse('chat inicializado anteriormente');
+	const newChat = await createChat(user._id, psychologistId._id);
+	return okResponse('chat inicializado', { newChat });
 };
 
 const getMessages = async (user, psy) => {
-	let messages = await Chat.findOne({
-		psychologist: psy,
-		user: user,
-	}).populate('user psychologist');
+	let messages = await buscarChat(user, psy);
 
 	if (!messages)
-		messages = await Chat.create({
-			user: user,
-			psychologist: psy,
-		});
+		messages = await createChat(user, psy).populate('user psychologist');
 
 	return okResponse('Mensajes conseguidos', {
 		messages,
@@ -39,25 +43,24 @@ const getMessages = async (user, psy) => {
 };
 
 const getChats = async user => {
-	if (user.role == 'psychologist') {
-		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);
-		return okResponse('Chats conseguidos', {
-			chats: await Chat.find({
-				psychologist: user.psychologist._id,
-			}).populate('user psychologist'),
-		});
+	const roles = ['psychologist', 'user'];
+	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
+	// Es para verificar que sea un rol valido
+	if (!roles.includes(user.role)) {
+		return conflictResponse(
+			'Ha ocurrido un error intentando recuperar tus chats'
+		);
 	}
-	if (user.role == 'user') {
-		logInfo(`El usuario ${user.email} ha conseguido sus chats`);
-		return okResponse('Chat conseguidos', {
-			chats: await Chat.find({ user: user._id }).populate(
-				'user psychologist'
-			),
-		});
-	}
-	return conflictResponse(
-		'Ha ocurrido un error intentando recuperar tus chats'
-	);
+	// Se encuentra el rol y se devuelven los chats
+	const chats = roles.find(rol => {
+		if (rol == user.role) {
+			logInfo(
+				`El ${spanishRoles[rol]} ${user.email} ha conseguido sus chats`
+			);
+			return Chat.find({ [rol]: user._id }).populate('user psychologist');
+		}
+	});
+	return okResponse('Chats conseguidos', { chats });
 };
 
 export const sendMessage = async (user, content, userId, psychologistId) => {
