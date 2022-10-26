@@ -34,8 +34,9 @@ const startConversation = async (psychologistId, user) => {
 const getMessages = async (user, psy) => {
 	let messages = await buscarChat(user, psy);
 
-	if (!messages)
-		messages = await createChat(user, psy).populate('user psychologist');
+	if (!messages) messages = await createChat(user, psy);
+
+	messages = messages.populate('user psychologist');
 
 	return okResponse('Mensajes conseguidos', {
 		messages,
@@ -52,15 +53,21 @@ const getChats = async user => {
 		);
 	}
 	// Se encuentra el rol y se devuelven los chats
-	const chats = roles.find(rol => {
-		if (rol == user.role) {
-			logInfo(
-				`El ${spanishRoles[rol]} ${user.email} ha conseguido sus chats`
-			);
-			return Chat.find({ [rol]: user._id }).populate('user psychologist');
-		}
-	});
-	return okResponse('Chats conseguidos', { chats });
+	const chatss = await Promise.allSettled(
+		roles.find(async rol => {
+			if (rol == user.role) {
+				logInfo(
+					`El ${spanishRoles[rol]} ${user.email} ha conseguido sus chats`
+				);
+				const chat = await Chat.find({ [rol]: user._id }).populate(
+					'user psychologist'
+				);
+				console.log(chat);
+				return chat;
+			}
+		})
+	);
+	return okResponse('Chats conseguidos', { chats: chatss });
 };
 
 export const sendMessage = async (user, content, userId, psychologistId) => {
