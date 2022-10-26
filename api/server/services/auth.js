@@ -9,9 +9,9 @@ import { logError, logInfo } from '../config/pino';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import mailService from '../services/mail';
+import Analytics from 'analytics-node';
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const generateJwt = user => {
 	const payload = {

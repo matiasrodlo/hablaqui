@@ -13,9 +13,10 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
 	let psychologists = await Psychologist.find();

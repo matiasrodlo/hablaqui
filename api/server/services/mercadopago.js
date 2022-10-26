@@ -12,10 +12,10 @@ import email from '../models/email';
 import mailService from './mail';
 import Sessions from '../models/sessions';
 import moment from 'moment';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 mercadopago.configure({
 	access_token: mercadopago_key,

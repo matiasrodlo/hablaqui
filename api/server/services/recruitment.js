@@ -7,9 +7,9 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { actionInfo } from '../utils/logger/infoMessages';
 import psychologist from '../models/psychologist';
 import mailService from './mail';
+import Analytics from 'analytics-node';
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const recruitmentService = {
 	/**

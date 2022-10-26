@@ -8,11 +8,12 @@ import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
+import sgClient from '@sendgrid/client';
+
 moment.tz.setDefault('America/Santiago');
+sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
-const sgClient = require('@sendgrid/client');
-sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
  * @description Checks wheter the email is schedulable (3 days or less before the appointment)

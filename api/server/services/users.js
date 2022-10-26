@@ -13,11 +13,13 @@ import mailService from './mail';
 import Sessions from '../models/sessions';
 import Coupon from '../models/coupons';
 import moment from 'moment';
+import crypto from 'crypto';
 import { room } from '../config/dotenv';
 import Auth from './auth';
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -232,7 +234,7 @@ const usersService = {
 				},
 			});
 		}
-		const roomId = require('crypto')
+		const roomId = crypto
 			.createHash('md5')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');

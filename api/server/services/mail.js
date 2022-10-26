@@ -2,9 +2,9 @@
 
 import moment from 'moment';
 import { logInfo } from '../config/pino';
-moment.tz.setDefault('America/Santiago');
+import sgMail from '@sendgrid/mail';
 
-const sgMail = require('@sendgrid/mail');
+moment.tz.setDefault('America/Santiago');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailService = {

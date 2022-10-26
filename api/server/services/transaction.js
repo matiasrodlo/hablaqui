@@ -8,9 +8,10 @@ import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunctio
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailService from './mail';
 import moment from 'moment';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
 	let sessions = await getAllSessionsFunction(psy);

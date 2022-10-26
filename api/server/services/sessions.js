@@ -16,10 +16,12 @@ import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
 import mailService from './mail';
 import Sessions from '../models/sessions';
+import crypto from 'crypto';
 import moment from 'moment';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getSessions = async (userLogged, idUser, idPsy) => {
 	// iniciamos la variable
@@ -253,7 +255,7 @@ const createPlan = async ({ payload }) => {
 		psychologist: payload.psychologist,
 	});
 
-	const roomId = require('crypto')
+	const roomId = crypto
 		.createHash('md5')
 		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
@@ -586,7 +588,7 @@ const customNewSession = async (user, payload) => {
 		);
 
 		// Creamos la direccion de la sala de videollamadas
-		const roomId = require('crypto')
+		const roomId = crypto
 			.createHash('md5')
 			.update(`${payload.user}${payload.psychologist}`)
 			.digest('hex');
