@@ -764,14 +764,16 @@ import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(badMutable);
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(
+	customParseFormat,
+	badMutable,
+	relativeTime,
+	utc,
+	timezone,
+	isSameOrBefore,
+	isSameOrAfter
+);
 dayjs.tz.setDefault('America/Santiago');
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
 
 export default {
 	components: {

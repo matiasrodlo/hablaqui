@@ -43,8 +43,7 @@ import dayjs from 'dayjs';
 import { mapActions, mapGetters } from 'vuex';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

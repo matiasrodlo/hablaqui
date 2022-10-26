@@ -24,13 +24,15 @@ import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(badMutable);
-dayjs.extend(localizedFormat);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
+dayjs.extend(
+	customParseFormat,
+	badMutable,
+	localizedFormat,
+	utc,
+	timezone,
+	isSameOrBefore,
+	isSameOrAfter
+);
 dayjs.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);

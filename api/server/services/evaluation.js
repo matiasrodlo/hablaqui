@@ -12,8 +12,7 @@ import mailService from './mail';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 const addRating = async (user, newRating, comment, psychologist) => {

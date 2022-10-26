@@ -6,11 +6,7 @@ import timezone from 'dayjs/plugin/timezone';
 import isBetween from 'dayjs/plugin/isBetween';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(badMutable);
-dayjs.extend(isBetween);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(customParseFormat, badMutable, isBetween, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export const paymentInfoFunction = async psyId => {

@@ -99,9 +99,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(customParseFormat, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

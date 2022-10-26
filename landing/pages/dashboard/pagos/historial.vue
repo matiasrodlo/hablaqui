@@ -159,10 +159,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import badMutable from 'dayjs/plugin/badMutable';
-dayjs.extend(badMutable);
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(badMutable, relativeTime, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

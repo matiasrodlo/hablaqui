@@ -6,9 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(badMutable);
-dayjs.extend(utc);
+dayjs.extend(customParseFormat, badMutable, utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 

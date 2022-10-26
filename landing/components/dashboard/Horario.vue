@@ -316,10 +316,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isBetween from 'dayjs/plugin/isBetween';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.extend(isBetween);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(customParseFormat, isBetween, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

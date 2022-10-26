@@ -210,11 +210,7 @@ import timezone from 'dayjs/plugin/timezone';
 import calendar from 'dayjs/plugin/calendar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-dayjs.extend(localizedFormat);
-dayjs.extend(calendar);
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(localizedFormat, calendar, relativeTime, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {
