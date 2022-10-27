@@ -1,45 +1,40 @@
 'use strict';
 
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
-import Chat from '../models/chat'; // chat.js contiene la definición del modelo de chat para mongodb
-import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
-import Email from '../models/email'; // email.js contiene la definición del modelo de email para mongodb
-import Analytics from 'analytics-node'; // Analytics-node sirve para integrar analiticas en cualquier aplicación.
-// Sugerencia: yo creo que habría que extraer en una función aparte el crear un chat, se repite mucho en el código.
-const startConversation = async (psychologistId, user) => {
-	// función que recibe el id del psicologo y el usuario, función que inicializa una conversación
-	const hasChats = await Chat.findOne({
-		// busca un chat en la base de datos
-		psychologist: psychologistId, // que tenga como psicologo al psicologo que se recibe como parámetro
-		user: user, // y que tenga como usuario al usuario que se recibe como parámetro
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Chat from '../models/chat';
+import { logInfo } from '../config/pino';
+import Email from '../models/email';
+import Analytics from 'analytics-node';
+
+const createChat = async (user, psychologistId) => {
+	const newChat = new Chat({
+		user: user,
+		psychologist: psychologistId,
 	});
-	if (!hasChats) {
-		// si no existe un chat con el psicologo y el usuario
-		const newChat = await Chat.create({
-			// crea un nuevo chat
-			user: user._id, // con el id del usuario
-			psychologist: psychologistId, // y el id del psicologo
-		});
-		return okResponse('chat inicializado', { newChat }); // retorna un mensaje de éxito y el chat inicializado
+	return newChat;
+};
+
+const buscarChat = async (user, psy) => {
+	const chat = await Chat.findOne({
+		user: user,
+		psychologist: psy,
+	});
+	return chat;
+};
+
+const startConversation = async (psychologistId, user) => {
+	const hasChats = await buscarChat(user, psychologistId);
+	if (hasChats) {
+		return okResponse('chat inicializado anteriormente');
 	}
-	return okResponse('chat inicializado anteriormente'); // si ya existe un chat con el psicologo y el usuario retorna un mensaje de éxito
+	const newChat = await createChat(user._id, psychologistId._id);
+	return okResponse('chat inicializado', { newChat });
 };
 
 const getMessages = async (user, psy) => {
-	// función para obtener los mensajes de un chat, user y psy son ObjectID del usuario y el psicologo
-	let messages = await Chat.findOne({
-		// busca un chat en la base de datos
-		psychologist: psy, // que tenga como psicologo al psicologo que se recibe como parámetro siendo de tipo ObjectId
-		user: user, // y que tenga como usuario al usuario que se recibe como parámetro siendo de tipo ObjectId
-	}).populate('user psychologist'); // Hace que devuelva del documento de chat el usuario y el psicologo
+	let messages = await buscarChat(user, psy);
 
-	if (!messages)
-		// si no existe un chat con el psicologo y el usuario
-		messages = await Chat.create({
-			// crea un nuevo chat
-			user: user, // con el id del usuario
-			psychologist: psy, // y el id del psicologo
-		});
+	if (!messages) messages = await createChat(user, psy);
 
 	return okResponse('Mensajes conseguidos', {
 		// retorna un mensaje de éxito y los mensajes
@@ -48,33 +43,29 @@ const getMessages = async (user, psy) => {
 };
 
 const getChats = async user => {
-	// función para obtener los chats de un usuario
-	if (user.role == 'psychologist') {
-		// si el usuario es un psicologo
-		logInfo(`El psicologo ${user.email} ha conseguido sus chats`); // imprime en la consola el email del psicologo
-		return okResponse('Chats conseguidos', {
-			// retorna un mensaje de éxito y los chats
-			chats: await Chat.find({
-				// busca los chats en la base de datos
-				psychologist: user.psychologist._id, // que tengan como psicologo al psicologo que se recibe como parámetro siendo de tipo ObjectId
-			}).populate('user psychologist'), // Hace que devuelva del documento de chat el usuario y el psicologo
-		});
+	const roles = ['psychologist', 'user'];
+	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
+	let chat;
+	// Es para verificar que sea un rol valido
+	if (!roles.includes(user.role)) {
+		return conflictResponse(
+			'Ha ocurrido un error intentando recuperar tus chats'
+		);
 	}
-	if (user.role == 'user') {
-		// si el usuario es un usuario
-		logInfo(`El usuario ${user.email} ha conseguido sus chats`); // imprime en la consola el email del usuario
-		return okResponse('Chat conseguidos', {
-			// retorna un mensaje de éxito y los chats
-			chats: await Chat.find({ user: user._id }).populate(
-				// busca los chats en la base de datos y hace que devuelva del documento de chat el usuario y el psicologo
+	// Se encuentra el rol y se devuelven los chats
+	for (let i in roles) {
+		if (roles[i] == user.role) {
+			logInfo(
+				`El ${spanishRoles[roles[i]]} ${
+					user.email
+				} ha conseguido sus chats`
+			);
+			chat = await Chat.find({ [roles[i]]: user._id }).populate(
 				'user psychologist'
-			),
-		});
+			);
+		}
 	}
-	return conflictResponse(
-		// si el usuario no es ni un usuario ni un psicologo retorna un mensaje de error
-		'Ha ocurrido un error intentando recuperar tus chats'
-	);
+	return okResponse('Chats conseguidos', { chats: chat });
 };
 
 export const sendMessage = async (user, content, userId, psychologistId) => {
