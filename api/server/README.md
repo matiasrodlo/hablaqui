@@ -1,4 +1,4 @@
-# COMPONENTS
+# API
 
 ## Table of Contents
 
