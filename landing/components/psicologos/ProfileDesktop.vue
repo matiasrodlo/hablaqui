@@ -17,23 +17,27 @@
 									class="text-capitalize py-4"
 									style="color: #706f6f; font-size: 14px"
 								>
-									código {{ psychologist.code ? psychologist.code : '' }}
+									Código {{ psychologist.code ? psychologist.code : '' }}
 								</div>
 							</div>
 						</v-col>
 						<v-col cols="8">
 							<div>
-								<h1 v-if="psychologist.gender == 'male'"
+								<h1
+									v-if="psychologist.gender == 'male'"
 									class="text-left font-weight-bold"
-									style="color: #3c3c3b; font-size: 28px">
+									style="color: #3c3c3b; font-size: 28px"
+								>
 									Psicólogo {{ psychologist.name }}
 									{{ psychologist.lastName && psychologist.lastName }}
 								</h1>
-								<h1 v-else
+								<h1
+									v-else
 									class="text-left font-weight-bold"
-									style="color: #3c3c3b; font-size: 28px">
+									style="color: #3c3c3b; font-size: 28px"
+								>
 									Psicóloga {{ psychologist.name }}
-								{{ psychologist.lastName && psychologist.lastName }}
+									{{ psychologist.lastName && psychologist.lastName }}
 								</h1>
 							</div>
 							<div
@@ -76,8 +80,6 @@
 					</v-row>
 				</v-card>
 				<v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
-					<v-card-text class="text-h5 primary--text font-weight-bold">Perfil</v-card-text>
-					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
 						<div class="text-left subtitle-1 primary--text">Especialidades</div>
 						<div
@@ -116,9 +118,7 @@
 					</v-card-text>
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<div class="mb-4 text-left subtitle-1 primary--text">
-							Modelos de trabajo terapéutico
-						</div>
+						<div class="mb-4 text-left subtitle-1 primary--text">Modelos</div>
 						<div class="body-1 text-left">
 							<ul v-if="psychologist.models && psychologist.models.length">
 								<li v-for="(model, i) in psychologist.models" :key="i" class="my-1">
@@ -140,8 +140,8 @@
 									:key="i"
 									class="my-1"
 								>
-									{{ formation.formationType }} -
-									{{ formation.description }}
+									{{ formation.formationType }}, {{ formation.description }},
+									{{ formation.intitucion }}
 									<span v-if="formation.start && formation.end">
 										({{ formation.start }}, {{ formation.end }})
 									</span>
@@ -151,9 +151,7 @@
 					</v-card-text>
 					<v-divider></v-divider>
 					<v-card-text>
-						<div class="mb-4 text-left subtitle-1 primary--text">
-							Descripción personal
-						</div>
+						<div class="mb-4 text-left subtitle-1 primary--text">Descripción</div>
 						<div class="body-1 text-left">
 							{{
 								psychologist.personalDescription
@@ -164,11 +162,9 @@
 					</v-card-text>
 					<v-divider class="mx-4"></v-divider>
 					<v-card-text>
-						<div class="mb-4 text-left subtitle-1 primary--text">
-							Política de reprogramación
-						</div>
+						<div class="mb-4 text-left subtitle-1 primary--text">Reprogramación</div>
 						<div class="body-1 text-left">
-							Puedes reprogramar tu sesión hasta
+							Puede reprogramar hasta
 							<strong>
 								{{ psychologist.preferences.minimumRescheduleSession }} hora(s)
 							</strong>
