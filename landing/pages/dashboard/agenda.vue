@@ -1106,7 +1106,7 @@ export default {
 		},
 		setSubtitle(date) {
 			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
-				.add(60, 'minutes')
+				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
 		closeDialog() {
