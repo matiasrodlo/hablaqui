@@ -42,7 +42,10 @@ export const paymentInfoFunction = async psyId => {
 
 					return {
 						_id: session._id,
-						datePayment: paymentPlanDate,
+						datePayment: moment(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).format('DD/MM/YYYY HH:mm'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: moment(session.date, 'MM/DD/YYYY HH:mm').format(
@@ -83,7 +86,10 @@ export const paymentInfoFunction = async psyId => {
 				) {
 					let session = {
 						_id: null,
-						datePayment: paymentPlanDate,
+						datePayment: moment(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).format('DD/MM/YYYY HH:mm'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
@@ -102,6 +108,10 @@ export const paymentInfoFunction = async psyId => {
 					};
 					if (Date.parse(plans.expiration) < Date.now()) {
 						session.transDate = 'Expirado';
+						session.datePayment = '-';
+						session.total = '0';
+						session.amount = '0';
+						session.mercadoPercentage = '0';
 					}
 					sessions.push(session);
 				}
