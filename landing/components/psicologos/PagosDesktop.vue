@@ -137,7 +137,6 @@
 								<v-btn
 									small
 									class="px-10"
-									:disabled="!coupon"
 									color="primary"
 									rounded
 									@click="setCoupon"
@@ -174,7 +173,7 @@
 						<v-divider></v-divider>
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Total</div>
-							<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
+							<div v-if="planSelected" class="body-1">${{ PriceWithCoupon }}</div>
 						</div>
 						<div>
 							<v-btn
