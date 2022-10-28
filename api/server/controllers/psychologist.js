@@ -22,6 +22,20 @@ const psychologistsController = {
 			errorCallback(e, res, 'Error haciendo match');
 		}
 	},
+	async rescheduleSession(req, res) {
+		try {
+			const { sessionsId, planId, sessionId, newDate } = req.body;
+			const { data, code } = await psychologistsService.rescheduleSession(
+				sessionsId,
+				planId,
+				sessionId,
+				newDate
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'error actualizando la cita');
+		}
+	},
 	async getByUsername(req, res) {
 		try {
 			const { username } = req.params;

@@ -25,6 +25,14 @@ const retoolController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async fixSpecialities(req, res) {
+		try {
+			const { data, code } = await retoolService.fixSpecialities();
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(retoolController);

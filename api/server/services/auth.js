@@ -47,7 +47,8 @@ const login = async user => {
 		});
 	}
 	// comentado por JESUS marzo/24/2022 porque interrumpe el flujo
-	//el objeto user debe contener, ahora, un elemento isVerified que indica si la cuenta está o no verificada
+	//el objeto user debe contener, ahora, un elemento isVerified que indica si
+	// la cuenta está o no verificada
 	// if (user.role === 'user' && !user.isVerified)
 	// 	return conflictResponse('Verifica tu correo');
 	return okResponse(`Bienvenido ${user.name}`, {

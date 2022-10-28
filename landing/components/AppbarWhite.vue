@@ -1,17 +1,19 @@
 <template>
 	<div>
 		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
-			<v-list-item link to="/">
-				<v-img
-					id="logo-drawer"
-					tabindex="0"
-					class="mx-auto my-5"
-					style="max-width: 150px"
-					src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
-					lazy-src="`https://cdn.hablaqui.cl/static/logo.png"
-					alt="hablaqui Logo"
-					accesskey="h"
-				/>
+			<v-list-item>
+				<a href="https://hablaqui.cl/">
+					<v-img
+						id="logo-drawer"
+						tabindex="0"
+						class="mx-auto my-5"
+						style="max-width: 150px"
+						src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+						lazy-src="`https://cdn.hablaqui.cl/static/logo.png"
+						alt="hablaqui Logo"
+						accesskey="h"
+					/>
+				</a>
 			</v-list-item>
 			<v-list dense>
 				<v-list-item
@@ -42,7 +44,7 @@
 					id="link-para-especialistas-drawer"
 					accesskey="q"
 					link
-					href="https://hablaqui.cl/blog/para-empresas"
+					href="https://hablaqui.cl/#"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="secondary--text font-weight-bold body-2">
@@ -129,7 +131,7 @@
 			<v-container fluid style="max-width: 1080px">
 				<v-row align="center" justify="space-between" no-gutters>
 					<v-col class="d-flex align-center" md="7" lg="8">
-						<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+						<a id="logo-appbar" href="https://hablaqui.cl/" exact accesskey="h">
 							<v-img
 								style="max-width: 176px"
 								alt="hablaqui Logo"
@@ -137,20 +139,20 @@
 								lazy-src="https://cdn.hablaqui.cl/static/logo.png"
 								contain
 							/>
-						</nuxt-link>
+						</a>
 						<a
 							id="especialistas-appabar"
 							accesskey="r"
 							style="text-decoration: none; font-size: 12.8px"
 							class="hidden-sm-and-down ml-7"
-							href="https://hablaqui.cl/blog/para-especialistas"
+							href="https://hablaqui.cl/para-especialistas"
 						>
 							<span class="text-uppercase font-nav"> Para especialistas </span>
 						</a>
 
 						<a
 							id="empresas-appbar"
-							href="https://hablaqui.cl/blog/para-empresas"
+							href="https://hablaqui.cl/#"
 							style="text-decoration: none; font-size: 12.8px"
 							accesskey="p"
 							class="hidden-sm-and-down ml-4"
@@ -242,11 +244,7 @@
 														</v-list-item-avatar>
 														<v-list-item-content>
 															<v-list-item-title
-																class="
-																	secondary--text
-																	font-weight-bold
-																	body-2
-																"
+																class="secondary--text font-weight-bold body-2"
 															>
 																{{ item.name }}
 															</v-list-item-title>
@@ -264,11 +262,7 @@
 													</v-list-item-avatar>
 													<v-list-item-content>
 														<v-list-item-title
-															class="
-																secondary--text
-																font-weight-bold
-																body-2
-															"
+															class="secondary--text font-weight-bold body-2"
 														>
 															Cerrar sesion
 														</v-list-item-title>
@@ -314,13 +308,7 @@
 										font-size: 13.2px;
 										line-height: 1.6;
 									"
-									class="
-										py-4
-										ml-2
-										hidden-sm-and-down
-										text-uppercase
-										font-weight-bold
-									"
+									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
 									color="primary"
 									depressed
 									to="/psicologos"
@@ -415,6 +403,20 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
+				{
+					name: 'Cambio de sesión',
+					link: { name: 'dashboard-reschedule-session' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Cambio de psicologo',
+					link: { name: 'dashboard-change-psy' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
 			];
 		},
 	},
@@ -453,6 +455,5 @@ export default {
 	font-weight: 700;
 	font-family: 'Lato', sans-serif;
 	letter-spacing: 0.02em;
-	// font-size: 0.8em;
 }
 </style>

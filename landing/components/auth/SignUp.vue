@@ -66,14 +66,6 @@
 					>
 						Términos y condiciones
 					</nuxt-link>
-					<span class="primary--text">y</span>
-					<nuxt-link
-						style="text-decoration: none"
-						:to="{ name: 'politicas' }"
-						target="_blank"
-					>
-						la Política de privacidad.
-					</nuxt-link>
 				</span>
 			</v-col>
 			<v-col cols="12">

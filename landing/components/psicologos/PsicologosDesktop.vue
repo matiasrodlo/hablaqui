@@ -765,8 +765,7 @@ export default {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
 		goEvaluation() {
-			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else this.$router.push('/auth/?register=true&from=psy');
+			this.$router.push({ name: 'evaluacion', params: { clean: true } });
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';

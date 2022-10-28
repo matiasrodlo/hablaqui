@@ -100,18 +100,6 @@
 										offset-y
 										min-width="auto"
 									>
-										<template #activator="{ on, attrs }">
-											<v-text-field
-												v-model="selected.birthDate"
-												label="Fecha de nacimiento"
-												readonly
-												filled
-												outlined
-												dense
-												v-bind="attrs"
-												v-on="on"
-											></v-text-field>
-										</template>
 										<v-date-picker
 											v-model="selected.birthDate"
 											locale="es"
@@ -161,28 +149,6 @@
 								</v-col>
 								<v-divider class="hidden-sm-and-down" vertical></v-divider>
 								<v-col cols="12" sm="6">
-									<v-text-field
-										v-model="selected.email"
-										disabled
-										label="Correo electrónico"
-										dense
-										filled
-										outlined
-									></v-text-field>
-									<v-text-field
-										v-model="selected.direction"
-										label="Dirección"
-										dense
-										filled
-										outlined
-									></v-text-field>
-									<v-text-field
-										v-model="selected.phone"
-										label="Teléfono"
-										dense
-										filled
-										outlined
-									></v-text-field>
 									<v-textarea
 										v-model="selected.observation"
 										label="Observaciones"

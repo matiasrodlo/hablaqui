@@ -15,21 +15,21 @@
 				<v-col cols="12" md="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3">
-							<nuxt-link to="/" class="tex-center">
+							<a href="https://hablaqui.cl/" class="tex-center">
 								<v-img
 									class="mx-auto"
 									style="max-width: 200px"
 									:src="`https://cdn.hablaqui.cl/static/logo.png`"
 									:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 								/>
-							</nuxt-link>
+							</a>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">
 						<v-col cols="12" sm="10" lg="8">
 							<sign-up />
 							<div class="font-weight-bold caption secondary--text">
-								2021 Hablaqui
+								2022 Hablaqui
 							</div>
 						</v-col>
 					</v-row>
@@ -120,22 +120,17 @@ export default {
 				{
 					id: 1,
 					img: `https://cdn.hablaqui.cl/static/auth.webp`,
-					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Permita que lo conozcan, agenden y paguen en piloto automático',
 				},
 				{
 					id: 2,
 					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
-					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+					text: 'Consiga que los consultantes le encuentren fácilmente y haga que le elijan',
 				},
 				{
 					id: 3,
 					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
-					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
-				},
-				{
-					id: 4,
-					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
-					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+					text: 'Olvide trámites aburridos como agendar citas, confirmar asistencias y cobrar',
 				},
 			],
 			carousel: 0,
