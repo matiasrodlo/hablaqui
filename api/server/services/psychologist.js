@@ -1,14 +1,14 @@
 'use strict';
 
-import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
+import { logInfo } from '../config/pino';
 import sessionsFunctions from './sessions';
-import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction'; // Funcion para obtener todas las sesiones de un psicologo
-import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologos para mongodb
-import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de recruitment para mongodb
-import User from '../models/user'; // user.js contiene la definición del modelo de usuarios para mongodb
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // Funciones para peticiones 200 y 400
-import moment from 'moment'; // // moment.js es una librería para el manejo de fechas
-import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
+import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
+import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
+import User from '../models/user';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import moment from 'moment';
+import Sessions from '../models/sessions';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -47,7 +47,7 @@ const normalize = (value, min, max) => {
 
 const priceCriterion = (psy, payload, pointsPerCriterion) => {
 	let points = 0;
-	if (payload.price >= psy.price) {
+	if (payload.price >= psy.sessionPrices.video) {
 		points = pointsPerCriterion;
 	}
 	points = normalize(points, 0, pointsPerCriterion);
@@ -91,34 +91,57 @@ const maximumAvailability = (payload, pointsPerCriterion) => {
 	return maximum;
 };
 
-const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
-	const nextDays = 3;
+/**
+ * @description Asigna puntaje por cantidad de coincidencias de disponibilidad
+ * @param {Object} days - Días de disponibilidad del psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
+ * @returns - Puntaje
+ */
+
+const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 	let points = 0;
 	for (let i = 0; i < nextDays; i++) {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
 		days[i].available.forEach(hora => {
 			if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('06:00', 'HH:mm'),
-					moment('12:59', 'HH:mm')
+					moment('00:00', 'HH:mm'),
+					moment('08:59', 'HH:mm')
+				) &&
+				payload.schedule == 'early'
+			) {
+				points += pointsPerCriterion;
+			} else if (
+				moment(hora, 'HH:mm').isBetween(
+					moment('09:00', 'HH:mm'),
+					moment('11:59', 'HH:mm')
 				) &&
 				payload.schedule == 'morning'
 			) {
 				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('13:00', 'HH:mm'),
-					moment('15:59', 'HH:mm')
+					moment('12:00', 'HH:mm'),
+					moment('13:59', 'HH:mm')
 				) &&
 				payload.schedule == 'midday'
 			) {
 				points += pointsPerCriterion;
 			} else if (
 				moment(hora, 'HH:mm').isBetween(
-					moment('16:00', 'HH:mm'),
-					moment('23:00', 'HH:mm')
+					moment('14:00', 'HH:mm'),
+					moment('17:59', 'HH:mm')
 				) &&
 				payload.schedule == 'afternoon'
+			) {
+				points += pointsPerCriterion;
+			} else if (
+				moment(hora, 'HH:mm').isBetween(
+					moment('18:00', 'HH:mm'),
+					moment('23:59', 'HH:mm')
+				) &&
+				payload.schedule == 'night'
 			) {
 				points += pointsPerCriterion;
 			}
@@ -137,8 +160,9 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion) => {
 
 const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 	let points = 0;
+	const nextDays = 3;
 	const maximum = maximumAvailability(payload, pointsPerCriterion);
-	points = pointsDisponibilidad(days, payload, pointsPerCriterion);
+	points = pointsDisponibilidad(days, payload, pointsPerCriterion, nextDays);
 	points = normalize(points, 0, maximum);
 	return points;
 };
@@ -224,27 +248,36 @@ const ponderationMatch = async (matchedList, payload) => {
  */
 
 const psychologistClasification = async (matchedList, payload) => {
+	const nextDays = 7;
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
+			psy.points = 0;
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				psy._id
 			);
-			points = pointsDisponibilidad(days, payload, pointsPerCriterion);
+			points = pointsDisponibilidad(
+				days,
+				payload,
+				pointsPerCriterion,
+				nextDays
+			);
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
 			return { ...psychologist, points };
 		})
 	);
 	newMatchedList.sort((a, b) => b.points - a.points);
-	resultList.push(newMatchedList[0]);
 	// Se elmina el primer elemento del arreglo
-	newMatchedList.splice(0, 1);
+	resultList.push(newMatchedList.shift(0));
 	// Se obtiene el psicologo que tenga menor precio
-	if (newMatchedList[0].price < newMatchedList[1].price) {
+	if (
+		newMatchedList[0].sessionPrices.video <
+		newMatchedList[1].sessionPrices.video
+	) {
 		resultList.push(newMatchedList[0]);
 		resultList.unshift(newMatchedList[1]);
 	} else {
@@ -263,7 +296,7 @@ const match = async body => {
 		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes },
+			specialties: { $in: payload.themes }, // Filtra por especialidades
 		});
 	} else {
 		// Si no es transgenero
@@ -278,7 +311,7 @@ const match = async body => {
 
 	// Agregar de nuevo modelo terapeutico
 	// Se obtiene la lista de psicologos que coinciden con los temas
-	if (matchedPsychologists.length === 0) {
+	if (matchedPsychologists.length < 3) {
 		matchedPsychologists = await Psychologist.find();
 		perfectMatch = false;
 	}
@@ -348,7 +381,6 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	await sessions.save();
 	return okResponse('Hora actualizada', { sessions });
 };
-
 const updatePlan = async (psychologistId, planInfo) => {
 	// Funcion para actualizar el plan de un psicologo, se busca el psicologo por su id y se actualiza
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
