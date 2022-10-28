@@ -132,11 +132,11 @@
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
 			<v-tab v-if="$auth.$state.user" class="primary--text text-capitalize">
-				{{ $auth.$state.user.role == 'user' ? 'Mis planes' : 'Horario' }}
+				{{ $auth.$state.user.role == 'user' ? 'Suscripciones' : 'Horario' }}
 			</v-tab>
 
 			<v-tab class="primary--text text-capitalize">
-				{{ $auth.$state.user.role == 'user' ? 'Mi psicologo' : 'Servicios' }}
+				{{ $auth.$state.user.role == 'user' ? 'Especialista' : 'Servicios' }}
 			</v-tab>
 		</v-tabs>
 		<v-row no-gutters>

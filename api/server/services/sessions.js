@@ -14,7 +14,9 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailService from './mail';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import mailServiceReminder from '../utils/functions/mails/reminder';
+import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -132,13 +134,15 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 
 	// Se verifica si es un compromiso privado
 	if (cancelSessions.user == null) {
-		await mailService.sendCancelCommitment(cancelSessions.psychologist);
+		await mailServiceReminder.sendCancelCommitment(
+			cancelSessions.psychologist
+		);
 	} else {
-		await mailService.sendCancelSessionPsy(
+		await mailServiceReminder.sendCancelSessionPsy(
 			cancelSessions.user,
 			cancelSessions.psychologist
 		);
-		await mailService.sendCancelSessionUser(
+		await mailServiceReminder.sendCancelSessionUser(
 			cancelSessions.user,
 			cancelSessions.psychologist
 			//sessionCancel.plan[0].session[0].date
@@ -422,7 +426,7 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailService.pendingPlanPayment(
+		await mailServicePsy.pendingPlanPayment(
 			user,
 			psychologist,
 			payload.price,
@@ -526,7 +530,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			},
 		});
 	}
-	await mailService.sendScheduleToUser(
+	await mailServiceSchedule.sendScheduleToUser(
 		userLogged,
 		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -535,7 +539,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			myPlan.totalSessions
 		}`
 	);
-	await mailService.sendScheduleToPsy(
+	await mailServiceSchedule.sendScheduleToPsy(
 		userLogged,
 		psychologist,
 		moment(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -643,7 +647,7 @@ const customNewSession = async (user, payload) => {
 
 		// Correo de compromiso privado
 		if (payload.type === 'compromiso privado')
-			await mailService.sendCustomSessionCommitment(
+			await mailServiceReminder.sendCustomSessionCommitment(
 				updatedSession.psychologist
 			);
 
@@ -658,7 +662,7 @@ const customNewSession = async (user, payload) => {
 			});
 			if (payload.type === 'sesion online') {
 				// Enviamos email al user con el link para pagar
-				await mailService.sendCustomSessionToUser(
+				await mailServiceSchedule.sendCustomSessionToUser(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -666,7 +670,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'online'
 				);
-				await mailService.sendCustomSessionToPsy(
+				await mailServiceSchedule.sendCustomSessionToPsy(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -676,7 +680,7 @@ const customNewSession = async (user, payload) => {
 				);
 			}
 			if (payload.type === 'sesion presencial') {
-				await mailService.sendCustomSessionToUser(
+				await mailServiceSchedule.sendCustomSessionToUser(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -684,7 +688,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'presencial'
 				);
-				await mailService.sendCustomSessionToPsy(
+				await mailServiceSchedule.sendCustomSessionToPsy(
 					updatedSession.user,
 					updatedSession.psychologist,
 					data.init_point,
@@ -759,7 +763,84 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-// Type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
+const getFormattedSessionsForMatch = async idPsychologist => {
+	let sessions = [];
+	// obtenemos el psicologo
+	const psychologist = await Psychologist.findById(idPsychologist).select(
+		'_id schedule preferences inmediateAttention'
+	);
+	// creamos un array con la cantidad de dias
+	const length = Array.from(Array(31), (_, x) => x);
+	// creamos un array con la cantidad de horas
+	const hours = Array.from(Array(24), (_, x) =>
+		moment()
+			.hour(x)
+			.minute(0)
+			.format('HH:mm')
+	);
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
+		psychologist: idPsychologist,
+	});
+
+	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
+	psySessions = psySessions.filter(item =>
+		item.plan.some(plan => {
+			return (
+				plan.payment === 'success' &&
+				moment().isBefore(moment(plan.expiration))
+			);
+		})
+	);
+
+	// Formato de array debe ser [date, date, ...date]
+	const daySessions = psySessions
+		.flatMap(item => {
+			return item.plan.flatMap(plan => {
+				return plan.session.length
+					? plan.session.map(session => session.date)
+					: [];
+			});
+		})
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
+	let minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
+
+	sessions = length.map(el => {
+		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
+
+		return {
+			id: el,
+			value: day,
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			text: moment(day),
+			available: hours.filter(hour => {
+				return (
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
+					formattedSchedule(psychologist.schedule, day, hour) &&
+					!daySessions.some(
+						date =>
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								moment(day).format('L') &&
+							hour ===
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+					)
+				);
+			}),
+		};
+	});
+	return sessions;
+};
+
+//type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
 const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
@@ -1044,25 +1125,25 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Se envia correo de reprogramacion
 	if (userLogged.role === 'user') {
-		await mailService.sendRescheduleToUser(
+		await mailServiceSchedule.sendRescheduleToUser(
 			sessions.user,
 			sessions.psychologist,
 			newDate
 		);
-		await mailService.sendRescheduleToPsy(
+		await mailServiceSchedule.sendRescheduleToPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
 	} else {
-		await mailService.sendRescheduleToUserByPsy(
+		await mailServiceSchedule.sendRescheduleToUserByPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
-		await mailService.sendRescheduleToPsyByPsy(
+		await mailServiceSchedule.sendRescheduleToPsyByPsy(
 			sessions.user,
 			sessions.psychologist,
 			newDate,
@@ -1149,7 +1230,6 @@ const getAllSessions = async psy => {
 				typeof value.total == 'number' ? sum + value.total : sum,
 			0
 		);
-
 	return okResponse('Sesiones obtenidas', {
 		total,
 		sessions,
@@ -1172,6 +1252,7 @@ const sessionsService = {
 	createPlan,
 	createSession,
 	customNewSession,
+	getFormattedSessionsForMatch,
 	getFormattedSessions,
 	formattedSessionsAll,
 	paymentsInfo,

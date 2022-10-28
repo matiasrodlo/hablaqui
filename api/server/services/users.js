@@ -1,188 +1,326 @@
-'use strict';
+'use strict'; // Sirve para que el código sea mas estricto y evitar errores
 
-import User from '../models/user';
-import Psychologist from '../models/psychologist';
-import Recruitment from '../models/recruitment';
-import { logInfo } from '../config/winston';
-import bcrypt from 'bcryptjs';
-import servicesAuth from './auth';
-import { actionInfo } from '../utils/logger/infoMessages';
-import { conflictResponse, okResponse } from '../utils/responses/functions';
-import { bucket } from '../config/bucket';
-import mailService from './mail';
-import Sessions from '../models/sessions';
-import Coupon from '../models/coupons';
-import moment from 'moment';
-import { room } from '../config/dotenv';
-import Auth from './auth';
+import User from '../models/user'; // user.js contiene la definición del modelo de usuario para mongodb
+import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologo para mongodb
+import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de reclutamiento para mongodb
+import { logInfo } from '../config/winston'; // winston.js contiene la configuración de winston para el logging
+import bcrypt from 'bcryptjs'; // bcryptjs es una librería para encriptar contraseñas
+import servicesAuth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
+import { actionInfo } from '../utils/logger/infoMessages'; // infoMessages.js contiene los mensajes de información para el logging
+import { conflictResponse, okResponse } from '../utils/responses/functions'; // functions.js contiene las funciones para las respuestas
+import { bucket } from '../config/bucket'; // bucket.js contiene la configuración de la conexión con el bucket de google cloud storage
+import mailServiceAccount from '../utils/functions/mails/accountsShares'; // mail.js contiene la lógica para el envío de correos electrónicos
+import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
+import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
+import moment from 'moment'; // moment.js es una librería para el manejo de fechas
+import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
+import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
+
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 moment.tz.setDefault('America/Santiago');
 
 const usersService = {
+	// usersService contiene la lógica para los servicios de usuarios
 	async getProfile(id) {
-		const user = await User.findById(id);
+		// getProfile obtiene el perfil de un usuario
+		const user = await User.findById(id); // Se busca el usuario en la base de datos
 		if (!user) {
-			return conflictResponse('perfil no encontrado');
+			// Si no se encuentra el usuario
+			return conflictResponse('perfil no encontrado'); // Se retorna un error
 		}
 		return okResponse('perfil obtenido', {
-			user: await servicesAuth.generateUser(user),
+			// Se retorna el perfil del usuario
+			user: await servicesAuth.generateUser(user), // Se genera el perfil del usuario
 		});
 	},
 	async changeActualPassword(user, newPassword) {
-		user.password = bcrypt.hashSync(newPassword, 10);
-		await user.save();
-		logInfo(actionInfo(user.email, 'actualizo su contraseña'));
-		return okResponse('Actualizó su contraseña');
+		// changeActualPassword cambia la contraseña actual de un usuario
+		user.password = bcrypt.hashSync(newPassword, 10); // Se encripta la nueva contraseña
+		await user.save(); // Se guarda el usuario en la base de datos
+		logInfo(actionInfo(user.email, 'actualizo su contraseña')); // Se registra el evento en el log
+		return okResponse('Actualizó su contraseña'); // Se retorna un mensaje de éxito
 	},
 	async updatePassword(user, oldPassword, newPassword) {
-		const foundUser = await User.findById(user._id);
-		// if the password is te same we cancel the update
-		const samePassword = oldPassword === newPassword;
+		// updatePassword actualiza la contraseña de un usuario
+		const foundUser = await User.findById(user._id); // Se busca el usuario en la base de datos
+		// if the password is te same we cancel the update 	// Si la contraseña es la misma se cancela la actualización
+		const samePassword = oldPassword === newPassword; // Se verifica si la contraseña es la misma
 		if (samePassword)
-			return conflictResponse('no puede ser la misma contraseña');
-		const isEqual = bcrypt.compareSync(oldPassword, foundUser.password);
+			// Si la contraseña es la misma
+			return conflictResponse('no puede ser la misma contraseña'); // Se retorna un error
+		const isEqual = bcrypt.compareSync(oldPassword, foundUser.password); // Se verifica si la contraseña es correcta
 		//if the password doesn't match, we cancel the update
 		if (!isEqual)
+			// Si la contraseña no es correcta
 			return conflictResponse('la contraseña anterior no es correcta');
-		else return await this.changeActualPassword(foundUser, newPassword);
+		// Se retorna un error
+		else return await this.changeActualPassword(foundUser, newPassword); // Se actualiza la contraseña
 	},
 	async passwordRecovery(user, newPassword) {
-		const foundUser = await User.findById(user._id);
-		const isEqual = bcrypt.compareSync(newPassword, foundUser.password);
+		// passwordRecovery recupera la contraseña de un usuario
+		const foundUser = await User.findById(user._id); // Se busca el usuario en la base de datos
+		const isEqual = bcrypt.compareSync(newPassword, foundUser.password); // Se verifica si la contraseña es correcta
 		//if the password is the same, we cancel the update with this
 		if (isEqual)
+			// Si la contraseña es la misma
 			return conflictResponse('no puede ser la misma contraseña');
-		else return await this.changeActualPassword(foundUser, newPassword);
+		// Se retorna un error
+		else return await this.changeActualPassword(foundUser, newPassword); // Se actualiza la contraseña
 	},
 	async updateProfile(id, profile) {
+		// updateProfile actualiza el perfil de un usuario
 		const updated = await User.findByIdAndUpdate(id, profile, {
-			new: true,
-			runValidators: true,
-			context: 'query',
+			// Se actualiza el perfil del usuario
+			new: true, // Se retorna el nuevo perfil
+			runValidators: true, // es true para que se ejecuten las validaciones
+			context: 'query', // query es el contexto de mongoose
 		});
 
 		return okResponse('Actualizado exitosamente', {
-			user: await servicesAuth.generateUser(updated),
+			// Se retorna un mensaje de éxito
+			user: await servicesAuth.generateUser(updated), // Se genera el perfil del usuario
 		});
 	},
+
+	async updatePlan(user, newPlan) {
+		// updatePlan actualiza el plan de un usuario
+		let updated = null; // Se inicializa la variable updated
+		updated = await User.findByIdAndUpdate(
+			// Se actualiza el plan del usuario
+			user._id, // Se busca el usuario por su id
+			{ myPlan: newPlan }, // Se actualiza el plan del usuario
+			{
+				new: true,
+				runValidators: true,
+				context: 'query',
+			}
+		);
+
+		logInfo(actionInfo(user.email, 'actualizo su plan')); // Se registra el evento en el log
+		return okResponse('plan actualizado', { profile: updated }); // Se retorna un mensaje de éxito
+	},
+	async updatePsychologist(user, newPsychologist, oldPsychologist) {
+		// Se realiza una busqueda del plan del consultante
+		const oldSession = await Sessions.findOne({
+			psychologist: oldPsychologist,
+			user: user,
+		});
+
+		// Se verifica que la sesión exista
+		if (!oldSession) {
+			return conflictResponse('No se encontró la sesión');
+		}
+		if (oldSession.plan.length === 0) {
+			return conflictResponse('No se encontró el plan');
+		}
+		const ultimoPlan = oldSession.plan[oldSession.plan.length - 1];
+		if (Date.now() > Date.parse(ultimoPlan.expiration)) {
+			return conflictResponse('El plan ha expirado');
+		}
+
+		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
+		const sessionesPendientes = ultimoPlan.session.filter(
+			session =>
+				session.status === 'pending' || session.status === 'upnext'
+		).length;
+		const sessionesRealizadas = ultimoPlan.session.filter(
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
+		).length;
+		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
+		const newPlan = {
+			title: ultimoPlan.title,
+			period: ultimoPlan.period,
+			totalPrice: ultimoPlan.totalPrice,
+			sessionPrice: ultimoPlan.sessionPrice,
+			payment: ultimoPlan.payment,
+			datePayment: ultimoPlan.datePayment,
+			expiration: ultimoPlan.expiration,
+			usedCoupon: ultimoPlan.usedCoupon,
+			totalSessions: (
+				Number(ultimoPlan.totalSessions) - sessionesRealizadas
+			).toString(),
+			remainingSessions: (
+				Number(ultimoPlan.remainingSessions) + sessionesPendientes
+			).toString(),
+			tokenToPay: ultimoPlan.tokenToPay,
+			session: [],
+		};
+
+		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
+		let newSession = await Sessions.findOne({
+			psychologist: newPsychologist,
+			user: user,
+		});
+		if (newSession === null) {
+			newSession = await Sessions.create({
+				psychologist: newPsychologist,
+				user: user,
+				plan: [newPlan],
+				roomsUrl: oldSession.roomsUrl,
+			});
+		} else {
+			newSession.plan.push(newPlan);
+			await newSession.save();
+		}
+
+		// Se cambia el plan de expiración del plan antiguo
+		ultimoPlan.expiration = moment()
+			.subtract(1, 'days')
+			.format();
+
+		// Se filtran las sesiones que no a la fecha no se han realizado
+		ultimoPlan.session = ultimoPlan.session.filter(
+			session =>
+				Date.parse(session.date) < Date.now() &&
+				session.status === 'success'
+		);
+
+		ultimoPlan.remainingSessions = 0;
+
+		await oldSession.save();
+		return okResponse('plan actualizado', { profile: user });
+	},
 	async uploadAvatar({
-		userLogged,
-		avatar,
-		avatarThumbnail,
-		role,
-		idPsychologist,
-		_id,
-		oldAvatar,
-		oldAvatarThumbnail,
+		// uploadAvatar sube el avatar de un usuario
+		userLogged, // usuario que está logueado
+		avatar, // avatar del usuario
+		avatarThumbnail, // avatar del usuario en miniatura
+		role, // rol del usuario
+		idPsychologist, // id del psicólogo
+		_id, // id del usuario
+		oldAvatar, // avatar anterior del usuario
+		oldAvatarThumbnail, // avatar anterior del usuario en miniatura
 	}) {
-		let psychologist;
-		let userRole = role;
-		let userID = _id;
+		let psychologist; // Se declara la variable psychologist
+		let userRole = role; // Se inicializa la variable userRole
+		let userID = _id; // Se inicializa la variable userID
 
 		if (!avatar && !avatarThumbnail)
-			return conflictResponse('Ha ocurrido un error inesperado');
+			// Si no hay avatar ni avatar en miniatura
+			return conflictResponse('Ha ocurrido un error inesperado'); // Se retorna un error
 
 		if (userLogged.role === 'superuser') {
-			const psy = await Psychologist.findById(idPsychologist);
+			// Si el usuario logueado es un superusuario
+			const psy = await Psychologist.findById(idPsychologist); // Se busca el psicólogo en la base de datos
 			const userSelected = await User.findOne({
-				email: psy.email,
-				role: 'psychologist',
+				// Se busca el usuario en la base de datos
+				email: psy.email, // Se busca el usuario por su email
+				role: 'psychologist', // Se busca el usuario por su rol
 			});
-			userRole = userSelected.role;
-			userID = userSelected._id;
+			userRole = userSelected.role; // Se asigna el rol del usuario
+			userID = userSelected._id; // Se asigna el id del usuario
 		}
 
 		if (userRole === 'psychologist') {
-			const userData = await User.findById(userID);
-			await mailService.sendUploadPicture(userData);
+			// Si el rol del usuario es psicólogo
+			const userData = await User.findById(userID); // Se busca el usuario en la base de datos
+			await mailServiceAccount.sendUploadPicture(userData); // Se sube la foto del usuario
 			if (userData.psychologist) {
+				// Si el usuario tiene un psicólogo
 				psychologist = await Psychologist.findByIdAndUpdate(
-					idPsychologist,
+					// Se encuentra por ID y se actualiza el avatar del psicólogo
+					idPsychologist, // Se busca el psicólogo por su id
 					{
-						avatar,
-						avatarThumbnail,
-						approveAvatar: false,
+						avatar, // Se actualiza el avatar del psicólogo
+						avatarThumbnail, // Se actualiza el avatar del psicólogo en miniatura
+						approveAvatar: false, // Se actualiza el estado de aprobación del avatar del psicólogo
 					},
-					{ new: true }
+					{ new: true } // que sea new quiere decir que se retorna el objeto actualizado
 				);
 			} else {
+				// Si el usuario no tiene un psicólogo
 				psychologist = await Recruitment.findByIdAndUpdate(
+					// Se encuentra por ID y se actualiza el avatar del psicólogo
 					userID,
 					{
-						avatar,
-						avatarThumbnail,
-						approveAvatar: false,
+						avatar, // Se actualiza el avatar del psicólogo
+						avatarThumbnail, // Se actualiza el avatar del psicólogo en miniatura
+						approveAvatar: false, // Se actualiza el estado de aprobación del avatar del psicólogo
 					},
-					{ new: true }
+					{ new: true } // que sea new quiere decir que se retorna el objeto actualizado
 				);
 			}
 		}
 
 		const profile = await User.findByIdAndUpdate(
-			userID,
+			// Se encuentra por ID y se actualiza el avatar del usuario
+			userID, // Se busca el usuario por su id
 			{
-				avatar,
-				avatarThumbnail,
+				avatar, // Se actualiza el avatar del usuario
+				avatarThumbnail, // Se actualiza el avatar del usuario en miniatura
 			},
 			{
-				new: true,
+				new: true, // que sea new quiere decir que se retorna el objeto actualizado
 			}
 		);
 
 		// delete old image
 		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch(
+			// Se elimina el avatar anterior del usuario
 			console.error
 		);
 
-		logInfo(`${userLogged.email} actualizo su avatar`);
+		logInfo(`${userLogged.email} actualizo su avatar`); // Se registra el evento en el log
 
 		return okResponse('Avatar actualizado', {
+			// Se retorna un mensaje de éxito
 			user: profile,
 			psychologist,
 		});
 	},
 
 	async deleteFile(oldAvatar, oldAvatarThumbnail) {
+		// deleteFile elimina el avatar anterior del usuario
 		if (oldAvatar)
-			await bucket
-				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
-				.delete();
+			// Si hay un avatar anterior
+			await bucket // Se elimina el avatar anterior del usuario
+				.file(oldAvatar.split('https://cdn.hablaqui.cl/').join('')) // Se elimina el avatar anterior del usuario
+				.delete(); // Se elimina el avatar anterior del usuario
 		if (oldAvatarThumbnail)
-			await bucket
+			// Si hay un avatar anterior en miniatura
+			await bucket // Se elimina el avatar anterior del usuario en miniatura
 				.file(
-					oldAvatarThumbnail
-						.split('https://cdn.hablaqui.cl/')
-						.join('')
+					// Se elimina el avatar anterior del usuario en miniatura
+					oldAvatarThumbnail // Se elimina el avatar anterior del usuario en miniatura
+						.split('https://cdn.hablaqui.cl/') // Se elimina el avatar anterior del usuario en miniatura
+						.join('') // Se elimina el avatar anterior del usuario en miniatura
 				)
-				.delete();
+				.delete(); // Se elimina el avatar anterior del usuario en miniatura
 	},
 
 	async setUserOnline(user) {
+		// setUserOnline establece el estado de un usuario como en línea
 		// const data = {
 		// 	...user,
 		// 	status: true,
 		// };
 		// pusher.trigger('user-status', 'online', data, pusherCallback);
-		return okResponse('Usuario conectado', user);
+		return okResponse('Usuario conectado', user); // Se retorna un mensaje de éxito
 	},
 
 	async setUserOffline(user) {
+		// setUserOffline establece el estado de un usuario como desconectado
 		// const data = {
 		// 	...user,
 		// 	status: false,
 		// };
 		// pusher.trigger('user-status', 'offline', data, pusherCallback);
-		return okResponse('Usuario desconectado', user);
+		return okResponse('Usuario desconectado', user); // Se retorna un mensaje de éxito
 	},
-
+	// Sugerencia: Siento también que este metodo podría dividirse en otras funciones mas pequeñas
 	async registerUser(user, body) {
+		// registerUser registra un usuario
 		if (user.role !== 'psychologist')
-			return conflictResponse('Usuario activo no es psicologo');
+			// Si el usuario no es psicólogo
+			return conflictResponse('Usuario activo no es psicologo'); // Se retorna un mensaje de error
 		if (await User.exists({ email: body.email }))
-			return conflictResponse('Correo electronico en uso');
+			// Si el email ya está registrado
+			return conflictResponse('Correo electronico en uso'); // Se retorna un mensaje de error
 
-		const pass =
+		const pass = // Se crea una contraseña aleatoria
 			Math.random()
 				.toString(36)
 				.slice(2) +
@@ -190,175 +328,206 @@ const usersService = {
 				.toString(36)
 				.slice(2);
 		const newUser = {
+			// Se crea un nuevo usuario
 			//psychologist: user._id,
-			isInvited: true,
-			name: body.name,
-			lastName: body.lastName,
-			email: body.email,
-			password: bcrypt.hashSync(pass, 10),
-			role: 'user',
-			rut: body.rut,
-			phone: body.phone,
-			invitedBy: user.psychologist,
+			isInvited: true, // Se establece que el usuario es invitado
+			name: body.name, // Se establece el nombre del usuario
+			lastName: body.lastName, // Se establece el apellido del usuario
+			email: body.email, // Se establece el email del usuario
+			password: bcrypt.hashSync(pass, 10), // Se establece la contraseña del usuario y se encripta
+			role: 'user', // Se establece el rol del usuario
+			rut: body.rut, // Se establece el rut del usuario
+			phone: body.phone, // Se establece el teléfono del usuario
+			invitedBy: user.psychologist, // Se establece el psicólogo que invitó al usuario
 		};
-		const createdUser = await User.create(newUser);
-		const token = Auth.generateJwt(createdUser);
-		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
-		await mailService.sendVerifyEmail(createdUser, verifyurl);
+		const createdUser = await User.create(newUser); // Se crea el usuario
+		const token = Auth.generateJwt(createdUser); // Se genera el token
+		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`; // Se establece la url de verificación del email
+		await mailServiceAccount.sendVerifyEmail(createdUser, verifyurl); // Se envia el email de verificación
 
 		if (
-			process.env.API_URL.includes('hablaqui.cl') ||
-			process.env.DEBUG_ANALYTICS === 'true'
+			process.env.API_URL.includes('hablaqui.cl') || // Si la url de la api es de hablaqui.cl
+			process.env.DEBUG_ANALYTICS === 'true' // Si el modo debug está activado
 		) {
 			analytics.identify({
-				userId: createdUser._id.toString(),
+				// Se identifica al usuario
+				userId: createdUser._id.toString(), // Se establece el id del usuario
 				traits: {
-					name: user.name,
-					email: user.email,
-					type: user.role,
-					referencerId: user._id,
-					referencerName: `${user.name} ${user.lastName}`,
+					// Se establecen las características del usuario
+					name: user.name, // Se establece el nombre del usuario
+					email: user.email, // Se establece el email del usuario
+					type: user.role, // Se establece el rol del usuario
+					referencerId: user._id, // Se establece el id del usuario
+					referencerName: `${user.name} ${user.lastName}`, // Se establece el nombre del usuario
 				},
 			});
 			analytics.track({
-				userId: createdUser._id.toString(),
-				event: 'referral-user-signup',
+				// Se registra la acción
+				userId: createdUser._id.toString(), // Se establece el id del usuario
+				event: 'referral-user-signup', // Se establece la acción
 				properties: {
-					name: user.name,
-					email: user.email,
-					type: user.role,
-					referencerId: user.psychologist.toString(),
-					referencerName: `${user.name} ${user.lastName}`,
+					// Se establecen las propiedades
+					name: user.name, // Se establece el nombre del usuario
+					email: user.email, // Se establece el email del usuario
+					type: user.role, // Se establece el rol del usuario
+					referencerId: user.psychologist.toString(), // Se establece el id del psicólogo
+					referencerName: `${user.name} ${user.lastName}`, // Se establece el nombre del psicólogo
 				},
 			});
 		}
-		const roomId = require('crypto')
-			.createHash('md5')
-			.update(`${createdUser._id}${user._id}`)
-			.digest('hex');
+		const roomId = require('crypto') // Se crea una sala aleatoria
+			.createHash('md5') // Se establece el algoritmo de encriptación, en este caso MD5
+			.update(`${createdUser._id}${user._id}`) // .update se utiliza para encriptar
+			.digest('hex'); // Se obtiene el hash, digest se utiliza para obtener el hash en hexadecimal
 
 		const newPlan = {
-			title: 'Plan inicial',
-			period: 'Plan inicial',
-			totalPrice: 0,
-			sessionPrice: 0,
-			payment: 'success',
-			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
-			invitedByPsychologist: true,
-			usedCoupon: '',
-			totalSessions: 0,
-			remainingSessions: 0,
-			session: [],
+			// Se crea un nuevo plan
+			title: 'Plan inicial', // Se establece el título del plan
+			period: 'Plan inicial', // Se establece el periodo del plan
+			totalPrice: 0, // Se establece el precio total del plan
+			sessionPrice: 0, // Se establece el precio de la sesión
+			payment: 'success', // Se establece el estado del pago
+			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(), // Se establece la fecha de expiración del plan
+			invitedByPsychologist: true, // Se establece que el plan fue invitado por el psicólogo
+			usedCoupon: '', // Se establece el cupón utilizado
+			totalSessions: 0, // Se establece el total de sesiones
+			remainingSessions: 0, // Se establece el total de sesiones restantes
+			session: [], // Se establecen las sesiones
 		};
 
 		if (user.role === 'psychologist' && createdUser.role === 'user')
+			// Si el usuario es un psicólogo y el usuario creado es un usuario
 			await Sessions.create({
-				plan: [newPlan],
-				user: createdUser._id,
-				psychologist: user.psychologist,
-				roomsUrl: `${room}room/${roomId}`,
+				// Se crea una sesión
+				plan: [newPlan], // Se establecen los planes
+				user: createdUser._id, // Se establece el usuario
+				psychologist: user.psychologist, // Se establece el psicólogo
+				roomsUrl: `${room}room/${roomId}`, // Se establece la url de la sala
 			});
 
 		if (process.env.NODE_ENV === 'development')
+			// Si el entorno es de desarrollo
 			logInfo(
+				// Se registra la acción
 				actionInfo(
-					user.email,
-					`Usuario registrado ${newUser.email} ${pass}`
+					// Se establece la información de la acción
+					user.email, // Se establece el email del usuario
+					`Usuario registrado ${newUser.email} ${pass}` // Se establece el mensaje
 				)
 			);
 
 		// Sending email with user information
-		await mailService.sendGuestNewUser(user, newUser, pass);
+		await mailServiceAccount.sendGuestNewUser(user, newUser, pass); // Se envia el email con la información del usuario
 
 		return okResponse('Nuevo usuario creado', {
+			// Se retorna una respuesta de éxito
 			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
+	// Sugerencia: Se podría reducir un poco más el código de la función
 	async changePsychologist(sessionsId) {
+		// Función para cambiar el psicólogo de una sesión
 		const foundPlan = await Sessions.findById(sessionsId).populate(
-			'psychologist user'
+			// Se busca por id la sesión
+			'psychologist user' // Se establecen los campos a buscar
 		);
-		if (!foundPlan) return conflictResponse('No hay planes');
+		if (!foundPlan) return conflictResponse('No hay planes'); // Si no hay planes se retorna un error de conflicto
 		const planData = foundPlan.plan.filter(
-			plan =>
-				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
-		);
+			// Se filtran los planes
+			(
+				plan // Se establecen las condiciones
+			) =>
+				plan.payment === 'success' && // Se establece que el pago sea exitoso
+				moment().isBefore(moment(plan.expiration)) // Se establece que la fecha de expiración sea anterior a la actual, es decir, que el plan no haya expirado, esto se hace para evitar que se cambie el psicólogo de una sesión que ya haya expirado
+		); // moment se utiliza para obtener la fecha actual
 
-		if (!planData) return conflictResponse('No hay planes para cancelar');
+		if (!planData) return conflictResponse('No hay planes para cancelar'); // Si no hay planes para cancelar se retorna un error de conflicto
 
-		let sessionsData = [];
+		let sessionsData = []; // Se establece un arreglo de sesiones
 		planData.forEach(plan => {
+			// Se recorren los planes
 			const sessions = {
-				plan: plan._id,
-				remainingSessions: plan.remainingSessions,
-				price: plan.sessionPrice,
+				// Se establecen las sesiones
+				plan: plan._id, // Se establece el plan
+				remainingSessions: plan.remainingSessions, // Se establece el total de sesiones restantes
+				price: plan.sessionPrice, // Se establece el precio de la sesión
 				session: plan.session.filter(
-					session => session.status !== 'success'
+					// Se filtran las sesiones
+					session => session.status !== 'success' // Se establece que el estado de la sesión no sea exitosa
 				),
 			};
-			sessionsData.push(sessions);
+			sessionsData.push(sessions); // Se agrega la sesión al arreglo
 		});
-
-		let discount = 0;
-		let sessionsToDelete = [];
+		// Sugerencia: Declarar variables al inicio porfavor.
+		let discount = 0; // Se establece el descuento
+		let sessionsToDelete = []; // Se establece un arreglo de sesiones a eliminar
 		sessionsData.forEach(data => {
-			const remaining = data.session.length + data.remainingSessions;
-			discount += remaining * data.price;
-			sessionsToDelete.push(data.session);
+			// Se recorren las sesiones
+			const remaining = data.session.length + data.remainingSessions; // Se establece el total de sesiones restantes
+			discount += remaining * data.price; // Se establece el descuento
+			sessionsToDelete.push(data.session); // Se agrega la sesión al arreglo
 		});
-		console.log(discount);
-		console.log(sessionsToDelete);
+		console.log(discount); // Se imprime el descuento
+		console.log(sessionsToDelete); // Se imprime las sesiones a eliminar
 
 		planData.forEach(async plan => {
+			// Se recorren los planes
 			await Sessions.updateOne(
+				// Se actualiza la sesión
 				{
-					_id: sessionsId,
-					'plan._id': plan._id,
+					_id: sessionsId, // Se establece el id de la sesión
+					'plan._id': plan._id, // Se establece el id del plan
 				},
 				{
 					$set: {
-						'plan.$.payment': 'failed',
-						'plan.$.remainingSessions': 0,
+						// set se utiliza para actualizar un documento en la base de datos
+						'plan.$.payment': 'failed', // Se establece el pago como fallido
+						'plan.$.remainingSessions': 0, // Se establece el total de sesiones restantes
 					},
 				}
 			);
 			plan.session.forEach(async session => {
+				// Se recorren las sesiones
 				await Sessions.updateOne(
+					// Se actualiza la sesión
 					{
-						_id: sessionsId,
-						'plan._id': plan._id,
-						'plan.session._id': session._id,
+						_id: sessionsId, // Se establece el id de la sesión
+						'plan._id': plan._id, // Se establece el id del plan
+						'plan.session._id': session._id, // Se establece el id de la sesión
 					},
 					{
 						$pull: {
-							'plan.$.session': { _id: session._id },
+							// pull se utiliza para eliminar un documento en la base de datos
+							'plan.$.session': { _id: session._id }, // Se establece el id de la sesión
 						},
 					}
 				);
 			});
 		});
 
-		const now = new Date();
-		let expiration = now;
-		expiration.setDate(expiration.getDate() + 3);
+		const now = new Date(); // Se establece la fecha actual
+		let expiration = now; // Se establece la fecha de expiración
+		expiration.setDate(expiration.getDate() + 3); // Se establece la fecha de expiración a 3 días después de la fecha actual
 
 		const newCoupon = {
-			code: foundPlan.user.name + now.getTime(),
-			discount,
-			discountType: 'static',
+			// Se establece el nuevo cupón
+			code: foundPlan.user.name + now.getTime(), // Se establece el código del cupón
+			discount, // Se establece el descuento
+			discountType: 'static', // Se establece el tipo de descuento
 			restrictions: {
+				// Se establecen las restricciones del cupón
 				user: foundPlan.user._id,
 			},
-			expiration: expiration.toISOString(),
+			expiration: expiration.toISOString(), // Se establece la fecha de expiración
 		};
-		await mailService.sendChangePsycologistToUser(
-			foundPlan.user,
-			foundPlan.psychologist,
-			newCoupon
+		await mailServiceAccount.sendChangePsycologistToUser(
+			// Se envía el correo al usuario
+			foundPlan.user, // Se envía el plan al usuario
+			foundPlan.psychologist, // Se envía el psicólogo al usuario
+			newCoupon // Se envía el cupón al usuario
 		);
-		await Coupon.create(newCoupon);
-		return okResponse('Cupón hecho');
+		await Coupon.create(newCoupon); // Se crea el cupón
+		return okResponse('Cupón hecho'); // Se retorna un mensaje de éxito
 	},
 };
 
