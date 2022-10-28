@@ -18,7 +18,7 @@ const buscarChat = async (user, psy) => {
 	const chat = await Chat.findOne({
 		user: user,
 		psychologist: psy,
-	});
+	}).populate('user psychologist');
 	return chat;
 };
 
@@ -44,6 +44,7 @@ const getMessages = async (user, psy) => {
 
 const getChats = async user => {
 	const roles = ['psychologist', 'user'];
+	const idRoles = ['psychologist', '_id'];
 	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
 	let chat;
 	// Es para verificar que sea un rol valido
@@ -60,7 +61,7 @@ const getChats = async user => {
 					user.email
 				} ha conseguido sus chats`
 			);
-			chat = await Chat.find({ [roles[i]]: user._id }).populate(
+			chat = await Chat.find({ [roles[i]]: user[idRoles[i]] }).populate(
 				'user psychologist'
 			);
 		}
