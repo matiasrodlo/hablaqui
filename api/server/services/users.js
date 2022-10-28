@@ -9,7 +9,7 @@ import servicesAuth from './auth'; // auth.js contiene la lógica para la autent
 import { actionInfo } from '../utils/logger/infoMessages'; // infoMessages.js contiene los mensajes de información para el logging
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // functions.js contiene las funciones para las respuestas
 import { bucket } from '../config/bucket'; // bucket.js contiene la configuración de la conexión con el bucket de google cloud storage
-import mailService from './mail'; // mail.js contiene la lógica para el envío de correos electrónicos
+import mailServiceAccount from '../utils/functions/mails/accountsShares'; // mail.js contiene la lógica para el envío de correos electrónicos
 import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
 import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
 import moment from 'moment'; // moment.js es una librería para el manejo de fechas
@@ -217,7 +217,7 @@ const usersService = {
 		if (userRole === 'psychologist') {
 			// Si el rol del usuario es psicólogo
 			const userData = await User.findById(userID); // Se busca el usuario en la base de datos
-			await mailService.sendUploadPicture(userData); // Se sube la foto del usuario
+			await mailServiceAccount.sendUploadPicture(userData); // Se sube la foto del usuario
 			if (userData.psychologist) {
 				// Si el usuario tiene un psicólogo
 				psychologist = await Psychologist.findByIdAndUpdate(
@@ -343,7 +343,7 @@ const usersService = {
 		const createdUser = await User.create(newUser); // Se crea el usuario
 		const token = Auth.generateJwt(createdUser); // Se genera el token
 		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`; // Se establece la url de verificación del email
-		await mailService.sendVerifyEmail(createdUser, verifyurl); // Se envia el email de verificación
+		await mailServiceAccount.sendVerifyEmail(createdUser, verifyurl); // Se envia el email de verificación
 
 		if (
 			process.env.API_URL.includes('hablaqui.cl') || // Si la url de la api es de hablaqui.cl
@@ -417,7 +417,7 @@ const usersService = {
 			);
 
 		// Sending email with user information
-		await mailService.sendGuestNewUser(user, newUser, pass); // Se envia el email con la información del usuario
+		await mailServiceAccount.sendGuestNewUser(user, newUser, pass); // Se envia el email con la información del usuario
 
 		return okResponse('Nuevo usuario creado', {
 			// Se retorna una respuesta de éxito
@@ -520,7 +520,7 @@ const usersService = {
 			},
 			expiration: expiration.toISOString(), // Se establece la fecha de expiración
 		};
-		await mailService.sendChangePsycologistToUser(
+		await mailServiceAccount.sendChangePsycologistToUser(
 			// Se envía el correo al usuario
 			foundPlan.user, // Se envía el plan al usuario
 			foundPlan.psychologist, // Se envía el psicólogo al usuario

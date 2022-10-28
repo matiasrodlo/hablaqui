@@ -8,7 +8,7 @@ import { sign } from 'jsonwebtoken'; // el nombre lo dice todo
 import { logError, logInfo } from '../config/pino'; // pino.js es un logger para nodejs
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
-import mailService from '../services/mail'; // mail.js contiene la definición de los servicios de envío de correo
+import mailServiceAccount from '../utils/functions/mails/accountsShares';
 
 var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
 var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
@@ -136,7 +136,8 @@ const register = async payload => {
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
-	else await mailService.sendVerifyEmail(user, verifyurl);
+	// logInfo es una función que imprime en consola la información del usuario y la url de verificación
+	else await mailServiceAccount.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
 
 	// Segment identification
 	if (
@@ -165,7 +166,8 @@ const register = async payload => {
 	// Se envia el correo de bienvenida
 	logInfo(actionInfo(user.email, 'Sé registro exitosamente'));
 	if (user.role === 'user') {
-		await mailService.sendWelcomeNewUser(user);
+		// si el rol del usuario es user
+		await mailServiceAccount.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
 	}
 	return okResponse(`Bienvenido ${user.name}`, {
 		user: await generateUser(user),
@@ -203,7 +205,7 @@ const sendPasswordRecover = async email => {
 
 	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
 
-	mailService.sendPasswordRecovery(user, recoveryUrl);
+	mailServiceAccount.sendPasswordRecovery(user, recoveryUrl); // envía el correo de recuperación de contraseña
 
 	//Correo para recuperar contraseña
 	if (process.env.NODE_ENV === 'development')
@@ -234,9 +236,9 @@ const changeVerifiedStatus = async id => {
 
 	if (!user) return conflictResponse('Este usuario no existe');
 
-	user.isVerified = true;
-	await user.save();
-	if (user.role === 'user') await mailService.sendWelcomeNewUser(user);
+	user.isVerified = true; // cambia el estado de verificación del usuario a true
+	await user.save(); // guarda el usuario
+	if (user.role === 'user') await mailServiceAccount.sendWelcomeNewUser(user); // envía el correo de bienvenida al usuario
 
 	return okResponse('Cuenta verificada');
 };
