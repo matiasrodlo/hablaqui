@@ -257,49 +257,25 @@
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Tipo de plan</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto</span>
 						<span>{{ item.amount }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>% Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
-						class="
-							caption
-							font-weight-medium
-							secondary--text
-							d-flex
-							justify-space-between
-						"
+						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
 						<span>Monto final</span>
 						<span>{{ item.finalAmount }}</span>
@@ -428,7 +404,9 @@
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
 							{{ psychologist.paymentMethod.bank }}
 						</div>
-						<v-btn rounded color="primary" to="/" class="mt-4 px-6">Ir a inicio</v-btn>
+						<v-btn rounded color="primary" href="https://hablaqui.cl/" class="mt-4 px-6"
+							>Ir a inicio</v-btn
+						>
 					</v-card-text>
 				</template>
 			</v-card>
@@ -487,15 +465,15 @@ export default {
 			search: '',
 			header: [
 				{
-					text: 'Fecha de pago',
+					text: 'Fecha',
 					sortable: false,
 					value: 'datePayment',
 				},
-				{ text: 'Nombre', value: 'name', sortable: false },
+				{ text: 'Consultante', value: 'name', sortable: false },
 				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
 				{ text: 'Monto final', value: 'finalAmount', sortable: false },
-				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
+				{ text: 'Estado', value: 'transState', sortable: false },
 			],
 		};
 	},

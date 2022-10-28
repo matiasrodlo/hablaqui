@@ -17,6 +17,7 @@
 					]"
 					type="text"
 					:value="psychologist.models"
+					@input="limiterModels"
 					@change="e => setPsychologist({ ...psychologist, models: e })"
 				></v-select>
 			</v-sheet>
@@ -33,6 +34,7 @@
 					type="text"
 					:items="specialties"
 					:value="psychologist.specialties"
+					@input="limiterSpecialities"
 					@change="e => setPsychologist({ ...psychologist, specialties: e })"
 				></v-select>
 			</v-sheet>
@@ -140,7 +142,7 @@
 									v-model="selectedFormation.description"
 									filled
 									outlined
-									placeholder="P. ej: Psicología forense"
+									placeholder="Psicología clinica"
 									dense
 									hide-details
 									type="text"
@@ -152,7 +154,7 @@
 									v-model="selectedFormation.intitucion"
 									filled
 									outlined
-									placeholder="P. ej: universidad de Chile"
+									placeholder="Universidad de Chile"
 									dense
 									hide-details
 									type="text"
@@ -166,7 +168,7 @@
 									outlined
 									dense
 									type="text"
-									placeholder="P. ej: 2019"
+									placeholder="2016"
 									hide-details
 								></v-text-field>
 							</v-col>
@@ -177,7 +179,7 @@
 									filled
 									outlined
 									dense
-									placeholder="P. ej: 2021"
+									placeholder="2021"
 									hide-details
 									type="text"
 								></v-text-field>
@@ -275,7 +277,7 @@
 									v-model="selectedExperience.title"
 									filled
 									outlined
-									placeholder="P. ej: Psicólogo"
+									placeholder="Psicólogo Clinico"
 									dense
 									hide-details
 									type="text"
@@ -289,7 +291,7 @@
 									outlined
 									dense
 									hide-details
-									placeholder="P. ej: Hospital del Cáncer"
+									placeholder="Clinica Las Condes"
 									type="text"
 								></v-text-field>
 							</v-col>
@@ -298,7 +300,7 @@
 									v-model="selectedExperience.current"
 									dense
 									hide-details
-									label="Actualmente tengo este cargo"
+									label="Actualmente estoy trabajando aquí"
 									@change="
 										e => {
 											selectedExperience.end = '';
@@ -316,7 +318,7 @@
 									outlined
 									dense
 									hide-details
-									placeholder="P. ej: 2019"
+									placeholder="2019"
 									type="text"
 								></v-text-field>
 							</v-col>
@@ -329,7 +331,7 @@
 										outlined
 										dense
 										hide-details
-										placeholder="P. ej: 2021"
+										placeholder="2021"
 										type="text"
 									></v-text-field>
 								</v-col>
@@ -484,6 +486,12 @@ export default {
 					end: '',
 				};
 			this.dialogFormation = true;
+		},
+		limiterModels(e) {
+			if (e.length > 2) e.pop();
+		},
+		limiterSpecialities(e) {
+			if (e.length > 6) e.pop();
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',

@@ -1,12 +1,12 @@
 <template>
 	<v-container fluid style="max-width: 1200px">
 		<v-row align="center" justify="center">
-			<v-col cols="12">
-				<div class="text-h5 text-md-h4 font-weight-bold text-center">
-					Conoce a los especialistas
+			<v-col cols="12" style="padding: 30px">
+				<div class="text-h6 text-md-h5 font-weight-bold text-center">
+					Especialistas recomendados
 				</div>
-				<div class="text-center">
-					Hemos priorizado aquellos que encajan de mejor manera con tus preferencias.
+				<div class="text-center" style="padding: 10px">
+					Hemos seleccionado aquellos que mejor encajan con sus preferencias
 				</div>
 			</v-col>
 		</v-row>
@@ -18,6 +18,14 @@
 						:height="fullcard.includes(item._id) ? '100%' : '300px'"
 						class="item text-center mt-6"
 					>
+						<div style="position: absolute; top: 0; left: 0">
+							<div
+								style="background-color: #3093ff; font-size: 20px"
+								class="white--text rounded-br-xl rounded-tl-lg pl-4 pr-6"
+							>
+								{{ item.type }}
+							</div>
+						</div>
 						<v-row>
 							<v-col
 								cols="3"
@@ -123,6 +131,14 @@
 				<v-col :key="item._id" cols="12">
 					<v-card style="border-radius: 15px" class="item text-center mt-6">
 						<v-card-text>
+							<div style="position: absolute; top: 0; right: 0">
+								<div
+									style="background-color: #3093ff; font-size: 18px"
+									class="white--text rounded-bl-xl rounded-tr-lg pr-4 pl-6"
+								>
+									{{ item.type }}
+								</div>
+							</div>
 							<v-row>
 								<v-col cols="3" sm="2" class="d-flex align-start justify-center">
 									<div class="text-center">
@@ -211,14 +227,11 @@
 		</v-row>
 		<v-row>
 			<v-col cols="12" class="font-weight-regular mt-4 mb-10 text-center">
-				¿No estás satisfecho con estas opciones?
+				¿Desea cambiar sus preferencias?
 				<v-btn text class="primary--text px-0 mx-1" @click="resetMatch">
-					Buscar nuevamente.
+					Realizar evaluación
 				</v-btn>
-				<div>
-					No puede volver a elegir a estos terapeutas si solicita nuevos partidos. ¿No
-					estás satisfecho con estas opciones?
-				</div>
+				<div>Puede no encontrar nuevamente estos especialista si realiza la evaluación</div>
 			</v-col>
 		</v-row>
 	</v-container>

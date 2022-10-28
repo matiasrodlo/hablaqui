@@ -38,7 +38,7 @@
 				"
 				@click="dialog = true"
 			>
-				ver más
+				Ver más
 				<icon size="16px" :icon="mdiChevronRight" />
 			</span>
 			<v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">

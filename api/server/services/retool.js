@@ -1,4 +1,5 @@
 import Psychologist from '../models/psychologist';
+import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import moment from 'moment';
@@ -110,9 +111,36 @@ const getSessionsPayment = async (startDate, endDate) => {
 	return okResponse('psicologos obtenidos', { psyPayments: auxFlatSession });
 };
 
+const fixSpecialities = async () => {
+	let psychologists = await Psychologist.find();
+	let appointments = await Appointments.find();
+	appointments = JSON.stringify(appointments);
+	appointments = JSON.parse(appointments);
+	let arrayAppointments = [];
+
+	appointments.forEach(item => {
+		arrayAppointments.push(item.name);
+	});
+
+	for (let j = 0; j < psychologists.length; j++) {
+		const arraySpecialities = [];
+		for (let i = 0; i < psychologists[j].specialties.length; i++) {
+			const index = arrayAppointments.indexOf(
+				psychologists[j].specialties[i]
+			);
+			if (index !== -1)
+				arraySpecialities.push(psychologists[j].specialties[i]);
+		}
+		psychologists[j].specialties = arraySpecialities;
+		await psychologists[j].save();
+	}
+	return okResponse('app', { psychologists });
+};
+
 const retoolService = {
 	getNextSessions,
 	getSessionsPayment,
+	fixSpecialities,
 };
 
 export default Object.freeze(retoolService);

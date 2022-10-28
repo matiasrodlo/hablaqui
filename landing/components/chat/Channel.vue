@@ -71,13 +71,12 @@
 			>
 				<!-- burbujas asistente -->
 				<template v-if="selected.assistant">
-					<div class="text-center">hablaquí</div>
+					<div class="text-center">Hablaquí</div>
 					<div
 						class="mx-auto text-center headline font-weight-bold primary--text my-4"
 						style="max-width: 320px"
 					>
-						Bienvenido al chat confidencial
-						{{ $auth.$state.user.role === 'user' ? 'con el psicólogo' : '' }}
+						Mensajería ilimitada
 					</div>
 					<v-divider
 						class="mx-auto mb-10"
@@ -93,8 +92,8 @@
 						<p class="body-2">
 							{{
 								$auth.$state.user.role === 'user'
-									? '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es ayudarte a encontrar el profesional más adecuado para ti, para que pueda trabajar contigo en aquello que desees mejorar. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
-									: '¡Hola! Bienvenid@ a tu espacio personal en Hablaquí. Soy Habi, tu asesora virtual. Mi objetivo es atender tus consultas sobre el funcionamiento de la plataforma. Si bien actualmente estoy en desarrollo, próximamente podrás interactuar conmigo.'
+									? '¡Hola! Soy Habi, su asistente virtual. Mi objetivo es ayudarle con cualquier cosa que necesite. Próximamente podra interactuar conmigo.'
+									: '¡Hola! Soy Habi, su asistente virtual. Mi objetivo es ayudarle con cualquier cosa que necesite. Próximamente podra interactuar conmigo.'
 							}}
 						</p>
 					</div>
@@ -147,14 +146,12 @@
 			</v-card-text>
 			<!-- Zona para escribir -->
 			<v-card-text v-if="selected.assistant">
-				<div class="text-center body-2">
-					Hablaquí valora la privacidad. No compartiremos tus mensajes, ni tampoco ningún
-					dato personal.
-				</div>
+				<div class="text-center body-2">Valoramos y protegemos su privacidad</div>
+
 				<div class="primary--text body-2 text-center">
-					<nuxt-link target="_blank" to="/condiciones" style="text-decoration: none">
-						Ver terminos y condiciones de Chat
-					</nuxt-link>
+					<a href="https://hablaqui.cl/politicas-de-privacidad/" target="_blank"
+						>Políticas de Privacidad</a
+					>
 				</div>
 			</v-card-text>
 			<v-card-text v-else style="flex: 0" class="pb-0">

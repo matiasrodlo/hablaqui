@@ -18,7 +18,14 @@
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn rounded color="primary" class="px-16" to="/" depressed>Ir a casa </v-btn>
+					<v-btn
+						rounded
+						color="primary"
+						class="px-16"
+						href="https://hablaqui.cl/"
+						depressed
+						>Ir a casa
+					</v-btn>
 					<v-spacer></v-spacer>
 				</v-card-actions>
 			</v-card>
