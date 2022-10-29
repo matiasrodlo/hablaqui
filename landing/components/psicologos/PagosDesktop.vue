@@ -93,7 +93,11 @@
 						v-for="item in itemsPlan"
 						:key="item.id"
 						class="px-10 pointer d-flex justify-space-between align-center"
-						@click="planSelected = item"
+						@click="
+							planSelected = item;
+							PriceWithCoupon = null;
+							PriceSessionCoupon = null;
+						"
 					>
 						<div>
 							<div class="titleColor body-1 font-weight-bold">
@@ -168,13 +172,19 @@
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Valor por sesión</div>
 							<div v-if="planSelected" class="body-1">
-								{{ planSelected.valuePerSession }}
+								{{
+									PriceSessionCoupon
+										? '$' + PriceSessionCoupon
+										: planSelected.valuePerSession
+								}}
 							</div>
 						</div>
 						<v-divider></v-divider>
 						<div class="my-6 d-flex justify-space-between">
 							<div class="body-1 font-weight-bold">Total</div>
-							<div v-if="planSelected" class="body-1">${{ planSelected.price }}</div>
+							<div v-if="planSelected" class="body-1">
+								${{ PriceWithCoupon ? PriceWithCoupon : planSelected.price }}
+							</div>
 						</div>
 						<div>
 							<v-btn
@@ -251,6 +261,7 @@ export default {
 			mdiClockOutline,
 			mdiCalendarOutline,
 			PriceWithCoupon: null,
+			PriceSessionCoupon: null,
 			loading: false,
 			coupon: '',
 			itemsPlan: [
@@ -302,6 +313,7 @@ export default {
 				if (coupon.discountType === 'static') {
 					this.PriceWithCoupon = this.planSelected.price - coupon.discount;
 				}
+				this.PriceSessionCoupon = this.PriceWithCoupon / this.planSelected.cant;
 			} catch (error) {
 				this.PriceWithCoupon = null;
 				this.snackBar({ content: error.response.data.message, color: 'error' });
