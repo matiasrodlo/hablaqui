@@ -22,24 +22,24 @@
 
 -   #### pagos:
 
-    -   **historial.vue**: Detalles de las transacciones de un psicólogo
-    -   **index.vue**: Historial de pagos de un psicólogo
-    -   **success.vue**: Páginas de pagos satisfactorios. Por ahora es de planes satisfactorios de usuarios de rol "user"
+    -   **historial.vue**: Detalle transacciones (psy)
+    -   **index.vue**: Historial de pagos (psy)
+    -   **success.vue**: Pago exito (user)
 
 -   #### perfil:
 
-    -   **configuracion-personal.vue**: Edita el perfil (utilizado en móviles)
-    -   **datos-bancarios.vue**: Edita los datos bancarios del psicólogo (utilizado en móviles)
-    -   **experiencia-formacion.vue**: Edita la experiencia y formación de un psicólogo(utilizado en móviles)
+    -   **configuracion-personal.vue**: Información general (utilizado en móviles)
+    -   **datos-bancarios.vue**: Datos bancarios mobile (psy)
+    -   **experiencia-formacion.vue**: experiencia y formación mobile (psy)
     -   **horario.vue**: Edita el horario de un psicólogo (utilizado en móviles)
     -   **index.vue**: Vista principal de "Mi cuenta"
     -   **informacion-general.vue**: Edita los datos profesiones de un psicólogo (utilizado en móviles)
-    -   **services.vue**: Servicios de un psicólogo
+    -   **services.vue**: Servicios (psy)
 
--   **agenda.vue**: Vista con el calendario
--   **chat.vue**: Vista de chat
--   **panel.vue**: Panel del super usuario
--   **planes.vue**: Muestra los planes que puede contratar un psicólogo
+-   **agenda.vue**: Sesiones (calendario)
+-   **chat.vue**: Chat
+-   **panel.vue**: Panel de administrador
+-   **planes.vue**: Planes free/premium (psy)
 
 ---
 
@@ -50,7 +50,7 @@
 -   **\_slug.vue**: Renderiza las vistas dinámicas de psicólogos por ciudad
 -   **index.vue**: Muestra todos los psicólogos
 -   **pagos.vue**: Muestra la información detallada de un pago de un plan para un usuario rol "user"
--   **ubicaciones.vue**: Vista con las listas de todas las ciudades por regiones
+-   **ubicaciones.vue**: Listas de ciudades por regiones (Deprecado)
 
 ---
 
