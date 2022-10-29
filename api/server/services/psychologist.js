@@ -912,7 +912,9 @@ const getMountToPay = async idPsy => {
 		.filter(p => p.title !== 'Plan inicial' && p.payment === 'success');
 	let session = plans.flatMap(p => {
 		return {
-			sessions: p.session.filter(item => !item.paidToPsychologist),
+			sessions: p.session.filter(
+				item => !item.paidToPsychologist && item.status === 'success'
+			),
 			price: p.sessionPrice,
 			coupon: p.usedCoupon,
 		};
@@ -931,6 +933,7 @@ const getMountToPay = async idPsy => {
 		item.sessions.flatMap(s => {
 			return {
 				date: s.date,
+				_id: s._id,
 				status: s.status,
 				sessionNumber: s.sessionNumber,
 				price: item.price,

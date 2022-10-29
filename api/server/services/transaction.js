@@ -246,22 +246,28 @@ const getTransactions = async user => {
 	});
 };
 
-const generateTransaction = async (total, session) => {
-	const mapSession = session.map(s => s._id);
-	await mapSession.forEach(async id => {
+const generateTransaction = async (total, session, idPsy) => {
+	if (session.length === 0)
+		return conflictResponse('No hay sesiones para pagar');
+	await session.forEach(async s => {
 		await Sessions.updateOne(
 			{
-				'plan.session._id': id,
+				'plan.session._id': s._id,
 			},
 			{
 				$set: {
-					'plan.$[].session.$[session].paidToPsychologist': false,
+					'plan.$[].session.$[session].paidToPsychologist': true,
 				},
 			},
-			{ arrayFilters: [{ 'session._id': id }] }
+			{ arrayFilters: [{ 'session._id': s._id }] }
 		);
 	});
-	return okResponse('completado');
+	const transaction = await Transaction.create({
+		total,
+		sessions: session,
+		psychologist: idPsy,
+	});
+	return okResponse('Pago completado', { transaction });
 };
 
 const transactionService = {

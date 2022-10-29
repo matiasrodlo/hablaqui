@@ -157,7 +157,11 @@
 							<input class="px-2" :value="totalMount" type="text" :disabled="true" />
 						</v-col>
 						<v-col cols="4" class="py-2">
-							<v-btn small :disabled="!selected.isPsy" @click="setTransaction">
+							<v-btn
+								small
+								:disabled="!selected.isPsy || sessionsToPay.length === 0"
+								@click="setTransaction"
+							>
 								Pagar
 							</v-btn>
 						</v-col>
@@ -748,8 +752,9 @@
 
 <script>
 import axios from 'axios';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'Panel',
@@ -980,16 +985,25 @@ export default {
 			return avatar;
 		},
 		async setTransaction() {
-			await this.$axios('/transactions/generate', {
-				method: 'POST',
-				data: {
-					total: this.totalMount,
-					session: this.sessionsToPay,
-					idPsy: this.selected._id,
-				},
-			});
-			this.totalMount = 0;
+			try {
+				const { data } = await this.$axios('/transactions/generate', {
+					method: 'POST',
+					data: {
+						total: this.totalMount,
+						session: this.sessionsToPay,
+						idPsy: this.selected._id,
+					},
+				});
+				this.sessionsToPay = [];
+				this.totalMount = 0;
+				this.snackBar({ content: data.message, color: 'success' });
+			} catch (error) {
+				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+			}
 		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		...mapActions({
 			putApproveAvatar: 'Psychologist/approveAvatar',
 			checkUsername: 'Psychologist/checkUsername',

@@ -45,7 +45,8 @@ const transactionController = {
 			const { total, session, idPsy } = req.body;
 			const { data, code } = await transactionService.generateTransaction(
 				total,
-				session
+				session,
+				idPsy
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
