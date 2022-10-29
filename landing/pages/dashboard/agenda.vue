@@ -232,7 +232,7 @@
 									v-if="selectedEvent.statusPlan === 'pending'"
 									class="text--secondary body-2"
 								>
-									Pendiente por pago de consultante
+									Pendiente de pago
 								</v-card-actions>
 								<v-card-actions
 									v-if="selectedEvent.title === 'compromiso privado'"
@@ -587,9 +587,7 @@
 									<v-avatar color="#78909C" size="20">
 										<icon small :icon="mdiCheck" color="white" />
 									</v-avatar>
-									<span class="ml-1 caption">
-										Pendiente por pago del consultante
-									</span>
+									<span class="ml-1 caption"> Pendiente de pago </span>
 								</v-btn>
 							</v-col>
 						</v-row>

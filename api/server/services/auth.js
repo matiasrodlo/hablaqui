@@ -137,7 +137,7 @@ const register = async payload => {
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
 	// logInfo es una función que imprime en consola la información del usuario y la url de verificación
-	else await mailServiceAccount.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
+	// else await mailServiceAccount.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
 
 	// Segment identification
 	if (
