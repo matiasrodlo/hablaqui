@@ -150,6 +150,17 @@
 								Verificar
 							</v-btn>
 						</v-col>
+						<!-- Monto -->
+						<v-col cols="12">Monto a pagar</v-col>
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Monto</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input class="px-2" :value="totalMount" type="text" :disabled="true" />
+						</v-col>
+						<v-col cols="4" class="py-2">
+							<v-btn small :disabled="!selected.isPsy" @click="setTransaction">
+								Pagar
+							</v-btn>
+						</v-col>
 						<!-- Codigo -->
 						<v-col cols="12">Codigo</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -766,6 +777,8 @@ export default {
 			loading: true,
 			available: false,
 			banks: [],
+			totalMount: 0,
+			sessionsToPay: [],
 		};
 	},
 	computed: {
@@ -901,8 +914,15 @@ export default {
 		async checkusername() {
 			this.available = await this.checkUsername(this.selected.username);
 		},
-		setSelected(item, isPsy) {
+		async setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
+			if (isPsy) {
+				const { total, session } = await this.$axios.$get(
+					'/psychologist/pay-mount/' + item._id
+				);
+				this.totalMount = total;
+				this.sessionsToPay = session;
+			}
 			this.dialog = true;
 		},
 		newExperience() {
@@ -958,6 +978,17 @@ export default {
 				this.selected.avatarThumbnail ? this.selected.avatarThumbnail : ''
 			);
 			return avatar;
+		},
+		async setTransaction() {
+			await this.$axios('/transactions/generate', {
+				method: 'POST',
+				data: {
+					total: this.totalMount,
+					session: this.sessionsToPay,
+					idPsy: this.selected._id,
+				},
+			});
+			this.totalMount = 0;
 		},
 		...mapActions({
 			putApproveAvatar: 'Psychologist/approveAvatar',

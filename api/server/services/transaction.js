@@ -246,10 +246,29 @@ const getTransactions = async user => {
 	});
 };
 
+const generateTransaction = async (total, session) => {
+	const mapSession = session.map(s => s._id);
+	await mapSession.forEach(async id => {
+		await Sessions.updateOne(
+			{
+				'plan.session._id': id,
+			},
+			{
+				$set: {
+					'plan.$[].session.$[session].paidToPsychologist': false,
+				},
+			},
+			{ arrayFilters: [{ 'session._id': id }] }
+		);
+	});
+	return okResponse('completado');
+};
+
 const transactionService = {
 	completePaymentsRequest,
 	createPaymentsRequest,
 	getTransactions,
+	generateTransaction,
 };
 
 export default Object.freeze(transactionService);
