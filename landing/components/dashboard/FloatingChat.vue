@@ -113,6 +113,7 @@ export default {
 			selected: null,
 			loadingChat: false,
 			channel: null,
+			plan: null,
 		};
 	},
 	computed: {
@@ -181,7 +182,7 @@ export default {
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			floatingChat: 'Chat/floatingChat',
 			allPsychologists: 'Psychologist/psychologists',
 			resumeView: 'Psychologist/resumeView',
@@ -200,6 +201,10 @@ export default {
 				}
 			}
 		},
+	},
+	beforeMount() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	created() {
 		moment.locale('es');
