@@ -46,7 +46,6 @@ export default {
 					route: `/${psychologist.username}`,
 					payload: psychologist,
 				}));
-
 			// generate routes comunas
 			/* const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({

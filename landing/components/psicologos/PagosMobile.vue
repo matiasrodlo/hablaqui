@@ -231,7 +231,7 @@ export default {
 			itemsPlan: [
 				{
 					id: 1,
-					title: 'Semanal',
+					title: 'Pago semanal',
 					pricePerSession: '$50.000 / por sesión',
 					valuePerSession: '$50.000',
 					priceTotal: '',
@@ -240,7 +240,7 @@ export default {
 				},
 				{
 					id: 2,
-					title: 'Mensual',
+					title: 'Pago mensual',
 					pricePerSession: '$45.000 / por sesión',
 					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
@@ -249,7 +249,7 @@ export default {
 				},
 				{
 					id: 3,
-					title: 'Trimestral',
+					title: 'Pago trimestral',
 					pricePerSession: '$40.000 / por sesión',
 					valuePerSession: '$40.000',
 					priceTotal: '($480000)',
