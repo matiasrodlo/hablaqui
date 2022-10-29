@@ -234,7 +234,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i <= 5"
+															v-if="i <= 7"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -255,7 +255,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i >= 10"
+															v-if="i >= 8"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -964,7 +964,7 @@ export default {
 				gender,
 				themes: this.themes,
 				schedule: this.schedule,
-				model: '',
+				model: this.models,
 				price: this.price,
 			};
 			this.matchPsi(payload).then(response => {

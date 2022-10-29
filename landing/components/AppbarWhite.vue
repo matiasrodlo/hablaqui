@@ -406,12 +406,14 @@ export default {
 				{
 					name: 'Cambio de sesión',
 					link: { name: 'dashboard-reschedule-session' },
+					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 				{
 					name: 'Cambio de psicologo',
 					link: { name: 'dashboard-change-psy' },
+					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},

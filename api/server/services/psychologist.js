@@ -1,14 +1,14 @@
 'use strict';
 
-import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
+import { logInfo } from '../config/pino';
 import sessionsFunctions from './sessions';
-import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction'; // Funcion para obtener todas las sesiones de un psicologo
-import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologos para mongodb
-import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de recruitment para mongodb
-import User from '../models/user'; // user.js contiene la definición del modelo de usuarios para mongodb
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // Funciones para peticiones 200 y 400
-import moment from 'moment'; // // moment.js es una librería para el manejo de fechas
-import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
+import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
+import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
+import User from '../models/user';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import moment from 'moment';
+import Sessions from '../models/sessions';
 import {
 	bucket,
 	getPublicUrlAvatar,
@@ -296,7 +296,7 @@ const match = async body => {
 		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes },
+			specialties: { $in: payload.themes }, // Filtra por especialidades
 		});
 	} else {
 		// Si no es transgenero
@@ -381,7 +381,6 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	await sessions.save();
 	return okResponse('Hora actualizada', { sessions });
 };
-
 const updatePlan = async (psychologistId, planInfo) => {
 	// Funcion para actualizar el plan de un psicologo, se busca el psicologo por su id y se actualiza
 	const updatedPsychologist = await Psychologist.findByIdAndUpdate(

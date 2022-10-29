@@ -1,5 +1,6 @@
 import axios from 'axios';
 import pkg from './package.json';
+
 const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
