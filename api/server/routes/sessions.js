@@ -29,13 +29,12 @@ const sessionsRouter = Router();
  * @description Devuelve todas las sesiones del psicólogo
  * @method GET
  * @route /api/v1/psychologists/sessions/:idPsychologist/:idUser
- * @param {String} params.idPsychologist - Id pertenciente al psicólogo
- * @param {String} params.idUser - Id perteneciente al usuario/consultante
+ * @param {String} params.idUser - Id perteneciente al usuario/consultante o psicologo según el caso
  * @returns Objeto con la información de todas las sesiones del usuario
  * @access authenticated
  */
 sessionsRouter.get(
-	'/psychologists/sessions/:idPsychologist/:idUser',
+	'/psychologists/sessions/:idUser',
 	[passport.authenticate('jwt', { session: true })],
 	sessionsController.getSessions
 );

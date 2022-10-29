@@ -369,6 +369,7 @@ export default {
 			selected: null,
 			channel: null,
 			initLoading: true,
+			plan: null,
 		};
 	},
 	computed: {
@@ -480,7 +481,7 @@ export default {
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
 			clients: 'Psychologist/clients',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
 	},
@@ -490,6 +491,10 @@ export default {
 				this.dialog = true;
 			} else this.dialog = false;
 		},
+	},
+	beforeMount() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	created() {
 		this.selected = {

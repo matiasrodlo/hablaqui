@@ -5,12 +5,11 @@ import { errorCallback } from '../utils/functions/errorCallback';
 const sessionsController = {
 	async getSessions(req, res) {
 		try {
-			const { idUser, idPsychologist } = req.params;
+			const { idUser } = req.params;
 			const { user } = req;
 			const { data, code } = await sessionsService.getSessions(
 				user,
-				idUser,
-				idPsychologist
+				idUser
 			);
 			return restResponse(data, code, res);
 		} catch (error) {
