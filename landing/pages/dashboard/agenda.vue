@@ -44,7 +44,7 @@
 					}
 				"
 			/>
-			<appbar class="hidden-sm-and-down" title="Mi sesiones" />
+			<appbar class="hidden-sm-and-down" title="Sesiones" />
 			<v-row justify="center" style="height: calc(100vh - 110px)">
 				<v-col
 					cols="12"
@@ -292,7 +292,7 @@
 										<icon :icon="mdiChevronLeft" x-large color="white" />
 									</v-btn>
 									<div style="flex: 1" class="body-1 font-weight-bold pt-2">
-										{{ dialogNewUser ? 'Consultante nuevo' : 'Agendar' }}
+										{{ dialogNewUser ? 'Nuevo Consultante' : 'Agendar' }}
 									</div>
 									<v-btn style="flex: 0" icon @click="closeDialog">
 										<icon :icon="mdiClose" color="white" />
@@ -1104,7 +1104,7 @@ export default {
 		},
 		setSubtitle(date) {
 			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
-				.add(60, 'minutes')
+				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
 		closeDialog() {
