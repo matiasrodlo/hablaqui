@@ -69,9 +69,9 @@
 					</v-list-item-title>
 					<v-list-item-subtitle>
 						<div class="body-1">Bienvenido a Hablaquí</div>
-						<small v-if="!$auth.$state.user.isVerified" class="error--text">
+						<!-- <small v-if="!$auth.$state.user.isVerified" class="error--text">
 							Verifica tu correo electronico
-						</small>
+						</small> -->
 					</v-list-item-subtitle>
 				</v-list-item-content>
 				<client-only>
@@ -132,7 +132,7 @@
 			<v-tab class="primary--text text-capitalize"> Información General </v-tab>
 
 			<v-tab v-if="$auth.$state.user" class="primary--text text-capitalize">
-				{{ $auth.$state.user.role == 'user' ? 'Suscripciones' : 'Horario' }}
+				{{ $auth.$state.user.role == 'user' ? 'Subscripciones' : 'Horario' }}
 			</v-tab>
 
 			<v-tab class="primary--text text-capitalize">
