@@ -44,4 +44,9 @@ transactionRouter.get(
 	transactionController.getTransactions
 );
 
+transactionRouter.post(
+	'/transactions/generate',
+	[passport.authenticate('jwt', { session: true })],
+	transactionController.generateTransaction
+);
 export default transactionRouter;

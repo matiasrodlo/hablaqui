@@ -8,6 +8,7 @@ import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import moment from 'moment';
+import Coupon from '../models/coupons';
 import Sessions from '../models/sessions';
 import {
 	bucket,
@@ -902,6 +903,47 @@ const changeToInmediateAttention = async psy => {
 		psychologist,
 	});
 };
+
+const getMountToPay = async idPsy => {
+	let sessions = await Sessions.find({ psychologist: idPsy });
+	sessions = sessions.filter(s => !!s.user);
+	const plans = sessions
+		.flatMap(s => s.plan)
+		.filter(p => p.title !== 'Plan inicial' && p.payment === 'success');
+	let session = plans.flatMap(p => {
+		return {
+			sessions: p.session.filter(
+				item => !item.paidToPsychologist && item.status === 'success'
+			),
+			price: p.sessionPrice,
+			coupon: p.usedCoupon,
+		};
+	});
+	let total = 0;
+	for (let i = 0; i < session.length; i++) {
+		if (session[i].coupon) {
+			const coupon = await Coupon.findOne({ code: session[i].coupon });
+			if (coupon.discountType === 'percentage')
+				session[i].price = session[i].price / (coupon.discount / 100);
+			else session[i].price += coupon.discount;
+		}
+		total += session[i].price * session[i].sessions.length;
+	}
+	session = session.flatMap(item =>
+		item.sessions.flatMap(s => {
+			return {
+				date: s.date,
+				_id: s._id,
+				status: s.status,
+				sessionNumber: s.sessionNumber,
+				price: item.price,
+				coupon: item.coupon,
+			};
+		})
+	);
+	return okResponse('Planes', { total, session });
+};
+
 /*
 const getAllSessionsInmediateAttention = async () => {
 	let psychologist = await Psychologist.find({}).select(
@@ -971,5 +1013,6 @@ const psychologistsService = {
 	uploadProfilePicture,
 	usernameAvailable,
 	changeToInmediateAttention,
+	getMountToPay,
 };
 export default Object.freeze(psychologistsService);

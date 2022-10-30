@@ -40,6 +40,19 @@ const transactionController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async generateTransaction(req, res) {
+		try {
+			const { total, session, idPsy } = req.body;
+			const { data, code } = await transactionService.generateTransaction(
+				total,
+				session,
+				idPsy
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(transactionController);
