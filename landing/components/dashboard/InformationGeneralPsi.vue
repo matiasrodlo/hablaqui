@@ -75,7 +75,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-
+/**
+ * Componente: Actualiza informacion general del psicologo
+ * code, linkedin, professionalDescription, personalDescription
+ */
 export default {
 	props: {
 		psychologist: {
@@ -93,6 +96,9 @@ export default {
 		};
 	},
 	methods: {
+		/**
+		 * Actualiza un del psicologo y lo establece de vuelta ya actualizado
+		 */
 		async onSubmite() {
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
