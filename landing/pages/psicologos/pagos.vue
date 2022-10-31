@@ -101,11 +101,9 @@ export default {
 			this.plan.psychologist === this.psychologist._id &&
 			this.plan.remainingSessions > 0;
 	},
-	beforeMount() {
+	async mounted() {
 		this.plan =
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-	},
-	async mounted() {
 		window.scrollTo(0, 0);
 		if (this.hasSessions) {
 			await this.newSession();

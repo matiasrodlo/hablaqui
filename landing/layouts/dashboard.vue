@@ -723,14 +723,12 @@ export default {
 			}
 		},
 	},
-	beforeMount() {
-		this.plan =
-			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-	},
 	async mounted() {
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 		if (this.$auth.$state.user.role === 'user') {
