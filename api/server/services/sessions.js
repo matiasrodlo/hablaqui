@@ -212,8 +212,8 @@ const createPlan = async ({ payload }) => {
 
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
-		expirationDate = moment()
-			.add({ weeks: 2 })
+		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
+			.add(50, 'minutes')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
