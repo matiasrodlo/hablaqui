@@ -257,25 +257,49 @@
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<div
-						class="caption font-weight-medium secondary--text d-flex justify-space-between"
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
 					>
 						<span>Tipo de plan</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
-						class="caption font-weight-medium secondary--text d-flex justify-space-between"
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
 					>
 						<span>Monto</span>
 						<span>{{ item.amount }}</span>
 					</div>
 					<div
-						class="caption font-weight-medium secondary--text d-flex justify-space-between"
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
 					>
 						<span>% Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
-						class="caption font-weight-medium secondary--text d-flex justify-space-between"
+						class="
+							caption
+							font-weight-medium
+							secondary--text
+							d-flex
+							justify-space-between
+						"
 					>
 						<span>Monto final</span>
 						<span>{{ item.finalAmount }}</span>
@@ -478,14 +502,26 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Dia de la fecha de retiro
+		 * @returns un string con la fecha en que puede retirar
+		 */
 		dayWithdraw() {
 			const day = moment().add('7', 'days');
 			return moment(day).format('DD/MM/YYYY');
 		},
+		/**
+		 * Ultima transaccion realizada
+		 * @returns la ultima transaccion
+		 */
 		lastTransaction() {
 			if (!this.transactions || !this.transactions.transactions.length) return null;
 			return this.transactions.transactions[this.transactions.transactions.length - 1];
 		},
+		/**
+		 * Lista de pagos
+		 * @returns arrays con los pagos
+		 */
 		payments: {
 			get() {
 				let result = this.items
@@ -507,20 +543,38 @@ export default {
 				return item;
 			},
 		},
+		/**
+		 * Formato a fecha
+		 * @returns retorna la fecha formateada
+		 */
 		formatedFindByDate() {
 			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
 		},
 	},
 	created() {
+		// establecemos moment a español
 		moment.locale('es');
 	},
 	methods: {
+		/**
+		 * Formato a fecha
+		 * @param {string} item fecha a formatear
+		 * @returns retorna la fecha formateada
+		 */
 		formatDate(item) {
 			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
 		},
+		/**
+		 * Formato a fecha
+		 * @param {string} item fecha a formatear
+		 * @returns retorna la fecha formateada
+		 */
 		formatDateMoment(item) {
 			return moment(item).format('DD MMMM, YYYY');
 		},
+		/**
+		 * Hace la peticion de pago y refresca los datos luego
+		 */
 		async submitPayment() {
 			this.loadingPayment = true;
 			await this.paymentRequest();
