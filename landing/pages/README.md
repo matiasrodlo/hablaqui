@@ -17,8 +17,8 @@
 
 -   #### consultantes:
 
-    -   **consultante-seleccionado.vue**: Muestra la información del consultante seleccionado
-    -   **index.vue**: Muestra una tabla con la información de todos los consultante (dashboard/consultantes)
+    -   **index.vue**: Agenda con consultantes (psy)
+    -   **consultante-seleccionado.vue**: Información de consultante (psy)
 
 -   #### pagos:
 
@@ -28,16 +28,16 @@
 
 -   #### perfil:
 
-    -   **configuracion-personal.vue**: Información general (utilizado en móviles)
-    -   **datos-bancarios.vue**: Datos bancarios mobile (psy)
-    -   **experiencia-formacion.vue**: experiencia y formación mobile (psy)
-    -   **horario.vue**: Edita el horario de un psicólogo (utilizado en móviles)
-    -   **index.vue**: Vista principal de "Mi cuenta"
-    -   **informacion-general.vue**: Edita los datos profesiones de un psicólogo (utilizado en móviles)
+    -   **index.vue**: Mi cuenta (user/psy)
+    -   **configuracion-personal.vue**: Información general resposive (user/Psy)
+    -   **datos-bancarios.vue**: Datos bancarios responsive (psy)
+    -   **experiencia-formacion.vue**: Experiencia y formación responsive (psy)
+    -   **horario.vue**: Disponibilidad resposive (psy)
+    -   **informacion-general.vue**: Información profesional resposive (psy)
     -   **services.vue**: Servicios (psy)
 
 -   **agenda.vue**: Sesiones (calendario)
--   **chat.vue**: Chat
+-   **chat.vue**: Chat (user/psy)
 -   **panel.vue**: Panel de administrador
 -   **planes.vue**: Planes free/premium (psy)
 
@@ -47,10 +47,10 @@
 
 ---
 
--   **\_slug.vue**: Renderiza las vistas dinámicas de psicólogos por ciudad
--   **index.vue**: Muestra todos los psicólogos
--   **pagos.vue**: Muestra la información detallada de un pago de un plan para un usuario rol "user"
--   **ubicaciones.vue**: Listas de ciudades por regiones (Deprecado)
+-   **\_slug.vue**: Renderiza vistas dinámicas por localidad
+-   **index.vue**: Marketplace (Listado con psy)
+-   **pagos.vue**: Muestra la información detallada de un pago de un plan para un usuario rol "user" (?)
+-   **ubicaciones.vue**: Listas de ciudades por regiones (D)
 
 ---
 
@@ -58,19 +58,22 @@
 
 ---
 
--   **\_slug.vue**: Página dinámica que renderiza el perfil del psicólogo. El parámetro "\_slug" es el "username" del psicólogo
--   **auth.vue**: Vista de autenticación
--   **condiciones.vue**: Términos y condiciones
--   **evaluacion.vue**: Matchmaking de psicólogo en según preferencias del usuario
--   **faq.vue**: Preguntas frecuentes
--   **index.vue**: Vista principal
--   **nuevo-psicologo.vue**: Para crear un nuevo psicólogo (sin utilizar)
--   **para-especialistas.vue**: Vista que crea un usuario con rol "psychologist" (usado actualmente)
--   **password-reset.vue**: Cambia de contraseña según enlace enviado por email
--   **politicas.vue**: Vista con las políticas de Hablaquí
--   **postulaciones.vue**: Vista de postulaciones de psicólogos
--   **review.vue**: Vista que permite la evaluación de un psicólogo
--   **terminos-y-condiciones-especilistas.vue**: Términos y condiciones especilistas
--   **verificacion-email.vue**: Vista que verifica el correo
+-   **\_slug.vue**: Username de psy. Renderización perfil.
+-   **auth.vue**: Registro/login
+-   **evaluacion.vue**: Matchmaking
+
+-   **password-reset.vue**: Cambio de contraseña vía email (user/psy)
+
+-   **postulaciones.vue**: Postulación psy
+-   **review.vue**: Evaluación de un psy
+-   **verificacion-email.vue**: Verificación de cuenta
+
+-   **politicas.vue**: Politicas de privacidad (D)
+-   **faq.vue**: Preguntas frecuentes (D)
+-   **index.vue**: Landing principal (D)
+-   **condiciones.vue**: Términos y condiciones (D)
+-   **para-especialistas.vue**: Landing de psy (D)
+-   **terminos-y-condiciones-especilistas.vue**: Términos y condiciones psy (D)
+-   **nuevo-psicologo.vue**: Para crear un nuevo psicólogo (D)
 
 ---
