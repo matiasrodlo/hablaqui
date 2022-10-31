@@ -492,10 +492,6 @@ export default {
 			} else this.dialog = false;
 		},
 	},
-	beforeMount() {
-		this.plan =
-			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-	},
 	created() {
 		this.selected = {
 			name: 'Habi',
@@ -523,6 +519,8 @@ export default {
 	},
 	methods: {
 		async initFetch() {
+			this.plan =
+				this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 			moment.locale('es');
 			await this.getPsychologists();
 			if (this.$auth.$state.user.role === 'user') {

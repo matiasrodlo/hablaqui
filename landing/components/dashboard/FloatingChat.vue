@@ -202,10 +202,6 @@ export default {
 			}
 		},
 	},
-	beforeMount() {
-		this.plan =
-			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-	},
 	created() {
 		moment.locale('es');
 		this.socket = this.$nuxtSocket({
@@ -224,6 +220,8 @@ export default {
 		});
 	},
 	async mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (this.resumeView) {
 			if (this.$route.params.id) {
 				const psychologist = this.psychologists.find(

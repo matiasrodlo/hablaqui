@@ -688,9 +688,7 @@
 								<v-text-field
 									readonly
 									disabled
-									:value="`Sesión ${plan.session.length + 1}/${
-										plan.totalSessions
-									}`"
+									:value="`Sesión ${appoinmentSessions + 1}/${totalSessions}`"
 									hide-details="auto"
 									type="text"
 									class="mt-2"
@@ -936,18 +934,16 @@ export default {
 		this.dialogAppointment = this.$route.query.dialog ? !!this.$route.query.dialog : false;
 		this.idClient = this.$route.query.client;
 	},
-	beforeMount() {
-		if (this.plans) {
-			this.plan = this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-			this.totalSessions = this.plans.totalSessions;
-			this.appoinmentSessions = this.plans.appoinmentSessions;
-		}
-	},
 	async mounted() {
 		await this.initFetch();
 	},
 	methods: {
 		async initFetch() {
+			if (this.plans) {
+				this.plan = this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
+				this.totalSessions = this.plans.totalSessions;
+				this.appoinmentSessions = this.plans.appoinmentSessions;
+			}
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&
 				!this.$auth.$state.user.psychologist

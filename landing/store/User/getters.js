@@ -31,7 +31,6 @@ export default {
 		const filterPlans = plans.filter(
 			item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
 		);
-
 		const totalSessions = filterPlans.reduce(
 			(sum, value) =>
 				typeof value.totalSessions === 'number' ? sum + value.totalSessions : sum,
@@ -46,6 +45,10 @@ export default {
 		let sortedPlans = filterPlans
 			.filter(item => item.remainingSessions !== 0)
 			.sort((a, b) => a.diff - b.diff);
+
+		if (!sortedPlans.length && filterPlans.length > 0)
+			sortedPlans = [filterPlans.sort((a, b) => a.diff - b.diff).pop()];
+
 		// retornamos el plan success y sin expirar
 		// retornamos el ultimo plan succes y que expiro
 		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === min)];
