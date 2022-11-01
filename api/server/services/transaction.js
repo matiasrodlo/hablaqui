@@ -276,18 +276,27 @@ const getAllTransactions = async user => {
 
 	let transactions = await Transaction.find().populate('psychologist');
 
-	transactions = transactions.map(t => {
-		return {
-			createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
-			session: t.sessions,
-			total: t.total,
-			name: t.psychologist.name,
-			lastName: t.psychologist.lastName,
-			username: t.psychologist.username,
-			email: t.psychologist.email,
-			psyId: t.psychologist._id,
-		};
-	});
+	transactions = transactions
+		.map(t => {
+			return {
+				createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				session: t.sessions.map(s => {
+					return {
+						...s,
+						date: moment(s.date, 'MM/DD/YYYY HH:mm').format(
+							'DD/MM/YYYY HH:mm'
+						),
+					};
+				}),
+				total: t.total,
+				name: t.psychologist.name,
+				lastName: t.psychologist.lastName,
+				username: t.psychologist.username,
+				email: t.psychologist.email,
+				psyId: t.psychologist._id,
+			};
+		})
+		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 	return okResponse('Todas las transacciones', { transactions });
 };
 

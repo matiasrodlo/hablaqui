@@ -47,7 +47,7 @@
 						:headers="headersTransactions"
 						:items="transactions"
 						sort-by="createdAt"
-						:sort-desc="true"
+						:sort-desc="false"
 						class="elevation-1"
 					>
 						<template #top>

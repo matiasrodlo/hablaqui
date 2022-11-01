@@ -178,7 +178,9 @@ const getMountToPay = async user => {
 		session = session.flatMap(item =>
 			item.sessions.flatMap(s => {
 				return {
-					date: s.date,
+					date: moment(s.date, 'MM/DD/YYYY HH:mm').format(
+						'DD/MM/YYYY HH:mm'
+					),
 					_id: s._id,
 					status: s.status,
 					sessionNumber: s.sessionNumber,
