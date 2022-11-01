@@ -1,6 +1,7 @@
 import Psychologist from '../models/psychologist';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Coupon from '../models/coupons';
 import Sessions from '../models/sessions';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -137,10 +138,75 @@ const fixSpecialities = async () => {
 	return okResponse('app', { psychologists });
 };
 
+const getMountToPay = async user => {
+	if (user.role !== 'superuser')
+		return conflictResponse('No puedes emplear esta acción');
+	const psychologists = await Psychologist.find();
+	let amounts = [];
+
+	for (let psy in psychologists) {
+		let sessions = await Sessions.find({
+			psychologist: psychologists[psy]._id,
+		});
+		sessions = sessions.filter(s => !!s.user);
+		const plans = sessions
+			.flatMap(s => s.plan)
+			.filter(p => p.title !== 'Plan inicial' && p.payment === 'success');
+		let session = plans.flatMap(p => {
+			return {
+				sessions: p.session.filter(
+					item =>
+						!item.paidToPsychologist && item.status === 'success'
+				),
+				price: p.sessionPrice,
+				coupon: p.usedCoupon,
+			};
+		});
+		let total = 0;
+		for (let i = 0; i < session.length; i++) {
+			if (session[i].coupon) {
+				const coupon = await Coupon.findOne({
+					code: session[i].coupon,
+				});
+				if (coupon.discountType === 'percentage')
+					session[i].price =
+						session[i].price / (coupon.discount / 100);
+				else session[i].price += coupon.discount;
+			}
+			total += session[i].price * session[i].sessions.length;
+		}
+		session = session.flatMap(item =>
+			item.sessions.flatMap(s => {
+				return {
+					date: s.date,
+					_id: s._id,
+					status: s.status,
+					sessionNumber: s.sessionNumber,
+					price: item.price,
+					coupon: item.coupon,
+				};
+			})
+		);
+		amounts.push({
+			_id: psychologists[psy]._id,
+			name: psychologists[psy].name,
+			lastName: psychologists[psy].lastName,
+			email: psychologists[psy].email,
+			username: psychologists[psy].username,
+			total,
+			session,
+		});
+	}
+	console.log(amounts);
+
+	return okResponse('Planes', { amounts });
+};
+
 const retoolService = {
 	getNextSessions,
 	getSessionsPayment,
 	fixSpecialities,
+	getMountToPay,
 };
 
 export default Object.freeze(retoolService);
