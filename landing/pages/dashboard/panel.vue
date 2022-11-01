@@ -921,13 +921,6 @@ export default {
 		},
 		async setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
-			if (isPsy) {
-				const { total, session } = await this.$axios.$get(
-					'/psychologist/pay-mount/' + item._id
-				);
-				this.totalMount = total;
-				this.sessionsToPay = session;
-			}
 			this.dialog = true;
 		},
 		newExperience() {
@@ -983,23 +976,6 @@ export default {
 				this.selected.avatarThumbnail ? this.selected.avatarThumbnail : ''
 			);
 			return avatar;
-		},
-		async setTransaction() {
-			try {
-				const { data } = await this.$axios('/transactions/generate', {
-					method: 'POST',
-					data: {
-						total: this.totalMount,
-						session: this.sessionsToPay,
-						idPsy: this.selected._id,
-					},
-				});
-				this.sessionsToPay = [];
-				this.totalMount = 0;
-				this.snackBar({ content: data.message, color: 'success' });
-			} catch (error) {
-				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
-			}
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',

@@ -353,10 +353,4 @@ psychologistsRouter.post(
 	psychologistsController.changeToInmediateAttention
 );
 
-psychologistsRouter.get(
-	'/psychologist/pay-mount/:idPsy',
-	//[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getMountToPay
-);
-
 export default psychologistsRouter;
