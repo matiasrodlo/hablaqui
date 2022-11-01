@@ -2,7 +2,6 @@ import http from 'http';
 import { logger } from './config/pino';
 import { Server as webSocketServer } from 'socket.io';
 import { sendMessage } from './services/chat';
-import { landing_url } from './config/dotenv';
 const app = require('./app');
 const server = http.createServer(app);
 
@@ -14,7 +13,7 @@ server.listen(process.env.PORT || 3000, () => {
 
 const io = new webSocketServer(server, {
 	cors: {
-		origin: landing_url,
+		origin: '*',
 	},
 });
 
