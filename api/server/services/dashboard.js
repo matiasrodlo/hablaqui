@@ -197,7 +197,6 @@ const getMountToPay = async user => {
 			session,
 		});
 	}
-	console.log(amounts);
 
 	return okResponse('Planes', { amounts });
 };

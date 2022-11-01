@@ -246,7 +246,8 @@ const getTransactions = async user => {
 	});
 };
 
-const generateTransaction = async (total, session, idPsy) => {
+const generateTransaction = async (user, total, session, idPsy) => {
+	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
 	if (session.length === 0)
 		return conflictResponse('No hay sesiones para pagar');
 	await session.forEach(async s => {
@@ -262,7 +263,7 @@ const generateTransaction = async (total, session, idPsy) => {
 			{ arrayFilters: [{ 'session._id': s._id }] }
 		);
 	});
-	const transaction = await Transaction.create({
+	let transaction = await Transaction.create({
 		total,
 		sessions: session,
 		psychologist: idPsy,
@@ -270,11 +271,32 @@ const generateTransaction = async (total, session, idPsy) => {
 	return okResponse('Pago completado', { transaction });
 };
 
+const getAllTransactions = async user => {
+	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
+
+	let transactions = await Transaction.find().populate('psychologist');
+
+	transactions = transactions.map(t => {
+		return {
+			createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
+			session: t.sessions,
+			total: t.total,
+			name: t.psychologist.name,
+			lastName: t.psychologist.lastName,
+			username: t.psychologist.username,
+			email: t.psychologist.email,
+			psyId: t.psychologist._id,
+		};
+	});
+	return okResponse('Todas las transacciones', { transactions });
+};
+
 const transactionService = {
 	completePaymentsRequest,
 	createPaymentsRequest,
 	getTransactions,
 	generateTransaction,
+	getAllTransactions,
 };
 
 export default Object.freeze(transactionService);

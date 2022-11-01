@@ -13,7 +13,6 @@
 						:page.sync="page"
 						hide-default-footer
 						@page-count="pageCount = $event"
-						@click:row="showSessions"
 					>
 						<template #top>
 							<v-toolbar flat>
@@ -21,14 +20,47 @@
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
-							<v-btn :disabled="item.session.length === 0" @click="editItem(item)">
+							<v-btn
+								:disabled="item.session.length === 0"
+								small
+								@click="setTransaction(item)"
+							>
 								Pagar
+							</v-btn>
+							<v-btn
+								:disabled="item.session.length === 0"
+								small
+								@click="showSessionsToPay(item, 'Sesiones a pagar')"
+							>
+								Sesiones
 							</v-btn>
 						</template>
 					</v-data-table>
 					<div class="text-center pt-2">
 						<v-pagination v-model="page" :length="pageCount" />
 					</div>
+				</div>
+			</v-col>
+			<v-col cols="12">
+				<div>
+					<v-data-table
+						:headers="headersTransactions"
+						:items="transactions"
+						sort-by="createdAt"
+						:sort-desc="true"
+						class="elevation-1"
+					>
+						<template #top>
+							<v-toolbar flat>
+								<v-toolbar-title>Tabla de pagos hechos</v-toolbar-title>
+							</v-toolbar>
+						</template>
+						<template #item.action="{ item }">
+							<v-btn small @click="showSessionsToPay(item, 'Sesiones pagadas')">
+								Sesiones
+							</v-btn>
+						</template>
+					</v-data-table>
 				</div>
 			</v-col>
 		</v-row>
@@ -42,7 +74,7 @@
 		>
 			<v-card>
 				<v-card-title>
-					<span class="text-h5">Sesiones a pagar</span>
+					<span class="text-h5">{{ label }}</span>
 				</v-card-title>
 				<v-data-table :headers="headersSessions" :items="sessions" />
 			</v-card>
@@ -52,10 +84,8 @@
 <script>
 import axios from 'axios';
 import { mapMutations } from 'vuex';
-import moment from 'moment';
 import { isEmpty } from 'lodash';
-
-moment.tz.setDefault('America/Santiago');
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'Payment',
@@ -69,19 +99,30 @@ export default {
 			page: 1,
 			pageCount: 0,
 			psychologist: [],
+			transactions: [],
+			label: 'Sesiones a pagar',
 			headers: [
 				{ text: 'Nombre', value: 'name' },
 				{ text: 'Apellido', value: 'lastName' },
 				{ text: 'Nombre de usuario', value: 'username' },
 				{ text: 'Correo', value: 'email' },
 				{ text: 'Monto total', value: 'total' },
-				{ text: 'Pagar', value: 'action', sortable: false },
+				{ text: 'Acciones', value: 'action', sortable: false },
 			],
 			headersSessions: [
 				{ text: 'Fecha', value: 'date' },
 				{ text: 'N° de sesión', value: 'sessionNumber' },
 				{ text: 'Valor de la sesion', value: 'price' },
 				{ text: 'Cupón', value: 'coupon' },
+			],
+			headersTransactions: [
+				{ text: 'Fecha', value: 'createdAt' },
+				{ text: 'Nombre', value: 'name' },
+				{ text: 'Apellido', value: 'lastName' },
+				{ text: 'Nombre de usuario', value: 'username' },
+				{ text: 'Correo', value: 'email' },
+				{ text: 'Monto total', value: 'total' },
+				{ text: 'Acciones', value: 'action', sortable: false },
 			],
 			dialog: false,
 			sessions: [],
@@ -94,28 +135,32 @@ export default {
 		async initFetch() {
 			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
 			this.psychologist = amounts;
+			const { transactions } = await this.$axios.$get('/transaction/get/all');
+			this.transactions = transactions;
 		},
-		async setTransaction(totalMount, sessionsToPay) {
+		async setTransaction(item) {
 			try {
-				const { data } = await this.$axios('/transactions/generate', {
+				const { data } = await this.$axios('/transaction/generate', {
 					method: 'POST',
 					data: {
-						total: totalMount,
-						session: sessionsToPay,
-						idPsy: this.selected._id,
+						total: item.total,
+						session: item.session,
+						idPsy: item._id,
 					},
 				});
+
+				const index = this.psychologist.indexOf(item);
+				this.psychologist[index].total = 0;
+				this.psychologist[index].session = [];
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 			}
 		},
-		showSessions(item) {
+		showSessionsToPay(item, label) {
+			this.label = label;
 			this.dialog = true;
 			this.sessions = item.session;
-		},
-		editItem(item) {
-			console.log(item);
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
