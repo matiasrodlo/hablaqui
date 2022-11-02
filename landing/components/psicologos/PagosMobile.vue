@@ -45,10 +45,6 @@
 							<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
 						</div>
 					</div>
-					<div class="my-3">
-						Sesiones por videollamada (50 min) Habla con un psicólogo por videollamada
-						en cualquier momento, en cualquier lugar.
-					</div>
 					<div class="mt-3">
 						<v-btn
 							color="primary"
@@ -73,7 +69,7 @@
 				</v-expand-transition>
 			</v-card>
 			<v-card class="shadowCard mt-6" style="border-radius: 15px">
-				<v-card-title class="titleColor"> Seleccionar tipo de pago </v-card-title>
+				<v-card-title class="titleColor"> Suscripciones </v-card-title>
 				<v-card-text
 					v-for="item in itemsPlan"
 					:key="item.id"
@@ -106,7 +102,7 @@
 				</v-card-text>
 			</v-card>
 			<v-card class="shadowCard mt-6" style="border-radius: 15px">
-				<v-card-title class="titleColor"> Cupón </v-card-title>
+				<v-card-title class="titleColor">Cupón</v-card-title>
 				<v-card-text class="">
 					<v-text-field
 						v-model="coupon"
@@ -132,10 +128,10 @@
 				</v-card-text>
 			</v-card>
 			<v-card class="shadowCard mt-6" style="border-radius: 15px">
-				<v-card-title class="titleColor"> Resumen de pago </v-card-title>
+				<v-card-title class="titleColor"> Resumen </v-card-title>
 				<v-card-text class="">
 					<div class="my-6 d-flex justify-space-between">
-						<div class="body-1 font-weight-bold">Tipo de pago</div>
+						<div class="body-1 font-weight-bold">Subscripción</div>
 						<div v-if="planSelected" class="body-1">
 							{{ planSelected.title }}
 						</div>
@@ -165,36 +161,33 @@
 							color="rgba(26, 165, 216, 0.16)"
 							@click="payButton"
 						>
-							<span class="primary--text">Continuar con el pago</span>
+							<span class="primary--text">Continuar</span>
 						</v-btn>
 					</div>
-					<div class="caption my-6 text-center">
-						Este es un pago seguro con encriptado SSL
-					</div>
-					<div class="caption font-weight-bold">Paga seguro con</div>
+					<div class="caption my-6 text-center">Pago seguro con encriptado SSL</div>
 					<div class="d-flex justify-space-around">
 						<v-img
-							width="50"
+							width="20"
 							contain
 							:src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
 						></v-img>
 						<v-img
-							width="50"
+							width="20"
 							contain
 							:src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
 						></v-img>
 						<v-img
-							width="50"
+							width="20"
 							contain
 							:src="`https://cdn.hablaqui.cl/static/surface.png`"
 						></v-img>
 						<v-img
-							width="50"
+							width="20"
 							contain
 							:src="`https://cdn.hablaqui.cl/static/american_express.png`"
 						></v-img>
 						<v-img
-							width="50"
+							width="20"
 							contain
 							:src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
 						></v-img>

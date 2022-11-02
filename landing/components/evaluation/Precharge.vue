@@ -2,12 +2,8 @@
 	<v-container v-show="image">
 		<v-row align="center" justify="center">
 			<v-col cols="12">
-				<div class="text-center text-h4 font-weight-bold mt-4">
-					¡Ya está todo casi listo!
-				</div>
 				<div class="text-center text-h6 font-weight-bold mt-4">
-					Espera un momento mientras encontramos los mejores especialistas según tus
-					preferencias
+					Estamos buscando a los mejores especialistas
 				</div>
 			</v-col>
 			<v-col cols="12" md="2" class="text-center text-md-right">
@@ -58,10 +54,10 @@ export default {
 			mdiClose,
 			image: '',
 			items: [
-				{ title: 'Calculando tu perfil', done: false },
-				{ title: 'Buscando especialistas para ti', done: false },
-				{ title: 'Analizando sugerencias', avatar: '', done: false },
-				{ title: 'Seleccionando especialistas', done: false },
+				{ title: 'Analisis de preferencias', done: false },
+				{ title: 'Busqueda de especialistas', done: false },
+				{ title: 'Evaluación de alternativas', avatar: '', done: false },
+				{ title: 'Selección de especialistas', done: false },
 			],
 		};
 	},

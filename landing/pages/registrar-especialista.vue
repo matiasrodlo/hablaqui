@@ -29,7 +29,7 @@
 						<v-col cols="12" sm="10" lg="8">
 							<sign-up />
 							<div class="font-weight-bold caption secondary--text">
-								2021 Hablaqui
+								2022 Hablaqui
 							</div>
 						</v-col>
 					</v-row>
@@ -120,22 +120,17 @@ export default {
 				{
 					id: 1,
 					img: `https://cdn.hablaqui.cl/static/auth.webp`,
-					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Permita que lo conozcan, agenden y paguen en piloto automático',
 				},
 				{
 					id: 2,
 					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
-					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+					text: 'Consiga que los consultantes le encuentren fácilmente y haga que le elijan',
 				},
 				{
 					id: 3,
 					img: `https://cdn.hablaqui.cl/static/auth-3.webp`,
-					text: ' Encontramos al especialista más adecuado para ti y que mejor se adapte a tus horarios',
-				},
-				{
-					id: 4,
-					img: `https://cdn.hablaqui.cl/static/auth-4.webp`,
-					text: 'Precios más asequibles, sin tener que renunciar a la calidad de una terapia presencial',
+					text: 'Olvide trámites aburridos como agendar citas, confirmar asistencias y cobrar',
 				},
 			],
 			carousel: 0,
