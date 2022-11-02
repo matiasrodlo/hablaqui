@@ -27,6 +27,19 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando perfil');
 		}
 	},
+	async updatePsychologist(req, res) {
+		try {
+			const { user, newPsychologist, oldPsychologist } = req.body;
+			const { data, code } = await userService.updatePsychologist(
+				user,
+				newPsychologist,
+				oldPsychologist
+			);
+			restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error actualizando psicólogo');
+		}
+	},
 	async updateOne(req, res) {
 		try {
 			const { id } = req.params;
