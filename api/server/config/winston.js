@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import moment from 'moment';
 import { node_env } from './dotenv';
 import expressWinston from 'express-winston';
 import { createLogger, format, transports } from 'winston';
+=======
+import moment from 'moment'; // moment es una librería para manejar fechas y horas y es muy útil para formatearlas en el formato que necesitemos
+import { node_env } from './dotenv'; // Contiene varaibles de entorno para el trabajo local
+>>>>>>> main
 moment.tz.setDefault('America/Santiago');
 
 const MESSAGE = Symbol.for('message');

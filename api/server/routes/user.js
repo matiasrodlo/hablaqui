@@ -44,10 +44,26 @@ userRouter.get(
 );
 
 /**
+ * @description Actualiza el psicológo del usuario desde la intranet
+ * @method PUT
+ * @route /api/v1/dashboard/update/psychologist
+ * @param {String} body.newPsychologist - Id del psicólogo nuevo (requerido)
+ * @param {String} body.oldPsychologist - Id del psicólogo anterior (requerido)
+ * @param {String} body.user - Id del usuario al que se le va a cambiar el psicólogo (requerido)
+ * @return Objeto usuario con nueva información
+ * @access authenticated (user)
+ */
+
+userRouter.put(
+	'/dashboard/update/psychologist',
+	userController.updatePsychologist
+);
+
+/**
  * @description Actualiza la información de un usuario logeado
  * @method PUT
  * @route /api/v1/user/update/profile
- * @param {Object} body.profile - Objeto con la información actulizada del perfil del usuario
+ * @param {Object} body.profile - Objeto con la información actualizada del perfil del usuario
  * @return Objeto usuario con nueva información
  * @access authenticated (user)
  */

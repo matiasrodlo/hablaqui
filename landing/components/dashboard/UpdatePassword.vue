@@ -50,7 +50,7 @@
 				style="border-radius: 10px"
 				@click="updatePass"
 			>
-				Actualizar nueva contraseña
+				Guardar
 			</v-btn>
 		</v-col>
 	</v-row>
