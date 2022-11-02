@@ -1,31 +1,27 @@
 <template>
 	<v-container fluid style="max-width: 1200px">
 		<v-row justify="center" class="pb-16">
-			<v-col cols="12" class="text-center mb-10">
-				<div class="my-2 primary--text headline text-md-h4 font-weight-bold">
-					Los mejores planes para ti
-				</div>
-			</v-col>
 			<v-col cols="12" md="6" lg="5">
 				<v-card class="box rounded-xl">
 					<v-card-text class="d-flex align-center">
 						<div style="flex: 2">
 							<div
 								v-if="(currentPlan && currentPlan.tier === 'free') || !currentPlan"
-								class="text-left body-1 font-weight-bold d-block"
+								class="text-left body-3 font-weight-bold d-block"
 								style="color: #15314a"
 							>
-								Tu plan actual
+								Plan actual
 							</div>
 							<div v-else style="height: 22px"></div>
 							<div
-								class="headline font-weight-bold text-left d-block"
+								class="primary--text text-left headline font-weight-bold d-block"
 								style="color: #15314a"
 							>
 								Plan básico
 							</div>
 							<div class="text-left text--secondary d-block">
-								Para profesionales que buscan mayor productividad y nuevos clientes
+								Las principales herramientas para crecer como profesional
+								independiente
 							</div>
 						</div>
 						<div
@@ -180,7 +176,7 @@
 						block
 						@click="setPreferences('premium')"
 					>
-						Suscríbete al plan premium
+						Suscribirse al plan premium
 					</v-btn>
 				</v-radio-group>
 			</v-col>

@@ -471,15 +471,15 @@ export default {
 			search: '',
 			header: [
 				{
-					text: 'Fecha de pago',
+					text: 'Fecha',
 					sortable: false,
 					value: 'datePayment',
 				},
-				{ text: 'Nombre', value: 'name', sortable: false },
+				{ text: 'Consultante', value: 'name', sortable: false },
 				{ text: 'Suscripción', value: 'suscription', sortable: false },
 				{ text: 'Monto', value: 'amount', sortable: false },
 				{ text: 'Monto final', value: 'finalAmount', sortable: false },
-				{ text: 'Fecha de transferencia', value: 'transState', sortable: false },
+				{ text: 'Estado', value: 'transState', sortable: false },
 			],
 		};
 	},

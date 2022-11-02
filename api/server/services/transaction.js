@@ -6,7 +6,7 @@ import Psychologist from '../models/psychologist';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
-import mailService from './mail';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -16,10 +16,12 @@ var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
+	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id
 	let sessions = await getAllSessionsFunction(psy);
 	const user = await Psychologist.findById(psy);
 	const now = dayjs().format();
 
+	// Se busca el documentro de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
 	if (!transactions) {
 		await Transaction.create({
@@ -29,14 +31,16 @@ const completePaymentsRequest = async psy => {
 		});
 	}
 
-	/*Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante 
-	y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el psicólogo*/
+	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante
+	// y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el psicólogo
 	sessions = sessions.filter(
 		session =>
 			session.status === 'success' &&
 			session.statusPlan === 'success' &&
 			session.request === 'pending'
 	);
+
+	// Se actualiza la fecha del pago y el estado de la solicitud de retiro
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
 			{
@@ -55,6 +59,7 @@ const completePaymentsRequest = async psy => {
 		);
 	});
 
+	// Cuenta la cantidad de sesiones
 	const total = sessions.reduce(
 		(sum, value) =>
 			typeof value.total == 'number' ? sum + value.total : sum,
@@ -66,13 +71,15 @@ const completePaymentsRequest = async psy => {
 		sessionsPaid: sessions.length,
 		transactionDate: now,
 	};
+
+	// Se actualiza el documento de transacciones con la nueva transacción
 	await Transaction.findOneAndUpdate(
 		{ psychologist: psy },
 		{ $push: { transactionCompleted: transaction } }
 	);
 
 	//Enviar correo de dinero depositado a psy
-	await mailService.sendCompletePaymentRequest(user, total, now);
+	await mailServicePsy.sendCompletePaymentRequest(user, total, now);
 
 	return okResponse('Peticion completada', {
 		total: total,
@@ -83,10 +90,12 @@ const completePaymentsRequest = async psy => {
 const createPaymentsRequest = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
+	// Se obtiene las sessiones del psy
 	const psy = user.psychologist;
 	let sessions = await getAllSessionsFunction(psy);
 	const now = dayjs().format();
 
+	// Se busca el modelo de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
 	if (!transactions) {
 		await Transaction.create({
@@ -95,9 +104,9 @@ const createPaymentsRequest = async user => {
 			transactionCompleted: [],
 		});
 	}
-	/*Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante,
-	que este en un estado none (implicando que la solicitud de retiro por parte de un psicólogo no se ha hecho)
-	y que la sesión no sea un Compromiso privado*/
+	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante,
+	// que este en un estado none (implicando que la solicitud de retiro por parte de un psicólogo no se ha hecho)
+	// y que la sesión no sea un Compromiso privado
 	sessions = sessions.filter(
 		session =>
 			session.status === 'success' &&
@@ -106,17 +115,20 @@ const createPaymentsRequest = async user => {
 			session.name !== 'Compromiso privado '
 	);
 
+	// Se obtiene el total de las sesiones ya filtradas
 	const total = sessions.reduce(
 		(sum, value) =>
 			typeof value.total == 'number' ? sum + value.total : sum,
 		0
 	);
 
+	// Esto se podría deber a que el psicólogo no tiene sesiones pagadas
 	if (total === 0)
 		return conflictResponse(
 			'No puedes hacer una petición con saldo 0 disponible'
 		);
 
+	// Se actualiza cada una de las sessiones con la solicitud pendiente y la fecha de solicitud (now)
 	sessions.forEach(async session => {
 		await Sessions.findOneAndUpdate(
 			{
@@ -144,6 +156,7 @@ const createPaymentsRequest = async user => {
 		{ $push: { transactionsRequest: transaction } }
 	);
 
+	// Se hace el trackeo en segment
 	if (
 		process.env.API_URL.includes('hablaqui.cl') ||
 		process.env.DEBUG_ANALYTICS === 'true'
@@ -158,7 +171,7 @@ const createPaymentsRequest = async user => {
 		});
 	}
 	//Crear correo de petición de retiro de dinero
-	await mailService.sendPaymentRequest(user, total, now);
+	await mailServicePsy.sendPaymentRequest(user, total, now);
 
 	return okResponse('Peticion hecha', {
 		total: total,
@@ -171,9 +184,11 @@ const getTransactions = async user => {
 		return conflictResponse('No estas autorizado para esta operacion');
 	const psy = user.psychologist;
 
+	// Se obtienen las sessiones del psy y se obtiene el documento de transacciones con el id del psy
 	let sessions = await getAllSessionsFunction(psy);
 	let transactions = await Transaction.findOne({ psychologist: psy });
 
+	// Si existe el documento de transacciones se obtiene el total de las transacciones en solicitud
 	if (transactions) transactions = transactions.transactionsRequest;
 	else transactions = [];
 
@@ -183,6 +198,8 @@ const getTransactions = async user => {
 			session.statusPlan === 'success' &&
 			session.name !== 'Compromiso privado '
 	);
+
+	// Se obtiene el total de dinero ya pagado
 	const total = sessions
 		.filter(session => {
 			return (
@@ -197,6 +214,7 @@ const getTransactions = async user => {
 			0
 		);
 
+	// Se obtiene el total de dinero a cobrar
 	const totalAvailable = sessions
 		.filter(
 			session =>
@@ -210,6 +228,7 @@ const getTransactions = async user => {
 			0
 		);
 
+	// Se obtiene el total de las sesiones realizadas y las sessiones a cobrar
 	const sessionsReceivable = sessions.filter(
 		session => session.request === 'none'
 	).length;

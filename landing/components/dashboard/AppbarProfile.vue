@@ -5,19 +5,10 @@
 		</v-btn>
 		<h1 class="primary--text">{{ title }}</h1>
 		<v-spacer></v-spacer>
-		<div class="mx-5 body-1 primary--text">
-			<router-link
-				v-if="$auth.$state.user && $auth.$state.user.role == 'user'"
-				style="text-decoration: none"
-				:to="{ name: 'psicologos' }"
-			>
-				Psicólogos
-			</router-link>
-		</div>
-		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+		<div v-if="$auth.$state.user.role === 'user'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
+				href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1"
 				target="_blank"
 			>
 				<div class="d-flex align-center">
@@ -28,11 +19,64 @@
 						width="30"
 						class="mx-2"
 					></v-img>
-					Agendar con ejecutivo
+					Atención al cliente
 				</div>
 			</a>
 		</div>
-		<!-- ocultado por peticion de daniel -->
+		<div v-if="$auth.user.role === 'user'" class="mx-5 body-1 primary--text">
+			<a
+				style="text-decoration: none"
+				href="https://hablaqui.cl/preguntas-frecuentes/"
+				target="_blank"
+			>
+				<div class="d-flex align-center">
+					<v-img
+						src="https://cdn.hablaqui.cl/static/demo.png"
+						contain
+						height="30"
+						width="30"
+						class="mx-2"
+					></v-img>
+					Preguntas frecuentes
+				</div>
+			</a>
+		</div>
+		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+			<a
+				style="text-decoration: none"
+				href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1"
+				target="_blank"
+			>
+				<div class="d-flex align-center">
+					<v-img
+						src="https://cdn.hablaqui.cl/static/demo.png"
+						contain
+						height="30"
+						width="30"
+						class="mx-2"
+					></v-img>
+					Atención al cliente
+				</div>
+			</a>
+		</div>
+		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+			<a
+				style="text-decoration: none"
+				href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
+				target="_blank"
+			>
+				<div class="d-flex align-center">
+					<v-img
+						src="https://cdn.hablaqui.cl/static/demo.png"
+						contain
+						height="30"
+						width="30"
+						class="mx-2"
+					></v-img>
+					Preguntas frecuentes
+				</div>
+			</a>
+		</div>
 		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
@@ -43,27 +87,9 @@
 						width="30"
 						class="mx-2"
 					></v-img>
-					Mi plan premium
+					Premium
 				</div>
 			</nuxt-link>
-		</div>
-		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
-			<a
-				style="text-decoration: none"
-				href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
-				target="_blank"
-			>
-				Centro de ayuda
-			</a>
-		</div>
-		<div v-else class="mx-5 body-1 primary--text">
-			<a
-				style="text-decoration: none"
-				href="https://hablaqui.cl/preguntas-frecuentes/"
-				target="_blank"
-			>
-				Centro de ayuda
-			</a>
 		</div>
 		<v-btn
 			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"

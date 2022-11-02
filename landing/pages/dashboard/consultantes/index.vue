@@ -47,7 +47,7 @@
 						<v-btn fab depressed color="primary" style="width: 20px; height: 20px">
 							<icon :icon="mdiPlus" color="white" small />
 						</v-btn>
-						<span class="primary--text ml-2"> Consultante nuevo </span>
+						<span class="primary--text ml-2">Agendamiento manual</span>
 					</span>
 					<card-onboarding
 						v-if="step && step.title === 'Consultante nuevo'"
@@ -67,8 +67,8 @@
 							class="text-center text-sm-left font-weight-medium pointer"
 							@click="() => (dialogComission = true)"
 						>
-							Paga 0% de comisión con los consultantes nuevos que invites.
-							<b>¡Sepa más!</b>
+							0% de comisión para consultantes invitados
+							<b>¡Ver más!</b>
 						</div>
 					</v-alert>
 				</v-col>
@@ -346,7 +346,7 @@
 							style="flex: 1"
 							class="text-center text-h6 font-weight-bold pt-2 primary--text"
 						>
-							0% de comisión por clientes referidos por ti
+							0% de comisión para consultantes invitados
 						</div>
 						<v-btn
 							style="flex: 0"
@@ -359,31 +359,24 @@
 					</v-card-text>
 					<v-card-text class="pt-3">
 						<p>
-							Nuestro objetivo es ampliar y potenciar su consulta mediante un entorno
-							de trabajo automatizado y dinámico.
-						</p>
-						<p>
-							Por ello, le animamos a liberarse de las cuatro paredes de su consulta
-							atendiendo a todos sus clientes en Hablaquí. Ingresar a sus clientes es
-							cosa de unos clics y lo mejor: cobramos 0% de comisión.
-						</p>
-						<p>
-							Al llevar a sus clientes a la plataforma asegura organización y
-							practicidad en sus actividades, además de optimizar sus tiempos y
-							dinero. Concéntrese en atender a sus clientes y déjenos la burocracia a
+							Concéntrese en atender a sus consultantes y déjenos la burocracia a
 							nosotros.
 						</p>
-						<h4 class="primary--text">Cómo hacerlo:</h4>
+						<p>
+							El tiempo que gasta en agendar, confirmar su asistencia y cobrar, ahora
+							lo podrá usar para enfocarse en tu carrera o simplemente ver Netflix.
+						</p>
+						<p>
+							Ingresar a sus consultantes es muy simple y lo mejor: cobramos 0% de
+							comisión. De esta forma estara asegurando organización y practicidad en
+							sus actividades diarias, además de optimizar sus tiempos y dinero.
+						</p>
+						<h4 class="primary--text">¿Cómo hacerlo?</h4>
 						<br />
 						<ul style="list-style: none; padding: 0">
-							<li>1. Vaya a la sección “Consultantes”</li>
-							<li>2. Haga clic en “Consultante nuevo”</li>
-							<li>3. Rellene los datos solicitados</li>
-							<li>4. Haga clic en el botón “Agregar”</li>
-							<li>
-								5. Hecho, tu consultante ya está asociado a ti y no pagará más
-								comisión a Hablaquí.
-							</li>
+							<li>1. Vaya a la sección “Mi cuenta”</li>
+							<li>2. Haga clic en “Copiar link”</li>
+							<li>3. Comparta su link de pago</li>
 						</ul>
 					</v-card-text>
 				</v-card>

@@ -26,7 +26,11 @@ export const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
+<<<<<<< HEAD
 				const paymentPlanDate = dayjs(plans.datePayment).format(
+=======
+				let paymentPlanDate = moment(plans.datePayment).format(
+>>>>>>> main
 					'DD/MM/YYYY'
 				);
 
@@ -87,12 +91,16 @@ export const paymentInfoFunction = async psyId => {
 					i <= plans.totalSessions;
 					i++
 				) {
-					const session = {
+					let session = {
 						_id: null,
+<<<<<<< HEAD
 						datePayment: dayjs(
 							plans.datePayment,
 							'MM/DD/YYYY'
 						).format('DD/MM/YYYY'),
+=======
+						datePayment: paymentPlanDate,
+>>>>>>> main
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
@@ -109,7 +117,23 @@ export const paymentInfoFunction = async psyId => {
 						status: 'pending',
 						transDate: 'Por agendar',
 					};
+					if (Date.parse(plans.expiration) < Date.now()) {
+						session.transDate = 'Expirado';
+					}
 					sessions.push(session);
+				}
+
+				const expirated = sessions.filter(
+					session => session.transDate === 'Expirado'
+				).length;
+
+				if (
+					expirated > 0 &&
+					pendingsToPay === 0 &&
+					receivable === 0 &&
+					pendingsToDo === 0
+				) {
+					paymentPlanDate = 'Expirado';
 				}
 
 				/*sessions = sessions.filter(

@@ -14,9 +14,9 @@
 						:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
 					></v-img>
 				</div>
-				<div class="headline font-weight-bold">¡Ya has terminado!</div>
+				<div class="headline font-weight-bold">¡Bienvenido!</div>
 				<div class="my-6 text--secondary body-1 mx-auto" style="max-width: 800px">
-					Puedes dirigirte a la agenda y verificar tus sesiones agendadas
+					Es momento de comenzar su viaje hacia el bienestar
 				</div>
 				<div>
 					<v-btn

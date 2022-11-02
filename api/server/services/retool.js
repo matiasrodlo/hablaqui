@@ -10,11 +10,20 @@ dayjs.extend(isBetween, utc, timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 const getNextSessions = async () => {
+	/*
+	Retorna las proximas sesiones de los psicologos.
+	De momento esta función no tiene entradas.
+	*/
+	// Se obtienen las sesiones de todos los psicologos
 	let sessions = await Sessions.find().populate('psychologist user');
-	//console.log(sessions);
+
+	// Se filtran las sesiones que no tienen psicologo ni usuario
 	sessions = sessions.filter(s => s.user !== null && s.psychologist !== null);
+
+	// Se obtienen el último plan activo con sesiones.
 	const plans = sessions
 		.flatMap(s => {
+			// Se obtiene el último plan de la sesion, se verifica que el plan esté pagado y no haya expirado
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
@@ -32,10 +41,13 @@ const getNextSessions = async () => {
 			};
 		})
 		.filter(p => p.planActived && p.plan.session.length !== 0);
+
+	// Se filtra de plans las proximas sesiones y las ordena por fecha
 	const nextSessions = plans
 		.flatMap(p => {
 			const plan = p.plan;
 			return plan.session.flatMap(s => {
+				// Se obtiene si una sesion es proxima y se verifica que la sesion no haya expirado.
 				const isNextSession =
 					s.status !== 'success' && dayjs(s.date).isAfter(dayjs());
 				return {
@@ -59,12 +71,21 @@ const getNextSessions = async () => {
 };
 
 const getSessionsPayment = async (startDate, endDate) => {
+	/*
+	Retorna las sesiones pagadas entre las fechas indicadas.
+	Tiene como entrada las fechas de inicio y fin.
+	*/
+	// Se obtienen las sesiones unido con el psicologo
 	let sessions = await Sessions.find().populate('psychologist user');
+
+	// Se filtran las sesiones que se ha inicializado la variable de psicologo
 	sessions = sessions.filter(s => !!s.psychologist);
 
 	let flatSession = sessions.flatMap(s => {
+		// Se obtiene el plan de una sesión
 		const plan = s.plan.pop();
 		return plan.session.flatMap(ss => {
+			// Se deja en un mismo array los datos del psicologo, la sesion y el precio del plan
 			return {
 				_id: s.psychologist._id.toString(),
 				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
@@ -77,10 +98,12 @@ const getSessionsPayment = async (startDate, endDate) => {
 		});
 	});
 
+	// Se filtra de flatSession las sesiones pagadas entre las fechas indicadas
 	flatSession = flatSession.filter(s =>
 		dayjs(s.date).isBetween(dayjs(startDate), dayjs(endDate))
 	);
 
+	// Se agrupan las sesiones por psicologo y se suman los precios
 	let auxFlatSession = [];
 	flatSession.forEach(s => {
 		const resp = auxFlatSession.find(e => e && e._id === s._id);

@@ -255,7 +255,7 @@
 												<v-col>
 													<template v-for="(item, i) in specialties">
 														<v-btn
-															v-if="i >= 10"
+															v-if="i >= 8"
 															:key="i"
 															:color="
 																themes.includes(item)
@@ -270,8 +270,8 @@
 															@click="() => setTheme(item)"
 														>
 															{{ item }}
-														</v-btn></template
-													>
+														</v-btn>
+													</template>
 												</v-col>
 											</v-row>
 											<v-btn text color="primary" @click="step = 2">
@@ -283,12 +283,13 @@
 										</v-stepper-content>
 										<v-stepper-content step="4">
 											<div class="primary--text font-weight-bold title">
-												¿Cuales son sus expectativas sobre el proceso?
+												¿En qué momento del día <br />
+												<span>puede asistir a sus citas?</span>
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Cognitivo-conductual'
+													schedule == 'early'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -299,16 +300,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Cognitivo-conductual';
+														schedule = 'early';
 													}
 												"
 											>
-												Sesiones estructuradas con metas y tareas semanales
+												Temprano: Antes de las 9 am
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Integrativo'
+													schedule == 'morning'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -319,16 +320,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Integrativo';
+														schedule = 'morning';
 													}
 												"
 											>
-												Deseo conocer herramientas para ponerlas en práctica
+												En la mañana: Entre 9 am y 12 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Contextual'
+													schedule == 'midday'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -339,17 +340,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Contextual';
+														schedule = 'midday';
 													}
 												"
 											>
-												Aprender a relacionarme con mis pensamientos y
-												emociones
+												A Medio día: Entre 12 y 2 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Psicoanálisis'
+													schedule == 'afternoon'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -360,17 +360,16 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Psicoanálisis';
+														schedule = 'afternoon';
 													}
 												"
 											>
-												Conversar y aprender observando mis experiencias
-												pasadas
+												En la tarde: Entre 2 y 6 pm
 											</div>
 											<div
 												class="pa-2 my-4"
 												:class="
-													focus == 'Humanista'
+													schedule == 'night'
 														? 'primary white--text'
 														: 'text--disabled'
 												"
@@ -381,32 +380,11 @@
 												@click="
 													() => {
 														step = 5;
-														focus = 'Humanista';
+														schedule = 'night';
 													}
 												"
 											>
-												Reflexionar y conocer el origen de mis emociones
-											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													focus == 'Sistémico'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														focus = 'Sistémico';
-													}
-												"
-											>
-												Entender mi forma de interactuar y mejorar mis
-												relaciones
+												En la noche: Después de las 6 pm
 											</div>
 											<v-btn text color="primary" @click="step = 3">
 												Atras
@@ -414,8 +392,109 @@
 										</v-stepper-content>
 										<v-stepper-content step="5">
 											<div class="primary--text font-weight-bold title">
-												¿Con qué género se siente más cómodo <br />
-												<span>compartiendo lo que le sucede?</span>
+												¿Cuales son sus expectativas sobre el proceso?
+											</div>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Cognitivo-conductual')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Cognitivo-conductual')"
+												block
+												rounded
+												large
+												@click="() => setModels('Cognitivo-conductual')"
+											>
+												Sesiones estructuradas con metas y tareas semanales
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Integrativo')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Integrativo')"
+												block
+												rounded
+												large
+												@click="() => setModels('Integrativo')"
+											>
+												Deseo conocer herramientas para ponerlas en práctica
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Contextual')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Contextual')"
+												block
+												rounded
+												large
+												@click="() => setModels('Contextual')"
+											>
+												Aprender a relacionarme con mis pensamientos y
+												emociones
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Psicoanálisis')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Psicoanálisis')"
+												block
+												rounded
+												large
+												@click="() => setModels('Psicoanálisis')"
+											>
+												Conversar y aprender observando mis experiencias
+												pasadas
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Humanista')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Humanista')"
+												block
+												rounded
+												large
+												@click="() => setModels('Humanista')"
+											>
+												Reflexionar y conocer el origen de mis emociones
+											</v-btn>
+											<v-btn
+												class="pa-2 my-4"
+												:color="
+													models.includes('Sistémico')
+														? 'primary'
+														: '#BDBDBD'
+												"
+												:outlined="!models.includes('Sistémico')"
+												block
+												rounded
+												large
+												@click="() => setModels('Sistémico')"
+											>
+												Entender mi forma de interactuar y mejorar mis
+												relaciones
+											</v-btn>
+											<v-btn text color="primary" @click="step = 4">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="6">
+											<div class="primary--text font-weight-bold title">
+												¿Con qué género te sientes más cómodo <br />
+												<span>compartiendo lo que te sucede?</span>
 											</div>
 
 											<v-btn
@@ -432,7 +511,7 @@
 												@click="
 													() => {
 														genderConfort = 'female';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -450,7 +529,7 @@
 												@click="
 													() => {
 														genderConfort = 'male';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -470,7 +549,7 @@
 												@click="
 													() => {
 														genderConfort = 'transgender';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
@@ -490,14 +569,88 @@
 												@click="
 													() => {
 														genderConfort = 'Me es indiferente';
-														openPrecharge();
+														step = 7;
 													}
 												"
 											>
 												Me es indiferente
 											</v-btn>
 
-											<v-btn text color="primary" @click="step = 4">
+											<v-btn text color="primary" @click="step = 5">
+												Atras
+											</v-btn>
+										</v-stepper-content>
+										<v-stepper-content step="7">
+											<div class="primary--text font-weight-bold title">
+												¿Cuál es su presupuesto semanal?
+											</div>
+
+											<v-btn
+												:color="price === 15000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 15000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 15000;
+														openPrecharge();
+													}
+												"
+											>
+												$15.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 20000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 20000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 20000;
+														openPrecharge();
+													}
+												"
+											>
+												$20.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 30000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 30000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 30000;
+														openPrecharge();
+													}
+												"
+											>
+												$30.000 CLP
+											</v-btn>
+											<v-btn
+												:color="price === 40000 ? 'primary' : '#BDBDBD'"
+												:outlined="price !== 40000"
+												block
+												rounded
+												large
+												class="my-4"
+												@click="
+													() => {
+														price = 40000;
+														openPrecharge();
+													}
+												"
+											>
+												$40.000 CLP
+											</v-btn>
+
+											<v-btn text color="primary" @click="step = 6">
 												Atras
 											</v-btn>
 										</v-stepper-content>
@@ -687,7 +840,6 @@ export default {
 		Icon: () => import('~/components/Icon'),
 		Avatar: () => import('~/components/Avatar'),
 	},
-	middleware: ['auth'],
 	async asyncData({ $axios, error }) {
 		try {
 			const { appointments } = await $axios.$get('/appointments/all');
@@ -707,9 +859,11 @@ export default {
 			age: '',
 			firstTherapy: null,
 			themes: [],
-			focus: '',
+			schedule: '',
 			genderConfort: '',
+			price: 0,
 			specialties: [],
+			models: [],
 			psychologists: [],
 			matchedPsychologists: [],
 		};
@@ -744,8 +898,20 @@ export default {
 	created() {
 		if (process.browser) {
 			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length && psi._id === this.$auth.$state.user._id) {
-				this.matchedPsychologists = psi.match;
+			if (psi && psi.match.length) {
+				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
+					this.matchedPsychologists = psi.match;
+				else if (psi._id === null && this.$auth.$state.loggedIn) {
+					localStorage.removeItem('psi');
+					localStorage.setItem(
+						'psi',
+						JSON.stringify({
+							match: psi.match,
+							_id: this.$auth.$state.user._id,
+						})
+					);
+					this.matchedPsychologists = psi.match;
+				}
 			}
 		}
 	},
@@ -770,9 +936,11 @@ export default {
 			this.age = '';
 			this.firstTherapy = null;
 			this.themes = [];
-			this.focus = '';
+			this.schedule = '';
 			this.genderConfort = '';
 			this.matchedPsychologists = [];
+			this.models = [];
+			this.price = 0;
 			this.step = '0';
 		},
 		setTheme(value) {
@@ -782,13 +950,22 @@ export default {
 			} else if (this.themes.length < 3) this.themes.push(value);
 			if (this.themes.length === 3) this.step = 4;
 		},
+		setModels(model) {
+			if (this.models.includes(model)) {
+				const index = this.models.findIndex(item => item === model);
+				this.models.splice(index, 1);
+			} else if (this.models.length < 3) this.models.push(model);
+			if (this.models.length === 3) this.step = 6;
+		},
 		openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
 				gender,
 				themes: this.themes,
-				model: this.focus,
+				schedule: this.schedule,
+				model: this.models,
+				price: this.price,
 			};
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
@@ -796,9 +973,11 @@ export default {
 						'psi',
 						JSON.stringify({
 							match: response.filter((el, i) => i < 3),
-							_id: this.$auth.$state.user._id,
+							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
 						})
 					);
+					if (!this.$auth.$state.loggedIn)
+						this.$router.push('/auth/?register=true&from=psy');
 					this.matchedPsychologists = response.filter((el, i) => i < 3);
 				}
 			});
