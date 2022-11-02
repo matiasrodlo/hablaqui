@@ -31,14 +31,6 @@ const authController = {
 			errorCallback(e, res);
 		}
 	},
-	generateJwt(req, res) {
-		const { user } = req;
-		const token = authService.generateJwt(user);
-		const response = {
-			token,
-		};
-		res.json(response);
-	},
 	async sendPasswordRecover(req, res) {
 		try {
 			const { email } = req.params;
@@ -61,9 +53,6 @@ const authController = {
 		} catch (error) {
 			errorCallback(error, res, 'Ha ocurrido un error al verificar');
 		}
-	},
-	googleAuthCallback(req, res) {
-		authService.googleAuthCallback(req, res);
 	},
 };
 

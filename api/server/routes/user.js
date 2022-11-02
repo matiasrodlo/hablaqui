@@ -44,10 +44,26 @@ userRouter.get(
 );
 
 /**
+ * @description Actualiza el psicológo del usuario desde la intranet
+ * @method PUT
+ * @route /api/v1/dashboard/update/psychologist
+ * @param {String} body.newPsychologist - Id del psicólogo nuevo (requerido)
+ * @param {String} body.oldPsychologist - Id del psicólogo anterior (requerido)
+ * @param {String} body.user - Id del usuario al que se le va a cambiar el psicólogo (requerido)
+ * @return Objeto usuario con nueva información
+ * @access authenticated (user)
+ */
+
+userRouter.put(
+	'/dashboard/update/psychologist',
+	userController.updatePsychologist
+);
+
+/**
  * @description Actualiza la información de un usuario logeado
  * @method PUT
  * @route /api/v1/user/update/profile
- * @param {Object} body.profile - Objeto con la información actulizada del perfil del usuario
+ * @param {Object} body.profile - Objeto con la información actualizada del perfil del usuario
  * @return Objeto usuario con nueva información
  * @access authenticated (user)
  */
@@ -107,40 +123,6 @@ userRouter.patch(
 );
 
 /**
- * @description -----No comentado, pues no estoy seguro si está siendo usado ------
- * @method PUT
- * @route /api/v1/user/update/plan
- * @param {}
- * @return
- * @access authenticated ()
- */
-userRouter.put(
-	'/user/update/plan',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePlan, 'body'),
-	],
-	userController.updatePlan
-);
-
-/**
- * @description -- No está siendo usado --
- * @method PUT
- * @route /api/v1/user/update/psychologist
- * @param {}
- * @return
- * @access authenticated ()
- */
-userRouter.put(
-	'/user/update/psychologist',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePsychologist, 'body'),
-	],
-	userController.updatePsychologist
-);
-
-/**
  * @description Actualiza/sube foto de perfil del usuario psicólogo principalmente
  * @method PUT
  * @route /api/v1/user/upload/avatar
@@ -190,27 +172,6 @@ userRouter.post(
 );
 
 /**
- * @description Sube una evaluación de un usuario sobre un psicólogo
- * @method POST
- * @route /api/v1/user/evaluation/:psyId
- * @param {String} params.psyId - Id del psicólogo
- * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
- * @param {Number} body.puntuality - puntuación respecto a la puntualidad
- * @param {Number} body.attention - puntuación sobre la atención del psicólogo
- * @param {Number} body.internet - puntuación respecto a la conexión
- * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
- * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
- * @param {String} body.comment - comentario del usuario sobre el psicólogo
- * @return Objeto con los datos de la evaluación recién creada
- * @access authenticated (user)
- */
-userRouter.post(
-	'/user/evaluation/:psyId',
-	[passport.authenticate('jwt', { session: true })],
-	userController.addEvaluation
-);
-
-/**
  * @description Permite la desvinculación de un psicólogo antes de terminar el plan
  * @method POST
  * @route /api/v1/user/change/psychologist/:sessionId
@@ -222,13 +183,5 @@ userRouter.post(
 	[passport.authenticate('jwt', { session: true })],
 	userController.changePsychologist
 );
-
-/**
- * @description Devuelve las evaluaciones hechas de un usuario particular
- * @method GET
- * @route /api/v1/user/get/evaluations/:userId
- * @param {String} params.userId - Id del usuario del que obtendremos las evaluaciones
- */
-userRouter.get('/user/get/evaluations/:userId', userController.getEvaluations);
 
 export default userRouter;

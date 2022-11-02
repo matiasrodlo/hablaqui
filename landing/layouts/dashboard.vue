@@ -481,6 +481,20 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
 				},
+				{
+					name: 'Cambio de sesión',
+					link: { name: 'dashboard-reschedule-session' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
+				{
+					name: 'Cambio de psicologo',
+					link: { name: 'dashboard-change-psy' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
 			];
 		},
 		routeName() {

@@ -428,7 +428,9 @@
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
 							{{ psychologist.paymentMethod.bank }}
 						</div>
-						<v-btn rounded color="primary" to="/" class="mt-4 px-6">Ir a inicio</v-btn>
+						<v-btn rounded color="primary" href="https://hablaqui.cl/" class="mt-4 px-6"
+							>Ir a inicio</v-btn
+						>
 					</v-card-text>
 				</template>
 			</v-card>

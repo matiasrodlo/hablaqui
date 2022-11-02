@@ -29,29 +29,6 @@ authRouter.post(
 authRouter.post('/auth/logout', authController.logout);
 
 /**
- * No se usa.
- */
-authRouter.get(
-	'/auth/google',
-	passport.authenticate('google', {
-		scope: [
-			'https://www.googleapis.com/auth/plus.login',
-			'https://www.googleapis.com/auth/userinfo.email',
-		],
-	}),
-	authController.generateJwt
-);
-
-authRouter.get(
-	'/auth/google/callback',
-	passport.authenticate('google', {
-		session: false,
-		failureRedirect: process.env.FRONTEND_URL + '/auth',
-	}),
-	authController.googleAuthCallback
-);
-
-/**
  * @description Registro de usuario
  * @method POST
  * @route /api/v1/auth/register

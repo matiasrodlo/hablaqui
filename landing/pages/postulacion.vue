@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!loading" style="height: 100vh">
 		<div class="ma-4 d-flex justify-space-between align-center">
-			<nuxt-link id="logo-appbar" tabindex="0" to="/" exact accesskey="h">
+			<a id="logo-appbar" tabindex="0" href="https://hablaqui.cl/" exact accesskey="h">
 				<v-img
 					style="max-width: 160px"
 					alt="hablaqui Logo"
@@ -9,13 +9,13 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 					contain
 				/>
-			</nuxt-link>
+			</a>
 			<span class="hidden-sm-and-down text--secondary text-h6">
 				¿Necesitas ayuda?
 				<a
 					style="text-decoration: none"
 					class="primary--text"
-					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
+					href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1?autoload=1&app_absent=0"
 					target="_blank"
 				>
 					Contáctanos
@@ -24,7 +24,7 @@
 			<a
 				style="text-decoration: none"
 				class="hidden-md-and-up"
-				href="https://soporte.hablaqui.cl/hc"
+				href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1?autoload=1&app_absent=0"
 				target="_blank"
 			>
 				<v-img
@@ -62,12 +62,7 @@
 							<v-row>
 								<v-col cols="12">
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										¡Es un placer conocerte!
 									</div>
@@ -361,12 +356,7 @@
 										¡Estamos ansiosos de saber más de ti!
 									</div>
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										Cuéntanos sobre tu formación profesional
 									</div>
@@ -450,12 +440,7 @@
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="
-																primary--text
-																font-weight-bold
-																body-1
-																pb-2
-															"
+															class="primary--text font-weight-bold body-1 pb-2"
 														>
 															Formación
 														</div>
@@ -486,7 +471,7 @@
 															v-model="selectedFormation.description"
 															filled
 															outlined
-															placeholder="P. ej: Psicología forense"
+															placeholder="Psicólogo Clinico"
 															dense
 															hide-details
 															type="text"
@@ -500,7 +485,7 @@
 															v-model="selectedFormation.intitucion"
 															filled
 															outlined
-															placeholder="P. ej: universidad de Chile"
+															placeholder="Universidad de Chile"
 															dense
 															hide-details
 															type="text"
@@ -516,7 +501,7 @@
 															outlined
 															dense
 															type="text"
-															placeholder="P. ej: 2019"
+															placeholder="2019"
 															hide-details
 														></v-text-field>
 													</v-col>
@@ -529,7 +514,7 @@
 															filled
 															outlined
 															dense
-															placeholder="P. ej: 2021"
+															placeholder="2021"
 															hide-details
 															type="text"
 														></v-text-field>
@@ -628,12 +613,7 @@
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="
-																primary--text
-																font-weight-bold
-																body-1
-																pb-3
-															"
+															class="primary--text font-weight-bold body-1 pb-3"
 														>
 															Experiencia
 														</div>
@@ -644,7 +624,7 @@
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															placeholder="P. ej: Psicólogo"
+															placeholder="Psicólogo Clinico"
 															dense
 															hide-details
 															type="text"
@@ -660,7 +640,7 @@
 															outlined
 															dense
 															hide-details
-															placeholder="P. ej: Hospital del Cáncer"
+															placeholder="Clinica Las Condes"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -669,7 +649,7 @@
 															v-model="selectedExperience.current"
 															dense
 															hide-details
-															label="Actualmente tengo este cargo"
+															label="Actualmente estoy trabajando aquí"
 															@change="
 																e => {
 																	selectedExperience.end = '';
@@ -689,7 +669,7 @@
 															outlined
 															dense
 															hide-details
-															placeholder="P. ej: 2019"
+															placeholder="2019"
 															type="text"
 														></v-text-field>
 													</v-col>
@@ -704,7 +684,7 @@
 																outlined
 																dense
 																hide-details
-																placeholder="P. ej: 2021"
+																placeholder="2021"
 																type="text"
 															></v-text-field>
 														</v-col>
@@ -846,12 +826,7 @@
 								<v-col cols="12">
 									<div class="primary--text">¡Ya casi terminamos!</div>
 									<div
-										class="
-											mb-10
-											primary--text
-											font-weight-bold
-											text-h4 text-left
-										"
+										class="mb-10 primary--text font-weight-bold text-h4 text-left"
 									>
 										Háblanos sobre tu trabajo
 									</div>

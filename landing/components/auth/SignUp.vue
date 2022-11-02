@@ -22,6 +22,17 @@
 					:error-messages="emailErrors"
 				></v-text-field>
 			</v-col>
+			<v-col cols="12">
+				<v-text-field
+					v-model="form.phone"
+					label="Teléfono"
+					type="text"
+					dense
+					outlined
+					:error-messages="phoneErrors"
+				></v-text-field>
+			</v-col>
+
 			<!-- <v-col cols="12">
 				<v-text-field
 					v-model="form.inviteCode"
@@ -55,14 +66,6 @@
 					>
 						Términos y condiciones
 					</nuxt-link>
-					<span class="primary--text">y</span>
-					<nuxt-link
-						style="text-decoration: none"
-						:to="{ name: 'politicas' }"
-						target="_blank"
-					>
-						la Política de privacidad.
-					</nuxt-link>
 				</span>
 			</v-col>
 			<v-col cols="12">
@@ -86,10 +89,11 @@
 
 <script>
 import { validationMixin } from 'vuelidate';
-import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
+import { required, email, minLength, maxLength, helpers } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
-import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
 
 export default {
 	name: 'SignUp',
@@ -135,6 +139,13 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
+		phoneErrors() {
+			const errors = [];
+			if (!this.$v.form.phone.$dirty) return errors;
+			!this.$v.form.phone.required && errors.push('El celular es requerido');
+			!this.$v.form.phone.mustBePhone && errors.push('Escriba un número válido');
+			return errors;
+		},
 	},
 	created() {
 		this.defaultForm();
@@ -147,6 +158,7 @@ export default {
 				role: 'user',
 				password: '',
 				inviteCode: '',
+				phone: '',
 			};
 		},
 		async onSubmit() {
@@ -224,6 +236,10 @@ export default {
 			email: {
 				required,
 				email,
+			},
+			phone: {
+				required,
+				mustBePhone,
 			},
 			password: {
 				required,

@@ -25,4 +25,6 @@ retoolRouter.get(
 	'/retool/payments/next/:startDate/:endDate',
 	retoolController.getSessionsPayment
 );
+
+retoolRouter.get('/retool/fix/appointments', retoolController.fixSpecialities);
 export default retoolRouter;

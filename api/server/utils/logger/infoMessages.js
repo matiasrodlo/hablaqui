@@ -5,7 +5,7 @@
 //filter: sirve para especificar que se realizo una accion con un filtro o variable adicional
 // ej: test@test.cl obtuvo todos los lodging con placeId
 // con 'variable'
-export const infoMessages = (email, action, pluralization, model, data, filter) => {
+export const infoMessages = (email, action, pluralization, model, data, filter) => { // inforMessages es un objeto que contiene funciones que retornan strings
 	if (filter && data) {
 		return `${email} ${action} ${pluralization} ${model} ${JSON.stringify(data)} ${filter}`;
 	} else if (data) {

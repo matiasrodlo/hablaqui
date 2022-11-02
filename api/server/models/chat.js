@@ -45,6 +45,14 @@ let chatSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'psychologist',
 		},
+		isLastRead: {
+			type: Boolean,
+			default: true,
+		},
+		lastMessageSendBy: {
+			type: String,
+			default: 'error',
+		},
 		messages: [messageSchema],
 		reports: [reportSchema],
 	},

@@ -15,14 +15,14 @@
 				<v-col cols="12" md="6">
 					<v-row justify="center">
 						<v-col cols="6" sm="5" md="4" lg="3">
-							<nuxt-link to="/" class="tex-center">
+							<a href="https://hablaqui.cl/" class="tex-center">
 								<v-img
 									class="mx-auto"
 									style="max-width: 200px"
 									:src="`https://cdn.hablaqui.cl/static/logo.png`"
 									:lazy-src="`https://cdn.hablaqui.cl/static/logo.png`"
 								/>
-							</nuxt-link>
+							</a>
 						</v-col>
 					</v-row>
 					<v-row justify="center" class="text-center">

@@ -17,7 +17,7 @@
 		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
-				href="https://cal.hablaqui.cl/team/hablaqui/onboarding"
+				href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
 				target="_blank"
 			>
 				<div class="d-flex align-center">

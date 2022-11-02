@@ -13,13 +13,10 @@
 							class="text-h5 font-weight-medium my-4"
 							style="color: #3c3c3b; line-height: 26.4px"
 						>
-							Configura tu horario semanal
+							Disponibilidad semanal
 						</div>
-						<div
-							class="body-1 font-weight-bold"
-							style="color: #3c3c3b; line-height: 26.4px"
-						>
-							Gestiona tu horario de trabajo aquí
+						<div class="body-1 font-weight" style="color: #3c3c3b; line-height: 26.4px">
+							En estos horarios podrán agendar con usted desde su perfil
 						</div>
 						<small v-if="hasOverlay" class="error--text">
 							Existe un solapamiento de horas
