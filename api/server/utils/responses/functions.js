@@ -1,4 +1,4 @@
-//used in all controller methods
+// used in all controller methods
 export const restResponse = (data, code, res) =>
 	res.status(code).json({
 		...data,
@@ -8,7 +8,7 @@ export const restResponse = (data, code, res) =>
 	});
 
 export const conflictResponse = message => ({ code: 409, data: { message } });
-//se conserva la estructura antigua en este, ya que va ser ocupado en los catch del controller
+// se conserva la estructura antigua en este, ya que va ser ocupado en los catch del controller
 export const errorResponse = (e, res) =>
 	res
 		.status(400)
