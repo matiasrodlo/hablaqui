@@ -7,9 +7,6 @@ import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
 
 const newCoupon = async (user, payload) => {
-	/*
-	Esta función recibe un usuario y un objeto con los datos del cupon.
-	*/
 	// Verifica si el cupon ya existe y si el usuario tiene autorización para crear cupones
 	if (user.role !== 'superuser')
 		return conflictResponse('No tienes poder aqui.');
@@ -32,10 +29,6 @@ const newCoupon = async (user, payload) => {
 };
 
 const checkCoupon = async (code, user) => {
-	/*
-	Esta función recibe un codigo de cupon y un usuario.
-	*/
-
 	// Busca el cupon en la base de datos y verifica ciertas condiciones
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)

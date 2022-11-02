@@ -80,122 +80,111 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	const updatedChat = await Chat.findOneAndUpdate(
 		// busca un chat en la base de datos
 		{
-			user: userId, // que tenga como usuario al usuario que se recibe como parámetro siendo de tipo ObjectId
-			psychologist: psychologistId, // y que tenga como psicologo al psicologo que se recibe como parámetro siendo de tipo ObjectId
+			user: userId,
+			psychologist: psychologistId,
 		},
 		{
 			$push: {
-				// añade un nuevo mensaje al chat
-				messages: newMessage, // con el nuevo mensaje
+				messages: newMessage,
 			},
-			read: false, // y que el chat no esté leído
+			read: false,
 		},
-		{ new: true } // devuelve el documento actualizado
+		{ new: true }
 	);
+
+	// Se guardan los datos en data para poder guardarlos en el modelo de email
 	const data = {
-		// crea un objeto con los datos del mensaje
-		userId, // con el id del usuario
-		psychologistId, // con el id del psicologo
-		_id: updatedChat._id, // con el id del chat
-		content: [...updatedChat.messages].pop(), // Quita el último mensaje del array de mensajes, y devuelve el contenido del último mensaje
+		userId,
+		psychologistId,
+		_id: updatedChat._id,
+		content: [...updatedChat.messages].pop(),
 	};
-
 	await emailChatNotification(
-		// envía un email de notificación al psicologo
-		data, // con los datos del mensaje
-		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user' // si el usuario es un psicologo envía un email de notificación de que el psicologo ha enviado un mensaje, si no envía un email de notificación de que el usuario ha enviado un mensaje
+		data,
+		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user'
 	);
 
-	const analytics = new Analytics(process.env.SEGMENT_API_KEY); // crea un nuevo objeto de analytics, SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
+	// Envía un evento a segment
+	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 	analytics.track({
-		// envía un evento a segment
-		userId: user._id.toString(), // con el id del usuario
-		event: 'message-sent', // con el evento de mensaje enviado
+		userId: user._id.toString(),
+		event: 'message-sent',
 	});
 
-	return { chat: updatedChat, emit: data }; // retorna el chat actualizado y los datos del mensaje
+	return { chat: updatedChat, emit: data };
 };
 
 const emailChatNotification = async (data, type) => {
-	// función para enviar un email de notificación, recibe los datos del mensaje y el tipo de notificación
+	// Crea un payload con los datos de data y guarda en el modelo de email
 	const payload = {
-		// crea un objeto con los datos del mensaje
-		userRef: data.userId, // con el id del usuario
-		psyRef: data.psychologistId, // con el id del psicologo
-		type: type, // con el tipo de notificación
-		wasScheduled: false, // y que no estaba programado
-		sessionRef: data.content._id.toString(), // con el id del mensaje
-		sessionDate: data.content.createdAt, // con la fecha de creación del mensaje
+		userRef: data.userId,
+		psyRef: data.psychologistId,
+		type: type,
+		wasScheduled: false,
+		sessionRef: data.content._id.toString(),
+		sessionDate: data.content.createdAt,
 	};
 	await Email.updateOne(
-		// busca un email en la base de datos
 		{
-			userRef: data.userId, // que tenga como usuario al usuario que se recibe como parámetro siendo de tipo ObjectId
-			psyRef: data.psychologistId, // y que tenga como psicologo al psicologo que se recibe como parámetro siendo de tipo ObjectId
-			type: type, // y que tenga como tipo de notificación el tipo de notificación que se recibe como parámetro
+			userRef: data.userId,
+			psyRef: data.psychologistId,
+			type: type,
 		},
-		payload, // con los datos del mensaje
-		{ upsert: true } // duda
+		payload,
+		{ upsert: true }
 	);
 };
 
 const createReport = async (
-	// función para crear un reporte, recibe el id del usuario, el id del psicologo, el id del chat, el contenido del reporte y el motivo del reporte
-	user, // el usuario que reporta
-	psychologistId, // el id del psicologo
-	userId, // el id del usuario
-	reportType, // el tipo de reporte
-	issue // el motivo del reporte
+	user,
+	psychologistId,
+	userId,
+	reportType,
+	issue
 ) => {
+	// Crea un nuevo reporte del chat y lo guarda en el modelo de chat
 	const newReport = {
-		// crea un nuevo reporte
-		reportedBy: user._id, // con el id del usuario que lo reporta
-		reportType, // con el tipo de reporte
-		issue, // con el motivo del reporte
+		reportedBy: user._id,
+		reportType,
+		issue,
 	};
 
 	const updatedChat = await Chat.findOneAndUpdate(
-		// busca un chat en la base de datos para actualizarlo
 		{
-			user: userId, // que tenga como usuario al usuario que se recibe como parámetro siendo de tipo ObjectId
-			psychologist: psychologistId, // y que tenga como psicologo al psicologo que se recibe como parámetro siendo de tipo ObjectId
+			user: userId,
+			psychologist: psychologistId,
 		},
 		{
 			$push: {
-				// añade un nuevo reporte al chat
-				reports: newReport, // con el nuevo reporte
+				reports: newReport,
 			},
 		},
-		{ new: true } // devuelve el documento actualizado
+		{ new: true }
 	);
 
 	logInfo(
-		// registra un log de información
 		`El usuario ${user.email} de tipo ${user.role} ha hecho un reporte`
 	);
-	return okResponse('Reporte creado', { chat: updatedChat }); // retorna un mensaje de éxito y el chat actualizado
+	return okResponse('Reporte creado', { chat: updatedChat });
 };
 
 const readMessage = async (user, chatId) => {
-	// obtemos el id de la otra persona con que chateamos
-	const chat = await Chat.findById(chatId); // busca un chat en la base de datos
-	const id = user.role == 'psychologist' ? chat.user : user.psychologist; // Si el usuario es un psicologo, el id es el id del usuario, si no, el id es el id del psicologo
+	// Se obtiene el documento de chat, verifica el rol del usuario y marca el chat como leido
+	const chat = await Chat.findById(chatId);
+	const id = user.role == 'psychologist' ? chat.user : user.psychologist;
 
-	// marcamos como leido todos los mensajes
 	await Chat.updateOne(
-		// busca un chat en la base de datos para actualizarlo
-		{ _id: chatId, sentBy: id }, // busca el chat con el id que se recibe como parámetro y que el mensaje haya sido enviado por el id que se obtuvo anteriormente
+		{ _id: chatId, sentBy: id },
 		{
-			$set: { 'messages.$[].read': true }, // le cambia el estado de leído a todos los mensajes
+			$set: { 'messages.$[].read': true },
 		},
-		{ new: true } // devuelve el documento actualizado
+		{ new: true }
 	);
 
-	return okResponse('Mensajes leidos', {}); // retorna un mensaje de éxito
+	return okResponse('Mensajes leidos', {});
 };
 
 const chatService = {
-	// crea un objeto con las funciones del servicio
 	startConversation,
 	getMessages,
 	getChats,
