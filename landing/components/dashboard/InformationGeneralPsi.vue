@@ -89,7 +89,7 @@ export default {
 	},
 	data() {
 		return {
-			rules: [v => v.length <= 300 || 'Maximo 300 caracteres'],
+			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
 		};
 	},
 	methods: {

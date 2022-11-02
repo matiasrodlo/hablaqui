@@ -19,7 +19,7 @@
 							></avatar>
 						</nuxt-link>
 					</v-col>
-					<v-col cols="8" sm="9" class="pb-4 pl-4 pt-5">
+					<v-col cols="8" sm="9" class="pb-s pl-4 pt-5">
 						<div>
 							<nuxt-link
 								style="text-decoration: none"
@@ -86,8 +86,6 @@
 			</v-card-text>
 		</v-card>
 		<v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
-			<v-card-text class="text-h5 primary--text font-weight-bold">Perfil</v-card-text>
-			<v-divider class="mx-4"></v-divider>
 			<v-card-text>
 				<div class="text-left subtitle-1 primary--text">Especialidades</div>
 				<div
@@ -140,8 +138,9 @@
 				<div class="body-1 text-left">
 					<ul v-if="psychologist.formation && psychologist.formation.length">
 						<li v-for="(formation, i) in psychologist.formation" :key="i" class="my-1">
-							{{ formation.formationType }} -
-							{{ formation.description }}
+							{{ formation.formationType }}, {{ formation.description }},
+							{{ formation.intitucion }}
+
 							<span v-if="formation.start && formation.end">
 								({{ formation.start }}, {{ formation.end }})
 							</span>
@@ -162,11 +161,9 @@
 			</v-card-text>
 			<v-divider class="mx-4"></v-divider>
 			<v-card-text>
-				<div class="mb-4 text-left subtitle-1 primary--text">
-					Política de reprogramación
-				</div>
+				<div class="mb-4 text-left subtitle-1 primary--text">Reprogramación</div>
 				<div class="body-1 text-left">
-					Puedes reprogramar tu sesión hasta
+					Puede reprogramar hasta
 					<strong>
 						{{ psychologist.preferences.minimumRescheduleSession }} hora(s)
 					</strong>
