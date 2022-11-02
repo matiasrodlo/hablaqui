@@ -9,12 +9,6 @@
 			<v-card-text>
 				<div class="px-6 d-flex justify-space-between align-center">
 					<div>
-						<div
-							class="text-h5 font-weight-medium my-4"
-							style="color: #3c3c3b; line-height: 26.4px"
-						>
-							Disponibilidad semanal
-						</div>
 						<div class="body-1 font-weight" style="color: #3c3c3b; line-height: 26.4px">
 							En estos horarios podrán agendar con usted desde su perfil
 						</div>

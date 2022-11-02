@@ -130,11 +130,7 @@
 				<v-col
 					cols="12"
 					tag="section"
-					class="
-						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
-						font-weight-bold
-						my-10
-					"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
 						id="psi-quiero-comenzar-index"
@@ -232,26 +228,12 @@
 												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
 											>
 												<h4
-													class="
-														body-1
-														white--text
-														pt-1
-														pl-4
-														font-weight-regular
-														white--text
-													"
+													class="body-1 white--text pt-1 pl-4 font-weight-regular white--text"
 												>
 													{{ item.title }}
 												</h4>
 												<h2
-													class="
-														body-2
-														pl-4
-														pt-3
-														pb-2
-														font-weight-bold
-														white--text
-													"
+													class="body-2 pl-4 pt-3 pb-2 font-weight-bold white--text"
 												>
 													{{ item.name }}
 												</h2>
@@ -352,11 +334,7 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="
-						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
-						font-weight-bold
-						mb-10
-					"
+					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
 				>
 					<v-btn
 						id="comenzar-3"
@@ -562,13 +540,7 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="
-						mt-10
-						mb-5
-						text-center text-h5 text-md-h4
-						font-weight-bold
-						text--secondary
-					"
+					class="mt-10 mb-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
 				>
 					Descarga nuestra aplicación
 				</v-col>
@@ -615,11 +587,7 @@
 			<v-row tag="section">
 				<v-col
 					tag="h2"
-					class="
-						my-10
-						text-center text-md-left text-h4 text-md-h3 text--secondary
-						font-weight-bold
-					"
+					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
 				>
 					Preguntas frecuentes
 				</v-col>
@@ -638,12 +606,7 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="
-						hidden-sm-and-down
-						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
-						font-weight-bold
-						mt-16
-					"
+					class="hidden-sm-and-down text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
 				>
 					<v-btn
 						id="comenzar-4"
@@ -659,115 +622,12 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="
-						hidden-sm-and-down
-						text-center
-						body-1
-						font-weight-bold
-						mt-6
-						text--secondary
-					"
+					class="hidden-sm-and-down text-center body-1 font-weight-bold mt-6 text--secondary"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
 			</v-row>
 		</v-container>
-		<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-16">
-			<v-container tag="section">
-				<v-row justify="center">
-					<v-col cols="12" md="10" xl="8">
-						<v-row tag="section" align="center">
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									alt="Vida Tres Isapre"
-									contain
-									height="100"
-									:src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="nueva masvida"
-									:src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/nueva-masvida.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									alt="fonasa"
-									max-height="100"
-									:src="`https://cdn.hablaqui.cl/static/fonasa.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/fonasa.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="ban medica"
-									:src="`https://cdn.hablaqui.cl/static/banmedica.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/banmedica.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="colmena"
-									:src="`https://cdn.hablaqui.cl/static/colmena.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/colmena.png`"
-								></v-img>
-							</v-col>
-							<v-col tag="section" cols="6" sm="2">
-								<v-img
-									contain
-									max-height="100"
-									alt="consalud"
-									:src="`https://cdn.hablaqui.cl/static/consalud.png`"
-									:lazy-src="`https://cdn.hablaqui.cl/static/consalud.png`"
-								></v-img>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-			</v-container>
-		</section>
-		<section v-else class="mt-16" style="background-color: #e3f2fd">
-			<v-carousel
-				cycle
-				height="140"
-				:show-arrows="false"
-				hide-delimiter-background
-				hide-delimiters
-				reverse-transition="fade-transition"
-				transition="fade-transition"
-			>
-				<v-carousel-item
-					v-for="(item, e) in [
-						`https://cdn.hablaqui.cl/static/VidaTresIsapre.png`,
-						`https://cdn.hablaqui.cl/static/nueva-masvida.png`,
-						`https://cdn.hablaqui.cl/static/fonasa.png`,
-						`https://cdn.hablaqui.cl/static/banmedica.png`,
-						`https://cdn.hablaqui.cl/static/colmena.png`,
-						`https://cdn.hablaqui.cl/static/consalud.png`,
-					]"
-					:key="e"
-				>
-					<v-img
-						height="70"
-						class="mt-8"
-						:src="item"
-						:lazy-src="item"
-						:alt="item"
-						contain
-					/>
-				</v-carousel-item>
-			</v-carousel>
-		</section>
 		<Footer />
 		<div class="primary-color" style="height: 30px"></div>
 	</div>
