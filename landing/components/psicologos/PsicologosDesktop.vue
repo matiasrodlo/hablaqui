@@ -598,11 +598,13 @@
 				</v-col>
 			</v-row>
 		</v-container>
+		<!-- loader -->
 		<v-container v-else fluid style="max-width: 1080px">
 			<v-col v-for="c in 2" :key="c" cols="12" class="my-16">
 				<v-skeleton-loader type="image" />
 			</v-col>
 		</v-container>
+		<!-- scroll infinito(al llegar aqui se enejuta la funcion) -->
 		<div v-observe-visibility="scrollInfinity" />
 	</div>
 </template>
@@ -611,6 +613,9 @@
 import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
+/**
+ * Componente: Listado de psicologos en vista de escritorio
+ */
 export default {
 	name: 'PsicologosDesktop',
 	components: {
@@ -651,6 +656,7 @@ export default {
 		/**
 		 * Filter search box
 		 * Filtra en base a los resultados del panel
+		 * Este es el filtro final que se utiliza para iterar en el template
 		 */
 		filterLevelThree() {
 			return this.filterLevelTwo.filter(item => {
@@ -662,6 +668,7 @@ export default {
 		},
 		/**
 		 * Filter prices
+		 * Filtro en base a los precios de los psicologos
 		 */
 		filterLevelTwo(item) {
 			if (!this.prices) return this.filterLevelOne;
@@ -676,9 +683,13 @@ export default {
 		},
 		/**
 		 * items for search box
+		 * Primer filtro de psicologos en base a:
+		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
 		 */
 		filterLevelOne() {
+			// fitro de marketplaceVisibility
 			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
+			// si no hay genero , models, laguajes o status marcado entonces restorna el resultado
 			if (
 				!this.gender.length &&
 				!this.models.length &&
@@ -686,7 +697,9 @@ export default {
 				!this.status
 			)
 				return result;
+			// si quiere ver por psicologo online, filtramos estos
 			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
+			// filtramos los psicologo segun el genero marcados
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
@@ -694,12 +707,15 @@ export default {
 					trans && gender.push(trans);
 					return gender.some(el => this.gender.some(g => g === el));
 				});
+			// filtramos los psicologos segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
+			// filtramos segun los leguajes que habla el psicologo
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages === el))
 				);
+			// filtramos segun las specialties
 			if (this.specialties.length) {
 				result = result.filter(item =>
 					item.specialties.some(el => this.specialties.includes(el))
@@ -715,6 +731,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * Escucha que cambio de pagina(scroll) y obtiene más sessiones
+		 */
 		page(value, oldValue) {
 			let prev = 0;
 			if (oldValue) prev = oldValue;
@@ -723,6 +742,7 @@ export default {
 		},
 	},
 	created() {
+		// Cuando venimos de otra ruta con el chat abierto lo cerramos
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (
@@ -732,33 +752,57 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
+		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
 	beforeDestroy() {
+		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		/**
+		 * Cambia aumenta de pagina con el scroll
+		 */
 		scrollInfinity(isVisible) {
 			if (isVisible && this.page < this.filterLevelThree.length / 5) {
 				this.page += 1;
 			}
 		},
+		/**
+		 * Esto son los psicologos que se iran viendo segun el scroll
+		 */
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))
 				this.visibles.push(idPsychologist);
 		},
+		/**
+		 * Al ejecutar la funcion guarda en scrollHeight la distancion en ese momento que tiene de scroll
+		 */
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
+		/**
+		 * Ir a la ruta de evaluacion
+		 */
 		goEvaluation() {
 			this.$router.push({ name: 'evaluacion' });
 		},
+		/**
+		 * Busca el src del avatar
+		 * @param {boolean} thumbnail
+		 * @param {Object} psychologist
+		 * @returns String con el link del avatar
+		 */
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
 			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
 			if (psychologist.avatar) return psychologist.avatar;
 			return '';
 		},
+		/**
+		 * @param {string} id del psicologo
+		 * @returns Array de sesiones
+		 */
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.psychologist === id);
 			if (!temp) {
@@ -766,12 +810,19 @@ export default {
 			}
 			return temp.sessions;
 		},
+		/**
+		 * Reestablece valores
+		 */
 		changeInput() {
 			this.page = 0;
 			this.searchInput = '';
 			this.page = 1;
 			this.visibles = [];
 		},
+		/**
+		 * si no esta logeado lo envia a registro, si no lo envia al perfil y abre el chat
+		 * @param {string} psychologist
+		 */
 		goChat(psychologist) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
