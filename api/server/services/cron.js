@@ -263,7 +263,14 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
+
+		// Obtiene todas las sessiones y coemienza a recorrerlas, luego se recorre entre los planes, y finalmente
+		// Se recorre las sessiones para poder cambiar de estado a las sessiones pendientes, que estén dentro
+		// de las preferencias minimas del psicologo, se le cambia el estado a "upnext" como sessión próxima a realizarse.
+		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
+
 		const pendingSessions = await Sessions.find();
+		// Se quiere obtener las sessiones proximas y realizadas
 		var toUpdateUpnext = [];
 		var toUpdateSuccess = [];
 
@@ -306,6 +313,7 @@ const cronService = {
 			})
 		);
 
+		// A las sessiones proximas a realizarse las recorre para cambiarle el estado.
 		if (toUpdateUpnext.length > 1) {
 			try {
 				await Promise.allSettled(
@@ -350,6 +358,7 @@ const cronService = {
 			}
 		}
 
+		// A las sessiones realizadas las recorre para cambiarle el estado.
 		if (toUpdateSuccess.length > 1) {
 			try {
 				await Promise.allSettled(
