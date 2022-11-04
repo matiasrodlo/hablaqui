@@ -25,19 +25,20 @@ moment.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
-const getSessions = async (userLogged, idUser, idPsy) => {
+const getSessions = async (userLogged, idUser) => {
+	// iniciamos la variable
 	let sessions;
 
 	// Buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
-			psychologist: idPsy,
+			//psychologist: idPsy,
 			user: idUser,
 		}).populate('psychologist user');
 	}
 	if (userLogged.role === 'psychologist') {
 		sessions = await Sessions.find({
-			psychologist: idPsy,
+			psychologist: idUser,
 		}).populate('psychologist user');
 	}
 
@@ -327,8 +328,8 @@ const createPlan = async ({ payload }) => {
 				plan =>
 					plan.payment === 'success' &&
 					moment().isBefore(moment(plan.expiration)) &&
-					plan.title !== 'Plan inicial'
-				//sessions.psychologist.toString() !== payload.psychologist
+					plan.title !== 'Plan inicial' &&
+					sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
 	)
