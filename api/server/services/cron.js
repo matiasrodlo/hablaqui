@@ -9,11 +9,12 @@ import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import { logInfo } from '../config/pino';
+import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
+
 moment.tz.setDefault('America/Santiago');
+sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
-const sgClient = require('@sendgrid/client'); // sendgrid es una api que permite enviar correos masivos
-sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 function isSchedulableEmail(date) {
 	/**

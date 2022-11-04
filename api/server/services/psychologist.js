@@ -14,9 +14,10 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket'; // Funciones que devuelven URL's
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago'); // Se configura la zona horaria de la aplicación
+import Analytics from 'analytics-node';
+moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
 	// Funcion para obtener todos los psicologos

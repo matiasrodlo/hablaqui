@@ -8,9 +8,9 @@ import { actionInfo } from '../utils/logger/infoMessages'; // recibe informació
 import psychologist from '../models/psychologist'; // Contiene la definición del modelo de psychologist para mongodb
 import mailServiceAccount from '../utils/functions/mails/accountsShares'; // Utiliza el servicio de mail
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import Analytics from 'analytics-node';
 
-var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
-var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const recruitmentService = {
 	/**

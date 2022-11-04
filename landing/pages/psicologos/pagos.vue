@@ -52,6 +52,7 @@ export default {
 			loadingSession: false,
 			hasSessions: false,
 			psychologist: null,
+			plan: null,
 		};
 	},
 	head() {
@@ -78,7 +79,7 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			plan: 'User/plan',
+			plans: 'User/plan',
 		}),
 	},
 	jsonld() {
@@ -101,6 +102,8 @@ export default {
 			this.plan.remainingSessions > 0;
 	},
 	async mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		window.scrollTo(0, 0);
 		if (this.hasSessions) {
 			await this.newSession();

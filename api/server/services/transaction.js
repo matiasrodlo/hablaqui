@@ -8,9 +8,10 @@ import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunctio
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
 	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id

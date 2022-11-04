@@ -381,6 +381,7 @@ export default {
 			drawer: true,
 			online: true,
 			isMini: true,
+			plan: null,
 		};
 	},
 	computed: {
@@ -714,7 +715,7 @@ export default {
 			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			consultantes: 'Psychologist/clients',
 		}),
 	},
@@ -733,9 +734,10 @@ export default {
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
-
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
 				if (this.plan.psychologist) {

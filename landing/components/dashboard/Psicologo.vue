@@ -137,8 +137,12 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			plan: 'User/plan',
+			plans: 'User/plan',
 		}),
+	},
+	mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	methods: {
 		avatar(psychologist, thumbnail) {
