@@ -218,13 +218,13 @@ const createPlan = async ({ payload }) => {
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
 		expirationDate = moment()
-			.add({ months: 1 })
+			.add({ months: 2 })
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = moment()
-			.add({ months: 3 })
+			.add({ months: 6 })
 			.format();
 	}
 
