@@ -36,10 +36,10 @@ const createPreference = async body => {
 			},
 		],
 		back_urls: {
-			success: `${landing_url}/dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
+			success: `${landing_url}dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
 			// redirection to profile psychologist
-			failure: `${landing_url}/${body.psychologist}`,
-			pending: `${landing_url}/${body.psychologist}`,
+			failure: `${landing_url}${body.psychologist}`,
+			pending: `${landing_url}${body.psychologist}`,
 		},
 		auto_return: 'approved',
 		binary_mode: true,
@@ -87,8 +87,8 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 			success: `${api_url}api/v1/mercadopago/${
 				isPsychologist ? 'psychologist' : 'recruited'
 			}-pay/${id}?period=${body.period}`,
-			failure: `${landing_url}/pago/failure-pay`,
-			pending: `${landing_url}/pago/pending-pay`,
+			failure: `${landing_url}pago/failure-pay`,
+			pending: `${landing_url}pago/pending-pay`,
 		},
 		auto_return: 'approved',
 		binary_mode: true,
@@ -375,8 +375,8 @@ const createCustomSessionPreference = async params => {
 		],
 		back_urls: {
 			success: `${api_url}api/v1/mercadopago/custom-session-pay/${userId}/${psyId}/${planId}`,
-			failure: `${landing_url}/pago/failure-pay`,
-			pending: `${landing_url}/pago/pending-pay`,
+			failure: `${landing_url}pago/failure-pay`,
+			pending: `${landing_url}pago/pending-pay`,
 		},
 		auto_return: 'approved',
 		binary_mode: true,
