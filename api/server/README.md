@@ -3,14 +3,13 @@
 ## Table of Contents
 
 1. [Composición del back](#back)
-2. [Servicios](#servicios)
-3. [Librerias que se utilizan](#librerias)
+2. [Librerias que se utilizan](#librerias)
 
 ### BACK
 
 ---
 
--   **routes**: Carpeta que contiene todas las rutas de la API separado por servicios
+-   **routes**: Carpeta que contiene todas los endpoints de la API separado por servicios
 -   **controllers**: Carpeta que contiene todos los controladores de la API separado por servicios, solo se encarga de extraer la
                     información y enviarla al endpoint correspondiente
 -   **services**: Carpeta que contiene los servicios de la API, se encarga de la lógica de negocio y de la conexión con la base de datos
@@ -23,28 +22,10 @@ utiliza la libreria joi y el middleware validation)
 
 ---
 
-### SERVICIOS
-
----
--   **appointments**: Servicio que se encarga de obtener las citas de los psicólogos
--   **auth**: Servicio que se encarga de la autenticación de los usuarios
--   **chat**: Servicio que se encarga de la comunicación entre psicólogos y usuarios
--   **coupon**: Servicio que se encarga de los cupones de descuento en los pagos
--   **cron**: Servicio que se encarga de las tareas programadas
--   **evaluation**: Servicio que se encarga de la evaluación de los psicólogos
--   **mercadopago**: Servicio que se encarga de los pagos con mercadopago
--   **psychologist**: Servicio que contiene las acciones que involucran a los psicólogos
--   **recruitment**: Servicio que se encarga de la postulación de los psicólogos
--   **retool**: Servicio que contiene retool, retool es un herramienta que se utilizaba como dashboard (ya se esta dejando de usar)
--   **sessions**: Servicio que se encarga de las sesiones
--   **transaction**: Servicio que se encarga de las transacciones de los pagos
--   **users**: Servicio que contiene las acciones que involucran a los usuarios
-
----
-
 ### LIBRERIAS
 
 ---
+
 -   **axios**: Libreria que se utiliza para hacer peticiones http (se hace desde front)
 -   **analytics-node**: Libreria que se utiliza para hacer peticiones a segment
 -   **bcrypt**: Libreria que se utiliza para encriptar las contraseñas
@@ -64,3 +45,5 @@ utiliza la libreria joi y el middleware validation)
 -   **sengrid**: Libreria que se utiliza para enviar correos
 -   **socket.io**: Libreria que se utiliza para crear sockets
 -   **twilio**: Libreria que se utiliza para video llamadas
+
+---
