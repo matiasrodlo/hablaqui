@@ -310,11 +310,12 @@ const match = async body => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
+	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
 		// Machea por género (transgenero)
 		matchedSpecialists = await Specialist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes }, // Filtra por especialidades
+			specialties: { $in: payload.themes },
 		});
 	} else {
 		// Si no es transgenero
