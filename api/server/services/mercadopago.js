@@ -17,14 +17,14 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Analytics from 'analytics-node';
 dayjs.extend(customParseFormat);
 dayjs.extend(badMutable);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 mercadopago.configure({
 	access_token: mercadopago_key,
@@ -265,12 +265,12 @@ const psychologistPay = async (params, query) => {
 	let expirationDate;
 	if (period === 'anual') {
 		expirationDate = dayjs()
-			.add({ months: 12 })
+			.add(12, 'month')
 			.format();
 	}
 	if (period === 'mensual') {
 		expirationDate = dayjs()
-			.add({ months: 1 })
+			.add(1, 'month')
 			.format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
@@ -405,12 +405,12 @@ const recruitedPay = async (params, query) => {
 	let expirationDate;
 	if (period == 'anual') {
 		expirationDate = dayjs()
-			.add({ months: 12 })
+			.add(12, 'month')
 			.format();
 	}
 	if (period == 'mensual') {
 		expirationDate = dayjs()
-			.add({ months: 1 })
+			.add(1, 'month')
 			.format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan

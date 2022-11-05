@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import { node_env } from './dotenv';
+import expressWinston from 'express-winston';
+import { createLogger, format, transports } from 'winston';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
-const { createLogger, format, transports } = require('winston');
 const MESSAGE = Symbol.for('message');
 
 const jsonFormatter = logEntry => {
@@ -43,7 +44,6 @@ export const logInfo = info => logger.info(info);
 
 export const requestLogMiddleware = () => {
 	if (node_env === 'development') {
-		const expressWinston = require('express-winston');
 		return expressWinston.logger({
 			transports: [new transports.Console()],
 			// format: format.combine(format.colorize(), format.simple()),

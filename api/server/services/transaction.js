@@ -10,11 +10,12 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import Analytics from 'analytics-node';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
 	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id

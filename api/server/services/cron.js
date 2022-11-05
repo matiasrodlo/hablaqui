@@ -15,6 +15,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
 dayjs.extend(customParseFormat);
 dayjs.extend(badMutable);
 dayjs.extend(utc);
@@ -22,10 +23,9 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
+sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
-const sgClient = require('@sendgrid/client'); // sendgrid es una api que permite enviar correos masivos
-sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 function isSchedulableEmail(date) {
 	/**

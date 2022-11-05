@@ -19,6 +19,7 @@ import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
 import dayjs from 'dayjs';
+import crypto from 'crypto';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
@@ -26,6 +27,7 @@ import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Analytics from 'analytics-node';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(utc);
@@ -34,22 +36,23 @@ dayjs.extend(localizedFormat);
 dayjs.extend(badMutable);
 dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
-const getSessions = async (userLogged, idUser, idPsy) => {
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const getSessions = async (userLogged, idUser) => {
+	// iniciamos la variable
 	let sessions;
 
 	// Buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
-			psychologist: idPsy,
+			//psychologist: idPsy,
 			user: idUser,
 		}).populate('psychologist user');
 	}
 	if (userLogged.role === 'psychologist') {
 		sessions = await Sessions.find({
-			psychologist: idPsy,
+			psychologist: idUser,
 		}).populate('psychologist user');
 	}
 
@@ -228,13 +231,13 @@ const createPlan = async ({ payload }) => {
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
 		expirationDate = dayjs()
-			.add({ months: 1 })
+			.add(1, 'months')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
 		expirationDate = dayjs()
-			.add({ months: 3 })
+			.add(3, 'months')
 			.format();
 	}
 
@@ -280,7 +283,7 @@ const createPlan = async ({ payload }) => {
 		psychologist: payload.psychologist,
 	});
 
-	const roomId = require('crypto')
+	const roomId = crypto
 		.createHash('md5')
 		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
@@ -611,7 +614,7 @@ const customNewSession = async (user, payload) => {
 			payment:
 				payload.type === 'compromiso privado' ? 'success' : 'pending',
 			expiration: dayjs(payload.date, 'MM/DD/YYYY HH:mm')
-				.add({ weeks: 1 })
+				.add(1, 'week')
 				.toISOString(),
 			usedCoupon: '',
 			totalSessions: 1,
@@ -633,7 +636,7 @@ const customNewSession = async (user, payload) => {
 		);
 
 		// Creamos la direccion de la sala de videollamadas
-		const roomId = require('crypto')
+		const roomId = crypto
 			.createHash('md5')
 			.update(`${payload.user}${payload.psychologist}`)
 			.digest('hex');

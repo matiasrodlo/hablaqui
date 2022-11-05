@@ -69,7 +69,7 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{ plan.session.length }}/{{ plan.totalSessions }}
+									{{ appoinmentSessions }}/{{ totalSessions }}
 								</div>
 								<div
 									v-else
@@ -605,7 +605,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ plan.session.length }}/{{ plan.totalSessions }}
+						{{ appoinmentSessions }}/{{ totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -686,9 +686,7 @@
 								<v-text-field
 									readonly
 									disabled
-									:value="`Sesión ${plan.session.length + 1}/${
-										plan.totalSessions
-									}`"
+									:value="`Sesión ${appoinmentSessions + 1}/${totalSessions}`"
 									hide-details="auto"
 									type="text"
 									class="mt-2"
@@ -862,6 +860,9 @@ export default {
 			'22:00',
 			'23:00',
 		],
+		plan: null,
+		appoinmentSessions: 0,
+		totalSessions: 0,
 	}),
 	computed: {
 		nextSesion() {
@@ -920,7 +921,7 @@ export default {
 		...mapGetters({
 			allSessions: 'Psychologist/sessions',
 			clients: 'Psychologist/clients',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
 	},
@@ -950,6 +951,11 @@ export default {
 	},
 	methods: {
 		async initFetch() {
+			if (this.plans) {
+				this.plan = this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
+				this.totalSessions = this.plans.totalSessions;
+				this.appoinmentSessions = this.plans.appoinmentSessions;
+			}
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&
 				!this.$auth.$state.user.psychologist
@@ -960,7 +966,6 @@ export default {
 			await this.$auth.fetchUser();
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
-					idPsychologist: this.plan.psychologist,
 					idUser: this.plan.user,
 				});
 			}
@@ -969,7 +974,7 @@ export default {
 				this.$auth.$state.user.sessions.length
 			) {
 				await this.getSessions({
-					idPsychologist: this.$auth.$state.user.psychologist,
+					idUser: this.$auth.$state.user.psychologist,
 				});
 			}
 			await this.successPayment();
@@ -1158,7 +1163,12 @@ export default {
 				idPlan: this.plan._id,
 				payload,
 			});
+			this.appoinmentSessions += 1;
 			await this.$auth.fetchUser();
+			if (payload.remainingSessions <= 0) {
+				this.plans.sortedPlans = this.plans.sortedPlans.splice(0, 1);
+				if (this.plans.sortedPlans.length > 0) this.plan = this.plans.sortedPlans[0];
+			}
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},

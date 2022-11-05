@@ -13,18 +13,19 @@ import mailServiceAccount from '../utils/functions/mails/accountsShares'; // mai
 import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
 import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
 import dayjs from 'dayjs'; // dayjs.js es una librería para el manejo de fechas
+import crypto from 'crypto';
 import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
 import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Analytics from 'analytics-node';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -357,10 +358,7 @@ const usersService = {
 				},
 			});
 		}
-
-		// Se comienza a crear el documento de sessiones, se crea el link de la sala y
-		// el objeto del plan inicial, sea crea el documento de sesiones
-		const roomId = require('crypto')
+		const roomId = crypto
 			.createHash('md5')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');

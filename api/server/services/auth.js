@@ -9,9 +9,9 @@ import { logError, logInfo } from '../config/pino'; // pino.js es un logger para
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
 import mailServiceAccount from '../utils/functions/mails/accountsShares';
+import Analytics from 'analytics-node';
 
-var Analytics = require('analytics-node'); // Analytics-node sirve para integrar analiticas en cualquier aplicación.
-var analytics = new Analytics(process.env.SEGMENT_API_KEY); // SEGMENT_API_KEY es una variable de entorno que contiene la clave de segment
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const generateJwt = user => {
 	// Se crea el payload para el token, se genera con la clave secreta y el payload, se le asigna la expiración y se devuelve

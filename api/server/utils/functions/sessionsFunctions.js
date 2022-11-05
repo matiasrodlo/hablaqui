@@ -13,6 +13,13 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+const extractPrice = price => {
+	const priceArray = price.split(',');
+	let priceNumber = priceArray[0].replace('$', '');
+	priceNumber = priceNumber + priceArray[1];
+	return priceNumber;
+};
+
 export const paymentInfoFunction = async psyId => {
 	let allSessions = await Sessions.find({
 		psychologist: psyId,
@@ -30,6 +37,9 @@ export const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
+				// Cantidad de dinero a restar
+				let amountDueTotal = 0;
+				let amountDue = 0;
 				let paymentPlanDate = dayjs(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
@@ -49,10 +59,12 @@ export const paymentInfoFunction = async psyId => {
 						session.status === 'pending'
 							? 'Por realizar'
 							: transDate;
-
 					return {
 						_id: session._id,
-						datePayment: paymentPlanDate,
+						datePayment: dayjs(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).format('DD/MM/YYYY'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
@@ -93,10 +105,7 @@ export const paymentInfoFunction = async psyId => {
 				) {
 					let session = {
 						_id: null,
-						datePayment: dayjs(
-							plans.datePayment,
-							'MM/DD/YYYY'
-						).format('DD/MM/YYYY'),
+						datePayment: '---',
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
@@ -115,10 +124,14 @@ export const paymentInfoFunction = async psyId => {
 					};
 					if (Date.parse(plans.expiration) < Date.now()) {
 						session.transDate = 'Expirado';
+						amountDueTotal += Number(extractPrice(session.total));
+						amountDue += Number(extractPrice(session.amount));
+						session.total = '$0';
+						session.amount = '$0';
+						session.mercadoPercentage = '0';
 					}
 					sessions.push(session);
 				}
-
 				const expirated = sessions.filter(
 					session => session.transDate === 'Expirado'
 				).length;
@@ -149,9 +162,12 @@ export const paymentInfoFunction = async psyId => {
 					suscription: plans.period,
 					user: item.user._id,
 					datePayment: paymentPlanDate,
-					amount: priceFormatter(+plans.totalPrice),
+					amount: priceFormatter(+plans.totalPrice - amountDue),
 					finalAmount: priceFormatter(
-						+(plans.totalPrice * (1 - 0.0351)).toFixed(0)
+						+(
+							plans.totalPrice * (1 - 0.0351) -
+							amountDueTotal
+						).toFixed(0)
 					),
 					sessions,
 					transState:
