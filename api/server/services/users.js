@@ -15,6 +15,13 @@ import Coupon from '../models/coupons'; // coupons.js contiene la definición de
 import dayjs from 'dayjs'; // dayjs.js es una librería para el manejo de fechas
 import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
 import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);
