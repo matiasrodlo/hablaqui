@@ -79,23 +79,50 @@ const getEvaluationsPsy = async user => {
 	});
 };
 
-const getAllEvaluations = async psy => {
+const getAllEvaluations = async user => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Obtiene todas las evaluaciones de un psicologo incluso las que no han sido aprobadas
-	const evaluations = await getAllEvaluationsFunction(psy);
+	let evaluations = await Evaluation.find().populate('user psychologist');
+
+	evaluations = evaluations
+		.flatMap(item =>
+			item.evaluations.map(ev => {
+				return {
+					evsId: item._id,
+					evId: ev._id,
+					send: moment(ev.createdAt).format('DD/MM/YYYY HH:mm'),
+					updated: moment(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
+					approved: ev.approved,
+					comment: ev.comment,
+					global: ev.global,
+					puntuality: ev.puntuality,
+					attention: ev.attention,
+					internet: ev.internet,
+					like: ev.like,
+					improve: ev.improve,
+					psychologist:
+						item.psychologist.name +
+						' ' +
+						item.psychologist.lastName,
+					username: item.psychologist.username,
+					user: item.user.name + ' ' + item.user.lastName,
+				};
+			})
+		)
+		.sort((a, b) => new Date(a.send) - new Date(b.send));
 	return okResponse('Todas las sesiones devueltas', {
 		evaluations,
-		...getScores(evaluations),
 	});
 };
 
-const approveEvaluation = async (evaluationsId, evaluationId) => {
+const approveEvaluation = async (user, evaluationsId, evaluationId) => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Encuentra la evaluacion y la aprueba
 	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
-				'evaluations.$.moderatingDate': moment().format(),
 			},
 		}
 	).populate('psychologist user');
@@ -139,14 +166,14 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 	return okResponse('Evaluación aprobada', { evaluation });
 };
 
-const refuseEvaluation = async (evaluationsId, evaluationId) => {
+const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Encuentra la evaluacion y la rechaza
 	const evaluations = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
-				'evaluations.$.moderatingDate': moment().format(),
 			},
 		}
 	).populate('psychologist user');
