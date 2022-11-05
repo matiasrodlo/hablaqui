@@ -15,7 +15,8 @@
                     información y enviarla al endpoint correspondiente
 -   **services**: Carpeta que contiene los servicios de la API, se encarga de la lógica de negocio y de la conexión con la base de datos
 -   **models**: Carpeta que contiene los modelos de la base de datos (mongodb)
--   **schemas**: Carpeta que contiene los schemas de la base de datos (mongodb)
+-   **schemas**: Carpeta que contiene los schemas que son utilizados para validar los datos que se reciben en los endpoints (se
+utiliza la libreria joi y el middleware validation)
 -   **middleware**: Carpeta que contiene los middlewares de la API 
 -   **static**: Carpeta que contiene los archivos estáticos de la API
 -   **utils**: Carpeta que contiene funciones útiles para la API
