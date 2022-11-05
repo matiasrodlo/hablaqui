@@ -69,14 +69,14 @@
 							<v-btn
 								:disabled="item.approved === 'approved'"
 								x-small
-								@click="refuseApproveEvaluation('approved', item.evsId, item.evId)"
+								@click="refuseApproveEvaluation('approved', item)"
 							>
 								<icon :icon="mdiCheckBold" color="green" />
 							</v-btn>
 							<v-btn
 								:disabled="item.approved === 'refuse'"
 								x-small
-								@click="refuseApproveEvaluation('refuse', item.evsId, item.evId)"
+								@click="refuseApproveEvaluation('refuse', item)"
 							>
 								<icon :icon="mdiCloseThick" color="red" />
 							</v-btn>
@@ -215,28 +215,32 @@ export default {
 			const { evaluations } = await this.$axios.$get(`/evaluation/get-all-evaluations`);
 			this.evaluations = evaluations;
 		},
-		async refuseApproveEvaluation(type, evsId, evId) {
-			if (type === 'refuse') await this.refuse(evsId, evId);
+		async refuseApproveEvaluation(type, item) {
+			if (type === 'refuse') await this.refuse(item);
 
-			if (type === 'approved') await this.approve(evsId, evId);
+			if (type === 'approved') await this.approve(item);
 		},
-		async refuse(evsId, evId) {
+		async refuse(item) {
 			try {
 				const { data } = await this.$axios(
-					`/psychologist/refuse-evaluation/${evsId}/${evId}`,
+					`/psychologist/refuse-evaluation/${item.evsId}/${item.evId}`,
 					{ method: 'POST' }
 				);
+				const index = this.evaluations.indexOf(item);
+				this.evaluations[index].approved = 'refuse';
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 			}
 		},
-		async approve(evsId, evId) {
+		async approve(item) {
 			try {
 				const { data } = await this.$axios(
-					`/psychologist/approve-evaluation/${evsId}/${evId}`,
+					`/psychologist/approve-evaluation/${item.evsId}/${item.evId}`,
 					{ method: 'POST' }
 				);
+				const index = this.evaluations.indexOf(item);
+				this.evaluations[index].approved = 'approved';
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
