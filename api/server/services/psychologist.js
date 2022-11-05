@@ -292,27 +292,38 @@ const match = async body => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
+	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
-		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes }, // Filtra por especialidades
+			specialties: { $in: payload.themes },
 		});
 	} else {
-		// Si no es transgenero
 		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
-				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			specialties: { $in: payload.themes },
 		});
 	}
 
-	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de psicologos que coinciden con los temas
+	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
 	if (matchedPsychologists.length < 3) {
-		matchedPsychologists = await Psychologist.find();
+		if (payload.gender == 'transgender') {
+			matchedPsychologists = await Psychologist.find({
+				isTrans: true,
+			});
+		} else {
+			matchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					$in: ['male', 'female', 'transgender'],
+				},
+			});
+		}
+		// Si por algun razón sigue sin encontrar minimo 3, toma todos los psicologos
+		if (matchedPsychologists.length < 3) {
+			matchedPsychologists = await Psychologist.find();
+		}
 		perfectMatch = false;
 	}
 
