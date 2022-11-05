@@ -8,7 +8,6 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import { logInfo } from '../config/pino';
 moment.tz.setDefault('America/Santiago');
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
@@ -44,7 +43,7 @@ function generatePayload(date, batch) {
 
 async function getNumberSuccess() {
 	/**
-	 * @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
+	 * @description Actualiza la cantidad de sessiones exitosas de las sessiones.
 	 */
 	const users = await User.find();
 	users.forEach(async user => {
@@ -268,11 +267,7 @@ const cronService = {
 		// Se recorre las sessiones para poder cambiar de estado a las sessiones pendientes, que estén dentro
 		// de las preferencias minimas del psicologo, se le cambia el estado a "upnext" como sessión próxima a realizarse.
 		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
-
 		const pendingSessions = await Sessions.find();
-		// Se quiere obtener las sessiones proximas y realizadas
-		var toUpdateUpnext = [];
-		var toUpdateSuccess = [];
 
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
@@ -293,118 +288,31 @@ const cronService = {
 							moment().isBefore(plan.expiration)
 						) {
 							session.status = 'upnext';
-							toUpdateUpnext.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
 						} else if (
 							(session.status === 'upnext' ||
 								session.status === 'pending') &&
 							moment().isAfter(date)
 						) {
 							session.status = 'success';
-							toUpdateSuccess.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
 						}
+						await Sessions.findOneAndUpdate(
+							{
+								'plan.session._id': session._id,
+							},
+							{
+								$set: {
+									'plan.$[].session.$[element].status':
+										session.status,
+								},
+							},
+							{
+								arrayFilters: [{ 'element._id': session._id }],
+							}
+						);
 					});
 				});
 			})
 		);
-
-		// A las sessiones proximas a realizarse las recorre para cambiarle el estado.
-		if (toUpdateUpnext.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateUpnext.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateUpnext.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateUpnext[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateUpnext[0].status,
-						},
-					},
-					{
-						arrayFilters: [{ 'element._id': toUpdateUpnext[0].id }],
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
-
-		// A las sessiones realizadas las recorre para cambiarle el estado.
-		if (toUpdateSuccess.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateSuccess.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateSuccess.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateSuccess[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateSuccess[0].status,
-						},
-					},
-					{
-						arrayFilters: [
-							{ 'element._id': toUpdateSuccess[0].id },
-						],
-						new: true,
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
 		await getNumberSuccess();
 		return okResponse('Sesiones actualizadas');
 	},
