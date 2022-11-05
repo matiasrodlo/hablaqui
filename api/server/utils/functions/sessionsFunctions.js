@@ -6,7 +6,11 @@ import timezone from 'dayjs/plugin/timezone';
 import isBetween from 'dayjs/plugin/isBetween';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat, badMutable, isBetween, utc, timezone);
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export const paymentInfoFunction = async psyId => {
@@ -26,11 +30,7 @@ export const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-<<<<<<< HEAD
-				const paymentPlanDate = dayjs(plans.datePayment).format(
-=======
-				let paymentPlanDate = moment(plans.datePayment).format(
->>>>>>> main
+				let paymentPlanDate = dayjs(plans.datePayment).format(
 					'DD/MM/YYYY'
 				);
 
@@ -93,14 +93,10 @@ export const paymentInfoFunction = async psyId => {
 				) {
 					let session = {
 						_id: null,
-<<<<<<< HEAD
 						datePayment: dayjs(
 							plans.datePayment,
 							'MM/DD/YYYY'
 						).format('DD/MM/YYYY'),
-=======
-						datePayment: paymentPlanDate,
->>>>>>> main
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',

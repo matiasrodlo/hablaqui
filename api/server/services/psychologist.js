@@ -20,14 +20,12 @@ import timezone from 'dayjs/plugin/timezone';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
-dayjs.extend(
-	customParseFormat,
-	badMutable,
-	utc,
-	timezone,
-	isSameOrBefore,
-	isBetween
-);
+dayjs.extend(isBetween);
+dayjs.extend(badMutable);
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
 var Analytics = require('analytics-node');
 var analytics = new Analytics(process.env.SEGMENT_API_KEY);

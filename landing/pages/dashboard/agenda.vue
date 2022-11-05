@@ -762,15 +762,13 @@ import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(
-	customParseFormat,
-	badMutable,
-	relativeTime,
-	utc,
-	timezone,
-	isSameOrBefore,
-	isSameOrAfter
-);
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {
@@ -1119,13 +1117,8 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-<<<<<<< HEAD
 			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
 				.add(60, 'minutes')
-=======
-			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
-				.add(50, 'minutes')
->>>>>>> main
 				.format('HH:mm')}`;
 		},
 		closeDialog() {

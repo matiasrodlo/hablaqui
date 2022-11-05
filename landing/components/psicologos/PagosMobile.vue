@@ -45,13 +45,6 @@
 							<span class="ml-3 pt-1">Hora: {{ $route.query.start }}</span>
 						</div>
 					</div>
-<<<<<<< HEAD
-					<div class="my-3">
-						Sesiones por videollamada (50 min) Habla con un psicólogo por videollamada
-						en cualquier dayjso, en cualquier lugar.
-					</div>
-=======
->>>>>>> main
 					<div class="mt-3">
 						<v-btn
 							color="primary"
@@ -211,7 +204,8 @@ import { mapActions, mapMutations } from 'vuex';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-dayjs.extend(utc, timezone);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

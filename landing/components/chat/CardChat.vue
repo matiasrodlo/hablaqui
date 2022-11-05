@@ -264,7 +264,11 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-dayjs.extend(localizedFormat, calendar, relativeTime, utc, timezone);
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
+dayjs.extend(calendar);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {

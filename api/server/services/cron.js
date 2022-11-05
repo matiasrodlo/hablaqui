@@ -15,14 +15,12 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(
-	customParseFormat,
-	badMutable,
-	utc,
-	timezone,
-	isSameOrBefore,
-	isSameOrAfter
-);
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
