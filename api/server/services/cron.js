@@ -263,32 +263,32 @@ const cronService = {
 			);
 		}
 
-		// Obtiene todas las sessiones y coemienza a recorrerlas, luego se recorre entre los planes, y finalmente
-		// Se recorre las sessiones para poder cambiar de estado a las sessiones pendientes, que estén dentro
-		// de las preferencias minimas del psicologo, se le cambia el estado a "upnext" como sessión próxima a realizarse.
+		// Obtiene todas las sessiones y comienza a recorrerlas, luego se recorre entre los planes, y finalmente
+		// se recorre las sessiones, para poder cambiar de estado a las sessiones pendientes que estén dentro
+		// de las preferencias minimas del psicologo se le cambia el estado a "upnext" como sessión próxima a realizarse.
 		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
 		const pendingSessions = await Sessions.find();
 
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
-				const psyInfo = await psychologist.findOne(item.psychologist);
+				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
 						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						// if (
+						// 	session.status === 'pending' &&
+						// 	moment(date)
+						// 		.subtract(
+						// 			psyInfo.preferences
+						// 				.minimumRescheduleSession,
+						// 			'hours'
+						// 		)
+						// 		.isBefore(moment()) &&
+						// 	moment().isBefore(date) &&
+						// 	moment().isBefore(plan.expiration)
+						// ) {
+						// 	session.status = 'upnext';}
 						if (
-							session.status === 'pending' &&
-							moment(date)
-								.subtract(
-									psyInfo.preferences
-										.minimumRescheduleSession,
-									'hours'
-								)
-								.isBefore(moment()) &&
-							moment().isBefore(date) &&
-							moment().isBefore(plan.expiration)
-						) {
-							session.status = 'upnext';
-						} else if (
 							(session.status === 'upnext' ||
 								session.status === 'pending') &&
 							moment().isAfter(date)
