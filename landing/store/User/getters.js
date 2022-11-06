@@ -28,14 +28,32 @@ export default {
 		const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
 		const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
-		// retornamos el plan success y sin expirar
-		let plan = plans.find(
+		const filterPlans = plans.filter(
 			item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
 		);
+		const totalSessions = filterPlans.reduce(
+			(sum, value) =>
+				typeof value.totalSessions === 'number' ? sum + value.totalSessions : sum,
+			0
+		);
+
+		const appoinmentSessions = filterPlans.reduce(
+			(sum, value) =>
+				typeof value.session.length === 'number' ? sum + value.session.length : sum,
+			0
+		);
+		let sortedPlans = filterPlans
+			.filter(item => item.remainingSessions !== 0)
+			.sort((a, b) => a.diff - b.diff);
+
+		if (!sortedPlans.length && filterPlans.length > 0)
+			sortedPlans = [filterPlans.sort((a, b) => a.diff - b.diff).pop()];
+
+		// retornamos el plan success y sin expirar
 		// retornamos el ultimo plan succes y que expiro
-		if (!plan) plan = plans.find(item => item.diff === min);
+		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === min)];
 		// retornamos el siguiente plan pendiente
-		if (!plan) plan = plans.find(item => item.diff === max);
-		return plan;
+		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === max)];
+		return { sortedPlans, totalSessions, appoinmentSessions };
 	},
 };

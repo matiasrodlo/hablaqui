@@ -10,6 +10,8 @@ import routes from './routes/index';
 import { logError, logger } from './config/pino';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
 const app = express();
 
 require('@google-cloud/debug-agent').start({
@@ -55,8 +57,6 @@ app.use(passport.initialize());
 routes(app);
 
 // Swagger
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = {
 	definition: {
 		info: {

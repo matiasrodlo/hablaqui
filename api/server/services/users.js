@@ -1,24 +1,25 @@
 'use strict'; // Sirve para que el código sea mas estricto y evitar errores
 
-import User from '../models/user'; // user.js contiene la definición del modelo de usuario para mongodb
-import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologo para mongodb
-import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de reclutamiento para mongodb
-import { logInfo } from '../config/winston'; // winston.js contiene la configuración de winston para el logging
-import bcrypt from 'bcryptjs'; // bcryptjs es una librería para encriptar contraseñas
-import servicesAuth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
-import { actionInfo } from '../utils/logger/infoMessages'; // infoMessages.js contiene los mensajes de información para el logging
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // functions.js contiene las funciones para las respuestas
-import { bucket } from '../config/bucket'; // bucket.js contiene la configuración de la conexión con el bucket de google cloud storage
-import mailServiceAccount from '../utils/functions/mails/accountsShares'; // mail.js contiene la lógica para el envío de correos electrónicos
-import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
-import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
-import moment from 'moment'; // moment.js es una librería para el manejo de fechas
-import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
-import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
-
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+import User from '../models/user';
+import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
+import { logInfo } from '../config/winston';
+import bcrypt from 'bcryptjs';
+import servicesAuth from './auth';
+import { actionInfo } from '../utils/logger/infoMessages';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { bucket } from '../config/bucket';
+import mailServiceAccount from '../utils/functions/mails/accountsShares';
+import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
+import moment from 'moment';
+import crypto from 'crypto';
+import { room } from '../config/dotenv';
+import Auth from './auth';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -351,10 +352,7 @@ const usersService = {
 				},
 			});
 		}
-
-		// Se comienza a crear el documento de sessiones, se crea el link de la sala y
-		// el objeto del plan inicial, sea crea el documento de sesiones
-		const roomId = require('crypto')
+		const roomId = crypto
 			.createHash('md5')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
