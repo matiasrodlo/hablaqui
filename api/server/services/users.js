@@ -321,7 +321,7 @@ const usersService = {
 		// genera un link de verificación y se envia un correo con el link
 		const createdUser = await User.create(newUser);
 		const token = Auth.generateJwt(createdUser);
-		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
+		const verifyurl = `${process.env.VUE_APP_LANDING}verificacion-email?id=${createdUser._id}&token=${token}`;
 		await mailServiceAccount.sendVerifyEmail(createdUser, verifyurl);
 
 		// Se hace el trakeo en segment

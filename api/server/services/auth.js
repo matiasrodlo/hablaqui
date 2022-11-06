@@ -132,7 +132,7 @@ const register = async payload => {
 	const user = await User.create(newUser);
 	// Enviar correo de verificación
 	const token = generateJwt(user);
-	const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${user._id}&token=${token}`;
+	const verifyurl = `${process.env.VUE_APP_LANDING}verificacion-email?id=${user._id}&token=${token}`;
 
 	if (process.env.NODE_ENV === 'development')
 		logInfo(actionInfo(payload.email, `url: ${verifyurl}`));
@@ -203,7 +203,7 @@ const sendPasswordRecover = async email => {
 	}
 	const token = generatePasswordRecoverJwt(user);
 
-	const recoveryUrl = `${process.env.VUE_APP_LANDING}/password-reset?token=${token}`;
+	const recoveryUrl = `${process.env.VUE_APP_LANDING}password-reset?token=${token}`;
 
 	mailServiceAccount.sendPasswordRecovery(user, recoveryUrl); // envía el correo de recuperación de contraseña
 
