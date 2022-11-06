@@ -40,6 +40,32 @@ const transactionController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async generateTransaction(req, res) {
+		try {
+			const { user } = req;
+			const { total, session, idPsy } = req.body;
+			const { data, code } = await transactionService.generateTransaction(
+				user,
+				total,
+				session,
+				idPsy
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
+	async getAllTransactions(req, res) {
+		try {
+			const { user } = req;
+			const { data, code } = await transactionService.getAllTransactions(
+				user
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(transactionController);
