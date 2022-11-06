@@ -7,9 +7,9 @@ import Email from '../models/email';
 import Analytics from 'analytics-node';
 
 const createChat = async (user, psychologistId) => {
-	const newChat = new Chat({
-		user: user,
+	const newChat = await Chat.create({
 		psychologist: psychologistId,
+		user: user,
 	});
 	return newChat;
 };
@@ -27,7 +27,7 @@ const startConversation = async (psychologistId, user) => {
 	if (hasChats) {
 		return okResponse('chat inicializado anteriormente');
 	}
-	const newChat = await createChat(user._id, psychologistId._id);
+	const newChat = await createChat(user._id, psychologistId);
 	return okResponse('chat inicializado', { newChat });
 };
 
