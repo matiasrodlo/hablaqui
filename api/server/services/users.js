@@ -109,8 +109,7 @@ const usersService = {
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
 		const sessionesPendientes = ultimoPlan.session.filter(
-			session =>
-				session.status === 'pending' || session.status === 'upnext'
+			session => session.status === 'pending' // || session.status === 'upnext'
 		).length;
 		const sessionesRealizadas = ultimoPlan.session.filter(
 			session =>

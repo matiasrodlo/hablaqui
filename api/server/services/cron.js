@@ -289,8 +289,7 @@ const cronService = {
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
-							(session.status === 'upnext' ||
-								session.status === 'pending') &&
+							session.status === 'pending' && // || session.status === 'upnext'
 							moment().isAfter(date)
 						) {
 							session.status = 'success';
