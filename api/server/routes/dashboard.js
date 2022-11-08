@@ -1,9 +1,10 @@
 'use strict';
 
 import { Router } from 'express';
-import retoolController from '../controllers/retool';
+import passport from 'passport';
+import dashboardController from '../controllers/dashboard';
 
-const retoolRouter = Router();
+const dashboardRouter = Router();
 
 /**
  * @description Devuelve las sesiones que se realizaran proximamente
@@ -11,7 +12,10 @@ const retoolRouter = Router();
  * @route /api/v1/retool/sessions/next
  * @return Array con las sesiones que se aproximan
  */
-retoolRouter.get('/retool/sessions/next', retoolController.getNextSessions);
+dashboardRouter.get(
+	'/retool/sessions/next',
+	dashboardController.getNextSessions
+);
 
 /**
  * @description Devuelve la paga de los psicologos dentro de un intervalo de tiempo
@@ -21,10 +25,19 @@ retoolRouter.get('/retool/sessions/next', retoolController.getNextSessions);
  * @route /api/v1/retool/payments/next/:startDate/:endDate
  * @return Array con los montos a pagar por psicólogo
  */
-retoolRouter.get(
+dashboardRouter.get(
 	'/retool/payments/next/:startDate/:endDate',
-	retoolController.getSessionsPayment
+	dashboardController.getSessionsPayment
 );
 
-retoolRouter.get('/retool/fix/appointments', retoolController.fixSpecialities);
-export default retoolRouter;
+dashboardRouter.get(
+	'/retool/fix/appointments',
+	dashboardController.fixSpecialities
+);
+
+dashboardRouter.get(
+	'/dashboard/pay-mount',
+	[passport.authenticate('jwt', { session: true })],
+	dashboardController.getMountToPay
+);
+export default dashboardRouter;

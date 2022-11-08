@@ -369,6 +369,7 @@ export default {
 			selected: null,
 			channel: null,
 			initLoading: true,
+			plan: null,
 		};
 	},
 	computed: {
@@ -480,7 +481,7 @@ export default {
 			chats: 'Chat/chats',
 			allPsychologists: 'Psychologist/psychologists',
 			clients: 'Psychologist/clients',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
 	},
@@ -518,6 +519,8 @@ export default {
 	},
 	methods: {
 		async initFetch() {
+			this.plan =
+				this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 			moment.locale('es');
 			await this.getPsychologists();
 			if (this.$auth.$state.user.role === 'user') {

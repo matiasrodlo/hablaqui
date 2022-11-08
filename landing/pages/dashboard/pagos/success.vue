@@ -19,13 +19,7 @@
 					Es momento de comenzar su viaje hacia el bienestar
 				</div>
 				<div>
-					<v-btn
-						depressed
-						class="mx-2"
-						color="primary"
-						rounded
-						:to="{ name: 'dashboard-agenda' }"
-					>
+					<v-btn depressed class="mx-2" color="primary" rounded @click="redirectReload">
 						Ir a mi agenda
 					</v-btn>
 				</div>
@@ -61,6 +55,10 @@ export default {
 		}
 	},
 	methods: {
+		redirectReload() {
+			const url = new URL('/dashboard/agenda', window.location.origin);
+			window.location.href = url.toString();
+		},
 		...mapActions({
 			mercadopagoSuccess: 'Psychologist/mercadopagoSuccess',
 		}),
