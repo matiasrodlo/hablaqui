@@ -431,8 +431,6 @@ const usersService = {
 			discount += remaining * data.price;
 			sessionsToDelete.push(data.session);
 		});
-		console.log(discount);
-		console.log(sessionsToDelete);
 
 		planData.forEach(async plan => {
 			// Se busca en la base de datos y modifica el plan
