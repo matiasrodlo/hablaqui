@@ -400,7 +400,14 @@
 									style="position: absolute; top: 30px; left: 0"
 								>
 									<div
-										class="d-flex justify-space-between align-center info rounded-r-lg pa-2"
+										class="
+											d-flex
+											justify-space-between
+											align-center
+											info
+											rounded-r-lg
+											pa-2
+										"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
 											width: 70px;
@@ -577,7 +584,14 @@
 										</template>
 										<template v-else>
 											<div
-												class="primary--text caption font-weight-bold d-flex justify-center align-center"
+												class="
+													primary--text
+													caption
+													font-weight-bold
+													d-flex
+													justify-center
+													align-center
+												"
 												style="height: 300px"
 											>
 												Cargando...

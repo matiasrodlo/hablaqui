@@ -172,6 +172,116 @@
 						</div>
 					</v-card-text>
 				</v-card>
+				<v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
+					<v-card-title> Comentarios </v-card-title>
+					<v-card-subtitle> Todas las opiniones son importantes </v-card-subtitle>
+
+					<v-card-text>
+						<v-divider />
+						<v-row>
+							<v-col cols="6" class="d-flex align-center justify-start">
+								<v-card
+									max-width="50"
+									height="50"
+									class="rounded-circle primary px-4 mt-3"
+									elevation="5"
+								>
+									<h1 class="white--text text-center pt-3">5</h1>
+								</v-card>
+								<div class="text--secondary text-left align-center">
+									<div>
+										<v-rating
+											v-model="global"
+											readonly
+											half-increments
+										></v-rating>
+									</div>
+									<div class="mx-3">
+										<h5>Valorización global</h5>
+										<h5>{{ total }} opiniones</h5>
+									</div>
+								</div>
+							</v-col>
+							<v-col cols="6">
+								<div
+									class="
+										text--secondary text-left
+										d-flex
+										align-center
+										justify-start
+									"
+								>
+									<v-rating
+										v-model="puntuality"
+										readonly
+										half-increments
+									></v-rating>
+									<h4>Puntutalidad</h4>
+								</div>
+								<div
+									class="
+										text--secondary text-left
+										d-flex
+										align-center
+										justify-start
+									"
+								>
+									<v-rating
+										v-model="attention"
+										readonly
+										half-increments
+									></v-rating>
+									<h4>Atención</h4>
+								</div>
+
+								<div
+									class="
+										text--secondary text-left
+										d-flex
+										align-center
+										justify-start
+									"
+								>
+									<v-rating
+										v-model="internet"
+										readonly
+										half-increments
+									></v-rating>
+									<h4>Internet</h4>
+								</div>
+							</v-col>
+						</v-row>
+						<template v-for="item in evaluations">
+							<v-col :key="item._id" cols="12">
+								<div class="mt-6">
+									<v-row>
+										<v-col cols="12">
+											<div class="d-flex align-center justify-start">
+												<avatar
+													url=""
+													:name="item.name"
+													:last-name="item.lastName"
+													size="40"
+													loading-color="white"
+												/>
+												<h4 class="mx-2">
+													{{ item.name }} {{ item.lastName }}
+												</h4>
+											</div>
+											<div class="mx-12">
+												<h4>
+													{{ item.createdAt }}
+												</h4>
+												<p>{{ item.comment }}</p>
+											</div>
+											<v-divider />
+										</v-col>
+									</v-row>
+								</div>
+							</v-col>
+						</template>
+					</v-card-text>
+				</v-card>
 			</v-col>
 			<v-col cols="4" style="position: relative" class="pt-0">
 				<v-sheet
@@ -217,6 +327,13 @@ export default {
 			channel: null,
 			fullcard: false,
 			loadingCalendar: false,
+			evaluations: [],
+			global: 5,
+			puntuality: 5,
+			attention: 5,
+			internet: 5,
+			total: 0,
+			visibles: [],
 		};
 	},
 	computed: {
@@ -224,8 +341,11 @@ export default {
 			sessions: 'Psychologist/sessionsFormatted',
 		}),
 	},
+	async mounted() {
+		await this.$axios.$get(`/psychologist/get-evaluations/${this.psychologist.username}`);
+	},
 	created() {
-		this.setFloatingChat(false);
+		this.initFetch();
 		// this.socket = this.$nuxtSocket({
 		// 	channel: '/liveData',
 		// });
@@ -236,6 +356,17 @@ export default {
 		// });
 	},
 	methods: {
+		async initFetch() {
+			this.setFloatingChat(false);
+			const data = await this.$axios.$get(
+				`/psychologist/get-evaluations/${this.psychologist.username}`
+			);
+			this.evaluations = data.evaluations;
+			this.global = data.global;
+			this.puntuality = data.puntuality;
+			this.internet = data.internet;
+			this.total = data.total;
+		},
 		async getPsychologist(username) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
 			this.setPsychologist(psychologist);
@@ -253,6 +384,10 @@ export default {
 				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
+		},
+		handleVisivility(isVisible, entry, idEvaluation) {
+			if (isVisible && !this.visibles.includes(idEvaluation))
+				this.visibles.push(idEvaluation);
 		},
 		avatar(psychologist) {
 			if (!psychologist.approveAvatar) return '';

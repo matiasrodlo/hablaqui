@@ -51,13 +51,12 @@ const getRating = async psychologist => {
 	});
 };
 
-const getEvaluationsPsy = async user => {
-	if (user.role !== 'psychologist')
-		return conflictResponse('No eres psicólogo');
-
+const getEvaluationsPsy = async username => {
+	moment.locale('es');
 	// Verifica que el psicologo tenga evaluaciones, si tiene las obtiene y las devuelve
-	const psy = user.psychologist;
-	let evaluations = await Evaluation.find({ psychologist: psy });
+	let evaluations = await Evaluation.find({ username: username }).populate(
+		'user'
+	);
 	if (!evaluations)
 		return okResponse('Evaluaciones devueltas', {
 			evaluations: [],
@@ -65,9 +64,29 @@ const getEvaluationsPsy = async user => {
 			internet: 0,
 			puntuality: 0,
 			attention: 0,
+			total: 0,
 		});
 
-	evaluations = await getAllEvaluationsFunction(psy);
+	evaluations = evaluations.flatMap(item => {
+		return item.evaluations.map(evaluation => {
+			return {
+				_id: evaluation._id,
+				evaluationsId: item._id,
+				comment: evaluation.comment,
+				approved: evaluation.approved,
+				global: evaluation.global,
+				puntuality: evaluation.puntuality,
+				attention: evaluation.attention,
+				internet: evaluation.internet,
+				name: item.user.name,
+				lastName: item.user.lastName ? item.user.lastName : '',
+				userId: item.user._id,
+				createdAt: moment(evaluation.createdAt).format(
+					'DD [de] MMMM YYYY'
+				),
+			};
+		});
+	});
 	// Filtra las que han sido aprobadas
 	evaluations = evaluations.filter(
 		evaluation => evaluation.approved === 'approved'
@@ -76,6 +95,7 @@ const getEvaluationsPsy = async user => {
 	return okResponse('Evaluaciones devueltas', {
 		evaluations,
 		...getScores(evaluations),
+		total: evaluations.length,
 	});
 };
 

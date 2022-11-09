@@ -20,7 +20,6 @@ export const getAllEvaluationsFunction = async psy => {
 				internet: evaluation.internet,
 				name: item.user.name,
 				userId: item.user._id,
-				moderatingDate: evaluation.moderatingDate,
 				createdAt: moment(evaluation.createdAt)
 					.tz('America/Santiago')
 					.format(),
