@@ -195,8 +195,8 @@
 								>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending' ||
-											selectedEvent.status === 'upnext'
+											selectedEvent.status === 'pending'
+											// || selectedEvent.status === 'upnext'
 										"
 										:href="selectedEvent.url"
 										target="_blank"
@@ -208,8 +208,8 @@
 									<v-spacer></v-spacer>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending' ||
-											selectedEvent.status === 'upnext'
+											selectedEvent.status === 'pending'
+											// || selectedEvent.status === 'upnext'
 										"
 										text
 										@click="() => openDialog(selectedEvent)"

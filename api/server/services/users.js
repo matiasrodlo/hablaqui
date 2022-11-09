@@ -110,8 +110,7 @@ const usersService = {
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
 		const sessionesPendientes = ultimoPlan.session.filter(
-			session =>
-				session.status === 'pending' || session.status === 'upnext'
+			session => session.status === 'pending' // || session.status === 'upnext'
 		).length;
 		const sessionesRealizadas = ultimoPlan.session.filter(
 			session =>
@@ -432,8 +431,6 @@ const usersService = {
 			discount += remaining * data.price;
 			sessionsToDelete.push(data.session);
 		});
-		console.log(discount);
-		console.log(sessionsToDelete);
 
 		planData.forEach(async plan => {
 			// Se busca en la base de datos y modifica el plan
