@@ -57,6 +57,9 @@ let evaluations = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'psychologist',
 	},
+	username: {
+		type: String,
+	},
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

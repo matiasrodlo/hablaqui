@@ -34,9 +34,9 @@ const evaluationController = {
 	},
 	async getEvaluationsPsy(req, res) {
 		try {
-			const { user } = req;
+			const { username } = req.params;
 			const { data, code } = await evaluationService.getEvaluationsPsy(
-				user
+				username
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
