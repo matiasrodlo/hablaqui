@@ -8,7 +8,6 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import { logInfo } from '../config/pino';
 import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
 
 moment.tz.setDefault('America/Santiago');
@@ -45,7 +44,7 @@ function generatePayload(date, batch) {
 
 async function getNumberSuccess() {
 	/**
-	 * @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
+	 * @description Actualiza la cantidad de sessiones exitosas de las sessiones.
 	 */
 	const users = await User.find();
 	users.forEach(async user => {
@@ -264,139 +263,56 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
+
+		// Obtiene todas las sessiones y comienza a recorrerlas, luego se recorre entre los planes, y finalmente
+		// se recorre las sessiones, para poder cambiar de estado a las sessiones pendientes que estén dentro
+		// de las preferencias minimas del psicologo se le cambia el estado a "upnext" como sessión próxima a realizarse.
+		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
 		const pendingSessions = await Sessions.find();
-		var toUpdateUpnext = [];
-		var toUpdateSuccess = [];
 
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
-				const psyInfo = await psychologist.findOne(item.psychologist);
+				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
 						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						// if (
+						// 	session.status === 'pending' &&
+						// 	moment(date)
+						// 		.subtract(
+						// 			psyInfo.preferences
+						// 				.minimumRescheduleSession,
+						// 			'hours'
+						// 		)
+						// 		.isBefore(moment()) &&
+						// 	moment().isBefore(date) &&
+						// 	moment().isBefore(plan.expiration)
+						// ) {
+						// 	session.status = 'upnext';}
 						if (
-							session.status === 'pending' &&
-							moment(date)
-								.subtract(
-									psyInfo.preferences
-										.minimumRescheduleSession,
-									'hours'
-								)
-								.isBefore(moment()) &&
-							moment().isBefore(date) &&
-							moment().isBefore(plan.expiration)
-						) {
-							session.status = 'upnext';
-							toUpdateUpnext.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
-						} else if (
-							(session.status === 'upnext' ||
-								session.status === 'pending') &&
+							session.status === 'pending' && // || session.status === 'upnext'
 							moment().isAfter(date)
 						) {
 							session.status = 'success';
-							toUpdateSuccess.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
 						}
+						await Sessions.findOneAndUpdate(
+							{
+								'plan.session._id': session._id,
+							},
+							{
+								$set: {
+									'plan.$[].session.$[element].status':
+										session.status,
+								},
+							},
+							{
+								arrayFilters: [{ 'element._id': session._id }],
+							}
+						);
 					});
 				});
 			})
 		);
-
-		if (toUpdateUpnext.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateUpnext.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateUpnext.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateUpnext[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateUpnext[0].status,
-						},
-					},
-					{
-						arrayFilters: [{ 'element._id': toUpdateUpnext[0].id }],
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
-
-		if (toUpdateSuccess.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateSuccess.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateSuccess.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateSuccess[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateSuccess[0].status,
-						},
-					},
-					{
-						arrayFilters: [
-							{ 'element._id': toUpdateSuccess[0].id },
-						],
-						new: true,
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
 		await getNumberSuccess();
 		return okResponse('Sesiones actualizadas');
 	},
