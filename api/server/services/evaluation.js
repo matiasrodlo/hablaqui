@@ -186,6 +186,7 @@ const addEvaluation = async (user, psyId, payload) => {
 	if (countSessions < 3)
 		return conflictResponse('No puede escribir un comentario');
 
+	const psy = await Psychologist.findById(psyId);
 	// Devuelve las evaluaciones de un usuario en un psicólogo
 	const collEvaluation = await Evaluation.findOne({
 		psychologist: psyId,
@@ -212,11 +213,10 @@ const addEvaluation = async (user, psyId, payload) => {
 		created = await Evaluation.create({
 			user: user._id,
 			psychologist: psyId,
+			username: psy.username,
 			evaluations: [evaluation],
 		});
 	}
-
-	const psy = await Psychologist.findById(psyId);
 
 	await mailServicePsy.sendAddEvaluation(user, psy);
 	return okResponse('Evaluación guardada', created);

@@ -45,8 +45,7 @@ evaluationRouter.get(
  * @access authenticated
  */
 evaluationRouter.get(
-	'/psychologist/get-evaluations',
-	[passport.authenticate('jwt', { session: true })],
+	'/psychologist/get-evaluations/:username',
 	evaluationController.getEvaluationsPsy
 );
 
