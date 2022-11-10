@@ -1,8 +1,13 @@
 'use strict';
 
-import moment from 'moment';
 import sendMails from './sendMails';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat, badMutable, utc, timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
@@ -25,7 +30,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);
@@ -50,7 +55,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
+			sendAt: dayjs().unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);
@@ -135,13 +140,13 @@ const mailService = {
 				first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
@@ -167,13 +172,13 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: moment(date)
+			sendAt: dayjs(date)
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,

@@ -202,9 +202,19 @@
 <script>
 import { mapMutations } from 'vuex';
 import { mdiChevronLeft } from '@mdi/js';
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
-moment.tz.setDefault('America/Santiago');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import calendar from 'dayjs/plugin/calendar';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(calendar);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Channel',
@@ -275,8 +285,8 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		setDate(time) {
-			if (time) return moment(time).calendar();
-			return moment().format('llll');
+			if (time) return dayjs(time).calendar();
+			return dayjs().format('llll');
 		},
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));

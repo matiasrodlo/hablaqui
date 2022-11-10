@@ -12,9 +12,17 @@ import email from '../models/email';
 import mailServicePayments from '../utils/functions/mails/payments';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Analytics from 'analytics-node';
-moment.tz.setDefault('America/Santiago');
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -116,7 +124,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
 			currentPlan.tier === 'premium' &&
-			moment(currentPlan.expirationDate).isAfter(moment())
+			dayjs(currentPlan.expirationDate).isAfter(dayjs())
 		) {
 			return okResponse('Tienes un plan premium vigente');
 		}
@@ -184,7 +192,7 @@ const successPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': moment().format(),
+				'plan.$.datePayment': dayjs().format(),
 			},
 		},
 		{ new: true }
@@ -195,7 +203,7 @@ const successPay = async params => {
 	const sessionData = planData.session[0];
 	// Email scheduling for appointment reminder for the user
 	await email.create({
-		sessionDate: moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -206,7 +214,7 @@ const successPay = async params => {
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
-		sessionDate: moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
@@ -233,14 +241,14 @@ const successPay = async params => {
 	await mailServiceSchedule.sendScheduleToUser(
 		user,
 		psy,
-		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
 	await mailServiceSchedule.sendScheduleToPsy(
 		user,
 		psy,
-		moment(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
@@ -256,13 +264,13 @@ const psychologistPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period === 'anual') {
-		expirationDate = moment()
-			.add({ months: 12 })
+		expirationDate = dayjs()
+			.add(12, 'month')
 			.format();
 	}
 	if (period === 'mensual') {
-		expirationDate = moment()
-			.add({ months: 1 })
+		expirationDate = dayjs()
+			.add(1, 'month')
 			.format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
@@ -327,7 +335,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': moment().format(),
+				'plan.$.datePayment': dayjs().format(),
 			},
 		},
 		{ new: true }
@@ -396,13 +404,13 @@ const recruitedPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period == 'anual') {
-		expirationDate = moment()
-			.add({ months: 12 })
+		expirationDate = dayjs()
+			.add(12, 'month')
 			.format();
 	}
 	if (period == 'mensual') {
-		expirationDate = moment()
-			.add({ months: 1 })
+		expirationDate = dayjs()
+			.add(1, 'month')
 			.format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan

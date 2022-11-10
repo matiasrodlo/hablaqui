@@ -740,7 +740,7 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -753,7 +753,21 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -804,7 +818,7 @@ export default {
 		},
 		selectedElement: null,
 		selectedOpen: false,
-		today: moment().format('YYYY-MM-DD'),
+		today: dayjs().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
@@ -856,13 +870,13 @@ export default {
 			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
-				return moment(a, 'MM/DD/YYYY HH:mm').diff(moment(b, 'MM/DD/YYYY HH:mm'));
+				return dayjs(a, 'MM/DD/YYYY HH:mm').diff(dayjs(b, 'MM/DD/YYYY HH:mm'));
 			});
 			const date = allDates.find(item =>
-				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 			if (date) {
-				return moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
+				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
 			}
 			return '';
 		},
@@ -948,7 +962,7 @@ export default {
 			)
 				return null;
 			this.overlay = true;
-			moment.locale('es');
+			dayjs.locale('es');
 			await this.$auth.fetchUser();
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
@@ -1058,7 +1072,7 @@ export default {
 			}
 		},
 		setToday() {
-			this.focus = moment().format('YYYY-MM-DD');
+			this.focus = dayjs().format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();
@@ -1108,8 +1122,8 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
-				.add(50, 'minutes')
+			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
+				.add(60, 'minutes')
 				.format('HH:mm')}`;
 		},
 		closeDialog() {

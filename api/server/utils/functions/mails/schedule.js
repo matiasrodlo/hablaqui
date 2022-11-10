@@ -1,8 +1,13 @@
 'use strict';
 
-import moment from 'moment';
 import sendMails from './sendMails';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat, badMutable, utc, timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
@@ -89,8 +94,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -127,8 +132,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -290,8 +295,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -320,8 +325,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
