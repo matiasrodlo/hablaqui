@@ -4,6 +4,8 @@ import moment from 'moment';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
+let isReceiverSupport = false;
+
 const mailService = {
 	/**
 	 * @description Send an internal email about a new psy application
@@ -26,7 +28,8 @@ const mailService = {
 				psy_email: email,
 			},
 		};
-		await sendMails(dataPayload);
+		isReceiverSupport = true;
+		await sendMails(dataPayload, recruitedPsy, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to a psychologist about his/her new application
@@ -47,7 +50,7 @@ const mailService = {
 				first_name: name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, recruitedPsy, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the user to evaluate the psychologist.
@@ -70,7 +73,7 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the psychologist who must pay the plan.
@@ -96,7 +99,7 @@ const mailService = {
 				url,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the psychologist who has not paid the plan
@@ -119,7 +122,7 @@ const mailService = {
 				psy_name: psychologist.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the psychologist informing him/her that you have made a request for withdrawal from the platform.
@@ -143,7 +146,7 @@ const mailService = {
 				date: date,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the psychologist informing him/her that the withdrawal request has been completed.
@@ -167,7 +170,7 @@ const mailService = {
 				date: date,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description sends an email to the user who has completed an evaluation to a psychologist.
@@ -189,7 +192,7 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description sends an e-mail to the user who has passed an evaluation to a psychologist
@@ -211,7 +214,7 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
@@ -233,7 +236,7 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description send an email to the psychologist who has refused an evaluation
@@ -255,7 +258,7 @@ const mailService = {
 				user_name: user.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 };
 

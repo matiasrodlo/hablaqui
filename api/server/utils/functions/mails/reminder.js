@@ -4,6 +4,8 @@ import moment from 'moment';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
+let isReceiverSupport = false;
+
 const mailService = {
 	/**
 	 * @description sends an email to the user notifying him/her that the psychologist is talking to him/her.
@@ -28,7 +30,7 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description sends an email to the psychologist notifying him/her that the user is talking to him/her.
@@ -53,7 +55,7 @@ const mailService = {
 			sendAt: moment().unix(),
 			batchId: batch,
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user reminding them that they have requested a rescheduled session with a psychologist.
@@ -75,7 +77,7 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist reminding him that you have cancelled a private engagement.
@@ -95,7 +97,7 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist reminding him/her that you have scheduled a private appointment.
@@ -115,7 +117,7 @@ const mailService = {
 				psy_name: psychologist.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 	/**
 	 * @description Send an appointmet reminder to a user about an upcomming session
@@ -146,7 +148,7 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Send an appointmet reminder to a psychologist about an upcomming session
@@ -178,7 +180,7 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 };
 

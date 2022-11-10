@@ -4,6 +4,8 @@ import moment from 'moment';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
+let isReceiverSupport = false;
+
 const mailService = {
 	/**
 	 * @description Sends an email to the user who has paid for the session.
@@ -31,7 +33,7 @@ const mailService = {
 				date: date,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist who has received the payment.
@@ -61,7 +63,7 @@ const mailService = {
 				date: date,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist who has updated the payment account.
@@ -85,7 +87,7 @@ const mailService = {
 				price: price,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 };
 

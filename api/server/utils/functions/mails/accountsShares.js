@@ -3,6 +3,7 @@
 import moment from 'moment';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
+let isReceiverSupport = false;
 
 const mailService = {
 	/**
@@ -24,7 +25,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
@@ -46,7 +47,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send a welcome email to a new  user created by a psychologist
@@ -73,7 +74,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, newUser, isReceiverSupport);
 	},
 	/**
 	 * @description Send a recovery password email to a user
@@ -95,7 +96,7 @@ const mailService = {
 				group_id: 16321,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send a verification email to a new user created
@@ -117,7 +118,7 @@ const mailService = {
 				verify_url: url,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to support to notify that a psychologist has uploaded a photo.
@@ -137,7 +138,8 @@ const mailService = {
 				email: psy.email,
 			},
 		};
-		await sendMails(dataPayload);
+		isReceiverSupport = true;
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user who has cancelled his plan
@@ -164,7 +166,7 @@ const mailService = {
 				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 };
 

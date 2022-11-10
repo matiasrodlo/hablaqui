@@ -4,6 +4,8 @@ import moment from 'moment';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
+let isReceiverSupport = false;
+
 const mailService = {
 	/**
 	 * @description Send an appointmet purchase confirmation to a user
@@ -27,7 +29,7 @@ const mailService = {
 				price: price,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an appointmet purchase confirmation to a psy
@@ -55,7 +57,7 @@ const mailService = {
 				price: price,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them.
@@ -93,7 +95,7 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist notifying them that a user has scheduled a session with them.
@@ -131,7 +133,7 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that they have successfully rescheduled.
@@ -156,7 +158,7 @@ const mailService = {
 				psy_name: psy.name + ' ' + psy.lastName,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the psychologist notifying them that a user has rescheduled.
@@ -184,7 +186,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that they have requested a rescheduled session.
@@ -207,7 +209,7 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying him/her that the psychologist has rescheduled the session.
@@ -234,7 +236,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
 	 * @description Send an email to the psychologist notifying him/her that you have rescheduled the session.
@@ -262,7 +264,7 @@ const mailService = {
 				url: url,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that a user has scheduled a session.
@@ -295,7 +297,7 @@ const mailService = {
 				session,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
 	 * @description Sends an email to the user notifying them that they have scheduled a session.
@@ -325,7 +327,7 @@ const mailService = {
 				session,
 			},
 		};
-		await sendMails(dataPayload);
+		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 };
 
