@@ -284,11 +284,11 @@ const getAllTransactions = async user => {
 	transactions = transactions
 		.map(t => {
 			return {
-				createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				createdAt: dayjs(t.createdAt).format('DD/MM/YYYY HH:mm'),
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: moment(s.date, 'MM/DD/YYYY HH:mm').format(
+						date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
 							'DD/MM/YYYY HH:mm'
 						),
 					};
