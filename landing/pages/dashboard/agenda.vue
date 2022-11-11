@@ -1123,7 +1123,7 @@ export default {
 		},
 		setSubtitle(date) {
 			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
-				.add(60, 'minutes')
+				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
 		closeDialog() {
