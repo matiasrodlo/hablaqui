@@ -338,7 +338,7 @@ const createPlan = async ({ payload }) => {
 				plan =>
 					plan.payment === 'success' &&
 					dayjs().isBefore(dayjs(plan.expiration)) &&
-					plan.title !== 'Plan inicial'
+					plan.title !== 'Plan inicial' &&
 					sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
