@@ -197,17 +197,33 @@ const cronService = {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
-		// Encuentra los correos enviados a los usuarios y psicologos, envia los correos
-		const userMessage = await email.find({
-			type: 'send-by-user',
-			wasScheduled: false,
+		const dontReadMess = await Chat.find({ isLastRead: false }).populate(
+			'user psychologist'
+		);
+
+		dontReadMess.forEach(async mess => {
+			const user = mess.user;
+			const psy = mess.psychologist;
+			const batch = await getBatchId();
+			if (mess.lastMessageSendBy === 'user')
+				await mailServiceRemider.sendChatNotificationToPsy(
+					user,
+					psy,
+					batch
+				);
+			else if (mess.lastMessageSendBy === 'psychologist')
+				await mailServiceRemider.sendChatNotificationToUser(
+					user,
+					psy,
+					batch
+				);
 		});
-		await sendNotification(userMessage);
-		const psyMessage = await email.find({
-			type: 'send-by-psy',
-			wasScheduled: false,
-		});
-		await sendNotification(psyMessage);
+		await Chat.updateMany(
+			{ isLastRead: false },
+			{
+				isLastRead: true,
+			}
+		);
 		return okResponse('Se han enviado los correos');
 	},
 	async scheduleEmails(token) {
