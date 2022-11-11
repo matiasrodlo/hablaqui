@@ -32,7 +32,7 @@ const mercadopagoController = {
 			const { params, query } = req;
 			await mercadopagoService.psychologistPay(params, query);
 			return res.redirect(
-				`${process.env.VUE_APP_LANDING}/dashboard/perfil`
+				`${process.env.VUE_APP_LANDING}dashboard/perfil`
 			);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
@@ -43,7 +43,7 @@ const mercadopagoController = {
 			const { params, query } = req;
 			await mercadopagoService.recruitedPay(params, query);
 			return res.redirect(
-				`${process.env.VUE_APP_LANDING}/dashboard/perfil`
+				`${process.env.VUE_APP_LANDING}dashboard/perfil`
 			);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
@@ -69,7 +69,7 @@ const mercadopagoController = {
 		try {
 			const { params } = req;
 			await mercadopagoService.customSessionPay(params);
-			return res.redirect(`${landing_url}/dashboard/chat`);
+			return res.redirect(`${landing_url}dashboard/chat`);
 		} catch (e) {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
