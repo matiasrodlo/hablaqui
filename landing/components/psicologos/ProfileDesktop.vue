@@ -191,14 +191,14 @@
 								<div class="text--secondary text-left align-center">
 									<div>
 										<v-rating
-											v-model="global"
+											v-model="psychologist.rating"
 											readonly
 											half-increments
 										></v-rating>
 									</div>
 									<div class="mx-3">
 										<h5>Valorización global</h5>
-										<h5>{{ total }} opiniones</h5>
+										<h5>{{ psychologist.totalEvaluations }} opiniones</h5>
 									</div>
 								</div>
 							</v-col>
@@ -212,7 +212,7 @@
 									"
 								>
 									<v-rating
-										v-model="puntuality"
+										v-model="psychologist.puntualityRating"
 										readonly
 										half-increments
 									></v-rating>
@@ -227,7 +227,7 @@
 									"
 								>
 									<v-rating
-										v-model="attention"
+										v-model="psychologist.attentionRating"
 										readonly
 										half-increments
 									></v-rating>
@@ -243,7 +243,7 @@
 									"
 								>
 									<v-rating
-										v-model="internet"
+										v-model="psychologist.internetRating"
 										readonly
 										half-increments
 									></v-rating>
@@ -328,11 +328,6 @@ export default {
 			fullcard: false,
 			loadingCalendar: false,
 			evaluations: [],
-			global: 5,
-			puntuality: 5,
-			attention: 5,
-			internet: 5,
-			total: 0,
 			visibles: [],
 		};
 	},
@@ -341,9 +336,7 @@ export default {
 			sessions: 'Psychologist/sessionsFormatted',
 		}),
 	},
-	async mounted() {
-		await this.$axios.$get(`/psychologist/get-evaluations/${this.psychologist.username}`);
-	},
+	async mounted() {},
 	created() {
 		this.initFetch();
 		// this.socket = this.$nuxtSocket({
@@ -362,11 +355,18 @@ export default {
 				`/psychologist/get-evaluations/${this.psychologist.username}`
 			);
 			this.evaluations = data.evaluations;
-			this.global = data.global;
-			this.puntuality = data.puntuality;
-			this.internet = data.internet;
-			this.total = data.total;
 		},
+		/* scroll(person) {
+			window.onscroll = () => {
+				const bottomOfWindow =
+					document.documentElement.scrollTop + window.innerHeight ===
+					document.documentElement.offsetHeight;
+				if (bottomOfWindow) {
+					this.
+				}
+			};
+		}, */
+
 		async getPsychologist(username) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
 			this.setPsychologist(psychologist);
