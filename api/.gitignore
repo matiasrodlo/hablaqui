@@ -1,4 +1,5 @@
 uploads/
+server/utils/functions/mails/logMails.txt
 
 # App Engine Yaml (to optimize costs)
 app.yaml

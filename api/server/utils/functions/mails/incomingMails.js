@@ -2,8 +2,32 @@ import axios from 'axios';
 import { keyApiTestMails, namespaceTestMails } from '../../../config/dotenv';
 import { logInfo } from '../../../config/pino.js';
 import { okResponse, conflictResponse } from '../../responses/functions';
+import dayjs from 'dayjs';
+import fs from 'fs';
+
+const writerLogs = async (user, mail) => {
+	// Se obtiene el email del usuario y se obtiene el asunto, el cuerpo y el remitente del correo
+	const { email } = user;
+	const { from, subject, text } = mail;
+	const date = dayjs().format('DD-MM-YYYY HH:mm:ss');
+
+	// Se abre el archivo y se escribe en él para dejar un registro de los correos recibidos
+	fs.open('./server/utils/functions/mails/logMails.txt', 'a', (e, idFile) => {
+		fs.write(
+			idFile,
+			`${date} - ${email} - ${from} - ${subject}\n${text}\n\n`,
+			null,
+			'utf8',
+			() => {
+				fs.close(idFile);
+			}
+		);
+	});
+};
 
 const verifyIncomingMails = async user => {
+	let state;
+	let lastEmail;
 	// Se establece la url de la API JSON de testMails
 	const url = `https://api.testmail.app/api/json?apikey=${keyApiTestMails}&namespace=${namespaceTestMails}`;
 
@@ -18,15 +42,17 @@ const verifyIncomingMails = async user => {
 		let { data } = await axios.get(
 			`${url}&tag=${tag}&timestamp_from=${startTimestamp}&livequery=true`
 		);
-		let lastEmail = data.emails.shift();
+		lastEmail = data.emails.shift();
 		logInfo(
-			`El usuario ${user.email} obtuvo el último correo de ${lastEmail.from}`
+			`El usuario ${user.email} obtuvo el último correo de ${lastEmail.from} con el asunto de ${lastEmail.subject}`
 		);
-		return okResponse('Se obtuvo el correo', { correo: lastEmail });
+		writerLogs(user, lastEmail);
+		state = okResponse('Se obtuvo el correo', { correo: lastEmail });
 	} catch (error) {
 		logInfo('No se pudo obtener el correo');
-		return conflictResponse('No se pudo obtener el correo');
+		state = conflictResponse('No se pudo obtener el correo ', error);
 	}
+	return state;
 };
 
 export default verifyIncomingMails;
