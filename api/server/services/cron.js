@@ -97,53 +97,6 @@ async function getNumberSuccess() {
 	});
 }
 
-async function sendNotification(emails) {
-	/**
-	 * @description Envía un correo electrónico a los usuarios que no han sido notificados
-	 * @param {array} emails array de correos electrónicos
-	 */
-	emails.forEach(async e => {
-		if (dayjs().isAfter(dayjs(e.sessionDate).add(3, 'hours'))) {
-			// Si la cita ya pasó 3 horas, entonces se obtiene el batchId, se obtiene el usuario, el psicologo, y el chat.
-			const batch = await getBatchId();
-			const user = await User.findById(e.userRef);
-			const psy = await psychologist.findById(e.psyRef);
-			const messages = await Chat.findOne({
-				user: e.userRef,
-				psychologist: e.psyRef,
-			});
-
-			// Se filtra el chat para obtener los mensajes que sean del correo electrónico
-			const message = messages.messages.filter(
-				m => m._id.toString() === e.sessionRef.toString()
-			);
-
-			// Si el correo electrónico no ha sido leído y no ha sido programado, entonces se envía el correo electrónico
-			if (!message[0].read && !e.wasScheduled) {
-				e.type === 'send-by-psy'
-					? await mailServiceRemider.sendChatNotificationToUser(
-							user,
-							psy,
-							batch
-					  )
-					: await mailServiceRemider.sendChatNotificationToPsy(
-							user,
-							psy,
-							batch
-					  );
-			}
-
-			// Se actualiza el objeto de programación de correo electrónico
-			const updatePayload = {
-				wasScheduled: true,
-				scheduledAt: dayjs().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-				batchId: batch,
-			};
-			await email.updateOne({ _id: e._id }, updatePayload);
-		}
-	});
-}
-
 async function getBatchId() {
 	/**
 	 * @description Se obtiene un batchId para el envío de correos electrónicos
