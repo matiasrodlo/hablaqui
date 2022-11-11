@@ -25,7 +25,6 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);
@@ -50,7 +49,6 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 			},
-			sendAt: moment().unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);
