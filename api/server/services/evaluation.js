@@ -4,10 +4,7 @@ import Psychologist from '../models/psychologist';
 import Evaluation from '../models/evaluation';
 import Sessions from '../models/sessions';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import {
-	getScores,
-	getAllEvaluationsFunction,
-} from '../utils/functions/evaluationFunction';
+import { getAllEvaluationsFunction } from '../utils/functions/evaluationFunction';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
 moment.tz.setDefault('America/Santiago');
@@ -75,7 +72,6 @@ const getEvaluationsPsy = async user => {
 
 	return okResponse('Evaluaciones devueltas', {
 		evaluations,
-		...getScores(evaluations),
 	});
 };
 
@@ -124,43 +120,54 @@ const approveEvaluation = async (user, evaluationsId, evaluationId) => {
 			$set: {
 				'evaluations.$.approved': 'approved',
 			},
-		}
+		},
+		{ new: true }
 	).populate('psychologist user');
-	// Obtiene todas las evaluaciones del psicologo y filtra las aprobadas
-	const psy = evaluation.psychologist._id;
-	let evaluations = await getAllEvaluationsFunction(psy);
-	evaluations = evaluations.filter(
-		evaluation => evaluation.approved === 'approved'
-	);
 
-	// Recorre todas las evaluaciones y las va acumulando si es un valor numerico,
-	// y lo divide por el total de evaluaciones para obtener el promedio
-	const global =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.global == 'number' ? sum + value.global : sum,
-			0
-		) / evaluations.length;
+	const psy = evaluation.psychologist._id;
+
+	const evaluationApproved = evaluation.evaluations.find(
+		ev => ev.approved === 'approved'
+	);
+	// Obtiene las puntuaciones promedio registradas para el psicologo
+	let rating = evaluation.psychologist.attentionRating;
+	let internetRating = evaluation.psychologist.internetRating;
+	let puntualityRating = evaluation.psychologist.puntualityRating;
+	let attentionRating = evaluation.psychologist.attentionRating;
+	let totalEvaluations = evaluation.psychologist.totalEvaluations + 1;
+
+	// Se realiza el recalculo de los rating
+	rating = (rating + evaluationApproved.global) / totalEvaluations;
+	internetRating =
+		(internetRating + evaluationApproved.internet) / totalEvaluations;
+	puntualityRating =
+		(puntualityRating + evaluationApproved.puntuality) / totalEvaluations;
+	attentionRating =
+		(attentionRating + evaluationApproved.attention) / totalEvaluations;
 
 	// Actualiza el rating total del psicologo y lo redondea a 2 decimales
 	await Psychologist.findOneAndUpdate(
 		{ _id: psy },
 		{
 			$set: {
-				rating: global.toFixed(2),
+				rating: rating.toFixed(2),
+				internetRating: internetRating.toFixed(2),
+				puntualityRating: puntualityRating.toFixed(2),
+				attentionRating: attentionRating.toFixed(2),
+				totalEvaluations: totalEvaluations,
 			},
 		}
 	);
 
 	// Envia correo donde se aprueba la evaluación
 	await mailServicePsy.sendApproveEvaluationToUser(
-		evaluations.user,
-		evaluations.psychologist
+		evaluation.user,
+		evaluation.psychologist
 	);
 
 	await mailServicePsy.sendApproveEvaluationToPsy(
-		evaluations.user,
-		evaluations.psychologist
+		evaluation.user,
+		evaluation.psychologist
 	);
 
 	return okResponse('Evaluación aprobada', { evaluation });
