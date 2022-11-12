@@ -227,6 +227,7 @@ const ponderationMatch = async (matchedList, payload) => {
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				psy._id
 			);
+			console.log(days);
 			points +=
 				weighted[criteria] *
 				criterioDisponibilidad(payload, pointsPerCriterion, days);
