@@ -172,7 +172,7 @@
 						</div>
 					</v-card-text>
 				</v-card>
-				<v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
+				<v-card class="shadowCard mt-10 pb-5" style="border-radius: 15px">
 					<v-card-title> Comentarios </v-card-title>
 					<v-card-subtitle> Todas las opiniones son importantes </v-card-subtitle>
 
@@ -191,7 +191,7 @@
 								<div class="text--secondary text-left align-center">
 									<div>
 										<v-rating
-											v-model="psychologist.rating"
+											v-model="rating"
 											readonly
 											half-increments
 										></v-rating>
@@ -212,7 +212,7 @@
 									"
 								>
 									<v-rating
-										v-model="psychologist.puntualityRating"
+										v-model="puntuality"
 										readonly
 										half-increments
 									></v-rating>
@@ -227,7 +227,7 @@
 									"
 								>
 									<v-rating
-										v-model="psychologist.attentionRating"
+										v-model="attention"
 										readonly
 										half-increments
 									></v-rating>
@@ -243,7 +243,7 @@
 									"
 								>
 									<v-rating
-										v-model="psychologist.internetRating"
+										v-model="internet"
 										readonly
 										half-increments
 									></v-rating>
@@ -251,7 +251,7 @@
 								</div>
 							</v-col>
 						</v-row>
-						<template v-for="item in evaluations">
+						<template v-for="(item, index) in evaluations">
 							<v-col :key="item._id" cols="12">
 								<div class="mt-6">
 									<v-row>
@@ -274,7 +274,16 @@
 												</h4>
 												<p>{{ item.comment }}</p>
 											</div>
-											<v-divider />
+											<v-divider v-if="index > 0" />
+											<div v-if="isLastComment">
+												<h4 class="text-center">No hay más comentarios</h4>
+											</div>
+											<div v-show="loadingComments" class="text-center">
+												<v-progress-circular
+													indeterminate
+													color="primary"
+												/>
+											</div>
 										</v-col>
 									</v-row>
 								</div>
@@ -329,6 +338,13 @@ export default {
 			loadingCalendar: false,
 			evaluations: [],
 			visibles: [],
+			rating: 0,
+			internet: 0,
+			puntuality: 0,
+			attention: 0,
+			page: 1,
+			isLastComment: false,
+			loadingComments: false,
 		};
 	},
 	computed: {
@@ -336,7 +352,9 @@ export default {
 			sessions: 'Psychologist/sessionsFormatted',
 		}),
 	},
-	async mounted() {},
+	mounted() {
+		this.scroll();
+	},
 	created() {
 		this.initFetch();
 		// this.socket = this.$nuxtSocket({
@@ -349,23 +367,31 @@ export default {
 		// });
 	},
 	methods: {
-		async initFetch() {
+		initFetch() {
 			this.setFloatingChat(false);
-			const data = await this.$axios.$get(
-				`/psychologist/get-evaluations/${this.psychologist.username}`
-			);
-			this.evaluations = data.evaluations;
+			this.rating = this.psychologist.rating;
+			this.internet = this.psychologist.internetRating;
+			this.puntuality = this.psychologist.puntualityRating;
+			this.attention = this.psychologist.attentionRating;
 		},
-		/* scroll(person) {
-			window.onscroll = () => {
+		scroll() {
+			window.onscroll = async () => {
 				const bottomOfWindow =
 					document.documentElement.scrollTop + window.innerHeight ===
 					document.documentElement.offsetHeight;
-				if (bottomOfWindow) {
-					this.
+				if (bottomOfWindow && !this.isLastComment) {
+					this.loadingComments = true;
+					const data = await this.$axios.$get(
+						`/psychologist/get-evaluations/${this.psychologist.username}/${this.page}`
+					);
+					if (data.evaluations) {
+						this.evaluations = this.evaluations.concat(data.evaluations);
+						this.page += 1;
+					} else this.isLastComment = true;
+					this.loadingComments = false;
 				}
 			};
-		}, */
+		},
 
 		async getPsychologist(username) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);

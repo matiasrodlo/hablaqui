@@ -45,7 +45,7 @@ evaluationRouter.get(
  * @access authenticated
  */
 evaluationRouter.get(
-	'/psychologist/get-evaluations/:username',
+	'/psychologist/get-evaluations/:username/:page',
 	evaluationController.getEvaluationsPsy
 );
 

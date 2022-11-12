@@ -51,12 +51,33 @@ const getRating = async psychologist => {
 	});
 };
 
-const getEvaluationsPsy = async username => {
+const getEvaluationsPsy = async (username, page) => {
 	moment.locale('es');
-	// Verifica que el psicologo tenga evaluaciones, si tiene las obtiene y las devuelve
-	let evaluations = await Evaluation.find({ username: username }).populate(
-		'user'
-	);
+
+	// Cantidad total de documentos de evaluaciones sobre el psicologo en cuestion
+	const count = await Evaluation.countDocuments({
+		username: username,
+	});
+
+	const pageOptions = {
+		totalPages: Math.ceil(count / 2),
+		page: page ? parseInt(page) : 0,
+		limit: 2,
+	};
+
+	if (page > pageOptions.totalPages)
+		return okResponse('ultima pagina obtenida');
+
+	// Obtiene un lote de evaluarionces de psicologos
+	let evaluations = await Evaluation.find({ username: username })
+		.skip(
+			pageOptions.page > 0
+				? (pageOptions.page - 1) * pageOptions.limit
+				: 0
+		)
+		.limit(pageOptions.limit)
+		.populate('user');
+
 	if (!evaluations)
 		return okResponse('Evaluaciones devueltas', {
 			evaluations: [],
