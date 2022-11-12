@@ -278,8 +278,9 @@
 											<div v-if="isLastComment">
 												<h4 class="text-center">No hay más comentarios</h4>
 											</div>
-											<div v-show="loadingComments" class="text-center">
+											<div class="text-center">
 												<v-progress-circular
+													v-if="loadingComments"
 													indeterminate
 													color="primary"
 												/>
