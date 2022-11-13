@@ -47,11 +47,7 @@ psychologistsRouter.get(
  * @returns Objeto con las coincidencias sobre los psicólogos
  * @access authenticated
  */
-psychologistsRouter.post(
-	'/psychologists/match',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.match
-);
+psychologistsRouter.post('/psychologists/match', psychologistsController.match);
 
 /**
  *

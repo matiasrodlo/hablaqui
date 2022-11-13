@@ -19,22 +19,6 @@
 			/>
 		</template>
 		<!-- footer -->
-		<div style="background-color: #0f3860" class="mt-16">
-			<v-container class="white--text py-16" fluid style="max-width: 1080px">
-				<v-row>
-					<v-col>
-						Importante: Los servicios disponibles a través de Hablaquí son
-						proporcionados de forma independiente por profesionales en salud mental
-						certificados. Hablaquí no proporciona ningún servicio de salud mental u
-						otros de atención médica. Los profesionales en salud mental no pre-escriben
-						medicamentos a través de Hablaquí. Si estás experimentando una crisis o
-						emergencia, por favor comunícate a los servicios de emergencia más cercanos
-						a tu localidad.
-					</v-col>
-				</v-row>
-			</v-container>
-		</div>
-		<Footer />
 	</div>
 </template>
 
@@ -44,7 +28,6 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	components: {
-		Footer: () => import('~/components/Footer'),
 		Appbar: () => import('~/components/AppbarWhite'),
 		PagosDesktop: () =>
 			import(
@@ -69,6 +52,7 @@ export default {
 			loadingSession: false,
 			hasSessions: false,
 			psychologist: null,
+			plan: null,
 		};
 	},
 	head() {
@@ -95,7 +79,7 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			plan: 'User/plan',
+			plans: 'User/plan',
 		}),
 	},
 	jsonld() {
@@ -118,6 +102,8 @@ export default {
 			this.plan.remainingSessions > 0;
 	},
 	async mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		window.scrollTo(0, 0);
 		if (this.hasSessions) {
 			await this.newSession();

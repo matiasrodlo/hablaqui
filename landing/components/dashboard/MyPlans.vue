@@ -87,17 +87,10 @@
 		<template v-else>
 			<v-card>
 				<v-card-text class="text-center">
-					<div
-						class="headline font-weight-bold primary--text my-5 mx-auto"
-						style="max-width: 295px"
-					>
-						Adquiere nuestros planes y agenda con un espacialista
-					</div>
 					<div class="body-1 my-5 mx-auto" style="max-width: 280px">
-						Orientación psicológica en cualquier momento y lugar. Comienza a mejorar tu
-						vida hoy.
+						Bienestar en cualquier momento, en cualquier lugar
 					</div>
-					<v-btn rounded color="primary" to="/psicologos/"> Buscar ahora </v-btn>
+					<v-btn rounded color="primary" to="/psicologos/">Comenzar</v-btn>
 				</v-card-text>
 			</v-card>
 		</template>

@@ -14,18 +14,12 @@
 						:lazy-src="`https://cdn.hablaqui.cl/static/balloon.png`"
 					></v-img>
 				</div>
-				<div class="headline font-weight-bold">¡Ya has terminado!</div>
+				<div class="headline font-weight-bold">¡Bienvenido!</div>
 				<div class="my-6 text--secondary body-1 mx-auto" style="max-width: 800px">
-					Puedes dirigirte a la agenda y verificar tus sesiones agendadas
+					Es momento de comenzar su viaje hacia el bienestar
 				</div>
 				<div>
-					<v-btn
-						depressed
-						class="mx-2"
-						color="primary"
-						rounded
-						:to="{ name: 'dashboard-agenda' }"
-					>
+					<v-btn depressed class="mx-2" color="primary" rounded @click="redirectReload">
 						Ir a mi agenda
 					</v-btn>
 				</div>
@@ -61,6 +55,10 @@ export default {
 		}
 	},
 	methods: {
+		redirectReload() {
+			const url = new URL('/dashboard/agenda', window.location.origin);
+			window.location.href = url.toString();
+		},
 		...mapActions({
 			mercadopagoSuccess: 'Psychologist/mercadopagoSuccess',
 		}),

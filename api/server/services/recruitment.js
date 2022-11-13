@@ -1,24 +1,26 @@
 'use strict';
 
-import Recruitment from '../models/recruitment';
-import User from '../models/user';
-import { logInfo } from '../config/winston';
-import { conflictResponse, okResponse } from '../utils/responses/functions';
-import { actionInfo } from '../utils/logger/infoMessages';
-import psychologist from '../models/psychologist';
-import mailService from './mail';
+import Recruitment from '../models/recruitment'; // Contiene la definición del modelo de recruitment para mongodb
+import User from '../models/user'; // Contiene la definición del modelo de user para mongodb
+import { logInfo } from '../config/winston'; // Se importa el log de info para poder imprimir en la consola
+import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
+import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
+import psychologist from '../models/psychologist'; // Contiene la definición del modelo de psychologist para mongodb
+import mailServiceAccount from '../utils/functions/mails/accountsShares'; // Utiliza el servicio de mail
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import Analytics from 'analytics-node';
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const recruitmentService = {
 	/**
-	 * @description - This controller is used to create a new recruitment profile
-	 * @param {Object} user - The user object with all the details for the profile
-	 * @param {Object} body - The raw body of the request
-	 * @returns Response code, message and the created recruitment profile
+	 * @description - Este controlador se utiliza para crear un nuevo perfil de contratación
+	 * @param {Object} user - El objeto usuario con todos los detalles del perfil
+	 * @param {Object} body - El cuerpo bruto de la solicitud
+	 * @returns Código de respuesta, mensaje y perfil de contratación creado
 	 */
 	async register(user, body) {
+		// Se crea un objeto que contiene los datos del perfil de recruitment
 		const payload = {
 			...body,
 			email: user.email,
@@ -29,7 +31,9 @@ const recruitmentService = {
 		if (await Recruitment.exists({ rut: payload.rut })) {
 			return conflictResponse('Este postulante ya está registrado');
 		}
+		// Se crea un nuevo perfil de recruitment
 		const recruited = await Recruitment.create(payload);
+		// Se hace el trakeo en segment
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
@@ -77,21 +81,22 @@ const recruitmentService = {
 				},
 			});
 		}
-		// Send email to the psychologist confirming the application. Also internal confirmation is sent.
-		mailService.sendRecruitmentConfirmation(recruited);
-		mailService.sendRecruitmentConfirmationAdmin(recruited);
+		// Se envía un correo electrónico al psicólogo confirmando la solicitud. También se envía la confirmación interna.
+		mailServicePsy.sendRecruitmentConfirmation(recruited);
+		mailServicePsy.sendRecruitmentConfirmationAdmin(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This service is used to update a recruitment profile
-	 * @param {Object} body - The body of the request with the new values
-	 * @returns The response code, message and the updated recruitment profile (if any)
+	 * @description - Este servicio se utiliza para actualizar un perfil de contratación
+	 * @param {Object} body - El cuerpo de la solicitud con los nuevos valores
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación actualizado (si lo hay)
 	 */
 	async update(body, step) {
 		if (!(await Recruitment.exists({ email: body.email }))) {
 			return conflictResponse('Este postulante no existe');
 		}
+		// Se hace el trakeo en segment
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
@@ -107,6 +112,7 @@ const recruitmentService = {
 				});
 			}
 		}
+		// Se actualiza el perfil de recruitment
 		const recruited = await Recruitment.findOneAndUpdate(
 			{ email: body.email },
 			body,
@@ -116,25 +122,25 @@ const recruitmentService = {
 		return okResponse('Actualizado exitosamente', { recruited });
 	},
 	/**
-	 * @description - This service is used to get a recruitment profile by mail
-	 * @param {Object} mail - The mail of the recruitment profile
-	 * @returns The response code, message and the recruitment profile obtained (if exists)
+	 * @description - Este servicio se utiliza para obtener un perfil de contratación por correo
+	 * @param {Object} mail - El correo del perfil de contratación
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación obtenido (si existe)
 	 */
 	async get(email) {
 		const recruited = await Recruitment.findOne({ email });
 		return okResponse('Postulante obtenido', { recruited });
 	},
 	/**
-	 * @description - This services is used to get all recruitment
-	 * @returns The response code, message and the recruitments profile obtained
+	 * @description - Este servicio se utiliza para obtener toda la contratación
+	 * @returns El código de respuesta, el mensaje y el perfil de contratación obtenidos
 	 */
 	async getAll() {
 		const recruitment = await Recruitment.find({ isVerified: false });
 		return okResponse('Postulantes obtenidos', { recruitment });
 	},
 	/**
-	 * @description - This controller checks if a recruitment profile exists and it hasn't been verified.
-	 * @returns The response code, message and the new Psychologist profile created succesfully
+	 * @description - Este controlador comprueba si existe un perfil de contratación y no ha sido verificado.
+	 * @returns El código de respuesta, el mensaje y el nuevo perfil de psicólogo creado con éxito
 	 **/
 	async approve(user, email) {
 		if (user.role !== 'superuser')
@@ -150,6 +156,8 @@ const recruitmentService = {
 				'Este postulante ya está aprobado y no puede ser aprobado de nuevo'
 			);
 		}
+
+		// Se actualiza el perfil de recruitment
 		let payload = await Recruitment.findOneAndUpdate(
 			{ email },
 			{ isVerified: true },
@@ -157,20 +165,23 @@ const recruitmentService = {
 		);
 
 		// Formateamos el payload para que nos deje editar
-		payload = JSON.stringify(payload);
-		payload = JSON.parse(payload);
+		payload = JSON.stringify(payload); // Se convierte el payload a string
+		payload = JSON.parse(payload); // Se convierte el payload a JSON
 
-		delete payload._id;
-		delete payload.__v;
+		delete payload._id; // Se elimina el id del payload
+		delete payload.__v; // Se elimina el __v del payload
 
+		// Se crea un nuevo perfil de psychologist
 		const newProfile = await psychologist.create(payload);
-		mailService.sendWelcomeNewPsychologist(payload);
+		mailServiceAccount.sendWelcomeNewPsychologist(payload);
 
 		const userUpdated = await User.findOneAndUpdate(
 			{ email: payload.email },
 			{ $set: { psychologist: newProfile._id } },
 			{ new: true }
 		);
+
+		// Se hace el trakeo en segment
 		if (
 			process.env.API_URL.includes('hablaqui.cl') ||
 			process.env.DEBUG_ANALYTICS === 'true'
@@ -199,6 +210,7 @@ const recruitmentService = {
 		return okResponse('Aprobado exitosamente', { newProfile });
 	},
 	async updatePlan(recruitedId, newPlan) {
+		// Actualizar el plan de un perfil de recruitment
 		const recruitedToUpdate = await Recruitment.findOneAndUpdate(
 			{ _id: recruitedId },
 			{
@@ -211,6 +223,7 @@ const recruitmentService = {
 		return okResponse('Plan actualizado/creado', { recruitedToUpdate });
 	},
 	async flagOnboarding(recruitedId, flags) {
+		// Actualiza los flags de onboarding de un perfil de recruitment
 		const recruitedOnboarding = await Recruitment.findOneAndUpdate(
 			{ _id: recruitedId },
 			{
@@ -220,7 +233,7 @@ const recruitmentService = {
 			},
 			{ new: true }
 		);
-		return okResponse('Onboarding actualizado', { recruitedOnboarding });
+		return okResponse('Onboarding actualizado', { recruitedOnboarding }); // Se retorna el perfil de recruitment
 	},
 };
 

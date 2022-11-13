@@ -126,7 +126,7 @@
 					v-if="$auth.user.role === 'psychologist'"
 					class="my-4 hidden-md-and-up"
 					link
-					href="https://hablaqui.cl/para-psicologos/preguntas-frecuentes/"
+					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
 				>
 					<v-list-item-avatar size="30">
 						<v-img
@@ -178,13 +178,6 @@
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
-			<template v-if="!isMini" #append>
-				<div class="pa-2 caption white--text">
-					<icon class="pb-2" size="20" color="white" :icon="mdiAlert" />
-					Nuestra plataforma aún está en construcción. Si presentas algún problema, no
-					dudes en contactarnos
-				</div>
-			</template>
 		</v-navigation-drawer>
 		<v-navigation-drawer
 			v-if="$auth.$state.user.role === 'psychologist'"
@@ -311,13 +304,8 @@
 							<span class="secondary--text"> x </span>
 						</v-btn>
 					</div>
-					<v-card-text class="py-0 text-center body-1 px-6">
-						Aprenda a usar Hablaquí
-					</v-card-text>
-					<br />
 					<v-card-text class="text-center body-2 px-6">
-						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas en una
-						breve capacitación en línea.
+						Nos encantaría mostrarle nuestras funcionalidades y atender sus dudas
 					</v-card-text>
 					<v-card-actions class="text-center body-2 px-6">
 						<v-spacer></v-spacer>
@@ -393,6 +381,7 @@ export default {
 			drawer: true,
 			online: true,
 			isMini: true,
+			plan: null,
 		};
 	},
 	computed: {
@@ -459,7 +448,7 @@ export default {
 					disable,
 				},
 				{
-					name: 'Mi cuenta',
+					name: 'Cuenta',
 					link: { name: 'dashboard-perfil' },
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible,
@@ -484,6 +473,20 @@ export default {
 				{
 					name: 'Cambio de sesión',
 					link: { name: 'dashboard-reschedule-session' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
+				{
+					name: 'Cambio de psicologo',
+					link: { name: 'dashboard-change-psy' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
+				{
+					name: 'Tabla de pagos',
+					link: { name: 'dashboard-paymentTable' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
@@ -570,8 +573,7 @@ export default {
 							tab: 0,
 							card: {
 								title: 'Foto de perfil',
-								description:
-									'Luzca profesional. Adjunte su foto de perfil, nosotros la retocaremos. Ver manual.',
+								description: 'Adjunte su foto, nosotros la retocaremos. Ver manual',
 								link: 'https://drive.google.com/file/d/1IPmrPotLIyaRUD2T3NwnzQvF8KHm3pZw/view',
 							},
 							route: 'dashboard-perfil',
@@ -583,7 +585,7 @@ export default {
 							card: {
 								title: 'Datos bancarios',
 								description:
-									'Ingrese sus datos. Nosotros cobramos y transferimos directamente a su cuenta.',
+									'Ingrese sus datos. Transferimos directamente a su cuenta',
 							},
 							done: this.hasBankdata,
 							route: 'dashboard-perfil',
@@ -593,8 +595,7 @@ export default {
 							tab: 1,
 							card: {
 								title: 'Disponibilidad',
-								description:
-									'Establezca fácilmente sus horarios de atención al público.',
+								description: 'Establezca sus horarios de atención al público',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
@@ -605,7 +606,7 @@ export default {
 							card: {
 								title: 'Intervalos',
 								description:
-									'Establezca intervalos de disponibilidad para cada día.',
+									'Establezca intervalos de disponibilidad para cada día',
 							},
 							done: this.hasSchedule,
 							route: 'dashboard-perfil',
@@ -636,7 +637,7 @@ export default {
 							tab: 2,
 							card: {
 								title: 'Valor por sesión',
-								description: 'Configure el valor por sesiones de 50 minutos.',
+								description: 'Configure el valor por sesiones de 50 minutos',
 							},
 							done: this.hasSessionPrice,
 							route: 'dashboard-perfil',
@@ -660,7 +661,7 @@ export default {
 							card: {
 								title: 'Chat',
 								description:
-									'Envíe mensajes ilimitados para coordinar y realizar seguimiento.',
+									'Envíe mensajes ilimitados para coordinar y realizar seguimiento',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -671,7 +672,7 @@ export default {
 							card: {
 								title: 'Sesiones',
 								description:
-									'Las sesiones se añadirán automáticamente en su calendario.',
+									'Las sesiones se añadirán automáticamente a su calendario',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -683,7 +684,7 @@ export default {
 							card: {
 								title: 'Pagos',
 								description:
-									'Lleve el historial de sus ingresos en piloto automático. Todo organizado y al día',
+									'Lleve el historial de sus ingresos en piloto automático',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -695,7 +696,7 @@ export default {
 							card: {
 								title: 'Consultantes',
 								description:
-									'Todos sus consultantes en un solo lugar. Administre sus datos e historial de atención.',
+									'Toda la información de sus consultantes en un solo lugar',
 								link: '',
 								route: 'dashboard-chat',
 							},
@@ -714,7 +715,7 @@ export default {
 			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			consultantes: 'Psychologist/clients',
 		}),
 	},
@@ -733,9 +734,10 @@ export default {
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
-
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
 				if (this.plan.psychologist) {

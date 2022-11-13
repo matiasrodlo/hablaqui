@@ -1,4 +1,6 @@
 import axios from 'axios';
+import pkg from './package.json';
+
 const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
@@ -32,9 +34,9 @@ export default {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			const baseApi = process.env.API_ABSOLUTE
-				? process.env.API_ABSOLUTE
-				: 'http://localhost:3000/';
+			// const baseApi = process.env.API_ABSOLUTE
+			// 	? process.env.API_ABSOLUTE
+			// 	: 'http://localhost:3000/';
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
@@ -44,7 +46,6 @@ export default {
 					route: `/${psychologist.username}`,
 					payload: psychologist,
 				}));
-
 			// generate routes comunas
 			/* const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
@@ -355,5 +356,33 @@ export default {
 		 ** public patch
 		 */
 		publicPath: process.env.VUE_APP_LANDING,
+		filenames: process.env.VUE_APP_LANDING
+			? {
+					img: ({ isDev }) =>
+						isDev
+							? '[path][name].[ext]?v=' + pkg.version
+							: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
+					app: ({ isDev, isModern }) =>
+						isDev
+							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+					chunk: ({ isDev, isModern }) =>
+						isDev
+							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+					css: ({ isDev }) =>
+						isDev
+							? '[name].css?v=' + pkg.version
+							: 'css/[contenthash:7].css?v=' + pkg.version,
+					font: ({ isDev }) =>
+						isDev
+							? '[path][name].[ext]?v=' + pkg.version
+							: 'fonts/[name].[contenthash:7].[ext]?v=' + pkg.version,
+					video: ({ isDev }) =>
+						isDev
+							? '[path][name].[ext]?v=' + pkg.version
+							: 'videos/[name].[contenthash:7].[ext]?v=' + pkg.version,
+			  }
+			: {},
 	},
 };

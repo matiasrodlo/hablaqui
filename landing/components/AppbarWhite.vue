@@ -420,6 +420,21 @@ export default {
 				{
 					name: 'Cambio de sesión',
 					link: { name: 'dashboard-reschedule-session' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Cambio de psicologo',
+					link: { name: 'dashboard-change-psy' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Tabla de pagos',
+					link: { name: 'dashboard-paymentTable' },
+					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
@@ -461,6 +476,5 @@ export default {
 	font-weight: 700;
 	font-family: 'Lato', sans-serif;
 	letter-spacing: 0.02em;
-	// font-size: 0.8em;
 }
 </style>

@@ -19,11 +19,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSessions({ commit }, { idPsychologist, idUser }) {
+	async getSessions({ commit }, { idUser }) {
 		try {
-			const { sessions } = await this.$axios.$get(
-				`/psychologists/sessions/${idPsychologist}/${idUser}`
-			);
+			const { sessions } = await this.$axios.$get(`/psychologists/sessions/${idUser}`);
 			commit('setSessions', sessions);
 			return sessions;
 		} catch (e) {
@@ -225,7 +223,11 @@ export default {
 				method: 'POST',
 				data: { payload },
 			});
-			return data.matchedPsychologists;
+			const { matchedPsychologists } = data;
+			if (matchedPsychologists[0]) matchedPsychologists[0].type = 'Recomendado';
+			if (matchedPsychologists[1]) matchedPsychologists[1].type = 'Disponibilidad';
+			if (matchedPsychologists[2]) matchedPsychologists[2].type = 'Economico';
+			return matchedPsychologists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
