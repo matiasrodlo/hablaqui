@@ -766,7 +766,7 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-const getFormattedSessionsForMatch = async psychologist => {
+const getFormattedSessionsForMatch = async (psychologist, psySessions) => {
 	let sessions = [];
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
@@ -777,10 +777,6 @@ const getFormattedSessionsForMatch = async psychologist => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del psicologo
-	let psySessions = await Sessions.find({
-		psychologist: psychologist._id,
-	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	psySessions = psySessions.filter(item =>

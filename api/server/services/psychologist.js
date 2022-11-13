@@ -217,11 +217,16 @@ const ponderationMatch = async (matchedList, payload) => {
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
 	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico)
 	const weighted = [0.01, 0.05, 0.1, 0.5, 0.04, 0.2];
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			let criteria = 0;
 			let points = normalize(psy.points, 0, 100) * weighted[criteria];
+			const sessionPsy = sessions.filter(
+				session => session.psy === psy._id
+			);
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
@@ -230,7 +235,8 @@ const ponderationMatch = async (matchedList, payload) => {
 			criteria++;
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				psy
+				psy,
+				sessionPsy
 			);
 			points +=
 				weighted[criteria] *
