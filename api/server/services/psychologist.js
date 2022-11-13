@@ -288,6 +288,8 @@ const psychologistClasification = async (matchedList, payload) => {
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
+	// Se elimina el mejor match
+	matchedList.shift(0);
 	// Obtiene primero al psy más barato
 	matchedList.sort((a, b) => b.sessionPrices.video - a.sessionPrices.video);
 	resultList.push(matchedList.pop());
