@@ -13,11 +13,9 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
 dayjs.extend(customParseFormat);
-dayjs.extend(badMutable);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);

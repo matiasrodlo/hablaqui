@@ -4,9 +4,10 @@ import sendMails from './sendMails';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat, badMutable, utc, timezone);
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
