@@ -116,41 +116,41 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
 		days[i].available.forEach(hora => {
 			if (
-				dayjs(hora, 'HH:mm').isBetween(
-					dayjs('00:00', 'HH:mm'),
-					dayjs('08:59', 'HH:mm')
+				moment(hora, 'HH:mm').isBetween(
+					moment('00:00', 'HH:mm'),
+					moment('08:59', 'HH:mm')
 				) &&
 				payload.schedule == 'early'
 			) {
 				points += pointsPerCriterion;
 			} else if (
-				dayjs(hora, 'HH:mm').isBetween(
-					dayjs('09:00', 'HH:mm'),
-					dayjs('11:59', 'HH:mm')
+				moment(hora, 'HH:mm').isBetween(
+					moment('09:00', 'HH:mm'),
+					moment('11:59', 'HH:mm')
 				) &&
 				payload.schedule == 'morning'
 			) {
 				points += pointsPerCriterion;
 			} else if (
-				dayjs(hora, 'HH:mm').isBetween(
-					dayjs('12:00', 'HH:mm'),
-					dayjs('13:59', 'HH:mm')
+				moment(hora, 'HH:mm').isBetween(
+					moment('12:00', 'HH:mm'),
+					moment('13:59', 'HH:mm')
 				) &&
 				payload.schedule == 'midday'
 			) {
 				points += pointsPerCriterion;
 			} else if (
-				dayjs(hora, 'HH:mm').isBetween(
-					dayjs('14:00', 'HH:mm'),
-					dayjs('17:59', 'HH:mm')
+				moment(hora, 'HH:mm').isBetween(
+					moment('14:00', 'HH:mm'),
+					moment('17:59', 'HH:mm')
 				) &&
 				payload.schedule == 'afternoon'
 			) {
 				points += pointsPerCriterion;
 			} else if (
-				dayjs(hora, 'HH:mm').isBetween(
-					dayjs('18:00', 'HH:mm'),
-					dayjs('23:59', 'HH:mm')
+				moment(hora, 'HH:mm').isBetween(
+					moment('18:00', 'HH:mm'),
+					moment('23:59', 'HH:mm')
 				) &&
 				payload.schedule == 'night'
 			) {
@@ -730,7 +730,7 @@ const getClients = async specialist => {
 				plan: item.plan.find(
 					plan =>
 						plan.payment === 'success' &&
-						dayjs().isBefore(dayjs(plan.expiration))
+						moment().isBefore(moment(plan.expiration))
 				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
@@ -752,7 +752,7 @@ const getLastSession = item => {
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
 		.find(sessionDate =>
-			dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(dayjs())
+			moment(sessionDate, 'DD/MM/YYYY').isSameOrBefore(moment())
 		);
 };
 
@@ -896,10 +896,10 @@ const changeToInmediateAttention = async spec => {
 				.format('DD/MM/YYYY HH:mm');
 			return (
 				session.status !== 'success' &&
-				dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-				dayjs(date)
+				moment(date).isBefore(moment(now).add(3, 'hours')) &&
+				moment(date)
 					.add(50, 'minutes')
-					.isAfter(dayjs(now))
+					.isAfter(moment(now))
 			);
 		});
 
@@ -959,15 +959,19 @@ const getAllSessionsInmediateAttention = async () => {
 						: [];
 				})
 				.filter(session => {
+<<<<<<< HEAD:api/server/services/specialist.js
 					const date = dayjs.tz(dayjs(session.date)).format(
+=======
+					const date = moment(session.date).format(
+>>>>>>> d2c2af30 (fix: dayjs to moment):api/server/services/psychologist.js
 						'DD/MM/YYYY HH:mm'
 					);
 					return (
 						session.status !== 'success' &&
-						dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-						dayjs(date)
+						moment(date).isBefore(moment(now).add(3, 'hours')) &&
+						moment(date)
 							.add(50, 'minutes')
-							.isAfter(dayjs(now))
+							.isAfter(moment(now))
 					);
 				});
 		});
