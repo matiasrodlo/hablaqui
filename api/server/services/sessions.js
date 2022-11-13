@@ -877,12 +877,8 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-const getFormattedSessionsForMatch = async idSpecialist => {
+const getFormattedSessionsForMatch = async (specialist, specSessions) => {
 	let sessions = [];
-	// obtenemos el psicologo
-	const specialist = await Specialist.findById(idSpecialist).select(
-		'_id schedule preferences inmediateAttention'
-	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
@@ -893,10 +889,6 @@ const getFormattedSessionsForMatch = async idSpecialist => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del psicologo
-	let specSessions = await Sessions.find({
-		specialist: idSpecialist,
-	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	specSessions = specSessions.filter(item =>
@@ -919,8 +911,8 @@ const getFormattedSessionsForMatch = async idSpecialist => {
 		})
 		.filter(date => dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()));
 	let minimumNewSession = dayjs
-		.tz(dayjs().add(specialist.preferences.minimumNewSession, 'h'))
-		.format();
+			.tz(dayjs().add(specialist.preferences.minimumNewSession, 'h'))
+			.format();
 
 	sessions = length.map(el => {
 		const day = dayjs.tz(dayjs().add(el, 'days'));

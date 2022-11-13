@@ -209,12 +209,18 @@ const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
 const ponderationMatch = async (matchedList, payload) => {
 	const pointsPerCriterion = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
+	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico)
+	const weighted = [0.01, 0.05, 0.1, 0.5, 0.04, 0.2];
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
 		matchedList.map(async spec => {
 			let criteria = 0;
 			let points = normalize(spec.points, 0, 100) * weighted[criteria];
+			const sessionSpec = sessions.filter(
+				session => session.spec === spec._id
+			);
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
@@ -223,7 +229,8 @@ const ponderationMatch = async (matchedList, payload) => {
 			criteria++;
 			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				spec._id
+				spec,
+				sessionSpec
 			);
 			points +=
 				weighted[criteria] *
@@ -959,11 +966,7 @@ const getAllSessionsInmediateAttention = async () => {
 						: [];
 				})
 				.filter(session => {
-<<<<<<< HEAD:api/server/services/specialist.js
 					const date = dayjs.tz(dayjs(session.date)).format(
-=======
-					const date = moment(session.date).format(
->>>>>>> d2c2af30 (fix: dayjs to moment):api/server/services/psychologist.js
 						'DD/MM/YYYY HH:mm'
 					);
 					return (
