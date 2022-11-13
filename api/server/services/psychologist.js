@@ -14,9 +14,10 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket'; // Funciones que devuelven URL's
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago'); // Se configura la zona horaria de la aplicación
+import Analytics from 'analytics-node';
+moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
 	// Funcion para obtener todos los psicologos
@@ -313,7 +314,7 @@ const match = async body => {
 		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes },
+			specialties: { $in: payload.themes }, // Filtra por especialidades
 		});
 	} else {
 		// Si no es transgenero
@@ -726,11 +727,12 @@ const getClients = async psychologist => {
 				name: item.user.name,
 				observation: item.observation,
 				phone: item.user.phone,
-				plan: item.plan.find(
-					plan =>
-						plan.payment === 'success' &&
-						moment().isBefore(moment(plan.expiration))
-				),
+				plan: item.plan.find(plan => {
+					return (
+						moment().isBefore(moment(plan.expiration)) &&
+						plan.payment === 'success'
+					);
+				}),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
