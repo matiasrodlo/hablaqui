@@ -53,7 +53,7 @@ export default {
 		}));
 	},
 	setSessionsFormattedAll(state, items) {
-		dayjs.local('es');
+		dayjs.locale('es');
 		state.sessionsFormattedAll = items.map(item => {
 			return {
 				psychologist: item.psychologist,

@@ -8,21 +8,19 @@ import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import dayjs from 'dayjs';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import Sessions from '../models/sessions';
 import {
 	bucket,
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
 import Analytics from 'analytics-node';
 dayjs.extend(isBetween);
-dayjs.extend(badMutable);
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -227,7 +225,6 @@ const ponderationMatch = async (matchedList, payload) => {
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				psy._id
 			);
-			console.log(days);
 			points +=
 				weighted[criteria] *
 				criterioDisponibilidad(payload, pointsPerCriterion, days);

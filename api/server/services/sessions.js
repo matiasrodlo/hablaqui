@@ -21,19 +21,15 @@ import Sessions from '../models/sessions';
 import dayjs from 'dayjs';
 import crypto from 'crypto';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Analytics from 'analytics-node';
 dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
-dayjs.extend(badMutable);
 dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('America/Santiago');
 
@@ -821,15 +817,15 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	);
 
 	sessions = length.map(el => {
-		const day = dayjs(Date.now()).add(el, 'days');
+		const day = dayjs().add(el, 'days');
 		const temporal = dayjs(day).format('L');
 
 		return {
 			id: el,
-			value: day,
+			value: day.format(),
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: dayjs(day),
+			text: dayjs(day).format(),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
@@ -913,10 +909,10 @@ const getFormattedSessions = async (idPsychologist, type) => {
 
 		return {
 			id: el,
-			value: day,
+			value: day.format(),
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: dayjs(day),
+			text: dayjs(day).format(),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
@@ -1015,14 +1011,14 @@ const formattedSessionsAll = async ids => {
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
-				const day = dayjs(Date.now()).add(el, 'days');
+				const day = dayjs().add(el, 'days');
 				const temporal = dayjs(day).format('L');
 				return {
 					psychologist: item._id,
-					value: day,
+					value: day.format(),
 					day: day.format('DD MMM'),
 					date: day.format('L'),
-					text: dayjs(day),
+					text: dayjs(day).format(),
 					available: hours.filter(hour => {
 						return (
 							dayjs(
