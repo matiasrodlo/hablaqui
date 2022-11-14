@@ -73,12 +73,7 @@
 					<v-window v-model="step">
 						<v-window-item :value="1">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">
@@ -101,12 +96,7 @@
 
 						<v-window-item :value="2">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">2. Puntualidad</div>
@@ -126,12 +116,7 @@
 
 						<v-window-item :value="3">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">3. Atención</div>
@@ -151,12 +136,7 @@
 
 						<v-window-item :value="4">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">4. Internet</div>

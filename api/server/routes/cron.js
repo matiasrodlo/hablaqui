@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import cronController from '../controllers/cron';
+import { Router } from "express";
+import cronController from "../controllers/cron";
 
 const cronRouter = Router();
 
@@ -12,8 +12,8 @@ const cronRouter = Router();
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/email-schedule/:authToken',
-	cronController.scheduleEmails
+  "/cron/email-schedule/:authToken",
+  cronController.scheduleEmails
 );
 
 /**
@@ -23,8 +23,8 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/session-status/:authToken',
-	cronController.sessionStatus
+  "/cron/session-status/:authToken",
+  cronController.sessionStatus
 );
 
 /**
@@ -34,8 +34,8 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/email-chat/:authToken',
-	cronController.scheduleChatEmails
+  "/cron/email-chat/:authToken",
+  cronController.scheduleChatEmails
 );
 
 /**
@@ -44,7 +44,7 @@ cronRouter.post(
  * @route /api/v1/cron/limit-to-pay/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
+cronRouter.post("/cron/limit-to-pay/:authToken", cronController.limitToPayPlan);
 
 /**
  * @description: --------
@@ -53,7 +53,7 @@ cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/status/attention/:authToken',
-	cronController.statusInmediateAttention
+  "/cron/status/attention/:authToken",
+  cronController.statusInmediateAttention
 );
 export default cronRouter;

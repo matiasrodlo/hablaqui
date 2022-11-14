@@ -1,62 +1,62 @@
-'use strict';
+"use strict";
 
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
 let messageSchema = new Schema(
-	{
-		sentBy: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-		},
-		message: {
-			type: String,
-		},
-		read: {
-			type: Boolean,
-			default: 'false',
-		},
-	},
-	{ timestamps: true }
+  {
+    sentBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    message: {
+      type: String,
+    },
+    read: {
+      type: Boolean,
+      default: "false",
+    },
+  },
+  { timestamps: true }
 );
 
 let reportSchema = new Schema(
-	{
-		reportedBy: {
-			type: String,
-		},
-		reportType: {
-			type: String,
-			enum: ['inappropiate', 'no-answer', 'too-late', 'other'],
-		},
-		issue: {
-			type: String,
-		},
-	},
-	{ timestamps: true }
+  {
+    reportedBy: {
+      type: String,
+    },
+    reportType: {
+      type: String,
+      enum: ["inappropiate", "no-answer", "too-late", "other"],
+    },
+    issue: {
+      type: String,
+    },
+  },
+  { timestamps: true }
 );
 
 let chatSchema = new Schema(
-	{
-		user: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-		},
-		psychologist: {
-			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
-		},
-		isLastRead: {
-			type: Boolean,
-			default: true,
-		},
-		lastMessageSendBy: {
-			type: String,
-			default: 'error',
-		},
-		messages: [messageSchema],
-		reports: [reportSchema],
-	},
-	{ timestamps: true }
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    psychologist: {
+      type: Schema.Types.ObjectId,
+      ref: "psychologist",
+    },
+    isLastRead: {
+      type: Boolean,
+      default: true,
+    },
+    lastMessageSendBy: {
+      type: String,
+      default: "error",
+    },
+    messages: [messageSchema],
+    reports: [reportSchema],
+  },
+  { timestamps: true }
 );
 
-export default model('chat', chatSchema);
+export default model("chat", chatSchema);

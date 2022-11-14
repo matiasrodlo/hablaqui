@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import psychologistsController from '../controllers/psychologist';
-import multer from '../middleware/multer';
+import { Router } from "express";
+import passport from "passport";
+import psychologistsController from "../controllers/psychologist";
+import multer from "../middleware/multer";
 
 const psychologistsRouter = Router();
 
@@ -23,7 +23,7 @@ const psychologistsRouter = Router();
  * @method GET
  * @route /api/v1/psychologists/all
  */
-psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
+psychologistsRouter.get("/psychologists/all", psychologistsController.getAll);
 
 /**
  * @description Obtiene al psicólogo a través del username o su Id
@@ -33,8 +33,8 @@ psychologistsRouter.get('/psychologists/all', psychologistsController.getAll);
  * @returns Objeto con el psicólogo
  */
 psychologistsRouter.get(
-	'/psychologists/one/:info',
-	psychologistsController.getByData
+  "/psychologists/one/:info",
+  psychologistsController.getByData
 );
 
 /**
@@ -47,7 +47,7 @@ psychologistsRouter.get(
  * @returns Objeto con las coincidencias sobre los psicólogos
  * @access authenticated
  */
-psychologistsRouter.post('/psychologists/match', psychologistsController.match);
+psychologistsRouter.post("/psychologists/match", psychologistsController.match);
 
 /**
  *
@@ -61,8 +61,8 @@ psychologistsRouter.post('/psychologists/match', psychologistsController.match);
  * @access authenticated
  */
 psychologistsRouter.post(
-	'/dashboard/session/reschedule/',
-	psychologistsController.rescheduleSession
+  "/dashboard/session/reschedule/",
+  psychologistsController.rescheduleSession
 );
 
 /**
@@ -83,9 +83,9 @@ psychologistsRouter.post(
  * @access authenticated
  */
 psychologistsRouter.patch(
-	'/psychologist/set-schedule',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.setSchedule
+  "/psychologist/set-schedule",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.setSchedule
 );
 
 /**
@@ -102,9 +102,9 @@ psychologistsRouter.patch(
  * @access authenticated
  */
 psychologistsRouter.patch(
-	'/psychologist/update-payment-method',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.updatePaymentMethod
+  "/psychologist/update-payment-method",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.updatePaymentMethod
 );
 
 /**
@@ -166,9 +166,9 @@ psychologistsRouter.patch(
  * @access authenticated
  */
 psychologistsRouter.put(
-	'/psychologist/update-profile',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.updatePsychologist
+  "/psychologist/update-profile",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.updatePsychologist
 );
 
 /**
@@ -180,9 +180,9 @@ psychologistsRouter.put(
  * @access authenticated
  */
 psychologistsRouter.delete(
-	'/psychologist/:id',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.deleteOne
+  "/psychologist/:id",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.deleteOne
 );
 
 /**
@@ -212,9 +212,9 @@ psychologistsRouter.delete(
  * @access authenticated
  */
 psychologistsRouter.post(
-	'/psychologist/update-prices',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.setPrice
+  "/psychologist/update-prices",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.setPrice
 );
 
 /**
@@ -229,9 +229,9 @@ psychologistsRouter.post(
  * @access authenticated
  */
 psychologistsRouter.get(
-	'/psychologist/clients/:psychologist',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.getClients
+  "/psychologist/clients/:psychologist",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.getClients
 );
 
 /**
@@ -241,9 +241,9 @@ psychologistsRouter.get(
  * @access authenticated
  */
 psychologistsRouter.get(
-	'/psychologist/:search',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.searchClients
+  "/psychologist/:search",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.searchClients
 );
 /**
  * @swagger
@@ -272,8 +272,8 @@ psychologistsRouter.get(
  * @returns {Boolean} si nombre de usuario existe o no
  */
 psychologistsRouter.post(
-	'/psychologist/check-username',
-	psychologistsController.usernameAvailable
+  "/psychologist/check-username",
+  psychologistsController.usernameAvailable
 );
 
 /**
@@ -306,9 +306,9 @@ psychologistsRouter.post(
  * @access authenticated
  */
 psychologistsRouter.post(
-	'/psychologist/update-experience',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.updateFormationExperience
+  "/psychologist/update-experience",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.updateFormationExperience
 );
 
 /**
@@ -320,10 +320,10 @@ psychologistsRouter.post(
  * @returns {Object} Imagenes de perfil
  * @access authenticated
  */
-psychologistsRouter.put('/psychologist/avatar/:id', [
-	passport.authenticate('jwt', { session: true }),
-	multer.single('avatar'),
-	psychologistsController.uploadProfilePicture,
+psychologistsRouter.put("/psychologist/avatar/:id", [
+  passport.authenticate("jwt", { session: true }),
+  multer.single("avatar"),
+  psychologistsController.uploadProfilePicture,
 ]);
 
 /**
@@ -335,9 +335,9 @@ psychologistsRouter.put('/psychologist/avatar/:id', [
  * @access authenticated
  */
 psychologistsRouter.put(
-	'/psychologist/:id/approve-avatar',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.approveAvatar
+  "/psychologist/:id/approve-avatar",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.approveAvatar
 );
 
 /**
@@ -348,9 +348,9 @@ psychologistsRouter.put(
  * @access authenticated
  */
 psychologistsRouter.post(
-	'/psychologist/status/inmediate-attention',
-	[passport.authenticate('jwt', { session: true })],
-	psychologistsController.changeToInmediateAttention
+  "/psychologist/status/inmediate-attention",
+  [passport.authenticate("jwt", { session: true })],
+  psychologistsController.changeToInmediateAttention
 );
 
 export default psychologistsRouter;

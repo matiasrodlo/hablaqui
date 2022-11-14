@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import mercadopagoController from '../controllers/mercadopago';
+import { Router } from "express";
+import mercadopagoController from "../controllers/mercadopago";
 
 const mercadopagoRouter = Router();
 
@@ -29,8 +29,8 @@ const mercadopagoRouter = Router();
  * @param {String} params.planId - Identificador del objeto plan
  */
 mercadopagoRouter.get(
-	'/mercadopago/success-pay/:sessionsId/:planId',
-	mercadopagoController.successPay
+  "/mercadopago/success-pay/:sessionsId/:planId",
+  mercadopagoController.successPay
 );
 
 /**
@@ -40,8 +40,8 @@ mercadopagoRouter.get(
  * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
-	'/mercadopago/psychologist-preference',
-	mercadopagoController.createPsychologistPreference
+  "/mercadopago/psychologist-preference",
+  mercadopagoController.createPsychologistPreference
 );
 
 /**
@@ -52,8 +52,8 @@ mercadopagoRouter.post(
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
-	'/mercadopago/recruited-pay/:recruitedId',
-	mercadopagoController.recruitedPay
+  "/mercadopago/recruited-pay/:recruitedId",
+  mercadopagoController.recruitedPay
 );
 
 /*
@@ -68,8 +68,8 @@ mercadopagoRouter.get(
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
-	'/mercadopago/psychologist-pay/:psychologistId',
-	mercadopagoController.psychologistPay
+  "/mercadopago/psychologist-pay/:psychologistId",
+  mercadopagoController.psychologistPay
 );
 
 /**
@@ -83,8 +83,8 @@ mercadopagoRouter.get(
  * @return init_point
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session/:userId/:psyId/:planId',
-	mercadopagoController.createCustomSessionPreference
+  "/mercadopago/custom-session/:userId/:psyId/:planId",
+  mercadopagoController.createCustomSessionPreference
 );
 
 /**
@@ -97,8 +97,8 @@ mercadopagoRouter.get(
  * @retrun Objeto con el plan actualizado
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session-pay/:userId/:psyId/:planId',
-	mercadopagoController.customSessionPay
+  "/mercadopago/custom-session-pay/:userId/:psyId/:planId",
+  mercadopagoController.customSessionPay
 );
 
 export default mercadopagoRouter;

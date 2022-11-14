@@ -72,33 +72,14 @@
 								</div>
 								<label for="upload">
 									<div
-										class="
-											elevation-1
-											pointer
-											rounded
-											cyan
-											body-1
-											white--text
-											text-center
-											d-inline-block
-										"
+										class="elevation-1 pointer rounded cyan body-1 white--text text-center d-inline-block"
 										style="width: 200px"
 									>
 										{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
 									</div>
 								</label>
 								<div
-									class="
-										d-inline-block
-										elevation-1
-										pointer
-										success
-										rounded
-										body-1
-										white--text
-										text-center
-										ml-2
-									"
+									class="d-inline-block elevation-1 pointer success rounded body-1 white--text text-center ml-2"
 									style="width: 200px"
 									@click="approveAvatar(selected._id)"
 								>
