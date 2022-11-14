@@ -36,7 +36,7 @@
 					style="position: relative"
 					:style="step && step.title === 'Consultante nuevo' ? 'z-index: 3' : ''"
 				>
-					<span
+					<!-- <span
 						v-if="
 							$auth.$state.user.role === 'psychologist' &&
 							$auth.$state.user.psychologist
@@ -48,7 +48,7 @@
 							<icon :icon="mdiPlus" color="white" small />
 						</v-btn>
 						<span class="primary--text ml-2">Agendamiento manual</span>
-					</span>
+					</span> -->
 					<card-onboarding
 						v-if="step && step.title === 'Consultante nuevo'"
 						style="position: absolute; top: -40px; right: -25%; z-index: 3"
