@@ -209,8 +209,8 @@ const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
 const ponderationMatch = async (matchedList, payload) => {
 	const pointsPerCriterion = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico)
-	const weighted = [0.01, 0.05, 0.1, 0.5, 0.04, 0.2];
+	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
+	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 	// Se obtienen todas las sessiones
 	const sessions = await Sessions.find();
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
