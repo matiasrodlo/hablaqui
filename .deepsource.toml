@@ -6,8 +6,3 @@ enabled = true
 
   [analyzers.meta]
   plugins = ["vue"]
-  environment = ["mongo", "nodejs"]
-
-[[analyzers]]
-name = "secrets"
-enabled = true
