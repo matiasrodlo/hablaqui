@@ -25,7 +25,17 @@ const writerLogs = async (user, mail) => {
 	});
 };
 
-const verifyIncomingMails = async user => {
+export const issuerChange = async addressMail => {
+	if (process.env.NODE_ENV !== 'development') {
+		return addressMail;
+	}
+	// Se comienza a establecer la dirección de correo del emisor
+	const tag = addressMail.split('<')[1].split('@')[0];
+	addressMail = `${tag} <${namespaceTestMails}.staging@inbox.testmail.app>`;
+	return addressMail;
+};
+
+export const verifyIncomingMails = async user => {
 	let state;
 	let lastEmail;
 	// Se establece la url de la API JSON de testMails
@@ -54,5 +64,3 @@ const verifyIncomingMails = async user => {
 	}
 	return state;
 };
-
-export default verifyIncomingMails;

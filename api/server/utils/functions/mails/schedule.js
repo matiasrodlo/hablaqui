@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import sendMails from './sendMails';
+import { issuerChange } from './incomingMails';
 moment.tz.setDefault('America/Santiago');
 
 let isReceiverSupport = false;
@@ -29,6 +30,7 @@ const mailService = {
 				price: price,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -57,6 +59,7 @@ const mailService = {
 				price: price,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -95,6 +98,7 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -133,6 +137,7 @@ const mailService = {
 				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 	/**
@@ -158,6 +163,7 @@ const mailService = {
 				psy_name: psy.name + ' ' + psy.lastName,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -186,6 +192,7 @@ const mailService = {
 				url: url,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -209,6 +216,7 @@ const mailService = {
 				psy_name: psy.name,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -236,6 +244,7 @@ const mailService = {
 				url: url,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -264,6 +273,7 @@ const mailService = {
 				url: url,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -297,6 +307,7 @@ const mailService = {
 				session,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -327,6 +338,7 @@ const mailService = {
 				session,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 };

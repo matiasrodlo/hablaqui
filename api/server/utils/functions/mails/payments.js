@@ -2,6 +2,7 @@
 
 import moment from 'moment';
 import sendMails from './sendMails';
+import { issuerChange } from './incomingMails';
 moment.tz.setDefault('America/Santiago');
 
 let isReceiverSupport = false;
@@ -33,6 +34,7 @@ const mailService = {
 				date: date,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -63,6 +65,7 @@ const mailService = {
 				date: date,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -87,6 +90,7 @@ const mailService = {
 				price: price,
 			},
 		};
+		dataPayload.from = await issuerChange(dataPayload.from);
 		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 };
