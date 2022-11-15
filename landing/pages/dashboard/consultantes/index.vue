@@ -374,7 +374,7 @@
 						<h4 class="primary--text">¿Cómo hacerlo?</h4>
 						<br />
 						<ul style="list-style: none; padding: 0">
-							<li>1. Vaya a la sección “Mi cuenta”</li>
+							<li>1. Vaya a la sección Cuenta”</li>
 							<li>2. Haga clic en “Copiar link”</li>
 							<li>3. Comparta su link de pago</li>
 						</ul>

@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Mi cuenta" />
+		<appbar class="hidden-sm-and-down" title="Cuenta" />
 		<v-list
 			two-line
 			color="transparent"
@@ -174,16 +174,13 @@
 					<v-expansion-panel>
 						<v-expansion-panel-header>
 							<div>
-								<div class="text-h6" style="color: #3c3c3b">
-									Configuración personal
-								</div>
+								<div class="text-h6" style="color: #3c3c3b">Configuración</div>
 								<div
 									v-if="$auth.$state.user.role === 'psychologist'"
 									class="text--secondary"
 								>
 									Datos bancarios, información profesional, etc
 								</div>
-								<div v-else class="text--secondary">Configura tu perfil</div>
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
@@ -196,8 +193,7 @@
 					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
 						<v-expansion-panel-header>
 							<div>
-								<div class="text-h6" style="color: #3c3c3b">Mis planes</div>
-								<div class="text--secondary">Tus planes contratados</div>
+								<div class="text-h6" style="color: #3c3c3b">Suscripciones</div>
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
@@ -207,8 +203,7 @@
 					<v-expansion-panel v-if="$auth.$state.user.role == 'user'">
 						<v-expansion-panel-header>
 							<div>
-								<div class="text-h6" style="color: #3c3c3b">Mi psicologo</div>
-								<div class="text--secondary">Psicólogo actual</div>
+								<div class="text-h6" style="color: #3c3c3b">Especialista</div>
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>

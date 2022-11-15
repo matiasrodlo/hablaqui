@@ -244,11 +244,7 @@
 														</v-list-item-avatar>
 														<v-list-item-content>
 															<v-list-item-title
-																class="
-																	secondary--text
-																	font-weight-bold
-																	body-2
-																"
+																class="secondary--text font-weight-bold body-2"
 															>
 																{{ item.name }}
 															</v-list-item-title>
@@ -266,11 +262,7 @@
 													</v-list-item-avatar>
 													<v-list-item-content>
 														<v-list-item-title
-															class="
-																secondary--text
-																font-weight-bold
-																body-2
-															"
+															class="secondary--text font-weight-bold body-2"
 														>
 															Cerrar sesion
 														</v-list-item-title>
@@ -316,13 +308,7 @@
 										font-size: 13.2px;
 										line-height: 1.6;
 									"
-									class="
-										py-4
-										ml-2
-										hidden-sm-and-down
-										text-uppercase
-										font-weight-bold
-									"
+									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
 									color="primary"
 									depressed
 									to="/psicologos"
@@ -402,7 +388,7 @@ export default {
 						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
-					name: 'Mi cuenta',
+					name: 'Cuenta',
 					link: { name: 'dashboard-perfil' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/home.png',
@@ -418,7 +404,7 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 				{
-					name: 'Cambio de sesión',
+					name: 'Reagendamiento',
 					link: { name: 'dashboard-reschedule-session' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',

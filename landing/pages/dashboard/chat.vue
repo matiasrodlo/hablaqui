@@ -63,7 +63,7 @@
 								class="primary white--text pa-4 mt-2 mx-4"
 								style="border-radius: 20px"
 							>
-								Aún no tienes consultantes
+								Aún no tiene consultantes
 							</v-sheet>
 							<!-- consultantes -->
 							<v-list
