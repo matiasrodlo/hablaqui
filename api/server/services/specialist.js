@@ -267,16 +267,19 @@ const ponderationMatch = async (matchedList, payload) => {
 
 const specialistClasification = async (matchedList, payload) => {
 	const nextDays = 7;
-	let points = 0;
 	let resultList = [];
+	let points = 0;
 	let pointsPerCriterion = 1;
-	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
-	let newMatchedList = await Promise.all(
+	// Se elimina el mejor match
+	resultList.append(matchedList);
+	// Obtiene primero al spec más barato
+	matchedList.sort((a, b) => b.sessionPrices.video - a.sessionPrices.video);
+	resultList.append(matchedList);
+	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	matchedList = await Promise.all(
 		matchedList.map(async spec => {
 			spec.points = 0;
-			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				spec._id
-			);
+			const days = spec.days;
 			points = pointsDisponibilidad(
 				days,
 				payload,
@@ -288,20 +291,9 @@ const specialistClasification = async (matchedList, payload) => {
 			return { ...specialist, points };
 		})
 	);
-	newMatchedList.sort((a, b) => b.points - a.points);
-	// Se elmina el primer elemento del arreglo
-	resultList.push(newMatchedList.shift(0));
-	// Se obtiene el especialista que tenga menor precio
-	if (
-		newMatchedList[0].sessionPrices.video <
-		newMatchedList[1].sessionPrices.video
-	) {
-		resultList.push(newMatchedList[0]);
-		resultList.unshift(newMatchedList[1]);
-	} else {
-		resultList.push(newMatchedList[1]);
-		resultList.unshift(newMatchedList[0]);
-	}
+	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	matchedList.sort((a, b) => a.points - b.points);
+	resultList.append(matchedList);
 	return resultList;
 };
 
@@ -349,7 +341,13 @@ const match = async body => {
 		payload
 	);
 
-	return okResponse('especialistas encontrados', {
+	// Se busca entre los psicologos el más barato, con mayor disponibilidad, y el mejor match
+	matchedSpecialists = await specialistClasification(
+		matchedSpecialists,
+		payload
+	);
+
+	return okResponse('psicologos encontrados', {
 		matchedSpecialists,
 		perfectMatch,
 	});
