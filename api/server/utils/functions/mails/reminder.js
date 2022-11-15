@@ -123,7 +123,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date, batch) {
+	async sendReminderUser(user, psy, date, batch, reminderType) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
@@ -142,10 +142,13 @@ const mailService = {
 				group_id: 16321,
 			},
 			sendAt: moment(date)
-				.subtract(1, 'hour')
+				.subtract(1, reminderType)
 				.unix(),
 			batchId: batch,
 		};
+		if (reminderType === 'day') {
+			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
+		}
 		await sendMails(dataPayload);
 	},
 	/**
@@ -154,7 +157,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date, batch) {
+	async sendReminderPsy(user, psy, date, batch, reminderType) {
 		const { email, name, lastName } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
@@ -178,6 +181,9 @@ const mailService = {
 				.unix(),
 			batchId: batch,
 		};
+		if (reminderType === 'day') {
+			dataPayload.subject = `Mañana es tu sesión con ${name} en Hablaquí`;
+		}
 		await sendMails(dataPayload);
 	},
 };

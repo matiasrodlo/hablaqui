@@ -26,17 +26,18 @@ function isSchedulableEmail(date) {
 		.isAfter(date);
 }
 
-function generatePayload(date, batch) {
+function generatePayload(date, batch, reminderType) {
 	/**
 	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
 	 * @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
 	 * @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
+	 * @param {string} reminderType Tipo de recordatorio (1 hora antes, 1 día antes)
 	 * @returns un objeto con el payload
 	 */
 	return {
 		wasScheduled: true,
 		scheduledAt: moment(date)
-			.subtract(1, 'hour')
+			.subtract(1, reminderType)
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
 	};
@@ -104,6 +105,60 @@ async function getBatchId() {
 	return batch_id;
 }
 
+async function scheduleEmails(reminderType) {
+	// Busca los correos electrónicos que no han sido programados
+	const pendingEmails = await email.find({
+		wasScheduled: false,
+	});
+	if (pendingEmails.length > 0) {
+		pendingEmails.forEach(async emailInfo => {
+			const sessionDate = moment(emailInfo.sessionDate);
+			// Si es correo programado, busca el usuario y el psicologo.
+			if (isSchedulableEmail(sessionDate)) {
+				const user = await User.findById(emailInfo.userRef);
+				const psy = await psychologist.findById(emailInfo.psyRef);
+				try {
+					let batch = await getBatchId();
+					// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+					if (emailInfo.type === 'reminder-user') {
+						await mailServiceRemider.sendReminderUser(
+							user,
+							psy,
+							sessionDate,
+							batch,
+							reminderType
+						);
+					} else if (emailInfo.type === 'reminder-psy') {
+						await mailServiceRemider.sendReminderPsy(
+							user,
+							psy,
+							sessionDate,
+							batch,
+							reminderType
+						);
+					}
+					// Se genera el payload y se actualiza el email
+					const updatePayload = generatePayload(
+						sessionDate,
+						batch,
+						reminderType
+					);
+					await email.findByIdAndUpdate(
+						emailInfo._id,
+						updatePayload,
+						{ new: true }
+					);
+				} catch (error) {
+					return conflictResponse(
+						'Email sheduling service found an error'
+					);
+				}
+			}
+		});
+	}
+	return pendingEmails;
+}
+
 const cronService = {
 	async statusInmediateAttention(token) {
 		if (token !== authToken)
@@ -167,59 +222,26 @@ const cronService = {
 		);
 		return okResponse('Se han enviado los correos');
 	},
-	async scheduleEmails(token) {
+	async reminderHourBefore(token) {
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		// Busca los correos electrónicos que no han sido programados
-		const pendingEmails = await email.find({
-			wasScheduled: false,
-		});
-		if (pendingEmails.length > 0) {
-			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = moment(emailInfo.sessionDate);
-				// Si es correo programado, busca el usuario y el psicologo.
-				if (isSchedulableEmail(sessionDate)) {
-					const user = await User.findById(emailInfo.userRef);
-					const psy = await psychologist.findById(emailInfo.psyRef);
-					try {
-						let batch = await getBatchId();
-						// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
-						if (emailInfo.type === 'reminder-user') {
-							await mailServiceRemider.sendReminderUser(
-								user,
-								psy,
-								sessionDate,
-								batch
-							);
-						} else if (emailInfo.type === 'reminder-psy') {
-							await mailServiceRemider.sendReminderPsy(
-								user,
-								psy,
-								sessionDate,
-								batch
-							);
-						}
-						// Se genera el payload y se actualiza el email
-						const updatePayload = generatePayload(
-							sessionDate,
-							batch
-						);
-						await email.findByIdAndUpdate(
-							emailInfo._id,
-							updatePayload,
-							{ new: true }
-						);
-					} catch (error) {
-						return conflictResponse(
-							'Email sheduling service found an error'
-						);
-					}
-				}
-			});
+		const pendingEmails = await scheduleEmails('hour');
+		return okResponse(
+			'Email scheduling service invoked and ' +
+				pendingEmails.length +
+				' email(s) scheduled'
+		);
+	},
+	async reminderDayBefore(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
 		}
+		const pendingEmails = await scheduleEmails('day');
 		return okResponse(
 			'Email scheduling service invoked and ' +
 				pendingEmails.length +
