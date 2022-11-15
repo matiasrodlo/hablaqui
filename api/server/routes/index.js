@@ -9,7 +9,7 @@ import chatRouter from './chat';
 import couponRouter from './coupon';
 import recruitmentRouter from './recruitment';
 import cronRouter from './cron';
-import retoolRouter from './retool';
+import dashboardRouter from './dashboard';
 import sessionsRouter from './sessions';
 import evaluationRouter from './evaluation';
 import transactionRouter from './transaction';
@@ -26,7 +26,7 @@ export default app => {
 	app.use(apiVersion, recruitmentRouter);
 	app.use(apiVersion, userRoutes);
 	app.use(apiVersion, cronRouter);
-	app.use(apiVersion, retoolRouter);
+	app.use(apiVersion, dashboardRouter);
 	app.use(apiVersion, sessionsRouter);
 	app.use(apiVersion, evaluationRouter);
 	app.use(apiVersion, transactionRouter);

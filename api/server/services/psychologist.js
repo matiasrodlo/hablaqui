@@ -14,9 +14,10 @@ import {
 	getPublicUrlAvatar,
 	getPublicUrlAvatarThumb,
 } from '../config/bucket'; // Funciones que devuelven URL's
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago'); // Se configura la zona horaria de la aplicación
+import Analytics from 'analytics-node';
+moment.tz.setDefault('America/Santiago');
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
 	// Funcion para obtener todos los psicologos
@@ -48,6 +49,22 @@ const normalize = (value, min, max) => {
 const priceCriterion = (psy, payload, pointsPerCriterion) => {
 	let points = 0;
 	if (payload.price >= psy.sessionPrices.video) {
+		points = pointsPerCriterion;
+	}
+	points = normalize(points, 0, pointsPerCriterion);
+	return points;
+};
+
+/**
+ * @description Asigna puntaje por la coincidencia de genero
+ * @param {Object} psy - Psicologo
+ * @param {Object} payload - Contiene las preferencias del paciente
+ * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
+ * @returns - Puntaje
+ */
+const genderCriterion = (psy, payload, pointsPerCriterion) => {
+	let points = 0;
+	if (payload.gender == psy.gender) {
 		points = pointsPerCriterion;
 	}
 	points = normalize(points, 0, pointsPerCriterion);
@@ -198,12 +215,18 @@ const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
 const ponderationMatch = async (matchedList, payload) => {
 	const pointsPerCriterion = 3;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
+	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
+	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			let criteria = 0;
 			let points = normalize(psy.points, 0, 100) * weighted[criteria];
+			const sessionPsy = sessions.filter(
+				session => session.psy === psy._id
+			);
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
@@ -212,7 +235,8 @@ const ponderationMatch = async (matchedList, payload) => {
 			criteria++;
 			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
 			const days = await sessionFunctions.getFormattedSessionsForMatch(
-				psy._id
+				psy,
+				sessionPsy
 			);
 			points +=
 				weighted[criteria] *
@@ -228,10 +252,15 @@ const ponderationMatch = async (matchedList, payload) => {
 				criterioModeloTeraupetico(psy, payload, pointsPerCriterion) *
 				weighted[criteria];
 			criteria++;
+			// Se obtiene el genero del psicologo y se le asigna un puntaje dado por el genero
+			points +=
+				genderCriterion(psy, payload, pointsPerCriterion) *
+				weighted[criteria];
+			criteria++;
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let psychologist = JSON.stringify(psy);
 			psychologist = JSON.parse(psychologist);
-			return { ...psychologist, points };
+			return { ...psychologist, points, days };
 		})
 	);
 	// Se ordena el arreglo por puntuación manual del psicologo
@@ -249,16 +278,20 @@ const ponderationMatch = async (matchedList, payload) => {
 
 const psychologistClasification = async (matchedList, payload) => {
 	const nextDays = 7;
+	const bestMatch = matchedList[0];
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
+	// Se elimina el mejor match
+	matchedList.shift(0);
+	// Obtiene primero al psy más barato
+	matchedList.sort((a, b) => b.sessionPrices.video - a.sessionPrices.video);
+	resultList.push(matchedList.pop());
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
-	let newMatchedList = await Promise.all(
+	matchedList = await Promise.all(
 		matchedList.map(async psy => {
 			psy.points = 0;
-			const days = await sessionFunctions.getFormattedSessionsForMatch(
-				psy._id
-			);
+			const days = psy.days;
 			points = pointsDisponibilidad(
 				days,
 				payload,
@@ -270,41 +303,12 @@ const psychologistClasification = async (matchedList, payload) => {
 			return { ...psychologist, points };
 		})
 	);
-	newMatchedList.sort((a, b) => b.points - a.points);
-	// Se elmina el primer elemento del arreglo
-	resultList.push(newMatchedList.shift(0));
-	// Se obtiene el psicologo que tenga menor precio
-	if (
-		newMatchedList[0].sessionPrices.video <
-		newMatchedList[1].sessionPrices.video
-	) {
-		resultList.push(newMatchedList[0]);
-		resultList.unshift(newMatchedList[1]);
-	} else {
-		resultList.push(newMatchedList[1]);
-		resultList.unshift(newMatchedList[0]);
-	}
+	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	matchedList.sort((a, b) => a.points - b.points);
+	resultList.unshift(matchedList.pop());
+	// Se obtiene el psy con mejor match
+	resultList.unshift(bestMatch);
 	return resultList;
-};
-
-/**
- * @description Hace un array de arrays con la cantidad de psy, para mostrar los mejores match, mas baratos y con mayor disponibilidad,
- * luego los segundo mejores match, mas baratos y con mayor disponibilidad, etc.
- * @param {Array} matchedList - Lista de psicologos matchados que se quiere clasificar
- * @returns - Array de arrays con los mejores match, mas baratos y con mayor disponibilidad
- */
-
-const arrayGenerator = matchedList => {
-	let finalMatchedList = [];
-	// Se quiere hacer un array de arrays para que se muestren una cantidad de psicologos por pagina (3)
-	for (let i = 0; i < matchedList.length / 3; i++) {
-		let subMatchedList = [];
-		for (let j = 0; j < 3; j++) {
-			subMatchedList.push(matchedList[i + j]);
-		}
-		finalMatchedList.push(subMatchedList);
-	}
-	return finalMatchedList;
 };
 
 const match = async body => {
@@ -312,27 +316,38 @@ const match = async body => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
+	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
-		// Machea por género (transgenero)
 		matchedPsychologists = await Psychologist.find({
 			isTrans: true,
-			specialties: { $in: payload.themes }, // Filtra por especialidades
+			specialties: { $in: payload.themes },
 		});
 	} else {
-		// Si no es transgenero
 		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
-				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			specialties: { $in: payload.themes },
 		});
 	}
 
-	// Se necesita que la cantidad de psy matcheados sea multiplo de 3 (para hacer el matcheo de 3 en 3)
+	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
 	if (matchedPsychologists.length < 3) {
-		console.log(matchedPsychologists.length);
-		matchedPsychologists = await Psychologist.find();
+		if (payload.gender == 'transgender') {
+			matchedPsychologists = await Psychologist.find({
+				isTrans: true,
+			});
+		} else {
+			matchedPsychologists = await Psychologist.find({
+				gender: payload.gender || {
+					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					$in: ['male', 'female', 'transgender'],
+				},
+			});
+		}
+		if (matchedPsychologists.length < 3) {
+			matchedPsychologists = await Psychologist.find();
+		}
 		perfectMatch = false;
 	}
 
@@ -342,23 +357,10 @@ const match = async body => {
 		payload
 	);
 
-	// Se deja una cantidad multiplo de 3 para hacer el matcheo de 3 en 3
-	while (
-		matchedPsychologists.length % 3 != 0 &&
-		matchedPsychologists.length > 3
-	) {
-		matchedPsychologists.pop();
-	}
-
-	// Se hace un array de arrays para que se muestren una cantidad de psicologos por pagina (3)
-	matchedPsychologists = arrayGenerator(matchedPsychologists);
-
-	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
-	matchedPsychologists = await Promise.all(
-		matchedPsychologists.map(async list => {
-			list = await psychologistClasification(list, payload);
-			return list;
-		})
+	// Se busca entre los psicologos el más barato, con mayor disponibilidad, y el mejor match
+	matchedPsychologists = await psychologistClasification(
+		matchedPsychologists,
+		payload
 	);
 
 	console.log(matchedPsychologists);

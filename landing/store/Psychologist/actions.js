@@ -19,11 +19,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSessions({ commit }, { idPsychologist, idUser }) {
+	async getSessions({ commit }, { idUser }) {
 		try {
-			const { sessions } = await this.$axios.$get(
-				`/psychologists/sessions/${idPsychologist}/${idUser}`
-			);
+			const { sessions } = await this.$axios.$get(`/psychologists/sessions/${idUser}`);
 			commit('setSessions', sessions);
 			return sessions;
 		} catch (e) {

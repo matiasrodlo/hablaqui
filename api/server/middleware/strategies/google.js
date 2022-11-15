@@ -1,6 +1,7 @@
 import { logError } from '../../config/pino';
 import User from '../../models/user';
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+import googlePassport from 'passport-google-oauth';
+const GoogleStrategy = googlePassport.OAuth2Strategy;
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept

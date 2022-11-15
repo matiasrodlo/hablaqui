@@ -169,7 +169,7 @@ const readMessage = async (user, chatId) => {
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },
 		{
-			$set: { 'messages.$[].read': true },
+			$set: { 'messages.$[].read': true, isLastRead: true },
 		},
 		{ new: true }
 	);

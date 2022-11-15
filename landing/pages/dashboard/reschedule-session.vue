@@ -167,7 +167,6 @@ export default {
 		async getClients(id) {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
 			this.clients = users;
-			console.log(this.clients);
 		},
 		getSession(client) {
 			this.dialog = true;

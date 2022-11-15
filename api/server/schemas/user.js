@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
-Joi.objectId = require('joi-objectid')(Joi);
+import joiObjectId from 'joi-objectid';
+Joi.objectId = joiObjectId(Joi);
 
 const userSchema = {
 	updateProfile: Joi.object({

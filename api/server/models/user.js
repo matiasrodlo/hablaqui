@@ -1,7 +1,5 @@
 'use strict';
-
-const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+import { Schema, model } from 'mongoose';
 
 let userSchema = new Schema(
 	{

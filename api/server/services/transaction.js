@@ -8,9 +8,10 @@ import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunctio
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import moment from 'moment';
+import Analytics from 'analytics-node';
 moment.tz.setDefault('America/Santiago');
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
+
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const completePaymentsRequest = async psy => {
 	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id
@@ -246,10 +247,66 @@ const getTransactions = async user => {
 	});
 };
 
+const generateTransaction = async (user, total, session, idPsy) => {
+	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
+	if (session.length === 0)
+		return conflictResponse('No hay sesiones para pagar');
+	await session.forEach(async s => {
+		await Sessions.updateOne(
+			{
+				'plan.session._id': s._id,
+			},
+			{
+				$set: {
+					'plan.$[].session.$[session].paidToPsychologist': true,
+				},
+			},
+			{ arrayFilters: [{ 'session._id': s._id }] }
+		);
+	});
+	let transaction = await Transaction.create({
+		total,
+		sessions: session,
+		psychologist: idPsy,
+	});
+	return okResponse('Pago completado', { transaction });
+};
+
+const getAllTransactions = async user => {
+	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
+
+	let transactions = await Transaction.find().populate('psychologist');
+
+	transactions = transactions
+		.map(t => {
+			return {
+				createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				session: t.sessions.map(s => {
+					return {
+						...s,
+						date: moment(s.date, 'MM/DD/YYYY HH:mm').format(
+							'DD/MM/YYYY HH:mm'
+						),
+					};
+				}),
+				total: t.total,
+				name: t.psychologist.name,
+				lastName: t.psychologist.lastName,
+				username: t.psychologist.username,
+				email: t.psychologist.email,
+				psyId: t.psychologist._id,
+			};
+		})
+		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+	return okResponse('Todas las transacciones', { transactions });
+};
+
 const transactionService = {
 	completePaymentsRequest,
 	createPaymentsRequest,
 	getTransactions,
+	generateTransaction,
+	getAllTransactions,
 };
 
 export default Object.freeze(transactionService);

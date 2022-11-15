@@ -104,7 +104,6 @@ export default {
 	methods: {
 		async initFetch() {
 			await this.getPsychologist();
-			console.log(this.psychologists);
 		},
 		async getPsychologist() {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
