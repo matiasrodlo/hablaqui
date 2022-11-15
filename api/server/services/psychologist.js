@@ -278,15 +278,14 @@ const ponderationMatch = async (matchedList, payload) => {
 
 const psychologistClasification = async (matchedList, payload) => {
 	const nextDays = 7;
-	const bestMatch = matchedList[0];
-	let points = 0;
 	let resultList = [];
+	let points = 0;
 	let pointsPerCriterion = 1;
 	// Se elimina el mejor match
-	matchedList.shift(0);
+	resultList.append(matchedList);
 	// Obtiene primero al psy más barato
 	matchedList.sort((a, b) => b.sessionPrices.video - a.sessionPrices.video);
-	resultList.push(matchedList.pop());
+	resultList.append(matchedList);
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	matchedList = await Promise.all(
 		matchedList.map(async psy => {
@@ -305,9 +304,7 @@ const psychologistClasification = async (matchedList, payload) => {
 	);
 	// Se obtiene el psicologo con mayor disponibilidad representado por b
 	matchedList.sort((a, b) => a.points - b.points);
-	resultList.unshift(matchedList.pop());
-	// Se obtiene el psy con mejor match
-	resultList.unshift(bestMatch);
+	resultList.append(matchedList);
 	return resultList;
 };
 
@@ -362,9 +359,6 @@ const match = async body => {
 		matchedPsychologists,
 		payload
 	);
-
-	console.log(matchedPsychologists);
-	matchedPsychologists = matchedPsychologists[0];
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
