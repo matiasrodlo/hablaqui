@@ -218,7 +218,7 @@
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Horarios</div>
 								<div class="text--secondary">
-									Configura tu disponibilidad de atención
+									En estos horarios podrán agendar con usted
 								</div>
 							</div>
 						</v-expansion-panel-header>
@@ -234,7 +234,7 @@
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Servicios</div>
 								<div class="text--secondary">
-									Establece tus precios y política de agendamiento
+									Valor por sesión, agendamiento y reagendamiento
 								</div>
 							</div>
 						</v-expansion-panel-header>

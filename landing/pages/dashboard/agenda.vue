@@ -522,8 +522,8 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Hemos enviado un email al consultante. La fecha y hora
-										estará disponible hasta que el consultante pague su sesión.
+										Notificamos vía correo electronico al consultate sobre el
+										agendamiento y adjuntamos un enlace de pago
 									</v-card-text>
 								</template>
 							</v-card>

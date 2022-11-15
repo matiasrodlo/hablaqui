@@ -128,7 +128,7 @@
 									></v-text-field>
 									<v-text-field
 										:value="selected.plan ? selected.plan.title : 'Sin plan'"
-										label="Plan contratado"
+										label="Suscripción"
 										disabled
 										dense
 										filled
