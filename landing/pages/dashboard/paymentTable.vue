@@ -16,7 +16,7 @@
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla para pagos</v-toolbar-title>
+								<v-toolbar-title>Pagos pendientes</v-toolbar-title>
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
@@ -52,7 +52,7 @@
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla de pagos hechos</v-toolbar-title>
+								<v-toolbar-title>Pagos realizados</v-toolbar-title>
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
