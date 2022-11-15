@@ -383,9 +383,6 @@
 									</v-card-text>
 									<v-card-text v-else class="pt-2">
 										<v-row>
-											<v-col class="font-weight-medium" cols="12">
-												Tipo de evento
-											</v-col>
 											<v-col cols="6">
 												<v-select
 													v-model="typeSession"
@@ -405,7 +402,7 @@
 													]"
 													dense
 													hide-details
-													label="Seleccione"
+													label="Tipo de agendamiento"
 													outlined
 													@change="
 														() => {
