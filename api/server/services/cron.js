@@ -5,12 +5,18 @@ import User from '../models/user';
 import psychologist from '../models/psychologist';
 import mailServiceRemider from '../utils/functions/mails/reminder';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
 import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(isSameOrAfter);
 
-moment.tz.setDefault('America/Santiago');
+dayjs.tz.setDefault('America/Santiago');
 sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
@@ -18,10 +24,10 @@ const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 function isSchedulableEmail(date) {
 	/**
 	 * @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
-	 * @param {moment} date es la fecha de la cita
+	 * @param {dayjs} date es la fecha de la cita
 	 * @returns
 	 */
-	return moment()
+	return dayjs()
 		.add(3, 'days')
 		.isAfter(date);
 }
@@ -29,14 +35,14 @@ function isSchedulableEmail(date) {
 function generatePayload(date, batch, reminderType) {
 	/**
 	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
-	 * @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
+	 * @param {dayjs} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
 	 * @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
 	 * @param {string} reminderType Tipo de recordatorio (1 hora antes, 1 día antes)
 	 * @returns un objeto con el payload
 	 */
 	return {
 		wasScheduled: true,
-		scheduledAt: moment(date)
+		scheduledAt: dayjs(date)
 			.subtract(1, reminderType)
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
@@ -109,13 +115,13 @@ async function scheduleEmails(pendingEmails, reminderType) {
 	// Busca los correos electrónicos que no han sido programados
 	if (pendingEmails.length > 0) {
 		pendingEmails.forEach(async emailInfo => {
-			const sessionDate = moment(emailInfo.sessionDate);
+			const sessionDate = dayjs(emailInfo.sessionDate);
 			// Si es correo programado, busca el usuario y el psicologo.
 			if (isSchedulableEmail(sessionDate)) {
 				const user = await User.findById(emailInfo.userRef);
 				const psy = await psychologist.findById(emailInfo.psyRef);
 				try {
-					reminderType.forEach(async type => {
+					reminderType.forEach(async mailType => {
 						let batch = await getBatchId();
 						// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 						if (emailInfo.type === 'reminder-user') {
@@ -124,7 +130,7 @@ async function scheduleEmails(pendingEmails, reminderType) {
 								psy,
 								sessionDate,
 								batch,
-								type
+								mailType
 							);
 						} else if (emailInfo.type === 'reminder-psy') {
 							await mailServiceRemider.sendReminderPsy(
@@ -132,18 +138,22 @@ async function scheduleEmails(pendingEmails, reminderType) {
 								psy,
 								sessionDate,
 								batch,
-								type
+								mailType
 							);
 						}
 						// Se genera el payload y se actualiza el email
 						const updatePayload = generatePayload(
 							sessionDate,
 							batch,
-							type
+							mailType
 						);
+
 						// Se crea un nuevo documento en la colección de correos electrónicos programados
 						await email.create({
-							...emailInfo,
+							userRef: emailInfo.userRef,
+							psyRef: emailInfo.psyRef,
+							sessionDate: emailInfo.sessionDate,
+							type: emailInfo.type,
 							...updatePayload,
 						});
 					});
@@ -172,7 +182,7 @@ const cronService = {
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
-				if (moment(expiration).isBefore(moment(Date.now())))
+				if (dayjs(expiration).isBefore(dayjs(Date.now())))
 					await psychologist.findOneAndUpdate(
 						{ _id: psy._id },
 						{
@@ -232,7 +242,7 @@ const cronService = {
 		let pendingEmails = await email.find({
 			wasScheduled: false,
 		});
-		await scheduleEmails(['hour', 'day']);
+		await scheduleEmails(pendingEmails, ['hour', 'day']);
 		return okResponse(
 			'Email scheduling service invoked and ' +
 				pendingEmails.length +
@@ -257,23 +267,23 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
 						// if (
 						// 	session.status === 'pending' &&
-						// 	moment(date)
+						// 	dayjs(date)
 						// 		.subtract(
 						// 			psyInfo.preferences
 						// 				.minimumRescheduleSession,
 						// 			'hours'
 						// 		)
-						// 		.isBefore(moment()) &&
-						// 	moment().isBefore(date) &&
-						// 	moment().isBefore(plan.expiration)
+						// 		.isBefore(dayjs()) &&
+						// 	dayjs().isBefore(date) &&
+						// 	dayjs().isBefore(plan.expiration)
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
 							session.status === 'pending' && // || session.status === 'upnext'
-							moment().isAfter(date)
+							dayjs().isAfter(date)
 						) {
 							session.status = 'success';
 						}
@@ -311,9 +321,7 @@ const cronService = {
 
 			plans.forEach(async plan => {
 				if (
-					moment().isSameOrAfter(
-						moment(plan.createdAt).add(3, 'hours')
-					)
+					dayjs().isSameOrAfter(dayjs(plan.createdAt).add(3, 'hours'))
 				) {
 					// Se actualiza el estado el pago a cancelado
 					await Sessions.findOneAndUpdate(

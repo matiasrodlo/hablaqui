@@ -149,6 +149,7 @@ const mailService = {
 		if (reminderType === 'day') {
 			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
 		}
+		console.log(dataPayload);
 		await sendMails(dataPayload);
 	},
 	/**
