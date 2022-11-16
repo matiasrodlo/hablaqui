@@ -177,7 +177,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			sendAt: moment(date)
-				.subtract(1, 'hour')
+				.subtract(1, reminderType)
 				.unix(),
 			batchId: batch,
 		};
