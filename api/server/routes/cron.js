@@ -6,25 +6,14 @@ import cronController from '../controllers/cron';
 const cronRouter = Router();
 
 /**
- * @description: Calendariza correos para próximas sesiones una hora antes de la sesión
+ * @description: Calendariza correos para próximas sesiones una hora antes de la sesión y un día antes de la sesión
  * @method POST
  * @route /api/v1/cron/email-schedule/:authToken
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
 	'/cron/email-schedule/:authToken',
-	cronController.reminderHourBefore
-);
-
-/**
- * @description: Calendariza correos para próximas sesiones un día antes de la sesión
- * @method POST
- * @route /api/v1/cron/reminder-day-before/:authToken
- * @param {string} params.authToken - Token de autorización
- */
-cronRouter.post(
-	'/cron/reminder-day-before/:authToken',
-	cronController.reminderDayBefore
+	cronController.emailSchedule
 );
 
 /**
