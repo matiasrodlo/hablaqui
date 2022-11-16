@@ -2,7 +2,7 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
-			<div style="margin-bottom: 83px">
+			<div style="margin-bottom: 85px">
 				<Appbar />
 			</div>
 			<!-- content -->
@@ -11,11 +11,11 @@
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px; height: 500px"
 			>
-				<div class="title text-h6 text-sm-h4 font-weight-bold mb-5">
-					Encuentre su especialista ideal
+				<div class="title text-h7 text-sm-h4 font-weight-bold mb-5">
+					Encuentre al especialista ideal
 				</div>
 				<div class="d-flex justify-center text-h7 mb-12 mx-auto" style="max-width: 800px">
-					Responda las siguientes preguntas y nosotros hacemos el resto
+					Responda las siguientes preguntas, nosotros hacemos el resto
 				</div>
 				<div>
 					<v-container class="centerCard" fluid style="max-width: 1080px">
@@ -76,7 +76,7 @@
 													}
 												"
 											>
-												No Binario
+												No binario
 											</v-btn>
 											<v-btn
 												:color="
@@ -655,7 +655,7 @@
 								</v-stepper>
 							</v-col>
 						</v-row>
-						<v-row>
+						<!-- <v-row>
 							<v-col cols="12">
 								<v-divider style="border-width: 1px" />
 							</v-col>
@@ -669,6 +669,7 @@
 									:show-arrows="false"
 									light
 									height="200"
+									width="600"
 								>
 									<v-carousel-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
@@ -678,8 +679,8 @@
 													:key="l"
 													flat
 													color="transparent"
-													max-width="600"
-													max-height="190"
+													width="600"
+													height="190"
 													class="ma-2"
 													:to="{ path: `/${item.username}` }"
 												>
@@ -692,7 +693,7 @@
 																	></v-img>
 																</v-avatar>
 															</v-col>
-															<v-col class="text-left">
+															<v-col class="text-left align-center">
 																<div class="title primary--text">
 																	{{ item.name }}
 																	{{
@@ -722,7 +723,7 @@
 											<template v-else>
 												<v-card
 													width="400"
-													height="180"
+													height="120"
 													outlined
 													class="ma-2"
 												>
@@ -752,7 +753,6 @@
 																			element.lastName
 																		}}
 																	</div>
-																	Especialidades:
 																	<template
 																		v-for="(
 																			tag, k
@@ -763,7 +763,7 @@
 																				v-if="k < 5"
 																				class="ma-1 text-capitalize"
 																			>
-																				{{ tag }};
+																				{{ tag }},
 																			</span>
 																		</span>
 																	</template>
@@ -796,7 +796,7 @@
 									</v-item>
 								</v-item-group>
 							</v-col>
-						</v-row>
+						</v-row> -->
 					</v-container>
 				</div>
 			</div>
@@ -826,7 +826,7 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
-import Appbar from '~/components/AppbarWhite.vue';
+import Appbar from '~/components/AppbarClean.vue';
 
 export default {
 	name: 'Evaluation',
@@ -834,8 +834,8 @@ export default {
 		Appbar,
 		Precharge: () => import('~/components/evaluation/Precharge'),
 		Selection: () => import('~/components/evaluation/Selection'),
-		Icon: () => import('~/components/Icon'),
-		Avatar: () => import('~/components/Avatar'),
+		// Icon: () => import('~/components/Icon'),
+		// Avatar: () => import('~/components/Avatar'),
 	},
 	async asyncData({ $axios, error }) {
 		try {
