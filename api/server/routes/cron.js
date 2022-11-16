@@ -16,6 +16,12 @@ cronRouter.post(
 	cronController.reminderHourBefore
 );
 
+/**
+ * @description: Calendariza correos para próximas sesiones un día antes de la sesión
+ * @method POST
+ * @route /api/v1/cron/reminder-day-before/:authToken
+ * @param {string} params.authToken - Token de autorización
+ */
 cronRouter.post(
 	'/cron/reminder-day-before/:authToken',
 	cronController.reminderDayBefore
