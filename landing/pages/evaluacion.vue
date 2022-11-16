@@ -76,7 +76,7 @@
 													}
 												"
 											>
-												Transgénero
+												No Binario
 											</v-btn>
 											<v-btn
 												:color="
@@ -532,7 +532,7 @@
 											>
 												Hombre
 											</v-btn>
-											<v-btn
+											<!-- <v-btn
 												:color="
 													genderConfort === 'transgender'
 														? 'primary'
@@ -551,7 +551,7 @@
 												"
 											>
 												Transgenero
-											</v-btn>
+											</v-btn> -->
 											<v-btn
 												:color="
 													genderConfort === 'Me es indiferente'
