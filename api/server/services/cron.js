@@ -137,7 +137,7 @@ async function createCoupon() {
 	// Se genera un código aleatorio para el cupón
 	const randomCode = () => {
 		return Math.random()
-			.toString(36)
+			.toString(5)
 			.substring(2);
 	};
 	const code = randomCode() + randomCode();
