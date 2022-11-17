@@ -56,4 +56,16 @@ cronRouter.post(
 	'/cron/status/attention/:authToken',
 	cronController.statusInmediateAttention
 );
+
+/**
+ * @description: Envia el correo de recordatorio de pago al usuario
+ * @method POST
+ * @route /api/v1/cron/reminder-payment/:authToken
+ * @param {string} params.authToken - Token de autorización
+ */
+cronRouter.post(
+	'/cron/reminder-payment/:authToken',
+	cronController.reminderPayment
+);
+
 export default cronRouter;

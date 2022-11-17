@@ -21,6 +21,7 @@ import Sessions from '../models/sessions';
 import crypto from 'crypto';
 import moment from 'moment';
 import Analytics from 'analytics-node';
+import email from '../models/email';
 moment.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -435,6 +436,38 @@ const createPlan = async ({ payload }) => {
 			payload.price,
 			responseBody.init_point
 		);
+
+		// Se crean correos de recordatorio de pago
+		await email.create({
+			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			wasScheduled: false,
+			type: 'reminder-payment-hour',
+			queuedAt: undefined,
+			scheduledAt: undefined,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await email.create({
+			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			wasScheduled: false,
+			type: 'reminder-payment-day',
+			queuedAt: undefined,
+			scheduledAt: undefined,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await email.create({
+			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			wasScheduled: false,
+			type: 'promocional-incentive',
+			queuedAt: undefined,
+			scheduledAt: undefined,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);

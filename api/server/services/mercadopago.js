@@ -215,6 +215,26 @@ const successPay = async params => {
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
 	});
+
+	// Busca los correos de recordatorio de pago y los elimina
+	const mailsToDeleted = await email.find({
+		wasScheduled: false,
+		type: {
+			$in: [
+				'reminder-payment-hour',
+				'reminder-payment-day',
+				'promocional-incentive',
+			],
+		},
+	});
+	if (mailsToDeleted.length) {
+		mailsToDeleted.forEach(async mail => {
+			await email
+				.findByIdAndDelete(mail._id)
+				.catch(err => console.log(err));
+		});
+	}
+
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist

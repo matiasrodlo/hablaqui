@@ -52,6 +52,15 @@ const cronController = {
 			errorCallback(res, err);
 		}
 	},
+	async reminderPayment(req, res) {
+		try {
+			const token = req.params.authToken;
+			const { data, code } = await cronService.reminderPayment(token);
+			return restResponse(data, code, res);
+		} catch (err) {
+			errorCallback(res, err);
+		}
+	},
 };
 
 export default Object.freeze(cronController);

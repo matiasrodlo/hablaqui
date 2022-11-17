@@ -181,6 +181,12 @@ const mailService = {
 		};
 		await sendMails(dataPayload);
 	},
+	/**
+	 * @description The user is sent when more than one week has passed since the pending payment
+	 * and is sent a discount coupon to encourage the purchase.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {String} coupon - A coupon object from the database, corresponding to the coupon that will be sent to the user
+	 */
 	async sendPromocionalIncentive(user, coupon) {
 		const { email, name } = user;
 		const dataPayload = {

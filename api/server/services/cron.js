@@ -382,22 +382,41 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
+		// Se busca todas las sessiones y los correos no programados con los asuntos de pago
 		const sessions = await Sessions.find().populate('user psychologist');
+		const pendingEmails = await email.find({
+			wasScheduled: false,
+			type: {
+				$in: [
+					'reminder-payment-hour',
+					'reminder-payment-day',
+					'promocional-incentive',
+				],
+			},
+		});
+
 		sessions.forEach(item => {
 			// Filtro de sesiones que están en estado pending
 			const plans = item.plan.filter(plan => plan.payment === 'pending');
 
 			plans.forEach(async plan => {
+				// Crea la preferencia de mercado pago para los correos de recorto de pago
 				const url = await preference(
 					item.user,
 					item.psychologist,
 					plan
 				);
+				// Obtiene el correo correspondiente a la sessión
+				const email = pendingEmails.filter(
+					email =>
+						email.sessionRef._id.toString() === item._id.toString()
+				);
 				if (
 					moment().isBetween(
 						moment(plan.createdAt).add(1, 'hour'),
 						moment(plan.createdAt).add(1, 'day')
-					)
+					) &&
+					email.wasScheduled === false
 				) {
 					await mailServicePsy.pendingPlanPayment(
 						item.user,
@@ -409,7 +428,8 @@ const cronService = {
 					moment().isBetween(
 						moment(plan.createdAt).add(1, 'day'),
 						moment(plan.createdAt).add(1, 'week')
-					)
+					) &&
+					email.wasScheduled === false
 				) {
 					await mailServicePsy.pendingPlanPayment(
 						item.user,
@@ -418,14 +438,21 @@ const cronService = {
 						url
 					);
 				} else if (
-					moment().isAfter(moment(plan.createdAt).add(1, 'week'))
+					moment().isAfter(moment(plan.createdAt).add(1, 'week')) &&
+					email.wasScheduled === false
 				) {
+					// Si ya pasó más de una semana, crea un cupón de descuento para
+					// incentivar al usuario a pagar
 					const code = await createCoupon();
 					await mailServiceRemider.sendPromocionalIncentive(
 						item.user,
 						code
 					);
 				}
+				// Actualiza el correo como programado
+				await email.findByIdAndUpdate(email._id, {
+					wasScheduled: true,
+				});
 			});
 		});
 		return okResponse('Correos enviados');
