@@ -2,6 +2,8 @@
 import email from '../models/email';
 import Chat from '../models/chat';
 import User from '../models/user';
+import mercadopagoService from './mercadopago';
+import Coupon from '../models/coupons';
 import psychologist from '../models/psychologist';
 import mailServiceRemider from '../utils/functions/mails/reminder';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
@@ -102,6 +104,54 @@ async function getBatchId() {
 		});
 	let { batch_id } = result;
 	return batch_id;
+}
+
+async function preference(user, psychologist, plan) {
+	// Se genera un código aleatorio para el token de pago
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+	const price = plan.totalPrice;
+	const idSession = plan.session.pop()._id;
+	// Se crea el pago en mercadopago
+	const mercadopagoPayload = {
+		psychologist: psychologist.username,
+		price: price,
+		description:
+			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
+		quantity: 1,
+		sessionsId: idSession.toString(),
+		planId: plan._id.toString(),
+		token,
+	};
+	const responseBody = await mercadopagoService.createPreference(
+		mercadopagoPayload
+	);
+	return responseBody.init_point;
+}
+
+async function createCoupon() {
+	// Se genera un código aleatorio para el cupón
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const code = randomCode() + randomCode();
+	const coupon = {
+		code: code,
+		discount: 20,
+		discountType: 'percent',
+		restrictions: {
+			firstTimeOnly: true,
+		},
+		expiration: moment().add(1, 'week'),
+	};
+	await Coupon.create(coupon);
+	return coupon.code;
 }
 
 const cronService = {
@@ -325,6 +375,60 @@ const cronService = {
 			});
 		});
 		return okResponse('Planes actualizados');
+	},
+	async reminderPayment(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		const sessions = await Sessions.find().populate('user psychologist');
+		sessions.forEach(item => {
+			// Filtro de sesiones que están en estado pending
+			const plans = item.plan.filter(plan => plan.payment === 'pending');
+
+			plans.forEach(async plan => {
+				const url = await preference(
+					item.user,
+					item.psychologist,
+					plan
+				);
+				if (
+					moment().isBetween(
+						moment(plan.createdAt).add(1, 'hour'),
+						moment(plan.createdAt).add(1, 'day')
+					)
+				) {
+					await mailServicePsy.pendingPlanPayment(
+						item.user,
+						item.psychologist,
+						plan.totalPrice,
+						url
+					);
+				} else if (
+					moment().isBetween(
+						moment(plan.createdAt).add(1, 'day'),
+						moment(plan.createdAt).add(1, 'week')
+					)
+				) {
+					await mailServicePsy.pendingPlanPayment(
+						item.user,
+						item.psychologist,
+						plan.totalPrice,
+						url
+					);
+				} else if (
+					moment().isAfter(moment(plan.createdAt).add(1, 'week'))
+				) {
+					const code = await createCoupon();
+					await mailServiceRemider.sendPromocionalIncentive(
+						item.user,
+						code
+					);
+				}
+			});
+		});
+		return okResponse('Correos enviados');
 	},
 };
 

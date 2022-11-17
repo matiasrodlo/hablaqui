@@ -1,6 +1,7 @@
 'use strict';
 
 import moment from 'moment';
+import { landing_url } from '../../../config/dotenv';
 import sendMails from './sendMails';
 moment.tz.setDefault('America/Santiago');
 
@@ -177,6 +178,28 @@ const mailService = {
 				.subtract(1, 'hour')
 				.unix(),
 			batchId: batch,
+		};
+		await sendMails(dataPayload);
+	},
+	async sendPromocionalIncentive(user, coupon) {
+		const { email, name } = user;
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: name + '<' + email + '>',
+			subject: `Te damos 20% de descuento en tu próxima sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-64da30dfc68f4270b30fc2bb704e90a5',
+			dynamicTemplateData: {
+				user_name: name,
+				couponCode: coupon,
+				date: moment()
+					.add(1, 'week')
+					.format('DD/MM/YYYY'),
+				url: landing_url + '/evaluacion',
+			},
+			asm: {
+				group_id: 16321,
+			},
 		};
 		await sendMails(dataPayload);
 	},
