@@ -89,24 +89,21 @@ const getEvaluationsPsy = async (username, page) => {
 		});
 
 	evaluations = evaluations.flatMap(item => {
-		return item.evaluations.map(evaluation => {
-			return {
-				_id: evaluation._id,
-				evaluationsId: item._id,
-				comment: evaluation.comment,
-				approved: evaluation.approved,
-				global: evaluation.global,
-				puntuality: evaluation.puntuality,
-				attention: evaluation.attention,
-				internet: evaluation.internet,
-				name: item.user.name,
-				lastName: item.user.lastName ? item.user.lastName : '',
-				userId: item.user._id,
-				createdAt: moment(evaluation.createdAt).format(
-					'DD [de] MMMM YYYY'
-				),
-			};
-		});
+		const evaluation = item.evaluations.pop();
+		return {
+			_id: evaluation._id,
+			evaluationsId: item._id,
+			comment: evaluation.comment,
+			approved: evaluation.approved,
+			global: evaluation.global,
+			puntuality: evaluation.puntuality,
+			attention: evaluation.attention,
+			internet: evaluation.internet,
+			name: item.user.name,
+			lastName: item.user.lastName ? item.user.lastName : '',
+			userId: item.user._id,
+			createdAt: moment(evaluation.createdAt).format('DD [de] MMMM YYYY'),
+		};
 	});
 	// Filtra las que han sido aprobadas
 	evaluations = evaluations.filter(
@@ -224,7 +221,7 @@ const addEvaluation = async (user, psyId, payload) => {
 		session => session.status === 'success'
 	).length;
 
-	if (countSessions < 3)
+	if (countSessions < 1)
 		return conflictResponse('No puede escribir un comentario');
 
 	const psy = await Psychologist.findById(psyId);

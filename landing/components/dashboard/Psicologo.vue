@@ -58,6 +58,7 @@
 						>
 							<!-- ocultado por peticion de daniel -->
 							<v-btn
+								v-if="plan && plan.success && plan.success >= 1"
 								depressed
 								block
 								small
