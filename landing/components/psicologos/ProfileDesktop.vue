@@ -278,6 +278,9 @@
 											<div v-if="isLastComment">
 												<h4 class="text-center">No hay más comentarios</h4>
 											</div>
+											<div v-else>
+												<h4 class="text-center">Más comentarios</h4>
+											</div>
 											<div class="text-center">
 												<v-progress-circular
 													v-if="loadingComments"
@@ -368,32 +371,33 @@ export default {
 		// });
 	},
 	methods: {
-		initFetch() {
+		async initFetch() {
 			this.setFloatingChat(false);
 			this.rating = this.psychologist.rating;
 			this.internet = this.psychologist.internetRating;
 			this.puntuality = this.psychologist.puntualityRating;
 			this.attention = this.psychologist.attentionRating;
+			await this.loadComments();
 		},
 		scroll() {
-			window.onscroll = async () => {
+			window.onscroll = () => {
 				const bottomOfWindow =
 					document.documentElement.scrollTop + window.innerHeight ===
 					document.documentElement.offsetHeight;
-				if (bottomOfWindow && !this.isLastComment) {
-					this.loadingComments = true;
-					const data = await this.$axios.$get(
-						`/psychologist/get-evaluations/${this.psychologist.username}/${this.page}`
-					);
-					if (data.evaluations) {
-						this.evaluations = this.evaluations.concat(data.evaluations);
-						this.page += 1;
-					} else this.isLastComment = true;
-					this.loadingComments = false;
-				}
+				if (bottomOfWindow && !this.isLastComment) this.loadComments();
 			};
 		},
-
+		async loadComments() {
+			this.loadingComments = true;
+			const data = await this.$axios.$get(
+				`/psychologist/get-evaluations/${this.psychologist.username}/${this.page}`
+			);
+			if (data.evaluations) {
+				this.evaluations = this.evaluations.concat(data.evaluations);
+				this.page += 1;
+			} else this.isLastComment = true;
+			this.loadingComments = false;
+		},
 		async getPsychologist(username) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
 			this.setPsychologist(psychologist);
