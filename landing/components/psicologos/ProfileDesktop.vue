@@ -181,12 +181,13 @@
 						<v-row>
 							<v-col cols="6" class="d-flex align-center justify-start">
 								<v-card
+									width="50"
 									max-width="50"
 									height="50"
-									class="rounded-circle primary px-4 mt-3"
+									class="rounded-circle primary mt-3"
 									elevation="5"
 								>
-									<h1 class="white--text text-center pt-3">5</h1>
+									<h2 class="white--text text-center pt-3">{{ rating }}</h2>
 								</v-card>
 								<div class="text--secondary text-left align-center">
 									<div>
