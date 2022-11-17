@@ -241,6 +241,7 @@ const cronService = {
 		// Encuentra los correos que no han sido programados aún y los programa para enviarlos.
 		let pendingEmails = await email.find({
 			wasScheduled: false,
+			$in: ['reminder-user', 'reminder-psy'],
 		});
 		await scheduleEmails(pendingEmails, ['hour', 'day']);
 		return okResponse(
