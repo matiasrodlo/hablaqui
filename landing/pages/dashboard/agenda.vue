@@ -629,19 +629,11 @@
 				transition="dialog-top-transition"
 			>
 				<v-card rounded="xl">
-					<v-card-text class="text-center primary--text text-h5 py-3">
-						<div class="body-1 font-weight-bold text-center">
-							Comienza a hablar con nuestros psicólogos
-						</div>
+					<v-card-text class="text-center">
+						<small class="py-2 text--secondary"> Bienestar en cualquier momento </small>
 					</v-card-text>
 					<v-card-text class="text-center">
-						<small class="py-2 text--secondary">
-							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
-							tu vida hoy
-						</small>
-					</v-card-text>
-					<v-card-text class="text-center">
-						<v-btn color="primary" rounded to="/psicologos/">Buscar ahora</v-btn>
+						<v-btn color="primary" rounded to="/evaluacion/">Comenzar</v-btn>
 					</v-card-text>
 				</v-card>
 			</v-dialog>

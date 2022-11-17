@@ -109,9 +109,9 @@
 		</v-card-text>
 		<v-card-text v-if="!psychologist && !loading" class="text-center">
 			<div class="body-1 my-5 mx-auto" style="max-width: 280px">
-				Bienestar en cualquier momento, en cualquier lugar
+				Bienestar en cualquier momento
 			</div>
-			<v-btn rounded color="primary" :to="{ name: 'psicologos' }"> Comenzar </v-btn>
+			<v-btn rounded color="primary" :to="{ name: 'evaluacion' }"> Comenzar </v-btn>
 		</v-card-text>
 	</v-card>
 </template>

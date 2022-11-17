@@ -288,23 +288,16 @@
 									class="my-2 d-flex justify-center align-center"
 								>
 									<div class="text-center">
-										<span
-											class="body-1 primary--text font-weight-bold"
-											style="max-width: 220px"
-										>
-											Comienza a hablar con nuestros psicólogos
-										</span>
 										<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
-											Orientación psicológica en cualquier momento y lugar.
-											Comienza a mejorar tu vida hoy.
+											Bienestar en cualquier momento
 										</div>
 										<v-btn
 											class="mt-5 px-8"
 											color="primary"
 											rounded
-											:to="{ name: 'psicologos' }"
+											:to="{ name: 'evaluacion' }"
 										>
-											Buscar ahora
+											Comenzar
 										</v-btn>
 									</div>
 								</div>
