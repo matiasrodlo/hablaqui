@@ -135,10 +135,10 @@ async function preference(user, psychologist, plan) {
 
 async function createCoupon() {
 	// Generar un número entero random
-	const randomInt = (min = 10000, max = 50000) => {
+	const randomInt = (min = 100, max = 999) => {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
-	const code = 'habla' + randomInt();
+	const code = 'H' + randomInt();
 	const coupon = {
 		code: code,
 		discount: 20,
@@ -467,7 +467,9 @@ const cronService = {
 						console.log('chao');
 					}
 					if (isMailSent) {
+						const batch = getBatchId();
 						await email.findByIdAndUpdate(emailSession[i]._id, {
+							batchId: batch,
 							wasScheduled: true,
 						});
 						console.log('hola');
