@@ -201,7 +201,7 @@ const mailService = {
 				date: moment()
 					.add(1, 'week')
 					.format('DD/MM/YYYY'),
-				url: landing_url + '/evaluacion',
+				url: landing_url + 'evaluacion',
 			},
 			asm: {
 				group_id: 16321,

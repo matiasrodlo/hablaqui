@@ -134,21 +134,21 @@ async function preference(user, psychologist, plan) {
 }
 
 async function createCoupon() {
-	// Se genera un código aleatorio para el cupón
-	const randomCode = () => {
-		return Math.random()
-			.toString(5)
-			.substring(2);
+	// Generar un número entero random
+	const randomInt = (min = 10000, max = 50000) => {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
-	const code = randomCode() + randomCode();
+	const code = 'habla' + randomInt();
 	const coupon = {
 		code: code,
 		discount: 20,
-		discountType: 'percent',
+		discountType: 'percentage',
 		restrictions: {
 			firstTimeOnly: true,
 		},
-		expiration: moment().add(1, 'week'),
+		expiration: moment()
+			.add(1, 'week')
+			.format(),
 	};
 	await Coupon.create(coupon);
 	return coupon.code;
@@ -395,11 +395,14 @@ const cronService = {
 			},
 		});
 
-		sessions.forEach(item => {
+		sessions.forEach(async item => {
+			let i;
+			let isMailSent = false;
 			// Filtro de sesiones que están en estado pending
-			const plans = item.plan.filter(plan => plan.payment === 'pending');
-
-			plans.forEach(async plan => {
+			const plan = item.plan
+				.filter(plan => plan.payment === 'pending')
+				.pop();
+			if (plan) {
 				// Crea la preferencia de mercado pago para los correos de recorto de pago
 				const url = await preference(
 					item.user,
@@ -407,53 +410,70 @@ const cronService = {
 					plan
 				);
 				// Obtiene el correo correspondiente a la sessión
-				const email = pendingEmails.filter(
-					email =>
-						email.sessionRef._id.toString() === item._id.toString()
+				const emailSession = pendingEmails.filter(
+					pendingMail =>
+						pendingMail.sessionRef._id.toString() ===
+						item._id.toString()
 				);
-				if (
-					moment().isBetween(
-						moment(plan.createdAt).add(1, 'hour'),
-						moment(plan.createdAt).add(1, 'day')
-					) &&
-					email.wasScheduled === false
-				) {
-					await mailServicePsy.pendingPlanPayment(
-						item.user,
-						item.psychologist,
-						plan.totalPrice,
-						url
-					);
-				} else if (
-					moment().isBetween(
-						moment(plan.createdAt).add(1, 'day'),
-						moment(plan.createdAt).add(1, 'week')
-					) &&
-					email.wasScheduled === false
-				) {
-					await mailServicePsy.pendingPlanPayment(
-						item.user,
-						item.psychologist,
-						plan.totalPrice,
-						url
-					);
-				} else if (
-					moment().isAfter(moment(plan.createdAt).add(1, 'week')) &&
-					email.wasScheduled === false
-				) {
-					// Si ya pasó más de una semana, crea un cupón de descuento para
-					// incentivar al usuario a pagar
-					const code = await createCoupon();
-					await mailServiceRemider.sendPromocionalIncentive(
-						item.user,
-						code
-					);
+				if (emailSession.length > 0) {
+					if (
+						moment().isBetween(
+							moment(plan.createdAt).add(1, 'hour'),
+							moment(plan.createdAt).add(1, 'day')
+						) &&
+						emailSession[0].wasScheduled === false
+					) {
+						i = 0;
+						isMailSent = true;
+						await mailServicePsy.pendingPlanPayment(
+							item.user,
+							item.psychologist,
+							plan.totalPrice,
+							url
+						);
+						console.log('chao');
+					} else if (
+						moment().isBetween(
+							moment(plan.createdAt).add(1, 'day'),
+							moment(plan.createdAt).add(1, 'week')
+						) &&
+						emailSession[1].wasScheduled === false
+					) {
+						i = 1;
+						isMailSent = true;
+						await mailServicePsy.pendingPlanPayment(
+							item.user,
+							item.psychologist,
+							plan.totalPrice,
+							url
+						);
+						console.log('chao');
+					} else if (
+						moment().isAfter(
+							moment(plan.createdAt).add(1, 'week')
+						) &&
+						emailSession[emailSession.length - 1].wasScheduled ===
+							false
+					) {
+						i = emailSession.length - 1;
+						isMailSent = true;
+						// Si ya pasó más de una semana, crea un cupón de descuento para
+						// incentivar al usuario a pagar
+						const code = await createCoupon();
+						await mailServiceRemider.sendPromocionalIncentive(
+							item.user,
+							code
+						);
+						console.log('chao');
+					}
+					if (isMailSent) {
+						await email.findByIdAndUpdate(emailSession[i]._id, {
+							wasScheduled: true,
+						});
+						console.log('hola');
+					}
 				}
-				// Actualiza el correo como programado
-				await email.findByIdAndUpdate(email._id, {
-					wasScheduled: true,
-				});
-			});
+			}
 		});
 		return okResponse('Correos enviados');
 	},

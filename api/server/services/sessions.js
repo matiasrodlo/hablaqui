@@ -439,31 +439,31 @@ const createPlan = async ({ payload }) => {
 
 		// Se crean correos de recordatorio de pago
 		await email.create({
-			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			sessionDate: moment(created.date).format(),
 			wasScheduled: false,
 			type: 'reminder-payment-hour',
-			queuedAt: undefined,
-			scheduledAt: undefined,
+			queuedAt: null,
+			scheduledAt: null,
 			userRef: user._id,
 			psyRef: psychologist._id,
 			sessionRef: created._id,
 		});
 		await email.create({
-			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			sessionDate: moment(created.date).format(),
 			wasScheduled: false,
 			type: 'reminder-payment-day',
-			queuedAt: undefined,
-			scheduledAt: undefined,
+			queuedAt: null,
+			scheduledAt: null,
 			userRef: user._id,
 			psyRef: psychologist._id,
 			sessionRef: created._id,
 		});
 		await email.create({
-			sessionDate: moment(created.date, 'MM/DD/YYYY HH:mm'),
+			sessionDate: moment(created.date).format(),
 			wasScheduled: false,
 			type: 'promocional-incentive',
-			queuedAt: undefined,
-			scheduledAt: undefined,
+			queuedAt: null,
+			scheduledAt: null,
 			userRef: user._id,
 			psyRef: psychologist._id,
 			sessionRef: created._id,
