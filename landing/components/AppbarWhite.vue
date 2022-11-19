@@ -244,7 +244,11 @@
 														</v-list-item-avatar>
 														<v-list-item-content>
 															<v-list-item-title
-																class="secondary--text font-weight-bold body-2"
+																class="
+																	secondary--text
+																	font-weight-bold
+																	body-2
+																"
 															>
 																{{ item.name }}
 															</v-list-item-title>
@@ -262,7 +266,11 @@
 													</v-list-item-avatar>
 													<v-list-item-content>
 														<v-list-item-title
-															class="secondary--text font-weight-bold body-2"
+															class="
+																secondary--text
+																font-weight-bold
+																body-2
+															"
 														>
 															Cerrar sesion
 														</v-list-item-title>
@@ -308,7 +316,13 @@
 										font-size: 13.2px;
 										line-height: 1.6;
 									"
-									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
+									class="
+										py-4
+										ml-2
+										hidden-sm-and-down
+										text-uppercase
+										font-weight-bold
+									"
 									color="primary"
 									depressed
 									to="/psicologos"
@@ -326,7 +340,9 @@
 
 <script>
 import { mdiMenu, mdiAccountDetails } from '@mdi/js';
-// El logo en VUE carga pixelado y las letras se ven algo distintas, los botones estan desplazados, etc
+/**
+ * Barra de navegacion onda blanca
+ */
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),

@@ -1,8 +1,10 @@
 <template>
 	<div>
+		<!-- loader -->
 		<v-row v-if="loading" class="ma-0" style="height: 300px" align="center" justify="center">
 			<v-progress-circular indeterminate color="primary" />
 		</v-row>
+		<!-- calendario -->
 		<template v-else>
 			<div style="max-height: 280px; overflow-y: auto">
 				<v-slide-group v-model="slide" class="content" center-active show-arrows>
@@ -80,6 +82,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+/**
+ * calendario para visualizar las sesiones
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -107,14 +112,19 @@ export default {
 		...mapGetters({ sessions: 'Psychologist/sessionsFormatted' }),
 	},
 	watch: {
+		// listener si cambia de psicologo obtiene sus sessiones
 		idPsy(newValue) {
 			this.getData(newValue);
 		},
 	},
 	mounted() {
+		// Obtenemos las sessiones
 		this.getData(this.idPsy);
 	},
 	methods: {
+		/**
+		 * Obtienes las sessiones segun el id del psicologo
+		 */
 		async getData(id) {
 			this.loading = true;
 			await this.getFormattedSessions({ id, type: this.type });

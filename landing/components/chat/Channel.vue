@@ -259,8 +259,11 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
+			// si presiona para enviar mensaje y esta vacio no lo envia
 			if (isEmpty(this.message)) return;
+			// loader
 			this.loadingMessage = true;
+			// datos a enviar
 			const payload = {
 				psychologistId:
 					this.$auth.$state.user.role === 'psychologist'
@@ -273,26 +276,47 @@ export default {
 				content: this.message,
 				user: { _id: this.$auth.user._id, role: this.$auth.user.role },
 			};
+			// emitimos el evento
 			await this.socket.emit('sendMessage', payload, response => {
 				this.setChat(response);
 			});
+			// vaciamos el input
 			this.message = '';
+			// loader
 			this.loadingMessage = false;
+			// focus al input
 			this.$nextTick(() => this.$refs.messagechat.focus());
 			this.row = 1;
+			// scroll a la ventana hasta el final
 			this.scrollToElement();
 		},
+		/**
+		 * formatea la fecha
+		 * @param {string} sentBy id
+		 * @returns Boolean
+		 */
 		sentBy(sentBy) {
 			return sentBy === this.$auth.$state.user._id;
 		},
+		/**
+		 * formatea la fecha
+		 * @param {string} time fecha
+		 * @returns string con la fecha
+		 */
 		setDate(time) {
 			if (time) return dayjs.tz(dayjs(time)).calendar();
 			return dayjs.tz().format('llll');
 		},
+		/**
+		 * grow element
+		 */
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));
 			this.grow = height < 140;
 		},
+		/**
+		 * Scroll to element
+		 */
 		scrollToElement() {
 			const el = this.$el.getElementsByClassName('scroll')[0];
 			if (el) {

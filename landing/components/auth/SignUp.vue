@@ -1,7 +1,8 @@
 <template>
 	<v-form @submit.prevent="onSubmit">
 		<v-row no-gutters>
-			<v-col cols="6">
+			<!-- nombre -->
+			<v-col cols="12">
 				<v-text-field
 					v-model="form.name"
 					type="text"
@@ -12,17 +13,7 @@
 					:error-messages="nameErrors"
 				></v-text-field>
 			</v-col>
-			<v-col cols="6">
-				<v-text-field
-					v-model="form.lastName"
-					type="text"
-					label="Apellido"
-					outlined
-					dense
-					autocomplete="off"
-					:error-messages="lastnameErrors"
-				></v-text-field>
-			</v-col>
+			<!-- correo elecronico -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.email"
@@ -33,6 +24,7 @@
 					:error-messages="emailErrors"
 				></v-text-field>
 			</v-col>
+			<!-- telefono -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.phone"
@@ -54,6 +46,7 @@
 					outlined
 				></v-text-field>
 			</v-col> -->
+			<!-- contraseña -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.password"
@@ -66,6 +59,7 @@
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
+			<!-- terminos y condiciones -->
 			<v-col cols="12" class="d-flex align-center">
 				<v-checkbox v-model="accept" class="d-inline-block"></v-checkbox>
 				<span class="body-2 text-left" style="max-width: 300px">
@@ -79,12 +73,14 @@
 					</nuxt-link>
 				</span>
 			</v-col>
+			<!-- boton registrar -->
 			<v-col cols="12">
 				<v-btn :loading="loading" type="submit" block rounded color="primary">
 					Registrar
 				</v-btn>
 			</v-col>
 		</v-row>
+		<!-- modal terminos y condiciones -->
 		<v-dialog v-model="dialog" width="300">
 			<v-sheet style="width: 300px; height: 100px">
 				<v-alert dense outlined type="error" width="300" height="100">
@@ -106,6 +102,9 @@ import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
 
+/**
+ * Componente para iniciar sesión
+ */
 export default {
 	name: 'SignUp',
 	mixins: [validationMixin],
@@ -127,6 +126,10 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Verifica que el email sea valido
+		 * @returns array con los errores
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -134,6 +137,10 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un email valido');
 			return errors;
 		},
+		/**
+		 * Verifica que el name sea valido
+		 * @returns array con los errores
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
@@ -142,14 +149,10 @@ export default {
 			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
-		lastnameErrors() {
-			const errors = [];
-			if (!this.$v.form.lastName.$dirty) return errors;
-			!this.$v.form.lastName.required && errors.push('El apellido es querido');
-			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
-			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
-			return errors;
-		},
+		/**
+		 * Verifica que el password sea valido
+		 * @returns array con los errores
+		 */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
@@ -158,6 +161,10 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
+		/**
+		 * Verifica que el telefono sea valido
+		 * @returns array con los errores
+		 */
 		phoneErrors() {
 			const errors = [];
 			if (!this.$v.form.phone.$dirty) return errors;
@@ -167,9 +174,13 @@ export default {
 		},
 	},
 	created() {
+		// establece los datos por defecto del formulario
 		this.defaultForm();
 	},
 	methods: {
+		/**
+		 * Establece el formulario por defecto
+		 */
 		defaultForm() {
 			this.form = {
 				name: '',
@@ -181,41 +192,54 @@ export default {
 				phone: '',
 			};
 		},
+		/**
+		 * Envio del formulario
+		 */
 		async onSubmit() {
+			// verificamos validacion
 			this.$v.$touch();
 			if (!this.$v.$invalid && !this.accept) {
 				return (this.dialog = true);
 			}
 			if (!this.$v.$invalid && this.accept) {
 				try {
+					// activamos el loader
 					this.loading = true;
+					// enviamos el formulario
 					await this.$axios('/auth/register', {
 						method: 'post',
 						data: this.form,
 					});
+					// login despues del registro
 					const response = await this.$auth.loginWith('local', {
 						data: { email: this.form.email, password: this.form.password },
 					});
+					// establecemos el usuario luego del login
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn) {
+						// si llegamos al login con un query from=psy
 						if (this.$route.query.from === 'psy') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
 							return this.$router.push({ name: 'evaluacion' });
 						}
+						// si es role psicologo y esta aprobado
 						if (
 							response.data.user.role === 'psychologist' &&
 							this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
+						// si es role psicologo y no esta aprobado
 						if (
 							response.data.user.role === 'psychologist' &&
 							!this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'postulacion' });
 						}
+						// si es un superuser enviamos al panel
 						if (response.data.user.role === 'superuser')
 							return this.$router.push({ name: 'dashboard-panel' });
+						// si es un usuario
 						if (response.data.user.role === 'user') {
 							// redirecionamos de nuevo a pagos luego de ingresar
 							if (
@@ -239,8 +263,10 @@ export default {
 						}
 					}
 				} catch (error) {
+					// muestra mensaje de error
 					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {
+					// desactivamos el loader
 					this.loading = false;
 				}
 			}
