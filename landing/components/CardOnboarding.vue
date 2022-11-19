@@ -24,6 +24,9 @@
 import { mdiChevronRightCircle } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
+/**
+ * tarjeta para el onboarding
+ */
 export default {
 	props: {
 		itemId: {
@@ -50,6 +53,9 @@ export default {
 		...mapGetters({ step: 'User/step' }),
 	},
 	watch: {
+		/**
+		 * Listener step y abrir o no el menu
+		 */
 		step: {
 			handler(newValue) {
 				if (newValue) {
@@ -60,7 +66,11 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * mutaciones utilizadas
+		 */
 		...mapMutations({
+			// establece el paso en el que ira
 			setStep: 'User/setStep',
 		}),
 	},

@@ -19,6 +19,9 @@
 </template>
 
 <script>
+/**
+ * Visualiza el avatar o coloca iniciales del nombre si no tiene
+ */
 export default {
 	props: {
 		name: {
@@ -69,11 +72,19 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Iniciales a establecer
+		 * @returns string con las iniciales
+		 */
 		initials() {
 			if (this.name)
 				return `${this.name.substr(0, 1)}${this.lastName && this.lastName.substr(0, 1)}`;
 			return '';
 		},
+		/**
+		 * Colores random
+		 * @returns string con un color aleatorio
+		 */
 		randomColors() {
 			if (this.url) return '#6e548624';
 			return this.colors[Math.floor(Math.random() * this.colors.length)];
