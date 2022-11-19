@@ -93,6 +93,9 @@
 
 <script>
 import { mdiChevronLeft, mdiChevronRight, mdiChevronDown, mdiChevronUp } from '@mdi/js';
+/**
+ * calendario para psicologos
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -128,6 +131,9 @@ export default {
 		};
 	},
 	methods: {
+		/**
+		 * redirige si esta logeado a plans o auth si no esta logeado
+		 */
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({

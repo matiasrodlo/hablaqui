@@ -79,7 +79,9 @@
 
 <script>
 import { mdiMenu } from '@mdi/js';
-
+/**
+ * Barra de navegacion con onda azul
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
