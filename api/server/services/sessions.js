@@ -14,7 +14,6 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -412,30 +411,6 @@ const createPlan = async ({ payload }) => {
 	} else {
 		// Se crea el pago en mercadopago
 		const user = await User.findById(payload.user);
-		const plan = created.plan.pop();
-		const mercadopagoPayload = {
-			psychologist: psychologist.username,
-			price: payload.price,
-			description:
-				payload.title +
-				' - Pagado por ' +
-				user.name +
-				' ' +
-				user.lastName,
-			quantity: 1,
-			sessionsId: created._id.toString(),
-			planId: plan._id.toString(),
-			token,
-		};
-		responseBody = await mercadopagoService.createPreference(
-			mercadopagoPayload
-		);
-		await mailServicePsy.pendingPlanPayment(
-			user,
-			psychologist,
-			payload.price,
-			responseBody.init_point
-		);
 
 		// Se crean correos de recordatorio de pago
 		await email.create({
