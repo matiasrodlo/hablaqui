@@ -407,7 +407,7 @@
 												large
 												@click="() => setModels('Cognitivo-conductual')"
 											>
-												Sesiones estructuradas con metas semanales
+												Sesiones estructuradas con metas
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -422,7 +422,7 @@
 												large
 												@click="() => setModels('Integrativo')"
 											>
-												Conocer herramientas para ponerlas en práctica
+												Conocer herramientas y tecnicas
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -437,7 +437,7 @@
 												large
 												@click="() => setModels('Contextual')"
 											>
-												Aprender a relacionarme con mis pensamientos
+												Comprender mis pensamientos
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -452,7 +452,7 @@
 												large
 												@click="() => setModels('Psicoanálisis')"
 											>
-												Aprender observando mis experiencias pasadas
+												Aprender observando mi pasado
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
