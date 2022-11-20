@@ -188,7 +188,7 @@
 									{{ getMyPsy.name }} {{ getMyPsy.lastName }}
 								</v-list-item-title>
 								<v-list-item-subtitle class="primary--text">
-									Mi Psicólogo
+									Mi especialista
 								</v-list-item-subtitle>
 							</v-list-item-content>
 							<v-list-item-action>

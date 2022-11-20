@@ -163,7 +163,7 @@
 						<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
 							<v-card-text v-if="plan" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
+									Mi especialista
 								</v-subheader>
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
