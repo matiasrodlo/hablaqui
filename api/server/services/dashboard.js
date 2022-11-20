@@ -159,10 +159,22 @@ const getMountToPay = async user => {
 	for (let psy in psychologists) {
 		let sessions = await Sessions.find({
 			psychologist: psychologists[psy]._id,
-		});
+		}).populate('user');
 		sessions = sessions.filter(s => !!s.user);
 		const plans = sessions
-			.flatMap(s => s.plan)
+			.flatMap(s =>
+				s.plan.map(p => {
+					return {
+						title: p.title,
+						payment: p.payment,
+						session: p.session,
+						sessionPrice: p.sessionPrice,
+						usedCoupon: p.usedCoupon,
+						name: s.user.name,
+						email: s.user.email,
+					};
+				})
+			)
 			.filter(p => p.title !== 'Plan inicial' && p.payment === 'success');
 		let session = plans.flatMap(p => {
 			return {
@@ -172,6 +184,8 @@ const getMountToPay = async user => {
 				),
 				price: p.sessionPrice,
 				coupon: p.usedCoupon,
+				name: p.name,
+				email: p.email,
 			};
 		});
 		let total = 0;
@@ -189,24 +203,29 @@ const getMountToPay = async user => {
 		}
 		session = session.flatMap(item =>
 			item.sessions.flatMap(s => {
+				console.log(item);
 				return {
 					date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
 						'DD/MM/YYYY HH:mm'
 					),
 					_id: s._id,
 					status: s.status,
+					name: item.name,
+					email: item.email,
 					sessionNumber: s.sessionNumber,
 					price: item.price,
 					coupon: item.coupon,
 				};
 			})
 		);
+		console.log(session);
 		amounts.push({
 			_id: psychologists[psy]._id,
 			name: psychologists[psy].name,
 			lastName: psychologists[psy].lastName,
 			email: psychologists[psy].email,
 			username: psychologists[psy].username,
+			paymentMethod: psychologists[psy].paymentMethod,
 			total,
 			session,
 		});
