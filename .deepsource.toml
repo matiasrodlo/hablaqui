@@ -8,5 +8,5 @@ enabled = true
   plugins = ["vue"]
 
 [[transformers]]
-name = "prettier"
+name = "standardjs"
 enabled = true
