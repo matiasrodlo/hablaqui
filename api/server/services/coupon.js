@@ -3,8 +3,12 @@
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
 import { logInfo } from '../config/pino';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const newCoupon = async (user, payload) => {
 	// Verifica si el cupon ya existe y si el usuario tiene autorización para crear cupones
@@ -19,7 +23,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: moment(payload.expiration).toISOString(),
+		expiration: dayjs(payload.expiration).toISOString(),
 	};
 
 	// Guarda el cupon en la base de datos y retorna la respuesta satisfactoria
@@ -33,7 +37,7 @@ const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (moment().isAfter(foundCoupon.expiration))
+	if (dayjs().isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
 	if (foundCoupon.discountType === 'static' && foundCoupon.discount === 0)
 		return conflictResponse('Cupón con saldo 0');

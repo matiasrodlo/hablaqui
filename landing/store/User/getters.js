@@ -1,5 +1,9 @@
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	user: (state, getters, rootState) => rootState.auth.user,
@@ -22,14 +26,14 @@ export default {
 				// numero de sessiones concluidas
 				success: item.numberSessionSuccess,
 				// dias de diferencia entre el dia que expiró y hoy
-				diff: moment(plan.expiration).diff(moment(), 'days'),
+				diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
 			}))
 		);
 		const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
 		const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
 		const filterPlans = plans.filter(
-			item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+			item => item.payment === 'success' && dayjs().isBefore(dayjs(item.expiration))
 		);
 		const totalSessions = filterPlans.reduce(
 			(sum, value) =>
@@ -49,7 +53,6 @@ export default {
 		if (!sortedPlans.length && filterPlans.length > 0)
 			sortedPlans = [filterPlans.sort((a, b) => a.diff - b.diff).pop()];
 
-		// retornamos el plan success y sin expirar
 		// retornamos el ultimo plan succes y que expiro
 		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === min)];
 		// retornamos el siguiente plan pendiente

@@ -438,6 +438,13 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
+				{
+					name: 'Evaluaciones',
+					link: { name: 'dashboard-evaluations' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
 			];
 		},
 	},
