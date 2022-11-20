@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import transactionController from '../controllers/transaction';
+import { Router } from 'express'
+import passport from 'passport'
+import transactionController from '../controllers/transaction'
 
-const transactionRouter = Router();
+const transactionRouter = Router()
 
 /**
  * @description Completa las solicitudes de retiro de dinero
@@ -14,9 +14,9 @@ const transactionRouter = Router();
  * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
  */
 transactionRouter.post(
-	'/psychologist/complete-payments/:psy',
-	transactionController.completePaymentsRequest
-);
+  '/psychologist/complete-payments/:psy',
+  transactionController.completePaymentsRequest
+)
 
 /**
  * @description Crea una solicitud de retiro de dinero
@@ -26,10 +26,10 @@ transactionRouter.post(
  * @access authenticated
  */
 transactionRouter.post(
-	'/psychologist/payment-request',
-	[passport.authenticate('jwt', { session: true })],
-	transactionController.createPaymentsRequest
-);
+  '/psychologist/payment-request',
+  [passport.authenticate('jwt', { session: true })],
+  transactionController.createPaymentsRequest
+)
 
 /**
  * @description Devuelve todas las transacciones del psicólogo logeado
@@ -39,20 +39,20 @@ transactionRouter.post(
  * @access authenticated
  */
 transactionRouter.get(
-	'/psychologist/transactions/all',
-	[passport.authenticate('jwt', { session: true })],
-	transactionController.getTransactions
-);
+  '/psychologist/transactions/all',
+  [passport.authenticate('jwt', { session: true })],
+  transactionController.getTransactions
+)
 
 transactionRouter.post(
-	'/transaction/generate',
-	[passport.authenticate('jwt', { session: true })],
-	transactionController.generateTransaction
-);
+  '/transaction/generate',
+  [passport.authenticate('jwt', { session: true })],
+  transactionController.generateTransaction
+)
 
 transactionRouter.get(
-	'/transaction/get/all',
-	[passport.authenticate('jwt', { session: true })],
-	transactionController.getAllTransactions
-);
-export default transactionRouter;
+  '/transaction/get/all',
+  [passport.authenticate('jwt', { session: true })],
+  transactionController.getAllTransactions
+)
+export default transactionRouter

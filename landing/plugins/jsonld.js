@@ -1,5 +1,5 @@
 // plugins/jsonld.js
-import Vue from 'vue';
-import NuxtJsonld from 'nuxt-jsonld';
+import Vue from 'vue'
+import NuxtJsonld from 'nuxt-jsonld'
 
-Vue.use(NuxtJsonld);
+Vue.use(NuxtJsonld)

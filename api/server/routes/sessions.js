@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import sessionsController from '../controllers/sessions';
+import { Router } from 'express'
+import passport from 'passport'
+import sessionsController from '../controllers/sessions'
 
-const sessionsRouter = Router();
+const sessionsRouter = Router()
 
 /**
  * @swagger
@@ -34,10 +34,10 @@ const sessionsRouter = Router();
  * @access authenticated
  */
 sessionsRouter.get(
-	'/psychologists/sessions/:idUser',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.getSessions
-);
+  '/psychologists/sessions/:idUser',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.getSessions
+)
 
 /**
  * @description Devuelve todas las sesiones faltantes de un psicólogo
@@ -47,9 +47,9 @@ sessionsRouter.get(
  * @returns {Array} Lista con todas las sesiones faltantes del psicólogo en cuestión
  */
 sessionsRouter.get(
-	'/psychologist/get-remaining-sessions/:psy',
-	sessionsController.getRemainingSessions
-);
+  '/psychologist/get-remaining-sessions/:psy',
+  sessionsController.getRemainingSessions
+)
 
 /**
  * @description Cancela una sesión específica
@@ -62,10 +62,10 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.delete(
-	'/psychologist/cancel-session',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.cancelSession
-);
+  '/psychologist/cancel-session',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.cancelSession
+)
 
 /**
  * @description Creo No usada
@@ -75,7 +75,7 @@ sessionsRouter.delete(
  * @returns
  * @access
  */
-sessionsRouter.get('/psychologist/plan-task', sessionsController.checkPlanTask);
+sessionsRouter.get('/psychologist/plan-task', sessionsController.checkPlanTask)
 
 /**
  * @description Crea un plan
@@ -90,10 +90,10 @@ sessionsRouter.get('/psychologist/plan-task', sessionsController.checkPlanTask);
  * @access authenticated
  */
 sessionsRouter.post(
-	'/psychologists/session/create',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.createPlan
-);
+  '/psychologists/session/create',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.createPlan
+)
 
 /**
  * Create a session
@@ -115,10 +115,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.put(
-	'/psychologists/session/:id/plan/:idPlan',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.createSession
-);
+  '/psychologists/session/:id/plan/:idPlan',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.createSession
+)
 
 /**
  * @description Crea una nueva sesion custom, un poco mas libre y menos estandarizada
@@ -131,10 +131,10 @@ sessionsRouter.put(
  * @access authenticated
  */
 sessionsRouter.post(
-	'/psychologist/new-custom-session',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.customNewSession
-);
+  '/psychologist/new-custom-session',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.customNewSession
+)
 
 /**
  * @description Obtiene la session de un psicologo formateada para el selector
@@ -145,9 +145,9 @@ sessionsRouter.post(
  * @returns Objeto listado de las sesiones del psicólogo
  */
 sessionsRouter.get(
-	'/psychologists/formattedSessions/:idPsychologist/:type',
-	sessionsController.getFormattedSessions
-);
+  '/psychologists/formattedSessions/:idPsychologist/:type',
+  sessionsController.getFormattedSessions
+)
 
 /**
  * obtiene las sessiones de todos los psicologos formateada para el selector
@@ -159,9 +159,9 @@ sessionsRouter.get(
  * @returns Objeto listado de todas las sesiones de cada uno de los psicólogos
  */
 sessionsRouter.get(
-	'/psychologists/formattedSessionsAll',
-	sessionsController.formattedSessionsAll
-);
+  '/psychologists/formattedSessionsAll',
+  sessionsController.formattedSessionsAll
+)
 
 /**
  * @description Obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
@@ -170,9 +170,9 @@ sessionsRouter.get(
  * @returns Objeto con las sesiones formateadas
  */
 sessionsRouter.post(
-	'/psychologists/sessionsLimit',
-	sessionsController.sessionsLimit
-);
+  '/psychologists/sessionsLimit',
+  sessionsController.sessionsLimit
+)
 
 /**
  * @description Consigue los datos (y la tabla) de pagos del psicologo.
@@ -182,10 +182,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.get(
-	'/psychologist/payments/all',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.paymentsInfo
-);
+  '/psychologist/payments/all',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.paymentsInfo
+)
 
 /**
  * @description Cambia la hora de una session específica
@@ -198,10 +198,10 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.post(
-	'/psychologists/reschedule/:sessionsId/:id',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.reschedule
-);
+  '/psychologists/reschedule/:sessionsId/:id',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.reschedule
+)
 
 /**
  * @description Actualiza una sessions (Me falta información del endpoint)
@@ -211,10 +211,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.put(
-	'/psychologists/update/sessions',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.updateSessions
-);
+  '/psychologists/update/sessions',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.updateSessions
+)
 
 /**
  * @description: Elimina un compromiso privado de un psicologo
@@ -225,9 +225,9 @@ sessionsRouter.put(
  * @returns {Object} Objecto Session con el compromiso eliminado
  */
 sessionsRouter.patch(
-	'/psychologist/delete-commitment/:psyId/:planId',
-	sessionsController.deleteCommitment
-);
+  '/psychologist/delete-commitment/:psyId/:planId',
+  sessionsController.deleteCommitment
+)
 
 /**
  * @description Devuelve todas las sesiones que no hayan expirado
@@ -237,9 +237,9 @@ sessionsRouter.patch(
  * @returns {Array} Lista con todas las sesiones del psicólogo en cuestión
  */
 sessionsRouter.get(
-	'/psychologist/get-sessions/:psy',
-	sessionsController.getAllSessions
-);
+  '/psychologist/get-sessions/:psy',
+  sessionsController.getAllSessions
+)
 
 /**
  * @description Consigue los datos (y la tabla) de pagos del psicologo
@@ -250,8 +250,8 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.get(
-	'/psychologist/payments/:psy',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.paymentsInfoFromId
-);
-export default sessionsRouter;
+  '/psychologist/payments/:psy',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.paymentsInfoFromId
+)
+export default sessionsRouter
