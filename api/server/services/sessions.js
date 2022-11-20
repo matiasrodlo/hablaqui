@@ -411,6 +411,24 @@ const createPlan = async ({ payload }) => {
 	} else {
 		// Se crea el pago en mercadopago
 		const user = await User.findById(payload.user);
+		const plan = created.plan.pop();
+		const mercadopagoPayload = {
+			psychologist: psychologist.username,
+			price: payload.price,
+			description:
+				payload.title +
+				' - Pagado por ' +
+				user.name +
+				' ' +
+				user.lastName,
+			quantity: 1,
+			sessionsId: created._id.toString(),
+			planId: plan._id.toString(),
+			token,
+		};
+		responseBody = await mercadopagoService.createPreference(
+			mercadopagoPayload
+		);
 
 		// Se crean correos de recordatorio de pago
 		await email.create({
