@@ -1,8 +1,14 @@
 'use strict';
 
-import moment from 'moment';
 import sendMails from './sendMails';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
@@ -161,7 +167,7 @@ const mailService = {
 				psy_name: psy.name,
 				code: coupon.code,
 				amount: coupon.discount,
-				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
+				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
 		await sendMails(dataPayload);

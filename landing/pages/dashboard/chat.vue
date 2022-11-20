@@ -295,7 +295,7 @@
 											Comienza a hablar con nuestros psicólogos
 										</span>
 										<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
-											Orientación psicológica en cualquier momento y lugar.
+											Orientación psicológica en cualquier dayjso y lugar.
 											Comienza a mejorar tu vida hoy.
 										</div>
 										<v-btn
@@ -347,10 +347,16 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
 import { mdiMagnify } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -521,7 +527,7 @@ export default {
 		async initFetch() {
 			this.plan =
 				this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-			moment.locale('es');
+			dayjs.locale('es');
 			await this.getPsychologists();
 			if (this.$auth.$state.user.role === 'user') {
 				await this.getMessages();

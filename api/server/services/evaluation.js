@@ -9,8 +9,12 @@ import {
 	getAllEvaluationsFunction,
 } from '../utils/functions/evaluationFunction';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const addRating = async (user, newRating, comment, psychologist) => {
 	// Verifica que el usuario sea un psicologo, crea el rating y lo agrega al psicologo
@@ -95,7 +99,7 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
-				'evaluations.$.moderatingDate': moment().format(),
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		}
 	).populate('psychologist user');
@@ -146,7 +150,7 @@ const refuseEvaluation = async (evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
-				'evaluations.$.moderatingDate': moment().format(),
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		}
 	).populate('psychologist user');
