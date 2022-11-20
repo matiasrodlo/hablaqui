@@ -193,6 +193,22 @@ let psychologist = new Schema({
 		type: Number,
 		default: 0,
 	},
+	internetRating: {
+		type: Number,
+		default: 0,
+	},
+	puntualityRating: {
+		type: Number,
+		default: 0,
+	},
+	attentionRating: {
+		type: Number,
+		default: 0,
+	},
+	totalEvaluations: {
+		type: Number,
+		default: 0,
+	},
 	psyPlans: [psyPlan],
 	timeZone: {
 		type: String,
