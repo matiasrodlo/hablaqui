@@ -53,12 +53,12 @@ evaluationRouter.get(
 /**
  * @description Obtiene las evaluaciones de un psicólogo en particular
  * @method GET
- * @route /api/v1/psychologist/get-all-evaluations/:psy
- * @param {ObjectId} params.psy - Id del psicólogo
+ * @route /api/v1/psychologist/get-all-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
  */
 evaluationRouter.get(
-	'/psychologist/get-all-evaluations/:psy',
+	'/evaluation/get-all-evaluations',
+	[passport.authenticate('jwt', { session: true })],
 	evaluationController.getAllEvaluations
 );
 
@@ -72,6 +72,7 @@ evaluationRouter.get(
  */
 evaluationRouter.post(
 	'/psychologist/approve-evaluation/:evsId/:evId',
+	[passport.authenticate('jwt', { session: true })],
 	evaluationController.approveEvaluation
 );
 
@@ -85,6 +86,7 @@ evaluationRouter.post(
  */
 evaluationRouter.post(
 	'/psychologist/refuse-evaluation/:evsId/:evId',
+	[passport.authenticate('jwt', { session: true })],
 	evaluationController.refuseEvaluation
 );
 

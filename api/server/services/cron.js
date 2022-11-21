@@ -8,14 +8,17 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-dayjs.extend(timezone);
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
+dayjs.extend(customParseFormat);
 dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
-
+dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
 sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 

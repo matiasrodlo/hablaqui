@@ -57,8 +57,7 @@
 							class="text-center text-sm-right mb-4 mb-sm-0"
 						>
 							<!-- ocultado por peticion de daniel -->
-							<!-- <v-btn
-								v-if="plan && plan.success && plan.success >= 3"
+							<v-btn
 								depressed
 								block
 								small
@@ -68,7 +67,7 @@
 								@click="goToReview"
 							>
 								Añadir evaluación
-							</v-btn> -->
+							</v-btn>
 							<v-btn
 								depressed
 								block
