@@ -10,7 +10,6 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import { logInfo } from '../config/pino';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
@@ -156,7 +155,7 @@ async function createCoupon() {
 		restrictions: {
 			firstTimeOnly: true,
 		},
-		expiration: moment()
+		expiration: dayjs()
 			.add(1, 'week')
 			.format(),
 	};
@@ -424,9 +423,9 @@ const cronService = {
 				);
 				if (emailSession.length > 0) {
 					if (
-						moment().isBetween(
-							moment(plan.createdAt).add(1, 'hour'),
-							moment(plan.createdAt).add(1, 'day')
+						dayjs().isBetween(
+							dayjs(plan.createdAt).add(1, 'hour'),
+							dayjs(plan.createdAt).add(1, 'day')
 						) &&
 						emailSession[0].wasScheduled === false
 					) {
@@ -440,9 +439,9 @@ const cronService = {
 						);
 						console.log('chao');
 					} else if (
-						moment().isBetween(
-							moment(plan.createdAt).add(1, 'day'),
-							moment(plan.createdAt).add(1, 'week')
+						dayjs().isBetween(
+							dayjs(plan.createdAt).add(1, 'day'),
+							dayjs(plan.createdAt).add(1, 'week')
 						) &&
 						emailSession[1].wasScheduled === false
 					) {
@@ -456,9 +455,7 @@ const cronService = {
 						);
 						console.log('chao');
 					} else if (
-						moment().isAfter(
-							moment(plan.createdAt).add(1, 'week')
-						) &&
+						dayjs().isAfter(dayjs(plan.createdAt).add(1, 'week')) &&
 						emailSession[emailSession.length - 1].wasScheduled ===
 							false
 					) {
