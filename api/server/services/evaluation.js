@@ -90,8 +90,8 @@ const getAllEvaluations = async user => {
 				return {
 					evsId: item._id,
 					evId: ev._id,
-					send: moment(ev.createdAt).format('DD/MM/YYYY HH:mm'),
-					updated: moment(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
+					send: dayjs(ev.createdAt).format('DD/MM/YYYY HH:mm'),
+					updated: dayjs(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
 					approved: ev.approved,
 					comment: ev.comment,
 					global: ev.global,
