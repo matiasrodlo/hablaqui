@@ -137,9 +137,7 @@
 						/>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold body-2">
-							Centro de ayuda
-						</v-list-item-title>
+						<v-list-item-title class="font-weight-bold body-2"> FAQ </v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -157,9 +155,7 @@
 						/>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold body-2">
-							Centro de ayuda
-						</v-list-item-title>
+						<v-list-item-title class="font-weight-bold body-2"> FAQ </v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
@@ -501,13 +497,13 @@ export default {
 			];
 		},
 		routeName() {
-			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-chat') return 'Chats';
 			if (this.$route.name === 'dashboard-planes') return 'Planes';
-			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
-			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-agenda') return 'Agenda';
+			if (this.$route.name === 'dashboard-diario') return 'Diario';
 			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
-			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
+			if (this.$route.name === 'dashboard-perfil') return 'Cuenta';
 			if (this.$route.name === 'dashboard-perfil-configuracion-personal')
 				return 'Configuración personal';
 			if (this.$route.name === 'dashboard-perfil-datos-bancarios') return 'Datos bancarios';

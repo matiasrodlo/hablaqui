@@ -36,7 +36,7 @@
 					style="position: relative"
 					:style="step && step.title === 'Consultante nuevo' ? 'z-index: 3' : ''"
 				>
-					<span
+					<!-- <span
 						v-if="
 							$auth.$state.user.role === 'psychologist' &&
 							$auth.$state.user.psychologist
@@ -48,7 +48,7 @@
 							<icon :icon="mdiPlus" color="white" small />
 						</v-btn>
 						<span class="primary--text ml-2">Agendamiento manual</span>
-					</span>
+					</span> -->
 					<card-onboarding
 						v-if="step && step.title === 'Consultante nuevo'"
 						style="position: absolute; top: -40px; right: -25%; z-index: 3"
@@ -374,7 +374,7 @@
 						<h4 class="primary--text">¿Cómo hacerlo?</h4>
 						<br />
 						<ul style="list-style: none; padding: 0">
-							<li>1. Vaya a la sección “Mi cuenta”</li>
+							<li>1. Vaya a la sección Cuenta”</li>
 							<li>2. Haga clic en “Copiar link”</li>
 							<li>3. Comparta su link de pago</li>
 						</ul>
