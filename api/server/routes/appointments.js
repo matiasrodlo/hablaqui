@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import appointmentsController from '../controllers/appointments';
+import { Router } from "express";
+import appointmentsController from "../controllers/appointments";
 
 const appointmentsRouter = Router();
 
 appointmentsRouter.get(
-	'/appointments/all' /*,
+  "/appointments/all" /*,
     [
         passport.authenticate('jwt', { session: true }),
         grantAccess('readAny', 'appointments'),
     ]*/,
-	appointmentsController.getAll
+  appointmentsController.getAll
 );
 
 export default appointmentsRouter;

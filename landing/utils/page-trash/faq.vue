@@ -121,10 +121,10 @@
 			<v-container class="white--text py-16" fluid style="max-width: 1080px">
 				<v-row>
 					<v-col>
-						Los servicios son proporcionados de forma independiente por profesionales de la salud. Hablaquí no
-brinda ningún servicio de salud mental. Si está experimentando una crisis, comuníquese a los
-servicios de emergencia más cercanos.
-
+						Los servicios son proporcionados de forma independiente por profesionales de
+						la salud. Hablaquí no brinda ningún servicio de salud mental. Si está
+						experimentando una crisis, comuníquese a los servicios de emergencia más
+						cercanos.
 					</v-col>
 				</v-row>
 			</v-container>

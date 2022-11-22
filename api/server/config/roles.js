@@ -1,39 +1,39 @@
-import AccessControl from 'accesscontrol';
+import AccessControl from "accesscontrol";
 const accessControl = new AccessControl();
 
 const roles = () => {
-	accessControl
-		.grant('person')
+  accessControl
+    .grant("person")
 
-		.readOwn('profile')
-		.updateOwn('profile')
+    .readOwn("profile")
+    .updateOwn("profile")
 
-		.createOwn('person')
-		.readOwn('person')
-		.updateOwn('person')
+    .createOwn("person")
+    .readOwn("person")
+    .updateOwn("person")
 
-		.readAny('lodging');
+    .readAny("lodging");
 
-	accessControl
-		.grant('admin')
-		.extend('person')
+  accessControl
+    .grant("admin")
+    .extend("person")
 
-		.readAny('psychologists')
-		.createAny('psychologists')
-		.deleteAny('psychologists')
-		.updateAny('psychologists')
+    .readAny("psychologists")
+    .createAny("psychologists")
+    .deleteAny("psychologists")
+    .updateAny("psychologists")
 
-		.readAny('appointments')
-		.createAny('appointments')
-		.deleteAny('appointments')
-		.updateAny('appointments')
+    .readAny("appointments")
+    .createAny("appointments")
+    .deleteAny("appointments")
+    .updateAny("appointments")
 
-		.readAny('users')
-		.createAny('users')
-		.deleteAny('users')
-		.updateAny('users')
+    .readAny("users")
+    .createAny("users")
+    .deleteAny("users")
+    .updateAny("users");
 
-	return accessControl;
+  return accessControl;
 };
 
 export default roles();

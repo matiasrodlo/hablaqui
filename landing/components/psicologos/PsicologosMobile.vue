@@ -418,27 +418,13 @@
 								></v-img>
 								<div
 									style="width: 290px"
-									class="
-										mx-auto
-										my-3
-										text-center
-										title
-										primary--text
-										font-weight-bold
-									"
+									class="mx-auto my-3 text-center title primary--text font-weight-bold"
 								>
 									Te ayudamos a encontrar a tu psicólogo ideal
 								</div>
 								<div
 									style="max-width: 320px"
-									class="
-										mx-auto
-										text-center
-										my-3
-										body-1
-										primary--text
-										font-weight-regular
-									"
+									class="mx-auto text-center my-3 body-1 primary--text font-weight-regular"
 								>
 									Encuentra al psicólogo que necesitas, solo responde las
 									siguientes preguntas.
@@ -504,14 +490,7 @@
 								>
 									<div
 										v-if="item.rating > 0"
-										class="
-											d-flex
-											justify-space-between
-											align-center
-											info
-											rounded-l-lg
-											pa-2
-										"
+										class="d-flex justify-space-between align-center info rounded-l-lg pa-2"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
 											width: 70px;

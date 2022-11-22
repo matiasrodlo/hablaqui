@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import dashboardController from '../controllers/dashboard';
+import { Router } from "express";
+import passport from "passport";
+import dashboardController from "../controllers/dashboard";
 
 const dashboardRouter = Router();
 
@@ -13,8 +13,8 @@ const dashboardRouter = Router();
  * @return Array con las sesiones que se aproximan
  */
 dashboardRouter.get(
-	'/retool/sessions/next',
-	dashboardController.getNextSessions
+  "/retool/sessions/next",
+  dashboardController.getNextSessions
 );
 
 /**
@@ -26,18 +26,18 @@ dashboardRouter.get(
  * @return Array con los montos a pagar por psicólogo
  */
 dashboardRouter.get(
-	'/retool/payments/next/:startDate/:endDate',
-	dashboardController.getSessionsPayment
+  "/retool/payments/next/:startDate/:endDate",
+  dashboardController.getSessionsPayment
 );
 
 dashboardRouter.get(
-	'/retool/fix/appointments',
-	dashboardController.fixSpecialities
+  "/retool/fix/appointments",
+  dashboardController.fixSpecialities
 );
 
 dashboardRouter.get(
-	'/dashboard/pay-mount',
-	[passport.authenticate('jwt', { session: true })],
-	dashboardController.getMountToPay
+  "/dashboard/pay-mount",
+  [passport.authenticate("jwt", { session: true })],
+  dashboardController.getMountToPay
 );
 export default dashboardRouter;

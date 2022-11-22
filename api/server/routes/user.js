@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import userController from '../controllers/users';
-import userSchema from '../schemas/user';
-import validation from '../middleware/validation';
-import multer from '../middleware/multer';
-import storageAvatar from '../middleware/avatar/storage';
+import { Router } from "express";
+import passport from "passport";
+import userController from "../controllers/users";
+import userSchema from "../schemas/user";
+import validation from "../middleware/validation";
+import multer from "../middleware/multer";
+import storageAvatar from "../middleware/avatar/storage";
 
 const userRouter = Router();
 
@@ -22,12 +22,12 @@ const userRouter = Router();
  * @access authenticated (psychologist)
  */
 userRouter.post(
-	'/user/register',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.newUserByPsy, 'body'),
-	],
-	userController.registerUser
+  "/user/register",
+  [
+    passport.authenticate("jwt", { session: true }),
+    validation(userSchema.newUserByPsy, "body"),
+  ],
+  userController.registerUser
 );
 
 /**
@@ -38,9 +38,9 @@ userRouter.post(
  * @access authenticated (user)
  */
 userRouter.get(
-	'/user/profile',
-	[passport.authenticate('jwt', { session: true })],
-	userController.getUser
+  "/user/profile",
+  [passport.authenticate("jwt", { session: true })],
+  userController.getUser
 );
 
 /**
@@ -55,8 +55,8 @@ userRouter.get(
  */
 
 userRouter.put(
-	'/dashboard/update/psychologist',
-	userController.updatePsychologist
+  "/dashboard/update/psychologist",
+  userController.updatePsychologist
 );
 
 /**
@@ -68,13 +68,13 @@ userRouter.put(
  * @access authenticated (user)
  */
 userRouter.put(
-	'/user/update/profile',
-	[
-		passport.authenticate('jwt', { session: true }),
-		/*grantAccess('updateOwn', 'profile'),*/
-		validation(userSchema.updateProfile, 'body'),
-	],
-	userController.updateProfile
+  "/user/update/profile",
+  [
+    passport.authenticate("jwt", { session: true }),
+    /*grantAccess('updateOwn', 'profile'),*/
+    validation(userSchema.updateProfile, "body"),
+  ],
+  userController.updateProfile
 );
 
 /**
@@ -87,9 +87,9 @@ userRouter.put(
  * @access authenticated
  */
 userRouter.put(
-	'/user/update-one/:id',
-	[passport.authenticate('jwt', { session: true })],
-	userController.updateOne
+  "/user/update-one/:id",
+  [passport.authenticate("jwt", { session: true })],
+  userController.updateOne
 );
 
 /**
@@ -100,9 +100,9 @@ userRouter.put(
  * @access authenticated (user)
  */
 userRouter.patch(
-	'/user/reset-password',
-	[passport.authenticate('jwt', { session: true })],
-	userController.passwordRecovery
+  "/user/reset-password",
+  [passport.authenticate("jwt", { session: true })],
+  userController.passwordRecovery
 );
 
 /**
@@ -114,12 +114,12 @@ userRouter.patch(
  * @access authenticated (user)
  */
 userRouter.patch(
-	'/user/update/password',
-	[
-		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.updatePassword, 'body'),
-	],
-	userController.updatePassword
+  "/user/update/password",
+  [
+    passport.authenticate("jwt", { session: true }),
+    validation(userSchema.updatePassword, "body"),
+  ],
+  userController.updatePassword
 );
 
 /**
@@ -136,13 +136,13 @@ userRouter.patch(
  * @access authenticated
  */
 userRouter.put(
-	'/user/upload/avatar',
-	[
-		passport.authenticate('jwt', { session: true }),
-		multer.single('avatar'),
-		storageAvatar,
-	],
-	userController.uploadAvatar
+  "/user/upload/avatar",
+  [
+    passport.authenticate("jwt", { session: true }),
+    multer.single("avatar"),
+    storageAvatar,
+  ],
+  userController.uploadAvatar
 );
 
 /**
@@ -153,9 +153,9 @@ userRouter.put(
  * @access authenticated
  */
 userRouter.post(
-	'/user/set-status/online',
-	[passport.authenticate('jwt', { session: true })],
-	userController.setUserOnline
+  "/user/set-status/online",
+  [passport.authenticate("jwt", { session: true })],
+  userController.setUserOnline
 );
 
 /**
@@ -166,9 +166,9 @@ userRouter.post(
  * @access authenticated
  */
 userRouter.post(
-	'/user/set-status/offline',
-	[passport.authenticate('jwt', { session: true })],
-	userController.setUserOffline
+  "/user/set-status/offline",
+  [passport.authenticate("jwt", { session: true })],
+  userController.setUserOffline
 );
 
 /**
@@ -179,9 +179,9 @@ userRouter.post(
  * @access authenticated ()
  */
 userRouter.post(
-	'/user/change/psychologist/:sessionId',
-	[passport.authenticate('jwt', { session: true })],
-	userController.changePsychologist
+  "/user/change/psychologist/:sessionId",
+  [passport.authenticate("jwt", { session: true })],
+  userController.changePsychologist
 );
 
 export default userRouter;

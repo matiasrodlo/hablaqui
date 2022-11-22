@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import { Router } from 'express';
-import passport from 'passport';
-import chatController from '../controllers/chat';
+import { Router } from "express";
+import passport from "passport";
+import chatController from "../controllers/chat";
 
 const chatRouter = Router();
 
@@ -16,9 +16,9 @@ const chatRouter = Router();
  * @access: authenticated
  */
 chatRouter.post(
-	'/chat/start-conversation/:psychologistId',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.startConversation
+  "/chat/start-conversation/:psychologistId",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.startConversation
 );
 
 /**
@@ -29,9 +29,9 @@ chatRouter.post(
  * @access: authenticated
  */
 chatRouter.get(
-	'/chat/get-chats',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.getChats
+  "/chat/get-chats",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.getChats
 );
 
 /**
@@ -43,9 +43,9 @@ chatRouter.get(
  * @access: authenticated
  */
 chatRouter.get(
-	'/chat/get-messages/:psy/:user',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.getMessages
+  "/chat/get-messages/:psy/:user",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.getMessages
 );
 
 /**
@@ -57,9 +57,9 @@ chatRouter.get(
  * @access: authenticated
  */
 chatRouter.post(
-	'/chat/send-message/:psychologistId/:userId',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.sendMessage
+  "/chat/send-message/:psychologistId/:userId",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.sendMessage
 );
 
 /**
@@ -67,9 +67,9 @@ chatRouter.post(
  * No se usa
  */
 chatRouter.post(
-	'/chat/create-report/:psychologistId/:userId',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.createReport
+  "/chat/create-report/:psychologistId/:userId",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.createReport
 );
 
 /**
@@ -81,9 +81,9 @@ chatRouter.post(
  * @access: authenticated
  */
 chatRouter.patch(
-	'/chat/read-message/:messageId',
-	[passport.authenticate('jwt', { session: true })],
-	chatController.readMessage
+  "/chat/read-message/:messageId",
+  [passport.authenticate("jwt", { session: true })],
+  chatController.readMessage
 );
 
 export default Object.freeze(chatRouter);
