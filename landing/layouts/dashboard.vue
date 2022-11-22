@@ -491,6 +491,13 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
 				},
+				{
+					name: 'Evaluaciones',
+					link: { name: 'dashboard-evaluations' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
 			];
 		},
 		routeName() {
