@@ -408,78 +408,74 @@ const cronService = {
 			const plan = item.plan
 				.filter(plan => plan.payment === 'pending')
 				.pop();
-			if (plan) {
-				// Crea la preferencia de mercado pago para los correos de recorto de pago
-				const url = await preference(
+			if (!plan) {
+				return;
+			}
+			// Crea la preferencia de mercado pago para los correos de recorto de pago
+			const url = await preference(item.user, item.psychologist, plan);
+			// Obtiene el correo correspondiente a la sessión
+			const emailSession = pendingEmails.filter(
+				pendingMail =>
+					pendingMail.sessionRef._id.toString() ===
+					item._id.toString()
+			);
+			if (!emailSession.length > 0) {
+				return;
+			}
+			if (
+				dayjs().isBetween(
+					dayjs(plan.createdAt).add(1, 'hour'),
+					dayjs(plan.createdAt).add(1, 'day')
+				) &&
+				emailSession[0].wasScheduled === false
+			) {
+				i = 0;
+				isMailSent = true;
+				await mailServicePsy.pendingPlanPayment(
 					item.user,
 					item.psychologist,
-					plan
+					plan.totalPrice,
+					url
 				);
-				// Obtiene el correo correspondiente a la sessión
-				const emailSession = pendingEmails.filter(
-					pendingMail =>
-						pendingMail.sessionRef._id.toString() ===
-						item._id.toString()
+			} else if (
+				dayjs().isBetween(
+					dayjs(plan.createdAt).add(1, 'day'),
+					dayjs(plan.createdAt).add(1, 'week')
+				) &&
+				emailSession[1].wasScheduled === false
+			) {
+				i = 1;
+				isMailSent = true;
+				await mailServicePsy.pendingPlanPayment(
+					item.user,
+					item.psychologist,
+					plan.totalPrice,
+					url
 				);
-				if (emailSession.length > 0) {
-					if (
-						dayjs().isBetween(
-							dayjs(plan.createdAt).add(1, 'hour'),
-							dayjs(plan.createdAt).add(1, 'day')
-						) &&
-						emailSession[0].wasScheduled === false
-					) {
-						i = 0;
-						isMailSent = true;
-						await mailServicePsy.pendingPlanPayment(
-							item.user,
-							item.psychologist,
-							plan.totalPrice,
-							url
-						);
-						console.log('chao');
-					} else if (
-						dayjs().isBetween(
-							dayjs(plan.createdAt).add(1, 'day'),
-							dayjs(plan.createdAt).add(1, 'week')
-						) &&
-						emailSession[1].wasScheduled === false
-					) {
-						i = 1;
-						isMailSent = true;
-						await mailServicePsy.pendingPlanPayment(
-							item.user,
-							item.psychologist,
-							plan.totalPrice,
-							url
-						);
-						console.log('chao');
-					} else if (
-						dayjs().isAfter(dayjs(plan.createdAt).add(1, 'week')) &&
-						emailSession[emailSession.length - 1].wasScheduled ===
-							false
-					) {
-						i = emailSession.length - 1;
-						isMailSent = true;
-						// Si ya pasó más de una semana, crea un cupón de descuento para
-						// incentivar al usuario a pagar
-						const code = await createCoupon();
-						await mailServiceRemider.sendPromocionalIncentive(
-							item.user,
-							code
-						);
-						console.log('chao');
-					}
-					if (isMailSent) {
-						const batch = getBatchId();
-						await email.findByIdAndUpdate(emailSession[i]._id, {
-							batchId: batch,
-							wasScheduled: true,
-						});
-						console.log('hola');
-					}
-				}
+			} else if (
+				dayjs().isAfter(dayjs(plan.createdAt).add(1, 'week')) &&
+				emailSession[emailSession.length - 1].wasScheduled === false
+			) {
+				i = emailSession.length - 1;
+				isMailSent = true;
+				// Si ya pasó más de una semana, crea un cupón de descuento para
+				// incentivar al usuario a pagar
+				const code = await createCoupon();
+				await mailServiceRemider.sendPromocionalIncentive(
+					item.user,
+					code
+				);
 			}
+			if (!isMailSent) {
+				return;
+			}
+			const batch = await getBatchId();
+			await email.findByIdAndUpdate(emailSession[i]._id, {
+				batchId: batch,
+				wasScheduled: true,
+				queuedAt: new dayjs().format(),
+				scheduledAt: new dayjs().format(),
+			});
 		});
 		return okResponse('Correos enviados');
 	},
