@@ -80,7 +80,7 @@ specialistsRouter.post(
  * @access authenticated
  */
 specialistsRouter.post(
-	'/specialists/availityMatch',
+	'/specialists/availity-match',
 	specialistsController.availityMatch
 );
 
