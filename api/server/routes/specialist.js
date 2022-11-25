@@ -40,8 +40,13 @@ specialistsRouter.get(
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos
  * @method POST
+<<<<<<< HEAD:api/server/routes/specialist.js
  * @route /api/v1/specialists/match
  * @param {String} body.payload.gender - Implica el género del especialista de preferencia
+=======
+ * @route /api/v1/psychologists/best-match
+ * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+>>>>>>> 6e611a31 (doc: endpoint paths):api/server/routes/psychologist.js
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
  * @returns Objeto con las coincidencias sobre los especialistas
@@ -56,7 +61,7 @@ specialistsRouter.post(
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos con
  * el plan más barato
  * @method POST
- * @route /api/v1/specialists/match
+ * @route /api/v1/specialists/economic-match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
@@ -72,7 +77,7 @@ specialistsRouter.post(
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicologos con
  * mayor disponibilidad de horarios.
  * @method POST
- * @route /api/v1/specialists/match
+ * @route /api/v1/specialists/availity-match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
