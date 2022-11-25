@@ -15,12 +15,12 @@ const storage = (req, res, next) => {
 	const gcsname = `${Date.now()}-${name
 		.toLowerCase()
 		.normalize('NFD')
-		.replace(/[\u0300-\u036F]/g, '')}-${
+		.replace(/[\u0300-\u036F]/gu, '')}-${
 		lastName
 			? lastName
 					.toLowerCase()
 					.normalize('NFD')
-					.replace(/[\u0300-\u036F]/g, '')
+					.replace(/[\u0300-\u036F]/gu, '')
 			: ''
 	}`;
 
