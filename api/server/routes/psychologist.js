@@ -80,7 +80,7 @@ psychologistsRouter.post(
  * @access authenticated
  */
 psychologistsRouter.post(
-	'/psychologists/availityMatch',
+	'/psychologists/availity-match',
 	psychologistsController.availityMatch
 );
 
