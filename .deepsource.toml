@@ -1,8 +1,16 @@
 version = 1
 
 [[analyzers]]
+name = "test-coverage"
+enabled = true
+
+[[analyzers]]
 name = "javascript"
 enabled = true
 
   [analyzers.meta]
+<<<<<<< HEAD
   plugins = ["vue"]
+=======
+  plugins = ["vue"]
+>>>>>>> 07d3abb2d388fe5b44758c4809ac9455682a8ab0

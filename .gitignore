@@ -115,3 +115,6 @@ dist
 api/.idea
 front/.idea
 landing/.idea
+
+# VSCode
+.vscode
