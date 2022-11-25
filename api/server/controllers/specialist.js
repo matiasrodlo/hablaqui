@@ -13,10 +13,32 @@ const specialistsController = {
 			errorCallback(error, res, 'Error obteniendo los especialistas');
 		}
 	},
-	async match(req, res) {
+	async bestMatch(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await specialistsService.match(body);
+			const { data, code } = await specialistsService.bestMatch(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async economicMatch(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await specialistsService.economicMatch(
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async availityMatch(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await specialistsService.availityMatch(
+				body
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error haciendo match');

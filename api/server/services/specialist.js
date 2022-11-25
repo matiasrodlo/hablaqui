@@ -264,88 +264,156 @@ const ponderationMatch = async (matchedList, payload) => {
  * @param {Object} payload - Objeto con las preferencias del usuario
  * @returns - Lista de especialistas clasificados
  */
-
-const specialistClasification = async (matchedList, payload) => {
-	const nextDays = 7;
-	let resultList = [];
-	let points = 0;
-	let pointsPerCriterion = 1;
-	// Se elimina el mejor match
-	resultList.append(matchedList);
-	// Obtiene primero al spec más barato
-	matchedList.sort((a, b) => b.sessionPrices.video - a.sessionPrices.video);
-	resultList.append(matchedList);
-	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
-	matchedList = await Promise.all(
-		matchedList.map(async spec => {
-			spec.points = 0;
-			const days = spec.days;
-			points = pointsDisponibilidad(
-				days,
-				payload,
-				pointsPerCriterion,
-				nextDays
-			);
-			let specialist = JSON.stringify(spec);
-			specialist = JSON.parse(specialist);
-			return { ...specialist, points };
-		})
-	);
-	// Se obtiene el psicologo con mayor disponibilidad representado por b
-	matchedList.sort((a, b) => a.points - b.points);
-	resultList.append(matchedList);
-	return resultList;
-};
-
-const match = async body => {
+const bestMatch = async body => {
 	const { payload } = body;
 	let matchedSpecialists = [];
 	let perfectMatch = true;
-
 	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
-		// Machea por género (transgenero)
-		matchedSpecialists = await Specialist.find({
+		matchedSpecialists = await Psychologist.find({
 			isTrans: true,
 			specialties: { $in: payload.themes },
 		});
 	} else {
-		// Si no es transgenero
-		matchedSpecialists = await Specialist.find({
+		matchedSpecialists = await Psychologist.find({
 			gender: payload.gender || {
-				// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			specialties: { $in: payload.themes },
 		});
 	}
 
-	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de especialistas que coinciden con los temas
-	if (matchedSpecialists.length < 3) {
-		matchedSpecialists = await Specialist.find();
+	// Si no encuentra como minimo 0, busca el psicologo solo respecto al genero
+	if (matchedSpecialists.length == 0) {
+		if (payload.gender == 'transgender') {
+			matchedSpecialists = await Psychologist.find({
+				isTrans: true,
+			});
+		} else {
+			matchedSpecialists = await Psychologist.find({
+				gender: payload.gender || {
+					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					$in: ['male', 'female', 'transgender'],
+				},
+			});
+		}
+		if (matchedSpecialists.length == 0) {
+			matchedSpecialists = await Psychologist.find();
+		}
 		perfectMatch = false;
 	}
 
 	// Se busca el mejor match según criterios
-	matchedSpecialists = await ponderationMatch(matchedSpecialists, payload);
+	matchedSpecialists = await ponderationMatch(
+		matchedSpecialists,
+		payload,
+		weighted
+	);
+	
+	return okResponse('psicologos encontrados', {
+		matchedSpecialists,
+		perfectMatch,
+	});;
+};
 
-	// Se deja solo los 3 mejores especialistas
-	while (matchedSpecialists.length > 3) {
-		matchedSpecialists.pop();
+const economicMatch = async body => {
+	const { payload } = body;
+	let matchedSpecialists = [];
+	let perfectMatch = true;
+
+	// Si no encuentra como minimo 1, busca el psicologo solo respecto al genero
+	if (matchedSpecialists.length == 0) {
+		if (payload.gender == 'transgender') {
+			matchedSpecialists = await Psychologist.find({
+				isTrans: true,
+			});
+		} else {
+			matchedSpecialists = await Psychologist.find({
+				gender: payload.gender || {
+					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					$in: ['male', 'female', 'transgender'],
+				},
+			});
+		}
+		if (matchedSpecialists.length == 0) {
+			matchedSpecialists = await Psychologist.find();
+		}
+		perfectMatch = false;
 	}
 
-	// Se busca entre los primeros 3 especialistas el más barato, con mayor disponibilidad, y el mejor match
-	matchedSpecialists = await specialistClasification(
-		matchedSpecialists,
-		payload
+	// Se busca el mejor match según criterios
+	// Obtiene primero al psy más barato
+	matchedSpecialists.sort(
+		(a, b) => b.sessionPrices.video - a.sessionPrices.video
 	);
 
-	// Se busca entre los psicologos el más barato, con mayor disponibilidad, y el mejor match
-	matchedSpecialists = await specialistClasification(
+	return okResponse('psicologos encontrados', {
 		matchedSpecialists,
-		payload
+		perfectMatch,
+	});
+};
+
+const availityMatch = async body => {
+	const { payload } = body;
+	let points = 0;
+	const nextDays = 7;
+	let pointsPerCriterion = 1;
+	let matchedSpecialists = [];
+	let perfectMatch = true;
+
+	// Comienza a buscar los psicologos por genero y especialidad
+	if (payload.gender == 'transgender') {
+		matchedSpecialists = await Psychologist.find({
+			isTrans: true,
+			specialties: { $in: payload.themes },
+		});
+	} else {
+		matchedSpecialists = await Psychologist.find({
+			gender: payload.gender || {
+				$in: ['male', 'female', 'transgender'],
+			},
+			specialties: { $in: payload.themes },
+		});
+	}
+
+	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
+	if (matchedSpecialists.length == 0) {
+		if (payload.gender == 'transgender') {
+			matchedSpecialists = await Psychologist.find({
+				isTrans: true,
+			});
+		} else {
+			matchedSpecialists = await Psychologist.find({
+				gender: payload.gender || {
+					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					$in: ['male', 'female', 'transgender'],
+				},
+			});
+		}
+		if (matchedSpecialists.length == 0) {
+			matchedSpecialists = await Psychologist.find();
+		}
+		perfectMatch = false;
+	}
+
+	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	matchedSpecialists = await Promise.all(
+		matchedSpecialists.map(async psy => {
+			psy.points = 0;
+			const days = psy.days;
+			points = pointsDisponibilidad(
+				days,
+				payload,
+				pointsPerCriterion,
+				nextDays
+			);
+			let psychologist = JSON.stringify(psy);
+			psychologist = JSON.parse(psychologist);
+			return { ...psychologist, points };
+		})
 	);
+	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	matchedSpecialists.sort((a, b) => a.points - b.points);
 
 	return okResponse('psicologos encontrados', {
 		matchedSpecialists,
@@ -994,7 +1062,9 @@ const specialistsService = {
 	getAll,
 	getByData,
 	getClients,
-	match,
+	bestMatch,
+	economicMatch,
+	availityMatch,
 	rescheduleSession,
 	searchClients,
 	setPrice,

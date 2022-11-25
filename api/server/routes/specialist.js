@@ -38,7 +38,7 @@ specialistsRouter.get(
 );
 
 /**
- * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos
  * @method POST
  * @route /api/v1/specialists/match
  * @param {String} body.payload.gender - Implica el género del especialista de preferencia
@@ -47,7 +47,42 @@ specialistsRouter.get(
  * @returns Objeto con las coincidencias sobre los especialistas
  * @access authenticated
  */
-specialistsRouter.post('/specialists/match', specialistsController.match);
+specialistsRouter.post(
+	'/specialists/best-match',
+	specialistsController.bestMatch
+);
+
+/**
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos con
+ * el plan más barato
+ * @method POST
+ * @route /api/v1/specialists/match
+ * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+ * @param {String} body.payload.model -
+ * @param {String} body.payload.themes -
+ * @returns Objeto con las coincidencias sobre los psicólogos
+ * @access authenticated
+ */
+specialistsRouter.post(
+	'/specialists/economic-match',
+	specialistsController.economicMatch
+);
+
+/**
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicologos con
+ * mayor disponibilidad de horarios.
+ * @method POST
+ * @route /api/v1/specialists/match
+ * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+ * @param {String} body.payload.model -
+ * @param {String} body.payload.themes -
+ * @returns Objeto con las coincidencias sobre los psicólogos
+ * @access authenticated
+ */
+specialistsRouter.post(
+	'/specialists/availityMatch',
+	specialistsController.availityMatch
+);
 
 /**
  *
