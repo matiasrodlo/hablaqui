@@ -2,9 +2,9 @@
 
 import User from '../models/user';
 import Psychologist from '../models/psychologist';
-import Recruitment from '../models/recruitment';
-import { logInfo } from '../config/winston';
-import bcrypt from 'bcryptjs';
+import Recruitment from '../models/recruitment'; 
+import { logInfo } from '../config/winston'; 
+import bcrypt from 'bcryptjs'; 
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -12,12 +12,18 @@ import { bucket } from '../config/bucket';
 import mailServiceAccount from '../utils/functions/mails/accountsShares';
 import Sessions from '../models/sessions';
 import Coupon from '../models/coupons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import crypto from 'crypto';
 import { room } from '../config/dotenv';
 import Auth from './auth';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Analytics from 'analytics-node';
-moment.tz.setDefault('America/Santiago');
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -156,7 +162,7 @@ const usersService = {
 		}
 
 		// Se cambia el plan de expiración del plan antiguo
-		ultimoPlan.expiration = moment()
+		ultimoPlan.expiration = dayjs()
 			.subtract(1, 'days')
 			.format();
 
@@ -352,7 +358,7 @@ const usersService = {
 			});
 		}
 		const roomId = crypto
-			.createHash('md5')
+			.createHash("sha256")
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
@@ -362,7 +368,7 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: dayjs('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
@@ -403,7 +409,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 		);
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 

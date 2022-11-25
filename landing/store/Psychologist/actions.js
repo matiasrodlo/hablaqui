@@ -194,7 +194,7 @@ export default {
 
 	async ratingPsychologist({ commit }, { id, payload }) {
 		try {
-			const response = await this.$axios(`/user/evaluation:/${id}`, {
+			const response = await this.$axios(`/user/evaluation/${id}`, {
 				method: 'POST',
 				data: payload,
 			});

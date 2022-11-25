@@ -187,8 +187,12 @@
 <script>
 import { mdiCheck } from '@mdi/js';
 import { mapActions } from 'vuex';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -251,7 +255,7 @@ export default {
 			return (
 				this.currentPlan &&
 				this.currentPlan.tier === 'premium' &&
-				moment(this.currentPlan.expirationDate).isAfter(moment())
+				dayjs(this.currentPlan.expirationDate).isAfter(dayjs())
 			);
 		},
 	},

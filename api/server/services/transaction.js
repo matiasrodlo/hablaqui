@@ -7,9 +7,13 @@ import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import Analytics from 'analytics-node';
-moment.tz.setDefault('America/Santiago');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -17,7 +21,7 @@ const completePaymentsRequest = async psy => {
 	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id
 	let sessions = await getAllSessionsFunction(psy);
 	const user = await Psychologist.findById(psy);
-	const now = moment().format();
+	const now = dayjs().format();
 
 	// Se busca el documentro de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -91,7 +95,7 @@ const createPaymentsRequest = async user => {
 	// Se obtiene las sessiones del psy
 	const psy = user.psychologist;
 	let sessions = await getAllSessionsFunction(psy);
-	const now = moment().format();
+	const now = dayjs().format();
 
 	// Se busca el modelo de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -280,11 +284,11 @@ const getAllTransactions = async user => {
 	transactions = transactions
 		.map(t => {
 			return {
-				createdAt: moment(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				createdAt: dayjs(t.createdAt).format('DD/MM/YYYY HH:mm'),
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: moment(s.date, 'MM/DD/YYYY HH:mm').format(
+						date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
 							'DD/MM/YYYY HH:mm'
 						),
 					};
