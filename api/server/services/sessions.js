@@ -280,7 +280,7 @@ const createPlan = async ({ payload }) => {
 	}); 
  
 	const roomId = crypto 
-		.createHash('md5') 
+		.createHash("sha256") 
 		.update(`${payload.user}${payload.psychologist}`) 
 		.digest('hex'); 
  
@@ -633,7 +633,7 @@ const customNewSession = async (user, payload) => {
  
 		// Creamos la direccion de la sala de videollamadas 
 		const roomId = crypto 
-			.createHash('md5') 
+			.createHash("sha256") 
 			.update(`${payload.user}${payload.psychologist}`) 
 			.digest('hex'); 
  
