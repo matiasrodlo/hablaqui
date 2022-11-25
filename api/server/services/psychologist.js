@@ -299,8 +299,8 @@ const bestMatch = async body => {
 		});
 	}
 
-	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length < 3) {
+	// Si no encuentra como minimo 0, busca el psicologo solo respecto al genero
+	if (matchedPsychologists.length == 0) {
 		if (payload.gender == 'transgender') {
 			matchedPsychologists = await Psychologist.find({
 				isTrans: true,
@@ -313,7 +313,7 @@ const bestMatch = async body => {
 				},
 			});
 		}
-		if (matchedPsychologists.length < 3) {
+		if (matchedPsychologists.length == 0) {
 			matchedPsychologists = await Psychologist.find();
 		}
 		perfectMatch = false;
@@ -336,9 +336,6 @@ const economicMatch = async body => {
 	const { payload } = body;
 	let matchedPsychologists = [];
 	let perfectMatch = true;
-	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
-	const weighted = [0.001, 0.005, 0.045, 0.9, 0.045, 0.02];
 
 	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
@@ -355,8 +352,8 @@ const economicMatch = async body => {
 		});
 	}
 
-	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length < 3) {
+	// Si no encuentra como minimo 1, busca el psicologo solo respecto al genero
+	if (matchedPsychologists.length == 0) {
 		if (payload.gender == 'transgender') {
 			matchedPsychologists = await Psychologist.find({
 				isTrans: true,
@@ -369,17 +366,16 @@ const economicMatch = async body => {
 				},
 			});
 		}
-		if (matchedPsychologists.length < 3) {
+		if (matchedPsychologists.length == 0) {
 			matchedPsychologists = await Psychologist.find();
 		}
 		perfectMatch = false;
 	}
 
 	// Se busca el mejor match según criterios
-	matchedPsychologists = await ponderationMatch(
-		matchedPsychologists,
-		payload,
-		weighted
+	// Obtiene primero al psy más barato
+	matchedPsychologists.sort(
+		(a, b) => b.sessionPrices.video - a.sessionPrices.video
 	);
 
 	return okResponse('psicologos encontrados', {
@@ -390,11 +386,11 @@ const economicMatch = async body => {
 
 const availityMatch = async body => {
 	const { payload } = body;
+	let points = 0;
+	const nextDays = 7;
+	let pointsPerCriterion = 1;
 	let matchedPsychologists = [];
 	let perfectMatch = true;
-	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
-	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
-	const weighted = [0.001, 0.005, 0.9, 0.045, 0.045, 0.02];
 
 	// Comienza a buscar los psicologos por genero y especialidad
 	if (payload.gender == 'transgender') {
@@ -412,7 +408,7 @@ const availityMatch = async body => {
 	}
 
 	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length < 3) {
+	if (matchedPsychologists.length == 0) {
 		if (payload.gender == 'transgender') {
 			matchedPsychologists = await Psychologist.find({
 				isTrans: true,
@@ -425,18 +421,30 @@ const availityMatch = async body => {
 				},
 			});
 		}
-		if (matchedPsychologists.length < 3) {
+		if (matchedPsychologists.length == 0) {
 			matchedPsychologists = await Psychologist.find();
 		}
 		perfectMatch = false;
 	}
 
-	// Se busca el mejor match según criterios
-	matchedPsychologists = await ponderationMatch(
-		matchedPsychologists,
-		payload,
-		weighted
+	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	matchedPsychologists = await Promise.all(
+		matchedPsychologists.map(async psy => {
+			psy.points = 0;
+			const days = psy.days;
+			points = pointsDisponibilidad(
+				days,
+				payload,
+				pointsPerCriterion,
+				nextDays
+			);
+			let psychologist = JSON.stringify(psy);
+			psychologist = JSON.parse(psychologist);
+			return { ...psychologist, points };
+		})
 	);
+	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	matchedPsychologists.sort((a, b) => a.points - b.points);
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
