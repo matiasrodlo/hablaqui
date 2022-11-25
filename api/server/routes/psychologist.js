@@ -40,7 +40,7 @@ psychologistsRouter.get(
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos
  * @method POST
- * @route /api/v1/psychologists/match
+ * @route /api/v1/psychologists/best-match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
@@ -56,7 +56,7 @@ psychologistsRouter.post(
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos con
  * el plan más barato
  * @method POST
- * @route /api/v1/psychologists/match
+ * @route /api/v1/psychologists/economic-match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
@@ -72,7 +72,7 @@ psychologistsRouter.post(
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicologos con
  * mayor disponibilidad de horarios.
  * @method POST
- * @route /api/v1/psychologists/match
+ * @route /api/v1/psychologists/availity-match
  * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
