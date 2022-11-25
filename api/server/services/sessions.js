@@ -146,7 +146,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}).populate('psychologist user'); 
  
 	// Se verifica si es un compromiso privado 
-	if (cancelSessions.user == null) { 
+	if (cancelSessions.user === null) { 
 		await mailServiceReminder.sendCancelCommitment( 
 			cancelSessions.psychologist 
 		); 
