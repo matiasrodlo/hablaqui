@@ -14,8 +14,11 @@ server.listen(process.env.PORT || 3000, () => {
 
 const io = new webSocketServer(server, {
 	cors: {
-		// Eliminar / final del link de socket.io
-		origin: '*',
+		origin: [
+			'http://localhost:9000',
+			'https://app.hablaqui.cl',
+			'https://hablaqui-staging-306619.rj.r.appspot.com',
+		],
 	},
 });
 
