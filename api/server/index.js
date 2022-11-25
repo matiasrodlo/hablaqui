@@ -15,7 +15,7 @@ server.listen(process.env.PORT || 3000, () => {
 const io = new webSocketServer(server, {
 	cors: {
 		// Eliminar / final del link de socket.io
-		origin: landing_url.slice(0, -1),
+		origin: '*',
 	},
 });
 
