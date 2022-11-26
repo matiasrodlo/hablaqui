@@ -203,7 +203,17 @@ const successPay = async params => {
 	await email.create({
 		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
-		type: 'reminder-user',
+		type: 'reminder-user-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	await email.create({
+		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-user-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: foundPlan.user,
@@ -214,7 +224,17 @@ const successPay = async params => {
 	await email.create({
 		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
 		wasScheduled: false,
-		type: 'reminder-psy',
+		type: 'reminder-psy-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	await email.create({
+		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-psy-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: foundPlan.user,

@@ -145,13 +145,11 @@ const mailService = {
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs(date)
-				.subtract(1, reminderType)
-				.unix(),
 			batchId: batch,
 		};
 		if (reminderType === 'day') {
 			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
+			dataPayload.templateId = 'd-fa32dabc9c4a4adcb51847db3cac1d48';
 		}
 		await sendMails(dataPayload);
 	},
@@ -180,13 +178,11 @@ const mailService = {
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs(date)
-				.subtract(1, reminderType)
-				.unix(),
 			batchId: batch,
 		};
 		if (reminderType === 'day') {
 			dataPayload.subject = `Mañana es tu sesión con ${name} en Hablaquí`;
+			dataPayload.templateId = 'd-52dd78c814cb46aaad9ce9023163cfee';
 		}
 		await sendMails(dataPayload);
 	},

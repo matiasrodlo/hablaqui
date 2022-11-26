@@ -35,7 +35,7 @@ function isSchedulableEmail(date) {
 		.isAfter(date);
 }
 
-function generatePayload(date, batch, reminderType) {
+function generatePayload(date, batch, reminderType, isSend) {
 	/**
 	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
 	 * @param {dayjs} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
@@ -44,7 +44,7 @@ function generatePayload(date, batch, reminderType) {
 	 * @returns un objeto con el payload
 	 */
 	return {
-		wasScheduled: true,
+		wasScheduled: isSend,
 		scheduledAt: dayjs(date)
 			.subtract(1, reminderType)
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
@@ -114,34 +114,52 @@ async function getBatchId() {
 	return batch_id;
 }
 
-async function scheduleEmails(pendingEmails, reminderType) {
+/**
+ * @description La idea general de esta función es obtener los correos electrónicos que no han sido programados
+ * darles una fecha, o en su defecto verificar su fecha de envío y enviarlos.
+ * @param {Array} pendingEmails - Correos electrónicos pendientes de programación
+ */
+
+async function scheduleEmails(pendingEmails) {
 	// Busca los correos electrónicos que no han sido programados
 	if (!pendingEmails.length > 0) {
 		return;
 	}
 	pendingEmails.forEach(async emailInfo => {
+		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		let batch = null;
+		const mailType = emailInfo.type.split('-').pop();
+		const addressee = emailInfo.type.split('-')[1];
 		const sessionDate = dayjs(emailInfo.sessionDate);
-		// Si es correo programado, busca el usuario y el psicologo.
+		let isSend = false;
+
+		// Se verifica si no está dentro de los 3 días para darle una fecha de envío y
+		// se verifica si en el correo de recordatorio de un día antes es parte del día
+		// anterior para asegurar que se envíe el correo el día antes y no el día que corresponde
+		// a la sessión con un máximo de 20 horas antes.
 		if (!isSchedulableEmail(sessionDate)) {
+			return;
+		}
+		if (
+			!dayjs().isBefore(dayjs(sessionDate).subtract(20, 'hours')) &&
+			mailType === 'day'
+		) {
 			return;
 		}
 		const user = await User.findById(emailInfo.userRef);
 		const psy = await psychologist.findById(emailInfo.psyRef);
 		try {
-			reminderType.forEach(async mailType => {
+			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Si es null significa que aún no se le ha dado una fecha de envío
+			if (emailInfo.scheduledAt !== null) {
+				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
 				if (
-					!dayjs().isBefore(
-						dayjs(sessionDate)
-							.subtract(1, 'day')
-							.format()
-					) &&
-					mailType === 'day'
+					addressee === 'user' &&
+					dayjs().isAfter(emailInfo.scheduledAt)
 				) {
-					return;
-				}
-				let batch = await getBatchId();
-				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
-				if (emailInfo.type === 'reminder-user') {
+					batch = await getBatchId();
+					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
+					isSend = true;
 					await mailServiceRemider.sendReminderUser(
 						user,
 						psy,
@@ -149,7 +167,12 @@ async function scheduleEmails(pendingEmails, reminderType) {
 						batch,
 						mailType
 					);
-				} else if (emailInfo.type === 'reminder-psy') {
+				} else if (
+					addressee === 'psy' &&
+					dayjs().isAfter(emailInfo.scheduledAt)
+				) {
+					batch = await getBatchId();
+					isSend = true;
 					await mailServiceRemider.sendReminderPsy(
 						user,
 						psy,
@@ -158,23 +181,17 @@ async function scheduleEmails(pendingEmails, reminderType) {
 						mailType
 					);
 				}
-				// Se genera el payload y se actualiza el email
-				const updatePayload = generatePayload(
-					sessionDate,
-					batch,
-					mailType
-				);
-				// Se crea un nuevo documento en la colección de correos electrónicos programados
-				await email.create({
-					userRef: emailInfo.userRef,
-					psyRef: emailInfo.psyRef,
-					sessionDate: emailInfo.sessionDate,
-					type: emailInfo.type,
-					...updatePayload,
-				});
+			}
+			// Se genera el payload y se actualiza el email
+			const updatePayload = generatePayload(
+				sessionDate,
+				batch,
+				mailType,
+				isSend
+			);
+			await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
+				new: true,
 			});
-			// Se elimina antiguo correo
-			await email.deleteOne({ _id: emailInfo._id });
 		} catch (error) {
 			return conflictResponse('Email sheduling service found an error');
 		}
@@ -250,12 +267,19 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		// Encuentra los correos que no han sido programados aún y los programa para enviarlos.
+		// Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
 		let pendingEmails = await email.find({
 			wasScheduled: false,
-			$in: ['reminder-user', 'reminder-psy'],
+			$in: [
+				'reminder-user-hour',
+				'reminder-psy-hour',
+				'reminder-user-day',
+				'reminder-psy-day',
+			],
 		});
-		await scheduleEmails(pendingEmails, ['hour', 'day']);
+
+		// Se recorre el array de correos y se envían los correos
+		await scheduleEmails(pendingEmails);
 		return okResponse(
 			'Email scheduling service invoked and ' +
 				pendingEmails.length +
