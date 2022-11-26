@@ -141,9 +141,7 @@
 <script>
 import axios from 'axios';
 import { mapMutations } from 'vuex';
-import moment from 'moment';
 import { mdiCheckBold, mdiCloseThick } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
 
 export default {
 	components: {

@@ -358,7 +358,7 @@ const usersService = {
 			});
 		}
 		const roomId = crypto
-			.createHash('md5')
+			.createHash("sha256")
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 

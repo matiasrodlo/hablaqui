@@ -383,9 +383,6 @@
 									</v-card-text>
 									<v-card-text v-else class="pt-2">
 										<v-row>
-											<v-col class="font-weight-medium" cols="12">
-												Tipo de evento
-											</v-col>
 											<v-col cols="6">
 												<v-select
 													v-model="typeSession"
@@ -405,7 +402,7 @@
 													]"
 													dense
 													hide-details
-													label="Seleccione"
+													label="Tipo de agendamiento"
 													outlined
 													@change="
 														() => {
@@ -522,8 +519,8 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Hemos enviado un email al consultante. La fecha y hora
-										estará disponible hasta que el consultante pague su sesión.
+										Notificamos vía correo electronico al consultate sobre el
+										agendamiento y adjuntamos un enlace de pago
 									</v-card-text>
 								</template>
 							</v-card>
@@ -632,19 +629,11 @@
 				transition="dialog-top-transition"
 			>
 				<v-card rounded="xl">
-					<v-card-text class="text-center primary--text text-h5 py-3">
-						<div class="body-1 font-weight-bold text-center">
-							Comienza a hablar con nuestros psicólogos
-						</div>
+					<v-card-text class="text-center">
+						<small class="py-2 text--secondary"> Bienestar en cualquier momento </small>
 					</v-card-text>
 					<v-card-text class="text-center">
-						<small class="py-2 text--secondary">
-							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
-							tu vida hoy
-						</small>
-					</v-card-text>
-					<v-card-text class="text-center">
-						<v-btn color="primary" rounded to="/psicologos/">Buscar ahora</v-btn>
+						<v-btn color="primary" rounded to="/evaluacion/">Comenzar</v-btn>
 					</v-card-text>
 				</v-card>
 			</v-dialog>

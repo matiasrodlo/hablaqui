@@ -55,7 +55,7 @@
 		</v-col>
 		<!-- rut del titular -->
 		<v-col cols="12" md="6">
-			<div class="text-h6 secondary--text mb-2">RUT del titular</div>
+			<div class="text-h6 secondary--text mb-2">Rut</div>
 			<div class="d-flex align-center">
 				<v-img
 					:src="`https://cdn.hablaqui.cl/static/dni.png`"
@@ -101,7 +101,7 @@
 		</v-col>
 		<!-- nombre del titular -->
 		<v-col cols="12" md="6">
-			<div class="text-h6 secondary--text mb-2">Nombre completo del titular</div>
+			<div class="text-h6 secondary--text mb-2">Nombre completo</div>
 			<div class="d-flex align-center">
 				<v-img
 					:src="`https://cdn.hablaqui.cl/static/name-account.png`"
@@ -146,7 +146,7 @@
 			</div>
 		</v-col>
 		<v-col cols="12" md="6">
-			<div class="text-h6 secondary--text mb-2">Email</div>
+			<div class="text-h6 secondary--text mb-2">Correo Electronico</div>
 			<div class="d-flex align-center">
 				<v-img
 					:src="`https://cdn.hablaqui.cl/static/icon-email.png`"
