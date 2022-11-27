@@ -162,7 +162,8 @@ const usersService = {
 		}
 
 		// Se cambia el plan de expiración del plan antiguo
-		ultimoPlan.expiration = dayjs(Date.now())
+		ultimoPlan.expiration = dayjs
+			.tz(new Date())
 			.subtract(1, 'days')
 			.format();
 
@@ -409,7 +410,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				dayjs(Date.now()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
 		);
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 

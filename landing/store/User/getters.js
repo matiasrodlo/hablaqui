@@ -26,14 +26,15 @@ export default {
 				// numero de sessiones concluidas
 				success: item.numberSessionSuccess,
 				// dias de diferencia entre el dia que expiró y hoy
-				diff: dayjs(plan.expiration).diff(dayjs(Date.now()), 'days'),
+				diff: dayjs(plan.expiration).diff(dayjs.tz(new Date()), 'days'),
 			}))
 		);
 		const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
 		const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
 		const filterPlans = plans.filter(
-			item => item.payment === 'success' && dayjs(Date.now()).isBefore(dayjs(item.expiration))
+			item =>
+				item.payment === 'success' && dayjs.tz(new Date()).isBefore(dayjs(item.expiration))
 		);
 		const totalSessions = filterPlans.reduce(
 			(sum, value) =>

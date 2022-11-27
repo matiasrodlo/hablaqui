@@ -36,7 +36,7 @@ const getNextSessions = async () => {
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
-				dayjs(plan.expiration).isAfter(dayjs(Date.now()));
+				dayjs(plan.expiration).isAfter(dayjs.tz(new Date()));
 			// Devuelve un objeto con el último plan
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
@@ -59,7 +59,7 @@ const getNextSessions = async () => {
 				// Se obtiene si una sesion es proxima y se verifica que la sesion no haya expirado.
 				const isNextSession =
 					s.status !== 'success' &&
-					dayjs(s.date).isAfter(dayjs(Date.now()));
+					dayjs(s.date).isAfter(dayjs.tz(new Date()));
 				// Devuelve un objeto con la proxima sesion
 				return {
 					_id: s._id,

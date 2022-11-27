@@ -31,7 +31,8 @@ function isSchedulableEmail(date) {
 	 * @param {dayjs} date es la fecha de la cita
 	 * @returns
 	 */
-	return dayjs(Date.now())
+	return dayjs
+		.tz(new Date())
 		.add(3, 'days')
 		.isAfter(date);
 }
@@ -127,7 +128,7 @@ const cronService = {
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
-				if (dayjs(expiration).isBefore(dayjs(Date.now())))
+				if (dayjs(expiration).isBefore(dayjs.tz(new Date())))
 					await psychologist.findOneAndUpdate(
 						{ _id: psy._id },
 						{
@@ -262,14 +263,14 @@ const cronService = {
 						// 				.minimumRescheduleSession,
 						// 			'hours'
 						// 		)
-						// 		.isBefore(dayjs(Date.now())) &&
-						// 	dayjs(Date.now()).isBefore(date) &&
-						// 	dayjs(Date.now()).isBefore(plan.expiration)
+						// 		.isBefore(dayjs.tz(new Date())) &&
+						// 	dayjs.tz(new Date()).isBefore(date) &&
+						// 	dayjs.tz(new Date()).isBefore(plan.expiration)
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
 							session.status === 'pending' && // || session.status === 'upnext'
-							dayjs(Date.now()).isAfter(date)
+							dayjs.tz(new Date()).isAfter(date)
 						) {
 							session.status = 'success';
 						}
@@ -307,9 +308,9 @@ const cronService = {
 
 			plans.forEach(async plan => {
 				if (
-					dayjs(Date.now()).isSameOrAfter(
-						dayjs(plan.createdAt).add(3, 'hours')
-					)
+					dayjs
+						.tz(new Date())
+						.isSameOrAfter(dayjs(plan.createdAt).add(3, 'hours'))
 				) {
 					// Se actualiza el estado el pago a cancelado
 					await Sessions.findOneAndUpdate(

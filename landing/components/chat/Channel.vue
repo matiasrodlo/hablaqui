@@ -286,7 +286,7 @@ export default {
 		},
 		setDate(time) {
 			if (time) return dayjs(time).calendar();
-			return dayjs(Date.now()).format('llll');
+			return dayjs.tz(new Date()).format('llll');
 		},
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));

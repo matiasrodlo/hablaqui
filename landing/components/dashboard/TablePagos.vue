@@ -468,7 +468,7 @@ export default {
 			dialog: false,
 			dialogPayment: false,
 			menu: false,
-			findByDate: dayjs(Date.now()).format('YYYY-MM'),
+			findByDate: dayjs.tz(new Date()).format('YYYY-MM'),
 			mdiMagnify,
 			loadingPayment: false,
 			mdiClose,
@@ -489,7 +489,7 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = dayjs(Date.now()).add('7', 'days');
+			const day = dayjs.tz(new Date()).add('7', 'days');
 			return dayjs(day).format('DD/MM/YYYY');
 		},
 		lastTransaction() {

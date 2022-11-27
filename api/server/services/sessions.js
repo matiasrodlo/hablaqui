@@ -174,7 +174,7 @@ const checkPlanTask = async () => {
 	planUsers.forEach(async userWithPlan => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
-			if (dayjs(Date.now()).isAfter(plan.expiration)) {
+			if (dayjs.tz(new Date()).isAfter(plan.expiration)) {
 				plan.status = 'expired';
 			}
 		});
@@ -207,9 +207,14 @@ const createPlan = async ({ payload }) => {
 	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
 	if (
 		!psychologist.inmediateAttention.activated &&
-		dayjs(Date.now()).isAfter(
-			dayjs(date, 'MM/DD/YYYY HH:mm').subtract(minimumNewSession, 'hours')
-		)
+		dayjs
+			.tz(new Date())
+			.isAfter(
+				dayjs(date, 'MM/DD/YYYY HH:mm').subtract(
+					minimumNewSession,
+					'hours'
+				)
+			)
 	) {
 		return conflictResponse(
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
@@ -227,13 +232,15 @@ const createPlan = async ({ payload }) => {
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
-		expirationDate = dayjs(Date.now())
+		expirationDate = dayjs
+			.tz(new Date())
 			.add(2, 'months')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
-		expirationDate = dayjs(Date.now())
+		expirationDate = dayjs
+			.tz(new Date())
 			.add(6, 'months')
 			.format();
 	}
@@ -334,7 +341,7 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					dayjs(Date.now()).isBefore(dayjs(plan.expiration)) &&
+					dayjs.tz(new Date()).isBefore(dayjs(plan.expiration)) &&
 					plan.title !== 'Plan inicial' &&
 					sessions.psychologist.toString() !== payload.psychologist
 			);
@@ -379,7 +386,7 @@ const createPlan = async ({ payload }) => {
 			properties: {
 				products: planData,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: dayjs(Date.now()).format(),
+				timestamp: dayjs.tz(new Date()).format(),
 				total: payload.price / sessionQuantity,
 			},
 		});
@@ -390,7 +397,7 @@ const createPlan = async ({ payload }) => {
 				products: planData,
 				user: payload.user._id,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: dayjs(Date.now()).format(),
+				timestamp: dayjs.tz(new Date()).format(),
 			},
 		});
 	}
@@ -465,12 +472,14 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// Comprobar si la fecha es posterior a la fecha actual más el tiempo mínimo
 	if (
-		dayjs(Date.now()).isAfter(
-			dayjs(payload.date, 'MM/DD/YYYY HH:mm').subtract(
-				minimumNewSession,
-				'hours'
+		dayjs
+			.tz(new Date())
+			.isAfter(
+				dayjs(payload.date, 'MM/DD/YYYY HH:mm').subtract(
+					minimumNewSession,
+					'hours'
+				)
 			)
-		)
 	) {
 		return conflictResponse(
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
@@ -784,7 +793,8 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs(Date.now())
+		dayjs
+			.tz(new Date())
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -799,7 +809,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs(Date.now()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -814,15 +824,14 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 			});
 		})
 		.filter(date =>
-			dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs(Date.now()))
+			dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs.tz(new Date()))
 		);
-	let minimumNewSession = dayjs(Date.now()).add(
-		psychologist.preferences.minimumNewSession,
-		'h'
-	);
+	let minimumNewSession = dayjs
+		.tz(new Date())
+		.add(psychologist.preferences.minimumNewSession, 'h');
 
 	sessions = length.map(el => {
-		const day = dayjs(Date.now()).add(el, 'days');
+		const day = dayjs.tz(new Date()).add(el, 'days');
 		const temporal = dayjs(day).format('L');
 
 		return {
@@ -863,7 +872,8 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// Creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs(Date.now())
+		dayjs
+			.tz(new Date())
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -878,7 +888,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs(Date.now()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -893,25 +903,23 @@ const getFormattedSessions = async (idPsychologist, type) => {
 			});
 		})
 		.filter(date =>
-			dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs(Date.now()))
+			dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs.tz(new Date()))
 		);
 
 	// Veificamos el tipo de calendario que se debe mostrar
 	let minimumNewSession = 0;
 	if (type === 'schedule')
-		minimumNewSession = dayjs(Date.now()).add(
-			psychologist.preferences.minimumNewSession,
-			'h'
-		);
+		minimumNewSession = dayjs
+			.tz(new Date())
+			.add(psychologist.preferences.minimumNewSession, 'h');
 	else if (type === 'reschedule')
-		minimumNewSession = dayjs(Date.now()).add(
-			psychologist.preferences.minimumRescheduleSession,
-			'h'
-		);
+		minimumNewSession = dayjs
+			.tz(new Date())
+			.add(psychologist.preferences.minimumRescheduleSession, 'h');
 
 	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
-		const day = dayjs(Date.now()).add(el, 'days');
+		const day = dayjs.tz(new Date()).add(el, 'days');
 		const temporal = dayjs(day).format('L');
 
 		return {
@@ -960,7 +968,8 @@ const formattedSessionsAll = async ids => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs(Date.now())
+		dayjs
+			.tz(new Date())
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -977,7 +986,9 @@ const formattedSessionsAll = async ids => {
 				});
 			})
 			.filter(date =>
-				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs(Date.now()))
+				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(
+					dayjs.tz(new Date())
+				)
 			);
 
 	// Obtenemos sessiones del psicologo
@@ -991,7 +1002,7 @@ const formattedSessionsAll = async ids => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs(Date.now()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -1009,16 +1020,15 @@ const formattedSessionsAll = async ids => {
 
 	// Obtenemos la disponibilidad de todos los psicolgos
 	sessions = allSessions.map(item => {
-		const minimumNewSession = dayjs(Date.now()).add(
-			item.preferences.minimumNewSession,
-			'h'
-		);
+		const minimumNewSession = dayjs
+			.tz(new Date())
+			.add(item.preferences.minimumNewSession, 'h');
 		let schedule = item.schedule;
 
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
-				const day = dayjs(Date.now()).add(el, 'days');
+				const day = dayjs.tz(new Date()).add(el, 'days');
 				const temporal = dayjs(day).format('L');
 				return {
 					psychologist: item._id,
@@ -1087,12 +1097,14 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
-		dayjs(Date.now()).isAfter(
-			dayjs(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
-				minimumRescheduleSession,
-				'hours'
+		dayjs
+			.tz(new Date())
+			.isAfter(
+				dayjs(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
+					minimumRescheduleSession,
+					'hours'
+				)
 			)
-		)
 	) {
 		return conflictResponse(
 			'No puede agendar ' +

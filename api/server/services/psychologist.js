@@ -510,12 +510,12 @@ const updatePsychologist = async (user, profile) => {
 				// Si existe una fecha de vencimiento, y esta está antes de la fecha actual adelantado un mes
 				if (
 					psy.stampSetPrices &&
-					dayjs(Date.now()).isBefore(
-						dayjs(psy.stampSetPrices).add(1, 'months')
-					)
+					dayjs
+						.tz(new Date())
+						.isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
 				)
 					profile.sessionPrices = psy.sessionPrices;
-				else profile.stampSetPrices = dayjs(Date.now()).format();
+				else profile.stampSetPrices = dayjs.tz(new Date()).format();
 			}
 			const updated = await Psychologist.findByIdAndUpdate(
 				profile._id,
@@ -662,7 +662,9 @@ const setPrice = async (user, newPrice) => {
 	// Si el psicologo ya esta establecido, y el precio aún no expira
 	if (
 		psy.stampSetPrices &&
-		dayjs(Date.now()).isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+		dayjs
+			.tz(new Date())
+			.isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
@@ -677,7 +679,7 @@ const setPrice = async (user, newPrice) => {
 				video: newPrice,
 				full: newPrice * 1.25,
 			},
-			stampSetPrices: dayjs(Date.now()),
+			stampSetPrices: dayjs.tz(new Date()),
 		},
 		{ new: true }
 	);
@@ -714,7 +716,7 @@ const getClients = async psychologist => {
 				plan: item.plan.find(
 					plan =>
 						plan.payment === 'success' &&
-						dayjs(Date.now()).isBefore(dayjs(plan.expiration))
+						dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
 				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
@@ -735,7 +737,9 @@ const getLastSession = item => {
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
 		.find(sessionDate =>
-			dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(dayjs(Date.now()))
+			dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(
+				dayjs.tz(new Date())
+			)
 		);
 };
 

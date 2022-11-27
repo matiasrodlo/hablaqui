@@ -337,7 +337,7 @@ export default {
 	methods: {
 		setDate(time) {
 			if (time) return dayjs(time).calendar();
-			return dayjs(Date.now()).format('llll');
+			return dayjs.tz(new Date()).format('llll');
 		},
 		sentBy(sentBy) {
 			return sentBy === this.$auth.$state.user._id;

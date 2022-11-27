@@ -102,7 +102,7 @@ export default {
 		this.hasSessions =
 			this.plan &&
 			this.plan.payment === 'success' &&
-			dayjs(Date.now()).isBefore(dayjs(this.plan.expiration)) &&
+			dayjs.tz(new Date()).isBefore(dayjs(this.plan.expiration)) &&
 			this.plan.psychologist === this.psychologist._id &&
 			this.plan.remainingSessions > 0;
 	},

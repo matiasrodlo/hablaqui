@@ -312,7 +312,7 @@ export const setSession = (role, sessions) => {
 					numberSessionSuccess: item.numberSessionSuccess,
 					activePlan:
 						plan.payment === 'success' &&
-						dayjs(Date.now()).isBefore(dayjs(plan.expiration)),
+						dayjs.tz(new Date()).isBefore(dayjs(plan.expiration)),
 				};
 			});
 		});

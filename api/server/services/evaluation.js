@@ -123,7 +123,7 @@ const approveEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
-				'evaluations.$.moderatingDate': dayjs(Date.now()).format(),
+				'evaluations.$.moderatingDate': dayjs.tz(new Date()).format(),
 			},
 		},
 		{ new: true }
@@ -186,7 +186,7 @@ const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
-				'evaluations.$.moderatingDate': dayjs(Date.now()).format(),
+				'evaluations.$.moderatingDate': dayjs.tz(new Date()).format(),
 			},
 		}
 	).populate('psychologist user');
