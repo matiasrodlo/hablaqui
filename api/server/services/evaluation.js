@@ -4,10 +4,7 @@ import Psychologist from '../models/psychologist';
 import Evaluation from '../models/evaluation';
 import Sessions from '../models/sessions';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import {
-	getScores,
-	getAllEvaluationsFunction,
-} from '../utils/functions/evaluationFunction';
+import { getAllEvaluationsFunction } from '../utils/functions/evaluationFunction';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -79,20 +76,47 @@ const getEvaluationsPsy = async user => {
 
 	return okResponse('Evaluaciones devueltas', {
 		evaluations,
-		...getScores(evaluations),
 	});
 };
 
-const getAllEvaluations = async psy => {
+const getAllEvaluations = async user => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Obtiene todas las evaluaciones de un psicologo incluso las que no han sido aprobadas
-	const evaluations = await getAllEvaluationsFunction(psy);
+	let evaluations = await Evaluation.find().populate('user psychologist');
+
+	evaluations = evaluations
+		.flatMap(item =>
+			item.evaluations.map(ev => {
+				return {
+					evsId: item._id,
+					evId: ev._id,
+					send: dayjs(ev.createdAt).format('DD/MM/YYYY HH:mm'),
+					updated: dayjs(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
+					approved: ev.approved,
+					comment: ev.comment,
+					global: ev.global,
+					puntuality: ev.puntuality,
+					attention: ev.attention,
+					internet: ev.internet,
+					like: ev.like,
+					improve: ev.improve,
+					psychologist:
+						item.psychologist.name +
+						' ' +
+						item.psychologist.lastName,
+					username: item.psychologist.username,
+					user: item.user.name + ' ' + item.user.lastName,
+				};
+			})
+		)
+		.sort((a, b) => new Date(a.send) - new Date(b.send));
 	return okResponse('Todas las sesiones devueltas', {
 		evaluations,
-		...getScores(evaluations),
 	});
 };
 
-const approveEvaluation = async (evaluationsId, evaluationId) => {
+const approveEvaluation = async (user, evaluationsId, evaluationId) => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Encuentra la evaluacion y la aprueba
 	const evaluation = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
@@ -101,49 +125,61 @@ const approveEvaluation = async (evaluationsId, evaluationId) => {
 				'evaluations.$.approved': 'approved',
 				'evaluations.$.moderatingDate': dayjs().format(),
 			},
-		}
+		},
+		{ new: true }
 	).populate('psychologist user');
-	// Obtiene todas las evaluaciones del psicologo y filtra las aprobadas
-	const psy = evaluation.psychologist._id;
-	let evaluations = await getAllEvaluationsFunction(psy);
-	evaluations = evaluations.filter(
-		evaluation => evaluation.approved === 'approved'
-	);
 
-	// Recorre todas las evaluaciones y las va acumulando si es un valor numerico,
-	// y lo divide por el total de evaluaciones para obtener el promedio
-	const global =
-		evaluations.reduce(
-			(sum, value) =>
-				typeof value.global == 'number' ? sum + value.global : sum,
-			0
-		) / evaluations.length;
+	const psy = evaluation.psychologist._id;
+
+	const evaluationApproved = evaluation.evaluations.find(
+		ev => ev.approved === 'approved'
+	);
+	// Obtiene las puntuaciones promedio registradas para el psicologo
+	let rating = evaluation.psychologist.attentionRating;
+	let internetRating = evaluation.psychologist.internetRating;
+	let puntualityRating = evaluation.psychologist.puntualityRating;
+	let attentionRating = evaluation.psychologist.attentionRating;
+	let totalEvaluations = evaluation.psychologist.totalEvaluations + 1;
+
+	// Se realiza el recalculo de los rating
+	rating = (rating + evaluationApproved.global) / totalEvaluations;
+	internetRating =
+		(internetRating + evaluationApproved.internet) / totalEvaluations;
+	puntualityRating =
+		(puntualityRating + evaluationApproved.puntuality) / totalEvaluations;
+	attentionRating =
+		(attentionRating + evaluationApproved.attention) / totalEvaluations;
 
 	// Actualiza el rating total del psicologo y lo redondea a 2 decimales
 	await Psychologist.findOneAndUpdate(
 		{ _id: psy },
 		{
 			$set: {
-				rating: global.toFixed(2),
+				rating: rating.toFixed(2),
+				internetRating: internetRating.toFixed(2),
+				puntualityRating: puntualityRating.toFixed(2),
+				attentionRating: attentionRating.toFixed(2),
+				totalEvaluations: totalEvaluations,
 			},
 		}
 	);
 
 	// Envia correo donde se aprueba la evaluación
 	await mailServicePsy.sendApproveEvaluationToUser(
-		evaluations.user,
-		evaluations.psychologist
+		evaluation.user,
+		evaluation.psychologist
 	);
 
 	await mailServicePsy.sendApproveEvaluationToPsy(
-		evaluations.user,
-		evaluations.psychologist
+		evaluation.user,
+		evaluation.psychologist
 	);
 
 	return okResponse('Evaluación aprobada', { evaluation });
 };
 
-const refuseEvaluation = async (evaluationsId, evaluationId) => {
+const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
+	if (user.role !== 'superuser') return conflictResponse('No admin');
 	// Encuentra la evaluacion y la rechaza
 	const evaluations = await Evaluation.findOneAndUpdate(
 		{ _id: evaluationsId, 'evaluations._id': evaluationId },
