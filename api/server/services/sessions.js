@@ -227,6 +227,7 @@ const createPlan = async ({ payload }) => {
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
 		expirationDate = dayjs(date, 'MM/DD/YYYY HH:mm')
+			.tz(new Date())
 			.add(50, 'minutes')
 			.format();
 	}
