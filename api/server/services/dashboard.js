@@ -36,7 +36,7 @@ const getNextSessions = async () => {
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
-				dayjs(plan.expiration).isAfter(dayjs.tz(new Date()));
+				dayjs.tz(plan.expiration).isAfter(dayjs.tz(new Date()));
 			// Devuelve un objeto con el último plan
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
@@ -59,7 +59,7 @@ const getNextSessions = async () => {
 				// Se obtiene si una sesion es proxima y se verifica que la sesion no haya expirado.
 				const isNextSession =
 					s.status !== 'success' &&
-					dayjs(s.date).isAfter(dayjs.tz(new Date()));
+					dayjs.tz(s.date).isAfter(dayjs.tz(new Date()));
 				// Devuelve un objeto con la proxima sesion
 				return {
 					_id: s._id,
@@ -111,7 +111,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 
 	// Se filtra de flatSession las sesiones pagadas entre las fechas indicadas
 	flatSession = flatSession.filter(s =>
-		dayjs(s.date).isBetween(dayjs(startDate), dayjs(endDate))
+		dayjs.tz(s.date).isBetween(dayjs.tz(startDate), dayjs.tz(endDate))
 	);
 
 	// Se agrupan las sesiones por psicologo y se suman los precios

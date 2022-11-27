@@ -27,17 +27,21 @@ export const getAllSessionsFunction = async psy => {
 			return plan.session.map(session => {
 				const expiration =
 					plan.payment === 'pending' &&
-					dayjs.tz(new Date()).isAfter(dayjs(plan.expiration));
+					dayjs.tz(new Date()).isAfter(dayjs.tz(plan.expiration));
 				let requestDate = session.requestDate
 					? session.requestDate
 					: 'Por cobrar';
 				if (requestDate !== 'Por cobrar')
-					requestDate = dayjs(requestDate).format('YYYY/MM/DD HH:mm');
+					requestDate = dayjs
+						.tz(requestDate)
+						.format('YYYY/MM/DD HH:mm');
 				let paymentDate = session.requestDate
 					? session.requestDate
 					: 'Por cobrar';
 				if (paymentDate !== 'Por cobrar')
-					paymentDate = dayjs(paymentDate).format('YYYY/MM/DD HH:mm');
+					paymentDate = dayjs
+						.tz(paymentDate)
+						.format('YYYY/MM/DD HH:mm');
 				return {
 					_id: session._id,
 					date: session.date,

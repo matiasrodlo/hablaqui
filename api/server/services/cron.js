@@ -46,7 +46,8 @@ function generatePayload(date, batch) {
 	 */
 	return {
 		wasScheduled: true,
-		scheduledAt: dayjs(date)
+		scheduledAt: dayjs
+			.tz(date)
 			.subtract(1, 'hour')
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
@@ -128,7 +129,7 @@ const cronService = {
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
-				if (dayjs(expiration).isBefore(dayjs.tz(new Date())))
+				if (dayjs.tz(expiration).isBefore(dayjs.tz(new Date())))
 					await psychologist.findOneAndUpdate(
 						{ _id: psy._id },
 						{
@@ -190,7 +191,7 @@ const cronService = {
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = dayjs(emailInfo.sessionDate);
+				const sessionDate = dayjs.tz(emailInfo.sessionDate);
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
@@ -254,10 +255,10 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs.tz(session.date, 'MM/DD/YYYY HH:mm');
 						// if (
 						// 	session.status === 'pending' &&
-						// 	dayjs(date)
+						// 	dayjs.tz(date)
 						// 		.subtract(
 						// 			psyInfo.preferences
 						// 				.minimumRescheduleSession,
@@ -310,7 +311,7 @@ const cronService = {
 				if (
 					dayjs
 						.tz(new Date())
-						.isSameOrAfter(dayjs(plan.createdAt).add(3, 'hours'))
+						.isSameOrAfter(dayjs.tz(plan.createdAt).add(3, 'hours'))
 				) {
 					// Se actualiza el estado el pago a cancelado
 					await Sessions.findOneAndUpdate(

@@ -296,8 +296,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -326,8 +326,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 				session,
 			},
 		};

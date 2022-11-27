@@ -512,7 +512,7 @@ const updatePsychologist = async (user, profile) => {
 					psy.stampSetPrices &&
 					dayjs
 						.tz(new Date())
-						.isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+						.isBefore(dayjs.tz(psy.stampSetPrices).add(1, 'months'))
 				)
 					profile.sessionPrices = psy.sessionPrices;
 				else profile.stampSetPrices = dayjs.tz(new Date()).format();
@@ -664,7 +664,7 @@ const setPrice = async (user, newPrice) => {
 		psy.stampSetPrices &&
 		dayjs
 			.tz(new Date())
-			.isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+			.isBefore(dayjs.tz(psy.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
@@ -716,7 +716,7 @@ const getClients = async psychologist => {
 				plan: item.plan.find(
 					plan =>
 						plan.payment === 'success' &&
-						dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+						dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 				),
 				role: item.user.role,
 				roomsUrl: item.roomsUrl,
@@ -878,13 +878,14 @@ const changeToInmediateAttention = async psy => {
 		let now = new Date();
 		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
 		sessions = sessions.filter(session => {
-			const date = dayjs(session.date).format('DD/MM/YYYY HH:mm');
+			const date = dayjs.tz(session.date).format('DD/MM/YYYY HH:mm');
 			return (
 				session.status !== 'success' &&
-				dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-				dayjs(date)
+				dayjs.tz(date).isBefore(dayjs.tz(now).add(3, 'hours')) &&
+				dayjs
+					.tz(date)
 					.add(50, 'minutes')
-					.isAfter(dayjs(now))
+					.isAfter(dayjs.tz(now))
 			);
 		});
 
@@ -898,7 +899,8 @@ const changeToInmediateAttention = async psy => {
 				$set: {
 					inmediateAttention: {
 						activated: true,
-						expiration: dayjs(now)
+						expiration: dayjs
+							.tz(now)
 							.add(1, 'hour')
 							.format(),
 					},
@@ -944,15 +946,15 @@ const getAllSessionsInmediateAttention = async () => {
 						: [];
 				})
 				.filter(session => {
-					const date = dayjs(session.date).format(
+					const date = dayjs.tz(session.date).format(
 						'DD/MM/YYYY HH:mm'
 					);
 					return (
 						session.status !== 'success' &&
-						dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-						dayjs(date)
+						dayjs.tz(date).isBefore(dayjs.tz(now).add(3, 'hours')) &&
+						dayjs.tz(date)
 							.add(50, 'minutes')
-							.isAfter(dayjs(now))
+							.isAfter(dayjs.tz(now))
 					);
 				});
 		});
