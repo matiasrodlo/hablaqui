@@ -1111,7 +1111,8 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
+			return `Desde las ${dayjs.tz(date).format('HH:mm')} hasta las ${dayjs.tz
+(date)
 				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},

@@ -341,7 +341,7 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					dayjs.tz(new Date()).isBefore(dayjs(plan.expiration)) &&
+					dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration)) &&
 					plan.title !== 'Plan inicial' &&
 					sessions.psychologist.toString() !== payload.psychologist
 			);
@@ -509,7 +509,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	// Si no quedan sesiones por agendar, se obtiene la ultima sesion del plan
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
-		const expiration = dayjs(session.lastSession)
+		const expiration = dayjs
+			.tz(session.lastSession)
 			.add(50, 'minutes')
 			.format();
 		// La nueva expiración es la fecha de la ultima sesion del plan + 50 minutos
@@ -809,7 +810,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 			);
 		})
 	);
@@ -832,14 +833,14 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 
 	sessions = length.map(el => {
 		const day = dayjs.tz(new Date()).add(el, 'days');
-		const temporal = dayjs(day).format('L');
+		const temporal = dayjs.tz(day).format('L');
 
 		return {
 			id: el,
 			value: day.format(),
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: dayjs(day).format(),
+			text: dayjs.tz(day).format(),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
@@ -849,7 +850,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 					!daySessions.some(
 						date =>
 							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+								dayjs.tz(day).format('L') &&
 							hour ===
 								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
@@ -888,7 +889,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 			);
 		})
 	);
@@ -920,7 +921,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
 		const day = dayjs.tz(new Date()).add(el, 'days');
-		const temporal = dayjs(day).format('L');
+		const temporal = dayjs.tz(day).format('L');
 
 		return {
 			id: el,
@@ -937,7 +938,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 					!daySessions.some(
 						date =>
 							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+								dayjs.tz(day).format('L') &&
 							hour ===
 								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
@@ -1002,7 +1003,7 @@ const formattedSessionsAll = async ids => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 			);
 		})
 	);
@@ -1035,7 +1036,7 @@ const formattedSessionsAll = async ids => {
 					value: day.format(),
 					day: day.format('DD MMM'),
 					date: day.format('L'),
-					text: dayjs(day).format(),
+					text: dayjs.tz(day).format(),
 					available: hours.filter(hour => {
 						return (
 							dayjs(

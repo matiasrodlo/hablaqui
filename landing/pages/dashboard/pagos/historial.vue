@@ -216,7 +216,7 @@ export default {
 			this.loading = false;
 		},
 		formatDatedayjs(item) {
-			return dayjs(item).format('DD MMMM, YYYY');
+			return dayjs.tz(item).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;

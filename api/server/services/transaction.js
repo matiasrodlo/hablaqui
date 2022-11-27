@@ -284,13 +284,13 @@ const getAllTransactions = async user => {
 	transactions = transactions
 		.map(t => {
 			return {
-				createdAt: dayjs(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				createdAt: dayjs.tz(t.createdAt).format('DD/MM/YYYY HH:mm'),
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
-							'DD/MM/YYYY HH:mm'
-						),
+						date: dayjs
+							.tz(s.date, 'MM/DD/YYYY HH:mm')
+							.format('DD/MM/YYYY HH:mm'),
 					};
 				}),
 				total: t.total,

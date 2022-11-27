@@ -410,7 +410,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 		);
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 

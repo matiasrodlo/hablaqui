@@ -490,7 +490,7 @@ export default {
 	computed: {
 		dayWithdraw() {
 			const day = dayjs.tz(new Date()).add('7', 'days');
-			return dayjs(day).format('DD/MM/YYYY');
+			return dayjs.tz(day).format('DD/MM/YYYY');
 		},
 		lastTransaction() {
 			if (!this.transactions || !this.transactions.transactions.length) return null;
@@ -529,7 +529,7 @@ export default {
 			return dayjs(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
 		},
 		formatDatedayjs(item) {
-			return dayjs(item).format('DD MMMM, YYYY');
+			return dayjs.tz(item).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;

@@ -122,7 +122,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
 			currentPlan.tier === 'premium' &&
-			dayjs(currentPlan.expirationDate).isAfter(dayjs.tz(new Date()))
+			dayjs.tz(currentPlan.expirationDate).isAfter(dayjs.tz(new Date()))
 		) {
 			return okResponse('Tienes un plan premium vigente');
 		}

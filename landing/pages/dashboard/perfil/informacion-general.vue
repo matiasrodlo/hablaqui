@@ -31,7 +31,7 @@ export default {
 						psychologist: item.psychologist,
 						user: item.user,
 						// dias de diferencia entre el dia que expiró y hoy
-						diff: dayjs(plan.expiration).diff(dayjs.tz(new Date()), 'days'),
+						diff: dayjs.tz(plan.expiration).diff(dayjs.tz(new Date()), 'days'),
 					}))
 				);
 				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
@@ -41,7 +41,7 @@ export default {
 				let plan = plans.find(
 					item =>
 						item.payment === 'success' &&
-						dayjs.tz(new Date()).isBefore(dayjs(item.expiration))
+						dayjs.tz(new Date()).isBefore(dayjs.tz(item.expiration))
 				);
 				// retornamos el siguiente plan pendiente
 				if (!plan) plan = plans.find(item => item.diff === max);

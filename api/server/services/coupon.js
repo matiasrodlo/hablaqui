@@ -23,7 +23,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: dayjs(payload.expiration).toISOString(),
+		expiration: dayjs.tz(payload.expiration).toISOString(),
 	};
 
 	// Guarda el cupon en la base de datos y retorna la respuesta satisfactoria

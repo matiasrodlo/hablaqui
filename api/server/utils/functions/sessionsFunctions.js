@@ -38,9 +38,9 @@ export const paymentInfoFunction = async psyId => {
 				// Cantidad de dinero a restar
 				let amountDueTotal = 0;
 				let amountDue = 0;
-				let paymentPlanDate = dayjs(plans.datePayment).format(
-					'DD/MM/YYYY'
-				);
+				let paymentPlanDate = dayjs
+					.tz(plans.datePayment)
+					.format('DD/MM/YYYY');
 
 				let sessions = plans.session.map(session => {
 					let transDate =
@@ -50,7 +50,7 @@ export const paymentInfoFunction = async psyId => {
 									'DD/MM/YYYY'
 							  )
 							: session.requestDate &&
-							  dayjs(session.requestDate).isValid()
+							  dayjs.tz(session.requestDate).isValid()
 							? 'Pendiente'
 							: 'Por cobrar';
 					transDate =
@@ -204,7 +204,7 @@ export const formattedSchedule = (schedule, day, hour) => {
 		'saturday',
 		'sunday',
 	];
-	day = dayjs(day).format('dddd');
+	day = dayjs.tz(day).format('dddd');
 	week.forEach(weekDay => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
@@ -312,7 +312,9 @@ export const setSession = (role, sessions) => {
 					numberSessionSuccess: item.numberSessionSuccess,
 					activePlan:
 						plan.payment === 'success' &&
-						dayjs.tz(new Date()).isBefore(dayjs(plan.expiration)),
+						dayjs
+							.tz(new Date())
+							.isBefore(dayjs.tz(plan.expiration)),
 				};
 			});
 		});
