@@ -255,7 +255,7 @@ export default {
 			return (
 				this.currentPlan &&
 				this.currentPlan.tier === 'premium' &&
-				dayjs(this.currentPlan.expirationDate).isAfter(dayjs())
+				dayjs(this.currentPlan.expirationDate).isAfter(dayjs(Date.now()))
 			);
 		},
 	},

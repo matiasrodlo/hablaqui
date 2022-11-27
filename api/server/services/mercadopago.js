@@ -122,7 +122,7 @@ const setPlanFree = async (id, isPsychologist) => {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
 			currentPlan.tier === 'premium' &&
-			dayjs(currentPlan.expirationDate).isAfter(dayjs())
+			dayjs(currentPlan.expirationDate).isAfter(dayjs(Date.now()))
 		) {
 			return okResponse('Tienes un plan premium vigente');
 		}
@@ -190,7 +190,7 @@ const successPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': dayjs().format(),
+				'plan.$.datePayment': dayjs(Date.now()).format(),
 			},
 		},
 		{ new: true }
@@ -262,12 +262,12 @@ const psychologistPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period === 'anual') {
-		expirationDate = dayjs()
+		expirationDate = dayjs(Date.now())
 			.add(12, 'month')
 			.format();
 	}
 	if (period === 'mensual') {
-		expirationDate = dayjs()
+		expirationDate = dayjs(Date.now())
 			.add(1, 'month')
 			.format();
 	}
@@ -333,7 +333,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': dayjs().format(),
+				'plan.$.datePayment': dayjs(Date.now()).format(),
 			},
 		},
 		{ new: true }
@@ -402,12 +402,12 @@ const recruitedPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period == 'anual') {
-		expirationDate = dayjs()
+		expirationDate = dayjs(Date.now())
 			.add(12, 'month')
 			.format();
 	}
 	if (period == 'mensual') {
-		expirationDate = dayjs()
+		expirationDate = dayjs(Date.now())
 			.add(1, 'month')
 			.format();
 	}

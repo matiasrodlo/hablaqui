@@ -185,7 +185,7 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = dayjs().add('7', 'days');
+			const day = dayjs(Date.now()).add('7', 'days');
 			return dayjs(day).format('DD/MM/YYYY');
 		},
 		...mapGetters({

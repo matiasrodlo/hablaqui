@@ -31,7 +31,7 @@ function isSchedulableEmail(date) {
 	 * @param {dayjs} date es la fecha de la cita
 	 * @returns
 	 */
-	return dayjs()
+	return dayjs(Date.now())
 		.add(3, 'days')
 		.isAfter(date);
 }
@@ -262,14 +262,14 @@ const cronService = {
 						// 				.minimumRescheduleSession,
 						// 			'hours'
 						// 		)
-						// 		.isBefore(dayjs()) &&
-						// 	dayjs().isBefore(date) &&
-						// 	dayjs().isBefore(plan.expiration)
+						// 		.isBefore(dayjs(Date.now())) &&
+						// 	dayjs(Date.now()).isBefore(date) &&
+						// 	dayjs(Date.now()).isBefore(plan.expiration)
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
 							session.status === 'pending' && // || session.status === 'upnext'
-							dayjs().isAfter(date)
+							dayjs(Date.now()).isAfter(date)
 						) {
 							session.status = 'success';
 						}
@@ -307,7 +307,9 @@ const cronService = {
 
 			plans.forEach(async plan => {
 				if (
-					dayjs().isSameOrAfter(dayjs(plan.createdAt).add(3, 'hours'))
+					dayjs(Date.now()).isSameOrAfter(
+						dayjs(plan.createdAt).add(3, 'hours')
+					)
 				) {
 					// Se actualiza el estado el pago a cancelado
 					await Sessions.findOneAndUpdate(

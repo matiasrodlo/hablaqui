@@ -258,7 +258,7 @@ export default {
 			this.loading = false;
 		},
 		getAge(date) {
-			return dayjs().diff(date, 'years');
+			return dayjs(Date.now()).diff(date, 'years');
 		},
 		save(date) {
 			this.$refs.menu.save(date);

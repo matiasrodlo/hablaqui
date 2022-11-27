@@ -505,7 +505,7 @@ export default {
 			this.$v.$reset();
 		},
 		getAge(date) {
-			return dayjs().diff(date, 'years');
+			return dayjs(Date.now()).diff(date, 'years');
 		},
 		async changeStateOnboarding() {
 			await this.updateOne({

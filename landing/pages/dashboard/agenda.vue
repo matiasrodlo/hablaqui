@@ -807,7 +807,7 @@ export default {
 		},
 		selectedElement: null,
 		selectedOpen: false,
-		today: dayjs().format('YYYY-MM-DD'),
+		today: dayjs(Date.now()).format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
@@ -862,7 +862,7 @@ export default {
 				return dayjs(a, 'MM/DD/YYYY HH:mm').diff(dayjs(b, 'MM/DD/YYYY HH:mm'));
 			});
 			const date = allDates.find(item =>
-				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
+				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs(Date.now()))
 			);
 			if (date) {
 				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
@@ -1061,7 +1061,7 @@ export default {
 			}
 		},
 		setToday() {
-			this.focus = dayjs().format('YYYY-MM-DD');
+			this.focus = dayjs(Date.now()).format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();

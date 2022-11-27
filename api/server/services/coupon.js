@@ -37,7 +37,7 @@ const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (dayjs().isAfter(foundCoupon.expiration))
+	if (dayjs(Date.now()).isAfter(foundCoupon.expiration))
 		return conflictResponse('Este cupon ya ha expirado');
 	if (foundCoupon.discountType === 'static' && foundCoupon.discount === 0)
 		return conflictResponse('Cupón con saldo 0');

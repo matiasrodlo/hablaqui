@@ -124,7 +124,7 @@ export default {
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
-					diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
+					diff: dayjs(plan.expiration).diff(dayjs(Date.now()), 'days'),
 				}))
 			);
 		},
@@ -159,7 +159,7 @@ export default {
 				(item.payment === 'success' ||
 					item.payment === 'pending' ||
 					item.payment === 'failed') &&
-				dayjs().isBefore(dayjs(item.expiration))
+				dayjs(Date.now()).isBefore(dayjs(item.expiration))
 			);
 		},
 	},

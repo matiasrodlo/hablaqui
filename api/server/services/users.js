@@ -2,9 +2,9 @@
 
 import User from '../models/user';
 import Psychologist from '../models/psychologist';
-import Recruitment from '../models/recruitment'; 
-import { logInfo } from '../config/winston'; 
-import bcrypt from 'bcryptjs'; 
+import Recruitment from '../models/recruitment';
+import { logInfo } from '../config/winston';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -162,7 +162,7 @@ const usersService = {
 		}
 
 		// Se cambia el plan de expiración del plan antiguo
-		ultimoPlan.expiration = dayjs()
+		ultimoPlan.expiration = dayjs(Date.now())
 			.subtract(1, 'days')
 			.format();
 
@@ -358,7 +358,7 @@ const usersService = {
 			});
 		}
 		const roomId = crypto
-			.createHash("sha256")
+			.createHash('sha256')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
@@ -409,7 +409,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				dayjs().isBefore(dayjs(plan.expiration))
+				dayjs(Date.now()).isBefore(dayjs(plan.expiration))
 		);
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 
