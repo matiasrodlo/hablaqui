@@ -207,13 +207,12 @@ const createPlan = async ({ payload }) => {
 	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
 	if (
 		!psychologist.inmediateAttention.activated &&
-		dayjs
-			.tz(new Date())
-			.isAfter(
-				dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-					.subtract(minimumNewSession, 'hours')
-			)
+		dayjs.tz(new Date()).isAfter(
+			dayjs
+				.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+				.subtract(minimumNewSession, 'hours')
+				.format()
+		)
 	) {
 		return conflictResponse(
 			'No se puede agendar, se excede el tiempo de anticipación de la reserva'
