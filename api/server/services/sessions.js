@@ -892,7 +892,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs.tz(new Date()).isBefore(dayjs(plan.expiration))
+				dayjs.tz(new Date()).isBefore(dayjs.tz(plan.expiration))
 			);
 		})
 	);
@@ -1113,10 +1113,9 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		dayjs
 			.tz(new Date())
 			.isAfter(
-				dayjs(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
-					minimumRescheduleSession,
-					'hours'
-				)
+				dayjs
+					.tz(dayjs(currentSession.date, 'MM/DD/YYYY HH:mm'))
+					.subtract(minimumRescheduleSession, 'hours')
 			)
 	) {
 		return conflictResponse(
@@ -1128,7 +1127,9 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Se le da formato a la fecha nueva, se actualiza la fecha de la session
 	const date = `${newDate.date} ${newDate.hour}`;
-	newDate.date = dayjs(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
+	newDate.date = dayjs
+		.tz(dayjs(newDate.date, 'MM/DD/YYY'))
+		.format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -1147,7 +1148,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	if (session.remainingSessions === 0) {
 		// Si no existen sessiones pendientes, se da fecha de expiracion a la session 50 minutos despues de la ultima session
-		const expiration = dayjs(session.lastSession, 'YYYY/MM/DD HH:mm')
+		const expiration = dayjs
+			.tz(dayjs(session.lastSession, 'YYYY/MM/DD HH:mm'))
 			.add(50, 'minutes')
 			.format();
 		await Sessions.findOneAndUpdate(
