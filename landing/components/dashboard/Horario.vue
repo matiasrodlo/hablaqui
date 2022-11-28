@@ -542,14 +542,21 @@ export default {
 						el =>
 							el[0] !== '' ||
 							el[1] !== '' ||
-							dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))
+							dayjs.tz(dayjs(el[0], 'HH:mm')).isSame(dayjs.tz(dayjs(el[1], 'HH:mm')))
 					)
 					.map(el => {
-						if (dayjs(el[0], 'HH:mm').isBefore(dayjs(el[1], 'HH:mm')))
+						if (
+							dayjs
+								.tz(dayjs(el[0], 'HH:mm'))
+								.isBefore(dayjs.tz(dayjs(el[1], 'HH:mm')))
+						)
 							return [el[0], el[1]];
 						else return [el[1], el[0]];
 					})
-					.filter(el => !dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))),
+					.filter(
+						el =>
+							!dayjs.tz(dayjs(el[0], 'HH:mm')).isSame(dayjs.tz(dayjs(el[1], 'HH:mm')))
+					),
 			}));
 
 			const payload = {
@@ -570,12 +577,14 @@ export default {
 		validateInput(indexDay, indexInterval, value, type) {
 			const result = this.items[indexDay].intervals.some((item, i) => {
 				if (indexInterval !== i)
-					return dayjs(value, 'HH:mm').isBetween(
-						dayjs(item[0], 'HH:mm'),
-						dayjs(item[1], 'HH:mm'),
-						undefined,
-						[]
-					);
+					return dayjs
+						.tz(dayjs(value, 'HH:mm'))
+						.isBetween(
+							dayjs.tz(dayjs(item[0], 'HH:mm')),
+							dayjs.tz(dayjs(item[1], 'HH:mm')),
+							undefined,
+							[]
+						);
 				else if (item[0] === item[1]) return true;
 				else return false;
 			});
