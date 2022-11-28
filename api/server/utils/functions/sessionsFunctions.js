@@ -209,12 +209,14 @@ export const formattedSchedule = (schedule, day, hour) => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
 				validHour = schedule[weekDay].some(interval =>
-					dayjs(hour, 'HH:mm').isBetween(
-						dayjs(interval[0], 'HH:mm'),
-						dayjs(interval[1], 'HH:mm'),
-						undefined,
-						'[)'
-					)
+					dayjs
+						.tz(dayjs(hour, 'HH:mm'))
+						.isBetween(
+							dayjs.tz(dayjs(interval[0], 'HH:mm')),
+							dayjs.tz(dayjs(interval[1], 'HH:mm')),
+							undefined,
+							'[)'
+						)
 				);
 			else if (schedule[weekDay] === 'busy') validHour = false;
 	});

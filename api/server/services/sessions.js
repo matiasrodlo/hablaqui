@@ -907,7 +907,9 @@ const getFormattedSessions = async (idPsychologist, type) => {
 			});
 		})
 		.filter(date =>
-			dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs.tz(new Date()))
+			dayjs
+				.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+				.isSameOrAfter(dayjs.tz(new Date()))
 		);
 
 	// Veificamos el tipo de calendario que se debe mostrar
@@ -934,16 +936,19 @@ const getFormattedSessions = async (idPsychologist, type) => {
 			text: dayjs.tz(day).format(),
 			available: hours.filter(hour => {
 				return (
-					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
-						minimumNewSession
-					) &&
+					dayjs
+						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
+						.isAfter(minimumNewSession) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
-							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs.tz(day).format('L') &&
+							dayjs
+								.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+								.format('L') === dayjs.tz(day).format('L') &&
 							hour ===
-								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+								dayjs
+									.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+									.format('HH:mm')
 					)
 				);
 			}),
@@ -990,9 +995,9 @@ const formattedSessionsAll = async ids => {
 				});
 			})
 			.filter(date =>
-				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(
-					dayjs.tz(new Date())
-				)
+				dayjs
+					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+					.isSameOrAfter(dayjs.tz(new Date()))
 			);
 
 	// Obtenemos sessiones del psicologo
@@ -1033,7 +1038,7 @@ const formattedSessionsAll = async ids => {
 			psychologist: item._id,
 			sessions: length.map(el => {
 				const day = dayjs.tz(new Date()).add(el, 'days');
-				const temporal = dayjs(day).format('L');
+				const temporal = dayjs.tz(day).format('L');
 				return {
 					psychologist: item._id,
 					value: day.format(),
@@ -1042,20 +1047,24 @@ const formattedSessionsAll = async ids => {
 					text: dayjs.tz(day).format(),
 					available: hours.filter(hour => {
 						return (
-							dayjs(
-								`${temporal} ${hour}`,
-								'MM/DD/YYYY HH:mm'
-							).isAfter(minimumNewSession) &&
+							dayjs
+								.tz(
+									dayjs(
+										`${temporal} ${hour}`,
+										'MM/DD/YYYY HH:mm'
+									)
+								)
+								.isAfter(minimumNewSession) &&
 							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
-									dayjs(date, 'MM/DD/YYYY HH:mm').format(
-										'L'
-									) === temporal &&
+									dayjs
+										.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+										.format('L') === temporal &&
 									hour ===
-										dayjs(date, 'MM/DD/YYYY HH:mm').format(
-											'HH:mm'
-										)
+										dayjs
+											.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+											.format('HH:mm')
 							)
 						);
 					}),
