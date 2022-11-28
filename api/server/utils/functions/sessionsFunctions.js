@@ -210,10 +210,14 @@ export const formattedSchedule = (schedule, day, hour) => {
 			if (Array.isArray(schedule[weekDay]))
 				validHour = schedule[weekDay].some(interval =>
 					dayjs
-						.tz(dayjs(hour, 'HH:mm'))
+						.tz(dayjs(hour, 'HH:mm').format())
 						.isBetween(
-							dayjs.tz(dayjs(interval[0], 'HH:mm')),
-							dayjs.tz(dayjs(interval[1], 'HH:mm')),
+							dayjs
+								.tz(dayjs(interval[0], 'HH:mm').format())
+								.format(),
+							dayjs
+								.tz(dayjs(interval[1], 'HH:mm').format())
+								.format(),
 							undefined,
 							'[)'
 						)

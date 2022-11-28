@@ -938,17 +938,25 @@ const getFormattedSessions = async (idPsychologist, type) => {
 			available: hours.filter(hour => {
 				return (
 					dayjs
-						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
+						.tz(
+							dayjs(
+								`${temporal} ${hour}`,
+								'MM/DD/YYYY HH:mm'
+							).format()
+						)
+						.format()
 						.isAfter(minimumNewSession) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
 							dayjs
-								.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+								.tz(dayjs(date, 'MM/DD/YYYY HH:mm').format())
 								.format('L') === dayjs.tz(day).format('L') &&
 							hour ===
 								dayjs
-									.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+									.tz(
+										dayjs(date, 'MM/DD/YYYY HH:mm').format()
+									)
 									.format('HH:mm')
 					)
 				);
