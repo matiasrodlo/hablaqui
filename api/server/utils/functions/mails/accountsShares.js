@@ -42,9 +42,9 @@ const mailService = {
 			from:
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te damos la bienvenida a Hablaquí!',
+			subject: 'Enhorabuena, hemos aprobado a su cuenta',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-6db5e38488fc42769fca7398be2930ae',
+			templateId: 'd-78caf64c2f9340a39abd4d5af7d4a0f6',
 			dynamicTemplateData: {
 				first_name: name,
 			},
@@ -67,7 +67,7 @@ const mailService = {
 			to: name + '<' + email + '>',
 			subject: '¡Te han invitado a Hablaquí!',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-84ac6d244f044322916649f448ebcecd',
+			templateId: 'd-785749c477ff43e0bdd8b5a8fe9ec17e',
 			dynamicTemplateData: {
 				name: name,
 				email: email,
