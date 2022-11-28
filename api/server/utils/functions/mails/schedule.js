@@ -21,7 +21,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: 'Tu sesión en Hablaquí ha sido agendada',
+			subject: 'Confirmación de subscripción',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-f57ecb113d6d48a684203ebb82782976',
 			asm: {
@@ -48,7 +48,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `${nameUser} ${lastNameUser} ha agendado una sesión contigo en Hablaquí`,
+			subject: `Han contratado un nuevo plan con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-2d162b2b082b4b21851d6e0be428e64f',
 			asm: {
@@ -83,7 +83,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
+			subject: `${psychologist.name} agendó una sesión usted en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
 			asm: {
@@ -149,7 +149,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Has reprogramado con éxito tu sesión`,
+			subject: `Su sesión ha sido reagendada exitosamente`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-54f94040924645be93ccdb21c243e6c2',
 			asm: {

@@ -65,7 +65,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te han invitado a Hablaquí!',
+			subject: 'Ha sido invitado a Hablaquí por su especialista',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-785749c477ff43e0bdd8b5a8fe9ec17e',
 			dynamicTemplateData: {
@@ -133,7 +133,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
 			to: 'Hablaquí <soporte@hablaqui.cl>',
-			subject: `Psicologo subió foto`,
+			subject: `[Internal] Nueva fotografía de especialista`,
 			templateId: 'd-d0ad663db5c64f0f965d5aeab027a7aa',
 			asm: {
 				group_id: 16321,

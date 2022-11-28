@@ -79,7 +79,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
-			subject: `Has actualizado tu cuenta, ${psychologist.name}`,
+			subject: `Enhorabuena, bienvenido a premium`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-f5eb2f1bfaf14d888b3276f8010dacc4',
 			asm: {
