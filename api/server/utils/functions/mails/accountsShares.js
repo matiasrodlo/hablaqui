@@ -20,9 +20,9 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te damos la bienvenida a Hablaquí!',
+			subject: 'Bienvenido/a a Hablaquí',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-47d8674ebc0841b381cf68fa42c03b13',
+			templateId: 'd-0c5ca742f0df44b48f445bdedf6f85a8',
 			dynamicTemplateData: {
 				first_name: name,
 			},
