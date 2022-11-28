@@ -875,9 +875,12 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	// Creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		dayjs
-			.tz(new Date())
-			.hour(x)
-			.minute(0)
+			.tz(
+				dayjs(new Date())
+					.hour(x)
+					.minute(0)
+					.format()
+			)
 			.format('HH:mm')
 	);
 	// Obtenemos sessiones del psicologo
@@ -976,9 +979,12 @@ const formattedSessionsAll = async ids => {
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		dayjs
-			.tz(new Date())
-			.hour(x)
-			.minute(0)
+			.tz(
+				dayjs(new Date())
+					.hour(x)
+					.minute(0)
+					.format()
+			)
 			.format('HH:mm')
 	);
 
