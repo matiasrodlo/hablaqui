@@ -336,7 +336,7 @@ export default {
 	},
 	methods: {
 		setDate(time) {
-			if (time) return dayjs(time).calendar();
+			if (time) return dayjs.tz(time).calendar();
 			return dayjs.tz(new Date()).format('llll');
 		},
 		sentBy(sentBy) {
