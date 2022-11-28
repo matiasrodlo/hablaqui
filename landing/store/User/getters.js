@@ -33,7 +33,9 @@ export default {
 		const max = Math.max(...plans.map(el => el.diff).filter(el => el >= 0));
 
 		const filterPlans = plans.filter(
-			item => item.payment === 'success' && dayjs.tz(new Date()).isBefore(dayjs.tz(item.expiration))
+			item =>
+				item.payment === 'success' &&
+				dayjs.tz(new Date()).isBefore(dayjs.tz(item.expiration))
 		);
 		const totalSessions = filterPlans.reduce(
 			(sum, value) =>

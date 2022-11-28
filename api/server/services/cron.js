@@ -256,8 +256,12 @@ const cronService = {
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
 						const date = dayjs
-							.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
-							.add(1, 'hour');
+							.tz(
+								dayjs(session.date, 'MM/DD/YYYY HH:mm')
+									.add(1, 'hour')
+									.format()
+							)
+							.format();
 						// if (
 						// 	session.status === 'pending' &&
 						// 	dayjs.tz(date)
