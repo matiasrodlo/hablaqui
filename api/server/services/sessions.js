@@ -210,10 +210,9 @@ const createPlan = async ({ payload }) => {
 		dayjs
 			.tz(new Date())
 			.isAfter(
-				dayjs(date, 'MM/DD/YYYY HH:mm').subtract(
-					minimumNewSession,
-					'hours'
-				)
+				dayjs
+					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+					.subtract(minimumNewSession, 'hours')
 			)
 	) {
 		return conflictResponse(
@@ -476,10 +475,9 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		dayjs
 			.tz(new Date())
 			.isAfter(
-				dayjs(payload.date, 'MM/DD/YYYY HH:mm').subtract(
-					minimumNewSession,
-					'hours'
-				)
+				dayjs
+					.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm'))
+					.subtract(minimumNewSession, 'hours')
 			)
 	) {
 		return conflictResponse(
