@@ -52,7 +52,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `${user.name} ha pagado la sesión`,
+			subject: `Han contratado un nuevo plan con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-6ac128fe8f804757ad45c5dfab571e12',
 			asm: {

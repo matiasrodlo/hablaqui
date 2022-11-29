@@ -121,7 +121,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
-			subject: `Has creado una sesión para ${user.name}`,
+			subject: `Ha creado un agendamiento con ${user.name}`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-e935d9d8e9d8406581f909863491e41d',
 			asm: {

@@ -21,7 +21,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
+			subject: `Tiene un nuevo mensaje no leído en Hablaquí de parte de ${psychologist.name}`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-becad9021a1e4b34afbd466a84aea4e3',
 			asm: {

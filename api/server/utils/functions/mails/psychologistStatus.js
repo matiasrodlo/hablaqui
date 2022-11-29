@@ -161,7 +161,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Tu solicitud de retiro ya ha sido completada!`,
+			subject: `Transferencia de recaudación semanal`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-478ea4a5f440447db1d7ec9dc0361b55',
 			asm: {
