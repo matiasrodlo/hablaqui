@@ -198,28 +198,6 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description sends an e-mail to the user who has passed an evaluation to a psychologist
-	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
-	 */
-	async sendApproveEvaluationToUser(user, psy) {
-		const dataPayload = {
-			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
-			to: user.name + '<' + user.email + '>',
-			subject: `¡Se ha aprobado tu evaluación!`,
-			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-2be43052aefe4a51bd7800cdba7155a9',
-			asm: {
-				group_id: 16321,
-			},
-			dynamicTemplateData: {
-				psy_name: psy.name,
-				user_name: user.name,
-			},
-		};
-		await sendMails(dataPayload);
-	},
-	/**
 	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
 	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
