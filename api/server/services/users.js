@@ -249,9 +249,7 @@ const usersService = {
 				new: true,
 			}
 		);
-		await this.deleteFile(oldAvatar, oldAvatarThumbnail).catch(
-			console.error
-		);
+		await {}
 		logInfo(`${userLogged.email} actualizo su avatar`);
 
 		return okResponse('Avatar actualizado', {
