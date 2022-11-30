@@ -219,7 +219,7 @@ export default {
 	},
 	async matchSpec({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/specialists/match', {
+			const { data } = await this.$axios('/specialists/best-match', {
 				method: 'POST',
 				data: { payload },
 			});
