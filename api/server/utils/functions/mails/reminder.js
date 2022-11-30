@@ -164,7 +164,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
+			subject: `Su sesión con ${name} en Hablaquí está por comenzar`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
