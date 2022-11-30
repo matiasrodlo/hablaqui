@@ -385,6 +385,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
 				plan.expiration = dayjs(newDate, 'MM/DD/YYYY HH:mm')
 					.add(50, 'minutes')
+					.add(2, 'days') // Solución temporal
 					.format();
 			}
 		}
