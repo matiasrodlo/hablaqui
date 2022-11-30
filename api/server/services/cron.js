@@ -253,7 +253,10 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).add(1, 'day');
 						// if (
 						// 	session.status === 'pending' &&
 						// 	dayjs(date)
