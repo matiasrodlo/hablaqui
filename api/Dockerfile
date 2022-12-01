@@ -9,7 +9,7 @@ RUN apk --no-cache add --virtual builds-deps build-base python3
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 RUN apk add --no-cache tzdata
-ENV TZ=America/Santiago
+ENV TZ America/Los_Angeles
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
