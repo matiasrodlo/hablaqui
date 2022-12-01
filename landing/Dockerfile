@@ -2,6 +2,11 @@ FROM node:14-alpine
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
+RUN apk add --no-cache tzdata
+ENV TZ=America/Santiago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 ARG API_ABSOLUTE
 ARG FRONTEND_URL
