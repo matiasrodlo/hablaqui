@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<!-- filter name -->
+		<!-- 
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
@@ -56,8 +57,8 @@
 						</template>
 					</v-autocomplete>
 				</v-col>
-			</v-row>
-		</v-container>
+			</v-row> 
+		</v-container> -->
 		<!-- filters -->
 		<v-container
 			fluid
@@ -406,7 +407,7 @@
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px">
-						<v-row>
+						<!-- <v-row>
 							<v-col cols="12">
 								<v-img
 									width="100px"
@@ -433,6 +434,65 @@
 									<v-btn rounded color="primary" class="px-8 py-2" @click="start">
 										Comenzar
 									</v-btn>
+								</div>
+							</v-col>
+						</v-row> -->
+						<v-row class="px-4">
+							<v-col cols="12" md="4">
+								<div
+									style="border: 1px solid #e0e0e0; cursor: pointer"
+									class="rounded-lg"
+								>
+									<div
+										class="text-center py-2 white body-2 rounded-lg"
+										:class="toggle === 0 ? 'primary--text' : 'textbtn'"
+										@click="
+											() => {
+												toggle = 0;
+												getPsychologistsBestMatch();
+											}
+										"
+									>
+										Recomendados
+									</div>
+								</div>
+							</v-col>
+							<v-col cols="12" md="4">
+								<div
+									style="border: 1px solid #e0e0e0; cursor: pointer"
+									class="rounded-lg"
+								>
+									<div
+										class="text-center white py-2 rounded-lg body-2"
+										:class="toggle === 1 ? 'primary--text' : 'textbtn'"
+										@click="
+											() => {
+												toggle = 1;
+												getPsychologistsEconomicMatch();
+											}
+										"
+									>
+										Economico
+									</div>
+								</div>
+							</v-col>
+							<v-col cols="12" md="4">
+								<div
+									style="border: 1px solid #e0e0e0; cursor: pointer"
+									class="rounded-lg"
+								>
+									<div
+										class="text-center white py-2 rounded-lg body-2"
+										:class="toggle === 2 ? 'primary--text' : 'textbtn'"
+										@click="
+											() => {
+												toggle = 2;
+												getPsychologistsAvailityMatch();
+											}
+										"
+									>
+										Disponibilidad
+									</div>
 								</div>
 							</v-col>
 						</v-row>
@@ -652,7 +712,7 @@
 
 <script>
 import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 /**
  * Componente: Listado de especialistas en vista de mobile
  */
@@ -673,6 +733,7 @@ export default {
 	},
 	data() {
 		return {
+			toggle: null,
 			mdiChat,
 			showFilters: false,
 			mdiCloseCircle,
@@ -877,6 +938,11 @@ export default {
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
+		}),
+		...mapActions({
+			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
+			getPsychologistsAvailityMatch: 'Psychologist/getPsychologistsAvailityMatch',
+			getPsychologistsEconomicMatch: 'Psychologist/getPsychologistsEconomicMatch',
 		}),
 	},
 };
