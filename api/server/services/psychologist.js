@@ -276,8 +276,7 @@ const ponderationMatch = async (matchedList, payload, weighted) => {
 	return newMatchedList;
 };
 
-const bestMatch = async body => {
-	const { payload } = body;
+const bestMatch = async payload => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
@@ -332,8 +331,7 @@ const bestMatch = async body => {
 	});
 };
 
-const economicMatch = async body => {
-	const { payload } = body;
+const economicMatch = async payload => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
@@ -384,8 +382,7 @@ const economicMatch = async body => {
 	});
 };
 
-const availityMatch = async body => {
-	const { payload } = body;
+const availityMatch = async payload => {
 	let points = 0;
 	const nextDays = 7;
 	let pointsPerCriterion = 1;

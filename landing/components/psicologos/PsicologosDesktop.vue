@@ -1,69 +1,12 @@
 <template>
 	<div>
-		<!-- filter name -->
-		<v-container fluid style="max-width: 1080px">
-			<v-row>
-				<v-col
-					v-if="$route.name === 'psicologos'"
-					cols="12"
-					tag="h1"
-					class="text-left font-weight-bold text-h6 text-md-h3"
-					style="color: #54565a"
-				>
-					Encuentra a tu psicólogo online
-				</v-col>
-				<v-col cols="12" sm="6">
-					<v-autocomplete
-						id="searchInput"
-						:value="searchInput"
-						class="white"
-						dense
-						outlined
-						:items="
-							filterLevelTwo.map((item, index) => ({
-								text: `${item.name} ${item.lastName && item.lastName}`,
-								value: item._id,
-								index,
-							}))
-						"
-						label="Busca tu psicólogo"
-						:append-icon="mdiChevronDown"
-						hide-details
-						:menu-props="{
-							closeOnClick: true,
-						}"
-						clearable
-						:disabled="loadingPsychologist"
-						@change="
-							e => {
-								searchInput = e;
-								visibles = [];
-								page = 1;
-							}
-						"
-					>
-						<template #no-data>
-							<v-list-item>
-								<v-list-item-content>
-									<v-list-item-title>
-										No se encontraron resultados que coincidan con "<strong>
-											{{ searchInput }}
-										</strong>
-										" .
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
-						</template>
-					</v-autocomplete>
-				</v-col>
-			</v-row>
-		</v-container>
 		<!-- filters -->
 		<v-app-bar
 			id="appbarfilter"
 			:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
 			style="z-index: 1"
 			class="sticky scroll"
+			height="120"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container fluid style="max-width: 1080px">
@@ -262,7 +205,7 @@
 											? `Otros·${models.length + languages.length}`
 											: ''
 									"
-									label="Otros"
+									label="Disponibilidad"
 									readonly
 									outlined
 									dense
@@ -333,44 +276,61 @@
 						</v-menu>
 					</v-col>
 				</v-row>
+				<v-row>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center py-2 white body-2 rounded-lg"
+								:class="toggle === 0 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 0;
+										getPsychologistsBestMatch();
+									}
+								"
+							>
+								Recomendados
+							</div>
+						</div>
+					</v-col>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center white py-2 rounded-lg body-2"
+								:class="toggle === 1 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 1;
+										getPsychologistsEconomicMatch();
+									}
+								"
+							>
+								Economico
+							</div>
+						</div>
+					</v-col>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center white py-2 rounded-lg body-2"
+								:class="toggle === 2 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 2;
+										getPsychologistsAvailityMatch();
+									}
+								"
+							>
+								Disponibilidad
+							</div>
+						</div>
+					</v-col>
+				</v-row>
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
 		<v-container v-if="psychologists.length" fluid style="max-width: 1080px" class="my-4">
 			<v-row>
-				<v-col cols="12">
-					<v-sheet class="item" style="border-radius: 15px; height: 182px">
-						<v-row no-gutters align="center" style="height: 182px">
-							<v-col cols="3">
-								<v-img
-									width="250px"
-									contain
-									src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
-									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
-								></v-img>
-							</v-col>
-							<v-col class="pl-4">
-								<div class="text-h5 primary--text font-weight-bold">
-									Te ayudamos a encontrar a tu psicólogo ideal
-								</div>
-								<div class="my-2 text-h6 primary--text font-weight-regular">
-									Encuentra al psicólogo que necesitas, solo responde las
-									siguientes preguntas.
-								</div>
-								<div class="my-4">
-									<v-btn
-										rounded
-										color="primary"
-										class="px-8 py-2"
-										@click="goEvaluation"
-									>
-										Comenzar
-									</v-btn>
-								</div>
-							</v-col>
-						</v-row>
-					</v-sheet>
-				</v-col>
 				<v-col
 					v-if="loadingPsychologist"
 					cols="12"
@@ -400,7 +360,14 @@
 									style="position: absolute; top: 30px; left: 0"
 								>
 									<div
-										class="d-flex justify-space-between align-center info rounded-r-lg pa-2"
+										class="
+											d-flex
+											justify-space-between
+											align-center
+											info
+											rounded-r-lg
+											pa-2
+										"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
 											width: 70px;
@@ -577,7 +544,14 @@
 										</template>
 										<template v-else>
 											<div
-												class="primary--text caption font-weight-bold d-flex justify-center align-center"
+												class="
+													primary--text
+													caption
+													font-weight-bold
+													d-flex
+													justify-center
+													align-center
+												"
 												style="height: 300px"
 											>
 												Cargando...
@@ -611,7 +585,7 @@
 
 <script>
 import { mdiChevronDown, mdiAccount } from '@mdi/js';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 /**
  * Componente: Listado de psicologos en vista de escritorio
@@ -632,6 +606,7 @@ export default {
 	},
 	data() {
 		return {
+			toggle: null,
 			mdiChevronDown,
 			mdiAccount,
 			menuGender: false,
@@ -835,6 +810,11 @@ export default {
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
+		...mapActions({
+			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
+			getPsychologistsAvailityMatch: 'Psychologist/getPsychologistsAvailityMatch',
+			getPsychologistsEconomicMatch: 'Psychologist/getPsychologistsEconomicMatch',
+		}),
 	},
 };
 </script>
@@ -856,5 +836,8 @@ export default {
 
 .item:hover {
 	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
+}
+.textbtn {
+	color: #54565a;
 }
 </style>

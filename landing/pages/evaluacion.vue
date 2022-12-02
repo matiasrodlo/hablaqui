@@ -964,6 +964,7 @@ export default {
 				model: this.models,
 				price: this.price,
 			};
+			localStorage.setItem('match-making', JSON.stringify(payload));
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
 					localStorage.setItem(
