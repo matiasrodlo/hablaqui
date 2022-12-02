@@ -11,6 +11,54 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getPsychologistsBestMatch({ commit }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const payload = JSON.parse(localStorage.getItem('match-making'));
+			const { data } = await this.$axios('/psychologists/best-match', {
+				method: 'POST',
+				data: payload,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getPsychologistsEconomicMatch({ commit }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const payload = JSON.parse(localStorage.getItem('match-making'));
+			const { data } = await this.$axios('/psychologists/economic-match', {
+				method: 'POST',
+				data: payload,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getPsychologistsAvailityMatch({ commit }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const payload = JSON.parse(localStorage.getItem('match-making'));
+			const { data } = await this.$axios('/psychologists/availity-match', {
+				method: 'POST',
+				data: payload,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getTransactions({ commit }) {
 		try {
 			const { transactions } = await this.$axios.$get('/specialist/transactions/all');

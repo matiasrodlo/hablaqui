@@ -258,14 +258,7 @@ const ponderationMatch = async (matchedList, payload) => {
 	return newMatchedList;
 };
 
-/**
- * @description Clasifica los especialistas si es el mejor match, el mas barato y el con mayor disponibilidad
- * @param {Array} matchedList - Lista de especialistas matchados que se quiere clasificar
- * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns - Lista de especialistas clasificados
- */
-const bestMatch = async body => {
-	const { payload } = body;
+const bestMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 	// Comienza a buscar los psicologos por genero y especialidad
@@ -316,9 +309,8 @@ const bestMatch = async body => {
 	});;
 };
 
-const economicMatch = async body => {
-	const { payload } = body;
-	let matchedSpecialists = [];
+const economicMatch = async payload => {
+	let matchedPsychologists = [];
 	let perfectMatch = true;
 
 	// Si no encuentra como minimo 1, busca el psicologo solo respecto al genero
@@ -353,8 +345,7 @@ const economicMatch = async body => {
 	});
 };
 
-const availityMatch = async body => {
-	const { payload } = body;
+const availityMatch = async payload => {
 	let points = 0;
 	const nextDays = 7;
 	let pointsPerCriterion = 1;
