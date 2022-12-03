@@ -69,6 +69,8 @@ steps:
       - "SEGMENT_API_KEY=${_SEGMENT_API_KEY}"
       - "SENDGRID_API_KEY=${_SENDGRID_API_KEY}"
       - "DEBUG_ANALYTICS=${_DEBUG_ANALYTICS}"
+      - "KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}"
+      - "NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
