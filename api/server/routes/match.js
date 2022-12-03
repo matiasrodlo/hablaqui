@@ -13,7 +13,7 @@ const matchRouter = Router();
  * @param {String} params.user - Id del usuario
  * @return Respuestas guardadas
  */
-matchRouter.post('/match', matchController.createAnswers);
+matchRouter.post('/match/create-answers/:id', matchController.createAnswers);
 
 /**
  * @description Obtiene las respuestas de un usuario del flujo del match
@@ -22,7 +22,7 @@ matchRouter.post('/match', matchController.createAnswers);
  * @param {String} params.user - Id del usuario
  * @return {Object} Respuestas del usuario
  */
-matchRouter.get('/match', matchController.getAnswers);
+matchRouter.get('/match/get-answers/:id', matchController.getAnswers);
 
 /**
  * @description Actualiza las respuestas de un usuario del flujo del match
@@ -32,7 +32,7 @@ matchRouter.get('/match', matchController.getAnswers);
  * @param {String} params.user - Id del usuario
  * @return Respuestas actualizadas
  */
-matchRouter.put('/match', matchController.updateAnswers);
+matchRouter.put('/match/update-answers/:id', matchController.updateAnswers);
 
 /**
  * @description Elimina las respuestas de un usuario del flujo del match
@@ -41,6 +41,6 @@ matchRouter.put('/match', matchController.updateAnswers);
  * @param {String} params.user - Id del usuario
  * @return Respuestas eliminadas
  */
-matchRouter.delete('/match', matchController.deleteAnswers);
+matchRouter.delete('/match/delete-answers/:id', matchController.deleteAnswers);
 
 export default matchRouter;
