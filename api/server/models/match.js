@@ -2,7 +2,7 @@
 
 import { Schema, model } from 'mongoose';
 
-let answersFlow = new Schema(
+let answersSchema = new Schema(
 	{
 		gender: {
 			type: String,
@@ -32,4 +32,4 @@ let answersFlow = new Schema(
 	{ timestamps: true }
 );
 
-export default model('answersflow', answersFlow);
+export default model('matchanswers', answersSchema);
