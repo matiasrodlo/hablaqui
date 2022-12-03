@@ -12,6 +12,7 @@ import cronRouter from './cron';
 import dashboardRouter from './dashboard';
 import sessionsRouter from './sessions';
 import evaluationRouter from './evaluation';
+import matchRouter from './match';
 import transactionRouter from './transaction';
 import scriptsRouter from './scripts';
 
@@ -30,6 +31,7 @@ export default app => {
 	app.use(apiVersion, dashboardRouter);
 	app.use(apiVersion, sessionsRouter);
 	app.use(apiVersion, evaluationRouter);
+	app.use(apiVersion, matchRouter);
 	app.use(apiVersion, transactionRouter);
 	app.use(apiVersion, scriptsRouter);
 };
