@@ -16,9 +16,7 @@
 		<v-col cols="12" md="6">
 			<v-text-field
 				v-model="formUser.email"
-				readonly
 				filled
-				disabled
 				hide-details
 				outlined
 				dense
@@ -29,6 +27,7 @@
 			<v-text-field
 				v-model="formUser.lastName"
 				filled
+				disabled
 				outlined
 				dense
 				hide-details
@@ -38,6 +37,7 @@
 		<v-col cols="12" md="6">
 			<v-text-field
 				v-model="formUser.rut"
+				disabled
 				filled
 				outlined
 				hide-details
@@ -70,6 +70,7 @@
 						label="Fecha de nacimiento"
 						readonly
 						filled
+						disabled
 						outlined
 						hide-details
 						dense
@@ -137,6 +138,7 @@
 					{ text: 'Transgénero', value: 'transgender' },
 				]"
 				filled
+				disabled
 				outlined
 				hide-details
 				dense

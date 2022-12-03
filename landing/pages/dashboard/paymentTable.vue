@@ -16,7 +16,7 @@
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla para pagos</v-toolbar-title>
+								<v-toolbar-title>Pagos pendientes</v-toolbar-title>
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
@@ -34,6 +34,7 @@
 							>
 								Sesiones
 							</v-btn>
+							<v-btn small @click="showBankInfo(item)"> Datos bancarios </v-btn>
 						</template>
 					</v-data-table>
 					<div class="text-center pt-2">
@@ -45,14 +46,18 @@
 				<div>
 					<v-data-table
 						:headers="headersTransactions"
-						:items="transactions"
+						:items="filteredTransactions"
 						sort-by="createdAt"
 						:sort-desc="false"
-						class="elevation-1"
+						class="elevation-1 mb-5"
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla de pagos hechos</v-toolbar-title>
+								<v-toolbar-title>Pagos realizados</v-toolbar-title>
+								<v-spacer />
+								<v-text-field v-model="start" type="datetime-local" label="Desde" />
+								<v-spacer />
+								<v-text-field v-model="end" type="datetime-local" label="Hasta" />
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
@@ -79,13 +84,70 @@
 				<v-data-table :headers="headersSessions" :items="sessions" />
 			</v-card>
 		</v-dialog>
+		<v-dialog
+			v-model="showBank"
+			max-width="500"
+			@click:outside="
+				() => {
+					showBank = false;
+				}
+			"
+		>
+			<v-card max-width="500">
+				<v-card-title>
+					<span class="text-h5">Datos bancarios</span>
+				</v-card-title>
+				<v-divider></v-divider>
+				<v-card-text>
+					<v-row>
+						<v-col cols="6">
+							<div>
+								Banco:
+								<span class="font-weight-black">
+									{{ paymentMethods.bank }}
+								</span>
+							</div>
+						</v-col>
+						<v-col cols="6">
+							<div>
+								Rut: <span class="font-weight-black">{{ paymentMethods.rut }}</span>
+							</div>
+						</v-col>
+					</v-row>
+					<v-row>
+						<v-col cols="6">
+							Numero de cuenta:
+							<span class="font-weight-black">{{
+								paymentMethods.accountNumber
+							}}</span>
+						</v-col>
+						<v-col cols="6">
+							<div>
+								Tipo de cuenta:
+								<span class="font-weight-black">{{
+									paymentMethods.accountType
+								}}</span>
+							</div>
+						</v-col>
+					</v-row>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 <script>
 import axios from 'axios';
 import { mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isBetween from 'dayjs/plugin/isBetween';
+import timezone from 'dayjs/plugin/timezone';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Payment',
@@ -100,6 +162,8 @@ export default {
 			pageCount: 0,
 			psychologist: [],
 			transactions: [],
+			start: '',
+			end: '',
 			label: 'Sesiones a pagar',
 			headers: [
 				{ text: 'Nombre', value: 'name' },
@@ -111,6 +175,8 @@ export default {
 			],
 			headersSessions: [
 				{ text: 'Fecha', value: 'date' },
+				{ text: 'Consultante', value: 'name' },
+				{ text: 'Correo', value: 'email' },
 				{ text: 'N° de sesión', value: 'sessionNumber' },
 				{ text: 'Valor de la sesion', value: 'price' },
 				{ text: 'Cupón', value: 'coupon' },
@@ -125,8 +191,25 @@ export default {
 				{ text: 'Acciones', value: 'action', sortable: false },
 			],
 			dialog: false,
+			showBank: false,
+			paymentMethods: {},
 			sessions: [],
 		};
+	},
+	computed: {
+		filteredTransactions() {
+			let transactions = [];
+			if (this.start === '' || this.end === '') transactions = this.transactions;
+			else {
+				transactions = this.transactions.filter(t =>
+					dayjs(t.createdAt, 'DD/MM/YYYY HH:mm').isBetween(
+						dayjs(this.start, 'yyyy-MM-DDTHH:mm'),
+						dayjs(this.end, 'yyyy-MM-DDTHH:mm')
+					)
+				);
+			}
+			return transactions;
+		},
 	},
 	mounted() {
 		this.initFetch();
@@ -161,6 +244,10 @@ export default {
 			this.label = label;
 			this.dialog = true;
 			this.sessions = item.session;
+		},
+		showBankInfo(item) {
+			this.paymentMethods = item.paymentMethod;
+			this.showBank = true;
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
