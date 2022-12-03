@@ -9,7 +9,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * @param {Object} dataPayload - The data to send the mail
  */
 const sendMails = async (dataPayload, user, isReceiverSupport) => {
-	return new Promise((resolve, reject) => {
+	let sendMail = await new Promise((resolve, reject) => {
 		sgMail.send(dataPayload, (error, body) => {
 			if (error) {
 				reject(error);
@@ -19,14 +19,15 @@ const sendMails = async (dataPayload, user, isReceiverSupport) => {
 				logInfo(body);
 			}
 		});
-		if (
-			process.env.NODE_ENV === 'development' &&
-			user.email.split('.')[0] === namespaceTestMails &&
-			!isReceiverSupport
-		) {
-			verifyIncomingMails(user);
-		}
 	});
+	if (
+		process.env.NODE_ENV === 'development' &&
+		user.email.split('.')[0] === namespaceTestMails &&
+		!isReceiverSupport
+	) {
+		await verifyIncomingMails(user);
+	}
+	return sendMail;
 };
 
 export default sendMails;
