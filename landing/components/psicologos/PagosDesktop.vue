@@ -158,7 +158,7 @@
 					<v-card-title class="px-10 titleColor">Resumen</v-card-title>
 					<v-card-text class="px-10">
 						<div class="my-6 d-flex justify-space-between">
-							<div class="body-1 font-weight-bold">Subscripción</div>
+							<div class="body-1 font-weight-bold">Suscripción</div>
 							<div v-if="planSelected" class="body-1">
 								{{ planSelected.title }}
 							</div>
@@ -271,7 +271,7 @@ export default {
 			itemsPlan: [
 				{
 					id: 1,
-					title: 'Pago semanal',
+					title: 'Semanal',
 					pricePerSession: '$50.000 / por sesión',
 					valuePerSession: '$50.000',
 					priceTotal: '',
@@ -280,7 +280,7 @@ export default {
 				},
 				{
 					id: 2,
-					title: 'Pago mensual',
+					title: 'Mensual',
 					pricePerSession: '$45.000 / por sesión',
 					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
@@ -289,7 +289,7 @@ export default {
 				},
 				{
 					id: 3,
-					title: 'Pago trimestral',
+					title: 'Trimestral',
 					pricePerSession: '$40.000 / por sesión',
 					valuePerSession: '$40.000',
 					priceTotal: '($480000)',
@@ -337,7 +337,7 @@ export default {
 				if (item.id === 2) {
 					priceWithDiscount =
 						this.psychologist.sessionPrices.video * 4 -
-						this.psychologist.sessionPrices.video * 4 * 0.1;
+						this.psychologist.sessionPrices.video * 4 * 0.2;
 					pricePerSession = priceWithDiscount / 4;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 4;
@@ -345,7 +345,7 @@ export default {
 				if (item.id === 3) {
 					priceWithDiscount =
 						this.psychologist.sessionPrices.video * 12 -
-						this.psychologist.sessionPrices.video * 12 * 0.2;
+						this.psychologist.sessionPrices.video * 12 * 0.3;
 					pricePerSession = priceWithDiscount / 12;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 12;

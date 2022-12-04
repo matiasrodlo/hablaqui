@@ -131,8 +131,12 @@
 							</template>
 							<div class="elevation-5 pa-3">
 								<span class="primary--text">
-									Solo puede establecer el precio por sesión una primera vez. Si
-									desea gestionar un cambio tendrá que contactarnos.
+									Podrá establecer el valor de su suscripción semanal un vez. Si
+									posteriormente desea gestionar un cambio tendrá que
+									contactarnos. Consideré que ofrecemos un 20% de descuento por
+									sesión en suscripción mensual (4 sesiones) y 30% en trimestral
+									(12 sesiones) con el proposito de incentivar el compromiso hacia
+									el proceso terapeutico.
 								</span>
 							</div>
 						</v-tooltip>
@@ -192,7 +196,7 @@
 					>
 						<div>
 							<v-text-field
-								:value="Math.round(video * 0.6)"
+								:value="Math.round(video * 0.7)"
 								outlined
 								suffix="Trimestral"
 								type="number"

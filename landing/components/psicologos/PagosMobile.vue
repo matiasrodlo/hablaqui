@@ -131,7 +131,7 @@
 				<v-card-title class="titleColor"> Resumen </v-card-title>
 				<v-card-text class="">
 					<div class="my-6 d-flex justify-space-between">
-						<div class="body-1 font-weight-bold">Subscripción</div>
+						<div class="body-1 font-weight-bold">Suscripción</div>
 						<div v-if="planSelected" class="body-1">
 							{{ planSelected.title }}
 						</div>
@@ -236,7 +236,7 @@ export default {
 			itemsPlan: [
 				{
 					id: 1,
-					title: 'Pago semanal',
+					title: 'Semanal',
 					pricePerSession: '$50.000 / por sesión',
 					valuePerSession: '$50.000',
 					priceTotal: '',
@@ -245,7 +245,7 @@ export default {
 				},
 				{
 					id: 2,
-					title: 'Pago mensual',
+					title: 'Mensual',
 					pricePerSession: '$45.000 / por sesión',
 					valuePerSession: '$45.000',
 					priceTotal: '($180000)',
@@ -254,7 +254,7 @@ export default {
 				},
 				{
 					id: 3,
-					title: 'Pago trimestral',
+					title: 'Trimestral',
 					pricePerSession: '$40.000 / por sesión',
 					valuePerSession: '$40.000',
 					priceTotal: '($480000)',
