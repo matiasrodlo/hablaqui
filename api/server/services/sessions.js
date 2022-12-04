@@ -14,6 +14,7 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -25,7 +26,6 @@ import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Analytics from 'analytics-node';
-import email from '../models/email';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -116,28 +116,28 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		}
 	).populate('psychologist user');
 
-	/*session = getLastSessionFromPlan(session, id, planId);
-
-	const date = dayjs(session.date).format();
-	const lastSession = dayjs(session.lastSession).format();
-
-	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0
-	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente)
-	if (
-		session.remainingSessions === 0 &&
-		new Date(date).getTime() === new Date(lastSession).getTime()
-	) {
-		const expiration = dayjs(session.datePayment)
-			.add(1, 'months')
-			.format();
-		await Sessions.findOneAndUpdate(
-			{ _id: sessionsId, 'plan._id': session.plan_id },
-			{
-				$set: {
-					'plan.$.expiration': expiration,
-				},
-			}
-		);
+	/*session = getLastSessionFromPlan(session, id, planId); 
+ 
+	const date = dayjs(session.date).format(); 
+	const lastSession = dayjs(session.lastSession).format(); 
+ 
+	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0 
+	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente) 
+	if ( 
+		session.remainingSessions === 0 && 
+		new Date(date).getTime() === new Date(lastSession).getTime() 
+	) { 
+		const expiration = dayjs(session.datePayment) 
+			.add(1, 'months') 
+			.format(); 
+		await Sessions.findOneAndUpdate( 
+			{ _id: sessionsId, 'plan._id': session.plan_id }, 
+			{ 
+				$set: { 
+					'plan.$.expiration': expiration, 
+				}, 
+			} 
+		); 
 	}*/
 
 	// Considera que el usuario es psicologo
@@ -146,7 +146,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}).populate('psychologist user');
 
 	// Se verifica si es un compromiso privado
-	if (cancelSessions.user == null) {
+	if (cancelSessions.user === null) {
 		await mailServiceReminder.sendCancelCommitment(
 			cancelSessions.psychologist
 		);
@@ -194,6 +194,7 @@ const checkPlanTask = async () => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
+
 const createPlan = async ({ payload }) => {
 	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
@@ -280,7 +281,7 @@ const createPlan = async ({ payload }) => {
 	});
 
 	const roomId = crypto
-		.createHash('md5')
+		.createHash('sha256')
 		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
 
@@ -435,38 +436,12 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-
-		// Se crean correos de recordatorio de pago
-		await email.create({
-			sessionDate: dayjs(created.date).format(),
-			wasScheduled: false,
-			type: 'reminder-payment-hour',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
-		await email.create({
-			sessionDate: dayjs(created.date).format(),
-			wasScheduled: false,
-			type: 'reminder-payment-day',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
-		await email.create({
-			sessionDate: dayjs(created.date).format(),
-			wasScheduled: false,
-			type: 'promocional-incentive-week',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
+		await mailServicePsy.pendingPlanPayment(
+			user,
+			psychologist,
+			payload.price,
+			responseBody.init_point
+		);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -480,6 +455,7 @@ const createPlan = async ({ payload }) => {
  * @param {Object} payload - datos para guardar
  * @returns sessions actualizada
  */
+
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
 	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
@@ -597,6 +573,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
  * @param {Number} payload.price Precio que se cobrara
  * @returns sessions
  */
+
 const customNewSession = async (user, payload) => {
 	try {
 		// Validamos que sea psicologo
@@ -659,7 +636,7 @@ const customNewSession = async (user, payload) => {
 
 		// Creamos la direccion de la sala de videollamadas
 		const roomId = crypto
-			.createHash('md5')
+			.createHash('sha256')
 			.update(`${payload.user}${payload.psychologist}`)
 			.digest('hex');
 
@@ -1087,6 +1064,7 @@ const paymentsInfo = async user => {
  * @param {Object} newDate Datos a actualizar
  * @returns sessions
  */
+
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	// Se obtiene la session a reprogramar, se obtiene el tiempo minimo para reprogramar
 	let currentSession = await Sessions.findOne({
@@ -1204,6 +1182,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
  * Actualiza una sessions
  * @param {string} sessions campos a actualizar
  */
+
 const updateSessions = async sessions => {
 	await Sessions.updateOne(
 		{

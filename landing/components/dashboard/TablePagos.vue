@@ -243,7 +243,7 @@
 					<div>
 						<div class="primary--text font-weight-bold">{{ item.name }}</div>
 						<div class="font-weight-medium secondary--text caption mt-1">
-							Sesión:{{ item.sessionsNumber }}
+							Sesión: {{ item.sessionsNumber }}
 						</div>
 					</div>
 					<div>
@@ -259,19 +259,19 @@
 					<div
 						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
-						<span>Tipo de plan</span>
+						<span>Suscripción</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
 						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
-						<span>Monto</span>
+						<span>Valor</span>
 						<span>{{ item.amount }}</span>
 					</div>
 					<div
 						class="caption font-weight-medium secondary--text d-flex justify-space-between"
 					>
-						<span>% Hablaquí</span>
+						<span>Comisión Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
@@ -286,7 +286,7 @@
 		<v-dialog v-model="dialog" persistent max-width="400">
 			<v-card max-width="400">
 				<v-card-title class="d-flex">
-					<div class="primary--text" style="flex: 1">Detalles</div>
+					<div class="primary--text" style="flex: 1">Detalle</div>
 					<div style="flex: 0">
 						<v-btn
 							icon
@@ -307,25 +307,25 @@
 						<div>{{ selected.date }}</div>
 					</div>
 					<div class="d-flex justify-space-between my-2">
-						<div>N° de sesión:</div>
+						<div>Numero de sesión:</div>
 						<div>{{ selected.sessionsNumber }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">Monto:</div>
+						<div style="flex: 1">Valor sesión:</div>
 						<div style="flex: 0">{{ selected.amount }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">%Hablaqui:</div>
-						<div style="flex: 0">{{ selected.hablaquiPercentage }}</div>
+						<div style="flex: 1">Comisión Hablaqui:</div>
+						<div style="flex: 0">${{ selected.hablaquiPercentage }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">%Mercadopago:</div>
-						<div style="flex: 0">{{ selected.mercadoPercentage }}</div>
+						<div style="flex: 1">Comisión Mercadopago:</div>
+						<div style="flex: 0">${{ selected.mercadoPercentage }}</div>
 					</div>
 				</v-card-text>
 				<v-divider></v-divider>
 				<v-card-actions v-if="selected" class="py-6">
-					<span class="secondary--text">Total:</span>
+					<span class="secondary--text">Monto final:</span>
 					<v-spacer></v-spacer>
 					<span class="secondary--text">{{ selected.total }}</span>
 				</v-card-actions>

@@ -188,7 +188,7 @@
 									{{ getMyPsy.name }} {{ getMyPsy.lastName }}
 								</v-list-item-title>
 								<v-list-item-subtitle class="primary--text">
-									Mi Psicólogo
+									Mi especialista
 								</v-list-item-subtitle>
 							</v-list-item-content>
 							<v-list-item-action>
@@ -237,15 +237,9 @@
 			<template v-else>
 				<div class="d-flex justify-center align-center" style="flex: 1">
 					<div class="text-center pa-4" style="max-width: 300px">
-						<span class="body-1 primary--text font-weight-bold">
-							Comienza a hablar con nuestros psicólogos
-						</span>
-						<div class="mt-5 body-2">
-							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
-							tu vida hoy.
-						</div>
-						<v-btn class="mt-5 px-8" color="primary" rounded to="/psicologos/">
-							Buscar ahora
+						<div class="mt-5 body-2">Bienestar en cualquier momento</div>
+						<v-btn class="mt-5 px-8" color="primary" rounded to="/evaluacion/">
+							Comenzar
 						</v-btn>
 					</div>
 				</div>

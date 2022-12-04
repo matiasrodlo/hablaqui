@@ -20,7 +20,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <internal@mail.hablaqui.cl>',
 			to: 'direccion@hablaqui.com',
-			subject: '[Internal] ¡Hay una nueva postulación para Hablaquí!',
+			subject: '[Internal] Nueva postulación de especialista',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-8ee906349e144427ad0103a31507541a',
 			asm: {
@@ -43,7 +43,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reclutamiento@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Gracias por postular a Hablaquí!',
+			subject: 'Gracias por registrarse, acceda a su cuenta',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-d40470d41a3842ac9108bcdb6ac70022',
 			asm: {
@@ -64,7 +64,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Puedes evaluar a tu psicólogo`,
+			subject: `Evaluación de experiencia en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
 			asm: {
@@ -89,7 +89,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Tienes un plan por pagar`,
+			subject: `Subscripción pendiente el pago`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-a9b7fe9d08254e9b91d1cddbe399292c',
 			asm: {
@@ -114,7 +114,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `No has pagado tu plan`,
+			subject: `El plazo para pagar su subscripción expiró`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
 			asm: {
@@ -161,7 +161,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Tu solicitud de retiro ya ha sido completada!`,
+			subject: `Transferencia de recaudación semanal`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-478ea4a5f440447db1d7ec9dc0361b55',
 			asm: {
@@ -198,28 +198,6 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description sends an e-mail to the user who has passed an evaluation to a psychologist
-	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
-	 */
-	async sendApproveEvaluationToUser(user, psy) {
-		const dataPayload = {
-			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
-			to: user.name + '<' + user.email + '>',
-			subject: `¡Se ha aprobado tu evaluación!`,
-			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-2be43052aefe4a51bd7800cdba7155a9',
-			asm: {
-				group_id: 16321,
-			},
-			dynamicTemplateData: {
-				psy_name: psy.name,
-				user_name: user.name,
-			},
-		};
-		await sendMails(dataPayload);
-	},
-	/**
 	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
 	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
@@ -228,7 +206,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `¡Se ha aprobado una evaluación tuya!`,
+			subject: `Ha recibido una nueva evaluación`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-39a41d2dc58e4e35a5674cf03a2cb86e',
 			asm: {

@@ -54,9 +54,9 @@ export default {
 			sortedPlans = [filterPlans.sort((a, b) => a.diff - b.diff).pop()];
 
 		// retornamos el ultimo plan succes y que expiro
-		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === min)];
+		if (!sortedPlans.length) sortedPlans = [plans.find(item => item.diff === min)];
 		// retornamos el siguiente plan pendiente
-		if (!sortedPlans) sortedPlans = [plans.find(item => item.diff === max)];
+		if (!sortedPlans.length) sortedPlans = [plans.find(item => item.diff === max)];
 		return { sortedPlans, totalSessions, appoinmentSessions };
 	},
 };

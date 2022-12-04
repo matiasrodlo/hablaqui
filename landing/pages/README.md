@@ -28,7 +28,7 @@
 
 -   #### perfil:
 
-    -   **index.vue**: Mi cuenta (user/psy)
+    -   **index.vue**: Cuenta (user/psy)
     -   **configuracion-personal.vue**: Información general resposive (user/Psy)
     -   **datos-bancarios.vue**: Datos bancarios responsive (psy)
     -   **experiencia-formacion.vue**: Experiencia y formación responsive (psy)

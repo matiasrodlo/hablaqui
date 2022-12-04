@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Camnbio de psicólogo" />
+		<appbar class="hidden-sm-and-down" title="Reagendamiento" />
 		<v-row style="height: calc(100vh - 110px); overflow-y: auto">
 			<v-col class="text--secondary" cols="6">
 				<v-list>

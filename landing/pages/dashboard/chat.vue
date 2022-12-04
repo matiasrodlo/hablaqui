@@ -63,7 +63,7 @@
 								class="primary white--text pa-4 mt-2 mx-4"
 								style="border-radius: 20px"
 							>
-								Aún no tienes consultantes
+								Aún no tiene consultantes
 							</v-sheet>
 							<!-- consultantes -->
 							<v-list
@@ -163,7 +163,7 @@
 						<template v-if="$auth.$state.user && $auth.$state.user.role === 'user'">
 							<v-card-text v-if="plan" class="py-0">
 								<v-subheader class="primary--text body-1 px-0">
-									Mi Psicólogo
+									Mi especialista
 								</v-subheader>
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
@@ -288,23 +288,16 @@
 									class="my-2 d-flex justify-center align-center"
 								>
 									<div class="text-center">
-										<span
-											class="body-1 primary--text font-weight-bold"
-											style="max-width: 220px"
-										>
-											Comienza a hablar con nuestros psicólogos
-										</span>
 										<div class="mt-5 body-2 mx-auto" style="max-width: 220px">
-											Orientación psicológica en cualquier dayjso y lugar.
-											Comienza a mejorar tu vida hoy.
+											Bienestar en cualquier momento
 										</div>
 										<v-btn
 											class="mt-5 px-8"
 											color="primary"
 											rounded
-											:to="{ name: 'psicologos' }"
+											:to="{ name: 'evaluacion' }"
 										>
-											Buscar ahora
+											Comenzar
 										</v-btn>
 									</div>
 								</div>
