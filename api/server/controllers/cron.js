@@ -11,7 +11,7 @@ const cronController = {
 			const { data, code } = await cronService.scheduleEmails(token);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 	async sessionStatus(req, res) {
@@ -20,7 +20,7 @@ const cronController = {
 			const { data, code } = await cronService.sessionStatus(token);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 	async scheduleChatEmails(req, res) {
@@ -29,7 +29,7 @@ const cronController = {
 			const { data, code } = await cronService.scheduleChatEmails(token);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 	async limitToPayPlan(req, res) {
@@ -38,7 +38,7 @@ const cronController = {
 			const { data, code } = await cronService.limitToPayPlan(token);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 	async statusInmediateAttention(req, res) {
@@ -49,7 +49,7 @@ const cronController = {
 			);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 	async reminderPayment(req, res) {
@@ -58,7 +58,7 @@ const cronController = {
 			const { data, code } = await cronService.reminderPayment(token);
 			return restResponse(data, code, res);
 		} catch (err) {
-			errorCallback(res, err);
+			errorCallback(err, res);
 		}
 	},
 };

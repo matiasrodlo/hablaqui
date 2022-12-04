@@ -23,7 +23,6 @@ const sendMails = async dataPayload => {
 				logInfo(body);
 			}
 		});
-		console.log(dataPayload);
 	});
 };
 

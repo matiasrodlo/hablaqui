@@ -232,6 +232,8 @@ const successPay = async params => {
 				'promocional-incentive',
 			],
 		},
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
 	});
 	if (mailsToDeleted.length) {
 		mailsToDeleted.forEach(async mail => {

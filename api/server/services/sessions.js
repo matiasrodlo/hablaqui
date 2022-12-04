@@ -460,7 +460,7 @@ const createPlan = async ({ payload }) => {
 		await email.create({
 			sessionDate: dayjs(created.date).format(),
 			wasScheduled: false,
-			type: 'promocional-incentive',
+			type: 'promocional-incentive-week',
 			queuedAt: null,
 			scheduledAt: null,
 			userRef: user._id,
