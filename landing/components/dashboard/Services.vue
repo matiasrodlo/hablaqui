@@ -112,7 +112,7 @@
 							"
 						/>
 					</v-col>
-					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
+					<v-col class="text-h6" style="color: #3c3c3b">
 						Valor por sesión
 						<v-tooltip right max-width="300" color="white">
 							<template #activator="{ on, attrs }">
@@ -179,7 +179,6 @@
 								outlined
 								suffix="Mensual"
 								type="number"
-								hint="Ingrese el valor por sesion sin comas, ni puntos"
 								disabled
 								filled
 							>
@@ -197,7 +196,6 @@
 								outlined
 								suffix="Trimestral"
 								type="number"
-								hint="Ingrese el valor por sesion sin comas, ni puntos"
 								disabled
 								filled
 							>
