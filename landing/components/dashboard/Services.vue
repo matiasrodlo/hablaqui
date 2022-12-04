@@ -160,10 +160,46 @@
 								:value="video"
 								outlined
 								filled
-								suffix="CLP"
+								suffix="Semanal"
 								type="number"
 								hint="Ingrese el valor por sesion sin comas, ni puntos"
 								@input="setPrice"
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col
+						cols="12"
+						md="4"
+						:style="step && step.title === 'Valor mensual' ? 'z-index: 3' : ''"
+					>
+						<div>
+							<v-text-field
+								:value="Math.round(video * 0.8)"
+								outlined
+								suffix="Mensual"
+								type="number"
+								hint="Ingrese el valor por sesion sin comas, ni puntos"
+								disabled
+								filled
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col
+						cols="12"
+						md="4"
+						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
+					>
+						<div>
+							<v-text-field
+								:value="Math.round(video * 0.6)"
+								outlined
+								suffix="Trimestral"
+								type="number"
+								hint="Ingrese el valor por sesion sin comas, ni puntos"
+								disabled
+								filled
 							>
 							</v-text-field>
 						</div>
