@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { keyApiTestMails, namespaceTestMails } from '../../../config/dotenv';
+import {
+	keyApiTestMails,
+	namespaceTestMails,
+	node_env,
+} from '../../../config/dotenv';
 import { logInfo } from '../../../config/pino.js';
 import { okResponse, conflictResponse } from '../../responses/functions';
 import dayjs from 'dayjs';
@@ -26,12 +30,21 @@ const writerLogs = async (user, mail) => {
 };
 
 export const issuerChange = async addressMail => {
-	if (process.env.NODE_ENV !== 'development') {
+	if (node_env !== 'development') {
 		return addressMail;
 	}
 	// Se comienza a establecer la dirección de correo del emisor
 	const tag = addressMail.split('<')[1].split('@')[0];
 	addressMail = `${tag} <${namespaceTestMails}.staging@inbox.testmail.app>`;
+	return addressMail;
+};
+
+export const replyChange = async addressMail => {
+	if (node_env !== 'development') {
+		return addressMail;
+	}
+	// Se comienza a establecer la dirección de correo del emisor
+	addressMail = `Soporte <${namespaceTestMails}.soporte@inbox.testmail.app>`;
 	return addressMail;
 };
 

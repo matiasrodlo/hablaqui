@@ -1,6 +1,6 @@
 import sgMail from '@sendgrid/mail';
 import { logInfo } from '../../../config/pino';
-import { namespaceTestMails } from '../../../config/dotenv';
+import { namespaceTestMails, node_env } from '../../../config/dotenv';
 import { verifyIncomingMails } from './incomingMails';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -21,7 +21,7 @@ const sendMails = async (dataPayload, user, isReceiverSupport) => {
 		});
 	});
 	if (
-		process.env.NODE_ENV === 'development' &&
+		node_env === 'development' &&
 		user.email.split('.')[0] === namespaceTestMails &&
 		!isReceiverSupport
 	) {

@@ -1,7 +1,7 @@
 'use strict';
 
 import sendMails from './sendMails';
-import { issuerChange } from './incomingMails';
+import { issuerChange, replyChange } from './incomingMails';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -41,6 +41,7 @@ const mailService = {
 			},
 		};
 		dataPayload.from = await issuerChange(dataPayload.from);
+		dataPayload.reply_to = await replyChange(dataPayload.reply_to);
 		await sendMails(dataPayload, user, isReceiverSupport);
 	},
 	/**
@@ -72,6 +73,7 @@ const mailService = {
 			},
 		};
 		dataPayload.from = await issuerChange(dataPayload.from);
+		dataPayload.reply_to = await replyChange(dataPayload.reply_to);
 		await sendMails(dataPayload, psy, isReceiverSupport);
 	},
 	/**
@@ -97,6 +99,7 @@ const mailService = {
 			},
 		};
 		dataPayload.from = await issuerChange(dataPayload.from);
+		dataPayload.reply_to = await replyChange(dataPayload.reply_to);
 		await sendMails(dataPayload, psychologist, isReceiverSupport);
 	},
 };

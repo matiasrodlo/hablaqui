@@ -71,6 +71,7 @@ steps:
       - "DEBUG_ANALYTICS=${_DEBUG_ANALYTICS}"
       - "KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}"
       - "NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}"
+      - "NODE_ENV=${_NODE_ENV}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
