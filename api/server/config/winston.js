@@ -12,7 +12,7 @@ const MESSAGE = Symbol.for('message');
 
 const jsonFormatter = logEntry => {
 	const base = {
-		timestamp: dayjs.format(),
+		timestamp: dayjs().format(),
 		severity: logEntry.level.toUpperCase(),
 	};
 	const json = Object.assign(base, logEntry);
