@@ -182,7 +182,7 @@ const mailService = {
 			batchId: batch,
 		};
 		if (reminderType === 'day') {
-			dataPayload.subject = `Mañana es tu sesión con ${name} en Hablaquí`;
+			dataPayload.subject = `Mañana es tu sesión con ${user.name} en Hablaquí`;
 			dataPayload.templateId = 'd-52dd78c814cb46aaad9ce9023163cfee';
 		}
 		await sendMails(dataPayload);
