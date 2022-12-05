@@ -150,7 +150,7 @@ const mailService = {
 		};
 		if (reminderType === 'day') {
 			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
-			dataPayload.templateId = 'd-fa32dabc9c4a4adcb51847db3cac1d48';
+			dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6';
 		}
 		await sendMails(dataPayload);
 	},
@@ -183,7 +183,7 @@ const mailService = {
 		};
 		if (reminderType === 'day') {
 			dataPayload.subject = `Mañana es tu sesión con ${user.name} en Hablaquí`;
-			dataPayload.templateId = 'd-52dd78c814cb46aaad9ce9023163cfee';
+			dataPayload.templateId = 'd-5438529516ae4dbab81793daaaba7f06';
 		}
 		await sendMails(dataPayload);
 	},
