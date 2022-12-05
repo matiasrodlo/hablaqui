@@ -21,7 +21,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Tu psicólogo ${psychologist.name} te está hablando`,
+			subject: `Tiene un nuevo mensaje no leído en Hablaquí de parte de ${psychologist.name}`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-becad9021a1e4b34afbd466a84aea4e3',
 			asm: {
@@ -132,9 +132,10 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: 'Tu sesión en Hablaquí está por comenzar',
+			subject:
+				'Su sesión con ${psy.name} ${psy.lastname} está por comenzar',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-9a0771dd50e44569b8bb8d5bbce9a886',
+			templateId: 'd-3ab0f381fc2f4a579165cc6c36ed8586',
 			dynamicTemplateData: {
 				first_name: name,
 				psy_first_name: psy.name,
@@ -164,9 +165,9 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `Tu sesión con ${name} en Hablaquí está por comenzar`,
+			subject: `Su sesión con ${name} en Hablaquí está por comenzar`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-4ae158cf069a4f9abd6aae9784e1a255',
+			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
 				user_first_name: name,
 				user_last_name: lastName,
