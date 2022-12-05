@@ -12,6 +12,7 @@ import {
 } from '../utils/functions/sessionsFunctions';
 import User from '../models/user';
 import Coupon from '../models/coupons';
+import Email from '../models/email';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
@@ -559,6 +560,48 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			myPlan.totalSessions
 		}`
 	);
+	// Email scheduling for appointment reminder for the user
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-user-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: plan.user,
+		psyRef: plan.psychologist,
+		sessionRef: sessions._id,
+	});
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-user-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: plan.user,
+		psyRef: plan.psychologist,
+		sessionRef: sessions._id,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-psy-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: plan.user,
+		psyRef: plan.psychologist,
+		sessionRef: sessions._id,
+	});
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-psy-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: plan.user,
+		psyRef: plan.psychologist,
+		sessionRef: sessions._id,
+	});
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
