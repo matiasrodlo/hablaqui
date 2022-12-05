@@ -1123,6 +1123,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			return plan.session;
 		})
 		.filter(s => s._id.toString() === id.toString())[0];
+	// Se captura la fecha anterior para después buscar en la base de datos el correo correspondiente
+	const oldDate = currentSession.date;
 
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
@@ -1200,6 +1202,30 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			newDate,
 			sessions.roomsUrl
 		);
+	}
+	// Se les cambia la fecha de la sesión a los correos de recordatorio
+	const mailsToReprogram = await Email.find({
+		'session.date': dayjs(oldDate, 'MM/DD/YYYY HH:mm'),
+		type: {
+			$in: [
+				'reminder-user-day',
+				'reminder-user-hour',
+				'reminder-psy-day',
+				'reminder-psy-hour',
+			],
+		},
+		userRef: sessions.user._id,
+		psyRef: sessions.psychologist._id,
+	});
+	console.log('mailsToReprogram', mailsToReprogram);
+	if (mailsToReprogram.length) {
+		mailsToReprogram.forEach(async mail => {
+			await Email.findByIdAndUpdate(mail._id, {
+				sessionDate: newDate.date,
+				wasScheduled: false,
+				scheduledAt: null,
+			}).catch(err => console.log(err));
+		});
 	}
 
 	// Se hace el trackeo de la reprogramacion en segment
