@@ -161,18 +161,18 @@ const mailService = {
 	 * @param {string} date - The date of the appointment
 	 */
 	async sendReminderPsy(user, psy, date, batch, reminderType) {
-		const { email, name, lastName } = user;
+		const { email, name, lastName } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `Su sesión con ${name} en Hablaquí está por comenzar`,
+			subject: `Su sesión con ${user.name} en Hablaquí está por comenzar`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
-				user_first_name: name,
-				user_last_name: lastName,
-				psy_first_name: psy.name,
-				psy_last_name: psy.lastName,
+				user_first_name: user.name,
+				user_last_name: user.lastName,
+				psy_first_name: name,
+				psy_last_name: lastName,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
 			},

@@ -148,6 +148,9 @@ async function scheduleEmails(pendingEmails) {
 		}
 		const user = await User.findById(emailInfo.userRef);
 		const psy = await psychologist.findById(emailInfo.psyRef);
+		if (!user || !psy) {
+			return;
+		}
 		try {
 			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
