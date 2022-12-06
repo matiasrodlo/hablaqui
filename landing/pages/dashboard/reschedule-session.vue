@@ -182,7 +182,9 @@ export default {
 		},
 		clickSession(value) {
 			this.selectedSession = value;
-			this.sessionDate = dayjs(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDTHH:mm');
+			this.sessionDate = dayjs
+				.tz(dayjs(value.date, 'MM/DD/YYYY HH:mm'))
+				.format('yyyy-MM-DDTHH:mm');
 		},
 		async clicked() {
 			const res = await this.$axios.$post('/dashboard/session/reschedule', {

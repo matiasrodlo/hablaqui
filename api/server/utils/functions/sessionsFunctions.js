@@ -38,9 +38,9 @@ export const paymentInfoFunction = async psyId => {
 				// Cantidad de dinero a restar
 				let amountDueTotal = 0;
 				let amountDue = 0;
-				let paymentPlanDate = dayjs(plans.datePayment).format(
-					'DD/MM/YYYY'
-				);
+				let paymentPlanDate = dayjs
+					.tz(dayjs(plans.datePayment))
+					.format('DD/MM/YYYY');
 
 				let sessions = plans.session.map(session => {
 					let transDate =
@@ -59,15 +59,14 @@ export const paymentInfoFunction = async psyId => {
 							: transDate;
 					return {
 						_id: session._id,
-						datePayment: dayjs(
-							session.date,
-							'MM/DD/YYYY HH:mm'
-						).format('DD/MM/YYYY'),
+						datePayment: dayjs
+							.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
+							.format('DD/MM/YYYY'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
-							'DD/MM/YYYY HH:mm'
-						),
+						date: dayjs
+							.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
+							.format('DD/MM/YYYY HH:mm'),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: priceFormatter(+plans.sessionPrice),
 						hablaquiPercentage: 0,
@@ -204,7 +203,7 @@ export const formattedSchedule = (schedule, day, hour) => {
 		'saturday',
 		'sunday',
 	];
-	day = dayjs(day).format('dddd');
+	day = dayjs.tz(dayjs(day)).format('dddd');
 	week.forEach(weekDay => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
@@ -226,9 +225,9 @@ export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 	let session = sessions.plan
 		.flatMap(plan => {
 			let maxSession = plan.session.map(session =>
-				dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
-					'YYYY/MM/DD HH:mm'
-				)
+				dayjs
+					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
+					.format('YYYY/MM/DD HH:mm')
 			);
 			maxSession = maxSession.sort((a, b) => new Date(b) - new Date(a));
 			return plan.session.flatMap(session => {
@@ -283,11 +282,16 @@ export const setSession = (role, sessions) => {
 				plan.title = 'sesion online';
 
 			return plan.session.map(session => {
-				const start = dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
-					'YYYY-MM-DD HH:mm'
-				);
-				const end = dayjs(session.date, 'MM/DD/YYYY HH:mm')
-					.add(60, 'minutes')
+				const start = dayjs
+					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
+					.format('YYYY-MM-DD HH:mm');
+				const end = dayjs
+					.tz(
+						dayjs(session.date, 'MM/DD/YYYY HH:mm').add(
+							60,
+							'minutes'
+						)
+					)
 					.format('YYYY-MM-DD HH:mm');
 
 				return {

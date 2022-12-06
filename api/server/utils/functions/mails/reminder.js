@@ -140,15 +140,13 @@ const mailService = {
 				first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
+				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs(date)
-				.subtract(1, 'hour')
-				.unix(),
+			sendAt: dayjs.tz(dayjs(date).subtract(1, 'hour')).unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);
@@ -172,15 +170,13 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
+				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs(date)
-				.subtract(1, 'hour')
-				.unix(),
+			sendAt: dayjs.tz(dayjs(date).subtract(1, 'hour')).unix(),
 			batchId: batch,
 		};
 		await sendMails(dataPayload);

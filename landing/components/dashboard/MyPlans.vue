@@ -124,7 +124,7 @@ export default {
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
-					diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
+					diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),
 				}))
 			);
 		},
@@ -152,7 +152,7 @@ export default {
 			if (title === 'Acompañamiento vía mensajería') return 'Terapia vía mensajes de texto';
 		},
 		setDate(date) {
-			return dayjs(date).format('l');
+			return dayjs.tz(dayjs(date)).format('l');
 		},
 		itemSuccess(item) {
 			return (

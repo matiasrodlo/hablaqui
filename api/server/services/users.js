@@ -2,9 +2,9 @@
 
 import User from '../models/user';
 import Psychologist from '../models/psychologist';
-import Recruitment from '../models/recruitment'; 
-import { logInfo } from '../config/winston'; 
-import bcrypt from 'bcryptjs'; 
+import Recruitment from '../models/recruitment';
+import { logInfo } from '../config/winston';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -162,9 +162,7 @@ const usersService = {
 		}
 
 		// Se cambia el plan de expiración del plan antiguo
-		ultimoPlan.expiration = dayjs()
-			.subtract(1, 'days')
-			.format();
+		ultimoPlan.expiration = dayjs.tz(dayjs().subtract(1, 'days')).format();
 
 		// Se filtran las sesiones que no a la fecha no se han realizado
 		ultimoPlan.session = ultimoPlan.session.filter(
@@ -358,7 +356,7 @@ const usersService = {
 			});
 		}
 		const roomId = crypto
-			.createHash("sha256")
+			.createHash('sha256')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
@@ -368,7 +366,10 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: dayjs('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: dayjs
+				.tz(dayjs('12/12/2000', 'MM/DD/YYYY HH:mm'))
+				.format()
+				.toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,

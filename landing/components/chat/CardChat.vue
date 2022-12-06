@@ -332,12 +332,12 @@ export default {
 		};
 	},
 	created() {
-		dayjs.locale('es');
+		dayjs.tz().locale('es');
 	},
 	methods: {
 		setDate(time) {
-			if (time) return dayjs(time).calendar();
-			return dayjs().format('llll');
+			if (time) return dayjs.tz(dayjs(time)).calendar();
+			return dayjs.tz().format('llll');
 		},
 		sentBy(sentBy) {
 			return sentBy === this.$auth.$state.user._id;

@@ -190,7 +190,7 @@ const successPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': dayjs().format(),
+				'plan.$.datePayment': dayjs.tz().format(),
 			},
 		},
 		{ new: true }
@@ -201,7 +201,7 @@ const successPay = async params => {
 	const sessionData = planData.session[0];
 	// Email scheduling for appointment reminder for the user
 	await email.create({
-		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionDate: dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')),
 		wasScheduled: false,
 		type: 'reminder-user',
 		queuedAt: undefined,
@@ -212,7 +212,7 @@ const successPay = async params => {
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
-		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		sessionDate: dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')),
 		wasScheduled: false,
 		type: 'reminder-psy',
 		queuedAt: undefined,
@@ -239,14 +239,14 @@ const successPay = async params => {
 	await mailServiceSchedule.sendScheduleToUser(
 		user,
 		psy,
-		dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')).format(),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
 	await mailServiceSchedule.sendScheduleToPsy(
 		user,
 		psy,
-		dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
+		dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')).format(),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
@@ -262,14 +262,10 @@ const psychologistPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period === 'anual') {
-		expirationDate = dayjs()
-			.add(12, 'month')
-			.format();
+		expirationDate = dayjs.tz(dayjs().add(12, 'month')).format();
 	}
 	if (period === 'mensual') {
-		expirationDate = dayjs()
-			.add(1, 'month')
-			.format();
+		expirationDate = dayjs.tz(dayjs().add(1, 'month')).format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
 	const pricePaid = 69000 * 12;
@@ -333,7 +329,7 @@ const customSessionPay = async params => {
 		{
 			$set: {
 				'plan.$.payment': 'success',
-				'plan.$.datePayment': dayjs().format(),
+				'plan.$.datePayment': dayjs.tz().format(),
 			},
 		},
 		{ new: true }
@@ -402,14 +398,10 @@ const recruitedPay = async (params, query) => {
 	// Verifica el periodo del plan que se quiere contratar
 	let expirationDate;
 	if (period == 'anual') {
-		expirationDate = dayjs()
-			.add(12, 'month')
-			.format();
+		expirationDate = dayjs.tz(dayjs().add(12, 'month')).format();
 	}
 	if (period == 'mensual') {
-		expirationDate = dayjs()
-			.add(1, 'month')
-			.format();
+		expirationDate = dayjs.tz(dayjs().add(1, 'month')).format();
 	}
 	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
 	const pricePaid = 69000 * 12;

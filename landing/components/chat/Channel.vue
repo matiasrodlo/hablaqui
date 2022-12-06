@@ -285,8 +285,8 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		setDate(time) {
-			if (time) return dayjs(time).calendar();
-			return dayjs().format('llll');
+			if (time) return dayjs.tz(dayjs(time)).calendar();
+			return dayjs.tz().format('llll');
 		},
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));

@@ -133,7 +133,7 @@ export default {
 	},
 	methods: {
 		formatDate(item) {
-			return dayjs(item, 'MM/DD/YYYY').format('dddd DD MMMM YYYY');
+			return dayjs.tz(dayjs(item, 'MM/DD/YYYY')).format('dddd DD MMMM YYYY');
 		},
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {

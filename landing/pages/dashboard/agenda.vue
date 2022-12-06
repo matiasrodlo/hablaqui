@@ -807,7 +807,7 @@ export default {
 		},
 		selectedElement: null,
 		selectedOpen: false,
-		today: dayjs().format('YYYY-MM-DD'),
+		today: dayjs.tz().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
@@ -859,13 +859,15 @@ export default {
 			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
-				return dayjs(a, 'MM/DD/YYYY HH:mm').diff(dayjs(b, 'MM/DD/YYYY HH:mm'));
+				return dayjs
+					.tz(dayjs(a, 'MM/DD/YYYY HH:mm'))
+					.diff(dayjs.tz(dayjs(b, 'MM/DD/YYYY HH:mm')));
 			});
 			const date = allDates.find(item =>
 				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 			if (date) {
-				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
+				return dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('DD/MM/YY');
 			}
 			return '';
 		},
@@ -1061,7 +1063,7 @@ export default {
 			}
 		},
 		setToday() {
-			this.focus = dayjs().format('YYYY-MM-DD');
+			this.focus = dayjs.tz().format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();
@@ -1111,8 +1113,8 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
-				.add(50, 'minutes')
+			return `Desde las ${dayjs.tz(dayjs(date)).format('HH:mm')} hasta las ${dayjs
+				.tz(dayjs(date).add(50, 'minutes'))
 				.format('HH:mm')}`;
 		},
 		closeDialog() {

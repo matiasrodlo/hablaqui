@@ -31,7 +31,8 @@ function isSchedulableEmail(date) {
 	 * @param {dayjs} date es la fecha de la cita
 	 * @returns
 	 */
-	return dayjs()
+	return dayjs
+		.tz()
 		.add(3, 'days')
 		.isAfter(date);
 }
@@ -45,8 +46,8 @@ function generatePayload(date, batch) {
 	 */
 	return {
 		wasScheduled: true,
-		scheduledAt: dayjs(date)
-			.subtract(1, 'hour')
+		scheduledAt: dayjs
+			.tz(dayjs(date).subtract(1, 'hour'))
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
 	};
@@ -127,7 +128,7 @@ const cronService = {
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
-				if (dayjs(expiration).isBefore(dayjs(Date.now())))
+				if (dayjs(expiration).isBefore(dayjs()))
 					await psychologist.findOneAndUpdate(
 						{ _id: psy._id },
 						{
@@ -189,7 +190,9 @@ const cronService = {
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = dayjs(emailInfo.sessionDate);
+				const sessionDate = dayjs
+					.tz(dayjs(emailInfo.sessionDate))
+					.format();
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
@@ -253,7 +256,9 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs.tz(
+							dayjs(session.date, 'MM/DD/YYYY HH:mm')
+						);
 						// if (
 						// 	session.status === 'pending' &&
 						// 	dayjs(date)
@@ -263,13 +268,13 @@ const cronService = {
 						// 			'hours'
 						// 		)
 						// 		.isBefore(dayjs()) &&
-						// 	dayjs().isBefore(date) &&
-						// 	dayjs().isBefore(plan.expiration)
+						// 	dayjs().isBefore(dayjs(date)) &&
+						// 	dayjs().isBefore(dayjs(plan.expiration))
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
 							session.status === 'pending' && // || session.status === 'upnext'
-							dayjs().isAfter(date)
+							dayjs().isAfter(dayjs(date))
 						) {
 							session.status = 'success';
 						}

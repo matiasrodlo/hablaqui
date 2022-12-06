@@ -167,7 +167,9 @@ const mailService = {
 				psy_name: psy.name,
 				code: coupon.code,
 				amount: coupon.discount,
-				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),
+				expiration_date: dayjs
+					.tz(dayjs(coupon.expiration))
+					.format('DD/MM/YYYY'),
 			},
 		};
 		await sendMails(dataPayload);
