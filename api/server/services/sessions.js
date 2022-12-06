@@ -567,8 +567,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		type: 'reminder-user-hour',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: plan.user,
-		psyRef: plan.psychologist,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -577,8 +577,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		type: 'reminder-user-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: plan.user,
-		psyRef: plan.psychologist,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
 		sessionRef: sessions._id,
 	});
 	// Email scheduling for appointment reminder for the psychologist
@@ -588,8 +588,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		type: 'reminder-psy-hour',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: plan.user,
-		psyRef: plan.psychologist,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -598,8 +598,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		type: 'reminder-psy-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
-		userRef: plan.user,
-		psyRef: plan.psychologist,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
 		sessionRef: sessions._id,
 	});
 
