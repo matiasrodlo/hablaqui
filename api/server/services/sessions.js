@@ -822,14 +822,14 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 
 	sessions = length.map(el => {
 		const day = dayjs().add(el, 'days');
-		const temporal = dayjs(day).format('L');
+		const temporal = dayjs.tz(dayjs(day)).format('L');
 
 		return {
 			id: el,
-			value: dayjs.tz(dayjs(day)).format(),
-			day: dayjs.tz(dayjs(day)).format('DD MMM'),
-			date: dayjs.tz(dayjs(day)).format('L'),
-			text: dayjs.tz(dayjs(day)).format(),
+			value: day.format(),
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			text: day.format(),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
@@ -915,14 +915,14 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
 		const day = dayjs().add(el, 'days');
-		const temporal = dayjs(day).format('L');
+		const temporal = dayjs.tz(dayjs(day)).format('L');
 
 		return {
 			id: el,
-			value: dayjs.tz(dayjs(day)).format(),
-			day: dayjs.tz(dayjs(day)).format('DD MMM'),
-			date: dayjs.tz(dayjs(day)).format('L'),
-			text: dayjs.tz(dayjs(dayjs(day))).format(),
+			value: day.format(),
+			day: day.format('DD MMM'),
+			date: day.format('L'),
+			text: day.format(),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
@@ -1016,21 +1016,21 @@ const formattedSessionsAll = async ids => {
 	// Obtenemos la disponibilidad de todos los psicolgos
 	sessions = allSessions.map(item => {
 		const minimumNewSession = dayjs
-			.tz(dayjs(Date.now()).add(item.preferences.minimumNewSession, 'h'))
+			.tz(dayjs().add(item.preferences.minimumNewSession, 'h'))
 			.format();
 		let schedule = item.schedule;
 
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
-				const day = dayjs().add(el, 'days');
-				const temporal = dayjs(day).format('L');
+				const day = dayjs.tz(dayjs().add(el, 'days'));
+				const temporal = dayjs.tz(dayjs(day)).format('L');
 				return {
 					psychologist: item._id,
-					value: dayjs.tz(dayjs(day)).format(),
-					day: dayjs.tz(dayjs(day)).format('DD MMM'),
-					date: dayjs.tz(dayjs(day)).format('L'),
-					text: dayjs.tz(dayjs(day)).format(),
+					value: day.format(),
+					day: day.format('DD MMM'),
+					date: day.format('L'),
+					text: day.format(),
 					available: hours.filter(hour => {
 						return (
 							dayjs(
@@ -1054,6 +1054,11 @@ const formattedSessionsAll = async ids => {
 			}),
 		};
 	});
+	/*
+	sessions.forEach(item => {
+		// Se imprimen los proximos 5 días
+		console.log(item.sessions);
+	});*/
 	return okResponse('sesiones obtenidas', { sessions });
 };
 

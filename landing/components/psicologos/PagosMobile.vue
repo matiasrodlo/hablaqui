@@ -377,7 +377,7 @@ export default {
 			this.showCalendar = !this.showCalendar;
 		},
 		formatDate(date) {
-			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
+			return dayjs.tz(dayjs(date, 'MM/DD/YYYY')).format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

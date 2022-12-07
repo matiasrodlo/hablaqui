@@ -31,8 +31,7 @@ function isSchedulableEmail(date) {
 	 * @param {dayjs} date es la fecha de la cita
 	 * @returns
 	 */
-	return dayjs
-		.tz()
+	return dayjs()
 		.add(3, 'days')
 		.isAfter(date);
 }
