@@ -59,7 +59,7 @@ export default {
 				psychologist: item.psychologist,
 				sessions: item.sessions.map(el => ({
 					...el,
-					text: dayjs(el.text).format('ddd'),
+					text: dayjs.tz(dayjs(el.text)).format('ddd'),
 					day: dayjs(el.day, 'DD MMM').format('DD MMM'),
 				})),
 			};
@@ -73,7 +73,7 @@ export default {
 					psychologist: item.psychologist,
 					sessions: item.sessions.map(el => ({
 						...el,
-						text: dayjs(el.text).format('ddd'),
+						text: dayjs.tz(dayjs(el.text)).format('ddd'),
 						day: dayjs(el.day, 'DD MMM').format('DD MMM'),
 					})),
 				};
