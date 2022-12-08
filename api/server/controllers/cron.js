@@ -5,10 +5,10 @@ import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
 const cronController = {
-	async scheduleEmails(req, res) {
+	async emailSchedule(req, res) {
 		try {
 			const token = req.params.authToken;
-			const { data, code } = await cronService.scheduleEmails(token);
+			const { data, code } = await cronService.emailSchedule(token);
 			return restResponse(data, code, res);
 		} catch (err) {
 			errorCallback(res, err);
