@@ -150,7 +150,7 @@ const mailService = {
 			batchId: batch,
 		};
 		if (reminderType === 'day') {
-			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
+			dataPayload.subject = 'Mañana es su sesión en Hablaquí';
 			dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6';
 		}
 		await sendMails(dataPayload);
