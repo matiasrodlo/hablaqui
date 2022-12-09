@@ -580,7 +580,7 @@ export default {
 		 * Filtro en base a los precios de los especialistas
 		 */
 		filterLevelTwo(item) {
-			if (this.toggle) {
+			if (this.toggle == null || this.matchMaking == null) {
 				if (!this.prices) return this.filterLevelOne;
 				return this.filterLevelOne.filter(item => {
 					const prices = JSON.parse(this.prices);
@@ -640,6 +640,7 @@ export default {
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialistsMarketPlace',
 			sessions: 'Specialist/sessionsLimit',
+			matchMaking: 'Specialist/matchMaking',
 		}),
 	},
 	watch: {
@@ -745,10 +746,12 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-			if (this.toggle === 0) await this.getSpecialistsBestMatch();
-			if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
-			if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
+			if (this.matchMaking !== null) {
+				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
+				if (this.toggle === 0) await this.getSpecialistsBestMatch();
+				if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
+				if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
