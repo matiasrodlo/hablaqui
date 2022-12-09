@@ -127,7 +127,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date, batch, reminderType, roomsUrl) {
+	async sendReminderUser(user, psy, date, batch, reminderType, url) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
@@ -140,7 +140,7 @@ const mailService = {
 				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				url_rooms: roomsUrl,
+				url_rooms: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
 			},
@@ -161,7 +161,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date, batch, reminderType, roomsUrl) {
+	async sendReminderPsy(user, psy, date, batch, reminderType, url) {
 		const { email, name, lastName } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
@@ -174,7 +174,7 @@ const mailService = {
 				user_last_name: user.lastName,
 				psy_first_name: name,
 				psy_last_name: lastName,
-				url_rooms: roomsUrl,
+				url_rooms: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
 			},
