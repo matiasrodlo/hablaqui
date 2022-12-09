@@ -1,4 +1,5 @@
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
+import state from './state';
 
 export default {
 	async getPsychologists({ commit }) {
@@ -11,18 +12,18 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getPsychologistsBestMatch({ commit }) {
+	async getPsychologistsBestMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
-			const payload = JSON.parse(localStorage.getItem('match-making'));
 			const { data } = await this.$axios('/psychologists/best-match', {
 				method: 'POST',
-				data: payload,
+				data: state.matchMaking,
 			});
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}
 			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Psicologos recomendados obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -30,14 +31,14 @@ export default {
 	async getPsychologistsEconomicMatch({ commit }) {
 		try {
 			commit('setLoadingPsychologist', true);
-			const payload = JSON.parse(localStorage.getItem('match-making'));
 			const { data } = await this.$axios('/psychologists/economic-match', {
 				method: 'POST',
-				data: payload,
+				data: state.matchMaking,
 			});
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}
+			snackBarSuccess('Psicologos más economicos obtenidos')(commit);
 			commit('setLoadingPsychologist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -46,15 +47,15 @@ export default {
 	async getPsychologistsAvailityMatch({ commit }) {
 		try {
 			commit('setLoadingPsychologist', true);
-			const payload = JSON.parse(localStorage.getItem('match-making'));
 			const { data } = await this.$axios('/psychologists/availity-match', {
 				method: 'POST',
-				data: payload,
+				data: state.matchMaking,
 			});
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}
 			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Psicologos con mayor disponibilidad obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -359,6 +360,40 @@ export default {
 				}
 			);
 			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async createMatchMakig({ commit }, payload) {
+		try {
+			await this.$axios(`/match/create-answers/${payload.userId}`, {
+				method: 'POST',
+				data: payload,
+			});
+			snackBarSuccess('Sus repuestas han sido guardadas para buscar su psicologo ideal')(
+				commit
+			);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async updateMatchMakig({ commit, state }, payload) {
+		try {
+			const { data } = await this.$axios(`/match/update-answers/${payload.userId}`, {
+				method: 'PUT',
+				data: { ...state.matchMaking, ...payload },
+			});
+			commit('setMatchMaking', data.answers);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getMatchMakig({ commit }, userId) {
+		try {
+			const { data } = await this.$axios(`/match/get-answers/${userId}`, {
+				method: 'GET',
+			});
+			commit('setMatchMaking', data.answers);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

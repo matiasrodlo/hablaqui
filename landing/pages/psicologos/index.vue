@@ -101,6 +101,7 @@ export default {
 	},
 	methods: {
 		async initialFetch() {
+			if (this.$auth.$state.loggedIn) await this.getMatchMakig(this.$auth.$state.user._id);
 			await this.getAppointments();
 		},
 		getSessions(ids) {
@@ -109,6 +110,7 @@ export default {
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getMatchMakig: 'Psychologist/getMatchMakig',
 		}),
 	},
 };

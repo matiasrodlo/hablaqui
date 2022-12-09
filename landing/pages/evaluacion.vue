@@ -892,26 +892,6 @@ export default {
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 	},
-	created() {
-		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length) {
-				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedPsychologists = psi.match;
-				else if (psi._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('psi');
-					localStorage.setItem(
-						'psi',
-						JSON.stringify({
-							match: psi.match,
-							_id: this.$auth.$state.user._id,
-						})
-					);
-					this.matchedPsychologists = psi.match;
-				}
-			}
-		}
-	},
 	mounted() {
 		this.getFormattedSessionsAll();
 	},
@@ -954,7 +934,7 @@ export default {
 			} else if (this.models.length < 3) this.models.push(model);
 			if (this.models.length === 3) this.step = 6;
 		},
-		openPrecharge() {
+		async openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
@@ -963,22 +943,10 @@ export default {
 				schedule: this.schedule,
 				model: this.models,
 				price: this.price,
+				userId: this.$auth.user._id,
 			};
-			localStorage.setItem('match-making', JSON.stringify(payload));
-			this.matchPsi(payload).then(response => {
-				if (response && response.length) {
-					localStorage.setItem(
-						'psi',
-						JSON.stringify({
-							match: response.filter((el, i) => i < 3),
-							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
-						})
-					);
-					if (!this.$auth.$state.loggedIn)
-						this.$router.push('/auth/?register=true&from=psy');
-					this.matchedPsychologists = response.filter((el, i) => i < 3);
-				}
-			});
+			await this.createMatchMakig(payload);
+			this.$router.push('/psicologos');
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
@@ -987,6 +955,7 @@ export default {
 			return '';
 		},
 		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
 			matchPsi: 'Psychologist/matchPsi',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),
