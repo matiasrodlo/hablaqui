@@ -580,7 +580,7 @@ export default {
 		 * Filtro en base a los precios de los psicologos
 		 */
 		filterLevelTwo(item) {
-			if (this.toggle) {
+			if (this.toggle == null || this.matchMaking == null) {
 				if (!this.prices) return this.filterLevelOne;
 				return this.filterLevelOne.filter(item => {
 					const prices = JSON.parse(this.prices);
@@ -640,6 +640,7 @@ export default {
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsLimit',
+			matchMaking: 'Psychologist/matchMaking',
 		}),
 	},
 	watch: {
@@ -745,10 +746,12 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-			if (this.toggle === 0) await this.getPsychologistsBestMatch();
-			if (this.toggle === 1) await this.getPsychologistsEconomicMatch();
-			if (this.toggle === 2) await this.getPsychologistsAvailityMatch();
+			if (this.matchMaking !== null) {
+				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
+				if (this.toggle === 0) await this.getPsychologistsBestMatch();
+				if (this.toggle === 1) await this.getPsychologistsEconomicMatch();
+				if (this.toggle === 2) await this.getPsychologistsAvailityMatch();
+			}
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

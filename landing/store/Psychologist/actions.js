@@ -388,6 +388,16 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async deleteMatchMakig({ commit }, userid) {
+		try {
+			await this.$axios(`/match/delete-answers/${userid}`, {
+				method: 'DELETE',
+			});
+			commit('setMatchMaking', null);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getMatchMakig({ commit }, userId) {
 		try {
 			const { data } = await this.$axios(`/match/get-answers/${userId}`, {
