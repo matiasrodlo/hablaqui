@@ -177,103 +177,37 @@
 								clearable
 								:append-icon="mdiChevronDown"
 								:items="[
-									{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
-									{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
-									{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
-									{ value: '[29900]', text: '+ $29.900' },
+									{ value: 15000, text: 'Hasta $15.000' },
+									{ value: 20000, text: 'Hasta $20.000' },
+									{ value: 30000, text: 'Hasta $30.000' },
+									{ value: 40000, text: 'Hasta $40.000' },
 								]"
 								label="Precios"
 								hide-details
+								@change="e => actualizarMatch({ price: e })"
 							></v-autocomplete>
 						</div>
 					</v-col>
 					<v-col id="selectOthers" cols="3" style="position: relative">
-						<v-menu
+						<v-autocomplete
 							ref="menuOthers"
-							v-model="menuOthers"
-							:close-on-content-click="false"
-							transition="scale-transition"
-							offset-y
-							rounded
+							outlined
+							dense
+							class="white"
 							attach="#selectOthers"
-							min-width="200px"
-						>
-							<template #activator="{ on, attrs }">
-								<v-text-field
-									:value="
-										models.length || languages.length
-											? `Otros·${models.length + languages.length}`
-											: ''
-									"
-									label="Disponibilidad"
-									readonly
-									outlined
-									dense
-									class="white"
-									hide-details
-									:append-icon="mdiChevronDown"
-									v-bind="attrs"
-									@click:append="() => (menuOthers = !menuOthers)"
-									v-on="on"
-								>
-								</v-text-field>
-							</template>
-							<v-card rounded width="200px">
-								<v-card-text
-									><div class="body-2 font-weight-bold">Modelo terapéuticos</div>
-									<template
-										v-for="(item, i) in [
-											'Cognitivo-conductual',
-											'Contextual',
-											'Psicoanálisis',
-											'Humanista',
-											'Sistémico',
-										]"
-									>
-										<v-checkbox
-											:key="`models-${i}`"
-											v-model="models"
-											:value="item"
-											class="py-2"
-											hide-details
-											:label="item"
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption"> {{ item }}</span>
-											</template>
-										</v-checkbox>
-									</template>
-									<div class="body-2 font-weight-bold mt-2">Idioma</div>
-									<v-checkbox
-										v-model="languages"
-										value="spanish"
-										:disabled="loadingSpecialist"
-										hide-details
-										class="py-2"
-										label="Español"
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Español </span>
-										</template>
-									</v-checkbox>
-									<v-checkbox
-										v-model="languages"
-										value="english"
-										:disabled="loadingSpecialist"
-										hide-details
-										class="py-2"
-										label="Ingles"
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Ingles </span>
-										</template>
-									</v-checkbox>
-								</v-card-text>
-							</v-card>
-						</v-menu>
+							clearable
+							:append-icon="mdiChevronDown"
+							:items="[
+								{ value: 'early', text: 'Temprano: Antes de las 9 am' },
+								{ value: 'morning', text: 'En la mañana: Entre 9 am y 12 pm' },
+								{ value: 'midday', text: 'A Medio día: Entre 12 y 2 pm' },
+								{ value: 'afternoon', text: 'En la tarde: Entre 2 y 6 pm' },
+								{ value: 'night', text: 'En la noche: Después de las 6 pm' },
+							]"
+							label="Disponibilidad"
+							hide-details
+							@change="e => actualizarMatch({ schedule: e })"
+						></v-autocomplete>
 					</v-col>
 				</v-row>
 				<v-row>
@@ -285,7 +219,7 @@
 								@click="
 									() => {
 										toggle = 0;
-										getPsychologistsBestMatch();
+										getSpecialistsBestMatch();
 									}
 								"
 							>
@@ -301,7 +235,7 @@
 								@click="
 									() => {
 										toggle = 1;
-										getPsychologistsEconomicMatch();
+										getSpecialistsEconomicMatch();
 									}
 								"
 							>
@@ -317,7 +251,7 @@
 								@click="
 									() => {
 										toggle = 2;
-										getPsychologistsAvailityMatch();
+										getSpecialistsAvailityMatch();
 									}
 								"
 							>
@@ -646,15 +580,18 @@ export default {
 		 * Filtro en base a los precios de los especialistas
 		 */
 		filterLevelTwo(item) {
-			if (!this.prices) return this.filterLevelOne;
-			return this.filterLevelOne.filter(item => {
-				const prices = JSON.parse(this.prices);
-				if (prices.length > 1)
-					return (
-						prices[0] < item.sessionPrices.video && prices[1] > item.sessionPrices.video
-					);
-				else return prices[0] < item.sessionPrices.video;
-			});
+			if (this.toggle) {
+				if (!this.prices) return this.filterLevelOne;
+				return this.filterLevelOne.filter(item => {
+					const prices = JSON.parse(this.prices);
+					if (prices.length > 1)
+						return (
+							prices[0] < item.sessionPrices.video &&
+							prices[1] > item.sessionPrices.video
+						);
+					else return prices[0] < item.sessionPrices.video;
+				});
+			} else return this.filterLevelOne;
 		},
 		/**
 		 * items for search box
@@ -807,13 +744,20 @@ export default {
 				return this.$router.push(`/${specialist.username}/?chat=true`);
 			}
 		},
+		async actualizarMatch(value) {
+			await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
+			if (this.toggle === 0) await this.getSpecialistsBestMatch();
+			if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
+			if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
+		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
 		...mapActions({
-			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
-			getPsychologistsAvailityMatch: 'Psychologist/getPsychologistsAvailityMatch',
-			getPsychologistsEconomicMatch: 'Psychologist/getPsychologistsEconomicMatch',
+			updateMatchMakig: 'Specialist/updateMatchMakig',
+			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
+			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
+			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
 		}),
 	},
 };

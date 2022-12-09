@@ -449,7 +449,7 @@
 										@click="
 											() => {
 												toggle = 0;
-												getPsychologistsBestMatch();
+												getSpecialistsBestMatch();
 											}
 										"
 									>
@@ -468,7 +468,7 @@
 										@click="
 											() => {
 												toggle = 1;
-												getPsychologistsEconomicMatch();
+												getSpecialistsEconomicMatch();
 											}
 										"
 									>
@@ -487,7 +487,7 @@
 										@click="
 											() => {
 												toggle = 2;
-												getPsychologistsAvailityMatch();
+												getSpecialistsAvailityMatch();
 											}
 										"
 									>
@@ -940,9 +940,9 @@ export default {
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),
 		...mapActions({
-			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
-			getPsychologistsAvailityMatch: 'Psychologist/getPsychologistsAvailityMatch',
-			getPsychologistsEconomicMatch: 'Psychologist/getPsychologistsEconomicMatch',
+			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
+			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
+			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
 		}),
 	},
 };

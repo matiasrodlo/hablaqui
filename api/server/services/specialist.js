@@ -261,14 +261,14 @@ const ponderationMatch = async (matchedList, payload) => {
 const bestMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
-	// Comienza a buscar los psicologos por genero y especialidad
+	// Comienza a buscar los especialistas por genero y especialidad
 	if (payload.gender == 'transgender') {
-		matchedSpecialists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			isTrans: true,
 			specialties: { $in: payload.themes },
 		});
 	} else {
-		matchedSpecialists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
@@ -276,22 +276,22 @@ const bestMatch = async payload => {
 		});
 	}
 
-	// Si no encuentra como minimo 0, busca el psicologo solo respecto al genero
+	// Si no encuentra como minimo 0, busca el especialista solo respecto al genero
 	if (matchedSpecialists.length == 0) {
 		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				isTrans: true,
 			});
 		} else {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 					$in: ['male', 'female', 'transgender'],
 				},
 			});
 		}
 		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Psychologist.find();
+			matchedSpecialists = await Specialist.find();
 		}
 		perfectMatch = false;
 	}
@@ -303,32 +303,32 @@ const bestMatch = async payload => {
 		weighted
 	);
 	
-	return okResponse('psicologos encontrados', {
+	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
 		perfectMatch,
 	});;
 };
 
 const economicMatch = async payload => {
-	let matchedPsychologists = [];
+	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	// Si no encuentra como minimo 1, busca el psicologo solo respecto al genero
+	// Si no encuentra como minimo 1, busca el especialista solo respecto al genero
 	if (matchedSpecialists.length == 0) {
 		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				isTrans: true,
 			});
 		} else {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 					$in: ['male', 'female', 'transgender'],
 				},
 			});
 		}
 		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Psychologist.find();
+			matchedSpecialists = await Specialist.find();
 		}
 		perfectMatch = false;
 	}
@@ -339,7 +339,7 @@ const economicMatch = async payload => {
 		(a, b) => b.sessionPrices.video - a.sessionPrices.video
 	);
 
-	return okResponse('psicologos encontrados', {
+	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
 		perfectMatch,
 	});
@@ -352,14 +352,14 @@ const availityMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	// Comienza a buscar los psicologos por genero y especialidad
+	// Comienza a buscar los especialistas por genero y especialidad
 	if (payload.gender == 'transgender') {
-		matchedSpecialists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			isTrans: true,
 			specialties: { $in: payload.themes },
 		});
 	} else {
-		matchedSpecialists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			gender: payload.gender || {
 				$in: ['male', 'female', 'transgender'],
 			},
@@ -367,27 +367,27 @@ const availityMatch = async payload => {
 		});
 	}
 
-	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
+	// Si no encuentra como minimo 3, busca el especialista solo respecto al genero
 	if (matchedSpecialists.length == 0) {
 		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				isTrans: true,
 			});
 		} else {
-			matchedSpecialists = await Psychologist.find({
+			matchedSpecialists = await Specialist.find({
 				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 					$in: ['male', 'female', 'transgender'],
 				},
 			});
 		}
 		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Psychologist.find();
+			matchedSpecialists = await Specialist.find();
 		}
 		perfectMatch = false;
 	}
 
-	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	matchedSpecialists = await Promise.all(
 		matchedSpecialists.map(async psy => {
 			psy.points = 0;
@@ -403,10 +403,10 @@ const availityMatch = async payload => {
 			return { ...psychologist, points };
 		})
 	);
-	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	// Se obtiene el especialista con mayor disponibilidad representado por b
 	matchedSpecialists.sort((a, b) => a.points - b.points);
 
-	return okResponse('psicologos encontrados', {
+	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
 		perfectMatch,
 	});
@@ -481,7 +481,7 @@ const getByData = async username => {
 
 const setSchedule = async (user, payload) => {
 	let response;
-	// Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
+	// Si el user es un especialista, se busca el especialista por su id y se actualiza el horario
 	if (user.role === 'superuser') {
 		response = await Specialist.findByIdAndUpdate(
 			payload.specialist,

@@ -904,27 +904,6 @@ export default {
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 	},
-	created() {
-		// solo se ejecuta en el navegador
-		if (process.browser) {
-			const spec = JSON.parse(localStorage.getItem('spec'));
-			if (spec && spec.match.length) {
-				if (spec._id !== null && spec._id === this.$auth.$state.user._id)
-					this.matchedSpecialists = spec.match;
-				else if (spec._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('spec');
-					localStorage.setItem(
-						'spec',
-						JSON.stringify({
-							match: spec.match,
-							_id: this.$auth.$state.user._id,
-						})
-					);
-					this.matchedSpecialists = spec.match;
-				}
-			}
-		}
-	},
 	mounted() {
 		// obetenrmos las sesiones formateadas
 		this.getFormattedSessionsAll();
@@ -977,7 +956,7 @@ export default {
 		/**
 		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
 		 */
-		openPrecharge() {
+		async openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
@@ -986,22 +965,10 @@ export default {
 				schedule: this.schedule,
 				model: this.models,
 				price: this.price,
+				userId: this.$auth.user._id,
 			};
-			localStorage.setItem('match-making', JSON.stringify(payload));
-			this.matchSpec(payload).then(response => {
-				if (response && response.length) {
-					localStorage.setItem(
-						'spec',
-						JSON.stringify({
-							match: response.filter((el, i) => i < 3),
-							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
-						})
-					);
-					if (!this.$auth.$state.loggedIn)
-						this.$router.push('/auth/?register=true&from=spec');
-					this.matchedSpecialists = response.filter((el, i) => i < 3);
-				}
-			});
+			await this.createMatchMakig(payload);
+			this.$router.push('/especialistas');
 		},
 		/**
 		 * Retorna string con url del avatar
@@ -1013,6 +980,7 @@ export default {
 			return '';
 		},
 		...mapActions({
+			createMatchMakig: 'Specialist/createMatchMakig',
 			matchSpec: 'Specialist/matchSpec',
 			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
 		}),

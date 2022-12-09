@@ -36,6 +36,9 @@ export default {
 	setPayments(state, value) {
 		state.payments = value;
 	},
+	setMatchMaking(state, value) {
+		state.matchMaking = value;
+	},
 	setCustomSessions(state, value) {
 		state.sessions.push(value);
 	},

@@ -39,7 +39,7 @@ const getSessions = async (userLogged, idUser) => {
 	// iniciamos la variable
 	let sessions;
 
-	// Buscamos la sesiones correspondiente a ese user y psicologo
+	// Buscamos la sesiones correspondiente a ese user y especialista
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
 			//specialist: idSpec,
@@ -101,7 +101,7 @@ const getRemainingSessions = async spec => {
 	});
 };
 
-// Reprogramación sesiones para psicologos
+// Reprogramación sesiones para especialistas
 const cancelSession = async (user, planId, sessionsId, id) => {
 	const cancelSessions = await Sessions.findOneAndUpdate(
 		{
@@ -140,7 +140,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		); 
 	}*/
 
-	// Considera que el usuario es psicologo
+	// Considera que el usuario es especialista
 	const sessions = await Sessions.find({
 		specialist: cancelSessions[0].specialist._id,
 	}).populate('specialist user');
@@ -191,7 +191,7 @@ const checkPlanTask = async () => {
  * @param {Number} payload.price - Precio del plan
  * @param {String} payload.coupon - Cupon usado, caso contrario es ''
  * @param {ObjectId} payload.user - Id del user
- * @param {ObjectId} payload.specialist - Id del psicologo
+ * @param {ObjectId} payload.specialist - Id del especialista
  * @returns
  */
 
@@ -204,7 +204,7 @@ const createPlan = async ({ payload }) => {
 	const specialist = await Specialist.findById(payload.specialist);
 	const minimumNewSession = specialist.preferences.minimumNewSession;
 
-	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
+	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del especialista
 	if (
 		!specialist.inmediateAttention.activated &&
 		dayjs().isAfter(
@@ -288,7 +288,7 @@ const createPlan = async ({ payload }) => {
 		session: [newSession],
 	};
 
-	// Se busca en Sessions un documento con el usuario y el psicologo, además genera la sala
+	// Se busca en Sessions un documento con el usuario y el especialista, además genera la sala
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
 		specialist: payload.specialist,
@@ -304,9 +304,9 @@ const createPlan = async ({ payload }) => {
 			? `${room}room/${roomId}`
 			: '';
 
-	// Se verifica que el precio sea mayor a cero y que el usuario no sea el mismo que el psicologo
+	// Se verifica que el precio sea mayor a cero y que el usuario no sea el mismo que el especialista
 	if (payload.price > 0 && payload.user !== payload.specialist) {
-		// Se asigna el psicologo al usuario
+		// Se asigna el especialista al usuario
 		await User.findByIdAndUpdate(payload.user, {
 			$set: {
 				specialist: payload.specialist,
@@ -666,7 +666,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 };
 /**
  * Creacion de sesion personalizda
- * (invitado por psicologo, o bloqueo de horas)
+ * (invitado por especialista, o bloqueo de horas)
  * @param {Object} user Usuario logeado
  * @param {string} payload.date Fecha de la sesion
  * @param {string} payload.type Tipo de la sesion ['online', 'presencial', 'commitment', etc...]
@@ -676,9 +676,9 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 
 const customNewSession = async (user, payload) => {
 	try {
-		// Validamos que sea psicologo
+		// Validamos que sea especialista
 		if (user.role !== 'specialist')
-			return conflictResponse('No eres psicologo');
+			return conflictResponse('No eres especialista');
 		let sessions = [];
 		let hours = 1;
 
@@ -743,7 +743,7 @@ const customNewSession = async (user, payload) => {
 			.update(`${payload.user}${payload.specialist}`)
 			.digest('hex');
 
-		// creamos o actualizamos las sesiones entre el usuario y el psicologo
+		// creamos o actualizamos las sesiones entre el usuario y el especialista
 		// cuando se crea compromiso privado el user será null
 		const updatedSession = await Sessions.findOneAndUpdate(
 			{
@@ -945,10 +945,10 @@ const getFormattedSessionsForMatch = async (specialist, specSessions) => {
 };
 
 //type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
-// Utilizado para traer las sessiones de un psicologo para el selector
+// Utilizado para traer las sessiones de un especialista para el selector
 const getFormattedSessions = async (idSpecialist, type) => {
 	let sessions = [];
-	// Obtenemos el psicologo
+	// Obtenemos el especialista
 	const specialist = await Specialist.findById(idSpecialist).select(
 		'_id schedule preferences inmediateAttention'
 	);
@@ -962,7 +962,7 @@ const getFormattedSessions = async (idSpecialist, type) => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del psicologo
+	// Obtenemos sessiones del especialista
 	let specSessions = await Sessions.find({
 		specialist: idSpecialist,
 	});
@@ -1004,7 +1004,7 @@ const getFormattedSessions = async (idSpecialist, type) => {
 			)
 			.format();
 
-	// Se obtiene la disponibilidad del psicologo
+	// Se obtiene la disponibilidad del especialista
 	sessions = length.map(el => {
 		const day = dayjs.tz(dayjs().add(el, 'days'));
 		const temporal = dayjs.tz(day).format('L');
@@ -1035,7 +1035,7 @@ const getFormattedSessions = async (idSpecialist, type) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
-// Utilizado para traer las sessiones de todos los psicologos para el selector
+// Utilizado para traer las sessiones de todos los especialistas para el selector
 const formattedSessionsAll = async ids => {
 	let sessions = [];
 	let specialist = [];
@@ -1076,7 +1076,7 @@ const formattedSessionsAll = async ids => {
 				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 
-	// Obtenemos sessiones del psicologo
+	// Obtenemos sessiones del especialista
 	let allSessions = await Sessions.find({}).populate(
 		'specialist',
 		'_id schedule preferences inmediateAttention'
@@ -1092,7 +1092,7 @@ const formattedSessionsAll = async ids => {
 		})
 	);
 
-	// Mapeamos los psicologos para agregarle las sessiones filtrando por psicologo
+	// Mapeamos los especialistas para agregarle las sessiones filtrando por especialista
 	allSessions = specialist.map(item => ({
 		...item,
 		sessions: setDaySessions(
@@ -1153,7 +1153,7 @@ const formattedSessionsAll = async ids => {
 
 const paymentsInfo = async user => {
 	if (user.role != 'specialist')
-		return conflictResponse('No eres psicologo');
+		return conflictResponse('No eres especialista');
 
 	const payments = await paymentInfoFunction(user.specialist);
 	return okResponse('Obtuvo todo sus pagos', { payments });
@@ -1333,7 +1333,7 @@ const updateSessions = async sessions => {
 };
 
 const deleteCommitment = async (planId, specId) => {
-	// Se busca si existe el psicologo
+	// Se busca si existe el especialista
 	const spec = await Specialist.findById(specId);
 	if (!spec) {
 		return conflictResponse('No existe el psicólogo');
@@ -1382,7 +1382,7 @@ const getAllSessions = async spec => {
 const paymentsInfoFromId = async spec => {
 	// Se obtienen los pagos de las sesiones
 	const user = await Specialist.findById(spec);
-	if (!user) return conflictResponse('No es psicologo');
+	if (!user) return conflictResponse('No es especialista');
 	const payments = await paymentInfoFunction(spec);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };

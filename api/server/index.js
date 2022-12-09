@@ -6,7 +6,7 @@ const app = require('./app');
 const server = http.createServer(app);
 
 server.listen(process.env.PORT || 3000, () => {
-	logger.info(`Listen on port ${process.env.PORT}`);
+  logger.info(`Listen on port ${process.env.PORT}`);
 });
 
 // WEB SOCKETS
@@ -17,7 +17,7 @@ const io = new webSocketServer(server, {
 	},
 });
 
-const liveData = io.of('/liveData'); // URL which will accept socket
+const liveData = io.of("/liveData"); // URL which will accept socket
 
 // Socket event
 liveData.on('connection', socket => {

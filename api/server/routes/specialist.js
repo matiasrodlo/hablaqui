@@ -74,7 +74,7 @@ specialistsRouter.post(
 );
 
 /**
- * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicologos con
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas con
  * mayor disponibilidad de horarios.
  * @method POST
  * @route /api/v1/specialists/availity-match

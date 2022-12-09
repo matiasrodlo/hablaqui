@@ -109,6 +109,7 @@ export default {
 		 * obtiene los datos iniciales
 		 */
 		async initialFetch() {
+			if (this.$auth.$state.loggedIn) await this.getMatchMakig(this.$auth.$state.user._id);
 			await this.getAppointments();
 		},
 		/**
@@ -120,6 +121,7 @@ export default {
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getSessionsLimit: 'Specialist/getSessionsLimit',
+			getMatchMakig: 'Specialist/getMatchMakig',
 		}),
 	},
 };
