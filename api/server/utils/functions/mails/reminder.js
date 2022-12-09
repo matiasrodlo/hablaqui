@@ -137,7 +137,7 @@ const mailService = {
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3ab0f381fc2f4a579165cc6c36ed8586',
 			dynamicTemplateData: {
-				first_name: name,
+				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
 				date: dayjs(date).format('DD/MM/YYYY'),
