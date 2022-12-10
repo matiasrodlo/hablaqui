@@ -867,7 +867,7 @@ export default {
 				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 			if (date) {
-				return dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('DD/MM/YY');
+				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
 			}
 			return '';
 		},
@@ -1073,6 +1073,7 @@ export default {
 		},
 		showEvent({ nativeEvent, event }) {
 			const open = () => {
+				console.log(event);
 				this.selectedEvent = event;
 				this.selectedElement = nativeEvent.target;
 				setTimeout(() => {
@@ -1113,8 +1114,9 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-			return `Desde las ${dayjs.tz(dayjs(date)).format('HH:mm')} hasta las ${dayjs
-				.tz(dayjs(date).add(50, 'minutes'))
+			console.log(date);
+			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
+				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
 		closeDialog() {

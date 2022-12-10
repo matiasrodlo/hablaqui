@@ -282,16 +282,11 @@ export const setSession = (role, sessions) => {
 				plan.title = 'sesion online';
 
 			return plan.session.map(session => {
-				const start = dayjs
-					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
-					.format('YYYY-MM-DD HH:mm');
-				const end = dayjs
-					.tz(
-						dayjs(session.date, 'MM/DD/YYYY HH:mm').add(
-							60,
-							'minutes'
-						)
-					)
+				const start = dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
+					'YYYY-MM-DD HH:mm'
+				);
+				const end = dayjs(session.date, 'MM/DD/YYYY HH:mm')
+					.add(60, 'minutes')
 					.format('YYYY-MM-DD HH:mm');
 
 				return {
