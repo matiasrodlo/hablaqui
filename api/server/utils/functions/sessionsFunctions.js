@@ -59,14 +59,15 @@ export const paymentInfoFunction = async psyId => {
 							: transDate;
 					return {
 						_id: session._id,
-						datePayment: dayjs
-							.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
-							.format('DD/MM/YYYY'),
+						datePayment: dayjs(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).format('DD/MM/YYYY'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: dayjs
-							.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
-							.format('DD/MM/YYYY HH:mm'),
+						date: dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
+							'DD/MM/YYYY HH:mm'
+						),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
 						amount: priceFormatter(+plans.sessionPrice),
 						hablaquiPercentage: 0,

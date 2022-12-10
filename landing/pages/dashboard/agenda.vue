@@ -1073,7 +1073,6 @@ export default {
 		},
 		showEvent({ nativeEvent, event }) {
 			const open = () => {
-				console.log(event);
 				this.selectedEvent = event;
 				this.selectedElement = nativeEvent.target;
 				setTimeout(() => {
@@ -1114,7 +1113,6 @@ export default {
 			else this.filterTypeSession = value;
 		},
 		setSubtitle(date) {
-			console.log(date);
 			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
 				.add(50, 'minutes')
 				.format('HH:mm')}`;
