@@ -403,8 +403,8 @@ const availityMatch = async payload => {
 			return { ...psychologist, points };
 		})
 	);
-	// Se obtiene el especialista con mayor disponibilidad representado por b
-	matchedSpecialists.sort((a, b) => a.points - b.points);
+	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	matchedPsychologists.sort((a, b) => b.points - a.points);
 
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
