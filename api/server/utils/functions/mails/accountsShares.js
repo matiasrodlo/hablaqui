@@ -24,7 +24,7 @@ const mailService = {
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-0c5ca742f0df44b48f445bdedf6f85a8',
 			dynamicTemplateData: {
-				first_name: name,
+				user_first_name: name,
 			},
 			asm: {
 				group_id: 16321,
@@ -139,8 +139,8 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy: psy.name + ' ' + psy.lastName,
-				email: psy.email,
+				psy_name: psy.name + ' ' + psy.lastName,
+				psy_email: psy.email,
 			},
 		};
 		await sendMails(dataPayload);

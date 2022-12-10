@@ -131,7 +131,7 @@
 				<v-card-title class="titleColor"> Resumen </v-card-title>
 				<v-card-text class="">
 					<div class="my-6 d-flex justify-space-between">
-						<div class="body-1 font-weight-bold">Subscripción</div>
+						<div class="body-1 font-weight-bold">Suscripción</div>
 						<div v-if="planSelected" class="body-1">
 							{{ planSelected.title }}
 						</div>

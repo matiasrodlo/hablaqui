@@ -29,7 +29,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
-				first_name: name,
+				user_first_name: name,
 				price: price,
 			},
 		};
@@ -175,7 +175,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Un cliente a reprogramado una sesión contigo`,
+			subject: `Han reprogramado una sesión con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-b336c59aa9d74750b13414954f7daee0',
 			asm: {
