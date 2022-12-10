@@ -464,10 +464,9 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	// Comprobar si la fecha es posterior a la fecha actual más el tiempo mínimo
 	if (
 		dayjs().isAfter(
-			dayjs(payload.date, 'MM/DD/YYYY HH:mm').subtract(
-				minimumNewSession,
-				'hours'
-			)
+			dayjs
+				.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm'))
+				.subtract(minimumNewSession, 'hours')
 		)
 	) {
 		return conflictResponse(
