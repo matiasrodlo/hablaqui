@@ -14,7 +14,7 @@
 			</v-col>
 			<v-col cols="6">
 				<v-text-field
-					v-model="form.lastname"
+					v-model="form.lastName"
 					type="text"
 					label="Apellido"
 					outlined
@@ -144,10 +144,10 @@ export default {
 		},
 		lastnameErrors() {
 			const errors = [];
-			if (!this.$v.form.lastname.$dirty) return errors;
-			!this.$v.lastname.required && errors.push('El nombre es querido');
-			!this.$v.lastname.maxLength && errors.push('Maximo 90 caracteres');
-			!this.$v.lastname.minLength && errors.push('Minimo 3 caracteres');
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('El apellido es querido');
+			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
+			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
 		passwordErrors() {
@@ -173,7 +173,7 @@ export default {
 		defaultForm() {
 			this.form = {
 				name: '',
-				lastname: '',
+				lastName: '',
 				email: '',
 				role: 'user',
 				password: '',
@@ -267,7 +267,7 @@ export default {
 				minLength: minLength(3),
 				maxLength: maxLength(99),
 			},
-			lastname: {
+			lastName: {
 				required,
 				minLength: minLength(3),
 				maxLength: maxLength(99),
