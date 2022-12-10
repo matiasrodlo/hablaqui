@@ -427,11 +427,20 @@ const availityMatch = async body => {
 		perfectMatch = false;
 	}
 
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
+
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	matchedPsychologists = await Promise.all(
 		matchedPsychologists.map(async psy => {
 			psy.points = 0;
-			const days = psy.days;
+			const sessionPsy = sessions.filter(
+				session => session.psy === psy._id
+			);
+			const days = await sessionsFunctions.getFormattedSessionsForMatch(
+				psy,
+				sessionPsy
+			);
 			points = pointsDisponibilidad(
 				days,
 				payload,
