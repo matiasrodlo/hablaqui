@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logInfo } from '../api/server/config/pino';
 import pkg from './package.json';
 
 const isDev = process.env.DEPLOY_ENV === 'DEV';
@@ -37,6 +38,7 @@ export default {
 			// const baseApi = process.env.API_ABSOLUTE
 			// 	? process.env.API_ABSOLUTE
 			// 	: 'http://localhost:3000/';
+			logInfo('Tipo de entorno: ' + process.env.NODE_ENV);
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
