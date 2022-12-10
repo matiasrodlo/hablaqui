@@ -561,10 +561,11 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		}`
 	);
 
+	// Se filtra el plan para obtener el id de la ultima sesion
+	let planFiltered = sessions.plan.filter(plan => plan._id == idPlan);
+
 	let idSessionUltimate =
-		sessions.plan[sessions.plan.length - 1].session[
-			sessions.plan[0].session.length - 1
-		]._id;
+		planFiltered.session[sessions.plan[0].session.length - 1]._id;
 
 	// Email scheduling for appointment reminder for the user
 	await Email.create({
