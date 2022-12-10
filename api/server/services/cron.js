@@ -44,8 +44,8 @@ function generatePayload(date, batch) {
 	 */
 	return {
 		wasScheduled: true,
-		scheduledAt: dayjs
-			.tz(dayjs(date).subtract(1, 'hour'))
+		scheduledAt: dayjs(date)
+			.subtract(1, 'hour')
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
 	};
@@ -188,9 +188,7 @@ const cronService = {
 		});
 		if (pendingEmails.length > 0) {
 			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = dayjs
-					.tz(dayjs(emailInfo.sessionDate))
-					.format();
+				const sessionDate = dayjs(emailInfo.sessionDate).format();
 				if (isSchedulableEmail(sessionDate)) {
 					const user = await User.findById(emailInfo.userRef);
 					const psy = await psychologist.findById(emailInfo.psyRef);
