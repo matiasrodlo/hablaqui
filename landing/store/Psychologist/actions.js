@@ -1,5 +1,4 @@
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
-import state from './state';
 
 export default {
 	async getPsychologists({ commit }) {
@@ -13,6 +12,7 @@ export default {
 		}
 	},
 	async getPsychologistsBestMatch({ commit, state }) {
+		console.log(state.matchMaking);
 		try {
 			commit('setLoadingPsychologist', true);
 			const { data } = await this.$axios('/psychologists/best-match', {
@@ -28,7 +28,8 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getPsychologistsEconomicMatch({ commit }) {
+	async getPsychologistsEconomicMatch({ commit, state }) {
+		console.log(state.matchMaking);
 		try {
 			commit('setLoadingPsychologist', true);
 			const { data } = await this.$axios('/psychologists/economic-match', {
@@ -44,7 +45,8 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getPsychologistsAvailityMatch({ commit }) {
+	async getPsychologistsAvailityMatch({ commit, state }) {
+		console.log(state.matchMaking);
 		try {
 			commit('setLoadingPsychologist', true);
 			const { data } = await this.$axios('/psychologists/availity-match', {
