@@ -47,6 +47,7 @@ const login = async user => {
 	// la cuenta está o no verificada
 	// if (user.role === 'user' && !user.isVerified)
 	// 	return conflictResponse('Verifica tu correo');
+	logInfo('Tipo de entorno ' + process.env.NODE_ENV);
 	return okResponse(`Bienvenido ${user.name}`, {
 		token: generateJwt(user),
 		user: await generateUser(user),

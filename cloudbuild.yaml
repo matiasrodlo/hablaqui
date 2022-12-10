@@ -21,6 +21,7 @@ steps:
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
       - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_URL=${_VUE_APP_URL}"
+      - "NODE_ENV=${_NODE_ENV}"
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
@@ -69,6 +70,7 @@ steps:
       - "SEGMENT_API_KEY=${_SEGMENT_API_KEY}"
       - "SENDGRID_API_KEY=${_SENDGRID_API_KEY}"
       - "DEBUG_ANALYTICS=${_DEBUG_ANALYTICS}"
+      - "NODE_ENV=${_NODE_ENV}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
