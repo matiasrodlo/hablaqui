@@ -560,6 +560,12 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			myPlan.totalSessions
 		}`
 	);
+
+	let idSessionUltimate =
+		sessions.plan[sessions.plan.length - 1].session[
+			sessions.plan[0].session.length - 1
+		]._id;
+
 	// Email scheduling for appointment reminder for the user
 	await Email.create({
 		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -569,7 +575,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		scheduledAt: undefined,
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
-		sessionRef: sessions._id,
+		sessionRef: idSessionUltimate,
 	});
 	await Email.create({
 		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -579,7 +585,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		scheduledAt: undefined,
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
-		sessionRef: sessions._id,
+		sessionRef: idSessionUltimate,
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await Email.create({
@@ -590,7 +596,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		scheduledAt: undefined,
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
-		sessionRef: sessions._id,
+		sessionRef: idSessionUltimate,
 	});
 	await Email.create({
 		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -600,7 +606,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		scheduledAt: undefined,
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
-		sessionRef: sessions._id,
+		sessionRef: idSessionUltimate,
 	});
 
 	return okResponse('sesion creada', {
@@ -1213,7 +1219,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		},
 		userRef: sessions.user._id,
 		psyRef: sessions.psychologist._id,
-		sessionRef: sessions._id,
+		sessionRef: id,
 	});
 	if (mailsToReprogram.length) {
 		mailsToReprogram.forEach(async mail => {
