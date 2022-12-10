@@ -10,6 +10,7 @@ steps:
     args: ["run", "create-env"]
     env:
       - "API_ABSOLUTE=${_API_ABSOLUTE}"
+      - "NODE_ENV=${_NODE_ENV}"
       - "FRONTEND_URL=${_FRONTEND_URL}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
@@ -21,7 +22,6 @@ steps:
       - "VUE_APP_PUSHER_CLUSTER=${_VUE_APP_PUSHER_CLUSTER}"
       - "VUE_APP_PUSHER_KEY=${_VUE_APP_PUSHER_KEY}"
       - "VUE_APP_URL=${_VUE_APP_URL}"
-      - "NODE_ENV=${_NODE_ENV}"
     dir: "landing"
     id: "envvars-landing"
     waitFor: ["install-landing"]
