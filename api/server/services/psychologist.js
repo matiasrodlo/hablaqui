@@ -444,7 +444,7 @@ const availityMatch = async body => {
 		})
 	);
 	// Se obtiene el psicologo con mayor disponibilidad representado por b
-	matchedPsychologists.sort((a, b) => a.points - b.points);
+	matchedPsychologists.sort((a, b) => b.points - a.points);
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
