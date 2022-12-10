@@ -249,7 +249,7 @@ const successPay = async params => {
 			$in: [
 				'reminder-payment-hour',
 				'reminder-payment-day',
-				'promocional-incentive',
+				'promocional-incentive-week',
 			],
 		},
 		userRef: foundPlan.user,
