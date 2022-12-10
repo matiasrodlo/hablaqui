@@ -208,7 +208,9 @@ const createPlan = async ({ payload }) => {
 	if (
 		!psychologist.inmediateAttention.activated &&
 		dayjs().isAfter(
-			dayjs(date, 'MM/DD/YYYY HH:mm').subtract(minimumNewSession, 'hours')
+			dayjs
+				.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
+				.subtract(minimumNewSession, 'hours')
 		)
 	) {
 		return conflictResponse(
@@ -784,11 +786,9 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		dayjs
-			.tz(
-				dayjs()
-					.hour(x)
-					.minute(0)
-			)
+			.tz()
+			.hour(x)
+			.minute(0)
 			.format('HH:mm')
 	);
 	// Obtenemos sessiones del psicologo
@@ -964,11 +964,9 @@ const formattedSessionsAll = async ids => {
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		dayjs
-			.tz(
-				dayjs()
-					.hour(x)
-					.minute(0)
-			)
+			.tz()
+			.hour(x)
+			.minute(0)
 			.format('HH:mm')
 	);
 
@@ -1024,7 +1022,7 @@ const formattedSessionsAll = async ids => {
 			psychologist: item._id,
 			sessions: length.map(el => {
 				const day = dayjs.tz(dayjs().add(el, 'days'));
-				const temporal = dayjs.tz(dayjs(day)).format('L');
+				const temporal = dayjs.tz(day).format('L');
 				return {
 					psychologist: item._id,
 					value: day.format(),
@@ -1033,10 +1031,14 @@ const formattedSessionsAll = async ids => {
 					text: day.format(),
 					available: hours.filter(hour => {
 						return (
-							dayjs(
-								`${temporal} ${hour}`,
-								'MM/DD/YYYY HH:mm'
-							).isAfter(dayjs(minimumNewSession)) &&
+							dayjs
+								.tz(
+									dayjs(
+										`${temporal} ${hour}`,
+										'MM/DD/YYYY HH:mm'
+									)
+								)
+								.isAfter(dayjs.tz(minimumNewSession)) &&
 							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
@@ -1054,11 +1056,6 @@ const formattedSessionsAll = async ids => {
 			}),
 		};
 	});
-	/*
-	sessions.forEach(item => {
-		// Se imprimen los proximos 5 días
-		console.log(item.sessions);
-	});*/
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
