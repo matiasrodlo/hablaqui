@@ -1,5 +1,4 @@
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
-import state from './state';
 
 export default {
 	async getSpecialists({ commit }) {
