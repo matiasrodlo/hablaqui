@@ -131,6 +131,7 @@ async function scheduleEmails(pendingEmails) {
 		const mailType = emailInfo.type.split('-').pop();
 		const addressee = emailInfo.type.split('-')[1];
 		const sessionDate = dayjs(emailInfo.sessionDate);
+		const urlRooms = emailInfo.url;
 		let isSend = false;
 
 		// Se verifica si no está dentro de los 3 días para darle una fecha de envío y
@@ -168,7 +169,8 @@ async function scheduleEmails(pendingEmails) {
 						psy,
 						sessionDate,
 						batch,
-						mailType
+						mailType,
+						urlRooms
 					);
 				} else if (
 					addressee === 'psy' &&
@@ -181,7 +183,8 @@ async function scheduleEmails(pendingEmails) {
 						psy,
 						sessionDate,
 						batch,
-						mailType
+						mailType,
+						urlRooms
 					);
 				}
 			}

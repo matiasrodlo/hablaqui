@@ -48,6 +48,9 @@ let email = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'sessions',
 	},
+	url: {
+		type: String,
+	},
 });
 
 export default model('email', email);
