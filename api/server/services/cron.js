@@ -8,7 +8,6 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Sessions from '../models/sessions';
-import { logInfo } from '../config/pino';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import utc from 'dayjs/plugin/utc';
@@ -255,9 +254,9 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = dayjs.tz(
-							dayjs(session.date, 'MM/DD/YYYY HH:mm')
-						);
+						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm')
+							.add(4, 'hour')
+							.format();
 						// if (
 						// 	session.status === 'pending' &&
 						// 	dayjs(date)
@@ -273,7 +272,7 @@ const cronService = {
 						// 	session.status = 'upnext';}
 						if (
 							session.status === 'pending' && // || session.status === 'upnext'
-							dayjs().isAfter(dayjs(date))
+							dayjs().isAfter(date)
 						) {
 							session.status = 'success';
 						}
