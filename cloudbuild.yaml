@@ -9,8 +9,8 @@ steps:
     entrypoint: npm
     args: ["run", "create-env"]
     env:
+      - "NODE_ENV": "${_NODE_ENV}"
       - "API_ABSOLUTE=${_API_ABSOLUTE}"
-      - NODE_ENV: ${_NODE_ENV}
       - "FRONTEND_URL=${_FRONTEND_URL}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
@@ -46,6 +46,7 @@ steps:
     entrypoint: npm
     args: ["run", "create-env"]
     env:
+      - "NODE_ENV": "${_NODE_ENV}"
       - "API_URL=${_API_URL}"
       - "BUCKETNAME=${_BUCKETNAME}"
       - "FRONTEND_URL=${_FRONTEND_URL}"
@@ -70,7 +71,6 @@ steps:
       - "SEGMENT_API_KEY=${_SEGMENT_API_KEY}"
       - "SENDGRID_API_KEY=${_SENDGRID_API_KEY}"
       - "DEBUG_ANALYTICS=${_DEBUG_ANALYTICS}"
-      - NODE_ENV: "${_NODE_ENV}"
     dir: "api"
     id: "envvars-api"
     waitFor: ["install-api"]
