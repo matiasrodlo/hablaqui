@@ -105,29 +105,6 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the psychologist who has not paid the plan
-	 * @param {Object} user - A user object from the database, corresponding to the psychologist who has not paid the plan
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has not paid the plan
-	 */
-
-	async sendPaymentFailed(user, psychologist) {
-		const dataPayload = {
-			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
-			to: user.name + '<' + user.email + '>',
-			subject: `El plazo para pagar su subscripción expiró`,
-			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
-			asm: {
-				group_id: 16321,
-			},
-			dynamicTemplateData: {
-				user_name: user.name,
-				psy_name: psychologist.name,
-			},
-		};
-		await sendMails(dataPayload);
-	},
-	/**
 	 * @description Send an email to the psychologist informing him/her that you have made a request for withdrawal from the platform.
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
 	 * @param {String} total - The total amount of the withdrawal request

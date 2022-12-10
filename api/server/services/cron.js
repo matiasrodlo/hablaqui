@@ -429,10 +429,10 @@ const cronService = {
 						}
 					);
 					// Se actualiza el estado de la sesión a cancelada
-					await mailServicePsy.sendPaymentFailed(
-						item.user,
-						item.psychologist
-					);
+					// await mailServiceRemider.sendPaymentFailed(
+					// 	item.user,
+					// 	item.psychologist
+					// );
 				}
 			});
 		});
@@ -516,7 +516,7 @@ const cronService = {
 					) {
 						batch = await getBatchId();
 						isSend = true;
-						await mailServicePsy.pendingPlanPayment(
+						await mailServiceRemider.sendPaymentFailed(
 							user,
 							psy,
 							plan.totalPrice,

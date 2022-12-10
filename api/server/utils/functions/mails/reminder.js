@@ -216,6 +216,31 @@ const mailService = {
 		};
 		await sendMails(dataPayload);
 	},
+	/**
+	 * @description Send an email to the psychologist who has not paid the plan
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist who has not paid the plan
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist
+	 */
+
+	async sendPaymentHour(user, psychologist, price, url) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `El plazo para pagar su subscripción está por expirar`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				url: url,
+				price: price,
+			},
+		};
+		await sendMails(dataPayload);
+	},
 };
 
 export default Object.freeze(mailService);
