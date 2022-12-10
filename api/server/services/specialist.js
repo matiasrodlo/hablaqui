@@ -335,8 +335,8 @@ const economicMatch = async payload => {
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al psy más barato
-	matchedSpecialists.sort(
-		(a, b) => b.sessionPrices.video - a.sessionPrices.video
+	matchedPsychologists.sort(
+		(a, b) => a.sessionPrices.video - b.sessionPrices.video
 	);
 
 	return okResponse('especialistas encontrados', {
