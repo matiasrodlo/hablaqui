@@ -920,7 +920,7 @@ const getFormattedSessionsForMatch = async (specialist, specSessions) => {
 
 		return {
 			id: el,
-			value: day.format(),
+			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
 			text: day.format(),
