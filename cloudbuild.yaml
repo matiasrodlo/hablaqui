@@ -10,7 +10,7 @@ steps:
     args: ["run", "create-env"]
     env:
       - "API_ABSOLUTE=${_API_ABSOLUTE}"
-      - NODE_ENV: "${_NODE_ENV}"
+      - NODE_ENV: ${_NODE_ENV}
       - "FRONTEND_URL=${_FRONTEND_URL}"
       - "MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}"
       - "PUSHER_APP_ID=${_PUSHER_APP_ID}"
