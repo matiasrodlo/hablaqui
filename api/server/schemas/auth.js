@@ -9,7 +9,7 @@ const authSchema = {
 		lastName: Joi.string()
 			.min(3)
 			.max(100)
-			.allow(''),
+			.required(),
 		role: Joi.string()
 			.min(3)
 			.max(100)

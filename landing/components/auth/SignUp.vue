@@ -1,7 +1,7 @@
 <template>
 	<v-form @submit.prevent="onSubmit">
 		<v-row no-gutters>
-			<v-col cols="12">
+			<v-col cols="6">
 				<v-text-field
 					v-model="form.name"
 					type="text"
@@ -10,6 +10,17 @@
 					dense
 					autocomplete="off"
 					:error-messages="nameErrors"
+				></v-text-field>
+			</v-col>
+			<v-col cols="6">
+				<v-text-field
+					v-model="form.lastName"
+					type="text"
+					label="Apellido"
+					outlined
+					dense
+					autocomplete="off"
+					:error-messages="lastnameErrors"
 				></v-text-field>
 			</v-col>
 			<v-col cols="12">
@@ -131,6 +142,14 @@ export default {
 			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
+		lastnameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('El apellido es querido');
+			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
+			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
+			return errors;
+		},
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
@@ -154,6 +173,7 @@ export default {
 		defaultForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				email: '',
 				role: 'user',
 				password: '',
@@ -243,6 +263,11 @@ export default {
 	validations: {
 		form: {
 			name: {
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(99),
+			},
+			lastName: {
 				required,
 				minLength: minLength(3),
 				maxLength: maxLength(99),
