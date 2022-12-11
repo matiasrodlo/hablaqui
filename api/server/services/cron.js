@@ -24,17 +24,6 @@ sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 
-function isSchedulableEmail(date) {
-	/**
-	 * @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
-	 * @param {dayjs} date es la fecha de la cita
-	 * @returns
-	 */
-	return dayjs()
-		.add(3, 'days')
-		.isAfter(date);
-}
-
 function generatePayload(date, batch, reminderType, isSend) {
 	/**
 	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
@@ -133,13 +122,9 @@ async function scheduleEmails(pendingEmails) {
 		const sessionDate = dayjs(emailInfo.sessionDate);
 		let isSend = false;
 
-		// Se verifica si no está dentro de los 3 días para darle una fecha de envío y
-		// se verifica si en el correo de recordatorio de un día antes es parte del día
+		// Se verifica si en el correo de recordatorio de un día antes es parte del día
 		// anterior para asegurar que se envíe el correo el día antes y no el día que corresponde
 		// a la sessión con un máximo de 20 horas antes.
-		if (!isSchedulableEmail(sessionDate)) {
-			return;
-		}
 		if (
 			!dayjs().isBefore(dayjs(sessionDate).subtract(20, 'hours')) &&
 			mailType === 'day'
