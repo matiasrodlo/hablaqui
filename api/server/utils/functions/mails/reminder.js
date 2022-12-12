@@ -127,7 +127,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, sessionDate, batch, mailType, urlRooms) {
+	async sendReminderUser(user, psy, sessionDate, batch, mailType, url) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
@@ -142,7 +142,7 @@ const mailService = {
 				psy_last_name: psy.lastName,
 				date: dayjs(sessionDate).format('DD/MM/YYYY'),
 				hour: dayjs(sessionDate).format('HH:mm'),
-				url_rooms: urlRooms,
+				url_rooms: url,
 			},
 			asm: {
 				group_id: 16321,
@@ -161,7 +161,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, sessionDate, batch, mailType, urlRooms) {
+	async sendReminderPsy(user, psy, sessionDate, batch, mailType, url) {
 		const { email, name, lastName } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
@@ -176,7 +176,7 @@ const mailService = {
 				psy_last_name: lastName,
 				date: dayjs(sessionDate).format('DD/MM/YYYY'),
 				hour: dayjs(sessionDate).format('HH:mm'),
-				url_rooms: urlRooms,
+				url_rooms: url,
 			},
 			asm: {
 				group_id: 16321,
