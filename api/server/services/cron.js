@@ -191,7 +191,7 @@ async function scheduleEmails(pendingEmails) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
 				if (
 					addressee === 'user' &&
-					dayjs.tz().isAfter(emailInfo.scheduledAt)
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
@@ -205,7 +205,7 @@ async function scheduleEmails(pendingEmails) {
 					);
 				} else if (
 					addressee === 'psy' &&
-					dayjs.tz().isAfter(emailInfo.scheduledAt)
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					isSend = true;
@@ -485,7 +485,7 @@ const cronService = {
 				if (emailInfo.scheduledAt !== null) {
 					// Si la fecha actual está después que la fecha programada, entonces se envía el correo
 					if (
-						dayjs.tz().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'reminder-payment-hour'
 					) {
 						batch = await getBatchId();
@@ -498,7 +498,7 @@ const cronService = {
 							url
 						);
 					} else if (
-						dayjs.tz().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'reminder-payment-day'
 					) {
 						batch = await getBatchId();
@@ -510,7 +510,7 @@ const cronService = {
 							url
 						);
 					} else if (
-						dayjs.tz().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'promocional-incentive-week'
 					) {
 						batch = await getBatchId();
