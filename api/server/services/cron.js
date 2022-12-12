@@ -104,7 +104,7 @@ async function getBatchId() {
 	return batch_id;
 }
 
-async function preference(user, psychologist, plan) {
+async function preference(user, psychologist, plan, session) {
 	// Se genera un código aleatorio para el token de pago
 	const randomCode = () => {
 		return Math.random()
@@ -113,7 +113,6 @@ async function preference(user, psychologist, plan) {
 	};
 	const token = randomCode() + randomCode();
 	const price = plan.totalPrice;
-	const idSession = plan.session.pop()._id;
 	// Se crea el pago en mercadopago
 	const mercadopagoPayload = {
 		psychologist: psychologist.username,
@@ -121,7 +120,7 @@ async function preference(user, psychologist, plan) {
 		description:
 			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
 		quantity: 1,
-		sessionsId: idSession.toString(),
+		sessionsId: session._id.toString(),
 		planId: plan._id.toString(),
 		token,
 	};
@@ -479,7 +478,7 @@ const cronService = {
 			}
 			// Se obtiene la url de pago
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
-			const url = await preference(user, psy, plan);
+			const url = await preference(user, psy, plan, sessionDocument);
 			try {
 				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 				// Si es null significa que aún no se le ha dado una fecha de envío
