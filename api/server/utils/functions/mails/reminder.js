@@ -222,7 +222,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist
 	 */
 
-	async sendPaymentHour(user, psychologist, price, url) {
+	async sendPaymentDay(user, psychologist, price, url) {
 		const dataPayload = {
 			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',

@@ -515,7 +515,7 @@ const cronService = {
 					) {
 						batch = await getBatchId();
 						isSend = true;
-						await mailServiceRemider.sendPaymentHour(
+						await mailServiceRemider.sendPaymentDay(
 							user,
 							psy,
 							plan.totalPrice,
