@@ -14,10 +14,10 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
+import Email from '../models/email';
 import dayjs from 'dayjs';
 import crypto from 'crypto';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -434,12 +434,36 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailServicePsy.pendingPlanPayment(
-			user,
-			psychologist,
-			payload.price,
-			responseBody.init_point
-		);
+		await Email.create({
+			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-hour',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-day',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
+			wasScheduled: false,
+			type: 'promocional-incentive-week',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -556,6 +580,63 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			myPlan.totalSessions
 		}`
 	);
+
+	// Se filtra el plan para obtener el id de la ultima sesion
+	let planFiltered = sessions.plan.filter(plan => plan._id == idPlan)[0];
+
+	let idSessionUltimate =
+		planFiltered.session[sessions.plan[0].session.length - 1]._id;
+
+	// Email scheduling for appointment reminder for the user
+	await Email.create({
+		sessionDate: dayjs
+			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-user-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+	});
+	await Email.create({
+		sessionDate: dayjs
+			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-user-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await Email.create({
+		sessionDate: dayjs
+			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-psy-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+	});
+	await Email.create({
+		sessionDate: dayjs
+			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-psy-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+	});
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1172,6 +1253,31 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			newDate,
 			sessions.roomsUrl
 		);
+	}
+	// Se les cambia la fecha de la sesión a los correos de recordatorio
+	const mailsToReprogram = await Email.find({
+		type: {
+			$in: [
+				'reminder-user-day',
+				'reminder-user-hour',
+				'reminder-psy-day',
+				'reminder-psy-hour',
+			],
+		},
+		userRef: sessions.user._id,
+		psyRef: sessions.psychologist._id,
+		sessionRef: id,
+	});
+	if (mailsToReprogram.length) {
+		mailsToReprogram.forEach(async mail => {
+			await Email.findByIdAndUpdate(mail._id, {
+				sessionDate: dayjs(date, 'MM/DD/YYYY HH:mm').format(
+					'ddd, DD MMM YYYY HH:mm:ss ZZ'
+				),
+				wasScheduled: false,
+				scheduledAt: null,
+			}).catch(err => console.log(err));
+		});
 	}
 
 	// Se hace el trackeo de la reprogramacion en segment

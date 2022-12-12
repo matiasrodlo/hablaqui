@@ -1,5 +1,6 @@
 'use strict';
 
+import { landing_url } from '../../../config/dotenv';
 import sendMails from './sendMails';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -127,7 +128,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date, batch) {
+	async sendReminderUser(user, psy, date, batch, reminderType) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
@@ -137,18 +138,21 @@ const mailService = {
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3ab0f381fc2f4a579165cc6c36ed8586',
 			dynamicTemplateData: {
-				first_name: name,
+				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs.tz(dayjs(date).subtract(1, 'hour')).unix(),
 			batchId: batch,
 		};
+		if (reminderType === 'day') {
+			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
+			dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6';
+		}
 		await sendMails(dataPayload);
 	},
 	/**
@@ -157,12 +161,12 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date, batch) {
-		const { email, name, lastName } = user;
+	async sendReminderPsy(user, psy, date, batch, reminderType) {
+		const { email, name, lastName } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `Su sesión con ${name} en Hablaquí está por comenzar`,
+			subject: `Su sesión con ${user.name} en Hablaquí está por comenzar`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
@@ -170,14 +174,70 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
 			},
-			sendAt: dayjs.tz(dayjs(date).subtract(1, 'hour')).unix(),
 			batchId: batch,
+		};
+		if (reminderType === 'day') {
+			dataPayload.subject = `Mañana es tu sesión con ${user.name} en Hablaquí`;
+			dataPayload.templateId = 'd-5438529516ae4dbab81793daaaba7f06';
+		}
+		await sendMails(dataPayload);
+	},
+	/**
+	 * @description The user is sent when more than one week has passed since the pending payment
+	 * and is sent a discount coupon to encourage the purchase.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {String} coupon - A coupon object from the database, corresponding to the coupon that will be sent to the user
+	 */
+	async sendPromocionalIncentive(user, coupon) {
+		const { email, name } = user;
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: name + '<' + email + '>',
+			subject: `Te damos 20% de descuento en tu próxima sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-64da30dfc68f4270b30fc2bb704e90a5',
+			dynamicTemplateData: {
+				user_name: name,
+				couponCode: coupon,
+				date: dayjs()
+					.add(1, 'week')
+					.format('DD/MM/YYYY'),
+				url: landing_url + 'evaluacion',
+			},
+			asm: {
+				group_id: 16321,
+			},
+		};
+		await sendMails(dataPayload);
+	},
+	/**
+	 * @description Send an email to the psychologist who has not paid the plan
+	 * @param {Object} user - A user object from the database, corresponding to the psychologist who has not paid the plan
+	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist
+	 */
+
+	async sendPaymentDay(user, psychologist, price, url) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `El plazo para pagar su subscripción está por expirar`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-288e2344aa51452cb9fd71f5482b8c9f',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				url: url,
+				price: price,
+			},
 		};
 		await sendMails(dataPayload);
 	},

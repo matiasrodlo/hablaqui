@@ -202,10 +202,22 @@ const successPay = async params => {
 	// Email scheduling for appointment reminder for the user
 	await email.create({
 		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'))
+			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
 			.format(),
 		wasScheduled: false,
-		type: 'reminder-user',
+		type: 'reminder-user-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+	await email.create({
+		sessionDate: dayjs
+			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-user-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: foundPlan.user,
@@ -215,16 +227,50 @@ const successPay = async params => {
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
 		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'))
+			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
 			.format(),
 		wasScheduled: false,
-		type: 'reminder-psy',
+		type: 'reminder-psy-hour',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: foundPlan.user,
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
 	});
+	await email.create({
+		sessionDate: dayjs
+			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+			.format(),
+		wasScheduled: false,
+		type: 'reminder-psy-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+		sessionRef: sessionData._id,
+	});
+
+	// Busca los correos de recordatorio de pago y los elimina
+	const mailsToDeleted = await email.find({
+		wasScheduled: false,
+		type: {
+			$in: [
+				'reminder-payment-hour',
+				'reminder-payment-day',
+				'promocional-incentive-week',
+			],
+		},
+		userRef: foundPlan.user,
+		psyRef: foundPlan.psychologist,
+	});
+	if (mailsToDeleted.length) {
+		mailsToDeleted.forEach(async mail => {
+			await email
+				.findByIdAndDelete(mail._id)
+				.catch(err => console.log(err));
+		});
+	}
+
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
 	// Send appointment confirmation for user and psychologist

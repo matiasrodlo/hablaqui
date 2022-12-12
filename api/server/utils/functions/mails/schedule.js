@@ -29,7 +29,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
-				first_name: name,
+				user_first_name: name,
 				price: price,
 			},
 		};
@@ -95,10 +95,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-					.format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -135,10 +133,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-					.format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -179,7 +175,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Un cliente a reprogramado una sesión contigo`,
+			subject: `Han reprogramado una sesión con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-b336c59aa9d74750b13414954f7daee0',
 			asm: {
@@ -245,8 +241,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -275,8 +271,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
