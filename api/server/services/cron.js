@@ -488,7 +488,6 @@ const cronService = {
 			if (!plan) {
 				return conflictResponse('No se encontró el plan');
 			}
-
 			// Se obtiene la url de pago
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
 			const url = await preference(user, psy, plan);
@@ -516,7 +515,7 @@ const cronService = {
 					) {
 						batch = await getBatchId();
 						isSend = true;
-						await mailServiceRemider.sendPaymentFailed(
+						await mailServiceRemider.sendPaymentHour(
 							user,
 							psy,
 							plan.totalPrice,
