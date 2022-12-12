@@ -48,7 +48,7 @@ export default {
 		dayjs.locale('es');
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
-			text: dayjs(session.text).format('ddd'),
+			text: dayjs.tz(dayjs(session.text)).format('ddd'),
 			day: dayjs(session.day, 'DD MMM').format('DD MMM'),
 		}));
 	},

@@ -820,8 +820,8 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 		.format();
 
 	sessions = length.map(el => {
-		const day = dayjs().add(el, 'days');
-		const temporal = dayjs.tz(dayjs(day)).format('L');
+		const day = dayjs.tz(dayjs().add(el, 'days'));
+		const temporal = dayjs.tz(day).format('L');
 
 		return {
 			id: el,
@@ -831,9 +831,9 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 			text: day.format(),
 			available: hours.filter(hour => {
 				return (
-					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
-						dayjs(minimumNewSession)
-					) &&
+					dayjs
+						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
+						.isAfter(dayjs.tz(minimumNewSession)) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
@@ -862,11 +862,9 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	// Creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
 		dayjs
-			.tz(
-				dayjs()
-					.hour(x)
-					.minute(0)
-			)
+			.tz()
+			.hour(x)
+			.minute(0)
 			.format('HH:mm')
 	);
 	// Obtenemos sessiones del psicologo
@@ -913,8 +911,8 @@ const getFormattedSessions = async (idPsychologist, type) => {
 
 	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
-		const day = dayjs().add(el, 'days');
-		const temporal = dayjs.tz(dayjs(day)).format('L');
+		const day = dayjs.tz(dayjs().add(el, 'days'));
+		const temporal = dayjs.tz(day).format('L');
 
 		return {
 			id: el,
@@ -924,9 +922,9 @@ const getFormattedSessions = async (idPsychologist, type) => {
 			text: day.format(),
 			available: hours.filter(hour => {
 				return (
-					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
-						dayjs(minimumNewSession)
-					) &&
+					dayjs
+						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
+						.isAfter(dayjs.tz(minimumNewSession)) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
