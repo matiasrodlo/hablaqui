@@ -322,12 +322,14 @@ const cronService = {
 		// Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
 		let pendingEmails = await email.find({
 			wasScheduled: false,
-			$in: [
-				'reminder-user-hour',
-				'reminder-psy-hour',
-				'reminder-user-day',
-				'reminder-psy-day',
-			],
+			type: {
+				$in: [
+					'reminder-user-hour',
+					'reminder-psy-hour',
+					'reminder-user-day',
+					'reminder-psy-day',
+				],
+			},
 		});
 
 		// Se recorre el array de correos y se envían los correos
