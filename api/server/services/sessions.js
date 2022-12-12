@@ -774,12 +774,8 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-const getFormattedSessionsForMatch = async idPsychologist => {
+const getFormattedSessionsForMatch = async (psychologist, psySessions) => {
 	let sessions = [];
-	// obtenemos el psicologo
-	const psychologist = await Psychologist.findById(idPsychologist).select(
-		'_id schedule preferences inmediateAttention'
-	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
@@ -789,10 +785,6 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del psicologo
-	let psySessions = await Sessions.find({
-		psychologist: idPsychologist,
-	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
 	psySessions = psySessions.filter(item =>
@@ -820,15 +812,15 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	);
 
 	sessions = length.map(el => {
-		const day = dayjs().add(el, 'days');
+		const day = dayjs(Date.now()).add(el, 'days');
 		const temporal = dayjs(day).format('L');
 
 		return {
 			id: el,
-			value: day.format(),
+			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: dayjs(day).format(),
+			text: dayjs(day),
 			available: hours.filter(hour => {
 				return (
 					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
