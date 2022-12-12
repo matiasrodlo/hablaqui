@@ -570,7 +570,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
 		sessionRef: sessions._id,
-		url: sessions.roomsUrl,
+		url: roomsUrl,
 	});
 	await Email.create({
 		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -581,7 +581,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
 		sessionRef: sessions._id,
-		url: sessions.roomsUrl,
+		url: roomsUrl,
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await Email.create({
@@ -593,7 +593,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
 		sessionRef: sessions._id,
-		url: sessions.roomsUrl,
+		url: roomsUrl,
 	});
 	await Email.create({
 		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
@@ -604,7 +604,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		userRef: userLogged._id,
 		psyRef: psychologist._id,
 		sessionRef: sessions._id,
-		url: sessions.roomsUrl,
+		url: roomsUrl,
 	});
 
 	return okResponse('sesion creada', {
