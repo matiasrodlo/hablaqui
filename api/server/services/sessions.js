@@ -12,13 +12,12 @@ import {
 } from '../utils/functions/sessionsFunctions';
 import User from '../models/user';
 import Coupon from '../models/coupons';
-import Email from '../models/email';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
+import Email from '../models/email';
 import dayjs from 'dayjs';
 import crypto from 'crypto';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -437,12 +436,36 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailServicePsy.pendingPlanPayment(
-			user,
-			psychologist,
-			payload.price,
-			responseBody.init_point
-		);
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-hour',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-day',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'promocional-incentive-week',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
