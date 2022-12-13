@@ -128,7 +128,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderUser(user, psy, date, batch, reminderType) {
+	async sendReminderUser(user, psy, sessionDate, batch, mailType, urlRooms) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
@@ -141,16 +141,17 @@ const mailService = {
 				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs(sessionDate).format('DD/MM/YYYY'),
+				hour: dayjs(sessionDate).format('HH:mm'),
+				url_rooms: urlRooms,
 			},
 			asm: {
 				group_id: 16321,
 			},
 			batchId: batch,
 		};
-		if (reminderType === 'day') {
-			dataPayload.subject = 'Mañana es tu sesión en Hablaquí';
+		if (mailType === 'day') {
+			dataPayload.subject = 'Mañana es su sesión en Hablaquí';
 			dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6';
 		}
 		await sendMails(dataPayload);
@@ -161,7 +162,7 @@ const mailService = {
 	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist attending the user
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendReminderPsy(user, psy, date, batch, reminderType) {
+	async sendReminderPsy(user, psy, sessionDate, batch, mailType, urlRooms) {
 		const { email, name, lastName } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
@@ -174,15 +175,16 @@ const mailService = {
 				user_last_name: user.lastName,
 				psy_first_name: name,
 				psy_last_name: lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs(sessionDate).format('DD/MM/YYYY'),
+				hour: dayjs(sessionDate).format('HH:mm'),
+				url_rooms: urlRooms,
 			},
 			asm: {
 				group_id: 16321,
 			},
 			batchId: batch,
 		};
-		if (reminderType === 'day') {
+		if (mailType === 'day') {
 			dataPayload.subject = `Mañana es tu sesión con ${user.name} en Hablaquí`;
 			dataPayload.templateId = 'd-5438529516ae4dbab81793daaaba7f06';
 		}
