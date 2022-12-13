@@ -141,8 +141,8 @@ const mailService = {
 				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
@@ -174,8 +174,8 @@ const mailService = {
 				user_last_name: lastName,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(date).format('DD/MM/YYYY'),
-				hour: dayjs(date).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 			},
 			asm: {
 				group_id: 16321,
@@ -205,7 +205,8 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name: name,
 				couponCode: coupon,
-				date: dayjs()
+				date: dayjs
+					.tz()
 					.add(1, 'week')
 					.format('DD/MM/YYYY'),
 				url: landing_url + 'evaluacion',

@@ -143,9 +143,7 @@ async function createCoupon() {
 		restrictions: {
 			firstTimeOnly: true,
 		},
-		expiration: dayjs()
-			.add(1, 'week')
-			.format(),
+		expiration: dayjs.tz(dayjs().add(1, 'week')).format(),
 	};
 	await couponModel.create(coupon);
 	return coupon.code;
@@ -196,6 +194,7 @@ async function scheduleEmails(pendingEmails) {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 					isSend = true;
+					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
 						psy,
