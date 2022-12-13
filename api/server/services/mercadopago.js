@@ -209,6 +209,7 @@ const successPay = async params => {
 		userRef: foundPlan.user,
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
+		url: foundPlan.roomsUrl,
 	});
 	await email.create({
 		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
@@ -219,6 +220,7 @@ const successPay = async params => {
 		userRef: foundPlan.user,
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
+		url: foundPlan.roomsUrl,
 	});
 	// Email scheduling for appointment reminder for the psychologist
 	await email.create({
@@ -230,6 +232,7 @@ const successPay = async params => {
 		userRef: foundPlan.user,
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
+		url: foundPlan.roomsUrl,
 	});
 	await email.create({
 		sessionDate: dayjs(sessionData.date, 'MM/DD/YYYY HH:mm'),
@@ -240,6 +243,7 @@ const successPay = async params => {
 		userRef: foundPlan.user,
 		psyRef: foundPlan.psychologist,
 		sessionRef: sessionData._id,
+		url: foundPlan.roomsUrl,
 	});
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
