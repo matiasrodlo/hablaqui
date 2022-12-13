@@ -216,6 +216,61 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
+	 * @description Sends an email to the user notifying him/her that the psychologist has rescheduled the session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 */
+	async sendRescheduleToUserByPsy(user, psy, sessionDate, url) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Tu psicólogo ha reprogramado tu sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-98b3e79f152d4416aa0ed58a50c309d2',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name + ' ' + psy.lastName,
+				url: url,
+			},
+		};
+		await sendMails(dataPayload);
+	},
+	/**
+	 * @description Send an email to the psychologist notifying him/her that you have rescheduled the session.
+	 * @param {Object} user - A User object from the database, corresponding to the client
+	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {String} sessionDate - The date of the appointment
+	 * @param {String} url - The URL to the appointment page
+	 */
+	async sendRescheduleToPsyByPsy(user, psy, sessionDate, url) {
+		const dataPayload = {
+			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
+			to: psy.name + '<' + psy.email + '>',
+			subject: `Has reprogramado la sesión`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				date: sessionDate.date,
+				hour: sessionDate.hour,
+				psy_name: psy.name,
+				url: url,
+			},
+		};
+		await sendMails(dataPayload);
+	},
+	/**
 	 * @description Sends an email to the user notifying them that a user has scheduled a session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
