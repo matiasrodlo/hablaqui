@@ -373,7 +373,7 @@ const economicMatch = async payload => {
 	// Se busca el mejor match según criterios
 	// Obtiene primero al psy más barato
 	matchedPsychologists.sort(
-		(a, b) => b.sessionPrices.video - a.sessionPrices.video
+		(a, b) => a.sessionPrices.video - b.sessionPrices.video
 	);
 
 	return okResponse('psicologos encontrados', {
@@ -424,11 +424,20 @@ const availityMatch = async payload => {
 		perfectMatch = false;
 	}
 
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
+
 	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	matchedPsychologists = await Promise.all(
 		matchedPsychologists.map(async psy => {
 			psy.points = 0;
-			const days = psy.days;
+			const sessionPsy = sessions.filter(
+				session => session.psy === psy._id
+			);
+			const days = await sessionsFunctions.getFormattedSessionsForMatch(
+				psy,
+				sessionPsy
+			);
 			points = pointsDisponibilidad(
 				days,
 				payload,
@@ -441,7 +450,7 @@ const availityMatch = async payload => {
 		})
 	);
 	// Se obtiene el psicologo con mayor disponibilidad representado por b
-	matchedPsychologists.sort((a, b) => a.points - b.points);
+	matchedPsychologists.sort((a, b) => b.points - a.points);
 
 	return okResponse('psicologos encontrados', {
 		matchedPsychologists,
