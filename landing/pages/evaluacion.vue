@@ -943,10 +943,15 @@ export default {
 				schedule: this.schedule,
 				model: this.models,
 				price: this.price,
-				userId: this.$auth.user._id,
 			};
-			await this.createMatchMakig(payload);
-			this.$router.push('/psicologos');
+			if (this.$auth.loggedIn) {
+				payload.userId = this.$auth.user._id;
+				await this.createMatchMakig(payload);
+				this.$router.push('/psicologos');
+			} else {
+				localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
+				this.$router.push('/auth');
+			}
 		},
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';

@@ -26,7 +26,12 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+							class="
+								py-1
+								text-center text-h6 text-lg-h4
+								font-weight-bold
+								text--secondary
+							"
 						>
 						</v-col>
 						<v-col
