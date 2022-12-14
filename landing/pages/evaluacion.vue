@@ -965,10 +965,15 @@ export default {
 				schedule: this.schedule,
 				model: this.models,
 				price: this.price,
-				userId: this.$auth.user._id,
 			};
-			await this.createMatchMakig(payload);
-			this.$router.push('/especialistas');
+			if (this.$auth.loggedIn) {
+				payload.userId = this.$auth.user._id;
+				await this.createMatchMakig(payload);
+				this.$router.push('/especialistas');
+			} else {
+				localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
+				this.$router.push('/auth');
+			}
 		},
 		/**
 		 * Retorna string con url del avatar

@@ -14,7 +14,7 @@ export default {
 	async getSpecialistsBestMatch({ commit, state }) {
 		try {
 			commit('setLoadingSpecialist', true);
-			const { data } = await this.$axios('/psychologists/best-match', {
+			const { data } = await this.$axios('/specialists/best-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
@@ -30,7 +30,7 @@ export default {
 	async getSpecialistsEconomicMatch({ commit }) {
 		try {
 			commit('setLoadingSpecialist', true);
-			const { data } = await this.$axios('/psychologists/economic-match', {
+			const { data } = await this.$axios('/specialists/economic-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
@@ -46,7 +46,7 @@ export default {
 	async getSpecialistsAvailityMatch({ commit }) {
 		try {
 			commit('setLoadingSpecialist', true);
-			const { data } = await this.$axios('/psychologists/availity-match', {
+			const { data } = await this.$axios('/specialists/availity-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});

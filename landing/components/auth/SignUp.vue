@@ -97,7 +97,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength, helpers } from 'vuelidate/lib/validators';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
@@ -197,6 +197,7 @@ export default {
 		 */
 		async onSubmit() {
 			// verificamos validacion
+			const temporalMatchMaking = JSON.parse(localStorage.getItem('temporalMatchMaking'));
 			this.$v.$touch();
 			if (!this.$v.$invalid && !this.accept) {
 				return (this.dialog = true);
@@ -218,6 +219,11 @@ export default {
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn) {
 						// si llegamos al login con un query from=spec
+						if (temporalMatchMaking) {
+							temporalMatchMaking.userId = this.$auth.user._id;
+							await this.createMatchMakig(temporalMatchMaking);
+							localStorage.removeItem('temporalMatchMaking');
+						}
 						if (this.$route.query.from === 'spec') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
 							return this.$router.push({ name: 'evaluacion' });
@@ -281,6 +287,9 @@ export default {
 			};
 			window.dataLayer.push(data);
 		},
+		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
+		}),
 		...mapMutations({
 			setResumeView: 'Specialist/setResumeView',
 			snackBar: 'Snackbar/showMessage',

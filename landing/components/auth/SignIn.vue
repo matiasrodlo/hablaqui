@@ -52,6 +52,7 @@
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations, mapActions } from 'vuex';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
@@ -107,6 +108,7 @@ export default {
 		 */
 		async onSubmit() {
 			// verificamos validacion
+			const temporalMatchMaking = JSON.parse(localStorage.getItem('temporalMatchMaking'));
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				try {
@@ -119,6 +121,11 @@ export default {
 					// verificamos una vez más si esta logeado
 					if (this.$auth.$state.loggedIn) {
 						// si llegamos al login con un query from=spec
+						if (temporalMatchMaking) {
+							temporalMatchMaking.userId = this.$auth.user._id;
+							await this.createMatchMakig(temporalMatchMaking);
+							localStorage.removeItem('temporalMatchMaking');
+						}
 						if (this.$route.query.from === 'spec')
 							return this.$router.push({ name: 'evaluacion' });
 						// si es role especialista y esta aprobado
@@ -175,6 +182,9 @@ export default {
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
+		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
+		}),
 		...mapMutations({
 			setResumeView: 'Specialist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
