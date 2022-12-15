@@ -261,40 +261,12 @@ const ponderationMatch = async (matchedList, payload) => {
 const bestMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
-	// Comienza a buscar los especialistas por genero y especialidad
-	if (payload.gender == 'transgender') {
-		matchedSpecialists = await Specialist.find({
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedSpecialists = await Specialist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			specialties: { $in: payload.themes },
-		});
-	}
+	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
+	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
+	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 
-	// Si no encuentra como minimo 0, busca el especialista solo respecto al genero
-	if (matchedSpecialists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Specialist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedSpecialists = await Specialist.find({
-				gender: payload.gender || {
-					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Specialist.find();
-		}
-		perfectMatch = false;
-	}
+	// Comienza a buscar los psicologos
+	matchedSpecialists = await Specialist.find();
 
 	// Se busca el mejor match según criterios
 	matchedSpecialists = await ponderationMatch(
@@ -313,25 +285,7 @@ const economicMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	// Si no encuentra como minimo 1, busca el especialista solo respecto al genero
-	if (matchedSpecialists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Specialist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedSpecialists = await Specialist.find({
-				gender: payload.gender || {
-					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Specialist.find();
-		}
-		perfectMatch = false;
-	}
+	matchedPsychologists = await Psychologist.find();
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al spec más barato
@@ -352,40 +306,8 @@ const availityMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	// Comienza a buscar los especialistas por genero y especialidad
-	if (payload.gender == 'transgender') {
-		matchedSpecialists = await Specialist.find({
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedSpecialists = await Specialist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			specialties: { $in: payload.themes },
-		});
-	}
-
-	// Si no encuentra como minimo 3, busca el especialista solo respecto al genero
-	if (matchedSpecialists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedSpecialists = await Specialist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedSpecialists = await Specialist.find({
-				gender: payload.gender || {
-					// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedSpecialists.length == 0) {
-			matchedSpecialists = await Specialist.find();
-		}
-		perfectMatch = false;
-	}
+	// Comienza a buscar los psicologos
+	matchedPsychologists = await Specialist.find();
 
 	// Se obtienen todas las sessiones
 	const sessions = await Sessions.find();
