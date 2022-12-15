@@ -226,9 +226,9 @@ export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 	let session = sessions.plan
 		.flatMap(plan => {
 			let maxSession = plan.session.map(session =>
-				dayjs
-					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
-					.format('YYYY/MM/DD HH:mm')
+				dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
+					'YYYY/MM/DD HH:mm'
+				)
 			);
 			maxSession = maxSession.sort((a, b) => new Date(b) - new Date(a));
 			return plan.session.flatMap(session => {

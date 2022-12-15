@@ -224,16 +224,32 @@ const createPlan = async ({ payload }) => {
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
 		expirationDate = dayjs
-			.tz(dayjs(date, 'MM/DD/YYYY HH:mm').add(50, 'minutes'))
+			.tz(
+				dayjs(date, 'MM/DD/YYYY HH:mm')
+					.add(50, 'minutes')
+					.add(3, 'hours')
+			)
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
-		expirationDate = dayjs.tz(dayjs().add(2, 'months')).format();
+		expirationDate = dayjs
+			.tz(
+				dayjs()
+					.add(2, 'months')
+					.add(3, 'hours')
+			)
+			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
-		expirationDate = dayjs.tz(dayjs().add(6, 'months')).format();
+		expirationDate = dayjs
+			.tz(
+				dayjs()
+					.add(6, 'months')
+					.add(3, 'hours')
+			)
+			.format();
 	}
 
 	// Se crea la primera sesión
@@ -522,7 +538,11 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
 		const expiration = dayjs
-			.tz(dayjs(session.lastSession).add(50, 'minutes'))
+			.tz(
+				dayjs(session.lastSession)
+					.add(50, 'minutes')
+					.add(3, 'hours')
+			)
 			.format();
 		// La nueva expiración es la fecha de la ultima sesion del plan + 50 minutos
 		sessions = await Sessions.findOneAndUpdate(
@@ -1211,10 +1231,9 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		// Si no existen sessiones pendientes, se da fecha de expiracion a la session 50 minutos despues de la ultima session
 		const expiration = dayjs
 			.tz(
-				dayjs(session.lastSession, 'YYYY/MM/DD HH:mm').add(
-					50,
-					'minutes'
-				)
+				dayjs(session.lastSession, 'YYYY/MM/DD HH:mm')
+					.add(50, 'minutes')
+					.add(3, 'hours')
 			)
 			.format();
 		await Sessions.findOneAndUpdate(
