@@ -1247,6 +1247,52 @@ const paymentsInfoFromId = async psy => {
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
+const getAllSessionsFormatted = async () => {
+	// Se obtienen todas las sessiones de mongo
+	const sessions = await Sessions.find().populate('psychologist user');
+	if (!sessions) {
+		return conflictResponse('No hay sesiones');
+	}
+	// Se formatean las sesiones para que se puedan mostrar en el front
+	const formattedSessions = sessions.flatMap(sessionDocument => {
+		if (sessionDocument.plan.length == 0) {
+			return;
+		}
+		return sessionDocument.plan.flatMap(plan => {
+			if (plan.session.length == 0) {
+				return;
+			}
+			return plan.session.flatMap(session => {
+				// Se retorna un objeto con los datos que se quieren mostrar
+				return {
+					date: moment(session.date).format('DD/MM/YYYY HH:mm'),
+					sessionNumber: session.sessionNumber,
+					psychologist:
+						sessionDocument.psychologist.name +
+						' ' +
+						sessionDocument.psychologist.lastName,
+					user:
+						sessionDocument.user.name +
+						' ' +
+						sessionDocument.user.lastName,
+					totalSessions: plan.totalSessions,
+					userPhone: sessionDocument.user.phone,
+					psychologistPhone: sessionDocument.psychologist.phone,
+					emailUser: sessionDocument.user.email,
+					emailPsychologist: sessionDocument.psychologist.email,
+					statusSession: session.status,
+					expirationPlan: moment(plan.expiration).format(
+						'DD/MM/YYYY'
+					),
+					paymentPlan: plan.payment,
+				};
+			});
+		});
+	});
+	// Se retorna una respuesta con las sesiones formateadas
+	return okResponse('Sesiones obtenidas', formattedSessions);
+};
+
 const sessionsService = {
 	getSessions,
 	getRemainingSessions,
@@ -1264,6 +1310,7 @@ const sessionsService = {
 	deleteCommitment,
 	getAllSessions,
 	paymentsInfoFromId,
+	getAllSessionsFormatted,
 };
 
 export default Object.freeze(sessionsService);

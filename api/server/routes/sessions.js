@@ -254,4 +254,17 @@ sessionsRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	sessionsController.paymentsInfoFromId
 );
+
+/**
+ * @description Consigue los
+ * @method GET
+ * @route /api/v1/sessions/get-all-sessions-formatted
+ * @returns {Object} datos de los pagos del psicólogo
+ */
+
+sessionsRouter.get(
+	'/sessions/get-all-sessions-formatted',
+	sessionsController.getAllSessionsFormatted
+);
+
 export default sessionsRouter;
