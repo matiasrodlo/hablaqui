@@ -104,6 +104,7 @@ import { uniqBy } from 'lodash';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/es';
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);

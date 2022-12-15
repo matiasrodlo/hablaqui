@@ -4,6 +4,7 @@ import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import updateObjectInArray from '@/plugins/updateArray';
+import 'dayjs/locale/es';
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -49,7 +50,7 @@ export default {
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
 			text: dayjs.tz(dayjs(session.text)).format('ddd'),
-			day: dayjs(session.day, 'DD MMM').format('DD MMM'),
+			day: dayjs(session.day).format('DD MMM'),
 		}));
 	},
 	setSessionsFormattedAll(state, items) {
@@ -60,7 +61,7 @@ export default {
 				sessions: item.sessions.map(el => ({
 					...el,
 					text: dayjs.tz(dayjs(el.text)).format('ddd'),
-					day: dayjs(el.day, 'DD MMM').format('DD MMM'),
+					day: dayjs(el.day).format('DD MMM'),
 				})),
 			};
 		});
@@ -74,7 +75,7 @@ export default {
 					sessions: item.sessions.map(el => ({
 						...el,
 						text: dayjs.tz(dayjs(el.text)).format('ddd'),
-						day: dayjs(el.day, 'DD MMM').format('DD MMM'),
+						day: dayjs(el.day).format('DD MMM'),
 					})),
 				};
 			})

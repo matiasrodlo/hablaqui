@@ -258,6 +258,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/es';
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
