@@ -93,7 +93,6 @@ export const createReminder = async (
  */
 export const createPaymentReminder = async (user, psy, sessions) => {
 	await Email.create({
-		sessionDate: dayjs.tz(dayjs(sessions.date).add(3, 'hours')).format(),
 		wasScheduled: false,
 		type: 'reminder-payment-hour',
 		queuedAt: null,
@@ -103,7 +102,6 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 		sessionRef: sessions._id,
 	});
 	await Email.create({
-		sessionDate: dayjs.tz(dayjs(sessions.date).add(3, 'hours')).format(),
 		wasScheduled: false,
 		type: 'reminder-payment-day',
 		queuedAt: null,
@@ -113,7 +111,6 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 		sessionRef: sessions._id,
 	});
 	await Email.create({
-		sessionDate: dayjs.tz(dayjs(sessions.date).add(3, 'hours')).format(),
 		wasScheduled: false,
 		type: 'promocional-incentive-week',
 		queuedAt: null,
@@ -122,4 +119,86 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 		psyRef: psy._id,
 		sessionRef: sessions._id,
 	});
+};
+
+/**
+ * @description Funcion que crea los correos electronicos para el recordatorio de renovación del plan
+ * @param {Object} user - Objeto que contiene la informacion del usuario
+ * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {Object} sessions - Objeto del documento de sessiones
+ */
+export const createRenewalSubscription = async (user, psy, sessions) => {
+	await Email.create({
+		wasScheduled: false,
+		type: 'reminder-renewal-subscription-1-hour',
+		queuedAt: null,
+		scheduledAt: null,
+		userRef: user._id,
+		psyRef: psy._id,
+		sessionRef: sessions._id,
+	});
+	await Email.create({
+		wasScheduled: false,
+		type: 'reminder-renewal-subscription-1-day',
+		queuedAt: null,
+		scheduledAt: null,
+		userRef: user._id,
+		psyRef: psy._id,
+		sessionRef: sessions._id,
+	});
+	await Email.create({
+		wasScheduled: false,
+		type: 'reminder-renewal-subscription-1-week',
+		queuedAt: null,
+		scheduledAt: null,
+		userRef: user._id,
+		psyRef: psy._id,
+		sessionRef: sessions._id,
+	});
+};
+
+export const deleteReminderPayment = async (user, psy) => {
+	// Busca los correos de recordatorio de pago y los elimina
+	const mailsToDeleted = await Email.find({
+		wasScheduled: false,
+		type: {
+			$in: [
+				'reminder-payment-hour',
+				'reminder-payment-day',
+				'promocional-incentive-week',
+			],
+		},
+		userRef: user,
+		psyRef: psy,
+	});
+	if (mailsToDeleted.length) {
+		mailsToDeleted.forEach(async mail => {
+			await Email.findByIdAndDelete(mail._id).catch(err =>
+				console.log(err)
+			);
+		});
+	}
+};
+
+export const deleteRenewalEmails = async (user, psy) => {
+	// Busca los correos de recordatorio de pago y los elimina
+	const mailsToDeleted = await Email.find({
+		wasScheduled: false,
+		type: {
+			$in: [
+				'reminder-renewal-subscription-1-hour',
+				'reminder-renewal-subscription-1-day',
+				'reminder-renewal-subscription-1-week',
+			],
+		},
+		userRef: user,
+		psyRef: psy,
+	});
+	if (mailsToDeleted.length) {
+		mailsToDeleted.forEach(async mail => {
+			await Email.findByIdAndDelete(mail._id).catch(err =>
+				console.log(err)
+			);
+		});
+	}
 };

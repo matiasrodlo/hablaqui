@@ -4,7 +4,9 @@ import { room } from '../config/dotenv';
 import {
 	createReminder,
 	createPaymentReminder,
-} from '../utils/functions/createEmails';
+	createRenewalSubscription,
+	deleteRenewalEmails,
+} from '../utils/functions/emailFunction';
 import { logInfo } from '../config/pino';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -454,7 +456,9 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
+		// Se crea recordatorio de pago y se elimina correo de renovación de plan
 		await createPaymentReminder(user, psychologist, created);
+		await deleteRenewalEmails(user, psychologist);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -528,6 +532,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				},
 			}
 		).populate('psychologist user');
+		// Se crea el correo para recordar suscripción de renovación
+		await createRenewalSubscription(userLogged, psychologist, sessions);
 	}
 
 	// Se hace el trackeo en segment
@@ -1164,13 +1170,19 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 					.add(3, 'hours')
 			)
 			.format();
-		await Sessions.findOneAndUpdate(
+		let sessions = await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
 			{
 				$set: {
 					'plan.$.expiration': expiration,
 				},
 			}
+		);
+		// Se crean correos de recordatorio de renovacion de plan
+		await createRenewalSubscription(
+			userLogged,
+			currentSession.psychologist,
+			sessions
 		);
 	}
 
