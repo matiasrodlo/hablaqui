@@ -256,10 +256,10 @@ sessionsRouter.get(
 );
 
 /**
- * @description Consigue los
+ * @description Consigue sessiones e información necesaria en front, como la fecha de expiración del plan, datos del psicólogo, etc.
  * @method GET
  * @route /api/v1/sessions/get-all-sessions-formatted
- * @returns {Object} datos de los pagos del psicólogo
+ * @returns {Object} datos de los que se necesitan en front
  */
 
 sessionsRouter.get(
