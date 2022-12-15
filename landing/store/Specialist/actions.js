@@ -22,7 +22,7 @@ export default {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
 			commit('setLoadingSpecialist', false);
-			snackBarSuccess('Psicologos recomendados obtenidos')(commit);
+			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -37,8 +37,8 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
-			snackBarSuccess('Psicologos más economicos obtenidos')(commit);
-			commit('setLoadingSpecialist', false);
+			snackBarSuccess('Especialistas obtenidos')(commit);
+			commit('setLoadingPsychologist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -53,8 +53,8 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
-			commit('setLoadingSpecialist', false);
-			snackBarSuccess('Psicologos con mayor disponibilidad obtenidos')(commit);
+			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Especialistas obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -369,9 +369,6 @@ export default {
 				method: 'POST',
 				data: payload,
 			});
-			snackBarSuccess('Sus repuestas han sido guardadas para buscar su especialista ideal')(
-				commit
-			);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

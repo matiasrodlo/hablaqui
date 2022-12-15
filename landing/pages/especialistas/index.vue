@@ -49,16 +49,6 @@ export default {
 		EspecialistasDesktop,
 		EspecialistasMobile,
 	},
-	/**
-	 * Obtiene los especialistas
-	 */
-	async asyncData({ error, store }) {
-		try {
-			await store.dispatch('Specialist/getSpecialists');
-		} catch (e) {
-			error({ statusCode: 404, message: 'Page not found' });
-		}
-	},
 	head() {
 		return {
 			meta: [
@@ -109,7 +99,12 @@ export default {
 		 * obtiene los datos iniciales
 		 */
 		async initialFetch() {
-			if (this.$auth.$state.loggedIn) await this.getMatchMakig(this.$auth.$state.user._id);
+			if (this.$auth.$state.loggedIn) {
+				await this.getMatchMakig(this.$auth.$state.user._id);
+				await this.getPsychologistsBestMatch();
+			} else {
+				this.getPsychologists();
+			}
 			await this.getAppointments();
 		},
 		/**
@@ -122,6 +117,8 @@ export default {
 			getAppointments: 'Appointments/getAppointments',
 			getSessionsLimit: 'Specialist/getSessionsLimit',
 			getMatchMakig: 'Specialist/getMatchMakig',
+			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
+			getSpecialists: 'Specialist/getSpecialists',
 		}),
 	},
 };

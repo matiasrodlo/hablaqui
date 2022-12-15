@@ -971,8 +971,10 @@ export default {
 				await this.createMatchMakig(payload);
 				this.$router.push('/especialistas');
 			} else {
-				localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
-				this.$router.push('/auth');
+				setTimeout(() => {
+					localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
+					this.$router.push('/auth');
+				}, 5000);
 			}
 		},
 		/**
