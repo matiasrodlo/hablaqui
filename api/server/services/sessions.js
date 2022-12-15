@@ -1270,7 +1270,7 @@ const getAllSessionsFormatted = async () => {
 			return plan.session.flatMap(session => {
 				// Se retorna un objeto con los datos que se quieren mostrar
 				return {
-					date: moment(session.date).format('DD/MM/YYYY HH:mm'),
+					date: dayjs(session.date).format('DD/MM/YYYY HH:mm'),
 					sessionNumber: session.sessionNumber,
 					psychologist:
 						sessionDocument.psychologist.name + lastNamePsy,
@@ -1281,7 +1281,7 @@ const getAllSessionsFormatted = async () => {
 					emailUser: sessionDocument.user.email,
 					emailPsychologist: sessionDocument.psychologist.email,
 					statusSession: session.status,
-					expirationPlan: moment(plan.expiration).format(
+					expirationPlan: dayjs(plan.expiration).format(
 						'DD/MM/YYYY'
 					),
 					paymentPlan: plan.payment,
