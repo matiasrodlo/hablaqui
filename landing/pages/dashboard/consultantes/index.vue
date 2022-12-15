@@ -443,7 +443,7 @@ export default {
 					// eslint-disable-next-line unicorn/prefer-includes
 					return item.fullname.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
 				})
-				.sort((a, b) => dayjs(a.createdAt) - dayjs(b.createdAt));
+				.sort((a, b) => dayjs.tz(a.createdAt) - dayjs.tz(b.createdAt));
 		},
 		emailErrors() {
 			const errors = [];
@@ -505,7 +505,7 @@ export default {
 			this.$v.$reset();
 		},
 		getAge(date) {
-			return dayjs().diff(date, 'years');
+			return dayjs.tz().diff(dayjs.tz(dayjs(date)), 'years');
 		},
 		async changeStateOnboarding() {
 			await this.updateOne({

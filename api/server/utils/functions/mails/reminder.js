@@ -141,8 +141,8 @@ const mailService = {
 				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs(sessionDate).format('DD/MM/YYYY'),
-				hour: dayjs(sessionDate).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 				url_rooms: urlRooms,
 			},
 			asm: {
@@ -171,12 +171,8 @@ const mailService = {
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
-				user_first_name: user.name,
-				user_last_name: user.lastName,
-				psy_first_name: name,
-				psy_last_name: lastName,
-				date: dayjs(sessionDate).format('DD/MM/YYYY'),
-				hour: dayjs(sessionDate).format('HH:mm'),
+				date: dayjs.tz(date).format('DD/MM/YYYY'),
+				hour: dayjs.tz(date).format('HH:mm'),
 				url_rooms: urlRooms,
 			},
 			asm: {
@@ -207,7 +203,8 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name: name,
 				couponCode: coupon,
-				date: dayjs()
+				date: dayjs
+					.tz()
 					.add(1, 'week')
 					.format('DD/MM/YYYY'),
 				url: landing_url + 'evaluacion',

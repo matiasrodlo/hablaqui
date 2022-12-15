@@ -352,7 +352,7 @@ const match = async body => {
 
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	// Se da formato a la fecha
-	newDate = dayjs(newDate, 'yyyy-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm');
+	newDate = dayjs(newDate, 'YYYY-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm');
 	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
 	const sessions = await Sessions.findOneAndUpdate(
 		{
@@ -377,14 +377,13 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 			if (
 				plan.session[i]._id.toString() === sessionId.toString() &&
 				dayjs(plan.session[i].date, 'MM/DD/YYYY HH:mm').isAfter(
-					plan.expiration,
-					'MM/DD/YYYY HH:mm'
+					dayjs(plan.expiration, 'MM/DD/YYYY HH:mm')
 				) &&
 				plan._id.toString() === planId.toString()
 			) {
 				// Se actualiza la fecha de vencimiento a 50 minutos despues de la ultima sesion
-				plan.expiration = dayjs(newDate, 'MM/DD/YYYY HH:mm')
-					.add(50, 'minutes')
+				plan.expiration = dayjs
+					.tz(dayjs(newDate, 'MM/DD/YYYY HH:mm').add(50, 'minutes'))
 					.format();
 			}
 		}
@@ -513,7 +512,7 @@ const updatePsychologist = async (user, profile) => {
 					dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
 				)
 					profile.sessionPrices = psy.sessionPrices;
-				else profile.stampSetPrices = dayjs().format();
+				else profile.stampSetPrices = dayjs.tz().format();
 			}
 			const updated = await Psychologist.findByIdAndUpdate(
 				profile._id,
@@ -675,7 +674,7 @@ const setPrice = async (user, newPrice) => {
 				video: newPrice,
 				full: newPrice * 1.25,
 			},
-			stampSetPrices: dayjs(),
+			stampSetPrices: dayjs.tz().format(),
 		},
 		{ new: true }
 	);
@@ -728,7 +727,9 @@ const getLastSession = item => {
 	return item.plan
 		.flatMap(plan =>
 			plan.session.map(session =>
-				dayjs(session.date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY')
+				dayjs
+					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
+					.format('DD/MM/YYYY')
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
@@ -872,7 +873,9 @@ const changeToInmediateAttention = async psy => {
 		let now = new Date();
 		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
 		sessions = sessions.filter(session => {
-			const date = dayjs(session.date).format('DD/MM/YYYY HH:mm');
+			const date = dayjs
+				.tz(dayjs(session.date))
+				.format('DD/MM/YYYY HH:mm');
 			return (
 				session.status !== 'success' &&
 				dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
@@ -892,8 +895,8 @@ const changeToInmediateAttention = async psy => {
 				$set: {
 					inmediateAttention: {
 						activated: true,
-						expiration: dayjs(now)
-							.add(1, 'hour')
+						expiration: dayjs
+							.tz(dayjs(now).add(1, 'hour'))
 							.format(),
 					},
 				},
@@ -938,7 +941,7 @@ const getAllSessionsInmediateAttention = async () => {
 						: [];
 				})
 				.filter(session => {
-					const date = dayjs(session.date).format(
+					const date = dayjs.tz(dayjs(session.date)).format(
 						'DD/MM/YYYY HH:mm'
 					);
 					return (

@@ -25,9 +25,7 @@ export const getAllEvaluationsFunction = async psy => {
 				name: item.user.name,
 				userId: item.user._id,
 				moderatingDate: evaluation.moderatingDate,
-				createdAt: dayjs(evaluation.createdAt)
-					.tz('America/Santiago')
-					.format(),
+				createdAt: dayjs.tz(dayjs(evaluation.createdAt)).format(),
 			};
 		});
 	});

@@ -749,6 +749,7 @@ import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import badMutable from 'dayjs/plugin/badMutable';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import 'dayjs/locale/es';
 dayjs.extend(customParseFormat);
 dayjs.extend(badMutable);
 dayjs.extend(relativeTime);
@@ -807,7 +808,7 @@ export default {
 		},
 		selectedElement: null,
 		selectedOpen: false,
-		today: dayjs().format('YYYY-MM-DD'),
+		today: dayjs.tz().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
@@ -859,7 +860,9 @@ export default {
 			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
-				return dayjs(a, 'MM/DD/YYYY HH:mm').diff(dayjs(b, 'MM/DD/YYYY HH:mm'));
+				return dayjs
+					.tz(dayjs(a, 'MM/DD/YYYY HH:mm'))
+					.diff(dayjs.tz(dayjs(b, 'MM/DD/YYYY HH:mm')));
 			});
 			const date = allDates.find(item =>
 				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
@@ -1061,7 +1064,7 @@ export default {
 			}
 		},
 		setToday() {
-			this.focus = dayjs().format('YYYY-MM-DD');
+			this.focus = dayjs.tz().format('YYYY-MM-DD');
 		},
 		prev() {
 			this.$refs.calendar.prev();

@@ -159,6 +159,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import badMutable from 'dayjs/plugin/badMutable';
+import 'dayjs/locale/es';
 dayjs.extend(badMutable);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -186,7 +187,7 @@ export default {
 	computed: {
 		dayWithdraw() {
 			const day = dayjs().add('7', 'days');
-			return dayjs(day).format('DD/MM/YYYY');
+			return dayjs.tz(dayjs(day)).format('DD/MM/YYYY');
 		},
 		...mapGetters({
 			payments: 'Psychologist/payments',
@@ -216,7 +217,7 @@ export default {
 			this.loading = false;
 		},
 		formatDatedayjs(item) {
-			return dayjs(item).format('DD MMMM, YYYY');
+			return dayjs.tz(dayjs(item)).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;

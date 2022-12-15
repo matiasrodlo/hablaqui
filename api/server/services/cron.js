@@ -36,8 +36,8 @@ function generatePayload(date, batch, reminderType, isSend) {
 	 */
 	return {
 		wasScheduled: isSend,
-		scheduledAt: dayjs(date)
-			.subtract(1, reminderType)
+		scheduledAt: dayjs
+			.tz(dayjs(date).subtract(1, reminderType))
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
 	};
@@ -104,7 +104,7 @@ async function getBatchId() {
 	return batch_id;
 }
 
-async function preference(user, psychologist, plan) {
+async function preference(user, psychologist, plan, session) {
 	// Se genera un código aleatorio para el token de pago
 	const randomCode = () => {
 		return Math.random()
@@ -113,7 +113,6 @@ async function preference(user, psychologist, plan) {
 	};
 	const token = randomCode() + randomCode();
 	const price = plan.totalPrice;
-	const idSession = plan.session.pop()._id;
 	// Se crea el pago en mercadopago
 	const mercadopagoPayload = {
 		psychologist: psychologist.username,
@@ -121,7 +120,7 @@ async function preference(user, psychologist, plan) {
 		description:
 			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
 		quantity: 1,
-		sessionsId: idSession.toString(),
+		sessionsId: session._id.toString(),
 		planId: plan._id.toString(),
 		token,
 	};
@@ -144,9 +143,7 @@ async function createCoupon() {
 		restrictions: {
 			firstTimeOnly: true,
 		},
-		expiration: dayjs()
-			.add(1, 'week')
-			.format(),
+		expiration: dayjs.tz(dayjs().add(1, 'week')).format(),
 	};
 	await couponModel.create(coupon);
 	return coupon.code;
@@ -193,11 +190,12 @@ async function scheduleEmails(pendingEmails) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
 				if (
 					addressee === 'user' &&
-					dayjs().isAfter(emailInfo.scheduledAt)
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 					isSend = true;
+					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
 						psy,
@@ -208,7 +206,7 @@ async function scheduleEmails(pendingEmails) {
 					);
 				} else if (
 					addressee === 'psy' &&
-					dayjs().isAfter(emailInfo.scheduledAt)
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					isSend = true;
@@ -346,7 +344,9 @@ const cronService = {
 				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm')
+							.add(4, 'hour')
+							.format();
 						// if (
 						// 	session.status === 'pending' &&
 						// 	dayjs(date)
@@ -356,8 +356,8 @@ const cronService = {
 						// 			'hours'
 						// 		)
 						// 		.isBefore(dayjs()) &&
-						// 	dayjs().isBefore(date) &&
-						// 	dayjs().isBefore(plan.expiration)
+						// 	dayjs().isBefore(dayjs(date)) &&
+						// 	dayjs().isBefore(dayjs(plan.expiration))
 						// ) {
 						// 	session.status = 'upnext';}
 						if (
@@ -480,14 +480,14 @@ const cronService = {
 			}
 			// Se obtiene la url de pago
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
-			const url = await preference(user, psy, plan);
+			const url = await preference(user, psy, plan, sessionDocument);
 			try {
 				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 				// Si es null significa que aún no se le ha dado una fecha de envío
 				if (emailInfo.scheduledAt !== null) {
 					// Si la fecha actual está después que la fecha programada, entonces se envía el correo
 					if (
-						dayjs().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'reminder-payment-hour'
 					) {
 						batch = await getBatchId();
@@ -500,7 +500,7 @@ const cronService = {
 							url
 						);
 					} else if (
-						dayjs().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'reminder-payment-day'
 					) {
 						batch = await getBatchId();
@@ -512,7 +512,7 @@ const cronService = {
 							url
 						);
 					} else if (
-						dayjs().isAfter(emailInfo.scheduledAt) &&
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
 						emailInfo.type === 'promocional-incentive-week'
 					) {
 						batch = await getBatchId();
@@ -529,8 +529,8 @@ const cronService = {
 				// Se genera el payload y se actualiza el email
 				const updatePayload = {
 					wasScheduled: isSend,
-					scheduledAt: dayjs(plan.createdAt)
-						.add(1, mailType)
+					scheduledAt: dayjs
+						.tz(dayjs(plan.createdAt).add(1, mailType))
 						.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 					batchId: batch,
 				};

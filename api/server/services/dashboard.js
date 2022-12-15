@@ -205,9 +205,9 @@ const getMountToPay = async user => {
 			item.sessions.flatMap(s => {
 				console.log(item);
 				return {
-					date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
-						'DD/MM/YYYY HH:mm'
-					),
+					date: dayjs
+						.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+						.format('DD/MM/YYYY HH:mm'),
 					_id: s._id,
 					status: s.status,
 					name: item.name,
