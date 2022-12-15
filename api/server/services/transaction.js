@@ -12,6 +12,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Analytics from 'analytics-node';
+import 'dayjs/locale/es';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
@@ -285,6 +286,7 @@ const generateTransaction = async (user, total, session, idPsy) => {
 			.tz()
 			.subtract(1, 'week')
 			.startOf('week')
+			.add(1, 'day')
 			.format('DD/MM/YYYY'),
 		end: dayjs
 			.tz()
