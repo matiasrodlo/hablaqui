@@ -10,9 +10,14 @@ import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import 'dayjs/locale/es';
 import Analytics from 'analytics-node';
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocale);
 dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -255,6 +260,7 @@ const generateTransaction = async (user, total, session, idPsy) => {
 	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
 	if (session.length === 0)
 		return conflictResponse('No hay sesiones para pagar');
+	// Actualizar las sesiones como pagadas
 	await session.forEach(async s => {
 		await Sessions.updateOne(
 			{
@@ -268,11 +274,17 @@ const generateTransaction = async (user, total, session, idPsy) => {
 			{ arrayFilters: [{ 'session._id': s._id }] }
 		);
 	});
+	// Guarda la transaccion en mongo
 	let transaction = await Transaction.create({
 		total,
 		sessions: session,
 		psychologist: idPsy,
 	});
+	// Se obtiene la informacion del psy y se envia el correo
+	let psy = await Psychologist.findById(idPsy);
+	let period = dayjs.updateLocale('es');
+	period = period.months[dayjs.tz().month()];
+	await mailServicePsy.sendPaymentSummary(psy, period, total, session.length);
 	return okResponse('Pago completado', { transaction });
 };
 

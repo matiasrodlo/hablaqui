@@ -218,6 +218,26 @@ const mailService = {
 		};
 		await sendMails(dataPayload);
 	},
+	async sendPaymentSummary(psychologist, period, price, sessionsNumber) {
+		const dataPayload = {
+			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+			to: psychologist.name + '<' + psychologist.email + '>',
+			subject: `Resumen de pagos`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: '',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				psy_name: psychologist.name,
+				period: period,
+				price: price,
+				sessionsNumber: sessionsNumber,
+			},
+		};
+		console.log(dataPayload);
+		// await sendMails(dataPayload);
+	},
 };
 
 export default Object.freeze(mailService);

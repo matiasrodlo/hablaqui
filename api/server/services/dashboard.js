@@ -203,7 +203,6 @@ const getMountToPay = async user => {
 		}
 		session = session.flatMap(item =>
 			item.sessions.flatMap(s => {
-				console.log(item);
 				return {
 					date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
 						'DD/MM/YYYY HH:mm'
@@ -218,7 +217,6 @@ const getMountToPay = async user => {
 				};
 			})
 		);
-		console.log(session);
 		amounts.push({
 			_id: psychologists[psy]._id,
 			name: psychologists[psy].name,
