@@ -1,12 +1,6 @@
 'use strict';
 
 import { room } from '../config/dotenv';
-import {
-	createReminder,
-	createPaymentReminder,
-	createRenewalSubscription,
-	deleteRenewalEmails,
-} from '../utils/functions/emailFunction';
 import { logInfo } from '../config/pino';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -19,25 +13,15 @@ import {
 import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
-import Specialist from '../models/specialist';
+import Psychologist from '../models/psychologist';
+import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
-import Email from '../models/email';
-import dayjs from 'dayjs';
 import crypto from 'crypto';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import moment from 'moment';
 import Analytics from 'analytics-node';
-dayjs.extend(isSameOrAfter);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(localizedFormat);
-dayjs.extend(customParseFormat);
-dayjs.tz.setDefault('America/Santiago');
+moment.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -45,17 +29,17 @@ const getSessions = async (userLogged, idUser) => {
 	// iniciamos la variable
 	let sessions;
 
-	// Buscamos la sesiones correspondiente a ese user y especialista
+	// Buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
-			//specialist: idSpec,
+			//psychologist: idPsy,
 			user: idUser,
-		}).populate('specialist user');
+		}).populate('psychologist user');
 	}
-	if (userLogged.role === 'specialist') {
+	if (userLogged.role === 'psychologist') {
 		sessions = await Sessions.find({
-			specialist: idUser,
-		}).populate('specialist user');
+			psychologist: idUser,
+		}).populate('psychologist user');
 	}
 
 	// Para que nos de deje modificar el array de mongo
@@ -70,10 +54,10 @@ const getSessions = async (userLogged, idUser) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
-const getRemainingSessions = async spec => {
+const getRemainingSessions = async psy => {
 	let sessions = await Sessions.find({
-		specialist: spec,
-	}).populate('specialist user');
+		psychologist: psy,
+	}).populate('psychologist user');
 
 	sessions = sessions.flatMap(item => {
 		let name = '';
@@ -107,7 +91,7 @@ const getRemainingSessions = async spec => {
 	});
 };
 
-// Reprogramación sesiones para especialistas
+// Reprogramación sesiones para psicologos
 const cancelSession = async (user, planId, sessionsId, id) => {
 	const cancelSessions = await Sessions.findOneAndUpdate(
 		{
@@ -120,50 +104,50 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 				'plan.$.session': { _id: id },
 			},
 		}
-	).populate('specialist user');
+	).populate('psychologist user');
 
-	/*session = getLastSessionFromPlan(session, id, planId); 
- 
-	const date = dayjs.tz(dayjs(session.date)).format(); 
-	const lastSession = dayjs.tz(dayjs(session.lastSession)).format(); 
- 
-	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0 
-	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente) 
-	if ( 
-		session.remainingSessions === 0 && 
-		new Date(date).getTime() === new Date(lastSession).getTime() 
-	) { 
-		const expiration = dayjs.tz(dayjs(session.datePayment) 
-			.add(1, 'months')) 
-			.format(); 
-		await Sessions.findOneAndUpdate( 
-			{ _id: sessionsId, 'plan._id': session.plan_id }, 
-			{ 
-				$set: { 
-					'plan.$.expiration': expiration, 
-				}, 
-			} 
-		); 
+	/*session = getLastSessionFromPlan(session, id, planId);
+
+	const date = moment(session.date).format();
+	const lastSession = moment(session.lastSession).format();
+
+	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0
+	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente)
+	if (
+		session.remainingSessions === 0 &&
+		new Date(date).getTime() === new Date(lastSession).getTime()
+	) {
+		const expiration = moment(session.datePayment)
+			.add(1, 'months')
+			.format();
+		await Sessions.findOneAndUpdate(
+			{ _id: sessionsId, 'plan._id': session.plan_id },
+			{
+				$set: {
+					'plan.$.expiration': expiration,
+				},
+			}
+		);
 	}*/
 
-	// Considera que el usuario es especialista
+	// Considera que el usuario es psicologo
 	const sessions = await Sessions.find({
-		specialist: cancelSessions[0].specialist._id,
-	}).populate('specialist user');
+		psychologist: cancelSessions[0].psychologist._id,
+	}).populate('psychologist user');
 
 	// Se verifica si es un compromiso privado
-	if (cancelSessions.user === null) {
+	if (cancelSessions.user == null) {
 		await mailServiceReminder.sendCancelCommitment(
-			cancelSessions.specialist
+			cancelSessions.psychologist
 		);
 	} else {
-		await mailServiceReminder.sendCancelSessionSpec(
+		await mailServiceReminder.sendCancelSessionPsy(
 			cancelSessions.user,
-			cancelSessions.specialist
+			cancelSessions.psychologist
 		);
 		await mailServiceReminder.sendCancelSessionUser(
 			cancelSessions.user,
-			cancelSessions.specialist
+			cancelSessions.psychologist
 			//sessionCancel.plan[0].session[0].date
 		);
 	}
@@ -180,7 +164,8 @@ const checkPlanTask = async () => {
 	planUsers.forEach(async userWithPlan => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
-			if (dayjs().isAfter(dayjs(plan.expiration))) {
+			// Si el plan está vencido, se actualiza el estado del plan a vencido
+			if (moment().isAfter(plan.expiration)) {
 				plan.status = 'expired';
 			}
 		});
@@ -197,26 +182,26 @@ const checkPlanTask = async () => {
  * @param {Number} payload.price - Precio del plan
  * @param {String} payload.coupon - Cupon usado, caso contrario es ''
  * @param {ObjectId} payload.user - Id del user
- * @param {ObjectId} payload.specialist - Id del especialista
+ * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
-
 const createPlan = async ({ payload }) => {
-	if (payload.user === payload.specialist && payload.price !== 0) {
+	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
 	}
 	// Válido MM/DD/YYYY HH:mm
 	const date = `${payload.date} ${payload.start}`;
-	const specialist = await Specialist.findById(payload.specialist);
-	const minimumNewSession = specialist.preferences.minimumNewSession;
+	const psychologist = await Psychologist.findById(payload.psychologist);
+	const minimumNewSession = psychologist.preferences.minimumNewSession;
 
-	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del especialista
+	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
 	if (
-		!specialist.inmediateAttention.activated &&
-		dayjs().isAfter(
-			dayjs
-				.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-				.subtract(minimumNewSession, 'hours')
+		!psychologist.inmediateAttention.activated &&
+		moment().isAfter(
+			moment(date, 'MM/DD/YYYY HH:mm').subtract(
+				minimumNewSession,
+				'hours'
+			)
 		)
 	) {
 		return conflictResponse(
@@ -229,32 +214,20 @@ const createPlan = async ({ payload }) => {
 
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
-		expirationDate = dayjs
-			.tz(
-				dayjs(date, 'MM/DD/YYYY HH:mm')
-					.add(50, 'minutes')
-					.add(3, 'hours')
-			)
+		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
+			.add(50, 'minutes')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
-		expirationDate = dayjs
-			.tz(
-				dayjs()
-					.add(2, 'months')
-					.add(3, 'hours')
-			)
+		expirationDate = moment()
+			.add({ months: 2 })
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
-		expirationDate = dayjs
-			.tz(
-				dayjs()
-					.add(6, 'months')
-					.add(3, 'hours')
-			)
+		expirationDate = moment()
+			.add({ months: 6 })
 			.format();
 	}
 
@@ -262,7 +235,7 @@ const createPlan = async ({ payload }) => {
 	const newSession = {
 		date,
 		sessionNumber: 1,
-		paidToSpecialist: false,
+		paidToPsychologist: false,
 	};
 	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
@@ -294,15 +267,15 @@ const createPlan = async ({ payload }) => {
 		session: [newSession],
 	};
 
-	// Se busca en Sessions un documento con el usuario y el especialista, además genera la sala
+	// Se busca en Sessions un documento con el usuario y el psicologo, además genera la sala
 	const userSessions = await Sessions.findOne({
 		user: payload.user,
-		specialist: payload.specialist,
+		psychologist: payload.psychologist,
 	});
 
 	const roomId = crypto
-		.createHash('sha256')
-		.update(`${payload.user}${payload.specialist}`)
+		.createHash('md5')
+		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
 
 	const url =
@@ -310,12 +283,12 @@ const createPlan = async ({ payload }) => {
 			? `${room}room/${roomId}`
 			: '';
 
-	// Se verifica que el precio sea mayor a cero y que el usuario no sea el mismo que el especialista
-	if (payload.price > 0 && payload.user !== payload.specialist) {
-		// Se asigna el especialista al usuario
+	// Se verifica que el precio sea mayor a cero y que el usuario no sea el mismo que el psicologo
+	if (payload.price > 0 && payload.user !== payload.psychologist) {
+		// Se asigna el psicologo al usuario
 		await User.findByIdAndUpdate(payload.user, {
 			$set: {
-				specialist: payload.specialist,
+				psychologist: payload.psychologist,
 			},
 		});
 		// Se hace el trakeo en segment
@@ -331,8 +304,8 @@ const createPlan = async ({ payload }) => {
 			},
 		});
 		analytics.track({
-			userId: payload.specialist.toString(),
-			event: 'spec-new-plan',
+			userId: payload.psychologist.toString(),
+			event: 'psy-new-plan',
 			properties: {
 				plan: payload.title,
 				period: payload.paymentPeriod,
@@ -354,9 +327,9 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					dayjs().isBefore(dayjs(plan.expiration)) &&
+					moment().isBefore(moment(plan.expiration)) &&
 					plan.title !== 'Plan inicial' &&
-					sessions.specialist.toString() !== payload.specialist
+					sessions.psychologist.toString() !== payload.psychologist
 			);
 		})
 	)
@@ -365,14 +338,14 @@ const createPlan = async ({ payload }) => {
 		// Si se encontró un docuemnto, se agrega el nuevo plan con la URL de la sala
 		if (userSessions) {
 			created = await Sessions.findOneAndUpdate(
-				{ user: payload.user, specialist: payload.specialist },
+				{ user: payload.user, psychologist: payload.psychologist },
 				{ $push: { plan: newPlan }, $set: { roomsUrl: url } },
 				{ new: true }
 			);
 		} else {
 			created = await Sessions.create({
 				user: payload.user,
-				specialist: payload.specialist,
+				psychologist: payload.psychologist,
 				plan: [newPlan],
 				roomsUrl: url,
 			});
@@ -399,18 +372,18 @@ const createPlan = async ({ payload }) => {
 			properties: {
 				products: planData,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: dayjs.tz().format(),
+				timestamp: moment().format(),
 				total: payload.price / sessionQuantity,
 			},
 		});
 		analytics.track({
-			userId: payload.specialist.toString(),
-			event: 'current-spec-new-plan',
+			userId: payload.psychologist.toString(),
+			event: 'current-psy-new-plan',
 			properties: {
 				products: planData,
 				user: payload.user._id,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: dayjs.tz().format(),
+				timestamp: moment().format(),
 			},
 		});
 	}
@@ -440,7 +413,7 @@ const createPlan = async ({ payload }) => {
 		const user = await User.findById(payload.user);
 		const plan = created.plan.pop();
 		const mercadopagoPayload = {
-			specialist: specialist.username,
+			psychologist: psychologist.username,
 			price: payload.price,
 			description:
 				payload.title +
@@ -456,9 +429,12 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		// Se crea recordatorio de pago y se elimina correo de renovación de plan
-		await createPaymentReminder(user, specialist, created);
-		await deleteRenewalEmails(user, specialist);
+		await mailServicePsy.pendingPlanPayment(
+			user,
+			psychologist,
+			payload.price,
+			responseBody.init_point
+		);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -472,20 +448,20 @@ const createPlan = async ({ payload }) => {
  * @param {Object} payload - datos para guardar
  * @returns sessions actualizada
  */
-
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
-	const { specialist, plan, roomsUrl } = await Sessions.findOne({
+	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
 		_id: id,
-	}).populate('specialist');
+	}).populate('psychologist');
 
-	const minimumNewSession = specialist.preferences.minimumNewSession;
+	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// Comprobar si la fecha es posterior a la fecha actual más el tiempo mínimo
 	if (
-		dayjs().isAfter(
-			dayjs
-				.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm'))
-				.subtract(minimumNewSession, 'hours')
+		moment().isAfter(
+			moment(payload.date, 'MM/DD/YYYY HH:mm').subtract(
+				minimumNewSession,
+				'hours'
+			)
 		)
 	) {
 		return conflictResponse(
@@ -511,17 +487,13 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			$push: { 'plan.$.session': payload },
 		},
 		{ new: true }
-	).populate('specialist user');
+	).populate('psychologist user');
 
 	// Si no quedan sesiones por agendar, se obtiene la ultima sesion del plan
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
-		const expiration = dayjs
-			.tz(
-				dayjs(session.lastSession)
-					.add(50, 'minutes')
-					.add(3, 'hours')
-			)
+		const expiration = moment(session.lastSession)
+			.add(50, 'minutes')
 			.format();
 		// La nueva expiración es la fecha de la ultima sesion del plan + 50 minutos
 		sessions = await Sessions.findOneAndUpdate(
@@ -531,11 +503,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 					'plan.$.expiration': expiration,
 				},
 			}
-		).populate('specialist user');
-		// Se crea el correo para recordar suscripción de renovación
-		if (userLogged.role === 'user') {
-			await createRenewalSubscription(userLogged, specialist, sessions);
-		}
+		).populate('psychologist user');
 	}
 
 	// Se hace el trackeo en segment
@@ -549,49 +517,39 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			properties: {
 				user: userLogged._id,
 				planId: idPlan,
-				userspecId: id,
+				userpsyId: id,
 				email: userLogged.email,
 			},
 		});
-		const getUser = await User.findOne({ email: specialist.email });
+		const getUser = await User.findOne({ email: psychologist.email });
 		const userID = getUser._id;
 		analytics.track({
 			userId: userID.toString(),
-			event: 'spec-new-session',
+			event: 'psy-new-session',
 			properties: {
 				user: userLogged._id,
 				planId: idPlan,
-				userspecId: id,
+				userpsyId: id,
 			},
 		});
 	}
 	await mailServiceSchedule.sendScheduleToUser(
 		userLogged,
-		specialist,
-		dayjs.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm')).format(),
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
 		}`
 	);
-	await mailServiceSchedule.sendScheduleToSpec(
+	await mailServiceSchedule.sendScheduleToPsy(
 		userLogged,
-		specialist,
-		dayjs.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm')).format(),
+		psychologist,
+		moment(payload.date, 'MM/DD/YYYY HH:mm'),
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
 		}`
-	);
-
-	// Se crea el recordatorio de la sesion
-	await createReminder(
-		payload,
-		userLogged,
-		specialist,
-		sessions,
-		roomsUrl,
-		idPlan
 	);
 
 	return okResponse('sesion creada', {
@@ -600,36 +558,39 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 };
 /**
  * Creacion de sesion personalizda
- * (invitado por especialista, o bloqueo de horas)
+ * (invitado por psicologo, o bloqueo de horas)
  * @param {Object} user Usuario logeado
  * @param {string} payload.date Fecha de la sesion
  * @param {string} payload.type Tipo de la sesion ['online', 'presencial', 'commitment', etc...]
  * @param {Number} payload.price Precio que se cobrara
  * @returns sessions
  */
-
 const customNewSession = async (user, payload) => {
 	try {
-		// Validamos que sea especialista
-		if (user.role !== 'specialist')
-			return conflictResponse('No eres especialista');
+		// Validamos que sea psicologo
+		if (user.role !== 'psychologist')
+			return conflictResponse('No eres psicologo');
 		let sessions = [];
 		let hours = 1;
 
 		// Se comprueba si es una sesion de compromiso
 		if (payload.dateEnd && payload.type === 'compromiso privado') {
-			const start = dayjs(payload.date, 'MM/DD/YYYY HH:mm').format();
-			const end = dayjs(payload.dateEnd, 'MM/DD/YYYY HH:mm').format();
+			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
+			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
+			// Se calcula la cantidad de horas que dura la sesion
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
 		}
 
 		// Objeto con la sesion a crear
 		for (let i = 0; i < hours; i++) {
-			const date = dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(i, 'hours');
+			const date = moment(payload.date, 'MM/DD/YYYY HH:mm').add(
+				i,
+				'hours'
+			);
 			const newSession = {
 				date: date.format('MM/DD/YYYY HH:mm'),
 				sessionNumber: i + 1,
-				paidToSpecialist: false,
+				paidToPsychologist: false,
 				status: 'pending',
 			};
 			sessions.push(newSession);
@@ -643,8 +604,8 @@ const customNewSession = async (user, payload) => {
 			sessionPrice: payload.price,
 			payment:
 				payload.type === 'compromiso privado' ? 'success' : 'pending',
-			expiration: dayjs
-				.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(1, 'week'))
+			expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
+				.add({ weeks: 1 })
 				.toISOString(),
 			usedCoupon: '',
 			totalSessions: 1,
@@ -656,7 +617,7 @@ const customNewSession = async (user, payload) => {
 		await Sessions.updateOne(
 			{
 				user: payload.user,
-				specialist: user.specialist,
+				psychologist: user.psychologist,
 			},
 			{
 				$pull: {
@@ -667,30 +628,30 @@ const customNewSession = async (user, payload) => {
 
 		// Creamos la direccion de la sala de videollamadas
 		const roomId = crypto
-			.createHash('sha256')
-			.update(`${payload.user}${payload.specialist}`)
+			.createHash('md5')
+			.update(`${payload.user}${payload.psychologist}`)
 			.digest('hex');
 
-		// creamos o actualizamos las sesiones entre el usuario y el especialista
+		// creamos o actualizamos las sesiones entre el usuario y el psicologo
 		// cuando se crea compromiso privado el user será null
 		const updatedSession = await Sessions.findOneAndUpdate(
 			{
 				user: payload.user,
-				specialist: user.specialist,
+				psychologist: user.psychologist,
 			},
 			{
 				user: payload.user,
-				specialist: user.specialist,
+				psychologist: user.psychologist,
 				$push: { plan: newPlan },
 				roomsUrl: payload.user ? `${room}room/${roomId}` : '',
 			},
 			{ upsert: true, new: true }
-		).populate('user specialist');
+		).populate('user psychologist');
 
 		// Correo de compromiso privado
 		if (payload.type === 'compromiso privado')
 			await mailServiceReminder.sendCustomSessionCommitment(
-				updatedSession.specialist
+				updatedSession.psychologist
 			);
 
 		// Validamos precio y que exista user(recordemos que user es null en compromiso privado)
@@ -699,22 +660,22 @@ const customNewSession = async (user, payload) => {
 				data,
 			} = await mercadopagoService.createCustomSessionPreference({
 				userId: payload.user,
-				specId: user.specialist,
+				psyId: user.psychologist,
 				planId: updatedSession.plan[updatedSession.plan.length - 1]._id,
 			});
 			if (payload.type === 'sesion online') {
 				// Enviamos email al user con el link para pagar
 				await mailServiceSchedule.sendCustomSessionToUser(
 					updatedSession.user,
-					updatedSession.specialist,
+					updatedSession.psychologist,
 					data.init_point,
 					payload.date,
 					payload.price,
 					'online'
 				);
-				await mailServiceSchedule.sendCustomSessionToSpec(
+				await mailServiceSchedule.sendCustomSessionToPsy(
 					updatedSession.user,
-					updatedSession.specialist,
+					updatedSession.psychologist,
 					data.init_point,
 					payload.date,
 					payload.price,
@@ -724,15 +685,15 @@ const customNewSession = async (user, payload) => {
 			if (payload.type === 'sesion presencial') {
 				await mailServiceSchedule.sendCustomSessionToUser(
 					updatedSession.user,
-					updatedSession.specialist,
+					updatedSession.psychologist,
 					data.init_point,
 					payload.date,
 					payload.price,
 					'presencial'
 				);
-				await mailServiceSchedule.sendCustomSessionToSpec(
+				await mailServiceSchedule.sendCustomSessionToPsy(
 					updatedSession.user,
-					updatedSession.specialist,
+					updatedSession.psychologist,
 					data.init_point,
 					payload.date,
 					payload.price,
@@ -750,14 +711,14 @@ const customNewSession = async (user, payload) => {
 					{
 						item_id: 3,
 						item_name:
-							'Plan/sesión personalizada agendada por especialista',
+							'Plan/sesión personalizada agendada por psicólogo',
 						item_price: payload.price,
 						item_quantity: 1,
 					},
 				];
 				analytics.track({
 					userId: user._id.toString(),
-					event: 'spec-scheduled-user-session',
+					event: 'psy-scheduled-user-session',
 					properties: {
 						products: planData,
 						currency: 'CLP',
@@ -772,14 +733,14 @@ const customNewSession = async (user, payload) => {
 					{
 						item_id: 4,
 						item_name:
-							'Plan/sesión personalizada agendada por especialista presencialmente',
+							'Plan/sesión personalizada agendada por psicólogo presencialmente',
 						item_price: payload.price,
 						item_quantity: 1,
 					},
 				];
 				analytics.track({
 					userId: user._id.toString(),
-					event: 'spec-scheduled-onsite-user-session',
+					event: 'psy-scheduled-onsite-user-session',
 					properties: {
 						products: planData,
 						currency: 'CLP',
@@ -792,7 +753,7 @@ const customNewSession = async (user, payload) => {
 			} else if (payload.type === 'compromiso privado') {
 				analytics.track({
 					userId: user._id.toString(),
-					event: 'spec-scheduled-private-hours',
+					event: 'psy-scheduled-private-hours',
 				});
 			}
 		}
@@ -805,39 +766,38 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-const getFormattedSessionsForMatch = async idSpecialist => {
+const getFormattedSessionsForMatch = async idPsychologist => {
 	let sessions = [];
-	// obtenemos el especialista
-	const specialist = await Specialist.findById(idSpecialist).select(
+	// obtenemos el psicologo
+	const psychologist = await Psychologist.findById(idPsychologist).select(
 		'_id schedule preferences inmediateAttention'
 	);
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs
-			.tz()
+		moment()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del especialista
-	let specSessions = await Sessions.find({
-		specialist: idSpecialist,
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
+		psychologist: idPsychologist,
 	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
-	specSessions = specSessions.filter(item =>
+	psySessions = psySessions.filter(item =>
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs().isBefore(dayjs(plan.expiration))
+				moment().isBefore(moment(plan.expiration))
 			);
 		})
 	);
 
 	// Formato de array debe ser [date, date, ...date]
-	const daySessions = specSessions
+	const daySessions = psySessions
 		.flatMap(item => {
 			return item.plan.flatMap(plan => {
 				return plan.session.length
@@ -845,33 +805,36 @@ const getFormattedSessionsForMatch = async idSpecialist => {
 					: [];
 			});
 		})
-		.filter(date => dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()));
-	let minimumNewSession = dayjs
-		.tz(dayjs().add(specialist.preferences.minimumNewSession, 'h'))
-		.format();
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
+	let minimumNewSession = moment(Date.now()).add(
+		psychologist.preferences.minimumNewSession,
+		'h'
+	);
 
 	sessions = length.map(el => {
-		const day = dayjs.tz(dayjs().add(el, 'days'));
-		const temporal = dayjs.tz(day).format('L');
+		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
 
 		return {
 			id: el,
-			value: day.format(),
+			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: day.format(),
+			text: moment(day),
 			available: hours.filter(hour => {
 				return (
-					dayjs
-						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
-						.isAfter(dayjs.tz(minimumNewSession)) &&
-					formattedSchedule(specialist.schedule, day, hour) &&
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
+					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
-							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								moment(day).format('L') &&
 							hour ===
-								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -881,40 +844,39 @@ const getFormattedSessionsForMatch = async idSpecialist => {
 };
 
 //type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
-// Utilizado para traer las sessiones de un especialista para el selector
-const getFormattedSessions = async (idSpecialist, type) => {
+// Utilizado para traer las sessiones de un psicologo para el selector
+const getFormattedSessions = async (idPsychologist, type) => {
 	let sessions = [];
-	// Obtenemos el especialista
-	const specialist = await Specialist.findById(idSpecialist).select(
+	// Obtenemos el psicologo
+	const psychologist = await Psychologist.findById(idPsychologist).select(
 		'_id schedule preferences inmediateAttention'
 	);
 	// Creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// Creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs
-			.tz()
+		moment()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
 	);
-	// Obtenemos sessiones del especialista
-	let specSessions = await Sessions.find({
-		specialist: idSpecialist,
+	// Obtenemos sessiones del psicologo
+	let psySessions = await Sessions.find({
+		psychologist: idPsychologist,
 	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
-	specSessions = specSessions.filter(item =>
+	psySessions = psySessions.filter(item =>
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs().isBefore(dayjs(plan.expiration))
+				moment().isBefore(moment(plan.expiration))
 			);
 		})
 	);
 
 	// Formato de array debe ser [date, date, ...date]
-	const daySessions = specSessions
+	const daySessions = psySessions
 		.flatMap(item => {
 			return item.plan.flatMap(plan => {
 				return plan.session.length
@@ -922,47 +884,46 @@ const getFormattedSessions = async (idSpecialist, type) => {
 					: [];
 			});
 		})
-		.filter(date => dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()));
+		.filter(date =>
+			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+		);
 
 	// Veificamos el tipo de calendario que se debe mostrar
 	let minimumNewSession = 0;
 	if (type === 'schedule')
-		minimumNewSession = dayjs
-			.tz(dayjs().add(specialist.preferences.minimumNewSession, 'h'))
-			.format();
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumNewSession,
+			'h'
+		);
 	else if (type === 'reschedule')
-		minimumNewSession = dayjs
-			.tz(
-				dayjs().add(
-					specialist.preferences.minimumRescheduleSession,
-					'h'
-				)
-			)
-			.format();
+		minimumNewSession = moment(Date.now()).add(
+			psychologist.preferences.minimumRescheduleSession,
+			'h'
+		);
 
-	// Se obtiene la disponibilidad del especialista
+	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
-		const day = dayjs.tz(dayjs().add(el, 'days'));
-		const temporal = dayjs.tz(day).format('L');
+		const day = moment(Date.now()).add(el, 'days');
+		const temporal = moment(day).format('L');
 
 		return {
 			id: el,
-			value: day.format(),
+			value: day,
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: day.format(),
+			text: moment(day),
 			available: hours.filter(hour => {
 				return (
-					dayjs
-						.tz(dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm'))
-						.isAfter(dayjs.tz(minimumNewSession)) &&
-					formattedSchedule(specialist.schedule, day, hour) &&
+					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+						minimumNewSession
+					) &&
+					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
-							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								moment(day).format('L') &&
 							hour ===
-								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -971,28 +932,27 @@ const getFormattedSessions = async (idSpecialist, type) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
-// Utilizado para traer las sessiones de todos los especialistas para el selector
+// Utilizado para traer las sessiones de todos los psicologos para el selector
 const formattedSessionsAll = async ids => {
 	let sessions = [];
-	let specialist = [];
+	let psychologist = [];
 	if (ids && Array.isArray(ids) && ids.length) {
-		specialist = await Specialist.find({ _id: { $in: ids } }).select(
+		psychologist = await Psychologist.find({ _id: { $in: ids } }).select(
 			'schedule preferences inmediateAttention'
 		);
 	} else
-		specialist = await Specialist.find({}).select(
+		psychologist = await Psychologist.find({}).select(
 			'schedule preferences inmediateAttention'
 		);
 	// Para que nos de deje modificar el array de mongo
-	specialist = JSON.stringify(specialist);
-	specialist = JSON.parse(specialist);
+	psychologist = JSON.stringify(psychologist);
+	psychologist = JSON.parse(psychologist);
 
 	// creamos un array con la cantidad de dias
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		dayjs
-			.tz()
+		moment()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -1009,12 +969,12 @@ const formattedSessionsAll = async ids => {
 				});
 			})
 			.filter(date =>
-				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
+				moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
 			);
 
-	// Obtenemos sessiones del especialista
+	// Obtenemos sessiones del psicologo
 	let allSessions = await Sessions.find({}).populate(
-		'specialist',
+		'psychologist',
 		'_id schedule preferences inmediateAttention'
 	);
 
@@ -1023,58 +983,55 @@ const formattedSessionsAll = async ids => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				dayjs().isBefore(dayjs(plan.expiration))
+				moment().isBefore(moment(plan.expiration))
 			);
 		})
 	);
 
-	// Mapeamos los especialistas para agregarle las sessiones filtrando por especialista
-	allSessions = specialist.map(item => ({
+	// Mapeamos los psicologos para agregarle las sessiones filtrando por psicologo
+	allSessions = psychologist.map(item => ({
 		...item,
 		sessions: setDaySessions(
 			allSessions.filter(
 				element =>
-					element.specialist._id.toString() === item._id.toString()
+					element.psychologist._id.toString() === item._id.toString()
 			)
 		),
 	}));
 
 	// Obtenemos la disponibilidad de todos los psicolgos
 	sessions = allSessions.map(item => {
-		const minimumNewSession = dayjs
-			.tz(dayjs().add(item.preferences.minimumNewSession, 'h'))
-			.format();
+		const minimumNewSession = moment(Date.now()).add(
+			item.preferences.minimumNewSession,
+			'h'
+		);
 		let schedule = item.schedule;
 
 		return {
-			specialist: item._id,
+			psychologist: item._id,
 			sessions: length.map(el => {
-				const day = dayjs.tz(dayjs().add(el, 'days'));
-				const temporal = dayjs.tz(day).format('L');
+				const day = moment(Date.now()).add(el, 'days');
+				const temporal = moment(day).format('L');
 				return {
-					specialist: item._id,
-					value: day.format(),
+					psychologist: item._id,
+					value: day,
 					day: day.format('DD MMM'),
 					date: day.format('L'),
-					text: day.format(),
+					text: moment(day),
 					available: hours.filter(hour => {
 						return (
-							dayjs
-								.tz(
-									dayjs(
-										`${temporal} ${hour}`,
-										'MM/DD/YYYY HH:mm'
-									)
-								)
-								.isAfter(dayjs.tz(minimumNewSession)) &&
+							moment(
+								`${temporal} ${hour}`,
+								'MM/DD/YYYY HH:mm'
+							).isAfter(minimumNewSession) &&
 							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
-									dayjs(date, 'MM/DD/YYYY HH:mm').format(
+									moment(date, 'MM/DD/YYYY HH:mm').format(
 										'L'
 									) === temporal &&
 									hour ===
-										dayjs(date, 'MM/DD/YYYY HH:mm').format(
+										moment(date, 'MM/DD/YYYY HH:mm').format(
 											'HH:mm'
 										)
 							)
@@ -1088,10 +1045,10 @@ const formattedSessionsAll = async ids => {
 };
 
 const paymentsInfo = async user => {
-	if (user.role != 'specialist')
-		return conflictResponse('No eres especialista');
+	if (user.role != 'psychologist')
+		return conflictResponse('No eres psicologo');
 
-	const payments = await paymentInfoFunction(user.specialist);
+	const payments = await paymentInfoFunction(user.psychologist);
 	return okResponse('Obtuvo todo sus pagos', { payments });
 };
 
@@ -1103,13 +1060,14 @@ const paymentsInfo = async user => {
  * @param {Object} newDate Datos a actualizar
  * @returns sessions
  */
-
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	// Se obtiene la session a reprogramar, se obtiene el tiempo minimo para reprogramar
 	let currentSession = await Sessions.findOne({
 		_id: sessionsId,
-	}).populate('specialist', 'preferences');
-	const { minimumRescheduleSession } = currentSession.specialist.preferences;
+	}).populate('psychologist', 'preferences');
+	const {
+		minimumRescheduleSession,
+	} = currentSession.psychologist.preferences;
 
 	// Se obtiene las sessiones del plan, luego se filtra la session a reprogramar
 	currentSession = currentSession.plan
@@ -1120,8 +1078,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
-		dayjs().isAfter(
-			dayjs(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
+		moment().isAfter(
+			moment(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumRescheduleSession,
 				'hours'
 			)
@@ -1136,9 +1094,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Se le da formato a la fecha nueva, se actualiza la fecha de la session
 	const date = `${newDate.date} ${newDate.hour}`;
-	newDate.date = dayjs
-		.tz(dayjs(newDate.date, 'MM/DD/YYY'))
-		.format('DD/MM/YYYY');
+	newDate.date = moment(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -1150,19 +1106,15 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			},
 		},
 		{ arrayFilters: [{ 'session._id': id }], new: true }
-	).populate('specialist user');
+	).populate('psychologist user');
 
 	// Se obtiene la ultima session del plan y se verifica si existen sessiones pendientes
 	let session = getLastSessionFromPlan(sessions, id, '');
 
 	if (session.remainingSessions === 0) {
 		// Si no existen sessiones pendientes, se da fecha de expiracion a la session 50 minutos despues de la ultima session
-		const expiration = dayjs
-			.tz(
-				dayjs(session.lastSession, 'YYYY/MM/DD HH:mm')
-					.add(50, 'minutes')
-					.add(3, 'hours')
-			)
+		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
+			.add(50, 'minutes')
 			.format();
 		await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
@@ -1178,53 +1130,28 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	if (userLogged.role === 'user') {
 		await mailServiceSchedule.sendRescheduleToUser(
 			sessions.user,
-			sessions.specialist,
+			sessions.psychologist,
 			newDate
 		);
-		await mailServiceSchedule.sendRescheduleToSpec(
+		await mailServiceSchedule.sendRescheduleToPsy(
 			sessions.user,
-			sessions.specialist,
+			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
 	} else {
-		await mailServiceSchedule.sendRescheduleToUserBySpec(
+		await mailServiceSchedule.sendRescheduleToUserByPsy(
 			sessions.user,
-			sessions.specialist,
+			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
-		await mailServiceSchedule.sendRescheduleToSpecBySpec(
+		await mailServiceSchedule.sendRescheduleToPsyByPsy(
 			sessions.user,
-			sessions.specialist,
+			sessions.psychologist,
 			newDate,
 			sessions.roomsUrl
 		);
-	}
-	// Se les cambia la fecha de la sesión a los correos de recordatorio
-	const mailsToReprogram = await Email.find({
-		type: {
-			$in: [
-				'reminder-user-day',
-				'reminder-user-hour',
-				'reminder-spec-day',
-				'reminder-spec-hour',
-			],
-		},
-		userRef: sessions.user._id,
-		specRef: sessions.specialist._id,
-		sessionRef: id,
-	});
-	if (mailsToReprogram.length) {
-		mailsToReprogram.forEach(async mail => {
-			await Email.findByIdAndUpdate(mail._id, {
-				sessionDate: dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-					.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-				wasScheduled: false,
-				scheduledAt: null,
-			}).catch(err => console.log(err));
-		});
 	}
 
 	// Se hace el trackeo de la reprogramacion en segment
@@ -1237,7 +1164,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			event: 'user-reschedule-session',
 			properties: {
 				user: userLogged._id,
-				specialistId: sessions.specialist._id.toString(),
+				psychologistId: sessions.psychologist._id.toString(),
 			},
 		});
 	}
@@ -1250,7 +1177,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
  * Actualiza una sessions
  * @param {string} sessions campos a actualizar
  */
-
 const updateSessions = async sessions => {
 	await Sessions.updateOne(
 		{
@@ -1266,16 +1192,16 @@ const updateSessions = async sessions => {
 	return okResponse('Observacion agregada');
 };
 
-const deleteCommitment = async (planId, specId) => {
-	// Se busca si existe el especialista
-	const spec = await Specialist.findById(specId);
-	if (!spec) {
-		return conflictResponse('No existe el especialista');
+const deleteCommitment = async (planId, psyId) => {
+	// Se busca si existe el psicologo
+	const psy = await Psychologist.findById(psyId);
+	if (!psy) {
+		return conflictResponse('No existe el psicólogo');
 	}
 	// Se busca en mongo y borra la session agendada del plan
 	const updatedSessions = await Sessions.findOneAndUpdate(
 		{
-			specialist: spec._id,
+			psychologist: psy._id,
 			'plan._id': planId,
 		},
 		{
@@ -1290,10 +1216,10 @@ const deleteCommitment = async (planId, specId) => {
 };
 
 // Devuelve todas las sesiones, excepto las expiradas
-const getAllSessions = async spec => {
+const getAllSessions = async psy => {
 	// Obtenemos solamente las sesiones que no han expirado, se filtran las sesiones
 	// que no sean compromisos, y se suman la cantidad de sesiones restantes
-	const sessions = await getAllSessionsFunction(spec);
+	const sessions = await getAllSessionsFunction(psy);
 	const total = sessions
 		.filter(session => {
 			return (
@@ -1313,12 +1239,58 @@ const getAllSessions = async spec => {
 	});
 };
 
-const paymentsInfoFromId = async spec => {
+const paymentsInfoFromId = async psy => {
 	// Se obtienen los pagos de las sesiones
-	const user = await Specialist.findById(spec);
-	if (!user) return conflictResponse('No es especialista');
-	const payments = await paymentInfoFunction(spec);
+	const user = await Psychologist.findById(psy);
+	if (!user) return conflictResponse('No es psicologo');
+	const payments = await paymentInfoFunction(psy);
 	return okResponse('Obtuvo todo sus pagos', { payments });
+};
+
+const getAllSessionsFormatted = async () => {
+	// Se obtienen todas las sessiones de mongo
+	const sessions = await Sessions.find().populate('psychologist user');
+	if (!sessions) {
+		return conflictResponse('No hay sesiones');
+	}
+	// Se formatean las sesiones para que se puedan mostrar en el front
+	const formattedSessions = sessions.flatMap(sessionDocument => {
+		if (sessionDocument.plan.length == 0) {
+			return;
+		}
+		return sessionDocument.plan.flatMap(plan => {
+			if (plan.session.length == 0) {
+				return;
+			}
+			return plan.session.flatMap(session => {
+				// Se retorna un objeto con los datos que se quieren mostrar
+				return {
+					date: moment(session.date).format('DD/MM/YYYY HH:mm'),
+					sessionNumber: session.sessionNumber,
+					psychologist:
+						sessionDocument.psychologist.name +
+						' ' +
+						sessionDocument.psychologist.lastName,
+					user:
+						sessionDocument.user.name +
+						' ' +
+						sessionDocument.user.lastName,
+					totalSessions: plan.totalSessions,
+					userPhone: sessionDocument.user.phone,
+					psychologistPhone: sessionDocument.psychologist.phone,
+					emailUser: sessionDocument.user.email,
+					emailPsychologist: sessionDocument.psychologist.email,
+					statusSession: session.status,
+					expirationPlan: moment(plan.expiration).format(
+						'DD/MM/YYYY'
+					),
+					paymentPlan: plan.payment,
+				};
+			});
+		});
+	});
+	// Se retorna una respuesta con las sesiones formateadas
+	return okResponse('Sesiones obtenidas', formattedSessions);
 };
 
 const sessionsService = {
@@ -1338,6 +1310,7 @@ const sessionsService = {
 	deleteCommitment,
 	getAllSessions,
 	paymentsInfoFromId,
+	getAllSessionsFormatted,
 };
 
 export default Object.freeze(sessionsService);
