@@ -141,8 +141,8 @@ const mailService = {
 				user_first_name: name,
 				psy_first_name: psy.name,
 				psy_last_name: psy.lastName,
-				date: dayjs.tz(date).format('DD/MM/YYYY'),
-				hour: dayjs.tz(date).format('HH:mm'),
+				date: dayjs.tz(sessionDate).format('DD/MM/YYYY'),
+				hour: dayjs.tz(sessionDate).format('HH:mm'),
 				url_rooms: urlRooms,
 			},
 			asm: {
@@ -163,7 +163,7 @@ const mailService = {
 	 * @param {string} date - The date of the appointment
 	 */
 	async sendReminderPsy(user, psy, sessionDate, batch, mailType, urlRooms) {
-		const { email, name, lastName } = psy;
+		const { email, name } = psy;
 		const dataPayload = {
 			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
@@ -171,8 +171,8 @@ const mailService = {
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
 			dynamicTemplateData: {
-				date: dayjs.tz(date).format('DD/MM/YYYY'),
-				hour: dayjs.tz(date).format('HH:mm'),
+				date: dayjs.tz(sessionDate).format('DD/MM/YYYY'),
+				hour: dayjs.tz(sessionDate).format('HH:mm'),
 				url_rooms: urlRooms,
 			},
 			asm: {
@@ -236,6 +236,44 @@ const mailService = {
 				psy_name: psychologist.name,
 				url: url,
 				price: price,
+			},
+		};
+		await sendMails(dataPayload);
+	},
+	async reminderRenewalSubscription1hour(user, psychologist, expiracion) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `Recuerda continuar con las sesiones de ${psychologist.name}`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-9326769c5ebc4e61aab6f29f6e1e3f48',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				expiracion: dayjs(expiracion).format('DD/MM/YYYY'),
+				url: landing_url + 'psicologos',
+			},
+		};
+		await sendMails(dataPayload);
+	},
+	async reminderRenewalSubscription1day(user, psychologist, expiracion) {
+		const dataPayload = {
+			from: 'Hablaquí <notificaciones@mail.hablaqui.cl>',
+			to: user.name + '<' + user.email + '>',
+			subject: `No te olvides de continuar con las sesiones de ${psychologist.name}`,
+			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+			templateId: 'd-6d4c67af7f8c4eb49ce8b412b1430410',
+			asm: {
+				group_id: 16321,
+			},
+			dynamicTemplateData: {
+				user_name: user.name,
+				psy_name: psychologist.name,
+				expiracion: dayjs(expiracion).format('DD/MM/YYYY'),
+				url: landing_url + 'psicologos',
 			},
 		};
 		await sendMails(dataPayload);

@@ -214,10 +214,7 @@ const successPay = async params => {
 		planId
 	);
 	// Filtra al plan si es plan semanal para enviar o no el correo de renovacion
-	const isPlanWeekly = planData.filter(
-		plan => plan.period === 'Pago semanal'
-	);
-	if (isPlanWeekly.length) {
+	if (planData.period === 'Pago semanal') {
 		// Se crean correos de recordatorio de renovacion de plan
 		await createRenewalSubscription(
 			foundPlan.user,

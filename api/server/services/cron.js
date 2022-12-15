@@ -562,19 +562,23 @@ const cronService = {
 		// Se recorren los correos pendientes
 		pendingEmails.forEach(async emailInfo => {
 			// Se busca el usuario y el psy
-			const user = await userModel.findById(emailInfo.userId);
-			const psy = await psychologistModel.findById(emailInfo.psyId);
+			const user = await userModel.findById(emailInfo.userRef);
+			const psy = await psychologistModel.findById(emailInfo.psyRef);
 			const sessionDocument = await sessionsModel.findById(
-				emailInfo.sessionId
+				emailInfo.sessionRef
 			);
 			const mailType = emailInfo.type.split('-').pop();
+			let batch = null;
+			let isSend = false;
+			if (!user || !psy || !sessionDocument) {
+				console.log('user', user);
+				return;
+			}
 			// Se obtiene un plan expirado del usuario
 			const plan = sessionDocument.plan.filter(plan =>
 				dayjs().isAfter(dayjs(plan.expiration))
 			)[0];
-			let batch = null;
-			let isSend = false;
-			if (!user || !psy || !sessionDocument || !plan) {
+			if (!plan) {
 				return;
 			}
 			try {
@@ -590,10 +594,10 @@ const cronService = {
 						batch = await getBatchId();
 						// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 						isSend = true;
-						await mailServicePsy.reminderRenewalSubscription1hour(
+						await mailServiceRemider.reminderRenewalSubscription1hour(
 							user,
 							psy,
-							sessionDocument
+							plan.expiration
 						);
 					} else if (
 						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
@@ -601,7 +605,7 @@ const cronService = {
 					) {
 						batch = await getBatchId();
 						isSend = true;
-						await mailServicePsy.reminderRenewalSubscription1day(
+						await mailServiceRemider.reminderRenewalSubscription1day(
 							user,
 							psy,
 							sessionDocument
@@ -613,10 +617,12 @@ const cronService = {
 					) {
 						batch = await getBatchId();
 						isSend = true;
-						await mailServicePsy.reminderRenewalSubscription1week(
+						// Si ya pasó más de una semana, crea un cupón de descuento para
+						// incentivar al usuario a pagar
+						const code = await createCoupon();
+						await mailServiceRemider.sendPromocionalIncentive(
 							user,
-							psy,
-							sessionDocument
+							code
 						);
 					}
 				}
@@ -624,7 +630,7 @@ const cronService = {
 				const updatePayload = {
 					wasScheduled: isSend,
 					scheduledAt: dayjs
-						.tz(dayjs(sessionDocument.createdAt).add(1, mailType))
+						.tz(dayjs(plan.expiration).add(1, mailType))
 						.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 					batchId: batch,
 				};
@@ -637,6 +643,7 @@ const cronService = {
 				);
 			}
 		});
+		return okResponse(pendingEmails.length + ' Correos enviados');
 	},
 };
 
