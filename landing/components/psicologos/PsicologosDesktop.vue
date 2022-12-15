@@ -540,7 +540,7 @@ export default {
 	},
 	data() {
 		return {
-			toggle: null,
+			toggle: 0,
 			mdiChevronDown,
 			mdiAccount,
 			menuGender: false,

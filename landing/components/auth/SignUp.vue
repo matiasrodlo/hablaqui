@@ -183,6 +183,7 @@ export default {
 							temporalMatchMaking.userId = this.$auth.user._id;
 							await this.createMatchMakig(temporalMatchMaking);
 							localStorage.removeItem('temporalMatchMaking');
+							return this.$router.push('/psicologos');
 						}
 						if (this.$route.query.from === 'psy') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');

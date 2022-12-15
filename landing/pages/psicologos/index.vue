@@ -47,13 +47,6 @@ export default {
 		PsicologosDesktop,
 		PsicologosMobile,
 	},
-	async asyncData({ error, store }) {
-		try {
-			await store.dispatch('Psychologist/getPsychologists');
-		} catch (e) {
-			error({ statusCode: 404, message: 'Page not found' });
-		}
-	},
 	head() {
 		return {
 			meta: [
@@ -101,7 +94,12 @@ export default {
 	},
 	methods: {
 		async initialFetch() {
-			if (this.$auth.$state.loggedIn) await this.getMatchMakig(this.$auth.$state.user._id);
+			if (this.$auth.$state.loggedIn) {
+				await this.getMatchMakig(this.$auth.$state.user._id);
+				await this.getPsychologistsBestMatch();
+			} else {
+				this.getPsychologists();
+			}
 			await this.getAppointments();
 		},
 		getSessions(ids) {
@@ -111,6 +109,8 @@ export default {
 			getAppointments: 'Appointments/getAppointments',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
 			getMatchMakig: 'Psychologist/getMatchMakig',
+			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
+			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 	},
 };

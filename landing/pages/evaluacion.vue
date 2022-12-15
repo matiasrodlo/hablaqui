@@ -949,8 +949,10 @@ export default {
 				await this.createMatchMakig(payload);
 				this.$router.push('/psicologos');
 			} else {
-				localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
-				this.$router.push('/auth');
+				setTimeout(() => {
+					localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
+					this.$router.push('/auth');
+				}, 5000);
 			}
 		},
 		avatar(psychologist, thumbnail) {
