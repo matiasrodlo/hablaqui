@@ -253,7 +253,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name: user.name,
 				psy_name: psychologist.name,
-				expiracion: dayjs(expiracion).format('DD/MM/YYYY'),
+				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
 				url: landing_url + 'psicologos',
 			},
 		};
@@ -272,7 +272,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name: user.name,
 				psy_name: psychologist.name,
-				expiracion: dayjs(expiracion).format('DD/MM/YYYY'),
+				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
 				url: landing_url + 'psicologos',
 			},
 		};
