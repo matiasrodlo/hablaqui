@@ -284,40 +284,8 @@ const bestMatch = async body => {
 	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
 	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 
-	// Comienza a buscar los psicologos por genero y especialidad
-	if (payload.gender == 'transgender') {
-		matchedPsychologists = await Psychologist.find({
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedPsychologists = await Psychologist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			specialties: { $in: payload.themes },
-		});
-	}
-
-	// Si no encuentra como minimo 0, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedPsychologists = await Psychologist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedPsychologists.length == 0) {
-			matchedPsychologists = await Psychologist.find();
-		}
-		perfectMatch = false;
-	}
+	// Comienza a buscar los psicologos
+	matchedPsychologists = await Psychologist.find();
 
 	// Se busca el mejor match según criterios
 	matchedPsychologists = await ponderationMatch(
@@ -337,40 +305,7 @@ const economicMatch = async body => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
-	// Comienza a buscar los psicologos por genero y especialidad
-	if (payload.gender == 'transgender') {
-		matchedPsychologists = await Psychologist.find({
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedPsychologists = await Psychologist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			specialties: { $in: payload.themes },
-		});
-	}
-
-	// Si no encuentra como minimo 1, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedPsychologists = await Psychologist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedPsychologists.length == 0) {
-			matchedPsychologists = await Psychologist.find();
-		}
-		perfectMatch = false;
-	}
+	matchedPsychologists = await Psychologist.find();
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al psy más barato
@@ -392,40 +327,8 @@ const availityMatch = async body => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
-	// Comienza a buscar los psicologos por genero y especialidad
-	if (payload.gender == 'transgender') {
-		matchedPsychologists = await Psychologist.find({
-			isTrans: true,
-			specialties: { $in: payload.themes },
-		});
-	} else {
-		matchedPsychologists = await Psychologist.find({
-			gender: payload.gender || {
-				$in: ['male', 'female', 'transgender'],
-			},
-			specialties: { $in: payload.themes },
-		});
-	}
-
-	// Si no encuentra como minimo 3, busca el psicologo solo respecto al genero
-	if (matchedPsychologists.length == 0) {
-		if (payload.gender == 'transgender') {
-			matchedPsychologists = await Psychologist.find({
-				isTrans: true,
-			});
-		} else {
-			matchedPsychologists = await Psychologist.find({
-				gender: payload.gender || {
-					// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
-					$in: ['male', 'female', 'transgender'],
-				},
-			});
-		}
-		if (matchedPsychologists.length == 0) {
-			matchedPsychologists = await Psychologist.find();
-		}
-		perfectMatch = false;
-	}
+	// Comienza a buscar los psicologos
+	matchedPsychologists = await Psychologist.find();
 
 	// Se obtienen todas las sessiones
 	const sessions = await Sessions.find();
