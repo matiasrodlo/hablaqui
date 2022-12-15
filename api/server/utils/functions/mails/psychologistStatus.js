@@ -218,25 +218,32 @@ const mailService = {
 		};
 		await sendMails(dataPayload);
 	},
+	/**
+	 * @description an email is sent to the psychologist with the payment summary of the session.
+	 * @param {Object} psychologist - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
+	 * @param {String} period - The period of the payment summary
+	 * @param {String} price - The price of the payment summary
+	 * @param {String} sessionsNumber - The number of sessions of the payment summary
+	 */
 	async sendPaymentSummary(psychologist, period, price, sessionsNumber) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
 			subject: `Resumen de pagos`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: '',
+			templateId: 'd-8694f780a1104a61ba36edb56b8d917a',
 			asm: {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
 				psy_name: psychologist.name,
-				period: period,
+				start_week: period.start,
+				end_week: period.end,
 				price: price,
 				sessionsNumber: sessionsNumber,
 			},
 		};
-		console.log(dataPayload);
-		// await sendMails(dataPayload);
+		await sendMails(dataPayload);
 	},
 };
 

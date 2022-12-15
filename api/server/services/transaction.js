@@ -11,13 +11,10 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import updateLocale from 'dayjs/plugin/updateLocale';
-import 'dayjs/locale/es';
 import Analytics from 'analytics-node';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
-dayjs.extend(updateLocale);
 dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -282,8 +279,19 @@ const generateTransaction = async (user, total, session, idPsy) => {
 	});
 	// Se obtiene la informacion del psy y se envia el correo
 	let psy = await Psychologist.findById(idPsy);
-	let period = dayjs.updateLocale('es');
-	period = period.months[dayjs.tz().month()];
+	// Se obtiene el lunes de la semana pasada y el domingo
+	const period = {
+		start: dayjs
+			.tz()
+			.subtract(1, 'week')
+			.startOf('week')
+			.format('DD/MM/YYYY'),
+		end: dayjs
+			.tz()
+			.subtract(1, 'week')
+			.endOf('week')
+			.format('DD/MM/YYYY'),
+	};
 	await mailServicePsy.sendPaymentSummary(psy, period, total, session.length);
 	return okResponse('Pago completado', { transaction });
 };
