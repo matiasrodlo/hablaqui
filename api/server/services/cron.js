@@ -460,23 +460,14 @@ const cronService = {
 				emailInfo.sessionRef
 			);
 			const mailType = emailInfo.type.split('-').pop();
-
-			// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
-			if (!user) {
-				return conflictResponse('No se encontró el usuario');
-			}
-			if (!psy) {
-				return conflictResponse('No se encontró el psicólogo');
-			}
-			if (!sessionDocument) {
-				return conflictResponse('No se encontró la sesión');
-			}
 			// Se obtiene el plan pendiente
 			const plan = sessionDocument.plan
 				.filter(plan => plan.payment === 'pending')
 				.pop();
-			if (!plan) {
-				return conflictResponse('No se encontró el plan');
+
+			// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
+			if (!user || !psy || !sessionDocument || !plan) {
+				return;
 			}
 			// Se obtiene la url de pago
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
@@ -545,6 +536,107 @@ const cronService = {
 		});
 
 		return okResponse('Correos enviados');
+	},
+	async reminderRenewal(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		// Se busca todos los correos no programados con los asuntos de pago
+		const pendingEmails = await email.find({
+			wasScheduled: false,
+			type: {
+				$in: [
+					'reminder-renewal-subscription-1-hour',
+					'reminder-renewal-subscription-1-day',
+					'reminder-renewal-subscription-1-week',
+				],
+			},
+		});
+
+		if (!pendingEmails.length > 0) {
+			return okResponse('No hay correos pendientes');
+		}
+
+		// Se recorren los correos pendientes
+		pendingEmails.forEach(async emailInfo => {
+			// Se busca el usuario y el psy
+			const user = await userModel.findById(emailInfo.userId);
+			const psy = await psychologistModel.findById(emailInfo.psyId);
+			const sessionDocument = await sessionsModel.findById(
+				emailInfo.sessionId
+			);
+			const mailType = emailInfo.type.split('-').pop();
+			// Se obtiene un plan expirado del usuario
+			const plan = sessionDocument.plan.filter(plan =>
+				dayjs().isAfter(dayjs(plan.expiration))
+			)[0];
+			let batch = null;
+			let isSend = false;
+			if (!user || !psy || !sessionDocument || !plan) {
+				return;
+			}
+			try {
+				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+				// Si es null significa que aún no se le ha dado una fecha de envío
+				if (emailInfo.scheduledAt !== null) {
+					// Si la fecha actual está después que la fecha programada, entonces se envía el correo
+					if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type ===
+							'reminder-renewal-subscription-1-hour'
+					) {
+						batch = await getBatchId();
+						// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
+						isSend = true;
+						await mailServicePsy.reminderRenewalSubscription1hour(
+							user,
+							psy,
+							sessionDocument
+						);
+					} else if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type === 'reminder-renewal-subscription-1-day'
+					) {
+						batch = await getBatchId();
+						isSend = true;
+						await mailServicePsy.reminderRenewalSubscription1day(
+							user,
+							psy,
+							sessionDocument
+						);
+					} else if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type ===
+							'reminder-renewal-subscription-1-week'
+					) {
+						batch = await getBatchId();
+						isSend = true;
+						await mailServicePsy.reminderRenewalSubscription1week(
+							user,
+							psy,
+							sessionDocument
+						);
+					}
+				}
+				// Se genera el payload y se actualiza el email
+				const updatePayload = {
+					wasScheduled: isSend,
+					scheduledAt: dayjs
+						.tz(dayjs(sessionDocument.createdAt).add(1, mailType))
+						.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+					batchId: batch,
+				};
+				await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
+					new: true,
+				});
+			} catch (error) {
+				return conflictResponse(
+					'Email sheduling service found an error'
+				);
+			}
+		});
 	},
 };
 

@@ -6,10 +6,13 @@ import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv'; // dotenv contiene las variables de entorno
-import { createReminder } from '../utils/functions/createEmails';
+import {
+	createReminder,
+	createRenewalSubscription,
+	deleteReminderPayment,
+} from '../utils/functions/emailFunction';
 import recruitmentService from './recruitment';
 import User from '../models/user';
-import email from '../models/email';
 import mailServicePayments from '../utils/functions/mails/payments';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -196,6 +199,8 @@ const successPay = async params => {
 		},
 		{ new: true }
 	);
+
+	// Se crea recordatorio de la primera sesion
 	const planData = foundPlan.plan.filter(
 		plan => plan._id.toString() === planId
 	)[0];
@@ -208,27 +213,20 @@ const successPay = async params => {
 		foundPlan.roomsUrl,
 		planId
 	);
-
-	// Busca los correos de recordatorio de pago y los elimina
-	const mailsToDeleted = await email.find({
-		wasScheduled: false,
-		type: {
-			$in: [
-				'reminder-payment-hour',
-				'reminder-payment-day',
-				'promocional-incentive-week',
-			],
-		},
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-	});
-	if (mailsToDeleted.length) {
-		mailsToDeleted.forEach(async mail => {
-			await email
-				.findByIdAndDelete(mail._id)
-				.catch(err => console.log(err));
-		});
+	// Filtra al plan si es plan semanal para enviar o no el correo de renovacion
+	const isPlanWeekly = planData.filter(
+		plan => plan.period === 'Pago semanal'
+	);
+	if (isPlanWeekly.length) {
+		// Se crean correos de recordatorio de renovacion de plan
+		await createRenewalSubscription(
+			foundPlan.user,
+			foundPlan.psychologist,
+			foundPlan
+		);
 	}
+
+	await deleteReminderPayment(foundPlan.user._id, foundPlan.psychologist._id);
 
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);
