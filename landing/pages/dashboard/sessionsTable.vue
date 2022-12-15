@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Tabla de pagos" />
+		<appbar class="hidden-sm-and-down" title="Sesiones" />
 		<v-row>
 			<v-col cols="12">
 				<div>
@@ -19,11 +19,6 @@
 								<v-spacer />
 								<v-text-field v-model="end" type="datetime-local" label="Hasta" />
 							</v-toolbar>
-						</template>
-						<template #item.action="{ item }">
-							<v-btn small @click="showSessionsToPay(item, 'Sesiones pagadas')">
-								Sesiones
-							</v-btn>
 						</template>
 					</v-data-table>
 				</div>
@@ -53,45 +48,6 @@
 				}
 			"
 		>
-			<v-card max-width="500">
-				<v-card-title>
-					<span class="text-h5">Datos bancarios</span>
-				</v-card-title>
-				<v-divider></v-divider>
-				<v-card-text>
-					<v-row>
-						<v-col cols="6">
-							<div>
-								Banco:
-								<span class="font-weight-black">
-									{{ paymentMethods.bank }}
-								</span>
-							</div>
-						</v-col>
-						<v-col cols="6">
-							<div>
-								Rut: <span class="font-weight-black">{{ paymentMethods.rut }}</span>
-							</div>
-						</v-col>
-					</v-row>
-					<v-row>
-						<v-col cols="6">
-							Numero de cuenta:
-							<span class="font-weight-black">{{
-								paymentMethods.accountNumber
-							}}</span>
-						</v-col>
-						<v-col cols="6">
-							<div>
-								Tipo de cuenta:
-								<span class="font-weight-black">{{
-									paymentMethods.accountType
-								}}</span>
-							</div>
-						</v-col>
-					</v-row>
-				</v-card-text>
-			</v-card>
 		</v-dialog>
 	</v-container>
 </template>
@@ -131,7 +87,6 @@ export default {
 				{ text: 'Nombre de usuario', value: 'username' },
 				{ text: 'Correo', value: 'email' },
 				{ text: 'Monto total', value: 'total' },
-				{ text: 'Acciones', value: 'action', sortable: false },
 			],
 			headersSessions: [
 				{ text: 'Fecha', value: 'date' },
@@ -140,15 +95,6 @@ export default {
 				{ text: 'N° de sesión', value: 'sessionNumber' },
 				{ text: 'Valor de la sesion', value: 'price' },
 				{ text: 'Cupón', value: 'coupon' },
-			],
-			headersTransactions: [
-				{ text: 'Fecha', value: 'createdAt' },
-				{ text: 'Nombre', value: 'name' },
-				{ text: 'Apellido', value: 'lastName' },
-				{ text: 'Nombre de usuario', value: 'username' },
-				{ text: 'Correo', value: 'email' },
-				{ text: 'Monto total', value: 'total' },
-				{ text: 'Acciones', value: 'action', sortable: false },
 			],
 			dialog: false,
 			showBank: false,
