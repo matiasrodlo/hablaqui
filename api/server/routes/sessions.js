@@ -257,6 +257,7 @@ sessionsRouter.get(
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @description Consigue sessiones e información necesaria en front, como la fecha de expiración del plan, datos del psicólogo, etc.
  * @method GET
  * @route /api/v1/sessions/get-all-sessions-formatted
@@ -267,6 +268,12 @@ sessionsRouter.get(
  * @route /api/v1/sessions/get-all-sessions-formatted
  * @returns {Object} datos de los pagos del psicólogo
 >>>>>>> 8344e195 (feat: getAllSessionsFormatted endpoint)
+=======
+ * @description Consigue sessiones e información necesaria en front, como la fecha de expiración del plan, datos del psicólogo, etc.
+ * @method GET
+ * @route /api/v1/sessions/get-all-sessions-formatted
+ * @returns {Object} datos de los que se necesitan en front
+>>>>>>> 19e42891 (doc: getAllSessionsFormatted)
  */
 
 sessionsRouter.get(
