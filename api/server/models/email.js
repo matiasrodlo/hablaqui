@@ -1,8 +1,14 @@
 'use strict';
 
 import { Schema, model } from 'mongoose';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 let email = new Schema({
 	batchId: {
@@ -22,8 +28,8 @@ let email = new Schema({
 	},
 	queuedAt: {
 		type: String,
-		default: moment()
-			.locale('es-mx')
+		default: dayjs()
+			.locale('es')
 			.format('D MMMM YYYY, h:mm:ss a'),
 	},
 	scheduledAt: {
@@ -41,6 +47,9 @@ let email = new Schema({
 	sessionRef: {
 		type: Schema.Types.ObjectId,
 		ref: 'sessions',
+	},
+	url: {
+		type: String,
 	},
 });
 

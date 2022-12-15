@@ -1,5 +1,5 @@
 <template>
-	<v-container style="height: 100vh max-width: 1200px">
+	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Tabla de pagos" />
 		<v-row>
 			<v-col cols="12">
@@ -16,7 +16,7 @@
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla para pagos</v-toolbar-title>
+								<v-toolbar-title>Pagos pendientes</v-toolbar-title>
 							</v-toolbar>
 						</template>
 						<template #item.action="{ item }">
@@ -53,7 +53,7 @@
 					>
 						<template #top>
 							<v-toolbar flat>
-								<v-toolbar-title>Tabla de pagos hechos</v-toolbar-title>
+								<v-toolbar-title>Pagos realizados</v-toolbar-title>
 								<v-spacer />
 								<v-text-field v-model="start" type="datetime-local" label="Desde" />
 								<v-spacer />
@@ -139,9 +139,15 @@
 import axios from 'axios';
 import { mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isBetween from 'dayjs/plugin/isBetween';
+import timezone from 'dayjs/plugin/timezone';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
-moment.tz.setDefault('America/Santiago');
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	name: 'Payment',
@@ -196,9 +202,9 @@ export default {
 			if (this.start === '' || this.end === '') transactions = this.transactions;
 			else {
 				transactions = this.transactions.filter(t =>
-					moment(t.createdAt, 'DD/MM/YYYY HH:mm').isBetween(
-						moment(this.start, 'yyyy-MM-DDTHH:mm'),
-						moment(this.end, 'yyyy-MM-DDTHH:mm')
+					dayjs(t.createdAt, 'DD/MM/YYYY HH:mm').isBetween(
+						dayjs(this.start, 'yyyy-MM-DDTHH:mm'),
+						dayjs(this.end, 'yyyy-MM-DDTHH:mm')
 					)
 				);
 			}

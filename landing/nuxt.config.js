@@ -34,9 +34,9 @@ export default {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			const baseApi = process.env.API_ABSOLUTE
-				? process.env.API_ABSOLUTE
-				: 'http://localhost:3000/';
+			// const baseApi = process.env.API_ABSOLUTE
+			// 	? process.env.API_ABSOLUTE
+			// 	: 'http://localhost:3000/';
 
 			// generate routes psicologos
 			const res = await axios.get(`${baseURL}/psychologists/all`);
@@ -374,10 +374,6 @@ export default {
 						isDev
 							? '[name].css?v=' + pkg.version
 							: 'css/[contenthash:7].css?v=' + pkg.version,
-					img: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
 					font: ({ isDev }) =>
 						isDev
 							? '[path][name].[ext]?v=' + pkg.version

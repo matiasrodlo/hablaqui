@@ -158,7 +158,7 @@
 					<v-card-title class="px-10 titleColor">Resumen</v-card-title>
 					<v-card-text class="px-10">
 						<div class="my-6 d-flex justify-space-between">
-							<div class="body-1 font-weight-bold">Subscripción</div>
+							<div class="body-1 font-weight-bold">Suscripción</div>
 							<div v-if="planSelected" class="body-1">
 								{{ planSelected.title }}
 							</div>
@@ -235,8 +235,12 @@
 <script>
 import { mdiCalendarOutline, mdiClockOutline } from '@mdi/js';
 import { mapActions, mapMutations } from 'vuex';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -333,7 +337,7 @@ export default {
 				if (item.id === 2) {
 					priceWithDiscount =
 						this.psychologist.sessionPrices.video * 4 -
-						this.psychologist.sessionPrices.video * 4 * 0.1;
+						this.psychologist.sessionPrices.video * 4 * 0.2;
 					pricePerSession = priceWithDiscount / 4;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 4;
@@ -341,7 +345,7 @@ export default {
 				if (item.id === 3) {
 					priceWithDiscount =
 						this.psychologist.sessionPrices.video * 12 -
-						this.psychologist.sessionPrices.video * 12 * 0.2;
+						this.psychologist.sessionPrices.video * 12 * 0.3;
 					pricePerSession = priceWithDiscount / 12;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 12;
@@ -409,7 +413,7 @@ export default {
 			this.showCalendar = !this.showCalendar;
 		},
 		formatDate(date) {
-			return moment(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
+			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
 			mercadopagoPay: 'Psychologist/mercadopagoPay',

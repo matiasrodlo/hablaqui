@@ -1,82 +1,93 @@
 'use strict';
 
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
-import Chat from '../models/chat'; // chat.js contiene la definición del modelo de chat para mongodb
-import { logInfo } from '../config/pino'; // Se importa el log de info para poder imprimir en la consola
-import Email from '../models/email'; // email.js contiene la definición del modelo de email para mongodb
-import Analytics from 'analytics-node'; // Analytics-node sirve para integrar analiticas en cualquier aplicación con segment
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Chat from '../models/chat';
+import { logInfo } from '../config/pino';
+import Email from '../models/email';
+import Analytics from 'analytics-node';
 
-const startConversation = async (psychologistId, user) => {
-	// función que recibe el id del psicologo y el usuario, función que inicializa una conversación
-	const hasChats = await Chat.findOne({
+const createChat = async (user, psychologistId) => {
+	const newChat = await Chat.create({
 		psychologist: psychologistId,
 		user: user,
 	});
-	if (!hasChats) {
-		// si no existe un chat con el psicologo y el usuario, se crea un nuevo chat
-		const newChat = await Chat.create({
-			user: user._id,
-			psychologist: psychologistId,
-		});
-		return okResponse('chat inicializado', { newChat });
+	return newChat;
+};
+
+const buscarChat = async (user, psy) => {
+	const chat = await Chat.findOne({
+		user: user,
+		psychologist: psy,
+	}).populate('user psychologist');
+	return chat;
+};
+
+const startConversation = async (psychologistId, user) => {
+	const hasChats = await buscarChat(user, psychologistId);
+	if (hasChats) {
+		return okResponse('chat inicializado anteriormente');
 	}
-	return okResponse('chat inicializado anteriormente');
+	const newChat = await createChat(user._id, psychologistId);
+	return okResponse('chat inicializado', { newChat });
 };
 
 const getMessages = async (user, psy) => {
-	// función para obtener los mensajes de un chat y hace que devuelva del documento de chat del usuario y el psicologo
-	let messages = await Chat.findOne({
-		psychologist: psy,
-		user: user,
-	}).populate('user psychologist'); //
+	let messages = await buscarChat(user, psy);
 
-	if (!messages)
-		messages = await Chat.create({
-			user: user,
-			psychologist: psy,
-		});
+	if (!messages) messages = await createChat(user, psy);
 
 	return okResponse('Mensajes conseguidos', {
+		// retorna un mensaje de éxito y los mensajes
 		messages,
 	});
 };
 
 const getChats = async user => {
-	// función para obtener los chats de un psicologo o de un usuario
-	if (user.role == 'psychologist') {
-		logInfo(`El psicologo ${user.email} ha conseguido sus chats`);
-		return okResponse('Chats conseguidos', {
-			chats: await Chat.find({
-				psychologist: user.psychologist._id,
-			}).populate('user psychologist'),
-		});
+	const roles = ['psychologist', 'user'];
+	const idRoles = ['psychologist', '_id'];
+	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
+	let chat;
+	// Es para verificar que sea un rol valido
+	if (!roles.includes(user.role)) {
+		return conflictResponse(
+			'Ha ocurrido un error intentando recuperar tus chats'
+		);
 	}
-	if (user.role == 'user') {
-		logInfo(`El usuario ${user.email} ha conseguido sus chats`);
-		return okResponse('Chat conseguidos', {
-			chats: await Chat.find({ user: user._id }).populate(
+	// Se encuentra el rol y se devuelven los chats
+	for (let i in roles) {
+		if (roles[i] == user.role) {
+			logInfo(
+				`El ${spanishRoles[roles[i]]} ${
+					user.email
+				} ha conseguido sus chats`
+			);
+			chat = await Chat.find({ [roles[i]]: user[idRoles[i]] }).populate(
 				'user psychologist'
-			),
-		});
+			);
+		}
 	}
-	return conflictResponse(
-		'Ha ocurrido un error intentando recuperar tus chats'
-	);
+	return okResponse('Chats conseguidos', { chats: chat });
 };
 
 export const sendMessage = async (user, content, userId, psychologistId) => {
-	// Crea un nuevo mensaje, busca el chat y lo actualiza
+	// función para enviar un mensaje, recibe el usuario, el contenido del mensaje, el id del usuario y el id del psicologo
 	const newMessage = {
-		sentBy: user._id,
-		message: content,
+		// crea un nuevo mensaje
+		sentBy: user._id, // con el id del usuario que lo envía
+		message: content, // y el contenido del mensaje
 	};
 
 	const updatedChat = await Chat.findOneAndUpdate(
+		// busca un chat en la base de datos
 		{
 			user: userId,
 			psychologist: psychologistId,
 		},
 		{
+			$set: {
+				isLastRead: false,
+				lastMessageSendBy: user.role,
+			},
 			$push: {
 				messages: newMessage,
 			},
@@ -84,20 +95,13 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		},
 		{ new: true }
 	);
-
-	// Se guardan los datos en data para poder guardarlos en el modelo de email
 	const data = {
 		userId,
 		psychologistId,
 		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
-	await emailChatNotification(
-		data,
-		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user'
-	);
 
-	// Envía un evento a segment
 	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 	analytics.track({
 		userId: user._id.toString(),
@@ -105,27 +109,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	});
 
 	return { chat: updatedChat, emit: data };
-};
-
-const emailChatNotification = async (data, type) => {
-	// Crea un payload con los datos de data y guarda en el modelo de email
-	const payload = {
-		userRef: data.userId,
-		psyRef: data.psychologistId,
-		type: type,
-		wasScheduled: false,
-		sessionRef: data.content._id.toString(),
-		sessionDate: data.content.createdAt,
-	};
-	await Email.updateOne(
-		{
-			userRef: data.userId,
-			psyRef: data.psychologistId,
-			type: type,
-		},
-		payload,
-		{ upsert: true }
-	);
 };
 
 const createReport = async (
@@ -169,7 +152,7 @@ const readMessage = async (user, chatId) => {
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },
 		{
-			$set: { 'messages.$[].read': true },
+			$set: { 'messages.$[].read': true, isLastRead: true },
 		},
 		{ new: true }
 	);

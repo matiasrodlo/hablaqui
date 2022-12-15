@@ -6,8 +6,12 @@ import Sessions from '../models/sessions';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllEvaluationsFunction } from '../utils/functions/evaluationFunction';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const addRating = async (user, newRating, comment, psychologist) => {
 	// Verifica que el usuario sea un psicologo, crea el rating y lo agrega al psicologo
@@ -86,8 +90,8 @@ const getAllEvaluations = async user => {
 				return {
 					evsId: item._id,
 					evId: ev._id,
-					send: moment(ev.createdAt).format('DD/MM/YYYY HH:mm'),
-					updated: moment(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
+					send: dayjs(ev.createdAt).format('DD/MM/YYYY HH:mm'),
+					updated: dayjs(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
 					approved: ev.approved,
 					comment: ev.comment,
 					global: ev.global,
@@ -119,6 +123,7 @@ const approveEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		},
 		{ new: true }
@@ -181,6 +186,7 @@ const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
+				'evaluations.$.moderatingDate': dayjs().format(),
 			},
 		}
 	).populate('psychologist user');

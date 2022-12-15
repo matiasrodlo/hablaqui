@@ -14,14 +14,24 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
+import Email from '../models/email';
+import dayjs from 'dayjs';
 import crypto from 'crypto';
-import moment from 'moment';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Analytics from 'analytics-node';
-moment.tz.setDefault('America/Santiago');
+dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
@@ -106,28 +116,28 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 		}
 	).populate('psychologist user');
 
-	/*session = getLastSessionFromPlan(session, id, planId);
-
-	const date = moment(session.date).format();
-	const lastSession = moment(session.lastSession).format();
-
-	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0
-	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente)
-	if (
-		session.remainingSessions === 0 &&
-		new Date(date).getTime() === new Date(lastSession).getTime()
-	) {
-		const expiration = moment(session.datePayment)
-			.add(1, 'months')
-			.format();
-		await Sessions.findOneAndUpdate(
-			{ _id: sessionsId, 'plan._id': session.plan_id },
-			{
-				$set: {
-					'plan.$.expiration': expiration,
-				},
-			}
-		);
+	/*session = getLastSessionFromPlan(session, id, planId); 
+ 
+	const date = dayjs(session.date).format(); 
+	const lastSession = dayjs(session.lastSession).format(); 
+ 
+	//En caso de cancelar una sesión, cambiará a fecha de expiración si las sesiones restantes eran 0 
+	//y la fecha de lasesión cancelada sea igual que la fecha de la ultima sesión (sesión cuando expirá actualmente) 
+	if ( 
+		session.remainingSessions === 0 && 
+		new Date(date).getTime() === new Date(lastSession).getTime() 
+	) { 
+		const expiration = dayjs(session.datePayment) 
+			.add(1, 'months') 
+			.format(); 
+		await Sessions.findOneAndUpdate( 
+			{ _id: sessionsId, 'plan._id': session.plan_id }, 
+			{ 
+				$set: { 
+					'plan.$.expiration': expiration, 
+				}, 
+			} 
+		); 
 	}*/
 
 	// Considera que el usuario es psicologo
@@ -136,7 +146,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 	}).populate('psychologist user');
 
 	// Se verifica si es un compromiso privado
-	if (cancelSessions.user == null) {
+	if (cancelSessions.user === null) {
 		await mailServiceReminder.sendCancelCommitment(
 			cancelSessions.psychologist
 		);
@@ -164,8 +174,7 @@ const checkPlanTask = async () => {
 	planUsers.forEach(async userWithPlan => {
 		let foundUser = await User.findById(userWithPlan._id);
 		foundUser.plan.forEach(plan => {
-			// Si el plan está vencido, se actualiza el estado del plan a vencido
-			if (moment().isAfter(plan.expiration)) {
+			if (dayjs().isAfter(plan.expiration)) {
 				plan.status = 'expired';
 			}
 		});
@@ -185,6 +194,7 @@ const checkPlanTask = async () => {
  * @param {ObjectId} payload.psychologist - Id del psicologo
  * @returns
  */
+
 const createPlan = async ({ payload }) => {
 	if (payload.user === payload.psychologist && payload.price !== 0) {
 		return conflictResponse('No puedes suscribirte a ti mismo');
@@ -197,11 +207,8 @@ const createPlan = async ({ payload }) => {
 	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
 	if (
 		!psychologist.inmediateAttention.activated &&
-		moment().isAfter(
-			moment(date, 'MM/DD/YYYY HH:mm').subtract(
-				minimumNewSession,
-				'hours'
-			)
+		dayjs().isAfter(
+			dayjs(date, 'MM/DD/YYYY HH:mm').subtract(minimumNewSession, 'hours')
 		)
 	) {
 		return conflictResponse(
@@ -214,20 +221,20 @@ const createPlan = async ({ payload }) => {
 
 	if (payload.paymentPeriod == 'Pago semanal') {
 		sessionQuantity = 1;
-		expirationDate = moment(date, 'MM/DD/YYYY HH:mm')
+		expirationDate = dayjs(date, 'MM/DD/YYYY HH:mm')
 			.add(50, 'minutes')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago mensual') {
 		sessionQuantity = 4;
-		expirationDate = moment()
-			.add({ months: 2 })
+		expirationDate = dayjs()
+			.add(2, 'months')
 			.format();
 	}
 	if (payload.paymentPeriod == 'Pago trimestral') {
 		sessionQuantity = 12;
-		expirationDate = moment()
-			.add({ months: 6 })
+		expirationDate = dayjs()
+			.add(6, 'months')
 			.format();
 	}
 
@@ -274,7 +281,7 @@ const createPlan = async ({ payload }) => {
 	});
 
 	const roomId = crypto
-		.createHash('md5')
+		.createHash('sha256')
 		.update(`${payload.user}${payload.psychologist}`)
 		.digest('hex');
 
@@ -327,7 +334,7 @@ const createPlan = async ({ payload }) => {
 			return sessions.plan.some(
 				plan =>
 					plan.payment === 'success' &&
-					moment().isBefore(moment(plan.expiration)) &&
+					dayjs().isBefore(dayjs(plan.expiration)) &&
 					plan.title !== 'Plan inicial' &&
 					sessions.psychologist.toString() !== payload.psychologist
 			);
@@ -372,7 +379,7 @@ const createPlan = async ({ payload }) => {
 			properties: {
 				products: planData,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: moment().format(),
+				timestamp: dayjs().format(),
 				total: payload.price / sessionQuantity,
 			},
 		});
@@ -383,7 +390,7 @@ const createPlan = async ({ payload }) => {
 				products: planData,
 				user: payload.user._id,
 				order_id: created.plan[created.plan.length - 1]._id.toString(),
-				timestamp: moment().format(),
+				timestamp: dayjs().format(),
 			},
 		});
 	}
@@ -429,12 +436,36 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailServicePsy.pendingPlanPayment(
-			user,
-			psychologist,
-			payload.price,
-			responseBody.init_point
-		);
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-hour',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'reminder-payment-day',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
+		await Email.create({
+			sessionDate: dayjs(created.date).format(),
+			wasScheduled: false,
+			type: 'promocional-incentive-week',
+			queuedAt: null,
+			scheduledAt: null,
+			userRef: user._id,
+			psyRef: psychologist._id,
+			sessionRef: created._id,
+		});
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -448,6 +479,7 @@ const createPlan = async ({ payload }) => {
  * @param {Object} payload - datos para guardar
  * @returns sessions actualizada
  */
+
 //Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
 	const { psychologist, plan, roomsUrl } = await Sessions.findOne({
@@ -457,8 +489,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	const minimumNewSession = psychologist.preferences.minimumNewSession;
 	// Comprobar si la fecha es posterior a la fecha actual más el tiempo mínimo
 	if (
-		moment().isAfter(
-			moment(payload.date, 'MM/DD/YYYY HH:mm').subtract(
+		dayjs().isAfter(
+			dayjs(payload.date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumNewSession,
 				'hours'
 			)
@@ -492,7 +524,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	// Si no quedan sesiones por agendar, se obtiene la ultima sesion del plan
 	if (payload.remainingSessions === 0) {
 		let session = getLastSessionFromPlan(sessions, '', idPlan);
-		const expiration = moment(session.lastSession)
+		const expiration = dayjs(session.lastSession)
 			.add(50, 'minutes')
 			.format();
 		// La nueva expiración es la fecha de la ultima sesion del plan + 50 minutos
@@ -536,7 +568,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	await mailServiceSchedule.sendScheduleToUser(
 		userLogged,
 		psychologist,
-		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
@@ -545,12 +577,65 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 	await mailServiceSchedule.sendScheduleToPsy(
 		userLogged,
 		psychologist,
-		moment(payload.date, 'MM/DD/YYYY HH:mm'),
+		dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
 		roomsUrl,
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
 		}`
 	);
+
+	// Se filtra el plan para obtener el id de la ultima sesion
+	let planFiltered = sessions.plan.filter(plan => plan._id == idPlan)[0];
+
+	let idSessionUltimate =
+		planFiltered.session[sessions.plan[0].session.length - 1]._id;
+
+	// Email scheduling for appointment reminder for the user
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-user-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+		url: roomsUrl,
+	});
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-user-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+		url: roomsUrl,
+	});
+	// Email scheduling for appointment reminder for the psychologist
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-psy-hour',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+		url: roomsUrl,
+	});
+	await Email.create({
+		sessionDate: dayjs(payload.date, 'MM/DD/YYYY HH:mm'),
+		wasScheduled: false,
+		type: 'reminder-psy-day',
+		queuedAt: undefined,
+		scheduledAt: undefined,
+		userRef: userLogged._id,
+		psyRef: psychologist._id,
+		sessionRef: idSessionUltimate,
+		url: roomsUrl,
+	});
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -565,6 +650,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
  * @param {Number} payload.price Precio que se cobrara
  * @returns sessions
  */
+
 const customNewSession = async (user, payload) => {
 	try {
 		// Validamos que sea psicologo
@@ -575,15 +661,14 @@ const customNewSession = async (user, payload) => {
 
 		// Se comprueba si es una sesion de compromiso
 		if (payload.dateEnd && payload.type === 'compromiso privado') {
-			const start = moment(payload.date, 'MM/DD/YYYY HH:mm');
-			const end = moment(payload.dateEnd, 'MM/DD/YYYY HH:mm');
-			// Se calcula la cantidad de horas que dura la sesion
+			const start = dayjs(payload.date, 'MM/DD/YYYY HH:mm');
+			const end = dayjs(payload.dateEnd, 'MM/DD/YYYY HH:mm');
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
 		}
 
 		// Objeto con la sesion a crear
 		for (let i = 0; i < hours; i++) {
-			const date = moment(payload.date, 'MM/DD/YYYY HH:mm').add(
+			const date = dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(
 				i,
 				'hours'
 			);
@@ -604,8 +689,8 @@ const customNewSession = async (user, payload) => {
 			sessionPrice: payload.price,
 			payment:
 				payload.type === 'compromiso privado' ? 'success' : 'pending',
-			expiration: moment(payload.date, 'MM/DD/YYYY HH:mm')
-				.add({ weeks: 1 })
+			expiration: dayjs(payload.date, 'MM/DD/YYYY HH:mm')
+				.add(1, 'week')
 				.toISOString(),
 			usedCoupon: '',
 			totalSessions: 1,
@@ -628,7 +713,7 @@ const customNewSession = async (user, payload) => {
 
 		// Creamos la direccion de la sala de videollamadas
 		const roomId = crypto
-			.createHash('md5')
+			.createHash('sha256')
 			.update(`${payload.user}${payload.psychologist}`)
 			.digest('hex');
 
@@ -776,7 +861,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		moment()
+		dayjs()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -791,7 +876,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -805,36 +890,34 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 					: [];
 			});
 		})
-		.filter(date =>
-			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
-		);
-	let minimumNewSession = moment(Date.now()).add(
+		.filter(date => dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()));
+	let minimumNewSession = dayjs(Date.now()).add(
 		psychologist.preferences.minimumNewSession,
 		'h'
 	);
 
 	sessions = length.map(el => {
-		const day = moment(Date.now()).add(el, 'days');
-		const temporal = moment(day).format('L');
+		const day = dayjs().add(el, 'days');
+		const temporal = dayjs(day).format('L');
 
 		return {
 			id: el,
-			value: day,
+			value: day.format(),
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: moment(day),
+			text: dayjs(day).format(),
 			available: hours.filter(hour => {
 				return (
-					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
 						minimumNewSession
 					) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
-							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								moment(day).format('L') &&
+							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								dayjs(day).format('L') &&
 							hour ===
-								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -855,7 +938,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// Creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		moment()
+		dayjs()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -870,7 +953,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -884,46 +967,44 @@ const getFormattedSessions = async (idPsychologist, type) => {
 					: [];
 			});
 		})
-		.filter(date =>
-			moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
-		);
+		.filter(date => dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()));
 
 	// Veificamos el tipo de calendario que se debe mostrar
 	let minimumNewSession = 0;
 	if (type === 'schedule')
-		minimumNewSession = moment(Date.now()).add(
+		minimumNewSession = dayjs(Date.now()).add(
 			psychologist.preferences.minimumNewSession,
 			'h'
 		);
 	else if (type === 'reschedule')
-		minimumNewSession = moment(Date.now()).add(
+		minimumNewSession = dayjs(Date.now()).add(
 			psychologist.preferences.minimumRescheduleSession,
 			'h'
 		);
 
 	// Se obtiene la disponibilidad del psicologo
 	sessions = length.map(el => {
-		const day = moment(Date.now()).add(el, 'days');
-		const temporal = moment(day).format('L');
+		const day = dayjs(Date.now()).add(el, 'days');
+		const temporal = dayjs(day).format('L');
 
 		return {
 			id: el,
-			value: day,
+			value: day.format(),
 			day: day.format('DD MMM'),
 			date: day.format('L'),
-			text: moment(day),
+			text: dayjs(day).format(),
 			available: hours.filter(hour => {
 				return (
-					moment(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
+					dayjs(`${temporal} ${hour}`, 'MM/DD/YYYY HH:mm').isAfter(
 						minimumNewSession
 					) &&
 					formattedSchedule(psychologist.schedule, day, hour) &&
 					!daySessions.some(
 						date =>
-							moment(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								moment(day).format('L') &&
+							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
+								dayjs(day).format('L') &&
 							hour ===
-								moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -952,7 +1033,7 @@ const formattedSessionsAll = async ids => {
 	const length = Array.from(Array(31), (_, x) => x);
 	// creamos un array con la cantidad de horas
 	const hours = Array.from(Array(24), (_, x) =>
-		moment()
+		dayjs()
 			.hour(x)
 			.minute(0)
 			.format('HH:mm')
@@ -969,7 +1050,7 @@ const formattedSessionsAll = async ids => {
 				});
 			})
 			.filter(date =>
-				moment(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+				dayjs(date, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 
 	// Obtenemos sessiones del psicologo
@@ -983,7 +1064,7 @@ const formattedSessionsAll = async ids => {
 		item.plan.some(plan => {
 			return (
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 			);
 		})
 	);
@@ -1001,7 +1082,7 @@ const formattedSessionsAll = async ids => {
 
 	// Obtenemos la disponibilidad de todos los psicolgos
 	sessions = allSessions.map(item => {
-		const minimumNewSession = moment(Date.now()).add(
+		const minimumNewSession = dayjs(Date.now()).add(
 			item.preferences.minimumNewSession,
 			'h'
 		);
@@ -1010,28 +1091,28 @@ const formattedSessionsAll = async ids => {
 		return {
 			psychologist: item._id,
 			sessions: length.map(el => {
-				const day = moment(Date.now()).add(el, 'days');
-				const temporal = moment(day).format('L');
+				const day = dayjs().add(el, 'days');
+				const temporal = dayjs(day).format('L');
 				return {
 					psychologist: item._id,
-					value: day,
+					value: day.format(),
 					day: day.format('DD MMM'),
 					date: day.format('L'),
-					text: moment(day),
+					text: dayjs(day).format(),
 					available: hours.filter(hour => {
 						return (
-							moment(
+							dayjs(
 								`${temporal} ${hour}`,
 								'MM/DD/YYYY HH:mm'
 							).isAfter(minimumNewSession) &&
 							formattedSchedule(schedule, day, hour) &&
 							!item.sessions.some(
 								date =>
-									moment(date, 'MM/DD/YYYY HH:mm').format(
+									dayjs(date, 'MM/DD/YYYY HH:mm').format(
 										'L'
 									) === temporal &&
 									hour ===
-										moment(date, 'MM/DD/YYYY HH:mm').format(
+										dayjs(date, 'MM/DD/YYYY HH:mm').format(
 											'HH:mm'
 										)
 							)
@@ -1060,6 +1141,7 @@ const paymentsInfo = async user => {
  * @param {Object} newDate Datos a actualizar
  * @returns sessions
  */
+
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	// Se obtiene la session a reprogramar, se obtiene el tiempo minimo para reprogramar
 	let currentSession = await Sessions.findOne({
@@ -1078,8 +1160,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
-		moment().isAfter(
-			moment(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
+		dayjs().isAfter(
+			dayjs(currentSession.date, 'MM/DD/YYYY HH:mm').subtract(
 				minimumRescheduleSession,
 				'hours'
 			)
@@ -1094,7 +1176,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	// Se le da formato a la fecha nueva, se actualiza la fecha de la session
 	const date = `${newDate.date} ${newDate.hour}`;
-	newDate.date = moment(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
+	newDate.date = dayjs(newDate.date, 'MM/DD/YYY').format('DD/MM/YYYY');
 	const sessions = await Sessions.findOneAndUpdate(
 		{
 			_id: sessionsId,
@@ -1113,7 +1195,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 
 	if (session.remainingSessions === 0) {
 		// Si no existen sessiones pendientes, se da fecha de expiracion a la session 50 minutos despues de la ultima session
-		const expiration = moment(session.lastSession, 'YYYY/MM/DD HH:mm')
+		const expiration = dayjs(session.lastSession, 'YYYY/MM/DD HH:mm')
 			.add(50, 'minutes')
 			.format();
 		await Sessions.findOneAndUpdate(
@@ -1153,6 +1235,31 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			sessions.roomsUrl
 		);
 	}
+	// Se les cambia la fecha de la sesión a los correos de recordatorio
+	const mailsToReprogram = await Email.find({
+		type: {
+			$in: [
+				'reminder-user-day',
+				'reminder-user-hour',
+				'reminder-psy-day',
+				'reminder-psy-hour',
+			],
+		},
+		userRef: sessions.user._id,
+		psyRef: sessions.psychologist._id,
+		sessionRef: id,
+	});
+	if (mailsToReprogram.length) {
+		mailsToReprogram.forEach(async mail => {
+			await Email.findByIdAndUpdate(mail._id, {
+				sessionDate: dayjs(date, 'MM/DD/YYYY HH:mm').format(
+					'ddd, DD MMM YYYY HH:mm:ss ZZ'
+				),
+				wasScheduled: false,
+				scheduledAt: null,
+			}).catch(err => console.log(err));
+		});
+	}
 
 	// Se hace el trackeo de la reprogramacion en segment
 	if (
@@ -1177,6 +1284,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
  * Actualiza una sessions
  * @param {string} sessions campos a actualizar
  */
+
 const updateSessions = async sessions => {
 	await Sessions.updateOne(
 		{
@@ -1265,7 +1373,7 @@ const getAllSessionsFormatted = async () => {
 			return plan.session.flatMap(session => {
 				// Se retorna un objeto con los datos que se quieren mostrar
 				return {
-					date: moment(session.date).format('DD/MM/YYYY HH:mm'),
+					date: dayjs(session.date).format('DD/MM/YYYY HH:mm'),
 					sessionNumber: session.sessionNumber,
 					psychologist:
 						sessionDocument.psychologist.name +
@@ -1281,9 +1389,7 @@ const getAllSessionsFormatted = async () => {
 					emailUser: sessionDocument.user.email,
 					emailPsychologist: sessionDocument.psychologist.email,
 					statusSession: session.status,
-					expirationPlan: moment(plan.expiration).format(
-						'DD/MM/YYYY'
-					),
+					expirationPlan: dayjs(plan.expiration).format('DD/MM/YYYY'),
 					paymentPlan: plan.payment,
 				};
 			});

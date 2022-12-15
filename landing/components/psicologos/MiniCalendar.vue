@@ -95,8 +95,14 @@
 
 <script>
 import { mdiCalendarOutline, mdiChevronRight, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	components: {
@@ -127,7 +133,7 @@ export default {
 	},
 	methods: {
 		formatDate(item) {
-			return moment(item, 'MM/DD/YYYY').format('dddd DD MMMM YYYY');
+			return dayjs(item, 'MM/DD/YYYY').format('dddd DD MMMM YYYY');
 		},
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {

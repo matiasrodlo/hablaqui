@@ -1,6 +1,12 @@
 import sgMail from '@sendgrid/mail';
 import { logInfo } from '../../../config/pino';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 /**
  * @description It is in charge of sending the mail
