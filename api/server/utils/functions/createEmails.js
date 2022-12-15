@@ -7,6 +7,15 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/**
+ * @description Funcion que crea los correos electronicos para el recordatorio de la sesion
+ * @param {Object} payload - Objeto que debe contener como atributo la fecha de la sesion
+ * @param {Object} user - Objeto que contiene la informacion del usuario
+ * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {Object} sessions - Documento de la sesion
+ * @param {String} roomsUrl - Url de la sala de la sesion
+ * @param {String} idPlan - Id del plan de la sesion
+ */
 export const createReminder = async (
 	payload,
 	user,
@@ -76,6 +85,12 @@ export const createReminder = async (
 	});
 };
 
+/**
+ * @description Funcion que crea los correos electronicos para el recordatorio pago de la sesión
+ * @param {Object} user - Objeto que contiene la informacion del usuario
+ * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {String} sessions - Objecto de la sesion
+ */
 export const createPaymentReminder = async (user, psy, sessions) => {
 	await Email.create({
 		sessionDate: dayjs.tz(dayjs(sessions.date).add(3, 'hours')).format(),
