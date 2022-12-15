@@ -204,6 +204,17 @@ const sessionsController = {
 			);
 		}
 	},
+	async getAllSessionsFormatted(req, res) {
+		try {
+			const {
+				data,
+				code,
+			} = await sessionsService.getAllSessionsFormatted();
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(sessionsController);
