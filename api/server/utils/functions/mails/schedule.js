@@ -95,10 +95,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-					.format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -135,10 +133,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: dayjs
-					.tz(dayjs(date, 'MM/DD/YYYY HH:mm'))
-					.format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date, 'MM/DD/YYYY HH:mm')).format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -245,8 +241,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -275,8 +271,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: dayjs.tz(dayjs(date)).format('DD/MM/YYYY'),
-				hour: dayjs.tz(dayjs(date)).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
