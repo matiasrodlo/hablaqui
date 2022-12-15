@@ -6,6 +6,7 @@ import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv'; // dotenv contiene las variables de entorno
+import { createReminder } from '../utils/functions/createEmails';
 import recruitmentService from './recruitment';
 import User from '../models/user';
 import email from '../models/email';
@@ -199,60 +200,14 @@ const successPay = async params => {
 		plan => plan._id.toString() === planId
 	)[0];
 	const sessionData = planData.session[0];
-	// Email scheduling for appointment reminder for the user
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	// Email scheduling for appointment reminder for the psychologist
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
+	await createReminder(
+		sessionData,
+		foundPlan.user,
+		foundPlan.psychologist,
+		foundPlan,
+		foundPlan.roomsUrl,
+		planId
+	);
 
 	// Busca los correos de recordatorio de pago y los elimina
 	const mailsToDeleted = await email.find({

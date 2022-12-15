@@ -1,6 +1,10 @@
 'use strict';
 
 import { room } from '../config/dotenv';
+import {
+	createReminder,
+	createPaymentReminder,
+} from '../utils/functions/createEmails';
 import { logInfo } from '../config/pino';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -450,36 +454,7 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await Email.create({
-			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
-			wasScheduled: false,
-			type: 'reminder-payment-hour',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
-		await Email.create({
-			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
-			wasScheduled: false,
-			type: 'reminder-payment-day',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
-		await Email.create({
-			sessionDate: dayjs.tz(dayjs(created.date).add(3, 'hours')).format(),
-			wasScheduled: false,
-			type: 'promocional-incentive-week',
-			queuedAt: null,
-			scheduledAt: null,
-			userRef: user._id,
-			psyRef: psychologist._id,
-			sessionRef: created._id,
-		});
+		await createPaymentReminder(user, psychologist, created);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -601,66 +576,15 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		}`
 	);
 
-	// Se filtra el plan para obtener el id de la ultima sesion
-	let planFiltered = sessions.plan.filter(plan => plan._id == idPlan)[0];
-
-	let idSessionUltimate =
-		planFiltered.session[sessions.plan[0].session.length - 1]._id;
-
-	// Email scheduling for appointment reminder for the user
-	await Email.create({
-		sessionDate: dayjs
-			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userLogged._id,
-		psyRef: psychologist._id,
-		sessionRef: idSessionUltimate,
-		url: roomsUrl,
-	});
-	await Email.create({
-		sessionDate: dayjs
-			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userLogged._id,
-		psyRef: psychologist._id,
-		sessionRef: idSessionUltimate,
-		url: roomsUrl,
-	});
-	// Email scheduling for appointment reminder for the psychologist
-	await Email.create({
-		sessionDate: dayjs
-			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userLogged._id,
-		psyRef: psychologist._id,
-		sessionRef: idSessionUltimate,
-		url: roomsUrl,
-	});
-	await Email.create({
-		sessionDate: dayjs
-			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: userLogged._id,
-		psyRef: psychologist._id,
-		sessionRef: idSessionUltimate,
-		url: roomsUrl,
-	});
+	// Se crea el recordatorio de la sesion
+	await createReminder(
+		payload,
+		userLogged,
+		psychologist,
+		sessions,
+		roomsUrl,
+		idPlan
+	);
 
 	return okResponse('sesion creada', {
 		sessions: setSession(userLogged.role, [sessions]),
@@ -1294,9 +1218,9 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	if (mailsToReprogram.length) {
 		mailsToReprogram.forEach(async mail => {
 			await Email.findByIdAndUpdate(mail._id, {
-				sessionDate: dayjs(date, 'MM/DD/YYYY HH:mm').format(
-					'ddd, DD MMM YYYY HH:mm:ss ZZ'
-				),
+				sessionDate: dayjs
+					.tz(dayjs(date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+					.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 				wasScheduled: false,
 				scheduledAt: null,
 			}).catch(err => console.log(err));
