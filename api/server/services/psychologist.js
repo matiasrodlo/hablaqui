@@ -352,9 +352,7 @@ const match = async body => {
 
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	// Se da formato a la fecha
-	newDate = dayjs
-		.tz(dayjs(newDate, 'yyyy-MM-DDTHH:mm'))
-		.format('MM/DD/YYYY HH:mm');
+	newDate = dayjs(newDate, 'YYYY-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm');
 	// Se busca la sesion que se va a reprogramar y se actualiza la fecha
 	const sessions = await Sessions.findOneAndUpdate(
 		{
