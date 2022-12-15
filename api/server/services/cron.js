@@ -608,7 +608,7 @@ const cronService = {
 						await mailServiceRemider.reminderRenewalSubscription1day(
 							user,
 							psy,
-							sessionDocument
+							plan.expiration
 						);
 					} else if (
 						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
