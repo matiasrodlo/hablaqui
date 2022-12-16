@@ -1273,13 +1273,8 @@ const getAllSessionsFormatted = async () => {
 					date: moment(session.date).format('DD/MM/YYYY HH:mm'),
 					sessionNumber: session.sessionNumber,
 					psychologist:
-						sessionDocument.psychologist.name +
-						' ' +
-						sessionDocument.psychologist.lastName,
-					user:
-						sessionDocument.user.name +
-						' ' +
-						sessionDocument.user.lastName,
+						sessionDocument.psychologist.name + lastNamePsy,
+					user: sessionDocument.user.name + lastNameUser,
 					totalSessions: plan.totalSessions,
 					userPhone: sessionDocument.user.phone,
 					psychologistPhone: sessionDocument.psychologist.phone,
