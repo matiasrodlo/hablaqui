@@ -24,7 +24,8 @@ const updateAnswers = async (userId, answers) => {
   // Actualiza las respuestas de un usuario
   const updated = await matchModel.findOneAndUpdate(
     { user: userId },
-    { $set: answers }
+    { $set: answers },
+    { new: true }
   );
   return okResponse("Respuestas actualizadas", { answers: updated });
 };

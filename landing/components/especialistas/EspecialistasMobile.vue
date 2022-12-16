@@ -186,73 +186,21 @@
 								</v-card-text> -->
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
-									<v-menu
-										v-model="menuGender"
-										:close-on-content-click="false"
-										transition="scale-transition"
-										offset-y
-										rounded
-									>
-										<template #activator="{ on, attrs }">
-											<v-text-field
-												:value="
-													gender.length ? `Géneros·${gender.length}` : ''
-												"
-												readonly
-												outlined
-												dense
-												class="white"
-												hide-details
-												:append-icon="mdiChevronDown"
-												v-bind="attrs"
-												v-on="on"
-												@click:append="() => (menuGender = !menuGender)"
-											></v-text-field>
-										</template>
-										<v-card rounded>
-											<v-card-text>
-												<v-checkbox
-													v-model="gender"
-													value="male"
-													:disabled="loadingSpecialist"
-													label="Hombre"
-													class="py-2"
-													hide-details
-													@change="changeInput"
-												>
-													<template #label>
-														<span class="caption">Hombre</span>
-													</template>
-												</v-checkbox>
-												<v-checkbox
-													v-model="gender"
-													value="female"
-													label="Mujer"
-													:disabled="loadingSpecialist"
-													class="py-2"
-													hide-details
-													@change="changeInput"
-												>
-													<template #label>
-														<span class="caption">Mujer</span>
-													</template>
-												</v-checkbox>
-												<v-checkbox
-													v-model="gender"
-													value="transgender"
-													label="Transgénero"
-													:disabled="loadingSpecialist"
-													class="py-2"
-													hide-details
-													@change="changeInput"
-												>
-													<template #label>
-														<span class="caption">Transgénero </span>
-													</template>
-												</v-checkbox>
-											</v-card-text>
-										</v-card>
-									</v-menu>
+									<v-autocomplete
+										ref="genders"
+										v-model="gender"
+										outlined
+										dense
+										class="white"
+										:append-icon="mdiChevronDown"
+										:items="[
+											{ value: 'female', text: 'Mujer' },
+											{ value: 'male', text: 'Hombre' },
+											{ value: 'transgender', text: 'Transgénero' },
+										]"
+										hide-details
+										@change="e => actualizarMatch({ gender: e })"
+									></v-autocomplete>
 								</v-card-text>
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Precios</h4>
@@ -261,7 +209,6 @@
 										outlined
 										dense
 										class="white"
-										clearable
 										:append-icon="mdiChevronDown"
 										:items="[
 											{ value: 15000, text: 'Hasta $15.000' },
@@ -282,10 +229,10 @@
 									</h4>
 									<v-autocomplete
 										ref="menuOthers"
+										v-model="otros"
 										outlined
 										dense
 										class="white"
-										clearable
 										:append-icon="mdiChevronDown"
 										:items="[
 											{ value: 'early', text: 'Temprano: Antes de las 9 am' },
@@ -306,6 +253,7 @@
 												text: 'En la noche: Después de las 6 pm',
 											},
 										]"
+										label="Disponibilidad"
 										hide-details
 										@change="e => actualizarMatch({ schedule: e })"
 									></v-autocomplete>
@@ -676,7 +624,7 @@ export default {
 	},
 	data() {
 		return {
-			toggle: null,
+			toggle: 0,
 			mdiChat,
 			showFilters: false,
 			mdiCloseCircle,
@@ -689,6 +637,7 @@ export default {
 			specialties: [],
 			searchInput: '',
 			prices: '',
+			otros: '',
 			gender: [],
 			others: [],
 			models: [],
@@ -750,15 +699,13 @@ export default {
 				return result;
 			// si quiere ver por especialista online, filtramos estos
 			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
-			// filtramos los especialista segun el genero marcados
-			if (this.gender.length)
-				result = result.filter(item => {
-					const trans = item.isTrans && 'transgender';
-					const gender = [item.gender];
-					trans && gender.push(trans);
-					return gender.some(el => this.gender.some(g => g === el));
-				});
-			// filtramos los especialistas segun los models marcados
+			// if (this.gender.length)
+			// 	result = result.filter(item => {
+			// 		const trans = item.isTrans && 'transgender';
+			// 		const gender = [item.gender];
+			// 		trans && gender.push(trans);
+			// 		return gender.some(el => this.gender.some(g => g === el));
+			// 	});
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			// filtramos segun los leguajes que habla el especialista
@@ -779,6 +726,7 @@ export default {
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialistsMarketPlace',
 			sessions: 'Specialist/sessionsLimit',
+			matchMaking: 'Specialist/matchMaking',
 		}),
 	},
 	watch: {
@@ -790,6 +738,19 @@ export default {
 			if (oldValue) prev = oldValue;
 			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
 			this.getSessionsLimit(ids);
+		},
+		matchMaking(newVal) {
+			if (newVal) {
+				this.specialties = newVal.themes;
+				this.gender = newVal.gender;
+				this.prices = newVal.price;
+				this.otros = newVal.schedule;
+			}
+		},
+		menuSpecialties(newVal) {
+			if (!newVal) {
+				this.actualizarMatch({ themes: this.specialties });
+			}
 		},
 	},
 	created() {
