@@ -291,12 +291,6 @@ const cronService = {
 					batch
 				);
 		});
-		await Chat.updateMany(
-			{ isLastRead: false },
-			{
-				isLastRead: true,
-			}
-		);
 		return okResponse('Se han enviado los correos');
 	},
 	async emailSchedule(token) {
