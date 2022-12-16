@@ -17,7 +17,6 @@ let email = new Schema({
 	},
 	sessionDate: {
 		type: String,
-		required: true,
 	},
 	wasScheduled: {
 		type: Boolean,

@@ -149,6 +149,15 @@ const readMessage = async (user, chatId) => {
 	const chat = await Chat.findById(chatId);
 	const id = user.role == 'psychologist' ? chat.user : user.psychologist;
 
+	await Email.deleteMany({
+		type: {
+			$in: ['chat-psy-1-hour', 'chat-user-1-hour'],
+		},
+		wasScheduled: false,
+		userRef: chat.user,
+		psyRef: chat.psychologist,
+	});
+
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },
 		{
