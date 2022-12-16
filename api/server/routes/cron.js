@@ -87,4 +87,12 @@ cronRouter.post(
  */
 cronRouter.post('/cron/reminder-chat/:authToken', cronController.reminderChat);
 
+/**
+ * @description: Envia el correo de recordatorio de chat al usuario
+ * @method POST
+ * @route /api/v1/cron/reminder-chat/:authToken
+ * @param {string} params.authToken - Token de autorización
+ */
+cronRouter.post('/cron/reminder-chat/:authToken', cronController.reminderChat);
+
 export default cronRouter;
