@@ -86,7 +86,13 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+		...mapGetters({
+			loadingPsychologist: 'Psychologist/loadingPsychologist',
+			matchMaking: 'Psychologist/matchMaking',
+		}),
+	},
+	created() {
+		if (!this.$auth.$state.loggedIn) this.$router.push('/auth');
 	},
 	mounted() {
 		window.scrollTo(0, 0);
@@ -96,9 +102,11 @@ export default {
 		async initialFetch() {
 			if (this.$auth.$state.loggedIn) {
 				await this.getMatchMakig(this.$auth.$state.user._id);
-				await this.getPsychologistsBestMatch();
-			} else {
-				this.getPsychologists();
+				if (!this.matchMaking) {
+					this.$router.push('evaluacion');
+				} else {
+					await this.getPsychologistsBestMatch();
+				}
 			}
 			await this.getAppointments();
 		},

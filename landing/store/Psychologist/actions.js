@@ -401,7 +401,7 @@ export default {
 			});
 			commit('setMatchMaking', data.answers);
 		} catch (e) {
-			snackBarError(e)(commit);
+			console.error(e);
 		}
 	},
 	async setSchedule({ commit }, payload) {
