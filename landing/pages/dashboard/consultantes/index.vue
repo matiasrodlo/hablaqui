@@ -249,7 +249,14 @@
 			>
 				<v-card width="550" rounded="lg">
 					<v-card-text
-						class="d-flex justify-space-between justify-center primary white--text text-h5 py-3"
+						class="
+							d-flex
+							justify-space-between justify-center
+							primary
+							white--text
+							text-h5
+							py-3
+						"
 					>
 						<div class="body-1 font-weight-bold pt-2">Consultante nuevo</div>
 						<v-btn icon @click="closeDialog">
@@ -401,7 +408,9 @@ import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
-
+/**
+ * pagina principal de consultantes
+ */
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -433,6 +442,9 @@ export default {
 		form: null,
 	}),
 	computed: {
+		/**
+		 * retorna los clientes filtrados y ordenados por fecha
+		 */
 		items() {
 			return this.clients
 				.filter(item => {
@@ -441,6 +453,9 @@ export default {
 				})
 				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
 		},
+		/**
+		 * validacion de error de email
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -448,12 +463,18 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
 			return errors;
 		},
+		/**
+		 * validacion de error de nombre
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
 			!this.$v.form.name.required && errors.push('Se requiere nombre');
 			return errors;
 		},
+		/**
+		 * validacion de error de apellido
+		 */
 		lastNameErrors() {
 			const errors = [];
 			if (!this.$v.form.lastName.$dirty) return errors;
@@ -463,14 +484,21 @@ export default {
 		...mapGetters({ clients: 'Psychologist/clients', step: 'User/step' }),
 	},
 	watch: {
+		/**
+		 * listener para establecer el datepicker
+		 */
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
 	},
 	created() {
+		// limpia el formulario
 		this.resetForm();
 	},
 	methods: {
+		/**
+		 * crea un usuario y vuelve a obtener los clientes
+		 */
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -483,6 +511,9 @@ export default {
 				this.loading = false;
 			}
 		},
+		/**
+		 * resetea el formulario
+		 */
 		resetForm() {
 			this.form = {
 				name: '',
@@ -492,17 +523,29 @@ export default {
 				email: '',
 			};
 		},
+		/**
+		 * utilizado por el datepicker
+		 */
 		save(date) {
 			this.$refs.menu.save(date);
 		},
+		/**
+		 * cierra el modal
+		 */
 		closeDialog() {
 			this.dialog = false;
 			this.resetForm();
 			this.$v.$reset();
 		},
+		/**
+		 * establece los años trancurridos segun la fecha pasada
+		 */
 		getAge(date) {
 			return moment().diff(date, 'years');
 		},
+		/**
+		 * cambia el estado del onboarding a true es decir realizado
+		 */
 		async changeStateOnboarding() {
 			await this.updateOne({
 				_id: this.$auth.$state.user._id,

@@ -36,6 +36,9 @@
 
 <script>
 import { mapActions } from 'vuex';
+/**
+ * pagina d epago success
+ */
 export default {
 	data() {
 		return {
@@ -45,6 +48,7 @@ export default {
 		};
 	},
 	created() {
+		// guardamos en variables lo que este en la query url y limpiamos la url
 		if (this.$route.query.sessionsId && this.$route.query.planId) {
 			this.sessionsId = this.$route.query.sessionsId;
 			this.planId = this.$route.query.planId;
@@ -52,10 +56,12 @@ export default {
 		}
 	},
 	async mounted() {
+		// enviamos peticion para marcar como pago success
 		if (this.sessionsId && this.planId) {
 			await this.mercadopagoSuccess({ sessionsId: this.sessionsId, planId: this.planId });
 			this.overlay = false;
 		} else {
+			// redireccionamos al home
 			this.overlay = false;
 			this.$router.push('/');
 		}

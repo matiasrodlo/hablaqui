@@ -8,7 +8,9 @@
 <script>
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
-
+/**
+ * Servicios
+ */
 export default {
 	name: 'DatosBancarios',
 	components: {
@@ -17,6 +19,9 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * Obtiene datos iniciales
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -76,6 +81,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Establece el valor en la variable psicologo
+		 */
 		setPsychologist(value) {
 			this.psychologist = value;
 		},

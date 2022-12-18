@@ -176,7 +176,9 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-
+/**
+ * perfil de psicologo mobile
+ */
 export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
@@ -204,6 +206,7 @@ export default {
 		}),
 	},
 	created() {
+		// chat flotante a false al ingresar en la ruta
 		this.setFloatingChat(false);
 		// this.socket = this.$nuxtSocket({
 		// 	channel: '/liveData',
@@ -215,10 +218,16 @@ export default {
 		// });
 	},
 	methods: {
+		/**
+		 * obtenemos el psicologo
+		 */
 		async getPsychologist(data) {
 			const { psychologist } = await this.$axios.$get(`/psychologists/one/${data.username}`);
 			this.setPsychologist(psychologist);
 		},
+		/**
+		 * Ir al chat si estamos logeados
+		 */
 		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
@@ -233,6 +242,9 @@ export default {
 				this.setFloatingChat(true);
 			}
 		},
+		/**
+		 * string url del avatar
+		 */
 		avatar(psychologist) {
 			if (!psychologist.approveAvatar) return '';
 			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;

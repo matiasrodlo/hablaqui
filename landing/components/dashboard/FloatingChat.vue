@@ -103,6 +103,9 @@ import moment from 'moment-timezone';
 import { uniqBy } from 'lodash';
 moment.tz.setDefault('America/Santiago');
 
+/**
+ * burbuja de chat
+ */
 export default {
 	components: {
 		Chat: () => import('~/components/chat/CardChat'),
@@ -116,6 +119,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * retorna un nuevo array de psicologos con las propiedades necesarias
+		 */
 		psychologists() {
 			return this.allPsychologists.map(item => ({
 				...item,
@@ -125,6 +131,9 @@ export default {
 				),
 			}));
 		},
+		/**
+		 * retorna los chats de un spsicologo
+		 */
 		psyFromChats() {
 			let filterArray = this.chats;
 
@@ -150,6 +159,9 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
+		/**
+		 * propiedad que retorna si el chat se abre o no
+		 */
 		menu: {
 			get() {
 				return this.floatingChat;
@@ -158,6 +170,9 @@ export default {
 				this.setFloatingChat(value);
 			},
 		},
+		/**
+		 * propiedad que retorna si el chat se abre o no
+		 */
 		dialog: {
 			get() {
 				return this.floatingChat;
@@ -166,6 +181,9 @@ export default {
 				this.setFloatingChat(value);
 			},
 		},
+		/**
+		 * obtiene el psicologo del usuario
+		 */
 		getMyPsy() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
 				const psy = this.plan.psychologist;
@@ -188,6 +206,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * listener si cambia la propiedad
+		 */
 		async floatingChat(newValue) {
 			if (newValue && this.$route.query.chat) {
 				this.setResumeView(false);
@@ -202,7 +223,9 @@ export default {
 		},
 	},
 	created() {
+		// moment a esp
 		moment.locale('es');
+		// activa el socket io
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
 		});
@@ -219,7 +242,9 @@ export default {
 		});
 	},
 	async mounted() {
+		// si esta la vista resumen activa
 		if (this.resumeView) {
+			// si tenemos el id en los parametros buscamos el psi  y establecemos
 			if (this.$route.params.id) {
 				const psychologist = this.psychologists.find(
 					item => item._id === this.$route.params.id
@@ -227,9 +252,13 @@ export default {
 				await this.selectedPsy(psychologist);
 			}
 		}
+		// obtiene los mensajes
 		await this.getMessages();
 	},
 	methods: {
+		/**
+		 * funcion que se activa con el socket io
+		 */
 		async socketioCallback(data) {
 			if (
 				(this.selected && this.selected._id === data.psychologistId) ||
@@ -241,11 +270,17 @@ export default {
 			}
 			await this.getMessages();
 		},
+		/**
+		 * reestablece el chat luego de 200ms
+		 */
 		resetChat() {
 			setTimeout(() => {
 				if (this.selected) this.selected = null;
 			}, 200);
 		},
+		/**
+		 * selecciona e psicolog
+		 */
 		async selectedPsy(psy) {
 			if (this.selected && this.selected._id === psy._id) return;
 			// iniciamos carga del seleccionado
@@ -267,6 +302,9 @@ export default {
 				await this.getMessages();
 			}
 		},
+		/**
+		 * verdadero si tienes mensajes sin leer
+		 */
 		hasMessage(psy) {
 			const temp = {
 				...this.chats.find(item => item.psychologist && item.psychologist._id === psy._id),
@@ -279,6 +317,9 @@ export default {
 				if (hasMessage) return temp._id;
 			}
 		},
+		/**
+		 * conteo de los mensajes no leidos
+		 */
 		setCountMessagesUnread(item) {
 			let count = 0;
 			if (!item || !item.messages) return count;
@@ -289,6 +330,9 @@ export default {
 			});
 			return count;
 		},
+		/**
+		 * busca y retorna un psicologo segun el id
+		 */
 		getPsy(id) {
 			return this.psychologists.find(item => item._id === id);
 		},

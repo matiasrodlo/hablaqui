@@ -270,6 +270,9 @@ import { mdiCamera } from '@mdi/js';
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
+/**
+ * perfil index
+ */
 export default {
 	components: {
 		Appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -310,12 +313,19 @@ export default {
 		},
 	},
 	mounted() {
+		// verifica el clipboard
 		this.canCopy = !!navigator.clipboard;
 	},
 	methods: {
+		/**
+		 * estable el valor en psicologo
+		 */
 		setPsychologist(value) {
 			this.psychologist = value;
 		},
+		/**
+		 * Actualiza el avatar
+		 */
 		async uploadAvatar(file) {
 			if (!file) return false;
 			this.loadingAvatar = true;
@@ -325,6 +335,9 @@ export default {
 			if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist)
 				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
+		/**
+		 * Crea el formdata de avatar
+		 */
 		setAvatarObject(file) {
 			const avatar = new FormData();
 			avatar.append('avatar', file);
@@ -340,6 +353,9 @@ export default {
 			);
 			return avatar;
 		},
+		/**
+		 * copiar enlace
+		 */
 		copyLink() {
 			navigator.clipboard.writeText(
 				`${this.$config.LANDING_URL}${this.psychologist.username}`

@@ -31,7 +31,9 @@
 
 <script>
 import { mdiMagnify } from '@mdi/js';
-
+/**
+ * Geo psicologo, por ubicacion
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),

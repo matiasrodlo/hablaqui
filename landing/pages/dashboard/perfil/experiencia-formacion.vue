@@ -9,6 +9,9 @@
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
+/**
+ * Pagina de experiencia y formacion
+ */
 export default {
 	name: 'ExperienciaFormacion',
 	components: {
@@ -17,6 +20,9 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * Obtiene los datos iniciales necesarios
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -76,6 +82,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el valor al psicologo
+		 */
 		setPsychologist(value) {
 			this.psychologist = value;
 		},

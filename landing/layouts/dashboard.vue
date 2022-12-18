@@ -31,40 +31,6 @@
 				shaped
 				top
 			>
-				<!-- ocultado por peticion de daniel -->
-				<!-- <v-list-item
-					v-if="
-						psychologist &&
-						$auth.user.role === 'psychologist' &&
-						$auth.user.psychologist
-					"
-					inactive
-				>
-					<v-list-item-avatar size="35">
-						<v-btn outlined fab color="white">
-							<icon v-if="online" size="30" color="#FFFFFF" :icon="mdiAccount" />
-							<icon v-else size="30" color="#FFFFFF" :icon="mdiAccountOff" />
-						</v-btn>
-					</v-list-item-avatar>
-					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold body-2">
-							<v-switch
-								v-model="online"
-								dense
-								hide-details
-								:loading="loadingStatus"
-								class="mt-0"
-								@click="setToggleStatus"
-							>
-								<template #prepend>
-									<div class="white--text pt-1">
-										{{ online ? 'En linea' : 'Desconectado' }}
-									</div>
-								</template>
-							</v-switch>
-						</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item> -->
 				<template v-for="(item, i) in links">
 					<v-list-item
 						v-if="item.visible"
@@ -354,6 +320,9 @@ import {
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Snackbar from '@/components/Snackbar';
 
+/**
+ * Layout dashboard
+ */
 export default {
 	components: {
 		Snackbar,
@@ -384,9 +353,15 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * expand drawer
+		 */
 		expand() {
 			return true;
 		},
+		/**
+		 * Establece y retorna el paso(onboarding)
+		 */
 		onSelectedStep: {
 			get() {
 				return this.selectedStep;
@@ -395,6 +370,9 @@ export default {
 				return this.setStep(value);
 			},
 		},
+		/**
+		 * regresar
+		 */
 		goBack() {
 			return (
 				this.$route.name === 'dashboard-perfil-configuracion-personal' ||
@@ -406,6 +384,9 @@ export default {
 				this.$route.name === 'dashboard-consultantes-consultante-seleccionado'
 			);
 		},
+		/**
+		 * items de rutas a la que podemos ir
+		 */
 		links() {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
@@ -485,6 +466,9 @@ export default {
 				},
 			];
 		},
+		/**
+		 * dependiendo de donde nos encontremos retorna un titulo
+		 */
 		routeName() {
 			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
 			if (this.$route.name === 'dashboard-planes') return 'Planes';
@@ -506,9 +490,15 @@ export default {
 				return 'Consultante';
 			return '';
 		},
+		/**
+		 * verdadero si tiene avatar
+		 */
 		hasAvatar() {
 			return this.psychologist && this.psychologist.avatar;
 		},
+		/**
+		 * verdadero si tiene datos bancarios
+		 */
 		hasBankdata() {
 			return (
 				this.psychologist &&
@@ -520,6 +510,9 @@ export default {
 				this.psychologist.paymentMethod.name
 			);
 		},
+		/**
+		 * verdadero si tiene horario
+		 */
 		hasSchedule() {
 			return (
 				this.psychologist &&
@@ -533,6 +526,9 @@ export default {
 					this.psychologist.schedule.sunday !== 'busy')
 			);
 		},
+		/**
+		 * verdadero si tienes las preferencias de sesion
+		 */
 		hasPreferences() {
 			return (
 				this.psychologist &&
@@ -541,6 +537,9 @@ export default {
 				this.psychologist.preferences.minimumRescheduleSession > 0
 			);
 		},
+		/**
+		 * verdadero si tienes los precios de las sesiones
+		 */
 		hasSessionPrice() {
 			return (
 				this.psychologist &&
@@ -548,12 +547,21 @@ export default {
 				this.psychologist.sessionPrices.video > 0
 			);
 		},
+		/**
+		 * verdadero si tienes cosutantes
+		 */
 		hasConsultantes() {
 			return this.consultantes.length;
 		},
+		/**
+		 * verdadero si tienes eventos es decir sesiones
+		 */
 		hasEvents() {
 			return this.$auth.user.sessions.length;
 		},
+		/**
+		 * pasos del onboarding
+		 */
 		stepOnboarding() {
 			return [
 				{
@@ -712,6 +720,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * listener de propiedad psychologist
+		 */
 		psychologist(newValue) {
 			if (
 				newValue &&
@@ -729,6 +740,7 @@ export default {
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 
+		// si el usuario es role user
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
 				if (this.plan.psychologist) {
@@ -741,6 +753,7 @@ export default {
 				this.setPsychologist(null);
 			}
 		}
+		// si el usuario es role psicologo
 		if (this.$auth.$state.user.role === 'psychologist') {
 			let psychologist;
 			if (this.$auth.$state.user.psychologist) {
@@ -766,7 +779,7 @@ export default {
 			}
 			this.setPsychologist(psychologist);
 		}
-
+		// listener de el envento keyup para evaluar la tecla escape y cerrar onboarding
 		document.body.addEventListener('keyup', evt => {
 			evt = evt || window.event;
 			let isEscape = false;
@@ -781,20 +794,24 @@ export default {
 		});
 	},
 	methods: {
+		/**
+		 * cerrar sesion y redigire a auth
+		 */
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');
 		},
-		async setToggleStatus() {
-			this.loadingStatus = true;
-			await this.toggleStatus();
-			this.loadingStatus = false;
-		},
+		/**
+		 * muestra mensaje de bienvenida
+		 */
 		welcomeDialog() {
 			this.overlay = false;
 			this.setOnBoarding(true);
 			// this.changeStateOnboarding();
 		},
+		/**
+		 * establece nueva estado del onboarding
+		 */
 		async changeStateOnboarding() {
 			this.loadingOnboarding = true;
 			await this.updateOne({

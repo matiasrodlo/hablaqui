@@ -155,6 +155,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import { mdiClose } from '@mdi/js';
 import moment from 'moment';
+/**
+ * Pagina de Historial
+ */
 export default {
 	name: 'Pagos',
 	components: {
@@ -184,12 +187,17 @@ export default {
 		}),
 	},
 	created() {
+		// moment a esp
 		moment.locale('es');
 	},
 	mounted() {
+		// fetch inicial
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * caragando datos iniciales para la vista
+		 */
 		async initFetch() {
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&
@@ -205,9 +213,15 @@ export default {
 			this.psychologist = await psychologist;
 			this.loading = false;
 		},
+		/**
+		 * formatea la fecha
+		 */
 		formatDateMoment(item) {
 			return moment(item).format('DD MMMM, YYYY');
 		},
+		/**
+		 * envia una peticion de pago y vuelve a carga los datos iniciales
+		 */
 		async submitPayment() {
 			this.loadingPayment = true;
 			await this.paymentRequest();

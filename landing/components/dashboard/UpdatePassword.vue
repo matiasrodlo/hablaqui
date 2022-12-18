@@ -61,7 +61,9 @@ import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
-
+/**
+ * componente que actualiza tu contraseña
+ */
 export default {
 	mixins: [validationMixin],
 	data() {
@@ -80,6 +82,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * antigua contraseña
+		 */
 		oldPasswordErrors() {
 			const errors = [];
 			if (!this.$v.formPassword.oldPassword.$dirty) return errors;
@@ -87,6 +92,9 @@ export default {
 				errors.push('Actual contraseña es querida');
 			return errors;
 		},
+		/**
+		 * valida errores en la contraseña ingresada
+		 */
 		newPasswordErrors() {
 			const errors = [];
 			if (!this.$v.formPassword.newPassword.$dirty) return errors;
@@ -95,6 +103,9 @@ export default {
 			!this.$v.formPassword.newPassword.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
+		/**
+		 * verifica que la repeticion de contraseña sea valida
+		 */
 		repeatNewPasswordErrors() {
 			const errors = [];
 			if (!this.$v.formPassword.repeatNewPassword.$dirty) return errors;
@@ -106,6 +117,9 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * Actualiza la conseña
+		 */
 		async updatePass() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -122,6 +136,9 @@ export default {
 		},
 		...mapActions({ upatePassword: 'User/upatePassword' }),
 	},
+	/**
+	 * validaciones
+	 */
 	validations: {
 		formPassword: {
 			oldPassword: { required },

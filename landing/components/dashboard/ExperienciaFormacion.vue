@@ -381,6 +381,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiPencilOutline, mdiDeleteOutline } from '@mdi/js';
+/**
+ * Formulario de experiencia y formacion
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -413,13 +416,20 @@ export default {
 		}),
 	},
 	mounted() {
+		// se obtienen las especialidades
 		this.getAppointments();
 	},
 	methods: {
+		/**
+		 * actualiza el psicologo
+		 */
 		async onSubmit() {
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
 		},
+		/**
+		 * agrega una nueva experiencias
+		 */
 		newExperience() {
 			const experience = [...this.psychologist.experience];
 			if (this.indexSelected >= 0 && this.indexSelected !== null) {
@@ -439,6 +449,9 @@ export default {
 			}
 			this.dialogExperience = false;
 		},
+		/**
+		 * establece una experiencia
+		 */
 		setExperience(item, index) {
 			if (index !== null) this.indexSelected = index;
 			if (item) {
@@ -456,6 +469,9 @@ export default {
 			}
 			this.dialogExperience = true;
 		},
+		/**
+		 * agrega una nueva formacion
+		 */
 		newFormation() {
 			const formation = [...this.psychologist.formation];
 			if (this.indexSelected >= 0 && this.indexSelected !== null) {
@@ -474,6 +490,7 @@ export default {
 			}
 			this.dialogFormation = false;
 		},
+		/** edita o establece una formacion */
 		setFormation(item, index) {
 			if (index !== null) this.indexSelected = index;
 			if (item) this.selectedFormation = item;
@@ -487,9 +504,15 @@ export default {
 				};
 			this.dialogFormation = true;
 		},
+		/**
+		 * limitador modelo
+		 */
 		limiterModels(e) {
 			if (e.length > 2) e.pop();
 		},
+		/**
+		 * limitador especialidades
+		 */
 		limiterSpecialities(e) {
 			if (e.length > 6) e.pop();
 		},

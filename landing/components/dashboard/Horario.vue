@@ -308,6 +308,9 @@ import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/Santiago');
 
+/**
+ * horarios del psicologo
+ */
 export default {
 	name: 'Horario',
 	components: {
@@ -326,6 +329,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			// horarios por defecto
 			items: [
 				{
 					title: 'monday',
@@ -391,6 +395,7 @@ export default {
 					error: { start: [], end: [] },
 				},
 			],
+			// horas del dia formato HH:mm
 			hours: [
 				'00:00',
 				'1:00',
@@ -426,11 +431,17 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * verdadero si existe un solapamiento de horario
+		 */
 		hasOverlay() {
 			return this.items.some(
 				item => item.error && (item.error.start.length || item.error.end.length)
 			);
 		},
+		/**
+		 * retorna verdadero si tiene cambios por guardar
+		 */
 		hasChanges() {
 			const days = {
 				monday: this.items[0].active ? this.items[0].intervals : 'busy',
@@ -446,12 +457,15 @@ export default {
 		...mapGetters({ step: 'User/step' }),
 	},
 	created() {
+		// guardamos la query de la ruta
 		this.query = this.$route.query;
 	},
 	mounted() {
+		// hacemos una copia prufunda
 		this.setDay(cloneDeep(this.psychologist.schedule));
 	},
 	methods: {
+		// establecemos configuracion del dia pedido
 		setDay(payload) {
 			let intervals;
 			this.items = this.items.map((item, index) => {
@@ -515,14 +529,23 @@ export default {
 				return { ...item, intervals, active };
 			});
 		},
+		/**
+		 *  agrega un nuevo intervalo al dia
+		 */
 		addInterval(indexDay) {
 			this.items[indexDay].intervals.push(['', '']);
 		},
+		/**
+		 * remueve el intervalo seleccionado
+		 */
 		rmInterval(indexDay, indexInterval) {
 			this.items[indexDay].intervals = this.items[indexDay].intervals.filter(
 				(el, index) => index !== indexInterval
 			);
 		},
+		/**
+		 * guarda el horario
+		 */
 		async schedule() {
 			this.loading = true;
 
@@ -558,7 +581,9 @@ export default {
 			this.setDay(cloneDeep(psychologist.schedule));
 			this.loading = false;
 		},
-		// Validation
+		/**
+		 * ejecuta las validaciones permitidas al horario
+		 */
 		validateInput(indexDay, indexInterval, value, type) {
 			const result = this.items[indexDay].intervals.some((item, i) => {
 				if (indexInterval !== i)

@@ -65,7 +65,9 @@ import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
 import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
-
+/**
+ * Vista marketplace por ubicacion
+ */
 export default {
 	components: {
 		Footer,
@@ -120,9 +122,15 @@ export default {
 		this.initialFetch();
 	},
 	methods: {
+		/**
+		 * obtenemos las especialidades
+		 */
 		async initialFetch() {
 			await this.getAppointments();
 		},
+		/**
+		 * obtenemos las sessiones
+		 */
 		getSessions(ids) {
 			this.getSessionsLimit(ids);
 		},

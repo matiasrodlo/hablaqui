@@ -191,7 +191,9 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import { cloneDeep } from 'lodash';
 import { validationMixin } from 'vuelidate';
 import { mdiInformationOutline } from '@mdi/js';
-
+/**
+ * componente de actualizar perfil
+ */
 export default {
 	mixins: [validationMixin],
 	props: {
@@ -232,6 +234,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * verifica que el nombre sea valido
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.formUser.name.$dirty) return errors;
@@ -240,6 +245,9 @@ export default {
 			!this.$v.formUser.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
+		/**
+		 * Verdadero si tiene cambios por guardar
+		 */
 		hasChanges() {
 			return (
 				JSON.stringify({
@@ -270,9 +278,15 @@ export default {
 		},
 	},
 	watch: {
+		/**
+		 * listener menu de fecha de nacimiento
+		 */
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
+		/**
+		 * listener se activa si cambia la region para establecer las comunas segun eso
+		 */
 		region(newVal) {
 			if (newVal) {
 				this.comunas = this.comunasRegiones.find(
@@ -282,10 +296,13 @@ export default {
 		},
 	},
 	async mounted() {
+		// copia profunda del user
 		this.formUser = {
 			...cloneDeep(this.$auth.$state.user),
 		};
+		// obtenemos la zona
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
+		// obtenemos las comunas y regiones de chile
 		const response = await axios.get(`${this.$config.LANDING_URL}/comunas-regiones.json`);
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
@@ -296,6 +313,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Envia la actualizacion del perfil
+		 */
 		async updateProfile() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -321,6 +341,9 @@ export default {
 				this.loadingUser = false;
 			}
 		},
+		/**
+		 * utilizado por e picker de fecha
+		 */
 		save(date) {
 			this.$refs.menu.save(date);
 		},
