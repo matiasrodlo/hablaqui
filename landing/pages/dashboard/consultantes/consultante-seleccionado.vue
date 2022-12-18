@@ -183,7 +183,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-
+/**
+ * pagina de consultante seleccionado
+ */
 import {
 	mdiChatProcessingOutline,
 	mdiCalendarClockOutline,
@@ -220,9 +222,15 @@ export default {
 		...mapGetters({ clients: 'Psychologist/clients', payments: 'Psychologist/payments' }),
 	},
 	watch: {
+		/**
+		 * listener menu para el datepicker
+		 */
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
+		/**
+		 * listener de clients y si cambia seleccionar segun la query.id
+		 */
 		clients: {
 			handler(newValue) {
 				if (newValue) {
@@ -233,9 +241,13 @@ export default {
 		},
 	},
 	mounted() {
+		// inicial fetch
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * actualiza el usuario y las sesiones
+		 */
 		async onSubmit() {
 			this.loading = true;
 			await this.updateOne({
@@ -252,14 +264,23 @@ export default {
 			});
 			this.loading = false;
 		},
+		/**
+		 * obtiene listado de pagos
+		 */
 		async initFetch() {
 			this.loading = true;
 			await this.getPayments();
 			this.loading = false;
 		},
+		/**
+		 * retorna los años segun la fecha pasada
+		 */
 		getAge(date) {
 			return dayjs.tz().diff(dayjs.tz(dayjs(date)), 'years');
 		},
+		/**
+		 * utilizado por el datepicker para las fechas
+		 */
 		save(date) {
 			this.$refs.menu.save(date);
 		},

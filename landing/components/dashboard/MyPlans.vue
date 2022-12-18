@@ -107,6 +107,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * mis planes */
+
 export default {
 	data() {
 		return {
@@ -131,6 +133,9 @@ export default {
 	},
 	methods: {
 		status(item) {
+			/**
+			 * retornaun string con las clases css segun el estado del pagos
+			 */
 			if (this.itemSuccess(item)) {
 				if (item.payment === 'success') return 'success rounded-xl';
 				if (item.payment === 'pending') return 'warning rounded-xl';
@@ -138,6 +143,9 @@ export default {
 			}
 			return 'grey rounded-xl';
 		},
+		/**
+		 * establecemos la descripcion segun el titulo
+		 */
 		setDescrition(title) {
 			if (title === 'Sesiones por videollamada')
 				return 'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.';
@@ -146,14 +154,23 @@ export default {
 			if (title === 'Acompañamiento vía mensajería')
 				return 'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.';
 		},
+		/**
+		 * establecemos el subtitulo segun el titulo
+		 */
 		setSubtitle(title) {
 			if (title === 'Sesiones por videollamada') return 'Sesiones por videollamada (50 min)';
 			if (title === 'Mensajería y videollamada') return 'Mensajería + Videollamada (30min)';
 			if (title === 'Acompañamiento vía mensajería') return 'Terapia vía mensajes de texto';
 		},
+		/**
+		 * formatea la fecha con moment
+		 */
 		setDate(date) {
 			return dayjs.tz(dayjs(date)).format('l');
 		},
+		/**
+		 * los items success
+		 */
 		itemSuccess(item) {
 			return (
 				(item.payment === 'success' ||

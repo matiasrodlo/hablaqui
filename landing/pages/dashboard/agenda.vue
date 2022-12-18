@@ -759,6 +759,8 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Pagina de agenda */
+
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -855,6 +857,9 @@ export default {
 		totalSessions: 0,
 	}),
 	computed: {
+		/**
+		 * Retorna la proxima sesion
+		 */
 		nextSesion() {
 			// Obtenemos unarray solamente con las fechas de sesiones del plan
 			const dates = this.events.flatMap(session => session.date);
@@ -872,11 +877,17 @@ export default {
 			}
 			return '';
 		},
+		/**
+		 * Ancho maximo de la caja
+		 */
 		maxWidth() {
 			if (this.step === 0) return '700';
 			if (this.step === 1) return '900';
 			else return '800';
 		},
+		/**
+		 * validacion de email
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -884,22 +895,34 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
 			return errors;
 		},
+		/**
+		 * Validacion de nombre
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
 			!this.$v.form.name.required && errors.push('Se requiere nombre');
 			return errors;
 		},
+		/**
+		 * Validacion de apellido
+		 */
 		lastNameErrors() {
 			const errors = [];
 			if (!this.$v.form.lastName.$dirty) return errors;
 			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
+		/**
+		 * Validacion de la nueva sesion personalizada
+		 */
 		validatenewCustomSession() {
 			if (this.typeSession === 'compromiso privado') return false;
 			return !this.client || !this.typeSession || !this.valueSession;
 		},
+		/**
+		 * Array de sesiones filtradas
+		 */
 		sessions() {
 			const copyArray = [...this.allSessions];
 			if (this.filterTypeSession)
@@ -918,6 +941,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * listeer de clientes
+		 */
 		clients() {
 			if (this.idClient) {
 				this.idClient = null;
@@ -929,19 +955,27 @@ export default {
 					.find(item => item._id === this.$route.query.client);
 			}
 		},
+		/**
+		 * listener de sesiones
+		 */
 		sessions(newVal) {
 			if (newVal.length) this.events = this.sessions;
 		},
 	},
 	created() {
+		// resetea el formulario
 		this.resetForm();
 		this.dialogAppointment = this.$route.query.dialog ? !!this.$route.query.dialog : false;
 		this.idClient = this.$route.query.client;
 	},
 	async mounted() {
+		// Inicial fetch
 		await this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtienes los datos pricipales necesarios para la vista
+		 */
 		async initFetch() {
 			if (this.plans) {
 				this.plan = this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
@@ -973,16 +1007,25 @@ export default {
 			this.$refs.calendar?.checkChange();
 			this.overlay = false;
 		},
+		/**
+		 * Retorna string con un color del evento
+		 */
 		getEventColor(event) {
 			if (event.statusPlan === 'pending') return 'blue-grey lighten-1';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
 		},
+		/**
+		 * Retorna string para el color de texto
+		 */
 		getEventTextColor(event) {
 			//	if (event.statusPlan === 'pending') return 'error';
 			return 'white';
 		},
+		/**
+		 * Registra un nuevo usuario y obtiene la lsta de clientes actualizada
+		 */
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -993,6 +1036,9 @@ export default {
 				this.goBack();
 			}
 		},
+		/**
+		 * reinicio del formulario
+		 */
 		resetForm() {
 			this.form = {
 				name: '',
@@ -1002,11 +1048,17 @@ export default {
 				email: '',
 			};
 		},
+		/**
+		 * Regresa atras, router
+		 */
 		goBack() {
 			this.dialogNewUser = false;
 			this.resetForm();
 			this.$v.$reset();
 		},
+		/**
+		 * Reagendar evento
+		 */
 		async reschedule(item) {
 			this.loagindReschedule = true;
 			const newDate = { date: item.date, hour: item.start };
@@ -1021,28 +1073,44 @@ export default {
 			this.loagindReschedule = false;
 			this.dialog = false;
 		},
+		/**
+		 * Establecer evento
+		 */
 		setSchedule(item) {
 			this.newEvent = item;
 			this.$router.push(
 				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 		},
+		/**
+		 * Establecer nuevo plan
+		 */
 		setNewPlan(newPlan) {
 			this.newPlan = newPlan;
 			this.step = 2;
 		},
+		/**
+		 * Abrir modal
+		 */
 		openDialog(item) {
 			this.event = item;
 			this.dialog = true;
 		},
+		/**
+		 * Vista del tipo diario
+		 */
 		viewDay({ date }) {
 			this.focus = date;
 			this.type = 'day';
 		},
+		/** pasos onboarding */
 		setStepAddAppoinment() {
 			if (this.validatenewCustomSession) return alert('Debe completar los campos');
 			this.stepAddAppoinment = 1;
 		},
+		/**
+		 * Agregar nuevo appointment
+		 */
 		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
 				// Sin psicologo - sin sesiones
@@ -1063,15 +1131,23 @@ export default {
 				this.dialogAppointment = true;
 			}
 		},
+		/**
+		 * Establece el focus en el dia de hoy
+		 */
 		setToday() {
 			this.focus = dayjs.tz().format('YYYY-MM-DD');
 		},
+		/** arrow previo */
 		prev() {
 			this.$refs.calendar.prev();
 		},
+		/** arrow siguiente */
 		next() {
 			this.$refs.calendar.next();
 		},
+		/**
+		 * Mostrar evento
+		 */
 		showEvent({ nativeEvent, event }) {
 			const open = () => {
 				this.selectedEvent = event;
@@ -1090,6 +1166,9 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
+		/**
+		 * Pago success
+		 */
 		async successPayment() {
 			if (
 				this.$route.params.psyId &&
@@ -1109,15 +1188,18 @@ export default {
 				localStorage.removeItem('psi');
 			}
 		},
+		/** establece el tipo de filtro */
 		setFilter(value) {
 			if (this.filterTypeSession === value) this.filterTypeSession = '';
 			else this.filterTypeSession = value;
 		},
+		/** subtitle segun la fecha */
 		setSubtitle(date) {
 			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
 				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
+		/** cierra el modal */
 		closeDialog() {
 			if ('dialog' in this.$route.query) this.$router.replace({ query: null });
 			this.dialogAppointment = false;
@@ -1130,6 +1212,9 @@ export default {
 			this.idClient = null;
 			this.goBack();
 		},
+		/**
+		 * Nueva sesion personalizada
+		 */
 		async newCustomSession(item) {
 			if (this.validatenewCustomSession) return alert('Debe completar los campos');
 			this.loadingSession = true;
@@ -1143,6 +1228,9 @@ export default {
 			if (this.typeSession !== 'compromiso privado') this.stepAddAppoinment = 2;
 			if (this.typeSession === 'compromiso privado') this.closeDialog();
 		},
+		/**
+		 * Nueva sesion
+		 */
 		async newSession(event) {
 			this.loadingSession = true;
 			const payload = {
@@ -1164,6 +1252,9 @@ export default {
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},
+		/**
+		 * Cancelar sesion
+		 */
 		async cancelOneSession(item) {
 			this.overlay = true;
 			await this.cancelSession({
@@ -1178,6 +1269,9 @@ export default {
 				this.addAppointment({ date: null });
 			} else this.$router.push({ name: 'psicologos' });
 		},
+		/**
+		 * Establece los precios
+		 */
 		setPrice(e) {
 			if (this.verifyOnlyNumbers(e)) {
 				this.valueSession = Number(e);
@@ -1185,6 +1279,9 @@ export default {
 				this.valueSession = Number(e.split('.').join(''));
 			}
 		},
+		/**
+		 * Validacion de que sea solo numeros
+		 */
 		verifyOnlyNumbers(value) {
 			const regex = /^[0-9]*$/;
 			return regex.test(value.toString());
@@ -1205,6 +1302,9 @@ export default {
 			updateSession: 'Psychologist/updateSession',
 		}),
 	},
+	/**
+	 * Validaciones
+	 */
 	validations: {
 		form: {
 			email: {

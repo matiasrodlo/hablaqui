@@ -39,6 +39,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+/** pagina principal de pagos  */
 export default {
 	name: 'Pagos',
 	components: {
@@ -61,9 +62,13 @@ export default {
 		}),
 	},
 	mounted() {
+		// obtiene los datos iniciales
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * caragando datos iniciales para la vista
+		 */
 		async initFetch() {
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&

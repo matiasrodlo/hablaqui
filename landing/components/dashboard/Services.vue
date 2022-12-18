@@ -277,7 +277,9 @@
 <script>
 import { mdiInformationOutline, mdiAlertOutline } from '@mdi/js';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-
+/**
+ * pagina de servicios
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -311,6 +313,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * plan es free
+		 */
 		isFree() {
 			const length = this.psychologist.psyPlans.length;
 			return this.psychologist.psyPlans[length - 1].tier === 'free';
@@ -318,33 +323,53 @@ export default {
 		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {
+		// video sesiones
 		this.video = this.psychologist.sessionPrices.video;
+		// visibilidad
 		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
 	},
 	methods: {
+		/**
+		 * actualiza un psicologo
+		 */
 		async onSubmit() {
+			// loading
 			this.loading = true;
+			// actualizamos
 			const psychologist = await this.updatePsychologist(this.psychologist);
+			// establemos datos actualizads
 			this.setPsychologist(psychologist);
+			// video
 			this.video = psychologist.sessionPrices.video;
 			this.loading = false;
 		},
+		/**
+		 * establece los preciones
+		 */
 		setPrice(e) {
+			// verifica que solo sea numeros
 			if (this.verifyOnlyNumbers(e)) {
+				// videos
 				this.video = Number(e);
 			} else {
+				// videos
 				this.video = Number(e.split('.').join(''));
 			}
+			// establece el precio segun lo ingresado
 			const sessionPrices = {
 				video: Math.round(this.video),
 				text: Math.round(this.video * 0.75),
 				full: Math.round(this.video * 1.25),
 			};
+			// establece los datos actulizados al psycologo
 			this.setPsychologist({
 				...this.psychologist,
 				sessionPrices,
 			});
 		},
+		/**
+		 * verifica mendiante una regex la cadena pasada
+		 */
 		verifyOnlyNumbers(value) {
 			const regex = /^[0-9]*$/;
 			return regex.test(value.toString());

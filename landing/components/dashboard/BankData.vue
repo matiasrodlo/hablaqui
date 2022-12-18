@@ -145,6 +145,7 @@
 				</div>
 			</div>
 		</v-col>
+		<!-- email -->
 		<v-col cols="12" md="6">
 			<div class="text-h6 secondary--text mb-2">Correo Electronico</div>
 			<div class="d-flex align-center">
@@ -187,7 +188,9 @@ import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
-
+/**
+ * formulario de datos bancarios
+ */
 export default {
 	mixins: [validationMixin],
 	props: {
@@ -215,18 +218,30 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * retorna error si no llena el campo
+		 */
 		bankError() {
 			const errors = [];
 			if (!this.$v.bankData.bank.$dirty) return errors;
 			!this.$v.bankData.bank.required && errors.push('Banco es querido');
 			return errors;
 		},
+		/**
+		 * retorna error si no llena el campo
+		 */
 		accountTypeError() {
 			const errors = [];
 			if (!this.$v.bankData.accountType.$dirty) return errors;
 			!this.$v.bankData.accountType.required && errors.push('El tipo de cuenta es querido');
 			return errors;
 		},
+		/**
+		 * retorna error si no llena el campo
+		 */
+		/**
+		 * retorna error si no llena el campo
+		 */
 		accountNumberError() {
 			const errors = [];
 			if (!this.$v.bankData.accountNumber.$dirty) return errors;
@@ -234,24 +249,36 @@ export default {
 				errors.push('El numero de cuenta es querido');
 			return errors;
 		},
+		/**
+		 * retorna error si no llena el campo
+		 */
 		rutError() {
 			const errors = [];
 			if (!this.$v.bankData.rut.$dirty) return errors;
 			!this.$v.bankData.rut.required && errors.push('El rut es querido');
 			return errors;
 		},
+		/**
+		 * retorna error si no llena el campo
+		 */
 		nameError() {
 			const errors = [];
 			if (!this.$v.bankData.name.$dirty) return errors;
 			!this.$v.bankData.name.required && errors.push('El nombre es querido');
 			return errors;
 		},
+		/**
+		 * retorna error si no llena el campo
+		 */
 		emailError() {
 			const errors = [];
 			if (!this.$v.bankData.email.$dirty) return errors;
 			!this.$v.bankData.email.required && errors.push('El correo electronico es querido');
 			return errors;
 		},
+		/**
+		 * es verdadero si tiene cambios por guardar
+		 */
 		hasChanges() {
 			return (
 				JSON.stringify(this.bankData) === JSON.stringify(this.psychologist.paymentMethod)
@@ -259,19 +286,28 @@ export default {
 		},
 	},
 	async mounted() {
+		// si tiene metodos de pago el psicologo
 		if (this.psychologist.paymentMethod)
+			// guardamos una copia profunda que utilizaremos para editar estos datos
 			this.bankData = cloneDeep(this.psychologist.paymentMethod);
+		// listado de bancos
 		let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 		response = await response.json();
 		this.banks = response;
 	},
 	methods: {
+		/**
+		 * actualiza los metodo de pago
+		 */
 		async handleSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
+				// actualiza
 				const psychologist = await this.updatePaymentMethod(this.bankData);
+				// establece los datos actualizados
 				this.setPsychologist(psychologist);
+				// hace una copia profunda y la guarda en la variable
 				this.bankData = cloneDeep(psychologist.paymentMethod);
 				this.loading = false;
 			}
@@ -280,6 +316,9 @@ export default {
 			updatePaymentMethod: 'Psychologist/updatePaymentMethod',
 		}),
 	},
+	/**
+	 * validaciones
+	 */
 	validations: {
 		bankData: {
 			bank: { required },

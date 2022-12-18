@@ -15,6 +15,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Pagina de datos bancarios */
+
 export default {
 	name: 'DatosBancarios',
 	components: {
@@ -23,6 +25,9 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * Obtiene los datos iniciales necesarios
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -82,6 +87,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el valor al psicologo
+		 */
 		setPsychologist(value) {
 			this.psychologist = value;
 		},
