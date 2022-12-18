@@ -14,6 +14,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Perfil pagina de configuracion personal */
+
 export default {
 	name: 'ConfiguracionPersonal',
 	components: {
@@ -23,6 +25,9 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * obtiene los datos iniciales
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -78,6 +83,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el valor al psicologo
+		 */
 		setSpecialist(value) {
 			this.specialist = value;
 		},

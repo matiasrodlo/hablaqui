@@ -18,7 +18,9 @@
 </template>
 <script>
 import Snackbar from '@/components/Snackbar';
-
+/**
+ * layout por defecto
+ */
 export default {
 	components: {
 		Snackbar,

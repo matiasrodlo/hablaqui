@@ -76,7 +76,9 @@
 
 <script>
 import { mapActions } from 'vuex';
-
+/**
+ * muestra la informacion general del psicologo
+ */
 export default {
 	props: {
 		specialist: {
@@ -90,10 +92,14 @@ export default {
 	},
 	data() {
 		return {
+			// valida el minimo de caracteres permitido
 			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
 		};
 	},
 	methods: {
+		/**
+		 * actualiza y establece de vuelta el psicologo actualizado
+		 */
 		async onSubmite() {
 			const specialist = await this.updateSpecialist(this.specialist);
 			this.setSpecialist(specialist);

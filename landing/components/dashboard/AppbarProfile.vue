@@ -118,6 +118,9 @@
 import { mdiLogout, mdiChevronLeft, mdiFlag } from '@mdi/js';
 import { mapMutations, mapGetters } from 'vuex';
 
+/**
+ * El appbar del dashboard
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -136,6 +139,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * regresa atras segun el nombre de la ruta
+		 */
 		goBack() {
 			return (
 				this.$route.name === 'dashboard-perfil-configuracion-personal' ||
@@ -152,6 +158,9 @@ export default {
 		}),
 	},
 	methods: {
+		/**
+		 * Salir y regresar a la autenticacion
+		 */
 		async logout() {
 			await this.$auth.logout();
 			this.$router.push('/auth');

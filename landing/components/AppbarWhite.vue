@@ -356,6 +356,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * menu de navegacion, los enlaces
+		 */
 		menu() {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
@@ -449,17 +452,11 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * salir de la app
+		 */
 		async logout() {
 			await this.$auth.logout();
-		},
-		start() {
-			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else
-				this.$router.push({
-					name: 'auth',
-					params: { q: 'register' },
-					query: { from: 'spec' },
-				});
 		},
 	},
 };

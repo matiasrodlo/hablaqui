@@ -406,6 +406,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * pagina principal de consultantes */
+
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -437,6 +439,9 @@ export default {
 		form: null,
 	}),
 	computed: {
+		/**
+		 * retorna los clientes filtrados y ordenados por fecha
+		 */
 		items() {
 			return this.clients
 				.filter(item => {
@@ -445,6 +450,9 @@ export default {
 				})
 				.sort((a, b) => dayjs.tz(a.createdAt) - dayjs.tz(b.createdAt));
 		},
+		/**
+		 * validacion de error de email
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -452,12 +460,18 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un correo electrónico valido');
 			return errors;
 		},
+		/**
+		 * validacion de error de nombre
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
 			!this.$v.form.name.required && errors.push('Se requiere nombre');
 			return errors;
 		},
+		/**
+		 * validacion de error de apellido
+		 */
 		lastNameErrors() {
 			const errors = [];
 			if (!this.$v.form.lastName.$dirty) return errors;
@@ -467,14 +481,21 @@ export default {
 		...mapGetters({ clients: 'Specialist/clients', step: 'User/step' }),
 	},
 	watch: {
+		/**
+		 * listener para establecer el datepicker
+		 */
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
 	},
 	created() {
+		// limpia el formulario
 		this.resetForm();
 	},
 	methods: {
+		/**
+		 * crea un usuario y vuelve a obtener los clientes
+		 */
 		async submitUser() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -487,6 +508,9 @@ export default {
 				this.loading = false;
 			}
 		},
+		/**
+		 * resetea el formulario
+		 */
 		resetForm() {
 			this.form = {
 				name: '',
@@ -496,17 +520,29 @@ export default {
 				email: '',
 			};
 		},
+		/**
+		 * utilizado por el datepicker
+		 */
 		save(date) {
 			this.$refs.menu.save(date);
 		},
+		/**
+		 * cierra el modal
+		 */
 		closeDialog() {
 			this.dialog = false;
 			this.resetForm();
 			this.$v.$reset();
 		},
+		/**
+		 * establece los años trancurridos segun la fecha pasada
+		 */
 		getAge(date) {
 			return dayjs.tz().diff(dayjs.tz(dayjs(date)), 'years');
 		},
+		/**
+		 * cambia el estado del onboarding a true es decir realizado
+		 */
 		async changeStateOnboarding() {
 			await this.updateOne({
 				_id: this.$auth.$state.user._id,

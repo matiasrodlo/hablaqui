@@ -13,6 +13,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Inforacion general */
+
 export default {
 	name: 'InformacionGeneral',
 	components: {
@@ -21,6 +23,9 @@ export default {
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * obtiene los datos iniciales
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -76,6 +81,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el valor en variable
+		 */
 		setSpecialist(value) {
 			this.specialist = value;
 		},

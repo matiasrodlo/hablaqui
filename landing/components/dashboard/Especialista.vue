@@ -117,6 +117,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
+/**
+ * componente de psicologo
+ */
 export default {
 	props: {
 		specialist: {
@@ -144,15 +147,24 @@ export default {
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	methods: {
+		/**
+		 * retorna string url, miniatura si la tiene o full size
+		 */
 		avatar(specialist, thumbnail) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
 			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
+		/**
+		 * Se ejecuta para cambiar de especialista, le muestra un mesaje de alerta
+		 */
 		changeSpecialist() {
 			return alert('Por favor, escribanos a nuestro WhatsApp: +569 7132 6467');
 		},
+		/**
+		 * redirige al review
+		 */
 		goToReview() {
 			return this.$router.push(`/review?specialist=${this.specialist._id}`);
 		},
