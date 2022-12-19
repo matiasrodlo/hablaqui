@@ -286,7 +286,7 @@ const cronService = {
 				);
 				email.create({
 					userRef: user._id,
-					psychologistRef: psy._id,
+					psyRef: psy._id,
 					type: 'chat-psy-1-hour',
 					batch: null,
 					wasScheduled: false,
