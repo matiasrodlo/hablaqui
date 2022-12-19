@@ -240,7 +240,7 @@ const mailService = {
 				start_week: period.start,
 				end_week: period.end,
 				price: price,
-				sessionsNumber: sessionsNumber,
+				sessions_number: sessionsNumber,
 			},
 		};
 		await sendMails(dataPayload);
