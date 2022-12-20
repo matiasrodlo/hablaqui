@@ -72,33 +72,14 @@
 								</div>
 								<label for="upload">
 									<div
-										class="
-											elevation-1
-											pointer
-											rounded
-											cyan
-											body-1
-											white--text
-											text-center
-											d-inline-block
-										"
+										class="elevation-1 pointer rounded cyan body-1 white--text text-center d-inline-block"
 										style="width: 200px"
 									>
 										{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
 									</div>
 								</label>
 								<div
-									class="
-										d-inline-block
-										elevation-1
-										pointer
-										success
-										rounded
-										body-1
-										white--text
-										text-center
-										ml-2
-									"
+									class="d-inline-block elevation-1 pointer success rounded body-1 white--text text-center ml-2"
 									style="width: 200px"
 									@click="approveAvatar(selected._id)"
 								>
@@ -756,6 +737,9 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
+/**
+ * Panel del superusuario
+ */
 export default {
 	name: 'Panel',
 	components: {
@@ -801,6 +785,9 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtiene los datos iniciales
+		 */
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getPsychologist();
@@ -815,6 +802,9 @@ export default {
 			await this.getAppointments();
 			this.loading = false;
 		},
+		/**
+		 * Obtiene los postulados y los retorna ordenados
+		 */
 		async getRecruitments() {
 			const { recruitment } = await this.$axios.$get(`/recruitment`);
 			this.items = recruitment.sort((a, b) => {
@@ -830,6 +820,9 @@ export default {
 				return 0;
 			});
 		},
+		/**
+		 * obtiene los psicologos ordenamos
+		 */
 		async getPsychologist() {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			this.psychologists = psychologists.sort((a, b) => {
@@ -867,6 +860,9 @@ export default {
 				return psy;
 			});
 		},
+		/**
+		 * Aprueba un postulado
+		 */
 		async approve() {
 			await this.checkusername();
 			if (!this.available) {
@@ -887,6 +883,9 @@ export default {
 			this.loadingApprove = false;
 			this.dialog = false;
 		},
+		/**
+		 * Actualiza un psicologo
+		 */
 		async submit() {
 			this.loadingSubmit = true;
 			if (this.selected.isPsy) {
@@ -908,6 +907,9 @@ export default {
 			}
 			this.loadingSubmit = false;
 		},
+		/**
+		 * Elimina un psicologo
+		 */
 		async deletePsy() {
 			if (confirm('Estas seguro de eliminar?')) {
 				this.loadingDelete = true;
@@ -916,16 +918,26 @@ export default {
 				this.dialog = false;
 			}
 		},
+		/**
+		 * Valida el username(se utiliza para las url es importante)
+		 */
 		async checkusername() {
 			this.available = await this.checkUsername(this.selected.username);
 		},
 		async setSelected(item, isPsy) {
+			/** * establece un user como seleccionado */
 			this.selected = { ...item, isPsy };
 			this.dialog = true;
 		},
+		/**
+		 * agrega nueva experiencia
+		 */
 		newExperience() {
 			this.selected.experience.push({ title: '', place: '', start: '', end: '' });
 		},
+		/**
+		 * Agregar una nueva formacion
+		 */
 		newFormation() {
 			this.selected.formation.push({
 				formationType: '',
@@ -934,6 +946,9 @@ export default {
 				end: '',
 			});
 		},
+		/**
+		 * Sube el avatar
+		 */
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const { psychologist } = await this.upateAvatar(this.setAvatarObject(file));
@@ -950,6 +965,9 @@ export default {
 			);
 			this.loadingAvatar = false;
 		},
+		/**
+		 * Aprueba el avatar
+		 */
 		async approveAvatar(id) {
 			this.loadingApproveAvatar = true;
 			const psychologist = await this.putApproveAvatar(id);
@@ -964,6 +982,9 @@ export default {
 			);
 			this.loadingApproveAvatar = false;
 		},
+		/**
+		 * Establece el formdata del avatar antes de subirlo
+		 */
 		setAvatarObject(file) {
 			const avatar = new FormData();
 			avatar.append('avatar', file);

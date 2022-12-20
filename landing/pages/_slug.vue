@@ -35,7 +35,9 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
-
+/**
+ * Pagina del perfil de psicologo(mobile y desktop)
+ */
 export default {
 	components: {
 		Footer: () => import('~/components/Footer'),
@@ -149,6 +151,7 @@ export default {
 		};
 	},
 	async mounted() {
+		// hack para obtener los datos actualizados del psicologo siempre
 		if (!this.dataCurrent) {
 			const { psychologist } = await this.$axios.$get(
 				`/psychologists/one/${this.$route.params.slug}`
@@ -156,10 +159,12 @@ export default {
 			this.psychologist = psychologist;
 		}
 		this.loadingCalendar = true;
+		// obtiene las sesiones ya formateadas
 		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
 		this.loadingCalendar = false;
 		if (this.$route.query.chat) {
 			this.loadingChat = true;
+			// envia intencion de chat al psy
 			await this.startConversation(this.psychologist._id);
 			this.loadingChat = false;
 			this.setFloatingChat(true);
@@ -167,6 +172,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el psicologo
+		 */
 		setPsychologist(value) {
 			this.psychologist = value;
 		},

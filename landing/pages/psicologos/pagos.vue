@@ -31,6 +31,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Pagina principal de pagos */
+
 export default {
 	components: {
 		Appbar: () => import('~/components/AppbarWhite'),
@@ -99,6 +101,7 @@ export default {
 		};
 	},
 	created() {
+		// si tiene sessiones bolean
 		this.hasSessions =
 			this.plan &&
 			this.plan.payment === 'success' &&
@@ -110,11 +113,15 @@ export default {
 		this.plan =
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		window.scrollTo(0, 0);
+		// si tiene sesiones
 		if (this.hasSessions) {
 			await this.newSession();
 		}
 	},
 	methods: {
+		/**
+		 * Agrega uana nueva sesion y obtiene refetch del user
+		 */
 		async newSession() {
 			this.loadingSession = true;
 			const payload = {

@@ -26,7 +26,12 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
+							class="
+								py-1
+								text-center text-h6 text-lg-h4
+								font-weight-bold
+								text--secondary
+							"
 						>
 						</v-col>
 						<v-col
@@ -156,7 +161,9 @@
 
 <script>
 import { mdiRecord } from '@mdi/js';
-
+/**
+ * Pagina de autenticación
+ */
 export default {
 	components: {
 		SignIn: () => import('~/components/auth/SignIn'),
@@ -224,20 +231,31 @@ export default {
 		};
 	},
 	created() {
+		// si esta logeado redirige atras
 		if (this.$auth.loggedIn) {
 			this.$router.go(1);
 		}
+		// los step sigifican que es login o registro
 		if (this.$route.params.q) this.step = 2;
 		if (this.$route.query.register) this.step = 2;
 	},
 	methods: {
+		/**
+		 * Establecels step login, register
+		 */
 		setStep() {
 			if (this.step === 1) this.step = 2;
 			else this.step = 1;
 		},
+		/**
+		 * carouel img next
+		 */
 		next() {
 			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
 		},
+		/**
+		 * carouel img prev
+		 */
 		prev() {
 			this.carousel = this.carousel - 1 < 0 ? this.length - 1 : this.carousel - 1;
 		},

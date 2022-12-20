@@ -39,7 +39,9 @@ import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
 import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
-
+/**
+ * Pagina inicial de psicologos
+ */
 export default {
 	components: {
 		Footer,
@@ -47,6 +49,9 @@ export default {
 		PsicologosDesktop,
 		PsicologosMobile,
 	},
+	/**
+	 * Obtiene los psicologos
+	 */
 	async asyncData({ error, store }) {
 		try {
 			await store.dispatch('Psychologist/getPsychologists');
@@ -100,9 +105,15 @@ export default {
 		this.initialFetch();
 	},
 	methods: {
+		/**
+		 * obtiene los datos iniciales
+		 */
 		async initialFetch() {
 			await this.getAppointments();
 		},
+		/**
+		 * Obtiene la sessiones segun los ids pasados
+		 */
 		getSessions(ids) {
 			this.getSessionsLimit(ids);
 		},

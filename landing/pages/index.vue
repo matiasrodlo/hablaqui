@@ -130,7 +130,11 @@
 				<v-col
 					cols="12"
 					tag="section"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
+					class="
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						my-10
+					"
 				>
 					<v-btn
 						id="psi-quiero-comenzar-index"
@@ -228,12 +232,26 @@
 												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
 											>
 												<h4
-													class="body-1 white--text pt-1 pl-4 font-weight-regular white--text"
+													class="
+														body-1
+														white--text
+														pt-1
+														pl-4
+														font-weight-regular
+														white--text
+													"
 												>
 													{{ item.title }}
 												</h4>
 												<h2
-													class="body-2 pl-4 pt-3 pb-2 font-weight-bold white--text"
+													class="
+														body-2
+														pl-4
+														pt-3
+														pb-2
+														font-weight-bold
+														white--text
+													"
 												>
 													{{ item.name }}
 												</h2>
@@ -334,7 +352,11 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mb-10"
+					class="
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						mb-10
+					"
 				>
 					<v-btn
 						id="comenzar-3"
@@ -540,7 +562,13 @@
 				<v-col
 					tag="h2"
 					cols="12"
-					class="mt-10 mb-5 text-center text-h5 text-md-h4 font-weight-bold text--secondary"
+					class="
+						mt-10
+						mb-5
+						text-center text-h5 text-md-h4
+						font-weight-bold
+						text--secondary
+					"
 				>
 					Descarga nuestra aplicación
 				</v-col>
@@ -587,7 +615,11 @@
 			<v-row tag="section">
 				<v-col
 					tag="h2"
-					class="my-10 text-center text-md-left text-h4 text-md-h3 text--secondary font-weight-bold"
+					class="
+						my-10
+						text-center text-md-left text-h4 text-md-h3 text--secondary
+						font-weight-bold
+					"
 				>
 					Preguntas frecuentes
 				</v-col>
@@ -606,7 +638,12 @@
 				<v-col
 					tag="section"
 					cols="12"
-					class="hidden-sm-and-down text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold mt-16"
+					class="
+						hidden-sm-and-down
+						text-center text-h5 text-sm-h4 text-md-h3 text--secondary
+						font-weight-bold
+						mt-16
+					"
 				>
 					<v-btn
 						id="comenzar-4"
@@ -622,7 +659,14 @@
 				</v-col>
 				<v-col
 					cols="12"
-					class="hidden-sm-and-down text-center body-1 font-weight-bold mt-6 text--secondary"
+					class="
+						hidden-sm-and-down
+						text-center
+						body-1
+						font-weight-bold
+						mt-6
+						text--secondary
+					"
 				>
 					Comienza tu viaje de autoconocimiento y desarrollo personal ahora mismo
 				</v-col>
@@ -635,7 +679,9 @@
 
 <script>
 import { mdiCheck } from '@mdi/js';
-
+/**
+ * Home, no se utiliza
+ */
 export default {
 	components: {
 		Appbar: () => import('@/components/AppbarWhite'),

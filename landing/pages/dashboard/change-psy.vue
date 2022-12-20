@@ -40,7 +40,6 @@
 							selectedPsy.name + ' ' + selectedPsy.lastName
 						}}</span>
 					</div>
-
 					<div class="pa-5">
 						Consultante:
 						<span v-if="selectedClient">{{
@@ -73,8 +72,11 @@
 <script>
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+/**
+ * Cambio de psicologo
+ */
 export default {
-	name: 'Cambio',
+	name: 'ChangePsy',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
@@ -99,12 +101,21 @@ export default {
 		};
 	},
 	mounted() {
+		/**
+		 * inicial fetch datas
+		 */
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtenemos los datos iniciales
+		 */
 		async initFetch() {
 			await this.getPsychologist();
 		},
+		/**
+		 * Obtenermos los psicologos todos
+		 */
 		async getPsychologist() {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			this.psychologists = psychologists.sort((a, b) => {
@@ -120,17 +131,29 @@ export default {
 				return 0;
 			});
 		},
+		/**
+		 * Obtenemos los clientes del psicologo seleccionado
+		 */
 		async getClients(row) {
 			this.selectedPsy = row;
 			const { users } = await this.$axios.$get(`/psychologist/clients/${row._id}`);
 			this.clients = users;
 		},
+		/**
+		 * Cliente seleccionado
+		 */
 		selectClient(row) {
 			this.selectedClient = row;
 		},
+		/**
+		 * psi seleccionado
+		 */
 		selectNewPsy(row) {
 			this.selectedNewPsy = row;
 		},
+		/**
+		 * Actualizar psy in user
+		 */
 		async change() {
 			try {
 				this.loadingChange = true;

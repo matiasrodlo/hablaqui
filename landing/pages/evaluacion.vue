@@ -709,7 +709,11 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="ma-1 caption text-capitalize"
+																			class="
+																				ma-1
+																				caption
+																				text-capitalize
+																			"
 																		>
 																			{{ tag }};
 																		</span>
@@ -761,7 +765,10 @@
 																		<span :key="k">
 																			<span
 																				v-if="k < 5"
-																				class="ma-1 text-capitalize"
+																				class="
+																					ma-1
+																					text-capitalize
+																				"
 																			>
 																				{{ tag }},
 																			</span>
@@ -828,6 +835,8 @@ import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
 
+/** * Evaluacion - MatchMaking */
+
 export default {
 	name: 'Evaluation',
 	components: {
@@ -876,6 +885,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Psiclogos a mostrar en el carousel inferior
+		 */
 		psi() {
 			if (!this.psychologists) return [];
 			const items = this.random();
@@ -893,6 +905,7 @@ export default {
 		},
 	},
 	created() {
+		// solo se ejecuta en el navegador
 		if (process.browser) {
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			if (psi && psi.match.length) {
@@ -913,20 +926,21 @@ export default {
 		}
 	},
 	mounted() {
+		// obetenrmos las sesiones formateadas
 		this.getFormattedSessionsAll();
 	},
 	methods: {
-		next() {
-			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
-		},
-		prev() {
-			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
-		},
+		/**
+		 * Crea un array random de psicologos a mostrar
+		 */
 		random() {
 			return this.psychologists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			});
 		},
+		/**
+		 * Reset el matchMaking y localstorage
+		 */
 		resetMatch() {
 			localStorage.removeItem('psi');
 			this.gender = '';
@@ -940,6 +954,9 @@ export default {
 			this.price = 0;
 			this.step = '0';
 		},
+		/**
+		 * Establece el theme o especialidad
+		 */
 		setTheme(value) {
 			if (this.themes.includes(value)) {
 				const index = this.themes.findIndex(item => item === value);
@@ -947,6 +964,9 @@ export default {
 			} else if (this.themes.length < 3) this.themes.push(value);
 			if (this.themes.length === 3) this.step = 4;
 		},
+		/**
+		 * establece los modelos terapeuticos
+		 */
 		setModels(model) {
 			if (this.models.includes(model)) {
 				const index = this.models.findIndex(item => item === model);
@@ -954,6 +974,9 @@ export default {
 			} else if (this.models.length < 3) this.models.push(model);
 			if (this.models.length === 3) this.step = 6;
 		},
+		/**
+		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
+		 */
 		openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
@@ -979,6 +1002,9 @@ export default {
 				}
 			});
 		},
+		/**
+		 * Retorna string con url del avatar
+		 */
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
 			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;

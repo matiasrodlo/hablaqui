@@ -51,7 +51,9 @@
 import axios from 'axios';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import { mapMutations } from 'vuex';
-
+/**
+ * Verificacion de email
+ */
 export default {
 	name: 'VerificationEmail',
 	layout: 'simple',
@@ -62,6 +64,9 @@ export default {
 		};
 	},
 	methods: {
+		/**
+		 * Envia la peticion de verificacion de email
+		 */
 		async onSubmit() {
 			try {
 				this.loading = true;
@@ -81,6 +86,9 @@ export default {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 			}
 		},
+		/**
+		 * Cerrar sesion
+		 */
 		logout() {
 			this.$auth.logout();
 			this.dialog = true;
