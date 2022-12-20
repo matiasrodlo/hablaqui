@@ -356,6 +356,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Chat dashboard */
+
 export default {
 	components: {
 		avatar: () => import('~/components/Avatar'),
@@ -377,6 +379,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Nuevo array de especialistas
+		 */
 		specialists() {
 			return this.allSpecialists.map(item => ({
 				...item,
@@ -386,6 +391,9 @@ export default {
 				),
 			}));
 		},
+		/**
+		 * String subheader
+		 */
 		subHeader() {
 			if (this.selected.assistant) return 'Asistente virtual';
 			if (
@@ -412,6 +420,9 @@ export default {
 				? 'Especialista de hablaquí'
 				: 'No es un consultane';
 		},
+		/**
+		 * Lista de clientes
+		 */
 		listClients() {
 			return this.clients
 				.filter(item => item.name.toLowerCase().includes(this.search.toLowerCase()))
@@ -476,6 +487,9 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
+		/**
+		 * Obtiene mi especialista
+		 */
 		getMySpec() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
 				const spec = this.plan.specialist;
@@ -498,6 +512,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * listener si selecciono alguien para chatear
+		 */
 		selected(newValue) {
 			if (newValue && newValue._id) {
 				this.dialog = true;
@@ -505,12 +522,14 @@ export default {
 		},
 	},
 	created() {
+		// user default seleccionado Habi
 		this.selected = {
 			name: 'Habi',
 			assistant: true,
 			avatar: 'https://cdn.discordapp.com/attachments/829825912044388413/857366096428138566/hablaqui-asistente-virtual-habi.jpg',
 			url: '',
 		};
+		// start websokets conections
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
 		});
@@ -527,9 +546,13 @@ export default {
 		});
 	},
 	async mounted() {
+		// init fetch
 		await this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtiene los datos inicales
+		 */
 		async initFetch() {
 			this.plan =
 				this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
@@ -566,6 +589,9 @@ export default {
 			}
 			this.initLoading = false;
 		},
+		/**
+		 * Callback llamado por la conecion websokets
+		 */
 		async socketioCallback(data) {
 			if (this.selected._id === data.specialistId || this.selected._id === data.userId) {
 				await this.getChat({ spec: data.specialistId, user: data.userId });
@@ -579,6 +605,9 @@ export default {
 			}
 			await this.getMessages();
 		},
+		/**
+		 * Establece un user como seleccionado
+		 */
 		async setSelectedUser(user) {
 			this.loadingChat = true;
 			this.selected = {
@@ -601,6 +630,9 @@ export default {
 				await this.getMessages();
 			}
 		},
+		/**
+		 * establece un especialista como seleccionado
+		 */
 		async setSelectedSpec(spec) {
 			if (this.selected && this.selected._id === spec._id) return;
 			// iniciamos carga del seleccionado
@@ -624,6 +656,9 @@ export default {
 				await this.getMessages();
 			}
 		},
+		/**
+		 * Retorna un boleano si tiene mensajes
+		 */
 		hasMessage(spec) {
 			const temp = {
 				...this.chats.find(item => item.specialist && item.specialist._id === spec._id),
@@ -636,6 +671,9 @@ export default {
 				if (hasMessage) return temp._id;
 			}
 		},
+		/**
+		 * Retorna un boleano si tiene mensajes
+		 */
 		hasMessageUser(user) {
 			const temp = {
 				...this.chats.find(item => item.user && item.user._id === user._id),
@@ -648,9 +686,15 @@ export default {
 				if (hasMessage) return temp._id;
 			}
 		},
+		/**
+		 * Retorna un especialista segun el id
+		 */
 		getSpec(id) {
 			return this.specialists.find(item => item._id === id);
 		},
+		/**
+		 * retorna el numero de mensajes no leidos
+		 */
 		setCountMessagesUnread(item) {
 			let count = 0;
 			if (!item || !item.messages) return count;

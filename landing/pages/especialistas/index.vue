@@ -39,7 +39,9 @@ import EspecialistasDesktop from '~/components/especialistas/EspecialistasDeskto
 import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
-
+/**
+ * Pagina inicial de psicologos
+ */
 export default {
 	components: {
 		Footer,
@@ -47,6 +49,9 @@ export default {
 		EspecialistasDesktop,
 		EspecialistasMobile,
 	},
+	/**
+	 * Obtiene los psicologos
+	 */
 	async asyncData({ error, store }) {
 		try {
 			await store.dispatch('Specialist/getSpecialists');
@@ -100,9 +105,15 @@ export default {
 		this.initialFetch();
 	},
 	methods: {
+		/**
+		 * obtiene los datos iniciales
+		 */
 		async initialFetch() {
 			await this.getAppointments();
 		},
+		/**
+		 * Obtiene la sessiones segun los ids pasados
+		 */
 		getSessions(ids) {
 			this.getSessionsLimit(ids);
 		},

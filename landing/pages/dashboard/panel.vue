@@ -740,6 +740,9 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
+/**
+ * Panel del superusuario
+ */
 export default {
 	name: 'Panel',
 	components: {
@@ -785,6 +788,9 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtiene los datos iniciales
+		 */
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getSpecialist();
@@ -799,6 +805,9 @@ export default {
 			await this.getAppointments();
 			this.loading = false;
 		},
+		/**
+		 * Obtiene los postulados y los retorna ordenados
+		 */
 		async getRecruitments() {
 			const { recruitment } = await this.$axios.$get(`/recruitment`);
 			this.items = recruitment.sort((a, b) => {
@@ -814,6 +823,9 @@ export default {
 				return 0;
 			});
 		},
+		/**
+		 * obtiene los especialistas ordenamos
+		 */
 		async getSpecialist() {
 			const { specialists } = await this.$axios.$get('/specialists/all');
 			this.specialists = specialists.sort((a, b) => {
@@ -851,6 +863,9 @@ export default {
 				return spec;
 			});
 		},
+		/**
+		 * Aprueba un postulado
+		 */
 		async approve() {
 			await this.checkusername();
 			if (!this.available) {
@@ -871,6 +886,9 @@ export default {
 			this.loadingApprove = false;
 			this.dialog = false;
 		},
+		/**
+		 * Actualiza un psicologo
+		 */
 		async submit() {
 			this.loadingSubmit = true;
 			if (this.selected.isSpec) {
@@ -892,6 +910,9 @@ export default {
 			}
 			this.loadingSubmit = false;
 		},
+		/**
+		 * Elimina un especialista
+		 */
 		async deleteSpec() {
 			if (confirm('Estas seguro de eliminar?')) {
 				this.loadingDelete = true;
@@ -900,16 +921,26 @@ export default {
 				this.dialog = false;
 			}
 		},
+		/**
+		 * Valida el username(se utiliza para las url es importante)
+		 */
 		async checkusername() {
 			this.available = await this.checkUsername(this.selected.username);
 		},
 		async setSelected(item, isSpec) {
+			/** * establece un user como seleccionado */
 			this.selected = { ...item, isSpec };
 			this.dialog = true;
 		},
+		/**
+		 * agrega nueva experiencia
+		 */
 		newExperience() {
 			this.selected.experience.push({ title: '', place: '', start: '', end: '' });
 		},
+		/**
+		 * Agregar una nueva formacion
+		 */
 		newFormation() {
 			this.selected.formation.push({
 				formationType: '',
@@ -918,6 +949,9 @@ export default {
 				end: '',
 			});
 		},
+		/**
+		 * Sube el avatar
+		 */
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
 			const { specialist } = await this.upateAvatar(this.setAvatarObject(file));
@@ -934,6 +968,9 @@ export default {
 			);
 			this.loadingAvatar = false;
 		},
+		/**
+		 * Aprueba el avatar
+		 */
 		async approveAvatar(id) {
 			this.loadingApproveAvatar = true;
 			const specialist = await this.putApproveAvatar(id);
@@ -948,6 +985,9 @@ export default {
 			);
 			this.loadingApproveAvatar = false;
 		},
+		/**
+		 * Establece el formdata del avatar antes de subirlo
+		 */
 		setAvatarObject(file) {
 			const avatar = new FormData();
 			avatar.append('avatar', file);
