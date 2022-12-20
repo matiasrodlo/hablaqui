@@ -12,6 +12,9 @@
 </template>
 
 <script>
+/**
+ * Pagina listado de planes
+ */
 export default {
 	components: {
 		Appbar: () => import('~/components/AppbarWhite'),

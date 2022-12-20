@@ -88,7 +88,9 @@ import moment from 'moment';
 import { isEmpty } from 'lodash';
 
 moment.tz.setDefault('America/Santiago');
-
+/**
+ * pagina de reagendar sesion
+ */
 export default {
 	name: 'Panel',
 	components: {
@@ -123,10 +125,16 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtiene los datos iniciales
+		 */
 		async initFetch() {
 			await this.getPsychologist();
 			this.loading = false;
 		},
+		/**
+		 * mapea y ordena los psicologos
+		 */
 		async getPsychologist() {
 			const { psychologists } = await this.$axios.$get('/psychologists/all');
 			this.psychologists = psychologists.sort((a, b) => {
@@ -164,11 +172,17 @@ export default {
 				return psy;
 			});
 		},
+		/**
+		 * Obtiene los clientes
+		 */
 		async getClients(id) {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
 			this.clients = users;
 			console.log(this.clients);
 		},
+		/**
+		 * Obtiene la sesiones del cliente pasado
+		 */
 		getSession(client) {
 			this.dialog = true;
 			this.selectedClient = client;
@@ -176,10 +190,16 @@ export default {
 			this.selectedPlan = plan;
 			this.sessions = plan ? plan.session : [];
 		},
+		/**
+		 * Selecciona un fila en la tabla sesiones
+		 */
 		clickSession(value) {
 			this.selectedSession = value;
 			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDTHH:mm');
 		},
+		/**
+		 * Envia la Reagenda del evento
+		 */
 		async clicked() {
 			const res = await this.$axios.$post('/dashboard/session/reschedule', {
 				sessionsId: this.selectedClient.sessionsId,

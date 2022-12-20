@@ -165,7 +165,9 @@ import { mapMutations } from 'vuex';
 import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
 import axios from 'axios';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
-
+/**
+ * pagina reseteo de contraseña
+ */
 export default {
 	name: 'PasswordRecovery',
 	mixins: [validationMixin],
@@ -211,6 +213,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * validacion de errores en el pass
+		 */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.formData.newPassword.$dirty) return errors;
@@ -219,6 +224,9 @@ export default {
 			!this.$v.formData.newPassword.minLength && errors.push('Minimo 5 caracteres');
 			return errors;
 		},
+		/**
+		 * validacion de errores en el pass
+		 */
 		repetPasswordErrors() {
 			const errors = [];
 			if (!this.$v.formData.repeatedPassword.$dirty) return errors;
@@ -237,6 +245,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Envia el cambio de contraseña
+		 */
 		async onSubmit() {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
@@ -258,15 +269,15 @@ export default {
 				}
 			}
 		},
-		next() {
-			this.carousel = this.carousel + 1 === this.length ? 0 : this.carousel + 1;
-		},
-		prev() {
-			this.carousel = this.carousel - 1 < 0 ? this.length - 1 : this.carousel - 1;
-		},
+		/**
+		 * remueve la query de la ruta
+		 */
 		deleteQueryFromRoute() {
 			this.$router.replace({ query: null });
 		},
+		/**
+		 * Cerrar sesion
+		 */
 		async logout() {
 			await this.$auth.logout();
 			this.dialog = true;
@@ -279,6 +290,9 @@ export default {
 			snackBar: 'Snackbar/showMessage',
 		}),
 	},
+	/**
+	 * Validaciones
+	 */
 	validations: {
 		formData: {
 			newPassword: {

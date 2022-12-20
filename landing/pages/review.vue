@@ -281,7 +281,9 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-
+/**
+ * Pagina de review
+ */
 export default {
 	name: 'ReviewPsychologist',
 	components: {
@@ -309,6 +311,7 @@ export default {
 		};
 	},
 	created() {
+		// obtenemos el psicologo desde la query url
 		if (this.$route.query.psychologist) {
 			this.idPsychologist = this.$route.query.psychologist;
 			this.token = this.$route.query.token;
@@ -316,25 +319,32 @@ export default {
 		}
 	},
 	async mounted() {
+		// si no hay id psicologo
 		if (!this.idPsychologist) {
 			this.overlay = false;
 			return this.$router.push('/');
 		}
-
+		// establece el token proveniente de la url si existe
 		if (this.token) {
 			await this.$auth.setUserToken(this.token);
 		}
-
+		// finalmente se obtiene el psicologo
 		this.psychologist = await this.getPsychologist(this.idPsychologist);
 		this.overlay = false;
 	},
 	methods: {
+		/**
+		 * Retorna string con url del avatar
+		 */
 		avatar(psychologist, thumbnail) {
 			if (!psychologist.approveAvatar) return '';
 			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
 			if (psychologist.avatar) return psychologist.avatar;
 			return '';
 		},
+		/**
+		 * Registra el cambio en el rating del psicologo
+		 */
 		async onSubmit() {
 			this.loading = true;
 			await this.ratingPsychologist({
