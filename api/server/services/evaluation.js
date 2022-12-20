@@ -53,7 +53,7 @@ const getRating = async psychologist => {
 };
 
 const getEvaluationsPsy = async user => {
-	if (user.role !== 'psychologist')
+	if (user.role !== 'specialist')
 		return conflictResponse('No eres psicólogo');
 
 	// Verifica que el psicologo tenga evaluaciones, si tiene las obtiene y las devuelve

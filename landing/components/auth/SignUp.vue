@@ -210,13 +210,13 @@ export default {
 							return this.$router.push({ name: 'evaluacion' });
 						}
 						if (
-							response.data.user.role === 'psychologist' &&
+							response.data.user.role === 'specialist' &&
 							this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
 						if (
-							response.data.user.role === 'psychologist' &&
+							response.data.user.role === 'specialist' &&
 							!this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'postulacion' });

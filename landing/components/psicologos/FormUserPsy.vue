@@ -118,7 +118,7 @@ export default {
 				rut: '',
 				email: '',
 				password: '',
-				role: 'psychologist',
+				role: 'specialist',
 			},
 			recruitmentForm: {
 				avgPatients: '',

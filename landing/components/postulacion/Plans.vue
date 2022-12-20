@@ -238,7 +238,7 @@ export default {
 	},
 	computed: {
 		currentPlan() {
-			if (this.$auth.$state.user.role !== 'psychologist') return false;
+			if (this.$auth.$state.user.role !== 'specialist') return false;
 			if (!this.psychologist && !this.recruited) return false;
 			if (
 				this.psychologist &&

@@ -76,7 +76,7 @@
 				</v-list-item-content>
 				<client-only>
 					<v-list-item-action
-						v-if="canCopy && psychologist && $auth.user.role === 'psychologist'"
+						v-if="canCopy && psychologist && $auth.user.role === 'specialist'"
 					>
 						<div class="d-flex align-center">
 							<v-text-field
@@ -152,7 +152,7 @@
 					<v-tab-item :transition="false">
 						<my-plans v-if="tabs === 1 && $auth.$state.user.role === 'user'" />
 						<horario
-							v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'"
+							v-if="tabs === 1 && $auth.$state.user.role === 'specialist'"
 							:psychologist="psychologist"
 							:set-psychologist="setPsychologist"
 						/>
@@ -164,7 +164,7 @@
 							:set-psychologist="setPsychologist"
 						/>
 						<services
-							v-if="tabs === 2 && $auth.$state.user.role === 'psychologist'"
+							v-if="tabs === 2 && $auth.$state.user.role === 'specialist'"
 							:psychologist="psychologist"
 							:set-psychologist="setPsychologist"
 						/>
@@ -176,7 +176,7 @@
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Configuración</div>
 								<div
-									v-if="$auth.$state.user.role === 'psychologist'"
+									v-if="$auth.$state.user.role === 'specialist'"
 									class="text--secondary"
 								>
 									Datos bancarios, información profesional, etc
@@ -213,7 +213,7 @@
 							/>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
-					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+					<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 						<v-expansion-panel-header>
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Horarios</div>
@@ -229,7 +229,7 @@
 							/>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
-					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+					<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 						<v-expansion-panel-header>
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Servicios</div>
@@ -315,7 +315,7 @@ export default {
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
-			if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist)
+			if (this.$auth.user.role === 'specialist' && this.$auth.user.psychologist)
 				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
 		setAvatarObject(file) {

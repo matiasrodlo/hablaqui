@@ -342,7 +342,7 @@ export default {
 	computed: {
 		menu() {
 			const visible =
-				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
@@ -352,7 +352,7 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/info.png',
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.user.role === 'psychologist' &&
+						this.$auth.user.role === 'specialist' &&
 						!this.$auth.user.psychologist,
 				},
 				{
@@ -375,8 +375,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/pay.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 				},
 				{
 					name: 'Consultantes',
@@ -384,8 +383,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 				},
 				{
 					name: 'Cuenta',
@@ -393,7 +391,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible:
-						(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+						(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 						(this.$auth.$state.loggedIn && this.$auth.user.role === 'user'),
 				},
 				{

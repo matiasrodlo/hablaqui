@@ -260,7 +260,7 @@ export const setSession = (role, sessions) => {
 		let idUser = item.user && item.user._id ? item.user._id : item._id;
 
 		// Establece nombre de quien pertenece cada sesion
-		if (role === 'psychologist') {
+		if (role === 'specialist') {
 			if (item.user && item.user._id) {
 				name = item.user.name;
 				lastName = item.user.lastName ? item.user.lastName : '';

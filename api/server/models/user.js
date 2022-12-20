@@ -71,7 +71,7 @@ let userSchema = new Schema(
 		role: {
 			type: String,
 			default: 'user',
-			enum: ['user', 'psychologist', 'superuser'],
+			enum: ['user', 'specialist', 'superuser'],
 		},
 		gender: {
 			type: String,

@@ -38,7 +38,7 @@
 				>
 					<!-- <span
 						v-if="
-							$auth.$state.user.role === 'psychologist' &&
+							$auth.$state.user.role === 'specialist' &&
 							$auth.$state.user.psychologist
 						"
 						class="pointer"

@@ -46,7 +46,7 @@ const getSessions = async (userLogged, idUser) => {
 			user: idUser,
 		}).populate('psychologist user');
 	}
-	if (userLogged.role === 'psychologist') {
+	if (userLogged.role === 'specialist') {
 		sessions = await Sessions.find({
 			psychologist: idUser,
 		}).populate('psychologist user');
@@ -577,7 +577,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 const customNewSession = async (user, payload) => {
 	try {
 		// Validamos que sea psicologo
-		if (user.role !== 'psychologist')
+		if (user.role !== 'specialist')
 			return conflictResponse('No eres psicologo');
 		let sessions = [];
 		let hours = 1;
@@ -1041,8 +1041,7 @@ const formattedSessionsAll = async ids => {
 };
 
 const paymentsInfo = async user => {
-	if (user.role != 'psychologist')
-		return conflictResponse('No eres psicologo');
+	if (user.role != 'specialist') return conflictResponse('No eres psicologo');
 
 	const payments = await paymentInfoFunction(user.psychologist);
 	return okResponse('Obtuvo todo sus pagos', { payments });

@@ -35,7 +35,7 @@
 				<!-- <v-list-item
 					v-if="
 						psychologist &&
-						$auth.user.role === 'psychologist' &&
+						$auth.user.role === 'specialist' &&
 						$auth.user.psychologist
 					"
 					inactive
@@ -103,7 +103,7 @@
 					</v-list-item>
 				</template>
 				<v-list-item
-					v-if="$auth.$state.user.role === 'psychologist'"
+					v-if="$auth.$state.user.role === 'specialist'"
 					class="my-4 hidden-md-and-up"
 					link
 					href="https://cal.hablaqui.cl/team/hablaqui/capacitacion"
@@ -123,7 +123,7 @@
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
-					v-if="$auth.user.role === 'psychologist'"
+					v-if="$auth.user.role === 'specialist'"
 					class="my-4 hidden-md-and-up"
 					link
 					href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
@@ -176,7 +176,7 @@
 			</v-list>
 		</v-navigation-drawer>
 		<v-navigation-drawer
-			v-if="$auth.$state.user.role === 'psychologist'"
+			v-if="$auth.$state.user.role === 'specialist'"
 			:value="onBoarding"
 			width="350"
 			class="elevation-6"
@@ -405,7 +405,7 @@ export default {
 		},
 		links() {
 			const visible =
-				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			const disable = false;
 			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
@@ -429,8 +429,7 @@ export default {
 					link: { name: 'dashboard-pagos' },
 					img: 'https://cdn.hablaqui.cl/static/pay.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 					disable:
 						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
 				},
@@ -439,8 +438,7 @@ export default {
 					link: { name: 'dashboard-consultantes' },
 					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 					disable,
 				},
 				{
@@ -456,7 +454,7 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/diamante.png',
 					visible:
 						this.$vuetify.breakpoint.smAndDown &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.user.role === 'specialist',
 					disable,
 				},
 				{
@@ -724,22 +722,18 @@ export default {
 	},
 	watch: {
 		psychologist(newValue) {
-			if (
-				newValue &&
-				this.$auth.user.psychologist &&
-				this.$auth.user.role === 'psychologist'
-			) {
+			if (newValue && this.$auth.user.psychologist && this.$auth.user.role === 'specialist') {
 				this.online = newValue.inmediateAttention.activated;
 			}
 		},
 	},
 	async mounted() {
 		// lanzar onboarding al cargar
-		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'specialist')
 		// 	this.setOnBoarding(true);
 		this.plan =
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
-		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
+		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'specialist')
 			this.overlay = true;
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
@@ -753,7 +747,7 @@ export default {
 				this.setPsychologist(null);
 			}
 		}
-		if (this.$auth.$state.user.role === 'psychologist') {
+		if (this.$auth.$state.user.role === 'specialist') {
 			let psychologist;
 			if (this.$auth.$state.user.psychologist) {
 				await this.getClients(this.$auth.$state.user.psychologist);

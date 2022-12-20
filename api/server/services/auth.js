@@ -79,7 +79,7 @@ const getSessions = async user => {
 		return await Sessions.find({ user: user._id });
 	}
 
-	if (user.role === 'psychologist')
+	if (user.role === 'specialist')
 		return await Sessions.find({ psychologist: user.psychologist });
 
 	return null;
@@ -120,7 +120,7 @@ const register = async payload => {
 	if (await User.exists({ email: payload.email })) {
 		return conflictResponse('Correo electronico en uso');
 	}
-	if (payload.role === 'psychologist')
+	if (payload.role === 'specialist')
 		if (await User.exists({ rut: payload.rut }))
 			return conflictResponse('Rut en uso');
 	const newUser = {
