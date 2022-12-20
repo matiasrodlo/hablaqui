@@ -528,7 +528,7 @@
 						<v-row justify="end" class="text-md-right pt-4">
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -544,7 +544,7 @@
 							</v-col>
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -559,7 +559,7 @@
 								</v-btn>
 							</v-col>
 							<v-col
-								v-if="$auth.$state.user.role === 'psychologist'"
+								v-if="$auth.$state.user.role === 'specialist'"
 								cols="12"
 								sm="6"
 								md="3"
@@ -573,7 +573,7 @@
 							</v-col>
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -949,7 +949,7 @@ export default {
 				this.appoinmentSessions = this.plans.appoinmentSessions;
 			}
 			if (
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				!this.$auth.$state.user.psychologist
 			)
 				return null;
@@ -962,7 +962,7 @@ export default {
 				});
 			}
 			if (
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				this.$auth.$state.user.sessions.length
 			) {
 				await this.getSessions({
@@ -1058,7 +1058,7 @@ export default {
 					this.overlay = false;
 					this.dialogWithoutSessions = true;
 				}
-			} else if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist) {
+			} else if (this.$auth.user.role === 'specialist' && this.$auth.user.psychologist) {
 				this.date = date;
 				this.dialogAppointment = true;
 			}

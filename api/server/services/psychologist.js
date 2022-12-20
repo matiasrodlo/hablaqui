@@ -465,7 +465,7 @@ const setSchedule = async (user, payload) => {
 };
 
 const updatePaymentMethod = async (user, payload) => {
-	if (user.role !== 'psychologist')
+	if (user.role !== 'specialist')
 		return conflictResponse('No eres un psicologo.');
 	else {
 		// Si el user es un psicologo se busca por su id y se actualiza el metodo de pago
@@ -561,7 +561,7 @@ const updatePsychologist = async (user, profile) => {
 						personalDescription: updated.personalDescription,
 						professionalDescription:
 							updated.professionalDescription,
-						role: 'psychologist',
+						role: 'specialist',
 					},
 				});
 			}
@@ -652,7 +652,7 @@ const deleteOne = async (user, id) => {
 
 const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
-	if (user.role != 'psychologist')
+	if (user.role != 'specialist')
 		return conflictResponse('No tienes permisos');
 	const psy = await Psychologist.findById(user.psychologist);
 
@@ -758,7 +758,7 @@ const usernameAvailable = async username => {
 };
 
 const updateFormationExperience = async (user, payload) => {
-	if (user.role != 'psychologist') {
+	if (user.role != 'specialist') {
 		return conflictResponse('No eres psicologo');
 	}
 
@@ -849,7 +849,7 @@ const approveAvatar = async (user, id) => {
 };
 
 const changeToInmediateAttention = async psy => {
-	/*if (user.role !== 'psychologist')
+	/*if (user.role !== 'specialist')
 		return conflictResponse('No tienes permitida esta opción');
 	const psy = user.psychologist;*/
 	let psychologist = await Psychologist.findById(psy);

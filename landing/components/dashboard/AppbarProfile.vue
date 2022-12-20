@@ -41,7 +41,7 @@
 				</div>
 			</a>
 		</div>
-		<div v-if="$auth.$state.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+		<div v-if="$auth.$state.user.role === 'specialist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
 				href="https://api.whatsapp.com/message/RZPJ4H5ZTDNWB1"
@@ -59,7 +59,7 @@
 				</div>
 			</a>
 		</div>
-		<div v-if="$auth.user.role === 'psychologist'" class="mx-5 body-1 primary--text">
+		<div v-if="$auth.user.role === 'specialist'" class="mx-5 body-1 primary--text">
 			<a
 				style="text-decoration: none"
 				href="https://hablaqui.cl/para-especialistas/preguntas-frecuentes/"
@@ -77,7 +77,7 @@
 				</div>
 			</a>
 		</div>
-		<div v-if="$auth.$state.user.role == 'psychologist'" class="mx-5 body-1 primary--text">
+		<div v-if="$auth.$state.user.role == 'specialist'" class="mx-5 body-1 primary--text">
 			<nuxt-link style="text-decoration: none" to="/dashboard/planes">
 				<div class="d-flex align-center">
 					<v-img
@@ -92,7 +92,7 @@
 			</nuxt-link>
 		</div>
 		<v-btn
-			v-if="$auth.user.role === 'psychologist' && $vuetify.breakpoint.mdAndUp && psychologist"
+			v-if="$auth.user.role === 'specialist' && $vuetify.breakpoint.mdAndUp && psychologist"
 			class="mx-2"
 			small
 			elevation="1"

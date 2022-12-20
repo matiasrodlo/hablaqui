@@ -200,14 +200,14 @@ const usersService = {
 			const psy = await Psychologist.findById(idPsychologist);
 			const userSelected = await User.findOne({
 				email: psy.email,
-				role: 'psychologist',
+				role: 'specialist',
 			});
 			userRole = userSelected.role;
 			userID = userSelected._id;
 		}
 
 		// Hace la distinción de casos por que los psy tienen el modelo de usuario y psicologo
-		if (userRole === 'psychologist') {
+		if (userRole === 'specialist') {
 			const userData = await User.findById(userID);
 			await mailServiceAccount.sendUploadPicture(userData);
 			// En caso de los psy, en el campo de psy, se les asigna el ID del documento de psicologo
@@ -295,7 +295,7 @@ const usersService = {
 	},
 
 	async registerUser(user, body) {
-		if (user.role !== 'psychologist')
+		if (user.role !== 'specialist')
 			return conflictResponse('Usuario activo no es psicologo');
 		if (await User.exists({ email: body.email }))
 			return conflictResponse('Correo electronico en uso');
@@ -377,7 +377,7 @@ const usersService = {
 			session: [],
 		};
 
-		if (user.role === 'psychologist' && createdUser.role === 'user')
+		if (user.role === 'specialist' && createdUser.role === 'user')
 			await Sessions.create({
 				plan: [newPlan],
 				user: createdUser._id,

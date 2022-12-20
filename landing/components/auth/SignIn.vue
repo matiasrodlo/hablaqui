@@ -47,9 +47,9 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapMutations } from 'vuex';
-import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import { mapMutations, mapActions } from 'vuex';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
 	name: 'SignIn',
@@ -97,13 +97,13 @@ export default {
 						if (this.$route.query.from === 'psy')
 							return this.$router.push({ name: 'evaluacion' });
 						if (
-							response.data.user.role === 'psychologist' &&
+							response.data.user.role === 'specialist' &&
 							this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
 						if (
-							response.data.user.role === 'psychologist' &&
+							response.data.user.role === 'specialist' &&
 							!this.$auth.$state.user.psychologist
 						) {
 							return this.$router.push({ name: 'postulacion' });

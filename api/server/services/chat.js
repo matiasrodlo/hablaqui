@@ -147,7 +147,7 @@ const createReport = async (
 const readMessage = async (user, chatId) => {
 	// Se obtiene el documento de chat, verifica el rol del usuario y marca el chat como leido
 	const chat = await Chat.findById(chatId);
-	const id = user.role == 'psychologist' ? chat.user : user.psychologist;
+	const id = user.role == 'specialist' ? chat.user : user.psychologist;
 
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },

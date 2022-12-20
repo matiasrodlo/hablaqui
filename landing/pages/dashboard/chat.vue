@@ -49,7 +49,7 @@
 						</v-card-text>
 						<!-- barra lateral role psychologist -->
 						<template
-							v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'"
+							v-if="$auth.$state.user && $auth.$state.user.role === 'specialist'"
 						>
 							<!-- sin consultantes -->
 							<v-card-text v-if="listClients.length" class="py-0">
@@ -392,7 +392,7 @@ export default {
 				return 'Mi psicólogo';
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
@@ -422,7 +422,7 @@ export default {
 				);
 			}
 
-			if (this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'specialist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
@@ -533,7 +533,7 @@ export default {
 					url: '',
 				});
 			}
-			if (this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'specialist') {
 				if (this.$auth.$state.user.psychologist) {
 					await this.getMessages();
 				}

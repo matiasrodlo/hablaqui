@@ -66,7 +66,7 @@ export default {
 	methods: {
 		async initFetch() {
 			if (
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				!this.$auth.$state.user.psychologist
 			)
 				return null;

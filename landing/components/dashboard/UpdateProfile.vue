@@ -92,7 +92,7 @@
 				></v-date-picker>
 			</v-menu>
 		</v-col>
-		<v-col v-if="$auth.$state.user.role === 'psychologist'" cols="12" md="6">
+		<v-col v-if="$auth.$state.user.role === 'specialist'" cols="12" md="6">
 			<v-row>
 				<v-col>
 					<v-select
@@ -292,7 +292,7 @@ export default {
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
 		this.timezone = data;
-		if (this.psychologist && this.$auth.$state.user.role === 'psychologist') {
+		if (this.psychologist && this.$auth.$state.user.role === 'specialist') {
 			this.comuna = this.psychologist.comuna;
 			this.region = this.psychologist.region;
 		}
@@ -303,7 +303,7 @@ export default {
 			if (!this.$v.$invalid) {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
-				if (this.$auth.$state.user.role === 'psychologist') {
+				if (this.$auth.$state.user.role === 'specialist') {
 					const psychologist = await this.updatePsychologist({
 						...this.psychologist,
 						name: this.formUser.name,

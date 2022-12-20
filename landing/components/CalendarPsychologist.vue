@@ -135,10 +135,7 @@ export default {
 						item.date
 					}&start=${hour}&end=${item.available[index + 1]}`,
 				});
-			} else if (
-				this.$auth.$state.loggedIn &&
-				this.$auth.$state.user.role !== 'psychologist'
-			) {
+			} else if (this.$auth.$state.loggedIn && this.$auth.$state.user.role !== 'specialist') {
 				this.callback();
 				this.$router.push(
 					`/psicologos/pagos/?username=${this.username}&date=${

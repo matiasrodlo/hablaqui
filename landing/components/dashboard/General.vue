@@ -6,7 +6,7 @@
 					Configuración personal
 				</v-card-text>
 			</v-card>
-			<template v-if="$auth.$state.user.role === 'psychologist'">
+			<template v-if="$auth.$state.user.role === 'specialist'">
 				<v-card to="perfil/datos-bancarios" elevation="4" class="my-4" rounded>
 					<v-card-text class="body-2 font-weight-bold secondary--text">
 						Datos bancarios
@@ -39,7 +39,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Información personal
 							<v-progress-circular
-								v-if="!psychologist && $auth.$state.user.role === 'psychologist'"
+								v-if="!psychologist && $auth.$state.user.role === 'specialist'"
 								size="20"
 								indeterminate
 								color="primary"
@@ -59,7 +59,7 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
-			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+			<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 				<v-expansion-panel-header style="position: relative">
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
@@ -101,7 +101,7 @@
 			</v-expansion-panel>
 
 			<v-expansion-panel
-				v-if="$auth.$state.user.role === 'psychologist'"
+				v-if="$auth.$state.user.role === 'specialist'"
 				:disabled="!!step"
 				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
@@ -130,7 +130,7 @@
 			</v-expansion-panel>
 
 			<v-expansion-panel
-				v-if="$auth.$state.user.role === 'psychologist'"
+				v-if="$auth.$state.user.role === 'specialist'"
 				:disabled="!!step"
 				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>

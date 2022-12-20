@@ -263,11 +263,11 @@ export default {
 			this.loadingMessage = true;
 			const payload = {
 				psychologistId:
-					this.$auth.$state.user.role === 'psychologist'
+					this.$auth.$state.user.role === 'specialist'
 						? this.$auth.$state.user.psychologist
 						: this.selected._id,
 				userId:
-					this.$auth.$state.user.role === 'psychologist'
+					this.$auth.$state.user.role === 'specialist'
 						? this.selected._id
 						: this.$auth.$state.user._id,
 				content: this.message,
