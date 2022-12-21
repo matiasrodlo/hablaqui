@@ -47,6 +47,7 @@ const getChats = async user => {
 	const idRoles = ['psychologist', '_id'];
 	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
 	let chat;
+	if (user.role === 'specialist') user.role = 'psychologist';
 	// Es para verificar que sea un rol valido
 	if (!roles.includes(user.role)) {
 		return conflictResponse(
