@@ -14,6 +14,7 @@ import sessionsRouter from './sessions';
 import evaluationRouter from './evaluation';
 import matchRouter from './match';
 import transactionRouter from './transaction';
+import scriptsRouter from './scripts';
 
 const apiVersion = '/api/v1';
 
@@ -32,4 +33,5 @@ export default app => {
 	app.use(apiVersion, evaluationRouter);
 	app.use(apiVersion, matchRouter);
 	app.use(apiVersion, transactionRouter);
+	app.use(apiVersion, scriptsRouter);
 };
