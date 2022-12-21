@@ -201,6 +201,11 @@ let recruitment = new Schema(
 			type: String,
 			default: '',
 		},
+		profesion: {
+			type: String,
+			default: 'none',
+			enum: ['none', 'psychologist', 'nutritionist', 'psychopedagogue'],
+		},
 		birthDate: {
 			type: String,
 			default: '',
