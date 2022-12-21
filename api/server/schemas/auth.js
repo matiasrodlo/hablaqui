@@ -14,6 +14,10 @@ const authSchema = {
 			.min(3)
 			.max(100)
 			.allow(''),
+		profesion: Joi.string()
+			.min(3)
+			.max(100)
+			.required(),
 		rut: Joi.string()
 			.min(3)
 			.max(100)
