@@ -290,7 +290,7 @@ const cronService = {
 					type: 'chat-psy-1-hour',
 					batch: null,
 					wasScheduled: false,
-					scheduledAt: dayjs.tz(dayjs().add(1, 'hour')).format(),
+					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
 				});
 			} else if (mess.lastMessageSendBy === 'psychologist') {
 				await mailServiceRemider.sendChatNotificationToUser(
@@ -304,7 +304,7 @@ const cronService = {
 					type: 'chat-user-1-hour',
 					batch: null,
 					wasScheduled: false,
-					scheduledAt: dayjs.tz(dayjs().add(1, 'hour')).format(),
+					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
 				});
 			}
 		});
