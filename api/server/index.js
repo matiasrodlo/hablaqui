@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import http from "http";
 import { logger } from "./config/pino";
 import { Server as webSocketServer } from "socket.io";
 import { sendMessage } from "./services/chat";
-import { landing_url } from "./config/dotenv";
+// import { landing_url } from "./config/dotenv";
 const app = require("./app");
 const server = http.createServer(app);
 
