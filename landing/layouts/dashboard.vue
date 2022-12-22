@@ -734,6 +734,7 @@ export default {
 		},
 	},
 	async mounted() {
+		console.log('RAMA EN USO STAGING');
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
