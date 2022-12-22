@@ -46,7 +46,7 @@ let corsOptions = {
 
 app.use(limiter);
 app.use(helmet());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.static(path.join(__dirname, "static")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
