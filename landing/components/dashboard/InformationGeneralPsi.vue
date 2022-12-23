@@ -90,13 +90,20 @@ export default {
 	},
 	data() {
 		return {
-			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
+			rules: [value => value.length <= 170 || 'Máximo 170 carácteres'],
 		};
 	},
 	methods: {
 		async onSubmite() {
-			const specialist = await this.updateSpecialist(this.specialist);
-			this.setSpecialist(specialist);
+			if (
+				!(this.specialist.personalDescription.length <= 170) ||
+				!(this.specialist.professionalDescription.length <= 170)
+			)
+				alert('Excedió el máximo de carácteres');
+			else {
+				const specialist = await this.updateSpecialist(this.specialist);
+				this.setSpecialist(specialist);
+			}
 		},
 		...mapActions({
 			updateSpecialist: 'Specialist/updateSpecialist',

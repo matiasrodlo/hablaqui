@@ -997,7 +997,7 @@ export default {
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
-			setPsychologist: 'Psychologist/setPsychologist',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
 			putApproveAvatar: 'Specialist/approveAvatar',
