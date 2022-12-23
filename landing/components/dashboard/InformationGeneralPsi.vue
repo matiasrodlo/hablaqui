@@ -90,13 +90,20 @@ export default {
 	},
 	data() {
 		return {
-			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
+			rules: [value => value.length <= 170 || 'Máximo 170 carácteres'],
 		};
 	},
 	methods: {
 		async onSubmite() {
+			if(
+				!(this.psychologist.personalDescription.length <= 170) ||
+				!(this.psychologist.professionalDescription.length <= 170)
+			)
+				alert('Excedió el máximo de carácteres')
+			else{
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
+			}
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',
