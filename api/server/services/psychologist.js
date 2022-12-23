@@ -728,8 +728,7 @@ const getClients = async psychologist => {
 				roomsUrl: item.roomsUrl,
 				rut: item.user.rut,
 				sessionsId: item._id,
-			}))
-			.filter(item => !!item.plan),
+			})),
 	});
 };
 
