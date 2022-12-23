@@ -300,8 +300,9 @@
 agradecer, aprender de las personas, realizar actividades deportivas y reír."
 										filled
 										no-resize
-										hint="Hablé de usted más alla de lo profesional. Describa sus gustos y pasatiempos creando un ambiente acogedor."
+										hint="Hable de usted más allá de lo profesional. Describa sus gustos y pasatiempos creando un ambiente acogedor."
 										counter
+										:rules="rulesDescriptionField"
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
@@ -314,8 +315,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 										outlined
 										dense
 										type="text"
-										placeholder="instagram.com/usuario
-"
+										placeholder="instagram.com/usuario"
 									></v-text-field>
 								</v-col>
 								<v-col cols="12" md="6">
@@ -359,6 +359,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 										placeholder="Realizo psicoterapia familiar, de pareja e individual bajo la premisa de que el ser humano tiene un potencial enorme, colaborando para construir estrategias para solucionar problemas"
 										hint="Describa su metodología de trabajo y cómo puedes ayudar a al consultante."
 										counter
+										:rules="rulesDescriptionField"
 									></v-textarea>
 								</v-col>
 								<v-col cols="12" md="6">
@@ -1096,6 +1097,7 @@ export default {
 			timezone: [],
 			loadingStep: false,
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
+			rulesDescriptionField: [value => value.length <= 170 || 'Máximo 170 carácteres'],
 			form: {
 				avgPatients: '',
 				birthDate: '',
@@ -1208,6 +1210,10 @@ export default {
 				) {
 					alert(`Complete los campos faltantes`);
 				}
+				// Se comprueba si se excedió el número de carácteres en la descripción
+				else if (!(this.form.personalDescription.length <= 170)) {
+					alert('Excedió el máximo de carácteres');
+				}
 				return (
 					this.form.timeZone &&
 					this.form.gender &&
@@ -1217,6 +1223,7 @@ export default {
 					this.form.region &&
 					this.form.comuna &&
 					this.form.personalDescription &&
+					this.form.personalDescription.length <= 170 &&
 					this.form.phone.code &&
 					this.form.phone.number
 				);
@@ -1230,9 +1237,12 @@ export default {
 					!this.form.specialties.length ||
 					!this.form.models.length
 				)
-					alert('Complete los campo faltantes');
+					alert('Complete los campos faltantes');
+				else if (!(this.form.professionalDescription.length <= 170))
+					alert('Excedió el máximo de carácteres');
 				return (
 					this.form.professionalDescription &&
+					this.form.professionalDescription.length <= 170 &&
 					this.form.formation.length &&
 					this.form.experience.length &&
 					this.form.specialties.length &&
