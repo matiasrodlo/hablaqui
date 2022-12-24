@@ -90,7 +90,10 @@ export default {
 	},
 	data() {
 		return {
-			rules: [value => value.length <= 170 || 'Máximo 170 carácteres'],
+			rules: [
+				value => value.length <= 170 || 'Máximo 170 carácteres',
+				value => !!value || 'Este campo es requerido.',
+			],
 		};
 	},
 	methods: {
@@ -100,6 +103,11 @@ export default {
 				!(this.psychologist.professionalDescription.length <= 170)
 			)
 				alert('Excedió el máximo de carácteres')
+			else if (
+				!this.psychologist.professionalDescription ||
+				!this.psychologist.personalDescription
+			)
+				alert('Complete los campos faltantes')
 			else{
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
