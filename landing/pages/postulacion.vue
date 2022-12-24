@@ -1065,7 +1065,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 
 <script>
 import axios from 'axios';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { mdiPencilOutline, mdiDeleteOutline } from '@mdi/js';
 
 export default {
@@ -1165,6 +1165,10 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		// Se importa componente snackbar
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		async saveStep(step) {
 			this.loadingStep = true;
 			if (this.validationStep(step)) {
@@ -1212,11 +1216,19 @@ export default {
 					!this.form.phone.code ||
 					!this.form.phone.number
 				) {
-					alert(`Complete los campos faltantes`);
+					this.snackBar({
+						// Se genera un snackbar con la alerta correspondiente
+						content: 'Complete los campos faltantes',
+						color: 'error',
+					});
 				}
 				// Se comprueba si se excedió el número de carácteres en la descripción
 				else if (!(this.form.personalDescription.length <= 170)) {
-					alert('Excedió el máximo de carácteres');
+					this.snackBar({
+						// Se genera un snackbar con la alerta correspondiente
+						content: 'Excedió el límite de carácteres',
+						color: 'error',
+					});
 				}
 				return (
 					this.form.timeZone &&
@@ -1241,9 +1253,20 @@ export default {
 					!this.form.specialties.length ||
 					!this.form.models.length
 				)
-					alert('Complete los campos faltantes');
-				else if (!(this.form.professionalDescription.length <= 170))
-					alert('Excedió el máximo de carácteres');
+				{
+					// Se genera un snackbar con la alerta correspondiente
+					this.snackBar({
+						content: 'Complete los campos faltantes',
+						color: 'error',
+					});
+				}
+				else if (!(this.form.professionalDescription.length <= 170)){
+					this.snackBar({
+						// Se genera un snackbar con la alerta correspondiente
+						content: 'Excedió el límite de carácteres',
+						color: 'error',
+					});
+				}
 				return (
 					this.form.professionalDescription &&
 					this.form.professionalDescription.length <= 170 &&
