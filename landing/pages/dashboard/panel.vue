@@ -678,8 +678,18 @@
 								</v-col>
 							</v-row>
 						</v-col>
+						<v-col cols="12">Horario</v-col>
+						<v-col cols="12">
+							<v-card>
+								<v-card-text>
+									<horario
+										:specialist="specialist"
+										:set-specialist="setSpecialist"/>
+								</v-card-text>
+							</v-card>
+						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
-							¿Cuántos años llevas trabajando como especialista clínico?
+							¿Cuántos años llevas trabajando como psicólogo clínico?
 							{{ selected.yearsExpSpecialist }}
 							<br />
 							¿Cuántos años ha visto pacientes en línea a través de consultas por
@@ -745,6 +755,7 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Avatar: () => import('~/components/Avatar'),
+		Horario: () => import('~/components/dashboard/Horario'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -771,6 +782,14 @@ export default {
 		};
 	},
 	computed: {
+		specialist: {
+			get() {
+				return this.selected;
+			},
+			set(value) {
+				this.setSpecialist(value);
+			},
+		},
 		...mapGetters({
 			specialties: 'Appointments/specialties',
 		}),
@@ -785,6 +804,9 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		setSpecialist(value) {
+			this.specialist = value;
+		},
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getSpecialist();
