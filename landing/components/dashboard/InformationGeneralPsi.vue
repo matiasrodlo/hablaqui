@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	props: {
@@ -97,18 +97,29 @@ export default {
 		};
 	},
 	methods: {
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		async onSubmite() {
 			if (
 				!(this.specialist.personalDescription.length <= 170) ||
 				!(this.specialist.professionalDescription.length <= 170)
-			)
-				alert('Excedió el máximo de carácteres');
-			else if (
+			) {
+				this.snackBar({
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Excedió el límite de carácteres',
+					color: 'error',
+				});
+			} else if (
 				!this.specialist.professionalDescription ||
 				!this.specialist.personalDescription
-			)
-				alert('Complete los campos faltantes');
-			else {
+			) {
+				this.snackBar({
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Complete los campos faltantes',
+					color: 'error',
+				});
+			} else {
 				const specialist = await this.updateSpecialist(this.specialist);
 				this.setSpecialist(specialist);
 			}
