@@ -17,7 +17,7 @@
 			</v-col>
 			<v-col class="text--secondary" cols="6">
 				<v-list>
-					<v-subheader>Psicologos</v-subheader>
+					<v-subheader>Psicólogos</v-subheader>
 					<v-list-item
 						v-for="item in psychologists"
 						:key="item._id"
@@ -697,6 +697,16 @@
 								</v-col>
 							</v-row>
 						</v-col>
+						<v-col cols="12">Horario</v-col>
+						<v-col cols="12">
+							<v-card>
+								<v-card-text>
+									<horario
+										:psychologist="psychologist"
+										:set-psychologist="setPsychologist"/>
+								</v-card-text>
+							</v-card>
+						</v-col>
 						<v-col v-if="!selected.isPsy" cols="12">
 							¿Cuántos años llevas trabajando como psicólogo clínico?
 							{{ selected.yearsExpPsychologist }}
@@ -761,6 +771,7 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Avatar: () => import('~/components/Avatar'),
+		Horario: () => import('~/components/dashboard/Horario'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -787,6 +798,14 @@ export default {
 		};
 	},
 	computed: {
+		psychologist: {
+			get() {
+				return this.selected;
+			},
+			set(value) {
+				this.setPsychologist(value);
+			},
+		},
 		...mapGetters({
 			specialties: 'Appointments/specialties',
 		}),
@@ -801,6 +820,9 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		setPsychologist(value) {
+			this.psychologist = value;
+		},
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getPsychologist();
