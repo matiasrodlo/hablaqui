@@ -1097,7 +1097,10 @@ export default {
 			timezone: [],
 			loadingStep: false,
 			rulesTextField: [value => !!value || 'Este campo es requerido.'],
-			rulesDescriptionField: [value => value.length <= 170 || 'Máximo 170 carácteres'],
+			rulesDescriptionField: [
+				value => value.length <= 170 || 'Máximo 170 carácteres',
+				value => !!value || 'Este campo es requerido.',
+			],
 			form: {
 				avgPatients: '',
 				birthDate: '',
