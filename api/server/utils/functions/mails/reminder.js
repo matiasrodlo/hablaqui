@@ -254,7 +254,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
-				url: landing_url + 'psicologos',
+				url: landing_url + psychologist.username,
 			},
 		};
 		await sendMails(dataPayload);
@@ -273,7 +273,7 @@ const mailService = {
 				user_name: user.name,
 				psy_name: psychologist.name,
 				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
-				url: landing_url + 'psicologos',
+				url: landing_url + psychologist.username,
 			},
 		};
 		await sendMails(dataPayload);
