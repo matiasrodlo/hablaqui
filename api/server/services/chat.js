@@ -151,7 +151,7 @@ const readMessage = async (user, chatId) => {
 
 	await Email.deleteMany({
 		type: {
-			$in: ['chat-psy-1-hour', 'chat-user-1-hour'],
+			$in: ['chat-psy-1-day', 'chat-user-1-day'],
 		},
 		wasScheduled: false,
 		userRef: chat.user,

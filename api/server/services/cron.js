@@ -287,7 +287,7 @@ const cronService = {
 				email.create({
 					userRef: user._id,
 					psyRef: psy._id,
-					type: 'chat-psy-1-hour',
+					type: 'chat-psy-1-day',
 					batch: null,
 					wasScheduled: false,
 					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
@@ -301,7 +301,7 @@ const cronService = {
 				email.create({
 					userRef: user._id,
 					psyRef: psy._id,
-					type: 'chat-user-1-hour',
+					type: 'chat-user-1-day',
 					batch: null,
 					wasScheduled: false,
 					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
@@ -573,7 +573,7 @@ const cronService = {
 		const pendingEmails = await email.find({
 			wasScheduled: false,
 			type: {
-				$in: ['chat-psy-1-hour', 'chat-user-1-hour'],
+				$in: ['chat-psy-1-day', 'chat-user-1-day'],
 			},
 		});
 
