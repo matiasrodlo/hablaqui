@@ -39,6 +39,10 @@ export default {
 			// 	: 'http://localhost:3000/';
 
 			// generate routes psicologos
+			// Se ejecutan scripts para agregar profesion y cambiar rol
+			await axios.post(`${baseURL}/scripts/add-profesion`);
+			await axios.put(`${baseURL}/scripts/change-role`);
+
 			const res = await axios.get(`${baseURL}/psychologists/all`);
 			const psicologos = res.data.psychologists
 				.filter(psychologist => psychologist.username)
