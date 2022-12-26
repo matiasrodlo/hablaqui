@@ -19,8 +19,23 @@ const changeRole = async (req, res) => {
 	}
 };
 
+/**
+ * @description - This function is used to add the profession to psychologist
+ * @param {object} req - The request object (Recruitment details)
+ * @param {object} res - The response object (Response code and message)
+ */
+const addProfesion = async (req, res) => {
+	try {
+		const { data, code } = await scriptsService.addProfesion();
+		restResponse(data, code, res);
+	} catch (e) {
+		errorCallback(e, res, 'Error registrando el postulado');
+	}
+};
+
 const scriptsController = {
 	changeRole,
+	addProfesion,
 };
 
 export default Object.freeze(scriptsController);

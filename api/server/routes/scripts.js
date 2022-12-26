@@ -10,5 +10,11 @@ const scriptsRouter = Router();
  * @method PUT
  */
 scriptsRouter.put('/scripts/change-role', scriptsController.changeRole);
+/**
+ * @description: Script adding the profession to psychologist
+ * @route /api/v1/scripts/add-profesion
+ * @method POST
+ */
+scriptsRouter.post('/scripts/add-profesion', scriptsController.addProfesion);
 
 export default scriptsRouter;
