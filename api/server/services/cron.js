@@ -589,7 +589,7 @@ const cronService = {
 			try {
 				if (
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-					emailInfo.type === 'chat-user-1-hour'
+					emailInfo.type === 'chat-user-1-day'
 				) {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
@@ -601,7 +601,7 @@ const cronService = {
 					);
 				} else if (
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-					emailInfo.type === 'chat-psy-1-hour'
+					emailInfo.type === 'chat-psy-1-day'
 				) {
 					batch = await getBatchId();
 					isSend = true;
