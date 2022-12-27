@@ -73,7 +73,7 @@ let userSchema = new Schema(
 			default: 'user',
 			enum: ['user', 'specialist', 'superuser'],
 		},
-		profesion: {
+		profession: {
 			type: String,
 			default: 'none',
 			enum: ['none', 'psychologist', 'nutritionist', 'psychopedagogue'],

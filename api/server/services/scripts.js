@@ -20,10 +20,10 @@ const addProfesion = async () => {
 	// Se busca a todos los usuarios con el rol de psicologo que no tengan el atributo profesion
 	const users = await userModel.find({
 		role: 'psychologist',
-		profesion: { $exists: false },
+		profession: { $exists: false },
 	});
 	const psychologists = await psyModel.find({
-		profesion: { $exists: false },
+		profession: { $exists: false },
 	});
 	if (!users) return conflictResponse('No se encontro ningun usuario');
 	if (!psychologists)
@@ -34,11 +34,11 @@ const addProfesion = async () => {
 	// Se agrega la profesion a los psicologos
 	await psyModel.updateMany(
 		{ _id: { $in: psy } },
-		{ $set: { profesion: 'Psychologist' } }
+		{ $set: { profession: 'psychologist' } }
 	);
 	await userModel.updateMany(
 		{ _id: { $in: user } },
-		{ $set: { profesion: 'Psychologist' } }
+		{ $set: { profession: 'psychologist' } }
 	);
 	return okResponse('Profesion agregada', { user });
 };
