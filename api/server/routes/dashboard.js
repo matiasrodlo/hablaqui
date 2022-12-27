@@ -46,7 +46,7 @@ dashboardRouter.get(
  * @method PUT
  * @param {Boolean} params.visibility - Visibilidad del psicologo
  * @param {String} params.id - Id del psicologo
- * @route /api/v1/dashboard/specialist-visibility/:id/:visibility
+ * @route /api/v1/dashboard/specialist-visibility/:psyId/:visibility
  */
 dashboardRouter.put(
 	'/dashboard/specialist-visibility/:psyId/:visibility',
