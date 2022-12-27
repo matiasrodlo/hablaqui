@@ -23,7 +23,7 @@ const newCoupon = async (user, payload) => {
 		discount: payload.discount,
 		discountType: payload.discountType,
 		restrictions: payload.restrictions,
-		expiration: dayjs(payload.expiration).toISOString(),
+		expiration: dayjs.tz(dayjs(payload.expiration)).toISOString(),
 	};
 
 	// Guarda el cupon en la base de datos y retorna la respuesta satisfactoria
@@ -37,7 +37,7 @@ const checkCoupon = async (code, user) => {
 	const foundCoupon = await Coupon.findOne({ code });
 	if (!foundCoupon)
 		return conflictResponse('No se ha encontrado un cupon con ese codigo');
-	if (dayjs().isAfter(foundCoupon.expiration))
+	if (dayjs().isAfter(dayjs(foundCoupon.expiration)))
 		return conflictResponse('Este cupon ya ha expirado');
 	if (foundCoupon.discountType === 'static' && foundCoupon.discount === 0)
 		return conflictResponse('Cupón con saldo 0');

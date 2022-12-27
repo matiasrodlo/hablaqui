@@ -42,6 +42,18 @@ const retoolController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async specialistVisibility(req, res) {
+		try {
+			const { psyId, visibility } = req.params;
+			const { data, code } = await dashboardService.specialistVisibility(
+				psyId,
+				visibility
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(retoolController);

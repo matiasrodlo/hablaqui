@@ -38,9 +38,9 @@ export const paymentInfoFunction = async psyId => {
 				// Cantidad de dinero a restar
 				let amountDueTotal = 0;
 				let amountDue = 0;
-				let paymentPlanDate = dayjs(plans.datePayment).format(
-					'DD/MM/YYYY'
-				);
+				let paymentPlanDate = dayjs
+					.tz(dayjs(plans.datePayment))
+					.format('DD/MM/YYYY');
 
 				let sessions = plans.session.map(session => {
 					let transDate =
@@ -204,18 +204,18 @@ export const formattedSchedule = (schedule, day, hour) => {
 		'saturday',
 		'sunday',
 	];
-	day = dayjs(day).format('dddd');
+	day = dayjs.tz(day).format('dddd');
 	week.forEach(weekDay => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
-				validHour = schedule[weekDay].some(interval =>
-					dayjs(hour, 'HH:mm').isBetween(
+				validHour = schedule[weekDay].some(interval => {
+					return dayjs(hour, 'HH:mm').isBetween(
 						dayjs(interval[0], 'HH:mm'),
 						dayjs(interval[1], 'HH:mm'),
 						undefined,
 						'[)'
-					)
-				);
+					);
+				});
 			else if (schedule[weekDay] === 'busy') validHour = false;
 	});
 

@@ -32,12 +32,16 @@ export const getAllSessionsFunction = async psy => {
 					? session.requestDate
 					: 'Por cobrar';
 				if (requestDate !== 'Por cobrar')
-					requestDate = dayjs(requestDate).format('YYYY/MM/DD HH:mm');
+					requestDate = dayjs
+						.tz(dayjs(requestDate))
+						.format('YYYY/MM/DD HH:mm');
 				let paymentDate = session.requestDate
 					? session.requestDate
 					: 'Por cobrar';
 				if (paymentDate !== 'Por cobrar')
-					paymentDate = dayjs(paymentDate).format('YYYY/MM/DD HH:mm');
+					paymentDate = dayjs
+						.tz(dayjs(paymentDate))
+						.format('YYYY/MM/DD HH:mm');
 				return {
 					_id: session._id,
 					date: session.date,
@@ -51,9 +55,9 @@ export const getAllSessionsFunction = async psy => {
 					statusPlan: plan.payment,
 					suscription: plan.period,
 					idPlan: plan._id,
-					paymentPlanDate: dayjs(plan.datePayment).format(
-						'YYYY/MM/DD HH:mm'
-					),
+					paymentPlanDate: dayjs
+						.tz(dayjs(plan.datePayment))
+						.format('YYYY/MM/DD HH:mm'),
 					requestDate,
 					paymentDate,
 					request: session.request ? session.request : 'none',

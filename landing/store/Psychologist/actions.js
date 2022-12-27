@@ -11,6 +11,54 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getPsychologistsBestMatch({ commit, state }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const { data } = await this.$axios('/psychologists/best-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Psicologos obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getPsychologistsEconomicMatch({ commit, state }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const { data } = await this.$axios('/psychologists/economic-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			snackBarSuccess('Psicologos obtenidos')(commit);
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getPsychologistsAvailityMatch({ commit, state }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const { data } = await this.$axios('/psychologists/availity-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			if (data.perfectMatch) {
+				commit('setPsychologists', data.matchedPsychologists);
+			}
+			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Psicologos obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getTransactions({ commit }) {
 		try {
 			const { transactions } = await this.$axios.$get('/psychologist/transactions/all');
@@ -219,7 +267,7 @@ export default {
 	},
 	async matchPsi({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologists/match', {
+			const { data } = await this.$axios('/psychologists/best-match', {
 				method: 'POST',
 				data: { payload },
 			});
@@ -313,6 +361,47 @@ export default {
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);
+		}
+	},
+	async createMatchMakig({ commit }, payload) {
+		try {
+			await this.$axios(`/match/create-answers/${payload.userId}`, {
+				method: 'POST',
+				data: payload,
+			});
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async updateMatchMakig({ commit, state }, payload) {
+		try {
+			const { data } = await this.$axios(`/match/update-answers/${payload.userId}`, {
+				method: 'PUT',
+				data: { ...state.matchMaking, ...payload },
+			});
+			commit('setMatchMaking', data.answers);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async deleteMatchMakig({ commit }, userid) {
+		try {
+			await this.$axios(`/match/delete-answers/${userid}`, {
+				method: 'DELETE',
+			});
+			commit('setMatchMaking', null);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getMatchMakig({ commit }, userId) {
+		try {
+			const { data } = await this.$axios(`/match/get-answers/${userId}`, {
+				method: 'GET',
+			});
+			commit('setMatchMaking', data.answers);
+		} catch (e) {
+			console.error(e);
 		}
 	},
 	async setSchedule({ commit }, payload) {

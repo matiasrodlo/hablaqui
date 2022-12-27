@@ -23,6 +23,7 @@ export default {
 	loadingPsychologist: state => state.loadingPsychologist,
 	sessionsLimit: state => state.sessionsLimit,
 	sessionsFormatted: state => state.sessionsFormatted,
+	matchMaking: state => state.matchMaking,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,
 	clients: state => {
 		const clients = [...state.clients];

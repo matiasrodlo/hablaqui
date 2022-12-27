@@ -21,7 +21,7 @@ const completePaymentsRequest = async psy => {
 	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id
 	let sessions = await getAllSessionsFunction(psy);
 	const user = await Psychologist.findById(psy);
-	const now = dayjs().format();
+	const now = dayjs.tz().format();
 
 	// Se busca el documentro de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -95,7 +95,7 @@ const createPaymentsRequest = async user => {
 	// Se obtiene las sessiones del psy
 	const psy = user.psychologist;
 	let sessions = await getAllSessionsFunction(psy);
-	const now = dayjs().format();
+	const now = dayjs.tz().format();
 
 	// Se busca el modelo de transacciones con el id del psy, si no existe se crea
 	const transactions = await Transaction.findOne({ psychologist: psy });
@@ -284,13 +284,15 @@ const getAllTransactions = async user => {
 	transactions = transactions
 		.map(t => {
 			return {
-				createdAt: dayjs(t.createdAt).format('DD/MM/YYYY HH:mm'),
+				createdAt: dayjs
+					.tz(dayjs(t.createdAt))
+					.format('DD/MM/YYYY HH:mm'),
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
-							'DD/MM/YYYY HH:mm'
-						),
+						date: dayjs
+							.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+							.format('DD/MM/YYYY HH:mm'),
 					};
 				}),
 				total: t.total,

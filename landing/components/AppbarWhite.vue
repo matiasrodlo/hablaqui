@@ -244,7 +244,11 @@
 														</v-list-item-avatar>
 														<v-list-item-content>
 															<v-list-item-title
-																class="secondary--text font-weight-bold body-2"
+																class="
+																	secondary--text
+																	font-weight-bold
+																	body-2
+																"
 															>
 																{{ item.name }}
 															</v-list-item-title>
@@ -262,7 +266,11 @@
 													</v-list-item-avatar>
 													<v-list-item-content>
 														<v-list-item-title
-															class="secondary--text font-weight-bold body-2"
+															class="
+																secondary--text
+																font-weight-bold
+																body-2
+															"
 														>
 															Cerrar sesion
 														</v-list-item-title>
@@ -308,7 +316,13 @@
 										font-size: 13.2px;
 										line-height: 1.6;
 									"
-									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
+									class="
+										py-4
+										ml-2
+										hidden-sm-and-down
+										text-uppercase
+										font-weight-bold
+									"
 									color="primary"
 									depressed
 									to="/psicologos"
@@ -437,6 +451,7 @@ export default {
 	methods: {
 		async logout() {
 			await this.$auth.logout();
+			this.$router.push('/auth');
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
