@@ -119,7 +119,7 @@ export default {
 				email: '',
 				password: '',
 				role: 'specialist',
-				profesion: 'psychologist',
+				profession: 'psychologist',
 			},
 			recruitmentForm: {
 				avgPatients: '',
@@ -129,7 +129,7 @@ export default {
 				experience: [],
 				formation: [],
 				gender: '',
-				profesion: 'psychologist',
+				profession: 'psychologist',
 				instagram: '',
 				isExclusiveActivity: false,
 				isSupervisor: false,

@@ -1104,7 +1104,7 @@ export default {
 				experience: [],
 				formation: [],
 				gender: '',
-				profesion: 'psychologist',
+				profession: 'psychologist',
 				instagram: '',
 				isExclusiveActivity: false,
 				isSupervisor: false,

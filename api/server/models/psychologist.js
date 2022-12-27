@@ -147,7 +147,7 @@ let psychologist = new Schema({
 	specialties: {
 		type: Array,
 	},
-	profesion: {
+	profession: {
 		type: String,
 		default: 'none',
 		enum: ['none', 'psychologist', 'nutritionist', 'psychopedagogue'],
