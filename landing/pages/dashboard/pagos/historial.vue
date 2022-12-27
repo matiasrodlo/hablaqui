@@ -58,7 +58,7 @@
 											$ {{ item.total }} - {{ item.sessionsPaid }} Sesiones
 										</div>
 										<div v-if="item.trasactionDate" class="secondary--text">
-											{{ formatDateMoment(item.trasactionDate) }}
+											{{ formatDatedayjs(item.trasactionDate) }}
 										</div>
 									</v-list-item-action>
 								</v-list-item>
@@ -154,7 +154,18 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { mdiClose } from '@mdi/js';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import 'dayjs/locale/es';
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(relativeTime);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * Pagina de Historial
  */
@@ -178,8 +189,8 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = moment().add('7', 'days');
-			return moment(day).format('DD/MM/YYYY');
+			const day = dayjs().add('7', 'days');
+			return dayjs.tz(dayjs(day)).format('DD/MM/YYYY');
 		},
 		...mapGetters({
 			payments: 'Psychologist/payments',
@@ -187,8 +198,8 @@ export default {
 		}),
 	},
 	created() {
-		// moment a esp
-		moment.locale('es');
+		// dayjs a esp
+		dayjs.locale('es');
 	},
 	mounted() {
 		// fetch inicial
@@ -216,8 +227,8 @@ export default {
 		/**
 		 * formatea la fecha
 		 */
-		formatDateMoment(item) {
-			return moment(item).format('DD MMMM, YYYY');
+		formatDatedayjs(item) {
+			return dayjs.tz(dayjs(item)).format('DD MMMM, YYYY');
 		},
 		/**
 		 * envia una peticion de pago y vuelve a carga los datos iniciales

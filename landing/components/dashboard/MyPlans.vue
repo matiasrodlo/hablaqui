@@ -88,9 +88,9 @@
 			<v-card>
 				<v-card-text class="text-center">
 					<div class="body-1 my-5 mx-auto" style="max-width: 280px">
-						Bienestar en cualquier momento, en cualquier lugar
+						Bienestar en cualquier momento
 					</div>
-					<v-btn rounded color="primary" to="/psicologos/">Comenzar</v-btn>
+					<v-btn rounded color="primary" to="/evaluacion/">Comenzar</v-btn>
 				</v-card-text>
 			</v-card>
 		</template>
@@ -98,8 +98,15 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * mis planes
  */
@@ -120,7 +127,7 @@ export default {
 					psychologist: item.psychologist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
-					diff: moment(plan.expiration).diff(moment(), 'days'),
+					diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),
 				}))
 			);
 		},
@@ -160,7 +167,7 @@ export default {
 		 * formatea la fecha con moment
 		 */
 		setDate(date) {
-			return moment(date).format('l');
+			return dayjs.tz(dayjs(date)).format('l');
 		},
 		/**
 		 * los items success
@@ -170,7 +177,7 @@ export default {
 				(item.payment === 'success' ||
 					item.payment === 'pending' ||
 					item.payment === 'failed') &&
-				moment().isBefore(moment(item.expiration))
+				dayjs().isBefore(dayjs(item.expiration))
 			);
 		},
 	},

@@ -1,8 +1,14 @@
 'use strict';
 
-import moment from 'moment';
 import sendMails from './sendMails';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
@@ -14,11 +20,11 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te damos la bienvenida a Hablaquí!',
+			subject: 'Bienvenido/a a Hablaquí',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-47d8674ebc0841b381cf68fa42c03b13',
+			templateId: 'd-0c5ca742f0df44b48f445bdedf6f85a8',
 			dynamicTemplateData: {
-				first_name: name,
+				user_first_name: name,
 			},
 			asm: {
 				group_id: 16321,
@@ -36,9 +42,9 @@ const mailService = {
 			from:
 				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te damos la bienvenida a Hablaquí!',
+			subject: 'Enhorabuena, hemos aprobado a su cuenta',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-6db5e38488fc42769fca7398be2930ae',
+			templateId: 'd-78caf64c2f9340a39abd4d5af7d4a0f6',
 			dynamicTemplateData: {
 				first_name: name,
 			},
@@ -59,9 +65,9 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: '¡Te han invitado a Hablaquí!',
+			subject: 'Ha sido invitado a Hablaquí por su especialista',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-84ac6d244f044322916649f448ebcecd',
+			templateId: 'd-785749c477ff43e0bdd8b5a8fe9ec17e',
 			dynamicTemplateData: {
 				name: name,
 				email: email,
@@ -127,14 +133,14 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
 			to: 'Hablaquí <soporte@hablaqui.cl>',
-			subject: `Psicologo subió foto`,
+			subject: `[Internal] Nueva fotografía de especialista`,
 			templateId: 'd-d0ad663db5c64f0f965d5aeab027a7aa',
 			asm: {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy: psy.name + ' ' + psy.lastName,
-				email: psy.email,
+				psy_name: psy.name + ' ' + psy.lastName,
+				psy_email: psy.email,
 			},
 		};
 		await sendMails(dataPayload);
@@ -161,7 +167,7 @@ const mailService = {
 				psy_name: psy.name,
 				code: coupon.code,
 				amount: coupon.discount,
-				expiration_date: moment(coupon.expiration).format('DD/MM/YYYY'),
+				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),
 			},
 		};
 		await sendMails(dataPayload);

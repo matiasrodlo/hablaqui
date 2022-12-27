@@ -407,7 +407,7 @@ export default {
 						this.$auth.$state.user.role === 'psychologist',
 				},
 				{
-					name: 'Mi cuenta',
+					name: 'Cuenta',
 					link: { name: 'dashboard-perfil' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/home.png',
@@ -423,7 +423,7 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 				{
-					name: 'Cambio de sesión',
+					name: 'Reagendamiento',
 					link: { name: 'dashboard-reschedule-session' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
@@ -432,6 +432,20 @@ export default {
 				{
 					name: 'Cambio de psicologo',
 					link: { name: 'dashboard-change-psy' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Tabla de pagos',
+					link: { name: 'dashboard-paymentTable' },
+					color: 'primary',
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+				},
+				{
+					name: 'Evaluaciones',
+					link: { name: 'dashboard-evaluations' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
@@ -445,6 +459,7 @@ export default {
 		 */
 		async logout() {
 			await this.$auth.logout();
+			this.$router.push('/auth');
 		},
 	},
 };

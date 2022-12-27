@@ -49,16 +49,6 @@ export default {
 		PsicologosDesktop,
 		PsicologosMobile,
 	},
-	/**
-	 * Obtiene los psicologos
-	 */
-	async asyncData({ error, store }) {
-		try {
-			await store.dispatch('Psychologist/getPsychologists');
-		} catch (e) {
-			error({ statusCode: 404, message: 'Page not found' });
-		}
-	},
 	head() {
 		return {
 			meta: [
@@ -98,7 +88,13 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+		...mapGetters({
+			loadingPsychologist: 'Psychologist/loadingPsychologist',
+			matchMaking: 'Psychologist/matchMaking',
+		}),
+	},
+	created() {
+		if (!this.$auth.$state.loggedIn) this.$router.push('/auth');
 	},
 	mounted() {
 		window.scrollTo(0, 0);
@@ -109,6 +105,14 @@ export default {
 		 * obtiene los datos iniciales
 		 */
 		async initialFetch() {
+			if (this.$auth.$state.loggedIn) {
+				await this.getMatchMakig(this.$auth.$state.user._id);
+				if (!this.matchMaking) {
+					this.$router.push('evaluacion');
+				} else {
+					await this.getPsychologistsBestMatch();
+				}
+			}
 			await this.getAppointments();
 		},
 		/**
@@ -120,6 +124,9 @@ export default {
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getMatchMakig: 'Psychologist/getMatchMakig',
+			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
+			getPsychologists: 'Psychologist/getPsychologists',
 		}),
 	},
 };

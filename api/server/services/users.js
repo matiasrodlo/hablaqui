@@ -1,24 +1,31 @@
 'use strict'; // Sirve para que el código sea mas estricto y evitar errores
 
-import User from '../models/user'; // user.js contiene la definición del modelo de usuario para mongodb
-import Psychologist from '../models/psychologist'; // psychologist.js contiene la definición del modelo de psicologo para mongodb
-import Recruitment from '../models/recruitment'; // recruitment.js contiene la definición del modelo de reclutamiento para mongodb
-import { logInfo } from '../config/winston'; // winston.js contiene la configuración de winston para el logging
-import bcrypt from 'bcryptjs'; // bcryptjs es una librería para encriptar contraseñas
-import servicesAuth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
-import { actionInfo } from '../utils/logger/infoMessages'; // infoMessages.js contiene los mensajes de información para el logging
-import { conflictResponse, okResponse } from '../utils/responses/functions'; // functions.js contiene las funciones para las respuestas
-import { bucket } from '../config/bucket'; // bucket.js contiene la configuración de la conexión con el bucket de google cloud storage
-import mailServiceAccount from '../utils/functions/mails/accountsShares'; // mail.js contiene la lógica para el envío de correos electrónicos
-import Sessions from '../models/sessions'; // sessions.js contiene la definición del modelo de sesiones para mongodb
-import Coupon from '../models/coupons'; // coupons.js contiene la definición del modelo de cupones para mongodb
-import moment from 'moment'; // moment.js es una librería para el manejo de fechas
-import { room } from '../config/dotenv'; // dotenv.js contiene la configuración de las variables de entorno
-import Auth from './auth'; // auth.js contiene la lógica para la autenticación de usuarios
+import User from '../models/user';
+import Psychologist from '../models/psychologist';
+import Recruitment from '../models/recruitment';
+import { logInfo } from '../config/winston';
+import bcrypt from 'bcryptjs';
+import servicesAuth from './auth';
+import { actionInfo } from '../utils/logger/infoMessages';
+import { conflictResponse, okResponse } from '../utils/responses/functions';
+import { bucket } from '../config/bucket';
+import mailServiceAccount from '../utils/functions/mails/accountsShares';
+import Sessions from '../models/sessions';
+import Coupon from '../models/coupons';
+import dayjs from 'dayjs';
+import crypto from 'crypto';
+import { room } from '../config/dotenv';
+import Auth from './auth';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Analytics from 'analytics-node';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
-var Analytics = require('analytics-node');
-var analytics = new Analytics(process.env.SEGMENT_API_KEY);
-moment.tz.setDefault('America/Santiago');
+const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const usersService = {
 	async getProfile(id) {
@@ -109,8 +116,7 @@ const usersService = {
 
 		// Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
 		const sessionesPendientes = ultimoPlan.session.filter(
-			session =>
-				session.status === 'pending' || session.status === 'upnext'
+			session => session.status === 'pending' // || session.status === 'upnext'
 		).length;
 		const sessionesRealizadas = ultimoPlan.session.filter(
 			session =>
@@ -156,9 +162,7 @@ const usersService = {
 		}
 
 		// Se cambia el plan de expiración del plan antiguo
-		ultimoPlan.expiration = moment()
-			.subtract(1, 'days')
-			.format();
+		ultimoPlan.expiration = dayjs.tz(dayjs().subtract(1, 'days')).format();
 
 		// Se filtran las sesiones que no a la fecha no se han realizado
 		ultimoPlan.session = ultimoPlan.session.filter(
@@ -321,7 +325,7 @@ const usersService = {
 		// genera un link de verificación y se envia un correo con el link
 		const createdUser = await User.create(newUser);
 		const token = Auth.generateJwt(createdUser);
-		const verifyurl = `${process.env.VUE_APP_LANDING}/verificacion-email?id=${createdUser._id}&token=${token}`;
+		const verifyurl = `${process.env.VUE_APP_LANDING}verificacion-email?id=${createdUser._id}&token=${token}`;
 		await mailServiceAccount.sendVerifyEmail(createdUser, verifyurl);
 
 		// Se hace el trakeo en segment
@@ -351,11 +355,8 @@ const usersService = {
 				},
 			});
 		}
-
-		// Se comienza a crear el documento de sessiones, se crea el link de la sala y
-		// el objeto del plan inicial, sea crea el documento de sesiones
-		const roomId = require('crypto')
-			.createHash('md5')
+		const roomId = crypto
+			.createHash('sha256')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
@@ -365,7 +366,10 @@ const usersService = {
 			totalPrice: 0,
 			sessionPrice: 0,
 			payment: 'success',
-			expiration: moment('12/12/2000', 'MM/DD/YYYY HH:mm').toISOString(),
+			expiration: dayjs
+				.tz(dayjs('12/12/2000', 'MM/DD/YYYY HH:mm'))
+				.format()
+				.toISOString(),
 			invitedByPsychologist: true,
 			usedCoupon: '',
 			totalSessions: 0,
@@ -406,7 +410,7 @@ const usersService = {
 		const planData = foundPlan.plan.filter(
 			plan =>
 				plan.payment === 'success' &&
-				moment().isBefore(moment(plan.expiration))
+				dayjs().isBefore(dayjs(plan.expiration))
 		);
 		if (!planData) return conflictResponse('No hay planes para cancelar');
 
@@ -434,8 +438,6 @@ const usersService = {
 			discount += remaining * data.price;
 			sessionsToDelete.push(data.session);
 		});
-		console.log(discount);
-		console.log(sessionsToDelete);
 
 		planData.forEach(async plan => {
 			// Se busca en la base de datos y modifica el plan

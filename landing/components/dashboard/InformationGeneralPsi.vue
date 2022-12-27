@@ -7,6 +7,7 @@
 			<v-text-field
 				label="Código"
 				filled
+				disabled
 				outlined
 				dense
 				type="text"

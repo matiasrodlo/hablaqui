@@ -1048,7 +1048,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 											style="max-width: 800px"
 										>
 											Hemos recibido su postulación, en breve verificaremos
-											sus datos en la superintendencia de salud.
+											sus datos.
 										</div>
 										<div>
 											<v-btn

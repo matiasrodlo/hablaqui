@@ -305,8 +305,16 @@
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isBetween);
+dayjs.tz.setDefault('America/Santiago');
 
 /**
  * horarios del psicologo
@@ -557,14 +565,14 @@ export default {
 						el =>
 							el[0] !== '' ||
 							el[1] !== '' ||
-							moment(el[0], 'HH:mm').isSame(moment(el[1], 'HH:mm'))
+							dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))
 					)
 					.map(el => {
-						if (moment(el[0], 'HH:mm').isBefore(moment(el[1], 'HH:mm')))
+						if (dayjs(el[0], 'HH:mm').isBefore(dayjs(el[1], 'HH:mm')))
 							return [el[0], el[1]];
 						else return [el[1], el[0]];
 					})
-					.filter(el => !moment(el[0], 'HH:mm').isSame(moment(el[1], 'HH:mm'))),
+					.filter(el => !dayjs(el[0], 'HH:mm').isSame(dayjs(el[1], 'HH:mm'))),
 			}));
 
 			const payload = {
@@ -587,9 +595,9 @@ export default {
 		validateInput(indexDay, indexInterval, value, type) {
 			const result = this.items[indexDay].intervals.some((item, i) => {
 				if (indexInterval !== i)
-					return moment(value, 'HH:mm').isBetween(
-						moment(item[0], 'HH:mm'),
-						moment(item[1], 'HH:mm'),
+					return dayjs(value, 'HH:mm').isBetween(
+						dayjs(item[0], 'HH:mm'),
+						dayjs(item[1], 'HH:mm'),
 						undefined,
 						[]
 					);

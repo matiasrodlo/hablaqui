@@ -1,9 +1,22 @@
 import Psychologist from '../models/psychologist';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
+import Coupon from '../models/coupons';
 import Sessions from '../models/sessions';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.tz.setDefault('America/Santiago');
 
 const getNextSessions = async () => {
 	/*
@@ -23,7 +36,7 @@ const getNextSessions = async () => {
 			const plan = s.plan.pop();
 			const planActived =
 				plan.payment === 'success' &&
-				moment(plan.expiration).isAfter(moment());
+				dayjs(plan.expiration).isAfter(dayjs());
 			// Devuelve un objeto con el último plan
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
@@ -45,7 +58,7 @@ const getNextSessions = async () => {
 			return plan.session.flatMap(s => {
 				// Se obtiene si una sesion es proxima y se verifica que la sesion no haya expirado.
 				const isNextSession =
-					s.status !== 'success' && moment(s.date).isAfter(moment());
+					s.status !== 'success' && dayjs(s.date).isAfter(dayjs());
 				// Devuelve un objeto con la proxima sesion
 				return {
 					_id: s._id,
@@ -97,7 +110,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 
 	// Se filtra de flatSession las sesiones pagadas entre las fechas indicadas
 	flatSession = flatSession.filter(s =>
-		moment(s.date).isBetween(moment(startDate), moment(endDate))
+		dayjs(s.date).isBetween(dayjs(startDate), dayjs(endDate))
 	);
 
 	// Se agrupan las sesiones por psicologo y se suman los precios
@@ -137,10 +150,95 @@ const fixSpecialities = async () => {
 	return okResponse('app', { psychologists });
 };
 
+const getMountToPay = async user => {
+	if (user.role !== 'superuser')
+		return conflictResponse('No puedes emplear esta acción');
+	const psychologists = await Psychologist.find();
+	let amounts = [];
+
+	for (let psy in psychologists) {
+		let sessions = await Sessions.find({
+			psychologist: psychologists[psy]._id,
+		}).populate('user');
+		sessions = sessions.filter(s => !!s.user);
+		const plans = sessions
+			.flatMap(s =>
+				s.plan.map(p => {
+					return {
+						title: p.title,
+						payment: p.payment,
+						session: p.session,
+						sessionPrice: p.sessionPrice,
+						usedCoupon: p.usedCoupon,
+						name: s.user.name,
+						email: s.user.email,
+					};
+				})
+			)
+			.filter(p => p.title !== 'Plan inicial' && p.payment === 'success');
+		let session = plans.flatMap(p => {
+			return {
+				sessions: p.session.filter(
+					item =>
+						!item.paidToPsychologist && item.status === 'success'
+				),
+				price: p.sessionPrice,
+				coupon: p.usedCoupon,
+				name: p.name,
+				email: p.email,
+			};
+		});
+		let total = 0;
+		for (let i = 0; i < session.length; i++) {
+			if (session[i].coupon) {
+				const coupon = await Coupon.findOne({
+					code: session[i].coupon,
+				});
+				if (coupon.discountType === 'percentage')
+					session[i].price =
+						session[i].price / (coupon.discount / 100);
+				else session[i].price += coupon.discount;
+			}
+			total += session[i].price * session[i].sessions.length;
+		}
+		session = session.flatMap(item =>
+			item.sessions.flatMap(s => {
+				console.log(item);
+				return {
+					date: dayjs
+						.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+						.format('DD/MM/YYYY HH:mm'),
+					_id: s._id,
+					status: s.status,
+					name: item.name,
+					email: item.email,
+					sessionNumber: s.sessionNumber,
+					price: item.price,
+					coupon: item.coupon,
+				};
+			})
+		);
+		console.log(session);
+		amounts.push({
+			_id: psychologists[psy]._id,
+			name: psychologists[psy].name,
+			lastName: psychologists[psy].lastName,
+			email: psychologists[psy].email,
+			username: psychologists[psy].username,
+			paymentMethod: psychologists[psy].paymentMethod,
+			total,
+			session,
+		});
+	}
+
+	return okResponse('Planes', { amounts });
+};
+
 const retoolService = {
 	getNextSessions,
 	getSessionsPayment,
 	fixSpecialities,
+	getMountToPay,
 };
 
 export default Object.freeze(retoolService);

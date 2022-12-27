@@ -1,6 +1,10 @@
 import Sessions from '../../models/sessions';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export const getAllSessionsFunction = async psy => {
 	let sessions = await Sessions.find({
@@ -23,21 +27,21 @@ export const getAllSessionsFunction = async psy => {
 			return plan.session.map(session => {
 				const expiration =
 					plan.payment === 'pending' &&
-					moment().isAfter(moment(plan.expiration));
+					dayjs().isAfter(dayjs(plan.expiration));
 				let requestDate = session.requestDate
 					? session.requestDate
 					: 'Por cobrar';
 				if (requestDate !== 'Por cobrar')
-					requestDate = moment(requestDate).format(
-						'YYYY/MM/DD HH:mm'
-					);
+					requestDate = dayjs
+						.tz(dayjs(requestDate))
+						.format('YYYY/MM/DD HH:mm');
 				let paymentDate = session.requestDate
 					? session.requestDate
 					: 'Por cobrar';
 				if (paymentDate !== 'Por cobrar')
-					paymentDate = moment(paymentDate).format(
-						'YYYY/MM/DD HH:mm'
-					);
+					paymentDate = dayjs
+						.tz(dayjs(paymentDate))
+						.format('YYYY/MM/DD HH:mm');
 				return {
 					_id: session._id,
 					date: session.date,
@@ -51,9 +55,9 @@ export const getAllSessionsFunction = async psy => {
 					statusPlan: plan.payment,
 					suscription: plan.period,
 					idPlan: plan._id,
-					paymentPlanDate: moment(plan.datePayment).format(
-						'YYYY/MM/DD HH:mm'
-					),
+					paymentPlanDate: dayjs
+						.tz(dayjs(plan.datePayment))
+						.format('YYYY/MM/DD HH:mm'),
 					requestDate,
 					paymentDate,
 					request: session.request ? session.request : 'none',

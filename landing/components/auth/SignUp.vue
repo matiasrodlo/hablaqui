@@ -2,7 +2,7 @@
 	<v-form @submit.prevent="onSubmit">
 		<v-row no-gutters>
 			<!-- nombre -->
-			<v-col cols="12">
+			<v-col cols="6">
 				<v-text-field
 					v-model="form.name"
 					type="text"
@@ -11,6 +11,17 @@
 					dense
 					autocomplete="off"
 					:error-messages="nameErrors"
+				></v-text-field>
+			</v-col>
+			<v-col cols="6">
+				<v-text-field
+					v-model="form.lastName"
+					type="text"
+					label="Apellido"
+					outlined
+					dense
+					autocomplete="off"
+					:error-messages="lastnameErrors"
 				></v-text-field>
 			</v-col>
 			<!-- correo elecronico -->
@@ -97,7 +108,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength, helpers } from 'vuelidate/lib/validators';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
@@ -149,6 +160,14 @@ export default {
 			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
+		lastnameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('El apellido es querido');
+			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
+			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
+			return errors;
+		},
 		/**
 		 * Verifica que el password sea valido
 		 * @returns array con los errores
@@ -184,6 +203,7 @@ export default {
 		defaultForm() {
 			this.form = {
 				name: '',
+				lastName: '',
 				email: '',
 				role: 'user',
 				password: '',
@@ -195,6 +215,7 @@ export default {
 		 * Envio del formulario
 		 */
 		async onSubmit() {
+			const temporalMatchMaking = JSON.parse(localStorage.getItem('temporalMatchMaking'));
 			// verificamos validacion
 			this.$v.$touch();
 			if (!this.$v.$invalid && !this.accept) {
@@ -216,6 +237,12 @@ export default {
 					// establecemos el usuario luego del login
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn) {
+						if (temporalMatchMaking) {
+							temporalMatchMaking.userId = this.$auth.user._id;
+							await this.createMatchMakig(temporalMatchMaking);
+							localStorage.removeItem('temporalMatchMaking');
+							return this.$router.push('/psicologos');
+						}
 						// si llegamos al login con un query from=psy
 						if (this.$route.query.from === 'psy') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
@@ -280,6 +307,9 @@ export default {
 			};
 			window.dataLayer.push(data);
 		},
+		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
+		}),
 		...mapMutations({
 			setResumeView: 'Psychologist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
@@ -288,6 +318,11 @@ export default {
 	validations: {
 		form: {
 			name: {
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(99),
+			},
+			lastName: {
 				required,
 				minLength: minLength(3),
 				maxLength: maxLength(99),

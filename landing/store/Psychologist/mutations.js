@@ -1,6 +1,15 @@
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import updateObjectInArray from '@/plugins/updateArray';
-moment.tz.setDefault('America/Santiago');
+import 'dayjs/locale/es';
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	setPsychologists(state, value) {
@@ -27,6 +36,9 @@ export default {
 	setPayments(state, value) {
 		state.payments = value;
 	},
+	setMatchMaking(state, value) {
+		state.matchMaking = value;
+	},
 	setCustomSessions(state, value) {
 		state.sessions.push(value);
 	},
@@ -37,36 +49,36 @@ export default {
 		);
 	},
 	setSessionsFormatted(state, sessions) {
-		moment.locale('es');
+		dayjs.locale('es');
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
-			text: moment(session.text).format('ddd'),
-			day: moment(session.day, 'DD MMM').format('DD MMM'),
+			text: dayjs.tz(dayjs(session.text)).format('ddd'),
+			day: dayjs(session.day).format('DD MMM'),
 		}));
 	},
 	setSessionsFormattedAll(state, items) {
-		moment.locale('es');
+		dayjs.locale('es');
 		state.sessionsFormattedAll = items.map(item => {
 			return {
 				psychologist: item.psychologist,
 				sessions: item.sessions.map(el => ({
 					...el,
-					text: moment(el.text).format('ddd'),
-					day: moment(el.day, 'DD MMM').format('DD MMM'),
+					text: dayjs.tz(dayjs(el.text)).format('ddd'),
+					day: dayjs(el.day).format('DD MMM'),
 				})),
 			};
 		});
 	},
 	setSessionsLimit(state, items) {
-		moment.locale('es');
+		dayjs.locale('es');
 		state.sessionsLimit = state.sessionsLimit.concat(
 			items.map(item => {
 				return {
 					psychologist: item.psychologist,
 					sessions: item.sessions.map(el => ({
 						...el,
-						text: moment(el.text).format('ddd'),
-						day: moment(el.day, 'DD MMM').format('DD MMM'),
+						text: dayjs.tz(dayjs(el.text)).format('ddd'),
+						day: dayjs(el.day).format('DD MMM'),
 					})),
 				};
 			})

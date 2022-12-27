@@ -99,9 +99,16 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
-moment.tz.setDefault('America/Santiago');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/es';
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 /**
  * burbuja de chat
@@ -116,6 +123,7 @@ export default {
 			selected: null,
 			loadingChat: false,
 			channel: null,
+			plan: null,
 		};
 	},
 	computed: {
@@ -199,7 +207,7 @@ export default {
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			floatingChat: 'Chat/floatingChat',
 			allPsychologists: 'Psychologist/psychologists',
 			resumeView: 'Psychologist/resumeView',
@@ -223,8 +231,8 @@ export default {
 		},
 	},
 	created() {
-		// moment a esp
-		moment.locale('es');
+		// dayjs a esp
+		dayjs.locale('es');
 		// activa el socket io
 		this.socket = this.$nuxtSocket({
 			channel: '/liveData',
@@ -242,6 +250,8 @@ export default {
 		});
 	},
 	async mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		// si esta la vista resumen activa
 		if (this.resumeView) {
 			// si tenemos el id en los parametros buscamos el psi  y establecemos

@@ -6,8 +6,12 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 /**
  * Pagina de experiencia y formacion
@@ -33,7 +37,7 @@ export default {
 						psychologist: item.psychologist,
 						user: item.user,
 						// dias de diferencia entre el dia que expiró y hoy
-						diff: moment(plan.expiration).diff(moment(), 'days'),
+						diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),
 					}))
 				);
 				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));
@@ -41,7 +45,7 @@ export default {
 
 				// retornamos el plan success y sin expirar
 				let plan = plans.find(
-					item => item.payment === 'success' && moment().isBefore(moment(item.expiration))
+					item => item.payment === 'success' && dayjs().isBefore(dayjs(item.expiration))
 				);
 				// retornamos el siguiente plan pendiente
 				if (!plan) plan = plans.find(item => item.diff === max);

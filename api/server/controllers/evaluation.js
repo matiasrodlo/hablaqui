@@ -45,9 +45,9 @@ const evaluationController = {
 	},
 	async getAllEvaluations(req, res) {
 		try {
-			const { psy } = req.params;
+			const { user } = req;
 			const { data, code } = await evaluationService.getAllEvaluations(
-				psy
+				user
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -60,8 +60,10 @@ const evaluationController = {
 	},
 	async approveEvaluation(req, res) {
 		try {
+			const { user } = req;
 			const { evsId, evId } = req.params;
 			const { data, code } = await evaluationService.approveEvaluation(
+				user,
 				evsId,
 				evId
 			);
@@ -72,8 +74,10 @@ const evaluationController = {
 	},
 	async refuseEvaluation(req, res) {
 		try {
+			const { user } = req;
 			const { evsId, evId } = req.params;
 			const { data, code } = await evaluationService.refuseEvaluation(
+				user,
 				evsId,
 				evId
 			);

@@ -211,7 +211,7 @@
 										v-if="lastTransaction.trasactionDate"
 										class="body-1 text-right pt-2"
 									>
-										{{ formatDateMoment(lastTransaction.trasactionDate) }}
+										{{ formatDatedayjs(lastTransaction.trasactionDate) }}
 									</div>
 								</div>
 							</div>
@@ -243,7 +243,7 @@
 					<div>
 						<div class="primary--text font-weight-bold">{{ item.name }}</div>
 						<div class="font-weight-medium secondary--text caption mt-1">
-							Sesión:{{ item.sessionsNumber }}
+							Sesión: {{ item.sessionsNumber }}
 						</div>
 					</div>
 					<div>
@@ -265,7 +265,7 @@
 							justify-space-between
 						"
 					>
-						<span>Tipo de plan</span>
+						<span>Suscripción</span>
 						<span>{{ item.plan }}</span>
 					</div>
 					<div
@@ -277,7 +277,7 @@
 							justify-space-between
 						"
 					>
-						<span>Monto</span>
+						<span>Valor</span>
 						<span>{{ item.amount }}</span>
 					</div>
 					<div
@@ -289,7 +289,7 @@
 							justify-space-between
 						"
 					>
-						<span>% Hablaquí</span>
+						<span>Comisión Hablaquí</span>
 						<span>${{ item.percentage }}</span>
 					</div>
 					<div
@@ -310,7 +310,7 @@
 		<v-dialog v-model="dialog" persistent max-width="400">
 			<v-card max-width="400">
 				<v-card-title class="d-flex">
-					<div class="primary--text" style="flex: 1">Detalles</div>
+					<div class="primary--text" style="flex: 1">Detalle</div>
 					<div style="flex: 0">
 						<v-btn
 							icon
@@ -331,25 +331,25 @@
 						<div>{{ selected.date }}</div>
 					</div>
 					<div class="d-flex justify-space-between my-2">
-						<div>N° de sesión:</div>
+						<div>Numero de sesión:</div>
 						<div>{{ selected.sessionsNumber }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">Monto:</div>
+						<div style="flex: 1">Valor sesión:</div>
 						<div style="flex: 0">{{ selected.amount }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">%Hablaqui:</div>
-						<div style="flex: 0">{{ selected.hablaquiPercentage }}</div>
+						<div style="flex: 1">Comisión Hablaqui:</div>
+						<div style="flex: 0">${{ selected.hablaquiPercentage }}</div>
 					</div>
 					<div class="d-flex my-2">
-						<div style="flex: 1">%Mercadopago:</div>
-						<div style="flex: 0">{{ selected.mercadoPercentage }}</div>
+						<div style="flex: 1">Comisión Mercadopago:</div>
+						<div style="flex: 0">${{ selected.mercadoPercentage }}</div>
 					</div>
 				</v-card-text>
 				<v-divider></v-divider>
 				<v-card-actions v-if="selected" class="py-6">
-					<span class="secondary--text">Total:</span>
+					<span class="secondary--text">Monto final:</span>
 					<v-spacer></v-spacer>
 					<span class="secondary--text">{{ selected.total }}</span>
 				</v-card-actions>
@@ -439,10 +439,22 @@
 </template>
 
 <script>
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { mapActions } from 'vuex';
 import { mdiMagnify, mdiClose } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import 'dayjs/locale/es';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * Tabla de registros de pagos
  */
@@ -484,7 +496,7 @@ export default {
 			dialog: false,
 			dialogPayment: false,
 			menu: false,
-			findByDate: moment().format('YYYY-MM'),
+			findByDate: dayjs.tz().format('YYYY-MM'),
 			mdiMagnify,
 			loadingPayment: false,
 			mdiClose,
@@ -508,8 +520,8 @@ export default {
 		 * retorna la fecha de retiro en 7 dias formato dd/mm/yyyy
 		 */
 		dayWithdraw() {
-			const day = moment().add('7', 'days');
-			return moment(day).format('DD/MM/YYYY');
+			const day = dayjs().add('7', 'days');
+			return dayjs.tz(dayjs(day)).format('DD/MM/YYYY');
 		},
 		/**
 		 * muestra la ultima transaccion realizada
@@ -527,7 +539,7 @@ export default {
 				let result = this.items
 					.filter(
 						item =>
-							moment(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
+							dayjs.tz(dayjs(item.datePayment, 'DD/MM/YYYY')).format('YYYY-MM') ===
 							this.findByDate
 					)
 					.map((item, index) => ({ ...item, id: index }));
@@ -548,25 +560,25 @@ export default {
 		 * fomatea la fecha dada a MMMM, YYYY
 		 */
 		formatedFindByDate() {
-			return moment(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
+			return dayjs.tz(dayjs(this.findByDate, 'YYYY-MM')).format('MMMM, YYYY');
 		},
 	},
 	created() {
-		// moment a esp
-		moment.locale('es');
+		// dayjs a esp
+		dayjs.locale('es');
 	},
 	methods: {
 		/**
 		 * formatea la fecha que le pasemos a DD MMMM, YYYY
 		 */
 		formatDate(item) {
-			return moment(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
+			return dayjs.tz(dayjs(item, 'DD/MM/YYYY')).format('DD MMMM, YYYY');
 		},
 		/**
 		 * formatea a fecha que le pasemos a DD MMMM, YYYY
 		 */
-		formatDateMoment(item) {
-			return moment(item).format('DD MMMM, YYYY');
+		formatDatedayjs(item) {
+			return dayjs.tz(dayjs(item)).format('DD MMMM, YYYY');
 		},
 		/**
 		 * Envia una peticion de pago

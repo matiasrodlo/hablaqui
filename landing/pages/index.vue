@@ -31,7 +31,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							to="/psicologos/"
+							to="/evaluacion/"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -143,9 +143,9 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos/"
+						to="/evaluacion/"
 					>
-						Quiero empezar
+						Comenzar
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -365,9 +365,9 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/psicologos/"
+						to="/evaluacion/"
 					>
-						Quiero empezar
+						Comenzar
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -652,7 +652,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						to="/psicologos/"
+						to="/evaluacion/"
 					>
 						Quiero empezar
 					</v-btn>

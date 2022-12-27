@@ -15,9 +15,9 @@
 			</v-list-item>
 			<v-divider></v-divider>
 			<v-list dense>
-				<v-list-item id="comenzar-blue-drawer" accesskey="c" link nuxt to="/psicologos/">
+				<v-list-item id="comenzar-blue-drawer" accesskey="c" link nuxt to="/evaluacion/">
 					<v-list-item-content>
-						<v-list-item-title>Quiero comenzar</v-list-item-title>
+						<v-list-item-title>Comenzar</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>

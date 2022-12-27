@@ -1,6 +1,6 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Camnbio de psicólogo" />
+		<appbar class="hidden-sm-and-down" title="Reagendamiento" />
 		<v-row style="height: calc(100vh - 110px); overflow-y: auto">
 			<v-col class="text--secondary" cols="6">
 				<v-list>
@@ -84,10 +84,16 @@
 <script>
 import axios from 'axios';
 import { mapMutations } from 'vuex';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
-moment.tz.setDefault('America/Santiago');
 /**
  * pagina de reagendar sesion
  */
@@ -177,8 +183,7 @@ export default {
 		 */
 		async getClients(id) {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
-			this.clients = users;
-			console.log(this.clients);
+			this.clients = users.filter(user => !!user.plan);
 		},
 		/**
 		 * Obtiene la sesiones del cliente pasado
@@ -195,7 +200,9 @@ export default {
 		 */
 		clickSession(value) {
 			this.selectedSession = value;
-			this.sessionDate = moment(value.date, 'MM/DD/YYYY HH:mm').format('yyyy-MM-DDTHH:mm');
+			this.sessionDate = dayjs
+				.tz(dayjs(value.date, 'MM/DD/YYYY HH:mm'))
+				.format('YYYY-MM-DDTHH:mm');
 		},
 		/**
 		 * Envia la Reagenda del evento

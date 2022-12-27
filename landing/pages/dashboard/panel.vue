@@ -150,6 +150,21 @@
 								Verificar
 							</v-btn>
 						</v-col>
+						<!-- Monto -->
+						<v-col cols="12">Monto a pagar</v-col>
+						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Monto</v-col>
+						<v-col cols="4" class="br bb bt py-2">
+							<input class="px-2" :value="totalMount" type="text" :disabled="true" />
+						</v-col>
+						<v-col cols="4" class="py-2">
+							<v-btn
+								small
+								:disabled="!selected.isPsy || sessionsToPay.length === 0"
+								@click="setTransaction"
+							>
+								Pagar
+							</v-btn>
+						</v-col>
 						<!-- Codigo -->
 						<v-col cols="12">Codigo</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -737,8 +752,9 @@
 
 <script>
 import axios from 'axios';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 /**
  * Panel del superusuario
@@ -769,6 +785,8 @@ export default {
 			loading: true,
 			available: false,
 			banks: [],
+			totalMount: 0,
+			sessionsToPay: [],
 		};
 	},
 	computed: {
@@ -928,7 +946,7 @@ export default {
 		/**
 		 * establece un user como seleccionado
 		 */
-		setSelected(item, isPsy) {
+		async setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
 			this.dialog = true;
 		},
@@ -1001,6 +1019,9 @@ export default {
 			);
 			return avatar;
 		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		...mapActions({
 			putApproveAvatar: 'Psychologist/approveAvatar',
 			checkUsername: 'Psychologist/checkUsername',

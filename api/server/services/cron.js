@@ -1,42 +1,43 @@
 'use-strict';
 import email from '../models/email';
 import Chat from '../models/chat';
-import User from '../models/user';
-import psychologist from '../models/psychologist';
+import userModel from '../models/user';
+import mercadopagoService from './mercadopago';
+import couponModel from '../models/coupons';
+import psychologistModel from '../models/psychologist';
 import mailServiceRemider from '../utils/functions/mails/reminder';
 import mailServicePsy from '../utils/functions/mails/psychologistStatus';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
-import Sessions from '../models/sessions';
-import { logInfo } from '../config/pino';
-moment.tz.setDefault('America/Santiago');
-
-const authToken = 'MWYkx6jOiUcpx5w7UUhB';
-const sgClient = require('@sendgrid/client'); // sendgrid es una api que permite enviar correos masivos
+import sessionsModel from '../models/sessions';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import sgClient from '@sendgrid/client'; // sendgrid es una api que permite enviar correos masivos
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.tz.setDefault('America/Santiago');
 sgClient.setApiKey(process.env.SENDGRID_API_KEY);
 
-function isSchedulableEmail(date) {
-	/**
-	 * @description Comprueba si el correo electrónico es programable (3 días o menos antes de la cita)
-	 * @param {moment} date es la fecha de la cita
-	 * @returns
-	 */
-	return moment()
-		.add(3, 'days')
-		.isAfter(date);
-}
+const authToken = 'MWYkx6jOiUcpx5w7UUhB';
 
-function generatePayload(date, batch) {
+function generatePayload(date, batch, reminderType, isSend) {
 	/**
 	 * @description Crea el payload para actualizar el objeto de programación de correo electrónico
-	 * @param {moment} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
+	 * @param {dayjs} date Fecha en la que se programará el correo electrónico (1 hora antes de la cita)
 	 * @param {string} mailId ID de Mailgun para identificar el correo electrónico internamente
+	 * @param {string} reminderType Tipo de recordatorio (1 hora antes, 1 día antes)
 	 * @returns un objeto con el payload
 	 */
 	return {
-		wasScheduled: true,
-		scheduledAt: moment(date)
-			.subtract(1, 'hour')
+		wasScheduled: isSend,
+		scheduledAt: dayjs
+			.tz(dayjs(date).subtract(1, reminderType))
 			.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
 		batchId: batch,
 	};
@@ -44,14 +45,13 @@ function generatePayload(date, batch) {
 
 async function getNumberSuccess() {
 	/**
-	 * @description Se envia un correo electrónico para habilitar la evaluación del psicólogo
+	 * @description Actualiza la cantidad de sessiones exitosas de las sessiones.
 	 */
-	const users = await User.find();
+	const users = await userModel.find();
 	users.forEach(async user => {
-		const sessions = await Sessions.find({ user: user._id }).populate(
-			'psychologist',
-			'name'
-		);
+		const sessions = await sessionsModel
+			.find({ user: user._id })
+			.populate('psychologist', 'name');
 		sessions.forEach(async item => {
 			let successSessions = 0;
 			// Se filtran las citas que no hayan sido canceladas y se suman las sesiones exitosas
@@ -62,7 +62,7 @@ async function getNumberSuccess() {
 				).length;
 			});
 			// Se actualiza el número de sesiones exitosas
-			await Sessions.updateOne(
+			await sessionsModel.updateOne(
 				{
 					_id: item._id,
 				},
@@ -85,53 +85,6 @@ async function getNumberSuccess() {
 	});
 }
 
-async function sendNotification(emails) {
-	/**
-	 * @description Envía un correo electrónico a los usuarios que no han sido notificados
-	 * @param {array} emails array de correos electrónicos
-	 */
-	emails.forEach(async e => {
-		if (moment().isAfter(moment(e.sessionDate).add(3, 'hours'))) {
-			// Si la cita ya pasó 3 horas, entonces se obtiene el batchId, se obtiene el usuario, el psicologo, y el chat.
-			const batch = await getBatchId();
-			const user = await User.findById(e.userRef);
-			const psy = await psychologist.findById(e.psyRef);
-			const messages = await Chat.findOne({
-				user: e.userRef,
-				psychologist: e.psyRef,
-			});
-
-			// Se filtra el chat para obtener los mensajes que sean del correo electrónico
-			const message = messages.messages.filter(
-				m => m._id.toString() === e.sessionRef.toString()
-			);
-
-			// Si el correo electrónico no ha sido leído y no ha sido programado, entonces se envía el correo electrónico
-			if (!message[0].read && !e.wasScheduled) {
-				e.type === 'send-by-psy'
-					? await mailServiceRemider.sendChatNotificationToUser(
-							user,
-							psy,
-							batch
-					  )
-					: await mailServiceRemider.sendChatNotificationToPsy(
-							user,
-							psy,
-							batch
-					  );
-			}
-
-			// Se actualiza el objeto de programación de correo electrónico
-			const updatePayload = {
-				wasScheduled: true,
-				scheduledAt: moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-				batchId: batch,
-			};
-			await email.updateOne({ _id: e._id }, updatePayload);
-		}
-	});
-}
-
 async function getBatchId() {
 	/**
 	 * @description Se obtiene un batchId para el envío de correos electrónicos
@@ -151,21 +104,153 @@ async function getBatchId() {
 	return batch_id;
 }
 
+async function preference(user, psychologist, plan, session) {
+	// Se genera un código aleatorio para el token de pago
+	const randomCode = () => {
+		return Math.random()
+			.toString(36)
+			.substring(2);
+	};
+	const token = randomCode() + randomCode();
+	const price = plan.totalPrice;
+	// Se crea el pago en mercadopago
+	const mercadopagoPayload = {
+		psychologist: psychologist.username,
+		price: price,
+		description:
+			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
+		quantity: 1,
+		sessionsId: session._id.toString(),
+		planId: plan._id.toString(),
+		token,
+	};
+	const responseBody = await mercadopagoService.createPreference(
+		mercadopagoPayload
+	);
+	return responseBody.init_point;
+}
+
+async function createCoupon() {
+	// Generar un número entero random
+	const randomInt = (min = 100, max = 999) => {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	};
+	const code = 'H' + randomInt();
+	const coupon = {
+		code: code,
+		discount: 20,
+		discountType: 'percentage',
+		restrictions: {
+			firstTimeOnly: true,
+		},
+		expiration: dayjs.tz(dayjs().add(1, 'week')).format(),
+	};
+	await couponModel.create(coupon);
+	return coupon.code;
+}
+
+/**
+ * @description La idea general de esta función es obtener los correos electrónicos que no han sido programados
+ * darles una fecha, o en su defecto verificar su fecha de envío y enviarlos.
+ * @param {Array} pendingEmails - Correos electrónicos pendientes de programación
+ */
+
+async function scheduleEmails(pendingEmails) {
+	// Busca los correos electrónicos que no han sido programados
+	if (!pendingEmails.length > 0) {
+		return;
+	}
+	pendingEmails.forEach(async emailInfo => {
+		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		let batch = null;
+		const mailType = emailInfo.type.split('-').pop();
+		const addressee = emailInfo.type.split('-')[1];
+		const sessionDate = dayjs(emailInfo.sessionDate);
+		const urlRooms = emailInfo.url;
+		let isSend = false;
+
+		// Se verifica si en el correo de recordatorio de un día antes es parte del día
+		// anterior para asegurar que se envíe el correo el día antes y no el día que corresponde
+		// a la sessión con un máximo de 20 horas antes.
+		if (
+			!dayjs().isBefore(dayjs(sessionDate).subtract(20, 'hours')) &&
+			mailType === 'day'
+		) {
+			return;
+		}
+		const user = await userModel.findById(emailInfo.userRef);
+		const psy = await psychologistModel.findById(emailInfo.psyRef);
+		if (!user || !psy) {
+			return;
+		}
+		try {
+			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Si es null significa que aún no se le ha dado una fecha de envío
+			if (emailInfo.scheduledAt !== null) {
+				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
+				if (
+					addressee === 'user' &&
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
+				) {
+					batch = await getBatchId();
+					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
+					isSend = true;
+					console.log(sessionDate);
+					await mailServiceRemider.sendReminderUser(
+						user,
+						psy,
+						sessionDate,
+						batch,
+						mailType,
+						urlRooms
+					);
+				} else if (
+					addressee === 'psy' &&
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
+				) {
+					batch = await getBatchId();
+					isSend = true;
+					await mailServiceRemider.sendReminderPsy(
+						user,
+						psy,
+						sessionDate,
+						batch,
+						mailType,
+						urlRooms
+					);
+				}
+			}
+			// Se genera el payload y se actualiza el email
+			const updatePayload = generatePayload(
+				sessionDate,
+				batch,
+				mailType,
+				isSend
+			);
+			await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
+				new: true,
+			});
+		} catch (error) {
+			return conflictResponse('Email sheduling service found an error');
+		}
+	});
+}
+
 const cronService = {
 	async statusInmediateAttention(token) {
 		if (token !== authToken)
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
-		const psychologists = await psychologist.find();
+		const psychologists = await psychologistModel.find();
 
 		// Se recorre el array de psicólogos si el estado de la atención inmediata
 		// esta activo y la fecha de expiracion es antes de la fecha actual
 		psychologists.forEach(async psy => {
 			if (psy.inmediateAttention.activated) {
 				const expiration = psy.inmediateAttention.expiration;
-				if (moment(expiration).isBefore(moment(Date.now())))
-					await psychologist.findOneAndUpdate(
+				if (dayjs(expiration).isBefore(dayjs(Date.now())))
+					await psychologistModel.findOneAndUpdate(
 						{ _id: psy._id },
 						{
 							$set: {
@@ -185,72 +270,50 @@ const cronService = {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
-		// Encuentra los correos enviados a los usuarios y psicologos, envia los correos
-		const userMessage = await email.find({
-			type: 'send-by-user',
-			wasScheduled: false,
+		const dontReadMess = await Chat.find({ isLastRead: false }).populate(
+			'user psychologist'
+		);
+
+		dontReadMess.forEach(async mess => {
+			const user = mess.user;
+			const psy = mess.psychologist;
+			const batch = await getBatchId();
+			if (mess.lastMessageSendBy === 'user')
+				await mailServiceRemider.sendChatNotificationToPsy(
+					user,
+					psy,
+					batch
+				);
+			else if (mess.lastMessageSendBy === 'psychologist')
+				await mailServiceRemider.sendChatNotificationToUser(
+					user,
+					psy,
+					batch
+				);
 		});
-		await sendNotification(userMessage);
-		const psyMessage = await email.find({
-			type: 'send-by-psy',
-			wasScheduled: false,
-		});
-		await sendNotification(psyMessage);
 		return okResponse('Se han enviado los correos');
 	},
-	async scheduleEmails(token) {
+	async emailSchedule(token) {
 		if (token !== authToken) {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		// Busca los correos electrónicos que no han sido programados
-		const pendingEmails = await email.find({
+		// Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
+		let pendingEmails = await email.find({
 			wasScheduled: false,
+			type: {
+				$in: [
+					'reminder-user-hour',
+					'reminder-psy-hour',
+					'reminder-user-day',
+					'reminder-psy-day',
+				],
+			},
 		});
-		if (pendingEmails.length > 0) {
-			pendingEmails.forEach(async emailInfo => {
-				const sessionDate = moment(emailInfo.sessionDate);
-				// Si es correo programado, busca el usuario y el psicologo.
-				if (isSchedulableEmail(sessionDate)) {
-					const user = await User.findById(emailInfo.userRef);
-					const psy = await psychologist.findById(emailInfo.psyRef);
-					try {
-						let batch = await getBatchId();
-						// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
-						if (emailInfo.type === 'reminder-user') {
-							await mailServiceRemider.sendReminderUser(
-								user,
-								psy,
-								sessionDate,
-								batch
-							);
-						} else if (emailInfo.type === 'reminder-psy') {
-							await mailServiceRemider.sendReminderPsy(
-								user,
-								psy,
-								sessionDate,
-								batch
-							);
-						}
-						// Se genera el payload y se actualiza el email
-						const updatePayload = generatePayload(
-							sessionDate,
-							batch
-						);
-						await email.findByIdAndUpdate(
-							emailInfo._id,
-							updatePayload,
-							{ new: true }
-						);
-					} catch (error) {
-						return conflictResponse(
-							'Email sheduling service found an error'
-						);
-					}
-				}
-			});
-		}
+
+		// Se recorre el array de correos y se envían los correos
+		await scheduleEmails(pendingEmails);
 		return okResponse(
 			'Email scheduling service invoked and ' +
 				pendingEmails.length +
@@ -263,139 +326,58 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		const pendingSessions = await Sessions.find();
-		var toUpdateUpnext = [];
-		var toUpdateSuccess = [];
+
+		// Obtiene todas las sessiones y comienza a recorrerlas, luego se recorre entre los planes, y finalmente
+		// se recorre las sessiones, para poder cambiar de estado a las sessiones pendientes que estén dentro
+		// de las preferencias minimas del psicologo se le cambia el estado a "upnext" como sessión próxima a realizarse.
+		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
+		const pendingSessions = await sessionsModel.find();
 
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
-				const psyInfo = await psychologist.findOne(item.psychologist);
+				// const psyInfo = await psychologist.findOne(item.psychologist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
-						const date = moment(session.date, 'MM/DD/YYYY HH:mm');
+						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm')
+							.add(4, 'hour')
+							.format();
+						// if (
+						// 	session.status === 'pending' &&
+						// 	dayjs(date)
+						// 		.subtract(
+						// 			psyInfo.preferences
+						// 				.minimumRescheduleSession,
+						// 			'hours'
+						// 		)
+						// 		.isBefore(dayjs()) &&
+						// 	dayjs().isBefore(dayjs(date)) &&
+						// 	dayjs().isBefore(dayjs(plan.expiration))
+						// ) {
+						// 	session.status = 'upnext';}
 						if (
-							session.status === 'pending' &&
-							moment(date)
-								.subtract(
-									psyInfo.preferences
-										.minimumRescheduleSession,
-									'hours'
-								)
-								.isBefore(moment()) &&
-							moment().isBefore(date) &&
-							moment().isBefore(plan.expiration)
-						) {
-							session.status = 'upnext';
-							toUpdateUpnext.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
-						} else if (
-							(session.status === 'upnext' ||
-								session.status === 'pending') &&
-							moment().isAfter(date)
+							session.status === 'pending' && // || session.status === 'upnext'
+							dayjs().isAfter(date)
 						) {
 							session.status = 'success';
-							toUpdateSuccess.push({
-								id: session._id.toString(),
-								status: session.status,
-							});
 						}
+						await sessionsModel.findOneAndUpdate(
+							{
+								'plan.session._id': session._id,
+							},
+							{
+								$set: {
+									'plan.$[].session.$[element].status':
+										session.status,
+								},
+							},
+							{
+								arrayFilters: [{ 'element._id': session._id }],
+							}
+						);
 					});
 				});
 			})
 		);
-
-		if (toUpdateUpnext.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateUpnext.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateUpnext.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateUpnext[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateUpnext[0].status,
-						},
-					},
-					{
-						arrayFilters: [{ 'element._id': toUpdateUpnext[0].id }],
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
-
-		if (toUpdateSuccess.length > 1) {
-			try {
-				await Promise.allSettled(
-					toUpdateSuccess.forEach(async item => {
-						await Sessions.findOneAndUpdate(
-							{
-								'plan.session._id': item.id,
-							},
-							{
-								$set: {
-									'plan.$[].session.$[element].status':
-										item.status,
-								},
-							},
-							{
-								arrayFilters: [{ 'element._id': item.id }],
-							}
-						);
-					})
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		} else if (toUpdateSuccess.length === 1) {
-			try {
-				await Sessions.findOneAndUpdate(
-					{
-						'plan.session._id': toUpdateSuccess[0].id,
-					},
-					{
-						$set: {
-							'plan.$[].session.$[element].status':
-								toUpdateSuccess[0].status,
-						},
-					},
-					{
-						arrayFilters: [
-							{ 'element._id': toUpdateSuccess[0].id },
-						],
-						new: true,
-					}
-				);
-			} catch (error) {
-				logInfo(error);
-			}
-		}
 		await getNumberSuccess();
 		return okResponse('Sesiones actualizadas');
 	},
@@ -405,19 +387,19 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		const sessions = await Sessions.find().populate('user psychologist');
+		const sessions = await sessionsModel
+			.find()
+			.populate('user psychologist');
 		sessions.forEach(item => {
 			// Filtro de sesiones que están en estado pending
 			const plans = item.plan.filter(plan => plan.payment === 'pending');
 
 			plans.forEach(async plan => {
 				if (
-					moment().isSameOrAfter(
-						moment(plan.createdAt).add(3, 'hours')
-					)
+					dayjs().isSameOrAfter(dayjs(plan.createdAt).add(3, 'hours'))
 				) {
 					// Se actualiza el estado el pago a cancelado
-					await Sessions.findOneAndUpdate(
+					await sessionsModel.findOneAndUpdate(
 						{
 							_id: item._id,
 							'plan._id': plan._id,
@@ -431,14 +413,132 @@ const cronService = {
 						}
 					);
 					// Se actualiza el estado de la sesión a cancelada
-					await mailServicePsy.sendPaymentFailed(
-						item.user,
-						item.psychologist
-					);
+					// await mailServiceRemider.sendPaymentFailed(
+					// 	item.user,
+					// 	item.psychologist
+					// );
 				}
 			});
 		});
 		return okResponse('Planes actualizados');
+	},
+	async reminderPayment(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		// Se busca todos los correos no programados con los asuntos de pago
+		const pendingEmails = await email.find({
+			wasScheduled: false,
+			type: {
+				$in: [
+					'reminder-payment-hour',
+					'reminder-payment-day',
+					'promocional-incentive-week',
+				],
+			},
+		});
+
+		if (!pendingEmails.length > 0) {
+			return okResponse('No hay correos pendientes');
+		}
+
+		pendingEmails.forEach(async emailInfo => {
+			// Se obtiene el tipo de correo y el destinatario (psy o user)
+			let isSend = false;
+			let batch = null;
+			const user = await userModel.findById(emailInfo.userRef);
+			const psy = await psychologistModel.findById(emailInfo.psyRef);
+			const sessionDocument = await sessionsModel.findById(
+				emailInfo.sessionRef
+			);
+			const mailType = emailInfo.type.split('-').pop();
+
+			// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
+			if (!user) {
+				return conflictResponse('No se encontró el usuario');
+			}
+			if (!psy) {
+				return conflictResponse('No se encontró el psicólogo');
+			}
+			if (!sessionDocument) {
+				return conflictResponse('No se encontró la sesión');
+			}
+			// Se obtiene el plan pendiente
+			const plan = sessionDocument.plan
+				.filter(plan => plan.payment === 'pending')
+				.pop();
+			if (!plan) {
+				return conflictResponse('No se encontró el plan');
+			}
+			// Se obtiene la url de pago
+			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
+			const url = await preference(user, psy, plan, sessionDocument);
+			try {
+				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+				// Si es null significa que aún no se le ha dado una fecha de envío
+				if (emailInfo.scheduledAt !== null) {
+					// Si la fecha actual está después que la fecha programada, entonces se envía el correo
+					if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type === 'reminder-payment-hour'
+					) {
+						batch = await getBatchId();
+						// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
+						isSend = true;
+						await mailServicePsy.pendingPlanPayment(
+							user,
+							psy,
+							plan.totalPrice,
+							url
+						);
+					} else if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type === 'reminder-payment-day'
+					) {
+						batch = await getBatchId();
+						isSend = true;
+						await mailServiceRemider.sendPaymentDay(
+							user,
+							psy,
+							plan.totalPrice,
+							url
+						);
+					} else if (
+						dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+						emailInfo.type === 'promocional-incentive-week'
+					) {
+						batch = await getBatchId();
+						isSend = true;
+						// Si ya pasó más de una semana, crea un cupón de descuento para
+						// incentivar al usuario a pagar
+						const code = await createCoupon();
+						await mailServiceRemider.sendPromocionalIncentive(
+							user,
+							code
+						);
+					}
+				}
+				// Se genera el payload y se actualiza el email
+				const updatePayload = {
+					wasScheduled: isSend,
+					scheduledAt: dayjs
+						.tz(dayjs(plan.createdAt).add(1, mailType))
+						.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+					batchId: batch,
+				};
+				await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
+					new: true,
+				});
+			} catch (error) {
+				return conflictResponse(
+					'Email sheduling service found an error'
+				);
+			}
+		});
+
+		return okResponse('Correos enviados');
 	},
 };
 

@@ -112,7 +112,7 @@
 							"
 						/>
 					</v-col>
-					<v-col cols="12" class="text-h6" style="color: #3c3c3b">
+					<v-col class="text-h6" style="color: #3c3c3b">
 						Valor por sesión
 						<v-tooltip right max-width="300" color="white">
 							<template #activator="{ on, attrs }">
@@ -131,8 +131,12 @@
 							</template>
 							<div class="elevation-5 pa-3">
 								<span class="primary--text">
-									Solo puede establecer el precio por sesión una primera vez. Si
-									desea gestionar un cambio tendrá que contactarnos.
+									Podrá establecer el valor de su suscripción semanal un vez. Si
+									posteriormente desea gestionar un cambio tendrá que
+									contactarnos. Consideré que ofrecemos un 20% de descuento por
+									sesión en suscripción mensual (4 sesiones) y 30% en trimestral
+									(12 sesiones) con el proposito de incentivar el compromiso hacia
+									el proceso terapeutico.
 								</span>
 							</div>
 						</v-tooltip>
@@ -160,10 +164,44 @@
 								:value="video"
 								outlined
 								filled
-								suffix="CLP"
+								suffix="Semanal"
 								type="number"
 								hint="Ingrese el valor por sesion sin comas, ni puntos"
 								@input="setPrice"
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col
+						cols="12"
+						md="4"
+						:style="step && step.title === 'Valor mensual' ? 'z-index: 3' : ''"
+					>
+						<div>
+							<v-text-field
+								:value="Math.round(video * 0.8)"
+								outlined
+								suffix="Mensual"
+								type="number"
+								disabled
+								filled
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col
+						cols="12"
+						md="4"
+						:style="step && step.title === 'Valor por sesión' ? 'z-index: 3' : ''"
+					>
+						<div>
+							<v-text-field
+								:value="Math.round(video * 0.7)"
+								outlined
+								suffix="Trimestral"
+								type="number"
+								disabled
+								filled
 							>
 							</v-text-field>
 						</div>

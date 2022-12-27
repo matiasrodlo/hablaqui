@@ -95,8 +95,15 @@
 
 <script>
 import { mdiCalendarOutline, mdiChevronRight, mdiCloseCircle } from '@mdi/js';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * mini calendario
  */
@@ -135,7 +142,7 @@ export default {
 		 * formatea la fecha
 		 */
 		formatDate(item) {
-			return moment(item, 'MM/DD/YYYY').format('dddd DD MMMM YYYY');
+			return dayjs.tz(dayjs(item, 'MM/DD/YYYY')).format('dddd DD MMMM YYYY');
 		},
 		/**
 		 * ir a planes

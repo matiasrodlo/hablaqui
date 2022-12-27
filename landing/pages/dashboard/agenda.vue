@@ -69,7 +69,7 @@
 									v-if="plan"
 									class="text-center text--secondary font-weight-bold my-1"
 								>
-									{{ plan.session.length }}/{{ plan.totalSessions }}
+									{{ appoinmentSessions }}/{{ totalSessions }}
 								</div>
 								<div
 									v-else
@@ -195,8 +195,8 @@
 								>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending' ||
-											selectedEvent.status === 'upnext'
+											selectedEvent.status === 'pending'
+											// || selectedEvent.status === 'upnext'
 										"
 										:href="selectedEvent.url"
 										target="_blank"
@@ -208,8 +208,8 @@
 									<v-spacer></v-spacer>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending' ||
-											selectedEvent.status === 'upnext'
+											selectedEvent.status === 'pending'
+											// || selectedEvent.status === 'upnext'
 										"
 										text
 										@click="() => openDialog(selectedEvent)"
@@ -383,9 +383,6 @@
 									</v-card-text>
 									<v-card-text v-else class="pt-2">
 										<v-row>
-											<v-col class="font-weight-medium" cols="12">
-												Tipo de evento
-											</v-col>
 											<v-col cols="6">
 												<v-select
 													v-model="typeSession"
@@ -405,7 +402,7 @@
 													]"
 													dense
 													hide-details
-													label="Seleccione"
+													label="Tipo de agendamiento"
 													outlined
 													@change="
 														() => {
@@ -522,8 +519,8 @@
 									<v-card-text
 										class="text-center py-16 primary--text font-weight-medium"
 									>
-										Hemos enviado un email al consultante. La fecha y hora
-										estará disponible hasta que el consultante pague su sesión.
+										Notificamos vía correo electronico al consultate sobre el
+										agendamiento y adjuntamos un enlace de pago
 									</v-card-text>
 								</template>
 							</v-card>
@@ -605,7 +602,7 @@
 						v-if="plan"
 						class="headline text-center text--secondary font-weight-bold my-1"
 					>
-						{{ plan.session.length }}/{{ plan.totalSessions }}
+						{{ appoinmentSessions }}/{{ totalSessions }}
 					</div>
 					<div v-else class="headline text-center text--secondary font-weight-bold my-1">
 						0/0
@@ -632,19 +629,11 @@
 				transition="dialog-top-transition"
 			>
 				<v-card rounded="xl">
-					<v-card-text class="text-center primary--text text-h5 py-3">
-						<div class="body-1 font-weight-bold text-center">
-							Comienza a hablar con nuestros psicólogos
-						</div>
+					<v-card-text class="text-center">
+						<small class="py-2 text--secondary"> Bienestar en cualquier momento </small>
 					</v-card-text>
 					<v-card-text class="text-center">
-						<small class="py-2 text--secondary">
-							Orientación psicológica en cualquier momento y lugar. Comienza a mejorar
-							tu vida hoy
-						</small>
-					</v-card-text>
-					<v-card-text class="text-center">
-						<v-btn color="primary" rounded to="/psicologos/">Buscar ahora</v-btn>
+						<v-btn color="primary" rounded to="/evaluacion/">Comenzar</v-btn>
 					</v-card-text>
 				</v-card>
 			</v-dialog>
@@ -686,9 +675,7 @@
 								<v-text-field
 									readonly
 									disabled
-									:value="`Sesión ${plan.session.length + 1}/${
-										plan.totalSessions
-									}`"
+									:value="`Sesión ${appoinmentSessions + 1}/${totalSessions}`"
 									hide-details="auto"
 									type="text"
 									class="mt-2"
@@ -742,7 +729,7 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
+import dayjs from 'dayjs';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
@@ -755,7 +742,23 @@ import {
 	mdiMenuDown,
 	mdiPlus,
 } from '@mdi/js';
-moment.tz.setDefault('America/Santiago');
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import badMutable from 'dayjs/plugin/badMutable';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import 'dayjs/locale/es';
+dayjs.extend(customParseFormat);
+dayjs.extend(badMutable);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * Pagina de agenda
  */
@@ -808,7 +811,7 @@ export default {
 		},
 		selectedElement: null,
 		selectedOpen: false,
-		today: moment().format('YYYY-MM-DD'),
+		today: dayjs.tz().format('YYYY-MM-DD'),
 		events: [],
 		names: ['Sescion con', 'ocupado'],
 		event: null,
@@ -850,6 +853,9 @@ export default {
 			'22:00',
 			'23:00',
 		],
+		plan: null,
+		appoinmentSessions: 0,
+		totalSessions: 0,
 	}),
 	computed: {
 		/**
@@ -860,13 +866,15 @@ export default {
 			const dates = this.events.flatMap(session => session.date);
 			// Encontramos la session siguiente
 			const allDates = dates.sort((a, b) => {
-				return moment(a, 'MM/DD/YYYY HH:mm').diff(moment(b, 'MM/DD/YYYY HH:mm'));
+				return dayjs
+					.tz(dayjs(a, 'MM/DD/YYYY HH:mm'))
+					.diff(dayjs.tz(dayjs(b, 'MM/DD/YYYY HH:mm')));
 			});
 			const date = allDates.find(item =>
-				moment(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(moment())
+				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
 			);
 			if (date) {
-				return moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
+				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
 			}
 			return '';
 		},
@@ -929,7 +937,7 @@ export default {
 		...mapGetters({
 			allSessions: 'Psychologist/sessions',
 			clients: 'Psychologist/clients',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
 	},
@@ -970,17 +978,21 @@ export default {
 		 * Obtienes los datos pricipales necesarios para la vista
 		 */
 		async initFetch() {
+			if (this.plans) {
+				this.plan = this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
+				this.totalSessions = this.plans.totalSessions;
+				this.appoinmentSessions = this.plans.appoinmentSessions;
+			}
 			if (
 				this.$auth.$state.user.role === 'psychologist' &&
 				!this.$auth.$state.user.psychologist
 			)
 				return null;
 			this.overlay = true;
-			moment.locale('es');
+			dayjs.locale('es');
 			await this.$auth.fetchUser();
 			if (this.$auth.$state.user.role === 'user' && this.plan) {
 				await this.getSessions({
-					idPsychologist: this.plan.psychologist,
 					idUser: this.plan.user,
 				});
 			}
@@ -989,7 +1001,7 @@ export default {
 				this.$auth.$state.user.sessions.length
 			) {
 				await this.getSessions({
-					idPsychologist: this.$auth.$state.user.psychologist,
+					idUser: this.$auth.$state.user.psychologist,
 				});
 			}
 			await this.successPayment();
@@ -1124,7 +1136,7 @@ export default {
 		 * Establece el focus en el dia de hoy
 		 */
 		setToday() {
-			this.focus = moment().format('YYYY-MM-DD');
+			this.focus = dayjs.tz().format('YYYY-MM-DD');
 		},
 		/** arrow previo */
 		prev() {
@@ -1184,7 +1196,7 @@ export default {
 		},
 		/** subtitle segun la fecha */
 		setSubtitle(date) {
-			return `Desde las ${moment(date).format('HH:mm')} hasta las ${moment(date)
+			return `Desde las ${dayjs(date).format('HH:mm')} hasta las ${dayjs(date)
 				.add(50, 'minutes')
 				.format('HH:mm')}`;
 		},
@@ -1232,7 +1244,12 @@ export default {
 				idPlan: this.plan._id,
 				payload,
 			});
+			this.appoinmentSessions += 1;
 			await this.$auth.fetchUser();
+			if (payload.remainingSessions <= 0) {
+				this.plans.sortedPlans = this.plans.sortedPlans.splice(0, 1);
+				if (this.plans.sortedPlans.length > 0) this.plan = this.plans.sortedPlans[0];
+			}
 			this.loadingSession = false;
 			this.dialogHasSessions = false;
 		},

@@ -51,7 +51,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 
@@ -107,6 +107,7 @@ export default {
 		 */
 		async onSubmit() {
 			// verificamos validacion
+			const temporalMatchMaking = JSON.parse(localStorage.getItem('temporalMatchMaking'));
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				try {
@@ -118,6 +119,12 @@ export default {
 					this.$auth.setUser(response.data.user);
 					// verificamos una vez más si esta logeado
 					if (this.$auth.$state.loggedIn) {
+						if (temporalMatchMaking) {
+							temporalMatchMaking.userId = this.$auth.user._id;
+							await this.createMatchMakig(temporalMatchMaking);
+							localStorage.removeItem('temporalMatchMaking');
+							return this.$router.push('/psicologos');
+						}
 						// si llegamos al login con un query from=psy
 						if (this.$route.query.from === 'psy')
 							return this.$router.push({ name: 'evaluacion' });
@@ -175,6 +182,9 @@ export default {
 		defaultData() {
 			this.form = { email: '', password: '' };
 		},
+		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
+		}),
 		...mapMutations({
 			setResumeView: 'Psychologist/setResumeView',
 			snackBar: 'Snackbar/showMessage',

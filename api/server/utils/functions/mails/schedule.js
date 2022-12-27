@@ -1,8 +1,14 @@
 'use strict';
 
-import moment from 'moment';
 import sendMails from './sendMails';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
@@ -15,7 +21,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: 'Tu sesión en Hablaquí ha sido agendada',
+			subject: 'Confirmación de subscripción',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-f57ecb113d6d48a684203ebb82782976',
 			asm: {
@@ -23,7 +29,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
-				first_name: name,
+				user_first_name: name,
 				price: price,
 			},
 		};
@@ -42,7 +48,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: `${nameUser} ${lastNameUser} ha agendado una sesión contigo en Hablaquí`,
+			subject: `Han contratado un nuevo plan con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-2d162b2b082b4b21851d6e0be428e64f',
 			asm: {
@@ -77,7 +83,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `${psychologist.name} ha agendado una sesión contigo en Hablaquí`,
+			subject: `${psychologist.name} agendó una sesión usted en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
 			asm: {
@@ -89,8 +95,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -115,7 +121,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: psychologist.name + '<' + psychologist.email + '>',
-			subject: `Has creado una sesión para ${user.name}`,
+			subject: `Ha creado un agendamiento con ${user.name}`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-e935d9d8e9d8406581f909863491e41d',
 			asm: {
@@ -127,8 +133,8 @@ const mailService = {
 				payment_url: paymentURL,
 				value: value,
 				type: type,
-				date: moment(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
-				hour: moment(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
+				date: dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YYYY'),
+				hour: dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm'),
 			},
 		};
 		await sendMails(dataPayload);
@@ -143,7 +149,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Has reprogramado con éxito tu sesión`,
+			subject: `Su sesión ha sido reagendada exitosamente`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-54f94040924645be93ccdb21c243e6c2',
 			asm: {
@@ -169,7 +175,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: psy.name + '<' + psy.email + '>',
-			subject: `Un cliente a reprogramado una sesión contigo`,
+			subject: `Han reprogramado una sesión con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-b336c59aa9d74750b13414954f7daee0',
 			asm: {
@@ -222,7 +228,7 @@ const mailService = {
 			to: user.name + '<' + user.email + '>',
 			subject: `Tu psicólogo ha reprogramado tu sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-89913188fca9405da45caddede56fa54',
+			templateId: 'd-98b3e79f152d4416aa0ed58a50c309d2',
 			asm: {
 				group_id: 16321,
 			},
@@ -249,7 +255,7 @@ const mailService = {
 			to: psy.name + '<' + psy.email + '>',
 			subject: `Has reprogramado la sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-e10aea204d194d78917297b7ec612506',
+			templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
 			asm: {
 				group_id: 16321,
 			},
@@ -290,8 +296,8 @@ const mailService = {
 				user_last_name: lastNameUser,
 				psy_first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};
@@ -320,8 +326,8 @@ const mailService = {
 				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
 				first_name: name,
 				url: url,
-				date: moment(date).format('DD/MM/YYYY'),
-				hour: moment(date).format('HH:mm'),
+				date: dayjs(date).format('DD/MM/YYYY'),
+				hour: dayjs(date).format('HH:mm'),
 				session,
 			},
 		};

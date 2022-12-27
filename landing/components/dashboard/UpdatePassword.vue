@@ -34,7 +34,7 @@
 				outlined
 				dense
 				:error-messages="repeatNewPasswordErrors"
-				label="Repite la nueva contraseña"
+				label="Repetir Contraseña"
 				:type="showNewRepeatPassword ? 'text' : 'password'"
 				:append-icon="showNewRepeatPassword ? mdiEye : mdiEyeOff"
 				@click:append="showNewRepeatPassword = !showNewRepeatPassword"

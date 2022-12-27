@@ -103,9 +103,7 @@
 						/>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold body-2">
-							Centro de ayuda
-						</v-list-item-title>
+						<v-list-item-title class="font-weight-bold body-2"> FAQ </v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item
@@ -123,9 +121,7 @@
 						/>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="font-weight-bold body-2">
-							Centro de ayuda
-						</v-list-item-title>
+						<v-list-item-title class="font-weight-bold body-2"> FAQ </v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item class="my-4 hidden-md-and-up" link @click="logout">
@@ -350,6 +346,7 @@ export default {
 			drawer: true,
 			online: true,
 			isMini: true,
+			plan: null,
 		};
 	},
 	computed: {
@@ -464,19 +461,33 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
 				},
+				{
+					name: 'Tabla de pagos',
+					link: { name: 'dashboard-paymentTable' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
+				{
+					name: 'Evaluaciones',
+					link: { name: 'dashboard-evaluations' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
 			];
 		},
 		/**
 		 * dependiendo de donde nos encontremos retorna un titulo
 		 */
 		routeName() {
-			if (this.$route.name === 'dashboard-chat') return 'Mis Chats';
+			if (this.$route.name === 'dashboard-chat') return 'Chats';
 			if (this.$route.name === 'dashboard-planes') return 'Planes';
-			if (this.$route.name === 'dashboard-agenda') return 'Mi Agenda';
-			if (this.$route.name === 'dashboard-diario') return 'Mi diario';
+			if (this.$route.name === 'dashboard-agenda') return 'Agenda';
+			if (this.$route.name === 'dashboard-diario') return 'Diario';
 			if (this.$route.name === 'dashboard-consultantes') return 'Consultantes';
 			if (this.$route.name === 'dashboard-pagos') return 'Pagos';
-			if (this.$route.name === 'dashboard-perfil') return 'Mi cuenta';
+			if (this.$route.name === 'dashboard-perfil') return 'Cuenta';
 			if (this.$route.name === 'dashboard-perfil-configuracion-personal')
 				return 'Configuración personal';
 			if (this.$route.name === 'dashboard-perfil-datos-bancarios') return 'Datos bancarios';
@@ -715,7 +726,7 @@ export default {
 			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
 			psychologist: 'Psychologist/psychologist',
-			plan: 'User/plan',
+			plans: 'User/plan',
 			consultantes: 'Psychologist/clients',
 		}),
 	},
@@ -737,6 +748,8 @@ export default {
 		// lanzar onboarding al cargar
 		// if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 		// 	this.setOnBoarding(true);
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (!this.$auth.$state.user.onboarding && this.$auth.$state.user.role === 'psychologist')
 			this.overlay = true;
 

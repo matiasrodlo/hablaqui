@@ -1,6 +1,10 @@
 import Evaluation from '../../models/evaluation';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export const getAllEvaluationsFunction = async psy => {
 	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
@@ -21,9 +25,7 @@ export const getAllEvaluationsFunction = async psy => {
 				name: item.user.name,
 				userId: item.user._id,
 				moderatingDate: evaluation.moderatingDate,
-				createdAt: moment(evaluation.createdAt)
-					.tz('America/Santiago')
-					.format(),
+				createdAt: dayjs.tz(dayjs(evaluation.createdAt)).format(),
 			};
 		});
 	});

@@ -128,7 +128,7 @@
 									></v-text-field>
 									<v-text-field
 										:value="selected.plan ? selected.plan.title : 'Sin plan'"
-										label="Plan contratado"
+										label="Suscripción"
 										disabled
 										dense
 										filled
@@ -192,8 +192,13 @@ import {
 	mdiChevronDown,
 	mdiChevronLeft,
 } from '@mdi/js';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -271,7 +276,7 @@ export default {
 		 * retorna los años segun la fecha pasada
 		 */
 		getAge(date) {
-			return moment().diff(date, 'years');
+			return dayjs.tz().diff(dayjs.tz(dayjs(date)), 'years');
 		},
 		/**
 		 * utilizado por el datepicker para las fechas

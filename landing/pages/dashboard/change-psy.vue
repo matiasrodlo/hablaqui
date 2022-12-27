@@ -112,7 +112,6 @@ export default {
 		 */
 		async initFetch() {
 			await this.getPsychologist();
-			console.log(this.psychologists);
 		},
 		/**
 		 * Obtenermos los psicologos todos
@@ -138,7 +137,7 @@ export default {
 		async getClients(row) {
 			this.selectedPsy = row;
 			const { users } = await this.$axios.$get(`/psychologist/clients/${row._id}`);
-			this.clients = users;
+			this.clients = users.filter(user => !!user.plan);
 		},
 		/**
 		 * Cliente seleccionado

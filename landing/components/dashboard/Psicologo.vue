@@ -57,8 +57,7 @@
 							class="text-center text-sm-right mb-4 mb-sm-0"
 						>
 							<!-- ocultado por peticion de daniel -->
-							<!-- <v-btn
-								v-if="plan && plan.success && plan.success >= 3"
+							<v-btn
 								depressed
 								block
 								small
@@ -68,7 +67,7 @@
 								@click="goToReview"
 							>
 								Añadir evaluación
-							</v-btn> -->
+							</v-btn>
 							<v-btn
 								depressed
 								block
@@ -109,9 +108,9 @@
 		</v-card-text>
 		<v-card-text v-if="!psychologist && !loading" class="text-center">
 			<div class="body-1 my-5 mx-auto" style="max-width: 280px">
-				Bienestar en cualquier momento, en cualquier lugar
+				Bienestar en cualquier momento
 			</div>
-			<v-btn rounded color="primary" :to="{ name: 'psicologos' }"> Comenzar </v-btn>
+			<v-btn rounded color="primary" :to="{ name: 'evaluacion' }"> Comenzar </v-btn>
 		</v-card-text>
 	</v-card>
 </template>
@@ -140,8 +139,12 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			plan: 'User/plan',
+			plans: 'User/plan',
 		}),
+	},
+	mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	methods: {
 		/**

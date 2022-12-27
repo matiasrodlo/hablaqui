@@ -23,8 +23,14 @@
 </template>
 
 <script>
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { mapActions, mapGetters } from 'vuex';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * Pagina principal de pagos
  */
@@ -54,6 +60,7 @@ export default {
 			loadingSession: false,
 			hasSessions: false,
 			psychologist: null,
+			plan: null,
 		};
 	},
 	head() {
@@ -80,7 +87,7 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			plan: 'User/plan',
+			plans: 'User/plan',
 		}),
 	},
 	jsonld() {
@@ -99,11 +106,13 @@ export default {
 		this.hasSessions =
 			this.plan &&
 			this.plan.payment === 'success' &&
-			moment().isBefore(moment(this.plan.expiration)) &&
+			dayjs().isBefore(dayjs(this.plan.expiration)) &&
 			this.plan.psychologist === this.psychologist._id &&
 			this.plan.remainingSessions > 0;
 	},
 	async mounted() {
+		this.plan =
+			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		window.scrollTo(0, 0);
 		// si tiene sesiones
 		if (this.hasSessions) {

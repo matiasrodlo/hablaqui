@@ -36,7 +36,7 @@
 					style="position: relative"
 					:style="step && step.title === 'Consultante nuevo' ? 'z-index: 3' : ''"
 				>
-					<span
+					<!-- <span
 						v-if="
 							$auth.$state.user.role === 'psychologist' &&
 							$auth.$state.user.psychologist
@@ -48,7 +48,7 @@
 							<icon :icon="mdiPlus" color="white" small />
 						</v-btn>
 						<span class="primary--text ml-2">Agendamiento manual</span>
-					</span>
+					</span> -->
 					<card-onboarding
 						v-if="step && step.title === 'Consultante nuevo'"
 						style="position: absolute; top: -40px; right: -25%; z-index: 3"
@@ -381,7 +381,7 @@
 						<h4 class="primary--text">¿Cómo hacerlo?</h4>
 						<br />
 						<ul style="list-style: none; padding: 0">
-							<li>1. Vaya a la sección “Mi cuenta”</li>
+							<li>1. Vaya a la sección Cuenta”</li>
 							<li>2. Haga clic en “Copiar link”</li>
 							<li>3. Comparta su link de pago</li>
 						</ul>
@@ -406,8 +406,13 @@ import {
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { required, email } from 'vuelidate/lib/validators';
 import { validationMixin } from 'vuelidate';
-import moment from 'moment-timezone';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
 /**
  * pagina principal de consultantes
  */
@@ -451,7 +456,7 @@ export default {
 					// eslint-disable-next-line unicorn/prefer-includes
 					return item.fullname.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
 				})
-				.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
+				.sort((a, b) => dayjs.tz(a.createdAt) - dayjs.tz(b.createdAt));
 		},
 		/**
 		 * validacion de error de email
@@ -541,7 +546,7 @@ export default {
 		 * establece los años trancurridos segun la fecha pasada
 		 */
 		getAge(date) {
-			return moment().diff(date, 'years');
+			return dayjs.tz().diff(dayjs.tz(dayjs(date)), 'years');
 		},
 		/**
 		 * cambia el estado del onboarding a true es decir realizado

@@ -2,7 +2,7 @@
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
 		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
-			<div style="margin-bottom: 83px">
+			<div style="margin-bottom: 85px">
 				<Appbar />
 			</div>
 			<!-- content -->
@@ -11,11 +11,11 @@
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px; height: 500px"
 			>
-				<div class="title text-h6 text-sm-h4 font-weight-bold mb-5">
-					Encuentre su especialista ideal
+				<div class="title text-h7 text-sm-h4 font-weight-bold mb-5">
+					Encuentre al especialista ideal
 				</div>
 				<div class="d-flex justify-center text-h7 mb-12 mx-auto" style="max-width: 800px">
-					Responda las siguientes preguntas y nosotros hacemos el resto
+					Responda las siguientes preguntas, nosotros hacemos el resto
 				</div>
 				<div>
 					<v-container class="centerCard" fluid style="max-width: 1080px">
@@ -76,7 +76,7 @@
 													}
 												"
 											>
-												Transgénero
+												No binario
 											</v-btn>
 											<v-btn
 												:color="
@@ -407,7 +407,7 @@
 												large
 												@click="() => setModels('Cognitivo-conductual')"
 											>
-												Sesiones estructuradas con metas y tareas semanales
+												Sesiones estructuradas con metas
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -422,7 +422,7 @@
 												large
 												@click="() => setModels('Integrativo')"
 											>
-												Deseo conocer herramientas para ponerlas en práctica
+												Conocer herramientas y tecnicas
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -437,8 +437,7 @@
 												large
 												@click="() => setModels('Contextual')"
 											>
-												Aprender a relacionarme con mis pensamientos y
-												emociones
+												Comprender mis pensamientos
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -453,8 +452,7 @@
 												large
 												@click="() => setModels('Psicoanálisis')"
 											>
-												Conversar y aprender observando mis experiencias
-												pasadas
+												Aprender observando mi pasado
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -469,7 +467,7 @@
 												large
 												@click="() => setModels('Humanista')"
 											>
-												Reflexionar y conocer el origen de mis emociones
+												Reflexionar sobre mis emociones
 											</v-btn>
 											<v-btn
 												class="pa-2 my-4"
@@ -484,8 +482,7 @@
 												large
 												@click="() => setModels('Sistémico')"
 											>
-												Entender mi forma de interactuar y mejorar mis
-												relaciones
+												Entender y mejorar mis relaciones
 											</v-btn>
 											<v-btn text color="primary" @click="step = 4">
 												Atras
@@ -535,7 +532,7 @@
 											>
 												Hombre
 											</v-btn>
-											<v-btn
+											<!-- <v-btn
 												:color="
 													genderConfort === 'transgender'
 														? 'primary'
@@ -554,7 +551,7 @@
 												"
 											>
 												Transgenero
-											</v-btn>
+											</v-btn> -->
 											<v-btn
 												:color="
 													genderConfort === 'Me es indiferente'
@@ -658,7 +655,7 @@
 								</v-stepper>
 							</v-col>
 						</v-row>
-						<v-row>
+						<!-- <v-row>
 							<v-col cols="12">
 								<v-divider style="border-width: 1px" />
 							</v-col>
@@ -672,6 +669,7 @@
 									:show-arrows="false"
 									light
 									height="200"
+									width="600"
 								>
 									<v-carousel-item v-for="(element, i) in psi" :key="i">
 										<div class="text-center d-flex justify-center align-center">
@@ -681,8 +679,8 @@
 													:key="l"
 													flat
 													color="transparent"
-													max-width="600"
-													max-height="190"
+													width="600"
+													height="190"
 													class="ma-2"
 													:to="{ path: `/${item.username}` }"
 												>
@@ -695,7 +693,7 @@
 																	></v-img>
 																</v-avatar>
 															</v-col>
-															<v-col class="text-left">
+															<v-col class="text-left align-center">
 																<div class="title primary--text">
 																	{{ item.name }}
 																	{{
@@ -729,7 +727,7 @@
 											<template v-else>
 												<v-card
 													width="400"
-													height="180"
+													height="120"
 													outlined
 													class="ma-2"
 												>
@@ -759,7 +757,6 @@
 																			element.lastName
 																		}}
 																	</div>
-																	Especialidades:
 																	<template
 																		v-for="(
 																			tag, k
@@ -773,7 +770,7 @@
 																					text-capitalize
 																				"
 																			>
-																				{{ tag }};
+																				{{ tag }},
 																			</span>
 																		</span>
 																	</template>
@@ -806,7 +803,7 @@
 									</v-item>
 								</v-item-group>
 							</v-col>
-						</v-row>
+						</v-row> -->
 					</v-container>
 				</div>
 			</div>
@@ -836,7 +833,8 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
-import Appbar from '~/components/AppbarWhite.vue';
+import Appbar from '~/components/AppbarClean.vue';
+
 /**
  * Evaluacion - MatchMaking
  */
@@ -846,8 +844,8 @@ export default {
 		Appbar,
 		Precharge: () => import('~/components/evaluation/Precharge'),
 		Selection: () => import('~/components/evaluation/Selection'),
-		Icon: () => import('~/components/Icon'),
-		Avatar: () => import('~/components/Avatar'),
+		// Icon: () => import('~/components/Icon'),
+		// Avatar: () => import('~/components/Avatar'),
 	},
 	async asyncData({ $axios, error }) {
 		try {
@@ -907,27 +905,6 @@ export default {
 			return this.$vuetify.breakpoint.mdAndUp ? result : items;
 		},
 	},
-	created() {
-		// solo se ejecuta en el navegador
-		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length) {
-				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedPsychologists = psi.match;
-				else if (psi._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('psi');
-					localStorage.setItem(
-						'psi',
-						JSON.stringify({
-							match: psi.match,
-							_id: this.$auth.$state.user._id,
-						})
-					);
-					this.matchedPsychologists = psi.match;
-				}
-			}
-		}
-	},
 	mounted() {
 		// obetenrmos las sesiones formateadas
 		this.getFormattedSessionsAll();
@@ -980,7 +957,7 @@ export default {
 		/**
 		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
 		 */
-		openPrecharge() {
+		async openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
@@ -990,20 +967,16 @@ export default {
 				model: this.models,
 				price: this.price,
 			};
-			this.matchPsi(payload).then(response => {
-				if (response && response.length) {
-					localStorage.setItem(
-						'psi',
-						JSON.stringify({
-							match: response.filter((el, i) => i < 3),
-							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
-						})
-					);
-					if (!this.$auth.$state.loggedIn)
-						this.$router.push('/auth/?register=true&from=psy');
-					this.matchedPsychologists = response.filter((el, i) => i < 3);
-				}
-			});
+			if (this.$auth.loggedIn) {
+				payload.userId = this.$auth.user._id;
+				await this.createMatchMakig(payload);
+				this.$router.push('/psicologos');
+			} else {
+				setTimeout(() => {
+					localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
+					this.$router.push('/auth');
+				}, 5000);
+			}
 		},
 		/**
 		 * Retorna string con url del avatar
@@ -1015,6 +988,7 @@ export default {
 			return '';
 		},
 		...mapActions({
+			createMatchMakig: 'Psychologist/createMatchMakig',
 			matchPsi: 'Psychologist/matchPsi',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
 		}),

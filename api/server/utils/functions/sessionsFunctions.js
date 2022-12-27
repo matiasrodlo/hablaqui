@@ -1,7 +1,22 @@
 import Sessions from '../../models/sessions';
 import { priceFormatter } from './priceFormatter';
-import moment from 'moment';
-moment.tz.setDefault('America/Santiago');
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
+
+const extractPrice = price => {
+	const priceArray = price.split(',');
+	let priceNumber = priceArray[0].replace('$', '');
+	priceNumber = priceNumber + priceArray[1];
+	return priceNumber;
+};
 
 export const paymentInfoFunction = async psyId => {
 	let allSessions = await Sessions.find({
@@ -20,32 +35,37 @@ export const paymentInfoFunction = async psyId => {
 	const validPayments = allSessions.flatMap(item => {
 		if (item.user)
 			return item.plan.flatMap(plans => {
-				let paymentPlanDate = moment(plans.datePayment).format(
-					'DD/MM/YYYY'
-				);
+				// Cantidad de dinero a restar
+				let amountDueTotal = 0;
+				let amountDue = 0;
+				let paymentPlanDate = dayjs
+					.tz(dayjs(plans.datePayment))
+					.format('DD/MM/YYYY');
 
 				let sessions = plans.session.map(session => {
 					let transDate =
 						session.paymentDate &&
-						moment(session.paymentDate, 'MM/DD/YYYY').isValid()
-							? moment(session.paymentDate, 'MM/DD/YYYY').format(
+						dayjs(session.paymentDate, 'MM/DD/YYYY').isValid()
+							? dayjs(session.paymentDate, 'MM/DD/YYYY').format(
 									'DD/MM/YYYY'
 							  )
 							: session.requestDate &&
-							  moment(session.requestDate).isValid()
+							  dayjs(session.requestDate).isValid()
 							? 'Pendiente'
 							: 'Por cobrar';
 					transDate =
 						session.status === 'pending'
 							? 'Por realizar'
 							: transDate;
-
 					return {
 						_id: session._id,
-						datePayment: paymentPlanDate,
+						datePayment: dayjs(
+							session.date,
+							'MM/DD/YYYY HH:mm'
+						).format('DD/MM/YYYY'),
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
-						date: moment(session.date, 'MM/DD/YYYY HH:mm').format(
+						date: dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
 							'DD/MM/YYYY HH:mm'
 						),
 						sessionsNumber: `${session.sessionNumber} de ${plans.totalSessions}`,
@@ -83,7 +103,7 @@ export const paymentInfoFunction = async psyId => {
 				) {
 					let session = {
 						_id: null,
-						datePayment: paymentPlanDate,
+						datePayment: '---',
 						name: item.user.name ? item.user.name : '',
 						lastname: item.user.lastName ? item.user.lastName : '',
 						date: '---',
@@ -102,10 +122,14 @@ export const paymentInfoFunction = async psyId => {
 					};
 					if (Date.parse(plans.expiration) < Date.now()) {
 						session.transDate = 'Expirado';
+						amountDueTotal += Number(extractPrice(session.total));
+						amountDue += Number(extractPrice(session.amount));
+						session.total = '$0';
+						session.amount = '$0';
+						session.mercadoPercentage = '0';
 					}
 					sessions.push(session);
 				}
-
 				const expirated = sessions.filter(
 					session => session.transDate === 'Expirado'
 				).length;
@@ -136,9 +160,12 @@ export const paymentInfoFunction = async psyId => {
 					suscription: plans.period,
 					user: item.user._id,
 					datePayment: paymentPlanDate,
-					amount: priceFormatter(+plans.totalPrice),
+					amount: priceFormatter(+plans.totalPrice - amountDue),
 					finalAmount: priceFormatter(
-						+(plans.totalPrice * (1 - 0.0351)).toFixed(0)
+						+(
+							plans.totalPrice * (1 - 0.0351) -
+							amountDueTotal
+						).toFixed(0)
 					),
 					sessions,
 					transState:
@@ -177,18 +204,18 @@ export const formattedSchedule = (schedule, day, hour) => {
 		'saturday',
 		'sunday',
 	];
-	day = moment(day).format('dddd');
+	day = dayjs.tz(day).format('dddd');
 	week.forEach(weekDay => {
 		if (day.toLowerCase() === weekDay)
 			if (Array.isArray(schedule[weekDay]))
-				validHour = schedule[weekDay].some(interval =>
-					moment(hour, 'HH:mm').isBetween(
-						moment(interval[0], 'HH:mm'),
-						moment(interval[1], 'HH:mm'),
+				validHour = schedule[weekDay].some(interval => {
+					return dayjs(hour, 'HH:mm').isBetween(
+						dayjs(interval[0], 'HH:mm'),
+						dayjs(interval[1], 'HH:mm'),
 						undefined,
 						'[)'
-					)
-				);
+					);
+				});
 			else if (schedule[weekDay] === 'busy') validHour = false;
 	});
 
@@ -199,7 +226,7 @@ export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 	let session = sessions.plan
 		.flatMap(plan => {
 			let maxSession = plan.session.map(session =>
-				moment(session.date, 'MM/DD/YYYY HH:mm').format(
+				dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
 					'YYYY/MM/DD HH:mm'
 				)
 			);
@@ -256,10 +283,10 @@ export const setSession = (role, sessions) => {
 				plan.title = 'sesion online';
 
 			return plan.session.map(session => {
-				const start = moment(session.date, 'MM/DD/YYYY HH:mm').format(
+				const start = dayjs(session.date, 'MM/DD/YYYY HH:mm').format(
 					'YYYY-MM-DD HH:mm'
 				);
-				const end = moment(session.date, 'MM/DD/YYYY HH:mm')
+				const end = dayjs(session.date, 'MM/DD/YYYY HH:mm')
 					.add(60, 'minutes')
 					.format('YYYY-MM-DD HH:mm');
 
@@ -285,7 +312,7 @@ export const setSession = (role, sessions) => {
 					numberSessionSuccess: item.numberSessionSuccess,
 					activePlan:
 						plan.payment === 'success' &&
-						moment().isBefore(moment(plan.expiration)),
+						dayjs().isBefore(dayjs(plan.expiration)),
 				};
 			});
 		});
