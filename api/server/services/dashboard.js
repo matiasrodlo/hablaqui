@@ -238,7 +238,7 @@ const specialistVisibility = async (psyId, visibility) => {
 		const isVisible = visibility === 'true' ? true : false;
 		// Actualizar el campo de visibilidad de los especialistas
 		await Psychologist.findByIdAndUpdate(psyId, {
-			preferences: { marketplaceVisibility: isVisible },
+			$set: { 'preferences.marketplaceVisibility': isVisible },
 		});
 		return okResponse('Visibilidad actualizada', { psyId });
 	} catch (error) {

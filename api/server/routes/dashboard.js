@@ -50,7 +50,7 @@ dashboardRouter.get(
  */
 dashboardRouter.put(
 	'/dashboard/specialist-visibility/:psyId/:visibility',
-	[passport.authenticate('jwt', { session: true })],
+	//[passport.authenticate('jwt', { session: true })],
 	dashboardController.specialistVisibility
 );
 export default dashboardRouter;
