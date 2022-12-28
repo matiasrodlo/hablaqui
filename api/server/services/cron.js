@@ -278,18 +278,35 @@ const cronService = {
 			const user = mess.user;
 			const psy = mess.psychologist;
 			const batch = await getBatchId();
-			if (mess.lastMessageSendBy === 'user')
+			if (mess.lastMessageSendBy === 'user') {
 				await mailServiceRemider.sendChatNotificationToPsy(
 					user,
 					psy,
 					batch
 				);
-			else if (mess.lastMessageSendBy === 'psychologist')
+				email.create({
+					userRef: user._id,
+					psyRef: psy._id,
+					type: 'chat-psy-1-day',
+					batch: null,
+					wasScheduled: false,
+					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
+				});
+			} else if (mess.lastMessageSendBy === 'psychologist') {
 				await mailServiceRemider.sendChatNotificationToUser(
 					user,
 					psy,
 					batch
 				);
+				email.create({
+					userRef: user._id,
+					psyRef: psy._id,
+					type: 'chat-user-1-day',
+					batch: null,
+					wasScheduled: false,
+					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
+				});
+			}
 		});
 		return okResponse('Se han enviado los correos');
 	},
@@ -530,6 +547,79 @@ const cronService = {
 		});
 
 		return okResponse('Correos enviados');
+	},
+	async reminderChat(token) {
+		if (token !== authToken) {
+			return conflictResponse(
+				'ERROR! You are not authorized to use this endpoint.'
+			);
+		}
+		// Se busca todos los correos no programados con los asuntos de pago
+		const pendingEmails = await email.find({
+			wasScheduled: false,
+			type: {
+				$in: ['chat-psy-1-day', 'chat-user-1-day'],
+			},
+		});
+
+		if (!pendingEmails.length > 0) {
+			return okResponse('No hay correos pendientes');
+		}
+
+		// Se recorren los correos pendientes
+		pendingEmails.forEach(async emailInfo => {
+			// Se obtiene el tipo de correo y el destinatario (psy o user)
+			let isSend = false;
+			let batch = null;
+			const user = await userModel.findById(emailInfo.userRef);
+			const psy = await psychologistModel.findById(emailInfo.psyRef);
+			// Se verifica que el usuario se haya encontrado al igual que el psicólogo
+			if (!user) {
+				return conflictResponse('No se encontró el usuario');
+			}
+			if (!psy) {
+				return conflictResponse('No se encontró el psicólogo');
+			}
+			try {
+				if (
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+					emailInfo.type === 'chat-user-1-day'
+				) {
+					batch = await getBatchId();
+					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
+					isSend = true;
+					await mailServiceRemider.sendChatNotificationToUser(
+						user,
+						psy,
+						batch
+					);
+				} else if (
+					dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
+					emailInfo.type === 'chat-psy-1-day'
+				) {
+					batch = await getBatchId();
+					isSend = true;
+					await mailServiceRemider.sendChatNotificationToPsy(
+						user,
+						psy,
+						batch
+					);
+				}
+				// Se genera el payload y se actualiza el email
+				const updatePayload = {
+					wasScheduled: isSend,
+					batchId: batch,
+				};
+				await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
+					new: true,
+				});
+			} catch (error) {
+				return conflictResponse(
+					'Email sheduling service found an error'
+				);
+			}
+		});
+		return okResponse(pendingEmails.length + ' correos enviados');
 	},
 	async reminderRenewal(token) {
 		if (token !== authToken) {
