@@ -6,9 +6,13 @@ import Psychologist from '../models/psychologist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv'; // dotenv contiene las variables de entorno
+import {
+	createReminder,
+	createRenewalSubscription,
+	deleteReminderPayment,
+} from '../utils/functions/emailFunction';
 import recruitmentService from './recruitment';
 import User from '../models/user';
-import email from '../models/email';
 import mailServicePayments from '../utils/functions/mails/payments';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -195,85 +199,31 @@ const successPay = async params => {
 		},
 		{ new: true }
 	);
+
+	// Se crea recordatorio de la primera sesion
 	const planData = foundPlan.plan.filter(
 		plan => plan._id.toString() === planId
 	)[0];
 	const sessionData = planData.session[0];
-	// Email scheduling for appointment reminder for the user
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-user-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	// Email scheduling for appointment reminder for the psychologist
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-hour',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-	await email.create({
-		sessionDate: dayjs
-			.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
-			.format(),
-		wasScheduled: false,
-		type: 'reminder-psy-day',
-		queuedAt: undefined,
-		scheduledAt: undefined,
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-		sessionRef: sessionData._id,
-		url: foundPlan.roomsUrl,
-	});
-
-	// Busca los correos de recordatorio de pago y los elimina
-	const mailsToDeleted = await email.find({
-		wasScheduled: false,
-		type: {
-			$in: [
-				'reminder-payment-hour',
-				'reminder-payment-day',
-				'promocional-incentive-week',
-			],
-		},
-		userRef: foundPlan.user,
-		psyRef: foundPlan.psychologist,
-	});
-	if (mailsToDeleted.length) {
-		mailsToDeleted.forEach(async mail => {
-			await email
-				.findByIdAndDelete(mail._id)
-				.catch(err => console.log(err));
-		});
+	await createReminder(
+		sessionData,
+		foundPlan.user,
+		foundPlan.psychologist,
+		foundPlan,
+		foundPlan.roomsUrl,
+		planId
+	);
+	// Filtra al plan si es plan semanal para enviar o no el correo de renovacion
+	if (planData.period === 'Pago semanal') {
+		// Se crean correos de recordatorio de renovacion de plan
+		await createRenewalSubscription(
+			foundPlan.user,
+			foundPlan.psychologist,
+			foundPlan
+		);
 	}
+
+	await deleteReminderPayment(foundPlan.user._id, foundPlan.psychologist._id);
 
 	const user = await User.findById(foundPlan.user);
 	const psy = await Psychologist.findById(foundPlan.psychologist);

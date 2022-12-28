@@ -1,6 +1,12 @@
 'use strict';
 
 import { room } from '../config/dotenv';
+import {
+	createReminder,
+	createPaymentReminder,
+	createRenewalSubscription,
+	deleteRenewalEmails,
+} from '../utils/functions/emailFunction';
 import { logInfo } from '../config/pino';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -14,7 +20,7 @@ import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
 import Psychologist from '../models/psychologist';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import Email from '../models/email';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -436,12 +442,9 @@ const createPlan = async ({ payload }) => {
 		responseBody = await mercadopagoService.createPreference(
 			mercadopagoPayload
 		);
-		await mailServicePsy.pendingPlanPayment(
-			user,
-			psychologist,
-			payload.price,
-			responseBody.init_point
-		);
+		// Se crea recordatorio de pago y se elimina correo de renovación de plan
+		await createPaymentReminder(user, psychologist, created);
+		await deleteRenewalEmails(user, psychologist);
 	}
 
 	return okResponse('Plan y preferencias creadas', responseBody);
@@ -512,6 +515,8 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 				},
 			}
 		).populate('psychologist user');
+		// Se crea el correo para recordar suscripción de renovación
+		await createRenewalSubscription(userLogged, psychologist, sessions);
 	}
 
 	// Se hace el trackeo en segment
@@ -558,6 +563,16 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		`${myPlan.totalSessions - payload.remainingSessions}/${
 			myPlan.totalSessions
 		}`
+	);
+
+	// Se crea el recordatorio de la sesion
+	await createReminder(
+		payload,
+		userLogged,
+		psychologist,
+		sessions,
+		roomsUrl,
+		idPlan
 	);
 
 	return okResponse('sesion creada', {
@@ -1113,13 +1128,19 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 		const expiration = dayjs(session.lastSession, 'YYYY/MM/DD HH:mm')
 			.add(50, 'minutes')
 			.format();
-		await Sessions.findOneAndUpdate(
+		let sessions = await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
 			{
 				$set: {
 					'plan.$.expiration': expiration,
 				},
 			}
+		);
+		// Se crean correos de recordatorio de renovacion de plan
+		await createRenewalSubscription(
+			userLogged,
+			currentSession.psychologist,
+			sessions
 		);
 	}
 
@@ -1149,6 +1170,31 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			newDate,
 			sessions.roomsUrl
 		);
+	}
+	// Se les cambia la fecha de la sesión a los correos de recordatorio
+	const mailsToReprogram = await Email.find({
+		type: {
+			$in: [
+				'reminder-user-day',
+				'reminder-user-hour',
+				'reminder-psy-day',
+				'reminder-psy-hour',
+			],
+		},
+		userRef: sessions.user._id,
+		psyRef: sessions.psychologist._id,
+		sessionRef: id,
+	});
+	if (mailsToReprogram.length) {
+		mailsToReprogram.forEach(async mail => {
+			await Email.findByIdAndUpdate(mail._id, {
+				sessionDate: dayjs
+					.tz(dayjs(date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
+					.format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
+				wasScheduled: false,
+				scheduledAt: null,
+			}).catch(err => console.log(err));
+		});
 	}
 
 	// Se hace el trackeo de la reprogramacion en segment
