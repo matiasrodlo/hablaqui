@@ -900,6 +900,7 @@ export default {
 				await this.updatePsychologist(this.selected);
 				const { psychologists } = await this.$axios.$get('/psychologists/all');
 				this.psychologists = psychologists;
+				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
 				await this.$axios.$put(`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`);
 			} else {
 				await this.checkusername();
