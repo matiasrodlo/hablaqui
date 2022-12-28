@@ -84,6 +84,10 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 			psychologist: psychologistId,
 		},
 		{
+			$set: {
+				isLastRead: false,
+				lastMessageSendBy: user.role,
+			},
 			$push: {
 				messages: newMessage,
 			},

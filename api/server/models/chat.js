@@ -51,7 +51,7 @@ let chatSchema = new Schema(
 		},
 		lastMessageSendBy: {
 			type: String,
-			default: 'error',
+			default: null,
 		},
 		messages: [messageSchema],
 		reports: [reportSchema],
