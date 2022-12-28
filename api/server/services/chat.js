@@ -99,10 +99,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
-	await emailChatNotification(
-		data,
-		user.role === 'psychologist' ? 'send-by-psy' : 'send-by-user'
-	);
 
 	// Envía un evento a segment
 	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -112,27 +108,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	});
 
 	return { chat: updatedChat, emit: data };
-};
-
-const emailChatNotification = async (data, type) => {
-	// Crea un payload con los datos de data y guarda en el modelo de email
-	const payload = {
-		userRef: data.userId,
-		psyRef: data.psychologistId,
-		type: type,
-		wasScheduled: false,
-		sessionRef: data.content._id.toString(),
-		sessionDate: data.content.createdAt,
-	};
-	await Email.updateOne(
-		{
-			userRef: data.userId,
-			psyRef: data.psychologistId,
-			type: type,
-		},
-		payload,
-		{ upsert: true }
-	);
 };
 
 const createReport = async (
