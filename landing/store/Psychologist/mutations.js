@@ -4,6 +4,7 @@ import timezone from 'dayjs/plugin/timezone';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import updateObjectInArray from '@/plugins/updateArray';
+import 'dayjs/locale/es';
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -35,6 +36,9 @@ export default {
 	setPayments(state, value) {
 		state.payments = value;
 	},
+	setMatchMaking(state, value) {
+		state.matchMaking = value;
+	},
 	setCustomSessions(state, value) {
 		state.sessions.push(value);
 	},
@@ -48,8 +52,8 @@ export default {
 		dayjs.locale('es');
 		state.sessionsFormatted = sessions.map(session => ({
 			...session,
-			text: dayjs(session.text).format('ddd'),
-			day: dayjs(session.day, 'DD MMM').format('DD MMM'),
+			text: dayjs.tz(dayjs(session.text)).format('ddd'),
+			day: dayjs(session.day).format('DD MMM'),
 		}));
 	},
 	setSessionsFormattedAll(state, items) {
@@ -59,8 +63,8 @@ export default {
 				psychologist: item.psychologist,
 				sessions: item.sessions.map(el => ({
 					...el,
-					text: dayjs(el.text).format('ddd'),
-					day: dayjs(el.day, 'DD MMM').format('DD MMM'),
+					text: dayjs.tz(dayjs(el.text)).format('ddd'),
+					day: dayjs(el.day).format('DD MMM'),
 				})),
 			};
 		});
@@ -73,8 +77,8 @@ export default {
 					psychologist: item.psychologist,
 					sessions: item.sessions.map(el => ({
 						...el,
-						text: dayjs(el.text).format('ddd'),
-						day: dayjs(el.day, 'DD MMM').format('DD MMM'),
+						text: dayjs.tz(dayjs(el.text)).format('ddd'),
+						day: dayjs(el.day).format('DD MMM'),
 					})),
 				};
 			})

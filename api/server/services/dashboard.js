@@ -205,9 +205,9 @@ const getMountToPay = async user => {
 			item.sessions.flatMap(s => {
 				console.log(item);
 				return {
-					date: dayjs(s.date, 'MM/DD/YYYY HH:mm').format(
-						'DD/MM/YYYY HH:mm'
-					),
+					date: dayjs
+						.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+						.format('DD/MM/YYYY HH:mm'),
 					_id: s._id,
 					status: s.status,
 					name: item.name,
@@ -234,11 +234,25 @@ const getMountToPay = async user => {
 	return okResponse('Planes', { amounts });
 };
 
+const specialistVisibility = async (psyId, visibility) => {
+	try {
+		const isVisible = visibility === 'true' ? true : false;
+		// Actualizar el campo de visibilidad de los especialistas
+		await Psychologist.findByIdAndUpdate(psyId, {
+			preferences: { marketplaceVisibility: isVisible },
+		});
+		return okResponse('Visibilidad actualizada', { psyId });
+	} catch (error) {
+		return conflictResponse('Error al actualizar la visibilidad', error);
+	}
+};
+
 const retoolService = {
 	getNextSessions,
 	getSessionsPayment,
 	fixSpecialities,
 	getMountToPay,
+	specialistVisibility,
 };
 
 export default Object.freeze(retoolService);

@@ -28,7 +28,8 @@ let email = new Schema({
 	},
 	queuedAt: {
 		type: String,
-		default: dayjs()
+		default: dayjs
+			.tz()
 			.locale('es')
 			.format('D MMMM YYYY, h:mm:ss a'),
 	},

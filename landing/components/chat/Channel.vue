@@ -209,6 +209,7 @@ import timezone from 'dayjs/plugin/timezone';
 import calendar from 'dayjs/plugin/calendar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/es';
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -285,8 +286,8 @@ export default {
 			return sentBy === this.$auth.$state.user._id;
 		},
 		setDate(time) {
-			if (time) return dayjs(time).calendar();
-			return dayjs().format('llll');
+			if (time) return dayjs.tz(dayjs(time)).calendar();
+			return dayjs.tz().format('llll');
 		},
 		setGrow(e) {
 			const height = parseInt(e.target.style.height.replace('px', ''));

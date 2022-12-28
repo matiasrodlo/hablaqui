@@ -13,10 +13,32 @@ const psychologistsController = {
 			errorCallback(error, res, 'Error obteniendo los psicologos');
 		}
 	},
-	async match(req, res) {
+	async bestMatch(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await psychologistsService.match(body);
+			const { data, code } = await psychologistsService.bestMatch(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async economicMatch(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.economicMatch(
+				body
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async availityMatch(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await psychologistsService.availityMatch(
+				body
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error haciendo match');

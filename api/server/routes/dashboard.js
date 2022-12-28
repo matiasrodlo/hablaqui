@@ -40,4 +40,17 @@ dashboardRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	dashboardController.getMountToPay
 );
+
+/**
+ * @description Cambia la visibilidad de un psicologo
+ * @method PUT
+ * @param {Boolean} params.visibility - Visibilidad del psicologo
+ * @param {String} params.id - Id del psicologo
+ * @route /api/v1/dashboard/specialist-visibility/:psyId/:visibility
+ */
+dashboardRouter.put(
+	'/dashboard/specialist-visibility/:psyId/:visibility',
+	[passport.authenticate('jwt', { session: true })],
+	dashboardController.specialistVisibility
+);
 export default dashboardRouter;

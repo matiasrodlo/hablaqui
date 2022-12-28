@@ -31,7 +31,7 @@ export default {
 						psychologist: item.psychologist,
 						user: item.user,
 						// dias de diferencia entre el dia que expiró y hoy
-						diff: dayjs(plan.expiration).diff(dayjs(), 'days'),
+						diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),
 					}))
 				);
 				const min = Math.max(...plans.map(el => el.diff).filter(el => el <= 0));

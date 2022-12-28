@@ -1,69 +1,12 @@
 <template>
 	<div>
-		<!-- filter name -->
-		<v-container fluid style="max-width: 1080px">
-			<v-row>
-				<v-col
-					v-if="$route.name === 'psicologos'"
-					cols="12"
-					tag="h1"
-					class="text-left font-weight-bold text-h6 text-md-h3"
-					style="color: #54565a"
-				>
-					Encuentra a tu psicólogo online
-				</v-col>
-				<v-col cols="12" sm="6">
-					<v-autocomplete
-						id="searchInput"
-						:value="searchInput"
-						class="white"
-						dense
-						outlined
-						:items="
-							filterLevelTwo.map((item, index) => ({
-								text: `${item.name} ${item.lastName && item.lastName}`,
-								value: item._id,
-								index,
-							}))
-						"
-						label="Busca tu psicólogo"
-						:append-icon="mdiChevronDown"
-						hide-details
-						:menu-props="{
-							closeOnClick: true,
-						}"
-						clearable
-						:disabled="loadingPsychologist"
-						@change="
-							e => {
-								searchInput = e;
-								visibles = [];
-								page = 1;
-							}
-						"
-					>
-						<template #no-data>
-							<v-list-item>
-								<v-list-item-content>
-									<v-list-item-title>
-										No se encontraron resultados que coincidan con "<strong>
-											{{ searchInput }}
-										</strong>
-										" .
-									</v-list-item-title>
-								</v-list-item-content>
-							</v-list-item>
-						</template>
-					</v-autocomplete>
-				</v-col>
-			</v-row>
-		</v-container>
 		<!-- filters -->
 		<v-app-bar
 			id="appbarfilter"
 			:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
 			style="z-index: 1"
 			class="sticky scroll"
+			height="120"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container fluid style="max-width: 1080px">
@@ -88,6 +31,7 @@
 									"
 									label="Motivo de consulta"
 									readonly
+									:disabled="loadingMatchMaking"
 									outlined
 									dense
 									class="white"
@@ -118,109 +62,23 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<!-- ocultado por peticion de daniel -->
-					<!-- <v-col id="selectStatus" cols="2" style="position: relative">
-						<div
-							class="pointer"
-							@click="
-								() => {
-									status = !status;
-									changeInput();
-								}
-							"
-						>
-							<v-text-field
-								disabled
-								outlined
-								readonly
-								style="border-color: #04c396"
-								hide-details
-								dense
-								class="white"
-								value="Online"
-							>
-								<template #prepend-inner>
-									<div>
-										<icon
-											size="25px"
-											:color="status ? '#04c396' : '#54565a'"
-											:icon="mdiAccount"
-										/>
-									</div>
-								</template>
-							</v-text-field>
-						</div>
-					</v-col> -->
 					<v-col id="selectgender" cols="3" style="position: relative">
-						<v-menu
-							ref="menuGender"
-							v-model="menuGender"
-							:close-on-content-click="false"
-							transition="scale-transition"
-							offset-y
-							rounded
-							attach="#selectgender"
-							min-width="200px"
-						>
-							<template #activator="{ on, attrs }">
-								<v-text-field
-									:value="gender.length ? `Géneros·${gender.length}` : ''"
-									label="Género"
-									readonly
-									outlined
-									dense
-									class="white"
-									hide-details
-									:append-icon="mdiChevronDown"
-									v-bind="attrs"
-									@click:append="() => (menuGender = !menuGender)"
-									v-on="on"
-								></v-text-field>
-							</template>
-							<v-card rounded>
-								<v-card-text>
-									<v-checkbox
-										v-model="gender"
-										value="male"
-										:disabled="loadingPsychologist"
-										label="Hombre"
-										class="py-2"
-										hide-details
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Hombre</span>
-										</template>
-									</v-checkbox>
-									<v-checkbox
-										v-model="gender"
-										value="female"
-										label="Mujer"
-										:disabled="loadingPsychologist"
-										class="py-2"
-										hide-details
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Mujer</span>
-										</template>
-									</v-checkbox>
-									<v-checkbox
-										v-model="gender"
-										value="transgender"
-										label="Transgénero"
-										:disabled="loadingPsychologist"
-										class="py-2"
-										hide-details
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Transgénero </span>
-										</template>
-									</v-checkbox>
-								</v-card-text>
-							</v-card>
-						</v-menu>
+						<v-autocomplete
+							ref="genders"
+							v-model="gender"
+							outlined
+							dense
+							class="white"
+							:append-icon="mdiChevronDown"
+							:items="[
+								{ value: 'female', text: 'Mujer' },
+								{ value: 'male', text: 'Hombre' },
+								{ value: 'transgender', text: 'Transgénero' },
+							]"
+							label="Género"
+							hide-details
+							@change="e => actualizarMatch({ gender: e })"
+						></v-autocomplete>
 					</v-col>
 					<v-col cols="3">
 						<div id="selectPrices" style="position: relative">
@@ -230,107 +88,88 @@
 								outlined
 								dense
 								class="white"
-								attach="#selectPrices"
-								clearable
 								:append-icon="mdiChevronDown"
 								:items="[
-									{ value: '[9990, 14990]', text: '$9.990 - $14.990' },
-									{ value: '[14990, 22990]', text: '$14.990 - $22.990' },
-									{ value: '[22990, 29990]', text: '$22.990 - $29.990' },
-									{ value: '[29900]', text: '+ $29.900' },
+									{ value: 15000, text: 'Hasta $15.000' },
+									{ value: 20000, text: 'Hasta $20.000' },
+									{ value: 30000, text: 'Hasta $30.000' },
+									{ value: 40000, text: 'Hasta $40.000' },
 								]"
 								label="Precios"
 								hide-details
+								@change="e => actualizarMatch({ price: e })"
 							></v-autocomplete>
 						</div>
 					</v-col>
 					<v-col id="selectOthers" cols="3" style="position: relative">
-						<v-menu
+						<v-autocomplete
 							ref="menuOthers"
-							v-model="menuOthers"
-							:close-on-content-click="false"
-							transition="scale-transition"
-							offset-y
-							rounded
-							attach="#selectOthers"
-							min-width="200px"
-						>
-							<template #activator="{ on, attrs }">
-								<v-text-field
-									:value="
-										models.length || languages.length
-											? `Otros·${models.length + languages.length}`
-											: ''
-									"
-									label="Otros"
-									readonly
-									outlined
-									dense
-									class="white"
-									hide-details
-									:append-icon="mdiChevronDown"
-									v-bind="attrs"
-									@click:append="() => (menuOthers = !menuOthers)"
-									v-on="on"
-								>
-								</v-text-field>
-							</template>
-							<v-card rounded width="200px">
-								<v-card-text
-									><div class="body-2 font-weight-bold">Modelo terapéuticos</div>
-									<template
-										v-for="(item, i) in [
-											'Cognitivo-conductual',
-											'Contextual',
-											'Psicoanálisis',
-											'Humanista',
-											'Sistémico',
-										]"
-									>
-										<v-checkbox
-											:key="`models-${i}`"
-											v-model="models"
-											:value="item"
-											class="py-2"
-											hide-details
-											:label="item"
-											@change="changeInput"
-										>
-											<template #label>
-												<span class="caption"> {{ item }}</span>
-											</template>
-										</v-checkbox>
-									</template>
-									<div class="body-2 font-weight-bold mt-2">Idioma</div>
-									<v-checkbox
-										v-model="languages"
-										value="spanish"
-										:disabled="loadingPsychologist"
-										hide-details
-										class="py-2"
-										label="Español"
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Español </span>
-										</template>
-									</v-checkbox>
-									<v-checkbox
-										v-model="languages"
-										value="english"
-										:disabled="loadingPsychologist"
-										hide-details
-										class="py-2"
-										label="Ingles"
-										@change="changeInput"
-									>
-										<template #label>
-											<span class="caption">Ingles </span>
-										</template>
-									</v-checkbox>
-								</v-card-text>
-							</v-card>
-						</v-menu>
+							v-model="otros"
+							outlined
+							dense
+							class="white"
+							:append-icon="mdiChevronDown"
+							:items="[
+								{ value: 'early', text: 'Temprano: Antes de las 9 am' },
+								{ value: 'morning', text: 'En la mañana: Entre 9 am y 12 pm' },
+								{ value: 'midday', text: 'A Medio día: Entre 12 y 2 pm' },
+								{ value: 'afternoon', text: 'En la tarde: Entre 2 y 6 pm' },
+								{ value: 'night', text: 'En la noche: Después de las 6 pm' },
+							]"
+							label="Disponibilidad"
+							hide-details
+							@change="e => actualizarMatch({ schedule: e })"
+						></v-autocomplete>
+					</v-col>
+				</v-row>
+				<v-row>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center py-2 white body-2 rounded-lg"
+								:class="toggle === 0 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 0;
+										getPsychologistsBestMatch();
+									}
+								"
+							>
+								Recomendados
+							</div>
+						</div>
+					</v-col>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center white py-2 rounded-lg body-2"
+								:class="toggle === 1 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 1;
+										getPsychologistsEconomicMatch();
+									}
+								"
+							>
+								Economico
+							</div>
+						</div>
+					</v-col>
+					<v-col cols="12" md="4">
+						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
+							<div
+								class="text-center white py-2 rounded-lg body-2"
+								:class="toggle === 2 ? 'primary--text' : 'textbtn'"
+								@click="
+									() => {
+										toggle = 2;
+										getPsychologistsAvailityMatch();
+									}
+								"
+							>
+								Disponibilidad
+							</div>
+						</div>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -338,39 +177,6 @@
 		<!-- pychologist -->
 		<v-container v-if="psychologists.length" fluid style="max-width: 1080px" class="my-4">
 			<v-row>
-				<v-col cols="12">
-					<v-sheet class="item" style="border-radius: 15px; height: 182px">
-						<v-row no-gutters align="center" style="height: 182px">
-							<v-col cols="3">
-								<v-img
-									width="250px"
-									contain
-									src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
-									lazy-src="https://cdn.hablaqui.cl/static/banner_comenzar.png"
-								></v-img>
-							</v-col>
-							<v-col class="pl-4">
-								<div class="text-h5 primary--text font-weight-bold">
-									Te ayudamos a encontrar a tu psicólogo ideal
-								</div>
-								<div class="my-2 text-h6 primary--text font-weight-regular">
-									Encuentra al psicólogo que necesitas, solo responde las
-									siguientes preguntas.
-								</div>
-								<div class="my-4">
-									<v-btn
-										rounded
-										color="primary"
-										class="px-8 py-2"
-										@click="goEvaluation"
-									>
-										Comenzar
-									</v-btn>
-								</div>
-							</v-col>
-						</v-row>
-					</v-sheet>
-				</v-col>
 				<v-col
 					v-if="loadingPsychologist"
 					cols="12"
@@ -400,7 +206,14 @@
 									style="position: absolute; top: 30px; left: 0"
 								>
 									<div
-										class="d-flex justify-space-between align-center info rounded-r-lg pa-2"
+										class="
+											d-flex
+											justify-space-between
+											align-center
+											info
+											rounded-r-lg
+											pa-2
+										"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
 											width: 70px;
@@ -577,7 +390,14 @@
 										</template>
 										<template v-else>
 											<div
-												class="primary--text caption font-weight-bold d-flex justify-center align-center"
+												class="
+													primary--text
+													caption
+													font-weight-bold
+													d-flex
+													justify-center
+													align-center
+												"
 												style="height: 300px"
 											>
 												Cargando...
@@ -611,7 +431,7 @@
 
 <script>
 import { mdiChevronDown, mdiAccount } from '@mdi/js';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 /**
  * Componente: Listado de psicologos en vista de escritorio
@@ -632,8 +452,10 @@ export default {
 	},
 	data() {
 		return {
+			toggle: 0,
 			mdiChevronDown,
 			mdiAccount,
+			loadingMatchMaking: false,
 			menuGender: false,
 			menuSpecialties: false,
 			menuOthers: false,
@@ -643,6 +465,7 @@ export default {
 			prices: '',
 			gender: [],
 			others: [],
+			otros: '',
 			models: [],
 			languages: [],
 			scrollHeight: 0,
@@ -671,15 +494,18 @@ export default {
 		 * Filtro en base a los precios de los psicologos
 		 */
 		filterLevelTwo(item) {
-			if (!this.prices) return this.filterLevelOne;
-			return this.filterLevelOne.filter(item => {
-				const prices = JSON.parse(this.prices);
-				if (prices.length > 1)
-					return (
-						prices[0] < item.sessionPrices.video && prices[1] > item.sessionPrices.video
-					);
-				else return prices[0] < item.sessionPrices.video;
-			});
+			if (this.toggle == null || this.matchMaking == null) {
+				if (!this.prices) return this.filterLevelOne;
+				return this.filterLevelOne.filter(item => {
+					const prices = JSON.parse(this.prices);
+					if (prices.length > 1)
+						return (
+							prices[0] < item.sessionPrices.video &&
+							prices[1] > item.sessionPrices.video
+						);
+					else return prices[0] < item.sessionPrices.video;
+				});
+			} else return this.filterLevelOne;
 		},
 		/**
 		 * items for search box
@@ -700,13 +526,13 @@ export default {
 			// si quiere ver por psicologo online, filtramos estos
 			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
 			// filtramos los psicologo segun el genero marcados
-			if (this.gender.length)
-				result = result.filter(item => {
-					const trans = item.isTrans && 'transgender';
-					const gender = [item.gender];
-					trans && gender.push(trans);
-					return gender.some(el => this.gender.some(g => g === el));
-				});
+			// if (this.gender.length)
+			// 	result = result.filter(item => {
+			// 		const trans = item.isTrans && 'transgender';
+			// 		const gender = [item.gender];
+			// 		trans && gender.push(trans);
+			// 		return gender.some(el => this.gender.some(g => g === el));
+			// 	});
 			// filtramos los psicologos segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
@@ -728,6 +554,7 @@ export default {
 			appointments: 'Appointments/appointments',
 			psychologists: 'Psychologist/psychologistsMarketPlace',
 			sessions: 'Psychologist/sessionsLimit',
+			matchMaking: 'Psychologist/matchMaking',
 		}),
 	},
 	watch: {
@@ -739,6 +566,19 @@ export default {
 			if (oldValue) prev = oldValue;
 			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
+		},
+		matchMaking(newVal) {
+			if (newVal) {
+				this.specialties = newVal.themes;
+				this.gender = newVal.gender;
+				this.prices = newVal.price;
+				this.otros = newVal.schedule;
+			}
+		},
+		menuSpecialties(newVal) {
+			if (!newVal) {
+				this.actualizarMatch({ themes: this.specialties });
+			}
 		},
 	},
 	created() {
@@ -832,8 +672,24 @@ export default {
 				return this.$router.push(`/${psychologist.username}/?chat=true`);
 			}
 		},
+		async actualizarMatch(value) {
+			if (this.matchMaking !== null) {
+				this.loadingMatchMaking = true;
+				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
+				if (this.toggle === 0) await this.getPsychologistsBestMatch();
+				if (this.toggle === 1) await this.getPsychologistsEconomicMatch();
+				if (this.toggle === 2) await this.getPsychologistsAvailityMatch();
+				this.loadingMatchMaking = false;
+			}
+		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
+		}),
+		...mapActions({
+			updateMatchMakig: 'Psychologist/updateMatchMakig',
+			getPsychologistsBestMatch: 'Psychologist/getPsychologistsBestMatch',
+			getPsychologistsAvailityMatch: 'Psychologist/getPsychologistsAvailityMatch',
+			getPsychologistsEconomicMatch: 'Psychologist/getPsychologistsEconomicMatch',
 		}),
 	},
 };
@@ -856,5 +712,8 @@ export default {
 
 .item:hover {
 	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
+}
+.textbtn {
+	color: #54565a;
 }
 </style>

@@ -90,8 +90,12 @@ const getAllEvaluations = async user => {
 				return {
 					evsId: item._id,
 					evId: ev._id,
-					send: dayjs(ev.createdAt).format('DD/MM/YYYY HH:mm'),
-					updated: dayjs(ev.updatedAt).format('DD/MM/YYYY HH:mm'),
+					send: dayjs
+						.tz(dayjs(ev.createdAt))
+						.format('DD/MM/YYYY HH:mm'),
+					updated: dayjs
+						.tz(dayjs(ev.updatedAt))
+						.format('DD/MM/YYYY HH:mm'),
 					approved: ev.approved,
 					comment: ev.comment,
 					global: ev.global,
@@ -123,7 +127,7 @@ const approveEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'approved',
-				'evaluations.$.moderatingDate': dayjs().format(),
+				'evaluations.$.moderatingDate': dayjs.tz().format(),
 			},
 		},
 		{ new: true }
@@ -186,7 +190,7 @@ const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
 		{
 			$set: {
 				'evaluations.$.approved': 'refuse',
-				'evaluations.$.moderatingDate': dayjs().format(),
+				'evaluations.$.moderatingDate': dayjs.tz().format(),
 			},
 		}
 	).populate('psychologist user');
