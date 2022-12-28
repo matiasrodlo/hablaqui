@@ -904,6 +904,7 @@ export default {
 				await this.updateSpecialist(this.selected);
 				const { specialists } = await this.$axios.$get('/specialists/all');
 				this.specialists = specialists;
+				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
 				await this.$axios.$put(`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`);
 			} else {
 				await this.checkusername();
@@ -991,7 +992,7 @@ export default {
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
-			setPsychologist: 'Psychologist/setPsychologist',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
 			putApproveAvatar: 'Specialist/approveAvatar',
