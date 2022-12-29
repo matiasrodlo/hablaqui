@@ -934,6 +934,7 @@ export default {
 		},
 		async setSelected(item, isSpec) {
 			this.selected = { ...item, isSpec };
+			this.switch1 = this.selected.preferences.marketplaceVisibility;
 			this.dialog = true;
 		},
 		newExperience() {
