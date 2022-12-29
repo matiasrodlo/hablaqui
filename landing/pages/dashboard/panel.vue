@@ -930,6 +930,7 @@ export default {
 		},
 		async setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
+			this.switch1 = this.selected.preferences.marketplaceVisibility;
 			this.dialog = true;
 		},
 		newExperience() {
