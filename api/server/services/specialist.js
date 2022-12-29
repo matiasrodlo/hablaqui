@@ -417,7 +417,7 @@ const getByData = async username => {
 const setSchedule = async (user, payload) => {
 	let response;
 	// Si el user es un especialista, se busca el especialista por su id y se actualiza el horario
-	if (user.specialist) {
+	if (user.role === 'superuser') {
 		response = await Specialist.findByIdAndUpdate(
 			user.specialist,
 			{
@@ -435,26 +435,46 @@ const setSchedule = async (user, payload) => {
 			},
 			{ new: true }
 		);
-	}
-	// Si el user es un postulante (specialist === undefined), pero no un user
-	else {
-		response = await Recruitment.findOneAndUpdate(
-			{ email: user.email },
-			{
-				$set: {
-					schedule: {
-						monday: payload.monday,
-						tuesday: payload.tuesday,
-						wednesday: payload.wednesday,
-						thursday: payload.thursday,
-						friday: payload.friday,
-						saturday: payload.saturday,
-						sunday: payload.sunday,
+	} else {
+		if (user.specialist) {
+			response = await Specialist.findByIdAndUpdate(
+				user.specialist,
+				{
+					$set: {
+						schedule: {
+							monday: payload.monday,
+							tuesday: payload.tuesday,
+							wednesday: payload.wednesday,
+							thursday: payload.thursday,
+							friday: payload.friday,
+							saturday: payload.saturday,
+							sunday: payload.sunday,
+						},
 					},
 				},
-			},
-			{ new: true }
-		);
+				{ new: true }
+			);
+		}
+		// Si el user es un postulante (specialist === undefined), pero no un user
+		else {
+			response = await Recruitment.findOneAndUpdate(
+				{ email: user.email },
+				{
+					$set: {
+						schedule: {
+							monday: payload.monday,
+							tuesday: payload.tuesday,
+							wednesday: payload.wednesday,
+							thursday: payload.thursday,
+							friday: payload.friday,
+							saturday: payload.saturday,
+							sunday: payload.sunday,
+						},
+					},
+				},
+				{ new: true }
+			);
+		}
 	}
 	return okResponse('Horario actualizado', {
 		specialist: response,
