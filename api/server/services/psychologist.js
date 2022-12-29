@@ -536,7 +536,7 @@ const updatePsychologist = async (user, profile) => {
 			);
 			// Hace el trackeo de segment
 			if (
-				!process.env.API_URL.includes('hablaqui.cl') ||
+				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				const getUser = await User.findOne({ email: user.email });
@@ -599,7 +599,7 @@ const updatePsychologist = async (user, profile) => {
 			);
 			// Se hace el trackeo de segment
 			if (
-				!process.env.API_URL.includes('hablaqui.cl') ||
+				process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				analytics.track({
