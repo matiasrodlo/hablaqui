@@ -536,20 +536,20 @@ const updateSpecialist = async (user, profile) => {
 				profile,
 				{
 					new: true,
-					runValidators: true,
-					context: 'query',
+					//runValidators: true,
+					//context: 'query',
 				}
 			);
 			// Hace el trackeo de segment
 			if (
-				process.env.API_URL.includes('hablaqui.cl') ||
+				!process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				const getUser = await User.findOne({ email: user.email });
 				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
-					event: 'psy-updated-profile',
+					event: 'psy-updasted-profile',
 				});
 				analytics.identify({
 					userId: id.toString(),
@@ -605,7 +605,7 @@ const updateSpecialist = async (user, profile) => {
 			);
 			// Se hace el trackeo de segment
 			if (
-				process.env.API_URL.includes('hablaqui.cl') ||
+				!process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				analytics.track({
