@@ -302,7 +302,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import dayjs from 'dayjs';
@@ -566,6 +566,7 @@ export default {
 			this.setSpecialist(specialist);
 			this.setDay(cloneDeep(specialist.schedule));
 			this.loading = false;
+			this.snackBar({ content: 'Cambios realizados', color: 'success' });
 		},
 		// Validation
 		validateInput(indexDay, indexInterval, value, type) {
@@ -598,6 +599,9 @@ export default {
 		},
 		...mapActions({
 			setSchedule: 'Specialist/setSchedule',
+		}),
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
 		}),
 	},
 };
