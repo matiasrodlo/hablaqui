@@ -806,9 +806,7 @@ export default {
 				this.setPsychologist(value);
 			},
 		},
-		...mapGetters({
-			specialties: 'Appointments/specialties',
-		}),
+		...mapGetters({specialties: 'Appointments/specialties'}),
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -1001,6 +999,7 @@ export default {
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
+			setPsychologist: 'Psychologist/setPsychologist',
 		}),
 		...mapActions({
 			putApproveAvatar: 'Psychologist/approveAvatar',
