@@ -17,4 +17,11 @@ scriptsRouter.put('/scripts/change-role', scriptsController.changeRole);
  */
 scriptsRouter.post('/scripts/add-profesion', scriptsController.addProfesion);
 
+scriptsRouter.post(
+	'/scripts/remove-profesion',
+	scriptsController.removeProfesion
+);
+
+scriptsRouter.post('/scripts/remove-rol', scriptsController.removeRol);
+
 export default scriptsRouter;
