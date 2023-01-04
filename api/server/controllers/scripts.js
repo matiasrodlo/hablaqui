@@ -33,9 +33,29 @@ const addProfesion = async (req, res) => {
 	}
 };
 
+const removeProfesion = async (req, res) => {
+	try {
+		const { data, code } = await scriptsService.removeProfesion();
+		restResponse(data, code, res);
+	} catch (e) {
+		errorCallback(e, res, 'Error registrando el postulado');
+	}
+};
+
+const removeRol = async (req, res) => {
+	try {
+		const { data, code } = await scriptsService.removeRol();
+		restResponse(data, code, res);
+	} catch (e) {
+		errorCallback(e, res, 'Error registrando el postulado');
+	}
+};
+
 const scriptsController = {
 	changeRole,
 	addProfesion,
+	removeProfesion,
+	removeRol,
 };
 
 export default Object.freeze(scriptsController);
