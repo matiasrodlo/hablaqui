@@ -44,7 +44,7 @@ const removeProfesion = async (req, res) => {
 
 const removeRol = async (req, res) => {
 	try {
-		const { data, code } = await scriptsService.removeRol();
+		const { data, code } = await scriptsService.removeRole();
 		restResponse(data, code, res);
 	} catch (e) {
 		errorCallback(e, res, 'Error registrando el postulado');
