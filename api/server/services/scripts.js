@@ -63,12 +63,18 @@ const removeProfesion = async () => {
 	const psychologists = await psyModel.find({
 		profession: { $exists: true },
 	});
+	const recruitments = await recruitmentsModel.find({
+		profession: { $exists: true },
+	});
 	if (!users) return conflictResponse('No se encontro ningun usuario');
 	if (!psychologists)
 		return conflictResponse('No se encontro ningun psicologo');
+	if (!recruitments)
+		return conflictResponse('No se encontro ningun reclutamiento');
 	// Se obtienen los id de los usuarios y psicologos
 	const psy = psychologists.map(psy => psy._id);
 	const user = users.map(user => user._id);
+	const recruitment = recruitments.map(recruitment => recruitment._id);
 	// Se agrega la profesion a los psicologos
 	await psyModel.updateMany(
 		{ _id: { $in: psy } },
@@ -79,7 +85,7 @@ const removeProfesion = async () => {
 		{ $unset: { profession: '' } }
 	);
 	await recruitmentsModel.updateMany(
-		{ _id: { $in: user } },
+		{ _id: { $in: recruitment } },
 		{ $unset: { profession: '' } }
 	);
 	return okResponse('Profesion eliminada', { user });
