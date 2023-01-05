@@ -40,8 +40,10 @@ export default {
 
 			// generate routes psicologos
 			// Se ejecutan scripts para agregar profesion y cambiar rol
-			await axios.post(`${baseURL}/scripts/remove-rol`);
-			await axios.post(`${baseURL}/scripts/remove-profesion`);
+			await axios.post(`${baseURL}/scripts/add-profesion`);
+			await axios.put(`${baseURL}/scripts/change-role`);
+			// await axios.post(`${baseURL}/scripts/remove-rol`);
+			// await axios.post(`${baseURL}/scripts/remove-profesion`);
 
 			const res = await axios.get(`${baseURL}/psychologists/all`);
 			const psicologos = res.data.psychologists

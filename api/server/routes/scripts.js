@@ -17,11 +17,21 @@ scriptsRouter.put('/scripts/change-role', scriptsController.changeRole);
  */
 scriptsRouter.post('/scripts/add-profesion', scriptsController.addProfesion);
 
-scriptsRouter.post(
+/**
+ * @description: Script removing the profession to psychologist
+ * @route /api/v1/scripts/remove-profesion
+ * @method PUT
+ */
+scriptsRouter.put(
 	'/scripts/remove-profesion',
 	scriptsController.removeProfesion
 );
 
-scriptsRouter.post('/scripts/remove-rol', scriptsController.removeRol);
+/**
+ * @description: Script removing the role to psychologist
+ * @route /api/v1/scripts/remove-rol
+ * @method DELETE
+ */
+scriptsRouter.delete('/scripts/remove-rol', scriptsController.removeRol);
 
 export default scriptsRouter;
