@@ -3,6 +3,7 @@
 import { okResponse, conflictResponse } from '../utils/responses/functions';
 import userModel from '../models/user';
 import psyModel from '../models/psychologist';
+import recruitmentsModel from '../models/recruitment';
 
 const changeRole = async () => {
 	// Se buca a todos los usuarios con el rol de psicologo
@@ -25,12 +26,18 @@ const addProfesion = async () => {
 	const psychologists = await psyModel.find({
 		profession: { $exists: false },
 	});
+	const recruitments = await recruitmentsModel.find({
+		profession: { $exists: false },
+	});
 	if (!users) return conflictResponse('No se encontro ningun usuario');
 	if (!psychologists)
 		return conflictResponse('No se encontro ningun psicologo');
+	if (!recruitments)
+		return conflictResponse('No se encontro ningun reclutamiento');
 	// Se obtienen los id de los usuarios y psicologos
 	const psy = psychologists.map(psy => psy._id);
 	const user = users.map(user => user._id);
+	const recruitment = recruitments.map(recruitment => recruitment._id);
 	// Se agrega la profesion a los psicologos
 	await psyModel.updateMany(
 		{ _id: { $in: psy } },
@@ -38,6 +45,10 @@ const addProfesion = async () => {
 	);
 	await userModel.updateMany(
 		{ _id: { $in: user } },
+		{ $set: { profession: 'psychologist' } }
+	);
+	await recruitmentsModel.updateMany(
+		{ _id: { $in: recruitment } },
 		{ $set: { profession: 'psychologist' } }
 	);
 	return okResponse('Profesion agregada', { user });
@@ -64,6 +75,10 @@ const removeProfesion = async () => {
 		{ $unset: { profession: '' } }
 	);
 	await userModel.updateMany(
+		{ _id: { $in: user } },
+		{ $unset: { profession: '' } }
+	);
+	await recruitmentsModel.updateMany(
 		{ _id: { $in: user } },
 		{ $unset: { profession: '' } }
 	);
