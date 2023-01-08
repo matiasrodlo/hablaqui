@@ -123,7 +123,7 @@ export default {
 		async getClients(row) {
 			this.selectedPsy = row;
 			const { users } = await this.$axios.$get(`/psychologist/clients/${row._id}`);
-			this.clients = users;
+			this.clients = users.filter(user => !!user.plan);
 		},
 		selectClient(row) {
 			this.selectedClient = row;
