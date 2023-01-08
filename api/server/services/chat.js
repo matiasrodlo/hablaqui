@@ -104,13 +104,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
-<<<<<<< HEAD
-	await emailChatNotification(
-		data,
-		user.role === 'specialist' ? 'send-by-psy' : 'send-by-user'
-	);
-=======
->>>>>>> CORREOS
 
 	// Envía un evento a segment
 	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
