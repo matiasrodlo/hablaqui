@@ -516,7 +516,9 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 			}
 		).populate('psychologist user');
 		// Se crea el correo para recordar suscripción de renovación
-		await createRenewalSubscription(userLogged, psychologist, sessions);
+		if (userLogged.role === 'user') {
+			await createRenewalSubscription(userLogged, psychologist, sessions);
+		}
 	}
 
 	// Se hace el trackeo en segment
@@ -1135,12 +1137,14 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 				},
 			}
 		);
-		// Se crean correos de recordatorio de renovacion de plan
-		await createRenewalSubscription(
-			userLogged,
-			currentSession.psychologist,
-			sessions
-		);
+		if (userLogged.role === 'user') {
+			// Se crean correos de recordatorio de renovacion de plan
+			await createRenewalSubscription(
+				userLogged,
+				currentSession.psychologist,
+				sessions
+			);
+		}
 	}
 
 	// Se envia correo de reprogramacion
