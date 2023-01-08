@@ -308,6 +308,12 @@ const cronService = {
 				});
 			}
 		});
+		// Se actualizan los mensajes que ya fueron notificados
+		await Chat.updateMany(
+			{ isLastRead: false },
+			{ $set: { isLastRead: true } }
+		);
+
 		return okResponse('Se han enviado los correos');
 	},
 	async emailSchedule(token) {
