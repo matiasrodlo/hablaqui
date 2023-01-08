@@ -283,8 +283,7 @@ const psychologistPay = async (params, query) => {
 	};
 	const foundPsychologist = await Psychologist.findOneAndUpdate(
 		{ _id: psychologistId },
-		{ $push: { psyPlans: newPlan } },
-		{ $set: { isHide: false } },
+		{ $push: { psyPlans: newPlan }, $set: { isHide: false } },
 		{ new: true }
 	);
 	// Se realiza el trackeo de analytics
