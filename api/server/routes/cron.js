@@ -6,7 +6,7 @@ import cronController from '../controllers/cron';
 const cronRouter = Router();
 
 /**
- * @description: Calendariza correos para próximas sesiones una hora antes de la sesión y un día antes de la sesión
+ * @description: Calendariza correos para ser enviados
  * @method POST
  * @route /api/v1/cron/email-schedule/:authToken
  * @param {string} params.authToken - Token de autorización
@@ -55,37 +55,6 @@ cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
 cronRouter.post(
 	'/cron/status/attention/:authToken',
 	cronController.statusInmediateAttention
-);
-
-/**
- * @description: Envia el correo de recordatorio de pago al usuario
- * @method POST
- * @route /api/v1/cron/reminder-payment/:authToken
- * @param {string} params.authToken - Token de autorización
- */
-cronRouter.post(
-	'/cron/reminder-payment/:authToken',
-	cronController.reminderPayment
-);
-
-/**
- * @description: Envia el correo de recordatorio de chat al usuario
- * @method POST
- * @route /api/v1/cron/reminder-chat/:authToken
- * @param {string} params.authToken - Token de autorización
- */
-cronRouter.post('/cron/reminder-chat/:authToken', cronController.reminderChat);
-
-/**
- * @description: Envia el correo de recordatorio de renovación al usuario
- * @method POST
- * @route /api/v1/cron/reminder-renewal-email/:authToken
- * @param {string} params.authToken - Token de autorización
- */
-
-cronRouter.post(
-	'/cron/reminder-renewal-email/:authToken',
-	cronController.reminderRenewal
 );
 
 export default cronRouter;
