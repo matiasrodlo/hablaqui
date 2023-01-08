@@ -262,7 +262,7 @@ const cronService = {
 			);
 		}
 		// Se busca a llamar a todas las funciones de envío de correos
-		let totalEmailSchedule =
+		const totalEmailSchedule =
 			(await mailService.sessionReminder()) +
 			(await mailService.reminderPayment()) +
 			(await mailService.reminderChat()) +
