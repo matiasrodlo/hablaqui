@@ -85,6 +85,10 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 			psychologist: psychologistId,
 		},
 		{
+			$set: {
+				isLastRead: false,
+				lastMessageSendBy: user.role,
+			},
 			$push: {
 				messages: newMessage,
 			},
@@ -100,10 +104,13 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
+<<<<<<< HEAD
 	await emailChatNotification(
 		data,
 		user.role === 'specialist' ? 'send-by-psy' : 'send-by-user'
 	);
+=======
+>>>>>>> CORREOS
 
 	// Envía un evento a segment
 	const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -113,27 +120,6 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	});
 
 	return { chat: updatedChat, emit: data };
-};
-
-const emailChatNotification = async (data, type) => {
-	// Crea un payload con los datos de data y guarda en el modelo de email
-	const payload = {
-		userRef: data.userId,
-		psyRef: data.psychologistId,
-		type: type,
-		wasScheduled: false,
-		sessionRef: data.content._id.toString(),
-		sessionDate: data.content.createdAt,
-	};
-	await Email.updateOne(
-		{
-			userRef: data.userId,
-			psyRef: data.psychologistId,
-			type: type,
-		},
-		payload,
-		{ upsert: true }
-	);
 };
 
 const createReport = async (
@@ -173,6 +159,15 @@ const readMessage = async (user, chatId) => {
 	// Se obtiene el documento de chat, verifica el rol del usuario y marca el chat como leido
 	const chat = await Chat.findById(chatId);
 	const id = user.role == 'specialist' ? chat.user : user.psychologist;
+
+	await Email.deleteMany({
+		type: {
+			$in: ['chat-psy-1-day', 'chat-user-1-day'],
+		},
+		wasScheduled: false,
+		userRef: chat.user,
+		psyRef: chat.psychologist,
+	});
 
 	await Chat.updateOne(
 		{ _id: chatId, sentBy: id },
