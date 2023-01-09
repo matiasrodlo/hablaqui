@@ -129,7 +129,7 @@ const cronService = {
 					wasScheduled: false,
 					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
 				});
-			} else if (mess.lastMessageSendBy === 'psychologist') {
+			} else if (mess.lastMessageSendBy === 'specialist') {
 				await mailServiceRemider.sendChatNotificationToUser(
 					user,
 					psy,
