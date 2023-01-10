@@ -171,7 +171,7 @@ export default {
 		},
 		async getClients(id) {
 			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
-			this.clients = users;
+			this.clients = users.filter(user => !!user.plan);
 		},
 		getSession(client) {
 			this.dialog = true;
