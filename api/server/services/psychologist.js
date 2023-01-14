@@ -501,7 +501,9 @@ const updatePaymentMethod = async (user, payload) => {
 
 const updatePsychologist = async (user, profile) => {
 	if (user.role === 'user') return conflictResponse('No tienes poder.');
-	if (profile.isPsy) {
+	if (user.role === 'superuser' && !user.psychologist)
+		user.psychologist = profile._id;
+	if (user.psychologist) {
 		// Si el user es un psicologo intenta actualizar el psicologo
 		try {
 			const psy = await Psychologist.findById(profile._id);
@@ -525,7 +527,7 @@ const updatePsychologist = async (user, profile) => {
 			);
 			// Hace el trackeo de segment
 			if (
-				process.env.API_URL.includes('hablaqui.cl') ||
+				!process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				const getUser = await User.findOne({ email: user.email });
@@ -588,7 +590,7 @@ const updatePsychologist = async (user, profile) => {
 			);
 			// Se hace el trackeo de segment
 			if (
-				process.env.API_URL.includes('hablaqui.cl') ||
+				!process.env.API_URL.includes('hablaqui.cl') ||
 				process.env.DEBUG_ANALYTICS === 'true'
 			) {
 				analytics.track({
