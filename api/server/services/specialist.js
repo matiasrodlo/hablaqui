@@ -518,7 +518,7 @@ const updatePaymentMethod = async (user, payload) => {
 
 const updateSpecialist = async (user, profile) => {
 	if (user.role == 'user') return conflictResponse('No tienes poder.');
-	if (user.specialist) {
+	if (profile.isPsy) {
 		// Si el user es un especialista intenta actualizar el especialista
 		try {
 			const psy = await Specialist.findById(profile._id);
@@ -536,8 +536,8 @@ const updateSpecialist = async (user, profile) => {
 				profile,
 				{
 					new: true,
-					//runValidators: true,
-					//context: 'query',
+					runValidators: true,
+					context: 'query',
 				}
 			);
 			// Hace el trackeo de segment
