@@ -536,8 +536,8 @@ const updateSpecialist = async (user, profile) => {
 				profile,
 				{
 					new: true,
-					//runValidators: true,
-					//context: 'query',
+					runValidators: true,
+					context: 'query',
 				}
 			);
 			// Hace el trackeo de segment
