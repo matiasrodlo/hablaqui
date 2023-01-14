@@ -42,7 +42,7 @@ let email = new Schema({
 	},
 	specRef: {
 		type: Schema.Types.ObjectId,
-		ref: 'Pyschologist',
+		ref: 'Specialist',
 	},
 	sessionRef: {
 		type: Schema.Types.ObjectId,
