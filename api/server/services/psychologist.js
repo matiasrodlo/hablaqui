@@ -500,8 +500,8 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updatePsychologist = async (user, profile) => {
-	if (user.role == 'user') return conflictResponse('No tienes poder.');
-	if (user.psychologist) {
+	if (user.role === 'user') return conflictResponse('No tienes poder.');
+	if (profile.isPsy) {
 		// Si el user es un psicologo intenta actualizar el psicologo
 		try {
 			const psy = await Psychologist.findById(profile._id);
@@ -519,8 +519,8 @@ const updatePsychologist = async (user, profile) => {
 				profile,
 				{
 					new: true,
-					//runValidators: true,
-					//context: 'query',
+					runValidators: true,
+					context: 'query',
 				}
 			);
 			// Hace el trackeo de segment
