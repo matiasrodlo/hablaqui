@@ -7,10 +7,13 @@ import recruitmentsModel from '../models/recruitment';
 
 const changeRole = async () => {
 	// Se buca a todos los usuarios con el rol de especialista
-	const user = await userModel.find({ role: 'specialist' });
+	const user = await userModel.find({ role: 'psychologist' });
 	if (!user) return conflictResponse('No se encontro ningun usuario');
 	// Se cambia el rol de especialista a especialista
-	await userModel.updateMany({ role: 'specialist' }, { role: 'specialist' });
+	await userModel.updateMany(
+		{ role: 'psychologist' },
+		{ role: 'specialist' }
+	);
 	return okResponse('Rol cambiado', { user });
 };
 
@@ -93,7 +96,10 @@ const removeRole = async () => {
 	const user = await userModel.find({ role: 'specialist' });
 	if (!user) return conflictResponse('No se encontro ningun usuario');
 	// Se cambia el rol de especialista a especialista
-	await userModel.updateMany({ role: 'specialist' }, { role: 'specialist' });
+	await userModel.updateMany(
+		{ role: 'specialist' },
+		{ role: 'psychologist' }
+	);
 	return okResponse('Rol cambiado', { user });
 };
 

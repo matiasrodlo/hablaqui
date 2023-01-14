@@ -46,7 +46,7 @@ class Specialist
 		}
 		catch(e)
 		{
-			print('PSYCHOLOGIST LOAD DATA ERROR');
+			print('SPECIALIST LOAD DATA ERROR');
 			print(e);
 		}
 	}
