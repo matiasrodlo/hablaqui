@@ -1,13 +1,13 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
+		<div :class="!matchedSpecialists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
 			<div style="margin-bottom: 85px">
 				<Appbar />
 			</div>
 			<!-- content -->
 			<div
-				v-show="!matchedPsychologists.length && !dialogPrecharge"
+				v-show="!matchedSpecialists.length && !dialogPrecharge"
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px; height: 500px"
 			>
@@ -807,7 +807,7 @@
 					<Precharge
 						:close="() => (dialogPrecharge = false)"
 						:avatar="
-							psychologists
+							specialists
 								.map(el => {
 									if (el.avatarThumbnail) return el.avatarThumbnail;
 								})
@@ -817,8 +817,8 @@
 				</v-card-text>
 			</v-card>
 		</div>
-		<div v-show="!dialogPrecharge && matchedPsychologists.length">
-			<selection :match="matchedPsychologists" :reset-match="resetMatch" />
+		<div v-show="!dialogPrecharge && matchedSpecialists.length">
+			<selection :match="matchedSpecialists" :reset-match="resetMatch" />
 		</div>
 	</div>
 </template>
@@ -840,8 +840,8 @@ export default {
 	async asyncData({ $axios, error }) {
 		try {
 			const { appointments } = await $axios.$get('/appointments/all');
-			const { psychologists } = await $axios.$get('/psychologists/all');
-			return { psychologists, specialties: appointments };
+			const { specialists } = await $axios.$get('/specialists/all');
+			return { specialists, specialties: appointments };
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
 		}
@@ -861,8 +861,8 @@ export default {
 			price: 0,
 			specialties: [],
 			models: [],
-			psychologists: [],
-			matchedPsychologists: [],
+			specialists: [],
+			matchedSpecialists: [],
 		};
 	},
 	head() {
@@ -877,7 +877,7 @@ export default {
 	},
 	computed: {
 		psi() {
-			if (!this.psychologists) return [];
+			if (!this.specialists) return [];
 			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
@@ -897,7 +897,7 @@ export default {
 			const psi = JSON.parse(localStorage.getItem('psi'));
 			if (psi && psi.match.length) {
 				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedPsychologists = psi.match;
+					this.matchedSpecialists = psi.match;
 				else if (psi._id === null && this.$auth.$state.loggedIn) {
 					localStorage.removeItem('psi');
 					localStorage.setItem(
@@ -907,7 +907,7 @@ export default {
 							_id: this.$auth.$state.user._id,
 						})
 					);
-					this.matchedPsychologists = psi.match;
+					this.matchedSpecialists = psi.match;
 				}
 			}
 		}
@@ -923,7 +923,7 @@ export default {
 			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
 		},
 		random() {
-			return this.psychologists.sort(function randOrd() {
+			return this.specialists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			});
 		},
@@ -935,7 +935,7 @@ export default {
 			this.themes = [];
 			this.schedule = '';
 			this.genderConfort = '';
-			this.matchedPsychologists = [];
+			this.matchedSpecialists = [];
 			this.models = [];
 			this.price = 0;
 			this.step = '0';
@@ -974,20 +974,20 @@ export default {
 						})
 					);
 					if (!this.$auth.$state.loggedIn)
-						this.$router.push('/auth/?register=true&from=psy');
-					this.matchedPsychologists = response.filter((el, i) => i < 3);
+						this.$router.push('/auth/?register=true&from=spec');
+					this.matchedSpecialists = response.filter((el, i) => i < 3);
 				}
 			});
 		},
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		...mapActions({
-			matchPsi: 'Psychologist/matchPsi',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+			matchPsi: 'Specialist/matchPsi',
+			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
 		}),
 	},
 };

@@ -6,35 +6,35 @@ import { logInfo } from '../config/pino';
 import Email from '../models/email';
 import Analytics from 'analytics-node';
 
-const createChat = async (user, psychologistId) => {
+const createChat = async (user, specialistId) => {
 	const newChat = await Chat.create({
-		psychologist: psychologistId,
+		specialist: specialistId,
 		user: user,
 	});
 	return newChat;
 };
 
-const buscarChat = async (user, psy) => {
+const buscarChat = async (user, spec) => {
 	const chat = await Chat.findOne({
 		user: user,
-		psychologist: psy,
-	}).populate('user psychologist');
+		specialist: spec,
+	}).populate('user specialist');
 	return chat;
 };
 
-const startConversation = async (psychologistId, user) => {
-	const hasChats = await buscarChat(user, psychologistId);
+const startConversation = async (specialistId, user) => {
+	const hasChats = await buscarChat(user, specialistId);
 	if (hasChats) {
 		return okResponse('chat inicializado anteriormente');
 	}
-	const newChat = await createChat(user._id, psychologistId);
+	const newChat = await createChat(user._id, specialistId);
 	return okResponse('chat inicializado', { newChat });
 };
 
-const getMessages = async (user, psy) => {
-	let messages = await buscarChat(user, psy);
+const getMessages = async (user, spec) => {
+	let messages = await buscarChat(user, spec);
 
-	if (!messages) messages = await createChat(user, psy);
+	if (!messages) messages = await createChat(user, spec);
 
 	return okResponse('Mensajes conseguidos', {
 		// retorna un mensaje de éxito y los mensajes
@@ -43,11 +43,11 @@ const getMessages = async (user, psy) => {
 };
 
 const getChats = async user => {
-	const roles = ['psychologist', 'user'];
-	const idRoles = ['psychologist', '_id'];
-	const spanishRoles = { psychologist: 'psicologo', user: 'usuario' };
+	const roles = ['specialist', 'user'];
+	const idRoles = ['specialist', '_id'];
+	const spanishRoles = { specialist: 'especialista', user: 'usuario' };
 	let chat;
-	if (user.role === 'specialist') user.role = 'psychologist';
+	if (user.role === 'specialist') user.role = 'specialist';
 	// Es para verificar que sea un rol valido
 	if (!roles.includes(user.role)) {
 		return conflictResponse(
@@ -63,15 +63,15 @@ const getChats = async user => {
 				} ha conseguido sus chats`
 			);
 			chat = await Chat.find({ [roles[i]]: user[idRoles[i]] }).populate(
-				'user psychologist'
+				'user specialist'
 			);
 		}
 	}
 	return okResponse('Chats conseguidos', { chats: chat });
 };
 
-export const sendMessage = async (user, content, userId, psychologistId) => {
-	// función para enviar un mensaje, recibe el usuario, el contenido del mensaje, el id del usuario y el id del psicologo
+export const sendMessage = async (user, content, userId, specialistId) => {
+	// función para enviar un mensaje, recibe el usuario, el contenido del mensaje, el id del usuario y el id del especialista
 	const newMessage = {
 		// crea un nuevo mensaje
 		sentBy: user._id, // con el id del usuario que lo envía
@@ -82,7 +82,7 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 		// busca un chat en la base de datos
 		{
 			user: userId,
-			psychologist: psychologistId,
+			specialist: specialistId,
 		},
 		{
 			$set: {
@@ -98,7 +98,7 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	);
 	const data = {
 		userId,
-		psychologistId,
+		specialistId,
 		_id: updatedChat._id,
 		content: [...updatedChat.messages].pop(),
 	};
@@ -112,13 +112,7 @@ export const sendMessage = async (user, content, userId, psychologistId) => {
 	return { chat: updatedChat, emit: data };
 };
 
-const createReport = async (
-	user,
-	psychologistId,
-	userId,
-	reportType,
-	issue
-) => {
+const createReport = async (user, specialistId, userId, reportType, issue) => {
 	// Crea un nuevo reporte del chat y lo guarda en el modelo de chat
 	const newReport = {
 		reportedBy: user._id,
@@ -129,7 +123,7 @@ const createReport = async (
 	const updatedChat = await Chat.findOneAndUpdate(
 		{
 			user: userId,
-			psychologist: psychologistId,
+			specialist: specialistId,
 		},
 		{
 			$push: {
@@ -148,15 +142,15 @@ const createReport = async (
 const readMessage = async (user, chatId) => {
 	// Se obtiene el documento de chat, verifica el rol del usuario y marca el chat como leido
 	const chat = await Chat.findById(chatId);
-	const id = user.role == 'specialist' ? chat.user : user.psychologist;
+	const id = user.role == 'specialist' ? chat.user : user.specialist;
 
 	await Email.deleteMany({
 		type: {
-			$in: ['chat-psy-1-day', 'chat-user-1-day'],
+			$in: ['chat-spec-1-day', 'chat-user-1-day'],
 		},
 		wasScheduled: false,
 		userRef: chat.user,
-		psyRef: chat.psychologist,
+		specRef: chat.specialist,
 	});
 
 	await Chat.updateOne(

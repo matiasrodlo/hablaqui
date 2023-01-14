@@ -27,13 +27,13 @@ const userController = {
 			errorCallback(e, res, 'Error actualizando perfil');
 		}
 	},
-	async updatePsychologist(req, res) {
+	async updateSpecialist(req, res) {
 		try {
-			const { user, newPsychologist, oldPsychologist } = req.body;
-			const { data, code } = await userService.updatePsychologist(
+			const { user, newSpecialist, oldSpecialist } = req.body;
+			const { data, code } = await userService.updateSpecialist(
 				user,
-				newPsychologist,
-				oldPsychologist
+				newSpecialist,
+				oldSpecialist
 			);
 			restResponse(data, code, res);
 		} catch (e) {
@@ -127,10 +127,10 @@ const userController = {
 			errorCallback(e, res, 'Error registrando un usuario');
 		}
 	},
-	async changePsychologist(req, res) {
+	async changeSpecialist(req, res) {
 		try {
 			const { sessionId } = req.params;
-			const { data, code } = await userService.changePsychologist(
+			const { data, code } = await userService.changeSpecialist(
 				sessionId
 			);
 			return restResponse(data, code, res);

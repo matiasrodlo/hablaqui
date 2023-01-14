@@ -16,7 +16,7 @@ const mailService = {
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationUser(user, psy, price) {
+	async sendAppConfirmationUser(user, spec, price) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
@@ -28,7 +28,8 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
+				spec_name:
+					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				user_first_name: name,
 				price: price,
 			},
@@ -36,15 +37,15 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an appointmet purchase confirmation to a psy
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @description Send an appointmet purchase confirmation to a spec
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {Object} user - A User object from the database, corresponding to the client
 	 * @param {string} date - The date of the appointment
 	 */
-	async sendAppConfirmationPsy(psy, user, price) {
+	async sendAppConfirmationSpec(spec, user, price) {
 		const nameUser = user.name;
 		const lastNameUser = user.lastName;
-		const { email, name } = psy;
+		const { email, name } = spec;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
@@ -57,16 +58,16 @@ const mailService = {
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
-				psy_first_name: name,
+				spec_first_name: name,
 				price: price,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the user notifying them that a psychologist has scheduled a session with them.
+	 * @description Sends an email to the user notifying them that a specialist has scheduled a session with them.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} specialist - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} paymentURL - The URL to the payment page
 	 * @param {String} date - The date of the appointment
 	 * @param {String} value - The value of the appointment
@@ -74,7 +75,7 @@ const mailService = {
 	 */
 	async sendCustomSessionToUser(
 		user,
-		psychologist,
+		specialist,
 		paymentURL,
 		date,
 		value,
@@ -83,7 +84,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `${psychologist.name} agendó una sesión usted en Hablaquí`,
+			subject: `${specialist.name} agendó una sesión usted en Hablaquí`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-2fc1f3015bb844caab2a725dd3167892',
 			asm: {
@@ -91,7 +92,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				psy_name: psychologist.name,
+				spec_name: specialist.name,
 				payment_url: paymentURL,
 				value: value,
 				type: type,
@@ -102,17 +103,17 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the psychologist notifying them that a user has scheduled a session with them.
+	 * @description Sends an email to the specialist notifying them that a user has scheduled a session with them.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psychologist - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} specialist - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} paymentURL - The URL to the payment page
 	 * @param {String} date - The date of the appointment
 	 * @param {String} value - The value of the appointment
 	 * @param {String} type - The type of appointment
 	 */
-	async sendCustomSessionToPsy(
+	async sendCustomSessionToSpec(
 		user,
-		psychologist,
+		specialist,
 		paymentURL,
 		date,
 		value,
@@ -120,7 +121,7 @@ const mailService = {
 	) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
-			to: psychologist.name + '<' + psychologist.email + '>',
+			to: specialist.name + '<' + specialist.email + '>',
 			subject: `Ha creado un agendamiento con ${user.name}`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-e935d9d8e9d8406581f909863491e41d',
@@ -129,7 +130,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				psy_name: psychologist.name,
+				spec_name: specialist.name,
 				payment_url: paymentURL,
 				value: value,
 				type: type,
@@ -142,10 +143,10 @@ const mailService = {
 	/**
 	 * @description Sends an email to the user notifying them that they have successfully rescheduled.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 */
-	async sendRescheduleToUser(user, psy, sessionDate) {
+	async sendRescheduleToUser(user, spec, sessionDate) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -159,22 +160,22 @@ const mailService = {
 				user_name: user.name,
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				psy_name: psy.name + ' ' + psy.lastName,
+				spec_name: spec.name + ' ' + spec.lastName,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the psychologist notifying them that a user has rescheduled.
+	 * @description Sends an email to the specialist notifying them that a user has rescheduled.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 * @param {String} url - The URL to the payment page
 	 */
-	async sendRescheduleToPsy(user, psy, sessionDate, url) {
+	async sendRescheduleToSpec(user, spec, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Han reprogramado una sesión con usted`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-b336c59aa9d74750b13414954f7daee0',
@@ -186,7 +187,7 @@ const mailService = {
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				psy_name: psy.name,
+				spec_name: spec.name,
 				url: url,
 			},
 		};
@@ -195,12 +196,12 @@ const mailService = {
 	/**
 	 * @description Sends an email to the user notifying them that they have requested a rescheduled session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 */
-	async sendCancelSessionPsy(user, psy) {
+	async sendCancelSessionSpec(user, spec) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Has pedido una reprogramación de una sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
@@ -210,19 +211,19 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				psy_name: psy.name,
+				spec_name: spec.name,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Sends an email to the user notifying him/her that the psychologist has rescheduled the session.
+	 * @description Sends an email to the user notifying him/her that the specialist has rescheduled the session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 * @param {String} url - The URL to the appointment page
 	 */
-	async sendRescheduleToUserByPsy(user, psy, sessionDate, url) {
+	async sendRescheduleToUserBySpec(user, spec, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -236,23 +237,23 @@ const mailService = {
 				user_name: user.name,
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				psy_name: psy.name + ' ' + psy.lastName,
+				spec_name: spec.name + ' ' + spec.lastName,
 				url: url,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the psychologist notifying him/her that you have rescheduled the session.
+	 * @description Send an email to the specialist notifying him/her that you have rescheduled the session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} sessionDate - The date of the appointment
 	 * @param {String} url - The URL to the appointment page
 	 */
-	async sendRescheduleToPsyByPsy(user, psy, sessionDate, url) {
+	async sendRescheduleToSpecBySpec(user, spec, sessionDate, url) {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Has reprogramado la sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
@@ -264,7 +265,7 @@ const mailService = {
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				psy_name: psy.name,
+				spec_name: spec.name,
 				url: url,
 			},
 		};
@@ -273,18 +274,18 @@ const mailService = {
 	/**
 	 * @description Sends an email to the user notifying them that a user has scheduled a session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {String} date - The date of the appointment
 	 * @param {String} url - The URL to the appointment page
 	 * @param {String} session - The session number
 	 */
-	async sendScheduleToPsy(user, psy, date, url, session) {
+	async sendScheduleToSpec(user, spec, date, url, session) {
 		const nameUser = user.name;
 		const lastNameUser = user.lastName;
-		const { name } = psy;
+		const { name } = spec;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Se ha agendado una sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-36c740ffd8aa4b25915861806f0a5fb6',
@@ -294,7 +295,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
-				psy_first_name: name,
+				spec_first_name: name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
@@ -306,12 +307,12 @@ const mailService = {
 	/**
 	 * @description Sends an email to the user notifying them that they have scheduled a session.
 	 * @param {Object} user - A User object from the database, corresponding to the client
-	 * @param {Object} psy - A Psychologist object from the database, corresponding to the psychologist attending the user
+	 * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
 	 * @param {Object} date - The date of the appointment
 	 * @param {String} url - The URL to the appointment page
 	 * @param {String} session - The session number
 	 */
-	async sendScheduleToUser(user, psy, date, url, session) {
+	async sendScheduleToUser(user, spec, date, url, session) {
 		const { email, name } = user;
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
@@ -323,7 +324,8 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
+				spec_name:
+					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				first_name: name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),

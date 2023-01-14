@@ -2,7 +2,7 @@
 
 import mercadopago from 'mercadopago'; // Se importa el SDK de Mercado Pago
 import { okResponse, conflictResponse } from '../utils/responses/functions';
-import Psychologist from '../models/psychologist';
+import Specialist from '../models/specialist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/pino';
 import { api_url, landing_url, mercadopago_key } from '../config/dotenv'; // dotenv contiene las variables de entorno
@@ -47,9 +47,9 @@ const createPreference = async body => {
 		],
 		back_urls: {
 			success: `${landing_url}dashboard/pagos/success?sessionsId=${body.sessionsId}&planId=${body.planId}&token=${body.token}`,
-			// redirection to profile psychologist
-			failure: `${landing_url}${body.psychologist}`,
-			pending: `${landing_url}${body.psychologist}`,
+			// redirection to profile specialist
+			failure: `${landing_url}${body.specialist}`,
+			pending: `${landing_url}${body.specialist}`,
 		},
 		auto_return: 'approved',
 		binary_mode: true,
@@ -62,25 +62,25 @@ const createPreference = async body => {
 
 /**
  * Casos:
- * 1- postulante o psicologo
+ * 1- postulante o especialista
  * 2- plan free o premium
  * @param {Object} body
  * @returns {Obeject} payment
  */
-const createPsychologistPreference = async body => {
+const createSpecialistPreference = async body => {
 	// Se crea preferencia para que el psiologo pueda pagar su plan
-	const id = body.psychologistId || body.recruitedId;
-	const isPsychologist = !!body.psychologistId;
+	const id = body.specialistId || body.recruitedId;
+	const isSpecialist = !!body.specialistId;
 	let preference = {};
 	if (body.plan === 'premium')
-		preference.init_point = await setPlanPremium(body, isPsychologist, id);
+		preference.init_point = await setPlanPremium(body, isSpecialist, id);
 	else {
-		preference = await setPlanFree(id, isPsychologist);
+		preference = await setPlanFree(id, isSpecialist);
 	}
 	return okResponse('Preferecia creada', { preference });
 };
 
-const setPlanPremium = async (body, isPsychologist, id) => {
+const setPlanPremium = async (body, isSpecialist, id) => {
 	// Se crea preferencia para el plan premium
 	// Se crea un objeto de preferencia que contiene la información necesaria para crear el pago
 	let newPreference = {
@@ -95,7 +95,7 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 		],
 		back_urls: {
 			success: `${api_url}api/v1/mercadopago/${
-				isPsychologist ? 'psychologist' : 'recruited'
+				isSpecialist ? 'specialist' : 'recruited'
 			}-pay/${id}?period=${body.period}`,
 			failure: `${landing_url}pago/failure-pay`,
 			pending: `${landing_url}pago/pending-pay`,
@@ -110,18 +110,18 @@ const setPlanPremium = async (body, isPsychologist, id) => {
 	return init_point;
 };
 
-const setPlanFree = async (id, isPsychologist) => {
+const setPlanFree = async (id, isSpecialist) => {
 	let response;
-	if (isPsychologist) response = await Psychologist.findById(id);
+	if (isSpecialist) response = await Specialist.findById(id);
 	else response = await Recruitment.findById(id);
 
 	if (!response)
-		return conflictResponse('No se encontró el postulante o psicologo');
+		return conflictResponse('No se encontró el postulante o especialista');
 
-	// Verifica si el psicologo o postulante tiene o tuvo un plan
-	if (response.psyPlans && response.psyPlans.length) {
+	// Verifica si el especialista o postulante tiene o tuvo un plan
+	if (response.specPlans && response.specPlans.length) {
 		// Se obtiene el ultimo plan y se verifica las distintas situaciones
-		const currentPlan = response.psyPlans.pop();
+		const currentPlan = response.specPlans.pop();
 		if (currentPlan.tier === 'free') {
 			return okResponse('Ya tienes el plan gratuito');
 		} else if (
@@ -132,16 +132,16 @@ const setPlanFree = async (id, isPsychologist) => {
 		}
 		// Tiene un plan premium pero ya expiro
 		else
-			response.psyPlans = response.psyPlans.map(item => ({
+			response.specPlans = response.specPlans.map(item => ({
 				...item,
 				planStatus: 'expired',
 			}));
 	}
 
 	// Si no tiene plan o el plan expiro se crea uno nuevo
-	if (!response.psyPlans) response.psyPlans = [];
-	response.psyPlans = [
-		...response.psyPlans,
+	if (!response.specPlans) response.specPlans = [];
+	response.specPlans = [
+		...response.specPlans,
 		{
 			tier: 'free',
 			paymentStatus: 'success',
@@ -168,12 +168,12 @@ const setPlanFree = async (id, isPsychologist) => {
 		const userID = User.findOne({ email: response.email })._id;
 		analytics.track({
 			userId: userID.toString(),
-			event: 'psy-free-plan',
+			event: 'spec-free-plan',
 			properties: {
 				currency: 'CLP',
 				products: planData,
-				order_id: response.psyPlans[
-					response.psyPlans.length - 1
+				order_id: response.specPlans[
+					response.specPlans.length - 1
 				]._id.toString(),
 				total: 0,
 			},
@@ -208,7 +208,7 @@ const successPay = async params => {
 	await createReminder(
 		sessionData,
 		foundPlan.user,
-		foundPlan.psychologist,
+		foundPlan.specialist,
 		foundPlan,
 		foundPlan.roomsUrl,
 		planId
@@ -218,23 +218,23 @@ const successPay = async params => {
 		// Se crean correos de recordatorio de renovacion de plan
 		await createRenewalSubscription(
 			foundPlan.user,
-			foundPlan.psychologist,
+			foundPlan.specialist,
 			foundPlan
 		);
 	}
 
-	await deleteReminderPayment(foundPlan.user._id, foundPlan.psychologist._id);
+	await deleteReminderPayment(foundPlan.user._id, foundPlan.specialist._id);
 
 	const user = await User.findById(foundPlan.user);
-	const psy = await Psychologist.findById(foundPlan.psychologist);
-	// Send appointment confirmation for user and psychologist
+	const spec = await Specialist.findById(foundPlan.specialist);
+	// Send appointment confirmation for user and specialist
 	await mailServiceSchedule.sendAppConfirmationUser(
 		user,
-		psy,
+		spec,
 		planData.totalPrice
 	);
-	await mailServiceSchedule.sendAppConfirmationPsy(
-		psy,
+	await mailServiceSchedule.sendAppConfirmationSpec(
+		spec,
 		user,
 		planData.totalPrice
 	);
@@ -242,14 +242,14 @@ const successPay = async params => {
 	// --Faltaría indicar estos emails--
 	await mailServiceSchedule.sendScheduleToUser(
 		user,
-		psy,
+		spec,
 		dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')).format(),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
 	);
-	await mailServiceSchedule.sendScheduleToPsy(
+	await mailServiceSchedule.sendScheduleToSpec(
 		user,
-		psy,
+		spec,
 		dayjs.tz(dayjs(sessionData.date, 'MM/DD/YYYY HH:mm')).format(),
 		foundPlan.roomsUrl,
 		`1/${planData.totalSessions}`
@@ -259,8 +259,8 @@ const successPay = async params => {
 	return okResponse('Pago aprobado');
 };
 
-const psychologistPay = async (params, query) => {
-	const { psychologistId } = params;
+const specialistPay = async (params, query) => {
+	const { specialistId } = params;
 	const { period } = query;
 
 	// Verifica el periodo del plan que se quiere contratar
@@ -271,7 +271,7 @@ const psychologistPay = async (params, query) => {
 	if (period === 'mensual') {
 		expirationDate = dayjs.tz(dayjs().add(1, 'month')).format();
 	}
-	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
+	// Precio del plan premium por un año, crea el plan y actualiza el especialista con el plan
 	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
@@ -281,9 +281,9 @@ const psychologistPay = async (params, query) => {
 		price: pricePaid,
 		subscriptionPeriod: period,
 	};
-	const foundPsychologist = await Psychologist.findOneAndUpdate(
-		{ _id: psychologistId },
-		{ $push: { psyPlans: newPlan }, $set: { isHide: false } },
+	const foundSpecialist = await Specialist.findOneAndUpdate(
+		{ _id: specialistId },
+		{ $push: { specPlans: newPlan }, $set: { isHide: false } },
 		{ new: true }
 	);
 	// Se realiza el trackeo de analytics
@@ -299,35 +299,35 @@ const psychologistPay = async (params, query) => {
 				item_quantity: 1,
 			},
 		];
-		const userID = User.findOne({ email: foundPsychologist.email })._id;
+		const userID = User.findOne({ email: foundSpecialist.email })._id;
 		analytics.track({
 			userId: userID.toString(),
-			event: 'psy-premium-plan',
+			event: 'spec-premium-plan',
 			properties: {
 				currency: 'CLP',
 				products: planData,
-				order_id: foundPsychologist.psyPlans[
-					foundPsychologist.psyPlans.length - 1
+				order_id: foundSpecialist.specPlans[
+					foundSpecialist.specPlans.length - 1
 				]._id.toString(),
 				total: pricePaid,
 			},
 		});
 	}
-	await mailServicePayments.sendPsychologistPay(
-		foundPsychologist,
+	await mailServicePayments.sendSpecialistPay(
+		foundSpecialist,
 		period,
 		pricePaid
 	);
-	return okResponse('plan actualizado', { foundPsychologist });
+	return okResponse('plan actualizado', { foundSpecialist });
 };
 const customSessionPay = async params => {
 	// Busca la sesion y actualiza el pago
-	const { userId, psyId, planId } = params;
+	const { userId, specId, planId } = params;
 	const updatePlan = await Sessions.findOneAndUpdate(
 		{
 			'plan._id': planId,
 			user: userId,
-			psychologist: psyId,
+			specialist: specId,
 		},
 		{
 			$set: {
@@ -336,21 +336,21 @@ const customSessionPay = async params => {
 			},
 		},
 		{ new: true }
-	).populate('psychologist user');
+	).populate('specialist user');
 	// Obtiene el id del plan
 	const plan = updatePlan.plan.filter(
 		plan => plan._id.toString() === planId
 	)[0];
-	await mailServicePayments.sendSuccessCustomSessionPaymentPsy(
+	await mailServicePayments.sendSuccessCustomSessionPaymentSpec(
 		updatePlan.user,
-		updatePlan.psychologist,
+		updatePlan.specialist,
 		plan.totalPrice,
 		updatePlan.roomsUrl,
 		plan.session[0].date
 	);
 	await mailServicePayments.sendSuccessCustomSessionPaymentUser(
 		updatePlan.user,
-		updatePlan.psychologist,
+		updatePlan.specialist,
 		plan.totalPrice,
 		updatePlan.roomsUrl,
 		plan.session[0].date
@@ -359,12 +359,12 @@ const customSessionPay = async params => {
 };
 
 const createCustomSessionPreference = async params => {
-	const { userId, psyId, planId } = params;
+	const { userId, specId, planId } = params;
 	// Encuentra la sesion y el plan, utiliza el id del plan para obtener el precio
 	const foundPlan = await Sessions.findOne({
 		'plan._id': planId,
 		user: userId,
-		psychologist: psyId,
+		specialist: specId,
 	});
 	const planData = foundPlan.plan[foundPlan.plan.length - 1];
 	// Crea la preferencia de pago de mercado pago
@@ -372,14 +372,14 @@ const createCustomSessionPreference = async params => {
 		items: [
 			{
 				title: 'Sesion personalizada',
-				description: 'Sesion personalizada creada por psicologo',
+				description: 'Sesion personalizada creada por especialista',
 				currency_id: 'CLP',
 				unit_price: planData.totalPrice,
 				quantity: 1,
 			},
 		],
 		back_urls: {
-			success: `${api_url}api/v1/mercadopago/custom-session-pay/${userId}/${psyId}/${planId}`,
+			success: `${api_url}api/v1/mercadopago/custom-session-pay/${userId}/${specId}/${planId}`,
 			failure: `${landing_url}pago/failure-pay`,
 			pending: `${landing_url}pago/pending-pay`,
 		},
@@ -394,7 +394,7 @@ const createCustomSessionPreference = async params => {
 };
 
 const recruitedPay = async (params, query) => {
-	// Se encarga de actualizar el plan del psicologo
+	// Se encarga de actualizar el plan del especialista
 	const { recruitedId } = params;
 	const { period } = query;
 
@@ -406,7 +406,7 @@ const recruitedPay = async (params, query) => {
 	if (period == 'mensual') {
 		expirationDate = dayjs.tz(dayjs().add(1, 'month')).format();
 	}
-	// Precio del plan premium por un año, crea el plan y actualiza el psicologo con el plan
+	// Precio del plan premium por un año, crea el plan y actualiza el especialista con el plan
 	const pricePaid = 69000 * 12;
 	const newPlan = {
 		tier: 'premium',
@@ -420,9 +420,9 @@ const recruitedPay = async (params, query) => {
 
 const mercadopagoService = {
 	createPreference,
-	createPsychologistPreference,
+	createSpecialistPreference,
 	successPay,
-	psychologistPay,
+	specialistPay,
 	recruitedPay,
 	createCustomSessionPreference,
 	customSessionPay,

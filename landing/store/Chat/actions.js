@@ -1,9 +1,9 @@
 import { snackBarError } from '@/utils/snackbar';
 
 export default {
-	async startConversation({ commit }, idPsychologist) {
+	async startConversation({ commit }, idSpecialist) {
 		try {
-			await this.$axios.$post(`/chat/start-conversation/${idPsychologist}`);
+			await this.$axios.$post(`/chat/start-conversation/${idSpecialist}`);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -18,9 +18,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async sendMessage({ commit }, { payload, psychologistId, userId }) {
+	async sendMessage({ commit }, { payload, specialistId, userId }) {
 		try {
-			const { data } = await this.$axios(`/chat/send-message/${psychologistId}/${userId}`, {
+			const { data } = await this.$axios(`/chat/send-message/${specialistId}/${userId}`, {
 				method: 'POST',
 				data: { content: payload },
 			});
@@ -29,9 +29,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getChat({ commit }, { psy, user }) {
+	async getChat({ commit }, { spec, user }) {
 		try {
-			const { data } = await this.$axios(`/chat/get-messages/${psy}/${user}`, {
+			const { data } = await this.$axios(`/chat/get-messages/${spec}/${user}`, {
 				method: 'GET',
 			});
 			commit('setChat', { ...data.messages, url: data.url });

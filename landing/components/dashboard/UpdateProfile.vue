@@ -197,11 +197,11 @@ import { mdiInformationOutline } from '@mdi/js';
 export default {
 	mixins: [validationMixin],
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -265,8 +265,8 @@ export default {
 					timeZone: this.$auth.$state.user.timeZone,
 					gender: this.$auth.$state.user.gender,
 					birthDate: this.$auth.$state.user.birthDate,
-					region: this.psychologist ? this.psychologist.region : '',
-					comuna: this.psychologist ? this.psychologist.comuna : '',
+					region: this.specialist ? this.specialist.region : '',
+					comuna: this.specialist ? this.specialist.comuna : '',
 				})
 			);
 		},
@@ -292,9 +292,9 @@ export default {
 		this.comunasRegiones = response.data;
 		this.regiones = response.data.map(i => i.region);
 		this.timezone = data;
-		if (this.psychologist && this.$auth.$state.user.role === 'specialist') {
-			this.comuna = this.psychologist.comuna;
-			this.region = this.psychologist.region;
+		if (this.specialist && this.$auth.$state.user.role === 'specialist') {
+			this.comuna = this.specialist.comuna;
+			this.region = this.specialist.region;
 		}
 	},
 	methods: {
@@ -304,8 +304,8 @@ export default {
 				this.loadingUser = true;
 				const user = await this.updateUser(this.formUser);
 				if (this.$auth.$state.user.role === 'specialist') {
-					const psychologist = await this.updatePsychologist({
-						...this.psychologist,
+					const specialist = await this.updateSpecialist({
+						...this.specialist,
 						name: this.formUser.name,
 						lastName: this.formUser.lastName,
 						birthDate: this.formUser.birthDate,
@@ -313,10 +313,10 @@ export default {
 						comuna: this.comuna,
 						region: this.region,
 					});
-					this.username = psychologist.username;
-					this.comuna = psychologist.comuna;
-					this.region = psychologist.region;
-					this.setPsychologist(psychologist);
+					this.username = specialist.username;
+					this.comuna = specialist.comuna;
+					this.region = specialist.region;
+					this.setSpecialist(specialist);
 				}
 				this.$auth.setUser(user);
 				this.$v.$reset();
@@ -327,7 +327,7 @@ export default {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
-			updatePsychologist: 'Psychologist/updatePsychologist',
+			updateSpecialist: 'Specialist/updateSpecialist',
 			updateUser: 'User/updateUser',
 		}),
 	},

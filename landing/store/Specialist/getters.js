@@ -1,9 +1,9 @@
 import { cloneDeep } from 'lodash';
 
 export default {
-	psychologistsMarketPlace: state => {
-		const psy = cloneDeep(state.psychologists);
-		return psy
+	specialistsMarketPlace: state => {
+		const spec = cloneDeep(state.specialists);
+		return spec
 			.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			})
@@ -14,13 +14,13 @@ export default {
 				return b.points - a.points;
 			});
 	},
-	psychologists: state => state.psychologists,
-	psychologist: state => state.psychologist,
+	specialists: state => state.specialists,
+	specialist: state => state.specialist,
 	sessions: state => state.sessions,
 	transactions: state => state.transactions,
 	page: state => state.page,
 	payments: state => state.payments,
-	loadingPsychologist: state => state.loadingPsychologist,
+	loadingSpecialist: state => state.loadingSpecialist,
 	sessionsLimit: state => state.sessionsLimit,
 	sessionsFormatted: state => state.sessionsFormatted,
 	sessionsFormattedAll: state => state.sessionsFormattedAll,

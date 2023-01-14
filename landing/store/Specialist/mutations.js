@@ -12,17 +12,17 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {
-	setPsychologists(state, value) {
-		state.psychologists = Object.freeze(value);
+	setSpecialists(state, value) {
+		state.specialists = Object.freeze(value);
 	},
-	setPsychologist(state, value) {
-		state.psychologist = value;
+	setSpecialist(state, value) {
+		state.specialist = value;
 	},
-	setPsychologistsPagination(state, value) {
-		state.psychologists = [...state.psychologists, ...value];
+	setSpecialistsPagination(state, value) {
+		state.specialists = [...state.specialists, ...value];
 	},
-	setLoadingPsychologist(state, value) {
-		state.loadingPsychologist = value;
+	setLoadingSpecialist(state, value) {
+		state.loadingSpecialist = value;
 	},
 	setTransactions(state, value) {
 		state.transactions = value;
@@ -57,7 +57,7 @@ export default {
 		dayjs.locale('es');
 		state.sessionsFormattedAll = items.map(item => {
 			return {
-				psychologist: item.psychologist,
+				specialist: item.specialist,
 				sessions: item.sessions.map(el => ({
 					...el,
 					text: dayjs.tz(dayjs(el.text)).format('ddd'),
@@ -71,7 +71,7 @@ export default {
 		state.sessionsLimit = state.sessionsLimit.concat(
 			items.map(item => {
 				return {
-					psychologist: item.psychologist,
+					specialist: item.specialist,
 					sessions: item.sessions.map(el => ({
 						...el,
 						text: dayjs.tz(dayjs(el.text)).format('ddd'),

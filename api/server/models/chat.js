@@ -41,9 +41,9 @@ let chatSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'User',
 		},
-		psychologist: {
+		specialist: {
 			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
+			ref: 'specialist',
 		},
 		isLastRead: {
 			type: Boolean,

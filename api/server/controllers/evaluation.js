@@ -9,12 +9,12 @@ const evaluationController = {
 		try {
 			const { user } = req;
 			const { newRating, comment } = req.body;
-			const { psychologist } = req.params;
+			const { specialist } = req.params;
 			const { data, code } = await evaluationService.addRating(
 				user,
 				Number(newRating),
 				comment,
-				psychologist
+				specialist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -23,19 +23,19 @@ const evaluationController = {
 	},
 	async getRating(req, res) {
 		try {
-			const { psychologist } = req.params;
+			const { specialist } = req.params;
 			const { data, code } = await evaluationService.getRating(
-				psychologist
+				specialist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'error consiguiendo el rating');
 		}
 	},
-	async getEvaluationsPsy(req, res) {
+	async getEvaluationsSpec(req, res) {
 		try {
 			const { user } = req;
-			const { data, code } = await evaluationService.getEvaluationsPsy(
+			const { data, code } = await evaluationService.getEvaluationsSpec(
 				user
 			);
 			return restResponse(data, code, res);
@@ -88,11 +88,11 @@ const evaluationController = {
 	},
 	async addEvaluation(req, res) {
 		try {
-			const { psyId } = req.params;
+			const { specId } = req.params;
 			const { user, body } = req;
 			const { data, code } = await evaluationService.addEvaluation(
 				user,
-				psyId,
+				specId,
 				body
 			);
 			return restResponse(data, code, res);

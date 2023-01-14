@@ -36,12 +36,12 @@ mercadopagoRouter.get(
 /**
  * @description crear preferencias para generar ruta de pago
  * @method POST
- * @route /api/v1/mercadopago/psychologist-preference
+ * @route /api/v1/mercadopago/specialist-preference
  * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
-	'/mercadopago/psychologist-preference',
-	mercadopagoController.createPsychologistPreference
+	'/mercadopago/specialist-preference',
+	mercadopagoController.createSpecialistPreference
 );
 
 /**
@@ -63,41 +63,41 @@ mercadopagoRouter.get(
 /**
  * @description Pasa una plan de psicólogo a pagado.
  * @method POST
- * @route /api/v1/mercadopago/psychologist-pay/:psychologistId
- * @param {String} params.psychologistId el id del psicólogo
+ * @route /api/v1/mercadopago/specialist-pay/:specialistId
+ * @param {String} params.specialistId el id del psicólogo
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
-	'/mercadopago/psychologist-pay/:psychologistId',
-	mercadopagoController.psychologistPay
+	'/mercadopago/specialist-pay/:specialistId',
+	mercadopagoController.specialistPay
 );
 
 /**
  * MERCADOPAGO SESIONES CUSTOM
  * @description Crea las preferencias para la pasarela de mercadopago
  * @method GET
- * @route /api/v1/mercadopago/custom-session/:userId/:psyId/:planId
+ * @route /api/v1/mercadopago/custom-session/:userId/:specId/:planId
  * @param {String} params.userId - Id del usuario asociado al plan
- * @param {String} params.psyId - Id del psicólogo asociado al plan
+ * @param {String} params.specId - Id del psicólogo asociado al plan
  * @param {String} params.planId - Id del plan
  * @return init_point
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session/:userId/:psyId/:planId',
+	'/mercadopago/custom-session/:userId/:specId/:planId',
 	mercadopagoController.createCustomSessionPreference
 );
 
 /**
  * @description Actualiza el plan custom a pagado
  * @method GET
- * @route /api/v1/mercadopago/custom-session-pay/:userId/:psyId/:planId
+ * @route /api/v1/mercadopago/custom-session-pay/:userId/:specId/:planId
  * @param {String} params.userId - Id del usuario asociado al plan
- * @param {String} params.psyId - Id del psicólogo asociado al plan
+ * @param {String} params.specId - Id del psicólogo asociado al plan
  * @param {String} params.planId - Id del plan
  * @retrun Objeto con el plan actualizado
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session-pay/:userId/:psyId/:planId',
+	'/mercadopago/custom-session-pay/:userId/:specId/:planId',
 	mercadopagoController.customSessionPay
 );
 

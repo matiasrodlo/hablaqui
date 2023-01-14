@@ -121,7 +121,7 @@ export default {
 			return this.$auth.$state.user.sessions.flatMap(item =>
 				item.plan.map(plan => ({
 					...plan,
-					psychologist: item.psychologist,
+					specialist: item.specialist,
 					user: item.user,
 					// dias de diferencia entre el dia que expiró y hoy
 					diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),

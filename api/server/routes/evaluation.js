@@ -12,15 +12,15 @@ const evaluationRouter = Router();
 /**
  * @description Añade una nueva evaluación al perfil del psicólogo
  * @method POST
- * @route /api/v1/psychologist/add-rating/:psychologist
- * @param {ObjectId} params.psychologist - Id del psicólogo que es referenciado en la evaluación
+ * @route /api/v1/specialist/add-rating/:specialist
+ * @param {ObjectId} params.specialist - Id del psicólogo que es referenciado en la evaluación
  * @param {String} body.newRating - Puntaje de la evaluación
  * @param {String} body.comment - Comentario de la evaluación
  * @returns {Object} psicólogo con los datos actualizados
  * @access authenticated
  */
 evaluationRouter.post(
-	'/psychologist/add-rating/:psychologist',
+	'/specialist/add-rating/:specialist',
 	[passport.authenticate('jwt', { session: true })],
 	evaluationController.addRating
 );
@@ -28,32 +28,32 @@ evaluationRouter.post(
 /**
  * @description Consigue las calificaciones de un psicólogo en específico
  * @method GET
- * @route /api/v1/psychologist/get-rating/:psychologist
- * @param {ObjectId} params.psychologist - Id del psicólogo de quien queremos las evaluaciones o ratings
+ * @route /api/v1/specialist/get-rating/:specialist
+ * @param {ObjectId} params.specialist - Id del psicólogo de quien queremos las evaluaciones o ratings
  * @returns {Number} puntuación promedio del psicólogo
  */
 evaluationRouter.get(
-	'/psychologist/get-rating/:psychologist',
+	'/specialist/get-rating/:specialist',
 	evaluationController.getRating
 );
 
 /**
  * @description Devuelve todas las evaluaciones del psicólogo logeado
  * @method GET
- * @route /api/v1/psychologist/get-evaluations
+ * @route /api/v1/specialist/get-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
  * @access authenticated
  */
 evaluationRouter.get(
-	'/psychologist/get-evaluations',
+	'/specialist/get-evaluations',
 	[passport.authenticate('jwt', { session: true })],
-	evaluationController.getEvaluationsPsy
+	evaluationController.getEvaluationsSpec
 );
 
 /**
  * @description Obtiene las evaluaciones de un psicólogo en particular
  * @method GET
- * @route /api/v1/psychologist/get-all-evaluations
+ * @route /api/v1/specialist/get-all-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
  */
 evaluationRouter.get(
@@ -65,13 +65,13 @@ evaluationRouter.get(
 /**
  * @description Permite aprobar una evaluación hecha por un consultante
  * @method POST
- * @route /api/v1/psychologist/approve-evaluation/:evsId/:evId
+ * @route /api/v1/specialist/approve-evaluation/:evsId/:evId
  * @param {ObjectId} params.evsId - Id del esquema de evaluaciones
  * @param {ObjectId} params.evId - Id de la evaluación
  * @returns {Object} Evaluación aprobada
  */
 evaluationRouter.post(
-	'/psychologist/approve-evaluation/:evsId/:evId',
+	'/specialist/approve-evaluation/:evsId/:evId',
 	[passport.authenticate('jwt', { session: true })],
 	evaluationController.approveEvaluation
 );
@@ -79,13 +79,13 @@ evaluationRouter.post(
 /**
  * @description Permite rechazar una evaluación hecha por un consultante
  * @method POST
- * @route /api/v1/psychologist/refuse-evaluation/:evsId/:evId
+ * @route /api/v1/specialist/refuse-evaluation/:evsId/:evId
  * @param {ObjectId} params.evsId - Id del esquema de evaluaciones
  * @param {ObjectId} params.evId - Id de la evaluación
  * @returns {Object} Evaluación rechazada
  */
 evaluationRouter.post(
-	'/psychologist/refuse-evaluation/:evsId/:evId',
+	'/specialist/refuse-evaluation/:evsId/:evId',
 	[passport.authenticate('jwt', { session: true })],
 	evaluationController.refuseEvaluation
 );
@@ -93,8 +93,8 @@ evaluationRouter.post(
 /**
  * @description Sube una evaluación de un usuario sobre un psicólogo
  * @method POST
- * @route /api/v1/user/evaluation/:psyId
- * @param {String} params.psyId - Id del psicólogo
+ * @route /api/v1/user/evaluation/:specId
+ * @param {String} params.specId - Id del psicólogo
  * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
  * @param {Number} body.puntuality - puntuación respecto a la puntualidad
  * @param {Number} body.attention - puntuación sobre la atención del psicólogo
@@ -106,7 +106,7 @@ evaluationRouter.post(
  * @access authenticated (user)
  */
 evaluationRouter.post(
-	'/user/evaluation/:psyId',
+	'/user/evaluation/:specId',
 	[passport.authenticate('jwt', { session: true })],
 	evaluationController.addEvaluation
 );

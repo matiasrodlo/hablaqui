@@ -4,9 +4,9 @@ import { Schema, model } from 'mongoose';
 
 let transaction = new Schema(
 	{
-		psychologist: {
+		specialist: {
 			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
+			ref: 'specialist',
 		},
 		total: { type: Number },
 		sessions: { type: Array },

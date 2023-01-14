@@ -16,7 +16,7 @@ CUALQUIER PERSONA
 			<v-col cols="12" sm="6">
 				<div class="mb-10">
 					<div class="text-center text-h6 text-lg-h4 font-weight-bold text--secondary">
-						Bienvenido al Regístro de psicologo
+						Bienvenido al Regístro de especialista
 					</div>
 					<div class="text-center text-h6 text-lg-h5 text--secondary">
 						¡Nos alegra que estés aquí!
@@ -491,7 +491,7 @@ export default {
 			// this.$v.$touch();
 			const payload = this.setFormData();
 			this.loading = true;
-			await this.registerPsychologist(payload);
+			await this.registerSpecialist(payload);
 			this.loading = false;
 			this.terminado = true;
 
@@ -505,7 +505,7 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			registerPsychologist: 'Psychologist/registerPsychologist',
+			registerSpecialist: 'Specialist/registerSpecialist',
 		}),
 	},
 	validations: {

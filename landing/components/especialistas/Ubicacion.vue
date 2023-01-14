@@ -4,17 +4,17 @@
 		<div style="margin-bottom: 83px">
 			<Appbar />
 		</div>
-		<!-- geo psicologos -->
-		<geoPsicologos class="mt-10" :location="location" />
+		<!-- geo especialistas -->
+		<geoEspecialistas class="mt-10" :location="location" />
 		<!-- desktop -->
-		<psicologos-desktop
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-desktop
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-mobile
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="hidden-md-and-up"
 		/>
@@ -61,8 +61,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
-import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import EspecialistasDesktop from '~/components/especialistas/EspecialistasDesktop';
+import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 
@@ -70,9 +70,9 @@ export default {
 	components: {
 		Footer,
 		Appbar,
-		PsicologosDesktop,
-		PsicologosMobile,
-		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
+		EspecialistasDesktop,
+		EspecialistasMobile,
+		geoEspecialistas: () => import('~/components/especialistas/GeoEspecialistas'),
 	},
 	props: {
 		location: {
@@ -113,7 +113,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+		...mapGetters({ loadingSpecialist: 'Specialist/loadingSpecialist' }),
 	},
 	mounted() {
 		window.scrollTo(0, 0);
@@ -128,8 +128,8 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
-			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
+			getSessionsLimit: 'Specialist/getSessionsLimit',
 		}),
 	},
 };

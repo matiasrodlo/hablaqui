@@ -15,22 +15,22 @@ const mercadopagoController = {
 			errorCallback(e, res, 'Error al aprobar pago.');
 		}
 	},
-	async createPsychologistPreference(req, res) {
+	async createSpecialistPreference(req, res) {
 		try {
 			const { body } = req;
 			const {
 				data,
 				code,
-			} = await mercadopagoService.createPsychologistPreference(body);
+			} = await mercadopagoService.createSpecialistPreference(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error procesando el servicio');
 		}
 	},
-	async psychologistPay(req, res) {
+	async specialistPay(req, res) {
 		try {
 			const { params, query } = req;
-			await mercadopagoService.psychologistPay(params, query);
+			await mercadopagoService.specialistPay(params, query);
 			return res.redirect(
 				`${process.env.VUE_APP_LANDING}dashboard/perfil`
 			);
@@ -51,13 +51,13 @@ const mercadopagoController = {
 	},
 	async createCustomSessionPreference(req, res) {
 		try {
-			const { userId, psyId, planId } = req.params;
+			const { userId, specId, planId } = req.params;
 			const {
 				data,
 				code,
 			} = await mercadopagoService.createCustomSessionPreference(
 				userId,
-				psyId,
+				specId,
 				planId
 			);
 			return restResponse(data, code, res);

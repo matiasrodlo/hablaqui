@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'service.dart';
-import '../classes/Psychologist.dart';
+import '../classes/Specialist.dart';
 import '../classes/Chat.dart';
 import '../classes/ChatMessage.dart';
 
@@ -12,13 +12,13 @@ class ServiceHablaqui extends Service
 	
 	factory	ServiceHablaqui() => _instance;
 	
-	Future<List<Psychologist>>	getPsychologists() async
+	Future<List<Specialist>>	getSpecialists() async
 	{
-		String _json 	= await this.get('/psychologists/all');
-		var items 		= <Psychologist>[];
+		String _json 	= await this.get('/specialists/all');
+		var items 		= <Specialist>[];
 		var obj 		= json.decode(_json);
 		
-		obj['psychologists'].forEach( (d) => items.add( new Psychologist.fromMap(d) ));
+		obj['specialists'].forEach( (d) => items.add( new Specialist.fromMap(d) ));
 		
 		return items;
 	}
@@ -32,9 +32,9 @@ class ServiceHablaqui extends Service
 		
 		return items;
 	}
-	Future<List<ChatMessage>> getChatMessages(String psychoId, String userId) async
+	Future<List<ChatMessage>> getChatMessages(String specchoId, String userId) async
 	{
-		String _json	= await this.get('/chat/get-messages/' + psychoId + '/' + userId);
+		String _json	= await this.get('/chat/get-messages/' + specchoId + '/' + userId);
 		var obj			= json.decode(_json);
 		
 		var items = <ChatMessage>[];
@@ -42,12 +42,12 @@ class ServiceHablaqui extends Service
 		
 		return items;
 	}
-	Future<ChatMessage> sendChatMessage(String psychoId, String userId, String message) async
+	Future<ChatMessage> sendChatMessage(String specchoId, String userId, String message) async
 	{
 		var data = {
 			'content': message,
 		};
-		String _json = await this.post('/chat/send-message/$psychoId/$userId', data, {'Content-Type': 'application/x-www-form-urlencoded'});
+		String _json = await this.post('/chat/send-message/$specchoId/$userId', data, {'Content-Type': 'application/x-www-form-urlencoded'});
 		
 		var obj = json.decode(_json);
 		

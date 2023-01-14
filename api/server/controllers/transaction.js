@@ -7,11 +7,11 @@ import { errorCallback } from '../utils/functions/errorCallback';
 const transactionController = {
 	async completePaymentsRequest(req, res) {
 		try {
-			const { psy } = req.params;
+			const { spec } = req.params;
 			const {
 				data,
 				code,
-			} = await transactionService.completePaymentsRequest(psy);
+			} = await transactionService.completePaymentsRequest(spec);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');
@@ -43,12 +43,12 @@ const transactionController = {
 	async generateTransaction(req, res) {
 		try {
 			const { user } = req;
-			const { total, session, idPsy } = req.body;
+			const { total, session, idSpec } = req.body;
 			const { data, code } = await transactionService.generateTransaction(
 				user,
 				total,
 				session,
-				idPsy
+				idSpec
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

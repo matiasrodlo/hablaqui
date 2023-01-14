@@ -2,82 +2,79 @@
 
 import { okResponse, conflictResponse } from '../utils/responses/functions';
 import userModel from '../models/user';
-import psyModel from '../models/psychologist';
+import specModel from '../models/specialist';
 import recruitmentsModel from '../models/recruitment';
 
 const changeRole = async () => {
-	// Se buca a todos los usuarios con el rol de psicologo
-	const user = await userModel.find({ role: 'psychologist' });
+	// Se buca a todos los usuarios con el rol de especialista
+	const user = await userModel.find({ role: 'specialist' });
 	if (!user) return conflictResponse('No se encontro ningun usuario');
-	// Se cambia el rol de psicologo a especialista
-	await userModel.updateMany(
-		{ role: 'psychologist' },
-		{ role: 'specialist' }
-	);
+	// Se cambia el rol de especialista a especialista
+	await userModel.updateMany({ role: 'specialist' }, { role: 'specialist' });
 	return okResponse('Rol cambiado', { user });
 };
 
 const addProfesion = async () => {
-	// Se busca a todos los usuarios con el rol de psicologo que no tengan el atributo profesion
+	// Se busca a todos los usuarios con el rol de especialista que no tengan el atributo profesion
 	const users = await userModel.find({
-		role: 'psychologist',
+		role: 'specialist',
 		profession: { $exists: false },
 	});
-	const psychologists = await psyModel.find({
+	const specialists = await specModel.find({
 		profession: { $exists: false },
 	});
 	const recruitments = await recruitmentsModel.find({
 		profession: { $exists: false },
 	});
 	if (!users) return conflictResponse('No se encontro ningun usuario');
-	if (!psychologists)
-		return conflictResponse('No se encontro ningun psicologo');
+	if (!specialists)
+		return conflictResponse('No se encontro ningun especialista');
 	if (!recruitments)
 		return conflictResponse('No se encontro ningun reclutamiento');
-	// Se obtienen los id de los usuarios y psicologos
-	const psy = psychologists.map(psy => psy._id);
+	// Se obtienen los id de los usuarios y especialistas
+	const spec = specialists.map(spec => spec._id);
 	const user = users.map(user => user._id);
 	const recruitment = recruitments.map(recruitment => recruitment._id);
-	// Se agrega la profesion a los psicologos
-	await psyModel.updateMany(
-		{ _id: { $in: psy } },
-		{ $set: { profession: 'psychologist' } }
+	// Se agrega la profesion a los especialistas
+	await specModel.updateMany(
+		{ _id: { $in: spec } },
+		{ $set: { profession: 'specialist' } }
 	);
 	await userModel.updateMany(
 		{ _id: { $in: user } },
-		{ $set: { profession: 'psychologist' } }
+		{ $set: { profession: 'specialist' } }
 	);
 	await recruitmentsModel.updateMany(
 		{ _id: { $in: recruitment } },
-		{ $set: { profession: 'psychologist' } }
+		{ $set: { profession: 'specialist' } }
 	);
 	return okResponse('Profesion agregada', { user });
 };
 
 const removeProfesion = async () => {
-	// Se busca a todos los usuarios con el rol de psicologo que no tengan el atributo profesion
+	// Se busca a todos los usuarios con el rol de especialista que no tengan el atributo profesion
 	const users = await userModel.find({
-		role: 'psychologist',
+		role: 'specialist',
 		profession: { $exists: true },
 	});
-	const psychologists = await psyModel.find({
+	const specialists = await specModel.find({
 		profession: { $exists: true },
 	});
 	const recruitments = await recruitmentsModel.find({
 		profession: { $exists: true },
 	});
 	if (!users) return conflictResponse('No se encontro ningun usuario');
-	if (!psychologists)
-		return conflictResponse('No se encontro ningun psicologo');
+	if (!specialists)
+		return conflictResponse('No se encontro ningun especialista');
 	if (!recruitments)
 		return conflictResponse('No se encontro ningun reclutamiento');
-	// Se obtienen los id de los usuarios y psicologos
-	const psy = psychologists.map(psy => psy._id);
+	// Se obtienen los id de los usuarios y especialistas
+	const spec = specialists.map(spec => spec._id);
 	const user = users.map(user => user._id);
 	const recruitment = recruitments.map(recruitment => recruitment._id);
-	// Se agrega la profesion a los psicologos
-	await psyModel.updateMany(
-		{ _id: { $in: psy } },
+	// Se agrega la profesion a los especialistas
+	await specModel.updateMany(
+		{ _id: { $in: spec } },
 		{ $unset: { profession: '' } }
 	);
 	await userModel.updateMany(
@@ -92,14 +89,11 @@ const removeProfesion = async () => {
 };
 
 const removeRole = async () => {
-	// Se buca a todos los usuarios con el rol de psicologo
+	// Se buca a todos los usuarios con el rol de especialista
 	const user = await userModel.find({ role: 'specialist' });
 	if (!user) return conflictResponse('No se encontro ningun usuario');
-	// Se cambia el rol de psicologo a especialista
-	await userModel.updateMany(
-		{ role: 'specialist' },
-		{ role: 'psychologist' }
-	);
+	// Se cambia el rol de especialista a especialista
+	await userModel.updateMany({ role: 'specialist' }, { role: 'specialist' });
 	return okResponse('Rol cambiado', { user });
 };
 

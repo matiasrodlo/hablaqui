@@ -24,7 +24,7 @@ const recruitmentController = {
 		}
 	},
 	/**
-	 * @description - This function is used to update the recruitment details of a psychologist
+	 * @description - This function is used to update the recruitment details of a specialist
 	 * @param {object} req - The request object (Recruitment details to update)
 	 * @param {object} res - The response object (Response code and message)
 	 * @returns {object} - The response object
@@ -36,11 +36,11 @@ const recruitmentController = {
 			const { data, code } = await recruitmentService.update(body, step);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error actualizando el psicologo');
+			errorCallback(e, res, 'Error actualizando el especialista');
 		}
 	},
 	/**
-	 * @description - This function is used to get the recruitment details of a psychologist by mail from params
+	 * @description - This function is used to get the recruitment details of a specialist by mail from params
 	 * @param {object} req - The request object (Recruitment email of the profile)
 	 * @param res - The response object (Response code and profile)
 	 * @returns {object} - The response object
@@ -71,7 +71,7 @@ const recruitmentController = {
 	/**
 	 * @description - This function is used to approve a specific Recruitment profile by mail
 	 * @param {object} req - The request object (Recruitment email of the profile)
-	 * @param res - The response object (Response code and the new Psychologist profile)
+	 * @param res - The response object (Response code and the new Specialist profile)
 	 * @returns {object} - The response object
 	 */
 	async approve(req, res) {

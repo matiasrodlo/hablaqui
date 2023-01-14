@@ -1,5 +1,5 @@
 <template>
-	<div :id="idPsy">
+	<div :id="idSpec">
 		<v-row
 			v-if="!sessions.length"
 			class="ma-0"
@@ -68,7 +68,7 @@
 						() => {
 							if (heighCalendar === 'max-height: 230px') {
 								heighCalendar = 'max-height: 100%';
-								setFullCard(idPsy);
+								setFullCard(idSpec);
 							} else {
 								heighCalendar = 'max-height: 230px';
 								setMinimalCard();
@@ -111,7 +111,7 @@ export default {
 			required: true,
 		},
 		titleButton: { type: String, default: 'Agendar una cita online' },
-		idPsy: { type: String, default: '' },
+		idSpec: { type: String, default: '' },
 		username: { type: String, default: '' },
 		loadingBtn: { type: Boolean, default: false },
 		sessions: { type: Array, default: () => [] },
@@ -131,14 +131,14 @@ export default {
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
-					path: `/auth/?psychologist=${this.username}&date=${
-						item.date
-					}&start=${hour}&end=${item.available[index + 1]}`,
+					path: `/auth/?specialist=${this.username}&date=${item.date}&start=${hour}&end=${
+						item.available[index + 1]
+					}`,
 				});
 			} else if (this.$auth.$state.loggedIn && this.$auth.$state.user.role !== 'specialist') {
 				this.callback();
 				this.$router.push(
-					`/psicologos/pagos/?username=${this.username}&date=${
+					`/especialistas/pagos/?username=${this.username}&date=${
 						item.date
 					}&start=${hour}&end=${item.available[index + 1]}`
 				);

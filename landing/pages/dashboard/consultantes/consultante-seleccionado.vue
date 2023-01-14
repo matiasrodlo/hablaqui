@@ -217,7 +217,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ clients: 'Psychologist/clients', payments: 'Psychologist/payments' }),
+		...mapGetters({ clients: 'Specialist/clients', payments: 'Specialist/payments' }),
 	},
 	watch: {
 		bmenu(val) {
@@ -264,8 +264,8 @@ export default {
 			this.$refs.menu.save(date);
 		},
 		...mapActions({
-			getPayments: 'Psychologist/getPayments',
-			updateSessions: 'Psychologist/updateSessions',
+			getPayments: 'Specialist/getPayments',
+			updateSessions: 'Specialist/updateSessions',
 			updateOne: 'User/updateOne',
 		}),
 	},

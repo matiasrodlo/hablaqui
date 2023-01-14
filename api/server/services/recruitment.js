@@ -5,9 +5,9 @@ import User from '../models/user'; // Contiene la definición del modelo de user
 import { logInfo } from '../config/winston'; // Se importa el log de info para poder imprimir en la consola
 import { conflictResponse, okResponse } from '../utils/responses/functions'; // funciones para generar respuestas http
 import { actionInfo } from '../utils/logger/infoMessages'; // recibe información sobre la acción que el usuario realiza
-import psychologist from '../models/psychologist'; // Contiene la definición del modelo de psychologist para mongodb
+import specialist from '../models/specialist'; // Contiene la definición del modelo de specialist para mongodb
 import mailServiceAccount from '../utils/functions/mails/accountsShares'; // Utiliza el servicio de mail
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import mailServiceSpec from '../utils/functions/mails/specialistStatus';
 import Analytics from 'analytics-node';
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
@@ -40,7 +40,7 @@ const recruitmentService = {
 		) {
 			analytics.track({
 				userId: user._id.toString(),
-				event: 'psy-new-application',
+				event: 'spec-new-application',
 				properties: {
 					email: user.email,
 					name: user.name,
@@ -58,7 +58,7 @@ const recruitmentService = {
 			});
 			analytics.track({
 				userId: user._id.toString(),
-				event: 'psy-application-step',
+				event: 'spec-application-step',
 				properties: {
 					step: 1,
 				},
@@ -82,8 +82,8 @@ const recruitmentService = {
 			});
 		}
 		// Se envía un correo electrónico al psicólogo confirmando la solicitud. También se envía la confirmación interna.
-		mailServicePsy.sendRecruitmentConfirmation(recruited);
-		mailServicePsy.sendRecruitmentConfirmationAdmin(recruited);
+		mailServiceSpec.sendRecruitmentConfirmation(recruited);
+		mailServiceSpec.sendRecruitmentConfirmationAdmin(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
 		return okResponse('Registrado exitosamente', { recruited });
 	},
@@ -102,10 +102,10 @@ const recruitmentService = {
 			process.env.DEBUG_ANALYTICS === 'true'
 		) {
 			if (step !== undefined && step !== null && step !== '') {
-				const psyID = await User.findOne({ email: body.email });
+				const specID = await User.findOne({ email: body.email });
 				analytics.track({
-					userId: psyID._id.toString(),
-					event: 'psy-application-step',
+					userId: specID._id.toString(),
+					event: 'spec-application-step',
 					properties: {
 						step: step,
 					},
@@ -171,13 +171,13 @@ const recruitmentService = {
 		delete payload._id; // Se elimina el id del payload
 		delete payload.__v; // Se elimina el __v del payload
 
-		// Se crea un nuevo perfil de psychologist
-		const newProfile = await psychologist.create(payload);
-		mailServiceAccount.sendWelcomeNewPsychologist(payload);
+		// Se crea un nuevo perfil de specialist
+		const newProfile = await specialist.create(payload);
+		mailServiceAccount.sendWelcomeNewSpecialist(payload);
 
 		const userUpdated = await User.findOneAndUpdate(
 			{ email: payload.email },
-			{ $set: { psychologist: newProfile._id } },
+			{ $set: { specialist: newProfile._id } },
 			{ new: true }
 		);
 
@@ -188,18 +188,18 @@ const recruitmentService = {
 		) {
 			analytics.track({
 				userId: userUpdated._id.toString(),
-				event: 'new-psy-onboard',
+				event: 'new-spec-onboard',
 			});
 			analytics.identify({
 				userId: userUpdated._id.toString(),
 				traits: {
 					role: userUpdated.role,
-					psychologist: newProfile._id,
+					specialist: newProfile._id,
 					email: payload.email,
 					name: payload.name,
 					lastName: payload.lastName,
 					rut: payload.rut,
-					psyId: newProfile._id,
+					specId: newProfile._id,
 				},
 			});
 		}
@@ -215,7 +215,7 @@ const recruitmentService = {
 			{ _id: recruitedId },
 			{
 				$push: {
-					psyPlans: { paymentStatus: 'success', ...newPlan },
+					specPlans: { paymentStatus: 'success', ...newPlan },
 				},
 			},
 			{ new: true }

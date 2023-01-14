@@ -16,9 +16,9 @@
 						'Contextual',
 					]"
 					type="text"
-					:value="psychologist.models"
+					:value="specialist.models"
 					@input="limiterModels"
-					@change="e => setPsychologist({ ...psychologist, models: e })"
+					@change="e => setSpecialist({ ...specialist, models: e })"
 				></v-select>
 			</v-sheet>
 		</v-col>
@@ -33,9 +33,9 @@
 					multiple
 					type="text"
 					:items="specialties"
-					:value="psychologist.specialties"
+					:value="specialist.specialties"
 					@input="limiterSpecialities"
-					@change="e => setPsychologist({ ...psychologist, specialties: e })"
+					@change="e => setSpecialist({ ...specialist, specialties: e })"
 				></v-select>
 			</v-sheet>
 		</v-col>
@@ -53,8 +53,8 @@
 					]"
 					chips
 					multiple
-					:value="psychologist.languages"
-					@change="e => setPsychologist({ ...psychologist, languages: e })"
+					:value="specialist.languages"
+					@change="e => setSpecialist({ ...specialist, languages: e })"
 				></v-select>
 			</v-sheet>
 		</v-col>
@@ -63,7 +63,7 @@
 			<v-sheet elevation="3" class="pa-4">
 				<div class="body-1 font-weight-bold secondary--text mb-2">Formación</div>
 				<v-list>
-					<v-list-item v-for="(item, t) in psychologist.formation" :key="t">
+					<v-list-item v-for="(item, t) in specialist.formation" :key="t">
 						<v-list-item-content>
 							<v-list-item-title class="text-capitalize">
 								{{ item.formationType }} -
@@ -83,9 +83,9 @@
 								icon
 								@click="
 									() =>
-										setPsychologist({
-											...psychologist,
-											formation: psychologist.formation.filter(
+										setSpecialist({
+											...specialist,
+											formation: specialist.formation.filter(
 												(el, index) => index !== t
 											),
 										})
@@ -217,7 +217,7 @@
 			<v-sheet elevation="3" class="pa-4">
 				<div class="body-1 font-weight-bold secondary--text mb-2">Experiencia laboral</div>
 				<v-list>
-					<v-list-item v-for="(item, t) in psychologist.experience" :key="t">
+					<v-list-item v-for="(item, t) in specialist.experience" :key="t">
 						<v-list-item-content>
 							<v-list-item-title class="text-capitalize">
 								{{ item.title }} -
@@ -236,9 +236,9 @@
 								icon
 								@click="
 									() =>
-										setPsychologist({
-											...psychologist,
-											experience: psychologist.experience.filter(
+										setSpecialist({
+											...specialist,
+											experience: specialist.experience.filter(
 												(el, index) => index !== t
 											),
 										})
@@ -386,11 +386,11 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -417,14 +417,14 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
-			const psychologist = await this.updatePsychologist(this.psychologist);
-			this.setPsychologist(psychologist);
+			const specialist = await this.updateSpecialist(this.specialist);
+			this.setSpecialist(specialist);
 		},
 		newExperience() {
-			const experience = [...this.psychologist.experience];
+			const experience = [...this.specialist.experience];
 			if (this.indexSelected >= 0 && this.indexSelected !== null) {
-				this.setPsychologist({
-					...this.psychologist,
+				this.setSpecialist({
+					...this.specialist,
 					experience: experience.map(item => {
 						if (this.selectedExperience._id === item._id)
 							return this.selectedExperience;
@@ -432,8 +432,8 @@ export default {
 					}),
 				});
 			} else {
-				this.setPsychologist({
-					...this.psychologist,
+				this.setSpecialist({
+					...this.specialist,
 					experience: [...experience, this.selectedExperience],
 				});
 			}
@@ -457,18 +457,18 @@ export default {
 			this.dialogExperience = true;
 		},
 		newFormation() {
-			const formation = [...this.psychologist.formation];
+			const formation = [...this.specialist.formation];
 			if (this.indexSelected >= 0 && this.indexSelected !== null) {
-				this.setPsychologist({
-					...this.psychologist,
+				this.setSpecialist({
+					...this.specialist,
 					formation: formation.map(item => {
 						if (this.selectedFormation._id === item._id) return this.selectedFormation;
 						return item;
 					}),
 				});
 			} else {
-				this.setPsychologist({
-					...this.psychologist,
+				this.setSpecialist({
+					...this.specialist,
 					formation: [...formation, this.selectedFormation],
 				});
 			}
@@ -495,7 +495,7 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			updatePsychologist: 'Psychologist/updatePsychologist',
+			updateSpecialist: 'Specialist/updateSpecialist',
 		}),
 	},
 };

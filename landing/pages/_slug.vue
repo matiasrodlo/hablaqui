@@ -6,14 +6,14 @@
 		</div>
 		<!-- desktop -->
 		<profile-desktop
-			:psychologist="psychologist"
-			:set-psychologist="setPsychologist"
+			:specialist="specialist"
+			:set-specialist="setSpecialist"
 			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
 		<profile-mobile
-			:psychologist="psychologist"
-			:set-psychologist="setPsychologist"
+			:specialist="specialist"
+			:set-specialist="setSpecialist"
 			class="mt-10 hidden-md-and-up"
 		/>
 		<!-- footer -->
@@ -42,19 +42,19 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		ProfileDesktop: () =>
 			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/ProfileDesktop'
+				/* webpackChunkName: "EspecialistasDesktop" */ '~/components/especialistas/ProfileDesktop'
 			),
 		ProfileMobile: () =>
 			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
+				/* webpackChunkName: "EspecialistasMobile" */ '~/components/especialistas/ProfileMobile'
 			),
 	},
 	async asyncData({ $axios, params, error, payload }) {
 		try {
-			if (payload) return { psychologist: payload, dataCurrent: false };
+			if (payload) return { specialist: payload, dataCurrent: false };
 			else {
-				const { psychologist } = await $axios.$get(`/psychologists/one/${params.slug}`);
-				return { psychologist, dataCurrent: true };
+				const { specialist } = await $axios.$get(`/specialists/one/${params.slug}`);
+				return { specialist, dataCurrent: true };
 			}
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
@@ -69,20 +69,20 @@ export default {
 	head() {
 		return {
 			title: `${
-				this.psychologist
+				this.specialist
 					? 'Psicólogo ' +
-					  this.psychologist.name +
+					  this.specialist.name +
 					  ' ' +
-					  this.psychologist.lastName +
+					  this.specialist.lastName +
 					  ' $' +
-					  this.psychologist.sessionPrices.video
+					  this.specialist.sessionPrices.video
 					: ''
 			}`,
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
-					content: this.psychologist ? this.psychologist.professionalDescription : '',
+					content: this.specialist ? this.specialist.professionalDescription : '',
 				},
 				{
 					hid: 'twitter:url',
@@ -92,17 +92,17 @@ export default {
 				{
 					hid: 'twitter:title',
 					name: 'twitter:title',
-					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+					content: `${this.specialist.name + this.specialist.lastName} | Hablaquí`,
 				},
 				{
 					hid: 'twitter:description',
 					name: 'twitter:description',
-					content: this.psychologist.professionalDescription,
+					content: this.specialist.professionalDescription,
 				},
 				{
 					hid: 'twitter:image',
 					name: 'twitter:image',
-					content: this.psychologist.avatar,
+					content: this.specialist.avatar,
 				},
 				{
 					hid: 'og:url',
@@ -112,27 +112,27 @@ export default {
 				{
 					hid: 'og:title',
 					property: 'og:title',
-					content: `${this.psychologist.name + this.psychologist.lastName} | Hablaquí`,
+					content: `${this.specialist.name + this.specialist.lastName} | Hablaquí`,
 				},
 				{
 					hid: 'og:description',
 					property: 'og:description',
-					content: this.psychologist.professionalDescription,
+					content: this.specialist.professionalDescription,
 				},
 				{
 					hid: 'og:image',
 					property: 'og:image',
-					content: this.psychologist.avatar,
+					content: this.specialist.avatar,
 				},
 				{
 					hid: 'og:image:secure_url',
 					property: 'og:image:secure_url',
-					content: this.psychologist.avatar,
+					content: this.specialist.avatar,
 				},
 				{
 					hid: 'og:image:alt',
 					property: 'og:image:alt',
-					content: this.psychologist.name,
+					content: this.specialist.name,
 				},
 				{
 					hid: 'robots',
@@ -143,36 +143,36 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://hablaqui.cl/${this.psychologist.username}/`,
+					href: `https://hablaqui.cl/${this.specialist.username}/`,
 				},
 			],
 		};
 	},
 	async mounted() {
 		if (!this.dataCurrent) {
-			const { psychologist } = await this.$axios.$get(
-				`/psychologists/one/${this.$route.params.slug}`
+			const { specialist } = await this.$axios.$get(
+				`/specialists/one/${this.$route.params.slug}`
 			);
-			this.psychologist = psychologist;
+			this.specialist = specialist;
 		}
 		this.loadingCalendar = true;
-		await this.getFormattedSessions({ id: this.psychologist._id, type: 'schedule' });
+		await this.getFormattedSessions({ id: this.specialist._id, type: 'schedule' });
 		this.loadingCalendar = false;
 		if (this.$route.query.chat) {
 			this.loadingChat = true;
-			await this.startConversation(this.psychologist._id);
+			await this.startConversation(this.specialist._id);
 			this.loadingChat = false;
 			this.setFloatingChat(true);
 			this.$router.replace({ query: null });
 		}
 	},
 	methods: {
-		setPsychologist(value) {
-			this.psychologist = value;
+		setSpecialist(value) {
+			this.specialist = value;
 		},
 		...mapActions({
 			startConversation: 'Chat/startConversation',
-			getFormattedSessions: 'Psychologist/getFormattedSessions',
+			getFormattedSessions: 'Specialist/getFormattedSessions',
 		}),
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',

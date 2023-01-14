@@ -111,8 +111,8 @@
 							</v-col>
 							<v-divider vertical class="my-4"></v-divider>
 							<v-col cols="4">
-								<calendar-psychologist
-									:id-psy="item._id"
+								<calendar-specialist
+									:id-spec="item._id"
 									:username="item.username"
 									:sessions="getSessions(item._id)"
 									:callback="date => null"
@@ -214,7 +214,7 @@
 										}}
 									</div>
 									<mini-calendar
-										:id-psy="item._id"
+										:id-spec="item._id"
 										:username="item.username"
 										:sessions="getSessions(item._id)"
 									/>
@@ -241,8 +241,8 @@
 import { mapGetters } from 'vuex';
 export default {
 	components: {
-		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
-		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
+		CalendarSpecialist: () => import('~/components/CalendarSpecialist'),
 	},
 	props: {
 		match: {
@@ -261,18 +261,18 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			sessions: 'Psychologist/sessionsFormattedAll',
+			sessions: 'Specialist/sessionsFormattedAll',
 		}),
 	},
 	methods: {
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		getSessions(id) {
-			const temp = this.sessions.find(element => element.psychologist === id);
+			const temp = this.sessions.find(element => element.specialist === id);
 			if (!temp) {
 				return [];
 			}

@@ -16,7 +16,7 @@
 -   **cron**: Servicio que se encarga de las tareas programadas
 -   **evaluation**: Servicio que se encarga de la evaluación de los psicólogos
 -   **mercadopago**: Servicio que se encarga de los pagos con mercadopago
--   **psychologist**: Servicio que contiene las acciones que involucran a los psicólogos
+-   **specialist**: Servicio que contiene las acciones que involucran a los psicólogos
 -   **recruitment**: Servicio que se encarga de la postulación de los psicólogos
 -   **retool**: Servicio que contiene retool, retool es un herramienta que se utilizaba como dashboard (ya se esta dejando de usar)
 -   **sessions**: Servicio que se encarga de las sesiones

@@ -11,7 +11,7 @@ dayjs.tz.setDefault('America/Santiago');
  * @description Funcion que crea los correos electronicos para el recordatorio de la sesion
  * @param {Object} payload - Objeto que debe contener como atributo la fecha de la sesion
  * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {Object} spec - Objeto que contiene la informacion del especialista
  * @param {Object} sessions - Documento de la sesion
  * @param {String} roomsUrl - Url de la sala de la sesion
  * @param {String} idPlan - Id del plan de la sesion
@@ -19,7 +19,7 @@ dayjs.tz.setDefault('America/Santiago');
 export const createReminder = async (
 	payload,
 	user,
-	psy,
+	spec,
 	sessions,
 	roomsUrl,
 	idPlan
@@ -39,7 +39,7 @@ export const createReminder = async (
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: idSessionUltimate,
 		url: roomsUrl,
 	});
@@ -52,21 +52,21 @@ export const createReminder = async (
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: idSessionUltimate,
 		url: roomsUrl,
 	});
-	// Email scheduling for appointment reminder for the psy
+	// Email scheduling for appointment reminder for the spec
 	await Email.create({
 		sessionDate: dayjs
 			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
 			.format(),
 		wasScheduled: false,
-		type: 'reminder-psy-hour',
+		type: 'reminder-spec-hour',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: idSessionUltimate,
 		url: roomsUrl,
 	});
@@ -75,11 +75,11 @@ export const createReminder = async (
 			.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(3, 'hours'))
 			.format(),
 		wasScheduled: false,
-		type: 'reminder-psy-day',
+		type: 'reminder-spec-day',
 		queuedAt: undefined,
 		scheduledAt: undefined,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: idSessionUltimate,
 		url: roomsUrl,
 	});
@@ -88,17 +88,17 @@ export const createReminder = async (
 /**
  * @description Funcion que crea los correos electronicos para el recordatorio pago de la sesión
  * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {Object} spec - Objeto que contiene la informacion del especialista
  * @param {String} sessions - Objecto de la sesion
  */
-export const createPaymentReminder = async (user, psy, sessions) => {
+export const createPaymentReminder = async (user, spec, sessions) => {
 	await Email.create({
 		wasScheduled: false,
 		type: 'reminder-payment-hour',
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -107,7 +107,7 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -116,7 +116,7 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 };
@@ -124,17 +124,17 @@ export const createPaymentReminder = async (user, psy, sessions) => {
 /**
  * @description Funcion que crea los correos electronicos para el recordatorio de renovación del plan
  * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} psy - Objeto que contiene la informacion del psicologo
+ * @param {Object} spec - Objeto que contiene la informacion del especialista
  * @param {Object} sessions - Objeto del documento de sessiones
  */
-export const createRenewalSubscription = async (user, psy, sessions) => {
+export const createRenewalSubscription = async (user, spec, sessions) => {
 	await Email.create({
 		wasScheduled: false,
 		type: 'reminder-renewal-subscription-1-hour',
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -143,7 +143,7 @@ export const createRenewalSubscription = async (user, psy, sessions) => {
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 	await Email.create({
@@ -152,12 +152,12 @@ export const createRenewalSubscription = async (user, psy, sessions) => {
 		queuedAt: null,
 		scheduledAt: null,
 		userRef: user._id,
-		psyRef: psy._id,
+		specRef: spec._id,
 		sessionRef: sessions._id,
 	});
 };
 
-export const deleteReminderPayment = async (user, psy) => {
+export const deleteReminderPayment = async (user, spec) => {
 	// Busca los correos de recordatorio de pago y los elimina
 	const mailsToDeleted = await Email.find({
 		wasScheduled: false,
@@ -169,7 +169,7 @@ export const deleteReminderPayment = async (user, psy) => {
 			],
 		},
 		userRef: user,
-		psyRef: psy,
+		specRef: spec,
 	});
 	if (mailsToDeleted.length) {
 		mailsToDeleted.forEach(async mail => {
@@ -180,7 +180,7 @@ export const deleteReminderPayment = async (user, psy) => {
 	}
 };
 
-export const deleteRenewalEmails = async (user, psy) => {
+export const deleteRenewalEmails = async (user, spec) => {
 	// Busca los correos de recordatorio de pago y los elimina
 	const mailsToDeleted = await Email.find({
 		wasScheduled: false,
@@ -192,7 +192,7 @@ export const deleteRenewalEmails = async (user, psy) => {
 			],
 		},
 		userRef: user,
-		psyRef: psy,
+		specRef: spec,
 	});
 	if (mailsToDeleted.length) {
 		mailsToDeleted.forEach(async mail => {

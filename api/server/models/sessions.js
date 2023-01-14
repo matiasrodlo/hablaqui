@@ -7,7 +7,7 @@ let session = new Schema({
 	sessionNumber: {
 		type: String,
 	},
-	paidToPsychologist: {
+	paidToSpecialist: {
 		type: Boolean,
 		default: 'false',
 	},
@@ -76,9 +76,9 @@ let sessionSchema = new Schema({
 		type: String,
 	},
 	plan: [plan],
-	psychologist: {
+	specialist: {
 		type: Schema.Types.ObjectId,
-		ref: 'psychologist',
+		ref: 'specialist',
 	},
 	numberSessionSuccess: {
 		type: Number,

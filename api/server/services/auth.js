@@ -80,7 +80,7 @@ const getSessions = async user => {
 	}
 
 	if (user.role === 'specialist')
-		return await Sessions.find({ psychologist: user.psychologist });
+		return await Sessions.find({ specialist: user.specialist });
 
 	return null;
 };
@@ -105,7 +105,7 @@ const generateUser = async user => {
 		onboarding: user.onboarding,
 		phone: user.phone,
 		plan: user.plan,
-		psychologist: user.psychologist,
+		specialist: user.specialist,
 		role: user.role,
 		rut: user.rut,
 		sessions: await getSessions(user),

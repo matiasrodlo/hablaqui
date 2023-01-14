@@ -67,7 +67,7 @@ let experienceSchema = new Schema({
 	},
 });
 
-let psyPlan = new Schema({
+let specPlan = new Schema({
 	tier: {
 		type: String,
 		enum: ['free', 'premium'],
@@ -96,7 +96,7 @@ let psyPlan = new Schema({
 	},
 });
 
-let psychologist = new Schema({
+let specialist = new Schema({
 	avatar: {
 		type: String,
 		default: '',
@@ -150,7 +150,7 @@ let psychologist = new Schema({
 	profession: {
 		type: String,
 		default: 'none',
-		enum: ['none', 'psychologist', 'nutritionist', 'psychopedagogue'],
+		enum: ['none', 'specialist', 'nutritionist', 'specchopedagogue'],
 	},
 	experience: [experienceSchema],
 	formation: [formationSchema],
@@ -214,7 +214,7 @@ let psychologist = new Schema({
 		type: Number,
 		default: 0,
 	},
-	psyPlans: [psyPlan],
+	specPlans: [specPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',
@@ -229,4 +229,4 @@ let psychologist = new Schema({
 	},
 });
 
-export default model('psychologist', psychologist);
+export default model('specialist', specialist);

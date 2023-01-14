@@ -19,13 +19,13 @@ const userRouter = Router();
  * @param {String} body.rut - Rut del consultante
  * @param {String} body.phone - Número de telefono del consultante
  * @return Objeto con el usuario
- * @access authenticated (psychologist)
+ * @access authenticated (specialist)
  */
 userRouter.post(
 	'/user/register',
 	[
 		passport.authenticate('jwt', { session: true }),
-		validation(userSchema.newUserByPsy, 'body'),
+		validation(userSchema.newUserBySpec, 'body'),
 	],
 	userController.registerUser
 );
@@ -44,20 +44,17 @@ userRouter.get(
 );
 
 /**
- * @description Actualiza el psicológo del usuario desde la intranet
+ * @description Actualiza el especialista del usuario desde la intranet
  * @method PUT
- * @route /api/v1/dashboard/update/psychologist
- * @param {String} body.newPsychologist - Id del psicólogo nuevo (requerido)
- * @param {String} body.oldPsychologist - Id del psicólogo anterior (requerido)
+ * @route /api/v1/dashboard/update/specialist
+ * @param {String} body.newSpecialist - Id del psicólogo nuevo (requerido)
+ * @param {String} body.oldSpecialist - Id del psicólogo anterior (requerido)
  * @param {String} body.user - Id del usuario al que se le va a cambiar el psicólogo (requerido)
  * @return Objeto usuario con nueva información
  * @access authenticated (user)
  */
 
-userRouter.put(
-	'/dashboard/update/psychologist',
-	userController.updatePsychologist
-);
+userRouter.put('/dashboard/update/specialist', userController.updateSpecialist);
 
 /**
  * @description Actualiza la información de un usuario logeado
@@ -130,7 +127,7 @@ userRouter.patch(
  * @param {String} body.role - role del usuario a actualizar avatar
  * @param {String} body.name - nombre del usuario a actualizar avatar
  * @param {String} body.lastName - apellido del usuario a actualizar avatar
- * @param {String} body.idPsychologist - Para actualizar elavatar del psicologo
+ * @param {String} body.idSpecialist - Para actualizar elavatar del especialista
  * @param {Object} file - Contiene los avatar o fotos de perfil del usuario
  * @return Objeto con el perfil del usuario y sus características de psicólog
  * @access authenticated
@@ -174,14 +171,14 @@ userRouter.post(
 /**
  * @description Permite la desvinculación de un psicólogo antes de terminar el plan
  * @method POST
- * @route /api/v1/user/change/psychologist/:sessionId
+ * @route /api/v1/user/change/specialist/:sessionId
  * @param {String} params.sessionId - Id del objeto de la sesión con el plan activo
  * @access authenticated ()
  */
 userRouter.post(
-	'/user/change/psychologist/:sessionId',
+	'/user/change/specialist/:sessionId',
 	[passport.authenticate('jwt', { session: true })],
-	userController.changePsychologist
+	userController.changeSpecialist
 );
 
 export default userRouter;

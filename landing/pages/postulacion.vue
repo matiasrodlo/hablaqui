@@ -816,7 +816,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 									</div>
 									<div>
 										<v-text-field
-											v-model="form.yearsExpPsychologist"
+											v-model="form.yearsExpSpecialist"
 											filled
 											outlined
 											dense
@@ -1104,7 +1104,7 @@ export default {
 				experience: [],
 				formation: [],
 				gender: '',
-				profession: 'psychologist',
+				profession: 'specialist',
 				instagram: '',
 				isExclusiveActivity: false,
 				isSupervisor: false,
@@ -1118,7 +1118,7 @@ export default {
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
-				yearsExpPsychologist: '',
+				yearsExpSpecialist: '',
 				yearsExpVideocalls: '',
 				howFindOut: 'Búsqueda de internet',
 				isContentCreator: false,
@@ -1170,7 +1170,7 @@ export default {
 						data: this.form,
 					});
 					this.$segment.track(this.form._id.toString(), {
-						event: 'psy-application-step',
+						event: 'spec-application-step',
 						properties: {
 							step,
 							email: this.$auth.user.email,

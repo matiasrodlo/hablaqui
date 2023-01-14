@@ -1,15 +1,11 @@
 <template>
 	<v-container style="height: 100vh; max-width: 1200px">
-		<appbar class="hidden-sm-and-down" title="Cambio de psicologo" />
+		<appbar class="hidden-sm-and-down" title="Cambio de especialista" />
 		<v-row>
 			<v-col cols="6">
 				<v-card>
-					<v-card-title> Psicologo actual </v-card-title>
-					<v-data-table
-						:headers="headers"
-						:items="psychologists"
-						@click:row="getClients"
-					/>
+					<v-card-title> Especialista actual </v-card-title>
+					<v-data-table :headers="headers" :items="specialists" @click:row="getClients" />
 				</v-card>
 			</v-col>
 			<v-spacer />
@@ -23,21 +19,21 @@
 		<v-row>
 			<v-col cols="6">
 				<v-card>
-					<v-card-title> Psicologo Nuevo </v-card-title>
+					<v-card-title> Especialista Nuevo </v-card-title>
 					<v-data-table
 						:headers="headers"
-						:items="psychologists"
-						@click:row="selectNewPsy"
+						:items="specialists"
+						@click:row="selectNewSpec"
 					/>
 				</v-card>
 			</v-col>
 			<v-col cols="6">
 				<v-card>
-					<v-card-title> Cambio de psicologo </v-card-title>
+					<v-card-title> Cambio de especialista </v-card-title>
 					<div class="pa-5">
-						Psicologo actual:
-						<span v-if="selectedPsy">{{
-							selectedPsy.name + ' ' + selectedPsy.lastName
+						Especialista actual:
+						<span v-if="selectedSpec">{{
+							selectedSpec.name + ' ' + selectedSpec.lastName
 						}}</span>
 					</div>
 
@@ -48,9 +44,9 @@
 						}}</span>
 					</div>
 					<div class="pa-5">
-						Psicologo nuevo:
-						<span v-if="selectedNewPsy">{{
-							selectedNewPsy.name + ' ' + selectedNewPsy.lastName
+						Especialista nuevo:
+						<span v-if="selectedNewSpec">{{
+							selectedNewSpec.name + ' ' + selectedNewSpec.lastName
 						}}</span>
 					</div>
 					<v-card-actions>
@@ -58,7 +54,7 @@
 						<div>
 							<v-btn
 								class="primary"
-								:disabled="!selectedClient || !selectedPsy || !selectedNewPsy"
+								:disabled="!selectedClient || !selectedSpec || !selectedNewSpec"
 								@click="change"
 								>Realizar Cambio</v-btn
 							>
@@ -83,13 +79,13 @@ export default {
 	data() {
 		return {
 			userId: '',
-			currentPsyId: '',
-			newPsyId: '',
-			psychologists: [],
+			currentSpecId: '',
+			newSpecId: '',
+			specialists: [],
 			clients: [],
 			selectedClient: null,
-			selectedPsy: null,
-			selectedNewPsy: null,
+			selectedSpec: null,
+			selectedNewSpec: null,
 			loadingChange: false,
 			headers: [
 				{ text: 'Nombre', value: 'name' },
@@ -103,11 +99,11 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			await this.getPsychologist();
+			await this.getSpecialist();
 		},
-		async getPsychologist() {
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			this.psychologists = psychologists.sort((a, b) => {
+		async getSpecialist() {
+			const { specialists } = await this.$axios.$get('/specialists/all');
+			this.specialists = specialists.sort((a, b) => {
 				const fa = a.name.toLowerCase();
 				const fb = b.name.toLowerCase();
 
@@ -121,24 +117,24 @@ export default {
 			});
 		},
 		async getClients(row) {
-			this.selectedPsy = row;
-			const { users } = await this.$axios.$get(`/psychologist/clients/${row._id}`);
+			this.selectedSpec = row;
+			const { users } = await this.$axios.$get(`/specialist/clients/${row._id}`);
 			this.clients = users.filter(user => !!user.plan);
 		},
 		selectClient(row) {
 			this.selectedClient = row;
 		},
-		selectNewPsy(row) {
-			this.selectedNewPsy = row;
+		selectNewSpec(row) {
+			this.selectedNewSpec = row;
 		},
 		async change() {
 			try {
 				this.loadingChange = true;
-				const { data } = await this.$axios(`/dashboard/update/psychologist`, {
+				const { data } = await this.$axios(`/dashboard/update/specialist`, {
 					method: 'PUT',
 					data: {
-						newPsychologist: this.selectedNewPsy._id,
-						oldPsychologist: this.selectedPsy._id,
+						newSpecialist: this.selectedNewSpec._id,
+						oldSpecialist: this.selectedSpec._id,
 						user: this.selectedClient._id,
 					},
 				});

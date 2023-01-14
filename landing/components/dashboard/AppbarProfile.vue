@@ -92,7 +92,7 @@
 			</nuxt-link>
 		</div>
 		<v-btn
-			v-if="$auth.user.role === 'specialist' && $vuetify.breakpoint.mdAndUp && psychologist"
+			v-if="$auth.user.role === 'specialist' && $vuetify.breakpoint.mdAndUp && specialist"
 			class="mx-2"
 			small
 			elevation="1"
@@ -148,7 +148,7 @@ export default {
 			);
 		},
 		...mapGetters({
-			psychologist: 'Psychologist/psychologist',
+			specialist: 'Specialist/specialist',
 		}),
 	},
 	methods: {

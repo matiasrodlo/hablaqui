@@ -6,10 +6,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
-export const getAllSessionsFunction = async psy => {
+export const getAllSessionsFunction = async spec => {
 	let sessions = await Sessions.find({
-		psychologist: psy,
-	}).populate('psychologist user');
+		specialist: spec,
+	}).populate('specialist user');
 
 	sessions = sessions.flatMap(item => {
 		let name = '';
@@ -46,9 +46,9 @@ export const getAllSessionsFunction = async psy => {
 					_id: session._id,
 					date: session.date,
 					sessionPrice: plan.sessionPrice,
-					idPsychologist: item.psychologist._id,
+					idSpecialist: item.specialist._id,
 					name: `${name} ${lastName}`,
-					paidToPsychologist: session.paidToPsychologist,
+					paidToSpecialist: session.paidToSpecialist,
 					sessionsNumber: `${session.sessionNumber}/${plan.totalSessions}`,
 					sessionsId: item._id,
 					status: session.status,

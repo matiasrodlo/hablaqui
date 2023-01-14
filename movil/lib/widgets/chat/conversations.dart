@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/service-hablaqui.dart';
-import '../../classes/Psychologist.dart';
+import '../../classes/Specialist.dart';
 import '../../classes/Chat.dart';
 import '../../colors.dart' as appColors;
 import '../button.dart';
@@ -130,16 +130,16 @@ class _ChatConversationsState extends State<ChatConversations>
 				SizedBox(height: 20),
 				WidgetButton(
 					text: 'Buscar ahora',
-					callback: this._searchPsychologists,
+					callback: this._searchSpecialists,
 					color: appColors.mainColors['blue'],
 				),
 			]
 		);
 	}
-	void _searchPsychologists() async
+	void _searchSpecialists() async
 	{
-		//Navigator.of(this.context).pushNamed('/psychologists/search');
-		String url = 'https://hablaqui.cl/psicologos';
+		//Navigator.of(this.context).pushNamed('/specialists/search');
+		String url = 'https://hablaqui.cl/especialistas';
 		if (await canLaunch(url)) 
 		{
 			await launch(url);
@@ -166,21 +166,21 @@ class _ChatConversationsState extends State<ChatConversations>
 						width: 54,
 						height: 54,
 						child: CircleAvatar(
-							backgroundImage: NetworkImage(chat.psychologist.avatar),
+							backgroundImage: NetworkImage(chat.specialist.avatar),
 							backgroundColor: Colors.grey,
 						)
 					),
-					title: Text(chat.psychologist.fullName),
+					title: Text(chat.specialist.fullName),
 					subtitle: Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
 							Text('Psicólogo - Activo')
 						]
 					),
-					//trailing: Image.network(psycho.avatar)
+					//trailing: Image.network(speccho.avatar)
 					onTap: ()
 					{
-						Navigator.push(this.context, MaterialPageRoute(builder: (_) => chatPage.ChatPage(psycho: chat.psychologist)));
+						Navigator.push(this.context, MaterialPageRoute(builder: (_) => chatPage.ChatPage(speccho: chat.specialist)));
 					}
 				)
 			)

@@ -4,7 +4,7 @@ const sessionSchema = {
 	newSession: Joi.object({
 		date: Joi.date().required(),
 		title: Joi.string().required(),
-		psychologist: Joi.string().required(),
+		specialist: Joi.string().required(),
 		client: Joi.string().required(),
 	}),
 };

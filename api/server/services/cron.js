@@ -4,9 +4,9 @@ import Chat from '../models/chat';
 import userModel from '../models/user';
 import mercadopagoService from './mercadopago';
 import couponModel from '../models/coupons';
-import psychologistModel from '../models/psychologist';
+import specialistModel from '../models/specialist';
 import mailServiceRemider from '../utils/functions/mails/reminder';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import mailServiceSpec from '../utils/functions/mails/specialistStatus';
 import dayjs from 'dayjs';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import sessionsModel from '../models/sessions';
@@ -51,7 +51,7 @@ async function getNumberSuccess() {
 	users.forEach(async user => {
 		const sessions = await sessionsModel
 			.find({ user: user._id })
-			.populate('psychologist', 'name');
+			.populate('specialist', 'name');
 		sessions.forEach(async item => {
 			let successSessions = 0;
 			// Se filtran las citas que no hayan sido canceladas y se suman las sesiones exitosas
@@ -76,9 +76,9 @@ async function getNumberSuccess() {
 			);
 			if (!item.evaluationNotifcation && successSessions === 3) {
 				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del psicólogo
-				await mailServicePsy.sendEnabledEvaluation(
+				await mailServiceSpec.sendEnabledEvaluation(
 					user,
-					item.psychologist
+					item.specialist
 				);
 			}
 		});
@@ -104,7 +104,7 @@ async function getBatchId() {
 	return batch_id;
 }
 
-async function preference(user, psychologist, plan, session) {
+async function preference(user, specialist, plan, session) {
 	// Se genera un código aleatorio para el token de pago
 	const randomCode = () => {
 		return Math.random()
@@ -115,7 +115,7 @@ async function preference(user, psychologist, plan, session) {
 	const price = plan.totalPrice;
 	// Se crea el pago en mercadopago
 	const mercadopagoPayload = {
-		psychologist: psychologist.username,
+		specialist: specialist.username,
 		price: price,
 		description:
 			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
@@ -161,7 +161,7 @@ async function scheduleEmails(pendingEmails) {
 		return;
 	}
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		// Se obtiene el tipo de correo y el destinatario (spec o user)
 		let batch = null;
 		const mailType = emailInfo.type.split('-').pop();
 		const addressee = emailInfo.type.split('-')[1];
@@ -179,8 +179,8 @@ async function scheduleEmails(pendingEmails) {
 			return;
 		}
 		const user = await userModel.findById(emailInfo.userRef);
-		const psy = await psychologistModel.findById(emailInfo.psyRef);
-		if (!user || !psy) {
+		const spec = await specialistModel.findById(emailInfo.specRef);
+		if (!user || !spec) {
 			return;
 		}
 		try {
@@ -198,21 +198,21 @@ async function scheduleEmails(pendingEmails) {
 					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
-						psy,
+						spec,
 						sessionDate,
 						batch,
 						mailType,
 						urlRooms
 					);
 				} else if (
-					addressee === 'psy' &&
+					addressee === 'spec' &&
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					isSend = true;
-					await mailServiceRemider.sendReminderPsy(
+					await mailServiceRemider.sendReminderSpec(
 						user,
-						psy,
+						spec,
 						sessionDate,
 						batch,
 						mailType,
@@ -242,16 +242,16 @@ const cronService = {
 			return conflictResponse(
 				'ERROR! You are not authorized to use this endpoint.'
 			);
-		const psychologists = await psychologistModel.find();
+		const specialists = await specialistModel.find();
 
 		// Se recorre el array de psicólogos si el estado de la atención inmediata
 		// esta activo y la fecha de expiracion es antes de la fecha actual
-		psychologists.forEach(async psy => {
-			if (psy.inmediateAttention.activated) {
-				const expiration = psy.inmediateAttention.expiration;
+		specialists.forEach(async spec => {
+			if (spec.inmediateAttention.activated) {
+				const expiration = spec.inmediateAttention.expiration;
 				if (dayjs(expiration).isBefore(dayjs(Date.now())))
-					await psychologistModel.findOneAndUpdate(
-						{ _id: psy._id },
+					await specialistModel.findOneAndUpdate(
+						{ _id: spec._id },
 						{
 							$set: {
 								inmediateAttention: {
@@ -271,36 +271,36 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		const dontReadMess = await Chat.find({ isLastRead: false }).populate(
-			'user psychologist'
+			'user specialist'
 		);
 
 		dontReadMess.forEach(async mess => {
 			const user = mess.user;
-			const psy = mess.psychologist;
+			const spec = mess.specialist;
 			const batch = await getBatchId();
 			if (mess.lastMessageSendBy === 'user') {
-				await mailServiceRemider.sendChatNotificationToPsy(
+				await mailServiceRemider.sendChatNotificationToSpec(
 					user,
-					psy,
+					spec,
 					batch
 				);
 				email.create({
 					userRef: user._id,
-					psyRef: psy._id,
-					type: 'chat-psy-1-day',
+					specRef: spec._id,
+					type: 'chat-spec-1-day',
 					batch: null,
 					wasScheduled: false,
 					scheduledAt: dayjs.tz(dayjs().add(1, 'day')).format(),
 				});
-			} else if (mess.lastMessageSendBy === 'psychologist') {
+			} else if (mess.lastMessageSendBy === 'specialist') {
 				await mailServiceRemider.sendChatNotificationToUser(
 					user,
-					psy,
+					spec,
 					batch
 				);
 				email.create({
 					userRef: user._id,
-					psyRef: psy._id,
+					specRef: spec._id,
 					type: 'chat-user-1-day',
 					batch: null,
 					wasScheduled: false,
@@ -328,9 +328,9 @@ const cronService = {
 			type: {
 				$in: [
 					'reminder-user-hour',
-					'reminder-psy-hour',
+					'reminder-spec-hour',
 					'reminder-user-day',
-					'reminder-psy-day',
+					'reminder-spec-day',
 				],
 			},
 		});
@@ -352,13 +352,13 @@ const cronService = {
 
 		// Obtiene todas las sessiones y comienza a recorrerlas, luego se recorre entre los planes, y finalmente
 		// se recorre las sessiones, para poder cambiar de estado a las sessiones pendientes que estén dentro
-		// de las preferencias minimas del psicologo se le cambia el estado a "upnext" como sessión próxima a realizarse.
+		// de las preferencias minimas del especialista se le cambia el estado a "upnext" como sessión próxima a realizarse.
 		// También verifica si la session ya se realizó, y si es así, cambia el estado a "success".
 		const pendingSessions = await sessionsModel.find();
 
 		await Promise.allSettled(
 			pendingSessions.map(async item => {
-				// const psyInfo = await psychologist.findOne(item.psychologist);
+				// const specInfo = await specialist.findOne(item.specialist);
 				await item.plan.map(async plan => {
 					await plan.session.map(async session => {
 						const date = dayjs(session.date, 'MM/DD/YYYY HH:mm')
@@ -368,7 +368,7 @@ const cronService = {
 						// 	session.status === 'pending' &&
 						// 	dayjs(date)
 						// 		.subtract(
-						// 			psyInfo.preferences
+						// 			specInfo.preferences
 						// 				.minimumRescheduleSession,
 						// 			'hours'
 						// 		)
@@ -410,9 +410,7 @@ const cronService = {
 				'ERROR! You are not authorized to use this endpoint.'
 			);
 		}
-		const sessions = await sessionsModel
-			.find()
-			.populate('user psychologist');
+		const sessions = await sessionsModel.find().populate('user specialist');
 		sessions.forEach(item => {
 			// Filtro de sesiones que están en estado pending
 			const plans = item.plan.filter(plan => plan.payment === 'pending');
@@ -438,7 +436,7 @@ const cronService = {
 					// Se actualiza el estado de la sesión a cancelada
 					// await mailServiceRemider.sendPaymentFailed(
 					// 	item.user,
-					// 	item.psychologist
+					// 	item.specialist
 					// );
 				}
 			});
@@ -468,11 +466,11 @@ const cronService = {
 		}
 
 		pendingEmails.forEach(async emailInfo => {
-			// Se obtiene el tipo de correo y el destinatario (psy o user)
+			// Se obtiene el tipo de correo y el destinatario (spec o user)
 			let isSend = false;
 			let batch = null;
 			const user = await userModel.findById(emailInfo.userRef);
-			const psy = await psychologistModel.findById(emailInfo.psyRef);
+			const spec = await specialistModel.findById(emailInfo.specRef);
 			const sessionDocument = await sessionsModel.findById(
 				emailInfo.sessionRef
 			);
@@ -483,12 +481,12 @@ const cronService = {
 				.pop();
 
 			// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
-			if (!user || !psy || !sessionDocument || !plan) {
+			if (!user || !spec || !sessionDocument || !plan) {
 				return;
 			}
 			// Se obtiene la url de pago
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
-			const url = await preference(user, psy, plan, sessionDocument);
+			const url = await preference(user, spec, plan, sessionDocument);
 			try {
 				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
 				// Si es null significa que aún no se le ha dado una fecha de envío
@@ -501,9 +499,9 @@ const cronService = {
 						batch = await getBatchId();
 						// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 						isSend = true;
-						await mailServicePsy.pendingPlanPayment(
+						await mailServiceSpec.pendingPlanPayment(
 							user,
-							psy,
+							spec,
 							plan.totalPrice,
 							url
 						);
@@ -515,7 +513,7 @@ const cronService = {
 						isSend = true;
 						await mailServiceRemider.sendPaymentDay(
 							user,
-							psy,
+							spec,
 							plan.totalPrice,
 							url
 						);
@@ -564,7 +562,7 @@ const cronService = {
 		const pendingEmails = await email.find({
 			wasScheduled: false,
 			type: {
-				$in: ['chat-psy-1-day', 'chat-user-1-day'],
+				$in: ['chat-spec-1-day', 'chat-user-1-day'],
 			},
 		});
 
@@ -574,16 +572,16 @@ const cronService = {
 
 		// Se recorren los correos pendientes
 		pendingEmails.forEach(async emailInfo => {
-			// Se obtiene el tipo de correo y el destinatario (psy o user)
+			// Se obtiene el tipo de correo y el destinatario (spec o user)
 			let isSend = false;
 			let batch = null;
 			const user = await userModel.findById(emailInfo.userRef);
-			const psy = await psychologistModel.findById(emailInfo.psyRef);
+			const spec = await specialistModel.findById(emailInfo.specRef);
 			// Se verifica que el usuario se haya encontrado al igual que el psicólogo
 			if (!user) {
 				return conflictResponse('No se encontró el usuario');
 			}
-			if (!psy) {
+			if (!spec) {
 				return conflictResponse('No se encontró el psicólogo');
 			}
 			try {
@@ -596,18 +594,18 @@ const cronService = {
 					isSend = true;
 					await mailServiceRemider.sendChatNotificationToUser(
 						user,
-						psy,
+						spec,
 						batch
 					);
 				} else if (
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-					emailInfo.type === 'chat-psy-1-day'
+					emailInfo.type === 'chat-spec-1-day'
 				) {
 					batch = await getBatchId();
 					isSend = true;
-					await mailServiceRemider.sendChatNotificationToPsy(
+					await mailServiceRemider.sendChatNotificationToSpec(
 						user,
-						psy,
+						spec,
 						batch
 					);
 				}
@@ -651,16 +649,16 @@ const cronService = {
 
 		// Se recorren los correos pendientes
 		pendingEmails.forEach(async emailInfo => {
-			// Se busca el usuario y el psy
+			// Se busca el usuario y el spec
 			const user = await userModel.findById(emailInfo.userRef);
-			const psy = await psychologistModel.findById(emailInfo.psyRef);
+			const spec = await specialistModel.findById(emailInfo.specRef);
 			const sessionDocument = await sessionsModel.findById(
 				emailInfo.sessionRef
 			);
 			const mailType = emailInfo.type.split('-').pop();
 			let batch = null;
 			let isSend = false;
-			if (!user || !psy || !sessionDocument) {
+			if (!user || !spec || !sessionDocument) {
 				console.log('user', user);
 				return;
 			}
@@ -686,7 +684,7 @@ const cronService = {
 						isSend = true;
 						await mailServiceRemider.reminderRenewalSubscription1hour(
 							user,
-							psy,
+							spec,
 							plan.expiration
 						);
 					} else if (
@@ -697,7 +695,7 @@ const cronService = {
 						isSend = true;
 						await mailServiceRemider.reminderRenewalSubscription1day(
 							user,
-							psy,
+							spec,
 							plan.expiration
 						);
 					} else if (

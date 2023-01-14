@@ -191,11 +191,11 @@ import { cloneDeep } from 'lodash';
 export default {
 	mixins: [validationMixin],
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -253,14 +253,11 @@ export default {
 			return errors;
 		},
 		hasChanges() {
-			return (
-				JSON.stringify(this.bankData) === JSON.stringify(this.psychologist.paymentMethod)
-			);
+			return JSON.stringify(this.bankData) === JSON.stringify(this.specialist.paymentMethod);
 		},
 	},
 	async mounted() {
-		if (this.psychologist.paymentMethod)
-			this.bankData = cloneDeep(this.psychologist.paymentMethod);
+		if (this.specialist.paymentMethod) this.bankData = cloneDeep(this.specialist.paymentMethod);
 		let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 		response = await response.json();
 		this.banks = response;
@@ -270,14 +267,14 @@ export default {
 			this.$v.$touch();
 			if (!this.$v.$invalid) {
 				this.loading = true;
-				const psychologist = await this.updatePaymentMethod(this.bankData);
-				this.setPsychologist(psychologist);
-				this.bankData = cloneDeep(psychologist.paymentMethod);
+				const specialist = await this.updatePaymentMethod(this.bankData);
+				this.setSpecialist(specialist);
+				this.bankData = cloneDeep(specialist.paymentMethod);
 				this.loading = false;
 			}
 		},
 		...mapActions({
-			updatePaymentMethod: 'Psychologist/updatePaymentMethod',
+			updatePaymentMethod: 'Specialist/updatePaymentMethod',
 		}),
 	},
 	validations: {

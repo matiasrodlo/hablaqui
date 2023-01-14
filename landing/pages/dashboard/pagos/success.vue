@@ -60,7 +60,7 @@ export default {
 			window.location.href = url.toString();
 		},
 		...mapActions({
-			mercadopagoSuccess: 'Psychologist/mercadopagoSuccess',
+			mercadopagoSuccess: 'Specialist/mercadopagoSuccess',
 		}),
 	},
 };

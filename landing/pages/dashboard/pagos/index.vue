@@ -29,7 +29,7 @@
 				hide-search
 				:items="payments"
 				:transactions="transactions"
-				:psychologist="psychologist"
+				:specialist="specialist"
 				:loading="loading"
 				:fetch-data="initFetch"
 			></table-pagos>
@@ -54,9 +54,9 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			payments: 'Psychologist/payments',
-			transactions: 'Psychologist/transactions',
-			psychologist: 'Psychologist/psychologist',
+			payments: 'Specialist/payments',
+			transactions: 'Specialist/transactions',
+			specialist: 'Specialist/specialist',
 			stepOnboarding: 'User/step',
 		}),
 	},
@@ -65,10 +65,7 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'specialist' &&
-				!this.$auth.$state.user.psychologist
-			)
+			if (this.$auth.$state.user.role === 'specialist' && !this.$auth.$state.user.specialist)
 				return null;
 			this.loading = true;
 			await this.getPayments();
@@ -77,8 +74,8 @@ export default {
 		},
 		...mapMutations({ setStepLinks: 'User/setStepLinks' }),
 		...mapActions({
-			getPayments: 'Psychologist/getPayments',
-			getTransactions: 'Psychologist/getTransactions',
+			getPayments: 'Specialist/getPayments',
+			getTransactions: 'Specialist/getTransactions',
 		}),
 	},
 };

@@ -9,14 +9,14 @@ const chatRouter = Router();
 /**
  * @description: Inicia una conversacion entre dos personas
  * @method POST
- * @route /api/v1/chat/start-conversation/:psychologistId
+ * @route /api/v1/chat/start-conversation/:specialistId
  * @param {Object} user - Usuario logeado (que iniciara la conversacion)
- * @param {String} params.psychologistId - Id del psicologo con el que se conversara.
+ * @param {String} params.specialistId - Id del especialista con el que se conversara.
  * @returns: Objecto de chat (sin mensajes, pero iniciado)
  * @access: authenticated
  */
 chatRouter.post(
-	'/chat/start-conversation/:psychologistId',
+	'/chat/start-conversation/:specialistId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.startConversation
 );
@@ -37,13 +37,13 @@ chatRouter.get(
 /**
  * @description: Consigue todos los mensajes de un solo chat.
  * @method GET
- * @route /api/v1/chat/get-messages/:psy/:user
- * @param {String} params.psy - Id del psicologo
+ * @route /api/v1/chat/get-messages/:spec/:user
+ * @param {String} params.spec - Id del especialista
  * @param {String} params.user - Id del user
  * @access: authenticated
  */
 chatRouter.get(
-	'/chat/get-messages/:psy/:user',
+	'/chat/get-messages/:spec/:user',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.getMessages
 );
@@ -51,13 +51,13 @@ chatRouter.get(
 /**
  * @description: Envia un mensaje a ese chat.
  * @method POST
- * @route /api/v1/chat/send-message/:psychologistId/:userId
+ * @route /api/v1/chat/send-message/:specialistId/:userId
  * @param {String} body.content - Cuerpo del mensaje
  * @returns: Objeto de chat con el nuevo mensaje incluido
  * @access: authenticated
  */
 chatRouter.post(
-	'/chat/send-message/:psychologistId/:userId',
+	'/chat/send-message/:specialistId/:userId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.sendMessage
 );
@@ -67,7 +67,7 @@ chatRouter.post(
  * No se usa
  */
 chatRouter.post(
-	'/chat/create-report/:psychologistId/:userId',
+	'/chat/create-report/:specialistId/:userId',
 	[passport.authenticate('jwt', { session: true })],
 	chatController.createReport
 );

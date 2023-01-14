@@ -17,9 +17,9 @@
 						<v-row align="start" justify="center">
 							<v-col cols="4" class="text-center">
 								<avatar
-									:url="avatar(psychologist, true)"
-									:name="psychologist.name"
-									:last-name="psychologist.lastName ? psychologist.lastName : ''"
+									:url="avatar(specialist, true)"
+									:name="specialist.name"
+									:last-name="specialist.lastName ? specialist.lastName : ''"
 									size="125"
 									loading-color="white"
 								></avatar>
@@ -27,29 +27,29 @@
 									class="text-capitalize py-4"
 									style="color: #706f6f; font-size: 14px"
 								>
-									código {{ psychologist.code ? psychologist.code : '' }}
+									código {{ specialist.code ? specialist.code : '' }}
 								</div>
 							</v-col>
 							<v-col cols="8">
 								<nuxt-link
 									style="text-decoration: none"
 									:to="{
-										path: `/${psychologist.username}`,
+										path: `/${specialist.username}`,
 									}"
 								>
 									<div
 										class="text-left font-weight-bold"
 										style="color: #3c3c3b; font-size: 23px"
 									>
-										{{ psychologist.name }}
-										{{ psychologist.lastName && psychologist.lastName }}
+										{{ specialist.name }}
+										{{ specialist.lastName && specialist.lastName }}
 									</div>
 								</nuxt-link>
 								<div
 									class="text-left font-weight-medium pa-2"
 									style="color: #3c3c3b; font-size: 15px"
 								>
-									${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
+									${{ Math.ceil(specialist.sessionPrices.video / 100) * 100 }}
 									/ 50 min
 								</div>
 								<div class="my-3 body-2 d-flex align-center">
@@ -77,8 +77,8 @@
 							</v-col>
 							<v-expand-transition>
 								<v-col v-if="showCalendar" cols="10">
-									<calendar-psychologist
-										:id-psy="psychologist._id"
+									<calendar-specialist
+										:id-spec="specialist._id"
 										:set-date="changeDate"
 										title-button="Seleccionar"
 									/>
@@ -246,10 +246,10 @@ export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
 		Icon: () => import('~/components/Icon'),
-		CalendarPsychologist: () => import('~/components/Calendar'),
+		CalendarSpecialist: () => import('~/components/Calendar'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
@@ -331,21 +331,21 @@ export default {
 
 				if (item.id === 1) {
 					priceWithDiscount = 0;
-					pricePerSession = Math.ceil(this.psychologist.sessionPrices.video / 100) * 100;
-					price = Math.ceil(this.psychologist.sessionPrices.video / 100) * 100;
+					pricePerSession = Math.ceil(this.specialist.sessionPrices.video / 100) * 100;
+					price = Math.ceil(this.specialist.sessionPrices.video / 100) * 100;
 				}
 				if (item.id === 2) {
 					priceWithDiscount =
-						this.psychologist.sessionPrices.video * 4 -
-						this.psychologist.sessionPrices.video * 4 * 0.2;
+						this.specialist.sessionPrices.video * 4 -
+						this.specialist.sessionPrices.video * 4 * 0.2;
 					pricePerSession = priceWithDiscount / 4;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 4;
 				}
 				if (item.id === 3) {
 					priceWithDiscount =
-						this.psychologist.sessionPrices.video * 12 -
-						this.psychologist.sessionPrices.video * 12 * 0.3;
+						this.specialist.sessionPrices.video * 12 -
+						this.specialist.sessionPrices.video * 12 * 0.3;
 					pricePerSession = priceWithDiscount / 12;
 					pricePerSession = Math.ceil(pricePerSession / 100) * 100;
 					price = pricePerSession * 12;
@@ -360,10 +360,10 @@ export default {
 				};
 			});
 		},
-		avatar(psychologist) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		async payButton() {
@@ -373,7 +373,7 @@ export default {
 				start: this.$route.query.start,
 				end: this.$route.query.end,
 				user: this.$auth.$state.user,
-				psychologist: this.psychologist._id,
+				specialist: this.specialist._id,
 				paymentPeriod: this.planSelected.title,
 				title: `${this.planSelected.cant} Sesión(es) por videollamada - ${this.planSelected.title} `,
 				originalPrice: this.planSelected.price,
@@ -401,14 +401,14 @@ export default {
 				plan: plan.title,
 				'cantidad-sesiones': plan.cant,
 				precio: plan.price,
-				especialista: this.psychologist.name + ' ' + this.psychologist.lastName,
-				'id-especialista': this.psychologist._id,
+				especialista: this.specialist.name + ' ' + this.specialist.lastName,
+				'id-especialista': this.specialist._id,
 			};
 			window.dataLayer.push(data);
 		},
 		changeDate(item) {
 			this.$router.push(
-				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+				`/especialistas/pagos/?username=${this.specialist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 			this.showCalendar = !this.showCalendar;
 		},
@@ -416,8 +416,8 @@ export default {
 			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},
 		...mapActions({
-			mercadopagoPay: 'Psychologist/mercadopagoPay',
-			createSession: 'Psychologist/createSession',
+			mercadopagoPay: 'Specialist/mercadopagoPay',
+			createSession: 'Specialist/createSession',
 		}),
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',

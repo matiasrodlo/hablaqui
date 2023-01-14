@@ -18,7 +18,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaquí"
 					class="mt-10"
-					@click="() => $router.push({ name: 'psicologos' })"
+					@click="() => $router.push({ name: 'especialistas' })"
 				/>
 			</v-sheet>
 			<v-list
@@ -34,9 +34,9 @@
 				<!-- ocultado por peticion de daniel -->
 				<!-- <v-list-item
 					v-if="
-						psychologist &&
+						specialist &&
 						$auth.user.role === 'specialist' &&
-						$auth.user.psychologist
+						$auth.user.specialist
 					"
 					inactive
 				>
@@ -408,7 +408,7 @@ export default {
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			const disable = false;
-			const lengthPlan = this.psychologist ? this.psychologist.psyPlans.length - 1 : -1;
+			const lengthPlan = this.specialist ? this.specialist.specPlans.length - 1 : -1;
 			return [
 				{
 					name: 'Chat',
@@ -431,7 +431,7 @@ export default {
 					visible:
 						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 					disable:
-						lengthPlan !== -1 && this.psychologist.psyPlans[lengthPlan].tier === 'free',
+						lengthPlan !== -1 && this.specialist.specPlans[lengthPlan].tier === 'free',
 				},
 				{
 					name: 'Consultantes',
@@ -472,8 +472,8 @@ export default {
 					disable,
 				},
 				{
-					name: 'Cambio de psicologo',
-					link: { name: 'dashboard-change-psy' },
+					name: 'Cambio de especialista',
+					link: { name: 'dashboard-change-spec' },
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
@@ -516,45 +516,45 @@ export default {
 			return '';
 		},
 		hasAvatar() {
-			return this.psychologist && this.psychologist.avatar;
+			return this.specialist && this.specialist.avatar;
 		},
 		hasBankdata() {
 			return (
-				this.psychologist &&
-				this.psychologist.paymentMethod &&
-				this.psychologist.paymentMethod.bank &&
-				this.psychologist.paymentMethod.accountType &&
-				this.psychologist.paymentMethod.email &&
-				this.psychologist.paymentMethod.rut &&
-				this.psychologist.paymentMethod.name
+				this.specialist &&
+				this.specialist.paymentMethod &&
+				this.specialist.paymentMethod.bank &&
+				this.specialist.paymentMethod.accountType &&
+				this.specialist.paymentMethod.email &&
+				this.specialist.paymentMethod.rut &&
+				this.specialist.paymentMethod.name
 			);
 		},
 		hasSchedule() {
 			return (
-				this.psychologist &&
-				this.psychologist.schedule &&
-				(this.psychologist.schedule.monday !== 'busy' ||
-					this.psychologist.schedule.tuesday !== 'busy' ||
-					this.psychologist.schedule.wednesday !== 'busy' ||
-					this.psychologist.schedule.thursday !== 'busy' ||
-					this.psychologist.schedule.friday !== 'busy' ||
-					this.psychologist.schedule.saturday !== 'busy' ||
-					this.psychologist.schedule.sunday !== 'busy')
+				this.specialist &&
+				this.specialist.schedule &&
+				(this.specialist.schedule.monday !== 'busy' ||
+					this.specialist.schedule.tuesday !== 'busy' ||
+					this.specialist.schedule.wednesday !== 'busy' ||
+					this.specialist.schedule.thursday !== 'busy' ||
+					this.specialist.schedule.friday !== 'busy' ||
+					this.specialist.schedule.saturday !== 'busy' ||
+					this.specialist.schedule.sunday !== 'busy')
 			);
 		},
 		hasPreferences() {
 			return (
-				this.psychologist &&
-				this.psychologist.preferences &&
-				this.psychologist.preferences.minimumNewSession > 0 &&
-				this.psychologist.preferences.minimumRescheduleSession > 0
+				this.specialist &&
+				this.specialist.preferences &&
+				this.specialist.preferences.minimumNewSession > 0 &&
+				this.specialist.preferences.minimumRescheduleSession > 0
 			);
 		},
 		hasSessionPrice() {
 			return (
-				this.psychologist &&
-				this.psychologist.sessionPrices &&
-				this.psychologist.sessionPrices.video > 0
+				this.specialist &&
+				this.specialist.sessionPrices &&
+				this.specialist.sessionPrices.video > 0
 			);
 		},
 		hasConsultantes() {
@@ -715,14 +715,14 @@ export default {
 			onBoarding: 'User/onBoarding',
 			stepLinks: 'User/stepLinks',
 			selectedStep: 'User/step',
-			psychologist: 'Psychologist/psychologist',
+			specialist: 'Specialist/specialist',
 			plans: 'User/plan',
-			consultantes: 'Psychologist/clients',
+			consultantes: 'Specialist/clients',
 		}),
 	},
 	watch: {
-		psychologist(newValue) {
-			if (newValue && this.$auth.user.psychologist && this.$auth.user.role === 'specialist') {
+		specialist(newValue) {
+			if (newValue && this.$auth.user.specialist && this.$auth.user.role === 'specialist') {
 				this.online = newValue.inmediateAttention.activated;
 			}
 		},
@@ -737,40 +737,40 @@ export default {
 			this.overlay = true;
 		if (this.$auth.$state.user.role === 'user') {
 			if (this.$auth.$state.user.sessions.length) {
-				if (this.plan.psychologist) {
-					const { psychologist } = await this.$axios.$get(
-						`/psychologists/one/${this.plan.psychologist}`
+				if (this.plan.specialist) {
+					const { specialist } = await this.$axios.$get(
+						`/specialists/one/${this.plan.specialist}`
 					);
-					this.setPsychologist(psychologist);
+					this.setSpecialist(specialist);
 				}
 			} else {
-				this.setPsychologist(null);
+				this.setSpecialist(null);
 			}
 		}
 		if (this.$auth.$state.user.role === 'specialist') {
-			let psychologist;
-			if (this.$auth.$state.user.psychologist) {
-				await this.getClients(this.$auth.$state.user.psychologist);
+			let specialist;
+			if (this.$auth.$state.user.specialist) {
+				await this.getClients(this.$auth.$state.user.specialist);
 				const res = await this.$axios.$get(
-					`/psychologists/one/${this.$auth.$state.user.psychologist}`
+					`/specialists/one/${this.$auth.$state.user.specialist}`
 				);
-				psychologist = res.psychologist;
+				specialist = res.specialist;
 			} else {
 				const res = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
-				psychologist = res.recruited;
+				specialist = res.recruited;
 			}
-			if (!psychologist.formation.length) {
-				psychologist.formation.push({
+			if (!specialist.formation.length) {
+				specialist.formation.push({
 					formationType: '',
 					description: '',
 					start: '',
 					end: '',
 				});
 			}
-			if (!psychologist.experience.length) {
-				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			if (!specialist.experience.length) {
+				specialist.experience.push({ title: '', place: '', start: '', end: '' });
 			}
-			this.setPsychologist(psychologist);
+			this.setSpecialist(specialist);
 		}
 
 		document.body.addEventListener('keyup', evt => {
@@ -815,12 +815,12 @@ export default {
 			setListenerUserOnline: 'User/setListenerUserOnline',
 			setOnBoarding: 'User/setOnBoarding',
 			setStep: 'User/setStep',
-			setPsychologist: 'Psychologist/setPsychologist',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
-			getClients: 'Psychologist/getClients',
+			getClients: 'Specialist/getClients',
 			updateOne: 'User/updateOne',
-			toggleStatus: 'Psychologist/toggleStatus',
+			toggleStatus: 'Specialist/toggleStatus',
 		}),
 	},
 };

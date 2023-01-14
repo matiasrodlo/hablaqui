@@ -6,7 +6,7 @@ import passport from 'passport';
 
 const recruitmentRouter = Router();
 /**
- * @description: Route to post a new recruitment profile for psychologist
+ * @description: Route to post a new recruitment profile for specialist
  * @route /api/v1/recruitment/register
  * @method POST
  * @access: public (authenticated)
@@ -17,7 +17,7 @@ recruitmentRouter.post(
 	recruitmentController.register
 );
 /**
- * @description Route to update a recruitment profile for psychologist
+ * @description Route to update a recruitment profile for specialist
  * @route /api/v1/recruitment/update
  * @method PUT
  * @access: public (authenticated)
@@ -28,7 +28,7 @@ recruitmentRouter.put(
 	recruitmentController.update
 );
 /**
- * @description: Route to get the recruitment profile of psychologist by email
+ * @description: Route to get the recruitment profile of specialist by email
  * @route: /api/v1/recruitment/:email
  * @method: GET
  * @access: public (authenticated)
@@ -39,7 +39,7 @@ recruitmentRouter.get(
 	recruitmentController.get
 );
 /**
- * @description: Route to get all recruitment profile of psychologist
+ * @description: Route to get all recruitment profile of specialist
  * @route: /api/v1/recruitment
  * @method: GET
  * @access: public (authenticated)
@@ -50,7 +50,7 @@ recruitmentRouter.get(
 	recruitmentController.getAll
 );
 /**
- * @description: Route to approve a Recruitment profile and to create a new psychologist profile
+ * @description: Route to approve a Recruitment profile and to create a new specialist profile
  * @route: /api/v1/recruitment/approve/:email
  * @method: POST
  * @access: public (authenticated)

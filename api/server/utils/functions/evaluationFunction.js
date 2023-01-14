@@ -6,8 +6,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
-export const getAllEvaluationsFunction = async psy => {
-	let evaluations = await Evaluation.find({ psychologist: psy }).populate(
+export const getAllEvaluationsFunction = async spec => {
+	let evaluations = await Evaluation.find({ specialist: spec }).populate(
 		'user'
 	);
 

@@ -359,22 +359,19 @@
 					<v-card-text class="py-0">
 						<v-divider> </v-divider>
 					</v-card-text>
-					<v-card-text
-						v-if="psychologist && psychologist.paymentMethod"
-						class="pb-0 pt-2"
-					>
+					<v-card-text v-if="specialist && specialist.paymentMethod" class="pb-0 pt-2">
 						<div class="d-flex justify-space-between align-center">
 							<div>
 								<div class="title">
-									{{ psychologist.paymentMethod.bank }}
+									{{ specialist.paymentMethod.bank }}
 								</div>
 								<v-btn color="primary" text class="pa-0" to="perfil">
 									Cambiar de cuenta
 								</v-btn>
 							</div>
 							<div class="subtitle-2 text-right">
-								<div>{{ psychologist.paymentMethod.name }}</div>
-								<div>{{ psychologist.paymentMethod.accountNumber }}</div>
+								<div>{{ specialist.paymentMethod.name }}</div>
+								<div>{{ specialist.paymentMethod.accountNumber }}</div>
 							</div>
 						</div>
 					</v-card-text>
@@ -400,9 +397,9 @@
 						habiles
 					</v-card-title>
 					<v-card-text class="text-center">
-						<div v-if="psychologist && psychologist.paymentMethod" class="body-1">
+						<div v-if="specialist && specialist.paymentMethod" class="body-1">
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
-							{{ psychologist.paymentMethod.bank }}
+							{{ specialist.paymentMethod.bank }}
 						</div>
 						<v-btn rounded color="primary" href="https://hablaqui.cl/" class="mt-4 px-6"
 							>Ir a inicio</v-btn
@@ -444,7 +441,7 @@ export default {
 			type: Object,
 			default: null,
 		},
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
@@ -540,7 +537,7 @@ export default {
 			this.step = 2;
 		},
 		...mapActions({
-			paymentRequest: 'Psychologist/paymentRequest',
+			paymentRequest: 'Specialist/paymentRequest',
 		}),
 	},
 };

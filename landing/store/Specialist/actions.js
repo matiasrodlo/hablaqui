@@ -1,19 +1,19 @@
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
 
 export default {
-	async getPsychologists({ commit }) {
+	async getSpecialists({ commit }) {
 		try {
-			commit('setLoadingPsychologist', true);
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			commit('setPsychologists', psychologists);
-			commit('setLoadingPsychologist', false);
+			commit('setLoadingSpecialist', true);
+			const { specialists } = await this.$axios.$get('/specialists/all');
+			commit('setSpecialists', specialists);
+			commit('setLoadingSpecialist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async getTransactions({ commit }) {
 		try {
-			const { transactions } = await this.$axios.$get('/psychologist/transactions/all');
+			const { transactions } = await this.$axios.$get('/specialist/transactions/all');
 			commit('setTransactions', transactions);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -21,7 +21,7 @@ export default {
 	},
 	async getSessions({ commit }, { idUser }) {
 		try {
-			const { sessions } = await this.$axios.$get(`/psychologists/sessions/${idUser}`);
+			const { sessions } = await this.$axios.$get(`/specialists/sessions/${idUser}`);
 			commit('setSessions', sessions);
 			return sessions;
 		} catch (e) {
@@ -31,7 +31,7 @@ export default {
 	async getFormattedSessions({ commit }, payload) {
 		try {
 			const { sessions } = await this.$axios.$get(
-				`/psychologists/formattedSessions/${payload.id}/${payload.type}`
+				`/specialists/formattedSessions/${payload.id}/${payload.type}`
 			);
 			commit('setSessionsFormatted', sessions);
 			return sessions;
@@ -39,10 +39,10 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	// Obtiene solo agendas de los psicologos soliciotados
+	// Obtiene solo agendas de los especialistas soliciotados
 	async getSessionsLimit({ commit }, ids) {
 		try {
-			const { data } = await this.$axios('/psychologists/sessionsLimit', {
+			const { data } = await this.$axios('/specialists/sessionsLimit', {
 				method: 'POST',
 				data: { ids },
 			});
@@ -51,9 +51,9 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getFormattedSessionsAll({ commit }, idPsychologist) {
+	async getFormattedSessionsAll({ commit }, idSpecialist) {
 		try {
-			const { sessions } = await this.$axios.$get('/psychologists/formattedSessionsAll');
+			const { sessions } = await this.$axios.$get('/specialists/formattedSessionsAll');
 			commit('setSessionsFormattedAll', sessions);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -61,7 +61,7 @@ export default {
 	},
 	async getClients({ commit }, id) {
 		try {
-			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
+			const { users } = await this.$axios.$get(`/specialist/clients/${id}`);
 			commit('setClients', users);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -69,54 +69,54 @@ export default {
 	},
 	async searchClients({ commit }, search) {
 		try {
-			const { users } = await this.$axios.$get(`/psychologist/${search}`);
+			const { users } = await this.$axios.$get(`/specialist/${search}`);
 			commit('setClients', users);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
-	async getPsychologist({ commit }, id) {
+	async getSpecialist({ commit }, id) {
 		try {
-			const { psychologist } = await this.$axios.$get(`/psychologists/one/${id}`);
-			return psychologist;
+			const { specialist } = await this.$axios.$get(`/specialists/one/${id}`);
+			return specialist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async getPayments({ commit }) {
 		try {
-			const { payments } = await this.$axios.$get('/psychologist/payments/all');
+			const { payments } = await this.$axios.$get('/specialist/payments/all');
 			commit('setPayments', payments);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
-	async deletePsychologist({ commit }, id) {
+	async deleteSpecialist({ commit }, id) {
 		try {
-			const { psychologists } = await this.$axios(`/psychologist/${id}`, {
+			const { specialists } = await this.$axios(`/specialist/${id}`, {
 				method: 'delete',
 			});
-			commit('setPsychologists', psychologists);
-			return psychologists;
+			commit('setSpecialists', specialists);
+			return specialists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async updatePaymentMethod({ commit }, payload) {
 		try {
-			const { data } = await this.$axios(`/psychologist/update-payment-method`, {
+			const { data } = await this.$axios(`/specialist/update-payment-method`, {
 				method: 'PATCH',
 				data: { payload },
 			});
 			snackBarSuccess('Metodo de pago actualizado')(commit);
-			return data.psychologist;
+			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async checkUsername({ commit }, username) {
 		try {
-			const { data } = await this.$axios('/psychologist/check-username', {
+			const { data } = await this.$axios('/specialist/check-username', {
 				method: 'POST',
 				data: { username },
 			});
@@ -127,7 +127,7 @@ export default {
 	},
 	async paymentRequest({ commit }, username) {
 		try {
-			await this.$axios('/psychologist/payment-request', {
+			await this.$axios('/specialist/payment-request', {
 				method: 'POST',
 			});
 			snackBarSuccess('Pago solicitado')(commit);
@@ -135,21 +135,21 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async updatePsychologist({ commit }, profile) {
+	async updateSpecialist({ commit }, profile) {
 		try {
-			const { data } = await this.$axios('/psychologist/update-profile', {
+			const { data } = await this.$axios('/specialist/update-profile', {
 				method: 'PUT',
 				data: { profile },
 			});
 			snackBarSuccess('Actualizado exitosamente')(commit);
-			return data.psychologist;
+			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async updateSessions({ commit }, payload) {
 		try {
-			await this.$axios('/psychologists/update/sessions', {
+			await this.$axios('/specialists/update/sessions', {
 				method: 'PUT',
 				data: payload,
 			});
@@ -159,29 +159,29 @@ export default {
 	},
 	async approveAvatar({ commit }, id) {
 		try {
-			const { data } = await this.$axios(`/psychologist/${id}/approve-avatar`, {
+			const { data } = await this.$axios(`/specialist/${id}/approve-avatar`, {
 				method: 'PUT',
 			});
 			snackBarSuccess(data.message)(commit);
-			return data.psychologist;
+			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async toggleStatus({ commit }) {
 		try {
-			const { data } = await this.$axios(`/psychologist/status/inmediate-attention`, {
+			const { data } = await this.$axios(`/specialist/status/inmediate-attention`, {
 				method: 'POST',
 			});
 			snackBarSuccess(data.message)(commit);
-			commit('setPsychologist', data.psychologist);
+			commit('setSpecialist', data.specialist);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async createCustomSession({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologist/new-custom-session', {
+			const { data } = await this.$axios('/specialist/new-custom-session', {
 				method: 'POST',
 				data: payload,
 			});
@@ -192,7 +192,7 @@ export default {
 		}
 	},
 
-	async ratingPsychologist({ commit }, { id, payload }) {
+	async ratingSpecialist({ commit }, { id, payload }) {
 		try {
 			const response = await this.$axios(`/user/evaluation/${id}`, {
 				method: 'POST',
@@ -206,7 +206,7 @@ export default {
 	},
 	async setReschedule({ commit }, { id, sessionsId, newDate }) {
 		try {
-			const { data } = await this.$axios(`/psychologists/reschedule/${sessionsId}/${id}`, {
+			const { data } = await this.$axios(`/specialists/reschedule/${sessionsId}/${id}`, {
 				method: 'POST',
 				data: { newDate },
 			});
@@ -219,15 +219,15 @@ export default {
 	},
 	async matchPsi({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologists/match', {
+			const { data } = await this.$axios('/specialists/match', {
 				method: 'POST',
 				data: { payload },
 			});
-			const { matchedPsychologists } = data;
-			if (matchedPsychologists[0]) matchedPsychologists[0].type = 'Recomendado';
-			if (matchedPsychologists[1]) matchedPsychologists[1].type = 'Disponibilidad';
-			if (matchedPsychologists[2]) matchedPsychologists[2].type = 'Economico';
-			return matchedPsychologists;
+			const { matchedSpecialists } = data;
+			if (matchedSpecialists[0]) matchedSpecialists[0].type = 'Recomendado';
+			if (matchedSpecialists[1]) matchedSpecialists[1].type = 'Disponibilidad';
+			if (matchedSpecialists[2]) matchedSpecialists[2].type = 'Economico';
+			return matchedSpecialists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -255,7 +255,7 @@ export default {
 	},
 	async setPaymentPreferences({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/mercadopago/psychologist-preference', {
+			const { data } = await this.$axios('/mercadopago/specialist-preference', {
 				method: 'POST',
 				data: payload,
 			});
@@ -269,7 +269,7 @@ export default {
 	},
 	async createSession({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologists/session/create', {
+			const { data } = await this.$axios('/specialists/session/create', {
 				method: 'POST',
 				data: { payload },
 			});
@@ -280,7 +280,7 @@ export default {
 	},
 	async cancelSession({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologist/cancel-session', {
+			const { data } = await this.$axios('/specialist/cancel-session', {
 				method: 'delete',
 				data: payload,
 			});
@@ -291,7 +291,7 @@ export default {
 	},
 	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
-			const { data } = await this.$axios(`/psychologists/session/${id}/plan/${idPlan}`, {
+			const { data } = await this.$axios(`/specialists/session/${id}/plan/${idPlan}`, {
 				method: 'put',
 				data: payload,
 			});
@@ -303,9 +303,9 @@ export default {
 	},
 	async updateSession({ commit }, payload) {
 		try {
-			const { psyId, userId, sessionId } = payload;
+			const { specId, userId, sessionId } = payload;
 			const { data } = await this.$axios(
-				`/mercadopago/success-pay/${psyId}/${userId}/${sessionId}`,
+				`/mercadopago/success-pay/${specId}/${userId}/${sessionId}`,
 				{
 					method: 'POST',
 				}
@@ -317,11 +317,11 @@ export default {
 	},
 	async setSchedule({ commit }, payload) {
 		try {
-			const { data } = await this.$axios('/psychologist/set-schedule', {
+			const { data } = await this.$axios('/specialist/set-schedule', {
 				method: 'PATCH',
 				data: { payload },
 			});
-			return data.psychologist;
+			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

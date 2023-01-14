@@ -19,7 +19,7 @@
 		<v-overlay :value="overlay">
 			<v-progress-circular indeterminate size="64"></v-progress-circular>
 		</v-overlay>
-		<v-container v-if="psychologist" fluid style="height: 70vh; max-width: 1200px">
+		<v-container v-if="specialist" fluid style="height: 70vh; max-width: 1200px">
 			<v-row v-if="ready" justify="center" align="center" style="overflow-y: auto">
 				<v-col cols="12" sm="8" md="7" lg="6" class="text-center" style="color: #5c5c5c">
 					<div>
@@ -57,15 +57,15 @@
 					<div class="d-flex align-center mb-10">
 						<avatar
 							style="flex: 0"
-							:url="avatar(psychologist, true)"
-							:name="psychologist.name"
-							:last-name="psychologist.lastName ? psychologist.lastName : ''"
+							:url="avatar(specialist, true)"
+							:name="specialist.name"
+							:last-name="specialist.lastName ? specialist.lastName : ''"
 							size="80"
 							loading-color="white"
 						></avatar>
 						<div style="flex: 1" class="ml-4 text-left">
 							<div class="font-weight-medium headline">
-								{{ psychologist.name }} {{ psychologist.lastName }}
+								{{ specialist.name }} {{ specialist.lastName }}
 							</div>
 							<div class="title font-weight-regular">Psicólogo</div>
 						</div>
@@ -73,12 +73,7 @@
 					<v-window v-model="step">
 						<v-window-item :value="1">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">
@@ -101,12 +96,7 @@
 
 						<v-window-item :value="2">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">2. Puntualidad</div>
@@ -126,12 +116,7 @@
 
 						<v-window-item :value="3">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">3. Atención</div>
@@ -151,12 +136,7 @@
 
 						<v-window-item :value="4">
 							<div
-								class="
-									text--secondary text-left
-									d-flex
-									align-center
-									justify-space-between
-								"
+								class="text--secondary text-left d-flex align-center justify-space-between"
 							>
 								<div>
 									<div class="font-weight-medium headline">4. Internet</div>
@@ -283,7 +263,7 @@ import { mapActions } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
 export default {
-	name: 'ReviewPsychologist',
+	name: 'ReviewSpecialist',
 	components: {
 		Icon: () => import('~/components/Icon'),
 	},
@@ -293,10 +273,10 @@ export default {
 			mdiChevronLeft,
 			mdiChevronRight,
 			step: 1,
-			idPsychologist: '',
+			idSpecialist: '',
 			token: '',
 			overlay: true,
-			psychologist: null,
+			specialist: null,
 			global: 0,
 			puntuality: 0,
 			attention: 0,
@@ -309,14 +289,14 @@ export default {
 		};
 	},
 	created() {
-		if (this.$route.query.psychologist) {
-			this.idPsychologist = this.$route.query.psychologist;
+		if (this.$route.query.specialist) {
+			this.idSpecialist = this.$route.query.specialist;
 			this.token = this.$route.query.token;
 			// this.$router.replace({ query: null });
 		}
 	},
 	async mounted() {
-		if (!this.idPsychologist) {
+		if (!this.idSpecialist) {
 			this.overlay = false;
 			return this.$router.push('/');
 		}
@@ -325,20 +305,20 @@ export default {
 			await this.$auth.setUserToken(this.token);
 		}
 
-		this.psychologist = await this.getPsychologist(this.idPsychologist);
+		this.specialist = await this.getSpecialist(this.idSpecialist);
 		this.overlay = false;
 	},
 	methods: {
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		async onSubmit() {
 			this.loading = true;
-			await this.ratingPsychologist({
-				id: this.psychologist._id,
+			await this.ratingSpecialist({
+				id: this.specialist._id,
 				payload: {
 					comment: this.comment,
 					global: this.global,
@@ -353,8 +333,8 @@ export default {
 			this.ready = true;
 		},
 		...mapActions({
-			getPsychologist: 'Psychologist/getPsychologist',
-			ratingPsychologist: 'Psychologist/ratingPsychologist',
+			getSpecialist: 'Specialist/getSpecialist',
+			ratingSpecialist: 'Specialist/ratingSpecialist',
 		}),
 	},
 };

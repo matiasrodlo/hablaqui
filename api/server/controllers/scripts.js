@@ -20,7 +20,7 @@ const changeRole = async (req, res) => {
 };
 
 /**
- * @description - This function is used to add the profession to psychologist
+ * @description - This function is used to add the profession to specialist
  * @param {object} req - The request object (Recruitment details)
  * @param {object} res - The response object (Response code and message)
  */

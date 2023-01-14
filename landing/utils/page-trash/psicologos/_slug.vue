@@ -8,11 +8,11 @@
 export default {
 	name: 'UbicacionSlug',
 	components: {
-		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
+		Ubicacion: () => import('~/components/especialistas/Ubicacion'),
 	},
 	async asyncData({ params, store, $config, error, payload }) {
 		try {
-			await store.dispatch('Psychologist/getPsychologists');
+			await store.dispatch('Specialist/getSpecialists');
 			if (payload) return { comuna: payload };
 			else {
 				const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, {
@@ -64,7 +64,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/psicologos/${this.$route.params.slug}/`,
+					href: `https://cdn.hablaqui.cl/static/especialistas/${this.$route.params.slug}/`,
 				},
 			],
 		};

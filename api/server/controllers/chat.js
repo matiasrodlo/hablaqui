@@ -9,7 +9,7 @@ const chatController = {
 		try {
 			const { params, user } = req;
 			const { data, code } = await chatService.startConversation(
-				params.psychologistId,
+				params.specialistId,
 				user
 			);
 			return restResponse(data, code, res);
@@ -28,8 +28,8 @@ const chatController = {
 	},
 	async getMessages(req, res) {
 		try {
-			const { user, psy } = req.params;
-			const { data, code } = await chatService.getMessages(user, psy);
+			const { user, spec } = req.params;
+			const { data, code } = await chatService.getMessages(user, spec);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error consiguiendo los mensajes');
@@ -37,14 +37,14 @@ const chatController = {
 	},
 	async sendMessage(req, res) {
 		try {
-			const { psychologistId, userId } = req.params;
+			const { specialistId, userId } = req.params;
 			const { content } = req.body;
 			const { user } = req;
 			const { data, code } = await chatService.sendMessage(
 				user,
 				content,
 				userId,
-				psychologistId
+				specialistId
 			);
 
 			return restResponse(data, code, res);
@@ -54,12 +54,12 @@ const chatController = {
 	},
 	async createReport(req, res) {
 		try {
-			const { psychologistId, userId } = req.params;
+			const { specialistId, userId } = req.params;
 			const { reportType, issue } = req.body;
 			const { user } = req;
 			const { data, code } = await chatService.createReport(
 				user,
-				psychologistId,
+				specialistId,
 				userId,
 				reportType,
 				issue

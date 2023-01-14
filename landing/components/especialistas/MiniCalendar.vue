@@ -51,12 +51,12 @@
 					</v-card-title>
 					<v-card-text style="flex: 1" class="pa-0">
 						<calendar
-							:id-psy="idPsy"
+							:id-spec="idSpec"
 							:username="username"
 							:sessions="sessions"
 							:callback="date => null"
 							:set-full-card="id => fullcard.push(id)"
-							:set-minimal-card="id => fullcard.filter(id => idPsy !== id)"
+							:set-minimal-card="id => fullcard.filter(id => idSpec !== id)"
 						/>
 					</v-card-text>
 					<v-card-actions style="flex: 0">
@@ -66,7 +66,8 @@
 							rounded
 							@click="
 								() => {
-									if ($route.name === 'psicologos') $router.push(`/${username}`);
+									if ($route.name === 'especialistas')
+										$router.push(`/${username}`);
 									else dialog = false;
 								}
 							"
@@ -107,10 +108,10 @@ dayjs.tz.setDefault('America/Santiago');
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
-		Calendar: () => import('~/components/CalendarPsychologist'),
+		Calendar: () => import('~/components/CalendarSpecialist'),
 	},
 	props: {
-		idPsy: { type: String, default: '' },
+		idSpec: { type: String, default: '' },
 		username: { type: String, default: '' },
 		sessions: { type: Array, default: () => [] },
 	},
@@ -138,13 +139,13 @@ export default {
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
-					path: `/auth/?psychologist=${this.username}&date=${
-						item.date
-					}&start=${hour}&end=${item.available[index + 1]}`,
+					path: `/auth/?specialist=${this.username}&date=${item.date}&start=${hour}&end=${
+						item.available[index + 1]
+					}`,
 				});
 			} else {
 				this.$router.push(
-					`/psicologos/pagos/?username=${this.username}&date=${
+					`/especialistas/pagos/?username=${this.username}&date=${
 						item.date
 					}&start=${hour}&end=${item.available[index + 1]}`
 				);

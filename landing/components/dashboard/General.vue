@@ -39,7 +39,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Información personal
 							<v-progress-circular
-								v-if="!psychologist && $auth.$state.user.role === 'specialist'"
+								v-if="!specialist && $auth.$state.user.role === 'specialist'"
 								size="20"
 								indeterminate
 								color="primary"
@@ -51,10 +51,7 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
-					<update-profile
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
-					/>
+					<update-profile :specialist="specialist" :set-specialist="setSpecialist" />
 					<update-password />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -65,7 +62,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Datos bancarios
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -95,8 +92,8 @@
 						/>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
-					<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
+				<v-expansion-panel-content v-if="specialist">
+					<bank-data :specialist="specialist" :set-specialist="setSpecialist" />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
@@ -110,7 +107,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Información profesional
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -121,10 +118,10 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
+				<v-expansion-panel-content v-if="specialist">
 					<information-general-psi
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
+						:specialist="specialist"
+						:set-specialist="setSpecialist"
 					/>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -139,7 +136,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Experiencia y formación
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -150,10 +147,10 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
+				<v-expansion-panel-content v-if="specialist">
 					<experiencia-formacion
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
+						:specialist="specialist"
+						:set-specialist="setSpecialist"
 					/>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -172,11 +169,11 @@ export default {
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},

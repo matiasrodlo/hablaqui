@@ -18,9 +18,9 @@ const extractPrice = price => {
 	return priceNumber;
 };
 
-export const paymentInfoFunction = async psyId => {
+export const paymentInfoFunction = async specId => {
 	let allSessions = await Sessions.find({
-		psychologist: psyId,
+		specialist: specId,
 	}).populate('user');
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -252,7 +252,7 @@ export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
 	return session[0];
 };
 
-// Utilizado en mi agenda, para llenar el calendario de sesiones user o psicologo
+// Utilizado en mi agenda, para llenar el calendario de sesiones user o especialista
 export const setSession = (role, sessions) => {
 	return sessions.flatMap(item => {
 		let name = '';
@@ -269,10 +269,8 @@ export const setSession = (role, sessions) => {
 				lastName = '';
 			}
 		} else if (role === 'user') {
-			name = item.psychologist.name;
-			lastName = item.psychologist.lastName
-				? item.psychologist.lastName
-				: '';
+			name = item.specialist.name;
+			lastName = item.specialist.lastName ? item.specialist.lastName : '';
 		}
 		return item.plan.flatMap(plan => {
 			if (plan.title === 'Mensajería y videollamada')
@@ -298,10 +296,10 @@ export const setSession = (role, sessions) => {
 					totalPrice: plan.totalPrice,
 					sessionPrice: plan.sessionPrice,
 					end,
-					idPsychologist: item.psychologist._id,
+					idSpecialist: item.specialist._id,
 					idUser,
 					name: `${name} ${lastName}`,
-					paidToPsychologist: session.paidToPsychologist,
+					paidToSpecialist: session.paidToSpecialist,
 					sessionNumber: session.sessionNumber,
 					sessionsId: item._id,
 					start,

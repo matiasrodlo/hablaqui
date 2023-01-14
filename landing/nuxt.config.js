@@ -38,29 +38,29 @@ export default {
 			// 	? process.env.API_ABSOLUTE
 			// 	: 'http://localhost:3000/';
 
-			// generate routes psicologos
+			// generate routes especialistas
 			// Se ejecutan scripts para agregar profesion y cambiar rol
 			await axios.post(`${baseURL}/scripts/add-profesion`);
 			await axios.put(`${baseURL}/scripts/change-role`);
 			// await axios.post(`${baseURL}/scripts/remove-rol`);
 			// await axios.post(`${baseURL}/scripts/remove-profesion`);
 
-			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists
-				.filter(psychologist => psychologist.username)
-				.map(psychologist => ({
-					route: `/${psychologist.username}`,
-					payload: psychologist,
+			const res = await axios.get(`${baseURL}/specialists/all`);
+			const especialistas = res.data.specialists
+				.filter(specialist => specialist.username)
+				.map(specialist => ({
+					route: `/${specialist.username}`,
+					payload: specialist,
 				}));
 			// generate routes comunas
 			/* const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
-				route: `/psicologos/${el.comuna.slug}`,
+				route: `/especialistas/${el.comuna.slug}`,
 				payload: el.comuna,
 			}));
 
-			const routes = psicologos.concat(comunas); */
-			callback(null, psicologos);
+			const routes = especialistas.concat(comunas); */
+			callback(null, especialistas);
 		},
 	},
 	loading: {
@@ -283,7 +283,7 @@ export default {
 			? process.env.VUE_APP_LANDING
 			: 'http://localhost:9000/',
 		gzip: true,
-		exclude: ['/dashboard/**', '/nuevo-psicologo'],
+		exclude: ['/dashboard/**', '/nuevo-especialista'],
 		trailingSlash: true,
 	},
 
