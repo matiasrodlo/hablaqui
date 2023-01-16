@@ -330,6 +330,7 @@ let recruitment = new Schema(
 		},
 		ratings: [rating],
 		specPlans: [specPlan],
+		psyPlans: [specPlan],
 		sessions: [session],
 		timeZone: {
 			type: String,

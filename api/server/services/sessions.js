@@ -1170,7 +1170,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 					.add(3, 'hours')
 			)
 			.format();
-		let sessions = await Sessions.findOneAndUpdate(
+		await Sessions.findOneAndUpdate(
 			{ _id: sessionsId, 'plan._id': session.plan_id },
 			{
 				$set: {
@@ -1178,14 +1178,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 				},
 			}
 		);
-		if (userLogged.role === 'user') {
-			// Se crean correos de recordatorio de renovacion de plan
-			await createRenewalSubscription(
-				userLogged,
-				currentSession.specialist,
-				sessions
-			);
-		}
 	}
 
 	// Se envia correo de reprogramacion

@@ -80,6 +80,10 @@ let sessionSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'specialist',
 	},
+	psychologist: {
+		type: Schema.Types.ObjectId,
+		ref: 'psychologist',
+	},
 	numberSessionSuccess: {
 		type: Number,
 		default: 0,

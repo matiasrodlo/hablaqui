@@ -51,11 +51,31 @@ const removeRol = async (req, res) => {
 	}
 };
 
+const migrateAll = async (req, res) => {
+	try {
+		const { data, code } = await scriptsService.migrateAll();
+		restResponse(data, code, res);
+	} catch (e) {
+		errorCallback(e, res, 'Error registrando el postulado');
+	}
+};
+
+const stepBack = async (req, res) => {
+	try {
+		const { data, code } = await scriptsService.stepBack();
+		restResponse(data, code, res);
+	} catch (e) {
+		errorCallback(e, res, 'Error registrando el postulado');
+	}
+};
+
 const scriptsController = {
 	changeRole,
 	addProfesion,
 	removeProfesion,
 	removeRol,
+	migrateAll,
+	stepBack,
 };
 
 export default Object.freeze(scriptsController);

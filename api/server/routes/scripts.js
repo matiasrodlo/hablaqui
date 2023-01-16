@@ -34,4 +34,18 @@ scriptsRouter.put(
  */
 scriptsRouter.delete('/scripts/remove-rol', scriptsController.removeRol);
 
+/**
+ * @description: Script migrating all the data
+ * @route /api/v1/scripts/migrate-all
+ * @method PUT
+ */
+scriptsRouter.put('/scripts/migrate-all', scriptsController.migrateAll);
+
+/**
+ * @description: Script step back to the previous version
+ * @route /api/v1/scripts/step-back
+ * @method PUT
+ */
+scriptsRouter.put('/scripts/step-back', scriptsController.stepBack);
+
 export default scriptsRouter;

@@ -8,6 +8,10 @@ let transaction = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'specialist',
 		},
+		psychologist: {
+			type: Schema.Types.ObjectId,
+			ref: 'psychologist',
+		},
 		total: { type: Number },
 		sessions: { type: Array },
 	},

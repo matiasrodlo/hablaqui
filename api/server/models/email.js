@@ -44,6 +44,10 @@ let email = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Specialist',
 	},
+	psyRef: {
+		type: Schema.Types.ObjectId,
+		ref: 'Psychologist',
+	},
 	sessionRef: {
 		type: Schema.Types.ObjectId,
 		ref: 'sessions',

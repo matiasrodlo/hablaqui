@@ -68,6 +68,11 @@ let userSchema = new Schema(
 			ref: 'specialist',
 			required: false,
 		},
+		psychologist: {
+			type: Schema.Types.ObjectId,
+			ref: 'psychologist',
+			required: false,
+		},
 		role: {
 			type: String,
 			default: 'user',

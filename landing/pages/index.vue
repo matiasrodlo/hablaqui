@@ -224,8 +224,8 @@
 										</template>
 										<aside style="position: absolute; bottom: 0; width: 100%">
 											<v-img
-												:src="`https://cdn.hablaqui.cl/static/nuestros_especialistas.png`"
-												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_especialistas.png`"
+												:src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
 											>
 												<h4
 													class="body-1 white--text pt-1 pl-4 font-weight-regular white--text"
