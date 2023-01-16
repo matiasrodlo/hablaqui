@@ -47,15 +47,15 @@ const addProfesion = async () => {
 	// Se agrega la profesion a los especialistas
 	await specModel.updateMany(
 		{ _id: { $in: spec } },
-		{ $set: { profession: 'specialist' } }
+		{ $set: { profession: 'psychologist' } }
 	);
 	await userModel.updateMany(
 		{ _id: { $in: user } },
-		{ $set: { profession: 'specialist' } }
+		{ $set: { profession: 'psychologist' } }
 	);
 	await recruitmentsModel.updateMany(
 		{ _id: { $in: recruitment } },
-		{ $set: { profession: 'specialist' } }
+		{ $set: { profession: 'psychologist' } }
 	);
 	return okResponse('Profesion agregada', { user });
 };
