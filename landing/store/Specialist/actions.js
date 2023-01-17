@@ -1,4 +1,10 @@
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	async getSpecialists({ commit }) {
@@ -50,11 +56,65 @@ export default {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta best-match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
 			commit('setLoadingPsychologist', false);
-			snackBarSuccess('Especialistas obtenidos')(commit);
+			snackBarSuccess('Psicologos obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSpecialistsEconomicMatch({ commit, state }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const dateNow = dayjs.tz().format();
+			const { data } = await this.$axios('/psychologists/economic-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta economic-match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
+
+			if (data.perfectMatch) {
+				commit('setSpecialists', data.matchedSpecialists);
+			}
+			snackBarSuccess('Psicologos obtenidos')(commit);
+			commit('setLoadingPsychologist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSpecialistsAvailityMatch({ commit, state }) {
+		try {
+			commit('setLoadingPsychologist', true);
+			const dateNow = dayjs.tz().format();
+			const { data } = await this.$axios('/psychologists/availity-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta availity - match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
+
+			if (data.perfectMatch) {
+				commit('setSpecialists', data.matchedSpecialists);
+			}
+			commit('setLoadingPsychologist', false);
+			snackBarSuccess('Psicologos obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
