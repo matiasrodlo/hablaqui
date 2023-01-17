@@ -1,4 +1,10 @@
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Santiago');
 
 export default {
 	async getPsychologists({ commit }) {
@@ -14,10 +20,17 @@ export default {
 	async getPsychologistsBestMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const dateNow = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/best-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta best-match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}
@@ -30,10 +43,18 @@ export default {
 	async getPsychologistsEconomicMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const dateNow = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/economic-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta economic-match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
+
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}
@@ -46,10 +67,18 @@ export default {
 	async getPsychologistsAvailityMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const dateNow = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/availity-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const dateNow2 = dayjs.tz().format();
+			console.log(
+				'tiempo de respuesta availity - match',
+				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
+				'segundos'
+			);
+
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
 			}

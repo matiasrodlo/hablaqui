@@ -2,9 +2,9 @@
 
 import User from '../models/user';
 import Psychologist from '../models/psychologist';
-import Recruitment from '../models/recruitment'; 
-import { logInfo } from '../config/winston'; 
-import bcrypt from 'bcryptjs'; 
+import Recruitment from '../models/recruitment';
+import { logInfo } from '../config/winston';
+import bcrypt from 'bcryptjs';
 import servicesAuth from './auth';
 import { actionInfo } from '../utils/logger/infoMessages';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -358,7 +358,7 @@ const usersService = {
 			});
 		}
 		const roomId = crypto
-			.createHash("sha256")
+			.createHash('sha256')
 			.update(`${createdUser._id}${user._id}`)
 			.digest('hex');
 
