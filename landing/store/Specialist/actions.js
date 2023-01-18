@@ -51,17 +51,17 @@ export default {
 	},
 	async getSpecialistsAvailityMatch({ commit }) {
 		try {
+<<<<<<< HEAD:landing/store/Specialist/actions.js
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/availity-match', {
+=======
+			commit('setLoadingPsychologist', true);
+			const { data } = await this.$axios('/psychologists/best-match', {
+>>>>>>> ac18b83f (fix: compare order of psychologists):landing/store/Psychologist/actions.js
 				method: 'POST',
 				data: state.matchMaking,
 			});
-			const dateNow2 = dayjs.tz().format();
-			console.log(
-				'tiempo de respuesta best-match',
-				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
-				'segundos'
-			);
+			console.log('best-match', data);
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
@@ -74,17 +74,11 @@ export default {
 	async getSpecialistsEconomicMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
-			const dateNow = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/economic-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
-			const dateNow2 = dayjs.tz().format();
-			console.log(
-				'tiempo de respuesta economic-match',
-				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
-				'segundos'
-			);
+			console.log('economic-match', data);
 
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
@@ -98,17 +92,11 @@ export default {
 	async getSpecialistsAvailityMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
-			const dateNow = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/availity-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
-			const dateNow2 = dayjs.tz().format();
-			console.log(
-				'tiempo de respuesta availity - match',
-				dayjs(dateNow2).diff(dayjs(dateNow), 'second'),
-				'segundos'
-			);
+			console.log('availity-match', data);
 
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
