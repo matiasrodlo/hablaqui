@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	props: {
@@ -90,13 +90,43 @@ export default {
 	},
 	data() {
 		return {
-			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
+			rules: [
+				value => value.length <= 170 || 'Máximo 170 carácteres',
+				value => !!value || 'Este campo es requerido.',
+			],
 		};
 	},
 	methods: {
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		async onSubmite() {
+			if(
+				!(this.psychologist.personalDescription.length <= 170) ||
+				!(this.psychologist.professionalDescription.length <= 170)
+			)
+			{
+				this.snackBar({
+						// Se genera un snackbar con la alerta correspondiente
+						content: 'Excedió el límite de carácteres',
+						color: 'error',
+					});
+			}
+			else if (
+				!this.psychologist.professionalDescription ||
+				!this.psychologist.personalDescription
+			)
+			{
+					this.snackBar({
+						// Se genera un snackbar con la alerta correspondiente
+						content: 'Complete los campos faltantes',
+						color: 'error',
+					});
+				}
+			else{
 			const psychologist = await this.updatePsychologist(this.psychologist);
 			this.setPsychologist(psychologist);
+			}
 		},
 		...mapActions({
 			updatePsychologist: 'Psychologist/updatePsychologist',

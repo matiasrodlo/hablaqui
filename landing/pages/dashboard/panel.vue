@@ -122,6 +122,12 @@
 								></v-file-input>
 							</v-col>
 						</template>
+							<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
+							<v-switch
+							v-if="selected.isPsy" 
+							v-model="switch1"
+							label="Mostrar Psicólogo en Matchmaking">
+							</v-switch>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -795,6 +801,7 @@ export default {
 			banks: [],
 			totalMount: 0,
 			sessionsToPay: [],
+			switch1: true,
 		};
 	},
 	computed: {
@@ -913,6 +920,8 @@ export default {
 				await this.updatePsychologist(this.selected);
 				const { psychologists } = await this.$axios.$get('/psychologists/all');
 				this.psychologists = psychologists;
+				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
+				await this.$axios.$put(`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`);
 			} else {
 				await this.checkusername();
 				if (!this.available) {
@@ -941,6 +950,7 @@ export default {
 		},
 		async setSelected(item, isPsy) {
 			this.selected = { ...item, isPsy };
+			this.switch1 = this.selected.preferences.marketplaceVisibility;
 			this.dialog = true;
 		},
 		newExperience() {

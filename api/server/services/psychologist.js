@@ -520,7 +520,9 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updatePsychologist = async (user, profile) => {
-	if (user.role == 'user') return conflictResponse('No tienes poder.');
+	if (user.role === 'user') return conflictResponse('No tienes poder.');
+	if (user.role === 'superuser' && !user.psychologist)
+		user.psychologist = profile._id;
 	if (user.psychologist) {
 		// Si el user es un psicologo intenta actualizar el psicologo
 		try {
@@ -552,7 +554,7 @@ const updatePsychologist = async (user, profile) => {
 				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
-					event: 'psy-updated-profile',
+					event: 'psy-updasted-profile',
 				});
 				analytics.identify({
 					userId: id.toString(),
