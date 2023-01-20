@@ -51,13 +51,8 @@ export default {
 	},
 	async getSpecialistsAvailityMatch({ commit }) {
 		try {
-<<<<<<< HEAD:landing/store/Specialist/actions.js
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/availity-match', {
-=======
-			commit('setLoadingPsychologist', true);
-			const { data } = await this.$axios('/psychologists/best-match', {
->>>>>>> ac18b83f (fix: compare order of psychologists):landing/store/Psychologist/actions.js
 				method: 'POST',
 				data: state.matchMaking,
 			});
