@@ -20,10 +20,18 @@ export default {
 	async getPsychologistsBestMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const date1 = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/best-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const date2 = dayjs.tz().format();
+			console.log(
+				'el tiempo que tarda Best-Match',
+				dayjs(date2).diff(date1, 'second'),
+				'segundos'
+			);
+
 			console.log('best-match', data);
 			if (data.perfectMatch) {
 				commit('setPsychologists', data.matchedPsychologists);
@@ -37,10 +45,17 @@ export default {
 	async getPsychologistsEconomicMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const date1 = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/economic-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const date2 = dayjs.tz().format();
+			console.log(
+				'el tiempo que tarda Economic-Match',
+				dayjs(date2).diff(date1, 'second'),
+				'segundos'
+			);
 			console.log('economic-match', data);
 
 			if (data.perfectMatch) {
@@ -55,10 +70,17 @@ export default {
 	async getPsychologistsAvailityMatch({ commit, state }) {
 		try {
 			commit('setLoadingPsychologist', true);
+			const date1 = dayjs.tz().format();
 			const { data } = await this.$axios('/psychologists/availity-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
+			const date2 = dayjs.tz().format();
+			console.log(
+				'el tiempo que tarda Availity-Match',
+				dayjs(date2).diff(date1, 'second'),
+				'segundos'
+			);
 			console.log('availity-match', data);
 
 			if (data.perfectMatch) {

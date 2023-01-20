@@ -284,7 +284,9 @@ const bestMatch = async payload => {
 	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 
 	// Comienza a buscar los psicologos
-	matchedPsychologists = await Psychologist.find();
+	matchedPsychologists = await Psychologist.find({
+		'preferences.marketplaceVisibility': true,
+	});
 
 	// Se busca el mejor match según criterios
 	matchedPsychologists = await ponderationMatch(
@@ -303,7 +305,10 @@ const economicMatch = async payload => {
 	let matchedPsychologists = [];
 	let perfectMatch = true;
 
-	matchedPsychologists = await Psychologist.find();
+	matchedPsychologists = await Psychologist.find({
+		'preferences.marketplaceVisibility': true,
+	});
+
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al psy más barato
@@ -325,7 +330,10 @@ const availityMatch = async payload => {
 	let perfectMatch = true;
 
 	// Comienza a buscar los psicologos
-	matchedPsychologists = await Psychologist.find();
+	matchedPsychologists = await Psychologist.find({
+		'preferences.marketplaceVisibility': true,
+	});
+
 
 	// Se obtienen todas las sessiones
 	const sessions = await Sessions.find();
