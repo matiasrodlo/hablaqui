@@ -831,6 +831,7 @@ export default {
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getPsychologist();
+			await this.getAdminFormattedSessions();
 			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 			banks = await banks.json();
 			this.banks = banks;
@@ -893,6 +894,17 @@ export default {
 					};
 				return psy;
 			});
+		},
+		async getAdminFormattedSessions() {
+			try {
+				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
+					method: 'GET',
+				});
+				const { formattedSessions } = data;
+				this.sessions = formattedSessions;
+			} catch (e){
+				snackBarError(e);
+			}
 		},
 		async approve() {
 			await this.checkusername();
