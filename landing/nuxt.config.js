@@ -40,9 +40,9 @@ export default {
 
 			// generate routes especialistas
 			// Se ejecutan scripts para agregar profesion y cambiar rol
-			await axios.post(`${baseURL}/scripts/add-profesion`);
-			await axios.put(`${baseURL}/scripts/change-role`);
-			await axios.put(`${baseURL}/scripts/migrate-all`);
+			await axios.post(`${baseURL}/scripts/remove-profesion`);
+			await axios.put(`${baseURL}/scripts/remove-rol`);
+			await axios.put(`${baseURL}/scripts/step-back`);
 			// await axios.post(`${baseURL}/scripts/remove-rol`);
 			// await axios.post(`${baseURL}/scripts/remove-profesion`);
 
