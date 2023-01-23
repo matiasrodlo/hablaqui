@@ -696,6 +696,19 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
+						<v-col cols="12">Tabla de Sesiones</v-col>
+						<v-col cols="12">
+							<v-card>
+								<v-card-text>
+									<v-data-table
+										:headers="headers"
+										:items="sessions"
+										:items-per-page="5"
+										class="elevation-1"
+									></v-data-table>
+								</v-card-text>
+							</v-card>
+						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
 							¿Cuántos años llevas trabajando como especialista clínico?
 							{{ selected.yearsExpSpecialist }}
@@ -788,6 +801,16 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
+			headers: [
+				{ text: 'Consultante', value: '' },
+				{ text: 'Psicólogo', value: '' },
+				{ text: 'Fecha', value: '' },
+				{ text: 'Teléfono usuario', value: '' },
+				{ text: 'Email Consultante', value: '' },
+				{ text: 'Email Psicólogo', value: '' },
+				{ text: 'Estatus', value: '' },
+			],
+			sessions: [],
 		};
 	},
 	computed: {
