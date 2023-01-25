@@ -587,8 +587,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		psychologist,
 		dayjs.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm')).format(),
 		roomsUrl,
-		`${myPlan.totalSessions - payload.remainingSessions}/${
-			myPlan.totalSessions
+		`${myPlan.totalSessions - payload.remainingSessions}/${myPlan.totalSessions
 		}`
 	);
 	await mailServiceSchedule.sendScheduleToPsy(
@@ -596,8 +595,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		psychologist,
 		dayjs.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm')).format(),
 		roomsUrl,
-		`${myPlan.totalSessions - payload.remainingSessions}/${
-			myPlan.totalSessions
+		`${myPlan.totalSessions - payload.remainingSessions}/${myPlan.totalSessions
 		}`
 	);
 
@@ -943,9 +941,9 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 					!daySessions.some(
 						date =>
 							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+							dayjs(day).format('L') &&
 							hour ===
-								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+							dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -1034,9 +1032,9 @@ const getFormattedSessions = async (idPsychologist, type) => {
 					!daySessions.some(
 						date =>
 							dayjs(date, 'MM/DD/YYYY HH:mm').format('L') ===
-								dayjs(day).format('L') &&
+							dayjs(day).format('L') &&
 							hour ===
-								dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
+							dayjs(date, 'MM/DD/YYYY HH:mm').format('HH:mm')
 					)
 				);
 			}),
@@ -1148,9 +1146,9 @@ const formattedSessionsAll = async ids => {
 										'L'
 									) === temporal &&
 									hour ===
-										dayjs(date, 'MM/DD/YYYY HH:mm').format(
-											'HH:mm'
-										)
+									dayjs(date, 'MM/DD/YYYY HH:mm').format(
+										'HH:mm'
+									)
 							)
 						);
 					}),
@@ -1205,8 +1203,8 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 	) {
 		return conflictResponse(
 			'No puede agendar ' +
-				minimumRescheduleSession +
-				' horas antes de la sesión'
+			minimumRescheduleSession +
+			' horas antes de la sesión'
 		);
 	}
 
@@ -1440,7 +1438,7 @@ const getAllSessionsFormatted = async () => {
 		});
 	});
 	// Se retorna una respuesta con las sesiones formateadas
-	return okResponse('Sesiones obtenidas', formattedSessions);
+	return okResponse('Sesiones obtenidas', { formattedSessions });
 };
 
 const sessionsService = {
