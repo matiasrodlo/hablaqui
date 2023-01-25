@@ -698,11 +698,18 @@
 						<v-col cols="12">
 							<v-card>
 								<v-card-text>
+									<v-text-field
+										v-model="search"
+										append-icon="mdi-magnify"
+										label="Search"
+										single-line
+										hide-details
+									></v-text-field>
 									<v-data-table
 										:headers="headers"
 										:items="sessions"
 										:items-per-page="5"
-										class="elevation-1"
+										:search="search"
 									></v-data-table>
 								</v-card-text>
 							</v-card>
@@ -799,14 +806,15 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
+			search: '',
 			headers: [
-				{ text: 'Consultante', value: '' },
-				{ text: 'Psicólogo', value: '' },
-				{ text: 'Fecha', value: '' },
-				{ text: 'Teléfono usuario', value: '' },
-				{ text: 'Email Consultante', value: '' },
-				{ text: 'Email Psicólogo', value: '' },
-				{ text: 'Estatus', value: '' },
+				{ text: 'Consultante', value: 'user' },
+				{ text: 'Psicólogo', value: 'psychologist' },
+				{ text: 'Fecha', value: 'date' },
+				{ text: 'Teléfono usuario', value: 'userPhone' },
+				{ text: 'Email Consultante', value: 'emailUser' },
+				{ text: 'Email Psicólogo', value: 'emailPsychologist' },
+				{ text: 'Estatus', value: 'statusSession' },
 			],
 			sessions: [],
 		};
@@ -907,11 +915,10 @@ export default {
 				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
 					method: 'GET'
 				});
-				const { message } = data;
-				this.sessions = message;
-				console.log('TABLAAAAAAAAAAAAAAAAAAAAAAA');
-				console.log(message);
-				return message;
+				const { formattedSessions } = data;
+				this.sessions = formattedSessions;
+				console.log(this.sessions[0]);
+				return formattedSessions;
 			} catch (e) {
 				this.snackBar({
 						content: e,
