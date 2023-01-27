@@ -699,20 +699,45 @@
 						<v-col cols="12">Tabla de Sesiones</v-col>
 						<v-col cols="12">
 							<v-card>
+								<v-card-title>
+									<v-row>
+										<v-col>
+											<v-text-field
+												v-model="dateFilterText"
+												type="datetime-local"
+												label="Filtro por Fecha"
+											></v-text-field>
+										</v-col>
+										<v-col>
+											<v-select
+												v-model="statFilterText"
+												:items="status"
+												label="Filtro por Status"
+											></v-select>
+										</v-col>
+										<v-col>
+											<v-text-field
+												v-model="psyFilterText"
+												label="Filtro por Psicólogo"
+											></v-text-field>
+										</v-col>
+										<v-col>
+											<v-text-field
+												v-model="userFilterText"
+												label="Filtro por Usuario"
+											></v-text-field>
+										</v-col>
+									</v-row>
+								</v-card-title>
 								<v-card-text>
-									<v-text-field
-										v-model="search"
-										append-icon="mdi-magnify"
-										label="Search"
-										single-line
-										hide-details
-									></v-text-field>
 									<v-data-table
+										v-model="tableSelected"
 										:headers="headers"
-										:items="sessions"
+										:items="filteredSessions"
+										item-key="name"
 										:items-per-page="5"
-										:search="search"
-									></v-data-table>
+									>
+									</v-data-table>
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -809,6 +834,16 @@ export default {
 			sessionsToPay: [],
 			switch1: true,
 			search: '',
+			dateFilterText: [],
+			statFilterText: [],
+			psyFilterText: [],
+			userFilterText: [],
+			filters: {
+				psychologist: [],
+				user: [],
+				date: [],
+				statusSession: [],
+			},
 			headers: [
 				{ text: 'Consultante', value: 'user' },
 				{ text: 'Psicólogo', value: 'psychologist' },
@@ -819,6 +854,8 @@ export default {
 				{ text: 'Estatus', value: 'statusSession' },
 			],
 			sessions: [],
+			status: ['pending', 'success'],
+			tableSelected: [],
 		};
 	},
 	computed: {
@@ -831,6 +868,13 @@ export default {
 			},
 		},
 		...mapGetters({ specialties: 'Appointments/specialties' }),
+		filteredSessions() {
+			return this.sessions.filter(s => {
+				return Object.keys(this.filters).every(f => {
+					return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
+				});
+			});
+		},
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -1055,6 +1099,9 @@ export default {
 			updateSpecialist: 'Specialist/updateSpecialist',
 			upateAvatar: 'User/upateAvatar',
 		}),
+		columnValueList(val) {
+			return this.sessions.map(d => d[val]);
+		},
 	},
 };
 </script>
