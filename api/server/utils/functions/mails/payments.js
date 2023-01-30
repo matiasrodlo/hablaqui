@@ -39,7 +39,7 @@ const mailService = {
 				user_name: user.name,
 				paid: paid,
 				roomsUrl: roomsUrl,
-				spec_name: spec.name + ' ' + spec.lastName,
+				psy_name: spec.name + ' ' + spec.lastName,
 				date: date,
 			},
 		};
@@ -69,7 +69,7 @@ const mailService = {
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				paid: paid,
 				roomsUrl: roomsUrl,
-				spec_name: spec.name,
+				psy_name: spec.name,
 				date: date,
 			},
 		};
@@ -92,7 +92,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				period: period,
 				price: price,
 			},

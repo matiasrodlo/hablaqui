@@ -72,8 +72,8 @@ const mailService = {
 				name: name,
 				email: email,
 				password: pass,
-				spec_first_name: spec.name,
-				spec_last_name: spec.lastName,
+				psy_first_name: spec.name,
+				psy_last_name: spec.lastName,
 			},
 			asm: {
 				group_id: 16321,
@@ -139,8 +139,8 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name + ' ' + spec.lastName,
-				spec_email: spec.email,
+				psy_name: spec.name + ' ' + spec.lastName,
+				psy_email: spec.email,
 			},
 		};
 		await sendMails(dataPayload);
@@ -164,7 +164,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				spec_name: spec.name,
+				psy_name: spec.name,
 				code: coupon.code,
 				amount: coupon.discount,
 				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),

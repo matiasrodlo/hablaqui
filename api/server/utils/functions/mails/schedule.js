@@ -28,7 +28,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name:
+				psy_name:
 					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				user_first_name: name,
 				price: price,
@@ -58,7 +58,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
-				spec_first_name: name,
+				psy_first_name: name,
 				price: price,
 			},
 		};
@@ -92,7 +92,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				payment_url: paymentURL,
 				value: value,
 				type: type,
@@ -130,7 +130,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				payment_url: paymentURL,
 				value: value,
 				type: type,
@@ -160,7 +160,7 @@ const mailService = {
 				user_name: user.name,
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				spec_name: spec.name + ' ' + spec.lastName,
+				psy_name: spec.name + ' ' + spec.lastName,
 			},
 		};
 		await sendMails(dataPayload);
@@ -187,7 +187,7 @@ const mailService = {
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				spec_name: spec.name,
+				psy_name: spec.name,
 				url: url,
 			},
 		};
@@ -211,7 +211,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				spec_name: spec.name,
+				psy_name: spec.name,
 			},
 		};
 		await sendMails(dataPayload);
@@ -237,7 +237,7 @@ const mailService = {
 				user_name: user.name,
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				spec_name: spec.name + ' ' + spec.lastName,
+				psy_name: spec.name + ' ' + spec.lastName,
 				url: url,
 			},
 		};
@@ -265,7 +265,7 @@ const mailService = {
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
 				date: sessionDate.date,
 				hour: sessionDate.hour,
-				spec_name: spec.name,
+				psy_name: spec.name,
 				url: url,
 			},
 		};
@@ -295,7 +295,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
-				spec_first_name: name,
+				psy_first_name: name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
@@ -324,7 +324,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name:
+				psy_name:
 					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				first_name: name,
 				url: url,

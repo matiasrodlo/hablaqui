@@ -30,7 +30,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 			},
 			batchId: batch,
 		};
@@ -54,7 +54,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 			},
 			batchId: batch,
 		};
@@ -77,7 +77,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name:
+				psy_name:
 					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 			},
 		};
@@ -98,7 +98,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 			},
 		};
 		await sendMails(dataPayload);
@@ -118,7 +118,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 			},
 		};
 		await sendMails(dataPayload);
@@ -140,8 +140,8 @@ const mailService = {
 			templateId: 'd-3ab0f381fc2f4a579165cc6c36ed8586',
 			dynamicTemplateData: {
 				user_first_name: name,
-				spec_first_name: spec.name,
-				spec_last_name: spec.lastName,
+				psy_first_name: spec.name,
+				psy_last_name: spec.lastName,
 				date: dayjs.tz(sessionDate).format('DD/MM/YYYY'),
 				hour: dayjs.tz(sessionDate).format('HH:mm'),
 				url_rooms: urlRooms,
@@ -234,7 +234,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				url: url,
 				price: price,
 			},
@@ -253,7 +253,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
 				url: landing_url + specialist.username,
 			},
@@ -272,7 +272,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name: specialist.name,
+				psy_name: specialist.name,
 				expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY'),
 				url: landing_url + specialist.username,
 			},
