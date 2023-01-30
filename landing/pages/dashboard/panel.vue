@@ -753,6 +753,7 @@
 										:items="filteredSessions"
 										item-key="name"
 										:items-per-page="5"
+										:search="userFilterText"
 									>
 									</v-data-table>
 								</v-card-text>
