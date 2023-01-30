@@ -103,11 +103,11 @@
 								></v-file-input>
 							</v-col>
 						</template>
-						<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
+						<!--Switch para mostrar especialista en matchmaking, aparece solo si es un especialista verificado y su contenido se guarda en "switch1"-->
 						<v-switch
-							v-if="selected.isPsy"
+							v-if="selected.isSpec"
 							v-model="switch1"
-							label="Mostrar Psicólogo en Matchmaking"
+							label="Mostrar Especialista en Matchmaking"
 						>
 						</v-switch>
 						<!-- username -->
@@ -717,8 +717,8 @@
 										</v-col>
 										<v-col>
 											<v-text-field
-												v-model="psyFilterText"
-												label="Filtro por Psicólogo"
+												v-model="specFilterText"
+												label="Filtro por Especialista"
 											></v-text-field>
 										</v-col>
 										<v-col>
@@ -731,12 +731,9 @@
 								</v-card-title>
 								<v-card-text>
 									<v-data-table
-										v-model="tableSelected"
 										:headers="headers"
 										:items="filteredSessions"
-										item-key="name"
 										:items-per-page="5"
-										:search="userFilterText"
 									>
 									</v-data-table>
 								</v-card-text>
@@ -802,6 +799,7 @@
 import axios from 'axios';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 export default {
@@ -834,29 +832,21 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
-			search: '',
-			dateFilterText: [],
-			statFilterText: [],
-			psyFilterText: [],
-			userFilterText: [],
-			filters: {
-				psychologist: [],
-				user: [],
-				date: [],
-				statusSession: [],
-			},
+			dateFilterText: null,
+			statFilterText: '',
+			specFilterText: '',
+			userFilterText: '',
 			headers: [
 				{ text: 'Consultante', value: 'user' },
-				{ text: 'Psicólogo', value: 'psychologist' },
+				{ text: 'Especialista', value: 'specialist' },
 				{ text: 'Fecha', value: 'date' },
 				{ text: 'Teléfono usuario', value: 'userPhone' },
 				{ text: 'Email Consultante', value: 'emailUser' },
-				{ text: 'Email Psicólogo', value: 'emailPsychologist' },
+				{ text: 'Email Especialista', value: 'emailSpecialist' },
 				{ text: 'Estatus', value: 'statusSession' },
 			],
 			sessions: [],
 			status: ['pending', 'success'],
-			tableSelected: [],
 		};
 	},
 	computed: {
@@ -870,11 +860,16 @@ export default {
 		},
 		...mapGetters({ specialties: 'Appointments/specialties' }),
 		filteredSessions() {
-			return this.sessions.filter(s => {
-				return Object.keys(this.filters).every(f => {
-					return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
-				});
-			});
+			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista y fecha de la sesión
+			return this.sessions.filter(
+				session =>
+					session.user.includes(this.userFilterText) &&
+					session.statusSession.includes(this.statFilterText) &&
+					session.specialist.includes(this.specFilterText) &&
+					(this.dateFilterText
+						? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
+						: true)
+			);
 		},
 	},
 	watch: {
@@ -999,7 +994,7 @@ export default {
 				await this.updateSpecialist(this.selected);
 				const { specialists } = await this.$axios.$get('/specialists/all');
 				this.specialists = specialists;
-				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
+				// Endpoint encargado de actualizar visibilidad del especialista en el matchmaking
 				await this.$axios.$put(
 					`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`
 				);
