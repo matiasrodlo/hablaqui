@@ -729,12 +729,9 @@
 								</v-card-title>
 								<v-card-text>
 									<v-data-table
-										v-model="tableSelected"
 										:headers="headers"
 										:items="filteredSessions"
-										item-key="name"
 										:items-per-page="5"
-										:search="userFilterText"
 									>
 									</v-data-table>
 								</v-card-text>
@@ -801,6 +798,7 @@ import axios from 'axios';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import dayjs from 'dayjs';
 
 export default {
 	name: 'Panel',
@@ -832,17 +830,10 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
-			search: '',
-			dateFilterText: [],
-			statFilterText: [],
-			psyFilterText: [],
-			userFilterText: [],
-			filters: {
-				psychologist: [],
-				user: [],
-				date: [],
-				statusSession: [],
-			},
+			dateFilterText: null,
+			statFilterText: '',
+			psyFilterText: '',
+			userFilterText: '',
 			headers: [
 				{ text: 'Consultante', value: 'user' },
 				{ text: 'Psicólogo', value: 'psychologist' },
@@ -854,7 +845,6 @@ export default {
 			],
 			sessions: [],
 			status: ["pending", "success"],
-			tableSelected: [],
 		};
 	},
 	computed: {
@@ -868,11 +858,17 @@ export default {
 		},
 		...mapGetters({specialties: 'Appointments/specialties'}),
 		filteredSessions() {
-			return this.sessions.filter((s) => {
-				return Object.keys(this.filters).every((f) => {
-					return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
-				});
-			});
+			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo y fecha de la sesión
+			return this.sessions.filter(
+				session =>
+				session.user.includes(this.userFilterText) &&
+				session.statusSession.includes(this.statFilterText) &&
+				session.psychologist.includes(this.psyFilterText) &&
+				(this.dateFilterText
+					? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
+					: true
+				)
+			);
 		},
 	},
 	watch: {
