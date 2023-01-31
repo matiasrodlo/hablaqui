@@ -2,7 +2,7 @@ import './config/config.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import mongoose from 'mongoose';
+import mongoose, { CallbackWithoutResult } from 'mongoose';
 import passport from 'passport';
 import passportConfig from './config/passport';
 import path from 'path';
@@ -12,7 +12,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
-const app = express();
+
+const app: express.Application = express();
 
 require('@google-cloud/debug-agent').start({
 	serviceContext: { enableCanary: true },
@@ -38,8 +39,8 @@ const limiter = rateLimit({
 //limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
 const whitelist = [process.env.VUE_APP_LANDING];
 let corsOptions = {
-	origin: function(origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) callback(null, true);
+	origin: (origin: string, callback: CallbackWithoutResult) => {
+		if (whitelist.indexOf(origin) !== -1) callback(null);
 		else callback('Not allowed by CORS: ' + origin);
 	},
 };
@@ -84,4 +85,4 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-module.exports = app;
+export default app;
