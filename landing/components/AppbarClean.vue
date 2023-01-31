@@ -25,7 +25,7 @@
 				>
 					<v-list-item-content>
 						<v-list-item-title class="white--text font-weight-bold body-2">
-							Buscar Psicólogo
+							Buscar Especialista
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
@@ -313,7 +313,7 @@
 									depressed
 									to="/especialistas"
 								>
-									Buscar Psicólogo
+									Buscar Especialista
 								</v-btn> -->
 							</v-col>
 						</template>

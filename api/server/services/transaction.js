@@ -34,7 +34,7 @@ const completePaymentsRequest = async spec => {
 	}
 
 	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante
-	// y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el psicólogo
+	// y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el especialista
 	sessions = sessions.filter(
 		session =>
 			session.status === 'success' &&
@@ -107,7 +107,7 @@ const createPaymentsRequest = async user => {
 		});
 	}
 	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante,
-	// que este en un estado none (implicando que la solicitud de retiro por parte de un psicólogo no se ha hecho)
+	// que este en un estado none (implicando que la solicitud de retiro por parte de un especialista no se ha hecho)
 	// y que la sesión no sea un Compromiso privado
 	sessions = sessions.filter(
 		session =>
@@ -124,7 +124,7 @@ const createPaymentsRequest = async user => {
 		0
 	);
 
-	// Esto se podría deber a que el psicólogo no tiene sesiones pagadas
+	// Esto se podría deber a que el especialista no tiene sesiones pagadas
 	if (total === 0)
 		return conflictResponse(
 			'No puedes hacer una petición con saldo 0 disponible'

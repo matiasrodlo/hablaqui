@@ -61,10 +61,10 @@ mercadopagoRouter.get(
  */
 
 /**
- * @description Pasa una plan de psicólogo a pagado.
+ * @description Pasa una plan de especialista a pagado.
  * @method POST
  * @route /api/v1/mercadopago/specialist-pay/:specialistId
- * @param {String} params.specialistId el id del psicólogo
+ * @param {String} params.specialistId el id del especialista
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
@@ -78,7 +78,7 @@ mercadopagoRouter.get(
  * @method GET
  * @route /api/v1/mercadopago/custom-session/:userId/:specId/:planId
  * @param {String} params.userId - Id del usuario asociado al plan
- * @param {String} params.specId - Id del psicólogo asociado al plan
+ * @param {String} params.specId - Id del especialista asociado al plan
  * @param {String} params.planId - Id del plan
  * @return init_point
  */
@@ -92,7 +92,7 @@ mercadopagoRouter.get(
  * @method GET
  * @route /api/v1/mercadopago/custom-session-pay/:userId/:specId/:planId
  * @param {String} params.userId - Id del usuario asociado al plan
- * @param {String} params.specId - Id del psicólogo asociado al plan
+ * @param {String} params.specId - Id del especialista asociado al plan
  * @param {String} params.planId - Id del plan
  * @retrun Objeto con el plan actualizado
  */

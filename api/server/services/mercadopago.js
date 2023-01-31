@@ -160,7 +160,7 @@ const setPlanFree = async (id, isSpecialist) => {
 		let planData = [
 			{
 				item_id: 1,
-				item_name: 'Plan de psicólogo gratuito',
+				item_name: 'Plan de especialista gratuito',
 				item_price: 0,
 				item_quantity: 1,
 			},
@@ -294,7 +294,7 @@ const specialistPay = async (params, query) => {
 		let planData = [
 			{
 				item_id: 2,
-				item_name: 'Plan de psicólogo premium',
+				item_name: 'Plan de especialista premium',
 				item_price: pricePaid,
 				item_quantity: 1,
 			},

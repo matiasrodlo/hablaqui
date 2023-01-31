@@ -81,7 +81,7 @@ const recruitmentService = {
 				},
 			});
 		}
-		// Se envía un correo electrónico al psicólogo confirmando la solicitud. También se envía la confirmación interna.
+		// Se envía un correo electrónico al especialista confirmando la solicitud. También se envía la confirmación interna.
 		mailServiceSpec.sendRecruitmentConfirmation(recruited);
 		mailServiceSpec.sendRecruitmentConfirmationAdmin(recruited);
 		logInfo(actionInfo(recruited.email, 'se registró como postulante'));
@@ -140,7 +140,7 @@ const recruitmentService = {
 	},
 	/**
 	 * @description - Este controlador comprueba si existe un perfil de contratación y no ha sido verificado.
-	 * @returns El código de respuesta, el mensaje y el nuevo perfil de psicólogo creado con éxito
+	 * @returns El código de respuesta, el mensaje y el nuevo perfil de especialista creado con éxito
 	 **/
 	async approve(user, email) {
 		if (user.role !== 'superuser')

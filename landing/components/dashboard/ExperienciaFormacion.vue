@@ -277,7 +277,7 @@
 									v-model="selectedExperience.title"
 									filled
 									outlined
-									placeholder="Psicólogo Clinico"
+									placeholder="Especialista Clinico"
 									dense
 									hide-details
 									type="text"

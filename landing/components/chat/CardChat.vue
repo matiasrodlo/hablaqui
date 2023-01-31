@@ -171,7 +171,7 @@
 				"
 			>
 				<v-card-text style="flex: 0" class="py-0">
-					<v-subheader class="primary--text body-1 px-0">Psicólogos</v-subheader>
+					<v-subheader class="primary--text body-1 px-0">Especialistas</v-subheader>
 					<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 				</v-card-text>
 				<v-list style="flex: 1; overflow: auto" two-line>
@@ -222,7 +222,7 @@
 								{{ spec.name }} {{ spec.lastName }}
 							</v-list-item-title>
 							<v-list-item-subtitle v-show="false">
-								Psicólogo · Activo(a)
+								Especialista · Activo(a)
 							</v-list-item-subtitle>
 						</v-list-item-content>
 						<v-list-item-action>

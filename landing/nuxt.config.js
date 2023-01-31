@@ -71,7 +71,7 @@ export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
 		titleTemplate: '%s',
-		title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
+		title: 'Especialistas online desde $15.500 - Terapia online efectiva',
 		meta: [
 			{ charset: 'utf-8' },
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -91,7 +91,7 @@ export default {
 				hid: 'description',
 				name: 'description',
 				content:
-					'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
+					'Elige un especialista online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Especialistas especialistas online. ¡Comienza ahora!',
 			},
 			{
 				hid: 'twitter:card',
@@ -107,13 +107,13 @@ export default {
 			{
 				hid: 'twitter:title',
 				name: 'twitter:title',
-				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+				content: 'Especialista y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 			{
 				hid: 'twitter:description',
 				name: 'twitter:description',
 				content:
-					'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+					'Encuentra un especialista e inicia terapia online de calidad sin salir de casa. Contamos con especialistas profesionales de todas las especialidades. ¡Comienza ahora!',
 			},
 			{
 				hid: 'twitter:image',
@@ -133,13 +133,13 @@ export default {
 			{
 				hid: 'og:title',
 				property: 'og:title',
-				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+				content: 'Especialista y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 			{
 				hid: 'og:description',
 				property: 'og:description',
 				content:
-					'Encuentra un psicólogo e inicia terapia online de calidad sin salir de casa. Contamos con psicólogos profesionales de todas las especialidades. ¡Comienza ahora!',
+					'Encuentra un especialista e inicia terapia online de calidad sin salir de casa. Contamos con especialistas profesionales de todas las especialidades. ¡Comienza ahora!',
 			},
 			{
 				hid: 'og:image',
@@ -154,7 +154,7 @@ export default {
 			{
 				hid: 'og:image:alt',
 				property: 'og:image:alt',
-				content: 'Psicólogo y terapia online de calidad sin salir de casa | Hablaquí',
+				content: 'Especialista y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 		],
 		link: [

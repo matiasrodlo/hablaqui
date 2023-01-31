@@ -37,7 +37,7 @@ const userController = {
 			);
 			restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error actualizando psicólogo');
+			errorCallback(e, res, 'Error actualizando especialista');
 		}
 	},
 	async updateOne(req, res) {

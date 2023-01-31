@@ -54,7 +54,7 @@ const getRating = async specialist => {
 
 const getEvaluationsSpec = async user => {
 	if (user.role !== 'specialist')
-		return conflictResponse('No eres psicólogo');
+		return conflictResponse('No eres especialista');
 
 	// Verifica que el especialista tenga evaluaciones, si tiene las obtiene y las devuelve
 	const spec = user.specialist;
@@ -228,7 +228,7 @@ const addEvaluation = async (user, specId, payload) => {
 	if (countSessions < 3)
 		return conflictResponse('No puede escribir un comentario');
 
-	// Devuelve las evaluaciones de un usuario en un psicólogo
+	// Devuelve las evaluaciones de un usuario en un especialista
 	const collEvaluation = await Evaluation.findOne({
 		specialist: specId,
 		user: user._id,

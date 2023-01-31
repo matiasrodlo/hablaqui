@@ -188,7 +188,7 @@
 											{{ getMySpec.name }} {{ getMySpec.lastName }}
 										</v-list-item-title>
 										<v-list-item-subtitle v-show="false">
-											Psicólogo · Activo(a)
+											Especialista · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
 									<v-list-item-action>
@@ -222,7 +222,7 @@
 
 									<v-list-item-content>
 										<v-list-item-title class="caption">
-											Aun no tienes psicólogo
+											Aun no tienes especialista
 										</v-list-item-title>
 										<v-list-item-title class="caption">
 											Encuentra uno aquí
@@ -271,7 +271,7 @@
 												{{ spec.name }} {{ spec.lastName }}
 											</v-list-item-title>
 											<v-list-item-subtitle v-show="false">
-												Psicólogo · Activo(a)
+												Especialista · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
 										<v-list-item-action>
@@ -392,8 +392,16 @@ export default {
 				!this.selected.assistant &&
 				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.specialist
-			)
-				return 'Mi psicólogo';
+			) {
+				const professions = {
+					psychologist: 'Psicólogo',
+					nutritionist: 'Nutricionista',
+					specchopedagogue: 'Psicopedagogo',
+				};
+				return this.selected.profession
+					? especialidadEspecialista[this.selected.profession]
+					: 'Especialista';
+			}
 			if (
 				!this.selected.assistant &&
 				this.$auth.$state.user.role === 'specialist' &&
@@ -401,7 +409,7 @@ export default {
 			)
 				return 'Consultante';
 			return this.$auth.$state.user.role === 'user'
-				? 'Psicólogo de hablaquí'
+				? 'Especialista de hablaquí'
 				: 'No es un consultane';
 		},
 		listClients() {
@@ -416,7 +424,7 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
-		// lista de usuarios/clientes con los que podría chatear el psicólogo
+		// lista de usuarios/clientes con los que podría chatear el especialista
 		listUsers() {
 			let filterArray = this.chats.filter(item => item.specialist && item.user);
 
@@ -440,7 +448,7 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
-		// lista de psicólogos con los que podría chatear el usuario
+		// lista de especialistas con los que podría chatear el usuario
 		listSpecialist() {
 			let filterArray = this.chats.filter(item => item.specialist && item.user);
 

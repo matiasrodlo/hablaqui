@@ -10,13 +10,13 @@ const evaluationRouter = Router();
  * req.body = { newRating: number, comment: string }
  */
 /**
- * @description Añade una nueva evaluación al perfil del psicólogo
+ * @description Añade una nueva evaluación al perfil del especialista
  * @method POST
  * @route /api/v1/specialist/add-rating/:specialist
- * @param {ObjectId} params.specialist - Id del psicólogo que es referenciado en la evaluación
+ * @param {ObjectId} params.specialist - Id del especialista que es referenciado en la evaluación
  * @param {String} body.newRating - Puntaje de la evaluación
  * @param {String} body.comment - Comentario de la evaluación
- * @returns {Object} psicólogo con los datos actualizados
+ * @returns {Object} especialista con los datos actualizados
  * @access authenticated
  */
 evaluationRouter.post(
@@ -26,11 +26,11 @@ evaluationRouter.post(
 );
 
 /**
- * @description Consigue las calificaciones de un psicólogo en específico
+ * @description Consigue las calificaciones de un especialista en específico
  * @method GET
  * @route /api/v1/specialist/get-rating/:specialist
- * @param {ObjectId} params.specialist - Id del psicólogo de quien queremos las evaluaciones o ratings
- * @returns {Number} puntuación promedio del psicólogo
+ * @param {ObjectId} params.specialist - Id del especialista de quien queremos las evaluaciones o ratings
+ * @returns {Number} puntuación promedio del especialista
  */
 evaluationRouter.get(
 	'/specialist/get-rating/:specialist',
@@ -38,7 +38,7 @@ evaluationRouter.get(
 );
 
 /**
- * @description Devuelve todas las evaluaciones del psicólogo logeado
+ * @description Devuelve todas las evaluaciones del especialista logeado
  * @method GET
  * @route /api/v1/specialist/get-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
@@ -51,7 +51,7 @@ evaluationRouter.get(
 );
 
 /**
- * @description Obtiene las evaluaciones de un psicólogo en particular
+ * @description Obtiene las evaluaciones de un especialista en particular
  * @method GET
  * @route /api/v1/specialist/get-all-evaluations
  * @returns {Object} Evaluaciones hechas y sus puntajes
@@ -91,17 +91,17 @@ evaluationRouter.post(
 );
 
 /**
- * @description Sube una evaluación de un usuario sobre un psicólogo
+ * @description Sube una evaluación de un usuario sobre un especialista
  * @method POST
  * @route /api/v1/user/evaluation/:specId
- * @param {String} params.specId - Id del psicólogo
- * @param {Number} body.global - puntuación goblar sobre el psicólogo por parte del usuario
+ * @param {String} params.specId - Id del especialista
+ * @param {Number} body.global - puntuación goblar sobre el especialista por parte del usuario
  * @param {Number} body.puntuality - puntuación respecto a la puntualidad
- * @param {Number} body.attention - puntuación sobre la atención del psicólogo
+ * @param {Number} body.attention - puntuación sobre la atención del especialista
  * @param {Number} body.internet - puntuación respecto a la conexión
- * @param {String} body.like - comentario sobre lo que le gusto del psicólogo
- * @param {String} body.improve - comentario sobre lo que el psicólogo debe mejorar
- * @param {String} body.comment - comentario del usuario sobre el psicólogo
+ * @param {String} body.like - comentario sobre lo que le gusto del especialista
+ * @param {String} body.improve - comentario sobre lo que el especialista debe mejorar
+ * @param {String} body.comment - comentario del usuario sobre el especialista
  * @return Objeto con los datos de la evaluación recién creada
  * @access authenticated (user)
  */

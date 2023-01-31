@@ -227,7 +227,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
-			subject: `Tu psicólogo ha reprogramado tu sesión`,
+			subject: `Tu especialista ha reprogramado tu sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-98b3e79f152d4416aa0ed58a50c309d2',
 			asm: {

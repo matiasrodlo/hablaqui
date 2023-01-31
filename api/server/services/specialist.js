@@ -407,11 +407,11 @@ const getByData = async username => {
 	const usernameSearch = await Specialist.findOne({ username });
 	if (!usernameSearch) {
 		const idSearch = await Specialist.findOne({ _id: username });
-		return okResponse('Psicólogo encontrado', {
+		return okResponse('Especialista encontrado', {
 			specialist: idSearch,
 		});
 	}
-	return okResponse('Psicólogo encontrado', { specialist: usernameSearch }); // Se retorna una respuesta con el especialista
+	return okResponse('Especialista encontrado', { specialist: usernameSearch }); // Se retorna una respuesta con el especialista
 };
 
 const setSchedule = async (user, payload) => {

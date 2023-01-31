@@ -28,12 +28,12 @@ export default {
 	},
 	head() {
 		return {
-			title: `Psicólogos en ${this.$route.params.slug} | Desde $15.500`,
+			title: `Especialistas en ${this.$route.params.slug} | Desde $15.500`,
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'twitter:url',
@@ -43,7 +43,7 @@ export default {
 				{
 					hid: 'twitter:title',
 					name: 'twitter:title',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'og:url',
@@ -53,7 +53,7 @@ export default {
 				{
 					hid: 'og:title',
 					property: 'og:title',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'robots',

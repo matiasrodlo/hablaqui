@@ -80,7 +80,7 @@
 -   **ProfileMobile.vue**: Perfil (specResposive)
 -   **EspecialistasDesktop.vue**: Marketplace (Escritorio)
 -   **EspecialistasMobile.vue**: Marketplace (Resposive)
--   **Ubicación.vue**: Envoltura psicólogos por ubicación
+-   **Ubicación.vue**: Envoltura especialistas por ubicación
 
 ---
 

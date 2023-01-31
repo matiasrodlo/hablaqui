@@ -88,7 +88,7 @@ export default {
 			leaglName: 'Hablaquí',
 			url: 'http://app.hablaqui.cl/especialistas/',
 			email: 'soporte@hablaqui.cl',
-			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
+			slogan: 'Especialista y terapia online de calidad sin salir de casa',
 			logo: 'https://app.hablaqui.cl/logo_tiny.png',
 		};
 	},

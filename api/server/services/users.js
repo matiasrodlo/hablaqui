@@ -124,7 +124,7 @@ const usersService = {
 				session.status === 'success'
 		).length;
 
-		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
+		// Se crea un nuevo plan para el consultante con el nuevo especialista
 		const newPlan = {
 			title: ultimoPlan.title,
 			period: ultimoPlan.period,
@@ -144,7 +144,7 @@ const usersService = {
 			session: [],
 		};
 
-		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
+		// Se busca si el usuario tiene una sesión con el nuevo especialista, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
 			specialist: newSpecialist,
 			user: user,

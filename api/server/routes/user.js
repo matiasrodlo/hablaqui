@@ -11,7 +11,7 @@ import storageAvatar from '../middleware/avatar/storage';
 const userRouter = Router();
 
 /**
- * @description Registro de consultante hecho por el psicólogo
+ * @description Registro de consultante hecho por el especialista
  * @method POST
  * @route /api/v1/user/register
  * @param {String} body.name - Nombre del consultante (requerido)
@@ -47,9 +47,9 @@ userRouter.get(
  * @description Actualiza el especialista del usuario desde la intranet
  * @method PUT
  * @route /api/v1/dashboard/update/specialist
- * @param {String} body.newSpecialist - Id del psicólogo nuevo (requerido)
- * @param {String} body.oldSpecialist - Id del psicólogo anterior (requerido)
- * @param {String} body.user - Id del usuario al que se le va a cambiar el psicólogo (requerido)
+ * @param {String} body.newSpecialist - Id del especialista nuevo (requerido)
+ * @param {String} body.oldSpecialist - Id del especialista anterior (requerido)
+ * @param {String} body.user - Id del usuario al que se le va a cambiar el especialista (requerido)
  * @return Objeto usuario con nueva información
  * @access authenticated (user)
  */
@@ -120,7 +120,7 @@ userRouter.patch(
 );
 
 /**
- * @description Actualiza/sube foto de perfil del usuario psicólogo principalmente
+ * @description Actualiza/sube foto de perfil del usuario especialista principalmente
  * @method PUT
  * @route /api/v1/user/upload/avatar
  * @param {String} body._id - id de del usuario a actualizar avatar
@@ -169,7 +169,7 @@ userRouter.post(
 );
 
 /**
- * @description Permite la desvinculación de un psicólogo antes de terminar el plan
+ * @description Permite la desvinculación de un especialista antes de terminar el plan
  * @method POST
  * @route /api/v1/user/change/specialist/:sessionId
  * @param {String} params.sessionId - Id del objeto de la sesión con el plan activo

@@ -28,7 +28,7 @@
 									class="text-left font-weight-bold"
 									style="color: #3c3c3b; font-size: 28px"
 								>
-									Psicólogo {{ specialist.name }}
+									Especialista {{ specialist.name }}
 									{{ specialist.lastName && specialist.lastName }}
 								</h1>
 								<h1

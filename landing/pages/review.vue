@@ -67,7 +67,7 @@
 							<div class="font-weight-medium headline">
 								{{ specialist.name }} {{ specialist.lastName }}
 							</div>
-							<div class="title font-weight-regular">Psicólogo</div>
+							<div class="title font-weight-regular">Especialista</div>
 						</div>
 					</div>
 					<v-window v-model="step">
@@ -187,7 +187,7 @@
 						<v-window-item :value="6">
 							<div class="text--secondary text-left">
 								<div class="font-weight-medium headline">
-									6. ¿Qué es lo que el psicólogo necesita mejorar?
+									6. ¿Qué es lo que el especialista necesita mejorar?
 								</div>
 								<v-chip-group
 									v-model="improve"

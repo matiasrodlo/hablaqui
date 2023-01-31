@@ -40,7 +40,7 @@ const mailService = {
 		const { email, name } = user;
 		const dataPayload = {
 			from:
-				'Hablaquí para Psicólogos <bienvenida-especialistas@mail.hablaqui.cl>',
+				'Hablaquí para Especialistas <bienvenida-especialistas@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: 'Enhorabuena, hemos aprobado a su cuenta',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',

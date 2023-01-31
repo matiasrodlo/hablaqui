@@ -679,7 +679,7 @@
 							</v-row>
 						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
-							¿Cuántos años llevas trabajando como psicólogo clínico?
+							¿Cuántos años llevas trabajando como especialista clínico?
 							{{ selected.yearsExpSpecialist }}
 							<br />
 							¿Cuántos años ha visto pacientes en línea a través de consultas por
@@ -692,7 +692,7 @@
 							<br />
 							¿Está actualmente bajo la supervisión clínica de otro profesional de la
 							psicología? {{ selected.isUnderSupervision ? 'Si' : 'No' }} <br />
-							¿Supervisa actualmente a otros psicólogos?
+							¿Supervisa actualmente a otros especialistas?
 							{{ selected.isSupervisor ? 'Si' : 'No' }}
 						</v-col>
 					</v-row>

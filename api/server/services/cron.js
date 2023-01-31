@@ -75,7 +75,7 @@ async function getNumberSuccess() {
 				}
 			);
 			if (!item.evaluationNotifcation && successSessions === 3) {
-				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del psicólogo
+				// Si el usuario tiene 3 citas exitosas, entonces se envía un correo electrónico para habilitar la evaluación del especialista
 				await mailServiceSpec.sendEnabledEvaluation(
 					user,
 					item.specialist
@@ -184,7 +184,7 @@ async function scheduleEmails(pendingEmails) {
 			return;
 		}
 		try {
-			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
 			if (emailInfo.scheduledAt !== null) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
@@ -244,7 +244,7 @@ const cronService = {
 			);
 		const specialists = await specialistModel.find();
 
-		// Se recorre el array de psicólogos si el estado de la atención inmediata
+		// Se recorre el array de especialistas si el estado de la atención inmediata
 		// esta activo y la fecha de expiracion es antes de la fecha actual
 		specialists.forEach(async spec => {
 			if (spec.inmediateAttention.activated) {
@@ -480,7 +480,7 @@ const cronService = {
 				.filter(plan => plan.payment === 'pending')
 				.pop();
 
-			// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
+			// Se verifica que el usuario se haya encontrado al igual que el especialista y la sesión
 			if (!user || !spec || !sessionDocument || !plan) {
 				return;
 			}
@@ -488,7 +488,7 @@ const cronService = {
 			// Crea la preferencia de mercado pago para los correos de recordatorio de pago
 			const url = await preference(user, spec, plan, sessionDocument);
 			try {
-				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+				// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 				// Si es null significa que aún no se le ha dado una fecha de envío
 				if (emailInfo.scheduledAt !== null) {
 					// Si la fecha actual está después que la fecha programada, entonces se envía el correo
@@ -577,12 +577,12 @@ const cronService = {
 			let batch = null;
 			const user = await userModel.findById(emailInfo.userRef);
 			const spec = await specialistModel.findById(emailInfo.specRef);
-			// Se verifica que el usuario se haya encontrado al igual que el psicólogo
+			// Se verifica que el usuario se haya encontrado al igual que el especialista
 			if (!user) {
 				return conflictResponse('No se encontró el usuario');
 			}
 			if (!spec) {
-				return conflictResponse('No se encontró el psicólogo');
+				return conflictResponse('No se encontró el especialista');
 			}
 			try {
 				if (
@@ -670,7 +670,7 @@ const cronService = {
 				return;
 			}
 			try {
-				// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+				// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 				// Si es null significa que aún no se le ha dado una fecha de envío
 				if (emailInfo.scheduledAt !== null) {
 					// Si la fecha actual está después que la fecha programada, entonces se envía el correo

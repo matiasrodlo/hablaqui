@@ -456,7 +456,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 															v-model="selectedFormation.description"
 															filled
 															outlined
-															placeholder="Psicólogo Clinico"
+															placeholder="Especialista Clinico"
 															dense
 															hide-details
 															type="text"
@@ -609,7 +609,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															placeholder="Psicólogo Clinico"
+															placeholder="Especialista Clinico"
 															dense
 															hide-details
 															type="text"
@@ -812,7 +812,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 							<v-row>
 								<v-col cols="12">
 									<div class="text--secondary text-h7 mb-2 font-weight-regular">
-										¿Cuántos años lleva trabajando como psicólogo clínico?
+										¿Cuántos años lleva trabajando como especialista clínico?
 									</div>
 									<div>
 										<v-text-field
@@ -915,7 +915,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 								</v-col>
 								<v-col cols="12">
 									<div class="text--secondary text-h7 mb-2 font-weight-regular">
-										¿Supervisa actualmente a otros psicólogos?
+										¿Supervisa actualmente a otros especialistas?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isSupervisor" row>

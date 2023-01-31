@@ -12,7 +12,7 @@
 						Comunas
 					</h1>
 					<h2 class="text-h6 font-weight-medium text--secondary">
-						Psicólogos en Chile por comunas
+						Especialistas en Chile por comunas
 					</h2>
 				</v-col>
 			</v-row>
@@ -34,7 +34,7 @@
 											:to="`/especialistas/${el.comuna.slug}`"
 											style="text-decoration: none"
 										>
-											Psicólogos en {{ el.comuna.name }}</nuxt-link
+											Especialistas en {{ el.comuna.name }}</nuxt-link
 										>
 									</div>
 								</v-col>
@@ -53,7 +53,7 @@
 												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -69,7 +69,7 @@
 												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -81,7 +81,7 @@
 												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -100,7 +100,7 @@
 									href: '/',
 								},
 								{
-									text: 'Psicólogos',
+									text: 'Especialistas',
 									disabled: false,
 									href: '/especialistas',
 								},

@@ -10,7 +10,7 @@ const transactionRouter = Router();
  * @description Completa las solicitudes de retiro de dinero
  * @method PATCH
  * @route /api/v1/specialist/complete-request
- * @param {String} params.spec - id del psicólogo
+ * @param {String} params.spec - id del especialista
  * @returns {Object} Lista con todas las sesiones con solicitudes completadas y el monto total retirado
  */
 transactionRouter.post(
@@ -32,7 +32,7 @@ transactionRouter.post(
 );
 
 /**
- * @description Devuelve todas las transacciones del psicólogo logeado
+ * @description Devuelve todas las transacciones del especialista logeado
  * @method GET
  * @route /api/v1/specialist/transactions/all
  * @returns {Object} Lista con todas las transacciones

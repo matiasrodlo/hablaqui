@@ -10,7 +10,7 @@
 					class="text-left font-weight-bold text-h6 text-md-h3"
 					style="color: #54565a"
 				>
-					Encuentra a tu psicólogo online
+					Encuentra a tu especialista online
 				</v-col>
 				<v-col cols="12" sm="6">
 					<v-autocomplete
@@ -26,7 +26,7 @@
 								index,
 							}))
 						"
-						label="Busca tu psicólogo"
+						label="Busca tu especialista"
 						:append-icon="mdiChevronDown"
 						hide-details
 						:menu-props="{
@@ -351,10 +351,10 @@
 							</v-col>
 							<v-col class="pl-4">
 								<div class="text-h5 primary--text font-weight-bold">
-									Te ayudamos a encontrar a tu psicólogo ideal
+									Te ayudamos a encontrar a tu especialista ideal
 								</div>
 								<div class="my-2 text-h6 primary--text font-weight-regular">
-									Encuentra al psicólogo que necesitas, solo responde las
+									Encuentra al especialista que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
 								<div class="my-4">

@@ -10,7 +10,7 @@ const sessionsRouter = Router();
  * @swagger
  * /api/v1/specialists/sessions/{id}:
  *  get:
- *    summary: Devuelve todas las sesiones del psicólogo
+ *    summary: Devuelve todas las sesiones del especialista
  *    tags: [Specialists]
  *    parameters:
  *      - in: path
@@ -18,15 +18,15 @@ const sessionsRouter = Router();
  *        schema:
  *          type: string
  *        required: true
- *        description: Id del psicólogo
+ *        description: Id del especialista
  *    responses:
  *      200:
  *        description: Las sesiones segue el id
  *      400:
- *        description: Psicólogo no encontrado
+ *        description: Especialista no encontrado
  */
 /**
- * @description Devuelve todas las sesiones del psicólogo
+ * @description Devuelve todas las sesiones del especialista
  * @method GET
  * @route /api/v1/specialists/sessions/:idSpecialist/:idUser
  * @param {String} params.idUser - Id perteneciente al usuario/consultante o especialista según el caso
@@ -40,11 +40,11 @@ sessionsRouter.get(
 );
 
 /**
- * @description Devuelve todas las sesiones faltantes de un psicólogo
+ * @description Devuelve todas las sesiones faltantes de un especialista
  * @method PATCH
  * @route /api/v1/specialist/get-remaining-sessions
- * @param {String} params.spec - id del psicólogo
- * @returns {Array} Lista con todas las sesiones faltantes del psicólogo en cuestión
+ * @param {String} params.spec - id del especialista
+ * @returns {Array} Lista con todas las sesiones faltantes del especialista en cuestión
  */
 sessionsRouter.get(
 	'/specialist/get-remaining-sessions/:spec',
@@ -140,9 +140,9 @@ sessionsRouter.post(
  * @description Obtiene la session de un especialista formateada para el selector
  * @method GET
  * @route /api/v1/specialists/formattedSessions/:idSpecialist/:type
- * @param {String} params.idSpecialist - Id del psicólogo
+ * @param {String} params.idSpecialist - Id del especialista
  * @param {String} params.type - será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
- * @returns Objeto listado de las sesiones del psicólogo
+ * @returns Objeto listado de las sesiones del especialista
  */
 sessionsRouter.get(
 	'/specialists/formattedSessions/:idSpecialist/:type',
@@ -156,7 +156,7 @@ sessionsRouter.get(
  * @description Obtiene las sessiones de todos los especialistas formateada para el selector
  * @method GET
  * @route /api/v1/specialists/formattedSessionsAll
- * @returns Objeto listado de todas las sesiones de cada uno de los psicólogos
+ * @returns Objeto listado de todas las sesiones de cada uno de los especialistas
  */
 sessionsRouter.get(
 	'/specialists/formattedSessionsAll',
@@ -220,7 +220,7 @@ sessionsRouter.put(
  * @description: Elimina un compromiso privado de un especialista
  * @method PATCH
  * @route /api/v1/specialist/delete-private-commitment
- * @param {String} params.specId - id del psicólogo
+ * @param {String} params.specId - id del especialista
  * @param {String} params.planId - id del plan
  * @returns {Object} Objecto Session con el compromiso eliminado
  */
@@ -233,8 +233,8 @@ sessionsRouter.patch(
  * @description Devuelve todas las sesiones que no hayan expirado
  * @method PATCH
  * @route /api/v1/specialist/get-sessions
- * @param {String} params.spec - id del psicólogo
- * @returns {Array} Lista con todas las sesiones del psicólogo en cuestión
+ * @param {String} params.spec - id del especialista
+ * @returns {Array} Lista con todas las sesiones del especialista en cuestión
  */
 sessionsRouter.get(
 	'/specialist/get-sessions/:spec',
@@ -245,8 +245,8 @@ sessionsRouter.get(
  * @description Consigue los datos (y la tabla) de pagos del especialista
  * @method GET
  * @route /api/v1/specialist/payments/:spec
- * @param {ObjectId} params.spec - Id del psicólogo
- * @returns {Object} datos de los pagos del psicólogo
+ * @param {ObjectId} params.spec - Id del especialista
+ * @returns {Object} datos de los pagos del especialista
  * @access authenticated
  */
 sessionsRouter.get(

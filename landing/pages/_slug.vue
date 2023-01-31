@@ -70,7 +70,7 @@ export default {
 		return {
 			title: `${
 				this.specialist
-					? 'Psicólogo ' +
+					? 'Especialista ' +
 					  this.specialist.name +
 					  ' ' +
 					  this.specialist.lastName +

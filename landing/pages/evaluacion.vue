@@ -178,7 +178,7 @@
 
 										<v-stepper-content step="2">
 											<div class="primary--text font-weight-bold title">
-												¿Primera vez hablando con un psicólogo?
+												¿Primera vez hablando con un especialista?
 											</div>
 
 											<v-btn

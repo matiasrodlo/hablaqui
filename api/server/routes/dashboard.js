@@ -23,7 +23,7 @@ dashboardRouter.get(
  * @param {String} params.startDate - Fecha de inicio del intervalo
  * @param {String} params.endDate - Fecha de término del intervalo
  * @route /api/v1/retool/payments/next/:startDate/:endDate
- * @return Array con los montos a pagar por psicólogo
+ * @return Array con los montos a pagar por especialista
  */
 dashboardRouter.get(
 	'/retool/payments/next/:startDate/:endDate',

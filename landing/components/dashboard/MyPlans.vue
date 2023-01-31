@@ -140,11 +140,11 @@ export default {
 		},
 		setDescrition(title) {
 			if (title === 'Sesiones por videollamada')
-				return 'Habla con un psicólogo por videollamada en cualquier momento, en cualquier lugar.';
+				return 'Habla con un especialista por videollamada en cualquier momento, en cualquier lugar.';
 			if (title === 'Mensajería y videollamada')
-				return 'Chatea y habla por videollamada con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.';
+				return 'Chatea y habla por videollamada con un especialista. Respuestas vía texto garantizadas 5 días a la semana.';
 			if (title === 'Acompañamiento vía mensajería')
-				return 'Chatea con un psicólogo. Respuestas vía texto garantizadas 5 días a la semana.';
+				return 'Chatea con un especialista. Respuestas vía texto garantizadas 5 días a la semana.';
 		},
 		setSubtitle(title) {
 			if (title === 'Sesiones por videollamada') return 'Sesiones por videollamada (50 min)';

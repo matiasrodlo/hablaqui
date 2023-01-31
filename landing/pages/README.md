@@ -74,6 +74,6 @@
 -   **condiciones.vue**: Términos y condiciones (D)
 -   **para-especialistas.vue**: Landing de spec (D)
 -   **terminos-y-condiciones-especilistas.vue**: Términos y condiciones spec (D)
--   **nuevo-especialista.vue**: Para crear un nuevo psicólogo (D)
+-   **nuevo-especialista.vue**: Para crear un nuevo especialista (D)
 
 ---

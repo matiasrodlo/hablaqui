@@ -756,7 +756,7 @@ const customNewSession = async (user, payload) => {
 					{
 						item_id: 3,
 						item_name:
-							'Plan/sesión personalizada agendada por psicólogo',
+							'Plan/sesión personalizada agendada por especialista',
 						item_price: payload.price,
 						item_quantity: 1,
 					},
@@ -778,7 +778,7 @@ const customNewSession = async (user, payload) => {
 					{
 						item_id: 4,
 						item_name:
-							'Plan/sesión personalizada agendada por psicólogo presencialmente',
+							'Plan/sesión personalizada agendada por especialista presencialmente',
 						item_price: payload.price,
 						item_quantity: 1,
 					},
@@ -1276,7 +1276,7 @@ const deleteCommitment = async (planId, specId) => {
 	// Se busca si existe el especialista
 	const spec = await Specialist.findById(specId);
 	if (!spec) {
-		return conflictResponse('No existe el psicólogo');
+		return conflictResponse('No existe el especialista');
 	}
 	// Se busca en mongo y borra la session agendada del plan
 	const updatedSessions = await Sessions.findOneAndUpdate(
