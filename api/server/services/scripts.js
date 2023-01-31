@@ -81,7 +81,7 @@ const migrateDocumentEmail = async () => {
 	const emails = psychologist.map(email => email._id);
 	await Email.updateMany(
 		{ _id: { $in: emails } },
-		{ $rename: { psyRef: 'specRef' } }
+		{ $rename: { psyRef: 'specRef' }, $set: { lastMessageSendBy: 'specialist' } }
 	);
 	return okResponse('Correos actualizados', { psychologist });
 };
@@ -244,7 +244,7 @@ const returnDocumentChat = async () => {
 	const chats = psychologist.map(chat => chat._id);
 	await Chat.updateMany(
 		{ _id: { $in: chats } },
-		{ $rename: { specialist: 'psychologist' } }
+		{ $rename: { specialist: 'psychologist' }, $set: { lastMessageSendBy: 'psychologist'} }
 	);
 	return okResponse('Chats actualizados', { psychologist });
 };
