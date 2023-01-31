@@ -27,9 +27,9 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_first_name: name,
-				spec_last_name: lastName,
-				spec_email: email,
+				psy_first_name: name,
+				psy_last_name: lastName,
+				psy_email: email,
 			},
 		};
 		await sendMails(dataPayload);
@@ -73,7 +73,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				spec_name: spec.name,
+				psy_name: spec.name,
 			},
 		};
 		await sendMails(dataPayload);
@@ -97,7 +97,7 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				spec_name:
+				psy_name:
 					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				amount: amount,
 				url,
@@ -122,7 +122,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 				total: total,
 				date: date,
 			},
@@ -146,7 +146,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 				total: total,
 				date: date,
 			},
@@ -169,7 +169,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 				user_name: user.name,
 			},
 		};
@@ -191,7 +191,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 				user_name: user.name,
 			},
 		};
@@ -213,7 +213,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				spec_name: spec.name,
+				psy_name: spec.name,
 				user_name: user.name,
 			},
 		};

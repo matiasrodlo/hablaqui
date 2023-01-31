@@ -204,7 +204,7 @@ let recruitment = new Schema(
 		profession: {
 			type: String,
 			default: 'none',
-			enum: ['none', 'specialist', 'nutritionist', 'specchopedagogue'],
+			enum: ['none', 'psychologist', 'nutritionist', 'specchopedagogue'],
 		},
 		birthDate: {
 			type: String,
