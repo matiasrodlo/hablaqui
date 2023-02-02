@@ -969,9 +969,11 @@ export default {
 				price: this.price,
 			};
 			if (this.$auth.loggedIn) {
-				payload.userId = this.$auth.user._id;
-				await this.createMatchMakig(payload);
-				this.$router.push('/especialistas');
+				setTimeout(() => {
+					payload.userId = this.$auth.user._id;
+					this.createMatchMakig(payload);
+					this.$router.push('/especialistas');
+				}, 5000);
 			} else {
 				// Se ejecuta si no está logueado al terminar la encuesta
 				this.snackBar({
