@@ -31,7 +31,7 @@
 							x-large
 							class="ml-2 py-8 px-10"
 							nuxt
-							to="/evaluacion/"
+							@click="toEvaluation()"
 						>
 							<span class="text-capitalize body-1 text--secondary font-weight-bold">
 								Quiero empezar
@@ -139,7 +139,8 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/evaluacion/"
+						@click="toEvaluation()"
+
 					>
 						Comenzar
 					</v-btn>
@@ -343,7 +344,7 @@
 						x-large
 						class="font-weight-bold pa-8"
 						nuxt
-						to="/evaluacion/"
+						@click="toEvaluation()"
 					>
 						Comenzar
 					</v-btn>
@@ -615,7 +616,7 @@
 						x-large
 						class="font-weight-bold body-1 py-8 px-10"
 						nuxt
-						to="/evaluacion/"
+						@click="toEvaluation()"
 					>
 						Quiero empezar
 					</v-btn>
@@ -635,6 +636,7 @@
 
 <script>
 import { mdiCheck } from '@mdi/js';
+import { mapMutations } from 'vuex';
 
 export default {
 	components: {
@@ -853,6 +855,35 @@ export default {
 				},
 			],
 		};
+	},
+	methods: {
+		toEvaluation() {
+			// Si el usuario está logueado y es un consultante se revisa si ha hecho el matchmaking antes de ir a la evaluación
+			this.$auth.loggedIn
+			? (
+				this.$auth.user.role === 'user' ? (
+					// Si ya realizó el matchmaking se redirige a la página de psicólogos
+					this.$auth.user.match ? (
+						this.$router.push('/psicologos')
+					// Si no lo realizó se redirige a la evaluación
+					) : (
+						this.$router.push('/evaluacion')
+					)
+				)
+				: (
+					// Si no es un consultante se muestra un mensaje de error
+					this.snackBar({
+						content: 'Necesita ser consultante para acceder a esta página',
+						color: 'error'})
+				)
+			)
+			// Si no está logueado se redirige a la evaluación
+			: this.$router.push('/evaluacion')
+	
+		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		})
 	},
 	jsonld() {
 		return {

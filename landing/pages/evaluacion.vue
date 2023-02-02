@@ -827,6 +827,7 @@
 import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
+import { mapMutations } from 'vuex';
 
 export default {
 	name: 'Evaluation',
@@ -935,6 +936,7 @@ export default {
 			if (this.models.length === 3) this.step = 6;
 		},
 		async openPrecharge() {
+			// Método que se ejecuta cuando termina la evaluación
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
@@ -949,6 +951,11 @@ export default {
 				await this.createMatchMakig(payload);
 				this.$router.push('/psicologos');
 			} else {
+				// Se ejecuta si no está logueado al terminar la encuesta
+				this.snackBar({
+					content: 'Registrese a continuación para continuar el proceso de selección',
+					color: 'success',
+				});
 				setTimeout(() => {
 					localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
 					this.$router.push('/auth');
@@ -965,6 +972,9 @@ export default {
 			createMatchMakig: 'Psychologist/createMatchMakig',
 			matchPsi: 'Psychologist/matchPsi',
 			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+		}),
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
 		}),
 	},
 };
