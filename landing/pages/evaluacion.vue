@@ -834,6 +834,7 @@
 import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
+import { mapMutations } from 'vuex';
 
 /** * Evaluacion - MatchMaking */
 
@@ -957,6 +958,7 @@ export default {
 		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
 		 */
 		async openPrecharge() {
+			// Método que se ejecuta cuando termina la evaluación
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
 			const payload = {
@@ -971,6 +973,11 @@ export default {
 				await this.createMatchMakig(payload);
 				this.$router.push('/especialistas');
 			} else {
+				// Se ejecuta si no está logueado al terminar la encuesta
+				this.snackBar({
+					content: 'Registrese a continuación para continuar el proceso de selección',
+					color: 'success',
+				});
 				setTimeout(() => {
 					localStorage.setItem('temporalMatchMaking', JSON.stringify(payload));
 					this.$router.push('/auth');
@@ -990,6 +997,9 @@ export default {
 			createMatchMakig: 'Specialist/createMatchMakig',
 			matchSpec: 'Specialist/matchSpec',
 			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
+		}),
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
 		}),
 	},
 };
