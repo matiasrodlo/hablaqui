@@ -62,64 +62,169 @@
 							</v-card>
 						</v-menu>
 					</v-col>
-					<v-col id="selectgender" cols="3" style="position: relative">
-						<v-autocomplete
-							ref="genders"
-							v-model="gender"
-							outlined
-							dense
-							class="white"
-							:append-icon="mdiChevronDown"
-							:items="[
-								{ value: 'female', text: 'Mujer' },
-								{ value: 'male', text: 'Hombre' },
-								{ value: 'transgender', text: 'Transgénero' },
-							]"
-							label="Género"
-							hide-details
-							@change="e => actualizarMatch({ gender: e })"
-						></v-autocomplete>
+					<v-col id="menuGender" cols="3" style="position: relative">
+						<v-menu
+							ref="menuGender"
+							v-model="menuGender"
+							:close-on-content-click="false"
+							transition="scale-transition"
+							offset-y
+							rounded
+							attach="#menuGender"
+							min-width="240px"
+						>
+							<template #activator="{ on, attrs }">
+								<v-text-field
+									:value="
+										genderBoxes.length == 0
+										? genderBoxes
+										: 
+											genderBoxes.length == 1
+											? genderList.find(element => element.value == genderBoxes[0]).text
+											: `Géneros ${genderBoxes.length}`
+									"
+									label="Géneros"
+									readonly
+									:disabled="loadingMatchMaking"
+									outlined
+									dense
+									class="white"
+									hide-details
+									:append-icon="mdiChevronDown"
+									v-bind="attrs"
+									@click:append="() => (menuGender = !menuGender)"
+									v-on="on"
+								></v-text-field>
+							</template>
+							<v-card rounded height="150">
+								<v-card-text style="height: 150px; overflow-y: scroll">
+									<v-checkbox
+										v-for="(element, j) in genderList"
+										:key="j"
+										v-model="genderBoxes"
+										:value="element.value"
+										:label="element.text"
+										class="py-2"
+										hide-details
+										@change="changeInput"
+									>
+										<template #label="{ item }">
+											<span class="caption">{{ item }}</span>
+										</template>
+									</v-checkbox>
+								</v-card-text>
+							</v-card>
+						</v-menu>
 					</v-col>
 					<v-col cols="3">
-						<div id="selectPrices" style="position: relative">
-							<v-autocomplete
-								ref="menuPrices"
-								v-model="prices"
-								outlined
-								dense
-								class="white"
-								:append-icon="mdiChevronDown"
-								:items="[
-									{ value: 15000, text: 'Hasta $15.000' },
-									{ value: 20000, text: 'Hasta $20.000' },
-									{ value: 30000, text: 'Hasta $30.000' },
-									{ value: 40000, text: 'Hasta $40.000' },
-								]"
-								label="Precios"
-								hide-details
-								@change="e => actualizarMatch({ price: e })"
-							></v-autocomplete>
+						<div id="menuPrices" style="position: relative">
+							<v-menu
+							ref="menuPrices"
+							v-model="menuPrices"
+							:close-on-content-click="false"
+							transition="scale-transition"
+							offset-y
+							rounded
+							attach="#menuPrices"
+							min-width="240px"
+						>
+							<template #activator="{ on, attrs }">
+								<v-text-field
+									:value="
+										priceBoxes.length == 0
+										? priceBoxes
+										: 
+											priceBoxes.length == 1
+											? priceList.find(element => element.value == priceBoxes[0]).text
+											: `Precios ${priceBoxes.length}`
+									"
+									label="Precios"
+									readonly
+									:disabled="loadingMatchMaking"
+									outlined
+									dense
+									class="white"
+									hide-details
+									:append-icon="mdiChevronDown"
+									v-bind="attrs"
+									@click:append="() => (menuPrices = !menuPrices)"
+									v-on="on"
+								></v-text-field>
+							</template>
+							<v-card rounded height="150">
+								<v-card-text style="height: 150px; overflow-y: scroll">
+									<v-checkbox
+										v-for="(element, j) in priceList"
+										:key="j"
+										v-model="priceBoxes"
+										:value="element.value"
+										:label="element.text"
+										class="py-2"
+										hide-details
+										@change="changeInput"
+									>
+										<template #label="{ item }">
+											<span class="caption">{{ item }}</span>
+										</template>
+									</v-checkbox>
+								</v-card-text>
+							</v-card>
+						</v-menu>
 						</div>
 					</v-col>
-					<v-col id="selectOthers" cols="3" style="position: relative">
-						<v-autocomplete
+					<v-col id="menuOthers" cols="3" style="position: relative">
+						<v-menu
 							ref="menuOthers"
-							v-model="otros"
-							outlined
-							dense
-							class="white"
-							:append-icon="mdiChevronDown"
-							:items="[
-								{ value: 'early', text: 'Temprano: Antes de las 9 am' },
-								{ value: 'morning', text: 'En la mañana: Entre 9 am y 12 pm' },
-								{ value: 'midday', text: 'A Medio día: Entre 12 y 2 pm' },
-								{ value: 'afternoon', text: 'En la tarde: Entre 2 y 6 pm' },
-								{ value: 'night', text: 'En la noche: Después de las 6 pm' },
-							]"
-							label="Disponibilidad"
-							hide-details
-							@change="e => actualizarMatch({ schedule: e })"
-						></v-autocomplete>
+							v-model="menuOthers"
+							:close-on-content-click="false"
+							transition="scale-transition"
+							offset-y
+							rounded
+							attach="#menuOthers"
+							min-width="240px"
+						>
+							<template #activator="{ on, attrs }">
+								<v-text-field
+									:value="
+										dispoBoxes.length == 0
+										? dispoBoxes
+										: 
+											dispoBoxes.length == 1
+											? dispoList.find(element => element.value == dispoBoxes[0]).text
+											: `Disponibilidad ${dispoBoxes.length}`
+									"
+									label="Disponibilidad"
+									readonly
+									:disabled="loadingMatchMaking"
+									outlined
+									dense
+									class="white"
+									hide-details
+									:append-icon="mdiChevronDown"
+									v-bind="attrs"
+									@click:append="() => (menuOthers = !menuOthers)"
+									v-on="on"
+								></v-text-field>
+							</template>
+							<v-card rounded height="150">
+								<v-card-text style="height: 150px; overflow-y: scroll">
+									<v-checkbox
+										v-for="(element, j) in dispoList"
+										:key="j"
+										v-model="dispoBoxes"
+										:value="element.value"
+										:label="element.text"
+										class="py-2"
+										hide-details
+										@change="changeInput"
+									>
+										<template #label="{ item }">
+											<span class="caption">{{ item }}</span>
+										</template>
+									</v-checkbox>
+								</v-card-text>
+							</v-card>
+						</v-menu>
 					</v-col>
 				</v-row>
 				<v-row>
@@ -473,6 +578,27 @@ export default {
 			fullcard: [],
 			page: null,
 			status: false,
+			genderBoxes: [],
+			genderList: [
+						{ value: 'female', text: 'Mujer' },
+						{ value: 'male', text: 'Hombre' },
+						{ value: 'transgender', text: 'Transgénero' },
+					],
+			priceBoxes: [],
+			priceList: [
+						{ value: 15000, text: 'Hasta $15.000' },
+						{ value: 20000, text: 'Hasta $20.000' },
+						{ value: 30000, text: 'Hasta $30.000' },
+						{ value: 40000, text: 'Hasta $40.000' },
+					],
+			dispoBoxes: [],
+			dispoList: [
+						{ value: 'early', text: 'Temprano: Antes de las 9 am' },
+						{ value: 'morning', text: 'En la mañana: Entre 9 am y 12 pm' },
+						{ value: 'midday', text: 'A Medio día: Entre 12 y 2 pm' },
+						{ value: 'afternoon', text: 'En la tarde: Entre 2 y 6 pm' },
+						{ value: 'night', text: 'En la noche: Después de las 6 pm' },
+					],
 		};
 	},
 	computed: {
