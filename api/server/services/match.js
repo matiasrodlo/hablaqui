@@ -1,6 +1,7 @@
 "use strict";
 
 import matchModel from "../models/match";
+import userModel  from "../models/user";
 import { okResponse, conflictResponse } from "../utils/responses/functions";
 
 const createAnswers = async (userId, answers) => {
@@ -9,7 +10,15 @@ const createAnswers = async (userId, answers) => {
     ...answers,
     user: userId,
   };
+
   const created = await matchModel.create(newAnswers);
+
+  // Se guarda el ID del documento de match en el documento de user
+  await userModel.findOneAndUpdate(
+    { _id: userId },
+    { $set: { match: created._id } }
+  );
+  
   return okResponse("Respuestas guardadas", { answers: created });
 };
 

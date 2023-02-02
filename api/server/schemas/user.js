@@ -28,6 +28,7 @@ const userSchema = {
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
 		gender: Joi.string().allow(),
+		match: Joi.string().allow(),
 	}).min(1),
 	updatePassword: Joi.object({
 		oldPassword: Joi.string()
