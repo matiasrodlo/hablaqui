@@ -947,9 +947,11 @@ export default {
 				price: this.price,
 			};
 			if (this.$auth.loggedIn) {
-				payload.userId = this.$auth.user._id;
-				await this.createMatchMakig(payload);
-				this.$router.push('/psicologos');
+				setTimeout(() => {
+					payload.userId = this.$auth.user._id;
+					this.createMatchMakig(payload);
+					this.$router.push('/psicologos');
+				}, 5000);
 			} else {
 				// Se ejecuta si no está logueado al terminar la encuesta
 				this.snackBar({
