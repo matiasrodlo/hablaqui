@@ -73,6 +73,11 @@ let userSchema = new Schema(
 			ref: 'psychologist',
 			required: false,
 		},
+		match: {
+			type: Schema.Types.ObjectId,
+			ref: 'match',
+			required: false,
+		},
 		role: {
 			type: String,
 			default: 'user',
