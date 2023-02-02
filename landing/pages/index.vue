@@ -879,7 +879,6 @@ export default {
 			)
 			// Si no está logueado se redirige a la evaluación
 			: this.$router.push('/evaluacion')
-	
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
