@@ -112,6 +112,7 @@ const generateUser = async user => {
 		state: user.state,
 		timeZone: user.timeZone,
 		isVerified: user.isVerified,
+		match: user.match,
 	};
 };
 
