@@ -487,8 +487,8 @@ export default {
 	},
 	computed: {
 		dayWithdraw() {
-			const day = dayjs.tz().add('7', 'days');
-			return dayjs(day).format('DD/MM/YYYY');
+			const day = dayjs().add('7', 'days');
+			return dayjs.tz(dayjs(day)).format('DD/MM/YYYY');
 		},
 		lastTransaction() {
 			if (!this.transactions || !this.transactions.transactions.length) return null;
@@ -499,7 +499,7 @@ export default {
 				let result = this.items
 					.filter(
 						item =>
-							dayjs(item.datePayment, 'DD/MM/YYYY').format('YYYY-MM') ===
+							dayjs.tz(dayjs(item.datePayment, 'DD/MM/YYYY')).format('YYYY-MM') ===
 							this.findByDate
 					)
 					.map((item, index) => ({ ...item, id: index }));
@@ -516,7 +516,7 @@ export default {
 			},
 		},
 		formatedFindByDate() {
-			return dayjs(this.findByDate, 'YYYY-MM').format('MMMM, YYYY');
+			return dayjs.tz(dayjs(this.findByDate, 'YYYY-MM')).format('MMMM, YYYY');
 		},
 	},
 	created() {
@@ -524,10 +524,10 @@ export default {
 	},
 	methods: {
 		formatDate(item) {
-			return dayjs(item, 'DD/MM/YYYY').format('DD MMMM, YYYY');
+			return dayjs.tz(dayjs(item, 'DD/MM/YYYY')).format('DD MMMM, YYYY');
 		},
 		formatDatedayjs(item) {
-			return dayjs(item).format('DD MMMM, YYYY');
+			return dayjs.tz(dayjs(item)).format('DD MMMM, YYYY');
 		},
 		async submitPayment() {
 			this.loadingPayment = true;

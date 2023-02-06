@@ -204,7 +204,6 @@ const getMountToPay = async user => {
 		}
 		session = session.flatMap(item =>
 			item.sessions.flatMap(s => {
-				console.log(item);
 				return {
 					date: dayjs
 						.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
@@ -219,7 +218,6 @@ const getMountToPay = async user => {
 				};
 			})
 		);
-		console.log(session);
 		amounts.push({
 			_id: specialists[spec]._id,
 			name: specialists[spec].name,

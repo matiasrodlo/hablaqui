@@ -195,7 +195,6 @@ async function scheduleEmails(pendingEmails) {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 					isSend = true;
-					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
 						spec,
@@ -659,7 +658,6 @@ const cronService = {
 			let batch = null;
 			let isSend = false;
 			if (!user || !spec || !sessionDocument) {
-				console.log('user', user);
 				return;
 			}
 			// Se obtiene un plan expirado del usuario
