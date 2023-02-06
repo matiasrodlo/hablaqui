@@ -705,7 +705,7 @@ export default {
 				{
 					id: 4,
 					title: 'Verónica P. R.',
-					desc: 'Es muy especial la conexión con mi psicóloga y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
+					desc: 'Es muy especial la conexión con mi Especialista y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
 				},
 				{
 					id: 5,
@@ -715,7 +715,7 @@ export default {
 				{
 					id: 6,
 					title: 'Renata F. T.',
-					desc: 'Me resultó fácil elegir a mi psicóloga, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
+					desc: 'Me resultó fácil elegir a mi Especialista, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
 				},
 			],
 			faq: [

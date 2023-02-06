@@ -239,6 +239,17 @@ const getTransactions = async user => {
 		session => session.status === 'success'
 	).length;
 
+	console.log( {
+		transactions: {
+			total: priceFormatter(total),
+			totalAvailable: priceFormatter(totalAvailable),
+			successSessions,
+			sessionsReceivable,
+			sessions,
+			transactions,
+		},
+	});
+
 	return okResponse('Transacciones devueltas', {
 		transactions: {
 			total: priceFormatter(total),
@@ -290,8 +301,7 @@ const getAllTransactions = async user => {
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: dayjs
-							.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+						date: dayjs(s.date, 'MM/DD/YYYY HH:mm')
 							.format('DD/MM/YYYY HH:mm'),
 					};
 				}),
