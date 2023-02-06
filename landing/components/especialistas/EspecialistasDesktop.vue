@@ -643,7 +643,7 @@ export default {
 			let result = this.specialists.filter(item => item.preferences.marketplaceVisibility);
 			// si no hay genero , models, laguajes o status marcado entonces restorna el resultado
 			if (
-				!this.gender.length &&
+				!this.genderBoxes.length &&
 				!this.models.length &&
 				!this.languages.length &&
 				!this.status
@@ -662,11 +662,9 @@ export default {
 			// filtramos los psicologos segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
-			// filtramos segun los leguajes que habla el especialista
-			if (this.languages.length)
-				result = result.filter(item =>
-					item.languages.some(el => this.languages.some(languages => languages === el))
-				);
+			// filtramos segun el género del especialista
+			if (this.genderBoxes.length)
+				result = result.filter(item => this.genderBoxes.includes(item.gender));
 			// filtramos segun las specialties
 			if (this.specialties.length) {
 				result = result.filter(item =>
