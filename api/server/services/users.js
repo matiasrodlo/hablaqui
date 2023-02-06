@@ -368,8 +368,7 @@ const usersService = {
 			payment: 'success',
 			expiration: dayjs
 				.tz(dayjs('12/12/2000', 'MM/DD/YYYY HH:mm'))
-				.format()
-				.toISOString(),
+				.format(),
 			invitedBySpecialist: true,
 			usedCoupon: '',
 			totalSessions: 0,
