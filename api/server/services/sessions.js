@@ -1117,7 +1117,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			return plan.session;
 		})
 		.filter(s => s._id.toString() === id.toString())[0];
-	console.log(dayjs());
+
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
 		dayjs().isAfter(
