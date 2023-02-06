@@ -618,20 +618,14 @@ const customNewSession = async (user, payload) => {
 
 		// Se comprueba si es una sesion de compromiso
 		if (payload.dateEnd && payload.type === 'compromiso privado') {
-			const start = dayjs
-				.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm'))
-				.format();
-			const end = dayjs
-				.tz(dayjs(payload.dateEnd, 'MM/DD/YYYY HH:mm'))
-				.format();
+			const start = dayjs(payload.date, 'MM/DD/YYYY HH:mm').format();
+			const end = dayjs(payload.dateEnd, 'MM/DD/YYYY HH:mm').format();
 			hours = Math.abs(end.diff(start, 'hours')) + 1;
 		}
 
 		// Objeto con la sesion a crear
 		for (let i = 0; i < hours; i++) {
-			const date = dayjs.tz(
-				dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(i, 'hours')
-			);
+			const date = dayjs(payload.date, 'MM/DD/YYYY HH:mm').add(i, 'hours');
 			const newSession = {
 				date: date.format('MM/DD/YYYY HH:mm'),
 				sessionNumber: i + 1,
@@ -1123,7 +1117,7 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			return plan.session;
 		})
 		.filter(s => s._id.toString() === id.toString())[0];
-
+	console.log(dayjs());
 	// Si la session esta programada despues de la fecha actual quitando el tiempo minimo para reprogramar
 	if (
 		dayjs().isAfter(
