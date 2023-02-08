@@ -1,5 +1,0 @@
-dispatch:
-  - url: "api.hablaqui.cl/*"
-    service: api
-  - url: "www.hablaqui.cl/*"
-    service: frontend
