@@ -1,15 +1,22 @@
+# Establece la imagen base
 FROM node:14-alpine
 
+# Se configura el contenedor para utilizar bcrypt
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 RUN apk --no-cache add --virtual builds-deps build-base python3
 
+# Crea una carpeta con el parámetro -p, sin error si existe, crea directorios padre según sea necesario, 
+# con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
+# archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
+# Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
+# Declara parámetros de la línea de comandos para el proceso de construcción
 ARG NODE_ENV=development
 ARG NODE_PORT=3000
 ARG API_URL
@@ -29,6 +36,7 @@ ARG URLDB
 ARG SEGMENT_API_KEY
 ARG SENDGRID_API_KEY
 
+# Establece variables de entorno
 RUN export NODE_ENV=$NODE_ENV
 RUN export NODE_PORT=$NODE_PORT
 RUN export API_URL=$API_URL
@@ -48,16 +56,21 @@ RUN export URLDB=$URLDB
 RUN export SEGMENT_API_KEY=$SEGMENT_API_KEY
 RUN export SENDGRID_API_KEY=$SENDGRID_API_KEY
 
+# Cambia el usuario actual a node
 USER node
 
+# Copia packer.json y server.js a la carpeta /home/node/app, junto con la carpeta server y server.js
 COPY package.json ./
 COPY server.js ./
 COPY --chown=node:node /server ./server
 
+# Instala las dependencias del proyecto
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 RUN npm run create-env
 
+# Expone el puerto 3000
 EXPOSE 3000
 
+# Ejecuta el comando npm run container
 ENTRYPOINT ["npm", "run", "container"]
