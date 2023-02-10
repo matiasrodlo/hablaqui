@@ -26,12 +26,7 @@
 						</v-col>
 						<v-col
 							cols="12"
-							class="
-								py-1
-								text-center text-h6 text-lg-h4
-								font-weight-bold
-								text--secondary
-							"
+							class="py-1 text-center text-h6 text-lg-h4 font-weight-bold text--secondary"
 						>
 							<span>Ingresa tu nueva contraseña</span>
 						</v-col>

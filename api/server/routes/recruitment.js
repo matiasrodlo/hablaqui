@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import recruitmentController from '../controllers/recruitment';
-import passport from 'passport';
+import { Router } from 'express'
+import recruitmentController from '../controllers/recruitment'
+import passport from 'passport'
 
-const recruitmentRouter = Router();
+const recruitmentRouter = Router()
 /**
  * @description: Route to post a new recruitment profile for specialist
  * @route /api/v1/recruitment/register
@@ -12,10 +12,10 @@ const recruitmentRouter = Router();
  * @access: public (authenticated)
  */
 recruitmentRouter.post(
-	'/recruitment/register',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.register
-);
+  '/recruitment/register',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.register
+)
 /**
  * @description Route to update a recruitment profile for specialist
  * @route /api/v1/recruitment/update
@@ -23,10 +23,10 @@ recruitmentRouter.post(
  * @access: public (authenticated)
  */
 recruitmentRouter.put(
-	'/recruitment/update',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.update
-);
+  '/recruitment/update',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.update
+)
 /**
  * @description: Route to get the recruitment profile of specialist by email
  * @route: /api/v1/recruitment/:email
@@ -34,10 +34,10 @@ recruitmentRouter.put(
  * @access: public (authenticated)
  */
 recruitmentRouter.get(
-	'/recruitment/:email',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.get
-);
+  '/recruitment/:email',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.get
+)
 /**
  * @description: Route to get all recruitment profile of specialist
  * @route: /api/v1/recruitment
@@ -45,10 +45,10 @@ recruitmentRouter.get(
  * @access: public (authenticated)
  */
 recruitmentRouter.get(
-	'/recruitment',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.getAll
-);
+  '/recruitment',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.getAll
+)
 /**
  * @description: Route to approve a Recruitment profile and to create a new specialist profile
  * @route: /api/v1/recruitment/approve/:email
@@ -57,10 +57,10 @@ recruitmentRouter.get(
  * @param: email
  **/
 recruitmentRouter.post(
-	'/recruitment/approve/:email',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.approve
-);
+  '/recruitment/approve/:email',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.approve
+)
 /**
  * @description: Route to update oonboarding flag from recruitment
  * @route: /api/v1/recruitment/update/flags/:recruitmentId
@@ -69,9 +69,9 @@ recruitmentRouter.post(
  * @param: recruitmentId
  **/
 recruitmentRouter.post(
-	'/recruitment/update/flags/:recruitedId',
-	[passport.authenticate('jwt', { session: true })],
-	recruitmentController.flagOnboarding
-);
+  '/recruitment/update/flags/:recruitedId',
+  [passport.authenticate('jwt', { session: true })],
+  recruitmentController.flagOnboarding
+)
 
-export default recruitmentRouter;
+export default recruitmentRouter

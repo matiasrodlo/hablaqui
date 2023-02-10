@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import mercadopagoController from '../controllers/mercadopago';
+import { Router } from 'express'
+import mercadopagoController from '../controllers/mercadopago'
 
-const mercadopagoRouter = Router();
+const mercadopagoRouter = Router()
 
 /**
  * MERCADOPAGO SESIONES GENERAL
@@ -16,10 +16,10 @@ const mercadopagoRouter = Router();
  * @param {String} body.plan - ObjectId del plan creado previamente
  * @returns: Preferencia, pero lo importante es el init_point (la URL para redireccionar a mercadopago)
  */
-/*mercadopagoRouter.post(
+/* mercadopagoRouter.post(
 	'/mercadopago/create-preference',
 	mercadopagoController.createPreference
-);*/
+); */
 
 /**
  * @description Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
@@ -29,9 +29,9 @@ const mercadopagoRouter = Router();
  * @param {String} params.planId - Identificador del objeto plan
  */
 mercadopagoRouter.get(
-	'/mercadopago/success-pay/:sessionsId/:planId',
-	mercadopagoController.successPay
-);
+  '/mercadopago/success-pay/:sessionsId/:planId',
+  mercadopagoController.successPay
+)
 
 /**
  * @description crear preferencias para generar ruta de pago
@@ -40,9 +40,9 @@ mercadopagoRouter.get(
  * @returns {String} URL para pagar
  */
 mercadopagoRouter.post(
-	'/mercadopago/specialist-preference',
-	mercadopagoController.createSpecialistPreference
-);
+  '/mercadopago/specialist-preference',
+  mercadopagoController.createSpecialistPreference
+)
 
 /**
  * @description Pasa una plan de postulante a pagado.
@@ -52,9 +52,9 @@ mercadopagoRouter.post(
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
-	'/mercadopago/recruited-pay/:recruitedId',
-	mercadopagoController.recruitedPay
-);
+  '/mercadopago/recruited-pay/:recruitedId',
+  mercadopagoController.recruitedPay
+)
 
 /*
  * @description: Esta ruta no debe ser usada por frontend, solo es back_url de la preferencia.
@@ -68,9 +68,9 @@ mercadopagoRouter.get(
  * @query {string} planId el periodo de pago (mensual, anual)
  */
 mercadopagoRouter.get(
-	'/mercadopago/specialist-pay/:specialistId',
-	mercadopagoController.specialistPay
-);
+  '/mercadopago/specialist-pay/:specialistId',
+  mercadopagoController.specialistPay
+)
 
 /**
  * MERCADOPAGO SESIONES CUSTOM
@@ -83,9 +83,9 @@ mercadopagoRouter.get(
  * @return init_point
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session/:userId/:specId/:planId',
-	mercadopagoController.createCustomSessionPreference
-);
+  '/mercadopago/custom-session/:userId/:specId/:planId',
+  mercadopagoController.createCustomSessionPreference
+)
 
 /**
  * @description Actualiza el plan custom a pagado
@@ -97,8 +97,8 @@ mercadopagoRouter.get(
  * @retrun Objeto con el plan actualizado
  */
 mercadopagoRouter.get(
-	'/mercadopago/custom-session-pay/:userId/:specId/:planId',
-	mercadopagoController.customSessionPay
-);
+  '/mercadopago/custom-session-pay/:userId/:specId/:planId',
+  mercadopagoController.customSessionPay
+)
 
-export default mercadopagoRouter;
+export default mercadopagoRouter

@@ -149,8 +149,8 @@
 					<br />
 					<br />
 					Si el Usuario concierta la cita y no se presenta a la hora prevista, el importe
-					cobrado por el servicio será repercutido al Especialista que puso a disposición la
-					hora de la cita, descontando la cuota de servicio de Hablaquí, no siendo
+					cobrado por el servicio será repercutido al Especialista que puso a disposición
+					la hora de la cita, descontando la cuota de servicio de Hablaquí, no siendo
 					devuelto importe alguno al Usuario.
 				</v-col>
 				<v-col cols="12" md="12">

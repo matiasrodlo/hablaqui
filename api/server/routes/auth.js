@@ -1,12 +1,12 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import authController from '../controllers/auth';
-import validation from '../middleware/validation';
-import authSchema from '../schemas/auth';
+import { Router } from 'express'
+import passport from 'passport'
+import authController from '../controllers/auth'
+import validation from '../middleware/validation'
+import authSchema from '../schemas/auth'
 
-const authRouter = Router();
+const authRouter = Router()
 
 /**
  * @description: Autenticación del login
@@ -16,17 +16,17 @@ const authRouter = Router();
  * @returns: Objeto con token de autenticación y usuario
  */
 authRouter.post(
-	'/auth/login',
-	[validation(authSchema.login, 'body'), passport.authenticate('local')],
-	authController.login
-);
+  '/auth/login',
+  [validation(authSchema.login, 'body'), passport.authenticate('local')],
+  authController.login
+)
 
 /**
  * @description: Logout
  * @method POST
  * @route /api/v1/auth/logout
  */
-authRouter.post('/auth/logout', authController.logout);
+authRouter.post('/auth/logout', authController.logout)
 
 /**
  * @description Registro de usuario
@@ -37,10 +37,10 @@ authRouter.post('/auth/logout', authController.logout);
  * @returns Objeto con token de autenticación y usuario
  */
 authRouter.post(
-	'/auth/register',
-	validation(authSchema.register, 'body'),
-	authController.register
-);
+  '/auth/register',
+  validation(authSchema.register, 'body'),
+  authController.register
+)
 
 /**
  * @description Recuperación de contraseña
@@ -49,9 +49,9 @@ authRouter.post(
  * @param {string} params.email - Email de recuperación
  */
 authRouter.get(
-	'/auth/send-password-recover/:email',
-	authController.sendPasswordRecover
-);
+  '/auth/send-password-recover/:email',
+  authController.sendPasswordRecover
+)
 
 /**
  * @description Cambio de contraseña
@@ -62,10 +62,10 @@ authRouter.get(
  * @access authenticated
  */
 authRouter.put(
-	'/auth/user/password',
-	passport.authenticate('jwt'),
-	authController.changeUserPassword
-);
+  '/auth/user/password',
+  passport.authenticate('jwt'),
+  authController.changeUserPassword
+)
 
 /**
  * @description Verificación del correo del usuario
@@ -76,9 +76,9 @@ authRouter.put(
  * @access authenticated
  */
 authRouter.put(
-	'/auth/user/verification/:id',
-	passport.authenticate('jwt'),
-	authController.changeVerifiedStatus
-);
+  '/auth/user/verification/:id',
+  passport.authenticate('jwt'),
+  authController.changeVerifiedStatus
+)
 
-export default authRouter;
+export default authRouter
