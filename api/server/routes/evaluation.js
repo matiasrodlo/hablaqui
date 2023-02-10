@@ -1,9 +1,9 @@
-'use strict';
-import { Router } from 'express';
-import passport from 'passport';
-import evaluationController from '../controllers/evaluation';
+'use strict'
+import { Router } from 'express'
+import passport from 'passport'
+import evaluationController from '../controllers/evaluation'
 
-const evaluationRouter = Router();
+const evaluationRouter = Router()
 
 /**
  * Add new rating
@@ -20,10 +20,10 @@ const evaluationRouter = Router();
  * @access authenticated
  */
 evaluationRouter.post(
-	'/specialist/add-rating/:specialist',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.addRating
-);
+  '/specialist/add-rating/:specialist',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.addRating
+)
 
 /**
  * @description Consigue las calificaciones de un especialista en específico
@@ -33,9 +33,9 @@ evaluationRouter.post(
  * @returns {Number} puntuación promedio del especialista
  */
 evaluationRouter.get(
-	'/specialist/get-rating/:specialist',
-	evaluationController.getRating
-);
+  '/specialist/get-rating/:specialist',
+  evaluationController.getRating
+)
 
 /**
  * @description Devuelve todas las evaluaciones del especialista logeado
@@ -45,10 +45,10 @@ evaluationRouter.get(
  * @access authenticated
  */
 evaluationRouter.get(
-	'/specialist/get-evaluations',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.getEvaluationsSpec
-);
+  '/specialist/get-evaluations',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.getEvaluationsSpec
+)
 
 /**
  * @description Obtiene las evaluaciones de un especialista en particular
@@ -57,10 +57,10 @@ evaluationRouter.get(
  * @returns {Object} Evaluaciones hechas y sus puntajes
  */
 evaluationRouter.get(
-	'/evaluation/get-all-evaluations',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.getAllEvaluations
-);
+  '/evaluation/get-all-evaluations',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.getAllEvaluations
+)
 
 /**
  * @description Permite aprobar una evaluación hecha por un consultante
@@ -71,10 +71,10 @@ evaluationRouter.get(
  * @returns {Object} Evaluación aprobada
  */
 evaluationRouter.post(
-	'/specialist/approve-evaluation/:evsId/:evId',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.approveEvaluation
-);
+  '/specialist/approve-evaluation/:evsId/:evId',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.approveEvaluation
+)
 
 /**
  * @description Permite rechazar una evaluación hecha por un consultante
@@ -85,10 +85,10 @@ evaluationRouter.post(
  * @returns {Object} Evaluación rechazada
  */
 evaluationRouter.post(
-	'/specialist/refuse-evaluation/:evsId/:evId',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.refuseEvaluation
-);
+  '/specialist/refuse-evaluation/:evsId/:evId',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.refuseEvaluation
+)
 
 /**
  * @description Sube una evaluación de un usuario sobre un especialista
@@ -106,10 +106,10 @@ evaluationRouter.post(
  * @access authenticated (user)
  */
 evaluationRouter.post(
-	'/user/evaluation/:specId',
-	[passport.authenticate('jwt', { session: true })],
-	evaluationController.addEvaluation
-);
+  '/user/evaluation/:specId',
+  [passport.authenticate('jwt', { session: true })],
+  evaluationController.addEvaluation
+)
 /**
  * @description Devuelve las evaluaciones hechas de un usuario particular
  * @method GET
@@ -117,8 +117,8 @@ evaluationRouter.post(
  * @param {String} params.userId - Id del usuario del que obtendremos las evaluaciones
  */
 evaluationRouter.get(
-	'/user/get/evaluations/:userId',
-	evaluationController.getEvaluationsById
-);
+  '/user/get/evaluations/:userId',
+  evaluationController.getEvaluationsById
+)
 
-export default evaluationRouter;
+export default evaluationRouter

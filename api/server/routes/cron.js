@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import cronController from '../controllers/cron';
+import { Router } from 'express'
+import cronController from '../controllers/cron'
 
-const cronRouter = Router();
+const cronRouter = Router()
 
 /**
  * @description: Calendariza correos para próximas sesiones una hora antes de la sesión y un día antes de la sesión
@@ -12,9 +12,9 @@ const cronRouter = Router();
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/email-schedule/:authToken',
-	cronController.emailSchedule
-);
+  '/cron/email-schedule/:authToken',
+  cronController.emailSchedule
+)
 
 /**
  * @description: Verifica y actualiza el estado de las sesiones
@@ -23,9 +23,9 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/session-status/:authToken',
-	cronController.sessionStatus
-);
+  '/cron/session-status/:authToken',
+  cronController.sessionStatus
+)
 
 /**
  * @description: Calendariza los correos de chat para ser enviados
@@ -34,9 +34,9 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/email-chat/:authToken',
-	cronController.scheduleChatEmails
-);
+  '/cron/email-chat/:authToken',
+  cronController.scheduleChatEmails
+)
 
 /**
  * @description: Verifica el límite de tiempo para pagar un plan pendiente de un consultante
@@ -44,7 +44,7 @@ cronRouter.post(
  * @route /api/v1/cron/limit-to-pay/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
+cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan)
 
 /**
  * @description: --------
@@ -53,9 +53,9 @@ cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/status/attention/:authToken',
-	cronController.statusInmediateAttention
-);
+  '/cron/status/attention/:authToken',
+  cronController.statusInmediateAttention
+)
 
 /**
  * @description: Envia el correo de recordatorio de pago al usuario
@@ -64,9 +64,9 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/reminder-payment/:authToken',
-	cronController.reminderPayment
-);
+  '/cron/reminder-payment/:authToken',
+  cronController.reminderPayment
+)
 
 /**
  * @description: Envia el correo de recordatorio de renovación al usuario
@@ -76,15 +76,15 @@ cronRouter.post(
  */
 
 cronRouter.post(
-	'/cron/reminder-renewal-email/:authToken',
-	cronController.reminderRenewal
-);
+  '/cron/reminder-renewal-email/:authToken',
+  cronController.reminderRenewal
+)
 /**
  * @description: Envia el correo de recordatorio de chat al usuario
  * @method POST
  * @route /api/v1/cron/reminder-chat/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post('/cron/reminder-chat/:authToken', cronController.reminderChat);
+cronRouter.post('/cron/reminder-chat/:authToken', cronController.reminderChat)
 
-export default cronRouter;
+export default cronRouter

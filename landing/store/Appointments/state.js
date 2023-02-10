@@ -1,5 +1,5 @@
 const initialState = {
-	appointments: [],
-};
+  appointments: []
+}
 
-export default () => initialState;
+export default () => initialState
