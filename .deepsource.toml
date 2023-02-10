@@ -2,15 +2,18 @@ version = 1
 
 [[analyzers]]
 name = "docker"
-enabled = true
 
 [[analyzers]]
 name = "test-coverage"
-enabled = true
 
 [[analyzers]]
 name = "javascript"
-enabled = true
 
   [analyzers.meta]
   plugins = ["vue"]
+
+[[transformers]]
+name = "prettier"
+
+[[transformers]]
+name = "standardjs"
