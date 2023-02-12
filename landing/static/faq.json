@@ -5,27 +5,27 @@
         "faq": [
             {
                 "title": "¿Qué es Hablaquí?",
-                "description": "Hablaquí es una plataforma web que ofrece servicios de terapia psicológica online, a un precio accesible, y además por profesionales altamente calificados, que cuentan con formación especializada en aquello que tú desees tratar. El pago, agendamiento, sesiones y chat con tu terapeuta se realiza a través de nuestra plataforma web y aplicación móvil. Estamos aquí para orientarte y acompañarte en tu proceso de desarrollo personal, brindándote psicoterapia de calidad, a tu alcance y comodidad en todos los sentidos."
+                "description": "Hablaquí es una plataforma web que ofrece servicios de terapia speccológica online, a un precio accesible, y además por profesionales altamente calificados, que cuentan con formación especializada en aquello que tú desees tratar. El pago, agendamiento, sesiones y chat con tu terapeuta se realiza a través de nuestra plataforma web y aplicación móvil. Estamos aquí para orientarte y acompañarte en tu proceso de desarrollo personal, brindándote speccoterapia de calidad, a tu alcance y comodidad en todos los sentidos."
             },
             {
                 "title": "¿Para quién es Hablaquí?",
                 "description": "En Hablaquí estamos disponibles para atender a cualquier persona mayor de 18 años quese sienta afectada por algún motivo en su salud mental. Aunque no solamente atendemosa personas que tienen algún problema en particular, también ayudamos a personas que se sienten bien, pero que buscan mayor desarrollo personal, autoconocimiento, sentido de vida, etc. No es necesario que tengas algún diagnóstico previo para comenzar."
             },
             {
-                "title": "¿Quién será mi psicólogo?",
-                "description": "Te recomendamos un psicólogo online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir."
+                "title": "¿Quién será mi especialista?",
+                "description": "Te recomendamos un especialista online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir."
             },
             {
                 "title": "¿Necesito diagnóstico?",
-                "description": "No. Nuestros psicólogos están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un psicólogo o psiquiatra, va a ser útil, pero no es necesario para comenzar."
+                "description": "No. Nuestros especialistas están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un especialista o specquiatra, va a ser útil, pero no es necesario para comenzar."
             },
             {
-                "title": "¿Puedo solicitar cambio de psicólogo?",
-                "description": "Si te sientes insatisfecho con tu psicólogo, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción."
+                "title": "¿Puedo solicitar cambio de especialista?",
+                "description": "Si te sientes insatisfecho con tu especialista, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción."
             },
             {
-                "title": "¿Tienen licencia los psicólogos de Hablaquí?",
-                "description": "¡Absolutamente! En Hablaquí, contamos con una extensa red de psicólogos certificados. Todos los psicólogos de Hablaquí han sido cuidadosamente examinados y capacitados. Los psicólogos de Hablaquí se someten a una evaluación y revisión exhaustivas para cumplir con los requisitos de atención y son monitoreados, evaluados de cerca por su desempeño."
+                "title": "¿Tienen licencia los especialistas de Hablaquí?",
+                "description": "¡Absolutamente! En Hablaquí, contamos con una extensa red de especialistas certificados. Todos los especialistas de Hablaquí han sido cuidadosamente examinados y capacitados. Los especialistas de Hablaquí se someten a una evaluación y revisión exhaustivas para cumplir con los requisitos de atención y son monitoreados, evaluados de cerca por su desempeño."
             }
         ]
     },
@@ -39,7 +39,7 @@
             },
             {
                 "title": "¿Tienen convenios con isapres?",
-                "description": "Si, más de 3 millones de personas están inscritas en alguna Isapre, y 14 millones en Fonasa. Por eso, todos nuestros psicólogos están habilitados para extender boletas reembolsables en Isapres y Fonasa, justo como funciona en una terapia presencial. Una vez contrates tu plan, puedes solicitar tu boleta a soporte@hablaqui.cl"
+                "description": "Si, más de 3 millones de personas están inscritas en alguna Isapre, y 14 millones en Fonasa. Por eso, todos nuestros especialistas están habilitados para extender boletas reembolsables en Isapres y Fonasa, justo como funciona en una terapia presencial. Una vez contrates tu plan, puedes solicitar tu boleta a soporte@hablaqui.cl"
             },
             {
                 "title": "¿Cómo puedo recibir un reembolso de mi Isapre?",
@@ -68,7 +68,7 @@
                 "description": "¡Absolutamente! Durante la última década, numerosos estudios de investigación han demostrado el potencial efectivo de la conversación terapéutica en línea. ¿El progreso del paciente es más lento en la terapia en línea? ¡No! Numerosos estudios demuestran que la terapia de mensajes puede ser tan eficaz como la terapia tradicional para el tratamiento de los problemas de salud emocional y conductual más comunes, como la depresión, la ansiedad, el abuso de sustancias, el estrés, el trastorno de estrés postraumático y más."
             },
             {
-                "title": "¿En qué se especializan sus psicólogos?",
+                "title": "¿En qué se especializan sus especialistas?",
                 "description": "No es necesario tener algún diagnóstico para verte beneficiado por nuestros servicios, sinembargo, si te ves afectado(a) por alguno de estos problemas de salud mental, estaremos encantados de orientarte y acompañarte en su tratamiento: Depresión, Ansiedad y estrés, Fobia social, Trastorno obsesivo compulsivo, Ansiedad generalizada, Autoconocimiento, Cambio de hábitos, Autoestima, Enfoque de género y diversidad, Dificultades interpersonales, Control de ira, Duelo y pérdida, Regulación emocional, Trastornos del sueño, Trastornos de personalidad, Trastorno del ánimo bipolar,  Déficit atencional, Sexualidad, Trastornos de la conducta alimentaria (TCA),",
                 "detail": [
                     {
@@ -137,7 +137,7 @@
                     },
                     {
                         "title": "Trastornos de la conducta alimentaria (TCA)",
-                        "description": "Los TCA se caracterizan por una conducta alterada frente a la ingesta alimentaria o la aparición de conductas para controlar el peso. Con frecuencia los síntomas de TCA varían a lo largo del tiempo y pueden acabar desarrollando atracones o a la inversa. Los TCA están asociados a múltiples complicaciones médicas y psicológicas y afectan al funcionamiento psicosocial de la persona."
+                        "description": "Los TCA se caracterizan por una conducta alterada frente a la ingesta alimentaria o la aparición de conductas para controlar el peso. Con frecuencia los síntomas de TCA varían a lo largo del tiempo y pueden acabar desarrollando atracones o a la inversa. Los TCA están asociados a múltiples complicaciones médicas y speccológicas y afectan al funcionamiento speccosocial de la persona."
                     },
                     {
                         "title": "Trastornos de personalidad",
@@ -145,13 +145,13 @@
                     },
                     {
                         "title": "Trastorno del ánimo bipolar",
-                        "description": "El trastorno bipolar es una condición mental que causa cambios extremos en el estado de ánimo que comprenden altos y bajos emocionales por periodos de tiempo. Cuando te deprimes, puedes sentirte triste o desesperanzado y perder el interés o el placer en la mayoría de las actividades. Cuando tu estado de ánimo cambia a manía o hipomanía (menos extrema que la manía), es posible que te sientas eufórico, lleno de energía o inusualmente irritable. Estos cambios en el estado de ánimo pueden afectar el sueño, la energía, el nivel de actividad, el juicio, el comportamiento y la capacidad de pensar con claridad. Sin embargo, también hay algunos casos que no atendemos por el momento, por ejemplo: terapia de pareja, maternidad y paternidad con menores de edad, trastornos del espectro autista e ideación suicida (ganas de quitarse la vida). En el caso de TCA, trastornos de la personalidad y trastorno bipolar solamente ofrecemos terapia de acompañamiento, es decir, no es una psicoterapia orientada al cambio o a la mejoría directa de síntomas, sino que más bien un espacio seguro de escucha empática y orientación general."
+                        "description": "El trastorno bipolar es una condición mental que causa cambios extremos en el estado de ánimo que comprenden altos y bajos emocionales por periodos de tiempo. Cuando te deprimes, puedes sentirte triste o desesperanzado y perder el interés o el placer en la mayoría de las actividades. Cuando tu estado de ánimo cambia a manía o hipomanía (menos extrema que la manía), es posible que te sientas eufórico, lleno de energía o inusualmente irritable. Estos cambios en el estado de ánimo pueden afectar el sueño, la energía, el nivel de actividad, el juicio, el comportamiento y la capacidad de pensar con claridad. Sin embargo, también hay algunos casos que no atendemos por el momento, por ejemplo: terapia de pareja, maternidad y paternidad con menores de edad, trastornos del espectro autista e ideación suicida (ganas de quitarse la vida). En el caso de TCA, trastornos de la personalidad y trastorno bipolar solamente ofrecemos terapia de acompañamiento, es decir, no es una speccoterapia orientada al cambio o a la mejoría directa de síntomas, sino que más bien un espacio seguro de escucha empática y orientación general."
                     }
                 ]
             },
             {
-                "title": "¿Qué tipos de psicoterapia ofrecen?",
-                "description": "Si bien todos estos tipos de psicoterapia están científicamente validados y muestran buenos resultados, te ofrecemos el abordaje que a ti te haga más sentido: Terapia cognitivo-conductual, Terapia humanista existencial, Terapia Sistémica, Terapia Psicoanalítica Relacional",
+                "title": "¿Qué tipos de speccoterapia ofrecen?",
+                "description": "Si bien todos estos tipos de speccoterapia están científicamente validados y muestran buenos resultados, te ofrecemos el abordaje que a ti te haga más sentido: Terapia cognitivo-conductual, Terapia humanista existencial, Terapia Sistémica, Terapia Psicoanalítica Relacional",
                 "detail": [
                     {
                         "title": "Terapia cognitivo-conductual",
@@ -159,7 +159,7 @@
                     },
                     {
                         "title": "Terapia humanista existencial",
-                        "description": "Podríamos simplificar la identidad de esta corriente de la psicología diciendo que los “humanistas” no sólo investigan el sufrimiento, sino que profundizan en el crecimiento y el autoconocimiento de la propia persona. Se preocupan más de plantear alternativas a este sufrimiento que a estudiar la conducta. Aportan una visión positiva y su base es la voluntad y la esperanza de la misma persona.  El principal énfasis de este enfoque es el sentido de la experiencia vivida del consultante y su potencial como ser humano, se aplican técnicas de exploración e integración de esta experiencia en un nivel profundo."
+                        "description": "Podríamos simplificar la identidad de esta corriente de la speccología diciendo que los “humanistas” no sólo investigan el sufrimiento, sino que profundizan en el crecimiento y el autoconocimiento de la propia persona. Se preocupan más de plantear alternativas a este sufrimiento que a estudiar la conducta. Aportan una visión positiva y su base es la voluntad y la esperanza de la misma persona.  El principal énfasis de este enfoque es el sentido de la experiencia vivida del consultante y su potencial como ser humano, se aplican técnicas de exploración e integración de esta experiencia en un nivel profundo."
                     },
                     {
                         "title": "Terapia Sistémica",
@@ -167,17 +167,17 @@
                     },
                     {
                         "title": "Terapia Psicoanalítica Relacional",
-                        "description": "La Terapia Psicoanalítica pone su énfasis en la influencia de nuestra mente inconsciente en los pensamientos, emociones, actitudes y conductas que tenemos cotidianamente y que han sido forjados en nuestra historia, siendo la interacción entre este inconsciente, el mundo y los otros, el causante de buena parte de afecciones y trastornos psicológicos. Las intervenciones de este enfoque se centran en la empatía y la relación entre el terapeuta y el consultante en el momento presente, eso la diferencia del psicoanálisis clásico, que ponía mucho más énfasis en encontrar el origen del malestar en la infancia del consultante."
+                        "description": "La Terapia Psicoanalítica pone su énfasis en la influencia de nuestra mente inconsciente en los pensamientos, emociones, actitudes y conductas que tenemos cotidianamente y que han sido forjados en nuestra historia, siendo la interacción entre este inconsciente, el mundo y los otros, el causante de buena parte de afecciones y trastornos psicológicos. Las intervenciones de este enfoque se centran en la empatía y la relación entre el terapeuta y el consultante en el momento presente, eso la diferencia del speccoanálisis clásico, que ponía mucho más énfasis en encontrar el origen del malestar en la infancia del consultante."
                     }
                 ]
             },
             {
-                "title": "¿Puedo volver atrás y leer los mensajes anteriores con mi psicólogo?",
+                "title": "¿Puedo volver atrás y leer los mensajes anteriores con mi especialista?",
                 "description": "¡Sí! ¡Todos los mensajes con su proveedor están disponibles para que los vea dentro de su sala de chat privada de terapia de conversación en cualquier momento que desee! Un gran beneficio de nuestro servicio de terapia basada en texto es que siempre tiene la capacidad de volver atrás y leer las conversaciones pasadas que ha tenido con su proveedor, lo que puede ayudarlo a reflexionar y realizar un seguimiento de su progreso a lo largo del tiempo. Tenga en cuenta que es posible que deba ver su cuenta a través del escritorio para revisar los mensajes más antiguos."
             },
             {
-                "title": "¿Cada cuanto me responderá mi psicólogo?",
-                "description": "Si contrataste un plan que incluye mensajería de texto puede esperar que su psicólogo responda 5 días a la semana, dos veces al día, generalmente dentro de 4 a 6 horas hábiles. Si desea hablar con su psicólogo en tiempo real, le sugerimos que programe una sesión de video en vivo. Recomendamos hablar con su proveedor sobre su horario y necesidades, ¡y ver qué funciona mejor para ambos!"
+                "title": "¿Cada cuanto me responderá mi especialista?",
+                "description": "Si contrataste un plan que incluye mensajería de texto puede esperar que su especialista responda 5 días a la semana, dos veces al día, generalmente dentro de 4 a 6 horas hábiles. Si desea hablar con su especialista en tiempo real, le sugerimos que programe una sesión de video en vivo. Recomendamos hablar con su proveedor sobre su horario y necesidades, ¡y ver qué funciona mejor para ambos!"
             }
         ]
     },
@@ -208,12 +208,12 @@
                 "description": "Si tiene algún problema al usar la aplicación Hablaquí, elimine la aplicación de su dispositivo móvil y luego descárguela nuevamente. Si surge un problema mientras usa el sitio web, cierre la sesión de su cuenta y luego vuelva a iniciarla; esto refrescará el entorno. También recomendamos usar Google Chrome cuando visualice el sitio y borre su caché periódicamente. Si el problema persiste, comuníquese con soporte@hablaqui.cl e incluya la mayor cantidad de información posible sobre los problemas que está experimentando y el tipo de dispositivo/navegador que está utilizando."
             },
             {
-                "title": "¿Por qué no se envían mis mensajes a mi psicólogo?",
+                "title": "¿Por qué no se envían mis mensajes a mi especialista?",
                 "description": "Una conexión débil puede provocar que los mensajes no se envíen. Recomendamos verificar la intensidad de su conexión a Internet y luego cerrar la sesión y volver a ingresar a la aplicación. Si esto continúa puede ser problema de la aplicación, le recomendamos iniciar sesión en su sala de chat directamente a través de nuestro sitio web en www.hablaqui.com hasta que podamos resolver el problema. Si continúa teniendo dificultades, comuníquese con soporte@hablaqui.cl con la siguiente información: 1. El tipo de dispositivo que está utilizando. 2. El número de versión de su teléfono / dispositivo. 3. El número de versión de la aplicación Hablaquí. 4. Si el problema está ocurriendo por igual en redes de datos móviles y WiFi."
             },
             {
                 "title": "¿Por qué no puedo enviar mi encuesta/evaluación?",
-                "description": "Si tiene problemas para enviar sus encuestas y/o evaluaciones, intente lo siguiente: 1. Si accede a través de un dispositivo móvil, asegúrese de que está utilizando la última versión de nuestra aplicación para iOS o Android. 2. Intente acceder a la encuesta desde un dispositivo diferente (por ejemplo, computadora, iPad, etc.) Si lo anterior no funciona, puede enviar un mensaje con sus respuestas a su psicólogo para no perder tiempo. ¡Debería poder actualizar su perfil por usted!"
+                "description": "Si tiene problemas para enviar sus encuestas y/o evaluaciones, intente lo siguiente: 1. Si accede a través de un dispositivo móvil, asegúrese de que está utilizando la última versión de nuestra aplicación para iOS o Android. 2. Intente acceder a la encuesta desde un dispositivo diferente (por ejemplo, computadora, iPad, etc.) Si lo anterior no funciona, puede enviar un mensaje con sus respuestas a su especialista para no perder tiempo. ¡Debería poder actualizar su perfil por usted!"
             },
             {
                 "title": "¿Cómo puedo restablecer mi contraseña?",

@@ -38,8 +38,8 @@
 				>
 					<!-- <span
 						v-if="
-							$auth.$state.user.role === 'psychologist' &&
-							$auth.$state.user.psychologist
+							$auth.$state.user.role === 'specialist' &&
+							$auth.$state.user.specialist
 						"
 						class="pointer"
 						@click="dialog = true"
@@ -464,7 +464,7 @@ export default {
 			!this.$v.form.lastName.required && errors.push('Se requiere apellido');
 			return errors;
 		},
-		...mapGetters({ clients: 'Psychologist/clients', step: 'User/step' }),
+		...mapGetters({ clients: 'Specialist/clients', step: 'User/step' }),
 	},
 	watch: {
 		bmenu(val) {
@@ -483,7 +483,7 @@ export default {
 				this.loadingCreatedUser = false;
 				this.closeDialog();
 				this.loading = true;
-				await this.getClients(this.$auth.$state.user.psychologist);
+				await this.getClients(this.$auth.$state.user.specialist);
 				this.loading = false;
 			}
 		},
@@ -520,7 +520,7 @@ export default {
 			setStep: 'User/setStep',
 		}),
 		...mapActions({
-			getClients: 'Psychologist/getClients',
+			getClients: 'Specialist/getClients',
 			registerUser: 'User/registerUser',
 			updateOne: 'User/updateOne',
 		}),

@@ -17,15 +17,15 @@
 			</v-list-item>
 			<v-list dense>
 				<v-list-item
-					id="link-psi-drawer"
+					id="link-spec-drawer"
 					class="primary"
 					accesskey="p"
 					link
-					:to="{ name: 'psicologos' }"
+					:to="{ name: 'especialistas' }"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="white--text font-weight-bold body-2">
-							Buscar Psicólogo
+							Buscar Especialista
 						</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
@@ -125,8 +125,8 @@
 			height="83"
 			color="#ffffff"
 			style="opacity: 0.9"
-			:elevate-on-scroll="$route.name !== 'psicologos'"
-			:app="$route.name !== 'psicologos'"
+			:elevate-on-scroll="$route.name !== 'especialistas'"
+			:app="$route.name !== 'especialistas'"
 		>
 			<v-container fluid style="max-width: 1080px">
 				<v-row align="center" justify="space-between" no-gutters>
@@ -299,7 +299,7 @@
 								</v-btn>
 								<v-btn
 									v-show="!$auth.$state.loggedIn"
-									id="buscar-psicologo-appbar"
+									id="buscar-especialista-appbar"
 									rounded
 									small
 									accesskey="c"
@@ -311,9 +311,9 @@
 									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
 									color="primary"
 									depressed
-									to="/psicologos"
+									to="/especialistas"
 								>
-									Buscar Psicólogo
+									Buscar Especialista
 								</v-btn>
 							</v-col>
 						</template>
@@ -342,7 +342,7 @@ export default {
 	computed: {
 		menu() {
 			const visible =
-				(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'user');
 			return [
 				{
@@ -352,8 +352,8 @@ export default {
 					img: 'https://cdn.hablaqui.cl/static/info.png',
 					visible:
 						this.$auth.$state.loggedIn &&
-						this.$auth.user.role === 'psychologist' &&
-						!this.$auth.user.psychologist,
+						this.$auth.user.role === 'specialist' &&
+						!this.$auth.user.specialist,
 				},
 				{
 					name: 'Chat',
@@ -375,8 +375,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/pay.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 				},
 				{
 					name: 'Consultantes',
@@ -384,8 +383,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/icon-consultante.png',
 					visible:
-						this.$auth.$state.loggedIn &&
-						this.$auth.$state.user.role === 'psychologist',
+						this.$auth.$state.loggedIn && this.$auth.$state.user.role === 'specialist',
 				},
 				{
 					name: 'Cuenta',
@@ -393,7 +391,7 @@ export default {
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/home.png',
 					visible:
-						(this.$auth.$state.loggedIn && this.$auth.user.role === 'psychologist') ||
+						(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
 						(this.$auth.$state.loggedIn && this.$auth.user.role === 'user'),
 				},
 				{
@@ -411,8 +409,8 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 				},
 				{
-					name: 'Cambio de psicologo',
-					link: { name: 'dashboard-change-psy' },
+					name: 'Cambio de especialista',
+					link: { name: 'dashboard-change-spec' },
 					color: 'primary',
 					img: 'https://cdn.hablaqui.cl/static/apps.png',
 					visible: this.$auth.$state.user?.role === 'superuser',
@@ -444,7 +442,7 @@ export default {
 				this.$router.push({
 					name: 'auth',
 					params: { q: 'register' },
-					query: { from: 'psy' },
+					query: { from: 'spec' },
 				});
 		},
 	},

@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../classes/Psychologist.dart';
+import '../classes/Specialist.dart';
 import '../classes/Chat.dart';
 import '../classes/ChatMessage.dart';
 import '../colors.dart' as appColors;
@@ -18,9 +18,9 @@ import '../config.dart';
 
 class ChatPage extends StatefulWidget
 {
-	final Psychologist	psycho;
+	final Specialist	speccho;
 	
-	ChatPage({@required this.psycho});
+	ChatPage({@required this.speccho});
 	
 	@override
 	_ChatPageState	createState() => _ChatPageState();
@@ -76,7 +76,7 @@ class _ChatPageState extends State<ChatPage>
 	{
 		await this.initPusher();
 		this._user = new User.fromMap( await SB_Settings.getObject('user')) ;
-		var items = await ServiceHablaqui().getChatMessages(this.widget.psycho.id, this._user.id);
+		var items = await ServiceHablaqui().getChatMessages(this.widget.speccho.id, this._user.id);
 		this._messages.addAll( items );
 		
 		this.setState((){
@@ -138,17 +138,17 @@ class _ChatPageState extends State<ChatPage>
 						Container(
 							height: 50,
 							child: CircleAvatar(
-								backgroundImage: NetworkImage(this.widget.psycho.avatar),
+								backgroundImage: NetworkImage(this.widget.speccho.avatar),
 							)
 						),
 						SizedBox(width: 10),
-						Text(this.widget.psycho.fullName)
+						Text(this.widget.speccho.fullName)
 					],
 				),
 				actions: [
 					IconButton(
 						icon: Image.asset('images/info-icon.png', height: 20),
-						onPressed: this._openPsychoEmail
+						onPressed: this._openSpecchoEmail
 					)
 				]
 			),
@@ -182,7 +182,7 @@ class _ChatPageState extends State<ChatPage>
 										//expands: true,
 										focusNode: this._focusNode,
 										controller: this._ctrlMessage,
-										decoration: WidgetHelper.getTextFieldDecoration('Mensaje a ${this.widget.psycho.name}').copyWith(
+										decoration: WidgetHelper.getTextFieldDecoration('Mensaje a ${this.widget.speccho.name}').copyWith(
 											//isDense: true,
 											contentPadding: EdgeInsets.all(10),
 											suffixIcon: Container(
@@ -219,7 +219,7 @@ class _ChatPageState extends State<ChatPage>
 	}
 	Stream<List> _getMessages() async*
 	{
-		var items = await ServiceHablaqui().getChatMessages(this.widget.psycho.id, this._user.id);
+		var items = await ServiceHablaqui().getChatMessages(this.widget.speccho.id, this._user.id);
 		this._messages.addAll( items );
 		
 		yield this._messages;
@@ -252,7 +252,7 @@ class _ChatPageState extends State<ChatPage>
 					message: this._messages[index],
 					isMine: this._user.id == this._messages[index].sentBy,
 					width: msgWidth,
-					from: this._user.id == this._messages[index].sentBy ? this._user.name : this.widget.psycho.fullName,
+					from: this._user.id == this._messages[index].sentBy ? this._user.name : this.widget.speccho.fullName,
 				);
 			}
 		);
@@ -262,7 +262,7 @@ class _ChatPageState extends State<ChatPage>
 		if( this._ctrlMessage.text.trim().isEmpty )
 			return;
 			
-		ServiceHablaqui().sendChatMessage(this.widget.psycho.id, this._user.id, this._ctrlMessage.text.trim());
+		ServiceHablaqui().sendChatMessage(this.widget.speccho.id, this._user.id, this._ctrlMessage.text.trim());
 		//this._messages.add( message );
 		this._ctrlMessage.text = '';
 		//this._focusNode.unfocus();
@@ -288,9 +288,9 @@ class _ChatPageState extends State<ChatPage>
 			() => this._scrollController.jumpTo(this._scrollController.position.maxScrollExtent),
 		);
 	}
-	void _openPsychoEmail() async
+	void _openSpecchoEmail() async
 	{
-		String url = 'mailto:soporte@hablaqui.cl?subject=';//'mailto:${this.widget.psycho.email}?subject=';
+		String url = 'mailto:soporte@hablaqui.cl?subject=';//'mailto:${this.widget.speccho.email}?subject=';
 		if (await canLaunch(url)) 
 		{
 			await launch(

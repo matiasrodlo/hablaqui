@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../classes/Psychologist.dart';
+import '../../classes/Specialist.dart';
 import '../../colors.dart' as appColors;
 import '../../widgets/button.dart';
 
 
-class PsychologistProfile extends StatefulWidget
+class SpecialistProfile extends StatefulWidget
 {
-	final	Psychologist	psycho;
+	final	Specialist	speccho;
 	
-	PsychologistProfile({@required this.psycho});
+	SpecialistProfile({@required this.speccho});
 	
 	@override
-	_PsychologistProfileState	createState() => _PsychologistProfileState();
+	_SpecialistProfileState	createState() => _SpecialistProfileState();
 }
 
-class _PsychologistProfileState extends State<PsychologistProfile>
+class _SpecialistProfileState extends State<SpecialistProfile>
 {
 	@override
 	void initState()
@@ -25,7 +25,7 @@ class _PsychologistProfileState extends State<PsychologistProfile>
 	{
 		
 		return Scaffold(
-			appBar: AppBar(title: Text('Perfil del Psicólogo')),
+			appBar: AppBar(title: Text('Perfil del Especialista')),
 			body: Container(
 				padding: EdgeInsets.all(10),
 				child: ListView(
@@ -35,12 +35,12 @@ class _PsychologistProfileState extends State<PsychologistProfile>
 								width: 100,
 								height: 100,
 								child: CircleAvatar(
-									backgroundImage: NetworkImage(this.widget.psycho.avatar),
+									backgroundImage: NetworkImage(this.widget.speccho.avatar),
 								)
 							)
 						),
 						SizedBox(height: 10),
-						Text('Codigo: ${this.widget.psycho.code}', textAlign: TextAlign.center,
+						Text('Codigo: ${this.widget.speccho.code}', textAlign: TextAlign.center,
 							style: TextStyle(fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])
 						),
 						SizedBox(height: 10),
@@ -67,7 +67,7 @@ class _PsychologistProfileState extends State<PsychologistProfile>
 					children: [
 						Text('Formación', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])),
 						SizedBox(height: 10),
-						Text( this.widget.psycho.formation.map<String>( (f) => f).toList().join(', ') )
+						Text( this.widget.speccho.formation.map<String>( (f) => f).toList().join(', ') )
 					]
 				)
 			)
@@ -82,7 +82,7 @@ class _PsychologistProfileState extends State<PsychologistProfile>
 					children: [
 						Text('Especialidades', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])),
 						SizedBox(height: 10),
-						Text( this.widget.psycho.specialties.map<String>( (f) => f).toList().join(', ') )
+						Text( this.widget.speccho.specialties.map<String>( (f) => f).toList().join(', ') )
 					]
 				)
 			)

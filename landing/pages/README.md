@@ -8,7 +8,7 @@
     - [Pagos](#pagos)
     - [Perfil](#perfil)
 
-2. [Psicologos](#psicologos)
+2. [Especialistas](#especialistas)
 3. [Raíz](#raiz)
 
 ### DASHBOARD
@@ -17,38 +17,38 @@
 
 -   #### consultantes:
 
-    -   **index.vue**: Agenda con consultantes (psy)
-    -   **consultante-seleccionado.vue**: Información de consultante (psy)
+    -   **index.vue**: Agenda con consultantes (spec)
+    -   **consultante-seleccionado.vue**: Información de consultante (spec)
 
 -   #### pagos:
 
-    -   **historial.vue**: Detalle transacciones (psy)
-    -   **index.vue**: Historial de pagos (psy)
+    -   **historial.vue**: Detalle transacciones (spec)
+    -   **index.vue**: Historial de pagos (spec)
     -   **success.vue**: Pago exito (user)
 
 -   #### perfil:
 
-    -   **index.vue**: Cuenta (user/psy)
-    -   **configuracion-personal.vue**: Información general resposive (user/Psy)
-    -   **datos-bancarios.vue**: Datos bancarios responsive (psy)
-    -   **experiencia-formacion.vue**: Experiencia y formación responsive (psy)
-    -   **horario.vue**: Disponibilidad resposive (psy)
-    -   **informacion-general.vue**: Información profesional resposive (psy)
-    -   **services.vue**: Servicios (psy)
+    -   **index.vue**: Cuenta (user/spec)
+    -   **configuracion-personal.vue**: Información general resposive (user/Spec)
+    -   **datos-bancarios.vue**: Datos bancarios responsive (spec)
+    -   **experiencia-formacion.vue**: Experiencia y formación responsive (spec)
+    -   **horario.vue**: Disponibilidad resposive (spec)
+    -   **informacion-general.vue**: Información profesional resposive (spec)
+    -   **services.vue**: Servicios (spec)
 
 -   **agenda.vue**: Sesiones (calendario)
--   **chat.vue**: Chat (user/psy)
+-   **chat.vue**: Chat (user/spec)
 -   **panel.vue**: Panel de administrador
--   **planes.vue**: Planes free/premium (psy)
+-   **planes.vue**: Planes free/premium (spec)
 
 ---
 
-### PSICOLOGOS
+### Especialistas
 
 ---
 
 -   **\_slug.vue**: Renderiza vistas dinámicas por localidad
--   **index.vue**: Marketplace (Listado con psy)
+-   **index.vue**: Marketplace (Listado con spec)
 -   **pagos.vue**: Muestra la información detallada de un pago de un plan para un usuario rol "user" (?)
 -   **ubicaciones.vue**: Listas de ciudades por regiones (D)
 
@@ -58,22 +58,22 @@
 
 ---
 
--   **\_slug.vue**: Username de psy. Renderización perfil.
+-   **\_slug.vue**: Username de spec. Renderización perfil.
 -   **auth.vue**: Registro/login
 -   **evaluacion.vue**: Matchmaking
 
--   **password-reset.vue**: Cambio de contraseña vía email (user/psy)
+-   **password-reset.vue**: Cambio de contraseña vía email (user/spec)
 
--   **postulaciones.vue**: Postulación psy
--   **review.vue**: Evaluación de un psy
+-   **postulaciones.vue**: Postulación spec
+-   **review.vue**: Evaluación de un spec
 -   **verificacion-email.vue**: Verificación de cuenta
 
 -   **politicas.vue**: Politicas de privacidad (D)
 -   **faq.vue**: Preguntas frecuentes (D)
 -   **index.vue**: Landing principal (D)
 -   **condiciones.vue**: Términos y condiciones (D)
--   **para-especialistas.vue**: Landing de psy (D)
--   **terminos-y-condiciones-especilistas.vue**: Términos y condiciones psy (D)
--   **nuevo-psicologo.vue**: Para crear un nuevo psicólogo (D)
+-   **para-especialistas.vue**: Landing de spec (D)
+-   **terminos-y-condiciones-especilistas.vue**: Términos y condiciones spec (D)
+-   **nuevo-especialista.vue**: Para crear un nuevo especialista (D)
 
 ---

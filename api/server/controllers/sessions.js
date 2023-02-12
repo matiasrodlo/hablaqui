@@ -18,9 +18,9 @@ const sessionsController = {
 	},
 	async getRemainingSessions(req, res) {
 		try {
-			const { psy } = req.params;
+			const { spec } = req.params;
 			const { data, code } = await sessionsService.getRemainingSessions(
-				psy
+				spec
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -88,9 +88,9 @@ const sessionsController = {
 	},
 	async getFormattedSessions(req, res) {
 		try {
-			const { idPsychologist, type } = req.params;
+			const { idSpecialist, type } = req.params;
 			const { data, code } = await sessionsService.getFormattedSessions(
-				idPsychologist,
+				idSpecialist,
 				type
 			);
 			return restResponse(data, code, res);
@@ -170,10 +170,10 @@ const sessionsController = {
 	},
 	async deleteCommitment(req, res) {
 		try {
-			const { psyId, planId } = req.params;
+			const { specId, planId } = req.params;
 			const { data, code } = await sessionsService.deleteCommitment(
 				planId,
-				psyId
+				specId
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -182,8 +182,8 @@ const sessionsController = {
 	},
 	async getAllSessions(req, res) {
 		try {
-			const { psy } = req.params;
-			const { data, code } = await sessionsService.getAllSessions(psy);
+			const { spec } = req.params;
+			const { data, code } = await sessionsService.getAllSessions(spec);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');
@@ -191,9 +191,9 @@ const sessionsController = {
 	},
 	async paymentsInfoFromId(req, res) {
 		try {
-			const { psy } = req.params;
+			const { spec } = req.params;
 			const { data, code } = await sessionsService.paymentsInfoFromId(
-				psy
+				spec
 			);
 			return restResponse(data, code, res);
 		} catch (e) {

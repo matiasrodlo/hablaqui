@@ -1,7 +1,7 @@
 'use strict'; // Sirve para que el código sea mas estricto y evitar errores
 
 import User from '../models/user';
-import Psychologist from '../models/psychologist';
+import Specialist from '../models/specialist';
 import Recruitment from '../models/recruitment';
 import { logInfo } from '../config/winston';
 import bcrypt from 'bcryptjs';
@@ -95,10 +95,10 @@ const usersService = {
 		logInfo(actionInfo(user.email, 'actualizo su plan'));
 		return okResponse('plan actualizado', { profile: updated });
 	},
-	async updatePsychologist(user, newPsychologist, oldPsychologist) {
+	async updateSpecialist(user, newSpecialist, oldSpecialist) {
 		// Se realiza una busqueda del plan del consultante
 		const oldSession = await Sessions.findOne({
-			psychologist: oldPsychologist,
+			specialist: oldSpecialist,
 			user: user,
 		});
 
@@ -124,7 +124,7 @@ const usersService = {
 				session.status === 'success'
 		).length;
 
-		// Se crea un nuevo plan para el consultante con el nuevo psicólogo
+		// Se crea un nuevo plan para el consultante con el nuevo especialista
 		const newPlan = {
 			title: ultimoPlan.title,
 			period: ultimoPlan.period,
@@ -144,14 +144,14 @@ const usersService = {
 			session: [],
 		};
 
-		// Se busca si el usuario tiene una sesión con el nuevo psicólogo, si no la tiene se crea una
+		// Se busca si el usuario tiene una sesión con el nuevo especialista, si no la tiene se crea una
 		let newSession = await Sessions.findOne({
-			psychologist: newPsychologist,
+			specialist: newSpecialist,
 			user: user,
 		});
 		if (newSession === null) {
 			newSession = await Sessions.create({
-				psychologist: newPsychologist,
+				specialist: newSpecialist,
 				user: user,
 				plan: [newPlan],
 				roomsUrl: oldSession.roomsUrl,
@@ -181,12 +181,12 @@ const usersService = {
 		avatar,
 		avatarThumbnail,
 		role,
-		idPsychologist,
+		idSpecialist,
 		_id,
 		oldAvatar,
 		oldAvatarThumbnail,
 	}) {
-		let psychologist;
+		let specialist;
 		let userRole = role;
 		let userID = _id;
 
@@ -194,27 +194,27 @@ const usersService = {
 		if (!avatar && !avatarThumbnail)
 			return conflictResponse('Ha ocurrido un error inesperado');
 
-		// En caso de que el usuario sea super usuario se busca al psicologo por su id para
+		// En caso de que el usuario sea super usuario se busca al especialista por su id para
 		// encontrar al usuario, y se obtiene el id y su rol del usuario.
 		if (userLogged.role === 'superuser') {
-			const psy = await Psychologist.findById(idPsychologist);
+			const spec = await Specialist.findById(idSpecialist);
 			const userSelected = await User.findOne({
-				email: psy.email,
-				role: 'psychologist',
+				email: spec.email,
+				role: 'specialist',
 			});
 			userRole = userSelected.role;
 			userID = userSelected._id;
 		}
 
-		// Hace la distinción de casos por que los psy tienen el modelo de usuario y psicologo
-		if (userRole === 'psychologist') {
+		// Hace la distinción de casos por que los spec tienen el modelo de usuario y especialista
+		if (userRole === 'specialist') {
 			const userData = await User.findById(userID);
 			await mailServiceAccount.sendUploadPicture(userData);
-			// En caso de los psy, en el campo de psy, se les asigna el ID del documento de psicologo
-			if (userData.psychologist) {
+			// En caso de los spec, en el campo de spec, se les asigna el ID del documento de especialista
+			if (userData.specialist) {
 				// La imagen queda a probación al subirla
-				psychologist = await Psychologist.findByIdAndUpdate(
-					idPsychologist,
+				specialist = await Specialist.findByIdAndUpdate(
+					idSpecialist,
 					{
 						avatar,
 						avatarThumbnail,
@@ -223,8 +223,8 @@ const usersService = {
 					{ new: true }
 				);
 			} else {
-				// Si por alguna razón no esta asignado el psy, se busca su documento de recruitment y actualiza la imagen
-				psychologist = await Recruitment.findByIdAndUpdate(
+				// Si por alguna razón no esta asignado el spec, se busca su documento de recruitment y actualiza la imagen
+				specialist = await Recruitment.findByIdAndUpdate(
 					userID,
 					{
 						avatar,
@@ -254,7 +254,7 @@ const usersService = {
 
 		return okResponse('Avatar actualizado', {
 			user: profile,
-			psychologist,
+			specialist,
 		});
 	},
 
@@ -295,8 +295,8 @@ const usersService = {
 	},
 
 	async registerUser(user, body) {
-		if (user.role !== 'psychologist')
-			return conflictResponse('Usuario activo no es psicologo');
+		if (user.role !== 'specialist')
+			return conflictResponse('Usuario activo no es especialista');
 		if (await User.exists({ email: body.email }))
 			return conflictResponse('Correo electronico en uso');
 
@@ -310,7 +310,7 @@ const usersService = {
 				.toString(36)
 				.slice(2);
 		const newUser = {
-			//psychologist: user._id,
+			//specialist: user._id,
 			isInvited: true,
 			name: body.name,
 			lastName: body.lastName,
@@ -319,7 +319,7 @@ const usersService = {
 			role: 'user',
 			rut: body.rut,
 			phone: body.phone,
-			invitedBy: user.psychologist,
+			invitedBy: user.specialist,
 		};
 		// Se crea el usuario, se guarda en la base de datos, se genera un token con el que se
 		// genera un link de verificación y se envia un correo con el link
@@ -350,7 +350,7 @@ const usersService = {
 					name: user.name,
 					email: user.email,
 					type: user.role,
-					referencerId: user.psychologist.toString(),
+					referencerId: user.specialist.toString(),
 					referencerName: `${user.name} ${user.lastName}`,
 				},
 			});
@@ -368,20 +368,19 @@ const usersService = {
 			payment: 'success',
 			expiration: dayjs
 				.tz(dayjs('12/12/2000', 'MM/DD/YYYY HH:mm'))
-				.format()
-				.toISOString(),
-			invitedByPsychologist: true,
+				.format(),
+			invitedBySpecialist: true,
 			usedCoupon: '',
 			totalSessions: 0,
 			remainingSessions: 0,
 			session: [],
 		};
 
-		if (user.role === 'psychologist' && createdUser.role === 'user')
+		if (user.role === 'specialist' && createdUser.role === 'user')
 			await Sessions.create({
 				plan: [newPlan],
 				user: createdUser._id,
-				psychologist: user.psychologist,
+				specialist: user.specialist,
 				roomsUrl: `${room}room/${roomId}`,
 			});
 
@@ -399,10 +398,10 @@ const usersService = {
 			user: await servicesAuth.generateUser(createdUser),
 		});
 	},
-	async changePsychologist(sessionsId) {
+	async changeSpecialist(sessionsId) {
 		// Se busca el plan con el Id del documento de sesiones
 		const foundPlan = await Sessions.findById(sessionsId).populate(
-			'psychologist user'
+			'specialist user'
 		);
 		if (!foundPlan) return conflictResponse('No hay planes');
 
@@ -485,9 +484,9 @@ const usersService = {
 			},
 			expiration: expiration.toISOString(),
 		};
-		await mailServiceAccount.sendChangePsycologistToUser(
+		await mailServiceAccount.sendChangeSpeccologistToUser(
 			foundPlan.user,
-			foundPlan.psychologist,
+			foundPlan.specialist,
 			newCoupon
 		);
 		await Coupon.create(newCoupon);

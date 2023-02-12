@@ -18,10 +18,10 @@ const roles = () => {
 		.grant('admin')
 		.extend('person')
 
-		.readAny('psychologists')
-		.createAny('psychologists')
-		.deleteAny('psychologists')
-		.updateAny('psychologists')
+		.readAny('specialists')
+		.createAny('specialists')
+		.deleteAny('specialists')
+		.updateAny('specialists')
 
 		.readAny('appointments')
 		.createAny('appointments')
@@ -31,7 +31,7 @@ const roles = () => {
 		.readAny('users')
 		.createAny('users')
 		.deleteAny('users')
-		.updateAny('users')
+		.updateAny('users');
 
 	return accessControl;
 };

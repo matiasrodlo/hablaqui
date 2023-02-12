@@ -17,9 +17,9 @@
 			</v-col>
 			<v-col class="text--secondary" cols="6">
 				<v-list>
-					<v-subheader>Psicólogos</v-subheader>
+					<v-subheader>Especialistas</v-subheader>
 					<v-list-item
-						v-for="item in psychologists"
+						v-for="item in specialists"
 						:key="item._id"
 						:disabled="loading"
 						@click="setSelected(item, true)"
@@ -33,7 +33,7 @@
 			<v-card v-if="selected" max-width="1200px">
 				<v-toolbar flat color="primary" class="white--text">
 					<nuxt-link
-						v-if="selected.isPsy"
+						v-if="selected.isSpec"
 						style="text-decoration: none; display: block"
 						:to="{ path: `/${selected.username}` }"
 					>
@@ -46,7 +46,7 @@
 				</v-toolbar>
 				<v-card-text class="mt-3">
 					<v-row>
-						<template v-if="selected.isPsy">
+						<template v-if="selected.isSpec">
 							<v-col cols="12">
 								<a :href="selected.avatar" target="_blank">
 									<avatar
@@ -72,33 +72,14 @@
 								</div>
 								<label for="upload">
 									<div
-										class="
-											elevation-1
-											pointer
-											rounded
-											cyan
-											body-1
-											white--text
-											text-center
-											d-inline-block
-										"
+										class="elevation-1 pointer rounded cyan body-1 white--text text-center d-inline-block"
 										style="width: 200px"
 									>
 										{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
 									</div>
 								</label>
 								<div
-									class="
-										d-inline-block
-										elevation-1
-										pointer
-										success
-										rounded
-										body-1
-										white--text
-										text-center
-										ml-2
-									"
+									class="d-inline-block elevation-1 pointer success rounded body-1 white--text text-center ml-2"
 									style="width: 200px"
 									@click="approveAvatar(selected._id)"
 								>
@@ -122,11 +103,11 @@
 								></v-file-input>
 							</v-col>
 						</template>
-							<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
+							<!--Switch para mostrar speccógolo en matchmaking, aparece solo si es un especialista verificado y su contenido se guarda en "switch1"-->
 							<v-switch
-							v-if="selected.isPsy" 
+							v-if="selected.isSpec" 
 							v-model="switch1"
-							label="Mostrar Psicólogo en Matchmaking">
+							label="Mostrar Especialista en Matchmaking">
 							</v-switch>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
@@ -138,7 +119,7 @@
 								class="px-2"
 								:value="selected.username"
 								type="text"
-								:disabled="selected.isPsy"
+								:disabled="selected.isSpec"
 								@input="
 									e => {
 										selected.username = e.target.value;
@@ -147,7 +128,7 @@
 								"
 							/>
 						</v-col>
-						<v-col v-if="!selected.isPsy" cols="4" class="py-2">
+						<v-col v-if="!selected.isSpec" cols="4" class="py-2">
 							<v-btn
 								:color="available ? 'success' : 'warning'"
 								small
@@ -165,7 +146,7 @@
 						<v-col cols="4" class="py-2">
 							<v-btn
 								small
-								:disabled="!selected.isPsy || sessionsToPay.length === 0"
+								:disabled="!selected.isSpec || sessionsToPay.length === 0"
 								@click="setTransaction"
 							>
 								Pagar
@@ -191,7 +172,7 @@
 								class="px-2"
 								:value="selected.email"
 								type="text"
-								:disabled="selected.isPsy"
+								:disabled="selected.isSpec"
 								@input="e => (selected.email = e.target.value)"
 							/>
 						</v-col>
@@ -202,7 +183,7 @@
 								class="px-2"
 								:value="selected.rut"
 								type="text"
-								:disabled="selected.isPsy"
+								:disabled="selected.isSpec"
 								@input="e => (selected.rut = e.target.value)"
 							/>
 						</v-col>
@@ -376,7 +357,7 @@
 							</select>
 						</v-col>
 					</v-row>
-					<v-row v-if="selected.isPsy">
+					<v-row v-if="selected.isSpec">
 						<v-col cols="12">Datos Bancarios</v-col>
 						<!-- bank data -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -708,8 +689,8 @@
 							<v-card>
 								<v-card-text>
 									<horario
-										:psychologist="psychologist"
-										:set-psychologist="setPsychologist"/>
+										:specialist="specialist"
+										:set-specialist="setSpecialist"/>
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -734,8 +715,8 @@
 										</v-col>
 										<v-col>
 											<v-text-field
-											v-model="psyFilterText"
-											label="Filtro por Psicólogo"
+											v-model="specFilterText"
+											label="Filtro por Especialista"
 											></v-text-field>
 										</v-col>
 										<v-col>
@@ -756,9 +737,9 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col v-if="!selected.isPsy" cols="12">
-							¿Cuántos años llevas trabajando como psicólogo clínico?
-							{{ selected.yearsExpPsychologist }}
+						<v-col v-if="!selected.isSpec" cols="12">
+							¿Cuántos años llevas trabajando como especialista clínico?
+							{{ selected.yearsExpSpecialist }}
 							<br />
 							¿Cuántos años ha visto pacientes en línea a través de consultas por
 							video? {{ selected.yearsExpVideocalls }}
@@ -769,13 +750,16 @@
 							{{ selected.isExclusiveActivity ? 'Si' : 'No' }}
 							<br />
 							¿Está actualmente bajo la supervisión clínica de otro profesional de la
-							psicología? {{ selected.isUnderSupervision ? 'Si' : 'No' }} <br />
-							¿Supervisa actualmente a otros psicólogos?
+							speccología? {{ selected.isUnderSupervision ? 'Si' : 'No' }} <br />
+							¿Supervisa actualmente a otros especialistas?
 							{{ selected.isSupervisor ? 'Si' : 'No' }}
 						</v-col>
 					</v-row>
 				</v-card-text>
-				<div v-if="!selected.isPsy" class="text-center warning--text font-weight-bold pb-2">
+				<div
+					v-if="!selected.isSpec"
+					class="text-center warning--text font-weight-bold pb-2"
+				>
 					Recuerda antes de aprobar dar al boton actualizar y tambien recuerda verificar
 					el username que este disponible
 				</div>
@@ -785,7 +769,7 @@
 						Actualizar
 					</v-btn>
 					<v-btn
-						v-if="!selected.isPsy"
+						v-if="!selected.isSpec"
 						:loading="loadingApprove"
 						text
 						color="primary"
@@ -794,11 +778,11 @@
 						Aprobar
 					</v-btn>
 					<v-btn
-						v-if="selected.isPsy"
+						v-if="selected.isSpec"
 						:loading="loadingDelete"
 						text
 						color="error"
-						@click="deletePsy"
+						@click="deleteSpec"
 					>
 						Eliminar
 					</v-btn>
@@ -831,7 +815,7 @@ export default {
 			loadingAvatar: false,
 			dialog: false,
 			items: [],
-			psychologists: [],
+			specialists: [],
 			selected: null,
 			comunasRegiones: [],
 			regiones: [],
@@ -848,15 +832,15 @@ export default {
 			switch1: true,
 			dateFilterText: null,
 			statFilterText: '',
-			psyFilterText: '',
+			specFilterText: '',
 			userFilterText: '',
 			headers: [
 				{ text: 'Consultante', value: 'user' },
-				{ text: 'Psicólogo', value: 'psychologist' },
+				{ text: 'Especialista', value: 'specialist' },
 				{ text: 'Fecha', value: 'date' },
 				{ text: 'Teléfono usuario', value: 'userPhone' },
 				{ text: 'Email Consultante', value: 'emailUser' },
-				{ text: 'Email Psicólogo', value: 'emailPsychologist' },
+				{ text: 'Email Especialista', value: 'emailSpecialist' },
 				{ text: 'Estatus', value: 'statusSession' },
 			],
 			sessions: [],
@@ -864,22 +848,22 @@ export default {
 		};
 	},
 	computed: {
-		psychologist: {
+		specialist: {
 			get() {
 				return this.selected;
 			},
 			set(value) {
-				this.setPsychologist(value);
+				this.setSpecialist(value);
 			},
 		},
 		...mapGetters({specialties: 'Appointments/specialties'}),
 		filteredSessions() {
-			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo y fecha de la sesión
+			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista y fecha de la sesión
 			return this.sessions.filter(
 				session =>
 				session.user.includes(this.userFilterText) &&
 				session.statusSession.includes(this.statFilterText) &&
-				session.psychologist.includes(this.psyFilterText) &&
+				session.specialist.includes(this.specFilterText) &&
 				(this.dateFilterText
 					? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
 					: true
@@ -897,12 +881,12 @@ export default {
 		this.initFetch();
 	},
 	methods: {
-		setPsychologist(value) {
-			this.psychologist = value;
+		setSpecialist(value) {
+			this.specialist = value;
 		},
 		async initFetch() {
 			await this.getRecruitments();
-			await this.getPsychologist();
+			await this.getSpecialist();
 			await this.getFormattedSessions();
 			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 			banks = await banks.json();
@@ -930,9 +914,9 @@ export default {
 				return 0;
 			});
 		},
-		async getPsychologist() {
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			this.psychologists = psychologists.sort((a, b) => {
+		async getSpecialist() {
+			const { specialists } = await this.$axios.$get('/specialists/all');
+			this.specialists = specialists.sort((a, b) => {
 				const fa = a.name.toLowerCase();
 				const fb = b.name.toLowerCase();
 
@@ -944,19 +928,19 @@ export default {
 				}
 				return 0;
 			});
-			this.psychologists = this.psychologists.map(psychologist => {
-				const psy = psychologist;
-				if (!psychologist.experience.length)
-					psy.experience.push({ title: '', place: '', start: '', end: '' });
-				if (!psychologist.formation.length)
-					psy.formation.push({
+			this.specialists = this.specialists.map(specialist => {
+				const spec = specialist;
+				if (!specialist.experience.length)
+					spec.experience.push({ title: '', place: '', start: '', end: '' });
+				if (!specialist.formation.length)
+					spec.formation.push({
 						formationType: '',
 						description: '',
 						start: '',
 						end: '',
 					});
-				if (isEmpty(psychologist.paymentMethod))
-					psychologist.paymentMethod = {
+				if (isEmpty(specialist.paymentMethod))
+					specialist.paymentMethod = {
 						bank: '',
 						accountType: '',
 						accountNumber: '',
@@ -964,7 +948,7 @@ export default {
 						name: '',
 						email: '',
 					};
-				return psy;
+				return spec;
 			});
 		},
 		async getFormattedSessions() {
@@ -992,24 +976,24 @@ export default {
 			if (!confirm('Estas seguro de aprobar este postulado?'))
 				return (this.loadingApprove = false);
 			this.loadingApprove = true;
-			if (this.selected.isPsy) return;
+			if (this.selected.isSpec) return;
 			await this.$axios(`/recruitment/approve/${this.selected.email}`, {
 				method: 'post',
 			});
 			const { recruitment } = await this.$axios.$get(`/recruitment`);
 			this.items = recruitment;
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			this.psychologists = psychologists;
+			const { specialists } = await this.$axios.$get('/specialists/all');
+			this.specialists = specialists;
 			this.loadingApprove = false;
 			this.dialog = false;
 		},
 		async submit() {
 			this.loadingSubmit = true;
-			if (this.selected.isPsy) {
-				await this.updatePsychologist(this.selected);
-				const { psychologists } = await this.$axios.$get('/psychologists/all');
-				this.psychologists = psychologists;
-				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
+			if (this.selected.isSpec) {
+				await this.updateSpecialist(this.selected);
+				const { specialists } = await this.$axios.$get('/specialists/all');
+				this.specialists = specialists;
+				// Endpoint encargado de actualizar visibilidad del especialista en el matchmaking
 				await this.$axios.$put(`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`);
 			} else {
 				await this.checkusername();
@@ -1026,10 +1010,10 @@ export default {
 			}
 			this.loadingSubmit = false;
 		},
-		async deletePsy() {
+		async deleteSpec() {
 			if (confirm('Estas seguro de eliminar?')) {
 				this.loadingDelete = true;
-				this.psychologists = await this.deletePsychologist(this.selected._id);
+				this.specialists = await this.deleteSpecialist(this.selected._id);
 				this.loadingDelete = false;
 				this.dialog = false;
 			}
@@ -1037,8 +1021,8 @@ export default {
 		async checkusername() {
 			this.available = await this.checkUsername(this.selected.username);
 		},
-		async setSelected(item, isPsy) {
-			this.selected = { ...item, isPsy };
+		async setSelected(item, isSpec) {
+			this.selected = { ...item, isSpec };
 			this.switch1 = this.selected.preferences.marketplaceVisibility;
 			this.dialog = true;
 		},
@@ -1055,15 +1039,15 @@ export default {
 		},
 		async uploadAvatar(file) {
 			this.loadingAvatar = true;
-			const { psychologist } = await this.upateAvatar(this.setAvatarObject(file));
-			const index = this.psychologists.findIndex(element => element._id === psychologist._id);
-			this.psychologists[index] = psychologist;
+			const { specialist } = await this.upateAvatar(this.setAvatarObject(file));
+			const index = this.specialists.findIndex(element => element._id === specialist._id);
+			this.specialists[index] = specialist;
 			this.setSelected(
 				{
 					...this.selected,
-					avatar: psychologist.avatar,
-					avatarThumbnail: psychologist.avatarThumbnail,
-					approveAvatar: psychologist.approveAvatar,
+					avatar: specialist.avatar,
+					avatarThumbnail: specialist.avatarThumbnail,
+					approveAvatar: specialist.approveAvatar,
 				},
 				true
 			);
@@ -1071,13 +1055,13 @@ export default {
 		},
 		async approveAvatar(id) {
 			this.loadingApproveAvatar = true;
-			const psychologist = await this.putApproveAvatar(id);
-			const index = this.psychologists.findIndex(element => element._id === psychologist._id);
-			this.psychologists[index] = psychologist;
+			const specialist = await this.putApproveAvatar(id);
+			const index = this.specialists.findIndex(element => element._id === specialist._id);
+			this.specialists[index] = specialist;
 			this.setSelected(
 				{
 					...this.selected,
-					approveAvatar: psychologist.approveAvatar,
+					approveAvatar: specialist.approveAvatar,
 				},
 				true
 			);
@@ -1088,7 +1072,7 @@ export default {
 			avatar.append('avatar', file);
 			avatar.append('name', this.selected.name);
 			avatar.append('lastName', this.selected.lastName);
-			avatar.append('idPsychologist', this.selected._id.toString());
+			avatar.append('idSpecialist', this.selected._id.toString());
 			avatar.append('oldAvatar', this.selected.avatar);
 			avatar.append(
 				'oldAvatarThumbnail',
@@ -1098,14 +1082,14 @@ export default {
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
-			setPsychologist: 'Psychologist/setPsychologist',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
-			putApproveAvatar: 'Psychologist/approveAvatar',
-			checkUsername: 'Psychologist/checkUsername',
-			deletePsychologist: 'Psychologist/deletePsychologist',
+			putApproveAvatar: 'Specialist/approveAvatar',
+			checkUsername: 'Specialist/checkUsername',
+			deleteSpecialist: 'Specialist/deleteSpecialist',
 			getAppointments: 'Appointments/getAppointments',
-			updatePsychologist: 'Psychologist/updatePsychologist',
+			updateSpecialist: 'Specialist/updateSpecialist',
 			upateAvatar: 'User/upateAvatar',
 		}),
 		columnValueList(val) {

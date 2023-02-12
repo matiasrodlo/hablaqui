@@ -164,28 +164,30 @@
 					@input="e => setSearch(e)"
 				/>
 			</v-card-text>
-			<!-- todos los psicologos -->
+			<!-- todos los especialistas -->
 			<template
-				v-if="psyFromChats.length || ($auth.$state.user.role === 'user' && plan && !search)"
+				v-if="
+					specFromChats.length || ($auth.$state.user.role === 'user' && plan && !search)
+				"
 			>
 				<v-card-text style="flex: 0" class="py-0">
-					<v-subheader class="primary--text body-1 px-0">Psicólogos</v-subheader>
+					<v-subheader class="primary--text body-1 px-0">Especialistas</v-subheader>
 					<v-divider style="border-color: #5eb3e4" class="mb-2"></v-divider>
 				</v-card-text>
 				<v-list style="flex: 1; overflow: auto" two-line>
-					<!-- mi psicologo -->
+					<!-- mi especialista -->
 					<template v-if="$auth.$state.user.role === 'user' && plan && !search">
-						<v-list-item @click="selectedPsy(getMyPsy)">
+						<v-list-item @click="selectedSpec(getMySpec)">
 							<v-list-item-avatar
 								style="border-radius: 50%"
-								:style="getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+								:style="getMySpec.hasMessage ? 'border: 3px solid #2070E5' : ''"
 								size="50"
 							>
-								<avatar :url="getMyPsy.avatar" :name="getMyPsy.name" size="50" />
+								<avatar :url="getMySpec.avatar" :name="getMySpec.name" size="50" />
 							</v-list-item-avatar>
 							<v-list-item-content>
 								<v-list-item-title>
-									{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+									{{ getMySpec.name }} {{ getMySpec.lastName }}
 								</v-list-item-title>
 								<v-list-item-subtitle class="primary--text">
 									Mi especialista
@@ -194,40 +196,40 @@
 							<v-list-item-action>
 								<v-badge
 									color="primary"
-									:content="getMyPsy.countMessagesUnRead"
-									:value="getMyPsy.countMessagesUnRead"
+									:content="getMySpec.countMessagesUnRead"
+									:value="getMySpec.countMessagesUnRead"
 								>
 								</v-badge>
 							</v-list-item-action>
 						</v-list-item>
 					</template>
-					<!-- resto de psicologo -->
+					<!-- resto de especialista -->
 					<v-list-item
-						v-for="(psy, e) in psyFromChats"
+						v-for="(spec, e) in specFromChats"
 						:key="e"
-						@click="selectedPsy(psy)"
+						@click="selectedSpec(spec)"
 					>
 						<v-list-item-avatar
 							style="border-radius: 50%"
-							:style="psy.hasMessage ? 'border: 3px solid #2070E5' : ''"
+							:style="spec.hasMessage ? 'border: 3px solid #2070E5' : ''"
 							size="50"
 						>
-							<avatar :url="psy.avatar" :name="psy.name" size="50" />
+							<avatar :url="spec.avatar" :name="spec.name" size="50" />
 						</v-list-item-avatar>
 
 						<v-list-item-content>
 							<v-list-item-title>
-								{{ psy.name }} {{ psy.lastName }}
+								{{ spec.name }} {{ spec.lastName }}
 							</v-list-item-title>
 							<v-list-item-subtitle v-show="false">
-								Psicólogo · Activo(a)
+								Especialista · Activo(a)
 							</v-list-item-subtitle>
 						</v-list-item-content>
 						<v-list-item-action>
 							<v-badge
 								color="primary"
-								:content="psy.countMessagesUnRead"
-								:value="psy.countMessagesUnRead"
+								:content="spec.countMessagesUnRead"
+								:value="spec.countMessagesUnRead"
 							>
 							</v-badge>
 						</v-list-item-action>
@@ -284,7 +286,7 @@ export default {
 			type: Function,
 			required: true,
 		},
-		selectedPsy: {
+		selectedSpec: {
 			type: Function,
 			required: true,
 		},
@@ -304,11 +306,11 @@ export default {
 			type: Object,
 			default: null,
 		},
-		getMyPsy: {
+		getMySpec: {
 			type: Object,
 			default: null,
 		},
-		psyFromChats: {
+		specFromChats: {
 			type: Array,
 			default: () => [],
 		},
@@ -353,12 +355,12 @@ export default {
 			if (isEmpty(this.message)) return;
 			this.loadingMessage = true;
 			const payload = {
-				psychologistId:
-					this.$auth.$state.user.role === 'psychologist'
-						? this.$auth.$state.user.psychologist
+				specialistId:
+					this.$auth.$state.user.role === 'specialist'
+						? this.$auth.$state.user.specialist
 						: this.selected._id,
 				userId:
-					this.$auth.$state.user.role === 'psychologist'
+					this.$auth.$state.user.role === 'specialist'
 						? this.selected._id
 						: this.$auth.$state.user._id,
 				content: this.message,

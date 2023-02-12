@@ -65,8 +65,7 @@
 					class="mt-5"
 					@click="
 						() => {
-							if (/*$auth.user.role !== 'psychologist' &&*/ selected)
-								setDate(selected);
+							if (/*$auth.user.role !== 'specialist' &&*/ selected) setDate(selected);
 						}
 					"
 				>
@@ -90,7 +89,7 @@ export default {
 			required: true,
 		},
 		titleButton: { type: String, default: 'Agendar una cita online' },
-		idPsy: { type: String, default: '' },
+		idSpec: { type: String, default: '' },
 		loadingBtn: { type: Boolean, default: false },
 		type: { type: String, default: 'schedule' },
 	},
@@ -104,15 +103,15 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters({ sessions: 'Psychologist/sessionsFormatted' }),
+		...mapGetters({ sessions: 'Specialist/sessionsFormatted' }),
 	},
 	watch: {
-		idPsy(newValue) {
+		idSpec(newValue) {
 			this.getData(newValue);
 		},
 	},
 	mounted() {
-		this.getData(this.idPsy);
+		this.getData(this.idSpec);
 	},
 	methods: {
 		async getData(id) {
@@ -121,7 +120,7 @@ export default {
 			this.loading = false;
 		},
 		...mapActions({
-			getFormattedSessions: 'Psychologist/getFormattedSessions',
+			getFormattedSessions: 'Specialist/getFormattedSessions',
 		}),
 	},
 };

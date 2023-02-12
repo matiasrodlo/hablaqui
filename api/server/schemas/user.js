@@ -19,7 +19,7 @@ const userSchema = {
 		name: Joi.string().allow(''),
 		phone: Joi.string().allow(''),
 		plan: Joi.array(),
-		psychologist: Joi.string().allow(''),
+		specialist: Joi.string().allow(''),
 		onboarding: Joi.boolean(),
 		isVerified: Joi.boolean(),
 		role: Joi.string().allow(''),
@@ -28,6 +28,7 @@ const userSchema = {
 		state: Joi.boolean().allow(''),
 		timeZone: Joi.string().allow(),
 		gender: Joi.string().allow(),
+		profession: Joi.string().allow(),
 	}).min(1),
 	updatePassword: Joi.object({
 		oldPassword: Joi.string()
@@ -42,8 +43,8 @@ const userSchema = {
 	updatePlan: Joi.object({
 		newPlan: Joi.string().required(),
 	}),
-	updatePsychologist: Joi.object({
-		newPsychologist: Joi.object().required(),
+	updateSpecialist: Joi.object({
+		newSpecialist: Joi.object().required(),
 	}),
 	updateAvatar: Joi.object({
 		newAvatar: Joi.string().required(),
@@ -56,7 +57,7 @@ const userSchema = {
 			.email()
 			.required(),
 	}),
-	newUserByPsy: Joi.object({
+	newUserBySpec: Joi.object({
 		email: Joi.string()
 			.email()
 			.required(),

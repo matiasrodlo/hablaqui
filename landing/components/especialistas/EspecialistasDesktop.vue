@@ -4,13 +4,13 @@
 		<v-container fluid style="max-width: 1080px">
 			<v-row>
 				<v-col
-					v-if="$route.name === 'psicologos'"
+					v-if="$route.name === 'especialistas'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h6 text-md-h3"
 					style="color: #54565a"
 				>
-					Encuentra a tu psicólogo online
+					Encuentra a tu especialista online
 				</v-col>
 				<v-col cols="12" sm="6">
 					<v-autocomplete
@@ -26,14 +26,14 @@
 								index,
 							}))
 						"
-						label="Busca tu psicólogo"
+						label="Busca tu especialista"
 						:append-icon="mdiChevronDown"
 						hide-details
 						:menu-props="{
 							closeOnClick: true,
 						}"
 						clearable
-						:disabled="loadingPsychologist"
+						:disabled="loadingSpecialist"
 						@change="
 							e => {
 								searchInput = e;
@@ -182,7 +182,7 @@
 									<v-checkbox
 										v-model="gender"
 										value="male"
-										:disabled="loadingPsychologist"
+										:disabled="loadingSpecialist"
 										label="Hombre"
 										class="py-2"
 										hide-details
@@ -196,7 +196,7 @@
 										v-model="gender"
 										value="female"
 										label="Mujer"
-										:disabled="loadingPsychologist"
+										:disabled="loadingSpecialist"
 										class="py-2"
 										hide-details
 										@change="changeInput"
@@ -209,7 +209,7 @@
 										v-model="gender"
 										value="transgender"
 										label="Transgénero"
-										:disabled="loadingPsychologist"
+										:disabled="loadingSpecialist"
 										class="py-2"
 										hide-details
 										@change="changeInput"
@@ -305,7 +305,7 @@
 									<v-checkbox
 										v-model="languages"
 										value="spanish"
-										:disabled="loadingPsychologist"
+										:disabled="loadingSpecialist"
 										hide-details
 										class="py-2"
 										label="Español"
@@ -318,7 +318,7 @@
 									<v-checkbox
 										v-model="languages"
 										value="english"
-										:disabled="loadingPsychologist"
+										:disabled="loadingSpecialist"
 										hide-details
 										class="py-2"
 										label="Ingles"
@@ -336,7 +336,7 @@
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
-		<v-container v-if="psychologists.length" fluid style="max-width: 1080px" class="my-4">
+		<v-container v-if="specialists.length" fluid style="max-width: 1080px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px; height: 182px">
@@ -351,10 +351,10 @@
 							</v-col>
 							<v-col class="pl-4">
 								<div class="text-h5 primary--text font-weight-bold">
-									Te ayudamos a encontrar a tu psicólogo ideal
+									Te ayudamos a encontrar a tu especialista ideal
 								</div>
 								<div class="my-2 text-h6 primary--text font-weight-regular">
-									Encuentra al psicólogo que necesitas, solo responde las
+									Encuentra al especialista que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
 								<div class="my-4">
@@ -372,7 +372,7 @@
 					</v-sheet>
 				</v-col>
 				<v-col
-					v-if="loadingPsychologist"
+					v-if="loadingSpecialist"
 					cols="12"
 					style="height: 300px"
 					class="d-flex justify-center align-center"
@@ -564,8 +564,8 @@
 									<v-divider vertical class="my-4"></v-divider>
 									<v-col cols="4">
 										<template v-if="visibles.includes(item._id)">
-											<calendar-psychologist
-												:id-psy="item._id"
+											<calendar-specialist
+												:id-spec="item._id"
 												:username="item.username"
 												:sessions="getSessions(item._id)"
 												:callback="date => null"
@@ -590,7 +590,7 @@
 					</template>
 				</template>
 				<v-col
-					v-if="psychologists.length && !filterLevelThree.length"
+					v-if="specialists.length && !filterLevelThree.length"
 					cols="12"
 					class="title primary--text"
 				>
@@ -614,15 +614,15 @@ import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 /**
- * Componente: Listado de psicologos en vista de escritorio
+ * Componente: Listado de especialistas en vista de escritorio
  */
 export default {
-	name: 'PsicologosDesktop',
+	name: 'EspecialistasDesktop',
 	components: {
-		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		CalendarSpecialist: () => import('~/components/CalendarSpecialist'),
 	},
 	props: {
-		loadingPsychologist: {
+		loadingSpecialist: {
 			type: Boolean,
 		},
 		getSessionsLimit: {
@@ -668,7 +668,7 @@ export default {
 		},
 		/**
 		 * Filter prices
-		 * Filtro en base a los precios de los psicologos
+		 * Filtro en base a los precios de los especialistas
 		 */
 		filterLevelTwo(item) {
 			if (!this.prices) return this.filterLevelOne;
@@ -683,12 +683,12 @@ export default {
 		},
 		/**
 		 * items for search box
-		 * Primer filtro de psicologos en base a:
+		 * Primer filtro de especialistas en base a:
 		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
 		 */
 		filterLevelOne() {
 			// fitro de marketplaceVisibility
-			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
+			let result = this.specialists.filter(item => item.preferences.marketplaceVisibility);
 			// si no hay genero , models, laguajes o status marcado entonces restorna el resultado
 			if (
 				!this.gender.length &&
@@ -697,9 +697,9 @@ export default {
 				!this.status
 			)
 				return result;
-			// si quiere ver por psicologo online, filtramos estos
+			// si quiere ver por especialista online, filtramos estos
 			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
-			// filtramos los psicologo segun el genero marcados
+			// filtramos los especialista segun el genero marcados
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
@@ -707,10 +707,10 @@ export default {
 					trans && gender.push(trans);
 					return gender.some(el => this.gender.some(g => g === el));
 				});
-			// filtramos los psicologos segun los models marcados
+			// filtramos los especialistas segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
-			// filtramos segun los leguajes que habla el psicologo
+			// filtramos segun los leguajes que habla el especialista
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages === el))
@@ -726,8 +726,8 @@ export default {
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsLimit',
+			specialists: 'Specialist/specialistsMarketPlace',
+			sessions: 'Specialist/sessionsLimit',
 		}),
 	},
 	watch: {
@@ -746,7 +746,7 @@ export default {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (
-			this.$route.name === 'psicologos' &&
+			this.$route.name === 'especialistas' &&
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });
@@ -769,11 +769,11 @@ export default {
 			}
 		},
 		/**
-		 * Esto son los psicologos que se iran viendo segun el scroll
+		 * Esto son los especialistas que se iran viendo segun el scroll
 		 */
-		handleVisivility(isVisible, entry, idPsychologist) {
-			if (isVisible && !this.visibles.includes(idPsychologist))
-				this.visibles.push(idPsychologist);
+		handleVisivility(isVisible, entry, idSpecialist) {
+			if (isVisible && !this.visibles.includes(idSpecialist))
+				this.visibles.push(idSpecialist);
 		},
 		/**
 		 * Al ejecutar la funcion guarda en scrollHeight la distancion en ese momento que tiene de scroll
@@ -790,21 +790,21 @@ export default {
 		/**
 		 * Busca el src del avatar
 		 * @param {boolean} thumbnail
-		 * @param {Object} psychologist
+		 * @param {Object} specialist
 		 * @returns String con el link del avatar
 		 */
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		/**
-		 * @param {string} id del psicologo
+		 * @param {string} id del especialista
 		 * @returns Array de sesiones
 		 */
 		getSessions(id) {
-			const temp = this.sessions.find(element => element.psychologist === id);
+			const temp = this.sessions.find(element => element.specialist === id);
 			if (!temp) {
 				return [];
 			}
@@ -821,15 +821,15 @@ export default {
 		},
 		/**
 		 * si no esta logeado lo envia a registro, si no lo envia al perfil y abre el chat
-		 * @param {string} psychologist
+		 * @param {string} specialist
 		 */
-		goChat(psychologist) {
+		goChat(specialist) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
-					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+					path: `/auth/?register=true&specialist=${specialist.username}`,
 				});
 			} else {
-				return this.$router.push(`/${psychologist.username}/?chat=true`);
+				return this.$router.push(`/${specialist.username}/?chat=true`);
 			}
 		},
 		...mapMutations({

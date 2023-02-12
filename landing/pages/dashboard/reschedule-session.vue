@@ -4,9 +4,9 @@
 		<v-row style="height: calc(100vh - 110px); overflow-y: auto">
 			<v-col class="text--secondary" cols="6">
 				<v-list>
-					<v-subheader>Psicologos</v-subheader>
+					<v-subheader>Especialistas</v-subheader>
 					<v-list-item
-						v-for="item in psychologists"
+						v-for="item in specialists"
 						:key="item._id"
 						:disabled="false"
 						@click="
@@ -103,7 +103,7 @@ export default {
 	middleware: ['auth'],
 	data() {
 		return {
-			psychologists: [],
+			specialists: [],
 			clients: [],
 			selectedClient: {},
 			loading: true,
@@ -129,12 +129,12 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			await this.getPsychologist();
+			await this.getSpecialist();
 			this.loading = false;
 		},
-		async getPsychologist() {
-			const { psychologists } = await this.$axios.$get('/psychologists/all');
-			this.psychologists = psychologists.sort((a, b) => {
+		async getSpecialist() {
+			const { specialists } = await this.$axios.$get('/specialists/all');
+			this.specialists = specialists.sort((a, b) => {
 				const fa = a.name.toLowerCase();
 				const fb = b.name.toLowerCase();
 
@@ -146,19 +146,19 @@ export default {
 				}
 				return 0;
 			});
-			this.psychologists = this.psychologists.map(psychologist => {
-				const psy = psychologist;
-				if (!psychologist.experience.length)
-					psy.experience.push({ title: '', place: '', start: '', end: '' });
-				if (!psychologist.formation.length)
-					psy.formation.push({
+			this.specialists = this.specialists.map(specialist => {
+				const spec = specialist;
+				if (!specialist.experience.length)
+					spec.experience.push({ title: '', place: '', start: '', end: '' });
+				if (!specialist.formation.length)
+					spec.formation.push({
 						formationType: '',
 						description: '',
 						start: '',
 						end: '',
 					});
-				if (isEmpty(psychologist.paymentMethod))
-					psychologist.paymentMethod = {
+				if (isEmpty(specialist.paymentMethod))
+					specialist.paymentMethod = {
 						bank: '',
 						accountType: '',
 						accountNumber: '',
@@ -166,11 +166,11 @@ export default {
 						name: '',
 						email: '',
 					};
-				return psy;
+				return spec;
 			});
 		},
 		async getClients(id) {
-			const { users } = await this.$axios.$get(`/psychologist/clients/${id}`);
+			const { users } = await this.$axios.$get(`/specialist/clients/${id}`);
 			this.clients = users.filter(user => !!user.plan);
 		},
 		getSession(client) {

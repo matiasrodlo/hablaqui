@@ -7,9 +7,9 @@
 						<v-col cols="4" class="text-center">
 							<div class="text-center">
 								<avatar
-									:url="avatar(psychologist, true)"
-									:name="psychologist.name"
-									:last-name="psychologist.lastName ? psychologist.lastName : ''"
+									:url="avatar(specialist, true)"
+									:name="specialist.name"
+									:last-name="specialist.lastName ? specialist.lastName : ''"
 									size="160"
 									loading-color="white"
 								></avatar>
@@ -17,39 +17,39 @@
 									class="text-capitalize py-4"
 									style="color: #706f6f; font-size: 14px"
 								>
-									Código {{ psychologist.code ? psychologist.code : '' }}
+									Código {{ specialist.code ? specialist.code : '' }}
 								</div>
 							</div>
 						</v-col>
 						<v-col cols="8">
 							<div>
 								<h1
-									v-if="psychologist.gender == 'male'"
+									v-if="specialist.gender == 'male'"
 									class="text-left font-weight-bold"
 									style="color: #3c3c3b; font-size: 28px"
 								>
-									Psicólogo {{ psychologist.name }}
-									{{ psychologist.lastName && psychologist.lastName }}
+									Especialista {{ specialist.name }}
+									{{ specialist.lastName && specialist.lastName }}
 								</h1>
 								<h1
 									v-else
 									class="text-left font-weight-bold"
 									style="color: #3c3c3b; font-size: 28px"
 								>
-									Psicóloga {{ psychologist.name }}
-									{{ psychologist.lastName && psychologist.lastName }}
+									Especialista {{ specialist.name }}
+									{{ specialist.lastName && specialist.lastName }}
 								</h1>
 							</div>
 							<div
 								class="text-left font-weight-medium pa-2"
 								style="color: #3c3c3b; font-size: 16px; flex: 1"
 							>
-								${{ Math.ceil(psychologist.sessionPrices.video / 100) * 100 }}
+								${{ Math.ceil(specialist.sessionPrices.video / 100) * 100 }}
 								/ 50 min
 							</div>
 							<div>
 								<v-chip-group show-arrows>
-									<template v-for="(tag, s) in psychologist.specialties">
+									<template v-for="(tag, s) in specialist.specialties">
 										<v-chip :key="s" class="ma-2" small>
 											{{ tag }}
 										</v-chip>
@@ -58,7 +58,7 @@
 							</div>
 							<div class="pr-4">
 								<div class="text-left" style="color: #54565a; font-size: 14px">
-									{{ psychologist.professionalDescription }}
+									{{ specialist.professionalDescription }}
 								</div>
 							</div>
 							<div class="my-4 text-left">
@@ -83,12 +83,12 @@
 					<v-card-text>
 						<div class="text-left subtitle-1 primary--text">Especialidades</div>
 						<div
-							v-if="psychologist.specialties && psychologist.specialties.length"
+							v-if="specialist.specialties && specialist.specialties.length"
 							class="body-1 text-left mt-3"
 						>
 							<ul>
 								<li
-									v-for="(item, i) in psychologist.specialties"
+									v-for="(item, i) in specialist.specialties"
 									:key="i"
 									class="my-1"
 								>
@@ -102,9 +102,9 @@
 					<v-card-text>
 						<div class="mb-4 text-left subtitle-1 primary--text">Experiencia</div>
 						<h2 class="body-1 text-left">
-							<ul v-if="psychologist.experience && psychologist.experience.length">
+							<ul v-if="specialist.experience && specialist.experience.length">
 								<li
-									v-for="(experience, i) in psychologist.experience"
+									v-for="(experience, i) in specialist.experience"
 									:key="i"
 									class="my-1"
 								>
@@ -120,8 +120,8 @@
 					<v-card-text>
 						<div class="mb-4 text-left subtitle-1 primary--text">Modelos</div>
 						<div class="body-1 text-left">
-							<ul v-if="psychologist.models && psychologist.models.length">
-								<li v-for="(model, i) in psychologist.models" :key="i" class="my-1">
+							<ul v-if="specialist.models && specialist.models.length">
+								<li v-for="(model, i) in specialist.models" :key="i" class="my-1">
 									{{ model }}
 								</li>
 							</ul>
@@ -132,9 +132,9 @@
 					<v-card-text>
 						<div class="mb-4 text-left subtitle-1 primary--text">Formación</div>
 						<div class="body-1 text-left">
-							<ul v-if="psychologist.formation && psychologist.formation.length">
+							<ul v-if="specialist.formation && specialist.formation.length">
 								<li
-									v-for="(formation, i) in psychologist.formation.filter(
+									v-for="(formation, i) in specialist.formation.filter(
 										el => el !== null
 									)"
 									:key="i"
@@ -154,8 +154,8 @@
 						<div class="mb-4 text-left subtitle-1 primary--text">Descripción</div>
 						<div class="body-1 text-left">
 							{{
-								psychologist.personalDescription
-									? psychologist.personalDescription
+								specialist.personalDescription
+									? specialist.personalDescription
 									: 'Sin descripcion'
 							}}
 						</div>
@@ -166,7 +166,7 @@
 						<div class="body-1 text-left">
 							Puede reprogramar hasta
 							<strong>
-								{{ psychologist.preferences.minimumRescheduleSession }} hora(s)
+								{{ specialist.preferences.minimumRescheduleSession }} hora(s)
 							</strong>
 							antes sin costo adicional.
 						</div>
@@ -179,9 +179,9 @@
 					style="border-radius: 15px"
 					:height="fullcard ? 'max-content' : '290px'"
 				>
-					<calendar-psychologist
-						:id-psy="psychologist._id"
-						:username="psychologist.username"
+					<calendar-specialist
+						:id-spec="specialist._id"
+						:username="specialist.username"
 						:sessions="sessions"
 						:callback="date => null"
 						:set-full-card="id => (fullcard = true)"
@@ -199,14 +199,14 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
-		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
+		CalendarSpecialist: () => import('~/components/CalendarSpecialist'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			required: true,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -221,7 +221,7 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			sessions: 'Psychologist/sessionsFormatted',
+			sessions: 'Specialist/sessionsFormatted',
 		}),
 	},
 	created() {
@@ -229,35 +229,35 @@ export default {
 		// this.socket = this.$nuxtSocket({
 		// 	channel: '/liveData',
 		// });
-		// this.socket.on('getPsychologist', username => {
-		// 	if (username === this.psychologist.username) {
-		// 		this.getPsychologist(username);
+		// this.socket.on('getSpecialist', username => {
+		// 	if (username === this.specialist.username) {
+		// 		this.getSpecialist(username);
 		// 	}
 		// });
 	},
 	methods: {
-		async getPsychologist(username) {
-			const { psychologist } = await this.$axios.$get(`/psychologists/one/${username}`);
-			this.setPsychologist(psychologist);
+		async getSpecialist(username) {
+			const { specialist } = await this.$axios.$get(`/specialists/one/${username}`);
+			this.setSpecialist(specialist);
 		},
 		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
-					path: `/auth/?register=true&psychologist=${this.psychologist.username}`,
+					path: `/auth/?register=true&specialist=${this.specialist.username}`,
 				});
 			} else {
 				if (!this.$route.query.chat)
 					this.$router.replace(`/${this.$route.params.slug}/?chat=true`);
 				this.loadingChat = true;
-				await this.startConversation(this.psychologist._id);
+				await this.startConversation(this.specialist._id);
 				this.loadingChat = false;
 				this.setFloatingChat(true);
 			}
 		},
-		avatar(psychologist) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		...mapActions({

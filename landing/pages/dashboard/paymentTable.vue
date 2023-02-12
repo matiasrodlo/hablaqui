@@ -6,7 +6,7 @@
 				<div>
 					<v-data-table
 						:headers="headers"
-						:items="psychologist"
+						:items="specialist"
 						sort-by="total"
 						:sort-desc="true"
 						class="elevation-1"
@@ -160,7 +160,7 @@ export default {
 		return {
 			page: 1,
 			pageCount: 0,
-			psychologist: [],
+			specialist: [],
 			transactions: [],
 			start: '',
 			end: '',
@@ -217,7 +217,7 @@ export default {
 	methods: {
 		async initFetch() {
 			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
-			this.psychologist = amounts;
+			this.specialist = amounts;
 			const { transactions } = await this.$axios.$get('/transaction/get/all');
 			this.transactions = transactions;
 		},
@@ -228,13 +228,13 @@ export default {
 					data: {
 						total: item.total,
 						session: item.session,
-						idPsy: item._id,
+						idSpec: item._id,
 					},
 				});
 
-				const index = this.psychologist.indexOf(item);
-				this.psychologist[index].total = 0;
-				this.psychologist[index].session = [];
+				const index = this.specialist.indexOf(item);
+				this.specialist[index].total = 0;
+				this.specialist[index].session = [];
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });

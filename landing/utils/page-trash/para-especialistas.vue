@@ -13,7 +13,7 @@
 		>
 			<Appbar class="hidden-sm-and-down" />
 			<v-container
-				id="form-psy"
+				id="form-spec"
 				tag="section"
 				fluid
 				style="height: calc(100% - 180px); max-width: 1080px"
@@ -21,25 +21,13 @@
 				<v-row justify="center" align="center" style="height: 100%">
 					<v-col cols="12" md="7" xl="5">
 						<h1
-							class="
-								text-center text-md-left
-								white--text
-								font-weight-bold
-								text-h4 text-lg-h3
-							"
+							class="text-center text-md-left white--text font-weight-bold text-h4 text-lg-h3"
 						>
 							Únete a la red de salud <br />
 							mental y bienestar
 						</h1>
 						<h2
-							class="
-								mt-3
-								text-center text-md-left
-								white--text
-								my-4
-								text-h6 text-lg-h5
-								font-weight-bold
-							"
+							class="mt-3 text-center text-md-left white--text my-4 text-h6 text-lg-h5 font-weight-bold"
 						>
 							Descubre los beneficios de ser parte de Hablaquí y brinda terapia online
 							desde cualquier lugar
@@ -148,14 +136,7 @@
 									alt="check"
 								/>
 								<h3
-									class="
-										white--text
-										ml-6
-										text-left
-										body-1
-										text-sm-h5
-										font-weight-bold
-									"
+									class="white--text ml-6 text-left body-1 text-sm-h5 font-weight-bold"
 								>
 									Videollamadas seguras y cómodas
 								</h3>
@@ -168,14 +149,7 @@
 									alt="check"
 								/>
 								<h3
-									class="
-										white--text
-										ml-6
-										text-left
-										body-1
-										text-sm-h5
-										font-weight-bold
-									"
+									class="white--text ml-6 text-left body-1 text-sm-h5 font-weight-bold"
 								>
 									Sistema de reservas
 								</h3>
@@ -188,14 +162,7 @@
 									alt="check"
 								/>
 								<h3
-									class="
-										white--text
-										ml-6
-										text-left
-										body-1
-										text-sm-h5
-										font-weight-bold
-									"
+									class="white--text ml-6 text-left body-1 text-sm-h5 font-weight-bold"
 								>
 									Sitio web especializado
 								</h3>
@@ -208,14 +175,7 @@
 									alt="check"
 								/>
 								<h3
-									class="
-										white--text
-										ml-6
-										text-left
-										body-1
-										text-sm-h5
-										font-weight-bold
-									"
+									class="white--text ml-6 text-left body-1 text-sm-h5 font-weight-bold"
 								>
 									Gestión de agenda, clientes y pagos
 								</h3>
@@ -228,14 +188,7 @@
 									alt="check"
 								/>
 								<h3
-									class="
-										white--text
-										ml-6
-										text-left
-										body-1
-										text-sm-h5
-										font-weight-bold
-									"
+									class="white--text ml-6 text-left body-1 text-sm-h5 font-weight-bold"
 								>
 									Recordatorios y correo electrónico
 								</h3>
@@ -353,10 +306,15 @@
 					</v-card>
 				</v-col>
 				<v-col cols="12" class="text-center">
-					<v-btn class="hidden-sm-and-down" to="#form-psy" color="primary" x-large rounded
+					<v-btn
+						class="hidden-sm-and-down"
+						to="#form-spec"
+						color="primary"
+						x-large
+						rounded
 						>Regístrate ahora</v-btn
 					>
-					<v-btn class="hidden-md-and-up" to="#form-psy2" color="primary" x-large rounded
+					<v-btn class="hidden-md-and-up" to="#form-spec2" color="primary" x-large rounded
 						>Regístrate ahora</v-btn
 					>
 				</v-col>
@@ -373,25 +331,12 @@
 				<v-row justify-md="center" align="center" style="height: 500px">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
 						<h2
-							class="
-								pt-10 pt-sm-16
-								text-center
-								font-weight-bold
-								white--text
-								text-h5 text-sm-h4
-							"
+							class="pt-10 pt-sm-16 text-center font-weight-bold white--text text-h5 text-sm-h4"
 						>
 							Próximamente
 						</h2>
 						<h3
-							class="
-								text-center
-								font-weight-bold
-								white--text
-								caption
-								my-sm-4
-								text-sm-h6
-							"
+							class="text-center font-weight-bold white--text caption my-sm-4 text-sm-h6"
 						>
 							Mantén contacto con tus consultantes vía Chat. <br />
 							¡Descarga la aplicación ahora!
@@ -431,13 +376,7 @@
 				<v-row justify-md="center">
 					<v-col offset-md="6" cols="12" md="6" class="mt-0 mt-sm-16 mt-md-0">
 						<h2
-							class="
-								pt-10 pt-sm-16
-								text-center
-								font-weight-bold
-								white--text
-								text-h5 text-sm-h4
-							"
+							class="pt-10 pt-sm-16 text-center font-weight-bold white--text text-h5 text-sm-h4"
 						>
 							Próximamente
 						</h2>

@@ -1,22 +1,22 @@
 'use strict';
 
-import psychologistsService from '../services/psychologist';
+import specialistsService from '../services/specialist';
 import { restResponse } from '../utils/responses/functions';
 import { errorCallback } from '../utils/functions/errorCallback';
 
-const psychologistsController = {
+const specialistsController = {
 	async getAll(req, res) {
 		try {
-			const { data, code } = await psychologistsService.getAll();
+			const { data, code } = await specialistsService.getAll();
 			return restResponse(data, code, res);
 		} catch (error) {
-			errorCallback(error, res, 'Error obteniendo los psicologos');
+			errorCallback(error, res, 'Error obteniendo los especialistas');
 		}
 	},
 	async match(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await psychologistsService.match(body);
+			const { data, code } = await specialistsService.match(body);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error haciendo match');
@@ -25,7 +25,7 @@ const psychologistsController = {
 	async rescheduleSession(req, res) {
 		try {
 			const { sessionsId, planId, sessionId, newDate } = req.body;
-			const { data, code } = await psychologistsService.rescheduleSession(
+			const { data, code } = await specialistsService.rescheduleSession(
 				sessionsId,
 				planId,
 				sessionId,
@@ -39,19 +39,19 @@ const psychologistsController = {
 	async getByUsername(req, res) {
 		try {
 			const { username } = req.params;
-			const { data, code } = await psychologistsService.getByUsername(
+			const { data, code } = await specialistsService.getByUsername(
 				username
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error consiguiendo el psicologo');
+			errorCallback(e, res, 'error consiguiendo el especialista');
 		}
 	},
 	async setSchedule(req, res) {
 		try {
 			const { user } = req;
 			const { payload } = req.body;
-			const { data, code } = await psychologistsService.setSchedule(
+			const { data, code } = await specialistsService.setSchedule(
 				user,
 				payload
 			);
@@ -64,27 +64,27 @@ const psychologistsController = {
 		try {
 			const { user } = req;
 			const { payload } = req.body;
-			const {
-				data,
-				code,
-			} = await psychologistsService.updatePaymentMethod(user, payload);
+			const { data, code } = await specialistsService.updatePaymentMethod(
+				user,
+				payload
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'error actualizando el metodo de pago');
 		}
 	},
 
-	async updatePsychologist(req, res) {
+	async updateSpecialist(req, res) {
 		try {
 			const { user } = req;
 			const { profile } = req.body;
-			const {
-				data,
-				code,
-			} = await psychologistsService.updatePsychologist(user, profile);
+			const { data, code } = await specialistsService.updateSpecialist(
+				user,
+				profile
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'error actualizando el psicologo');
+			return errorCallback(e, res, 'error actualizando el especialista');
 		}
 	},
 
@@ -92,20 +92,17 @@ const psychologistsController = {
 		try {
 			const { user } = req;
 			const { id } = req.params;
-			const { data, code } = await psychologistsService.deleteOne(
-				user,
-				id
-			);
+			const { data, code } = await specialistsService.deleteOne(user, id);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'error eliminando el psicologo');
+			return errorCallback(e, res, 'error eliminando el especialista');
 		}
 	},
 	async setPrice(req, res) {
 		try {
 			const { user } = req;
 			const { newPrice } = req.body;
-			const { data, code } = await psychologistsService.setPrice(
+			const { data, code } = await specialistsService.setPrice(
 				user,
 				newPrice
 			);
@@ -117,17 +114,17 @@ const psychologistsController = {
 	async getByData(req, res) {
 		try {
 			const { info } = req.params;
-			const { data, code } = await psychologistsService.getByData(info);
+			const { data, code } = await specialistsService.getByData(info);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error consiguiendo el psicologo');
+			errorCallback(e, res, 'error consiguiendo el especialista');
 		}
 	},
 	async getClients(req, res) {
 		try {
-			const { psychologist } = req.params;
-			const { data, code } = await psychologistsService.getClients(
-				psychologist
+			const { specialist } = req.params;
+			const { data, code } = await specialistsService.getClients(
+				specialist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -137,7 +134,7 @@ const psychologistsController = {
 	async searchClients(req, res) {
 		try {
 			const { search } = req.params;
-			const { data, code } = await psychologistsService.searchClients(
+			const { data, code } = await specialistsService.searchClients(
 				search
 			);
 			return restResponse(data, code, res);
@@ -148,7 +145,7 @@ const psychologistsController = {
 	async usernameAvailable(req, res) {
 		try {
 			const { username } = req.body;
-			const { data, code } = await psychologistsService.usernameAvailable(
+			const { data, code } = await specialistsService.usernameAvailable(
 				username
 			);
 			return restResponse(data, code, res);
@@ -163,7 +160,7 @@ const psychologistsController = {
 			const {
 				data,
 				code,
-			} = await psychologistsService.updateFormationExperience(
+			} = await specialistsService.updateFormationExperience(
 				user,
 				payload
 			);
@@ -177,7 +174,7 @@ const psychologistsController = {
 		try {
 			const { user } = req;
 			const { id } = req.params;
-			const { data, code } = await psychologistsService.approveAvatar(
+			const { data, code } = await specialistsService.approveAvatar(
 				user,
 				id
 			);
@@ -193,7 +190,7 @@ const psychologistsController = {
 			const {
 				data,
 				code,
-			} = await psychologistsService.uploadProfilePicture(id, file);
+			} = await specialistsService.uploadProfilePicture(id, file);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(
@@ -209,8 +206,8 @@ const psychologistsController = {
 			const {
 				data,
 				code,
-			} = await psychologistsService.changeToInmediateAttention(
-				user.psychologist
+			} = await specialistsService.changeToInmediateAttention(
+				user.specialist
 			);
 			return restResponse(data, code, res);
 		} catch (e) {
@@ -219,4 +216,4 @@ const psychologistsController = {
 	},
 };
 
-export default Object.freeze(psychologistsController);
+export default Object.freeze(specialistsController);

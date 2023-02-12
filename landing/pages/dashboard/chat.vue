@@ -47,9 +47,9 @@
 								label="Buscar"
 							/>
 						</v-card-text>
-						<!-- barra lateral role psychologist -->
+						<!-- barra lateral role specialist -->
 						<template
-							v-if="$auth.$state.user && $auth.$state.user.role === 'psychologist'"
+							v-if="$auth.$state.user && $auth.$state.user.role === 'specialist'"
 						>
 							<!-- sin consultantes -->
 							<v-card-text v-if="listClients.length" class="py-0">
@@ -167,43 +167,43 @@
 								</v-subheader>
 								<v-divider style="border-color: #5eb3e4"></v-divider>
 							</v-card-text>
-							<!-- usuario mi psicologo -->
-							<v-list v-if="plan && getMyPsy" dense two-line class="py-0">
-								<v-list-item @click="setSelectedPsy(getMyPsy)">
+							<!-- usuario mi especialista -->
+							<v-list v-if="plan && getMySpec" dense two-line class="py-0">
+								<v-list-item @click="setSelectedSpec(getMySpec)">
 									<v-list-item-avatar
 										style="border-radius: 50%"
 										:style="
-											getMyPsy.hasMessage ? 'border: 3px solid #2070E5' : ''
+											getMySpec.hasMessage ? 'border: 3px solid #2070E5' : ''
 										"
 										size="40"
 									>
 										<avatar
-											:url="getMyPsy.avatar"
-											:name="getMyPsy.name"
+											:url="getMySpec.avatar"
+											:name="getMySpec.name"
 											size="40"
 										/>
 									</v-list-item-avatar>
 									<v-list-item-content>
 										<v-list-item-title>
-											{{ getMyPsy.name }} {{ getMyPsy.lastName }}
+											{{ getMySpec.name }} {{ getMySpec.lastName }}
 										</v-list-item-title>
 										<v-list-item-subtitle v-show="false">
-											Psicólogo · Activo(a)
+											Especialista · Activo(a)
 										</v-list-item-subtitle>
 									</v-list-item-content>
 									<v-list-item-action>
 										<v-badge
 											color="primary"
-											:content="getMyPsy.countMessagesUnRead"
-											:value="getMyPsy.countMessagesUnRead"
+											:content="getMySpec.countMessagesUnRead"
+											:value="getMySpec.countMessagesUnRead"
 										>
 										</v-badge>
 									</v-list-item-action>
 								</v-list-item>
 							</v-list>
-							<!-- usuario sin psicologo -->
+							<!-- usuario sin especialista -->
 							<v-list
-								v-else-if="!$auth.$state.user && !plan && listPsychologist.length"
+								v-else-if="!$auth.$state.user && !plan && listSpecialist.length"
 								link
 								two-line
 								class="py-0 primary"
@@ -222,7 +222,7 @@
 
 									<v-list-item-content>
 										<v-list-item-title class="caption">
-											Aun no tienes psicólogo
+											Aun no tienes especialista
 										</v-list-item-title>
 										<v-list-item-title class="caption">
 											Encuentra uno aquí
@@ -230,9 +230,9 @@
 									</v-list-item-content>
 								</v-list-item>
 							</v-list>
-							<!-- lista de psicologos "chat iniciado" -->
-							<template v-if="listPsychologist.length || plan">
-								<v-card-text v-if="listPsychologist.length" class="py-0">
+							<!-- lista de especialistas "chat iniciado" -->
+							<template v-if="listSpecialist.length || plan">
+								<v-card-text v-if="listSpecialist.length" class="py-0">
 									<v-subheader class="primary--text body-1 px-0"
 										>General</v-subheader
 									>
@@ -242,46 +242,50 @@
 									></v-divider>
 								</v-card-text>
 								<v-list
-									v-if="listPsychologist.length"
+									v-if="listSpecialist.length"
 									two-line
 									dense
 									style="overflow-y: auto"
 								>
 									<v-list-item
-										v-for="(psy, e) in listPsychologist"
+										v-for="(spec, e) in listSpecialist"
 										:key="e"
-										@click="setSelectedPsy(psy)"
+										@click="setSelectedSpec(spec)"
 									>
 										<v-list-item-avatar
 											style="border-radius: 50%"
 											:style="
-												psy.hasMessage ? 'border: 3px solid #2070E5' : ''
+												spec.hasMessage ? 'border: 3px solid #2070E5' : ''
 											"
 											size="40"
 										>
-											<avatar :url="psy.avatar" :name="psy.name" size="40" />
+											<avatar
+												:url="spec.avatar"
+												:name="spec.name"
+												size="40"
+											/>
 										</v-list-item-avatar>
 
 										<v-list-item-content>
 											<v-list-item-title>
-												{{ psy.name }} {{ psy.lastName }}
+												{{ spec.name }} {{ spec.lastName }}
 											</v-list-item-title>
 											<v-list-item-subtitle v-show="false">
-												Psicólogo · Activo(a)
+												Especialista · Activo(a)
 											</v-list-item-subtitle>
 										</v-list-item-content>
 										<v-list-item-action>
 											<v-badge
 												color="primary"
-												:content="psy.countMessagesUnRead"
-												:value="psy.countMessagesUnRead"
+												:content="spec.countMessagesUnRead"
+												:value="spec.countMessagesUnRead"
 											>
 											</v-badge>
 										</v-list-item-action>
 									</v-list-item>
 								</v-list>
 							</template>
-							<!-- lista de psicologos "sin chats iniciados" -->
+							<!-- lista de especialistas "sin chats iniciados" -->
 							<template v-else>
 								<div
 									style="flex: 1"
@@ -373,12 +377,12 @@ export default {
 		};
 	},
 	computed: {
-		psychologists() {
-			return this.allPsychologists.map(item => ({
+		specialists() {
+			return this.allSpecialists.map(item => ({
 				...item,
 				hasMessage: this.hasMessage(item),
 				countMessagesUnRead: this.setCountMessagesUnread(
-					this.chats.find(chat => chat.psychologist._id === item._id)
+					this.chats.find(chat => chat.specialist._id === item._id)
 				),
 			}));
 		},
@@ -387,17 +391,25 @@ export default {
 			if (
 				!this.selected.assistant &&
 				this.$auth.$state.user &&
-				this.selected._id === this.$auth.$state.user.psychologist
-			)
-				return 'Mi psicólogo';
+				this.selected._id === this.$auth.$state.user.specialist
+			) {
+				const professions = {
+					specialist: 'Especialista',
+					nutritionist: 'Nutricionista',
+					specchopedagogue: 'Psicopedagogo',
+				};
+				return this.selected.profession
+					? especialidadEspecialista[this.selected.profession]
+					: 'Especialista';
+			}
 			if (
 				!this.selected.assistant &&
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				this.clients.some(client => client._id === this.selected._id)
 			)
 				return 'Consultante';
 			return this.$auth.$state.user.role === 'user'
-				? 'Psicólogo de hablaquí'
+				? 'Especialista de hablaquí'
 				: 'No es un consultane';
 		},
 		listClients() {
@@ -412,9 +424,9 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
-		// lista de usuarios/clientes con los que podría chatear el psicólogo
+		// lista de usuarios/clientes con los que podría chatear el especialista
 		listUsers() {
-			let filterArray = this.chats.filter(item => item.psychologist && item.user);
+			let filterArray = this.chats.filter(item => item.specialist && item.user);
 
 			if (this.search) {
 				filterArray = this.chats.filter(el =>
@@ -422,7 +434,7 @@ export default {
 				);
 			}
 
-			if (this.$auth.$state.user.role === 'psychologist') {
+			if (this.$auth.$state.user.role === 'specialist') {
 				filterArray = filterArray.filter(item => {
 					return this.clients.every(el => el._id !== item.user._id);
 				});
@@ -436,40 +448,40 @@ export default {
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
-		// lista de psicólogos con los que podría chatear el usuario
-		listPsychologist() {
-			let filterArray = this.chats.filter(item => item.psychologist && item.user);
+		// lista de especialistas con los que podría chatear el usuario
+		listSpecialist() {
+			let filterArray = this.chats.filter(item => item.specialist && item.user);
 
 			if (this.search) {
 				filterArray = this.chats.filter(el =>
-					el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+					el.specialist.name.toLowerCase().includes(this.search.toLowerCase())
 				);
 			}
 
-			if (this.$auth.$state.user.role === 'user' && this.getMyPsy) {
+			if (this.$auth.$state.user.role === 'user' && this.getMySpec) {
 				filterArray = filterArray.filter(item => {
-					return this.getMyPsy._id !== item.psychologist._id;
+					return this.getMySpec._id !== item.specialist._id;
 				});
 			}
 
 			filterArray = uniqBy(filterArray, function (e) {
-				return e.psychologist._id;
+				return e.specialist._id;
 			});
 
 			return filterArray
 				.map(item => ({
-					...item.psychologist,
+					...item.specialist,
 					countMessagesUnRead: this.setCountMessagesUnread(item),
-					hasMessage: this.hasMessage(item.psychologist),
+					hasMessage: this.hasMessage(item.specialist),
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
-		getMyPsy() {
+		getMySpec() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
-				const psy = this.plan.psychologist;
-				if (psy)
+				const spec = this.plan.specialist;
+				if (spec)
 					return {
-						...this.getPsy(psy),
+						...this.getSpec(spec),
 						roomsUrl: this.plan && this.plan.roomsUrl ? this.plan.roomsUrl : '',
 					};
 				else return null;
@@ -479,8 +491,8 @@ export default {
 		...mapGetters({
 			chat: 'Chat/chat',
 			chats: 'Chat/chats',
-			allPsychologists: 'Psychologist/psychologists',
-			clients: 'Psychologist/clients',
+			allSpecialists: 'Specialist/specialists',
+			clients: 'Specialist/clients',
 			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
@@ -508,7 +520,7 @@ export default {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
-					this.$auth.$state.user.psychologist === data.psychologistId)
+					this.$auth.$state.user.specialist === data.specialistId)
 			) {
 				this.socketioCallback(data);
 			}
@@ -522,7 +534,7 @@ export default {
 			this.plan =
 				this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 			dayjs.locale('es');
-			await this.getPsychologists();
+			await this.getSpecialists();
 			if (this.$auth.$state.user.role === 'user') {
 				await this.getMessages();
 				this.initLoading = false;
@@ -533,8 +545,8 @@ export default {
 					url: '',
 				});
 			}
-			if (this.$auth.$state.user.role === 'psychologist') {
-				if (this.$auth.$state.user.psychologist) {
+			if (this.$auth.$state.user.role === 'specialist') {
+				if (this.$auth.$state.user.specialist) {
 					await this.getMessages();
 				}
 				if ('client' in this.$route.query) {
@@ -555,8 +567,8 @@ export default {
 			this.initLoading = false;
 		},
 		async socketioCallback(data) {
-			if (this.selected._id === data.psychologistId || this.selected._id === data.userId) {
-				await this.getChat({ psy: data.psychologistId, user: data.userId });
+			if (this.selected._id === data.specialistId || this.selected._id === data.userId) {
+				await this.getChat({ spec: data.specialistId, user: data.userId });
 				// scroll to end
 				setTimeout(() => {
 					if (this.$vuetify.breakpoint.smAndDown) {
@@ -576,7 +588,7 @@ export default {
 				_id: user._id,
 				roomsUrl: user.roomsUrl,
 			};
-			await this.getChat({ psy: this.$auth.$state.user.psychologist, user: user._id });
+			await this.getChat({ spec: this.$auth.$state.user.specialist, user: user._id });
 			this.loadingChat = false;
 			// scroll to end
 			setTimeout(() => {
@@ -589,32 +601,32 @@ export default {
 				await this.getMessages();
 			}
 		},
-		async setSelectedPsy(psy) {
-			if (this.selected && this.selected._id === psy._id) return;
+		async setSelectedSpec(spec) {
+			if (this.selected && this.selected._id === spec._id) return;
 			// iniciamos carga del seleccionado
 			this.loadingChat = true;
-			this.selected = psy;
+			this.selected = spec;
 			// obtener chat del selecciona
-			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
+			await this.getChat({ spec: spec._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
 			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
-			if (!this.chat) await this.startConversation(psy._id);
+			if (!this.chat) await this.startConversation(spec._id);
 			// scroll to end
 			setTimeout(() => {
 				if (this.$vuetify.breakpoint.smAndDown) {
 					this.$refs.channel1.scrollToElement();
 				} else this.$refs.channel2.scrollToElement();
 			}, 100);
-			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
-			if (psy.countMessagesUnRead) {
-				await this.updateMessage(psy.hasMessage);
+			// Si ya tiene un chat con el spec, marcamos mensaje como Leído y actualizamos el spec
+			if (spec.countMessagesUnRead) {
+				await this.updateMessage(spec.hasMessage);
 				await this.getMessages();
 			}
 		},
-		hasMessage(psy) {
+		hasMessage(spec) {
 			const temp = {
-				...this.chats.find(item => item.psychologist && item.psychologist._id === psy._id),
+				...this.chats.find(item => item.specialist && item.specialist._id === spec._id),
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				const hasMessage = temp.messages.some(
@@ -636,8 +648,8 @@ export default {
 				if (hasMessage) return temp._id;
 			}
 		},
-		getPsy(id) {
-			return this.psychologists.find(item => item._id === id);
+		getSpec(id) {
+			return this.specialists.find(item => item._id === id);
 		},
 		setCountMessagesUnread(item) {
 			let count = 0;
@@ -650,7 +662,7 @@ export default {
 			return count;
 		},
 		...mapActions({
-			getPsychologists: 'Psychologist/getPsychologists',
+			getSpecialists: 'Specialist/getSpecialists',
 			getChat: 'Chat/getChat',
 			getMessages: 'Chat/getMessages',
 			updateMessage: 'Chat/updateMessage',
@@ -658,7 +670,7 @@ export default {
 		}),
 		...mapMutations({
 			setChat: 'Chat/setChat',
-			setPsychologists: 'Psychologist/setPsychologists',
+			setSpecialists: 'Specialist/setSpecialists',
 			setStepLinks: 'User/setStepLinks',
 		}),
 	},

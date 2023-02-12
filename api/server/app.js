@@ -73,9 +73,9 @@ const swaggerOptions = {
 };
 /**
  * @openapi
- * /psychologists:
+ * /specialists:
  * 	get:
- * 	description: Get all psychologists
+ * 	description: Get all specialists
  * 	responses:
  * 		200:
  * 			description: Successful response

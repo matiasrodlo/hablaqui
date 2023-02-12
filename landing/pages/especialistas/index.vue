@@ -3,14 +3,14 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<psicologos-desktop
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-desktop
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-mobile
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="mt-10 hidden-md-and-up"
 		/>
@@ -35,8 +35,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
-import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import EspecialistasDesktop from '~/components/especialistas/EspecialistasDesktop';
+import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 
@@ -44,12 +44,12 @@ export default {
 	components: {
 		Footer,
 		Appbar,
-		PsicologosDesktop,
-		PsicologosMobile,
+		EspecialistasDesktop,
+		EspecialistasMobile,
 	},
 	async asyncData({ error, store }) {
 		try {
-			await store.dispatch('Psychologist/getPsychologists');
+			await store.dispatch('Specialist/getSpecialists');
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
 		}
@@ -60,12 +60,12 @@ export default {
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/',
+					content: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/',
+					content: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 				{
 					hid: 'robots',
@@ -76,7 +76,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: process.env.VUE_APP_LANDING + '/psicologos/',
+					href: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 			],
 		};
@@ -86,14 +86,14 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://app.hablaqui.cl/psicologos/',
+			url: 'http://app.hablaqui.cl/especialistas/',
 			email: 'soporte@hablaqui.cl',
-			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
+			slogan: 'Especialista y terapia online de calidad sin salir de casa',
 			logo: 'https://app.hablaqui.cl/logo_tiny.png',
 		};
 	},
 	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+		...mapGetters({ loadingSpecialist: 'Specialist/loadingSpecialist' }),
 	},
 	mounted() {
 		window.scrollTo(0, 0);
@@ -108,7 +108,7 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getSessionsLimit: 'Specialist/getSessionsLimit',
 		}),
 	},
 };

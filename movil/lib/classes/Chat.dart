@@ -1,4 +1,4 @@
-import 'Psychologist.dart';
+import 'Specialist.dart';
 
 class Chat
 {
@@ -6,7 +6,7 @@ class Chat
 	List			reports;
 	DateTime		updatedAt;
 	DateTime		createdAt;
-	Psychologist	psychologist;
+	Specialist	specialist;
 	
 	Chat();
 	
@@ -20,7 +20,7 @@ class Chat
 		{
 			this.id				= data['_id'];
 			this.reports		= data['reports'];
-			this.psychologist	= new Psychologist.fromMap(data['psychologist']);
+			this.specialist	= new Specialist.fromMap(data['specialist']);
 			this.updatedAt		= DateTime.parse(data['createdAt']);
 			this.createdAt		= DateTime.parse(data['updatedAt']);
 		}

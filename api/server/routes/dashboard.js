@@ -18,12 +18,12 @@ dashboardRouter.get(
 );
 
 /**
- * @description Devuelve la paga de los psicologos dentro de un intervalo de tiempo
+ * @description Devuelve la paga de los especialistas dentro de un intervalo de tiempo
  * @method GET
  * @param {String} params.startDate - Fecha de inicio del intervalo
  * @param {String} params.endDate - Fecha de término del intervalo
  * @route /api/v1/retool/payments/next/:startDate/:endDate
- * @return Array con los montos a pagar por psicólogo
+ * @return Array con los montos a pagar por especialista
  */
 dashboardRouter.get(
 	'/retool/payments/next/:startDate/:endDate',
@@ -42,14 +42,14 @@ dashboardRouter.get(
 );
 
 /**
- * @description Cambia la visibilidad de un psicologo
+ * @description Cambia la visibilidad de un especialista
  * @method PUT
- * @param {Boolean} params.visibility - Visibilidad del psicologo
- * @param {String} params.id - Id del psicologo
- * @route /api/v1/dashboard/specialist-visibility/:psyId/:visibility
+ * @param {Boolean} params.visibility - Visibilidad del especialista
+ * @param {String} params.id - Id del especialista
+ * @route /api/v1/dashboard/specialist-visibility/:specId/:visibility
  */
 dashboardRouter.put(
-	'/dashboard/specialist-visibility/:psyId/:visibility',
+	'/dashboard/specialist-visibility/:specId/:visibility',
 	[passport.authenticate('jwt', { session: true })],
 	dashboardController.specialistVisibility
 );

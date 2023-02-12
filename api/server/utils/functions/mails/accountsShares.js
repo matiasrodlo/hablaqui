@@ -33,14 +33,14 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send a welcome email to a new psychologist using the mailgun API with the template 'welcome-new-psy'
-	 * @param {Object} user - A User object from the database, corresponding to the new psychologist
+	 * @description Send a welcome email to a new specialist using the mailgun API with the template 'welcome-new-spec'
+	 * @param {Object} user - A User object from the database, corresponding to the new specialist
 	 */
-	async sendWelcomeNewPsychologist(user) {
+	async sendWelcomeNewSpecialist(user) {
 		const { email, name } = user;
 		const dataPayload = {
 			from:
-				'Hablaquí para Psicólogos <bienvenida-psicologos@mail.hablaqui.cl>',
+				'Hablaquí para Especialistas <bienvenida-especialistas@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: 'Enhorabuena, hemos aprobado a su cuenta',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
@@ -55,12 +55,12 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send a welcome email to a new  user created by a psychologist
-	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
-	 * @param {Object} newUser -  A User object from the database, corresponding to the psychologist
+	 * @description Send a welcome email to a new  user created by a specialist
+	 * @param {Object} spec - A User object from the database, corresponding to the specialist
+	 * @param {Object} newUser -  A User object from the database, corresponding to the specialist
 	 * @param {String} pass - Password to login
 	 */
-	async sendGuestNewUser(psy, newUser, pass) {
+	async sendGuestNewUser(spec, newUser, pass) {
 		const { name, email } = newUser;
 		const dataPayload = {
 			from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
@@ -72,8 +72,8 @@ const mailService = {
 				name: name,
 				email: email,
 				password: pass,
-				psy_first_name: psy.name,
-				psy_last_name: psy.lastName,
+				spec_first_name: spec.name,
+				spec_last_name: spec.lastName,
 			},
 			asm: {
 				group_id: 16321,
@@ -126,10 +126,10 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to support to notify that a psychologist has uploaded a photo.
-	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
+	 * @description Send an email to support to notify that a specialist has uploaded a photo.
+	 * @param {Object} spec - A User object from the database, corresponding to the specialist
 	 */
-	async sendUploadPicture(psy) {
+	async sendUploadPicture(spec) {
 		const dataPayload = {
 			from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
 			to: 'Hablaquí <soporte@hablaqui.cl>',
@@ -139,19 +139,19 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name + ' ' + psy.lastName,
-				psy_email: psy.email,
+				spec_name: spec.name + ' ' + spec.lastName,
+				spec_email: spec.email,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
 	 * @description Sends an email to the user who has cancelled his plan
-	 * @param {Object} user - A User object from the database, corresponding to the psychologist
-	 * @param {Object} psy - A User object from the database, corresponding to the psychologist
+	 * @param {Object} user - A User object from the database, corresponding to the specialist
+	 * @param {Object} spec - A User object from the database, corresponding to the specialist
 	 * @param {String} coupon - Coupon code
 	 */
-	async sendChangePsycologistToUser(user, psy, coupon) {
+	async sendChangeSpeccologistToUser(user, spec, coupon) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -164,7 +164,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				psy_name: psy.name,
+				spec_name: spec.name,
 				code: coupon.code,
 				amount: coupon.discount,
 				expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),

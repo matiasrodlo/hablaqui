@@ -21,7 +21,7 @@ export default {
 			item.plan.map(plan => ({
 				...plan,
 				idSessions: item._id,
-				psychologist: item.psychologist,
+				specialist: item.specialist,
 				user: item.user,
 				// numero de sessiones concluidas
 				success: item.numberSessionSuccess,

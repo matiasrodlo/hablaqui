@@ -260,7 +260,7 @@
 										</v-card-text>
 										<v-card-text class="px-0 px-sm-2 px-md-4">
 											<calendar
-												:id-psy="selectedEvent.idPsychologist"
+												:id-spec="selectedEvent.idSpecialist"
 												:set-date="e => reschedule(e)"
 												title-button="Reprogramar sesión"
 												type="reschedule"
@@ -508,7 +508,7 @@
 								</template>
 								<template v-if="stepAddAppoinment == 1">
 									<calendar
-										:id-psy="$auth.user.psychologist"
+										:id-spec="$auth.user.specialist"
 										:set-date="e => newCustomSession(e)"
 										title-button="Agendar"
 										:loading-btn="loadingSession"
@@ -528,7 +528,7 @@
 						<v-row justify="end" class="text-md-right pt-4">
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -544,7 +544,7 @@
 							</v-col>
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -559,7 +559,7 @@
 								</v-btn>
 							</v-col>
 							<v-col
-								v-if="$auth.$state.user.role === 'psychologist'"
+								v-if="$auth.$state.user.role === 'specialist'"
 								cols="12"
 								sm="6"
 								md="3"
@@ -573,7 +573,7 @@
 							</v-col>
 							<v-col
 								v-if="
-									$auth.$state.user.role === 'psychologist' ||
+									$auth.$state.user.role === 'specialist' ||
 									$auth.$state.user.role === 'user'
 								"
 								cols="12"
@@ -686,7 +686,7 @@
 							</v-col>
 							<v-col>
 								<calendar
-									:id-psy="plan.psychologist"
+									:id-spec="plan.specialist"
 									:set-date="e => newSession(e)"
 									title-button="Agendar"
 									:loading-btn="loadingSession"
@@ -713,8 +713,8 @@
 					</v-card-text>
 					<v-card-text v-if="step == 0" class="px-0 px-sm-2 px-md-4">
 						<calendar
-							v-if="psychologist"
-							:id-psy="psychologist._id"
+							v-if="specialist"
+							:id-spec="specialist._id"
 							:set-date="e => setSchedule(e)"
 							title-button="Continuar"
 						/>
@@ -795,10 +795,10 @@ export default {
 		selectedEvent: {
 			details: '',
 			end: '',
-			idPsychologist: '',
+			idSpecialist: '',
 			idUser: '',
 			name: '',
-			paidToPsychologist: false,
+			paidToSpecialist: false,
 			sessionNumber: '',
 			sessionsId: '',
 			start: '',
@@ -819,7 +819,7 @@ export default {
 		dialogHasSessions: false,
 		dialogWithoutSessions: false,
 		newEvent: null,
-		psychologist: null,
+		specialist: null,
 		filterTypeSession: '',
 		loadingSession: false,
 		loagindReschedule: false,
@@ -911,8 +911,8 @@ export default {
 			else return copyArray;
 		},
 		...mapGetters({
-			allSessions: 'Psychologist/sessions',
-			clients: 'Psychologist/clients',
+			allSessions: 'Specialist/sessions',
+			clients: 'Specialist/clients',
 			plans: 'User/plan',
 			stepOnboarding: 'User/step',
 		}),
@@ -948,10 +948,7 @@ export default {
 				this.totalSessions = this.plans.totalSessions;
 				this.appoinmentSessions = this.plans.appoinmentSessions;
 			}
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			)
+			if (this.$auth.$state.user.role === 'specialist' && !this.$auth.$state.user.specialist)
 				return null;
 			this.overlay = true;
 			dayjs.locale('es');
@@ -962,11 +959,11 @@ export default {
 				});
 			}
 			if (
-				this.$auth.$state.user.role === 'psychologist' &&
+				this.$auth.$state.user.role === 'specialist' &&
 				this.$auth.$state.user.sessions.length
 			) {
 				await this.getSessions({
-					idUser: this.$auth.$state.user.psychologist,
+					idUser: this.$auth.$state.user.specialist,
 				});
 			}
 			await this.successPayment();
@@ -988,7 +985,7 @@ export default {
 			if (!this.$v.$invalid) {
 				this.loadingCreatedUser = true;
 				await this.registerUser(this.form);
-				await this.getClients(this.$auth.$state.user.psychologist);
+				await this.getClients(this.$auth.$state.user.specialist);
 				this.loadingCreatedUser = false;
 				this.goBack();
 			}
@@ -1024,7 +1021,7 @@ export default {
 		setSchedule(item) {
 			this.newEvent = item;
 			this.$router.push(
-				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+				`/especialistas/pagos/?username=${this.specialist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 		},
 		setNewPlan(newPlan) {
@@ -1045,20 +1042,20 @@ export default {
 		},
 		async addAppointment({ date }) {
 			if (this.$auth.user.role === 'user') {
-				// Sin psicologo - sin sesiones
-				this.dialogSearchNow = !this.plan || (this.plan && !this.plan.psychologist);
+				// Sin especialista - sin sesiones
+				this.dialogSearchNow = !this.plan || (this.plan && !this.plan.specialist);
 
-				// con psicologo - con sesiones por agendar
+				// con especialista - con sesiones por agendar
 				this.dialogHasSessions =
-					this.plan && this.plan.psychologist && this.plan.remainingSessions > 0;
-				// con psicologo - sin sesiones por agendar
-				if (this.plan && this.plan.psychologist && this.plan.remainingSessions <= 0) {
+					this.plan && this.plan.specialist && this.plan.remainingSessions > 0;
+				// con especialista - sin sesiones por agendar
+				if (this.plan && this.plan.specialist && this.plan.remainingSessions <= 0) {
 					this.overlay = true;
-					this.psychologist = await this.getPsychologist(this.plan.psychologist);
+					this.specialist = await this.getSpecialist(this.plan.specialist);
 					this.overlay = false;
 					this.dialogWithoutSessions = true;
 				}
-			} else if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist) {
+			} else if (this.$auth.user.role === 'specialist' && this.$auth.user.specialist) {
 				this.date = date;
 				this.dialogAppointment = true;
 			}
@@ -1092,21 +1089,21 @@ export default {
 		},
 		async successPayment() {
 			if (
-				this.$route.params.psyId &&
+				this.$route.params.specId &&
 				this.$route.params.userId &&
 				this.$route.params.sessionId
 			) {
 				const payload = {
-					psyId: this.$route.params.psyId,
+					specId: this.$route.params.specId,
 					userId: this.$route.params.userId,
 					sessionId: this.$route.params.sessionId,
 				};
 				await this.updateSession(payload);
 				//  clean query url from MercadoPago
 				await this.$router.replace({ query: null });
-				// clear Localstorage"match o psi"
+				// clear Localstorage"match o spec"
 				localStorage.removeItem('match');
-				localStorage.removeItem('psi');
+				localStorage.removeItem('spec');
 			}
 		},
 		setFilter(value) {
@@ -1174,9 +1171,9 @@ export default {
 			this.overlay = false;
 		},
 		acquire() {
-			if (this.plan && this.plan.psychologist) {
+			if (this.plan && this.plan.specialist) {
 				this.addAppointment({ date: null });
-			} else this.$router.push({ name: 'psicologos' });
+			} else this.$router.push({ name: 'especialistas' });
 		},
 		setPrice(e) {
 			if (this.verifyOnlyNumbers(e)) {
@@ -1190,19 +1187,19 @@ export default {
 			return regex.test(value.toString());
 		},
 		...mapMutations({
-			setSessions: 'Psychologist/setSessions',
+			setSessions: 'Specialist/setSessions',
 			setStepLinks: 'User/setStepLinks',
 		}),
 		...mapActions({
-			addSession: 'Psychologist/addSession',
-			cancelSession: 'Psychologist/cancelSession',
-			createCustomSession: 'Psychologist/createCustomSession',
-			getClients: 'Psychologist/getClients',
-			getPsychologist: 'Psychologist/getPsychologist',
-			getSessions: 'Psychologist/getSessions',
+			addSession: 'Specialist/addSession',
+			cancelSession: 'Specialist/cancelSession',
+			createCustomSession: 'Specialist/createCustomSession',
+			getClients: 'Specialist/getClients',
+			getSpecialist: 'Specialist/getSpecialist',
+			getSessions: 'Specialist/getSessions',
 			registerUser: 'User/registerUser',
-			setReschedule: 'Psychologist/setReschedule',
-			updateSession: 'Psychologist/updateSession',
+			setReschedule: 'Specialist/setReschedule',
+			updateSession: 'Specialist/updateSession',
 		}),
 	},
 	validations: {

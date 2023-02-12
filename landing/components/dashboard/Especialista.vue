@@ -14,23 +14,23 @@
 				</v-col>
 			</v-row>
 		</v-card-text>
-		<v-card-text v-if="psychologist && !loading">
+		<v-card-text v-if="specialist && !loading">
 			<v-row align="center" justify="center">
 				<v-col cols="12" sm="3" class="text-center">
 					<avatar
-						:url="avatar(psychologist, true)"
-						:name="psychologist.name"
-						:last-name="psychologist.lastName ? psychologist.lastName : ''"
+						:url="avatar(specialist, true)"
+						:name="specialist.name"
+						:last-name="specialist.lastName ? specialist.lastName : ''"
 						size="130"
 						loading-color="white"
 					></avatar>
 					<div class="text-center body-2 text--secondary mt-3 mb-2">
-						Código {{ psychologist.code }}
+						Código {{ specialist.code }}
 					</div>
 					<nuxt-link
 						class="primary--text body-2 font-weight-bold"
 						style="text-decoration: none"
-						:to="{ path: `/${psychologist.username}` }"
+						:to="{ path: `/${specialist.username}` }"
 					>
 						Más información
 					</nuxt-link>
@@ -41,12 +41,12 @@
 							<nuxt-link
 								style="text-decoration: none"
 								:to="{
-									path: `/${psychologist.username}`,
+									path: `/${specialist.username}`,
 								}"
 							>
 								<span class="body-1 text-lg-h5 font-weight-bold text--secondary">
-									{{ psychologist.name }}
-									{{ psychologist.lastName && psychologist.lastName }}
+									{{ specialist.name }}
+									{{ specialist.lastName && specialist.lastName }}
 								</span>
 							</nuxt-link>
 						</v-col>
@@ -75,14 +75,14 @@
 								text
 								rounded
 								class="ma-2"
-								@click="changePsychologist"
+								@click="changeSpecialist"
 							>
-								Cambiar psicológo
+								Cambiar especialista
 							</v-btn>
 						</v-col>
 					</v-row>
 					<v-chip-group v-model="specialties" show-arrows>
-						<template v-for="(tag, i) in psychologist.specialties">
+						<template v-for="(tag, i) in specialist.specialties">
 							<v-chip
 								:key="i"
 								:value="tag"
@@ -98,15 +98,15 @@
 					</v-chip-group>
 					<div class="body-2 mt-2 mr-4 text-center text-sm-left">
 						{{
-							psychologist.professionalDescription.length > 345
-								? psychologist.professionalDescription.slice(0, 345).concat('...')
-								: psychologist.professionalDescription
+							specialist.professionalDescription.length > 345
+								? specialist.professionalDescription.slice(0, 345).concat('...')
+								: specialist.professionalDescription
 						}}
 					</div>
 				</v-col>
 			</v-row>
 		</v-card-text>
-		<v-card-text v-if="!psychologist && !loading" class="text-center">
+		<v-card-text v-if="!specialist && !loading" class="text-center">
 			<div class="body-1 my-5 mx-auto" style="max-width: 280px">
 				Bienestar en cualquier momento
 			</div>
@@ -119,11 +119,11 @@
 import { mapGetters } from 'vuex';
 export default {
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -144,17 +144,17 @@ export default {
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 	},
 	methods: {
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
-		changePsychologist() {
+		changeSpecialist() {
 			return alert('Por favor, escribanos a nuestro WhatsApp: +569 7132 6467');
 		},
 		goToReview() {
-			return this.$router.push(`/review?psychologist=${this.psychologist._id}`);
+			return this.$router.push(`/review?specialist=${this.specialist._id}`);
 		},
 	},
 };

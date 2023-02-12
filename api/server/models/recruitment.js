@@ -2,7 +2,7 @@
 
 import { Schema, model } from 'mongoose';
 
-// Model for psychologist that are not approved
+// Model for specialist that are not approved
 let session = new Schema({
 	date: {
 		type: String,
@@ -29,7 +29,7 @@ let session = new Schema({
 	plan: {
 		type: String,
 	},
-	invitedByPsychologist: {
+	invitedBySpecialist: {
 		type: Boolean,
 	},
 });
@@ -120,7 +120,7 @@ let rating = new Schema(
 	{ timestamps: true }
 );
 
-let psyPlan = new Schema({
+let specPlan = new Schema({
 	tier: {
 		type: String,
 		enum: ['free', 'premium'],
@@ -201,6 +201,11 @@ let recruitment = new Schema(
 			type: String,
 			default: '',
 		},
+		profession: {
+			type: String,
+			default: 'none',
+			enum: ['none', 'specialist', 'nutritionist', 'specchopedagogue'],
+		},
 		birthDate: {
 			type: String,
 			default: '',
@@ -259,7 +264,7 @@ let recruitment = new Schema(
 			type: Object,
 			required: false,
 		},
-		yearsExpPsychologist: {
+		yearsExpSpecialist: {
 			type: String,
 			default: '',
 		},
@@ -324,7 +329,8 @@ let recruitment = new Schema(
 			default: Date.now,
 		},
 		ratings: [rating],
-		psyPlans: [psyPlan],
+		specPlans: [specPlan],
+		specPlans: [specPlan],
 		sessions: [session],
 		timeZone: {
 			type: String,

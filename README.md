@@ -8,7 +8,7 @@
   <h3 align="center">Hablaquí</h3>
 
   <p align="center">
-   Psicólogo y terapia online de calidad sin salir de casa | Hablaquí
+   Especialista y terapia online de calidad sin salir de casa | Hablaquí
     <br />
     <a href="https://hablaqui.cl"><strong>Ir al sitio »</strong></a>
     <br />
@@ -24,7 +24,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Acerca del proyecto hablaquí
 
-Hablaquí es un mercado de servicios de salud mental y bienestar. Una plataforma online en la que los clientes tienen acceso a psicólogos seleccionados, pudiendo programar, pagar y recibir acompañamiento psicológico vía audio, chat y videollamada. Además, para el profesional tenemos la infraestructura completa de oficina y escritorio virtual, siendo así su plataforma de marketing online.
+Hablaquí es un mercado de servicios de salud mental y bienestar. Una plataforma online en la que los clientes tienen acceso a especialistas seleccionados, pudiendo programar, pagar y recibir acompañamiento psicológico vía audio, chat y videollamada. Además, para el profesional tenemos la infraestructura completa de oficina y escritorio virtual, siendo así su plataforma de marketing online.
 
 ### Cultura Interna
 

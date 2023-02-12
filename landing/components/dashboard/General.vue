@@ -6,7 +6,7 @@
 					Configuración personal
 				</v-card-text>
 			</v-card>
-			<template v-if="$auth.$state.user.role === 'psychologist'">
+			<template v-if="$auth.$state.user.role === 'specialist'">
 				<v-card to="perfil/datos-bancarios" elevation="4" class="my-4" rounded>
 					<v-card-text class="body-2 font-weight-bold secondary--text">
 						Datos bancarios
@@ -39,7 +39,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Información personal
 							<v-progress-circular
-								v-if="!psychologist && $auth.$state.user.role === 'psychologist'"
+								v-if="!specialist && $auth.$state.user.role === 'specialist'"
 								size="20"
 								indeterminate
 								color="primary"
@@ -51,21 +51,18 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
-					<update-profile
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
-					/>
+					<update-profile :specialist="specialist" :set-specialist="setSpecialist" />
 					<update-password />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
-			<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+			<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 				<v-expansion-panel-header style="position: relative">
 					<div>
 						<div class="text-h6" style="color: #3c3c3b">
 							Datos bancarios
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -95,13 +92,13 @@
 						/>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
-					<bank-data :psychologist="psychologist" :set-psychologist="setPsychologist" />
+				<v-expansion-panel-content v-if="specialist">
+					<bank-data :specialist="specialist" :set-specialist="setSpecialist" />
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
 			<v-expansion-panel
-				v-if="$auth.$state.user.role === 'psychologist'"
+				v-if="$auth.$state.user.role === 'specialist'"
 				:disabled="!!step"
 				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
@@ -110,7 +107,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Información profesional
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -121,16 +118,16 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
-					<information-general-psi
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
+				<v-expansion-panel-content v-if="specialist">
+					<information-general-spec
+						:specialist="specialist"
+						:set-specialist="setSpecialist"
 					/>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 
 			<v-expansion-panel
-				v-if="$auth.$state.user.role === 'psychologist'"
+				v-if="$auth.$state.user.role === 'specialist'"
 				:disabled="!!step"
 				:style="step && step.title === 'Datos bancarios' ? 'opacity: 0.3' : ''"
 			>
@@ -139,7 +136,7 @@
 						<div class="text-h6" style="color: #3c3c3b">
 							Experiencia y formación
 							<v-progress-circular
-								v-if="!psychologist"
+								v-if="!specialist"
 								size="20"
 								indeterminate
 								color="primary"
@@ -150,10 +147,10 @@
 						</div>
 					</div>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content v-if="psychologist">
+				<v-expansion-panel-content v-if="specialist">
 					<experiencia-formacion
-						:psychologist="psychologist"
-						:set-psychologist="setPsychologist"
+						:specialist="specialist"
+						:set-specialist="setSpecialist"
 					/>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -172,11 +169,11 @@ export default {
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},

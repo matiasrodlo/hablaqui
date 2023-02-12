@@ -4,13 +4,13 @@
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
-					v-if="$route.name === 'psicologos'"
+					v-if="$route.name === 'especialistas'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h5"
 					style="color: #54565a"
 				>
-					Encuentra a tu psicólogo online
+					Encuentra a tu especialista online
 				</v-col>
 				<v-col cols="12" sm="6">
 					<v-autocomplete
@@ -26,14 +26,14 @@
 								index,
 							}))
 						"
-						label="Busca un psicólogo sin salir de casa"
+						label="Busca un especialista sin salir de casa"
 						:append-icon="mdiChevronDown"
 						hide-details
 						:menu-props="{
 							closeOnClick: true,
 						}"
 						clearable
-						:disabled="loadingPsychologist"
+						:disabled="loadingSpecialist"
 						@change="
 							e => {
 								searchInput = e;
@@ -213,7 +213,7 @@
 												<v-checkbox
 													v-model="gender"
 													value="male"
-													:disabled="loadingPsychologist"
+													:disabled="loadingSpecialist"
 													label="Hombre"
 													class="py-2"
 													hide-details
@@ -227,7 +227,7 @@
 													v-model="gender"
 													value="female"
 													label="Mujer"
-													:disabled="loadingPsychologist"
+													:disabled="loadingSpecialist"
 													class="py-2"
 													hide-details
 													@change="changeInput"
@@ -240,7 +240,7 @@
 													v-model="gender"
 													value="transgender"
 													label="Transgénero"
-													:disabled="loadingPsychologist"
+													:disabled="loadingSpecialist"
 													class="py-2"
 													hide-details
 													@change="changeInput"
@@ -339,7 +339,7 @@
 												<v-checkbox
 													v-model="languages"
 													value="spanish"
-													:disabled="loadingPsychologist"
+													:disabled="loadingSpecialist"
 													hide-details
 													class="py-2"
 													label="Español"
@@ -352,7 +352,7 @@
 												<v-checkbox
 													v-model="languages"
 													value="english"
-													:disabled="loadingPsychologist"
+													:disabled="loadingSpecialist"
 													hide-details
 													class="py-2"
 													label="Ingles"
@@ -402,7 +402,7 @@
 			</v-row>
 		</v-container>
 		<!-- pychologist -->
-		<v-container v-if="psychologists.length" fluid style="max-width: 600px" class="my-4">
+		<v-container v-if="specialists.length" fluid style="max-width: 600px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px">
@@ -418,29 +418,15 @@
 								></v-img>
 								<div
 									style="width: 290px"
-									class="
-										mx-auto
-										my-3
-										text-center
-										title
-										primary--text
-										font-weight-bold
-									"
+									class="mx-auto my-3 text-center title primary--text font-weight-bold"
 								>
-									Te ayudamos a encontrar a tu psicólogo ideal
+									Te ayudamos a encontrar a tu especialista ideal
 								</div>
 								<div
 									style="max-width: 320px"
-									class="
-										mx-auto
-										text-center
-										my-3
-										body-1
-										primary--text
-										font-weight-regular
-									"
+									class="mx-auto text-center my-3 body-1 primary--text font-weight-regular"
 								>
-									Encuentra al psicólogo que necesitas, solo responde las
+									Encuentra al especialista que necesitas, solo responde las
 									siguientes preguntas.
 								</div>
 								<div class="text-center my-4">
@@ -453,7 +439,7 @@
 					</v-sheet>
 				</v-col>
 				<v-col
-					v-if="loadingPsychologist"
+					v-if="loadingSpecialist"
 					cols="12"
 					style="height: 300px"
 					class="d-flex justify-center align-center"
@@ -504,14 +490,7 @@
 								>
 									<div
 										v-if="item.rating > 0"
-										class="
-											d-flex
-											justify-space-between
-											align-center
-											info
-											rounded-l-lg
-											pa-2
-										"
+										class="d-flex justify-space-between align-center info rounded-l-lg pa-2"
 										style="
 											background-color: rgba(0, 121, 255, 0.23) !important;
 											width: 70px;
@@ -642,7 +621,7 @@
 												</div>
 											</nuxt-link>
 											<mini-calendar
-												:id-psy="item._id"
+												:id-spec="item._id"
 												:username="item.username"
 												:sessions="getSessions(item._id)"
 											/>
@@ -654,7 +633,7 @@
 					</template>
 				</template>
 				<v-col
-					v-if="psychologists.length && !filterLevelThree.length"
+					v-if="specialists.length && !filterLevelThree.length"
 					cols="12"
 					class="title primary--text"
 				>
@@ -676,13 +655,13 @@ import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-	name: 'PsicologosMobile',
+	name: 'EspecialistasMobile',
 	components: {
-		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
+		MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		loadingPsychologist: {
+		loadingSpecialist: {
 			type: Boolean,
 		},
 		getSessionsLimit: {
@@ -745,7 +724,7 @@ export default {
 		 * items for search box
 		 */
 		filterLevelOne() {
-			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
+			let result = this.specialists.filter(item => item.preferences.marketplaceVisibility);
 			if (
 				!this.gender.length &&
 				!this.models.length &&
@@ -778,8 +757,8 @@ export default {
 		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			psychologists: 'Psychologist/psychologistsMarketPlace',
-			sessions: 'Psychologist/sessionsLimit',
+			specialists: 'Specialist/specialistsMarketPlace',
+			sessions: 'Specialist/sessionsLimit',
 		}),
 	},
 	watch: {
@@ -794,7 +773,7 @@ export default {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (
-			this.$route.name === 'psicologos' &&
+			this.$route.name === 'especialistas' &&
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });
@@ -809,25 +788,25 @@ export default {
 		scrollInfinity(isVisible) {
 			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
 		},
-		handleVisivility(isVisible, entry, idPsychologist) {
-			if (isVisible && !this.visibles.includes(idPsychologist))
-				this.visibles.push(idPsychologist);
+		handleVisivility(isVisible, entry, idSpecialist) {
+			if (isVisible && !this.visibles.includes(idSpecialist))
+				this.visibles.push(idSpecialist);
 		},
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
 		},
 		start() {
 			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else this.$router.push('/auth/?register=true&from=psy');
+			else this.$router.push('/auth/?register=true&from=spec');
 		},
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		getSessions(id) {
-			const temp = this.sessions.find(element => element.psychologist === id);
+			const temp = this.sessions.find(element => element.specialist === id);
 			if (!temp) {
 				return [];
 			}
@@ -839,13 +818,13 @@ export default {
 			this.page = 1;
 			this.visibles = [];
 		},
-		goChat(psychologist) {
+		goChat(specialist) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
-					path: `/auth/?register=true&psychologist=${psychologist.username}`,
+					path: `/auth/?register=true&specialist=${specialist.username}`,
 				});
 			} else {
-				return this.$router.push(`/${psychologist.username}/?chat=true`);
+				return this.$router.push(`/${specialist.username}/?chat=true`);
 			}
 		},
 		...mapMutations({

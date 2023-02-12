@@ -1,4 +1,4 @@
-class Psychologist
+class Specialist
 {
 	String			id;
 	String			name;
@@ -17,9 +17,9 @@ class Psychologist
 	
 	String get fullName => this.name + ' ' + this.lastName;
 	
-	Psychologist();
+	Specialist();
 	
-	Psychologist.fromMap(Map data)
+	Specialist.fromMap(Map data)
 	{
 		this.loadData(data);
 	}
@@ -46,7 +46,7 @@ class Psychologist
 		}
 		catch(e)
 		{
-			print('PSYCHOLOGIST LOAD DATA ERROR');
+			print('SPECIALIST LOAD DATA ERROR');
 			print(e);
 		}
 	}

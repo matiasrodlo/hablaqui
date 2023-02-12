@@ -189,12 +189,12 @@ export default {
 				{
 					id: 1,
 					img: `https://cdn.hablaqui.cl/static/auth.webp`,
-					text: 'Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					text: 'Habla con tu especialista por videollamada, estés donde estés y sin tener que desplazarte',
 				},
 				{
 					id: 2,
 					img: `https://cdn.hablaqui.cl/static/auth-2.webp`,
-					text: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada',
+					text: 'Disfruta de las sesiones con tu especialista de manera segura y privada',
 				},
 				{
 					id: 3,

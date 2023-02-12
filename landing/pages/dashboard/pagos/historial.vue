@@ -99,19 +99,19 @@
 					<v-card-text class="py-0">
 						<v-divider> </v-divider>
 					</v-card-text>
-					<v-card-text v-if="psychologist" class="pb-0 pt-2">
+					<v-card-text v-if="specialist" class="pb-0 pt-2">
 						<div class="d-flex justify-space-between align-center">
 							<div>
 								<div class="title">
-									{{ psychologist.paymentMethod.bank }}
+									{{ specialist.paymentMethod.bank }}
 								</div>
 								<v-btn color="primary" text class="pa-0" to="perfil">
 									Cambiar de cuenta
 								</v-btn>
 							</div>
 							<div class="subtitle-2 text-right">
-								<div>{{ psychologist.paymentMethod.name }}</div>
-								<div>{{ psychologist.paymentMethod.accountNumber }}</div>
+								<div>{{ specialist.paymentMethod.name }}</div>
+								<div>{{ specialist.paymentMethod.accountNumber }}</div>
 							</div>
 						</div>
 					</v-card-text>
@@ -137,9 +137,9 @@
 						habiles
 					</v-card-title>
 					<v-card-text class="text-center">
-						<div v-if="psychologist" class="body-1">
+						<div v-if="specialist" class="body-1">
 							El dinero estara disponible el {{ dayWithdraw }} en la cuenta
-							{{ psychologist.paymentMethod.bank }}
+							{{ specialist.paymentMethod.bank }}
 						</div>
 						<v-btn rounded color="primary" href="https://hablaqui.cl/" class="mt-4 px-6"
 							>Ir a inicio</v-btn
@@ -180,7 +180,7 @@ export default {
 			dialogPayment: false,
 			loadingPayment: false,
 			loading: false,
-			psychologist: null,
+			specialist: null,
 			step: 1,
 		};
 	},
@@ -190,8 +190,8 @@ export default {
 			return dayjs.tz(dayjs(day)).format('DD/MM/YYYY');
 		},
 		...mapGetters({
-			payments: 'Psychologist/payments',
-			transactions: 'Psychologist/transactions',
+			payments: 'Specialist/payments',
+			transactions: 'Specialist/transactions',
 		}),
 	},
 	created() {
@@ -202,18 +202,15 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			if (
-				this.$auth.$state.user.role === 'psychologist' &&
-				!this.$auth.$state.user.psychologist
-			)
+			if (this.$auth.$state.user.role === 'specialist' && !this.$auth.$state.user.specialist)
 				return null;
 			this.loading = true;
 			await this.getPayments();
 			await this.getTransactions();
-			const { psychologist } = await this.$axios.$get(
-				`/psychologists/one/${this.$auth.$state.user.psychologist}`
+			const { specialist } = await this.$axios.$get(
+				`/specialists/one/${this.$auth.$state.user.specialist}`
 			);
-			this.psychologist = await psychologist;
+			this.specialist = await specialist;
 			this.loading = false;
 		},
 		formatDatedayjs(item) {
@@ -227,9 +224,9 @@ export default {
 			this.step = 2;
 		},
 		...mapActions({
-			paymentRequest: 'Psychologist/paymentRequest',
-			getPayments: 'Psychologist/getPayments',
-			getTransactions: 'Psychologist/getTransactions',
+			paymentRequest: 'Specialist/paymentRequest',
+			getPayments: 'Specialist/getPayments',
+			getTransactions: 'Specialist/getTransactions',
 		}),
 	},
 };

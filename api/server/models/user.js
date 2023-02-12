@@ -63,15 +63,25 @@ let userSchema = new Schema(
 			type: Array,
 			required: false,
 		},
-		psychologist: {
+		specialist: {
 			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
+			ref: 'specialist',
+			required: false,
+		},
+		specialist: {
+			type: Schema.Types.ObjectId,
+			ref: 'specialist',
 			required: false,
 		},
 		role: {
 			type: String,
 			default: 'user',
-			enum: ['user', 'psychologist', 'superuser'],
+			enum: ['user', 'specialist', 'superuser'],
+		},
+		profession: {
+			type: String,
+			default: 'none',
+			enum: ['none', 'specialist', 'nutritionist', 'specchopedagogue'],
 		},
 		gender: {
 			type: String,

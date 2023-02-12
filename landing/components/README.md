@@ -7,7 +7,7 @@
 3. [Dashboard](#dashboard)
 4. [Evaluation](#evaluation)
 5. [Postulacion](#postulacion)
-6. [Psicologos](#psicologos)
+6. [Especialistas](#especialistas)
 7. [Raíz](#raiz)
 
 ### AUTH
@@ -15,8 +15,8 @@
 ---
 
 -   **GoogleBtn.vue**: Login con Google (No Integrado)
--   **SendPasswordRecovery.vue**: Recuperación de contraseña (user/psy)
--   **SignIn.vue**: Login (user/psy)
+-   **SendPasswordRecovery.vue**: Recuperación de contraseña (user/spec)
+-   **SignIn.vue**: Login (user/spec)
 -   **SignUp.vue**: Registro (user)
 
 ---
@@ -26,7 +26,7 @@
 ---
 
 -   **CardChat.vue**: Chat flotante (user)
--   **Channel.vue**: Chat (user/psy)
+-   **Channel.vue**: Chat (user/spec)
 
 ---
 
@@ -35,16 +35,16 @@
 ---
 
 -   **AppbarProfile.vue**: Header
--   **BankData.vue**: Datos bancarios psy
--   **ExperienciaFormacion.vue**: Experiencia y formación psy
+-   **BankData.vue**: Datos bancarios spec
+-   **ExperienciaFormacion.vue**: Experiencia y formación spec
 -   **FloatingChat.vue**: Chat flotante user (Home?)
--   **General.vue**: Mi cuenta (psy)
--   **Horario.vue**: Disponibilidad (psy)
--   **InformationGeneralPsi.vue**: Información general (psy)
+-   **General.vue**: Mi cuenta (spec)
+-   **Horario.vue**: Disponibilidad (spec)
+-   **InformationGeneralPsi.vue**: Información general (spec)
 -   **MyPlans.vue**: Planes contratados (user)
--   **Psicologo.vue**: Mi psy (user)
--   **Services.vue**: Servicios (psy)
--   **TablePagos.vue**: Pagos (psy)
+-   **Especialista.vue**: Mi spec (user)
+-   **Services.vue**: Servicios (spec)
+-   **TablePagos.vue**: Pagos (spec)
 -   **UpdatePassword.vue**: Nueva contraseña (both)
 -   **UpdateProfile.vue**: Información personal (user)
 
@@ -63,24 +63,24 @@
 
 ---
 
--   **Plans.vue**: Planes (psy)
+-   **Plans.vue**: Planes (spec)
 
 ---
 
-### PSICOLOGOS
+### Especialistas
 
 ---
 
--   **FormUserPsy.vue**: Resgistro (psy)
--   **GeoPsicologos.vue** : Cabecera (geoPsy)
--   **MiniCalendar.vue**: Calendario perfil (psyResponsive)
+-   **FormUserSpec.vue**: Resgistro (spec)
+-   **GeoEspecialistas.vue** : Cabecera (geoSpec)
+-   **MiniCalendar.vue**: Calendario perfil (specResponsive)
 -   **PagosDesktop.vue**: Checkout (userEscritorio)
 -   **PagosMobile.vue**: Checkout (userResponsive)
--   **ProfileDesktop.vue**: Perfil (psyEscritorio)
--   **ProfileMobile.vue**: Perfil (psyResposive)
--   **PsicologosDesktop.vue**: Marketplace (Escritorio)
--   **PsicologosMobile.vue**: Marketplace (Resposive)
--   **Ubicación.vue**: Envoltura psicólogos por ubicación
+-   **ProfileDesktop.vue**: Perfil (specEscritorio)
+-   **ProfileMobile.vue**: Perfil (specResposive)
+-   **EspecialistasDesktop.vue**: Marketplace (Escritorio)
+-   **EspecialistasMobile.vue**: Marketplace (Resposive)
+-   **Ubicación.vue**: Envoltura especialistas por ubicación
 
 ---
 
@@ -92,7 +92,7 @@
 -   **AppbarWhite.vue**: Menú de navegación
 -   **Avatar.vue**: Avatar de un usuario
 -   **Calendar.vue**: Timepicker scroll
--   **CalendarPsychologist.vue**: Timepicker expandible
+-   **CalendarSpecialist.vue**: Timepicker expandible
 -   **CardOnboarding.vue**: Mensaje onboarding
 -   **Footer.vue**: Pie de página (General)
 -   **Icon.vue**: Visualización de iconos

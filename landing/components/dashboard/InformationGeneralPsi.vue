@@ -11,8 +11,8 @@
 				outlined
 				dense
 				type="text"
-				:value="psychologist.code"
-				@change="e => setPsychologist({ ...psychologist, code: e })"
+				:value="specialist.code"
+				@change="e => setSpecialist({ ...specialist, code: e })"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12" md="6">
@@ -22,8 +22,8 @@
 				outlined
 				dense
 				type="text"
-				:value="psychologist.linkedin"
-				@change="e => setPsychologist({ ...psychologist, linkedin: e })"
+				:value="specialist.linkedin"
+				@change="e => setSpecialist({ ...specialist, linkedin: e })"
 			></v-text-field>
 		</v-col>
 		<v-col cols="12">
@@ -37,10 +37,10 @@
 				outlined
 				dense
 				type="text"
-				:value="psychologist.professionalDescription"
+				:value="specialist.professionalDescription"
 				counter
 				:rules="rules"
-				@change="e => setPsychologist({ ...psychologist, professionalDescription: e })"
+				@change="e => setSpecialist({ ...specialist, professionalDescription: e })"
 			></v-textarea>
 		</v-col>
 		<v-col cols="12">
@@ -54,10 +54,10 @@
 				outlined
 				dense
 				type="text"
-				:value="psychologist.personalDescription"
+				:value="specialist.personalDescription"
 				counter
 				:rules="rules"
-				@change="e => setPsychologist({ ...psychologist, personalDescription: e })"
+				@change="e => setSpecialist({ ...specialist, personalDescription: e })"
 			></v-textarea>
 		</v-col>
 		<v-col cols="12" class="text-center">
@@ -79,11 +79,11 @@ import { mapActions, mapMutations } from 'vuex';
 
 export default {
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -102,8 +102,8 @@ export default {
 		}),
 		async onSubmite() {
 			if(
-				!(this.psychologist.personalDescription.length <= 170) ||
-				!(this.psychologist.professionalDescription.length <= 170)
+				!(this.specialist.personalDescription.length <= 170) ||
+				!(this.specialist.professionalDescription.length <= 170)
 			)
 			{
 				this.snackBar({
@@ -113,8 +113,8 @@ export default {
 					});
 			}
 			else if (
-				!this.psychologist.professionalDescription ||
-				!this.psychologist.personalDescription
+				!this.specialist.professionalDescription ||
+				!this.specialist.personalDescription
 			)
 			{
 					this.snackBar({
@@ -124,12 +124,12 @@ export default {
 					});
 				}
 			else{
-			const psychologist = await this.updatePsychologist(this.psychologist);
-			this.setPsychologist(psychologist);
+			const specialist = await this.updateSpecialist(this.specialist);
+			this.setSpecialist(specialist);
 			}
 		},
 		...mapActions({
-			updatePsychologist: 'Psychologist/updatePsychologist',
+			updateSpecialist: 'Specialist/updateSpecialist',
 		}),
 	},
 };

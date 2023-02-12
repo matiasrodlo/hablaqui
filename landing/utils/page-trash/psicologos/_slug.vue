@@ -8,11 +8,11 @@
 export default {
 	name: 'UbicacionSlug',
 	components: {
-		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
+		Ubicacion: () => import('~/components/especialistas/Ubicacion'),
 	},
 	async asyncData({ params, store, $config, error, payload }) {
 		try {
-			await store.dispatch('Psychologist/getPsychologists');
+			await store.dispatch('Specialist/getSpecialists');
 			if (payload) return { comuna: payload };
 			else {
 				const response = await fetch(`${$config.API_ABSOLUTE}/comunas.json`, {
@@ -28,12 +28,12 @@ export default {
 	},
 	head() {
 		return {
-			title: `Psicólogos en ${this.$route.params.slug} | Desde $15.500`,
+			title: `Especialistas en ${this.$route.params.slug} | Desde $15.500`,
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'twitter:url',
@@ -43,7 +43,7 @@ export default {
 				{
 					hid: 'twitter:title',
 					name: 'twitter:title',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'og:url',
@@ -53,7 +53,7 @@ export default {
 				{
 					hid: 'og:title',
 					property: 'og:title',
-					content: `Nuestros psicólogos en ${this.$route.params.slug}`,
+					content: `Nuestros especialistas en ${this.$route.params.slug}`,
 				},
 				{
 					hid: 'robots',
@@ -64,7 +64,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/psicologos/${this.$route.params.slug}/`,
+					href: `https://cdn.hablaqui.cl/static/especialistas/${this.$route.params.slug}/`,
 				},
 			],
 		};

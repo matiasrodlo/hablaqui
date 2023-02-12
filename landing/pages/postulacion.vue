@@ -356,7 +356,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 										filled
 										outlined
 										dense
-										placeholder="Realizo psicoterapia familiar, de pareja e individual bajo la premisa de que el ser humano tiene un potencial enorme, colaborando para construir estrategias para solucionar problemas"
+										placeholder="Realizo speccoterapia familiar, de pareja e individual bajo la premisa de que el ser humano tiene un potencial enorme, colaborando para construir estrategias para solucionar problemas"
 										hint="Describa su metodología de trabajo y cómo puedes ayudar a al consultante."
 										counter
 										:rules="rulesDescriptionField"
@@ -457,7 +457,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 															v-model="selectedFormation.description"
 															filled
 															outlined
-															placeholder="Psicólogo Clinico"
+															placeholder="Especialista Clinico"
 															dense
 															hide-details
 															type="text"
@@ -610,7 +610,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 															v-model="selectedExperience.title"
 															filled
 															outlined
-															placeholder="Psicólogo Clinico"
+															placeholder="Especialista Clinico"
 															dense
 															hide-details
 															type="text"
@@ -813,11 +813,11 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 							<v-row>
 								<v-col cols="12">
 									<div class="text--secondary text-h7 mb-2 font-weight-regular">
-										¿Cuántos años lleva trabajando como psicólogo clínico?
+										¿Cuántos años lleva trabajando como especialista clínico?
 									</div>
 									<div>
 										<v-text-field
-											v-model="form.yearsExpPsychologist"
+											v-model="form.yearsExpSpecialist"
 											filled
 											outlined
 											dense
@@ -916,7 +916,7 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 								</v-col>
 								<v-col cols="12">
 									<div class="text--secondary text-h7 mb-2 font-weight-regular">
-										¿Supervisa actualmente a otros psicólogos?
+										¿Supervisa actualmente a otros especialistas?
 									</div>
 									<div>
 										<v-radio-group v-model="form.isSupervisor" row>
@@ -1109,6 +1109,7 @@ export default {
 				experience: [],
 				formation: [],
 				gender: '',
+				profession: 'specialist',
 				instagram: '',
 				isExclusiveActivity: false,
 				isSupervisor: false,
@@ -1122,7 +1123,7 @@ export default {
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
-				yearsExpPsychologist: '',
+				yearsExpSpecialist: '',
 				yearsExpVideocalls: '',
 				howFindOut: 'Búsqueda de internet',
 				isContentCreator: false,
@@ -1178,7 +1179,7 @@ export default {
 						data: this.form,
 					});
 					this.$segment.track(this.form._id.toString(), {
-						event: 'psy-application-step',
+						event: 'spec-application-step',
 						properties: {
 							step,
 							email: this.$auth.user.email,

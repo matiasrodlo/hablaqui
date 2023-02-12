@@ -19,12 +19,12 @@
 								:items="hours"
 								hide-details
 								label="Seleccione"
-								:value="psychologist.preferences.minimumNewSession"
+								:value="specialist.preferences.minimumNewSession"
 								@change="
 									e => {
-										const preferences = psychologist.preferences;
-										setPsychologist({
-											...psychologist,
+										const preferences = specialist.preferences;
+										setSpecialist({
+											...specialist,
 											preferences: { ...preferences, minimumNewSession: e },
 										});
 									}
@@ -72,7 +72,7 @@
 						</div>
 						<div>
 							<v-select
-								:value="psychologist.preferences.minimumRescheduleSession"
+								:value="specialist.preferences.minimumRescheduleSession"
 								filled
 								:disabled="isFree"
 								outlined
@@ -82,9 +82,9 @@
 								label="Seleccione"
 								@change="
 									e => {
-										const preferences = psychologist.preferences;
-										setPsychologist({
-											...psychologist,
+										const preferences = specialist.preferences;
+										setSpecialist({
+											...specialist,
 											preferences: {
 												...preferences,
 												minimumRescheduleSession: e,
@@ -233,7 +233,7 @@
 								</div>
 							</v-tooltip>
 						</div>
-						<div v-if="psychologist.preferences" class="mt-8">
+						<div v-if="specialist.preferences" class="mt-8">
 							<v-switch
 								v-model="marketplaceVisibility"
 								:disabled="isFree"
@@ -242,13 +242,13 @@
 								persistent-hint
 								@change="
 									e => {
-										const preferences = psychologist.preferences;
-										setPsychologist({
-											...psychologist,
+										const preferences = specialist.preferences;
+										setSpecialist({
+											...specialist,
 											preferences: {
 												...preferences,
 												marketplaceVisibility:
-													!psychologist.preferences.marketplaceVisibility,
+													!specialist.preferences.marketplaceVisibility,
 											},
 										});
 									}
@@ -283,11 +283,11 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -312,21 +312,21 @@ export default {
 	},
 	computed: {
 		isFree() {
-			const length = this.psychologist.psyPlans.length;
-			return this.psychologist.psyPlans[length - 1].tier === 'free';
+			const length = this.specialist.specPlans.length;
+			return this.specialist.specPlans[length - 1].tier === 'free';
 		},
 		...mapGetters({ step: 'User/step' }),
 	},
 	mounted() {
-		this.video = this.psychologist.sessionPrices.video;
-		this.marketplaceVisibility = this.psychologist.preferences.marketplaceVisibility;
+		this.video = this.specialist.sessionPrices.video;
+		this.marketplaceVisibility = this.specialist.preferences.marketplaceVisibility;
 	},
 	methods: {
 		async onSubmit() {
 			this.loading = true;
-			const psychologist = await this.updatePsychologist(this.psychologist);
-			this.setPsychologist(psychologist);
-			this.video = psychologist.sessionPrices.video;
+			const specialist = await this.updateSpecialist(this.specialist);
+			this.setSpecialist(specialist);
+			this.video = specialist.sessionPrices.video;
 			this.loading = false;
 		},
 		setPrice(e) {
@@ -340,8 +340,8 @@ export default {
 				text: Math.round(this.video * 0.75),
 				full: Math.round(this.video * 1.25),
 			};
-			this.setPsychologist({
-				...this.psychologist,
+			this.setSpecialist({
+				...this.specialist,
 				sessionPrices,
 			});
 		},
@@ -354,7 +354,7 @@ export default {
 			setStep: 'User/setStep',
 		}),
 		...mapActions({
-			updatePsychologist: 'Psychologist/updatePsychologist',
+			updateSpecialist: 'Specialist/updateSpecialist',
 		}),
 	},
 };

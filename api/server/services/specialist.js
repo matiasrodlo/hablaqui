@@ -3,7 +3,7 @@
 import { logInfo } from '../config/pino';
 import sessionsFunctions from './sessions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
-import Psychologist from '../models/psychologist';
+import Specialist from '../models/specialist';
 import Recruitment from '../models/recruitment';
 import User from '../models/user';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
@@ -30,10 +30,10 @@ dayjs.tz.setDefault('America/Santiago');
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
-	// Funcion para obtener todos los psicologos
-	let psychologists = await Psychologist.find();
-	logInfo('obtuvo todos los psicologos');
-	return okResponse('psicologos obtenidos', { psychologists });
+	// Funcion para obtener todos los especialistas
+	let specialists = await Specialist.find();
+	logInfo('obtuvo todos los especialistas');
+	return okResponse('especialistas obtenidos', { specialists });
 };
 
 /**
@@ -50,15 +50,15 @@ const normalize = (value, min, max) => {
 
 /**
  * @description Asigna puntaje por el precio de la sesión
- * @param {Object} psy - Psicologo
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje
  */
 
-const priceCriterion = (psy, payload, pointsPerCriterion) => {
+const priceCriterion = (spec, payload, pointsPerCriterion) => {
 	let points = 0;
-	if (payload.price >= psy.sessionPrices.video) {
+	if (payload.price >= spec.sessionPrices.video) {
 		points = pointsPerCriterion;
 	}
 	points = normalize(points, 0, pointsPerCriterion);
@@ -67,18 +67,18 @@ const priceCriterion = (psy, payload, pointsPerCriterion) => {
 
 /**
  * @description Asigna puntaje por cantidad de coincidencias de especialidades
- * @param {Object} psy - Psicologo
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criteriaNumberSpecialties = (psy, payload, pointsPerCriterion) => {
+const criteriaNumberSpecialties = (spec, payload, pointsPerCriterion) => {
 	const numberOfSpecialities = 3;
 	let points = 0;
 	let maximum = 0;
 	for (let j = 0; j < numberOfSpecialities; j++) {
-		if (psy.specialties[j] === payload.themes[j])
+		if (spec.specialties[j] === payload.themes[j])
 			points += pointsPerCriterion;
 		maximum += pointsPerCriterion;
 	}
@@ -87,7 +87,7 @@ const criteriaNumberSpecialties = (psy, payload, pointsPerCriterion) => {
 };
 
 /**
- * @description Saca el puntaje maximo de disponibilidad de un psicologo
+ * @description Saca el puntaje maximo de disponibilidad de un especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje maximum
@@ -104,7 +104,7 @@ const maximumAvailability = (payload, pointsPerCriterion) => {
 
 /**
  * @description Asigna puntaje por cantidad de coincidencias de disponibilidad
- * @param {Object} days - Días de disponibilidad del psicologo
+ * @param {Object} days - Días de disponibilidad del especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje
@@ -163,7 +163,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 
 /**
  * @description Asigna puntaje por la cantidad de sesiones disponibles en un horario
- * @param {Object} psy - Psicologo
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
@@ -180,19 +180,19 @@ const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 
 /**
  * @description Asigna puntaje por la cantidad de coincidencias de modelo terapeutico
- * @param {Object} psy - Psicologo
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
+const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
 	const modelQuantity = 3;
 	let points = 0;
 	let maximum = 0;
 	// Se suma points por cada coincidencia y se obtiene el total de puntaje posible
 	for (let j = 0; j < modelQuantity; j++) {
-		if (psy.model[j] === payload.model[j]) points += pointsPerCriterion;
+		if (spec.model[j] === payload.model[j]) points += pointsPerCriterion;
 		maximum += pointsPerCriterion;
 	}
 	points = normalize(points, 0, maximum);
@@ -200,10 +200,10 @@ const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
 };
 
 /**
- * @description Pondera los psicologos segun sus puntajes
- * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
+ * @description Pondera los especialistas segun sus puntajes
+ * @param {Array} matchedList - Lista de especialistas matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns {Array} - Lista de psicologos ponderados
+ * @returns {Array} - Lista de especialistas ponderados
  */
 
 const ponderationMatch = async (matchedList, payload) => {
@@ -212,63 +212,63 @@ const ponderationMatch = async (matchedList, payload) => {
 	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
-		matchedList.map(async psy => {
+		matchedList.map(async spec => {
 			let criteria = 0;
-			let points = normalize(psy.points, 0, 100) * weighted[criteria];
+			let points = normalize(spec.points, 0, 100) * weighted[criteria];
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
 				weighted[criteria] *
-				criteriaNumberSpecialties(psy, payload, pointsPerCriterion);
+				criteriaNumberSpecialties(spec, payload, pointsPerCriterion);
 			criteria++;
-			// Se obtiene la disponibilidad del psicologo y recorre los primeros 3 días
+			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				psy._id
+				spec._id
 			);
 			points +=
 				weighted[criteria] *
 				criterioDisponibilidad(payload, pointsPerCriterion, days);
 			criteria++;
-			// Se obtiene el precio del psicologo y se le asigna un puntaje dado por el precio
+			// Se obtiene el precio del especialista y se le asigna un puntaje dado por el precio
 			points +=
-				priceCriterion(psy, payload, pointsPerCriterion) *
+				priceCriterion(spec, payload, pointsPerCriterion) *
 				weighted[criteria];
 			criteria++;
-			// Se obtiene el modelo terapeutico del psicologo y se le asigna un puntaje dado por el modelo
+			// Se obtiene el modelo terapeutico del especialista y se le asigna un puntaje dado por el modelo
 			points +=
-				criterioModeloTeraupetico(psy, payload, pointsPerCriterion) *
+				criterioModeloTeraupetico(spec, payload, pointsPerCriterion) *
 				weighted[criteria];
 			criteria++;
 			// De documento de mongo se pasa a un formato de objeto JSON
-			let psychologist = JSON.stringify(psy);
-			psychologist = JSON.parse(psychologist);
-			return { ...psychologist, points };
+			let specialist = JSON.stringify(spec);
+			specialist = JSON.parse(specialist);
+			return { ...specialist, points };
 		})
 	);
-	// Se ordena el arreglo por puntuación manual del psicologo
+	// Se ordena el arreglo por puntuación manual del especialista
 	newMatchedList = newMatchedList.sort((a, b) => b.points - a.points);
-	// Se imprime los puntajes de cada psicologo
+	// Se imprime los puntajes de cada especialista
 	return newMatchedList;
 };
 
 /**
- * @description Clasifica los psicologos si es el mejor match, el mas barato y el con mayor disponibilidad
- * @param {Array} matchedList - Lista de psicologos matchados que se quiere clasificar
+ * @description Clasifica los especialistas si es el mejor match, el mas barato y el con mayor disponibilidad
+ * @param {Array} matchedList - Lista de especialistas matchados que se quiere clasificar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns - Lista de psicologos clasificados
+ * @returns - Lista de especialistas clasificados
  */
 
-const psychologistClasification = async (matchedList, payload) => {
+const specialistClasification = async (matchedList, payload) => {
 	const nextDays = 7;
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
-	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
-		matchedList.map(async psy => {
-			psy.points = 0;
+		matchedList.map(async spec => {
+			spec.points = 0;
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				psy._id
+				spec._id
 			);
 			points = pointsDisponibilidad(
 				days,
@@ -276,15 +276,15 @@ const psychologistClasification = async (matchedList, payload) => {
 				pointsPerCriterion,
 				nextDays
 			);
-			let psychologist = JSON.stringify(psy);
-			psychologist = JSON.parse(psychologist);
-			return { ...psychologist, points };
+			let specialist = JSON.stringify(spec);
+			specialist = JSON.parse(specialist);
+			return { ...specialist, points };
 		})
 	);
 	newMatchedList.sort((a, b) => b.points - a.points);
 	// Se elmina el primer elemento del arreglo
 	resultList.push(newMatchedList.shift(0));
-	// Se obtiene el psicologo que tenga menor precio
+	// Se obtiene el especialista que tenga menor precio
 	if (
 		newMatchedList[0].sessionPrices.video <
 		newMatchedList[1].sessionPrices.video
@@ -300,20 +300,20 @@ const psychologistClasification = async (matchedList, payload) => {
 
 const match = async body => {
 	const { payload } = body;
-	let matchedPsychologists = [];
+	let matchedSpecialists = [];
 	let perfectMatch = true;
 
 	if (payload.gender == 'transgender') {
 		// Machea por género (transgenero)
-		matchedPsychologists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			isTrans: true,
 			specialties: { $in: payload.themes }, // Filtra por especialidades
 		});
 	} else {
 		// Si no es transgenero
-		matchedPsychologists = await Psychologist.find({
+		matchedSpecialists = await Specialist.find({
 			gender: payload.gender || {
-				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+				// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			specialties: { $in: payload.themes },
@@ -321,31 +321,28 @@ const match = async body => {
 	}
 
 	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de psicologos que coinciden con los temas
-	if (matchedPsychologists.length < 3) {
-		matchedPsychologists = await Psychologist.find();
+	// Se obtiene la lista de especialistas que coinciden con los temas
+	if (matchedSpecialists.length < 3) {
+		matchedSpecialists = await Specialist.find();
 		perfectMatch = false;
 	}
 
 	// Se busca el mejor match según criterios
-	matchedPsychologists = await ponderationMatch(
-		matchedPsychologists,
-		payload
-	);
+	matchedSpecialists = await ponderationMatch(matchedSpecialists, payload);
 
-	// Se deja solo los 3 mejores psicologos
-	while (matchedPsychologists.length > 3) {
-		matchedPsychologists.pop();
+	// Se deja solo los 3 mejores especialistas
+	while (matchedSpecialists.length > 3) {
+		matchedSpecialists.pop();
 	}
 
-	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
-	matchedPsychologists = await psychologistClasification(
-		matchedPsychologists,
+	// Se busca entre los primeros 3 especialistas el más barato, con mayor disponibilidad, y el mejor match
+	matchedSpecialists = await specialistClasification(
+		matchedSpecialists,
 		payload
 	);
 
-	return okResponse('psicologos encontrados', {
-		matchedPsychologists,
+	return okResponse('especialistas encontrados', {
+		matchedSpecialists,
 		perfectMatch,
 	});
 };
@@ -366,7 +363,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 			},
 		},
 		{ arrayFilters: [{ 'session._id': sessionId }], new: true }
-	).populate('psychologist user');
+	).populate('specialist user');
 	// Se verifica que la sesion exista
 	if (!sessions) {
 		return conflictResponse('Sesion no encontrada');
@@ -391,38 +388,38 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 	await sessions.save();
 	return okResponse('Hora actualizada', { sessions });
 };
-const updatePlan = async (psychologistId, planInfo) => {
-	// Funcion para actualizar el plan de un psicologo, se busca el psicologo por su id y se actualiza
-	const updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		psychologistId,
+const updatePlan = async (specialistId, planInfo) => {
+	// Funcion para actualizar el plan de un especialista, se busca el especialista por su id y se actualiza
+	const updatedSpecialist = await Specialist.findByIdAndUpdate(
+		specialistId,
 		{
 			$push: {
-				psyPlans: { paymentStatus: 'success', ...planInfo },
+				specPlans: { paymentStatus: 'success', ...planInfo },
 			},
 		},
 		{ new: true }
 	);
-	return okResponse('Plan creado', { psychologist: updatedPsychologist });
+	return okResponse('Plan creado', { specialist: updatedSpecialist });
 };
 
 const getByData = async username => {
-	// Funcion para obtener un psicologo por su username
-	const usernameSearch = await Psychologist.findOne({ username });
+	// Funcion para obtener un especialista por su username
+	const usernameSearch = await Specialist.findOne({ username });
 	if (!usernameSearch) {
-		const idSearch = await Psychologist.findOne({ _id: username });
-		return okResponse('Psicólogo encontrado', {
-			psychologist: idSearch,
+		const idSearch = await Specialist.findOne({ _id: username });
+		return okResponse('Especialista encontrado', {
+			specialist: idSearch,
 		});
 	}
-	return okResponse('Psicólogo encontrado', { psychologist: usernameSearch }); // Se retorna una respuesta con el psicologo
+	return okResponse('Especialista encontrado', { specialist: usernameSearch }); // Se retorna una respuesta con el especialista
 };
 
 const setSchedule = async (user, payload) => {
 	let response;
-	// Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
+	// Si el user es un especialista, se busca el especialista por su id y se actualiza el horario
 	if (user.role === 'superuser') {
-		response = await Psychologist.findByIdAndUpdate(
-			payload.psychologist,
+		response = await Specialist.findByIdAndUpdate(
+			user.specialist,
 			{
 				$set: {
 					schedule: {
@@ -439,9 +436,9 @@ const setSchedule = async (user, payload) => {
 			{ new: true }
 		);
 	} else {
-		if (user.psychologist) {
-			response = await Psychologist.findByIdAndUpdate(
-				user.psychologist,
+		if (user.specialist) {
+			response = await Specialist.findByIdAndUpdate(
+				user.specialist,
 				{
 					$set: {
 						schedule: {
@@ -458,7 +455,7 @@ const setSchedule = async (user, payload) => {
 				{ new: true }
 			);
 		}
-		// Si el user es un postulante (psychologist === undefined), pero no un user
+		// Si el user es un postulante (specialist === undefined), pero no un user
 		else {
 			response = await Recruitment.findOneAndUpdate(
 				{ email: user.email },
@@ -480,63 +477,63 @@ const setSchedule = async (user, payload) => {
 		}
 	}
 	return okResponse('Horario actualizado', {
-		psychologist: response,
+		specialist: response,
 	});
 };
 
 const updatePaymentMethod = async (user, payload) => {
-	if (user.role !== 'psychologist')
-		return conflictResponse('No eres un psicologo.');
+	if (user.role !== 'specialist')
+		return conflictResponse('No eres un especialista.');
 	else {
-		// Si el user es un psicologo se busca por su id y se actualiza el metodo de pago
-		let foundPsychologist;
-		if (user.psychologist) {
-			foundPsychologist = await Psychologist.findById(user.psychologist);
+		// Si el user es un especialista se busca por su id y se actualiza el metodo de pago
+		let foundSpecialist;
+		if (user.specialist) {
+			foundSpecialist = await Specialist.findById(user.specialist);
 		} else {
 			// Si el user es un postulante
-			foundPsychologist = await Recruitment.findOne({
+			foundSpecialist = await Recruitment.findOne({
 				email: user.email,
 			});
 		}
 		// Se crea un nuevo metodo de pago, se agregan los datos y se guarda
 		const newPaymentMethod = {
-			bank: payload.bank || foundPsychologist.paymentMethod.bank,
+			bank: payload.bank || foundSpecialist.paymentMethod.bank,
 			accountType:
 				payload.accountType ||
-				foundPsychologist.paymentMethod.accountType,
+				foundSpecialist.paymentMethod.accountType,
 			accountNumber:
 				payload.accountNumber ||
-				foundPsychologist.paymentMethod.accountNumber,
-			rut: payload.rut || foundPsychologist.paymentMethod.rut,
-			name: payload.name || foundPsychologist.paymentMethod.name,
-			email: payload.email || foundPsychologist.paymentMethod.email,
+				foundSpecialist.paymentMethod.accountNumber,
+			rut: payload.rut || foundSpecialist.paymentMethod.rut,
+			name: payload.name || foundSpecialist.paymentMethod.name,
+			email: payload.email || foundSpecialist.paymentMethod.email,
 		};
-		foundPsychologist.paymentMethod = newPaymentMethod;
-		await foundPsychologist.save();
+		foundSpecialist.paymentMethod = newPaymentMethod;
+		await foundSpecialist.save();
 		return okResponse('Metodo de pago actualizado', {
-			psychologist: foundPsychologist,
+			specialist: foundSpecialist,
 		});
 	}
 };
 
-const updatePsychologist = async (user, profile) => {
+const updateSpecialist = async (user, profile) => {
 	if (user.role === 'user') return conflictResponse('No tienes poder.');
-	if (user.role === 'superuser' && !user.psychologist)
-		user.psychologist = profile._id;
-	if (user.psychologist) {
-		// Si el user es un psicologo intenta actualizar el psicologo
+	if (user.role === 'superuser' && !user.specialist)
+		user.specialist = profile._id;
+	if (user.specialist) {
+		// Si el user es un especialista intenta actualizar el especialista
 		try {
-			const psy = await Psychologist.findById(profile._id);
-			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
+			const spec = await Specialist.findById(profile._id);
+			if (spec.sessionPrices.video !== profile.sessionPrices.video) {
 				// Si existe una fecha de vencimiento, y esta está antes de la fecha actual adelantado un mes
 				if (
-					psy.stampSetPrices &&
-					dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+					spec.stampSetPrices &&
+					dayjs().isBefore(dayjs(spec.stampSetPrices).add(1, 'months'))
 				)
-					profile.sessionPrices = psy.sessionPrices;
+					profile.sessionPrices = spec.sessionPrices;
 				else profile.stampSetPrices = dayjs.tz().format();
 			}
-			const updated = await Psychologist.findByIdAndUpdate(
+			const updated = await Specialist.findByIdAndUpdate(
 				profile._id,
 				profile,
 				{
@@ -554,7 +551,7 @@ const updatePsychologist = async (user, profile) => {
 				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
-					event: 'psy-updasted-profile',
+					event: 'spec-updasted-profile',
 				});
 				analytics.identify({
 					userId: id.toString(),
@@ -583,14 +580,14 @@ const updatePsychologist = async (user, profile) => {
 						personalDescription: updated.personalDescription,
 						professionalDescription:
 							updated.professionalDescription,
-						role: 'psychologist',
+						role: 'specialist',
 					},
 				});
 			}
 
-			logInfo(user.email, 'actualizo su perfil de psicologo');
+			logInfo(user.email, 'actualizo su perfil de especialista');
 			return okResponse('Actualizado exitosamente', {
-				psychologist: updated,
+				specialist: updated,
 			});
 		} catch (err) {
 			logInfo(err.stack);
@@ -600,7 +597,7 @@ const updatePsychologist = async (user, profile) => {
 		}
 	} else {
 		try {
-			// Se intenta actualizar el psicologo
+			// Se intenta actualizar el especialista
 			const updated = await Recruitment.findByIdAndUpdate(
 				profile._id,
 				profile,
@@ -649,7 +646,7 @@ const updatePsychologist = async (user, profile) => {
 				});
 			}
 			return okResponse('Actualizado exitosamente', {
-				psychologist: updated,
+				specialist: updated,
 			});
 		} catch (err) {
 			logInfo(err.stack);
@@ -666,30 +663,30 @@ const deleteOne = async (user, id) => {
 			'No tienes permisos suficientes para realizar esta acción'
 		);
 
-	// Se elimina el psicologo, se busca por id y se elimina
-	await Psychologist.deleteOne({ _id: id });
-	const psychologists = await Psychologist.find();
-	return okResponse('Psicologo eliminado', { psychologists });
+	// Se elimina el especialista, se busca por id y se elimina
+	await Specialist.deleteOne({ _id: id });
+	const specialists = await Specialist.find();
+	return okResponse('Especialista eliminado', { specialists });
 };
 
 const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
-	if (user.role != 'psychologist')
+	if (user.role != 'specialist')
 		return conflictResponse('No tienes permisos');
-	const psy = await Psychologist.findById(user.psychologist);
+	const spec = await Specialist.findById(user.specialist);
 
-	// Si el psicologo ya esta establecido, y el precio aún no expira
+	// Si el especialista ya esta establecido, y el precio aún no expira
 	if (
-		psy.stampSetPrices &&
-		dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+		spec.stampSetPrices &&
+		dayjs().isBefore(dayjs(spec.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
 		);
 
 	// Se actualiza el precio
-	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		user.psychologist,
+	let updatedSpecialist = await Specialist.findByIdAndUpdate(
+		user.specialist,
 		{
 			sessionPrices: {
 				text: newPrice * 0.75,
@@ -701,14 +698,14 @@ const setPrice = async (user, newPrice) => {
 		{ new: true }
 	);
 	return okResponse('Precios actualizados', {
-		psychologist: updatedPsychologist,
+		specialist: updatedSpecialist,
 	});
 };
 
-const getClients = async psychologist => {
-	// Se busca las sessiones de un psicologo en particular y se filtran por las que estan pagadas
+const getClients = async specialist => {
+	// Se busca las sessiones de un especialista en particular y se filtran por las que estan pagadas
 	let sessions = await Sessions.find({
-		psychologist: psychologist,
+		specialist: specialist,
 	}).populate('user');
 
 	return okResponse('Usuarios encontrados', {
@@ -771,7 +768,7 @@ const searchClients = async search => {
 const usernameAvailable = async username => {
 	// Se verifica si el nombre de usuario ya existe para saber si el usuario está disponible
 	let available = true;
-	if (await Psychologist.exists({ username })) available = false;
+	if (await Specialist.exists({ username })) available = false;
 	return okResponse(
 		available ? 'Usuario disponible' : 'Usuario ya esta ocupado',
 		{ available }
@@ -779,8 +776,8 @@ const usernameAvailable = async username => {
 };
 
 const updateFormationExperience = async (user, payload) => {
-	if (user.role != 'psychologist') {
-		return conflictResponse('No eres psicologo');
+	if (user.role != 'specialist') {
+		return conflictResponse('No eres especialista');
 	}
 
 	/**
@@ -792,21 +789,21 @@ const updateFormationExperience = async (user, payload) => {
 	 * 	experience: array
 	 */
 
-	let updatedPsychologist = await Psychologist.findByIdAndUpdate(
-		user.psychologist,
+	let updatedSpecialist = await Specialist.findByIdAndUpdate(
+		user.specialist,
 		payload,
 		{ new: true }
 	);
-	return okResponse('psicologo actualizado', {
-		psychologist: updatedPsychologist,
+	return okResponse('especialista actualizado', {
+		specialist: updatedSpecialist,
 	});
 };
 
-const uploadProfilePicture = async (psyID, picture) => {
+const uploadProfilePicture = async (specID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const { name, lastName, _id } = await User.findById(psyID);
+	const { name, lastName, _id } = await User.findById(specID);
 	// Se crea el archivo en GCS, GCS es un bucket de Google Cloud Storage, un bucket en Google Cloud Storage son contenedores básicos que contienen los datos
-	const gcsname = `${psyID}-${name}-${lastName}`;
+	const gcsname = `${specID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	// Se crea un stream para escribir en el archivo y se escribe el metadato de la imagen
 	const stream = file.createWriteStream({
@@ -838,7 +835,7 @@ const uploadProfilePicture = async (psyID, picture) => {
 		});
 	}
 
-	await Psychologist.findByIdAndUpdate(psyID, {
+	await Specialist.findByIdAndUpdate(specID, {
 		avatar: getPublicUrlAvatar(gcsname),
 		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
 	});
@@ -856,8 +853,8 @@ const approveAvatar = async (user, id) => {
 			'No tienes permisos suficientes para realizar esta acción'
 		);
 
-	// Se busca el psicologo y se le aprueba la imagen de avatar
-	const psychologist = await Psychologist.findByIdAndUpdate(
+	// Se busca el especialista y se le aprueba la imagen de avatar
+	const specialist = await Specialist.findByIdAndUpdate(
 		id,
 		{
 			approveAvatar: true,
@@ -865,19 +862,19 @@ const approveAvatar = async (user, id) => {
 		{ new: true }
 	);
 	return okResponse('Avatar aprobado', {
-		psychologist,
+		specialist,
 	});
 };
 
-const changeToInmediateAttention = async psy => {
-	/*if (user.role !== 'psychologist')
+const changeToInmediateAttention = async spec => {
+	/*if (user.role !== 'specialist')
 		return conflictResponse('No tienes permitida esta opción');
-	const psy = user.psychologist;*/
-	let psychologist = await Psychologist.findById(psy);
+	const spec = user.specialist;*/
+	let specialist = await Specialist.findById(spec);
 	// Si la atención inmediata está activada, se desactiva
-	if (psychologist.inmediateAttention.activated) {
-		psychologist = await Psychologist.findOneAndUpdate(
-			{ _id: psy },
+	if (specialist.inmediateAttention.activated) {
+		specialist = await Specialist.findOneAndUpdate(
+			{ _id: spec },
 			{
 				$set: {
 					inmediateAttention: {
@@ -890,7 +887,7 @@ const changeToInmediateAttention = async psy => {
 		);
 	} else {
 		// Si no esta activado el plan inmediato de atención
-		let sessions = await getAllSessionsFunction(psy);
+		let sessions = await getAllSessionsFunction(spec);
 		let now = new Date();
 		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
 		sessions = sessions.filter(session => {
@@ -910,8 +907,8 @@ const changeToInmediateAttention = async psy => {
 			return conflictResponse('Tiene sesiones próximas');
 
 		// Se activa el plan inmediato de atención
-		psychologist = await Psychologist.findOneAndUpdate(
-			{ _id: psy },
+		specialist = await Specialist.findOneAndUpdate(
+			{ _id: spec },
 			{
 				$set: {
 					inmediateAttention: {
@@ -926,28 +923,28 @@ const changeToInmediateAttention = async psy => {
 		);
 	}
 
-	const msj = psychologist.inmediateAttention.activated
+	const msj = specialist.inmediateAttention.activated
 		? 'Estaras disponible durante las proxima 3 horas'
 		: 'Atención inmediata desactivada';
 
 	return okResponse(msj, {
-		psychologist,
+		specialist,
 	});
 };
 /*
 const getAllSessionsInmediateAttention = async () => {
-	let psychologist = await Psychologist.find({}).select(
+	let specialist = await Specialist.find({}).select(
 		'_id inmediateAttention'
 	);
 	// Para que nos de deje modificar el array de mongo
-	psychologist = JSON.stringify(psychologist);
-	psychologist = JSON.parse(psychologist);
-	psychologist = psychologist.filter(
-		psy => psy.inmediateAttention.activated === true
+	specialist = JSON.stringify(specialist);
+	specialist = JSON.parse(specialist);
+	specialist = specialist.filter(
+		spec => spec.inmediateAttention.activated === true
 	);
 
 	let allSessions = await Sessions.find().populate(
-		'psychologist',
+		'specialist',
 		'_id inmediateAttention'
 	);
 
@@ -975,17 +972,17 @@ const getAllSessionsInmediateAttention = async () => {
 				});
 		});
 
-	allSessions = psychologist.map(item => ({
+	allSessions = specialist.map(item => ({
 		...item,
 		sessions: setDaySessions(
-			allSessions.filter(element => element.psychologist === item._id)
+			allSessions.filter(element => element.specialist === item._id)
 		).length,
 	}));
 
 	return okResponse('Sesiones', { allSessions });
 };*/
 
-const psychologistsService = {
+const specialistsService = {
 	approveAvatar,
 	deleteOne,
 	getAll,
@@ -999,9 +996,9 @@ const psychologistsService = {
 	updateFormationExperience,
 	updatePaymentMethod,
 	updatePlan,
-	updatePsychologist,
+	updateSpecialist,
 	uploadProfilePicture,
 	usernameAvailable,
 	changeToInmediateAttention,
 };
-export default Object.freeze(psychologistsService);
+export default Object.freeze(specialistsService);

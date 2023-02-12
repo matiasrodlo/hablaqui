@@ -76,7 +76,7 @@
 				</v-list-item-content>
 				<client-only>
 					<v-list-item-action
-						v-if="canCopy && psychologist && $auth.user.role === 'psychologist'"
+						v-if="canCopy && specialist && $auth.user.role === 'specialist'"
 					>
 						<div class="d-flex align-center">
 							<v-text-field
@@ -86,7 +86,7 @@
 								dense
 								hide-details
 								filled
-								:value="`hablaqui.cl/${psychologist.username}`"
+								:value="`hablaqui.cl/${specialist.username}`"
 							/>
 							<v-btn class="ml-1" small color="primary" @click="copyLink">
 								Copiar link
@@ -145,28 +145,28 @@
 					<v-tab-item :transition="false">
 						<general-information
 							v-if="tabs === 0"
-							:psychologist="psychologist"
-							:set-psychologist="setPsychologist"
+							:specialist="specialist"
+							:set-specialist="setSpecialist"
 						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
 						<my-plans v-if="tabs === 1 && $auth.$state.user.role === 'user'" />
 						<horario
-							v-if="tabs === 1 && $auth.$state.user.role === 'psychologist'"
-							:psychologist="psychologist"
-							:set-psychologist="setPsychologist"
+							v-if="tabs === 1 && $auth.$state.user.role === 'specialist'"
+							:specialist="specialist"
+							:set-specialist="setSpecialist"
 						/>
 					</v-tab-item>
 					<v-tab-item :transition="false">
-						<psicologo
+						<especialista
 							v-if="tabs === 2 && $auth.$state.user.role === 'user'"
-							:psychologist="psychologist"
-							:set-psychologist="setPsychologist"
+							:specialist="specialist"
+							:set-specialist="setSpecialist"
 						/>
 						<services
-							v-if="tabs === 2 && $auth.$state.user.role === 'psychologist'"
-							:psychologist="psychologist"
-							:set-psychologist="setPsychologist"
+							v-if="tabs === 2 && $auth.$state.user.role === 'specialist'"
+							:specialist="specialist"
+							:set-specialist="setSpecialist"
 						/>
 					</v-tab-item>
 				</v-tabs-items>
@@ -176,7 +176,7 @@
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Configuración</div>
 								<div
-									v-if="$auth.$state.user.role === 'psychologist'"
+									v-if="$auth.$state.user.role === 'specialist'"
 									class="text--secondary"
 								>
 									Datos bancarios, información profesional, etc
@@ -185,8 +185,8 @@
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
 							<general-information
-								:psychologist="psychologist"
-								:set-psychologist="setPsychologist"
+								:specialist="specialist"
+								:set-specialist="setSpecialist"
 							/>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
@@ -207,13 +207,13 @@
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
-							<psicologo
-								:psychologist="psychologist"
-								:set-psychologist="setPsychologist"
+							<especialista
+								:specialist="specialist"
+								:set-specialist="setSpecialist"
 							/>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
-					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+					<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 						<v-expansion-panel-header>
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Horarios</div>
@@ -223,13 +223,10 @@
 							</div>
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
-							<horario
-								:psychologist="psychologist"
-								:set-psychologist="setPsychologist"
-							/>
+							<horario :specialist="specialist" :set-specialist="setSpecialist" />
 						</v-expansion-panel-content>
 					</v-expansion-panel>
-					<v-expansion-panel v-if="$auth.$state.user.role === 'psychologist'">
+					<v-expansion-panel v-if="$auth.$state.user.role === 'specialist'">
 						<v-expansion-panel-header>
 							<div>
 								<div class="text-h6" style="color: #3c3c3b">Servicios</div>
@@ -271,7 +268,7 @@ export default {
 		Horario: () => import('~/components/dashboard/Horario'),
 		Icon: () => import('~/components/Icon'),
 		MyPlans: () => import('~/components/dashboard/MyPlans'),
-		Psicologo: () => import('~/components/dashboard/Psicologo'),
+		Especialista: () => import('~/components/dashboard/Especialista'),
 		Services: () => import('~/components/dashboard/Services'),
 	},
 	layout: 'dashboard',
@@ -287,15 +284,15 @@ export default {
 		};
 	},
 	computed: {
-		psychologist: {
+		specialist: {
 			get() {
 				return this.item;
 			},
 			set(value) {
-				this.setPsychologist(value);
+				this.setSpecialist(value);
 			},
 		},
-		...mapGetters({ item: 'Psychologist/psychologist', step: 'User/step' }),
+		...mapGetters({ item: 'Specialist/specialist', step: 'User/step' }),
 	},
 	watch: {
 		step(newValue) {
@@ -306,8 +303,8 @@ export default {
 		this.canCopy = !!navigator.clipboard;
 	},
 	methods: {
-		setPsychologist(value) {
-			this.psychologist = value;
+		setSpecialist(value) {
+			this.specialist = value;
 		},
 		async uploadAvatar(file) {
 			if (!file) return false;
@@ -315,7 +312,7 @@ export default {
 			const { user } = await this.upateAvatar(this.setAvatarObject(file));
 			this.$auth.setUser(user);
 			this.loadingAvatar = false;
-			if (this.$auth.user.role === 'psychologist' && this.$auth.user.psychologist)
+			if (this.$auth.user.role === 'specialist' && this.$auth.user.specialist)
 				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
 		setAvatarObject(file) {
@@ -324,7 +321,7 @@ export default {
 			avatar.append('_id', this.$auth.$state.user._id);
 			avatar.append('name', this.$auth.$state.user.name);
 			avatar.append('lastName', this.$auth.$state.user.lastName);
-			avatar.append('idPsychologist', this.$auth.$state.user.psychologist);
+			avatar.append('idSpecialist', this.$auth.$state.user.specialist);
 			avatar.append('role', this.$auth.$state.user.role);
 			avatar.append('oldAvatar', this.$auth.$state.user.avatar);
 			avatar.append(
@@ -334,12 +331,10 @@ export default {
 			return avatar;
 		},
 		copyLink() {
-			navigator.clipboard.writeText(
-				`${this.$config.LANDING_URL}${this.psychologist.username}`
-			);
+			navigator.clipboard.writeText(`${this.$config.LANDING_URL}${this.specialist.username}`);
 		},
 		...mapMutations({
-			setPsychologist: 'Psychologist/setPsychologist',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
 			upateAvatar: 'User/upateAvatar',

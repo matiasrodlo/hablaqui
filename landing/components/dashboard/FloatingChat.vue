@@ -8,8 +8,8 @@
 			offset-y="15"
 			dot
 			:value="
-				(getMyPsy && getMyPsy.countMessagesUnRead > 0) ||
-				(psyFromChats && psyFromChats.some(item => item.countMessagesUnRead > 0))
+				(getMySpec && getMySpec.countMessagesUnRead > 0) ||
+				(specFromChats && specFromChats.some(item => item.countMessagesUnRead > 0))
 			"
 			class="open-button pointer"
 		>
@@ -31,10 +31,10 @@
 						:selected="selected"
 						:chat="chat"
 						:plan="plan"
-						:get-my-psy="getMyPsy"
-						:psy-from-chats="psyFromChats"
+						:get-my-spec="getMySpec"
+						:spec-from-chats="specFromChats"
 						:set-selected="e => (selected = e)"
-						:selected-psy="e => selectedPsy(e)"
+						:selected-spec="e => selectedSpec(e)"
 						:loading-chat="loadingChat"
 						:search="search"
 						:close="() => (dialog = false)"
@@ -62,8 +62,8 @@
 					offset-y="15"
 					dot
 					:value="
-						(getMyPsy && getMyPsy.countMessagesUnRead > 0) ||
-						(psyFromChats && psyFromChats.some(item => item.countMessagesUnRead > 0))
+						(getMySpec && getMySpec.countMessagesUnRead > 0) ||
+						(specFromChats && specFromChats.some(item => item.countMessagesUnRead > 0))
 					"
 					class="open-button pointer"
 				>
@@ -85,10 +85,10 @@
 				:selected="selected"
 				:chat="chat"
 				:plan="plan"
-				:get-my-psy="getMyPsy"
-				:psy-from-chats="psyFromChats"
+				:get-my-spec="getMySpec"
+				:spec-from-chats="specFromChats"
 				:set-selected="e => (selected = e)"
-				:selected-psy="e => selectedPsy(e)"
+				:selected-spec="e => selectedSpec(e)"
 				:loading-chat="loadingChat"
 				:search="search"
 				:socket="socket"
@@ -124,37 +124,37 @@ export default {
 		};
 	},
 	computed: {
-		psychologists() {
-			return this.allPsychologists.map(item => ({
+		specialists() {
+			return this.allSpecialists.map(item => ({
 				...item,
 				hasMessage: this.hasMessage(item),
 				countMessagesUnRead: this.setCountMessagesUnread(
-					this.chats.find(chat => chat.psychologist._id === item._id)
+					this.chats.find(chat => chat.specialist._id === item._id)
 				),
 			}));
 		},
-		psyFromChats() {
+		specFromChats() {
 			let filterArray = this.chats;
 
 			filterArray = this.chats.filter(el =>
-				el.psychologist.name.toLowerCase().includes(this.search.toLowerCase())
+				el.specialist.name.toLowerCase().includes(this.search.toLowerCase())
 			);
 
-			if (this.getMyPsy) {
+			if (this.getMySpec) {
 				filterArray = filterArray.filter(item => {
-					return this.getMyPsy._id !== item.psychologist._id;
+					return this.getMySpec._id !== item.specialist._id;
 				});
 			}
 
 			filterArray = uniqBy(filterArray, function (e) {
-				return e.psychologist._id;
+				return e.specialist._id;
 			});
 
 			return filterArray
 				.map(item => ({
-					...item.psychologist,
+					...item.specialist,
 					countMessagesUnRead: this.setCountMessagesUnread(item),
-					hasMessage: this.hasMessage(item.psychologist),
+					hasMessage: this.hasMessage(item.specialist),
 				}))
 				.sort((a, b) => b.countMessagesUnRead - a.countMessagesUnRead);
 		},
@@ -174,12 +174,12 @@ export default {
 				this.setFloatingChat(value);
 			},
 		},
-		getMyPsy() {
+		getMySpec() {
 			if (this.$auth.$state.user && this.$auth.$state.user.role === 'user' && this.plan) {
-				const psy = this.plan.psychologist;
-				if (psy)
+				const spec = this.plan.specialist;
+				if (spec)
 					return {
-						...this.getPsy(psy),
+						...this.getSpec(spec),
 						roomsUrl: this.plan.roomsUrl,
 					};
 				else return null;
@@ -191,8 +191,8 @@ export default {
 			chats: 'Chat/chats',
 			plans: 'User/plan',
 			floatingChat: 'Chat/floatingChat',
-			allPsychologists: 'Psychologist/psychologists',
-			resumeView: 'Psychologist/resumeView',
+			allSpecialists: 'Specialist/specialists',
+			resumeView: 'Specialist/resumeView',
 		}),
 	},
 	watch: {
@@ -200,10 +200,10 @@ export default {
 			if (newValue && this.$route.query.chat) {
 				this.setResumeView(false);
 				if (this.$route.params.slug) {
-					const psychologist = this.psychologists.find(
+					const specialist = this.specialists.find(
 						item => item.username === this.$route.params.slug
 					);
-					await this.selectedPsy(psychologist);
+					await this.selectedSpec(specialist);
 					await this.getMessages();
 				}
 			}
@@ -220,7 +220,7 @@ export default {
 			if (
 				data.content.sentBy !== this.$auth.$state.user._id &&
 				(this.$auth.$state.user._id === data.userId ||
-					this.$auth.$state.user.psychologist === data.psychologistId)
+					this.$auth.$state.user.specialist === data.specialistId)
 			) {
 				this.socketioCallback(data);
 			}
@@ -231,10 +231,10 @@ export default {
 			this.plans && this.plans.sortedPlans.length > 0 ? this.plans.sortedPlans[0] : null;
 		if (this.resumeView) {
 			if (this.$route.params.id) {
-				const psychologist = this.psychologists.find(
+				const specialist = this.specialists.find(
 					item => item._id === this.$route.params.id
 				);
-				await this.selectedPsy(psychologist);
+				await this.selectedSpec(specialist);
 			}
 		}
 		await this.getMessages();
@@ -242,10 +242,10 @@ export default {
 	methods: {
 		async socketioCallback(data) {
 			if (
-				(this.selected && this.selected._id === data.psychologistId) ||
+				(this.selected && this.selected._id === data.specialistId) ||
 				(this.selected && this.selected._id === data.userId)
 			) {
-				await this.getChat({ psy: data.psychologistId, user: data.userId });
+				await this.getChat({ spec: data.specialistId, user: data.userId });
 				this.$refs.cardChat.scrollToElement();
 				await this.updateMessage(data._id);
 			}
@@ -256,13 +256,13 @@ export default {
 				if (this.selected) this.selected = null;
 			}, 200);
 		},
-		async selectedPsy(psy) {
-			if (this.selected && this.selected._id === psy._id) return;
+		async selectedSpec(spec) {
+			if (this.selected && this.selected._id === spec._id) return;
 			// iniciamos carga del seleccionado
 			this.loadingChat = true;
-			this.selected = psy;
+			this.selected = spec;
 			// obtener chat del selecciona
-			await this.getChat({ psy: psy._id, user: this.$auth.$state.user._id });
+			await this.getChat({ spec: spec._id, user: this.$auth.$state.user._id });
 			// finalizamos carga del seleccionado
 			this.loadingChat = false;
 			// scroll hasta el final para ver los ultimo mensajes
@@ -270,16 +270,16 @@ export default {
 				this.$refs.cardChat.scrollToElement();
 			}, 10);
 			// si no el usuario no tiene una conversation enviamos una intention de chat para notificar el pys
-			if (!this.chat) await this.startConversation(psy._id);
-			// Si ya tiene un chat con el psy, marcamos mensaje como Leído y actualizamos el psy
-			if (psy.countMessagesUnRead) {
-				await this.updateMessage(psy.hasMessage);
+			if (!this.chat) await this.startConversation(spec._id);
+			// Si ya tiene un chat con el spec, marcamos mensaje como Leído y actualizamos el spec
+			if (spec.countMessagesUnRead) {
+				await this.updateMessage(spec.hasMessage);
 				await this.getMessages();
 			}
 		},
-		hasMessage(psy) {
+		hasMessage(spec) {
 			const temp = {
-				...this.chats.find(item => item.psychologist && item.psychologist._id === psy._id),
+				...this.chats.find(item => item.specialist && item.specialist._id === spec._id),
 			};
 			if (temp && temp.messages && temp.messages.length) {
 				const hasMessage = temp.messages.some(
@@ -299,8 +299,8 @@ export default {
 			});
 			return count;
 		},
-		getPsy(id) {
-			return this.psychologists.find(item => item._id === id);
+		getSpec(id) {
+			return this.specialists.find(item => item._id === id);
 		},
 		...mapActions({
 			getChat: 'Chat/getChat',
@@ -309,7 +309,7 @@ export default {
 			startConversation: 'Chat/startConversation',
 		}),
 		...mapMutations({
-			setResumeView: 'Psychologist/setResumeView',
+			setResumeView: 'Specialist/setResumeView',
 			setChat: 'Chat/setChat',
 			setFloatingChat: 'Chat/setFloatingChat',
 		}),

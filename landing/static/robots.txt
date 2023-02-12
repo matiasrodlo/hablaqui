@@ -3,7 +3,7 @@ Disallow: /pagos/
 Disallow: /auth/
 Disallow: /blog/finalizar-compra/
 Disallow: /blog/mi-cuenta/
-Disallow: /blog/preguntas-frecuentes-psicologo/
+Disallow: /blog/preguntas-frecuentes-especialista/
 Disallow: /blog/featured_item/
 Disallow: /blog/blog/
 Disallow: /blog/carrito/

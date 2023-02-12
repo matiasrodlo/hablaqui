@@ -2,7 +2,7 @@
 
 import appointmentsRouter from './appointments';
 import authRoutes from './auth';
-import psychologistsRouter from './psychologist';
+import specialistsRouter from './specialist';
 import mercadopagoRouter from './mercadopago';
 import userRoutes from './user';
 import chatRouter from './chat';
@@ -13,6 +13,7 @@ import dashboardRouter from './dashboard';
 import sessionsRouter from './sessions';
 import evaluationRouter from './evaluation';
 import transactionRouter from './transaction';
+import scriptsRouter from './scripts';
 
 const apiVersion = '/api/v1';
 
@@ -22,7 +23,7 @@ export default app => {
 	app.use(apiVersion, chatRouter);
 	app.use(apiVersion, couponRouter);
 	app.use(apiVersion, mercadopagoRouter);
-	app.use(apiVersion, psychologistsRouter);
+	app.use(apiVersion, specialistsRouter);
 	app.use(apiVersion, recruitmentRouter);
 	app.use(apiVersion, userRoutes);
 	app.use(apiVersion, cronRouter);
@@ -30,4 +31,5 @@ export default app => {
 	app.use(apiVersion, sessionsRouter);
 	app.use(apiVersion, evaluationRouter);
 	app.use(apiVersion, transactionRouter);
+	app.use(apiVersion, scriptsRouter);
 };

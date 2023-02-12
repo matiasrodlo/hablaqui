@@ -207,7 +207,7 @@ export default {
 	data() {
 		return {
 			recruited: null,
-			psychologist: null,
+			specialist: null,
 			recruitedId: '',
 			mdiCheck,
 			period: 'mensual',
@@ -238,16 +238,12 @@ export default {
 	},
 	computed: {
 		currentPlan() {
-			if (this.$auth.$state.user.role !== 'psychologist') return false;
-			if (!this.psychologist && !this.recruited) return false;
-			if (
-				this.psychologist &&
-				this.psychologist.psyPlans &&
-				this.psychologist.psyPlans.length
-			)
-				return this.psychologist.psyPlans[this.psychologist.psyPlans.length - 1];
-			if (this.recruited && this.recruited.psyPlans && this.recruited.psyPlans.length)
-				return this.recruited.psyPlans[this.recruited.psyPlans.length - 1];
+			if (this.$auth.$state.user.role !== 'specialist') return false;
+			if (!this.specialist && !this.recruited) return false;
+			if (this.specialist && this.specialist.specPlans && this.specialist.specPlans.length)
+				return this.specialist.specPlans[this.specialist.specPlans.length - 1];
+			if (this.recruited && this.recruited.specPlans && this.recruited.specPlans.length)
+				return this.recruited.specPlans[this.recruited.specPlans.length - 1];
 			else return false;
 		},
 		hasPremiunPlan() {
@@ -260,11 +256,11 @@ export default {
 		},
 	},
 	async mounted() {
-		if (this.$auth.$state.user.psychologist) {
-			const { psychologist } = await this.$axios.$get(
-				`/psychologists/one/${this.$auth.$state.user.psychologist}`
+		if (this.$auth.$state.user.specialist) {
+			const { specialist } = await this.$axios.$get(
+				`/specialists/one/${this.$auth.$state.user.specialist}`
 			);
-			this.psychologist = psychologist;
+			this.specialist = specialist;
 		} else {
 			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 			this.recruitedId = recruited._id;
@@ -281,7 +277,7 @@ export default {
 				description:
 					plan === 'premium' ? 'Plan Premium de Hablaqui' : 'Plan Basico de Hablaqui',
 				title: plan === 'premium' ? 'Plan Premium' : 'Plan Free',
-				psychologistId: this.$auth.$state.user.psychologist,
+				specialistId: this.$auth.$state.user.specialist,
 				recruitedId: this.recruitedId,
 			});
 
@@ -290,7 +286,7 @@ export default {
 				else this.next();
 			}
 
-			if (this.$auth.$state.user.psychologist) {
+			if (this.$auth.$state.user.specialist) {
 				if (plan === 'premium') window.location.href = res.preference.init_point;
 				else this.$router.push({ name: 'dashboard-perfil' });
 			}
@@ -300,7 +296,7 @@ export default {
 			else this.$router.push({ name: 'dashboard-perfil' });
 		},
 		...mapActions({
-			setPaymentPreferences: 'Psychologist/setPaymentPreferences',
+			setPaymentPreferences: 'Specialist/setPaymentPreferences',
 		}),
 	},
 };

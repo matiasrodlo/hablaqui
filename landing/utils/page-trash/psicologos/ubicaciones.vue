@@ -12,7 +12,7 @@
 						Comunas
 					</h1>
 					<h2 class="text-h6 font-weight-medium text--secondary">
-						Psicólogos en Chile por comunas
+						Especialistas en Chile por comunas
 					</h2>
 				</v-col>
 			</v-row>
@@ -31,10 +31,10 @@
 								<v-col>
 									<div v-for="(el, e) in item.comuna" :key="e">
 										<nuxt-link
-											:to="`/psicologos/${el.comuna.slug}`"
+											:to="`/especialistas/${el.comuna.slug}`"
 											style="text-decoration: none"
 										>
-											Psicólogos en {{ el.comuna.name }}</nuxt-link
+											Especialistas en {{ el.comuna.name }}</nuxt-link
 										>
 									</div>
 								</v-col>
@@ -50,10 +50,10 @@
 											:key="i"
 										>
 											<nuxt-link
-												:to="`/psicologos/${el.comuna.slug}`"
+												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -66,10 +66,10 @@
 											:key="j"
 										>
 											<nuxt-link
-												:to="`/psicologos/${el.comuna.slug}`"
+												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -78,10 +78,10 @@
 									<v-col>
 										<div v-for="(el, e) in item.comuna" :key="e">
 											<nuxt-link
-												:to="`/psicologos/${el.comuna.slug}`"
+												:to="`/especialistas/${el.comuna.slug}`"
 												style="text-decoration: none"
 											>
-												Psicólogos en {{ el.comuna.name }}</nuxt-link
+												Especialistas en {{ el.comuna.name }}</nuxt-link
 											>
 										</div>
 									</v-col>
@@ -100,14 +100,14 @@
 									href: '/',
 								},
 								{
-									text: 'Psicólogos',
+									text: 'Especialistas',
 									disabled: false,
-									href: '/psicologos',
+									href: '/especialistas',
 								},
 								{
 									text: 'Ubicación',
 									disabled: true,
-									href: '/psicologos/ubicacion',
+									href: '/especialistas/ubicacion',
 								},
 							]"
 						>
@@ -200,37 +200,37 @@ export default {
 	},
 	head() {
 		return {
-			title: `Ubicaciones de nuestros psicologos | Hablaquí`,
+			title: `Ubicaciones de nuestros especialistas | Hablaquí`,
 			meta: [
 				{
 					hid: 'twitter:title',
 					name: 'twitter:title',
-					content: `Ubicaciones de nuestros psicologos | Hablaquí`,
+					content: `Ubicaciones de nuestros especialistas | Hablaquí`,
 				},
 				{
 					hid: 'twitter:description',
 					name: 'twitter:description',
-					content: 'Encuentra tu psicologo ideal en la ubicación más cercana a ti.',
+					content: 'Encuentra tu especialista ideal en la ubicación más cercana a ti.',
 				},
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/ubicaciones',
+					content: process.env.VUE_APP_LANDING + '/especialistas/ubicaciones',
 				},
 				{
 					hid: 'og:title',
 					property: 'og:title',
-					content: `Ubicaciones de nuestros psicologos | Hablaquí`,
+					content: `Ubicaciones de nuestros especialistas | Hablaquí`,
 				},
 				{
 					hid: 'og:description',
 					property: 'og:description',
-					content: 'Encuentra tu psicologo ideal en la ubicación más cercana a ti.',
+					content: 'Encuentra tu especialista ideal en la ubicación más cercana a ti.',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/ubicaciones',
+					content: process.env.VUE_APP_LANDING + '/especialistas/ubicaciones',
 				},
 				{
 					hid: 'robots',
@@ -241,7 +241,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/psicologos/ubicaciones`,
+					href: `https://cdn.hablaqui.cl/static/especialistas/ubicaciones`,
 				},
 			],
 		};

@@ -44,9 +44,9 @@ const retoolController = {
 	},
 	async specialistVisibility(req, res) {
 		try {
-			const { psyId, visibility } = req.params;
+			const { specId, visibility } = req.params;
 			const { data, code } = await dashboardService.specialistVisibility(
-				psyId,
+				specId,
 				visibility
 			);
 			return restResponse(data, code, res);

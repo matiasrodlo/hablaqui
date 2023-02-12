@@ -25,14 +25,14 @@ const liveData = io.of('/liveData'); // URL which will accept socket
 liveData.on('connection', socket => {
 	// actualizar chat
 	socket.on('sendMessage', (data, callback) => {
-		const { psychologistId, userId, content, user } = data;
+		const { specialistId, userId, content, user } = data;
 		try {
 			const sendMessageAsync = async () => {
 				const response = await sendMessage(
 					user,
 					content,
 					userId,
-					psychologistId
+					specialistId
 				);
 				liveData.emit('getMessage', response.emit);
 				callback(response.chat);

@@ -109,7 +109,7 @@ import { mdiRecord } from '@mdi/js';
 
 export default {
 	components: {
-		SignUp: () => import('@/components/psicologos/FormUserPsy.vue'),
+		SignUp: () => import('@/components/especialistas/FormUserSpec.vue'),
 		Icon: () => import('~/components/Icon'),
 	},
 	layout: 'simple',

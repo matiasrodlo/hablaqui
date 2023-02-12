@@ -2,11 +2,11 @@
 
 import Transaction from '../models/transaction';
 import Sessions from '../models/sessions';
-import Psychologist from '../models/psychologist';
+import Specialist from '../models/specialist';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import { getAllSessionsFunction } from '../utils/functions/getAllSessionsFunction';
 import { priceFormatter } from '../utils/functions/priceFormatter';
-import mailServicePsy from '../utils/functions/mails/psychologistStatus';
+import mailServiceSpec from '../utils/functions/mails/specialistStatus';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -17,24 +17,24 @@ dayjs.tz.setDefault('America/Santiago');
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
-const completePaymentsRequest = async psy => {
-	// Se obtienen todas las sessiones del psicologo, obtiene el documento de psicologo con su id
-	let sessions = await getAllSessionsFunction(psy);
-	const user = await Psychologist.findById(psy);
+const completePaymentsRequest = async spec => {
+	// Se obtienen todas las sessiones del especialista, obtiene el documento de especialista con su id
+	let sessions = await getAllSessionsFunction(spec);
+	const user = await Specialist.findById(spec);
 	const now = dayjs.tz().format();
 
-	// Se busca el documentro de transacciones con el id del psy, si no existe se crea
-	const transactions = await Transaction.findOne({ psychologist: psy });
+	// Se busca el documentro de transacciones con el id del spec, si no existe se crea
+	const transactions = await Transaction.findOne({ specialist: spec });
 	if (!transactions) {
 		await Transaction.create({
-			psychologist: psy,
+			specialist: spec,
 			transactionsRequest: [],
 			transactionCompleted: [],
 		});
 	}
 
 	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante
-	// y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el psicólogo
+	// y que este en un estado pending, respecto a la solicitud de retiro que haya pedido el especialista
 	sessions = sessions.filter(
 		session =>
 			session.status === 'success' &&
@@ -54,7 +54,7 @@ const completePaymentsRequest = async psy => {
 				$set: {
 					'plan.$.session.$[session].request': 'paid',
 					'plan.$.session.$[session].paymentDate': now,
-					'plan.$.session.$[session].paidToPsychologist': true,
+					'plan.$.session.$[session].paidToSpecialist': true,
 				},
 			},
 			{ arrayFilters: [{ 'session._id': session._id }], new: true }
@@ -76,12 +76,12 @@ const completePaymentsRequest = async psy => {
 
 	// Se actualiza el documento de transacciones con la nueva transacción
 	await Transaction.findOneAndUpdate(
-		{ psychologist: psy },
+		{ specialist: spec },
 		{ $push: { transactionCompleted: transaction } }
 	);
 
-	//Enviar correo de dinero depositado a psy
-	await mailServicePsy.sendCompletePaymentRequest(user, total, now);
+	//Enviar correo de dinero depositado a spec
+	await mailServiceSpec.sendCompletePaymentRequest(user, total, now);
 
 	return okResponse('Peticion completada', {
 		total: total,
@@ -92,22 +92,22 @@ const completePaymentsRequest = async psy => {
 const createPaymentsRequest = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
-	// Se obtiene las sessiones del psy
-	const psy = user.psychologist;
-	let sessions = await getAllSessionsFunction(psy);
+	// Se obtiene las sessiones del spec
+	const spec = user.specialist;
+	let sessions = await getAllSessionsFunction(spec);
 	const now = dayjs.tz().format();
 
-	// Se busca el modelo de transacciones con el id del psy, si no existe se crea
-	const transactions = await Transaction.findOne({ psychologist: psy });
+	// Se busca el modelo de transacciones con el id del spec, si no existe se crea
+	const transactions = await Transaction.findOne({ specialist: spec });
 	if (!transactions) {
 		await Transaction.create({
-			psychologist: psy,
+			specialist: spec,
 			transactionsRequest: [],
 			transactionCompleted: [],
 		});
 	}
 	// Filtra las sesiones obtenidas en base a un plan que haya sido pagado por el consultante,
-	// que este en un estado none (implicando que la solicitud de retiro por parte de un psicólogo no se ha hecho)
+	// que este en un estado none (implicando que la solicitud de retiro por parte de un especialista no se ha hecho)
 	// y que la sesión no sea un Compromiso privado
 	sessions = sessions.filter(
 		session =>
@@ -124,7 +124,7 @@ const createPaymentsRequest = async user => {
 		0
 	);
 
-	// Esto se podría deber a que el psicólogo no tiene sesiones pagadas
+	// Esto se podría deber a que el especialista no tiene sesiones pagadas
 	if (total === 0)
 		return conflictResponse(
 			'No puedes hacer una petición con saldo 0 disponible'
@@ -154,7 +154,7 @@ const createPaymentsRequest = async user => {
 		transactionDate: now,
 	};
 	await Transaction.findOneAndUpdate(
-		{ psychologist: psy },
+		{ specialist: spec },
 		{ $push: { transactionsRequest: transaction } }
 	);
 
@@ -165,7 +165,7 @@ const createPaymentsRequest = async user => {
 	) {
 		analytics.track({
 			userId: user._id.toString(),
-			event: 'psy-withdrawal-request',
+			event: 'spec-withdrawal-request',
 			properties: {
 				total: total,
 				sessions: sessions.length,
@@ -173,7 +173,7 @@ const createPaymentsRequest = async user => {
 		});
 	}
 	//Crear correo de petición de retiro de dinero
-	await mailServicePsy.sendPaymentRequest(user, total, now);
+	await mailServiceSpec.sendPaymentRequest(user, total, now);
 
 	return okResponse('Peticion hecha', {
 		total: total,
@@ -184,11 +184,11 @@ const createPaymentsRequest = async user => {
 const getTransactions = async user => {
 	if (user.role === 'user')
 		return conflictResponse('No estas autorizado para esta operacion');
-	const psy = user.psychologist;
+	const spec = user.specialist;
 
-	// Se obtienen las sessiones del psy y se obtiene el documento de transacciones con el id del psy
-	let sessions = await getAllSessionsFunction(psy);
-	let transactions = await Transaction.findOne({ psychologist: psy });
+	// Se obtienen las sessiones del spec y se obtiene el documento de transacciones con el id del spec
+	let sessions = await getAllSessionsFunction(spec);
+	let transactions = await Transaction.findOne({ specialist: spec });
 
 	// Si existe el documento de transacciones se obtiene el total de las transacciones en solicitud
 	if (transactions) transactions = transactions.transactionsRequest;
@@ -251,7 +251,7 @@ const getTransactions = async user => {
 	});
 };
 
-const generateTransaction = async (user, total, session, idPsy) => {
+const generateTransaction = async (user, total, session, idSpec) => {
 	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
 	if (session.length === 0)
 		return conflictResponse('No hay sesiones para pagar');
@@ -262,7 +262,7 @@ const generateTransaction = async (user, total, session, idPsy) => {
 			},
 			{
 				$set: {
-					'plan.$[].session.$[session].paidToPsychologist': true,
+					'plan.$[].session.$[session].paidToSpecialist': true,
 				},
 			},
 			{ arrayFilters: [{ 'session._id': s._id }] }
@@ -271,7 +271,7 @@ const generateTransaction = async (user, total, session, idPsy) => {
 	let transaction = await Transaction.create({
 		total,
 		sessions: session,
-		psychologist: idPsy,
+		specialist: idSpec,
 	});
 	return okResponse('Pago completado', { transaction });
 };
@@ -279,7 +279,7 @@ const generateTransaction = async (user, total, session, idPsy) => {
 const getAllTransactions = async user => {
 	if (user.role !== 'superuser') return conflictResponse('No tienes permiso');
 
-	let transactions = await Transaction.find().populate('psychologist');
+	let transactions = await Transaction.find().populate('specialist');
 
 	transactions = transactions
 		.map(t => {
@@ -290,17 +290,16 @@ const getAllTransactions = async user => {
 				session: t.sessions.map(s => {
 					return {
 						...s,
-						date: dayjs
-							.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
+						date: dayjs.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
 							.format('DD/MM/YYYY HH:mm'),
 					};
 				}),
 				total: t.total,
-				name: t.psychologist.name,
-				lastName: t.psychologist.lastName,
-				username: t.psychologist.username,
-				email: t.psychologist.email,
-				psyId: t.psychologist._id,
+				name: t.specialist.name,
+				lastName: t.specialist.lastName,
+				username: t.specialist.username,
+				email: t.specialist.email,
+				specId: t.specialist._id,
 			};
 		})
 		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));

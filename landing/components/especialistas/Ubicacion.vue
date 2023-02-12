@@ -4,17 +4,17 @@
 		<div style="margin-bottom: 83px">
 			<Appbar />
 		</div>
-		<!-- geo psicologos -->
-		<geoPsicologos class="mt-10" :location="location" />
+		<!-- geo especialistas -->
+		<geoEspecialistas class="mt-10" :location="location" />
 		<!-- desktop -->
-		<psicologos-desktop
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-desktop
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
-			:loading-psychologist="loadingPsychologist"
+		<especialistas-mobile
+			:loading-specialist="loadingSpecialist"
 			:get-sessions-limit="getSessions"
 			class="hidden-md-and-up"
 		/>
@@ -61,8 +61,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
-import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import EspecialistasDesktop from '~/components/especialistas/EspecialistasDesktop';
+import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 
@@ -70,9 +70,9 @@ export default {
 	components: {
 		Footer,
 		Appbar,
-		PsicologosDesktop,
-		PsicologosMobile,
-		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
+		EspecialistasDesktop,
+		EspecialistasMobile,
+		geoEspecialistas: () => import('~/components/especialistas/GeoEspecialistas'),
 	},
 	props: {
 		location: {
@@ -86,34 +86,34 @@ export default {
 			faq: [
 				{
 					id: 1,
-					title: '¿A qué tipo de psicólogo online debo acudir?',
-					desc: `Los psicólogos clínicos licenciados son profesionales de la salud mental más frecuentes en ${this.location.slug}. Estos
+					title: '¿A qué tipo de especialista online debo acudir?',
+					desc: `Los especialistas clínicos licenciados son profesionales de la salud mental más frecuentes en ${this.location.slug}. Estos
                         tienen la facultad de diagnosticar trastornos mentales y ofrecer terapia especializada.
-                        La formación y certificaciones difieren en función del profesional. Siendo así que cada psicólogo puede
+                        La formación y certificaciones difieren en función del profesional. Siendo así que cada especialista puede
                         especializarse en un área concreta, como la depresión, el asesoramiento matrimonial o la ansiedad. `,
 				},
 				{
 					id: 2,
-					title: `¿Cómo puedo encontrar a un psicólogo en ${this.location.slug}?`,
+					title: `¿Cómo puedo encontrar a un especialista en ${this.location.slug}?`,
 					desc: `En Hablaquí nos enfocamos exclusivamente en proveer terapia en línea de modo que usted pueda acceder a
-                        un psicólogo online estando en Localidad o en cualquier parte del mundo. Utilizando los filtros de esta página,
-                        puede acotar su búsqueda y explorar numerosas categorías para encontrar un psicólogo online con la
-                        experiencia y especialidad que necesita. Por ejemplo, es posible que desee limitar su búsqueda a un psicólogo
+                        un especialista online estando en Localidad o en cualquier parte del mundo. Utilizando los filtros de esta página,
+                        puede acotar su búsqueda y explorar numerosas categorías para encontrar un especialista online con la
+                        experiencia y especialidad que necesita. Por ejemplo, es posible que desee limitar su búsqueda a un especialista
                         cognitivo conductual para atenderse en línea desde Localidad.`,
 				},
 				{
 					id: 3,
 					title: '¿Qué tipo de terapia en línea es el mejor para mí?',
 					desc: `No existe una “forma correcta”. Cada tipo de orientación o tratamiento tiene el potencial de ayudar a una
-                        amplia gama de condiciones. Los psicólogos online de Hablaquí le permiten aumentar sus niveles de bienestar
+                        amplia gama de condiciones. Los especialistas online de Hablaquí le permiten aumentar sus niveles de bienestar
                         emocional estando en Localidad, para ello se especializan en diversas técnicas terapéuticas, como la
-                        psicoanalítica, cognitivo-conductual o sistémica. `,
+                        speccoanalítica, cognitivo-conductual o sistémica. `,
 				},
 			],
 		};
 	},
 	computed: {
-		...mapGetters({ loadingPsychologist: 'Psychologist/loadingPsychologist' }),
+		...mapGetters({ loadingSpecialist: 'Specialist/loadingSpecialist' }),
 	},
 	mounted() {
 		window.scrollTo(0, 0);
@@ -128,8 +128,8 @@ export default {
 		},
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
-			getSessionsLimit: 'Psychologist/getSessionsLimit',
+			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
+			getSessionsLimit: 'Specialist/getSessionsLimit',
 		}),
 	},
 };

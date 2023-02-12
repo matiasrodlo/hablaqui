@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh">
 		<appbar class="hidden-sm-and-down mb-16" title="Experiencia y formación" />
-		<experiencia-y-formacion :psychologist="psychologist" :set-psychologist="setPsychologist" />
+		<experiencia-y-formacion :specialist="specialist" :set-specialist="setSpecialist" />
 	</v-container>
 </template>
 
@@ -28,7 +28,7 @@ export default {
 				const plans = $auth.$state.user.sessions.flatMap(item =>
 					item.plan.map(plan => ({
 						...plan,
-						psychologist: item.psychologist,
+						specialist: item.specialist,
 						user: item.user,
 						// dias de diferencia entre el dia que expiró y hoy
 						diff: dayjs.tz(dayjs(plan.expiration)).diff(dayjs.tz(), 'days'),
@@ -46,42 +46,38 @@ export default {
 				// retornamos el ultimo plan succes y que expiro
 				if (!plan) plan = plans.find(item => item.diff === min);
 
-				if (plan.psychologist) {
-					const { psychologist } = await $axios.$get(
-						`/psychologists/one/${plan.psychologist}`
-					);
-					return { psychologist };
+				if (plan.specialist) {
+					const { specialist } = await $axios.$get(`/specialists/one/${plan.specialist}`);
+					return { specialist };
 				}
 			}
-			return { psychologist: null };
+			return { specialist: null };
 		} else {
-			let psychologist;
-			if ($auth.$state.user.psychologist) {
-				const res = await $axios.$get(
-					`/psychologists/one/${$auth.$state.user.psychologist}`
-				);
-				psychologist = res.psychologist;
+			let specialist;
+			if ($auth.$state.user.specialist) {
+				const res = await $axios.$get(`/specialists/one/${$auth.$state.user.specialist}`);
+				specialist = res.specialist;
 			} else {
 				const res = await $axios.$get(`/recruitment/${$auth.user.email}`);
-				psychologist = res.recruited;
+				specialist = res.recruited;
 			}
-			if (!psychologist.formation.length) {
-				psychologist.formation.push({
+			if (!specialist.formation.length) {
+				specialist.formation.push({
 					formationType: '',
 					description: '',
 					start: '',
 					end: '',
 				});
 			}
-			if (!psychologist.experience.length) {
-				psychologist.experience.push({ title: '', place: '', start: '', end: '' });
+			if (!specialist.experience.length) {
+				specialist.experience.push({ title: '', place: '', start: '', end: '' });
 			}
-			return { psychologist };
+			return { specialist };
 		}
 	},
 	methods: {
-		setPsychologist(value) {
-			this.psychologist = value;
+		setSpecialist(value) {
+			this.specialist = value;
 		},
 	},
 };

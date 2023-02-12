@@ -118,7 +118,8 @@ export default {
 				rut: '',
 				email: '',
 				password: '',
-				role: 'psychologist',
+				role: 'specialist',
+				profession: 'specialist',
 			},
 			recruitmentForm: {
 				avgPatients: '',
@@ -128,6 +129,7 @@ export default {
 				experience: [],
 				formation: [],
 				gender: '',
+				profession: 'specialist',
 				instagram: '',
 				isExclusiveActivity: false,
 				isSupervisor: false,
@@ -141,13 +143,13 @@ export default {
 				region: '',
 				specialties: [],
 				timeZone: 'America/Santiago',
-				yearsExpPsychologist: '',
+				yearsExpSpecialist: '',
 				yearsExpVideocalls: '',
 				howFindOut: 'Búsqueda de internet',
 				isContentCreator: false,
 				isAffiliateExternal: false,
 				isInterestedBusiness: false,
-				psyPlans: [
+				specPlans: [
 					{
 						tier: 'free',
 						paymentStatus: 'pending',
@@ -226,7 +228,7 @@ export default {
 						data: this.recruitmentForm,
 					});
 
-					// redireccionamos a postulacion como psicologo
+					// redireccionamos a postulacion como especialista
 					this.$router.push({ name: 'postulacion' });
 				} catch (error) {
 					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
@@ -236,7 +238,7 @@ export default {
 			}
 		},
 		...mapMutations({
-			setResumeView: 'Psychologist/setResumeView',
+			setResumeView: 'Specialist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
 		}),
 	},

@@ -198,19 +198,19 @@ export default {
 					});
 					this.$auth.setUser(response.data.user);
 					if (this.$auth.$state.loggedIn) {
-						if (this.$route.query.from === 'psy') {
+						if (this.$route.query.from === 'spec') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
 							return this.$router.push({ name: 'evaluacion' });
 						}
 						if (
-							response.data.user.role === 'psychologist' &&
-							this.$auth.$state.user.psychologist
+							response.data.user.role === 'specialist' &&
+							this.$auth.$state.user.specialist
 						) {
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
 						if (
-							response.data.user.role === 'psychologist' &&
-							!this.$auth.$state.user.psychologist
+							response.data.user.role === 'specialist' &&
+							!this.$auth.$state.user.specialist
 						) {
 							return this.$router.push({ name: 'postulacion' });
 						}
@@ -225,13 +225,13 @@ export default {
 							) {
 								this.datalayer(this.$auth.$state.user, 'registro-pago');
 								return this.$router.push(
-									`/psicologos/pagos/?username=${this.$route.query.psychologist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
+									`/especialistas/pagos/?username=${this.$route.query.specialist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
 								);
 							}
 							// redirecionamos de nuevo a chat luego de ingresar
-							if (this.$route.query.psychologist) {
+							if (this.$route.query.specialist) {
 								return this.$router.push(
-									`/${this.$route.query.psychologist}/?chat=true`
+									`/${this.$route.query.specialist}/?chat=true`
 								);
 							}
 							this.datalayer(this.$auth.$state.user, 'registro-natural');
@@ -256,7 +256,7 @@ export default {
 			window.dataLayer.push(data);
 		},
 		...mapMutations({
-			setResumeView: 'Psychologist/setResumeView',
+			setResumeView: 'Specialist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
 		}),
 	},

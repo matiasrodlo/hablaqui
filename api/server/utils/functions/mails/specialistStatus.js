@@ -12,11 +12,11 @@ dayjs.tz.setDefault('America/Santiago');
 
 const mailService = {
 	/**
-	 * @description Send an internal email about a new psy application
-	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
+	 * @description Send an internal email about a new spec application
+	 * @param {Object} recruitedSpec - A specialist object from the database, corresponding to recruited specialist
 	 */
-	async sendRecruitmentConfirmationAdmin(recruitedPsy) {
-		const { name, lastName, email } = recruitedPsy;
+	async sendRecruitmentConfirmationAdmin(recruitedSpec) {
+		const { name, lastName, email } = recruitedSpec;
 		const dataPayload = {
 			from: 'Hablaquí <internal@mail.hablaqui.cl>',
 			to: 'direccion@hablaqui.com',
@@ -27,19 +27,19 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_first_name: name,
-				psy_last_name: lastName,
-				psy_email: email,
+				spec_first_name: name,
+				spec_last_name: lastName,
+				spec_email: email,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to a psychologist about his/her new application
-	 * @param {Object} recruitedPsy - A psychologist object from the database, corresponding to recruited psychologist
+	 * @description Send an email to a specialist about his/her new application
+	 * @param {Object} recruitedSpec - A specialist object from the database, corresponding to recruited specialist
 	 */
-	async sendRecruitmentConfirmation(recruitedPsy) {
-		const { email, name } = recruitedPsy;
+	async sendRecruitmentConfirmation(recruitedSpec) {
+		const { email, name } = recruitedSpec;
 		const dataPayload = {
 			from: 'Hablaquí <reclutamiento@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
@@ -56,11 +56,11 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the user to evaluate the psychologist.
-	 * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the psychologist
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist that will be evaluated
+	 * @description Send an email to the user to evaluate the specialist.
+	 * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the specialist
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist that will be evaluated
 	 */
-	async sendEnabledEvaluation(user, psy) {
+	async sendEnabledEvaluation(user, spec) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -73,19 +73,19 @@ const mailService = {
 			dynamicTemplateData: {
 				user_name:
 					user.name + ' ' + (user.lastName ? user.lastName : ''),
-				psy_name: psy.name,
+				spec_name: spec.name,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the psychologist who must pay the plan.
-	 * @param {Object} user - A user object from the database, corresponding to the psychologist who must pay the plan
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who must pay the plan
+	 * @description Send an email to the specialist who must pay the plan.
+	 * @param {Object} user - A user object from the database, corresponding to the specialist who must pay the plan
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist who must pay the plan
 	 * @param {String} amount - The amount of the plan
 	 * @param {String} url - The url to pay the plan
 	 */
-	async pendingPlanPayment(user, psy, amount, url) {
+	async pendingPlanPayment(user, spec, amount, url) {
 		const dataPayload = {
 			from: 'Hablaquí <pagos@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -97,7 +97,8 @@ const mailService = {
 			},
 			dynamicTemplateData: {
 				user_name: user.name,
-				psy_name: psy.name + ' ' + (psy.lastName ? psy.lastName : ''),
+				spec_name:
+					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
 				amount: amount,
 				url,
 			},
@@ -105,15 +106,15 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the psychologist informing him/her that you have made a request for withdrawal from the platform.
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
+	 * @description Send an email to the specialist informing him/her that you have made a request for withdrawal from the platform.
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has made the withdrawal request
 	 * @param {String} total - The total amount of the withdrawal request
 	 * @param {String} date - The date of the withdrawal request
 	 */
-	async sendPaymentRequest(psy, total, date) {
+	async sendPaymentRequest(spec, total, date) {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `¡Has realizado una solicitud de retiro!`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-1b7f3153b2e64beca579cf634bcd2b7c',
@@ -121,7 +122,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name,
+				spec_name: spec.name,
 				total: total,
 				date: date,
 			},
@@ -129,15 +130,15 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description Send an email to the psychologist informing him/her that the withdrawal request has been completed.
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has made the withdrawal request
+	 * @description Send an email to the specialist informing him/her that the withdrawal request has been completed.
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has made the withdrawal request
 	 * @param {String} total - The total amount of the withdrawal request
 	 * @param {String} date - The date of the withdrawal request
 	 */
-	async sendCompletePaymentRequest(psy, total, date) {
+	async sendCompletePaymentRequest(spec, total, date) {
 		const dataPayload = {
 			from: 'Hablaquí <retiros@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Transferencia de recaudación semanal`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-478ea4a5f440447db1d7ec9dc0361b55',
@@ -145,7 +146,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name,
+				spec_name: spec.name,
 				total: total,
 				date: date,
 			},
@@ -153,11 +154,11 @@ const mailService = {
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description sends an email to the user who has completed an evaluation to a psychologist.
+	 * @description sends an email to the user who has completed an evaluation to a specialist.
 	 * @param {Object} user - A user object from the database, corresponding to the user who has completed an evaluation
-	 * @param {Object} psy - - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 * @param {Object} spec - - A specialist object from the database, corresponding to the specialist who has been evaluated
 	 */
-	async sendAddEvaluation(user, psy) {
+	async sendAddEvaluation(user, spec) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
 			to: user.name + '<' + user.email + '>',
@@ -168,21 +169,21 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name,
+				spec_name: spec.name,
 				user_name: user.name,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description sends an email to the psychologist informing him/her that a user has passed an evaluation
+	 * @description sends an email to the specialist informing him/her that a user has passed an evaluation
 	 * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has been evaluated
 	 */
-	async sendApproveEvaluationToPsy(user, psy) {
+	async sendApproveEvaluationToSpec(user, spec) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Ha recibido una nueva evaluación`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-39a41d2dc58e4e35a5674cf03a2cb86e',
@@ -190,21 +191,21 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name,
+				spec_name: spec.name,
 				user_name: user.name,
 			},
 		};
 		await sendMails(dataPayload);
 	},
 	/**
-	 * @description send an email to the psychologist who has refused an evaluation
+	 * @description send an email to the specialist who has refused an evaluation
 	 * @param {Object} user - A user object of the database, corresponding to the user who has made the evaluation
-	 * @param {Object} psy - A psychologist object from the database, corresponding to the psychologist who has been evaluated
+	 * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has been evaluated
 	 */
-	async sendRefuseEvaluation(user, psy) {
+	async sendRefuseEvaluation(user, spec) {
 		const dataPayload = {
 			from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
-			to: psy.name + '<' + psy.email + '>',
+			to: spec.name + '<' + spec.email + '>',
 			subject: `Se ha rechazado tu evaluación`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-c88421c7ff9e4165b883255b9a35a701',
@@ -212,7 +213,7 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				psy_name: psy.name,
+				spec_name: spec.name,
 				user_name: user.name,
 			},
 		};

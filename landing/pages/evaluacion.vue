@@ -1,13 +1,13 @@
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
-		<div :class="!matchedPsychologists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
+		<div :class="!matchedSpecialists.length && !dialogPrecharge ? 'primary' : 'trasnparent'">
 			<div style="margin-bottom: 85px">
 				<Appbar />
 			</div>
 			<!-- content -->
 			<div
-				v-show="!matchedPsychologists.length && !dialogPrecharge"
+				v-show="!matchedSpecialists.length && !dialogPrecharge"
 				class="primary white--text text-center"
 				style="position: relative; padding: 100px; height: 500px"
 			>
@@ -178,7 +178,7 @@
 
 										<v-stepper-content step="2">
 											<div class="primary--text font-weight-bold title">
-												¿Primera vez hablando con un psicólogo?
+												¿Primera vez hablando con un especialista?
 											</div>
 
 											<v-btn
@@ -671,7 +671,7 @@
 									height="200"
 									width="600"
 								>
-									<v-carousel-item v-for="(element, i) in psi" :key="i">
+									<v-carousel-item v-for="(element, i) in spec" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
@@ -783,7 +783,7 @@
 									mandatory
 								>
 									<v-item
-										v-for="(n, e) in psi"
+										v-for="(n, e) in spec"
 										:key="`btn-${e}`"
 										v-slot="{ active, toggle }"
 									>
@@ -807,7 +807,7 @@
 					<Precharge
 						:close="() => (dialogPrecharge = false)"
 						:avatar="
-							psychologists
+							specialists
 								.map(el => {
 									if (el.avatarThumbnail) return el.avatarThumbnail;
 								})
@@ -817,8 +817,8 @@
 				</v-card-text>
 			</v-card>
 		</div>
-		<div v-show="!dialogPrecharge && matchedPsychologists.length">
-			<selection :match="matchedPsychologists" :reset-match="resetMatch" />
+		<div v-show="!dialogPrecharge && matchedSpecialists.length">
+			<selection :match="matchedSpecialists" :reset-match="resetMatch" />
 		</div>
 	</div>
 </template>
@@ -840,8 +840,8 @@ export default {
 	async asyncData({ $axios, error }) {
 		try {
 			const { appointments } = await $axios.$get('/appointments/all');
-			const { psychologists } = await $axios.$get('/psychologists/all');
-			return { psychologists, specialties: appointments };
+			const { specialists } = await $axios.$get('/specialists/all');
+			return { specialists, specialties: appointments };
 		} catch (e) {
 			error({ statusCode: 404, message: 'Page not found' });
 		}
@@ -861,8 +861,8 @@ export default {
 			price: 0,
 			specialties: [],
 			models: [],
-			psychologists: [],
-			matchedPsychologists: [],
+			specialists: [],
+			matchedSpecialists: [],
 		};
 	},
 	head() {
@@ -876,8 +876,8 @@ export default {
 		};
 	},
 	computed: {
-		psi() {
-			if (!this.psychologists) return [];
+		spec() {
+			if (!this.specialists) return [];
 			const items = this.random();
 			const n = 3;
 			const result = [[], [], []];
@@ -894,20 +894,20 @@ export default {
 	},
 	created() {
 		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length) {
-				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedPsychologists = psi.match;
-				else if (psi._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('psi');
+			const spec = JSON.parse(localStorage.getItem('spec'));
+			if (spec && spec.match.length) {
+				if (spec._id !== null && spec._id === this.$auth.$state.user._id)
+					this.matchedSpecialists = spec.match;
+				else if (spec._id === null && this.$auth.$state.loggedIn) {
+					localStorage.removeItem('spec');
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
-							match: psi.match,
+							match: spec.match,
 							_id: this.$auth.$state.user._id,
 						})
 					);
-					this.matchedPsychologists = psi.match;
+					this.matchedSpecialists = spec.match;
 				}
 			}
 		}
@@ -923,19 +923,19 @@ export default {
 			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
 		},
 		random() {
-			return this.psychologists.sort(function randOrd() {
+			return this.specialists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			});
 		},
 		resetMatch() {
-			localStorage.removeItem('psi');
+			localStorage.removeItem('spec');
 			this.gender = '';
 			this.age = '';
 			this.firstTherapy = null;
 			this.themes = [];
 			this.schedule = '';
 			this.genderConfort = '';
-			this.matchedPsychologists = [];
+			this.matchedSpecialists = [];
 			this.models = [];
 			this.price = 0;
 			this.step = '0';
@@ -967,27 +967,27 @@ export default {
 			this.matchPsi(payload).then(response => {
 				if (response && response.length) {
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
 							match: response.filter((el, i) => i < 3),
 							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
 						})
 					);
 					if (!this.$auth.$state.loggedIn)
-						this.$router.push('/auth/?register=true&from=psy');
-					this.matchedPsychologists = response.filter((el, i) => i < 3);
+						this.$router.push('/auth/?register=true&from=spec');
+					this.matchedSpecialists = response.filter((el, i) => i < 3);
 				}
 			});
 		},
-		avatar(psychologist, thumbnail) {
-			if (!psychologist.approveAvatar) return '';
-			if (psychologist.avatarThumbnail && thumbnail) return psychologist.avatarThumbnail;
-			if (psychologist.avatar) return psychologist.avatar;
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
 		...mapActions({
-			matchPsi: 'Psychologist/matchPsi',
-			getFormattedSessionsAll: 'Psychologist/getFormattedSessionsAll',
+			matchPsi: 'Specialist/matchPsi',
+			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
 		}),
 	},
 };

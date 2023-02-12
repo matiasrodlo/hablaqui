@@ -3,7 +3,7 @@ import 'pages/home.dart';
 import 'pages/welcome.dart';
 import 'pages/users/login.dart';
 import 'pages/users/register.dart';
-import 'pages/psychologists/search.dart';
+import 'pages/specialists/search.dart';
 
 
 final appRoutes = <String, WidgetBuilder>{
@@ -11,5 +11,5 @@ final appRoutes = <String, WidgetBuilder>{
 	'/home': (BuildContext context) => Home(), 
 	'/login': (BuildContext context) => Login(), 
 	'/register': (BuildContext context) => Register(),
-	'/psychologists/search': (BuildContext context) => SearchPsychologists(),
+	'/specialists/search': (BuildContext context) => SearchSpecialists(),
 };

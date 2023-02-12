@@ -18,11 +18,11 @@
 						class="primary-color text-center text-md-left"
 					>
 						<h1 class="text-lg-h2 text-md-h3 text-h5 font-weight-bold my-10">
-							Tu psicólogo Online
+							Tu especialista Online
 						</h1>
 						<div class="title mt-10 mb-7">
 							Demos juntos el primer paso hacia el bienestar emocional. Habla de forma
-							segura y privada con un psicólogo online cuando lo necesites.
+							segura y privada con un especialista online cuando lo necesites.
 						</div>
 						<v-btn
 							id="quiero-comenzar-1"
@@ -65,14 +65,14 @@
 			src="https://cdn.hablaqui.cl/static/wave1.png"
 			lazy-src="https://cdn.hablaqui.cl/static/wave1.png"
 			style="width: 100%; height: auto"
-			alt="Tu psicólogo Online"
+			alt="Tu especialista Online"
 		/>
 		<v-img
 			class="hidden-md-and-up"
 			:lazy-src="`https://cdn.hablaqui.cl/static/phone_mobile.webp`"
 			:src="`https://cdn.hablaqui.cl/static/phone_mobile.webp`"
 			style="width: 100%; height: auto"
-			alt="Tu psicólogo Online"
+			alt="Tu especialista Online"
 		/>
 		<!-- SECTION 2 / como funciona -->
 		<v-container tag="section" class="pt-md-10" fluid style="max-width: 1080px">
@@ -89,7 +89,7 @@
 					cols="12"
 					class="body-1 mb-6 font-weight-bold text--secondary text-center"
 				>
-					Es fácil y seguro realizar terapia con un psicólogo online y continuar con tu
+					Es fácil y seguro realizar terapia con un especialista online y continuar con tu
 					estilo de vida con Hablaquí.
 				</v-col>
 			</v-row>
@@ -133,7 +133,7 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
-						id="psi-quiero-comenzar-index"
+						id="spec-quiero-comenzar-index"
 						color="primary"
 						style="border-radius: 15px"
 						x-large
@@ -146,7 +146,7 @@
 				</v-col>
 			</v-row>
 		</v-container>
-		<!-- SECTION 3 / Nuestros psicólogos -->
+		<!-- SECTION 3 / Nuestros especialistas -->
 		<v-img
 			v-if="$vuetify.breakpoint.mdAndUp"
 			class="mt-10"
@@ -166,26 +166,26 @@
 				<v-row tag="section" justify="space-between" align="center">
 					<v-col tag="section" cols="12" md="6" class="text-center text-md-left">
 						<h2 class="text-md-h3 text-h4 font-weight-bold my-16">
-							Nuestros psicólogos
+							Nuestros especialistas
 						</h2>
 						<article class="my-10 body-1">
-							Contamos con un amplio equipo de psicólogos enfocados a potenciar el
+							Contamos con un amplio equipo de especialistas enfocados a potenciar el
 							área que busques desarrollar. Todos nuestros profesionales son
 							rigurosamente seleccionados, certificados, y cuentan con un alto nivel
 							de formación y experiencia. Te garantizamos una atención efectiva y
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
-							id="ver-mas-psi-index"
+							id="ver-mas-spec-index"
 							style="border-radius: 15px"
 							color="white"
 							x-large
 							class="hidden-sm-and-down py-8 px-10 ml-md-16 mt-10 mb-5"
-							to="/psicologos/"
+							to="/especialistas/"
 							accesskey="p"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
-								Ver más psicólogos
+								Ver más especialistas
 							</span>
 						</v-btn>
 					</v-col>
@@ -224,8 +224,8 @@
 										</template>
 										<aside style="position: absolute; bottom: 0; width: 100%">
 											<v-img
-												:src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
-												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_psicologos.png`"
+												:src="`https://cdn.hablaqui.cl/static/nuestros_especialistas.png`"
+												:lazy-src="`https://cdn.hablaqui.cl/static/nuestros_especialistas.png`"
 											>
 												<h4
 													class="body-1 white--text pt-1 pl-4 font-weight-regular white--text"
@@ -267,10 +267,10 @@
 							color="white"
 							x-large
 							class="pa-4"
-							to="/psicologos/"
+							to="/especialistas/"
 						>
 							<span class="body-1 text--secondary font-weight-bold">
-								Ver más psicólogos
+								Ver más especialistas
 							</span>
 						</v-btn>
 					</v-col>
@@ -650,7 +650,7 @@ export default {
 				{
 					id: 1,
 					title: 'Encuentra un especialista  ',
-					desc: 'Nosotros te ayudamos y buscamos a los mejores psicólogos online.',
+					desc: 'Nosotros te ayudamos y buscamos a los mejores especialistas online.',
 				},
 				{
 					id: 2,
@@ -667,14 +667,14 @@ export default {
 				{
 					id: 1,
 					title: 'Comodidad',
-					desc: 'Programa una sesión en vivo con tu psicólogo a la hora que te resulte más conveniente. Habla con tu psicólogo por videollamada, estés donde estés y sin tener que desplazarte',
+					desc: 'Programa una sesión en vivo con tu especialista a la hora que te resulte más conveniente. Habla con tu especialista por videollamada, estés donde estés y sin tener que desplazarte',
 					img: `https://cdn.hablaqui.cl/static/comodidad.png`,
 					maxWidth: '250px',
 				},
 				{
 					id: 2,
 					title: 'Privacidad',
-					desc: 'Disfruta de las sesiones con tu psicólogo de manera segura y privada a través de un teléfono, tablet o computador.',
+					desc: 'Disfruta de las sesiones con tu especialista de manera segura y privada a través de un teléfono, tablet o computador.',
 					img: `https://cdn.hablaqui.cl/static/privacidad.png`,
 					maxWidth: '214px',
 				},
@@ -705,7 +705,7 @@ export default {
 				{
 					id: 4,
 					title: 'Verónica P. R.',
-					desc: 'Es muy especial la conexión con mi psicóloga y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
+					desc: 'Es muy especial la conexión con mi Especialista y el como me está ayudando. Que todo sea online ha sido una gran oportunidad, me costaba muchísimo encontrar tiempo para asistir a las sesiones presencialmente.',
 				},
 				{
 					id: 5,
@@ -715,14 +715,14 @@ export default {
 				{
 					id: 6,
 					title: 'Renata F. T.',
-					desc: 'Me resultó fácil elegir a mi psicóloga, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
+					desc: 'Me resultó fácil elegir a mi Especialista, me siento muy cómoda con ella y solo fue cosa de contestar un formulario. Además, es mucho más cómodo y económico, ya no tengo que gastar ni preocuparme por el transporte.',
 				},
 			],
 			faq: [
 				{
 					id: 1,
-					title: '¿Quién será mi psicólogo?',
-					desc: 'Te recomendamos un psicólogo online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir.',
+					title: '¿Quién será mi especialista?',
+					desc: 'Te recomendamos un especialista online que se adecue a tus preferencias por medio de una breve evaluación haciendo uso de inteligencia artificial. También, puedes revisar manualmente el listado de especialistas y elegir.',
 				},
 				{
 					id: 2,
@@ -732,12 +732,12 @@ export default {
 				{
 					id: 3,
 					title: '¿Necesito un diagnóstico?',
-					desc: 'No. Nuestros psicólogos están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un psicólogo o psiquiatra, va a ser útil, pero no es necesario para comenzar.',
+					desc: 'No. Nuestros especialistas están certificados y pueden ayudarte a identificar el origen y manejo del malestar por medio de la terapia. Si tienes un diagnóstico de un especialista o specquiatra, va a ser útil, pero no es necesario para comenzar.',
 				},
 				{
 					id: 4,
-					title: '¿Puedo cambiarme de psicólogo?',
-					desc: 'Si te sientes insatisfecho con tu psicólogo, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción.',
+					title: '¿Puedo cambiarme de especialista?',
+					desc: 'Si te sientes insatisfecho con tu especialista, te recomendamos solicitar un cambio enviando un correo a cambios@hablaqui.com. No tendrás cobros adicionales, ni perderás días de suscripción.',
 				},
 			],
 			efectividad: [
@@ -766,7 +766,7 @@ export default {
 						id: 2,
 						img: `https://cdn.hablaqui.cl/static/UniversityofCaliforniaBerkeley.webp`,
 						href: 'https://mhealth.jmir.org/2019/1/e10948/',
-						text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital son particularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+						text: '“Los hallazgos del estudio sugieren que las plataformas de speccoterapia digital son particularmente efectivas para personas sin antecedentes de speccoterapia o que no han sido tratadas previamente. (2019)”',
 					},
 					{
 						id: 4,
@@ -806,7 +806,7 @@ export default {
 					id: 2,
 					img: `https://cdn.hablaqui.cl/static/UniversityofCaliforniaBerkeley.webp`,
 					href: 'https://mhealth.jmir.org/2019/1/e10948/',
-					text: '“Los hallazgos del estudio sugieren que las plataformas de psicoterapia digital sonparticularmente efectivas para personas sin antecedentes de psicoterapia o que no han sido tratadas previamente. (2019)”',
+					text: '“Los hallazgos del estudio sugieren que las plataformas de speccoterapia digital sonparticularmente efectivas para personas sin antecedentes de speccoterapia o que no han sido tratadas previamente. (2019)”',
 				},
 				{
 					id: 4,
@@ -862,7 +862,7 @@ export default {
 			url: this.$config.LANDING_URL,
 			logo: this.$config.LANDING_URL,
 			description:
-				'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
+				'Elige un especialista online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Especialistas especialistas online. ¡Comienza ahora!',
 		};
 	},
 	head() {
@@ -870,13 +870,13 @@ export default {
 		const pathWithSlash = path.endsWith('/') ? path : `${path}/`;
 		const canonical = `${this.$config.LANDING_URL}${pathWithSlash}`;
 		return {
-			title: 'Psicólogos online desde $15.500 - Terapia online efectiva',
+			title: 'Especialistas online desde $15.500 - Terapia online efectiva',
 			meta: [
 				{
 					hid: 'description',
 					name: 'description',
 					content:
-						'Elige un psicólogo online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Psicólogos especialistas online. ¡Comienza ahora!',
+						'Elige un especialista online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Especialistas especialistas online. ¡Comienza ahora!',
 				},
 				{
 					hid: 'robots',

@@ -215,7 +215,6 @@ let specialist = new Schema({
 		default: 0,
 	},
 	specPlans: [specPlan],
-	specPlans: [specPlan],
 	timeZone: {
 		type: String,
 		default: 'America/Santiago',

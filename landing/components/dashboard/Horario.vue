@@ -2,7 +2,7 @@
 	<div :class="step ? 'mt-10' : ''">
 		<v-card
 			class="hidden-sm-and-down mx-auto mb-16"
-			:loading="!psychologist"
+			:loading="!specialist"
 			outlined
 			:style="{ 'max-width': $vuetify.breakpoint.lgAndUp ? '840px' : '100%' }"
 		>
@@ -18,7 +18,7 @@
 					</div>
 					<div>
 						<v-btn
-							v-if="psychologist"
+							v-if="specialist"
 							:disabled="hasChanges || hasOverlay"
 							:loading="loading"
 							color="primary"
@@ -248,7 +248,7 @@
 						<v-card-actions class="mt-2">
 							<v-spacer></v-spacer>
 							<v-btn
-								v-if="psychologist"
+								v-if="specialist"
 								:disabled="hasChanges || hasOverlay"
 								:loading="loading"
 								color="primary"
@@ -322,11 +322,11 @@ export default {
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
-		psychologist: {
+		specialist: {
 			type: Object,
 			default: null,
 		},
-		setPsychologist: {
+		setSpecialist: {
 			type: Function,
 			required: true,
 		},
@@ -449,7 +449,7 @@ export default {
 				saturday: this.items[5].active ? this.items[5].intervals : 'busy',
 				sunday: this.items[6].active ? this.items[6].intervals : 'busy',
 			};
-			return JSON.stringify(this.psychologist.schedule) === JSON.stringify(days);
+			return JSON.stringify(this.specialist.schedule) === JSON.stringify(days);
 		},
 		...mapGetters({ step: 'User/step' }),
 	},
@@ -457,7 +457,7 @@ export default {
 		this.query = this.$route.query;
 	},
 	mounted() {
-		this.setDay(cloneDeep(this.psychologist.schedule));
+		this.setDay(cloneDeep(this.specialist.schedule));
 	},
 	methods: {
 		setDay(payload) {
@@ -560,11 +560,11 @@ export default {
 				friday: this.items[4].active ? this.items[4].intervals : 'busy',
 				saturday: this.items[5].active ? this.items[5].intervals : 'busy',
 				sunday: this.items[6].active ? this.items[6].intervals : 'busy',
-				psychologist: this.psychologist._id,
+				specialist: this.specialist._id,
 			};
-			const psychologist = await this.setSchedule(payload);
-			this.setPsychologist(psychologist);
-			this.setDay(cloneDeep(psychologist.schedule));
+			const specialist = await this.setSchedule(payload);
+			this.setSpecialist(specialist);
+			this.setDay(cloneDeep(specialist.schedule));
 			this.loading = false;
 			this.snackBar({ content: 'Cambios realizados', color: 'success' });
 		},
@@ -598,7 +598,7 @@ export default {
 			}
 		},
 		...mapActions({
-			setSchedule: 'Psychologist/setSchedule',
+			setSchedule: 'Specialist/setSchedule',
 		}),
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',

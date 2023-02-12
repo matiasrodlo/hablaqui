@@ -157,7 +157,7 @@ export default {
 			mdiCheckBold,
 			mdiCloseThick,
 			headers: [
-				// { text: 'Psicologo', value: 'psychologist' },
+				// { text: 'Especialista', value: 'specialist' },
 				{
 					text: 'Nombre de usuario',
 					value: 'username',
@@ -221,7 +221,7 @@ export default {
 		async refuse(item) {
 			try {
 				const { data } = await this.$axios(
-					`/psychologist/refuse-evaluation/${item.evsId}/${item.evId}`,
+					`/specialist/refuse-evaluation/${item.evsId}/${item.evId}`,
 					{ method: 'POST' }
 				);
 				const index = this.evaluations.indexOf(item);
@@ -234,7 +234,7 @@ export default {
 		async approve(item) {
 			try {
 				const { data } = await this.$axios(
-					`/psychologist/approve-evaluation/${item.evsId}/${item.evId}`,
+					`/specialist/approve-evaluation/${item.evsId}/${item.evId}`,
 					{ method: 'POST' }
 				);
 				const index = this.evaluations.indexOf(item);

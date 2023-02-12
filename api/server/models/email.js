@@ -17,7 +17,6 @@ let email = new Schema({
 	},
 	sessionDate: {
 		type: String,
-		required: true,
 	},
 	wasScheduled: {
 		type: Boolean,
@@ -41,9 +40,13 @@ let email = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 	},
-	psyRef: {
+	specRef: {
 		type: Schema.Types.ObjectId,
-		ref: 'Pyschologist',
+		ref: 'Specialist',
+	},
+	specRef: {
+		type: Schema.Types.ObjectId,
+		ref: 'Specialist',
 	},
 	sessionRef: {
 		type: Schema.Types.ObjectId,

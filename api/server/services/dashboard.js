@@ -1,4 +1,4 @@
-import Psychologist from '../models/psychologist';
+import Specialist from '../models/specialist';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
@@ -20,14 +20,14 @@ dayjs.tz.setDefault('America/Santiago');
 
 const getNextSessions = async () => {
 	/*
-	Retorna las proximas sesiones de los psicologos.
+	Retorna las proximas sesiones de los especialistas.
 	De momento esta función no tiene entradas.
 	*/
-	// Se obtienen las sesiones de todos los psicologos
-	let sessions = await Sessions.find().populate('psychologist user');
+	// Se obtienen las sesiones de todos los especialistas
+	let sessions = await Sessions.find().populate('specialist user');
 
-	// Se filtran las sesiones que no tienen psicologo ni usuario
-	sessions = sessions.filter(s => s.user !== null && s.psychologist !== null);
+	// Se filtran las sesiones que no tienen especialista ni usuario
+	sessions = sessions.filter(s => s.user !== null && s.specialist !== null);
 
 	// Se obtienen el último plan activo con sesiones.
 	const plans = sessions
@@ -40,11 +40,11 @@ const getNextSessions = async () => {
 			// Devuelve un objeto con el último plan
 			return {
 				user: s.user.name + ' ' + s.user.lastName,
-				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
+				spec: s.specialist.name + ' ' + s.specialist.lastName,
 				userPhone: s.user.phone ? s.user.phone : '--',
-				psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
+				specPhone: s.specialist.phone ? s.specialist.phone : '--',
 				userEmail: s.user.email,
-				psyEmail: s.psychologist.email,
+				specEmail: s.specialist.email,
 				plan,
 				planActived,
 			};
@@ -66,10 +66,10 @@ const getNextSessions = async () => {
 					date: s.date,
 					user: p.user,
 					userPhone: p.userPhone,
-					psyPhone: p.psyPhone,
+					specPhone: p.specPhone,
 					userEmail: p.userEmail,
-					psyEmail: p.psyEmail,
-					psychologist: p.psy,
+					specEmail: p.specEmail,
+					specialist: p.spec,
 					status: s.status,
 					isNextSession,
 				};
@@ -77,7 +77,7 @@ const getNextSessions = async () => {
 		})
 		.filter(ns => ns.isNextSession)
 		.sort((a, b) => new Date(a.date) - new Date(b.date));
-	return okResponse('psicologos obtenidos', { nextSessions });
+	return okResponse('especialistas obtenidos', { nextSessions });
 };
 
 const getSessionsPayment = async (startDate, endDate) => {
@@ -85,22 +85,22 @@ const getSessionsPayment = async (startDate, endDate) => {
 	Retorna las sesiones pagadas entre las fechas indicadas.
 	Tiene como entrada las fechas de inicio y fin.
 	*/
-	// Se obtienen las sesiones unido con el psicologo
-	let sessions = await Sessions.find().populate('psychologist user');
+	// Se obtienen las sesiones unido con el especialista
+	let sessions = await Sessions.find().populate('specialist user');
 
-	// Se filtran las sesiones que se ha inicializado la variable de psicologo
-	sessions = sessions.filter(s => !!s.psychologist);
+	// Se filtran las sesiones que se ha inicializado la variable de especialista
+	sessions = sessions.filter(s => !!s.specialist);
 
 	let flatSession = sessions.flatMap(s => {
 		// Se obtiene el plan de una sesión
 		const plan = s.plan.pop();
 		return plan.session.flatMap(ss => {
-			// Se deja en un mismo array los datos del psicologo, la sesion y el precio del plan
+			// Se deja en un mismo array los datos del especialista, la sesion y el precio del plan
 			return {
-				_id: s.psychologist._id.toString(),
-				psy: s.psychologist.name + ' ' + s.psychologist.lastName,
-				psyPhone: s.psychologist.phone ? s.psychologist.phone : '--',
-				psyEmail: s.psychologist.email,
+				_id: s.specialist._id.toString(),
+				spec: s.specialist.name + ' ' + s.specialist.lastName,
+				specPhone: s.specialist.phone ? s.specialist.phone : '--',
+				specEmail: s.specialist.email,
 				price: plan.sessionPrice,
 				date: ss.date,
 				status: ss.status,
@@ -113,7 +113,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 		dayjs(s.date).isBetween(dayjs(startDate), dayjs(endDate))
 	);
 
-	// Se agrupan las sesiones por psicologo y se suman los precios
+	// Se agrupan las sesiones por especialista y se suman los precios
 	let auxFlatSession = [];
 	flatSession.forEach(s => {
 		const resp = auxFlatSession.find(e => e && e._id === s._id);
@@ -121,11 +121,13 @@ const getSessionsPayment = async (startDate, endDate) => {
 		else auxFlatSession[auxFlatSession.indexOf(resp)].price += s.price;
 	});
 
-	return okResponse('psicologos obtenidos', { psyPayments: auxFlatSession });
+	return okResponse('especialistas obtenidos', {
+		specPayments: auxFlatSession,
+	});
 };
 
 const fixSpecialities = async () => {
-	let psychologists = await Psychologist.find();
+	let specialists = await Specialist.find();
 	let appointments = await Appointments.find();
 	appointments = JSON.stringify(appointments);
 	appointments = JSON.parse(appointments);
@@ -135,30 +137,30 @@ const fixSpecialities = async () => {
 		arrayAppointments.push(item.name);
 	});
 
-	for (let j = 0; j < psychologists.length; j++) {
+	for (let j = 0; j < specialists.length; j++) {
 		const arraySpecialities = [];
-		for (let i = 0; i < psychologists[j].specialties.length; i++) {
+		for (let i = 0; i < specialists[j].specialties.length; i++) {
 			const index = arrayAppointments.indexOf(
-				psychologists[j].specialties[i]
+				specialists[j].specialties[i]
 			);
 			if (index !== -1)
-				arraySpecialities.push(psychologists[j].specialties[i]);
+				arraySpecialities.push(specialists[j].specialties[i]);
 		}
-		psychologists[j].specialties = arraySpecialities;
-		await psychologists[j].save();
+		specialists[j].specialties = arraySpecialities;
+		await specialists[j].save();
 	}
-	return okResponse('app', { psychologists });
+	return okResponse('app', { specialists });
 };
 
 const getMountToPay = async user => {
 	if (user.role !== 'superuser')
 		return conflictResponse('No puedes emplear esta acción');
-	const psychologists = await Psychologist.find();
+	const specialists = await Specialist.find();
 	let amounts = [];
 
-	for (let psy in psychologists) {
+	for (let spec in specialists) {
 		let sessions = await Sessions.find({
-			psychologist: psychologists[psy]._id,
+			specialist: specialists[spec]._id,
 		}).populate('user');
 		sessions = sessions.filter(s => !!s.user);
 		const plans = sessions
@@ -179,8 +181,7 @@ const getMountToPay = async user => {
 		let session = plans.flatMap(p => {
 			return {
 				sessions: p.session.filter(
-					item =>
-						!item.paidToPsychologist && item.status === 'success'
+					item => !item.paidToSpecialist && item.status === 'success'
 				),
 				price: p.sessionPrice,
 				coupon: p.usedCoupon,
@@ -203,7 +204,6 @@ const getMountToPay = async user => {
 		}
 		session = session.flatMap(item =>
 			item.sessions.flatMap(s => {
-				console.log(item);
 				return {
 					date: dayjs
 						.tz(dayjs(s.date, 'MM/DD/YYYY HH:mm'))
@@ -218,14 +218,13 @@ const getMountToPay = async user => {
 				};
 			})
 		);
-		console.log(session);
 		amounts.push({
-			_id: psychologists[psy]._id,
-			name: psychologists[psy].name,
-			lastName: psychologists[psy].lastName,
-			email: psychologists[psy].email,
-			username: psychologists[psy].username,
-			paymentMethod: psychologists[psy].paymentMethod,
+			_id: specialists[spec]._id,
+			name: specialists[spec].name,
+			lastName: specialists[spec].lastName,
+			email: specialists[spec].email,
+			username: specialists[spec].username,
+			paymentMethod: specialists[spec].paymentMethod,
 			total,
 			session,
 		});
@@ -234,14 +233,14 @@ const getMountToPay = async user => {
 	return okResponse('Planes', { amounts });
 };
 
-const specialistVisibility = async (psyId, visibility) => {
+const specialistVisibility = async (specId, visibility) => {
 	try {
 		const isVisible = visibility === 'true' ? true : false;
 		// Actualizar el campo de visibilidad de los especialistas
-		await Psychologist.findByIdAndUpdate(psyId, {
+		await Specialist.findByIdAndUpdate(specId, {
 			$set: { 'preferences.marketplaceVisibility': isVisible },
 		});
-		return okResponse('Visibilidad actualizada', { psyId });
+		return okResponse('Visibilidad actualizada', { specId });
 	} catch (error) {
 		return conflictResponse('Error al actualizar la visibilidad', error);
 	}
