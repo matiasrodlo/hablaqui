@@ -78,7 +78,7 @@
 									:value="
 										genderBoxes.length == 0
 										? genderBoxes
-										: 
+										:
 											genderBoxes.length == 1
 											? genderList.find(element => element.value == genderBoxes[0]).text
 											: `Géneros ${genderBoxes.length}`
@@ -133,7 +133,7 @@
 									:value="
 										priceBoxes.length == 0
 										? priceBoxes
-										: 
+										:
 											priceBoxes.length == 1
 											? priceList.find(element => element.value == priceBoxes[0]).text
 											: `Precios ${priceBoxes.length}`
@@ -188,7 +188,7 @@
 									:value="
 										dispoBoxes.length == 0
 										? dispoBoxes
-										: 
+										:
 											dispoBoxes.length == 1
 											? dispoList.find(element => element.value == dispoBoxes[0]).text
 											: `Disponibilidad ${dispoBoxes.length}`
@@ -295,7 +295,7 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in filterLevelThree">
+					<template v-for="(item, index) in psychologistFilter">
 						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
@@ -306,7 +306,7 @@
 								:height="fullcard.includes(item._id) ? '100%' : '300px'"
 								class="item text-center mt-6"
 							>
-								<div
+								<!--div
 									v-if="item.rating > 0"
 									style="position: absolute; top: 30px; left: 0"
 								>
@@ -336,7 +336,7 @@
 											>{{ item.rating.toFixed(1) }}</span
 										>
 									</div>
-								</div>
+								</div-->
 								<!-- ocultado por peticion de daniel -->
 								<!-- <div
 									v-if="item.inmediateAttention.activated"
@@ -515,7 +515,7 @@
 					</template>
 				</template>
 				<v-col
-					v-if="psychologists.length && !filterLevelThree.length"
+					v-if="false"
 					cols="12"
 					class="title primary--text"
 				>
@@ -537,6 +537,9 @@
 <script>
 import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 /**
  * Componente: Listado de psicologos en vista de escritorio
@@ -593,90 +596,56 @@ export default {
 					],
 			dispoBoxes: [],
 			dispoList: [
-						{ value: 'early', text: 'Temprano: Antes de las 9 am' },
-						{ value: 'morning', text: 'En la mañana: Entre 9 am y 12 pm' },
-						{ value: 'midday', text: 'A Medio día: Entre 12 y 2 pm' },
-						{ value: 'afternoon', text: 'En la tarde: Entre 2 y 6 pm' },
-						{ value: 'night', text: 'En la noche: Después de las 6 pm' },
+						{ value: ['00:00', '9:00'] , text: 'Temprano: Antes de las 9 am' },
+						{ value: ['9:00', '12:00'], text: 'En la mañana: Entre 9 am y 12 pm' },
+						{ value: ['12:00', '14:00'], text: 'A Medio día: Entre 12 y 2 pm' },
+						{ value: ['14:00', '18:00'], text: 'En la tarde: Entre 2 y 6 pm' },
+						{ value: ['18:00', '23:59'], text: 'En la noche: Después de las 6 pm' },
 					],
 		};
 	},
 	computed: {
 		/**
-		 * Filter search box
-		 * Filtra en base a los resultados del panel
-		 * Este es el filtro final que se utiliza para iterar en el template
+		 * Filtra en base a lo ingresado por el usuario
 		 */
-		filterLevelThree() {
-			return this.filterLevelTwo.filter(item => {
-				let result = item;
-				if (this.searchInput !== null)
-					result = result._id.includes(this.searchInput) && result;
-				return result;
-			});
-		},
-		/**
-		 * Filter prices
-		 * Filtro en base a los precios de los psicologos
-		 */
-		filterLevelTwo(item) {
-			if (this.toggle == null || this.matchMaking == null) {
-				if (!this.prices) return this.filterLevelOne;
-				return this.filterLevelOne.filter(item => {
-					const prices = JSON.parse(this.prices);
-					if (prices.length > 1)
-						return (
-							prices[0] < item.sessionPrices.video &&
-							prices[1] > item.sessionPrices.video
-						);
-					else return prices[0] < item.sessionPrices.video;
-				});
-			} else return this.filterLevelOne;
-		},
-		/**
-		 * items for search box
-		 * Primer filtro de psicologos en base a:
-		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
-		 */
-		filterLevelOne() {
-			// fitro de marketplaceVisibility
-			let result = this.psychologists.filter(item => item.preferences.marketplaceVisibility);
-			// si no hay genero , models, laguajes o status marcado entonces restorna el resultado
-			if (
-				!this.genderBoxes.length &&
-				!this.models.length &&
-				!this.languages.length &&
-				!this.status
-			)
-				return result;
-			// si quiere ver por psicologo online, filtramos estos
-			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
-			// filtramos los psicologo segun el genero marcados
-			// if (this.gender.length)
-			// 	result = result.filter(item => {
-			// 		const trans = item.isTrans && 'transgender';
-			// 		const gender = [item.gender];
-			// 		trans && gender.push(trans);
-			// 		return gender.some(el => this.gender.some(g => g === el));
-			// 	});
-			// filtramos los psicologos segun los models marcados
-			if (this.models.length)
-				result = result.filter(item => item.models.some(el => this.models.includes(el)));
-			// filtramos segun el género del especialista
-			if (this.genderBoxes.length)
-				result = result.filter(item => this.genderBoxes.includes(item.gender));
-			// filtramos segun las specialties
-			if (this.specialties.length) {
-				result = result.filter(item =>
-					item.specialties.some(el => this.specialties.includes(el))
-				);
-			}
+    psychologistFilter(){
+      let result = this.psychologists;
+      // Se filtran los psicólogos por especialidades
+      if (this.specialties.length !== 0)
+        result = result.filter(item => {
+          let flag = true;
+          this.specialties.forEach(specialty => {
+            if (item.specialties.includes(specialty) === false) flag = false;
+          });
+          return flag;
+        });
 
-			return result;
-		},
+      // Se filtran los psicólogos por género
+      if (this.genderBoxes.length !== 0)
+        result = result.filter(item => {
+          return this.genderBoxes.includes(item.gender)
+        });
+
+      // Se filtran los psicólogos por precio
+      if (this.priceBoxes.length !== 0)
+        result = result.filter(item => Math.max(...this.priceBoxes) >= item.sessionPrices.video);
+
+      // Se filtran los psicólogos por disponibilidad
+      /*if (this.dispoBoxes.length !== 0)
+        result = result.filter(item => {
+          let flag = false;
+          this.dispoBoxes.forEach(dispo => (item.schedule.forEach(day => {
+                (day[0].forEach(hour => {
+                if (dayjs(hour).isBetween(dispo[0], dispo[1], 'hour')) flag = true;
+                }))})))
+          return flag;
+        })
+       */
+      return result;
+    },
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			psychologists: 'Psychologist/psychologistsMarketPlace',
+			psychologists: 'Psychologist/psychologists',
 			sessions: 'Psychologist/sessionsLimit',
 			matchMaking: 'Psychologist/matchMaking',
 		}),
@@ -688,7 +657,7 @@ export default {
 		page(value, oldValue) {
 			let prev = 0;
 			if (oldValue) prev = oldValue;
-			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
+			const ids = this.psychologistFilter.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
 		matchMaking(newVal) {
@@ -728,7 +697,7 @@ export default {
 		 * Cambia aumenta de pagina con el scroll
 		 */
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.filterLevelThree.length / 5) {
+			if (isVisible && this.page < this.psychologistFilter.length / 5) {
 				this.page += 1;
 			}
 		},
