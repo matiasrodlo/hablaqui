@@ -696,49 +696,6 @@
 								</v-card-text>
 							</v-card>
 						</v-col>
-						<v-col cols="12">Tabla de Sesiones</v-col>
-						<v-col cols="12">
-							<v-card>
-								<v-card-title>
-									<v-row>
-										<v-col>
-											<v-text-field
-												v-model="dateFilterText"
-												type="datetime-local"
-												label="Filtro por Fecha"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-select
-												v-model="statFilterText"
-												:items="status"
-												label="Filtro por Status"
-											></v-select>
-										</v-col>
-										<v-col>
-											<v-text-field
-												v-model="specFilterText"
-												label="Filtro por Especialista"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-text-field
-												v-model="userFilterText"
-												label="Filtro por Usuario"
-											></v-text-field>
-										</v-col>
-									</v-row>
-								</v-card-title>
-								<v-card-text>
-									<v-data-table
-										:headers="headers"
-										:items="filteredSessions"
-										:items-per-page="5"
-									>
-									</v-data-table>
-								</v-card-text>
-							</v-card>
-						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
 							¿Cuántos años llevas trabajando como especialista clínico?
 							{{ selected.yearsExpSpecialist }}
@@ -832,21 +789,6 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
-			dateFilterText: null,
-			statFilterText: '',
-			specFilterText: '',
-			userFilterText: '',
-			headers: [
-				{ text: 'Consultante', value: 'user' },
-				{ text: 'Especialista', value: 'specialist' },
-				{ text: 'Fecha', value: 'date' },
-				{ text: 'Teléfono usuario', value: 'userPhone' },
-				{ text: 'Email Consultante', value: 'emailUser' },
-				{ text: 'Email Especialista', value: 'emailSpecialist' },
-				{ text: 'Estatus', value: 'statusSession' },
-			],
-			sessions: [],
-			status: ['pending', 'success'],
 		};
 	},
 	computed: {
@@ -859,18 +801,6 @@ export default {
 			},
 		},
 		...mapGetters({ specialties: 'Appointments/specialties' }),
-		filteredSessions() {
-			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista y fecha de la sesión
-			return this.sessions.filter(
-				session =>
-					session.user.includes(this.userFilterText) &&
-					session.statusSession.includes(this.statFilterText) &&
-					session.specialist.includes(this.specFilterText) &&
-					(this.dateFilterText
-						? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
-						: true)
-			);
-		},
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -888,7 +818,6 @@ export default {
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getSpecialist();
-			await this.getFormattedSessions();
 			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 			banks = await banks.json();
 			this.banks = banks;
@@ -951,22 +880,6 @@ export default {
 					};
 				return spec;
 			});
-		},
-		async getFormattedSessions() {
-			try {
-				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
-					method: 'GET',
-				});
-				const { formattedSessions } = data;
-				this.sessions = formattedSessions;
-				console.log(this.sessions[0]);
-				return formattedSessions;
-			} catch (e) {
-				this.snackBar({
-					content: e,
-					color: 'error',
-				});
-			}
 		},
 		async approve() {
 			await this.checkusername();
@@ -1106,15 +1019,19 @@ export default {
 .bt {
 	border-top: 1px solid rgb(197, 197, 197) !important;
 }
+
 .br {
 	border-right: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bb {
 	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bl {
 	border-left: 1px solid rgb(197, 197, 197) !important;
 }
+
 textarea,
 select,
 input {
