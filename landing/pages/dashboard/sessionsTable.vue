@@ -48,12 +48,6 @@
 				dialog = false;
 			}
 		">
-			<v-card>
-				<v-card-title>
-					<span class="text-h5">{{ label }}</span>
-				</v-card-title>
-				<v-data-table :headers="headersSessions" :items="sessions" />
-			</v-card>
 		</v-dialog>
 		<v-dialog v-model="showBank" max-width="500" @click:outside="
 	() => {
