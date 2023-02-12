@@ -5,12 +5,8 @@
 			<v-col class="text--secondary" cols="6">
 				<v-list>
 					<v-subheader>Postulados</v-subheader>
-					<v-list-item
-						v-for="item in items"
-						:key="item._id"
-						:disabled="loading"
-						@click="setSelected(item, false)"
-					>
+					<v-list-item v-for="item in items" :key="item._id" :disabled="loading"
+						@click="setSelected(item, false)">
 						{{ item.name }} {{ item.lastName }}
 					</v-list-item>
 				</v-list>
@@ -18,12 +14,8 @@
 			<v-col class="text--secondary" cols="6">
 				<v-list>
 					<v-subheader>Psicólogos</v-subheader>
-					<v-list-item
-						v-for="item in psychologists"
-						:key="item._id"
-						:disabled="loading"
-						@click="setSelected(item, true)"
-					>
+					<v-list-item v-for="item in psychologists" :key="item._id" :disabled="loading"
+						@click="setSelected(item, true)">
 						{{ item.name }} {{ item.lastName }}
 					</v-list-item>
 				</v-list>
@@ -32,11 +24,8 @@
 		<v-dialog v-model="dialog" fullscreen>
 			<v-card v-if="selected" max-width="1200px">
 				<v-toolbar flat color="primary" class="white--text">
-					<nuxt-link
-						v-if="selected.isPsy"
-						style="text-decoration: none; display: block"
-						:to="{ path: `/${selected.username}` }"
-					>
+					<nuxt-link v-if="selected.isPsy" style="text-decoration: none; display: block"
+						:to="{ path: `/${selected.username}` }">
 						<span class="body-2 font-weight-bold white--text">
 							{{ selected.name }} {{ selected.lastName }}
 						</span>
@@ -49,21 +38,13 @@
 						<template v-if="selected.isPsy">
 							<v-col cols="12">
 								<a :href="selected.avatar" target="_blank">
-									<avatar
-										:url="selected.avatar"
-										:name="selected.name"
-										:last-name="selected.lastName ? selected.lastName : ''"
-										size="100"
-										loading-color="white"
-										:loading="loadingAvatar"
-									></avatar>
+									<avatar :url="selected.avatar" :name="selected.name"
+										:last-name="selected.lastName ? selected.lastName : ''" size="100"
+										loading-color="white" :loading="loadingAvatar"></avatar>
 								</a>
-								<div
-									:class="
-										selected.approveAvatar ? 'success--text' : 'warning--text'
-									"
-									class="font-weight-bold body-1"
-								>
+								<div :class="
+									selected.approveAvatar ? 'success--text' : 'warning--text'
+								" class="font-weight-bold body-1">
 									{{
 										selected.approveAvatar
 											? 'Avatar aprobado'
@@ -71,8 +52,7 @@
 									}}
 								</div>
 								<label for="upload">
-									<div
-										class="
+									<div class="
 											elevation-1
 											pointer
 											rounded
@@ -81,14 +61,11 @@
 											white--text
 											text-center
 											d-inline-block
-										"
-										style="width: 200px"
-									>
-										{{ loadingAvatar ? 'Subiendo...' : 'Subir nuevo avatar' }}
+										" style="width: 200px">
+										{{ loadingAvatar? 'Subiendo...': 'Subir nuevo avatar' }}
 									</div>
 								</label>
-								<div
-									class="
+								<div class="
 										d-inline-block
 										elevation-1
 										pointer
@@ -98,61 +75,37 @@
 										white--text
 										text-center
 										ml-2
-									"
-									style="width: 200px"
-									@click="approveAvatar(selected._id)"
-								>
+									" style="width: 200px" @click="approveAvatar(selected._id)">
 									{{
 										loadingApproveAvatar
-											? 'Actualizando'
+										? 'Actualizando'
 											: 'Aprobar Avatar actual'
 									}}
 								</div>
-								<v-file-input
-									id="upload"
-									ref="avatar"
-									class="d-none"
-									dense
-									filled
-									hide-details
-									accept="image/jpeg, image/png, image/gif, image/jpg"
-									placeholder="Agrega un avatar"
-									drop-placeholder="Arrastrar aqui..."
-									@change="uploadAvatar"
-								></v-file-input>
+								<v-file-input id="upload" ref="avatar" class="d-none" dense filled hide-details
+									accept="image/jpeg, image/png, image/gif, image/jpg" placeholder="Agrega un avatar"
+									drop-placeholder="Arrastrar aqui..." @change="uploadAvatar"></v-file-input>
 							</v-col>
 						</template>
-							<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
-							<v-switch
-							v-if="selected.isPsy" 
-							v-model="switch1"
-							label="Mostrar Psicólogo en Matchmaking">
-							</v-switch>
+						<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
+						<v-switch v-if="selected.isPsy" v-model="switch1" label="Mostrar Psicólogo en Matchmaking">
+						</v-switch>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							username
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								class="px-2"
-								:value="selected.username"
-								type="text"
-								:disabled="selected.isPsy"
+							<input class="px-2" :value="selected.username" type="text" :disabled="selected.isPsy"
 								@input="
 									e => {
 										selected.username = e.target.value;
 										available = false;
 									}
-								"
-							/>
+								" />
 						</v-col>
 						<v-col v-if="!selected.isPsy" cols="4" class="py-2">
-							<v-btn
-								:color="available ? 'success' : 'warning'"
-								small
-								@click="checkusername"
-							>
+							<v-btn :color="available ? 'success' : 'warning'" small @click="checkusername">
 								Verificar
 							</v-btn>
 						</v-col>
@@ -163,11 +116,8 @@
 							<input class="px-2" :value="totalMount" type="text" :disabled="true" />
 						</v-col>
 						<v-col cols="4" class="py-2">
-							<v-btn
-								small
-								:disabled="!selected.isPsy || sessionsToPay.length === 0"
-								@click="setTransaction"
-							>
+							<v-btn small :disabled="!selected.isPsy || sessionsToPay.length === 0"
+								@click="setTransaction">
 								Pagar
 							</v-btn>
 						</v-col>
@@ -177,67 +127,42 @@
 							<div class="d-flex align-center" style="height: 100%">Codigo</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.code"
-								type="text"
-								@input="e => (selected.code = e.target.value)"
-							/>
+							<input :value="selected.code" type="text" @input="e => (selected.code = e.target.value)" />
 						</v-col>
 						<v-col cols="12">Datos basicos</v-col>
 						<!-- email -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Email</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								class="px-2"
-								:value="selected.email"
-								type="text"
-								:disabled="selected.isPsy"
-								@input="e => (selected.email = e.target.value)"
-							/>
+							<input class="px-2" :value="selected.email" type="text" :disabled="selected.isPsy"
+								@input="e => (selected.email = e.target.value)" />
 						</v-col>
 						<!-- rut -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> RUT</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								class="px-2"
-								:value="selected.rut"
-								type="text"
-								:disabled="selected.isPsy"
-								@input="e => (selected.rut = e.target.value)"
-							/>
+							<input class="px-2" :value="selected.rut" type="text" :disabled="selected.isPsy"
+								@input="e => (selected.rut = e.target.value)" />
 						</v-col>
 						<!-- name -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text"> Nombre</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								class="px-2"
-								:value="selected.name"
-								type="text"
-								@input="e => (selected.name = e.target.value)"
-							/>
+							<input class="px-2" :value="selected.name" type="text"
+								@input="e => (selected.name = e.target.value)" />
 						</v-col>
 						<!-- lastname -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Apellido
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								class="px-2"
-								:value="selected.lastName"
-								type="text"
-								@input="e => (selected.lastName = e.target.value)"
-							/>
+							<input class="px-2" :value="selected.lastName" type="text"
+								@input="e => (selected.lastName = e.target.value)" />
 						</v-col>
 						<!-- gender -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Genero
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.gender"
-								type="text"
-								@change="e => (selected.gender = e.target.value)"
-							>
+							<select :value="selected.gender" type="text"
+								@change="e => (selected.gender = e.target.value)">
 								<option value="male">Hombre</option>
 								<option value="female">Mujer</option>
 								<option value="transgender">Transgénero</option>
@@ -248,33 +173,24 @@
 							Cumpleaños
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.birthDate"
-								type="text"
-								@input="e => (selected.birthDate = e.target.value)"
-							/>
+							<input :value="selected.birthDate" type="text"
+								@input="e => (selected.birthDate = e.target.value)" />
 						</v-col>
 						<!-- instagram -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Instagram
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.instagram"
-								type="text"
-								@input="e => (selected.instagram = e.target.value)"
-							/>
+							<input :value="selected.instagram" type="text"
+								@input="e => (selected.instagram = e.target.value)" />
 						</v-col>
 						<!-- linkedin -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Linkedin
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.linkedin"
-								type="text"
-								@input="e => (selected.linkedin = e.target.value)"
-							/>
+							<input :value="selected.linkedin" type="text"
+								@input="e => (selected.linkedin = e.target.value)" />
 						</v-col>
 					</v-row>
 					<v-row>
@@ -293,10 +209,7 @@
 							</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<textarea
-								v-model="selected.professionalDescription"
-								rows="3"
-							></textarea>
+							<textarea v-model="selected.professionalDescription" rows="3"></textarea>
 						</v-col>
 					</v-row>
 					<v-row>
@@ -306,11 +219,8 @@
 							<div class="d-flex align-center" style="height: 100%">Zona horaria</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.timeZone"
-								type="text"
-								@change="e => (selected.timeZone = e.target.value)"
-							>
+							<select :value="selected.timeZone" type="text"
+								@change="e => (selected.timeZone = e.target.value)">
 								<option v-for="(item, i) in timezone" :key="i" :value="item">
 									{{ item }}
 								</option>
@@ -321,36 +231,18 @@
 							<div class="d-flex align-center" style="height: 100%">Idiomas</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-0">
-							<v-checkbox
-								v-model="selected.languages"
-								class="ma-0 d-inline-block"
-								filled
-								label="Español"
-								value="spanish"
-								outlined
-								hide-details
-							></v-checkbox>
-							<v-checkbox
-								v-model="selected.languages"
-								class="ma-0 d-inline-block"
-								filled
-								value="english"
-								label="Ingles"
-								outlined
-								hide-details
-								dense
-							></v-checkbox>
+							<v-checkbox v-model="selected.languages" class="ma-0 d-inline-block" filled label="Español"
+								value="spanish" outlined hide-details></v-checkbox>
+							<v-checkbox v-model="selected.languages" class="ma-0 d-inline-block" filled value="english"
+								label="Ingles" outlined hide-details dense></v-checkbox>
 						</v-col>
 						<!-- Región -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Región
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.region"
-								type="text"
-								@change="e => (selected.region = e.target.value)"
-							>
+							<select :value="selected.region" type="text"
+								@change="e => (selected.region = e.target.value)">
 								<template v-if="regiones.length">
 									<option v-for="(item, i) in regiones" :key="i" :value="item">
 										{{ item }}
@@ -363,11 +255,8 @@
 							Comuna
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.comuna"
-								type="text"
-								@change="e => (selected.comuna = e.target.value)"
-							>
+							<select :value="selected.comuna" type="text"
+								@change="e => (selected.comuna = e.target.value)">
 								<template v-if="comunas.length">
 									<option v-for="(item, i) in comunas" :key="i" :value="item">
 										{{ item }}
@@ -383,11 +272,8 @@
 							<div class="d-flex align-center" style="height: 100%">Banco</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.paymentMethod.bank"
-								type="text"
-								@change="e => (selected.paymentMethod.bank = e.target.value)"
-							>
+							<select :value="selected.paymentMethod.bank" type="text"
+								@change="e => (selected.paymentMethod.bank = e.target.value)">
 								<option v-for="(item, i) in banks" :key="i" :value="item.nombre">
 									{{ item.nombre }}
 								</option>
@@ -398,31 +284,21 @@
 							<div class="d-flex align-center" style="height: 100%">RUT titular</div>
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.paymentMethod.rut"
-								type="text"
-								@input="e => (selected.paymentMethod.rut = e.target.value)"
-							/>
+							<input :value="selected.paymentMethod.rut" type="text"
+								@input="e => (selected.paymentMethod.rut = e.target.value)" />
 						</v-col>
 						<!-- Tipo de cuenta -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Tipo de cuenta
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<select
-								:value="selected.paymentMethod.accountType"
-								type="text"
-								@change="e => (selected.paymentMethod.accountType = e.target.value)"
-							>
-								<option
-									v-for="(item, i) in [
-										'Cuenta vista',
-										'Cuenta ahorro',
-										'Cuenta corriente',
-									]"
-									:key="i"
-									:value="item"
-								>
+							<select :value="selected.paymentMethod.accountType" type="text"
+								@change="e => (selected.paymentMethod.accountType = e.target.value)">
+								<option v-for="(item, i) in [
+									'Cuenta vista',
+									'Cuenta ahorro',
+									'Cuenta corriente',
+								]" :key="i" :value="item">
 									{{ item }}
 								</option>
 							</select>
@@ -432,35 +308,25 @@
 							Nombre titular
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.paymentMethod.name"
-								type="text"
-								@input="e => (selected.paymentMethod.name = e.target.value)"
-							/>
+							<input :value="selected.paymentMethod.name" type="text"
+								@input="e => (selected.paymentMethod.name = e.target.value)" />
 						</v-col>
 						<!-- Número de cuenta -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Número de cuenta
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.paymentMethod.accountNumber"
-								type="text"
-								@input="
-									e => (selected.paymentMethod.accountNumber = e.target.value)
-								"
-							/>
+							<input :value="selected.paymentMethod.accountNumber" type="text" @input="
+								e => (selected.paymentMethod.accountNumber = e.target.value)
+							" />
 						</v-col>
 						<!-- Email -->
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
 							Correo
 						</v-col>
 						<v-col cols="4" class="br bb bt py-2">
-							<input
-								:value="selected.paymentMethod.email"
-								type="text"
-								@input="e => (selected.paymentMethod.email = e.target.value)"
-							/>
+							<input :value="selected.paymentMethod.email" type="text"
+								@input="e => (selected.paymentMethod.email = e.target.value)" />
 						</v-col>
 					</v-row>
 					<v-row>
@@ -472,19 +338,8 @@
 							</div>
 						</v-col>
 						<v-col cols="10" class="br bb bt py-0">
-							<v-select
-								v-model="selected.specialties"
-								:loading="!specialties.length"
-								solo
-								flat
-								dense
-								chips
-								small-chips
-								multiple
-								hide-details
-								type="text"
-								:items="specialties"
-							></v-select>
+							<v-select v-model="selected.specialties" :loading="!specialties.length" solo flat dense
+								chips small-chips multiple hide-details type="text" :items="specialties"></v-select>
 						</v-col>
 						<v-col cols="12">Experiencia</v-col>
 						<!-- Experiencia -->
@@ -510,77 +365,40 @@
 							</v-row>
 						</v-col>
 						<v-col cols="12" class="br bb bt pa-0">
-							<v-row
-								v-for="(item, i) in selected.experience"
-								:key="i"
-								align="center"
-								no-gutters
-							>
+							<v-row v-for="(item, i) in selected.experience" :key="i" align="center" no-gutters>
 								<v-col cols="3" class="bl br bb bt">
-									<input
-										class="px-2"
-										:value="item.title"
-										type="text"
-										@input="
-											e => (selected.experience[i].title = e.target.value)
-										"
-									/>
+									<input class="px-2" :value="item.title" type="text" @input="
+										e => (selected.experience[i].title = e.target.value)
+									" />
 								</v-col>
 								<v-col cols="3" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.place"
-										@input="
-											e => (selected.experience[i].place = e.target.value)
-										"
-									/>
+									<input class="px-2" type="text" :value="item.place" @input="
+										e => (selected.experience[i].place = e.target.value)
+									" />
 								</v-col>
 								<v-col cols="2" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.start"
-										@input="
-											e => (selected.experience[i].start = e.target.value)
-										"
-									/>
+									<input class="px-2" type="text" :value="item.start" @input="
+										e => (selected.experience[i].start = e.target.value)
+									" />
 								</v-col>
 								<v-col cols="2" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.end"
-										@input="e => (selected.experience[i].end = e.target.value)"
-									/>
+									<input class="px-2" type="text" :value="item.end"
+										@input="e => (selected.experience[i].end = e.target.value)" />
 								</v-col>
 								<v-col cols="2" class="text-right text-sm-left">
-									<v-btn
-										v-if="i === selected.experience.length - 1"
-										x-small
-										color="primary"
-										text
-										depressed
-										@click="newExperience"
-									>
+									<v-btn v-if="i === selected.experience.length - 1" x-small color="primary" text
+										depressed @click="newExperience">
 										<h1>+</h1>
 									</v-btn>
-									<v-btn
-										v-if="
-											i === selected.experience.length - 1 &&
-											selected.experience.length - 1
-										"
-										x-small
-										color="error"
-										text
-										depressed
-										@click="
-											() =>
-												(selected.experience = selected.experience.filter(
-													(el, index) => index !== i
-												))
-										"
-									>
+									<v-btn v-if="
+										i === selected.experience.length - 1 &&
+										selected.experience.length - 1
+									" x-small color="error" text depressed @click="
+	() =>
+	(selected.experience = selected.experience.filter(
+		(el, index) => index !== i
+	))
+">
 										<h1>-</h1>
 									</v-btn>
 								</v-col>
@@ -610,94 +428,54 @@
 							</v-row>
 						</v-col>
 						<v-col cols="12" class="br bb bt pa-0">
-							<v-row
-								v-for="(item, i) in selected.formation"
-								:key="i"
-								align="center"
-								no-gutters
-							>
+							<v-row v-for="(item, i) in selected.formation" :key="i" align="center" no-gutters>
 								<v-col cols="3" class="bl br bb bt">
-									<select
-										type="text"
-										:value="item.formationType"
-										@change="
-											e =>
-												(selected.formation[i].formationType =
-													e.target.value)
-										"
-									>
-										<option
-											v-for="(el, k) in [
-												'Licenciatura',
-												'Diplomado',
-												'Master',
-												'Magister',
-												'Doctorado',
-												'Curso/especialización',
-												'Otro',
-											]"
-											:key="k"
-											class="px-2"
-											:value="el"
-										>
+									<select type="text" :value="item.formationType" @change="
+										e =>
+										(selected.formation[i].formationType =
+											e.target.value)
+									">
+										<option v-for="(el, k) in [
+											'Licenciatura',
+											'Diplomado',
+											'Master',
+											'Magister',
+											'Doctorado',
+											'Curso/especialización',
+											'Otro',
+										]" :key="k" class="px-2" :value="el">
 											{{ el }}
 										</option>
 									</select>
 								</v-col>
 								<v-col cols="3" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.description"
-										@input="
-											e =>
-												(selected.formation[i].description = e.target.value)
-										"
-									/>
+									<input class="px-2" type="text" :value="item.description" @input="
+										e =>
+											(selected.formation[i].description = e.target.value)
+									" />
 								</v-col>
 								<v-col cols="2" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.start"
-										@input="e => (selected.formation[i].start = e.target.value)"
-									/>
+									<input class="px-2" type="text" :value="item.start"
+										@input="e => (selected.formation[i].start = e.target.value)" />
 								</v-col>
 								<v-col cols="2" class="br bb bt">
-									<input
-										class="px-2"
-										type="text"
-										:value="item.end"
-										@input="e => (selected.formation[i].end = e.target.value)"
-									/>
+									<input class="px-2" type="text" :value="item.end"
+										@input="e => (selected.formation[i].end = e.target.value)" />
 								</v-col>
 								<v-col cols="2" class="text-right text-sm-left">
-									<v-btn
-										v-if="i === selected.formation.length - 1"
-										x-small
-										color="primary"
-										text
-										depressed
-										@click="newFormation"
-									>
+									<v-btn v-if="i === selected.formation.length - 1" x-small color="primary" text
+										depressed @click="newFormation">
 										<h1>+</h1>
 									</v-btn>
-									<v-btn
-										v-if="
-											i === selected.formation.length - 1 &&
-											selected.formation.length - 1
-										"
-										x-small
-										color="error"
-										text
-										depressed
-										@click="
-											() =>
-												(selected.formation = selected.formation.filter(
-													(el, index) => index !== i
-												))
-										"
-									>
+									<v-btn v-if="
+										i === selected.formation.length - 1 &&
+										selected.formation.length - 1
+									" x-small color="error" text depressed @click="
+	() =>
+	(selected.formation = selected.formation.filter(
+		(el, index) => index !== i
+	))
+">
 										<h1>-</h1>
 									</v-btn>
 								</v-col>
@@ -707,52 +485,7 @@
 						<v-col cols="12">
 							<v-card>
 								<v-card-text>
-									<horario
-										:psychologist="psychologist"
-										:set-psychologist="setPsychologist"/>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col cols="12">Tabla de Sesiones</v-col>
-						<v-col cols="12">
-							<v-card>
-								<v-card-title>
-									<v-row>
-										<v-col>
-											<v-text-field
-											v-model="dateFilterText"
-											type="datetime-local"
-											label="Filtro por Fecha"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-select
-											v-model="statFilterText"
-											:items="status"
-											label="Filtro por Status"
-											></v-select>
-										</v-col>
-										<v-col>
-											<v-text-field
-											v-model="psyFilterText"
-											label="Filtro por Psicólogo"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-text-field
-											v-model="userFilterText"
-											label="Filtro por Usuario"
-											></v-text-field>
-										</v-col>
-									</v-row>
-								</v-card-title>
-								<v-card-text>
-									<v-data-table
-										:headers="headers"
-										:items="filteredSessions"
-										:items-per-page="5"
-									>
-									</v-data-table>
+									<horario :psychologist="psychologist" :set-psychologist="setPsychologist" />
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -784,22 +517,10 @@
 					<v-btn :loading="loadingSubmit" text color="primary" @click="submit">
 						Actualizar
 					</v-btn>
-					<v-btn
-						v-if="!selected.isPsy"
-						:loading="loadingApprove"
-						text
-						color="primary"
-						@click="approve"
-					>
+					<v-btn v-if="!selected.isPsy" :loading="loadingApprove" text color="primary" @click="approve">
 						Aprobar
 					</v-btn>
-					<v-btn
-						v-if="selected.isPsy"
-						:loading="loadingDelete"
-						text
-						color="error"
-						@click="deletePsy"
-					>
+					<v-btn v-if="selected.isPsy" :loading="loadingDelete" text color="error" @click="deletePsy">
 						Eliminar
 					</v-btn>
 					<v-spacer></v-spacer>
@@ -846,21 +567,6 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
-			dateFilterText: null,
-			statFilterText: '',
-			psyFilterText: '',
-			userFilterText: '',
-			headers: [
-				{ text: 'Consultante', value: 'user' },
-				{ text: 'Psicólogo', value: 'psychologist' },
-				{ text: 'Fecha', value: 'date' },
-				{ text: 'Teléfono usuario', value: 'userPhone' },
-				{ text: 'Email Consultante', value: 'emailUser' },
-				{ text: 'Email Psicólogo', value: 'emailPsychologist' },
-				{ text: 'Estatus', value: 'statusSession' },
-			],
-			sessions: [],
-			status: ["pending", "success"],
 		};
 	},
 	computed: {
@@ -872,20 +578,7 @@ export default {
 				this.setPsychologist(value);
 			},
 		},
-		...mapGetters({specialties: 'Appointments/specialties'}),
-		filteredSessions() {
-			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo y fecha de la sesión
-			return this.sessions.filter(
-				session =>
-				session.user.includes(this.userFilterText) &&
-				session.statusSession.includes(this.statFilterText) &&
-				session.psychologist.includes(this.psyFilterText) &&
-				(this.dateFilterText
-					? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
-					: true
-				)
-			);
-		},
+		...mapGetters({ specialties: 'Appointments/specialties' }),
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -903,7 +596,6 @@ export default {
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getPsychologist();
-			await this.getFormattedSessions();
 			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 			banks = await banks.json();
 			this.banks = banks;
@@ -966,22 +658,6 @@ export default {
 					};
 				return psy;
 			});
-		},
-		async getFormattedSessions() {
-			try {
-				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
-					method: 'GET'
-				});
-				const { formattedSessions } = data;
-				this.sessions = formattedSessions;
-				console.log(this.sessions[0]);
-				return formattedSessions;
-			} catch (e) {
-				this.snackBar({
-						content: e,
-						color: 'error',
-					});
-			}
 		},
 		async approve() {
 			await this.checkusername();
@@ -1109,9 +785,9 @@ export default {
 			upateAvatar: 'User/upateAvatar',
 		}),
 		columnValueList(val) {
-				return this.sessions.map((d) => d[val]);
-			},
-		
+			return this.sessions.map((d) => d[val]);
+		},
+
 	},
 };
 </script>
@@ -1120,15 +796,19 @@ export default {
 .bt {
 	border-top: 1px solid rgb(197, 197, 197) !important;
 }
+
 .br {
 	border-right: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bb {
 	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bl {
 	border-left: 1px solid rgb(197, 197, 197) !important;
 }
+
 textarea,
 select,
 input {
