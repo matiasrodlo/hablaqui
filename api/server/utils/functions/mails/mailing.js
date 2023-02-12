@@ -3,9 +3,9 @@ import email from '../../../models/email';
 import userModel from '../../../models/user';
 import mercadopagoService from '../../../services/mercadopago';
 import couponModel from '../../../models/coupons';
-import psychologistModel from '../../../models/psychologist';
+import specialistModel from '../../../models/specialist';
 import mailServiceRemider from './reminder';
-import mailServicePsy from './psychologistStatus';
+import mailServiceSpec from './specialistStatus';
 import dayjs from 'dayjs';
 import { conflictResponse } from '../../responses/functions';
 import sessionsModel from '../../../models/sessions';
@@ -59,7 +59,7 @@ async function getBatchId() {
 	return batch_id;
 }
 
-async function preference(user, psychologist, plan, session) {
+async function preference(user, specialist, plan, session) {
 	// Se genera un código aleatorio para el token de pago
 	const randomCode = () => {
 		return Math.random()
@@ -70,7 +70,7 @@ async function preference(user, psychologist, plan, session) {
 	const price = plan.totalPrice;
 	// Se crea el pago en mercadopago
 	const mercadopagoPayload = {
-		psychologist: psychologist.username,
+		specialist: specialist.username,
 		price: price,
 		description:
 			plan.title + ' - Pagado por ' + user.name + ' ' + user.lastName,
@@ -111,9 +111,9 @@ const sessionReminder = async () => {
 		type: {
 			$in: [
 				'reminder-user-hour',
-				'reminder-psy-hour',
+				'reminder-Spec-hour',
 				'reminder-user-day',
-				'reminder-psy-day',
+				'reminder-Spec-day',
 			],
 		},
 	});
@@ -123,7 +123,7 @@ const sessionReminder = async () => {
 		return;
 	}
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		// Se obtiene el tipo de correo y el destinatario (Spec o user)
 		let batch = null;
 		const mailType = emailInfo.type.split('-').pop();
 		const addressee = emailInfo.type.split('-')[1];
@@ -141,12 +141,12 @@ const sessionReminder = async () => {
 			return;
 		}
 		const user = await userModel.findById(emailInfo.userRef);
-		const psy = await psychologistModel.findById(emailInfo.psyRef);
-		if (!user || !psy) {
+		const Spec = await specialistModel.findById(emailInfo.SpecRef);
+		if (!user || !Spec) {
 			return;
 		}
 		try {
-			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
 			if (emailInfo.scheduledAt !== null) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
@@ -160,21 +160,21 @@ const sessionReminder = async () => {
 					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
-						psy,
+						Spec,
 						sessionDate,
 						batch,
 						mailType,
 						urlRooms
 					);
 				} else if (
-					addressee === 'psy' &&
+					addressee === 'Spec' &&
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					isSend = true;
-					await mailServiceRemider.sendReminderPsy(
+					await mailServiceRemider.sendReminderSpec(
 						user,
-						psy,
+						Spec,
 						sessionDate,
 						batch,
 						mailType,
@@ -217,11 +217,11 @@ const reminderPayment = async () => {
 	}
 
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		// Se obtiene el tipo de correo y el destinatario (Spec o user)
 		let isSend = false;
 		let batch = null;
 		const user = await userModel.findById(emailInfo.userRef);
-		const psy = await psychologistModel.findById(emailInfo.psyRef);
+		const Spec = await specialistModel.findById(emailInfo.SpecRef);
 		const sessionDocument = await sessionsModel.findById(
 			emailInfo.sessionRef
 		);
@@ -231,15 +231,15 @@ const reminderPayment = async () => {
 			.filter(plan => plan.payment === 'pending')
 			.pop();
 
-		// Se verifica que el usuario se haya encontrado al igual que el psicólogo y la sesión
-		if (!user || !psy || !sessionDocument || !plan) {
+		// Se verifica que el usuario se haya encontrado al igual que el especialista y la sesión
+		if (!user || !Spec || !sessionDocument || !plan) {
 			return;
 		}
 		// Se obtiene la url de pago
 		// Crea la preferencia de mercado pago para los correos de recordatorio de pago
-		const url = await preference(user, psy, plan, sessionDocument);
+		const url = await preference(user, Spec, plan, sessionDocument);
 		try {
-			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
 			if (emailInfo.scheduledAt !== null) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
@@ -250,9 +250,9 @@ const reminderPayment = async () => {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 					isSend = true;
-					await mailServicePsy.pendingPlanPayment(
+					await mailServiceSpec.pendingPlanPayment(
 						user,
-						psy,
+						Spec,
 						plan.totalPrice,
 						url
 					);
@@ -264,7 +264,7 @@ const reminderPayment = async () => {
 					isSend = true;
 					await mailServiceRemider.sendPaymentDay(
 						user,
-						psy,
+						Spec,
 						plan.totalPrice,
 						url
 					);
@@ -307,7 +307,7 @@ const reminderChat = async () => {
 	const pendingEmails = await email.find({
 		wasScheduled: false,
 		type: {
-			$in: ['chat-psy-1-day', 'chat-user-1-day'],
+			$in: ['chat-Spec-1-day', 'chat-user-1-day'],
 		},
 	});
 
@@ -317,17 +317,17 @@ const reminderChat = async () => {
 
 	// Se recorren los correos pendientes
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (psy o user)
+		// Se obtiene el tipo de correo y el destinatario (Spec o user)
 		let isSend = false;
 		let batch = null;
 		const user = await userModel.findById(emailInfo.userRef);
-		const psy = await psychologistModel.findById(emailInfo.psyRef);
-		// Se verifica que el usuario se haya encontrado al igual que el psicólogo
+		const Spec = await specialistModel.findById(emailInfo.SpecRef);
+		// Se verifica que el usuario se haya encontrado al igual que el especialista
 		if (!user) {
 			return conflictResponse('No se encontró el usuario');
 		}
-		if (!psy) {
-			return conflictResponse('No se encontró el psicólogo');
+		if (!Spec) {
+			return conflictResponse('No se encontró el especialista');
 		}
 		try {
 			if (
@@ -339,18 +339,18 @@ const reminderChat = async () => {
 				isSend = true;
 				await mailServiceRemider.sendChatNotificationToUser(
 					user,
-					psy,
+					Spec,
 					batch
 				);
 			} else if (
 				dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-				emailInfo.type === 'chat-psy-1-day'
+				emailInfo.type === 'chat-Spec-1-day'
 			) {
 				batch = await getBatchId();
 				isSend = true;
-				await mailServiceRemider.sendChatNotificationToPsy(
+				await mailServiceRemider.sendChatNotificationToSpec(
 					user,
-					psy,
+					Spec,
 					batch
 				);
 			}
@@ -388,16 +388,16 @@ const reminderRenewal = async () => {
 
 	// Se recorren los correos pendientes
 	pendingEmails.forEach(async emailInfo => {
-		// Se busca el usuario y el psy
+		// Se busca el usuario y el Spec
 		const user = await userModel.findById(emailInfo.userRef);
-		const psy = await psychologistModel.findById(emailInfo.psyRef);
+		const Spec = await specialistModel.findById(emailInfo.SpecRef);
 		const sessionDocument = await sessionsModel.findById(
 			emailInfo.sessionRef
 		);
 		const mailType = emailInfo.type.split('-').pop();
 		let batch = null;
 		let isSend = false;
-		if (!user || !psy || !sessionDocument) {
+		if (!user || !Spec || !sessionDocument) {
 			return;
 		}
 		// Se obtiene un plan expirado del usuario
@@ -408,7 +408,7 @@ const reminderRenewal = async () => {
 			return;
 		}
 		try {
-			// Se envía el correo electrónico al usuario o psicólogo para recordar la sesion
+			// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
 			if (emailInfo.scheduledAt !== null) {
 				// Si la fecha actual está después que la fecha programada, entonces se envía el correo
@@ -421,7 +421,7 @@ const reminderRenewal = async () => {
 					isSend = true;
 					await mailServiceRemider.reminderRenewalSubscription1hour(
 						user,
-						psy,
+						Spec,
 						plan.expiration
 					);
 				} else if (
@@ -432,7 +432,7 @@ const reminderRenewal = async () => {
 					isSend = true;
 					await mailServiceRemider.reminderRenewalSubscription1day(
 						user,
-						psy,
+						Spec,
 						plan.expiration
 					);
 				} else if (
