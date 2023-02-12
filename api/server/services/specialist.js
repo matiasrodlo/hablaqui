@@ -50,15 +50,15 @@ const normalize = (value, min, max) => {
 
 /**
  * @description Asigna puntaje por el precio de la sesión
- * @param {Object} psy - Especialista
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje
  */
 
-const priceCriterion = (psy, payload, pointsPerCriterion) => {
+const priceCriterion = (spec, payload, pointsPerCriterion) => {
 	let points = 0;
-	if (payload.price >= psy.sessionPrices.video) {
+	if (payload.price >= spec.sessionPrices.video) {
 		points = pointsPerCriterion;
 	}
 	points = normalize(points, 0, pointsPerCriterion);
@@ -67,18 +67,18 @@ const priceCriterion = (psy, payload, pointsPerCriterion) => {
 
 /**
  * @description Asigna puntaje por cantidad de coincidencias de especialidades
- * @param {Object} psy - Especialista
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criteriaNumberSpecialties = (psy, payload, pointsPerCriterion) => {
+const criteriaNumberSpecialties = (spec, payload, pointsPerCriterion) => {
 	const numberOfSpecialities = 3;
 	let points = 0;
 	let maximum = 0;
 	for (let j = 0; j < numberOfSpecialities; j++) {
-		if (psy.specialties[j] === payload.themes[j])
+		if (spec.specialties[j] === payload.themes[j])
 			points += pointsPerCriterion;
 		maximum += pointsPerCriterion;
 	}
@@ -163,7 +163,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 
 /**
  * @description Asigna puntaje por la cantidad de sesiones disponibles en un horario
- * @param {Object} psy - Especialista
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
@@ -180,19 +180,19 @@ const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 
 /**
  * @description Asigna puntaje por la cantidad de coincidencias de modelo terapeutico
- * @param {Object} psy - Especialista
+ * @param {Object} spec - Especialista
  * @param {Object} payload - Contiene las preferencias del paciente
  * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
  * @returns - Puntaje normalizado
  */
 
-const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
+const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
 	const modelQuantity = 3;
 	let points = 0;
 	let maximum = 0;
 	// Se suma points por cada coincidencia y se obtiene el total de puntaje posible
 	for (let j = 0; j < modelQuantity; j++) {
-		if (psy.model[j] === payload.model[j]) points += pointsPerCriterion;
+		if (spec.model[j] === payload.model[j]) points += pointsPerCriterion;
 		maximum += pointsPerCriterion;
 	}
 	points = normalize(points, 0, maximum);
@@ -212,18 +212,18 @@ const ponderationMatch = async (matchedList, payload) => {
 	const weighted = [0.1, 0.25, 0.25, 0.2, 0.1];
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
-		matchedList.map(async psy => {
+		matchedList.map(async spec => {
 			let criteria = 0;
-			let points = normalize(psy.points, 0, 100) * weighted[criteria];
+			let points = normalize(spec.points, 0, 100) * weighted[criteria];
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
 				weighted[criteria] *
-				criteriaNumberSpecialties(psy, payload, pointsPerCriterion);
+				criteriaNumberSpecialties(spec, payload, pointsPerCriterion);
 			criteria++;
 			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				psy._id
+				spec._id
 			);
 			points +=
 				weighted[criteria] *
@@ -231,16 +231,16 @@ const ponderationMatch = async (matchedList, payload) => {
 			criteria++;
 			// Se obtiene el precio del especialista y se le asigna un puntaje dado por el precio
 			points +=
-				priceCriterion(psy, payload, pointsPerCriterion) *
+				priceCriterion(spec, payload, pointsPerCriterion) *
 				weighted[criteria];
 			criteria++;
 			// Se obtiene el modelo terapeutico del especialista y se le asigna un puntaje dado por el modelo
 			points +=
-				criterioModeloTeraupetico(psy, payload, pointsPerCriterion) *
+				criterioModeloTeraupetico(spec, payload, pointsPerCriterion) *
 				weighted[criteria];
 			criteria++;
 			// De documento de mongo se pasa a un formato de objeto JSON
-			let specialist = JSON.stringify(psy);
+			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
 			return { ...specialist, points };
 		})
@@ -265,10 +265,10 @@ const specialistClasification = async (matchedList, payload) => {
 	let pointsPerCriterion = 1;
 	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
-		matchedList.map(async psy => {
-			psy.points = 0;
+		matchedList.map(async spec => {
+			spec.points = 0;
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
-				psy._id
+				spec._id
 			);
 			points = pointsDisponibilidad(
 				days,
@@ -276,7 +276,7 @@ const specialistClasification = async (matchedList, payload) => {
 				pointsPerCriterion,
 				nextDays
 			);
-			let specialist = JSON.stringify(psy);
+			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
 			return { ...specialist, points };
 		})
@@ -394,7 +394,7 @@ const updatePlan = async (specialistId, planInfo) => {
 		specialistId,
 		{
 			$push: {
-				psyPlans: { paymentStatus: 'success', ...planInfo },
+				specPlans: { paymentStatus: 'success', ...planInfo },
 			},
 		},
 		{ new: true }
@@ -523,14 +523,14 @@ const updateSpecialist = async (user, profile) => {
 	if (user.specialist) {
 		// Si el user es un especialista intenta actualizar el especialista
 		try {
-			const psy = await Specialist.findById(profile._id);
-			if (psy.sessionPrices.video !== profile.sessionPrices.video) {
+			const spec = await Specialist.findById(profile._id);
+			if (spec.sessionPrices.video !== profile.sessionPrices.video) {
 				// Si existe una fecha de vencimiento, y esta está antes de la fecha actual adelantado un mes
 				if (
-					psy.stampSetPrices &&
-					dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+					spec.stampSetPrices &&
+					dayjs().isBefore(dayjs(spec.stampSetPrices).add(1, 'months'))
 				)
-					profile.sessionPrices = psy.sessionPrices;
+					profile.sessionPrices = spec.sessionPrices;
 				else profile.stampSetPrices = dayjs.tz().format();
 			}
 			const updated = await Specialist.findByIdAndUpdate(
@@ -551,7 +551,7 @@ const updateSpecialist = async (user, profile) => {
 				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
-					event: 'psy-updasted-profile',
+					event: 'spec-updasted-profile',
 				});
 				analytics.identify({
 					userId: id.toString(),
@@ -673,12 +673,12 @@ const setPrice = async (user, newPrice) => {
 	newPrice = Number(newPrice);
 	if (user.role != 'specialist')
 		return conflictResponse('No tienes permisos');
-	const psy = await Specialist.findById(user.specialist);
+	const spec = await Specialist.findById(user.specialist);
 
 	// Si el especialista ya esta establecido, y el precio aún no expira
 	if (
-		psy.stampSetPrices &&
-		dayjs().isBefore(dayjs(psy.stampSetPrices).add(1, 'months'))
+		spec.stampSetPrices &&
+		dayjs().isBefore(dayjs(spec.stampSetPrices).add(1, 'months'))
 	)
 		return conflictResponse(
 			'Tiene que esperar 1 mes para volver a cambiar el precio'
@@ -799,11 +799,11 @@ const updateFormationExperience = async (user, payload) => {
 	});
 };
 
-const uploadProfilePicture = async (psyID, picture) => {
+const uploadProfilePicture = async (specID, picture) => {
 	if (!picture) return conflictResponse('No se ha enviado ninguna imagen');
-	const { name, lastName, _id } = await User.findById(psyID);
+	const { name, lastName, _id } = await User.findById(specID);
 	// Se crea el archivo en GCS, GCS es un bucket de Google Cloud Storage, un bucket en Google Cloud Storage son contenedores básicos que contienen los datos
-	const gcsname = `${psyID}-${name}-${lastName}`;
+	const gcsname = `${specID}-${name}-${lastName}`;
 	const file = bucket.file(gcsname);
 	// Se crea un stream para escribir en el archivo y se escribe el metadato de la imagen
 	const stream = file.createWriteStream({
@@ -835,7 +835,7 @@ const uploadProfilePicture = async (psyID, picture) => {
 		});
 	}
 
-	await Specialist.findByIdAndUpdate(psyID, {
+	await Specialist.findByIdAndUpdate(specID, {
 		avatar: getPublicUrlAvatar(gcsname),
 		avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
 	});
@@ -866,15 +866,15 @@ const approveAvatar = async (user, id) => {
 	});
 };
 
-const changeToInmediateAttention = async psy => {
+const changeToInmediateAttention = async spec => {
 	/*if (user.role !== 'specialist')
 		return conflictResponse('No tienes permitida esta opción');
-	const psy = user.specialist;*/
-	let specialist = await Specialist.findById(psy);
+	const spec = user.specialist;*/
+	let specialist = await Specialist.findById(spec);
 	// Si la atención inmediata está activada, se desactiva
 	if (specialist.inmediateAttention.activated) {
 		specialist = await Specialist.findOneAndUpdate(
-			{ _id: psy },
+			{ _id: spec },
 			{
 				$set: {
 					inmediateAttention: {
@@ -887,7 +887,7 @@ const changeToInmediateAttention = async psy => {
 		);
 	} else {
 		// Si no esta activado el plan inmediato de atención
-		let sessions = await getAllSessionsFunction(psy);
+		let sessions = await getAllSessionsFunction(spec);
 		let now = new Date();
 		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
 		sessions = sessions.filter(session => {
@@ -908,7 +908,7 @@ const changeToInmediateAttention = async psy => {
 
 		// Se activa el plan inmediato de atención
 		specialist = await Specialist.findOneAndUpdate(
-			{ _id: psy },
+			{ _id: spec },
 			{
 				$set: {
 					inmediateAttention: {
@@ -940,7 +940,7 @@ const getAllSessionsInmediateAttention = async () => {
 	specialist = JSON.stringify(specialist);
 	specialist = JSON.parse(specialist);
 	specialist = specialist.filter(
-		psy => psy.inmediateAttention.activated === true
+		spec => spec.inmediateAttention.activated === true
 	);
 
 	let allSessions = await Sessions.find().populate(

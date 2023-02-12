@@ -715,7 +715,7 @@
 										</v-col>
 										<v-col>
 											<v-text-field
-											v-model="psyFilterText"
+											v-model="specFilterText"
 											label="Filtro por Psicólogo"
 											></v-text-field>
 										</v-col>
@@ -832,11 +832,11 @@ export default {
 			switch1: true,
 			dateFilterText: null,
 			statFilterText: '',
-			psyFilterText: '',
+			specFilterText: '',
 			userFilterText: '',
 			headers: [
 				{ text: 'Consultante', value: 'user' },
-				{ text: 'Psicólogo', value: 'psychologist' },
+				{ text: 'Psicólogo', value: 'specialist' },
 				{ text: 'Fecha', value: 'date' },
 				{ text: 'Teléfono usuario', value: 'userPhone' },
 				{ text: 'Email Consultante', value: 'emailUser' },
@@ -863,7 +863,7 @@ export default {
 				session =>
 				session.user.includes(this.userFilterText) &&
 				session.statusSession.includes(this.statFilterText) &&
-				session.psychologist.includes(this.psyFilterText) &&
+				session.specialist.includes(this.specFilterText) &&
 				(this.dateFilterText
 					? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
 					: true

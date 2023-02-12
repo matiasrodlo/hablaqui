@@ -113,8 +113,8 @@ export default {
 					});
 			}
 			else if (
-				!this.psychologist.professionalDescription ||
-				!this.psychologist.personalDescription
+				!this.specialist.professionalDescription ||
+				!this.specialist.personalDescription
 			)
 			{
 					this.snackBar({
