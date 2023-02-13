@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh">
 		<appbar class="hidden-sm-and-down mb-16" title="Información general" />
-		<information-general-psi :specialist="specialist" :set-specialist="setSpecialist" />
+		<information-general-speci :specialist="specialist" :set-specialist="setSpecialist" />
 	</v-container>
 </template>
 
@@ -17,7 +17,7 @@ export default {
 	name: 'InformacionGeneral',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
-		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
+		InformationGeneralSpeci: () => import('~/components/dashboard/InformationGeneralSpeci'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],

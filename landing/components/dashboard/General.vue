@@ -119,7 +119,7 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content v-if="specialist">
-					<information-general-psi
+					<information-general-speci
 						:specialist="specialist"
 						:set-specialist="setSpecialist"
 					/>
@@ -165,7 +165,7 @@ export default {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
-		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
+		InformationGeneralSpeci: () => import('~/components/dashboard/InformationGeneralSpeci'),
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 	},
 	props: {

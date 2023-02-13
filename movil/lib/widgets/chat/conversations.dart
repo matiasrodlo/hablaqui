@@ -44,7 +44,7 @@ class _ChatConversationsState extends State<ChatConversations>
 					Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
-							Text('Mi psicólogo', style: TextStyle(color: appColors.mainColors['blue']),),
+							Text('Mi especialista', style: TextStyle(color: appColors.mainColors['blue']),),
 							SizedBox(height: 10),
 							Divider(color: appColors.mainColors['blue']),
 							SizedBox(height: 10),
@@ -119,7 +119,7 @@ class _ChatConversationsState extends State<ChatConversations>
 			//mainAxisAlignment: MainAxisAlignment.center,
 			crossAxisAlignment: CrossAxisAlignment.stretch,
 			children: [
-				Text('Comienza a hablar con nuestros psicólogos', 
+				Text('Comienza a hablar con nuestros especialistas', 
 					textAlign: TextAlign.center,
 					style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.mainColors['blue'])
 				),

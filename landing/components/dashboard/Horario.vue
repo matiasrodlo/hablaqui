@@ -560,7 +560,7 @@ export default {
 				friday: this.items[4].active ? this.items[4].intervals : 'busy',
 				saturday: this.items[5].active ? this.items[5].intervals : 'busy',
 				sunday: this.items[6].active ? this.items[6].intervals : 'busy',
-				psychologist: this.psychologist._id,
+				specialist: this.specialist._id,
 			};
 			const specialist = await this.setSchedule(payload);
 			this.setSpecialist(specialist);

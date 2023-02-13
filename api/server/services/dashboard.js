@@ -233,14 +233,14 @@ const getMountToPay = async user => {
 	return okResponse('Planes', { amounts });
 };
 
-const specialistVisibility = async (psyId, visibility) => {
+const specialistVisibility = async (specId, visibility) => {
 	try {
 		const isVisible = visibility === 'true' ? true : false;
 		// Actualizar el campo de visibilidad de los especialistas
-		await Psychologist.findByIdAndUpdate(psyId, {
+		await Specialist.findByIdAndUpdate(specId, {
 			$set: { 'preferences.marketplaceVisibility': isVisible },
 		});
-		return okResponse('Visibilidad actualizada', { psyId });
+		return okResponse('Visibilidad actualizada', { specId });
 	} catch (error) {
 		return conflictResponse('Error al actualizar la visibilidad', error);
 	}
