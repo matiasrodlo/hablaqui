@@ -40,7 +40,7 @@
 -   **FloatingChat.vue**: Chat flotante user (Home?)
 -   **General.vue**: Mi cuenta (spec)
 -   **Horario.vue**: Disponibilidad (spec)
--   **InformationGeneralPsi.vue**: Información general (spec)
+-   **InformationGeneralSpec.vue**: Información general (spec)
 -   **MyPlans.vue**: Planes contratados (user)
 -   **Especialista.vue**: Mi spec (user)
 -   **Services.vue**: Servicios (spec)

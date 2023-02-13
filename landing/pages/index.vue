@@ -133,7 +133,7 @@
 					class="text-center text-h5 text-sm-h4 text-md-h3 text--secondary font-weight-bold my-10"
 				>
 					<v-btn
-						id="psi-quiero-comenzar-index"
+						id="spec-quiero-comenzar-index"
 						color="primary"
 						style="border-radius: 15px"
 						x-large
@@ -176,7 +176,7 @@
 							experta, pero también cálida y humana.
 						</article>
 						<v-btn
-							id="ver-mas-psi-index"
+							id="ver-mas-spec-index"
 							style="border-radius: 15px"
 							color="white"
 							x-large

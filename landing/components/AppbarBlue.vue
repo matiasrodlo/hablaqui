@@ -49,7 +49,7 @@
 			</a>
 			<v-spacer></v-spacer>
 			<v-btn
-				id="psi-appbar-blue"
+				id="spec-appbar-blue"
 				to="/especialistas/"
 				large
 				rounded

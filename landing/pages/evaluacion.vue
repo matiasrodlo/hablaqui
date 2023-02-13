@@ -671,7 +671,7 @@
 									height="200"
 									width="600"
 								>
-									<v-carousel-item v-for="(element, i) in psi" :key="i">
+									<v-carousel-item v-for="(element, i) in spec" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
@@ -783,7 +783,7 @@
 									mandatory
 								>
 									<v-item
-										v-for="(n, e) in psi"
+										v-for="(n, e) in spec"
 										:key="`btn-${e}`"
 										v-slot="{ active, toggle }"
 									>
@@ -876,7 +876,7 @@ export default {
 		};
 	},
 	computed: {
-		psi() {
+		spec() {
 			if (!this.specialists) return [];
 			const items = this.random();
 			const n = 3;
@@ -894,20 +894,20 @@ export default {
 	},
 	created() {
 		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length) {
-				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedSpecialists = psi.match;
-				else if (psi._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('psi');
+			const spec = JSON.parse(localStorage.getItem('spec'));
+			if (spec && spec.match.length) {
+				if (spec._id !== null && spec._id === this.$auth.$state.user._id)
+					this.matchedSpecialists = spec.match;
+				else if (spec._id === null && this.$auth.$state.loggedIn) {
+					localStorage.removeItem('spec');
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
-							match: psi.match,
+							match: spec.match,
 							_id: this.$auth.$state.user._id,
 						})
 					);
-					this.matchedSpecialists = psi.match;
+					this.matchedSpecialists = spec.match;
 				}
 			}
 		}
@@ -928,7 +928,7 @@ export default {
 			});
 		},
 		resetMatch() {
-			localStorage.removeItem('psi');
+			localStorage.removeItem('spec');
 			this.gender = '';
 			this.age = '';
 			this.firstTherapy = null;
@@ -964,10 +964,10 @@ export default {
 				model: this.models,
 				price: this.price,
 			};
-			this.matchPsi(payload).then(response => {
+			this.matchSpec(payload).then(response => {
 				if (response && response.length) {
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
 							match: response.filter((el, i) => i < 3),
 							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
@@ -986,7 +986,7 @@ export default {
 			return '';
 		},
 		...mapActions({
-			matchPsi: 'Specialist/matchPsi',
+			matchSpec: 'Specialist/matchSpec',
 			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
 		}),
 	},

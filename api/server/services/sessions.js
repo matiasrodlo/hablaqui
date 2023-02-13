@@ -1039,7 +1039,7 @@ const formattedSessionsAll = async ids => {
 		),
 	}));
 
-	// Obtenemos la disponibilidad de todos los psicolgos
+	// Obtenemos la disponibilidad de todos los especialistas
 	sessions = allSessions.map(item => {
 		const minimumNewSession = dayjs
 			.tz(dayjs().add(item.preferences.minimumNewSession, 'h'))
