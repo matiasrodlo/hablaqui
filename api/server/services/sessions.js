@@ -1413,7 +1413,7 @@ const getAllSessionsFormatted = async () => {
 			const lastNameUser = !sessionDocument.user.lastName
 				? ''
 				: ' ' + sessionDocument.user.lastName;
-			const lastNamePsy = !sessionDocument.specialist.lastName
+			const lastNameSpec = !sessionDocument.specialist.lastName
 				? ''
 				: ' ' + sessionDocument.specialist.lastName;
 
@@ -1423,13 +1423,13 @@ const getAllSessionsFormatted = async () => {
 					date: dayjs(session.date).format('DD/MM/YYYY HH:mm'),
 					sessionNumber: session.sessionNumber,
 					specialist:
-						sessionDocument.specialist.name + lastNamePsy,
+						sessionDocument.specialist.name + lastNameSpec,
 					user: sessionDocument.user.name + lastNameUser,
 					totalSessions: plan.totalSessions,
 					userPhone: sessionDocument.user.phone,
 					specialistPhone: sessionDocument.specialist.phone,
 					emailUser: sessionDocument.user.email,
-					emailPsychologist: sessionDocument.specialist.email,
+					emailSpecialist: sessionDocument.specialist.email,
 					statusSession: session.status,
 					expirationPlan: dayjs(plan.expiration).format(
 						'DD/MM/YYYY'

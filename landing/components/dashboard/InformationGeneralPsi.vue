@@ -101,31 +101,27 @@ export default {
 			snackBar: 'Snackbar/showMessage',
 		}),
 		async onSubmite() {
-			if(
+			if (
 				!(this.specialist.personalDescription.length <= 170) ||
 				!(this.specialist.professionalDescription.length <= 170)
-			)
-			{
+			) {
 				this.snackBar({
-						// Se genera un snackbar con la alerta correspondiente
-						content: 'Excedió el límite de carácteres',
-						color: 'error',
-					});
-			}
-			else if (
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Excedió el límite de carácteres',
+					color: 'error',
+				});
+			} else if (
 				!this.specialist.professionalDescription ||
 				!this.specialist.personalDescription
-			)
-			{
-					this.snackBar({
-						// Se genera un snackbar con la alerta correspondiente
-						content: 'Complete los campos faltantes',
-						color: 'error',
-					});
-				}
-			else{
-			const specialist = await this.updateSpecialist(this.specialist);
-			this.setSpecialist(specialist);
+			) {
+				this.snackBar({
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Complete los campos faltantes',
+					color: 'error',
+				});
+			} else {
+				const specialist = await this.updateSpecialist(this.specialist);
+				this.setSpecialist(specialist);
 			}
 		},
 		...mapActions({

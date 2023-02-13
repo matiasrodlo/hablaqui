@@ -103,12 +103,13 @@
 								></v-file-input>
 							</v-col>
 						</template>
-							<!--Switch para mostrar psicógolo en matchmaking, aparece solo si es un psicólogo verificado y su contenido se guarda en "switch1"-->
-							<v-switch
-							v-if="selected.isPsy" 
+						<!--Switch para mostrar especialista en matchmaking, aparece solo si es un especialista verificado y su contenido se guarda en "switch1"-->
+						<v-switch
+							v-if="selected.isSpec"
 							v-model="switch1"
-							label="Mostrar Psicólogo en Matchmaking">
-							</v-switch>
+							label="Mostrar Especialista en Matchmaking"
+						>
+						</v-switch>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -690,50 +691,8 @@
 								<v-card-text>
 									<horario
 										:specialist="specialist"
-										:set-specialist="setSpecialist"/>
-								</v-card-text>
-							</v-card>
-						</v-col>
-						<v-col cols="12">Tabla de Sesiones</v-col>
-						<v-col cols="12">
-							<v-card>
-								<v-card-title>
-									<v-row>
-										<v-col>
-											<v-text-field
-											v-model="dateFilterText"
-											type="datetime-local"
-											label="Filtro por Fecha"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-select
-											v-model="statFilterText"
-											:items="status"
-											label="Filtro por Status"
-											></v-select>
-										</v-col>
-										<v-col>
-											<v-text-field
-											v-model="specFilterText"
-											label="Filtro por Psicólogo"
-											></v-text-field>
-										</v-col>
-										<v-col>
-											<v-text-field
-											v-model="userFilterText"
-											label="Filtro por Usuario"
-											></v-text-field>
-										</v-col>
-									</v-row>
-								</v-card-title>
-								<v-card-text>
-									<v-data-table
-										:headers="headers"
-										:items="filteredSessions"
-										:items-per-page="5"
-									>
-									</v-data-table>
+										:set-specialist="setSpecialist"
+									/>
 								</v-card-text>
 							</v-card>
 						</v-col>
@@ -797,6 +756,7 @@
 import axios from 'axios';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import dayjs from 'dayjs';
 
@@ -830,21 +790,6 @@ export default {
 			totalMount: 0,
 			sessionsToPay: [],
 			switch1: true,
-			dateFilterText: null,
-			statFilterText: '',
-			specFilterText: '',
-			userFilterText: '',
-			headers: [
-				{ text: 'Consultante', value: 'user' },
-				{ text: 'Psicólogo', value: 'specialist' },
-				{ text: 'Fecha', value: 'date' },
-				{ text: 'Teléfono usuario', value: 'userPhone' },
-				{ text: 'Email Consultante', value: 'emailUser' },
-				{ text: 'Email Psicólogo', value: 'emailPsychologist' },
-				{ text: 'Estatus', value: 'statusSession' },
-			],
-			sessions: [],
-			status: ["pending", "success"],
 		};
 	},
 	computed: {
@@ -856,20 +801,7 @@ export default {
 				this.setSpecialist(value);
 			},
 		},
-		...mapGetters({specialties: 'Appointments/specialties'}),
-		filteredSessions() {
-			// Método que filtra las sesiones según 4 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo y fecha de la sesión
-			return this.sessions.filter(
-				session =>
-				session.user.includes(this.userFilterText) &&
-				session.statusSession.includes(this.statFilterText) &&
-				session.specialist.includes(this.specFilterText) &&
-				(this.dateFilterText
-					? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
-					: true
-				)
-			);
-		},
+		...mapGetters({ specialties: 'Appointments/specialties' }),
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -954,7 +886,7 @@ export default {
 		async getFormattedSessions() {
 			try {
 				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
-					method: 'GET'
+					method: 'GET',
 				});
 				const { formattedSessions } = data;
 				this.sessions = formattedSessions;
@@ -962,9 +894,9 @@ export default {
 				return formattedSessions;
 			} catch (e) {
 				this.snackBar({
-						content: e,
-						color: 'error',
-					});
+					content: e,
+					color: 'error',
+				});
 			}
 		},
 		async approve() {
@@ -993,8 +925,10 @@ export default {
 				await this.updateSpecialist(this.selected);
 				const { specialists } = await this.$axios.$get('/specialists/all');
 				this.specialists = specialists;
-				// Endpoint encargado de actualizar visibilidad del psicólogo en el matchmaking
-				await this.$axios.$put(`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`);
+				// Endpoint encargado de actualizar visibilidad del especialista en el matchmaking
+				await this.$axios.$put(
+					`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`
+				);
 			} else {
 				await this.checkusername();
 				if (!this.available) {
@@ -1093,9 +1027,8 @@ export default {
 			upateAvatar: 'User/upateAvatar',
 		}),
 		columnValueList(val) {
-				return this.sessions.map((d) => d[val]);
-			},
-		
+			return this.sessions.map(d => d[val]);
+		},
 	},
 };
 </script>
@@ -1104,15 +1037,19 @@ export default {
 .bt {
 	border-top: 1px solid rgb(197, 197, 197) !important;
 }
+
 .br {
 	border-right: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bb {
 	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bl {
 	border-left: 1px solid rgb(197, 197, 197) !important;
 }
+
 textarea,
 select,
 input {

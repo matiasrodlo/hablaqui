@@ -1101,9 +1101,9 @@ export default {
 				await this.updateSession(payload);
 				//  clean query url from MercadoPago
 				await this.$router.replace({ query: null });
-				// clear Localstorage"match o psi"
+				// clear Localstorage"match o speci"
 				localStorage.removeItem('match');
-				localStorage.removeItem('psi');
+				localStorage.removeItem('speci');
 			}
 		},
 		setFilter(value) {

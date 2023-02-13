@@ -2,27 +2,55 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Sesiones" />
 		<v-row>
-			<v-col cols="12">
-				<div>
-					<v-data-table
-						:headers="headersTransactions"
-						:items="filteredTransactions"
-						sort-by="createdAt"
-						:sort-desc="false"
-						class="elevation-1 mb-5"
-					>
-						<template #top>
-							<v-toolbar flat>
-								<v-toolbar-title>Sesiones</v-toolbar-title>
-								<v-spacer />
-								<v-text-field v-model="start" type="datetime-local" label="Desde" />
-								<v-spacer />
-								<v-text-field v-model="end" type="datetime-local" label="Hasta" />
-							</v-toolbar>
-						</template>
+			<v-card>
+				<v-card-title>
+					<v-row>
+						<v-col>
+							<v-text-field
+								v-model="dateFilterText"
+								type="datetime-local"
+								label="Filtro por Fecha"
+							></v-text-field>
+						</v-col>
+						<v-col>
+							<v-select
+								v-model="statFilterText"
+								:item-value="status.value"
+								:item-text="status.text"
+								:items="status"
+								label="Estado de Realización"
+							>
+							</v-select>
+						</v-col>
+						<v-col>
+							<v-text-field
+								v-model="specFilterText"
+								label="Filtro por Especialista"
+							></v-text-field>
+						</v-col>
+						<v-col>
+							<v-text-field
+								v-model="userFilterText"
+								label="Filtro por Usuario"
+							></v-text-field>
+						</v-col>
+						<v-col>
+							<v-select
+								v-model="payFilterText"
+								:item-value="payStatus.value"
+								:item-text="payStatus.text"
+								:items="payStatus"
+								label="Estado de Pago"
+							>
+							</v-select>
+						</v-col>
+					</v-row>
+				</v-card-title>
+				<v-card-text>
+					<v-data-table :headers="headers" :items="filteredSessions" :items-per-page="5">
 					</v-data-table>
-				</div>
-			</v-col>
+				</v-card-text>
+			</v-card>
 		</v-row>
 		<v-dialog
 			v-model="dialog"
@@ -32,12 +60,6 @@
 				}
 			"
 		>
-			<v-card>
-				<v-card-title>
-					<span class="text-h5">{{ label }}</span>
-				</v-card-title>
-				<v-data-table :headers="headersSessions" :items="sessions" />
-			</v-card>
 		</v-dialog>
 		<v-dialog
 			v-model="showBank"
@@ -81,25 +103,33 @@ export default {
 			start: '',
 			end: '',
 			label: 'Sesiones a pagar',
-			headers: [
-				{ text: 'Nombre', value: 'name' },
-				{ text: 'Apellido', value: 'lastName' },
-				{ text: 'Nombre de usuario', value: 'username' },
-				{ text: 'Correo', value: 'email' },
-				{ text: 'Monto total', value: 'total' },
-			],
-			headersSessions: [
-				{ text: 'Fecha', value: 'date' },
-				{ text: 'Consultante', value: 'name' },
-				{ text: 'Correo', value: 'email' },
-				{ text: 'N° de sesión', value: 'sessionNumber' },
-				{ text: 'Valor de la sesion', value: 'price' },
-				{ text: 'Cupón', value: 'coupon' },
-			],
 			dialog: false,
 			showBank: false,
 			paymentMethods: {},
+			dateFilterText: null,
+			statFilterText: '',
+			specFilterText: '',
+			userFilterText: '',
+			payFilterText: '',
+			headers: [
+				{ text: 'Consultante', value: 'user' },
+				{ text: 'Especialista', value: 'specialist' },
+				{ text: 'Fecha', value: 'date' },
+				{ text: 'Teléfono usuario', value: 'userPhone' },
+				{ text: 'Email Consultante', value: 'emailUser' },
+				{ text: 'Email Especialista', value: 'emailSpecialist' },
+				{ text: 'Estado de Realización', value: 'statusSession' },
+				{ text: 'Estado de Pago', value: 'paymentPlan' },
+			],
 			sessions: [],
+			status: [
+				{ text: 'Pendiente', value: 'pending' },
+				{ text: 'Realizada', value: 'success' },
+			],
+			payStatus: [
+				{ text: 'Pendiente', value: 'pending' },
+				{ text: 'Pagada', value: 'success' },
+			],
 		};
 	},
 	computed: {
@@ -116,12 +146,26 @@ export default {
 			}
 			return transactions;
 		},
+		filteredSessions() {
+			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista, fecha de la sesión y estado de pago
+			return this.sessions.filter(
+				session =>
+					session.user.includes(this.userFilterText) &&
+					session.statusSession.includes(this.statFilterText) &&
+					session.specialist.includes(this.specFilterText) &&
+					session.paymentPlan.includes(this.payFilterText) &&
+					(this.dateFilterText
+						? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
+						: true)
+			);
+		},
 	},
 	mounted() {
 		this.initFetch();
 	},
 	methods: {
 		async initFetch() {
+			await this.getFormattedSessions();
 			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
 			this.specialist = amounts;
 			const { transactions } = await this.$axios.$get('/transaction/get/all');
@@ -134,7 +178,7 @@ export default {
 					data: {
 						total: item.total,
 						session: item.session,
-						idPsy: item._id,
+						idSpec: item._id,
 					},
 				});
 
@@ -158,6 +202,22 @@ export default {
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
 		}),
+		async getFormattedSessions() {
+			try {
+				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
+					method: 'GET',
+				});
+				const { formattedSessions } = data;
+				this.sessions = formattedSessions;
+				console.log(this.sessions[0]);
+				return formattedSessions;
+			} catch (e) {
+				this.snackBar({
+					content: e,
+					color: 'error',
+				});
+			}
+		},
 	},
 };
 </script>
