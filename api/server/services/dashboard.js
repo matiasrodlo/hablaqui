@@ -1,4 +1,5 @@
 import Specialist from '../models/specialist';
+import User from '../models/user';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
@@ -244,6 +245,34 @@ const specialistVisibility = async (specId, visibility) => {
 	} catch (error) {
 		return conflictResponse('Error al actualizar la visibilidad', error);
 	}
+};
+
+const getUsers = async () => {
+	// Se busca en la base de datos los usuarios y las sessiones
+	const users = await User.find();
+	const sessions = await Sessions.find();
+	// Se formatean los datos de los usuarios y se agregan las sesiones
+	const usersFormatted = users.map(user => {
+		const sessionsUser = sessions.filter(session => session.user.toString() === user._id);
+		if (sessionsUser.length !== 0){
+			sessionsUser = sessionsUser.map(session => {
+				return session.plan.map(plan => {
+					return plan.sessions;
+				});
+			});
+		}
+		return {
+			_id: user._id,
+			name: user.name,
+			lastName: user.lastName,
+			email: user.email,
+			phone: user.phone,
+			rut: user.rut,
+			sessions: sessionsUser,
+		};
+	});
+	// Se retorna la respuesta
+	return okResponse('Usuarios', { users: usersFormatted });
 };
 
 const retoolService = {
