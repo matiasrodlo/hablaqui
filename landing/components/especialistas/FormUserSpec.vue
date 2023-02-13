@@ -108,7 +108,7 @@ import { required, email, minLength, maxLength } from 'vuelidate/lib/validators'
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 /**
- * Fomulacion de registro de un user tipo psicologo
+ * Fomulacion de registro de un user tipo especialista
  */
 export default {
 	mixins: [validationMixin],

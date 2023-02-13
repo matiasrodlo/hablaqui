@@ -94,7 +94,7 @@
 <script>
 import { mdiChevronLeft, mdiChevronRight, mdiChevronDown, mdiChevronUp } from '@mdi/js';
 /**
- * calendario para psicologos
+ * calendario para especialista
  */
 export default {
 	components: {

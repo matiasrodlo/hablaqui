@@ -1182,7 +1182,7 @@ export default {
 				await this.$router.replace({ query: null });
 				// clear Localstorage"match o psi"
 				localStorage.removeItem('match');
-				localStorage.removeItem('psi');
+				localStorage.removeItem('spec');
 			}
 		},
 		/** establece el tipo de filtro */

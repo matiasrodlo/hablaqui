@@ -654,7 +654,7 @@
 import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 /**
- * Componente: Listado de psicologos en vista de mobile
+ * Componente: Listado de especialistas en vista de mobile
  */
 export default {
 	name: 'EspecialistasMobile',
@@ -711,7 +711,7 @@ export default {
 		},
 		/**
 		 * Filter prices
-		 * Filtro en base a los precios de los psicologos
+		 * Filtro en base a los precios de los especialistas
 		 */
 		filterLevelTwo(item) {
 			if (!this.prices) return this.filterLevelOne;
@@ -726,7 +726,7 @@ export default {
 		},
 		/**
 		 * items for search box
-		 * Primer filtro de psicologos en base a:
+		 * Primer filtro de especialistas en base a:
 		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
 		 */
 		filterLevelOne() {
@@ -741,9 +741,9 @@ export default {
 				!this.status
 			)
 				return result;
-			// si quiere ver por psicologo online, filtramos estos
+			// si quiere ver por especialista online, filtramos estos
 			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
-			// filtramos los psicologo segun el genero marcados
+			// filtramos los especialista segun el genero marcados
 			if (this.gender.length)
 				result = result.filter(item => {
 					const trans = item.isTrans && 'transgender';
@@ -751,10 +751,10 @@ export default {
 					trans && gender.push(trans);
 					return gender.some(el => this.gender.some(g => g === el));
 				});
-			// filtramos los psicologos segun los models marcados
+			// filtramos los especialistas segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
-			// filtramos segun los leguajes que habla el psicologo
+			// filtramos segun los leguajes que habla el especialista
 			if (this.languages.length)
 				result = result.filter(item =>
 					item.languages.some(el => this.languages.some(languages => languages === el))
@@ -811,7 +811,7 @@ export default {
 			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
 		},
 		/**
-		 * Esto son los psicologos que se iran viendo segun el scroll
+		 * Esto son los especialistas que se iran viendo segun el scroll
 		 */
 		handleVisivility(isVisible, entry, idSpecialist) {
 			if (isVisible && !this.visibles.includes(idSpecialist))
@@ -843,7 +843,7 @@ export default {
 			return '';
 		},
 		/**
-		 * @param {string} id del psicologo
+		 * @param {string} id del especialista
 		 * @returns Array de sesiones
 		 */
 		getSessions(id) {

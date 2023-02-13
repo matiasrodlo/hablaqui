@@ -330,7 +330,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * actualiza un psicologo
+		 * actualiza un especialista
 		 */
 		async onSubmit() {
 			// loading
@@ -361,7 +361,7 @@ export default {
 				text: Math.round(this.video * 0.75),
 				full: Math.round(this.video * 1.25),
 			};
-			// establece los datos actulizados al psycologo
+			// establece los datos actulizados al especialis
 			this.setSpecialist({
 				...this.specialist,
 				sessionPrices,

@@ -112,17 +112,17 @@ export default {
 	},
 	watch: {
 		// listener si cambia de especialista obtiene sus sessiones
-		idPsy(newValue) {
+		idSpec(newValue) {
 			this.getData(newValue);
 		},
 	},
 	mounted() {
 		// Obtenemos las sessiones
-		this.getData(this.idPsy);
+		this.getData(this.idSpec);
 	},
 	methods: {
 		/**
-		 * Obtienes las sessiones segun el id del psicologo
+		 * Obtienes las sessiones segun el id del especialista
 		 */
 		async getData(id) {
 			this.loading = true;

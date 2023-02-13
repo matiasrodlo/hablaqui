@@ -317,7 +317,7 @@ dayjs.extend(isBetween);
 dayjs.tz.setDefault('America/Santiago');
 
 /**
- * horarios del psicologo
+ * horarios del especialista
  */
 export default {
 	name: 'Horario',

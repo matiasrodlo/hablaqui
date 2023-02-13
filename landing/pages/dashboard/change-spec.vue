@@ -72,7 +72,7 @@ import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
  * Cambio de psicologo
  */
 export default {
-	name: 'ChangePsy',
+	name: 'ChangeSpec',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
@@ -148,7 +148,7 @@ export default {
 			this.selectedNewSpec = row;
 		},
 		/**
-		 * Actualizar psy in user
+		 * Actualizar spec in user
 		 */
 		async change() {
 			try {

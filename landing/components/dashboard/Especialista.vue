@@ -118,7 +118,7 @@
 <script>
 import { mapGetters } from 'vuex';
 /**
- * componente de psicologo
+ * componente de especialista
  */
 export default {
 	props: {

@@ -121,14 +121,14 @@ export default {
 						// si llegamos al login con un query from=spec
 						if (this.$route.query.from === 'spec')
 							return this.$router.push({ name: 'evaluacion' });
-						// si es role psicologo y esta aprobado
+						// si es role especialista y esta aprobado
 						if (
 							response.data.user.role === 'specialist' &&
 							this.$auth.$state.user.specialist
 						) {
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
-						// si es role psicologo y no esta aprobado
+						// si es role especialista y no esta aprobado
 						if (
 							response.data.user.role === 'specialist' &&
 							!this.$auth.$state.user.specialist

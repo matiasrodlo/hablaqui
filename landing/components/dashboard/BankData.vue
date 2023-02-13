@@ -284,7 +284,7 @@ export default {
 		},
 	},
 	async mounted() {
-		// si tiene metodos de pago el psicologo
+		// si tiene metodos de pago el especialista
 		if (this.specialist.paymentMethod)
 			// guardamos una copia profunda que utilizaremos para editar estos datos
 			this.bankData = cloneDeep(this.specialist.paymentMethod);

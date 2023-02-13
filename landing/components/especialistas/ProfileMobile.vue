@@ -171,7 +171,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 /**
- * perfil de psicologo mobile
+ * perfil de especialista mobile
  */
 export default {
 	components: {
@@ -213,7 +213,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * obtenemos el psicologo
+		 * obtenemos el especialista
 		 */
 		async getSpecialist(data) {
 			const { specialist } = await this.$axios.$get(`/specialists/one/${data.username}`);

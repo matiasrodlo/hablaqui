@@ -196,7 +196,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 /**
- * perfil de psicologo escritorio
+ * perfil de especialista escritorio
  */
 export default {
 	components: {

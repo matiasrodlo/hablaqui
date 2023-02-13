@@ -128,7 +128,7 @@ export default {
 	},
 	computed: {
 		/**
-		 * retorna un nuevo array de psicologos con las propiedades necesarias
+		 * retorna un nuevo array de especialistas con las propiedades necesarias
 		 */
 		specialists() {
 			return this.allSpecialists.map(item => ({
@@ -140,7 +140,7 @@ export default {
 			}));
 		},
 		/**
-		 * retorna los chats de un spsicologo
+		 * retorna los chats de un especialista
 		 */
 		specFromChats() {
 			let filterArray = this.chats;
@@ -341,7 +341,7 @@ export default {
 			return count;
 		},
 		/**
-		 * busca y retorna un psicologo segun el id
+		 * busca y retorna un especialista segun el id
 		 */
 		getSpec(id) {
 			return this.specialists.find(item => item._id === id);

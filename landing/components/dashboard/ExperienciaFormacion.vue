@@ -421,7 +421,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * actualiza el psicologo
+		 * actualiza el especialista
 		 */
 		async onSubmit() {
 			const specialist = await this.updateSpecialist(this.specialist);
