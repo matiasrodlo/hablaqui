@@ -13,7 +13,7 @@ import {
 import User from '../models/user';
 import Coupon from '../models/coupons';
 import mercadopagoService from './mercadopago';
-import Psychologist from '../models/specialist';
+import Specialist from '../models/specialist';
 import mailServiceReminder from '../utils/functions/mails/reminder';
 import mailServiceSchedule from '../utils/functions/mails/schedule';
 import Sessions from '../models/sessions';
@@ -201,7 +201,7 @@ const createPlan = async ({ payload }) => {
 	}
 	// Válido MM/DD/YYYY HH:mm
 	const date = `${payload.date} ${payload.start}`;
-	const specialist = await Psychologist.findById(payload.specialist);
+	const specialist = await Specialist.findById(payload.specialist);
 	const minimumNewSession = specialist.preferences.minimumNewSession;
 
 	// Verifica que la fecha de la sesión despues de la fecha actual según la preferencia del psicologo
@@ -256,7 +256,7 @@ const createPlan = async ({ payload }) => {
 	const newSession = {
 		date,
 		sessionNumber: 1,
-		paidToPsychologist: false,
+		paidToSpecialist: false,
 	};
 	const foundCoupon = await Coupon.findOne({ code: payload.coupon });
 
@@ -701,7 +701,7 @@ const customNewSession = async (user, payload) => {
 			const newSession = {
 				date: date.format('MM/DD/YYYY HH:mm'),
 				sessionNumber: i + 1,
-				paidToPsychologist: false,
+				paidToSpecialist: false,
 				status: 'pending',
 			};
 			sessions.push(newSession);
@@ -877,10 +877,10 @@ const customNewSession = async (user, payload) => {
 	}
 };
 
-const getFormattedSessionsForMatch = async idPsychologist => {
+const getFormattedSessionsForMatch = async idSpecialist => {
 	let sessions = [];
 	// obtenemos el psicologo
-	const specialist = await Psychologist.findById(idPsychologist).select(
+	const specialist = await Specialist.findById(idSpecialist).select(
 		'_id schedule preferences inmediateAttention'
 	);
 	// creamos un array con la cantidad de dias
@@ -895,7 +895,7 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 	);
 	// Obtenemos sessiones del psicologo
 	let specSessions = await Sessions.find({
-		specialist: idPsychologist,
+		specialist: idSpecialist,
 	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -954,10 +954,10 @@ const getFormattedSessionsForMatch = async idPsychologist => {
 
 //type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
 // Utilizado para traer las sessiones de un psicologo para el selector
-const getFormattedSessions = async (idPsychologist, type) => {
+const getFormattedSessions = async (idSpecialist, type) => {
 	let sessions = [];
 	// Obtenemos el psicologo
-	const specialist = await Psychologist.findById(idPsychologist).select(
+	const specialist = await Specialist.findById(idSpecialist).select(
 		'_id schedule preferences inmediateAttention'
 	);
 	// Creamos un array con la cantidad de dias
@@ -972,7 +972,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	);
 	// Obtenemos sessiones del psicologo
 	let specSessions = await Sessions.find({
-		specialist: idPsychologist,
+		specialist: idSpecialist,
 	});
 
 	// Filtramos que cada session sea de usuarios con pagos success y no hayan expirado
@@ -1048,11 +1048,11 @@ const formattedSessionsAll = async ids => {
 	let sessions = [];
 	let specialist = [];
 	if (ids && Array.isArray(ids) && ids.length) {
-		specialist = await Psychologist.find({ _id: { $in: ids } }).select(
+		specialist = await Specialist.find({ _id: { $in: ids } }).select(
 			'schedule preferences inmediateAttention'
 		);
 	} else
-		specialist = await Psychologist.find({}).select(
+		specialist = await Specialist.find({}).select(
 			'schedule preferences inmediateAttention'
 		);
 	// Para que nos de deje modificar el array de mongo
@@ -1342,7 +1342,7 @@ const updateSessions = async sessions => {
 
 const deleteCommitment = async (planId, specId) => {
 	// Se busca si existe el psicologo
-	const spec = await Psychologist.findById(specId);
+	const spec = await Specialist.findById(specId);
 	if (!spec) {
 		return conflictResponse('No existe el psicólogo');
 	}
@@ -1389,7 +1389,7 @@ const getAllSessions = async spec => {
 
 const paymentsInfoFromId = async spec => {
 	// Se obtienen los pagos de las sesiones
-	const user = await Psychologist.findById(spec);
+	const user = await Specialist.findById(spec);
 	if (!user) return conflictResponse('No es psicologo');
 	const payments = await paymentInfoFunction(spec);
 	return okResponse('Obtuvo todo sus pagos', { payments });
