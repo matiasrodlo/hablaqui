@@ -63,7 +63,7 @@ dashboardRouter.put(
 
 dashboardRouter.get(
 	'/dashboard/get-users',
-	// [passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	dashboardController.getUsers
 );
 
