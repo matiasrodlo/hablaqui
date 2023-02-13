@@ -53,4 +53,18 @@ dashboardRouter.put(
 	[passport.authenticate('jwt', { session: true })],
 	dashboardController.specialistVisibility
 );
+
+/**
+ * @description Devuelve los usuarios registrados
+ * @method GET
+ * @route /api/v1/dashboard/get-users
+ * @return Array con los usuarios registrados
+ */
+
+dashboardRouter.get(
+	'/dashboard/get-users',
+	// [passport.authenticate('jwt', { session: true })],
+	dashboardController.getUsers
+);
+
 export default dashboardRouter;

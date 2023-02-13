@@ -249,18 +249,26 @@ const specialistVisibility = async (specId, visibility) => {
 
 const getUsers = async () => {
 	// Se busca en la base de datos los usuarios y las sessiones
-	const users = await User.find();
+	const users = await User.find({ role: 'user'});
 	const sessions = await Sessions.find();
+	if (!users.length) return okResponse('No hay usuarios registrados', { users: [] })
 	// Se formatean los datos de los usuarios y se agregan las sesiones
 	const usersFormatted = users.map(user => {
-		const sessionsUser = sessions.filter(session => session.user.toString() === user._id);
-		if (sessionsUser.length !== 0){
-			sessionsUser = sessionsUser.map(session => {
-				return session.plan.map(plan => {
-					return plan.sessions;
+		let sessionsUser = sessions.filter(session => session.user.toString() === user._id.toString());
+		
+		// Verifica si el usuario tiene sesiones y las formatea
+		if (sessionsUser.length){
+			sessionsUser = sessionsUser.flatMap(session => {
+				if (!session.plan) return [];
+				return session.plan.flatMap(plan => {
+					if (!plan.session) return [];
+					if (plan.payment !== 'success') return [];
+					return plan.session;
 				});
 			});
 		}
+
+		// Se retorna el usuario formateado
 		return {
 			_id: user._id,
 			name: user.name,
@@ -281,6 +289,7 @@ const retoolService = {
 	fixSpecialities,
 	getMountToPay,
 	specialistVisibility,
+	getUsers,
 };
 
 export default Object.freeze(retoolService);
