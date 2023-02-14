@@ -887,7 +887,7 @@ export default {
 			this.dialog = false;
 		},
 		/**
-		 * Actualiza un psicologo
+		 * Actualiza un especialista
 		 */
 		async submit() {
 			this.loadingSubmit = true;

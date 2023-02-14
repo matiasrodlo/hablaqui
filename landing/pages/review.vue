@@ -291,7 +291,7 @@ export default {
 		};
 	},
 	created() {
-		// obtenemos el psicologo desde la query url
+		// obtenemos el especialista desde la query url
 		if (this.$route.query.specialist) {
 			this.idSpecialist = this.$route.query.specialist;
 			this.token = this.$route.query.token;
@@ -299,7 +299,7 @@ export default {
 		}
 	},
 	async mounted() {
-		// si no hay id psicologo
+		// si no hay id especialista
 		if (!this.idSpecialist) {
 			this.overlay = false;
 			return this.$router.push('/');
@@ -323,7 +323,7 @@ export default {
 			return '';
 		},
 		/**
-		 * Registra el cambio en el rating del psicologo
+		 * Registra el cambio en el rating del especialista
 		 */
 		async onSubmit() {
 			this.loading = true;

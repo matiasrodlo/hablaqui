@@ -36,7 +36,7 @@
 <script>
 import { mapActions, mapMutations } from 'vuex';
 /**
- * Pagina del perfil de psicologo(mobile y desktop)
+ * Pagina del perfil de especialista(mobile y desktop)
  */
 export default {
 	components: {
@@ -151,7 +151,7 @@ export default {
 		};
 	},
 	async mounted() {
-		// hack para obtener los datos actualizados del psicologo siempre
+		// hack para obtener los datos actualizados del especialista siempre
 		if (!this.dataCurrent) {
 			const { specialist } = await this.$axios.$get(
 				`/specialists/one/${this.$route.params.slug}`

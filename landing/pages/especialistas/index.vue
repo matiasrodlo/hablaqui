@@ -40,7 +40,7 @@ import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile'
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 /**
- * Pagina inicial de psicologos
+ * Pagina inicial de especialistas
  */
 export default {
 	components: {
@@ -50,7 +50,7 @@ export default {
 		EspecialistasMobile,
 	},
 	/**
-	 * Obtiene los psicologos
+	 * Obtiene los especialistas
 	 */
 	async asyncData({ error, store }) {
 		try {

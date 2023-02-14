@@ -56,12 +56,7 @@ CUALQUIER PERSONA
 									@change="setAvatar"
 								></v-file-input>
 								<div
-									class="
-										text-center text-h6
-										font-weight-bold
-										text--secondary
-										mb-2
-									"
+									class="text-center text-h6 font-weight-bold text--secondary mb-2"
 								>
 									Datos personales
 								</div>
@@ -154,12 +149,7 @@ CUALQUIER PERSONA
 							</v-window-item>
 							<v-window-item :value="2">
 								<div
-									class="
-										text-center text-h6
-										font-weight-bold
-										text--secondary
-										mb-2
-									"
+									class="text-center text-h6 font-weight-bold text--secondary mb-2"
 								>
 									Tus clientes quieren saber de ti cuentales que eres el mejor
 								</div>
@@ -194,12 +184,7 @@ CUALQUIER PERSONA
 									autocomplete="off"
 								></v-textarea>
 								<div
-									class="
-										text-center text-h8
-										font-weight-bold
-										text--secondary
-										mb-2
-									"
+									class="text-center text-h8 font-weight-bold text--secondary mb-2"
 								>
 									Lenguajes
 								</div>
@@ -240,12 +225,7 @@ CUALQUIER PERSONA
 							</v-window-item>
 							<v-window-item :value="3">
 								<div
-									class="
-										text-center text-h6
-										font-weight-bold
-										text--secondary
-										mb-2
-									"
+									class="text-center text-h6 font-weight-bold text--secondary mb-2"
 								>
 									Tus especialidades te ayudara a que puedan encontrarte mas
 									rapido
@@ -277,12 +257,7 @@ CUALQUIER PERSONA
 									</v-col>
 									<v-col
 										cols="12"
-										class="
-											text-center text-h6
-											font-weight-bold
-											text--secondary
-											mb-2
-										"
+										class="text-center text-h6 font-weight-bold text--secondary mb-2"
 									>
 										Modelos terapeuticos
 									</v-col>
@@ -360,7 +335,7 @@ import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/val
 import { mapActions, mapGetters } from 'vuex';
 import { mdiAccount, mdiCamera, mdiEye, mdiEyeOff } from '@mdi/js';
 /**
- * Pagina de nuevo psicologo
+ * Pagina de nuevo especialista
  */
 export default {
 	components: {

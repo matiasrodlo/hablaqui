@@ -83,7 +83,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * establece el valor al psicologo
+		 * establece el valor al especialista
 		 */
 		setSpecialist(value) {
 			this.specialist = value;

@@ -69,7 +69,7 @@
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 /**
- * Cambio de psicologo
+ * Cambio de especialista
  */
 export default {
 	name: 'ChangeSpec',
@@ -110,7 +110,7 @@ export default {
 			await this.getSpecialist();
 		},
 		/**
-		 * Obtenermos los psicologos todos
+		 * Obtenermos los especialistas todos
 		 */
 		async getSpecialist() {
 			const { specialists } = await this.$axios.$get('/specialists/all');
@@ -128,7 +128,7 @@ export default {
 			});
 		},
 		/**
-		 * Obtenemos los clientes del psicologo seleccionado
+		 * Obtenemos los clientes del especialista seleccionado
 		 */
 		async getClients(row) {
 			this.selectedSpec = row;
