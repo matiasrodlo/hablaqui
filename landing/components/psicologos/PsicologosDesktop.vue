@@ -539,6 +539,8 @@ import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 
 /**
@@ -596,11 +598,11 @@ export default {
 					],
 			dispoBoxes: [],
 			dispoList: [
-						{ value: ['00:00', '9:00'] , text: 'Temprano: Antes de las 9 am' },
-						{ value: ['9:00', '12:00'], text: 'En la mañana: Entre 9 am y 12 pm' },
-						{ value: ['12:00', '14:00'], text: 'A Medio día: Entre 12 y 2 pm' },
-						{ value: ['14:00', '18:00'], text: 'En la tarde: Entre 2 y 6 pm' },
-						{ value: ['18:00', '23:59'], text: 'En la noche: Después de las 6 pm' },
+						{ value: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')] , text: 'Temprano: Antes de las 9 am' },
+						{ value: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')], text: 'En la mañana: Entre 9 am y 12 pm' },
+						{ value: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')], text: 'A Medio día: Entre 12 y 2 pm' },
+						{ value: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')], text: 'En la tarde: Entre 2 y 6 pm' },
+						{ value: [dayjs('9:00', 'HH:mm'), dayjs('23:59', 'HH:mm')], text: 'En la noche: Después de las 6 pm' },
 					],
 		};
 	},
@@ -631,16 +633,26 @@ export default {
         result = result.filter(item => Math.max(...this.priceBoxes) >= item.sessionPrices.video);
 
       // Se filtran los psicólogos por disponibilidad
-      /*if (this.dispoBoxes.length !== 0)
+      if (this.dispoBoxes.length !== 0){
+		let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         result = result.filter(item => {
-          let flag = false;
-          this.dispoBoxes.forEach(dispo => (item.schedule.forEach(day => {
-                (day[0].forEach(hour => {
-                if (dayjs(hour).isBetween(dispo[0], dispo[1], 'hour')) flag = true;
-                }))})))
+            let flag = false;
+            this.dispoBoxes.forEach(dispo => {
+				if (flag === true){
+					return
+				}
+				week.forEach(day => {
+					if (Array.isArray((item.schedule[day]))){
+						if (item.schedule[day][0].some(hour => dayjs(hour, 'HH:mm').isBetween(dispo[0], dispo[1], 'hour'))){
+							flag = true
+							return
+						}
+					}
+				})
+			})
           return flag;
-        })
-       */
+        	})
+		}
       return result;
     },
 		...mapGetters({
