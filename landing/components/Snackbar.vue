@@ -8,6 +8,9 @@
 </template>
 
 <script>
+/**
+ * snakbar
+ */
 export default {
 	name: 'Snackbar',
 	data() {

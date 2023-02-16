@@ -106,7 +106,9 @@
 
 <script>
 import { mdiRecord } from '@mdi/js';
-
+/**
+ * Registro de especialista
+ */
 export default {
 	components: {
 		SignUp: () => import('@/components/especialistas/FormUserSpec.vue'),
@@ -172,6 +174,7 @@ export default {
 		};
 	},
 	created() {
+		// si no esta logeado regresamos atras
 		if (this.$auth.loggedIn) {
 			this.$router.go(1);
 		}

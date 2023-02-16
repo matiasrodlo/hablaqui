@@ -68,7 +68,7 @@ const createPreference = async body => {
  * @returns {Obeject} payment
  */
 const createSpecialistPreference = async body => {
-	// Se crea preferencia para que el psiologo pueda pagar su plan
+	// Se crea preferencia para que el especialista pueda pagar su plan
 	const id = body.specialistId || body.recruitedId;
 	const isSpecialist = !!body.specialistId;
 	let preference = {};

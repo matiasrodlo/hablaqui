@@ -119,7 +119,7 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content v-if="specialist">
-					<information-general-psi
+					<information-general-spec
 						:specialist="specialist"
 						:set-specialist="setSpecialist"
 					/>
@@ -160,12 +160,15 @@
 
 <script>
 import { mapGetters } from 'vuex';
+/**
+ * vista general mi cuenta
+ */
 export default {
 	components: {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
-		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
+		InformationGeneralSpec: () => import('~/components/dashboard/InformationGeneralSpec'),
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 	},
 	props: {

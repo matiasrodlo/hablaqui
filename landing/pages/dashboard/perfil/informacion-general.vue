@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh">
 		<appbar class="hidden-sm-and-down mb-16" title="Información general" />
-		<information-general-psi :specialist="specialist" :set-specialist="setSpecialist" />
+		<information-general-spec :specialist="specialist" :set-specialist="setSpecialist" />
 	</v-container>
 </template>
 
@@ -13,14 +13,19 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Inforacion general */
+
 export default {
 	name: 'InformacionGeneral',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
-		InformationGeneralPsi: () => import('~/components/dashboard/InformationGeneralPsi'),
+		InformationGeneralSpec: () => import('~/components/dashboard/InformationGeneralSpec'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
+	/**
+	 * obtiene los datos iniciales
+	 */
 	async asyncData({ $axios, $auth }) {
 		if ($auth.$state.user.role === 'user') {
 			if ($auth.$state.user.sessions.length) {
@@ -76,6 +81,9 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * establece el valor en variable
+		 */
 		setSpecialist(value) {
 			this.specialist = value;
 		},

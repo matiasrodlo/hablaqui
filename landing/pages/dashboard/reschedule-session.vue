@@ -94,6 +94,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * pagina de reagendar sesion */
+
 export default {
 	name: 'Panel',
 	components: {
@@ -128,10 +130,16 @@ export default {
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtiene los datos iniciales
+		 */
 		async initFetch() {
 			await this.getSpecialist();
 			this.loading = false;
 		},
+		/**
+		 * mapea y ordena los especialistas
+		 */
 		async getSpecialist() {
 			const { specialists } = await this.$axios.$get('/specialists/all');
 			this.specialists = specialists.sort((a, b) => {
@@ -169,10 +177,16 @@ export default {
 				return spec;
 			});
 		},
+		/**
+		 * Obtiene los clientes
+		 */
 		async getClients(id) {
 			const { users } = await this.$axios.$get(`/specialist/clients/${id}`);
 			this.clients = users.filter(user => !!user.plan);
 		},
+		/**
+		 * Obtiene la sesiones del cliente pasado
+		 */
 		getSession(client) {
 			this.dialog = true;
 			this.selectedClient = client;
@@ -180,12 +194,18 @@ export default {
 			this.selectedPlan = plan;
 			this.sessions = plan ? plan.session : [];
 		},
+		/**
+		 * Selecciona un fila en la tabla sesiones
+		 */
 		clickSession(value) {
 			this.selectedSession = value;
 			this.sessionDate = dayjs
 				.tz(dayjs(value.date, 'MM/DD/YYYY HH:mm'))
 				.format('YYYY-MM-DDTHH:mm');
 		},
+		/**
+		 * Envia la Reagenda del evento
+		 */
 		async clicked() {
 			const res = await this.$axios.$post('/dashboard/session/reschedule', {
 				sessionsId: this.selectedClient.sessionsId,

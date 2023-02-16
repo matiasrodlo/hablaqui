@@ -671,7 +671,7 @@
 									height="200"
 									width="600"
 								>
-									<v-carousel-item v-for="(element, i) in psi" :key="i">
+									<v-carousel-item v-for="(element, i) in spec" :key="i">
 										<div class="text-center d-flex justify-center align-center">
 											<template v-if="$vuetify.breakpoint.mdAndUp">
 												<v-card
@@ -709,7 +709,11 @@
 																	<span :key="k">
 																		<span
 																			v-if="k < 5"
-																			class="ma-1 caption text-capitalize"
+																			class="
+																				ma-1
+																				caption
+																				text-capitalize
+																			"
 																		>
 																			{{ tag }};
 																		</span>
@@ -761,7 +765,10 @@
 																		<span :key="k">
 																			<span
 																				v-if="k < 5"
-																				class="ma-1 text-capitalize"
+																				class="
+																					ma-1
+																					text-capitalize
+																				"
 																			>
 																				{{ tag }},
 																			</span>
@@ -783,7 +790,7 @@
 									mandatory
 								>
 									<v-item
-										v-for="(n, e) in psi"
+										v-for="(n, e) in spec"
 										:key="`btn-${e}`"
 										v-slot="{ active, toggle }"
 									>
@@ -827,6 +834,8 @@
 import { mapActions } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
+
+/** * Evaluacion - MatchMaking */
 
 export default {
 	name: 'Evaluation',
@@ -876,7 +885,10 @@ export default {
 		};
 	},
 	computed: {
-		psi() {
+		/**
+		 * Especialistas a mostrar en el carousel inferior
+		 */
+		spec() {
 			if (!this.specialists) return [];
 			const items = this.random();
 			const n = 3;
@@ -893,42 +905,44 @@ export default {
 		},
 	},
 	created() {
+		// solo se ejecuta en el navegador
 		if (process.browser) {
-			const psi = JSON.parse(localStorage.getItem('psi'));
-			if (psi && psi.match.length) {
-				if (psi._id !== null && psi._id === this.$auth.$state.user._id)
-					this.matchedSpecialists = psi.match;
-				else if (psi._id === null && this.$auth.$state.loggedIn) {
-					localStorage.removeItem('psi');
+			const spec = JSON.parse(localStorage.getItem('spec'));
+			if (spec && spec.match.length) {
+				if (spec._id !== null && spec._id === this.$auth.$state.user._id)
+					this.matchedSpecialists = spec.match;
+				else if (spec._id === null && this.$auth.$state.loggedIn) {
+					localStorage.removeItem('spec');
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
-							match: psi.match,
+							match: spec.match,
 							_id: this.$auth.$state.user._id,
 						})
 					);
-					this.matchedSpecialists = psi.match;
+					this.matchedSpecialists = spec.match;
 				}
 			}
 		}
 	},
 	mounted() {
+		// obetenrmos las sesiones formateadas
 		this.getFormattedSessionsAll();
 	},
 	methods: {
-		next() {
-			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
-		},
-		prev() {
-			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
-		},
+		/**
+		 * Crea un array random de especialista a mostrar
+		 */
 		random() {
 			return this.specialists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
 			});
 		},
+		/**
+		 * Reset el matchMaking y localstorage
+		 */
 		resetMatch() {
-			localStorage.removeItem('psi');
+			localStorage.removeItem('spec');
 			this.gender = '';
 			this.age = '';
 			this.firstTherapy = null;
@@ -940,6 +954,9 @@ export default {
 			this.price = 0;
 			this.step = '0';
 		},
+		/**
+		 * Establece el theme o especialidad
+		 */
 		setTheme(value) {
 			if (this.themes.includes(value)) {
 				const index = this.themes.findIndex(item => item === value);
@@ -947,6 +964,9 @@ export default {
 			} else if (this.themes.length < 3) this.themes.push(value);
 			if (this.themes.length === 3) this.step = 4;
 		},
+		/**
+		 * establece los modelos terapeuticos
+		 */
 		setModels(model) {
 			if (this.models.includes(model)) {
 				const index = this.models.findIndex(item => item === model);
@@ -954,6 +974,9 @@ export default {
 			} else if (this.models.length < 3) this.models.push(model);
 			if (this.models.length === 3) this.step = 6;
 		},
+		/**
+		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
+		 */
 		openPrecharge() {
 			this.dialogPrecharge = true;
 			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
@@ -964,10 +987,10 @@ export default {
 				model: this.models,
 				price: this.price,
 			};
-			this.matchPsi(payload).then(response => {
+			this.matchSpec(payload).then(response => {
 				if (response && response.length) {
 					localStorage.setItem(
-						'psi',
+						'spec',
 						JSON.stringify({
 							match: response.filter((el, i) => i < 3),
 							_id: !this.$auth.$state.loggedIn ? null : this.$auth.$state.user._id,
@@ -979,6 +1002,9 @@ export default {
 				}
 			});
 		},
+		/**
+		 * Retorna string con url del avatar
+		 */
 		avatar(specialist, thumbnail) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
@@ -986,7 +1012,7 @@ export default {
 			return '';
 		},
 		...mapActions({
-			matchPsi: 'Specialist/matchPsi',
+			matchSpec: 'Specialist/matchSpec',
 			getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',
 		}),
 	},

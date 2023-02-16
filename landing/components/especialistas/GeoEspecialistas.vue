@@ -18,8 +18,8 @@
 					</h2>
 					<br />
 					<p>
-						Agenda con un especialista en {{ location && location.name }} de forma segura y
-						privada en línea. Agenda con total libertad cuando te resulte más
+						Agenda con un especialista en {{ location && location.name }} de forma
+						segura y privada en línea. Agenda con total libertad cuando te resulte más
 						conveniente y conéctate por videollamada desde tu teléfono, tableta o
 						computadora.
 					</p>
@@ -31,7 +31,9 @@
 
 <script>
 import { mdiMagnify } from '@mdi/js';
-
+/**
+ * Geo especialista, por ubicacion
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
