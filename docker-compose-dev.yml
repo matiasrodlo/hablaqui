@@ -1,0 +1,50 @@
+version: "3.9"
+# Se especifican los servicios que se van a ejecutar
+services:
+  nodejs-server:
+   # Se especifica el dockerfile que se va a utilizar
+    build:
+      context: ./api
+      dockerfile: Dockerfile-dev
+    ports:
+      - "3000:3000"
+    container_name: node-api
+    environment:
+      - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
+      - NODE_ENV=development
+      - PORT=3000
+      - VUE_APP_ORIGIN=http://localhost:8080/
+      - FRONTEND_URL=http://localhost:8080/-
+      - JWT_SECRET=api-hablaqui2021
+      - JWT_ALGORITHM=HS256
+      - JWT_EXPIRATION=30d
+      - JWT_EXPIRATION_REFRESH=3d
+      - JWT_SECRET_REFRESH=api-refresh-hablaqui2021
+      - PASSWORD_RECOVERY_JWT_EXPIRATION=40m
+      - API_URL=http://localhost:3000/
+      - BUCKETNAME=hablaqui-content
+      - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
+      - NO_REPLY_EMAIL=no-reply@hablaqui.com
+      - NO_REPLY_PASSWORD=hablaqui2021com
+      - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
+      - SENDGRID_API_KEY=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
+      - VUE_APP_LANDING=http://localhost:9000/
+      - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
+      - NAMESPACE_TESTMAILS=bnwxe
+    # Se monta la carpeta del proyecto en el contenedor (lo que hace que no sea necesario hacer build cada vez que se modifica el código)
+    volumes:
+      # Volumen de anfitrion a host, se indica la ruta de la carpeta del proyecto en el host y la ruta de la carpeta del proyecto en el contenedor
+      - ./api:/home/node/app
+      # Volumen anonimo solo se indica la ruta de la carpeta que se va a montar y docker decide donde montarla, lo malo
+      # es que no se podrá utilizar desde otros contenedores
+      - /home/node/app/node_modules
+  # vue-ui:
+  #   build:
+  #     context: ./landing
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "9000:9000"
+  #   container_name: vue-ui
+  #   volumes:
+  #     - ./landing:/home/node/app
+  #     - /home/node/app/node_modules
