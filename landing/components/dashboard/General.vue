@@ -165,7 +165,7 @@ export default {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),
 		UpdatePassword: () => import('~/components/dashboard/UpdatePassword'),
 		BankData: () => import('~/components/dashboard/BankData'),
-		InformationGeneralSpeci: () => import('~/components/dashboard/InformationGeneralSpeci'),
+		InformationGeneralSpec: () => import('~/components/dashboard/InformationGeneralSpec'),
 		ExperienciaFormacion: () => import('~/components/dashboard/ExperienciaFormacion'),
 	},
 	props: {

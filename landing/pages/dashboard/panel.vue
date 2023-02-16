@@ -758,7 +758,6 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
-import dayjs from 'dayjs';
 
 export default {
 	name: 'Panel',

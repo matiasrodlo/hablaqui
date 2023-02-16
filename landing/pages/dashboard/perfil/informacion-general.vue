@@ -17,7 +17,7 @@ export default {
 	name: 'InformacionGeneral',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
-		InformationGeneralSpeci: () => import('~/components/dashboard/InformationGeneralSpeci'),
+		InformationGeneralSpec: () => import('~/components/dashboard/InformationGeneralSpec'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
