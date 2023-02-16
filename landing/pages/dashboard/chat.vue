@@ -393,14 +393,7 @@ export default {
 				this.$auth.$state.user &&
 				this.selected._id === this.$auth.$state.user.specialist
 			) {
-				const professions = {
-					psychologist: 'Psicólogo',
-					nutritionist: 'Nutricionista',
-					specchopedagogue: 'Psicopedagogo',
-				};
-				return this.selected.profession
-					? especialidadEspecialista[this.selected.profession]
-					: 'Especialista';
+				return 'Especialista';
 			}
 			if (
 				!this.selected.assistant &&
