@@ -107,7 +107,9 @@ import { validationMixin } from 'vuelidate';
 import { required, email, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
-
+/**
+ * Fomulacion de registro de un user tipo especialista
+ */
 export default {
 	mixins: [validationMixin],
 	data() {
@@ -166,24 +168,36 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * valida errores en el nombre
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.formData.name.$dirty) return errors;
 			!this.$v.formData.name.required && errors.push('El nombre es querido');
 			return errors;
 		},
+		/**
+		 * valida errores en el apellido
+		 */
 		lastNameErrors() {
 			const errors = [];
 			if (!this.$v.formData.lastName.$dirty) return errors;
 			!this.$v.formData.lastName.required && errors.push('El apellido es querido');
 			return errors;
 		},
+		/**
+		 * valida errores en el rut
+		 */
 		rutErrors() {
 			const errors = [];
 			if (!this.$v.formData.rut.$dirty) return errors;
 			!this.$v.formData.rut.required && errors.push('El rut es querido');
 			return errors;
 		},
+		/**
+		 * valida errores en el email
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.formData.email.$dirty) return errors;
@@ -191,6 +205,9 @@ export default {
 			!this.$v.formData.email.email && errors.push('Inserte un correo valido');
 			return errors;
 		},
+		/**
+		 * valida errores en el contraseña
+		 */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.formData.password.$dirty) return errors;
@@ -201,6 +218,9 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * envio de formulario de registro
+		 */
 		async onSubmit() {
 			this.$v.$touch();
 			// validamos que acepte los terminos y condiciones
@@ -242,6 +262,9 @@ export default {
 			snackBar: 'Snackbar/showMessage',
 		}),
 	},
+	/**
+	 * validaciones
+	 */
 	validations: {
 		formData: {
 			name: {

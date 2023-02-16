@@ -33,7 +33,9 @@
 
 <script>
 import { mdiCheck, mdiClose } from '@mdi/js';
-
+/**
+ * componente de precargar
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -62,6 +64,9 @@ export default {
 		};
 	},
 	mounted() {
+		/**
+		 * aqui se establecen los tiempos de cada imagen de la precarga
+		 */
 		setTimeout(() => {
 			this.image = this.avatar[0];
 			this.items[0].done = true;

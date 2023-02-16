@@ -166,6 +166,8 @@ dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Pagina de Historial */
+
 export default {
 	name: 'Pagos',
 	components: {
@@ -195,12 +197,17 @@ export default {
 		}),
 	},
 	created() {
+		// dayjs a esp
 		dayjs.locale('es');
 	},
 	mounted() {
+		// fetch inicial
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * caragando datos iniciales para la vista
+		 */
 		async initFetch() {
 			if (this.$auth.$state.user.role === 'specialist' && !this.$auth.$state.user.specialist)
 				return null;
@@ -213,9 +220,13 @@ export default {
 			this.specialist = await specialist;
 			this.loading = false;
 		},
+		/** * formatea la fecha */
 		formatDatedayjs(item) {
 			return dayjs.tz(dayjs(item)).format('DD MMMM, YYYY');
 		},
+		/**
+		 * envia una peticion de pago y vuelve a carga los datos iniciales
+		 */
 		async submitPayment() {
 			this.loadingPayment = true;
 			await this.paymentRequest();

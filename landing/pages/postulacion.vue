@@ -425,7 +425,12 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="primary--text font-weight-bold body-1 pb-2"
+															class="
+																primary--text
+																font-weight-bold
+																body-1
+																pb-2
+															"
 														>
 															Formación
 														</div>
@@ -598,7 +603,12 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 												<v-row>
 													<v-col cols="12">
 														<div
-															class="primary--text font-weight-bold body-1 pb-3"
+															class="
+																primary--text
+																font-weight-bold
+																body-1
+																pb-3
+															"
 														>
 															Experiencia
 														</div>
@@ -1066,7 +1076,9 @@ agradecer, aprender de las personas, realizar actividades deportivas y reír."
 import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 import { mdiPencilOutline, mdiDeleteOutline } from '@mdi/js';
-
+/**
+ * Pagina para postularse
+ */
 export default {
 	name: 'Postulacion',
 	components: {
@@ -1135,15 +1147,22 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * Utilizado por el datepicker
+		 */
 		bmenu(val) {
 			val && setTimeout(() => (this.activePicker = 'YEAR'));
 		},
+		/**
+		 * listener de region para establecer la comuna
+		 */
 		'form.region'(newVal) {
 			if (newVal)
 				this.comunas = this.comunasRegiones.find(item => item.region === newVal).comunas;
 		},
 	},
 	async mounted() {
+		// se obtienen los datos iniciales
 		this.loading = true;
 		const { data } = await axios.get(`${this.$config.API_ABSOLUTE}/timezone.json`);
 		let responseCountries = await fetch(`${this.$config.LANDING_URL}/countries.json`);
@@ -1160,6 +1179,9 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		/**
+		 * Guarda el paso y cambia al siguiente
+		 */
 		async saveStep(step) {
 			this.loadingStep = true;
 			if (this.validationStep(step)) {
@@ -1249,21 +1271,36 @@ export default {
 				return true;
 			}
 		},
+		/**
+		 * Remueve especialidad
+		 */
 		rmSpecialties(index) {
 			this.form.specialties.splice(index, 1);
 		},
+		/**
+		 * Remueve modelo
+		 */
 		rmModels(index) {
 			this.form.models.splice(index, 1);
 		},
+		/**
+		 * utilizado por el datepicker
+		 */
 		save(date) {
 			this.$refs.menu.save(date);
 		},
+		/**
+		 * agrega una nueva experiencia
+		 */
 		newExperience() {
 			if (this.indexSelected >= 0 && this.indexSelected !== null)
 				this.form.experience[parseInt(this.indexSelected)] = this.selectedExperience;
 			else this.form.experience.push(this.selectedExperience);
 			this.dialogExperience = false;
 		},
+		/**
+		 * establece una experiencia seleccionada
+		 */
 		setExperience(item, index) {
 			if (index !== null) this.indexSelected = index;
 			if (item) {
@@ -1281,12 +1318,18 @@ export default {
 			}
 			this.dialogExperience = true;
 		},
+		/**
+		 * agrega una nueva formacion
+		 */
 		newFormation() {
 			if (this.indexSelected >= 0 && this.indexSelected !== null)
 				this.form.formation[parseInt(this.indexSelected)] = this.selectedFormation;
 			else this.form.formation.push(this.selectedFormation);
 			this.dialogFormation = false;
 		},
+		/**
+		 * establece una formacion seleccionada
+		 */
 		setFormation(item, index) {
 			if (index !== null) this.indexSelected = index;
 			if (item) this.selectedFormation = item;
@@ -1300,6 +1343,9 @@ export default {
 				};
 			this.dialogFormation = true;
 		},
+		/**
+		 * establece el user y lo actualiza
+		 */
 		async setUser() {
 			const user = await this.updateUser({
 				...this.$auth.$state.user,
@@ -1309,13 +1355,18 @@ export default {
 			});
 			this.$auth.setUser(user);
 		},
+		/**
+		 * liitador del modelo
+		 */
 		limiterModels(e) {
 			if (e.length > 2) e.pop();
 		},
+		/**
+		 * limitador de las especialidades
+		 */
 		limiterSpecialities(e) {
 			if (e.length > 6) e.pop();
 		},
-
 		...mapActions({
 			getAppointments: 'Appointments/getAppointments',
 			updateUser: 'User/updateUser',

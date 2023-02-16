@@ -170,7 +170,9 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-
+/**
+ * perfil de especialista mobile
+ */
 export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
@@ -198,6 +200,7 @@ export default {
 		}),
 	},
 	created() {
+		// chat flotante a false al ingresar en la ruta
 		this.setFloatingChat(false);
 		// this.socket = this.$nuxtSocket({
 		// 	channel: '/liveData',
@@ -209,10 +212,16 @@ export default {
 		// });
 	},
 	methods: {
+		/**
+		 * obtenemos el especialista
+		 */
 		async getSpecialist(data) {
 			const { specialist } = await this.$axios.$get(`/specialists/one/${data.username}`);
 			this.setSpecialist(specialist);
 		},
+		/**
+		 * Ir al chat si estamos logeados
+		 */
 		async goChat() {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({
@@ -227,6 +236,9 @@ export default {
 				this.setFloatingChat(true);
 			}
 		},
+		/**
+		 * string url del avatar
+		 */
 		avatar(specialist) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail) return specialist.avatarThumbnail;

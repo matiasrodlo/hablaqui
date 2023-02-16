@@ -172,7 +172,7 @@ specialistsRouter.put(
 );
 
 /**
- * @description Elimina un psicólog de la BD
+ * @description Elimina un especialista de la BD
  * @method DELETE
  * @route /api/v1/specialist/:id
  * @param {ObjectId} params.id - Id del especialista a eliminar
