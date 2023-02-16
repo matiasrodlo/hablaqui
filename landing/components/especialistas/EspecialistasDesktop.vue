@@ -515,11 +515,7 @@
 					</template>
 				</template>
 				<v-col
-<<<<<<< HEAD:landing/components/especialistas/EspecialistasDesktop.vue
-					v-if="specialists.length && !filterLevelThree.length"
-=======
 					v-if="false"
->>>>>>> adcea136 (fix: marketplace major fixes in progress):landing/components/psicologos/PsicologosDesktop.vue
 					cols="12"
 					class="title primary--text"
 				>
@@ -661,15 +657,9 @@ export default {
     },
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-<<<<<<< HEAD:landing/components/especialistas/EspecialistasDesktop.vue
-			specialists: 'Specialist/specialistsMarketPlace',
-			sessions: 'Specialist/sessionsLimit',
-			matchMaking: 'Specialist/matchMaking',
-=======
 			psychologists: 'Psychologist/psychologists',
 			sessions: 'Psychologist/sessionsLimit',
 			matchMaking: 'Psychologist/matchMaking',
->>>>>>> adcea136 (fix: marketplace major fixes in progress):landing/components/psicologos/PsicologosDesktop.vue
 		}),
 	},
 	watch: {

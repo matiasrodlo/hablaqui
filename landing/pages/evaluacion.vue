@@ -906,13 +906,32 @@ export default {
 		},
 	},
 	mounted() {
-		// obetenrmos las sesiones formateadas
+		this.initFetch();
 		this.getFormattedSessionsAll();
 	},
 	methods: {
-		/**
-		 * Crea un array random de especialista a mostrar
-		 */
+		async initFetch() {
+			this.toEvaluation()
+		},
+		toEvaluation() {
+			// Si el usuario está logueado y es un consultante se revisa si ha hecho el matchmaking antes de ir a la evaluación
+			this.$auth.loggedIn
+			? (
+				this.$auth.user.role === 'user' ? (
+					// Si ya realizó el matchmaking se redirige a la página de psicólogos
+					this.$auth.user.match ? (
+						this.$router.push('/psicologos')
+			
+					) : null
+				) : this.$router.push('/')
+			) : null
+		},
+		next() {
+			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+		},
+		prev() {
+			this.onboarding = this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+		},
 		random() {
 			return this.specialists.sort(function randOrd() {
 				return Math.round(Math.random()) - 0.5;
