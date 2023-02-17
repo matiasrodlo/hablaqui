@@ -416,10 +416,10 @@ const getByData = async username => {
 
 const setSchedule = async (user, payload) => {
 	let response;
-	// Si el user es un especialista, se busca el especialista por su id y se actualiza el horario
+	// Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
 	if (user.role === 'superuser') {
 		response = await Specialist.findByIdAndUpdate(
-			user.specialist,
+			payload.specialist,
 			{
 				$set: {
 					schedule: {
