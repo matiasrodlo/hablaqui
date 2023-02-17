@@ -1,7 +1,7 @@
 <template>
 	<v-container style="height: 100vh">
 		<appbar class="hidden-sm-and-down mb-16" title="Información general" />
-		<information-general-speci :specialist="specialist" :set-specialist="setSpecialist" />
+		<information-general-spec :specialist="specialist" :set-specialist="setSpecialist" />
 	</v-container>
 </template>
 

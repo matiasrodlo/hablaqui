@@ -119,7 +119,7 @@
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content v-if="specialist">
-					<information-general-speci
+					<information-general-spec
 						:specialist="specialist"
 						:set-specialist="setSpecialist"
 					/>

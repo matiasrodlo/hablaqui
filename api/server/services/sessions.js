@@ -42,7 +42,7 @@ const getSessions = async (userLogged, idUser) => {
 	// Buscamos la sesiones correspondiente a ese user y psicologo
 	if (userLogged.role === 'user') {
 		sessions = await Sessions.find({
-			//specialist: idPsy,
+			//specialist: idSpec,
 			user: idUser,
 		}).populate('specialist user');
 	}
@@ -151,7 +151,7 @@ const cancelSession = async (user, planId, sessionsId, id) => {
 			cancelSessions.specialist
 		);
 	} else {
-		await mailServiceReminder.sendCancelSessionPsy(
+		await mailServiceReminder.sendCancelSessionSpec(
 			cancelSessions.user,
 			cancelSessions.specialist
 		);
@@ -590,7 +590,7 @@ const createSession = async (userLogged, id, idPlan, payload) => {
 		`${myPlan.totalSessions - payload.remainingSessions}/${myPlan.totalSessions
 		}`
 	);
-	await mailServiceSchedule.sendScheduleToPsy(
+	await mailServiceSchedule.sendScheduleToSpec(
 		userLogged,
 		specialist,
 		dayjs.tz(dayjs(payload.date, 'MM/DD/YYYY HH:mm')).format(),
@@ -784,7 +784,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'online'
 				);
-				await mailServiceSchedule.sendCustomSessionToPsy(
+				await mailServiceSchedule.sendCustomSessionToSpec(
 					updatedSession.user,
 					updatedSession.specialist,
 					data.init_point,
@@ -802,7 +802,7 @@ const customNewSession = async (user, payload) => {
 					payload.price,
 					'presencial'
 				);
-				await mailServiceSchedule.sendCustomSessionToPsy(
+				await mailServiceSchedule.sendCustomSessionToSpec(
 					updatedSession.user,
 					updatedSession.specialist,
 					data.init_point,
@@ -1255,20 +1255,20 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
 			sessions.specialist,
 			newDate
 		);
-		await mailServiceSchedule.sendRescheduleToPsy(
+		await mailServiceSchedule.sendRescheduleToSpec(
 			sessions.user,
 			sessions.specialist,
 			newDate,
 			sessions.roomsUrl
 		);
 	} else {
-		await mailServiceSchedule.sendRescheduleToUserByPsy(
+		await mailServiceSchedule.sendRescheduleToUserBySpec(
 			sessions.user,
 			sessions.specialist,
 			newDate,
 			sessions.roomsUrl
 		);
-		await mailServiceSchedule.sendRescheduleToPsyByPsy(
+		await mailServiceSchedule.sendRescheduleToSpecBySpec(
 			sessions.user,
 			sessions.specialist,
 			newDate,
