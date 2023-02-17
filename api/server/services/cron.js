@@ -114,7 +114,7 @@ const cronService = {
 		dontReadMess.forEach(async mess => {
 			const user = mess.user;
 			const spec = mess.specialist;
-			const batch = await getBatchId();
+			const batch = await mailService.getBatchId();
 			if (mess.lastMessageSendBy === 'user') {
 				await mailServiceRemider.sendChatNotificationToSpec(
 					user,

@@ -111,19 +111,20 @@ const sessionReminder = async () => {
 		type: {
 			$in: [
 				'reminder-user-hour',
-				'reminder-Spec-hour',
+				'reminder-spec-hour',
 				'reminder-user-day',
-				'reminder-Spec-day',
+				'reminder-spec-day',
 			],
 		},
 	});
 	// Se recorre el array de correos y se envían los correos
 	// Busca los correos electrónicos que no han sido programados
+	console.log('pendingEmails', pendingEmails);
 	if (!pendingEmails.length > 0) {
-		return;
+		return pendingEmails.length;
 	}
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (Spec o user)
+		// Se obtiene el tipo de correo y el destinatario (spec o user)
 		let batch = null;
 		const mailType = emailInfo.type.split('-').pop();
 		const addressee = emailInfo.type.split('-')[1];
@@ -141,8 +142,8 @@ const sessionReminder = async () => {
 			return;
 		}
 		const user = await userModel.findById(emailInfo.userRef);
-		const Spec = await specialistModel.findById(emailInfo.SpecRef);
-		if (!user || !Spec) {
+		const spec = await specialistModel.findById(emailInfo.specRef);
+		if (!user || !spec) {
 			return;
 		}
 		try {
@@ -160,21 +161,21 @@ const sessionReminder = async () => {
 					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
-						Spec,
+						spec,
 						sessionDate,
 						batch,
 						mailType,
 						urlRooms
 					);
 				} else if (
-					addressee === 'Spec' &&
+					addressee === 'spec' &&
 					dayjs().isAfter(dayjs(emailInfo.scheduledAt))
 				) {
 					batch = await getBatchId();
 					isSend = true;
 					await mailServiceRemider.sendReminderSpec(
 						user,
-						Spec,
+						spec,
 						sessionDate,
 						batch,
 						mailType,
@@ -213,15 +214,15 @@ const reminderPayment = async () => {
 	});
 
 	if (!pendingEmails.length > 0) {
-		return;
+		return pendingEmails.length;
 	}
 
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (Spec o user)
+		// Se obtiene el tipo de correo y el destinatario (spec o user)
 		let isSend = false;
 		let batch = null;
 		const user = await userModel.findById(emailInfo.userRef);
-		const Spec = await specialistModel.findById(emailInfo.SpecRef);
+		const spec = await specialistModel.findById(emailInfo.specRef);
 		const sessionDocument = await sessionsModel.findById(
 			emailInfo.sessionRef
 		);
@@ -232,12 +233,12 @@ const reminderPayment = async () => {
 			.pop();
 
 		// Se verifica que el usuario se haya encontrado al igual que el especialista y la sesión
-		if (!user || !Spec || !sessionDocument || !plan) {
+		if (!user || !spec || !sessionDocument || !plan) {
 			return;
 		}
 		// Se obtiene la url de pago
 		// Crea la preferencia de mercado pago para los correos de recordatorio de pago
-		const url = await preference(user, Spec, plan, sessionDocument);
+		const url = await preference(user, spec, plan, sessionDocument);
 		try {
 			// Se envía el correo electrónico al usuario o especialista para recordar la sesion
 			// Si es null significa que aún no se le ha dado una fecha de envío
@@ -252,7 +253,7 @@ const reminderPayment = async () => {
 					isSend = true;
 					await mailServiceSpec.pendingPlanPayment(
 						user,
-						Spec,
+						spec,
 						plan.totalPrice,
 						url
 					);
@@ -264,7 +265,7 @@ const reminderPayment = async () => {
 					isSend = true;
 					await mailServiceRemider.sendPaymentDay(
 						user,
-						Spec,
+						spec,
 						plan.totalPrice,
 						url
 					);
@@ -307,26 +308,26 @@ const reminderChat = async () => {
 	const pendingEmails = await email.find({
 		wasScheduled: false,
 		type: {
-			$in: ['chat-Spec-1-day', 'chat-user-1-day'],
+			$in: ['chat-spec-1-day', 'chat-user-1-day'],
 		},
 	});
 
 	if (!pendingEmails.length > 0) {
-		return;
+		return pendingEmails.length;
 	}
 
 	// Se recorren los correos pendientes
 	pendingEmails.forEach(async emailInfo => {
-		// Se obtiene el tipo de correo y el destinatario (Spec o user)
+		// Se obtiene el tipo de correo y el destinatario (spec o user)
 		let isSend = false;
 		let batch = null;
 		const user = await userModel.findById(emailInfo.userRef);
-		const Spec = await specialistModel.findById(emailInfo.SpecRef);
+		const spec = await specialistModel.findById(emailInfo.specRef);
 		// Se verifica que el usuario se haya encontrado al igual que el especialista
 		if (!user) {
 			return conflictResponse('No se encontró el usuario');
 		}
-		if (!Spec) {
+		if (!spec) {
 			return conflictResponse('No se encontró el especialista');
 		}
 		try {
@@ -339,18 +340,18 @@ const reminderChat = async () => {
 				isSend = true;
 				await mailServiceRemider.sendChatNotificationToUser(
 					user,
-					Spec,
+					spec,
 					batch
 				);
 			} else if (
 				dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-				emailInfo.type === 'chat-Spec-1-day'
+				emailInfo.type === 'chat-spec-1-day'
 			) {
 				batch = await getBatchId();
 				isSend = true;
 				await mailServiceRemider.sendChatNotificationToSpec(
 					user,
-					Spec,
+					spec,
 					batch
 				);
 			}
@@ -383,21 +384,21 @@ const reminderRenewal = async () => {
 	});
 
 	if (!pendingEmails.length > 0) {
-		return;
+		return pendingEmails.length;
 	}
 
 	// Se recorren los correos pendientes
 	pendingEmails.forEach(async emailInfo => {
-		// Se busca el usuario y el Spec
+		// Se busca el usuario y el spec
 		const user = await userModel.findById(emailInfo.userRef);
-		const Spec = await specialistModel.findById(emailInfo.SpecRef);
+		const spec = await specialistModel.findById(emailInfo.specRef);
 		const sessionDocument = await sessionsModel.findById(
 			emailInfo.sessionRef
 		);
 		const mailType = emailInfo.type.split('-').pop();
 		let batch = null;
 		let isSend = false;
-		if (!user || !Spec || !sessionDocument) {
+		if (!user || !spec || !sessionDocument) {
 			return;
 		}
 		// Se obtiene un plan expirado del usuario
@@ -421,7 +422,7 @@ const reminderRenewal = async () => {
 					isSend = true;
 					await mailServiceRemider.reminderRenewalSubscription1hour(
 						user,
-						Spec,
+						spec,
 						plan.expiration
 					);
 				} else if (
@@ -432,7 +433,7 @@ const reminderRenewal = async () => {
 					isSend = true;
 					await mailServiceRemider.reminderRenewalSubscription1day(
 						user,
-						Spec,
+						spec,
 						plan.expiration
 					);
 				} else if (
