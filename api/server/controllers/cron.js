@@ -8,7 +8,7 @@ const cronController = {
 	async emailSchedule(req, res) {
 		try {
 			const token = req.params.authToken;
-			const { data, code } = await cronService.emailSchedule(token);
+			const { data, code } = await cronService.unifyMailing(token);
 			return restResponse(data, code, res);
 		} catch (err) {
 			errorCallback(err, res);
@@ -47,33 +47,6 @@ const cronController = {
 			const { data, code } = await cronService.statusInmediateAttention(
 				token
 			);
-			return restResponse(data, code, res);
-		} catch (err) {
-			errorCallback(err, res);
-		}
-	},
-	async reminderPayment(req, res) {
-		try {
-			const token = req.params.authToken;
-			const { data, code } = await cronService.reminderPayment(token);
-			return restResponse(data, code, res);
-		} catch (err) {
-			errorCallback(err, res);
-		}
-	},
-	async reminderRenewal(req, res) {
-		try {
-			const token = req.params.authToken;
-			const { data, code } = await cronService.reminderRenewal(token);
-			return restResponse(data, code, res);
-		} catch (err) {
-			errorCallback(err, res);
-		}
-	},
-	async reminderChat(req, res) {
-		try {
-			const token = req.params.authToken;
-			const { data, code } = await cronService.reminderChat(token);
 			return restResponse(data, code, res);
 		} catch (err) {
 			errorCallback(err, res);
