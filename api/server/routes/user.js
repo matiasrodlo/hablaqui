@@ -129,7 +129,7 @@ userRouter.patch(
  * @param {String} body.lastName - apellido del usuario a actualizar avatar
  * @param {String} body.idSpecialist - Para actualizar elavatar del especialista
  * @param {Object} file - Contiene los avatar o fotos de perfil del usuario
- * @return Objeto con el perfil del usuario y sus características de pe
+ * @return Objeto con el perfil del usuario y sus características de especialista
  * @access authenticated
  */
 userRouter.put(
