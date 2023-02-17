@@ -68,12 +68,9 @@ USER node
 COPY package.json ./
 
 # Instala las dependencias del proyecto
-RUN npm install && ls
+RUN npm install
 RUN npm run create-env
 RUN npm rebuild bcrypt --build-from-source
-
-# Expone el puerto 3000
-EXPOSE 3000
 
 # Ejecuta el comando npm run container
 ENTRYPOINT ["npm", "run", "container-dev"]

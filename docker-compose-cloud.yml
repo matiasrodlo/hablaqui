@@ -31,10 +31,16 @@ services:
       - VUE_APP_LANDING=http://localhost:9000/
       - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
       - NAMESPACE_TESTMAILS=bnwxe
-  # vue-ui:
-  #   build:
-  #     context: ./landing
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9000:9000"
-  #   container_name: vue-ui
+  vue-ui:
+    build:
+      context: ./landing
+      dockerfile: Dockerfile-cloud
+    ports:
+      - "9000:9000"
+    container_name: vue-ui
+    environment:
+      - API_ABSOLUTE=http://localhost:3000/
+      - FRONTEND_URL=http://localhost:8080/-
+      - NODE_ENV=development
+      - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
+      - VUE_APP_LANDING=http://localhost:9000/

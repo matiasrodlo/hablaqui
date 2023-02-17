@@ -7,18 +7,23 @@ FROM node:14-alpine
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 # Declara parámetros de la línea de comandos para el proceso de construcción
-ARG API_ABSOLUTE
-ARG FRONTEND_URL
-ARG MERCADOPAGO_KEY
-ARG VUE_APP_LANDING
-ARG VUE_APP_URL
+# ARG API_ABSOLUTE
+# ARG FRONTEND_URL
+# ARG NODE_ENV
+# ARG MERCADOPAGO_KEY
+# ARG VUE_APP_LANDING
+ARG API_ABSOLUTE=http://localhost:3000/
+ARG FRONTEND_URL=http://localhost:8080/-
+ARG NODE_ENV=development
+ARG MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
+ARG VUE_APP_LANDING=http://localhost:9000/
 
 # Establece variables de entorno
-RUN export API_ABSOLUTE=$API_ABSOLUTE
-RUN export FRONTEND_URL=$FRONTEND_URL
-RUN export MERCADOPAGO_KEY=$MERCADOPAGO_KEY
-RUN export VUE_APP_LANDING=$VUE_APP_LANDING
-RUN export VUE_APP_URL=$VUE_APP_URL
+RUN export API_ABSOLUTE=${_API_ABSOLUTE}
+RUN export FRONTEND_URL=${_FRONTEND_URL}
+RUN export NODE_ENV=${_NODE_ENV}
+RUN export MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}
+RUN export VUE_APP_LANDING=${_VUE_APP_LANDING}
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -32,16 +37,11 @@ COPY --chown=node:node . ./
 # Instala las dependencias del proyecto
 RUN npm install
 
-# Establece variables de entorno
-ENV HOST=0.0.0.0
-ENV PORT=9000
-ENV NODE_ENV=production
-
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run create-env
 RUN npm run generate
 # Expone el puerto 9000 en el contenedor
-EXPOSE 9000
+EXPOSE 9000 8080
 
 # Ejecuta el comando npm run start
 ENTRYPOINT ["npm", "run", "start"]
