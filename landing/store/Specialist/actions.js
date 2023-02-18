@@ -321,6 +321,7 @@ export default {
 				method: 'PATCH',
 				data: { payload },
 			});
+			console.log(data);
 			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);

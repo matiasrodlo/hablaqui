@@ -1,4 +1,5 @@
 import Specialist from '../models/specialist';
+import User from '../models/user';
 import Appointments from '../models/appointments';
 import { conflictResponse, okResponse } from '../utils/responses/functions';
 import Coupon from '../models/coupons';
@@ -233,11 +234,62 @@ const getMountToPay = async user => {
 	return okResponse('Planes', { amounts });
 };
 
+const specialistVisibility = async (specId, visibility) => {
+	try {
+		const isVisible = visibility === 'true' ? true : false;
+		// Actualizar el campo de visibilidad de los especialistas
+		await Specialist.findByIdAndUpdate(specId, {
+			$set: { 'preferences.marketplaceVisibility': isVisible },
+		});
+		return okResponse('Visibilidad actualizada', { specId });
+	} catch (error) {
+		return conflictResponse('Error al actualizar la visibilidad', error);
+	}
+};
+
+const getUsers = async () => {
+	// Se busca en la base de datos los usuarios y las sessiones
+	const users = await User.find({ role: 'user'});
+	const sessions = await Sessions.find();
+	if (!users.length) return okResponse('No hay usuarios registrados', { users: [] })
+	// Se formatean los datos de los usuarios y se agregan las sesiones
+	const usersFormatted = users.map(user => {
+		let sessionsUser = sessions.filter(session => session.user.toString() === user._id.toString());
+		
+		// Verifica si el usuario tiene sesiones y las formatea
+		if (sessionsUser.length){
+			sessionsUser = sessionsUser.flatMap(session => {
+				if (!session.plan) return [];
+				return session.plan.flatMap(plan => {
+					if (!plan.session) return [];
+					if (plan.payment !== 'success') return [];
+					return plan.session;
+				});
+			});
+		}
+
+		// Se retorna el usuario formateado
+		return {
+			_id: user._id,
+			name: user.name,
+			lastName: user.lastName,
+			email: user.email,
+			phone: user.phone,
+			rut: user.rut,
+			sessions: sessionsUser,
+		};
+	});
+	// Se retorna la respuesta
+	return okResponse('Usuarios', { users: usersFormatted });
+};
+
 const retoolService = {
 	getNextSessions,
 	getSessionsPayment,
 	fixSpecialities,
 	getMountToPay,
+	specialistVisibility,
+	getUsers,
 };
 
 export default Object.freeze(retoolService);
