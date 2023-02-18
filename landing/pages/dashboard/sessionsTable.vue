@@ -7,9 +7,10 @@
           <v-row>
             <v-col>
 				<v-text-field v-model="start" type="datetime-local" label="Desde" />
-				<v-spacer />
-				<v-text-field v-model="end" type="datetime-local" label="Hasta" />
             </v-col>
+			<v-col>
+				<v-text-field v-model="end" type="datetime-local" label="Hasta" />
+			</v-col>
             <v-col>
               <v-select
                 v-model="statFilterText"
@@ -19,7 +20,9 @@
                 label="Estado de Realización">
               </v-select>
             </v-col>
-            <v-col>
+          </v-row>
+		  <v-row>
+			<v-col>
               <v-text-field v-model="psyFilterText"
                             label="Filtro por Especialista"></v-text-field>
             </v-col>
@@ -32,7 +35,7 @@
                         :items="payStatus" label="Estado de Pago">
               </v-select>
             </v-col>
-          </v-row>
+		  </v-row>
         </v-card-title>
         <v-card-text>
           <v-data-table
