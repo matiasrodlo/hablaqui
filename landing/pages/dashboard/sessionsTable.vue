@@ -137,6 +137,14 @@ export default {
 			return transactions;
 		},
 		filteredSessions() {
+			console.log("Fecha inicio:") 
+			console.log(dayjs(this.start))
+			console.log("Fecha final:")
+			console.log(dayjs(this.end))
+			console.log("Fecha primera sesión del array sin formatear")
+			console.log(dayjs(this.sessions[0].date))
+			console.log("Fecha primera sesión del array sin formatear")
+			console.log(dayjs(this.sessions[0].date, 'DD/MM/YYY HH:mm'))
 			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
