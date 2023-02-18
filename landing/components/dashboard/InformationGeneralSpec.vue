@@ -75,10 +75,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-/**
- * muestra la informacion general del especialista
- */
+import { mapActions, mapMutations } from 'vuex';
+
 export default {
 	props: {
 		specialist: {
@@ -92,17 +90,39 @@ export default {
 	},
 	data() {
 		return {
-			// valida el minimo de caracteres permitido
-			rules: [v => v.length <= 170 || 'Maximo 170 caracteres'],
+			rules: [
+				value => value.length <= 170 || 'Máximo 170 carácteres',
+				value => !!value || 'Este campo es requerido.',
+			],
 		};
 	},
 	methods: {
-		/**
-		 * actualiza y establece de vuelta el especialista actualizado
-		 */
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
 		async onSubmite() {
-			const specialist = await this.updateSpecialist(this.specialist);
-			this.setSpecialist(specialist);
+			if (
+				!(this.specialist.personalDescription.length <= 170) ||
+				!(this.specialist.professionalDescription.length <= 170)
+			) {
+				this.snackBar({
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Excedió el límite de carácteres',
+					color: 'error',
+				});
+			} else if (
+				!this.specialist.professionalDescription ||
+				!this.specialist.personalDescription
+			) {
+				this.snackBar({
+					// Se genera un snackbar con la alerta correspondiente
+					content: 'Complete los campos faltantes',
+					color: 'error',
+				});
+			} else {
+				const specialist = await this.updateSpecialist(this.specialist);
+				this.setSpecialist(specialist);
+			}
 		},
 		...mapActions({
 			updateSpecialist: 'Specialist/updateSpecialist',

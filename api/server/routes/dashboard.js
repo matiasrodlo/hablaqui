@@ -40,4 +40,31 @@ dashboardRouter.get(
 	[passport.authenticate('jwt', { session: true })],
 	dashboardController.getMountToPay
 );
+
+/**
+ * @description Cambia la visibilidad de un especialista
+ * @method PUT
+ * @param {Boolean} params.visibility - Visibilidad del especialista
+ * @param {String} params.id - Id del especialista
+ * @route /api/v1/dashboard/specialist-visibility/:specId/:visibility
+ */
+dashboardRouter.put(
+	'/dashboard/specialist-visibility/:specId/:visibility',
+	[passport.authenticate('jwt', { session: true })],
+	dashboardController.specialistVisibility
+);
+
+/**
+ * @description Devuelve los usuarios registrados
+ * @method GET
+ * @route /api/v1/dashboard/get-users
+ * @return Array con los usuarios registrados
+ */
+
+dashboardRouter.get(
+	'/dashboard/get-users',
+	[passport.authenticate('jwt', { session: true })],
+	dashboardController.getUsers
+);
+
 export default dashboardRouter;

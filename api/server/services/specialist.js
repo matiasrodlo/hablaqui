@@ -416,10 +416,10 @@ const getByData = async username => {
 
 const setSchedule = async (user, payload) => {
 	let response;
-	// Si el user es un especialista, se busca el especialista por su id y se actualiza el horario
-	if (user.specialist) {
+	// Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
+	if (user.role === 'superuser') {
 		response = await Specialist.findByIdAndUpdate(
-			user.specialist,
+			payload.specialist,
 			{
 				$set: {
 					schedule: {
@@ -435,26 +435,46 @@ const setSchedule = async (user, payload) => {
 			},
 			{ new: true }
 		);
-	}
-	// Si el user es un postulante (specialist === undefined), pero no un user
-	else {
-		response = await Recruitment.findOneAndUpdate(
-			{ email: user.email },
-			{
-				$set: {
-					schedule: {
-						monday: payload.monday,
-						tuesday: payload.tuesday,
-						wednesday: payload.wednesday,
-						thursday: payload.thursday,
-						friday: payload.friday,
-						saturday: payload.saturday,
-						sunday: payload.sunday,
+	} else {
+		if (user.specialist) {
+			response = await Specialist.findByIdAndUpdate(
+				user.specialist,
+				{
+					$set: {
+						schedule: {
+							monday: payload.monday,
+							tuesday: payload.tuesday,
+							wednesday: payload.wednesday,
+							thursday: payload.thursday,
+							friday: payload.friday,
+							saturday: payload.saturday,
+							sunday: payload.sunday,
+						},
 					},
 				},
-			},
-			{ new: true }
-		);
+				{ new: true }
+			);
+		}
+		// Si el user es un postulante (specialist === undefined), pero no un user
+		else {
+			response = await Recruitment.findOneAndUpdate(
+				{ email: user.email },
+				{
+					$set: {
+						schedule: {
+							monday: payload.monday,
+							tuesday: payload.tuesday,
+							wednesday: payload.wednesday,
+							thursday: payload.thursday,
+							friday: payload.friday,
+							saturday: payload.saturday,
+							sunday: payload.sunday,
+						},
+					},
+				},
+				{ new: true }
+			);
+		}
 	}
 	return okResponse('Horario actualizado', {
 		specialist: response,
@@ -497,7 +517,9 @@ const updatePaymentMethod = async (user, payload) => {
 };
 
 const updateSpecialist = async (user, profile) => {
-	if (user.role == 'user') return conflictResponse('No tienes poder.');
+	if (user.role === 'user') return conflictResponse('No tienes poder.');
+	if (user.role === 'superuser' && !user.specialist)
+		user.specialist = profile._id;
 	if (user.specialist) {
 		// Si el user es un especialista intenta actualizar el especialista
 		try {

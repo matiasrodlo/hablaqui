@@ -302,7 +302,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { mdiPlus, mdiMinus, mdiAlert, mdiClockOutline } from '@mdi/js';
 import dayjs from 'dayjs';
@@ -583,11 +583,13 @@ export default {
 				friday: this.items[4].active ? this.items[4].intervals : 'busy',
 				saturday: this.items[5].active ? this.items[5].intervals : 'busy',
 				sunday: this.items[6].active ? this.items[6].intervals : 'busy',
+				specialist: this.specialist._id,
 			};
 			const specialist = await this.setSchedule(payload);
 			this.setSpecialist(specialist);
 			this.setDay(cloneDeep(specialist.schedule));
 			this.loading = false;
+			this.snackBar({ content: 'Cambios realizados', color: 'success' });
 		},
 		/**
 		 * ejecuta las validaciones permitidas al horario
@@ -622,6 +624,9 @@ export default {
 		},
 		...mapActions({
 			setSchedule: 'Specialist/setSchedule',
+		}),
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
 		}),
 	},
 };

@@ -103,6 +103,13 @@
 								></v-file-input>
 							</v-col>
 						</template>
+						<!--Switch para mostrar especialista en matchmaking, aparece solo si es un especialista verificado y su contenido se guarda en "switch1"-->
+						<v-switch
+							v-if="selected.isSpec"
+							v-model="switch1"
+							label="Mostrar Especialista en Matchmaking"
+						>
+						</v-switch>
 						<!-- username -->
 						<v-col cols="12">Username</v-col>
 						<v-col cols="2" class="bl br bb bt py-2 primary white--text">
@@ -678,8 +685,19 @@
 								</v-col>
 							</v-row>
 						</v-col>
+						<v-col cols="12">Horario</v-col>
+						<v-col cols="12">
+							<v-card>
+								<v-card-text>
+									<horario
+										:specialist="specialist"
+										:set-specialist="setSpecialist"
+									/>
+								</v-card-text>
+							</v-card>
+						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
-							¿Cuántos años llevas trabajando como especialista clínico?
+							¿Cuántos años llevas trabajando como psicólogo clínico?
 							{{ selected.yearsExpSpecialist }}
 							<br />
 							¿Cuántos años ha visto pacientes en línea a través de consultas por
@@ -738,6 +756,7 @@
 import axios from 'axios';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isEmpty } from 'lodash';
+import dayjs from 'dayjs';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 /**
@@ -748,6 +767,7 @@ export default {
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 		Avatar: () => import('~/components/Avatar'),
+		Horario: () => import('~/components/dashboard/Horario'),
 	},
 	layout: 'dashboard',
 	middleware: ['auth'],
@@ -771,12 +791,19 @@ export default {
 			banks: [],
 			totalMount: 0,
 			sessionsToPay: [],
+			switch1: true,
 		};
 	},
 	computed: {
-		...mapGetters({
-			specialties: 'Appointments/specialties',
-		}),
+		specialist: {
+			get() {
+				return this.selected;
+			},
+			set(value) {
+				this.setSpecialist(value);
+			},
+		},
+		...mapGetters({ specialties: 'Appointments/specialties' }),
 	},
 	watch: {
 		'selected.region'(newVal) {
@@ -791,9 +818,13 @@ export default {
 		/**
 		 * Obtiene los datos iniciales
 		 */
+		setSpecialist(value) {
+			this.specialist = value;
+		},
 		async initFetch() {
 			await this.getRecruitments();
 			await this.getSpecialist();
+			await this.getFormattedSessions();
 			let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`);
 			banks = await banks.json();
 			this.banks = banks;
@@ -863,6 +894,22 @@ export default {
 				return spec;
 			});
 		},
+		async getFormattedSessions() {
+			try {
+				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
+					method: 'GET',
+				});
+				const { formattedSessions } = data;
+				this.sessions = formattedSessions;
+				console.log(this.sessions[0]);
+				return formattedSessions;
+			} catch (e) {
+				this.snackBar({
+					content: e,
+					color: 'error',
+				});
+			}
+		},
 		/**
 		 * Aprueba un postulado
 		 */
@@ -895,6 +942,10 @@ export default {
 				await this.updateSpecialist(this.selected);
 				const { specialists } = await this.$axios.$get('/specialists/all');
 				this.specialists = specialists;
+				// Endpoint encargado de actualizar visibilidad del especialista en el matchmaking
+				await this.$axios.$put(
+					`/dashboard/specialist-visibility/${this.selected._id}/${this.switch1}`
+				);
 			} else {
 				await this.checkusername();
 				if (!this.available) {
@@ -930,6 +981,7 @@ export default {
 		async setSelected(item, isSpec) {
 			/** * establece un user como seleccionado */
 			this.selected = { ...item, isSpec };
+			this.switch1 = this.selected.preferences.marketplaceVisibility;
 			this.dialog = true;
 		},
 		/**
@@ -1003,6 +1055,7 @@ export default {
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
+			setSpecialist: 'Specialist/setSpecialist',
 		}),
 		...mapActions({
 			putApproveAvatar: 'Specialist/approveAvatar',
@@ -1012,6 +1065,9 @@ export default {
 			updateSpecialist: 'Specialist/updateSpecialist',
 			upateAvatar: 'User/upateAvatar',
 		}),
+		columnValueList(val) {
+			return this.sessions.map(d => d[val]);
+		},
 	},
 };
 </script>
@@ -1020,15 +1076,19 @@ export default {
 .bt {
 	border-top: 1px solid rgb(197, 197, 197) !important;
 }
+
 .br {
 	border-right: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bb {
 	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
+
 .bl {
 	border-left: 1px solid rgb(197, 197, 197) !important;
 }
+
 textarea,
 select,
 input {
