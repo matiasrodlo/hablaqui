@@ -123,8 +123,8 @@ export default {
 			pageCount: 0,
 			psychologist: [],
 			transactions: [],
-			start: [],
-			end: [],
+			//start: [],
+			//end: [],
 			menu: '',
 			date: '',
 			label: 'Sesiones a pagar',
@@ -172,10 +172,13 @@ export default {
 			return transactions;
 		},
 		filteredSessions() {
+			let start = []
+			let end = []
 			if (this.date && this.date[0] && this.date[1]){
-				this.start = this.date[0].split('-')
-				this.end = this.date[1].split('-')
+				start = this.date[0].split('-')
+				end = this.date[1].split('-')
 			}
+
 			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
@@ -184,9 +187,9 @@ export default {
 					session.specialist.toLowerCase().includes(this.psyFilterText.toLowerCase()) &&
 					session.paymentPlan.includes(this.payFilterText) &&
 					(this.date && this.date[0] && this.date[1]
-						? dayjs(session.date, 'DD/MM/YYYY HH:mm').isBetween(
-						dayjs(`${this.start[2]}/${this.start[1]}/${this.start[0]}`, 'MM/DD/YYYY'),
-						dayjs(`${this.end[2]}/${this.end[1]}/${this.end[0]}`, 'MM/DD/YYYY')
+						? dayjs(dayjs(session.date).format('DD/MM/YYYY HH:mm')).isBetween(
+						`${start[0]}-${start[1]}-${start[2]}`,
+						`${end[0]}-${end[1]}-${end[2]}`
 					)
 						: true
 					)
