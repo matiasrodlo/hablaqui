@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up" app>
+		<v-navigation-drawer v-model="drawer" class="hidden-md-and-up">
 			<v-list-item>
 				<a href="https://hablaqui.cl/">
 					<v-img
