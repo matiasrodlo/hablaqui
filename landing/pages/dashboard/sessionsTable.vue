@@ -184,9 +184,9 @@ export default {
 					session.specialist.toLowerCase().includes(this.psyFilterText.toLowerCase()) &&
 					session.paymentPlan.includes(this.payFilterText) &&
 					(this.date && this.date[0] && this.date[1]
-						? dayjs(session.date, 'MM/DD/YYYY HH:mm').isBetween(
-						dayjs(`${this.start[2]}/${this.start[1]}/${this.start[0]}`, 'DD/MM/YYYY'),
-						dayjs(`${this.end[2]}/${this.end[1]}/${this.end[0]}`, 'DD/MM/YYYY')
+						? dayjs(session.date, 'DD/MM/YYYY HH:mm').isBetween(
+						dayjs(`${this.start[2]}/${this.start[1]}/${this.start[0]}`, 'MM/DD/YYYY'),
+						dayjs(`${this.end[2]}/${this.end[1]}/${this.end[0]}`, 'MM/DD/YYYY')
 					)
 						: true
 					)
