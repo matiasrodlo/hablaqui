@@ -2,106 +2,111 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Sesiones" />
 		<v-row>
-			<v-card>
-				<v-card-title>
-					<v-row>
-						<v-col>
-							<v-menu
-								ref="menu"
-								v-model="menu"
-								:close-on-content-click="false"
-								:return-value.sync="date"
-								transition="scale-transition"
-								offset-y
-								min-width="auto"
+			<v-col cols="12">
+				<div>
+					<v-card>
+						<v-card-title>
+							<v-row>
+								<v-col>
+									<v-menu
+										ref="menu"
+										v-model="menu"
+										:close-on-content-click="false"
+										:return-value.sync="date"
+										transition="scale-transition"
+										offset-y
+										min-width="auto"
+									>
+										<template v-slot:activator="{ on, attrs }">
+										<v-text-field
+											v-model="date"
+											label="Filtro por Fecha"
+											readonly
+											v-bind="attrs"
+											v-on="on"
+										></v-text-field>
+										</template>
+										<v-date-picker
+										v-model="date"
+										range
+										>
+										<v-spacer></v-spacer>
+										<v-btn
+											text
+											color="primary"
+											@click="menu = false"
+										>
+											Cancel
+										</v-btn>
+										<v-btn
+											text
+											color="primary"
+											@click="$refs.menu.save(date)"
+										>
+											OK
+										</v-btn>
+										</v-date-picker>
+									</v-menu>
+								</v-col>
+								<v-col>
+								<v-select
+									v-model="statFilterText"
+									:item-value="status.value"
+									:item-text="status.text"
+									:items="status"
+									label="Estado de Realización">
+								</v-select>
+								</v-col>
+								<v-col>
+								<v-text-field v-model="psyFilterText"
+												label="Filtro por Especialista"></v-text-field>
+								</v-col>
+								<v-col>
+								<v-text-field v-model="userFilterText"
+												label="Filtro por Usuario"></v-text-field>
+								</v-col>
+								<v-col>
+								<v-select v-model="payFilterText" :item-value="payStatus.value" :item-text="payStatus.text"
+											:items="payStatus" label="Estado de Pago">
+								</v-select>
+								</v-col>
+							</v-row>
+						</v-card-title>
+						<v-card-text>
+							<v-data-table
+								:headers="sessionsHeaders"
+								:items="filteredSessions"
+								:items-per-page="5"
 							>
-								<template v-slot:activator="{ on, attrs }">
-								<v-text-field
-									v-model="date"
-									label="Filtro por Fecha"
-									readonly
-									v-bind="attrs"
-									v-on="on"
-								></v-text-field>
-								</template>
-								<v-date-picker
-								v-model="date"
-								range
-								>
-								<v-spacer></v-spacer>
-								<v-btn
-									text
-									color="primary"
-									@click="menu = false"
-								>
-									Cancel
-								</v-btn>
-								<v-btn
-									text
-									color="primary"
-									@click="$refs.menu.save(date)"
-								>
-									OK
-								</v-btn>
-								</v-date-picker>
-							</v-menu>
-						</v-col>
-						<v-col>
-						<v-select
-							v-model="statFilterText"
-							:item-value="status.value"
-							:item-text="status.text"
-							:items="status"
-							label="Estado de Realización">
-						</v-select>
-						</v-col>
-						<v-col>
-						<v-text-field v-model="psyFilterText"
-										label="Filtro por Especialista"></v-text-field>
-						</v-col>
-						<v-col>
-						<v-text-field v-model="userFilterText"
-										label="Filtro por Usuario"></v-text-field>
-						</v-col>
-						<v-col>
-						<v-select v-model="payFilterText" :item-value="payStatus.value" :item-text="payStatus.text"
-									:items="payStatus" label="Estado de Pago">
-						</v-select>
-						</v-col>
-					</v-row>
-				</v-card-title>
-				<v-card-text>
-					<v-data-table
-						:headers="sessionsHeaders"
-						:items="filteredSessions"
-						:items-per-page="5"
-					>
-					<template #top>
-							<v-toolbar flat>
-								<v-toolbar-title>Pagos pendientes</v-toolbar-title>
-							</v-toolbar>
-						</template>
-						<template #item.action="{ item }">
-							<v-btn
-								:disabled="item.sessions.length === 0"
-								small
-								@click="showUserSessions(item)"
-							>
-								Sesiones
-							</v-btn>
-						</template>
-					</v-data-table>
-				</v-card-text>
-			</v-card>
+							</v-data-table>
+						</v-card-text>
+					</v-card>
+				</div>
+			</v-col>
 		</v-row>
+		<v-spacer></v-spacer>
 		<v-row>
-			<v-card>
-				<v-data-table
-					:headers="usersHeaders"
-					:items="users"
-					:items-per-page="5"
-				></v-data-table>
-			</v-card>
+			<v-col cols="12">
+				<div>
+					<v-card>
+						<v-data-table
+							:headers="usersHeaders"
+							:items="users"
+							:items-per-page="5"
+						>
+							<template #item.action="{ item }">
+								<v-btn
+									:disabled="item.sessions.length === 0"
+									small
+									@click="showUserSessions(item)"
+								>
+									Sesiones
+								</v-btn>
+							</template>
+						</v-data-table>
+					</v-card>
+				</div>
+			</v-col>
 		</v-row>
 		<v-dialog
 			v-model="dialog"
@@ -115,7 +120,7 @@
 				<v-card-title>
 					<span class="text-h5">Sesiones del usuario</span>
 				</v-card-title>
-				<v-data-table :headers="sessionsHeaders" :items="userSessions" />
+				<v-data-table :headers="headersUserSessions" :items="userSessions" />
 			</v-card>
 		</v-dialog>
 
@@ -153,7 +158,7 @@ export default {
 			menu: '',
 			date: '',
 			label: 'Sesiones a pagar',
-			dialog: false,
+			dialog: true,
 			showBank: false,
 			paymentMethods: {},
 			dateFilterText: null,
@@ -179,7 +184,15 @@ export default {
 				{text: 'Teléfono', value: 'phone'},
 				{text: 'id', value: '_id'},
 				{text: 'Rut', value: 'rut'},
-				{text: 'Acciones', value: 'action', sorteable: false},
+				{text: 'Acciones', value: 'action', sortable: false},
+			],
+			headersUserSessions: [
+				{ text: 'Fecha', value: 'date' },
+				{ text: 'Consultante', value: 'name' },
+				{ text: 'Correo', value: 'email' },
+				{ text: 'N° de sesión', value: 'sessionNumber' },
+				{ text: 'Estado de realización', value: 'status' },
+				{ text: 'Estado de Pago', value: 'paidToSpecialist' },
 			],
 			sessions: [],
 			status: [
@@ -241,7 +254,7 @@ export default {
 			this.psychologist = amounts;
 			const { transactions } = await this.$axios.$get('/transaction/get/all');
 			this.transactions = transactions;
-			const {usersObjects} = await this.getUsers();
+			let usersObjects = await this.getUsers();
 			this.users = usersObjects.users;
 		},
 		async setTransaction(item) {
@@ -277,7 +290,7 @@ export default {
 				const { data } = await this.$axios('/dashboard/get-users', {
 					method: 'GET',
 				});
-				console.log(data);
+				console.log(data.users.filter(user => user.sessions.length !== 0));
 				return data;
 			} catch (e) {
 				this.snackBar({
@@ -287,8 +300,13 @@ export default {
 			}
 		},
 		showUserSessions(item) {
-			this.dialog = true
 			this.userSessions = item.sessions
+			this.userSessions.forEach(session => {
+				session.name = item.name
+				session.email = item.email	
+			})
+			console.log(item.sessions)
+			this.dialog = true
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
