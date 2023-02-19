@@ -89,21 +89,63 @@
 			<v-col cols="12">
 				<div>
 					<v-card>
-						<v-data-table
-							:headers="usersHeaders"
-							:items="users"
-							:items-per-page="5"
-						>
-							<template #item.action="{ item }">
-								<v-btn
-									:disabled="item.sessions.length === 0"
-									small
-									@click="showUserSessions(item)"
-								>
-									Sesiones
-								</v-btn>
-							</template>
-						</v-data-table>
+						<v-card-title>
+							<v-row>
+								<v-col>
+									<v-text-field 
+										v-model="nameFilterText"
+										label="Nombre"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="lastNameFilterText"
+										label="Apellido"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="mailFilterText"
+										label="Correo"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="phoneFilterText"
+										label="Teléfono"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="idFilterText"
+										label="ID"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="rutFilterText"
+										label="Rut"
+									></v-text-field>
+								</v-col>
+							</v-row>
+						</v-card-title>
+						<v-card-text>
+							<v-data-table
+								:headers="usersHeaders"
+								:items="filteredUsers"
+								:items-per-page="5"
+							>
+								<template #item.action="{ item }">
+									<v-btn
+										:disabled="item.sessions.length === 0"
+										small
+										@click="showUserSessions(item)"
+									>
+										Sesiones
+									</v-btn>
+								</template>
+							</v-data-table>
+						</v-card-text>
 					</v-card>
 				</div>
 			</v-col>
@@ -158,7 +200,7 @@ export default {
 			menu: '',
 			date: '',
 			label: 'Sesiones a pagar',
-			dialog: true,
+			dialog: false,
 			showBank: false,
 			paymentMethods: {},
 			dateFilterText: null,
@@ -166,6 +208,12 @@ export default {
 			psyFilterText: '',
 			userFilterText: '',
 			payFilterText: '',
+			nameFilterText: '',
+			lastNameFilterText: '',
+			mailFilterText: '',
+			phoneFilterText: '',
+			idFilterText: '',
+			rutFilterText: '',
 			userSessions: [],
 			sessionsHeaders: [
 				{ text: 'Consultante', value: 'user' },
@@ -182,7 +230,7 @@ export default {
 				{text: 'Apellido', value: 'lastName'},
 				{text: 'Correo', value: 'email'},
 				{text: 'Teléfono', value: 'phone'},
-				{text: 'id', value: '_id'},
+				{text: 'ID', value: '_id'},
 				{text: 'Rut', value: 'rut'},
 				{text: 'Acciones', value: 'action', sortable: false},
 			],
@@ -243,6 +291,28 @@ export default {
 					)
 			);
 		},
+		filteredUsers() {
+			return this.users.filter(
+				//  correo telefono id rut
+				user =>
+					(this.nameFilterText === '' ? true : 
+						user.name === undefined ? false :
+							user.name.toLowerCase().includes(this.nameFilterText.toLowerCase())) &&
+					(this.lastNameFilterText === '' ? true :
+						user.lastName === undefined ? false :
+							user.lastName.toLowerCase().includes(this.lastNameFilterText.toLowerCase())) &&
+					(this.mailFilterText === '' ? true :
+						user.email === undefined ? false :
+							user.email.toLowerCase().includes(this.mailFilterText.toLowerCase())) &&
+					(this.phoneFilterText === '' ? true :
+						user.phone === undefined ? false :
+							user.phone.toLowerCase().includes(this.phoneFilterText.toLowerCase())) &&
+					user._id.includes(this.idFilterText.toLowerCase()) &&
+					(this.rutFilterText === '' ? true :
+						user.rut === undefined ? false :
+							user.rut.includes(this.rutFilterText.toLowerCase()))
+			)
+		},
 	},
 	mounted() {
 		this.initFetch();
@@ -290,7 +360,6 @@ export default {
 				const { data } = await this.$axios('/dashboard/get-users', {
 					method: 'GET',
 				});
-				console.log(data.users.filter(user => user.sessions.length !== 0));
 				return data;
 			} catch (e) {
 				this.snackBar({
@@ -303,9 +372,8 @@ export default {
 			this.userSessions = item.sessions
 			this.userSessions.forEach(session => {
 				session.name = item.name
-				session.email = item.email	
+				session.email = item.email
 			})
-			console.log(item.sessions)
 			this.dialog = true
 		},
 		...mapMutations({
@@ -318,7 +386,6 @@ export default {
         });
         const { formattedSessions } = data;
         this.sessions = formattedSessions;
-        console.log(this.sessions[0]);
         return formattedSessions;
       } catch (e) {
         this.snackBar({
@@ -330,7 +397,5 @@ export default {
 	},
 };
 </script>
-
 <style>
-
 </style>
