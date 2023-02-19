@@ -6,11 +6,46 @@
         <v-card-title>
           <v-row>
             <v-col>
-				<v-text-field v-model="start" type="datetime-local" label="Desde" />
+				<v-menu
+					ref="menu"
+					v-model="menu"
+					:close-on-content-click="false"
+					:return-value.sync="date"
+					transition="scale-transition"
+					offset-y
+					min-width="auto"
+				>
+					<template v-slot:activator="{ on, attrs }">
+					<v-text-field
+						v-model="date"
+						label="Filtro por Fecha"
+						readonly
+						v-bind="attrs"
+						v-on="on"
+					></v-text-field>
+					</template>
+					<v-date-picker
+					v-model="date"
+					range
+					>
+					<v-spacer></v-spacer>
+					<v-btn
+						text
+						color="primary"
+						@click="menu = false"
+					>
+						Cancel
+					</v-btn>
+					<v-btn
+						text
+						color="primary"
+						@click="$refs.menu.save(date)"
+					>
+						OK
+					</v-btn>
+					</v-date-picker>
+				</v-menu>
             </v-col>
-			<v-col>
-				<v-text-field v-model="end" type="datetime-local" label="Hasta" />
-			</v-col>
             <v-col>
               <v-select
                 v-model="statFilterText"
@@ -20,8 +55,6 @@
                 label="Estado de Realización">
               </v-select>
             </v-col>
-          </v-row>
-		  <v-row>
 			<v-col>
               <v-text-field v-model="psyFilterText"
                             label="Filtro por Especialista"></v-text-field>
@@ -90,8 +123,10 @@ export default {
 			pageCount: 0,
 			psychologist: [],
 			transactions: [],
-			start: '',
-			end: '',
+			start: [],
+			end: [],
+			menu: '',
+			date: '',
 			label: 'Sesiones a pagar',
 			dialog: false,
 			showBank: false,
@@ -137,14 +172,10 @@ export default {
 			return transactions;
 		},
 		filteredSessions() {
-			console.log("Fecha inicio:") 
-			console.log(dayjs(this.start))
-			console.log("Fecha final:")
-			console.log(dayjs(this.end))
-			console.log("Fecha primera sesión del array sin formatear")
-			console.log(dayjs(this.sessions[0].date))
-			console.log("Fecha primera sesión del array sin formatear")
-			console.log(dayjs(this.sessions[0].date, 'DD/MM/YYY HH:mm'))
+			if (this.date && this.date[0] && this.date[1]){
+				this.start = this.date[0].split('-')
+				this.end = this.date[1].split('-')
+			}
 			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
@@ -152,10 +183,10 @@ export default {
 					session.statusSession.includes(this.statFilterText) &&
 					session.specialist.toLowerCase().includes(this.psyFilterText.toLowerCase()) &&
 					session.paymentPlan.includes(this.payFilterText) &&
-					(this.start && this.end
+					(this.date && this.date[0] && this.date[1]
 						? dayjs(session.date, 'DD/MM/YYYY HH:mm').isBetween(
-						dayjs(this.start),
-						dayjs(this.end)
+						dayjs(`${this.start[2]}/${this.start[1]}/${this.start[0]}`, 'DD/MM/YYYY'),
+						dayjs(`${this.end[2]}/${this.end[1]}/${this.end[0]}`, 'DD/MM/YYYY')
 					)
 						: true
 					)
