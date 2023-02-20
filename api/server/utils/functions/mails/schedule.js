@@ -288,7 +288,7 @@ const mailService = {
 			to: spec.name + '<' + spec.email + '>',
 			subject: `Se ha agendado una sesión`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-36c740ffd8aa4b25915861806f0a5fb6',
+			templateId: 'd-2d64663ef57743bfb061130fb49e1625',
 			asm: {
 				group_id: 16321,
 			},
@@ -319,7 +319,7 @@ const mailService = {
 			to: name + '<' + email + '>',
 			subject: 'Tu sesión en Hablaquí ha sido agendada',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-			templateId: 'd-68a683ec58484a68afdc5f17932d8400',
+			templateId: 'd-93dcae8eaa45480286f29e25d88d173d',
 			asm: {
 				group_id: 16321,
 			},
