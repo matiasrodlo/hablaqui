@@ -20,12 +20,14 @@
     ],
     "rules": {
         "prettier/prettier": [
-            "error",
+            "warning",
             {
                 "trailingComma": "es5",
                 "singleQuote": true,
                 "useTabs": true,
                 "tabWidth": 4
-            }]
+            }
+        ],
+        "indent": ["warning", 2]
     }
 }

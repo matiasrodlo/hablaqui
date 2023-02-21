@@ -12,7 +12,25 @@
                 "GitHub.copilot",
                 "Vue.volar",
                 "eamodio.gitlens"
-            ]
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                "source.fixAll.eslint": true
+                },
+                "eslint.alwaysShowStatus": true,
+                "[javascript]": {
+                    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+                },
+                "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+                "editor.formatOnPaste": true,
+                "eslint.options": { "configFile":"/home/node/app/.eslintrc"},
+                "eslint.workingDirectories": ["/home/node/app"],
+                "[vue]": {
+                    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+                },
+                "git.ignoreMissingGitWarning": true
+            }
         }
     }
 }
