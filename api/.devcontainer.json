@@ -1,0 +1,17 @@
+{
+    "name": "API RESTful",
+    "dockerComposeFile": "../docker-compose-dev.yml",
+    "service": "api-restful",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/home/node/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "rvest.vs-code-prettier-eslint",
+                "GitHub.copilot",
+                "eamodio.gitlens"
+            ]
+        }
+    }
+}
