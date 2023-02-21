@@ -1,0 +1,83 @@
+# Establece la imagen base
+FROM node:14-alpine
+
+# Se configura el contenedor para utilizar bcrypt
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+RUN apk --no-cache add --virtual builds-deps build-base python3
+
+# Crea una carpeta con el parámetro -p, sin error si existe, crea directorios padre según sea necesario, 
+# con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
+# archivos de la carpeta /app asignandosela a node.
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+# Cambiar de directorio actual a /home/node/app
+WORKDIR /home/node/app
+
+# Declara parámetros de la línea de comandos para el proceso de construcción
+ARG URLDB
+ARG NODE_ENV
+ARG PORT
+ARG VUE_APP_ORIGIN
+ARG FRONTEND_URL
+ARG JWT_SECRET
+ARG JWT_ALGORITHM
+ARG JWT_EXPIRATION
+ARG JWT_EXPIRATION_REFRESH
+ARG JWT_SECRET_REFRESH
+ARG PASSWORD_RECOVERY_JWT_EXPIRATION
+ARG API_URL
+ARG BUCKETNAME
+ARG MERCADOPAGO_KEY
+ARG NO_REPLY_EMAIL
+ARG NO_REPLY_PASSWORD
+ARG SEGMENT_API_KEY
+ARG SENDGRID_API_KEY
+ARG VUE_APP_LANDING
+ARG KEY_API_TESTMAILS
+ARG NAMESPACE_TESTMAILS
+
+
+# Establece variables de entorno
+RUN export URLDB=${URLDB}
+RUN export NODE_ENV=${NODE_ENV}
+RUN export PORT=${PORT}
+RUN export VUE_APP_ORIGIN=${VUE_APP_ORIGIN}
+RUN export FRONTEND_URL=${FRONTEND_URL}
+RUN export JWT_SECRET=${JWT_SECRET}
+RUN export JWT_ALGORITHM=${JWT_ALGORITHM}
+RUN export JWT_EXPIRATION=${JWT_EXPIRATION}
+RUN export JWT_EXPIRATION_REFRESH=${JWT_EXPIRATION_REFRESH}
+RUN export JWT_SECRET_REFRESH=${JWT_SECRET_REFRESH}
+RUN export PASSWORD_RECOVERY_JWT_EXPIRATION=${PASSWORD_RECOVERY_JWT_EXPIRATION}
+RUN export API_URL=${API_URL}
+RUN export BUCKETNAME=${BUCKETNAME}
+RUN export MERCADOPAGO_KEY=${MERCADOPAGO_KEY}
+RUN export NO_REPLY_EMAIL=${NO_REPLY_EMAIL}
+RUN export NO_REPLY_PASSWORD=${NO_REPLY_PASSWORD}
+RUN export SEGMENT_API_KEY=${SEGMENT_API_KEY}
+RUN export SENDGRID_API_KEY=${SENDGRID_API_KEY}
+RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
+RUN export KEY_API_TESTMAILS=${KEY_API_TESTMAILS}
+RUN export NAMESPACE_TESTMAILS=${NAMESPACE_TESTMAILS}
+
+# Cambia el usuario actual a node
+USER node
+
+# Copia packer.json y server.js a la carpeta /home/node/app, junto con la carpeta server y server.js
+COPY package.json ./
+COPY server.js ./
+COPY --chown=node:node /server ./server
+
+# Instala las dependencias del proyecto
+RUN npm install
+RUN npm run create-env
+RUN npm rebuild bcrypt --build-from-source
+
+# Expone el puerto 3000
+EXPOSE 3000
+
+# Ejecuta el comando npm run container
+ENTRYPOINT ["npm", "run", "container"]

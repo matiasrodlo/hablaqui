@@ -1,5 +1,8 @@
 node_modules
 npm-debug.log
-Dockerfile
+Dockerfile-dev
+Dockerfile-cloud
 .dockerignore
+.gitignore
+.env
 .nuxt
