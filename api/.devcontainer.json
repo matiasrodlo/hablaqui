@@ -10,7 +10,8 @@
                 "dbaeumer.vscode-eslint",
                 "rvest.vs-code-prettier-eslint",
                 "GitHub.copilot",
-                "eamodio.gitlens"
+                "eamodio.gitlens",
+                "PKief.material-icon-theme"
             ],
             "settings": {
                 "editor.formatOnSave": true,

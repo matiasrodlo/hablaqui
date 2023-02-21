@@ -11,7 +11,8 @@
                 "rvest.vs-code-prettier-eslint",
                 "GitHub.copilot",
                 "Vue.volar",
-                "eamodio.gitlens"
+                "eamodio.gitlens",
+                "PKief.material-icon-theme"
             ],
             "settings": {
                 "editor.formatOnSave": true,
