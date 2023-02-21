@@ -18,7 +18,7 @@
 					:lazy-src="`https://cdn.hablaqui.cl/static/logo_tiny_white.png`"
 					alt="logo hablaquí"
 					class="mt-10"
-					@click="() => $router.push({ name: 'psicologos' })"
+					@click="() => $router.push({ name: 'especialistas' })"
 				/>
 			</v-sheet>
 			<v-list

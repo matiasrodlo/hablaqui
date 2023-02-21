@@ -230,7 +230,7 @@
 									</v-list-item-content>
 								</v-list-item>
 							</v-list>
-							<!-- lista de psicologos "chat iniciado" -->
+							<!-- lista de especialistas "chat iniciado" -->
 							<template v-if="listPsychologist.length || plan">
 								<v-card-text v-if="listPsychologist.length" class="py-0">
 									<v-subheader class="primary--text body-1 px-0"
@@ -281,7 +281,7 @@
 									</v-list-item>
 								</v-list>
 							</template>
-							<!-- lista de psicologos "sin chats iniciados" -->
+							<!-- lista de especialistas "sin chats iniciados" -->
 							<template v-else>
 								<div
 									style="flex: 1"

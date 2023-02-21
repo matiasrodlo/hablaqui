@@ -164,7 +164,7 @@
 					@input="e => setSearch(e)"
 				/>
 			</v-card-text>
-			<!-- todos los psicologos -->
+			<!-- todos los especialistas -->
 			<template
 				v-if="psyFromChats.length || ($auth.$state.user.role === 'user' && plan && !search)"
 			>

@@ -7,16 +7,11 @@ FROM node:14-alpine
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 # Declara parámetros de la línea de comandos para el proceso de construcción
-# ARG API_ABSOLUTE
-# ARG FRONTEND_URL
-# ARG NODE_ENV
-# ARG MERCADOPAGO_KEY
-# ARG VUE_APP_LANDING
-ARG API_ABSOLUTE=http://localhost:3000/
-ARG FRONTEND_URL=http://localhost:8080/-
-ARG NODE_ENV=development
-ARG MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
-ARG VUE_APP_LANDING=http://localhost:9000/
+ARG API_ABSOLUTE
+ARG FRONTEND_URL
+ARG NODE_ENV
+ARG MERCADOPAGO_KEY
+ARG VUE_APP_LANDING
 
 # Establece variables de entorno
 RUN export API_ABSOLUTE=${_API_ABSOLUTE}

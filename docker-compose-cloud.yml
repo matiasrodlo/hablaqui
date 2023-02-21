@@ -37,6 +37,7 @@ services:
       dockerfile: Dockerfile-cloud
     ports:
       - "9000:9000"
+      - "8080:8080"
     container_name: vue-ui
     environment:
       - API_ABSOLUTE=http://localhost:3000/

@@ -4,7 +4,7 @@
 		<v-row style="height: calc(100vh - 110px); overflow-y: auto">
 			<v-col class="text--secondary" cols="6">
 				<v-list>
-					<v-subheader>Psicologos</v-subheader>
+					<v-subheader>especialistas</v-subheader>
 					<v-list-item
 						v-for="item in psychologists"
 						:key="item._id"

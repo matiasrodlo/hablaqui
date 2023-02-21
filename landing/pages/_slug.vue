@@ -42,11 +42,11 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		ProfileDesktop: () =>
 			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/ProfileDesktop'
+				/* webpackChunkName: "especialistasDesktop" */ '~/components/especialistas/ProfileDesktop'
 			),
 		ProfileMobile: () =>
 			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/ProfileMobile'
+				/* webpackChunkName: "especialistasMobile" */ '~/components/especialistas/ProfileMobile'
 			),
 	},
 	async asyncData({ $axios, params, error, payload }) {

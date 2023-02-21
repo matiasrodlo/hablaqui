@@ -7,7 +7,7 @@
 3. [Dashboard](#dashboard)
 4. [Evaluation](#evaluation)
 5. [Postulacion](#postulacion)
-6. [Psicologos](#psicologos)
+6. [especialistas](#especialistas)
 7. [Raíz](#raiz)
 
 ### AUTH
@@ -67,19 +67,19 @@
 
 ---
 
-### PSICOLOGOS
+### especialistas
 
 ---
 
 -   **FormUserPsy.vue**: Resgistro (psy)
--   **GeoPsicologos.vue** : Cabecera (geoPsy)
+-   **Geoespecialistas.vue** : Cabecera (geoPsy)
 -   **MiniCalendar.vue**: Calendario perfil (psyResponsive)
 -   **PagosDesktop.vue**: Checkout (userEscritorio)
 -   **PagosMobile.vue**: Checkout (userResponsive)
 -   **ProfileDesktop.vue**: Perfil (psyEscritorio)
 -   **ProfileMobile.vue**: Perfil (psyResposive)
--   **PsicologosDesktop.vue**: Marketplace (Escritorio)
--   **PsicologosMobile.vue**: Marketplace (Resposive)
+-   **especialistasDesktop.vue**: Marketplace (Escritorio)
+-   **especialistasMobile.vue**: Marketplace (Resposive)
 -   **Ubicación.vue**: Envoltura psicólogos por ubicación
 
 ---

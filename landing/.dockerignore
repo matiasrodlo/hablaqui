@@ -3,4 +3,6 @@ npm-debug.log
 Dockerfile-dev
 Dockerfile-cloud
 .dockerignore
+.gitignore
+.env
 .nuxt

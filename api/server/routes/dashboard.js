@@ -18,7 +18,7 @@ dashboardRouter.get(
 );
 
 /**
- * @description Devuelve la paga de los psicologos dentro de un intervalo de tiempo
+ * @description Devuelve la paga de los especialistas dentro de un intervalo de tiempo
  * @method GET
  * @param {String} params.startDate - Fecha de inicio del intervalo
  * @param {String} params.endDate - Fecha de término del intervalo

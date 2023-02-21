@@ -38,9 +38,9 @@ export default {
 			// 	? process.env.API_ABSOLUTE
 			// 	: 'http://localhost:3000/';
 
-			// generate routes psicologos
+			// generate routes especialistas
 			const res = await axios.get(`${baseURL}/psychologists/all`);
-			const psicologos = res.data.psychologists
+			const especialistas = res.data.psychologists
 				.filter(psychologist => psychologist.username)
 				.map(psychologist => ({
 					route: `/${psychologist.username}`,
@@ -49,12 +49,12 @@ export default {
 			// generate routes comunas
 			/* const response = await axios.get(`${baseApi}/comunas.json`);
 			const comunas = response.data.map(el => ({
-				route: `/psicologos/${el.comuna.slug}`,
+				route: `/especialistas/${el.comuna.slug}`,
 				payload: el.comuna,
 			}));
 
-			const routes = psicologos.concat(comunas); */
-			callback(null, psicologos);
+			const routes = especialistas.concat(comunas); */
+			callback(null, especialistas);
 		},
 	},
 	loading: {

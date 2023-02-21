@@ -4,16 +4,16 @@
 		<div style="margin-bottom: 83px">
 			<Appbar />
 		</div>
-		<!-- geo psicologos -->
-		<geoPsicologos class="mt-10" :location="location" />
+		<!-- geo especialistas -->
+		<geoespecialistas class="mt-10" :location="location" />
 		<!-- desktop -->
-		<psicologos-desktop
+		<especialistas-desktop
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
 			class="hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
+		<especialistas-mobile
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
 			class="hidden-md-and-up"
@@ -61,8 +61,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
-import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import especialistasDesktop from '~/components/especialistas/especialistasDesktop';
+import especialistasMobile from '~/components/especialistas/especialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 
@@ -70,9 +70,9 @@ export default {
 	components: {
 		Footer,
 		Appbar,
-		PsicologosDesktop,
-		PsicologosMobile,
-		geoPsicologos: () => import('~/components/psicologos/GeoPsicologos'),
+		especialistasDesktop,
+		especialistasMobile,
+		geoespecialistas: () => import('~/components/especialistas/Geoespecialistas'),
 	},
 	props: {
 		location: {

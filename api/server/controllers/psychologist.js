@@ -10,7 +10,7 @@ const psychologistsController = {
 			const { data, code } = await psychologistsService.getAll();
 			return restResponse(data, code, res);
 		} catch (error) {
-			errorCallback(error, res, 'Error obteniendo los psicologos');
+			errorCallback(error, res, 'Error obteniendo los especialistas');
 		}
 	},
 	async match(req, res) {

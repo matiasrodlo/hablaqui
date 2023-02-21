@@ -372,7 +372,7 @@ export default {
 		},
 		changeDate(item) {
 			this.$router.push(
-				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+				`/especialistas/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 			this.showCalendar = !this.showCalendar;
 		},

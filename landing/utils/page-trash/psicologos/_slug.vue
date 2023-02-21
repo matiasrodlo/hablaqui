@@ -8,7 +8,7 @@
 export default {
 	name: 'UbicacionSlug',
 	components: {
-		Ubicacion: () => import('~/components/psicologos/Ubicacion'),
+		Ubicacion: () => import('~/components/especialistas/Ubicacion'),
 	},
 	async asyncData({ params, store, $config, error, payload }) {
 		try {
@@ -64,7 +64,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: `https://cdn.hablaqui.cl/static/psicologos/${this.$route.params.slug}/`,
+					href: `https://cdn.hablaqui.cl/static/especialistas/${this.$route.params.slug}/`,
 				},
 			],
 		};

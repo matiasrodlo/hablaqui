@@ -1,0 +1,14 @@
+steps:
+  - name: "docker-compose"
+    entrypoint: "docker"
+    args: ["compose","-f", "docker-compose.yml", "up"]
+    dir: "./"
+    id: "build-api"
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy"]
+    dir: "./"
+    waitFor: ["docker-compose"]
+  
+options:
+  machineType: 'N1_HIGHCPU_8'
+timeout: "2600s"

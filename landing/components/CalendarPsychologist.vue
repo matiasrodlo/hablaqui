@@ -141,7 +141,7 @@ export default {
 			) {
 				this.callback();
 				this.$router.push(
-					`/psicologos/pagos/?username=${this.username}&date=${
+					`/especialistas/pagos/?username=${this.username}&date=${
 						item.date
 					}&start=${hour}&end=${item.available[index + 1]}`
 				);

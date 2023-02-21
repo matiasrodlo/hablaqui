@@ -39,7 +39,7 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	// Obtiene solo agendas de los psicologos soliciotados
+	// Obtiene solo agendas de los especialistas soliciotados
 	async getSessionsLimit({ commit }, ids) {
 		try {
 			const { data } = await this.$axios('/psychologists/sessionsLimit', {

@@ -21,7 +21,7 @@
 					class="primary"
 					accesskey="p"
 					link
-					:to="{ name: 'psicologos' }"
+					:to="{ name: 'especialistas' }"
 				>
 					<v-list-item-content>
 						<v-list-item-title class="white--text font-weight-bold body-2">
@@ -125,8 +125,8 @@
 			height="83"
 			color="#ffffff"
 			style="opacity: 0.9"
-			:elevate-on-scroll="$route.name !== 'psicologos'"
-			:app="$route.name !== 'psicologos'"
+			:elevate-on-scroll="$route.name !== 'especialistas'"
+			:app="$route.name !== 'especialistas'"
 		>
 			<v-container fluid style="max-width: 1080px">
 				<v-row align="center" justify="space-between" no-gutters>
@@ -311,7 +311,7 @@
 									class="py-4 ml-2 hidden-sm-and-down text-uppercase font-weight-bold"
 									color="primary"
 									depressed
-									to="/psicologos"
+									to="/especialistas"
 								>
 									Buscar Psicólogo
 								</v-btn>

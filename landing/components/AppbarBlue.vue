@@ -50,7 +50,7 @@
 			<v-spacer></v-spacer>
 			<v-btn
 				id="psi-appbar-blue"
-				to="/psicologos/"
+				to="/especialistas/"
 				large
 				rounded
 				class="hidden-sm-and-down mx-4 px-8"

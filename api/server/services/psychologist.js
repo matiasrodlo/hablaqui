@@ -30,10 +30,10 @@ dayjs.tz.setDefault('America/Santiago');
 const analytics = new Analytics(process.env.SEGMENT_API_KEY);
 
 const getAll = async () => {
-	// Funcion para obtener todos los psicologos
+	// Funcion para obtener todos los especialistas
 	let psychologists = await Psychologist.find();
-	logInfo('obtuvo todos los psicologos');
-	return okResponse('psicologos obtenidos', { psychologists });
+	logInfo('obtuvo todos los especialistas');
+	return okResponse('especialistas obtenidos', { psychologists });
 };
 
 /**
@@ -200,10 +200,10 @@ const criterioModeloTeraupetico = (psy, payload, pointsPerCriterion) => {
 };
 
 /**
- * @description Pondera los psicologos segun sus puntajes
- * @param {Array} matchedList - Lista de psicologos matchados que se quiere ponderar
+ * @description Pondera los especialistas segun sus puntajes
+ * @param {Array} matchedList - Lista de especialistas matchados que se quiere ponderar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns {Array} - Lista de psicologos ponderados
+ * @returns {Array} - Lista de especialistas ponderados
  */
 
 const ponderationMatch = async (matchedList, payload) => {
@@ -252,10 +252,10 @@ const ponderationMatch = async (matchedList, payload) => {
 };
 
 /**
- * @description Clasifica los psicologos si es el mejor match, el mas barato y el con mayor disponibilidad
- * @param {Array} matchedList - Lista de psicologos matchados que se quiere clasificar
+ * @description Clasifica los especialistas si es el mejor match, el mas barato y el con mayor disponibilidad
+ * @param {Array} matchedList - Lista de especialistas matchados que se quiere clasificar
  * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns - Lista de psicologos clasificados
+ * @returns - Lista de especialistas clasificados
  */
 
 const psychologistClasification = async (matchedList, payload) => {
@@ -263,7 +263,7 @@ const psychologistClasification = async (matchedList, payload) => {
 	let points = 0;
 	let resultList = [];
 	let pointsPerCriterion = 1;
-	// Entre los psicologos ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	let newMatchedList = await Promise.all(
 		matchedList.map(async psy => {
 			psy.points = 0;
@@ -313,7 +313,7 @@ const match = async body => {
 		// Si no es transgenero
 		matchedPsychologists = await Psychologist.find({
 			gender: payload.gender || {
-				// Se buscan los psicologos por género, prioriza payload.gender el genero entregado por el cliente.
+				// Se buscan los especialistas por género, prioriza payload.gender el genero entregado por el cliente.
 				$in: ['male', 'female', 'transgender'],
 			},
 			specialties: { $in: payload.themes },
@@ -321,7 +321,7 @@ const match = async body => {
 	}
 
 	// Agregar de nuevo modelo terapeutico
-	// Se obtiene la lista de psicologos que coinciden con los temas
+	// Se obtiene la lista de especialistas que coinciden con los temas
 	if (matchedPsychologists.length < 3) {
 		matchedPsychologists = await Psychologist.find();
 		perfectMatch = false;
@@ -333,18 +333,18 @@ const match = async body => {
 		payload
 	);
 
-	// Se deja solo los 3 mejores psicologos
+	// Se deja solo los 3 mejores especialistas
 	while (matchedPsychologists.length > 3) {
 		matchedPsychologists.pop();
 	}
 
-	// Se busca entre los primeros 3 psicologos el más barato, con mayor disponibilidad, y el mejor match
+	// Se busca entre los primeros 3 especialistas el más barato, con mayor disponibilidad, y el mejor match
 	matchedPsychologists = await psychologistClasification(
 		matchedPsychologists,
 		payload
 	);
 
-	return okResponse('psicologos encontrados', {
+	return okResponse('especialistas encontrados', {
 		matchedPsychologists,
 		perfectMatch,
 	});

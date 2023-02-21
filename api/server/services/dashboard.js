@@ -20,10 +20,10 @@ dayjs.tz.setDefault('America/Santiago');
 
 const getNextSessions = async () => {
 	/*
-	Retorna las proximas sesiones de los psicologos.
+	Retorna las proximas sesiones de los especialistas.
 	De momento esta función no tiene entradas.
 	*/
-	// Se obtienen las sesiones de todos los psicologos
+	// Se obtienen las sesiones de todos los especialistas
 	let sessions = await Sessions.find().populate('psychologist user');
 
 	// Se filtran las sesiones que no tienen psicologo ni usuario
@@ -77,7 +77,7 @@ const getNextSessions = async () => {
 		})
 		.filter(ns => ns.isNextSession)
 		.sort((a, b) => new Date(a.date) - new Date(b.date));
-	return okResponse('psicologos obtenidos', { nextSessions });
+	return okResponse('especialistas obtenidos', { nextSessions });
 };
 
 const getSessionsPayment = async (startDate, endDate) => {
@@ -121,7 +121,7 @@ const getSessionsPayment = async (startDate, endDate) => {
 		else auxFlatSession[auxFlatSession.indexOf(resp)].price += s.price;
 	});
 
-	return okResponse('psicologos obtenidos', { psyPayments: auxFlatSession });
+	return okResponse('especialistas obtenidos', { psyPayments: auxFlatSession });
 };
 
 const fixSpecialities = async () => {

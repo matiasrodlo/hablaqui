@@ -8,6 +8,7 @@ const cronController = {
 	async emailSchedule(req, res) {
 		try {
 			const token = req.params.authToken;
+			console.log('hola');
 			const { data, code } = await cronService.emailSchedule(token);
 			return restResponse(data, code, res);
 		} catch (err) {

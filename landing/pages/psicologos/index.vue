@@ -3,13 +3,13 @@
 		<!-- appbar -->
 		<appbar />
 		<!-- desktop -->
-		<psicologos-desktop
+		<especialistas-desktop
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
 			class="mt-10 hidden-sm-and-down"
 		/>
 		<!-- mobile -->
-		<psicologos-mobile
+		<especialistas-mobile
 			:loading-psychologist="loadingPsychologist"
 			:get-sessions-limit="getSessions"
 			class="mt-10 hidden-md-and-up"
@@ -35,8 +35,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import PsicologosDesktop from '~/components/psicologos/PsicologosDesktop';
-import PsicologosMobile from '~/components/psicologos/PsicologosMobile';
+import especialistasDesktop from '~/components/especialistas/especialistasDesktop';
+import especialistasMobile from '~/components/especialistas/especialistasMobile';
 import Footer from '~/components/Footer';
 import Appbar from '~/components/AppbarWhite';
 
@@ -44,8 +44,8 @@ export default {
 	components: {
 		Footer,
 		Appbar,
-		PsicologosDesktop,
-		PsicologosMobile,
+		especialistasDesktop,
+		especialistasMobile,
 	},
 	async asyncData({ error, store }) {
 		try {
@@ -60,12 +60,12 @@ export default {
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/',
+					content: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos/',
+					content: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 				{
 					hid: 'robots',
@@ -76,7 +76,7 @@ export default {
 			link: [
 				{
 					rel: 'canonical',
-					href: process.env.VUE_APP_LANDING + '/psicologos/',
+					href: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 			],
 		};
@@ -86,7 +86,7 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://app.hablaqui.cl/psicologos/',
+			url: 'http://app.hablaqui.cl/especialistas/',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://app.hablaqui.cl/logo_tiny.png',

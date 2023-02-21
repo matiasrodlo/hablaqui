@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<snackbar />
-		<nuxt :keep-alive="$route.name === 'psicologos'" />
+		<nuxt :keep-alive="$route.name === 'especialistas'" />
 		<template
 			v-if="
 				$route.name !== 'index' &&

@@ -4,7 +4,7 @@
 		<v-container fluid style="max-width: 1200px">
 			<v-row>
 				<v-col
-					v-if="$route.name === 'psicologos'"
+					v-if="$route.name === 'especialistas'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h5"
@@ -676,9 +676,9 @@ import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-	name: 'PsicologosMobile',
+	name: 'especialistasMobile',
 	components: {
-		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
+		MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
 		Icon: () => import('~/components/Icon'),
 	},
 	props: {
@@ -794,7 +794,7 @@ export default {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (
-			this.$route.name === 'psicologos' &&
+			this.$route.name === 'especialistas' &&
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });

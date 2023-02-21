@@ -180,7 +180,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
-		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
+		MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
 	},
 	props: {
 		psychologist: {

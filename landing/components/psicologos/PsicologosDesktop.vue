@@ -4,7 +4,7 @@
 		<v-container fluid style="max-width: 1080px">
 			<v-row>
 				<v-col
-					v-if="$route.name === 'psicologos'"
+					v-if="$route.name === 'especialistas'"
 					cols="12"
 					tag="h1"
 					class="text-left font-weight-bold text-h6 text-md-h3"
@@ -614,10 +614,10 @@ import { mdiChevronDown, mdiAccount } from '@mdi/js';
 import { mapGetters, mapMutations } from 'vuex';
 
 /**
- * Componente: Listado de psicologos en vista de escritorio
+ * Componente: Listado de especialistas en vista de escritorio
  */
 export default {
-	name: 'PsicologosDesktop',
+	name: 'especialistasDesktop',
 	components: {
 		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
 	},
@@ -668,7 +668,7 @@ export default {
 		},
 		/**
 		 * Filter prices
-		 * Filtro en base a los precios de los psicologos
+		 * Filtro en base a los precios de los especialistas
 		 */
 		filterLevelTwo(item) {
 			if (!this.prices) return this.filterLevelOne;
@@ -683,7 +683,7 @@ export default {
 		},
 		/**
 		 * items for search box
-		 * Primer filtro de psicologos en base a:
+		 * Primer filtro de especialistas en base a:
 		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
 		 */
 		filterLevelOne() {
@@ -707,7 +707,7 @@ export default {
 					trans && gender.push(trans);
 					return gender.some(el => this.gender.some(g => g === el));
 				});
-			// filtramos los psicologos segun los models marcados
+			// filtramos los especialistas segun los models marcados
 			if (this.models.length)
 				result = result.filter(item => item.models.some(el => this.models.includes(el)));
 			// filtramos segun los leguajes que habla el psicologo
@@ -746,7 +746,7 @@ export default {
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
 		if (
-			this.$route.name === 'psicologos' &&
+			this.$route.name === 'especialistas' &&
 			JSON.stringify(this.$route.params) !== JSON.stringify({})
 		)
 			this.$router.replace({ query: null });
@@ -769,7 +769,7 @@ export default {
 			}
 		},
 		/**
-		 * Esto son los psicologos que se iran viendo segun el scroll
+		 * Esto son los especialistas que se iran viendo segun el scroll
 		 */
 		handleVisivility(isVisible, entry, idPsychologist) {
 			if (isVisible && !this.visibles.includes(idPsychologist))

@@ -225,7 +225,7 @@ export default {
 							) {
 								this.datalayer(this.$auth.$state.user, 'registro-pago');
 								return this.$router.push(
-									`/psicologos/pagos/?username=${this.$route.query.psychologist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
+									`/especialistas/pagos/?username=${this.$route.query.psychologist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
 								);
 							}
 							// redirecionamos de nuevo a chat luego de ingresar

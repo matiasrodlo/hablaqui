@@ -101,7 +101,7 @@ const getRemainingSessions = async psy => {
 	});
 };
 
-// Reprogramación sesiones para psicologos
+// Reprogramación sesiones para especialistas
 const cancelSession = async (user, planId, sessionsId, id) => {
 	const cancelSessions = await Sessions.findOneAndUpdate(
 		{
@@ -1045,7 +1045,7 @@ const getFormattedSessions = async (idPsychologist, type) => {
 	return okResponse('sesiones obtenidas', { sessions });
 };
 
-// Utilizado para traer las sessiones de todos los psicologos para el selector
+// Utilizado para traer las sessiones de todos los especialistas para el selector
 const formattedSessionsAll = async ids => {
 	let sessions = [];
 	let psychologist = [];
@@ -1102,7 +1102,7 @@ const formattedSessionsAll = async ids => {
 		})
 	);
 
-	// Mapeamos los psicologos para agregarle las sessiones filtrando por psicologo
+	// Mapeamos los especialistas para agregarle las sessiones filtrando por psicologo
 	allSessions = psychologist.map(item => ({
 		...item,
 		sessions: setDaySessions(

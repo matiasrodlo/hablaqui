@@ -4,21 +4,21 @@ FROM node:14-alpine
 # Crea una carpeta con el parámetro -p, sin error si existe, crea directorios padre según sea necesario, 
 # con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
 # archivos de la carpeta /app asignandosela a node.
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app && mkdir -p /home/node/app/.nuxt
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 # Declara parámetros de la línea de comandos para el proceso de construcción
 ARG API_ABSOLUTE
 ARG FRONTEND_URL
-ARG NODE_ENV
 ARG MERCADOPAGO_KEY
 ARG VUE_APP_LANDING
+ARG VUE_APP_URL
 
 # Establece variables de entorno
 RUN export API_ABSOLUTE=${_API_ABSOLUTE}
 RUN export FRONTEND_URL=${_FRONTEND_URL}
-RUN export NODE_ENV=${_NODE_ENV}
 RUN export MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}
 RUN export VUE_APP_LANDING=${_VUE_APP_LANDING}
+RUN export VUE_APP_URL=${_VUE_APP_URL}
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -26,18 +26,22 @@ WORKDIR /home/node/app
 # Cambia el usuario actual a node
 USER node
 
-# Copiar package.json
-COPY --chown=node:node package*.json ./
-
-ENV HOST=0.0.0.0
-ENV PORT=8080
+# Copia todos los archivos de la carpeta actual a la carpeta /home/node/app
+COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
 RUN npm install
 
+# Variables de entorno para que funcione Nuxt
+ENV HOST=0.0.0.0
+ENV PORT=8080
+ENV NODE_ENV=development
+
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run create-env
-RUN npm run generate
+
+# Se expone el puerto 9000 y 8080
+EXPOSE 9000 8080
 
 # Ejecuta el comando npm run start
 ENTRYPOINT ["npm", "run", "dev"]

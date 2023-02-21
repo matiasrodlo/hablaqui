@@ -8,7 +8,7 @@
     - [Pagos](#pagos)
     - [Perfil](#perfil)
 
-2. [Psicologos](#psicologos)
+2. [especialistas](#especialistas)
 3. [Raíz](#raiz)
 
 ### DASHBOARD
@@ -43,7 +43,7 @@
 
 ---
 
-### PSICOLOGOS
+### especialistas
 
 ---
 

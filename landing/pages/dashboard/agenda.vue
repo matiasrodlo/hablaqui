@@ -1024,7 +1024,7 @@ export default {
 		setSchedule(item) {
 			this.newEvent = item;
 			this.$router.push(
-				`/psicologos/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
+				`/especialistas/pagos/?username=${this.psychologist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 		},
 		setNewPlan(newPlan) {
@@ -1176,7 +1176,7 @@ export default {
 		acquire() {
 			if (this.plan && this.plan.psychologist) {
 				this.addAppointment({ date: null });
-			} else this.$router.push({ name: 'psicologos' });
+			} else this.$router.push({ name: 'especialistas' });
 		},
 		setPrice(e) {
 			if (this.verifyOnlyNumbers(e)) {

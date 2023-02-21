@@ -241,7 +241,7 @@
 import { mapGetters } from 'vuex';
 export default {
 	components: {
-		MiniCalendar: () => import('~/components/psicologos/MiniCalendar'),
+		MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
 		CalendarPsychologist: () => import('~/components/CalendarPsychologist'),
 	},
 	props: {

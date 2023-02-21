@@ -150,10 +150,10 @@ sessionsRouter.get(
 );
 
 /**
- * obtiene las sessiones de todos los psicologos formateada para el selector
+ * obtiene las sessiones de todos los especialistas formateada para el selector
  */
 /**
- * @description Obtiene las sessiones de todos los psicologos formateada para el selector
+ * @description Obtiene las sessiones de todos los especialistas formateada para el selector
  * @method GET
  * @route /api/v1/psychologists/formattedSessionsAll
  * @returns Objeto listado de todas las sesiones de cada uno de los psicólogos
@@ -164,7 +164,7 @@ sessionsRouter.get(
 );
 
 /**
- * @description Obtiene las sessiones de todos los psicologos formateada y unicamente de los psicologos que pasemos en body.ids
+ * @description Obtiene las sessiones de todos los especialistas formateada y unicamente de los especialistas que pasemos en body.ids
  * @method POST
  * @route /api/v1/psychologists/sessionsLimit
  * @returns Objeto con las sesiones formateadas

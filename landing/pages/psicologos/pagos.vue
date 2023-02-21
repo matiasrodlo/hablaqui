@@ -36,11 +36,11 @@ export default {
 		Appbar: () => import('~/components/AppbarWhite'),
 		PagosDesktop: () =>
 			import(
-				/* webpackChunkName: "PsicologosDesktop" */ '~/components/psicologos/PagosDesktop'
+				/* webpackChunkName: "especialistasDesktop" */ '~/components/especialistas/PagosDesktop'
 			),
 		PagosMobile: () =>
 			import(
-				/* webpackChunkName: "PsicologosMobile" */ '~/components/psicologos/PagosMobile'
+				/* webpackChunkName: "especialistasMobile" */ '~/components/especialistas/PagosMobile'
 			),
 	},
 	async asyncData({ query, $axios, error }) {
@@ -66,18 +66,18 @@ export default {
 				{
 					hid: 'twitter:url',
 					name: 'twitter:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/especialistas',
 				},
 				{
 					hid: 'og:url',
 					property: 'og:url',
-					content: process.env.VUE_APP_LANDING + '/psicologos',
+					content: process.env.VUE_APP_LANDING + '/especialistas',
 				},
 			],
 			link: [
 				{
 					rel: 'canonical',
-					href: process.env.VUE_APP_LANDING + '/psicologos/',
+					href: process.env.VUE_APP_LANDING + '/especialistas/',
 				},
 			],
 		};
@@ -92,7 +92,7 @@ export default {
 			'@context': 'https://schema.org',
 			'@type': 'Organization',
 			leaglName: 'Hablaquí',
-			url: 'http://app.hablaqui.cl/psicologos',
+			url: 'http://app.hablaqui.cl/especialistas',
 			email: 'soporte@hablaqui.cl',
 			slogan: 'Psicólogo y terapia online de calidad sin salir de casa',
 			logo: 'https://app.hablaqui.cl/logo_tiny.png',

@@ -139,7 +139,7 @@ class _ChatConversationsState extends State<ChatConversations>
 	void _searchPsychologists() async
 	{
 		//Navigator.of(this.context).pushNamed('/psychologists/search');
-		String url = 'https://hablaqui.cl/psicologos';
+		String url = 'https://hablaqui.cl/especialistas';
 		if (await canLaunch(url)) 
 		{
 			await launch(url);

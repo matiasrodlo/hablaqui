@@ -165,7 +165,7 @@ const mailService = {
 	async sendReminderPsy(user, psy, sessionDate, batch, mailType, urlRooms) {
 		const { email, name, lastName } = psy;
 		const dataPayload = {
-			from: 'Hablaquí <recordatorios-psicologos@mail.hablaqui.cl>',
+			from: 'Hablaquí <recordatorios-especialistas@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
 			subject: `Su sesión con ${user.name} en Hablaquí está por comenzar`,
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
