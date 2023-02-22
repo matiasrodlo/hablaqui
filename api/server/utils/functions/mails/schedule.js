@@ -293,9 +293,9 @@ const mailService = {
 				group_id: 16321,
 			},
 			dynamicTemplateData: {
-				user_first_name: nameUser,
-				user_last_name: lastNameUser,
-				psy_first_name: name,
+				user_name:
+					user.name + ' ' + (user.lastName ? user.lastName : ''),
+				psy_name: spec.name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
