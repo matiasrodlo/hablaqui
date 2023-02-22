@@ -26,9 +26,8 @@ WORKDIR /home/node/app
 # Cambia el usuario actual a node
 USER node
 
-# Copia todos los archivos de la carpeta actual a la carpeta /home/node/app
+# Copiar package.json
 COPY --chown=node:node package*.json ./
-COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
 RUN npm install

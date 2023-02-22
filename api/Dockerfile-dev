@@ -65,7 +65,9 @@ RUN export NAMESPACE_TESTMAILS=${NAMESPACE_TESTMAILS}
 
 # Cambia el usuario actual a node
 USER node
-COPY --chown=node:node . ./
+
+# Copiar package.json
+COPY --chown=node:node package*.json ./
 
 # Instala las dependencias del proyecto
 RUN npm install

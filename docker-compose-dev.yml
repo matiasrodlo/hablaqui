@@ -14,6 +14,9 @@ services:
       - VUE_APP_URL=http://localhost:3000/api/v1
       - HOST=0.0.0.0
       - PORT=8080
+    volumes:
+      - ./landing:/home/node/app
+      - /home/node/app/node_modules
   api-restful:
    # Se especifica el dockerfile que se va a utilizar
     build:
@@ -45,3 +48,6 @@ services:
       - NAMESPACE_TESTMAILS=bnwxe
     # # Se monta la carpeta del proyecto en el contenedor (lo que hace que no sea necesario hacer build cada vez que se modifica el código)
     # Volumen de anfitrion a host, se indica la ruta de la carpeta del proyecto en el host y la ruta de la carpeta del proyecto en el contenedor
+    volumes:
+      - ./api:/home/node/app
+      - /home/node/app/node_modules
