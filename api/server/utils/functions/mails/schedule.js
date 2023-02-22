@@ -295,7 +295,7 @@ const mailService = {
 			dynamicTemplateData: {
 				user_first_name: nameUser,
 				user_last_name: lastNameUser,
-				psy_first_name: name,
+				psy_name: name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
@@ -317,7 +317,7 @@ const mailService = {
 		const dataPayload = {
 			from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
 			to: name + '<' + email + '>',
-			subject: 'Tu sesión en Hablaquí ha sido agendada',
+			subject: 'Su sesión ha sido agendada',
 			reply_to: 'Hablaquí <soporte@hablaqui.cl>',
 			templateId: 'd-93dcae8eaa45480286f29e25d88d173d',
 			asm: {
@@ -326,7 +326,7 @@ const mailService = {
 			dynamicTemplateData: {
 				psy_name:
 					spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
-				first_name: name,
+				user_first_name: name,
 				url: url,
 				date: dayjs(date).format('DD/MM/YYYY'),
 				hour: dayjs(date).format('HH:mm'),
