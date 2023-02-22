@@ -12,7 +12,8 @@
                 "GitHub.copilot",
                 "Vue.volar",
                 "eamodio.gitlens",
-                "PKief.material-icon-theme"
+                "PKief.material-icon-theme",
+                "mongodb.mongodb-vscode"
             ],
             "settings": {
                 "editor.formatOnSave": true,
@@ -30,7 +31,15 @@
                 "[vue]": {
                     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
                 },
-                "git.ignoreMissingGitWarning": true
+                "git.ignoreMissingGitWarning": true,
+                "mdb.connectionSaving.defaultConnectionSavingLocation": "Workspace"
+            }
+        },
+        "codespaces": {
+            "repositories": {
+                "hablaqui/hablaqui-repository": {
+                    "permissions": "write-all"
+                }
             }
         }
     }
