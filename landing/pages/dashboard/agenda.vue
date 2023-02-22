@@ -211,10 +211,11 @@
 											selectedEvent.status === 'pending'
 											// || selectedEvent.status === 'upnext'
 										"
+										color="error"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
-										Reprogramar
+										Cancelar
 									</v-btn>
 									<v-chip
 										v-if="selectedEvent.status === 'success'"
