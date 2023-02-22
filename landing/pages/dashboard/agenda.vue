@@ -208,12 +208,24 @@
 									<v-spacer></v-spacer>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending'
+											selectedEvent.status === 'pending' &&
+											$auth.$state.user.role !== 'specialist'
 											// || selectedEvent.status === 'upnext'
+										"
+										color="primary"
+										text
+										@click="() => openDialog(selectedEvent)"
+									>
+										Reprogramar
+									</v-btn>
+									<v-btn
+										v-if="
+											selectedEvent.status === 'pending' &&
+											$auth.$state.user.role === 'specialist'
 										"
 										color="error"
 										text
-										@click="() => openDialog(selectedEvent)"
+										@click="() => cancelOneSession(selectedEvent)"
 									>
 										Cancelar
 									</v-btn>
