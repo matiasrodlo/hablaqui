@@ -237,7 +237,8 @@
 											<v-card>
 												<v-card-title> Advertencia </v-card-title>
 												<v-card-text>
-													El cancelar una sesión puede ocasionar molestias.
+													El cancelar una sesión puede ocasionar
+													molestias.
 												</v-card-text>
 												<v-card-actions>
 													<v-col>
@@ -1063,6 +1064,7 @@ export default {
 		 */
 		getEventColor(event) {
 			if (event.statusPlan === 'pending') return 'blue-grey lighten-1';
+			if (event.status === 'canceled') return 'error';
 			if (event.title === 'compromiso privado') return '#efb908';
 			if (event.title === 'sesion presencial') return '#00c6ea';
 			return 'primary';
@@ -1316,7 +1318,6 @@ export default {
 			this.overlay = false;
 		},
 		async cancelOneSessionSpecialist(item) {
-			console.log(item);
 			// Especialista cancela una sesión utilizando el endpoint de cancel-session-especialist
 			this.overlay = true;
 			await this.cancelSessionSpecialist({
@@ -1324,7 +1325,10 @@ export default {
 				id: item._id,
 				planId: item.idPlan,
 			});
+			this.popUp = false;
 			this.overlay = false;
+			this.snackBar({ content: 'Sesión cancelada', color: 'success' });
+			setTimeout(() => {}, 5000, location.reload());
 		},
 		acquire() {
 			if (this.plan && this.plan.specialist) {
@@ -1351,6 +1355,7 @@ export default {
 		...mapMutations({
 			setSessions: 'Specialist/setSessions',
 			setStepLinks: 'User/setStepLinks',
+			snackBar: 'Snackbar/showMessage',
 		}),
 		...mapActions({
 			addSession: 'Specialist/addSession',
