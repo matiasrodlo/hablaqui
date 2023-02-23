@@ -1111,7 +1111,7 @@ const formattedSessionsAll = async ids => {
 		),
 	}));
 
-	// Obtenemos la disponibilidad de todos los psicolgos
+	// Obtenemos la disponibilidad de todos los especialistas
 	sessions = allSessions.map(item => {
 		const minimumNewSession = dayjs
 			.tz(dayjs().add(item.preferences.minimumNewSession, 'h'))
@@ -1443,6 +1443,42 @@ const getAllSessionsFormatted = async () => {
 	return okResponse('Sesiones obtenidas', { formattedSessions });
 };
 
+const cancelSessionByEspecialist = async (user, planId, sessionsId, id) => {
+	// Se busca en mongo y cancela la session agendada del plan
+	const cancelSessions = await Sessions.findOneAndUpdate(
+		{
+			_id: sessionsId,
+			'plan._id': planId,
+			'plan.session._id': id,
+		},
+		{
+			$push: {
+				'plan.$.session': { status: 'canceled' },
+			},
+		}
+	).populate('specialist user');
+
+	if (!cancelSessions) {
+		return conflictResponse('No se pudo cancelar la sesión');
+	}
+
+	// Se envian los correos de cancelacion de sesion
+	await mailServiceReminder.sendCancelSessionSpec(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
+	await mailServiceReminder.sendCancelSessionUser(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
+
+	return okResponse('Sesion cancelada', {
+		sessions: setSession(user.role, sessions),
+	});
+};
+	
+
+
 const sessionsService = {
 	getSessions,
 	getRemainingSessions,
@@ -1461,6 +1497,7 @@ const sessionsService = {
 	getAllSessions,
 	paymentsInfoFromId,
 	getAllSessionsFormatted,
+	cancelSessionByEspecialist
 };
 
 export default Object.freeze(sessionsService);

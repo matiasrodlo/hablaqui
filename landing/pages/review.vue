@@ -261,7 +261,9 @@
 <script>
 import { mapActions } from 'vuex';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-
+/**
+ * Pagina de review
+ */
 export default {
 	name: 'ReviewSpecialist',
 	components: {
@@ -289,6 +291,7 @@ export default {
 		};
 	},
 	created() {
+		// obtenemos el especialista desde la query url
 		if (this.$route.query.specialist) {
 			this.idSpecialist = this.$route.query.specialist;
 			this.token = this.$route.query.token;
@@ -296,25 +299,32 @@ export default {
 		}
 	},
 	async mounted() {
+		// si no hay id especialista
 		if (!this.idSpecialist) {
 			this.overlay = false;
 			return this.$router.push('/');
 		}
-
+		// establece el token proveniente de la url si existe
 		if (this.token) {
 			await this.$auth.setUserToken(this.token);
 		}
-
+		// finalmente se obtiene el especialista
 		this.specialist = await this.getSpecialist(this.idSpecialist);
 		this.overlay = false;
 	},
 	methods: {
+		/**
+		 * Retorna string con url del avatar
+		 */
 		avatar(specialist, thumbnail) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
 			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
+		/**
+		 * Registra el cambio en el rating del especialista
+		 */
 		async onSubmit() {
 			this.loading = true;
 			await this.ratingSpecialist({

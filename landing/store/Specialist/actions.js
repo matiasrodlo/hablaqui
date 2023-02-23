@@ -217,7 +217,7 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async matchSpeci({ commit }, payload) {
+	async matchSpec({ commit }, payload) {
 		try {
 			const { data } = await this.$axios('/specialists/match', {
 				method: 'POST',

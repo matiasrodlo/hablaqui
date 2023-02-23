@@ -242,6 +242,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Vista de pagos desktop */
+
 export default {
 	components: {
 		Avatar: () => import('@/components/Avatar'),
@@ -302,9 +304,15 @@ export default {
 	},
 	mounted() {
 		this.setPrices();
+		/**
+		 * plan seleccionado
+		 */
 		this.planSelected = this.itemsPlan[1];
 	},
 	methods: {
+		/**
+		 * establece los cupones de descuento
+		 */
 		async setCoupon() {
 			try {
 				const { coupon } = await this.$axios.$post('/coupons/check-coupon', {
@@ -323,6 +331,9 @@ export default {
 				this.snackBar({ content: error.response.data.message, color: 'error' });
 			}
 		},
+		/**
+		 * establece los precios
+		 */
 		setPrices() {
 			this.itemsPlan = this.itemsPlan.map(item => {
 				let priceWithDiscount = '';
@@ -360,12 +371,18 @@ export default {
 				};
 			});
 		},
+		/**
+		 * strig url del avatar
+		 */
 		avatar(specialist) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail) return specialist.avatarThumbnail;
 			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
+		/**
+		 * Pagar el plan
+		 */
 		async payButton() {
 			this.loading = true;
 			const planPayload = {
@@ -395,6 +412,9 @@ export default {
 				else window.location.href = res.init_point;
 			this.loading = false;
 		},
+		/**
+		 * datalayer
+		 */
 		datalayer(plan) {
 			const data = {
 				event: 'checkout',
@@ -406,12 +426,18 @@ export default {
 			};
 			window.dataLayer.push(data);
 		},
+		/**
+		 * cambio de fecha
+		 */
 		changeDate(item) {
 			this.$router.push(
 				`/especialistas/pagos/?username=${this.specialist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
 			);
 			this.showCalendar = !this.showCalendar;
 		},
+		/**
+		 * formatea una fecha dada
+		 */
 		formatDate(date) {
 			return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY');
 		},

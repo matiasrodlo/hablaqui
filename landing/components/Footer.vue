@@ -1,4 +1,5 @@
 <template>
+	<!-- footer -->
 	<section v-if="$vuetify.breakpoint.mdAndUp" class="mt-4">
 		<v-container tag="section">
 			<v-row justify="center">

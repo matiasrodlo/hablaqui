@@ -14,6 +14,9 @@
 </template>
 
 <script>
+/**
+ * componente para visualizar icono
+ */
 export default {
 	props: {
 		size: {

@@ -17,7 +17,7 @@
 			</v-list-item>
 			<v-list dense>
 				<v-list-item
-					id="link-speci-drawer"
+					id="link-spec-drawer"
 					class="primary"
 					accesskey="p"
 					link
@@ -326,7 +326,9 @@
 
 <script>
 import { mdiMenu, mdiAccountDetails } from '@mdi/js';
-// El logo en VUE carga pixelado y las letras se ven algo distintas, los botones estan desplazados, etc
+/**
+ * Barra de navegacion onda blanca
+ */
 export default {
 	components: {
 		Avatar: () => import('~/components/Avatar'),
@@ -340,6 +342,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * menu de navegacion, los enlaces
+		 */
 		menu() {
 			const visible =
 				(this.$auth.$state.loggedIn && this.$auth.user.role === 'specialist') ||
@@ -433,17 +438,11 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * salir de la app
+		 */
 		async logout() {
 			await this.$auth.logout();
-		},
-		start() {
-			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else
-				this.$router.push({
-					name: 'auth',
-					params: { q: 'register' },
-					query: { from: 'spec' },
-				});
 		},
 	},
 };

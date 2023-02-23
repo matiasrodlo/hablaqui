@@ -334,7 +334,9 @@ import { validationMixin } from 'vuelidate';
 import { required, email, sameAs, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions, mapGetters } from 'vuex';
 import { mdiAccount, mdiCamera, mdiEye, mdiEyeOff } from '@mdi/js';
-
+/**
+ * Pagina de nuevo especialista
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -383,10 +385,16 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Return string url backround
+		 */
 		backgroundImg() {
 			if (this.$vuetify.breakpoint.smAndUp) return `https://cdn.hablaqui.cl/static/login.png`;
 			return null;
 		},
+		/**
+		 * Retirna errores del email
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -394,6 +402,9 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un email valido');
 			return errors;
 		},
+		/**
+		 * retorna erroes de nombre
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
@@ -402,6 +413,9 @@ export default {
 			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
+		/**
+		 * retorna errores de contraseña
+		 */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
@@ -410,6 +424,9 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
+		/**
+		 * retorna errores de contraseña repetida
+		 */
 		repeatPasswordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
@@ -423,6 +440,9 @@ export default {
 		}),
 	},
 	watch: {
+		/**
+		 * listener de region, para establecer la comuna segun esta
+		 */
 		'form.region'(newVal) {
 			if (newVal) {
 				this.comunas = this.comunasRegiones.find(item => {
@@ -432,9 +452,13 @@ export default {
 		},
 	},
 	created() {
+		// establece el formulrio por defecto
 		this.defaultForm();
 	},
 	async mounted() {
+		/**
+		 * Obtiene las especialidades
+		 */
 		this.getAppointments();
 		const response = await this.$axios.$get(
 			`${this.$config.LANDING_URL}/comunas-regiones.json`
@@ -443,6 +467,9 @@ export default {
 		this.regiones = response.map(i => i.region);
 	},
 	methods: {
+		/**
+		 * Default form
+		 */
 		defaultForm() {
 			this.repeatPassword = '';
 			this.form = {
@@ -464,6 +491,9 @@ export default {
 				isTrans: false,
 			};
 		},
+		/**
+		 * Pasa el form a formdata
+		 */
 		setFormData() {
 			const formData = new FormData();
 			formData.append('code', this.form.code);
@@ -487,6 +517,9 @@ export default {
 
 			return formData;
 		},
+		/**
+		 * Registra los cambios
+		 */
 		async handleClick() {
 			// this.$v.$touch();
 			const payload = this.setFormData();
@@ -499,6 +532,9 @@ export default {
 			this.defaultForm();
 			this.step = 1;
 		},
+		/**
+		 * Establece el avatar
+		 */
 		setAvatar(file) {
 			this.urlAvatar = URL.createObjectURL(file);
 			this.form.avatar = file;

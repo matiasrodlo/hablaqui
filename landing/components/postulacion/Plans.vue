@@ -194,6 +194,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * Planes */
+
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -237,6 +239,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * retorna el plan actual
+		 */
 		currentPlan() {
 			if (this.$auth.$state.user.role !== 'specialist') return false;
 			if (!this.specialist && !this.recruited) return false;
@@ -246,6 +251,9 @@ export default {
 				return this.recruited.specPlans[this.recruited.specPlans.length - 1];
 			else return false;
 		},
+		/**
+		 * verdadero si tiene plan premiun
+		 */
 		hasPremiunPlan() {
 			if (!this.currentPlan) return false;
 			return (
@@ -256,18 +264,23 @@ export default {
 		},
 	},
 	async mounted() {
+		// obtenemos el especialista
 		if (this.$auth.$state.user.specialist) {
 			const { specialist } = await this.$axios.$get(
 				`/specialists/one/${this.$auth.$state.user.specialist}`
 			);
 			this.specialist = specialist;
 		} else {
+			// obtenemos el postulado
 			const { recruited } = await this.$axios.$get(`/recruitment/${this.$auth.user.email}`);
 			this.recruitedId = recruited._id;
 			this.recruited = recruited;
 		}
 	},
 	methods: {
+		/**
+		 * Establece la preferencias del plan pasado
+		 */
 		async setPreferences(plan) {
 			// las preferencias se modificaron para que sean siempre anuales con un precio mensual de $69.990
 			const res = await this.setPaymentPreferences({
@@ -280,17 +293,20 @@ export default {
 				specialistId: this.$auth.$state.user.specialist,
 				recruitedId: this.recruitedId,
 			});
-
+			// si el id de reclutado existe
 			if (this.recruitedId) {
 				if (plan === 'premium') window.location.href = res.preference.init_point;
 				else this.next();
 			}
-
+			// si es especialista
 			if (this.$auth.$state.user.specialist) {
 				if (plan === 'premium') window.location.href = res.preference.init_point;
 				else this.$router.push({ name: 'dashboard-perfil' });
 			}
 		},
+		/**
+		 * cambia segun la ruta donde se encuentre
+		 */
 		goToStep() {
 			if (this.$route.name === 'postulacion') this.next();
 			else this.$router.push({ name: 'dashboard-perfil' });

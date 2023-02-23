@@ -551,7 +551,7 @@ const updateSpecialist = async (user, profile) => {
 				const id = getUser._id;
 				analytics.track({
 					userId: id.toString(),
-					event: 'spec-updasted-profile',
+					event: 'spec-updated-profile',
 				});
 				analytics.identify({
 					userId: id.toString(),

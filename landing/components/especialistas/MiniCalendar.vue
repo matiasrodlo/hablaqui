@@ -105,6 +105,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Santiago');
 
+/** * mini calendario */
+
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),
@@ -126,6 +128,9 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * sesiones disponible
+		 */
 		sessionsAvailable() {
 			const sessions = [...this.sessions];
 			const items = sessions.filter(item => item.available.length > 2);
@@ -133,9 +138,15 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * formatea la fecha
+		 */
 		formatDate(item) {
 			return dayjs.tz(dayjs(item, 'MM/DD/YYYY')).format('dddd DD MMMM YYYY');
 		},
+		/**
+		 * ir a planes
+		 */
 		goPlans(item, hour, index) {
 			if (!this.$auth.$state.loggedIn) {
 				this.$router.push({

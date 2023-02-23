@@ -34,6 +34,9 @@
 </template>
 
 <script>
+/** \
+ * layout de pagina de error
+ */
 export default {
 	layout: 'empty',
 	props: {

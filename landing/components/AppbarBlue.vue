@@ -49,7 +49,7 @@
 			</a>
 			<v-spacer></v-spacer>
 			<v-btn
-				id="speci-appbar-blue"
+				id="spec-appbar-blue"
 				to="/especialistas/"
 				large
 				rounded
@@ -79,7 +79,9 @@
 
 <script>
 import { mdiMenu } from '@mdi/js';
-
+/**
+ * Barra de navegacion con onda azul
+ */
 export default {
 	components: {
 		Icon: () => import('~/components/Icon'),

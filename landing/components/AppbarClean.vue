@@ -17,7 +17,7 @@
 			</v-list-item>
 			<!-- <v-list dense>
 				<v-list-item
-					id="link-speci-drawer"
+					id="link-spec-drawer"
 					class="primary"
 					accesskey="p"
 					link

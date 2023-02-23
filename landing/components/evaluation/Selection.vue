@@ -238,6 +238,9 @@
 </template>
 
 <script>
+/**
+ * seleccion
+ */
 import { mapGetters } from 'vuex';
 export default {
 	components: {
@@ -265,12 +268,18 @@ export default {
 		}),
 	},
 	methods: {
+		/**
+		 * retorna miniatura del avatar o el avatar full size
+		 */
 		avatar(specialist, thumbnail) {
 			if (!specialist.approveAvatar) return '';
 			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
 			if (specialist.avatar) return specialist.avatar;
 			return '';
 		},
+		/**
+		 * obtiene las sessiones segun el id
+		 */
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.specialist === id);
 			if (!temp) {

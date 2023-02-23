@@ -160,6 +160,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
+/**
+ * vista general mi cuenta
+ */
 export default {
 	components: {
 		UpdateProfile: () => import('~/components/dashboard/UpdateProfile'),

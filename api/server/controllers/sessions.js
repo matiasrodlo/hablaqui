@@ -215,6 +215,21 @@ const sessionsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async cancelSessionByEspecialist(req, res) {
+		try {
+			const { user } = req;
+			const { sessionsId, planId, id } = req.body;
+			const { data, code } = await sessionsService.cancelSessionByEspecialist(
+				user,
+				sessionsId,
+				planId,
+				id
+			);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	},
 };
 
 export default Object.freeze(sessionsController);

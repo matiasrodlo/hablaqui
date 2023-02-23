@@ -36,7 +36,6 @@
 							selectedSpec.name + ' ' + selectedSpec.lastName
 						}}</span>
 					</div>
-
 					<div class="pa-5">
 						Consultante:
 						<span v-if="selectedClient">{{
@@ -69,8 +68,11 @@
 <script>
 import { mapMutations } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+/**
+ * Cambio de especialista
+ */
 export default {
-	name: 'Cambio',
+	name: 'ChangeSpec',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
@@ -95,12 +97,21 @@ export default {
 		};
 	},
 	mounted() {
+		/**
+		 * inicial fetch datas
+		 */
 		this.initFetch();
 	},
 	methods: {
+		/**
+		 * Obtenemos los datos iniciales
+		 */
 		async initFetch() {
 			await this.getSpecialist();
 		},
+		/**
+		 * Obtenermos los especialistas todos
+		 */
 		async getSpecialist() {
 			const { specialists } = await this.$axios.$get('/specialists/all');
 			this.specialists = specialists.sort((a, b) => {
@@ -116,17 +127,29 @@ export default {
 				return 0;
 			});
 		},
+		/**
+		 * Obtenemos los clientes del especialista seleccionado
+		 */
 		async getClients(row) {
 			this.selectedSpec = row;
 			const { users } = await this.$axios.$get(`/specialist/clients/${row._id}`);
 			this.clients = users.filter(user => !!user.plan);
 		},
+		/**
+		 * Cliente seleccionado
+		 */
 		selectClient(row) {
 			this.selectedClient = row;
 		},
+		/**
+		 * spec seleccionado
+		 */
 		selectNewSpec(row) {
 			this.selectedNewSpec = row;
 		},
+		/**
+		 * Actualizar spec in user
+		 */
 		async change() {
 			try {
 				this.loadingChange = true;

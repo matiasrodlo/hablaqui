@@ -260,6 +260,9 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { mdiCamera } from '@mdi/js';
 
+/**
+ * perfil index
+ */
 export default {
 	components: {
 		Appbar: () => import('~/components/dashboard/AppbarProfile'),
@@ -300,12 +303,19 @@ export default {
 		},
 	},
 	mounted() {
+		// verifica el clipboard
 		this.canCopy = !!navigator.clipboard;
 	},
 	methods: {
+		/**
+		 * estable el valor en especialista
+		 */
 		setSpecialist(value) {
 			this.specialist = value;
 		},
+		/**
+		 * Actualiza el avatar
+		 */
 		async uploadAvatar(file) {
 			if (!file) return false;
 			this.loadingAvatar = true;
@@ -315,6 +325,9 @@ export default {
 			if (this.$auth.user.role === 'specialist' && this.$auth.user.specialist)
 				alert('Tu avatar estara disponible publicamente despues de que lo aprobemos');
 		},
+		/**
+		 * Crea el formdata de avatar
+		 */
 		setAvatarObject(file) {
 			const avatar = new FormData();
 			avatar.append('avatar', file);
@@ -330,6 +343,9 @@ export default {
 			);
 			return avatar;
 		},
+		/**
+		 * copiar enlace
+		 */
 		copyLink() {
 			navigator.clipboard.writeText(`${this.$config.LANDING_URL}${this.specialist.username}`);
 		},
