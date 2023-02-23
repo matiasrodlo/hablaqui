@@ -294,7 +294,7 @@ export default {
 		try {
 			const { data } = await this.$axios('/specialist/cancel-session-especialist', {
 				method: 'POST',
-				data: { payload },
+				data: payload,
 			});
 			return data;
 		} catch (e) {

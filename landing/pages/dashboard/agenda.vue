@@ -230,7 +230,6 @@
 										Cancelar
 										<v-dialog
 											v-model="popUp"
-											scrollable="false"
 											activator="parent"
 											persistent
 											max-width="500"
@@ -238,9 +237,7 @@
 											<v-card>
 												<v-card-title> Advertencia </v-card-title>
 												<v-card-text>
-													Está a punto de cancelar una sesión, esta
-													decisión podría generarle problemas al
-													Consultante.
+													El cancelar una sesión puede ocasionar molestias.
 												</v-card-text>
 												<v-card-actions>
 													<v-col>
@@ -260,7 +257,9 @@
 															block
 															@click="
 																() =>
-																	cancelOneSession(selectedEvent)
+																	cancelOneSessionSpecialist(
+																		selectedEvent
+																	)
 															"
 														>
 															Cancelar
@@ -1317,6 +1316,7 @@ export default {
 			this.overlay = false;
 		},
 		async cancelOneSessionSpecialist(item) {
+			console.log(item);
 			// Especialista cancela una sesión utilizando el endpoint de cancel-session-especialist
 			this.overlay = true;
 			await this.cancelSessionSpecialist({

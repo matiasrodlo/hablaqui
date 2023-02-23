@@ -1443,7 +1443,7 @@ const getAllSessionsFormatted = async () => {
 	return okResponse('Sesiones obtenidas', { formattedSessions });
 };
 
-const cancelSessionByEspecialist = async (user, planId, sessionsId, id) => {
+const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 	// Se busca en mongo y cancela la session agendada del plan
 	const cancelSessions = await Sessions.findOneAndUpdate(
 		{
@@ -1452,10 +1452,14 @@ const cancelSessionByEspecialist = async (user, planId, sessionsId, id) => {
 			'plan.session._id': id,
 		},
 		{
-			$push: {
-				'plan.$.session': { status: 'canceled' },
+			$set: {
+				'plan.$.session.$[session].status': 'canceled',
 			},
+		},
+		{
+			arrayFilters: [{ 'session._id': id }], new: true
 		}
+
 	).populate('specialist user');
 
 	if (!cancelSessions) {
@@ -1463,7 +1467,7 @@ const cancelSessionByEspecialist = async (user, planId, sessionsId, id) => {
 	}
 
 	// Se envian los correos de cancelacion de sesion
-	await mailServiceReminder.sendCancelSessionSpec(
+	await mailServiceSchedule.sendCancelSessionSpec(
 		cancelSessions.user,
 		cancelSessions.specialist
 	);
@@ -1472,12 +1476,8 @@ const cancelSessionByEspecialist = async (user, planId, sessionsId, id) => {
 		cancelSessions.specialist
 	);
 
-	return okResponse('Sesion cancelada', {
-		sessions: setSession(user.role, sessions),
-	});
+	return okResponse('Sesion cancelada', cancelSessions);
 };
-	
-
 
 const sessionsService = {
 	getSessions,

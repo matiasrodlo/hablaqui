@@ -33,8 +33,8 @@ const sessionsController = {
 			const { sessionsId, planId, id } = req.body;
 			const { data, code } = await sessionsService.cancelSession(
 				user,
-				planId,
 				sessionsId,
+				planId,
 				id
 			);
 			return restResponse(data, code, res);
@@ -217,10 +217,8 @@ const sessionsController = {
 	},
 	async cancelSessionByEspecialist(req, res) {
 		try {
-			const { user } = req;
 			const { sessionsId, planId, id } = req.body;
 			const { data, code } = await sessionsService.cancelSessionByEspecialist(
-				user,
 				sessionsId,
 				planId,
 				id
