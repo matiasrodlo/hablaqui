@@ -281,7 +281,7 @@ sessionsRouter.get(
 sessionsRouter.post(
 	'/specialist/cancel-session-especialist',
 	[passport.authenticate('jwt', { session: true })],
-	sessionsController.cancelSessionEspecialist
+	sessionsController.cancelSessionByEspecialist
 )
 
 export default sessionsRouter;
