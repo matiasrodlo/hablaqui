@@ -208,13 +208,67 @@
 									<v-spacer></v-spacer>
 									<v-btn
 										v-if="
-											selectedEvent.status === 'pending'
+											selectedEvent.status === 'pending' &&
+											$auth.$state.user.role !== 'specialist'
 											// || selectedEvent.status === 'upnext'
 										"
+										color="primary"
 										text
 										@click="() => openDialog(selectedEvent)"
 									>
 										Reprogramar
+									</v-btn>
+									<v-btn
+										v-if="
+											selectedEvent.status === 'pending' &&
+											$auth.$state.user.role === 'specialist'
+										"
+										color="error"
+										text
+										@click="popUp = true"
+									>
+										Cancelar
+										<v-dialog
+											v-model="popUp"
+											scrollable="false"
+											activator="parent"
+											persistent
+											max-width="500"
+										>
+											<v-card>
+												<v-card-title> Advertencia </v-card-title>
+												<v-card-text>
+													Está a punto de cancelar una sesión, esta
+													decisión podría generarle problemas al
+													Consultante.
+												</v-card-text>
+												<v-card-actions>
+													<v-col>
+														<v-btn
+															small
+															color="primary"
+															block
+															@click="popUp = false"
+														>
+															Retroceder
+														</v-btn>
+													</v-col>
+													<v-col>
+														<v-btn
+															small
+															color="error"
+															block
+															@click="
+																() =>
+																	cancelOneSession(selectedEvent)
+															"
+														>
+															Cancelar
+														</v-btn>
+													</v-col>
+												</v-card-actions>
+											</v-card>
+										</v-dialog>
 									</v-btn>
 									<v-chip
 										v-if="selectedEvent.status === 'success'"
@@ -855,6 +909,7 @@ export default {
 		plan: null,
 		appoinmentSessions: 0,
 		totalSessions: 0,
+		popUp: false,
 	}),
 	computed: {
 		/**

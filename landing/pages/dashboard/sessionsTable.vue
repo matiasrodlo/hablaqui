@@ -2,55 +2,153 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Sesiones" />
 		<v-row>
-			<v-card>
-				<v-card-title>
-					<v-row>
-						<v-col>
-							<v-text-field
-								v-model="dateFilterText"
-								type="datetime-local"
-								label="Filtro por Fecha"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-select
-								v-model="statFilterText"
-								:item-value="status.value"
-								:item-text="status.text"
-								:items="status"
-								label="Estado de Realización"
+			<v-col cols="12">
+				<div>
+					<v-card>
+						<v-card-title>
+							<v-row>
+								<v-col>
+									<v-menu
+										ref="menu"
+										v-model="menu"
+										:close-on-content-click="false"
+										:return-value.sync="date"
+										transition="scale-transition"
+										offset-y
+										min-width="auto"
+									>
+										<template v-slot:activator="{ on, attrs }">
+										<v-text-field
+											v-model="date"
+											label="Filtro por Fecha"
+											readonly
+											v-bind="attrs"
+											v-on="on"
+										></v-text-field>
+										</template>
+										<v-date-picker
+										v-model="date"
+										range
+										>
+										<v-spacer></v-spacer>
+										<v-btn
+											text
+											color="primary"
+											@click="menu = false"
+										>
+											Cancel
+										</v-btn>
+										<v-btn
+											text
+											color="primary"
+											@click="$refs.menu.save(date)"
+										>
+											OK
+										</v-btn>
+										</v-date-picker>
+									</v-menu>
+								</v-col>
+								<v-col>
+								<v-select
+									v-model="statFilterText"
+									:item-value="status.value"
+									:item-text="status.text"
+									:items="status"
+									label="Estado de Realización">
+								</v-select>
+								</v-col>
+								<v-col>
+								<v-text-field v-model="psyFilterText"
+												label="Filtro por Especialista"></v-text-field>
+								</v-col>
+								<v-col>
+								<v-text-field v-model="userFilterText"
+												label="Filtro por Usuario"></v-text-field>
+								</v-col>
+								<v-col>
+								<v-select v-model="payFilterText" :item-value="payStatus.value" :item-text="payStatus.text"
+											:items="payStatus" label="Estado de Pago">
+								</v-select>
+								</v-col>
+							</v-row>
+						</v-card-title>
+						<v-card-text>
+							<v-data-table
+								:headers="sessionsHeaders"
+								:items="filteredSessions"
+								:items-per-page="5"
 							>
-							</v-select>
-						</v-col>
-						<v-col>
-							<v-text-field
-								v-model="specFilterText"
-								label="Filtro por Especialista"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-text-field
-								v-model="userFilterText"
-								label="Filtro por Usuario"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-select
-								v-model="payFilterText"
-								:item-value="payStatus.value"
-								:item-text="payStatus.text"
-								:items="payStatus"
-								label="Estado de Pago"
+							</v-data-table>
+						</v-card-text>
+					</v-card>
+				</div>
+			</v-col>
+		</v-row>
+		<v-spacer></v-spacer>
+		<v-row>
+			<v-col cols="12">
+				<div>
+					<v-card>
+						<v-card-title>
+							<v-row>
+								<v-col>
+									<v-text-field 
+										v-model="nameFilterText"
+										label="Nombre"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="lastNameFilterText"
+										label="Apellido"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="mailFilterText"
+										label="Correo"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="phoneFilterText"
+										label="Teléfono"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="idFilterText"
+										label="ID"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field 
+										v-model="rutFilterText"
+										label="Rut"
+									></v-text-field>
+								</v-col>
+							</v-row>
+						</v-card-title>
+						<v-card-text>
+							<v-data-table
+								:headers="usersHeaders"
+								:items="filteredUsers"
+								:items-per-page="5"
 							>
-							</v-select>
-						</v-col>
-					</v-row>
-				</v-card-title>
-				<v-card-text>
-					<v-data-table :headers="headers" :items="filteredSessions" :items-per-page="5">
-					</v-data-table>
-				</v-card-text>
-			</v-card>
+								<template #item.action="{ item }">
+									<v-btn
+										:disabled="item.sessions.length === 0"
+										small
+										@click="showUserSessions(item)"
+									>
+										Sesiones
+									</v-btn>
+								</template>
+							</v-data-table>
+						</v-card-text>
+					</v-card>
+				</div>
+			</v-col>
 		</v-row>
 		<v-dialog
 			v-model="dialog"
@@ -60,18 +158,16 @@
 				}
 			"
 		>
+			<v-card>
+				<v-card-title>
+					<span class="text-h5">Sesiones del usuario</span>
+				</v-card-title>
+				<v-data-table :headers="headersUserSessions" :items="userSessions" />
+			</v-card>
 		</v-dialog>
-		<v-dialog
-			v-model="showBank"
-			max-width="500"
-			@click:outside="
-				() => {
-					showBank = false;
-				}
-			"
-		>
-		</v-dialog>
+
 	</v-container>
+
 </template>
 <script>
 import axios from 'axios';
@@ -98,20 +194,28 @@ export default {
 		return {
 			page: 1,
 			pageCount: 0,
-			specialist: [],
+			psychologist: [],
 			transactions: [],
-			start: '',
-			end: '',
+			users: [],
+			menu: '',
+			date: '',
 			label: 'Sesiones a pagar',
 			dialog: false,
 			showBank: false,
 			paymentMethods: {},
 			dateFilterText: null,
 			statFilterText: '',
-			specFilterText: '',
+			psyFilterText: '',
 			userFilterText: '',
 			payFilterText: '',
-			headers: [
+			nameFilterText: '',
+			lastNameFilterText: '',
+			mailFilterText: '',
+			phoneFilterText: '',
+			idFilterText: '',
+			rutFilterText: '',
+			userSessions: [],
+			sessionsHeaders: [
 				{ text: 'Consultante', value: 'user' },
 				{ text: 'Especialista', value: 'specialist' },
 				{ text: 'Fecha', value: 'date' },
@@ -121,14 +225,31 @@ export default {
 				{ text: 'Estado de Realización', value: 'statusSession' },
 				{ text: 'Estado de Pago', value: 'paymentPlan' },
 			],
+			usersHeaders: [
+				{text: 'Nombre', value: 'name'},
+				{text: 'Apellido', value: 'lastName'},
+				{text: 'Correo', value: 'email'},
+				{text: 'Teléfono', value: 'phone'},
+				{text: 'ID', value: '_id'},
+				{text: 'Rut', value: 'rut'},
+				{text: 'Acciones', value: 'action', sortable: false},
+			],
+			headersUserSessions: [
+				{ text: 'Fecha', value: 'date' },
+				{ text: 'Consultante', value: 'name' },
+				{ text: 'Correo', value: 'email' },
+				{ text: 'N° de sesión', value: 'sessionNumber' },
+				{ text: 'Estado de realización', value: 'status' },
+				{ text: 'Estado de Pago', value: 'paidToSpecialist' },
+			],
 			sessions: [],
 			status: [
 				{ text: 'Pendiente', value: 'pending' },
-				{ text: 'Realizada', value: 'success' },
+				{ text: 'Realizada', value: 'success' }
 			],
 			payStatus: [
 				{ text: 'Pendiente', value: 'pending' },
-				{ text: 'Pagada', value: 'success' },
+				{ text: 'Pagada', value: 'success' }
 			],
 		};
 	},
@@ -147,17 +268,50 @@ export default {
 			return transactions;
 		},
 		filteredSessions() {
-			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista, fecha de la sesión y estado de pago
+			let start = []
+			let end = []
+			if (this.date && this.date[0] && this.date[1]){
+				start = this.date[0].split('-')
+				end = this.date[1].split('-')
+			}
+
+			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
-					session.user.includes(this.userFilterText) &&
+					session.user.toLowerCase().includes(this.userFilterText.toLowerCase()) &&
 					session.statusSession.includes(this.statFilterText) &&
-					session.specialist.includes(this.specFilterText) &&
+					session.specialist.toLowerCase().includes(this.psyFilterText.toLowerCase()) &&
 					session.paymentPlan.includes(this.payFilterText) &&
-					(this.dateFilterText
-						? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
-						: true)
+					(this.date && this.date[0] && this.date[1]
+						? dayjs(dayjs(session.date).format('DD/MM/YYYY HH:mm')).isBetween(
+						`${start[0]}-${start[1]}-${start[2]}`,
+						`${end[0]}-${end[1]}-${end[2]}`
+					)
+						: true
+					)
 			);
+		},
+		filteredUsers() {
+			return this.users.filter(
+				//  correo telefono id rut
+				user =>
+					(this.nameFilterText === '' ? true : 
+						user.name === undefined ? false :
+							user.name.toLowerCase().includes(this.nameFilterText.toLowerCase())) &&
+					(this.lastNameFilterText === '' ? true :
+						user.lastName === undefined ? false :
+							user.lastName.toLowerCase().includes(this.lastNameFilterText.toLowerCase())) &&
+					(this.mailFilterText === '' ? true :
+						user.email === undefined ? false :
+							user.email.toLowerCase().includes(this.mailFilterText.toLowerCase())) &&
+					(this.phoneFilterText === '' ? true :
+						user.phone === undefined ? false :
+							user.phone.toLowerCase().includes(this.phoneFilterText.toLowerCase())) &&
+					user._id.includes(this.idFilterText.toLowerCase()) &&
+					(this.rutFilterText === '' ? true :
+						user.rut === undefined ? false :
+							user.rut.includes(this.rutFilterText.toLowerCase()))
+			)
 		},
 	},
 	mounted() {
@@ -165,11 +319,13 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			await this.getFormattedSessions();
+     		await this.getFormattedSessions();
 			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
-			this.specialist = amounts;
+			this.psychologist = amounts;
 			const { transactions } = await this.$axios.$get('/transaction/get/all');
 			this.transactions = transactions;
+			let usersObjects = await this.getUsers();
+			this.users = usersObjects.users;
 		},
 		async setTransaction(item) {
 			try {
@@ -178,13 +334,13 @@ export default {
 					data: {
 						total: item.total,
 						session: item.session,
-						idSpec: item._id,
+						idPsy: item._id,
 					},
 				});
 
-				const index = this.specialist.indexOf(item);
-				this.specialist[index].total = 0;
-				this.specialist[index].session = [];
+				const index = this.psychologist.indexOf(item);
+				this.psychologist[index].total = 0;
+				this.psychologist[index].session = [];
 				this.snackBar({ content: data.message, color: 'success' });
 			} catch (error) {
 				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
@@ -199,18 +355,12 @@ export default {
 			this.paymentMethods = item.paymentMethod;
 			this.showBank = true;
 		},
-		...mapMutations({
-			snackBar: 'Snackbar/showMessage',
-		}),
-		async getFormattedSessions() {
+		async getUsers() {
 			try {
-				const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
+				const { data } = await this.$axios('/dashboard/get-users', {
 					method: 'GET',
 				});
-				const { formattedSessions } = data;
-				this.sessions = formattedSessions;
-				console.log(this.sessions[0]);
-				return formattedSessions;
+				return data;
 			} catch (e) {
 				this.snackBar({
 					content: e,
@@ -218,8 +368,34 @@ export default {
 				});
 			}
 		},
+		showUserSessions(item) {
+			this.userSessions = item.sessions
+			this.userSessions.forEach(session => {
+				session.name = item.name
+				session.email = item.email
+			})
+			this.dialog = true
+		},
+		...mapMutations({
+			snackBar: 'Snackbar/showMessage',
+		}),
+    async getFormattedSessions() {
+      try {
+        const { data } = await this.$axios('/sessions/get-all-sessions-formatted', {
+          method: 'GET'
+        });
+        const { formattedSessions } = data;
+        this.sessions = formattedSessions;
+        return formattedSessions;
+      } catch (e) {
+        this.snackBar({
+          content: e,
+          color: 'error',
+        });
+      }
+    },
 	},
 };
 </script>
-
-<style></style>
+<style>
+</style>
