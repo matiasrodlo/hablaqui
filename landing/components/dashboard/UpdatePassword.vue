@@ -43,7 +43,7 @@
 		<v-col cols="12" class="text-center">
 			<v-btn
 				:loading="loadingPassword"
-				:disabled="$v.$invalid"
+				:disabled="!this.$v.formPassword.oldPassword.required"
 				color="primary"
 				depressed
 				class="px-16"
@@ -89,7 +89,7 @@ export default {
 			const errors = [];
 			if (!this.$v.formPassword.oldPassword.$dirty) return errors;
 			!this.$v.formPassword.oldPassword.required &&
-				errors.push('Actual contraseña es querida');
+				errors.push('La contraseña actual es requerida');
 			return errors;
 		},
 		/**
@@ -98,7 +98,7 @@ export default {
 		newPasswordErrors() {
 			const errors = [];
 			if (!this.$v.formPassword.newPassword.$dirty) return errors;
-			!this.$v.formPassword.newPassword.required && errors.push('La contraseña es querida');
+			!this.$v.formPassword.newPassword.required && errors.push('La nueva contraseña es requerida');
 			!this.$v.formPassword.newPassword.minLength && errors.push('Minimo 6 caracteres');
 			!this.$v.formPassword.newPassword.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
@@ -110,7 +110,7 @@ export default {
 			const errors = [];
 			if (!this.$v.formPassword.repeatNewPassword.$dirty) return errors;
 			!this.$v.formPassword.repeatNewPassword.required &&
-				errors.push('Repetir contraseña es querido');
+				errors.push('Repetir contraseña es requerido');
 			!this.$v.formPassword.repeatNewPassword.sameAsPassword &&
 				errors.push('Las contraseñas deben ser iguales');
 			return errors;
