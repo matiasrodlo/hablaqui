@@ -289,6 +289,18 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async cancelSessionSpecialist({ commit }, payload) {
+		// Especialista cancela la sesión agendada
+		try {
+			const { data } = await this.$axios('/specialist/cancel-session-especialist', {
+				method: 'POST',
+				data: { payload },
+			});
+			return data;
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async addSession({ commit }, { id, idPlan, payload }) {
 		try {
 			const { data } = await this.$axios(`/specialists/session/${id}/plan/${idPlan}`, {

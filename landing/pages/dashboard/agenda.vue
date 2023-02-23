@@ -1225,6 +1225,16 @@ export default {
 			});
 			this.overlay = false;
 		},
+		async cancelOneSessionSpecialist(item) {
+			// Especialista cancela una sesión utilizando el endpoint de cancel-session-especialist
+			this.overlay = true;
+			await this.cancelSessionSpecialist({
+				sessionsId: item.sessionsId,
+				id: item._id,
+				planId: item.idPlan,
+			});
+			this.overlay = false;
+		},
 		acquire() {
 			if (this.plan && this.plan.specialist) {
 				this.addAppointment({ date: null });
@@ -1248,6 +1258,7 @@ export default {
 		...mapActions({
 			addSession: 'Specialist/addSession',
 			cancelSession: 'Specialist/cancelSession',
+			cancelSessionSpecialist: 'Specialist/cancelSessionSpecialist',
 			createCustomSession: 'Specialist/createCustomSession',
 			getClients: 'Specialist/getClients',
 			getSpecialist: 'Specialist/getSpecialist',
