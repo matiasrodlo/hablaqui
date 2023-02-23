@@ -918,9 +918,9 @@ export default {
 			this.$auth.loggedIn
 			? (
 				this.$auth.user.role === 'user' ? (
-					// Si ya realizó el matchmaking se redirige a la página de psicólogos
+					// Si ya realizó el matchmaking se redirige a la página de especialistas
 					this.$auth.user.match ? (
-						this.$router.push('/psicologos')
+						this.$router.push('/especialistas')
 			
 					) : null
 				) : this.$router.push('/')

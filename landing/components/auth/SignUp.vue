@@ -223,7 +223,7 @@ export default {
 							temporalMatchMaking.userId = this.$auth.user._id;
 							await this.createMatchMakig(temporalMatchMaking);
 							localStorage.removeItem('temporalMatchMaking');
-							return this.$router.push('/psicologos');
+							return this.$router.push('/especialistas');
 						}
 						if (this.$route.query.from === 'spec') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
@@ -289,7 +289,7 @@ export default {
 			window.dataLayer.push(data);
 		},
 		...mapActions({
-			createMatchMakig: 'Psychologist/createMatchMakig',
+			createMatchMakig: 'Specialist/createMatchMakig',
 		}),
 		...mapMutations({
 			setResumeView: 'Specialist/setResumeView',

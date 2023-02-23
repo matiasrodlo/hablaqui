@@ -697,7 +697,7 @@
 							</v-card>
 						</v-col>
 						<v-col v-if="!selected.isSpec" cols="12">
-							¿Cuántos años llevas trabajando como psicólogo clínico?
+							¿Cuántos años llevas trabajando como especialista clínico?
 							{{ selected.yearsExpSpecialist }}
 							<br />
 							¿Cuántos años ha visto pacientes en línea a través de consultas por

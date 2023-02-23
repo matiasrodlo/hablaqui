@@ -44,7 +44,7 @@ export default {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
 			snackBarSuccess('Especialistas obtenidos')(commit);
-			commit('setLoadingPsychologist', false);
+			commit('setLoadingSpecialist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -60,7 +60,7 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
-			commit('setLoadingPsychologist', false);
+			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Psicologos obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -68,8 +68,8 @@ export default {
 	},
 	async getSpecialistsEconomicMatch({ commit, state }) {
 		try {
-			commit('setLoadingPsychologist', true);
-			const { data } = await this.$axios('/psychologists/economic-match', {
+			commit('setLoadingSpecialist', true);
+			const { data } = await this.$axios('/specialists/economic-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
@@ -79,15 +79,15 @@ export default {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
 			snackBarSuccess('Psicologos obtenidos')(commit);
-			commit('setLoadingPsychologist', false);
+			commit('setLoadingSpecialist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async getSpecialistsAvailityMatch({ commit, state }) {
 		try {
-			commit('setLoadingPsychologist', true);
-			const { data } = await this.$axios('/psychologists/availity-match', {
+			commit('setLoadingSpecialist', true);
+			const { data } = await this.$axios('/specialists/availity-match', {
 				method: 'POST',
 				data: state.matchMaking,
 			});
@@ -96,7 +96,7 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
-			commit('setLoadingPsychologist', false);
+			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Psicologos obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);

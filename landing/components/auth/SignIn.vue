@@ -54,7 +54,6 @@ import { required, email } from 'vuelidate/lib/validators';
 import { mapMutations, mapActions } from 'vuex';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
-import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 
 /**
  * Componente para iniciar sesión
@@ -125,7 +124,7 @@ export default {
 							temporalMatchMaking.userId = this.$auth.user._id;
 							await this.createMatchMakig(temporalMatchMaking);
 							localStorage.removeItem('temporalMatchMaking');
-							return this.$router.push('/psicologos');
+							return this.$router.push('/especialistas');
 						}
 						if (this.$route.query.from === 'spec')
 							return this.$router.push({ name: 'evaluacion' });
@@ -184,7 +183,7 @@ export default {
 			this.form = { email: '', password: '' };
 		},
 		...mapActions({
-			createMatchMakig: 'Psychologist/createMatchMakig',
+			createMatchMakig: 'Specialist/createMatchMakig',
 		}),
 		...mapMutations({
 			setResumeView: 'Specialist/setResumeView',

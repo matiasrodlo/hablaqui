@@ -295,7 +295,7 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in psychologistFilter">
+					<template v-for="(item, index) in specialistFilter">
 						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
@@ -610,9 +610,9 @@ export default {
 		/**
 		 * Filtra en base a lo ingresado por el usuario
 		 */
-    psychologistFilter(){
-      let result = this.psychologists;
-      // Se filtran los psicólogos por especialidades
+    specialistFilter(){
+      let result = this.specialists;
+      // Se filtran los especialistas por especialidades
       if (this.specialties.length !== 0)
         result = result.filter(item => {
           let flag = true;
@@ -622,17 +622,17 @@ export default {
           return flag;
         });
 
-      // Se filtran los psicólogos por género
+      // Se filtran los especialistas por género
       if (this.genderBoxes.length !== 0)
         result = result.filter(item => {
           return this.genderBoxes.includes(item.gender)
         });
 
-      // Se filtran los psicólogos por precio
+      // Se filtran los especialistas por precio
       if (this.priceBoxes.length !== 0)
         result = result.filter(item => Math.max(...this.priceBoxes) >= item.sessionPrices.video);
 
-      // Se filtran los psicólogos por disponibilidad
+      // Se filtran los especialistas por disponibilidad
       if (this.dispoBoxes.length !== 0){
 		let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         result = result.filter(item => {
@@ -657,9 +657,9 @@ export default {
     },
 		...mapGetters({
 			appointments: 'Appointments/appointments',
-			psychologists: 'Psychologist/psychologists',
-			sessions: 'Psychologist/sessionsLimit',
-			matchMaking: 'Psychologist/matchMaking',
+			specialists: 'Specialist/specialists',
+			sessions: 'Specialist/sessionsLimit',
+			matchMaking: 'Specialist/matchMaking',
 		}),
 	},
 	watch: {
@@ -669,7 +669,7 @@ export default {
 		page(value, oldValue) {
 			let prev = 0;
 			if (oldValue) prev = oldValue;
-			const ids = this.psychologistFilter.map(item => item._id).slice(prev * 5, value * 5);
+			const ids = this.specialistFilter.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
 		matchMaking(newVal) {
@@ -709,7 +709,7 @@ export default {
 		 * Cambia aumenta de pagina con el scroll
 		 */
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.psychologistFilter.length / 5) {
+			if (isVisible && this.page < this.specialistFilter.length / 5) {
 				this.page += 1;
 			}
 		},

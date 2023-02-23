@@ -846,9 +846,9 @@ export default {
 		async actualizarMatch(value) {
 			if (this.matchMaking !== null) {
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-				if (this.toggle === 0) await this.getPsychologistsBestMatch();
-				if (this.toggle === 1) await this.getPsychologistsEconomicMatch();
-				if (this.toggle === 2) await this.getPsychologistsAvailityMatch();
+				if (this.toggle === 0) await this.getSpecialistsBestMatch();
+				if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
+				if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
 				this.showFilters = false;
 			}
 		},

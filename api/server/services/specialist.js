@@ -265,7 +265,7 @@ const bestMatch = async payload => {
 	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
 	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 
-	// Comienza a buscar los psicologos
+	// Comienza a buscar los especialistas
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
 	});
@@ -287,7 +287,7 @@ const economicMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	matchedPsychologists = await Psychologist.find({
+	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
 	});
 
@@ -311,8 +311,8 @@ const availityMatch = async payload => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
-	// Comienza a buscar los psicologos
-	matchedPsychologists = await Specialist.find({
+	// Comienza a buscar los especialistas
+	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
 	});
 
@@ -336,12 +336,12 @@ const availityMatch = async payload => {
 				pointsPerCriterion,
 				nextDays
 			);
-			let psychologist = JSON.stringify(spec);
-			psychologist = JSON.parse(psychologist);
-			return { ...psychologist, points };
+			let specialist = JSON.stringify(spec);
+			specialist = JSON.parse(specialist);
+			return { ...specialist, points };
 		})
 	);
-	// Se obtiene el psicologo con mayor disponibilidad representado por b
+	// Se obtiene el especialista con mayor disponibilidad representado por b
 	matchedSpecialists.sort((a, b) => b.points - a.points);
 
 	return okResponse('especialistas encontrados', {

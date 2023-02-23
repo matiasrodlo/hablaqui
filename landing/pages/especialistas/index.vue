@@ -110,7 +110,7 @@ export default {
 				if (!this.matchMaking) {
 					this.$router.push('evaluacion');
 				} else {
-					await this.getPsychologistsBestMatch();
+					await this.getSpecialistsBestMatch();
 				}
 			}
 			await this.getAppointments();

@@ -38,14 +38,14 @@ specialistsRouter.get(
 );
 
 /**
- * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas
  * @method POST
 <<<<<<< HEAD:api/server/routes/specialist.js
  * @route /api/v1/specialists/match
  * @param {String} body.payload.gender - Implica el género del especialista de preferencia
 =======
  * @route /api/v1/psychologists/best-match
- * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+ * @param {String} body.payload.gender - Implica el género del especialista de preferencia
 >>>>>>> 6e611a31 (doc: endpoint paths):api/server/routes/psychologist.js
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
@@ -58,14 +58,14 @@ specialistsRouter.post(
 );
 
 /**
- * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los psicólogos con
+ * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas con
  * el plan más barato
  * @method POST
  * @route /api/v1/specialists/economic-match
- * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+ * @param {String} body.payload.gender - Implica el género del especialista de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
- * @returns Objeto con las coincidencias sobre los psicólogos
+ * @returns Objeto con las coincidencias sobre los especialistas
  * @access authenticated
  */
 specialistsRouter.post(
@@ -78,10 +78,10 @@ specialistsRouter.post(
  * mayor disponibilidad de horarios.
  * @method POST
  * @route /api/v1/specialists/availity-match
- * @param {String} body.payload.gender - Implica el género del psicólogo de preferencia
+ * @param {String} body.payload.gender - Implica el género del especialista de preferencia
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
- * @returns Objeto con las coincidencias sobre los psicólogos
+ * @returns Objeto con las coincidencias sobre los especialistas
  * @access authenticated
  */
 specialistsRouter.post(
