@@ -499,6 +499,14 @@ export default {
 					visible: this.$auth.$state.user?.role === 'superuser',
 					disable,
 				},
+				{
+					// Redirecciona a la tabla de usuarios del panel de administrador
+					name: 'Usuarios',
+					link: { name: 'dashboard-usersTable' },
+					img: 'https://cdn.hablaqui.cl/static/apps.png',
+					visible: this.$auth.$state.user?.role === 'superuser',
+					disable,
+				},
 			];
 		},
 		routeName() {

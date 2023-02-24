@@ -142,78 +142,6 @@
 				</div>
 			</v-col>
 		</v-row>
-		<v-spacer></v-spacer>
-		<v-row>
-			<v-col cols="12">
-				<div>
-					<v-card>
-						<v-card-title>
-							<v-row>
-								<v-col>
-									<v-text-field
-										v-model="nameFilterText"
-										label="Nombre"
-									></v-text-field>
-								</v-col>
-								<v-col>
-									<v-text-field
-										v-model="lastNameFilterText"
-										label="Apellido"
-									></v-text-field>
-								</v-col>
-								<v-col>
-									<v-text-field
-										v-model="mailFilterText"
-										label="Correo"
-									></v-text-field>
-								</v-col>
-								<v-col>
-									<v-text-field
-										v-model="phoneFilterText"
-										label="Teléfono"
-									></v-text-field>
-								</v-col>
-								<v-col>
-									<v-text-field v-model="idFilterText" label="ID"></v-text-field>
-								</v-col>
-								<v-col>
-									<v-text-field
-										v-model="rutFilterText"
-										label="Rut"
-									></v-text-field>
-								</v-col>
-							</v-row>
-						</v-card-title>
-						<v-card-text>
-							<v-data-table
-								:headers="usersHeaders"
-								:items="filteredUsers"
-								:items-per-page="5"
-							>
-								<template #item.action="{ item }">
-									<v-btn small @click="showUserSessions(item)"> Sesiones </v-btn>
-								</template>
-							</v-data-table>
-						</v-card-text>
-					</v-card>
-				</div>
-			</v-col>
-		</v-row>
-		<v-dialog
-			v-model="dialog"
-			@click:outside="
-				() => {
-					dialog = false;
-				}
-			"
-		>
-			<v-card>
-				<v-card-title>
-					<span class="text-h5">Sesiones del usuario</span>
-				</v-card-title>
-				<v-data-table :headers="headersUserSessions" :items="userSessions" />
-			</v-card>
-		</v-dialog>
 	</v-container>
 </template>
 <script>
@@ -223,7 +151,6 @@ import utc from 'dayjs/plugin/utc';
 import isBetween from 'dayjs/plugin/isBetween';
 import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 dayjs.extend(isBetween);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -231,7 +158,7 @@ dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {
-	name: 'Payment',
+	name: 'Sessions',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
@@ -242,29 +169,18 @@ export default {
 			page: 1,
 			pageCount: 0,
 			psychologist: [],
-			transactions: [],
-			users: [],
-			menu: '',
-			startDate: '',
-			endDate: '',
-			label: 'Sesiones a pagar',
+			// Menus de filtros
 			dialog: false,
 			endMenu: false,
 			startMenu: false,
-			showBank: false,
-			paymentMethods: {},
-			dateFilterText: null,
+			// Filtros de la tabla de sesiones
+			startDate: '',
+			endDate: '',
 			statFilterText: '',
 			psyFilterText: '',
 			userFilterText: '',
 			payFilterText: '',
-			nameFilterText: '',
-			lastNameFilterText: '',
-			mailFilterText: '',
-			phoneFilterText: '',
-			idFilterText: '',
-			rutFilterText: '',
-			userSessions: [],
+			// Headers de la tabla de sesiones
 			sessionsHeaders: [
 				{ text: 'Consultante', value: 'user' },
 				{ text: 'Especialista', value: 'specialist' },
@@ -275,28 +191,14 @@ export default {
 				{ text: 'Estado de Realización', value: 'statusSession' },
 				{ text: 'Estado de Pago', value: 'paymentPlan' },
 			],
-			usersHeaders: [
-				{ text: 'Nombre', value: 'name' },
-				{ text: 'Apellido', value: 'lastName' },
-				{ text: 'Correo', value: 'email' },
-				{ text: 'Teléfono', value: 'phone' },
-				{ text: 'ID', value: '_id' },
-				{ text: 'Rut', value: 'rut' },
-				{ text: 'Acciones', value: 'action', sortable: false },
-			],
-			headersUserSessions: [
-				{ text: 'Fecha', value: 'date' },
-				{ text: 'Consultante', value: 'name' },
-				{ text: 'Correo', value: 'email' },
-				{ text: 'N° de sesión', value: 'sessionNumber' },
-				{ text: 'Estado de realización', value: 'status' },
-				{ text: 'Estado de Pago', value: 'paidToSpecialist' },
-			],
+			// Sesiones
 			sessions: [],
+			// Estados de la sesión
 			status: [
 				{ text: 'Pendiente', value: 'pending' },
 				{ text: 'Realizada', value: 'success' },
 			],
+			// Estados de pago de la sesión
 			payStatus: [
 				{ text: 'Pendiente', value: 'pending' },
 				{ text: 'Pagada', value: 'success' },
@@ -304,19 +206,6 @@ export default {
 		};
 	},
 	computed: {
-		filteredTransactions() {
-			let transactions = [];
-			if (this.start === '' || this.end === '') transactions = this.transactions;
-			else {
-				transactions = this.transactions.filter(t =>
-					dayjs(t.createdAt, 'DD/MM/YYYY HH:mm').isBetween(
-						dayjs(this.start, 'yyyy-MM-DDTHH:mm'),
-						dayjs(this.end, 'yyyy-MM-DDTHH:mm')
-					)
-				);
-			}
-			return transactions;
-		},
 		filteredSessions() {
 			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
@@ -343,40 +232,6 @@ export default {
 						: true)
 			);
 		},
-		filteredUsers() {
-			return this.users.filter(
-				//  correo telefono id rut
-				user =>
-					(this.nameFilterText === ''
-						? true
-						: user.name === undefined
-						? false
-						: user.name.toLowerCase().includes(this.nameFilterText.toLowerCase())) &&
-					(this.lastNameFilterText === ''
-						? true
-						: user.lastName === undefined
-						? false
-						: user.lastName
-								.toLowerCase()
-								.includes(this.lastNameFilterText.toLowerCase())) &&
-					(this.mailFilterText === ''
-						? true
-						: user.email === undefined
-						? false
-						: user.email.toLowerCase().includes(this.mailFilterText.toLowerCase())) &&
-					(this.phoneFilterText === ''
-						? true
-						: user.phone === undefined
-						? false
-						: user.phone.toLowerCase().includes(this.phoneFilterText.toLowerCase())) &&
-					user._id.includes(this.idFilterText.toLowerCase()) &&
-					(this.rutFilterText === ''
-						? true
-						: user.rut === undefined
-						? false
-						: user.rut.includes(this.rutFilterText.toLowerCase()))
-			);
-		},
 	},
 	mounted() {
 		this.initFetch();
@@ -384,61 +239,6 @@ export default {
 	methods: {
 		async initFetch() {
 			await this.getFormattedSessions();
-			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
-			this.psychologist = amounts;
-			const { transactions } = await this.$axios.$get('/transaction/get/all');
-			this.transactions = transactions;
-			let usersObjects = await this.getUsers();
-			this.users = usersObjects.users;
-		},
-		async setTransaction(item) {
-			try {
-				const { data } = await this.$axios('/transaction/generate', {
-					method: 'POST',
-					data: {
-						total: item.total,
-						session: item.session,
-						idPsy: item._id,
-					},
-				});
-
-				const index = this.psychologist.indexOf(item);
-				this.psychologist[index].total = 0;
-				this.psychologist[index].session = [];
-				this.snackBar({ content: data.message, color: 'success' });
-			} catch (error) {
-				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
-			}
-		},
-		showSessionsToPay(item, label) {
-			this.label = label;
-			this.dialog = true;
-			this.sessions = item.session;
-		},
-		showBankInfo(item) {
-			this.paymentMethods = item.paymentMethod;
-			this.showBank = true;
-		},
-		async getUsers() {
-			try {
-				const { data } = await this.$axios('/dashboard/get-users', {
-					method: 'GET',
-				});
-				return data;
-			} catch (e) {
-				this.snackBar({
-					content: e,
-					color: 'error',
-				});
-			}
-		},
-		showUserSessions(item) {
-			this.userSessions = item.sessions;
-			this.userSessions.forEach(session => {
-				session.name = item.name;
-				session.email = item.email;
-			});
-			this.dialog = true;
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
