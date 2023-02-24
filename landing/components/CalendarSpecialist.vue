@@ -32,7 +32,7 @@
 									{{ item.text }}
 								</div>
 								<div class="caption text--secondary text-capitalize">
-									{{ item.day }}
+									{{ formatDate(item.date) }}
 								</div>
 							</div>
 							<div class="mt-3">
@@ -93,6 +93,9 @@
 
 <script>
 import { mdiChevronLeft, mdiChevronRight, mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import dayjs from 'dayjs';
+import CustomParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(CustomParseFormat);
 /**
  * calendario para especialista
  */
@@ -131,6 +134,15 @@ export default {
 		};
 	},
 	methods: {
+		formatDate(date) {
+			console.log(date);
+			let formatedDate = dayjs(date, 'MM/DD/YYYY').toString().split(' ');
+			if (formatedDate[2] === 'Mar') formatedDate[2] = 'Ene';
+			if (formatedDate[2] === 'Apr') formatedDate[2] = 'Abr';
+			if (formatedDate[2] === 'Aug') formatedDate[2] = 'Ago';
+			if (formatedDate[2] === 'Dec') formatedDate[2] = 'Dic';
+			return `${formatedDate[1]} ${formatedDate[2]}`;
+		},
 		/**
 		 * redirige si esta logeado a plans o auth si no esta logeado
 		 */
