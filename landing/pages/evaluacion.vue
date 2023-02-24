@@ -6,11 +6,8 @@
 				<Appbar />
 			</div>
 			<!-- content -->
-			<div
-				v-show="!matchedSpecialists.length && !dialogPrecharge"
-				class="primary white--text text-center"
-				style="position: relative; padding: 100px; height: 500px"
-			>
+			<div v-show="!matchedSpecialists.length && !dialogPrecharge" class="primary white--text text-center"
+				style="position: relative; padding: 100px; height: 500px">
 				<div class="title text-h7 text-sm-h4 font-weight-bold mb-5">
 					Encuentre al especialista ideal
 				</div>
@@ -28,74 +25,44 @@
 											<div class="primary--text font-weight-bold title">
 												¿Cuál es su género?
 											</div>
-											<v-btn
-												:color="gender === 'female' ? 'primary' : '#BDBDBD'"
-												:outlined="gender !== 'female'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="gender === 'female' ? 'primary' : '#BDBDBD'" :outlined="gender !== 'female'" block
+												rounded large class="my-4" @click="
 													() => {
 														step = 1;
 														gender = 'female';
 													}
-												"
-											>
+												">
 												Mujer
 											</v-btn>
-											<v-btn
-												:color="gender === 'male' ? 'primary' : '#BDBDBD'"
-												:outlined="gender !== 'male'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="gender === 'male' ? 'primary' : '#BDBDBD'" :outlined="gender !== 'male'" block
+												rounded large class="my-4" @click="
 													() => {
 														step = 1;
 														gender = 'male';
 													}
-												"
-											>
+												">
 												Hombre
 											</v-btn>
-											<v-btn
-												:color="
-													gender === 'transgender' ? 'primary' : '#BDBDBD'
-												"
-												:outlined="gender !== 'transgender'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														step = 1;
-														gender = 'transgender';
-													}
-												"
-											>
+											<v-btn :color="
+												gender === 'transgender' ? 'primary' : '#BDBDBD'
+											" :outlined="gender !== 'transgender'" block rounded large class="my-4" @click="
+	() => {
+		step = 1;
+		gender = 'transgender';
+	}
+">
 												No binario
 											</v-btn>
-											<v-btn
-												:color="
-													gender === 'Prefiero no indicarlo'
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="gender !== 'Prefiero no indicarlo'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														step = 1;
-														gender = 'Prefiero no indicarlo';
-													}
-												"
-											>
+											<v-btn :color="
+												gender === 'Prefiero no indicarlo'
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="gender !== 'Prefiero no indicarlo'" block rounded large class="my-4" @click="
+	() => {
+		step = 1;
+		gender = 'Prefiero no indicarlo';
+	}
+">
 												Prefiero no indicarlo
 											</v-btn>
 										</v-stepper-content>
@@ -104,71 +71,43 @@
 											<div class="primary--text font-weight-bold title">
 												¿En qué rango de edad se encuentra?<br />
 											</div>
-											<v-btn
-												:color="age === '18-25' ? 'primary' : '#BDBDBD'"
-												:outlined="age !== '18-25'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="age === '18-25' ? 'primary' : '#BDBDBD'" :outlined="age !== '18-25'" block rounded
+												large class="my-4" @click="
 													() => {
 														step = 2;
 														age = '18-25';
 													}
-												"
-											>
+												">
 												18-25
 											</v-btn>
 
-											<v-btn
-												:color="age === '26-35' ? 'primary' : '#BDBDBD'"
-												:outlined="age !== '26-35'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="age === '26-35' ? 'primary' : '#BDBDBD'" :outlined="age !== '26-35'" block rounded
+												large class="my-4" @click="
 													() => {
 														step = 2;
 														age = '26-35';
 													}
-												"
-											>
+												">
 												26-35
 											</v-btn>
 
-											<v-btn
-												:color="age === '36-45' ? 'primary' : '#BDBDBD'"
-												:outlined="age !== '36-45'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="age === '36-45' ? 'primary' : '#BDBDBD'" :outlined="age !== '36-45'" block rounded
+												large class="my-4" @click="
 													() => {
 														step = 2;
 														age = '36-45';
 													}
-												"
-											>
+												">
 												36-45
 											</v-btn>
 
-											<v-btn
-												:color="age === '+45' ? 'primary' : '#BDBDBD'"
-												:outlined="age !== '+45'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="age === '+45' ? 'primary' : '#BDBDBD'" :outlined="age !== '+45'" block rounded large
+												class="my-4" @click="
 													() => {
 														step = 2;
 														age = '+45';
 													}
-												"
-											>
+												">
 												+45
 											</v-btn>
 											<v-btn text color="primary" @click="step = 0">
@@ -181,41 +120,25 @@
 												¿Primera vez hablando con un especialista?
 											</div>
 
-											<v-btn
-												:color="
-													firstTherapy === 'si' ? 'primary' : '#BDBDBD'
-												"
-												:outlined="firstTherapy != 'si'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														step = 3;
-														firstTherapy = 'si';
-													}
-												"
-											>
+											<v-btn :color="
+												firstTherapy === 'si' ? 'primary' : '#BDBDBD'
+											" :outlined="firstTherapy != 'si'" block rounded large class="my-4" @click="
+	() => {
+		step = 3;
+		firstTherapy = 'si';
+	}
+">
 												Si
 											</v-btn>
 
-											<v-btn
-												:color="
-													firstTherapy == 'no' ? 'primary' : '#BDBDBD'
-												"
-												:outlined="firstTherapy != 'no'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														step = 3;
-														firstTherapy = 'no';
-													}
-												"
-											>
+											<v-btn :color="
+												firstTherapy == 'no' ? 'primary' : '#BDBDBD'
+											" :outlined="firstTherapy != 'no'" block rounded large class="my-4" @click="
+	() => {
+		step = 3;
+		firstTherapy = 'no';
+	}
+">
 												No
 											</v-btn>
 											<v-btn text color="primary" @click="step = 1">
@@ -233,42 +156,22 @@
 											<v-row>
 												<v-col>
 													<template v-for="(item, i) in specialties">
-														<v-btn
-															v-if="i <= 7"
-															:key="i"
-															:color="
-																themes.includes(item)
-																	? 'primary'
-																	: '#BDBDBD'
-															"
-															:outlined="!themes.includes(item)"
-															block
-															rounded
-															large
-															class="my-4"
-															@click="() => setTheme(item)"
-														>
+														<v-btn v-if="i <= 7" :key="i" :color="
+															themes.includes(item)
+																? 'primary'
+																: '#BDBDBD'
+														" :outlined="!themes.includes(item)" block rounded large class="my-4" @click="() => setTheme(item)">
 															{{ item }}
 														</v-btn>
 													</template>
 												</v-col>
 												<v-col>
 													<template v-for="(item, i) in specialties">
-														<v-btn
-															v-if="i >= 8"
-															:key="i"
-															:color="
-																themes.includes(item)
-																	? 'primary'
-																	: '#BDBDBD'
-															"
-															:outlined="!themes.includes(item)"
-															block
-															rounded
-															large
-															class="my-4"
-															@click="() => setTheme(item)"
-														>
+														<v-btn v-if="i >= 8" :key="i" :color="
+															themes.includes(item)
+																? 'primary'
+																: '#BDBDBD'
+														" :outlined="!themes.includes(item)" block rounded large class="my-4" @click="() => setTheme(item)">
 															{{ item }}
 														</v-btn>
 													</template>
@@ -286,104 +189,79 @@
 												¿En qué momento del día <br />
 												<span>puede asistir a sus citas?</span>
 											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													schedule == 'early'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														schedule = 'early';
-													}
-												"
-											>
+											<div class="pa-2 my-4" :class="
+												schedule == 'early'
+													? 'primary white--text'
+													: 'text--disabled'
+											" style="
+																		border-radius: 25px;
+																		border: 1px solid #e0e0e0;
+																	" @click="
+																		() => {
+																			step = 5;
+																			schedule = 'early';
+																		}
+																	">
 												Temprano: Antes de las 9 am
 											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													schedule == 'morning'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														schedule = 'morning';
-													}
-												"
-											>
+											<div class="pa-2 my-4" :class="
+												schedule == 'morning'
+													? 'primary white--text'
+													: 'text--disabled'
+											" style="
+																		border-radius: 25px;
+																		border: 1px solid #e0e0e0;
+																	" @click="
+																		() => {
+																			step = 5;
+																			schedule = 'morning';
+																		}
+																	">
 												En la mañana: Entre 9 am y 12 pm
 											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													schedule == 'midday'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														schedule = 'midday';
-													}
-												"
-											>
+											<div class="pa-2 my-4" :class="
+												schedule == 'midday'
+													? 'primary white--text'
+													: 'text--disabled'
+											" style="
+																		border-radius: 25px;
+																		border: 1px solid #e0e0e0;
+																	" @click="
+																		() => {
+																			step = 5;
+																			schedule = 'midday';
+																		}
+																	">
 												A Medio día: Entre 12 y 2 pm
 											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													schedule == 'afternoon'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														schedule = 'afternoon';
-													}
-												"
-											>
+											<div class="pa-2 my-4" :class="
+												schedule == 'afternoon'
+													? 'primary white--text'
+													: 'text--disabled'
+											" style="
+																		border-radius: 25px;
+																		border: 1px solid #e0e0e0;
+																	" @click="
+																		() => {
+																			step = 5;
+																			schedule = 'afternoon';
+																		}
+																	">
 												En la tarde: Entre 2 y 6 pm
 											</div>
-											<div
-												class="pa-2 my-4"
-												:class="
-													schedule == 'night'
-														? 'primary white--text'
-														: 'text--disabled'
-												"
-												style="
-													border-radius: 25px;
-													border: 1px solid #e0e0e0;
-												"
-												@click="
-													() => {
-														step = 5;
-														schedule = 'night';
-													}
-												"
-											>
+											<div class="pa-2 my-4" :class="
+												schedule == 'night'
+													? 'primary white--text'
+													: 'text--disabled'
+											" style="
+																		border-radius: 25px;
+																		border: 1px solid #e0e0e0;
+																	" @click="
+																		() => {
+																			step = 5;
+																			schedule = 'night';
+																		}
+																	">
 												En la noche: Después de las 6 pm
 											</div>
 											<v-btn text color="primary" @click="step = 3">
@@ -394,94 +272,48 @@
 											<div class="primary--text font-weight-bold title">
 												¿Cuales son sus expectativas sobre el proceso?
 											</div>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Cognitivo-conductual')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Cognitivo-conductual')"
-												block
-												rounded
-												large
-												@click="() => setModels('Cognitivo-conductual')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Cognitivo-conductual')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Cognitivo-conductual')" block rounded large
+												@click="() => setModels('Cognitivo-conductual')">
 												Sesiones estructuradas con metas
 											</v-btn>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Integrativo')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Integrativo')"
-												block
-												rounded
-												large
-												@click="() => setModels('Integrativo')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Integrativo')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Integrativo')" block rounded large @click="() => setModels('Integrativo')">
 												Conocer herramientas y tecnicas
 											</v-btn>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Contextual')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Contextual')"
-												block
-												rounded
-												large
-												@click="() => setModels('Contextual')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Contextual')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Contextual')" block rounded large @click="() => setModels('Contextual')">
 												Comprender mis pensamientos
 											</v-btn>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Psicoanálisis')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Psicoanálisis')"
-												block
-												rounded
-												large
-												@click="() => setModels('Psicoanálisis')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Psicoanálisis')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Psicoanálisis')" block rounded large
+												@click="() => setModels('Psicoanálisis')">
 												Aprender observando mi pasado
 											</v-btn>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Humanista')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Humanista')"
-												block
-												rounded
-												large
-												@click="() => setModels('Humanista')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Humanista')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Humanista')" block rounded large @click="() => setModels('Humanista')">
 												Reflexionar sobre mis emociones
 											</v-btn>
-											<v-btn
-												class="pa-2 my-4"
-												:color="
-													models.includes('Sistémico')
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="!models.includes('Sistémico')"
-												block
-												rounded
-												large
-												@click="() => setModels('Sistémico')"
-											>
+											<v-btn class="pa-2 my-4" :color="
+												models.includes('Sistémico')
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="!models.includes('Sistémico')" block rounded large @click="() => setModels('Sistémico')">
 												Entender y mejorar mis relaciones
 											</v-btn>
 											<v-btn text color="primary" @click="step = 4">
@@ -494,42 +326,26 @@
 												<span>compartiendo lo que te sucede?</span>
 											</div>
 
-											<v-btn
-												:color="
-													genderConfort === 'female'
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="genderConfort !== 'female'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														genderConfort = 'female';
-														step = 7;
-													}
-												"
-											>
+											<v-btn :color="
+												genderConfort === 'female'
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="genderConfort !== 'female'" block rounded large class="my-4" @click="
+	() => {
+		genderConfort = 'female';
+		step = 7;
+	}
+">
 												Mujer
 											</v-btn>
-											<v-btn
-												:color="
-													genderConfort === 'male' ? 'primary' : '#BDBDBD'
-												"
-												:outlined="genderConfort !== 'male'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														genderConfort = 'male';
-														step = 7;
-													}
-												"
-											>
+											<v-btn :color="
+												genderConfort === 'male' ? 'primary' : '#BDBDBD'
+											" :outlined="genderConfort !== 'male'" block rounded large class="my-4" @click="
+	() => {
+		genderConfort = 'male';
+		step = 7;
+	}
+">
 												Hombre
 											</v-btn>
 											<!-- <v-btn
@@ -552,24 +368,16 @@
 											>
 												Transgenero
 											</v-btn> -->
-											<v-btn
-												:color="
-													genderConfort === 'Me es indiferente'
-														? 'primary'
-														: '#BDBDBD'
-												"
-												:outlined="genderConfort !== 'Me es indiferente'"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
-													() => {
-														genderConfort = 'Me es indiferente';
-														step = 7;
-													}
-												"
-											>
+											<v-btn :color="
+												genderConfort === 'Me es indiferente'
+													? 'primary'
+													: '#BDBDBD'
+											" :outlined="genderConfort !== 'Me es indiferente'" block rounded large class="my-4" @click="
+	() => {
+		genderConfort = 'Me es indiferente';
+		step = 7;
+	}
+">
 												Me es indiferente
 											</v-btn>
 
@@ -582,68 +390,40 @@
 												¿Cuál es su presupuesto semanal?
 											</div>
 
-											<v-btn
-												:color="price === 15000 ? 'primary' : '#BDBDBD'"
-												:outlined="price !== 15000"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="price === 15000 ? 'primary' : '#BDBDBD'" :outlined="price !== 15000" block rounded
+												large class="my-4" @click="
 													() => {
 														price = 15000;
 														openPrecharge();
 													}
-												"
-											>
+												">
 												$15.000 CLP
 											</v-btn>
-											<v-btn
-												:color="price === 20000 ? 'primary' : '#BDBDBD'"
-												:outlined="price !== 20000"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="price === 20000 ? 'primary' : '#BDBDBD'" :outlined="price !== 20000" block rounded
+												large class="my-4" @click="
 													() => {
 														price = 20000;
 														openPrecharge();
 													}
-												"
-											>
+												">
 												$20.000 CLP
 											</v-btn>
-											<v-btn
-												:color="price === 30000 ? 'primary' : '#BDBDBD'"
-												:outlined="price !== 30000"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="price === 30000 ? 'primary' : '#BDBDBD'" :outlined="price !== 30000" block rounded
+												large class="my-4" @click="
 													() => {
 														price = 30000;
 														openPrecharge();
 													}
-												"
-											>
+												">
 												$30.000 CLP
 											</v-btn>
-											<v-btn
-												:color="price === 40000 ? 'primary' : '#BDBDBD'"
-												:outlined="price !== 40000"
-												block
-												rounded
-												large
-												class="my-4"
-												@click="
+											<v-btn :color="price === 40000 ? 'primary' : '#BDBDBD'" :outlined="price !== 40000" block rounded
+												large class="my-4" @click="
 													() => {
 														price = 40000;
 														openPrecharge();
 													}
-												"
-											>
+												">
 												$40.000 CLP
 											</v-btn>
 
@@ -811,16 +591,13 @@
 		<div v-if="dialogPrecharge" style="height: 100vh">
 			<v-card flat color="transparent">
 				<v-card-text>
-					<Precharge
-						:close="() => (dialogPrecharge = false)"
-						:avatar="
-							specialists
-								.map(el => {
-									if (el.avatarThumbnail) return el.avatarThumbnail;
-								})
-								.filter(el => el)
-						"
-					/>
+					<Precharge :close="() => (dialogPrecharge = false)" :avatar="
+						specialists
+							.map(el => {
+								if (el.avatarThumbnail) return el.avatarThumbnail;
+							})
+							.filter(el => el)
+					" />
 				</v-card-text>
 			</v-card>
 		</div>
