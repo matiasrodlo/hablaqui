@@ -4,13 +4,14 @@ services:
   landing-ui:
     build:
       context: ./landing
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile.dev
     ports:
       - "9000:9000"
       - "8080:8080"
     container_name: vue-ui
     environment:
       - API_ABSOLUTE=http://localhost:3000
+      - FRONTEND_URL=http://localhost:8080/-
       - VUE_APP_URL=http://localhost:3000/api/v1
       - HOST=0.0.0.0
       - PORT=8080
@@ -21,7 +22,7 @@ services:
    # Se especifica el dockerfile que se va a utilizar
     build:
       context: ./api
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     container_name: node-api

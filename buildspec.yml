@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      # Install Snyk
+      - echo Install Snyk
+      - curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux"
+      - chmod -R +x ./snyk
+  build:
+    commands:
+      - echo Build started on `date`
+      # Build the Docker images
+      - echo Building the production Docker image...
+      - docker build -t hablaqui/hablaqui-landing ./landing
+      - docker build -t hablaqui/hablaqui-api ./api
+      # Log in to the Docker CLI
+      - echo "$DOCKER_PW" | docker login -u "$DOCKER_ID" --password-stdin
+  post_build:
+    commands:
+      # Take these images and push them to Docker hub
+      - echo Pushing the Docker images...
+      - docker push hablaqui/hablaqui-landing
+      - docker push hablaqui/hablaqui-api

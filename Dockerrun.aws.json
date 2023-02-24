@@ -1,0 +1,31 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "landing-ui",
+        "image": "hablaqui/hablaqui-landing",
+        "hostname": "node",
+        "essential": true,
+        "portMappings": [
+          {
+            "hostPort": 8080,
+            "containerPort": 8080
+          }
+        ],
+        "memory": 1500
+      },
+      {
+        "name": "api-restful",
+        "image": "hablaqui/hablaqui-api",
+        "hostname": "vue",
+        "essential": true,
+        "portMappings": [
+          {
+            "hostPort": 3000,
+            "containerPort": 3000
+          }
+        ],
+        "memory": 1500
+      }
+    ]
+}
