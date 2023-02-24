@@ -30,10 +30,17 @@
 											<v-spacer></v-spacer>
 											<v-btn
 												text
-												color="primary"
-												@click="() => (endMenu = false)"
+												color="error"
+												@click="() => (startMenu = false)"
 											>
 												Cancelar
+											</v-btn>
+											<v-btn
+												text
+												color="error"
+												@click="() => (startDate = '')"
+											>
+												Borrar
 											</v-btn>
 											<v-btn
 												text
@@ -68,10 +75,13 @@
 											<v-spacer></v-spacer>
 											<v-btn
 												text
-												color="primary"
+												color="error"
 												@click="() => (endMenu = false)"
 											>
 												Cancelar
+											</v-btn>
+											<v-btn text color="error" @click="() => (endDate = '')">
+												Borrar
 											</v-btn>
 											<v-btn
 												text
@@ -89,7 +99,9 @@
 										:item-value="status.value"
 										:item-text="status.text"
 										:items="status"
-										label="Estado de Realización"
+										label="Realización"
+										clearable
+										@click:clear="statFilterText = ''"
 									>
 									</v-select>
 								</v-col>
@@ -112,6 +124,7 @@
 										:item-text="payStatus.text"
 										:items="payStatus"
 										label="Estado de Pago"
+										clearable
 									>
 									</v-select>
 								</v-col>
@@ -178,13 +191,7 @@
 								:items-per-page="5"
 							>
 								<template #item.action="{ item }">
-									<v-btn
-										:disabled="item.sessions.length === 0"
-										small
-										@click="showUserSessions(item)"
-									>
-										Sesiones
-									</v-btn>
+									<v-btn small @click="showUserSessions(item)"> Sesiones </v-btn>
 								</template>
 							</v-data-table>
 						</v-card-text>
@@ -210,9 +217,7 @@
 	</v-container>
 </template>
 <script>
-import axios from 'axios';
 import { mapMutations } from 'vuex';
-import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -313,18 +318,23 @@ export default {
 			return transactions;
 		},
 		filteredSessions() {
-			console.log(this.startDate, this.endDate);
-			console.log(dayjs(this.startDate, 'YYYY-MM-DD'), dayjs(this.endDate, 'YYYY-MM-DD'));
-			this.sessions.forEach(session => {
-				console.log(dayjs(session.date, 'DD/MM/YYYY HH:mm'));
-			});
 			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
-					session.user.toLowerCase().includes(this.userFilterText.toLowerCase()) &&
-					session.statusSession.includes(this.statFilterText) &&
-					session.specialist.toLowerCase().includes(this.psyFilterText.toLowerCase()) &&
-					session.paymentPlan.includes(this.payFilterText) &&
+					(this.userFilterText
+						? session.user.toLowerCase().includes(this.userFilterText.toLowerCase())
+						: true) &&
+					(this.statFilterText
+						? session.statusSession.includes(this.statFilterText)
+						: true) &&
+					(this.psyFilterText
+						? session.specialist
+								.toLowerCase()
+								.includes(this.psyFilterText.toLowerCase())
+						: true) &&
+					(this.payFilterText
+						? session.paymentPlan.includes(this.payFilterText)
+						: true) &&
 					(this.startDate && this.endDate
 						? dayjs(dayjs(session.date, 'DD/MM/YYYY HH:mm')).isBetween(
 								dayjs(this.startDate, 'YYYY-MM-DD'),
