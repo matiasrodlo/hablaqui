@@ -10,8 +10,8 @@ services:
       - "8080:8080"
     container_name: vue-ui
     environment:
-      - API_ABSOLUTE=http://localhost:3000
-      - VUE_APP_URL=http://localhost:3000/api/v1
+      - API_ABSOLUTE=${_API_ABSOLUTE}
+      - VUE_APP_URL=${_VUE_APP_URL}
       - HOST=0.0.0.0
       - PORT=8080
   api-restful:
@@ -23,25 +23,25 @@ services:
       - "3000:3000"
     container_name: node-api
     environment:
-      - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
-      - NODE_ENV=development
-      - PORT=3000
-      - FRONTEND_URL=http://localhost:8080/-
-      - JWT_SECRET=api-hablaqui2021
-      - JWT_ALGORITHM=HS256
-      - JWT_EXPIRATION=30d
-      - JWT_EXPIRATION_REFRESH=3d
-      - JWT_SECRET_REFRESH=api-refresh-hablaqui2021
-      - PASSWORD_RECOVERY_JWT_EXPIRATION=40m
-      - API_URL=http://localhost:3000/
-      - BUCKETNAME=hablaqui-content
-      - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
-      - NO_REPLY_EMAIL=no-reply@hablaqui.com
-      - NO_REPLY_PASSWORD=hablaqui2021com
-      - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
-      - SENDGRID_API_KEY=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
-      - VUE_APP_LANDING=http://localhost:9000/
-      - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
-      - NAMESPACE_TESTMAILS=bnwxe
+      - URLDB=${_URLDB}
+      - NODE_ENV=${_NODE_ENV}
+      - PORT=${_PORT}
+      - FRONTEND_URL=${_FRONTEND_URL}
+      - JWT_SECRET=${_JWT_SECRET}
+      - JWT_ALGORITHM=${_JWT_ALGORITHM}
+      - JWT_EXPIRATION=${_JWT_EXPIRATION}
+      - JWT_EXPIRATION_REFRESH=${_JWT_EXPIRATION_REFRESH}
+      - JWT_SECRET_REFRESH=${_JWT_SECRET_REFRESH}
+      - PASSWORD_RECOVERY_JWT_EXPIRATION=${_PASSWORD_RECOVERY_JWT_EXPIRATION}
+      - API_URL=${_API_URL}
+      - BUCKETNAME=${_BUCKETNAME}
+      - MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}
+      - NO_REPLY_EMAIL=${_NO_REPLY_EMAIL}
+      - NO_REPLY_PASSWORD=${_NO_REPLY_PASSWORD}
+      - SEGMENT_API_KEY=${_SEGMENT_API_KEY}
+      - SENDGRID_API_KEY=${_SENDGRID_API_KEY}
+      - VUE_APP_LANDING=${_VUE_APP_LANDING}
+      - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
+      - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
     # # Se monta la carpeta del proyecto en el contenedor (lo que hace que no sea necesario hacer build cada vez que se modifica el código)
     # Volumen de anfitrion a host, se indica la ruta de la carpeta del proyecto en el host y la ruta de la carpeta del proyecto en el contenedor
