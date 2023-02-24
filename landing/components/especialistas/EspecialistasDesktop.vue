@@ -77,10 +77,11 @@
 								<v-text-field
 									:value="
 										genderBoxes.length == 0
-										? genderBoxes
-										:
-											genderBoxes.length == 1
-											? genderList.find(element => element.value == genderBoxes[0]).text
+											? genderBoxes
+											: genderBoxes.length == 1
+											? genderList.find(
+													element => element.value == genderBoxes[0]
+											  ).text
 											: `Géneros ${genderBoxes.length}`
 									"
 									label="Géneros"
@@ -119,57 +120,58 @@
 					<v-col cols="3">
 						<div id="menuPrices" style="position: relative">
 							<v-menu
-							ref="menuPrices"
-							v-model="menuPrices"
-							:close-on-content-click="false"
-							transition="scale-transition"
-							offset-y
-							rounded
-							attach="#menuPrices"
-							min-width="240px"
-						>
-							<template #activator="{ on, attrs }">
-								<v-text-field
-									:value="
-										priceBoxes.length == 0
-										? priceBoxes
-										:
-											priceBoxes.length == 1
-											? priceList.find(element => element.value == priceBoxes[0]).text
-											: `Precios ${priceBoxes.length}`
-									"
-									label="Precios"
-									readonly
-									:disabled="loadingMatchMaking"
-									outlined
-									dense
-									class="white"
-									hide-details
-									:append-icon="mdiChevronDown"
-									v-bind="attrs"
-									@click:append="() => (menuPrices = !menuPrices)"
-									v-on="on"
-								></v-text-field>
-							</template>
-							<v-card rounded height="150">
-								<v-card-text style="height: 150px; overflow-y: scroll">
-									<v-checkbox
-										v-for="(element, j) in priceList"
-										:key="j"
-										v-model="priceBoxes"
-										:value="element.value"
-										:label="element.text"
-										class="py-2"
+								ref="menuPrices"
+								v-model="menuPrices"
+								:close-on-content-click="false"
+								transition="scale-transition"
+								offset-y
+								rounded
+								attach="#menuPrices"
+								min-width="240px"
+							>
+								<template #activator="{ on, attrs }">
+									<v-text-field
+										:value="
+											priceBoxes.length == 0
+												? priceBoxes
+												: priceBoxes.length == 1
+												? priceList.find(
+														element => element.value == priceBoxes[0]
+												  ).text
+												: `Precios ${priceBoxes.length}`
+										"
+										label="Precios"
+										readonly
+										:disabled="loadingMatchMaking"
+										outlined
+										dense
+										class="white"
 										hide-details
-										@change="changeInput"
-									>
-										<template #label="{ item }">
-											<span class="caption">{{ item }}</span>
-										</template>
-									</v-checkbox>
-								</v-card-text>
-							</v-card>
-						</v-menu>
+										:append-icon="mdiChevronDown"
+										v-bind="attrs"
+										@click:append="() => (menuPrices = !menuPrices)"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-card rounded height="150">
+									<v-card-text style="height: 150px; overflow-y: scroll">
+										<v-checkbox
+											v-for="(element, j) in priceList"
+											:key="j"
+											v-model="priceBoxes"
+											:value="element.value"
+											:label="element.text"
+											class="py-2"
+											hide-details
+											@change="changeInput"
+										>
+											<template #label="{ item }">
+												<span class="caption">{{ item }}</span>
+											</template>
+										</v-checkbox>
+									</v-card-text>
+								</v-card>
+							</v-menu>
 						</div>
 					</v-col>
 					<v-col id="menuOthers" cols="3" style="position: relative">
@@ -187,10 +189,11 @@
 								<v-text-field
 									:value="
 										dispoBoxes.length == 0
-										? dispoBoxes
-										:
-											dispoBoxes.length == 1
-											? dispoList.find(element => element.value == dispoBoxes[0]).text
+											? dispoBoxes
+											: dispoBoxes.length == 1
+											? dispoList.find(
+													element => element.value == dispoBoxes[0]
+											  ).text
 											: `Disponibilidad ${dispoBoxes.length}`
 									"
 									label="Disponibilidad"
@@ -495,14 +498,7 @@
 										</template>
 										<template v-else>
 											<div
-												class="
-													primary--text
-													caption
-													font-weight-bold
-													d-flex
-													justify-center
-													align-center
-												"
+												class="primary--text caption font-weight-bold d-flex justify-center align-center"
 												style="height: 300px"
 											>
 												Cargando...
@@ -514,11 +510,7 @@
 						</v-col>
 					</template>
 				</template>
-				<v-col
-					v-if="false"
-					cols="12"
-					class="title primary--text"
-				>
+				<v-col v-if="false" cols="12" class="title primary--text">
 					No se encontraron coincidencias
 				</v-col>
 			</v-row>
@@ -570,6 +562,7 @@ export default {
 			menuSpecialties: false,
 			menuOthers: false,
 			menuPrices: false,
+			flag: true,
 			specialties: [],
 			searchInput: '',
 			prices: '',
@@ -581,80 +574,110 @@ export default {
 			scrollHeight: 0,
 			visibles: [],
 			fullcard: [],
-			page: null,
+			page: 1,
+			initFlag: true,
 			status: false,
 			genderBoxes: [],
 			genderList: [
-						{ value: 'female', text: 'Mujer' },
-						{ value: 'male', text: 'Hombre' },
-						{ value: 'transgender', text: 'Transgénero' },
-					],
+				{ value: 'female', text: 'Mujer' },
+				{ value: 'male', text: 'Hombre' },
+				{ value: 'transgender', text: 'Transgénero' },
+			],
 			priceBoxes: [],
 			priceList: [
-						{ value: 15000, text: 'Hasta $15.000' },
-						{ value: 20000, text: 'Hasta $20.000' },
-						{ value: 30000, text: 'Hasta $30.000' },
-						{ value: 40000, text: 'Hasta $40.000' },
-					],
+				{ value: 15000, text: 'Hasta $15.000' },
+				{ value: 20000, text: 'Hasta $20.000' },
+				{ value: 30000, text: 'Hasta $30.000' },
+				{ value: 40000, text: 'Hasta $40.000' },
+			],
 			dispoBoxes: [],
 			dispoList: [
-						{ value: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')] , text: 'Temprano: Antes de las 9 am' },
-						{ value: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')], text: 'En la mañana: Entre 9 am y 12 pm' },
-						{ value: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')], text: 'A Medio día: Entre 12 y 2 pm' },
-						{ value: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')], text: 'En la tarde: Entre 2 y 6 pm' },
-						{ value: [dayjs('9:00', 'HH:mm'), dayjs('23:59', 'HH:mm')], text: 'En la noche: Después de las 6 pm' },
-					],
+				{
+					value: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')],
+					text: 'Temprano: Antes de las 9 am',
+				},
+				{
+					value: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')],
+					text: 'En la mañana: Entre 9 am y 12 pm',
+				},
+				{
+					value: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')],
+					text: 'A Medio día: Entre 12 y 2 pm',
+				},
+				{
+					value: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')],
+					text: 'En la tarde: Entre 2 y 6 pm',
+				},
+				{
+					value: [dayjs('9:00', 'HH:mm'), dayjs('23:59', 'HH:mm')],
+					text: 'En la noche: Después de las 6 pm',
+				},
+			],
 		};
 	},
 	computed: {
 		/**
 		 * Filtra en base a lo ingresado por el usuario
 		 */
-    specialistFilter(){
-      let result = this.specialists;
-      // Se filtran los especialistas por especialidades
-      if (this.specialties.length !== 0)
-        result = result.filter(item => {
-          let flag = true;
-          this.specialties.forEach(specialty => {
-            if (item.specialties.includes(specialty) === false) flag = false;
-          });
-          return flag;
-        });
+		specialistFilter() {
+			let result = this.specialists;
+			// Se filtran los especialistas por especialidades
+			if (this.specialties.length !== 0)
+				result = result.filter(item => {
+					let flag = true;
+					this.specialties.forEach(specialty => {
+						if (item.specialties.includes(specialty) === false) flag = false;
+					});
+					return flag;
+				});
 
-      // Se filtran los especialistas por género
-      if (this.genderBoxes.length !== 0)
-        result = result.filter(item => {
-          return this.genderBoxes.includes(item.gender)
-        });
+			// Se filtran los especialistas por género
+			if (this.genderBoxes.length !== 0)
+				result = result.filter(item => {
+					return this.genderBoxes.includes(item.gender);
+				});
 
-      // Se filtran los especialistas por precio
-      if (this.priceBoxes.length !== 0)
-        result = result.filter(item => Math.max(...this.priceBoxes) >= item.sessionPrices.video);
+			// Se filtran los especialistas por precio
+			if (this.priceBoxes.length !== 0)
+				result = result.filter(
+					item => Math.max(...this.priceBoxes) >= item.sessionPrices.video
+				);
 
-      // Se filtran los especialistas por disponibilidad
-      if (this.dispoBoxes.length !== 0){
-		let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-        result = result.filter(item => {
-            let flag = false;
-            this.dispoBoxes.forEach(dispo => {
-				if (flag === true){
-					return
-				}
-				week.forEach(day => {
-					if (Array.isArray((item.schedule[day]))){
-						if (item.schedule[day][0].some(hour => dayjs(hour, 'HH:mm').isBetween(dispo[0], dispo[1], 'hour'))){
-							flag = true
-							return
+			// Se filtran los especialistas por disponibilidad
+			if (this.dispoBoxes.length !== 0) {
+				let week = [
+					'monday',
+					'tuesday',
+					'wednesday',
+					'thursday',
+					'friday',
+					'saturday',
+					'sunday',
+				];
+				result = result.filter(item => {
+					let flag = false;
+					this.dispoBoxes.forEach(dispo => {
+						if (flag === true) {
+							return;
 						}
-					}
-				})
-			})
-          return flag;
-        	})
-		}
-      return result;
-    },
+						week.forEach(day => {
+							if (Array.isArray(item.schedule[day])) {
+								if (
+									item.schedule[day][0].some(hour =>
+										dayjs(hour, 'HH:mm').isBetween(dispo[0], dispo[1], 'hour')
+									)
+								) {
+									flag = true;
+									return;
+								}
+							}
+						});
+					});
+					return flag;
+				});
+			}
+			return result;
+		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialists',
@@ -680,11 +703,11 @@ export default {
 				this.otros = newVal.schedule;
 			}
 		},
-		menuSpecialties(newVal) {
+		/* menuSpecialties(newVal) {
 			if (!newVal) {
 				this.actualizarMatch({ themes: this.specialties });
 			}
-		},
+		}, */
 	},
 	created() {
 		// Cuando venimos de otra ruta con el chat abierto lo cerramos
@@ -697,6 +720,7 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
+		this.initFetch();
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
@@ -705,6 +729,11 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		async initFetch() {
+			// await this.getSpecialistsBestMatch();
+			// await this.actualizarMatch({ themes: this.specialties });
+			// await this.specialistFilter();
+		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
@@ -778,6 +807,7 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
+			console.log({ ...value });
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
