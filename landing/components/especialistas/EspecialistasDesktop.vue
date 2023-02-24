@@ -575,7 +575,6 @@ export default {
 			visibles: [],
 			fullcard: [],
 			page: 1,
-			initFlag: true,
 			status: false,
 			genderBoxes: [],
 			genderList: [
@@ -720,7 +719,6 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
-		this.initFetch();
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
@@ -729,11 +727,6 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
-		async initFetch() {
-			// await this.getSpecialistsBestMatch();
-			// await this.actualizarMatch({ themes: this.specialties });
-			// await this.specialistFilter();
-		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
