@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "landing-ui",
-        "image": "hablaqui/hablaqui-landing",
+        "image": "782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-api:latest",
         "hostname": "node",
         "essential": true,
         "portMappings": [
@@ -16,7 +16,7 @@
       },
       {
         "name": "api-restful",
-        "image": "hablaqui/hablaqui-api",
+        "image": "782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest",
         "hostname": "vue",
         "essential": true,
         "portMappings": [
