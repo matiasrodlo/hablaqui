@@ -135,9 +135,8 @@ export default {
 	},
 	methods: {
 		formatDate(date) {
-			console.log(date);
-			let formatedDate = dayjs(date, 'MM/DD/YYYY').toString().split(' ');
-			if (formatedDate[2] === 'Mar') formatedDate[2] = 'Ene';
+			const formatedDate = dayjs(date, 'MM/DD/YYYY').toString().split(' ');
+			if (formatedDate[2] === 'Jan') formatedDate[2] = 'Ene';
 			if (formatedDate[2] === 'Apr') formatedDate[2] = 'Abr';
 			if (formatedDate[2] === 'Aug') formatedDate[2] = 'Ago';
 			if (formatedDate[2] === 'Dec') formatedDate[2] = 'Dic';
