@@ -48,7 +48,7 @@ export default {
 	data() {
 		return {
 			pageNotFound: '404 Página no encontrada',
-			otherError: '¡Oops! ha ocurrido un error indesperado.',
+			otherError: '¡Oops! ha ocurrido un error inesperado.',
 		};
 	},
 	head() {

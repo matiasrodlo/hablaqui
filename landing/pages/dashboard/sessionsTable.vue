@@ -2,93 +2,163 @@
 	<v-container style="height: 100vh; max-width: 1200px">
 		<appbar class="hidden-sm-and-down" title="Sesiones" />
 		<v-row>
-			<v-card>
-				<v-card-title>
-					<v-row>
-						<v-col>
-							<v-text-field
-								v-model="dateFilterText"
-								type="datetime-local"
-								label="Filtro por Fecha"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-select
-								v-model="statFilterText"
-								:item-value="status.value"
-								:item-text="status.text"
-								:items="status"
-								label="Estado de Realización"
+			<v-col cols="12">
+				<div>
+					<v-card>
+						<v-card-title>
+							<v-row>
+								<v-col>
+									<v-menu
+										ref="startMenu"
+										v-model="startMenu"
+										:close-on-content-click="false"
+										:return-value.sync="startDate"
+										transition="scale-transition"
+										offset-y
+										min-width="auto"
+									>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												v-model="startDate"
+												label="Desde"
+												readonly
+												v-bind="attrs"
+												v-on="on"
+											></v-text-field>
+										</template>
+										<v-date-picker v-model="startDate">
+											<v-spacer></v-spacer>
+											<v-btn
+												text
+												color="error"
+												@click="() => (startMenu = false)"
+											>
+												Cancelar
+											</v-btn>
+											<v-btn
+												text
+												color="error"
+												@click="() => (startDate = '')"
+											>
+												Borrar
+											</v-btn>
+											<v-btn
+												text
+												color="primary"
+												@click="$refs.startMenu.save(startDate)"
+											>
+												OK
+											</v-btn>
+										</v-date-picker>
+									</v-menu>
+								</v-col>
+								<v-col>
+									<v-menu
+										ref="endMenu"
+										v-model="endMenu"
+										:close-on-content-click="false"
+										:return-value.sync="endDate"
+										transition="scale-transition"
+										offset-y
+										min-width="auto"
+									>
+										<template #activator="{ on, attrs }">
+											<v-text-field
+												v-model="endDate"
+												label="Hasta"
+												readonly
+												v-bind="attrs"
+												v-on="on"
+											></v-text-field>
+										</template>
+										<v-date-picker v-model="endDate">
+											<v-spacer></v-spacer>
+											<v-btn
+												text
+												color="error"
+												@click="() => (endMenu = false)"
+											>
+												Cancelar
+											</v-btn>
+											<v-btn text color="error" @click="() => (endDate = '')">
+												Borrar
+											</v-btn>
+											<v-btn
+												text
+												color="primary"
+												@click="$refs.endMenu.save(endDate)"
+											>
+												OK
+											</v-btn>
+										</v-date-picker>
+									</v-menu>
+								</v-col>
+								<v-col>
+									<v-select
+										v-model="statFilterText"
+										:item-value="status.value"
+										:item-text="status.text"
+										:items="status"
+										label="Realización"
+										clearable
+										@click:clear="statFilterText = ''"
+									>
+									</v-select>
+								</v-col>
+								<v-col>
+									<v-text-field
+										v-model="psyFilterText"
+										label="Filtro por Especialista"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-text-field
+										v-model="userFilterText"
+										label="Filtro por Usuario"
+									></v-text-field>
+								</v-col>
+								<v-col>
+									<v-select
+										v-model="payFilterText"
+										:item-value="payStatus.value"
+										:item-text="payStatus.text"
+										:items="payStatus"
+										label="Estado de Pago"
+										clearable
+									>
+									</v-select>
+								</v-col>
+							</v-row>
+						</v-card-title>
+						<v-card-text>
+							<v-data-table
+								:headers="sessionsHeaders"
+								:items="filteredSessions"
+								:items-per-page="5"
 							>
-							</v-select>
-						</v-col>
-						<v-col>
-							<v-text-field
-								v-model="specFilterText"
-								label="Filtro por Especialista"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-text-field
-								v-model="userFilterText"
-								label="Filtro por Usuario"
-							></v-text-field>
-						</v-col>
-						<v-col>
-							<v-select
-								v-model="payFilterText"
-								:item-value="payStatus.value"
-								:item-text="payStatus.text"
-								:items="payStatus"
-								label="Estado de Pago"
-							>
-							</v-select>
-						</v-col>
-					</v-row>
-				</v-card-title>
-				<v-card-text>
-					<v-data-table :headers="headers" :items="filteredSessions" :items-per-page="5">
-					</v-data-table>
-				</v-card-text>
-			</v-card>
+							</v-data-table>
+						</v-card-text>
+					</v-card>
+				</div>
+			</v-col>
 		</v-row>
-		<v-dialog
-			v-model="dialog"
-			@click:outside="
-				() => {
-					dialog = false;
-				}
-			"
-		>
-		</v-dialog>
-		<v-dialog
-			v-model="showBank"
-			max-width="500"
-			@click:outside="
-				() => {
-					showBank = false;
-				}
-			"
-		>
-		</v-dialog>
 	</v-container>
 </template>
 <script>
-import axios from 'axios';
 import { mapMutations } from 'vuex';
-import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isBetween from 'dayjs/plugin/isBetween';
 import timezone from 'dayjs/plugin/timezone';
-import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(isBetween);
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('America/Santiago');
 
 export default {
-	name: 'Payment',
+	name: 'Sessions',
 	components: {
 		appbar: () => import('~/components/dashboard/AppbarProfile'),
 	},
@@ -98,20 +168,20 @@ export default {
 		return {
 			page: 1,
 			pageCount: 0,
-			specialist: [],
-			transactions: [],
-			start: '',
-			end: '',
-			label: 'Sesiones a pagar',
+			psychologist: [],
+			// Menus de filtros
 			dialog: false,
-			showBank: false,
-			paymentMethods: {},
-			dateFilterText: null,
+			endMenu: false,
+			startMenu: false,
+			// Filtros de la tabla de sesiones
+			startDate: '',
+			endDate: '',
 			statFilterText: '',
-			specFilterText: '',
+			psyFilterText: '',
 			userFilterText: '',
 			payFilterText: '',
-			headers: [
+			// Headers de la tabla de sesiones
+			sessionsHeaders: [
 				{ text: 'Consultante', value: 'user' },
 				{ text: 'Especialista', value: 'specialist' },
 				{ text: 'Fecha', value: 'date' },
@@ -121,11 +191,14 @@ export default {
 				{ text: 'Estado de Realización', value: 'statusSession' },
 				{ text: 'Estado de Pago', value: 'paymentPlan' },
 			],
+			// Sesiones
 			sessions: [],
+			// Estados de la sesión
 			status: [
 				{ text: 'Pendiente', value: 'pending' },
 				{ text: 'Realizada', value: 'success' },
 			],
+			// Estados de pago de la sesión
 			payStatus: [
 				{ text: 'Pendiente', value: 'pending' },
 				{ text: 'Pagada', value: 'success' },
@@ -133,29 +206,29 @@ export default {
 		};
 	},
 	computed: {
-		filteredTransactions() {
-			let transactions = [];
-			if (this.start === '' || this.end === '') transactions = this.transactions;
-			else {
-				transactions = this.transactions.filter(t =>
-					dayjs(t.createdAt, 'DD/MM/YYYY HH:mm').isBetween(
-						dayjs(this.start, 'yyyy-MM-DDTHH:mm'),
-						dayjs(this.end, 'yyyy-MM-DDTHH:mm')
-					)
-				);
-			}
-			return transactions;
-		},
 		filteredSessions() {
-			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del especialista, fecha de la sesión y estado de pago
+			// Método que filtra las sesiones según 5 condiciones, nombre de usuario, estatus de la sesión, nombre del psicólogo, fecha de la sesión y estado de pago
 			return this.sessions.filter(
 				session =>
-					session.user.includes(this.userFilterText) &&
-					session.statusSession.includes(this.statFilterText) &&
-					session.specialist.includes(this.specFilterText) &&
-					session.paymentPlan.includes(this.payFilterText) &&
-					(this.dateFilterText
-						? session.date === dayjs(this.dateFilterText).format('DD/MM/YYYY HH:mm')
+					(this.userFilterText
+						? session.user.toLowerCase().includes(this.userFilterText.toLowerCase())
+						: true) &&
+					(this.statFilterText
+						? session.statusSession.includes(this.statFilterText)
+						: true) &&
+					(this.psyFilterText
+						? session.specialist
+								.toLowerCase()
+								.includes(this.psyFilterText.toLowerCase())
+						: true) &&
+					(this.payFilterText
+						? session.paymentPlan.includes(this.payFilterText)
+						: true) &&
+					(this.startDate && this.endDate
+						? dayjs(dayjs(session.date, 'DD/MM/YYYY HH:mm')).isBetween(
+								dayjs(this.startDate, 'YYYY-MM-DD'),
+								dayjs(this.endDate, 'YYYY-MM-DD')
+						  )
 						: true)
 			);
 		},
@@ -166,38 +239,6 @@ export default {
 	methods: {
 		async initFetch() {
 			await this.getFormattedSessions();
-			const { amounts } = await this.$axios.$get('/dashboard/pay-mount');
-			this.specialist = amounts;
-			const { transactions } = await this.$axios.$get('/transaction/get/all');
-			this.transactions = transactions;
-		},
-		async setTransaction(item) {
-			try {
-				const { data } = await this.$axios('/transaction/generate', {
-					method: 'POST',
-					data: {
-						total: item.total,
-						session: item.session,
-						idSpec: item._id,
-					},
-				});
-
-				const index = this.specialist.indexOf(item);
-				this.specialist[index].total = 0;
-				this.specialist[index].session = [];
-				this.snackBar({ content: data.message, color: 'success' });
-			} catch (error) {
-				this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
-			}
-		},
-		showSessionsToPay(item, label) {
-			this.label = label;
-			this.dialog = true;
-			this.sessions = item.session;
-		},
-		showBankInfo(item) {
-			this.paymentMethods = item.paymentMethod;
-			this.showBank = true;
 		},
 		...mapMutations({
 			snackBar: 'Snackbar/showMessage',
@@ -209,7 +250,6 @@ export default {
 				});
 				const { formattedSessions } = data;
 				this.sessions = formattedSessions;
-				console.log(this.sessions[0]);
 				return formattedSessions;
 			} catch (e) {
 				this.snackBar({
@@ -221,5 +261,4 @@ export default {
 	},
 };
 </script>
-
 <style></style>
