@@ -10,8 +10,8 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker build -t hablaqui-repository-landing-ui ./landing
       - docker build -t hablaqui-repository-api-restful ./api
+      - docker build -t hablaqui-repository-landing-ui ./landing
       - echo Build completed on `date`
   post_build:
     commands:
