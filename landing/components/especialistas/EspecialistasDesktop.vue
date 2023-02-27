@@ -719,6 +719,10 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
+		// Si el usuaio no ha realizado la encuesta lo redirige a la evaluacion
+		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
+			this.goEvaluation();
+		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
