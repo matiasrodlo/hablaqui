@@ -8,7 +8,7 @@
     "start": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js start",
     "generate": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
-    "code-check": "npx eslint \"./**/*.js\" ----fix && npx eslint \"./**/*.vue\" --fix && npx prettier --write \"**/*.js\" && npx prettier --write \"**/*.vue\"",
+    "code-check": "npx eslint \"./**/*.js\" --fix && npx eslint \"./**/*.vue\" --fix && npx prettier --write \"**/*.js\" && npx prettier --write \"**/*.vue\"",
     "create-env": "printenv > .env && cat .env"
   },
   "dependencies": {
