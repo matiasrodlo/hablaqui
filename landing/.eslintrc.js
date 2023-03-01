@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     node: true,
-    es2021: true,
+    // es2021: true,
     es6: true,
   },
   extends: [
@@ -10,7 +10,7 @@ module.exports = {
     'standard',
     'prettier',
   ],
-  overrides: [],
+  // overrides: [],
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: 'babel-eslint',
