@@ -10,7 +10,7 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker compose build
+      - docker-compose up -d
       - echo Build completed on `date`
   post_build:
     commands:
