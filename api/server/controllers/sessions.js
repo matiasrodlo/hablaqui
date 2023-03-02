@@ -10,6 +10,12 @@ const sessionsController = {
       const { data, code } = await sessionsService.getSessions(user, idUser)
       return restResponse(data, code, res)
     } catch (error) {
+
+
+
+
+
+      
       errorCallback(error, res, 'Error obteniendo las sesiones')
     }
   },

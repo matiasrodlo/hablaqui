@@ -6,14 +6,15 @@ module.exports = {
   extends: [
     'eslint:recommended',
     //'standard',
-    //'standard',
     'prettier',
   ],
   overrides: [],
+  /*
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  */
   parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
