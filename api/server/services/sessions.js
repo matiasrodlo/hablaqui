@@ -1455,6 +1455,9 @@ const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 			$set: {
 				'plan.$.session.$[session].status': 'canceled',
 			},
+			$inc: {
+				'plan.$.remainingSessions': +1,
+			},
 		},
 		{
 			arrayFilters: [{ 'session._id': id }], new: true
