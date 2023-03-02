@@ -34,6 +34,7 @@ specialistsRouter.get('/specialists/all', specialistsController.getAll);
  */
 specialistsRouter.get(
 	'/specialists/get-specialists-array-match',
+	[passport.authenticate('jwt', { session: true })],
 	specialistsController.getSpecialistArray
 );
 
