@@ -23,7 +23,7 @@
           ref="menu"
           v-model="menu"
           :close-on-content-click="false"
-          v-model:return-value="findByDate"
+          :return-value.sync="findByDate"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -68,7 +68,7 @@
             :items-per-page="5"
             :single-expand="true"
             item-key="id"
-            v-model:expanded="expanded"
+            :expanded.sync="expanded"
             :footer-props="{
               'items-per-page-text': 'Pagos por página',
             }"
@@ -443,9 +443,7 @@ dayjs.extend(relativeTime)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
-
 /** * Tabla de registros de pagos */
-
 export default {
   components: {
     Icon: () => import('~/components/Icon'),
