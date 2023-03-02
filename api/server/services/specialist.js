@@ -276,6 +276,9 @@ const bestMatch = async payload => {
 		payload,
 		weighted
 	);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
 	
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
@@ -297,6 +300,9 @@ const economicMatch = async payload => {
 	matchedSpecialists.sort(
 		(a, b) => a.sessionPrices.video - b.sessionPrices.video
 	);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
 
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
@@ -343,6 +349,9 @@ const availityMatch = async payload => {
 	);
 	// Se obtiene el especialista con mayor disponibilidad representado por b
 	matchedSpecialists.sort((a, b) => b.points - a.points);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
 
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
