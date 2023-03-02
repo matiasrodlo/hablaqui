@@ -26,6 +26,18 @@ const specialistsRouter = Router();
 specialistsRouter.get('/specialists/all', specialistsController.getAll);
 
 /**
+ * @description Obtiene los objetos correspondientes a los especialistas
+ * @method GET
+ * @route /api/v1/specialist/get-specialists-array-match
+ * @returns {Array} especialistas
+ * @access authenticated
+ */
+specialistsRouter.get(
+	'/specialists/get-specialists-array-match',
+	specialistsController.getSpecialistArray
+);
+
+/**
  * @description Obtiene al especialista a través del username o su Id
  * @method GET
  * @route /api/v1/specialists/one/:info
@@ -40,13 +52,8 @@ specialistsRouter.get(
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas
  * @method POST
-<<<<<<< HEAD:api/server/routes/specialist.js
  * @route /api/v1/specialists/match
  * @param {String} body.payload.gender - Implica el género del especialista de preferencia
-=======
- * @route /api/v1/psychologists/best-match
- * @param {String} body.payload.gender - Implica el género del especialista de preferencia
->>>>>>> 6e611a31 (doc: endpoint paths):api/server/routes/psychologist.js
  * @param {String} body.payload.model -
  * @param {String} body.payload.themes -
  * @returns Objeto con las coincidencias sobre los especialistas

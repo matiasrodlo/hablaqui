@@ -236,6 +236,16 @@ const specialistsController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async getSpecialistArray(req, res) {
+		try {
+			const { specs } = req.body;
+			console.log(specs);
+			const { data, code } = await specialistsService.getSpecialistArray(specs);
+			return restResponse(data, code, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	}
 };
 
 export default Object.freeze(specialistsController);

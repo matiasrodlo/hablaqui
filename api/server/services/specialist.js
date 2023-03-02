@@ -943,6 +943,15 @@ const changeToInmediateAttention = async spec => {
 		specialist,
 	});
 };
+
+const getSpecialistArray = async specs => {
+	// Se busca los especialistas que estan en el array de especialistas y se retorna el id, nombre y apellido
+	let specialist = await Specialist.find({ _id: { $in: specs } }).select(
+		'_id username name lastName code sessionPrices specialities professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
+	);
+	return okResponse('Especialistas', { specialist });
+};
+
 /*
 const getAllSessionsInmediateAttention = async () => {
 	let specialist = await Specialist.find({}).select(
@@ -1010,5 +1019,6 @@ const specialistsService = {
 	uploadProfilePicture,
 	usernameAvailable,
 	changeToInmediateAttention,
+	getSpecialistArray,
 };
 export default Object.freeze(specialistsService);
