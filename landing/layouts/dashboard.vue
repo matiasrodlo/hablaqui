@@ -3,7 +3,7 @@
     <v-navigation-drawer
       v-model="drawer"
       mini-variant-width="60"
-      v-model:mini-variant="isMini"
+      :mini-variant.sync="isMini"
       color="primary"
       :expand-on-hover="$vuetify.breakpoint.mdAndUp"
       app
@@ -345,7 +345,6 @@ import {
 } from '@mdi/js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Snackbar from '@/components/Snackbar'
-
 /**
  * Layout dashboard
  */
@@ -810,7 +809,6 @@ export default {
       this.$auth.$state.user.role === 'specialist'
     )
       this.overlay = true
-
     // si el usuario es role user
     if (this.$auth.$state.user.role === 'user') {
       if (this.$auth.$state.user.sessions.length) {
@@ -908,7 +906,6 @@ export default {
   },
 }
 </script>
-
 <style scoped>
 .border-desktop {
   border-radius: 50px 0 0 0;

@@ -32,5 +32,6 @@ module.exports = {
     'vue/no-reserved-component-names': 'off',
     'vue/valid-v-slot': 'off',
     'vue/no-v-text-v-html-on-component': 'off',
+    'vue/no-deprecated-v-bind-sync': 'off',
   },
 }
