@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import specialistsController from '../controllers/specialist';
-import multer from '../middleware/multer';
+import { Router } from 'express'
+import passport from 'passport'
+import specialistsController from '../controllers/specialist'
+import multer from '../middleware/multer'
 
-const specialistsRouter = Router();
+const specialistsRouter = Router()
 
 /**
  * @swagger
@@ -23,7 +23,7 @@ const specialistsRouter = Router();
  * @method GET
  * @route /api/v1/specialists/all
  */
-specialistsRouter.get('/specialists/all', specialistsController.getAll);
+specialistsRouter.get('/specialists/all', specialistsController.getAll)
 
 /**
  * @description Obtiene al especialista a través del username o su Id
@@ -32,10 +32,7 @@ specialistsRouter.get('/specialists/all', specialistsController.getAll);
  * @param {String} params.info - Parámetro por el cual se realiza la búsqueda del especialista
  * @returns Objeto con el especialista
  */
-specialistsRouter.get(
-	'/specialists/one/:info',
-	specialistsController.getByData
-);
+specialistsRouter.get('/specialists/one/:info', specialistsController.getByData)
 
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking
@@ -47,7 +44,7 @@ specialistsRouter.get(
  * @returns Objeto con las coincidencias sobre los especialistas
  * @access authenticated
  */
-specialistsRouter.post('/specialists/match', specialistsController.match);
+specialistsRouter.post('/specialists/match', specialistsController.match)
 
 /**
  *
@@ -61,9 +58,9 @@ specialistsRouter.post('/specialists/match', specialistsController.match);
  * @access authenticated
  */
 specialistsRouter.post(
-	'/dashboard/session/reschedule/',
-	specialistsController.rescheduleSession
-);
+  '/dashboard/session/reschedule/',
+  specialistsController.rescheduleSession
+)
 
 /**
  * change schedule specialist
@@ -83,10 +80,10 @@ specialistsRouter.post(
  * @access authenticated
  */
 specialistsRouter.patch(
-	'/specialist/set-schedule',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.setSchedule
-);
+  '/specialist/set-schedule',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.setSchedule
+)
 
 /**
  * @description Actualiza el método de pago con el que se les paga a los especialistas
@@ -102,10 +99,10 @@ specialistsRouter.patch(
  * @access authenticated
  */
 specialistsRouter.patch(
-	'/specialist/update-payment-method',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.updatePaymentMethod
-);
+  '/specialist/update-payment-method',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.updatePaymentMethod
+)
 
 /**
  * @swagger
@@ -166,10 +163,10 @@ specialistsRouter.patch(
  * @access authenticated
  */
 specialistsRouter.put(
-	'/specialist/update-profile',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.updateSpecialist
-);
+  '/specialist/update-profile',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.updateSpecialist
+)
 
 /**
  * @description Elimina un especialista de la BD
@@ -180,10 +177,10 @@ specialistsRouter.put(
  * @access authenticated
  */
 specialistsRouter.delete(
-	'/specialist/:id',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.deleteOne
-);
+  '/specialist/:id',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.deleteOne
+)
 
 /**
  * @swagger
@@ -212,10 +209,10 @@ specialistsRouter.delete(
  * @access authenticated
  */
 specialistsRouter.post(
-	'/specialist/update-prices',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.setPrice
-);
+  '/specialist/update-prices',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.setPrice
+)
 
 /**
  * get all clients('consultantes') the specialist
@@ -229,10 +226,10 @@ specialistsRouter.post(
  * @access authenticated
  */
 specialistsRouter.get(
-	'/specialist/clients/:specialist',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.getClients
-);
+  '/specialist/clients/:specialist',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.getClients
+)
 
 /**
  * @description Obtiene los clientes de un especialista mediante email
@@ -241,10 +238,10 @@ specialistsRouter.get(
  * @access authenticated
  */
 specialistsRouter.get(
-	'/specialist/:search',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.searchClients
-);
+  '/specialist/:search',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.searchClients
+)
 /**
  * @swagger
  * /api/v1/specialist/check-username:
@@ -272,9 +269,9 @@ specialistsRouter.get(
  * @returns {Boolean} si nombre de usuario existe o no
  */
 specialistsRouter.post(
-	'/specialist/check-username',
-	specialistsController.usernameAvailable
-);
+  '/specialist/check-username',
+  specialistsController.usernameAvailable
+)
 
 /**
  * @swagger
@@ -306,10 +303,10 @@ specialistsRouter.post(
  * @access authenticated
  */
 specialistsRouter.post(
-	'/specialist/update-experience',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.updateFormationExperience
-);
+  '/specialist/update-experience',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.updateFormationExperience
+)
 
 /**
  * @description Carga/actualiza la imagen de perfil del un especialista
@@ -321,10 +318,10 @@ specialistsRouter.post(
  * @access authenticated
  */
 specialistsRouter.put('/specialist/avatar/:id', [
-	passport.authenticate('jwt', { session: true }),
-	multer.single('avatar'),
-	specialistsController.uploadProfilePicture,
-]);
+  passport.authenticate('jwt', { session: true }),
+  multer.single('avatar'),
+  specialistsController.uploadProfilePicture,
+])
 
 /**
  * @description Actualiza la propiedad approveAvatar
@@ -335,10 +332,10 @@ specialistsRouter.put('/specialist/avatar/:id', [
  * @access authenticated
  */
 specialistsRouter.put(
-	'/specialist/:id/approve-avatar',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.approveAvatar
-);
+  '/specialist/:id/approve-avatar',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.approveAvatar
+)
 
 /**
  * @description Cambia el estado de atención inmediata
@@ -348,9 +345,9 @@ specialistsRouter.put(
  * @access authenticated
  */
 specialistsRouter.post(
-	'/specialist/status/inmediate-attention',
-	[passport.authenticate('jwt', { session: true })],
-	specialistsController.changeToInmediateAttention
-);
+  '/specialist/status/inmediate-attention',
+  [passport.authenticate('jwt', { session: true })],
+  specialistsController.changeToInmediateAttention
+)
 
-export default specialistsRouter;
+export default specialistsRouter

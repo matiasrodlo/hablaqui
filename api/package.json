@@ -9,7 +9,8 @@
 		"dev": "nodemon -r esm --inspect server.js",
 		"container-dev": "nodemon -r esm --inspect server.js --no-colors",
 		"test": "jest",
-		"create-env": "printenv > .env && cat .env"
+		"create-env": "printenv > .env && cat .env",
+		"code-check": "npx eslint \"**/*.js\" --fix && npx prettier --write \"**/*.js\""
 	},
 	"author": "",
 	"dependencies": {
@@ -61,14 +62,20 @@
 	"homepage": "https://github.com/Dhauzur/api-sochamar#readme",
 	"devDependencies": {
 		"@babel/core": "^7.8.4",
+		"@babel/eslint-parser": "^7.19.1",
 		"@babel/preset-env": "^7.8.4",
+		"babel-eslint": "^10.1.0",
 		"babel-jest": "^25.1.0",
-		"eslint": "^6.8.0",
-		"eslint-config-prettier": "^6.10.0",
-		"eslint-plugin-prettier": "^3.1.2",
+		"eslint": "^7.18.0",
+		"eslint-config-prettier": "^7.2.0",
+		"eslint-config-standard": "^17.0.0",
+		"eslint-plugin-import": "^2.27.5",
+		"eslint-plugin-n": "^15.6.1",
+		"eslint-plugin-prettier": "^3.3.1",
+		"eslint-plugin-promise": "^6.1.1",
 		"jest": "^25.1.0",
 		"nodemon": "^2.0.2",
-		"prettier": "^1.19.1",
+		"prettier": "^2.2.1",
 		"supertest": "^4.0.2"
 	},
 	"jest": {

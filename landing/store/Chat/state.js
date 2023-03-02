@@ -1,7 +1,7 @@
 const initialState = {
-	chat: null,
-	chats: [],
-	floatingChat: false,
-};
+  chat: null,
+  chats: [],
+  floatingChat: false,
+}
 
-export default () => initialState;
+export default () => initialState

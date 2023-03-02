@@ -1,21 +1,21 @@
-'use strict';
+'use strict'
 
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-let transaction = new Schema(
-	{
-		specialist: {
-			type: Schema.Types.ObjectId,
-			ref: 'specialist',
-		},
-		psychologist: {
-			type: Schema.Types.ObjectId,
-			ref: 'psychologist',
-		},
-		total: { type: Number },
-		sessions: { type: Array },
-	},
-	{ timestamps: true }
-);
+const transaction = new Schema(
+  {
+    specialist: {
+      type: Schema.Types.ObjectId,
+      ref: 'specialist',
+    },
+    psychologist: {
+      type: Schema.Types.ObjectId,
+      ref: 'psychologist',
+    },
+    total: { type: Number },
+    sessions: { type: Array },
+  },
+  { timestamps: true }
+)
 
-export default model('transaction', transaction);
+export default model('transaction', transaction)

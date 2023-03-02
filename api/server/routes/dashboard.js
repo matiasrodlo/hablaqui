@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import dashboardController from '../controllers/dashboard';
+import { Router } from 'express'
+import passport from 'passport'
+import dashboardController from '../controllers/dashboard'
 
-const dashboardRouter = Router();
+const dashboardRouter = Router()
 
 /**
  * @description Devuelve las sesiones que se realizaran proximamente
@@ -13,9 +13,9 @@ const dashboardRouter = Router();
  * @return Array con las sesiones que se aproximan
  */
 dashboardRouter.get(
-	'/retool/sessions/next',
-	dashboardController.getNextSessions
-);
+  '/retool/sessions/next',
+  dashboardController.getNextSessions
+)
 
 /**
  * @description Devuelve la paga de los especialistas dentro de un intervalo de tiempo
@@ -26,20 +26,20 @@ dashboardRouter.get(
  * @return Array con los montos a pagar por especialista
  */
 dashboardRouter.get(
-	'/retool/payments/next/:startDate/:endDate',
-	dashboardController.getSessionsPayment
-);
+  '/retool/payments/next/:startDate/:endDate',
+  dashboardController.getSessionsPayment
+)
 
 dashboardRouter.get(
-	'/retool/fix/appointments',
-	dashboardController.fixSpecialities
-);
+  '/retool/fix/appointments',
+  dashboardController.fixSpecialities
+)
 
 dashboardRouter.get(
-	'/dashboard/pay-mount',
-	[passport.authenticate('jwt', { session: true })],
-	dashboardController.getMountToPay
-);
+  '/dashboard/pay-mount',
+  [passport.authenticate('jwt', { session: true })],
+  dashboardController.getMountToPay
+)
 
 /**
  * @description Cambia la visibilidad de un especialista
@@ -49,10 +49,10 @@ dashboardRouter.get(
  * @route /api/v1/dashboard/specialist-visibility/:specId/:visibility
  */
 dashboardRouter.put(
-	'/dashboard/specialist-visibility/:specId/:visibility',
-	[passport.authenticate('jwt', { session: true })],
-	dashboardController.specialistVisibility
-);
+  '/dashboard/specialist-visibility/:specId/:visibility',
+  [passport.authenticate('jwt', { session: true })],
+  dashboardController.specialistVisibility
+)
 
 /**
  * @description Devuelve los usuarios registrados
@@ -62,9 +62,9 @@ dashboardRouter.put(
  */
 
 dashboardRouter.get(
-	'/dashboard/get-users',
-	[passport.authenticate('jwt', { session: true })],
-	dashboardController.getUsers
-);
+  '/dashboard/get-users',
+  [passport.authenticate('jwt', { session: true })],
+  dashboardController.getUsers
+)
 
-export default dashboardRouter;
+export default dashboardRouter
