@@ -10,7 +10,7 @@
             sort-by="total"
             :sort-desc="true"
             class="elevation-1"
-            v-model:page="page"
+            :page.sync="page"
             hide-default-footer
             @page-count="pageCount = $event"
           >
@@ -147,6 +147,7 @@
 <script>
 // import axios from 'axios'
 import { mapMutations } from 'vuex'
+// import { isEmpty } from 'lodash'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import isBetween from 'dayjs/plugin/isBetween'
@@ -156,7 +157,6 @@ dayjs.extend(isBetween)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
-
 export default {
   name: 'Payment',
   components: {
@@ -239,7 +239,6 @@ export default {
             idSpec: item._id,
           },
         })
-
         const index = this.specialist.indexOf(item)
         this.specialist[index].total = 0
         this.specialist[index].session = []
