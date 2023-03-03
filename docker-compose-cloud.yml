@@ -11,8 +11,6 @@ networks:
         
 services:
   landing-ui:
-    depends_on:
-      - api-restful
     build:
       context: ./landing
       dockerfile: Dockerfile.cloud
