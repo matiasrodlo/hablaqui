@@ -52,6 +52,9 @@ services:
       # - VUE_APP_LANDING=${_VUE_APP_LANDING}
       # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
       # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.81.20
   landing-ui:
     depends_on:
       - api-restful
@@ -65,5 +68,12 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8080
-    links:
-      - api-restful
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.81.10
+
+networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.20.81.0/24
