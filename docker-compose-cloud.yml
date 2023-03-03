@@ -1,5 +1,13 @@
 version: "3.8"
 # Se especifican los servicios que se van a ejecutar
+networks:
+  custom_network:
+    # Ip's estáticas para los contenedores
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.81.0/24
+        
 services:
   landing-ui:
     depends_on:
@@ -78,10 +86,3 @@ services:
       custom_network:
         ipv4_address: 192.168.81.20
   
-networks:
-  custom_network:
-    # Ip's estáticas para los contenedores
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.81.0/24
