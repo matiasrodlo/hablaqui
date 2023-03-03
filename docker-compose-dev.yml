@@ -12,6 +12,7 @@ services:
     environment:
       - API_ABSOLUTE=http://localhost:3000
       - FRONTEND_URL=http://localhost:8080/-
+      - NODE_ENV=development
       - VUE_APP_URL=http://localhost:3000/api/v1
       - HOST=0.0.0.0
       - PORT=8080

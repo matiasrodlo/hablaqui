@@ -2,22 +2,9 @@
     "AWSEBDockerrunVersion": 2,
     "containerDefinitions": [
       {
-        "name": "landing-ui",
+        "name": "api-restful",
         "image": "782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-api:latest",
         "hostname": "node",
-        "essential": true,
-        "portMappings": [
-          {
-            "hostPort": 8080,
-            "containerPort": 8080
-          }
-        ],
-        "memory": 1500
-      },
-      {
-        "name": "api-restful",
-        "image": "782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest",
-        "hostname": "vue",
         "essential": true,
         "portMappings": [
           {
