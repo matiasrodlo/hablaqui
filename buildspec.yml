@@ -3,7 +3,7 @@ phases:
   install:
     commands:
       - echo Installing Docker Compose...
-      - sudo curl -L --no-progress-meter --output /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-linux-x86_64
+      - sudo curl -L --no-progress-meter --output /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-linux-x86_64
       - sudo chmod +x /usr/local/bin/docker-compose
   pre_build:
     commands:
@@ -15,7 +15,8 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker compose -f docker-compose-cloud.yml up --build -d
+      - docker-compose --version
+      - docker-compose --file=docker-compose-cloud.yml up --build -d
       - echo Build completed on `date`
   post_build:
     commands:
