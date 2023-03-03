@@ -6,7 +6,7 @@ FROM node:14-alpine
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 RUN ip addr
-RUN ping -c 3 172.20.81.20
+RUN ping -c 3 172.18.0.20
 
 # Declara parámetros de la línea de comandos para el proceso de construcción
 ARG API_ABSOLUTE
