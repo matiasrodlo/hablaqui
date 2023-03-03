@@ -14,12 +14,11 @@ ARG VUE_APP_LANDING
 ARG VUE_APP_URL
 
 # Establece variables de entorno
-RUN export API_ABSOLUTE=${_API_ABSOLUTE}
-RUN export FRONTEND_URL=${_FRONTEND_URL}
-RUN export NODE_ENV=${_NODE_ENV}
-RUN export VUE_APP_LANDING=${_VUE_APP_LANDING}
-RUN export VUE_APP_URL=${_VUE_APP_URL}
-
+RUN export API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
+RUN export FRONTEND_URL=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
+RUN export VUE_APP_LANDING=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
+RUN export VUE_APP_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/api/v1
+RUN export NODE_ENV=production
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
@@ -36,11 +35,11 @@ RUN npm install
 # Variables de entorno para que funcione Nuxt
 ENV HOST=0.0.0.0
 ENV PORT=8080
-ENV NODE_ENV=${_NODE_ENV}
-ENV API_ABSOLUTE=${_API_ABSOLUTE}
-ENV FRONTEND_URL=${_FRONTEND_URL}
-ENV VUE_APP_LANDING=${_VUE_APP_LANDING}
-ENV VUE_APP_URL=${_VUE_APP_URL}
+ENV API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
+ENV FRONTEND_URL=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
+ENV VUE_APP_LANDING=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
+ENV VUE_APP_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/api/v1
+ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run create-env

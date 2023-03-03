@@ -63,10 +63,5 @@ services:
       - "8080:8080"
     container_name: vue-ui
     environment:
-      - API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
-      - FRONTEND_URL=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/#
-      - VUE_APP_LANDING=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
-      - VUE_APP_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/api/v1
-      - NODE_ENV=production
       - HOST=0.0.0.0
       - PORT=8080
