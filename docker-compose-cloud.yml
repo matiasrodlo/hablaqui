@@ -74,6 +74,7 @@ services:
 
 networks:
   customnetwork:
+    driver: bridge
     ipam:
       config:
         - subnet: 172.20.81.0/24
