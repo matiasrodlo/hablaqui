@@ -52,9 +52,6 @@ services:
       # - VUE_APP_LANDING=${_VUE_APP_LANDING}
       # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
       # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
-    networks:
-      customnetwork:
-        ipv4_address: 172.20.0.20
   landing-ui:
     depends_on:
       - api-restful
