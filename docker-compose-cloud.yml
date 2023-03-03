@@ -52,6 +52,8 @@ services:
       # - VUE_APP_LANDING=${_VUE_APP_LANDING}
       # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
       # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
+    networks:
+      - hablaqui-network
   landing-ui:
     depends_on:
       - api-restful
@@ -65,3 +67,8 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8080
+    networks:
+      - hablaqui-network
+
+networks:
+  hablaqui-network:
