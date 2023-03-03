@@ -55,22 +55,22 @@ services:
     networks:
       customnetwork:
         ipv4_address: 172.20.81.20
-  # landing-ui:
-  #   depends_on:
-  #     - api-restful
-  #   build:
-  #     context: ./landing
-  #     dockerfile: Dockerfile.cloud
-  #   ports:
-  #     - "9000:9000"
-  #     - "8080:8080"
-  #   container_name: vue-ui
-  #   environment:
-  #     - HOST=0.0.0.0
-  #     - PORT=8080
-  #   networks:
-  #     customnetwork:
-  #       ipv4_address: 172.20.81.10
+  landing-ui:
+    depends_on:
+      - api-restful
+    build:
+      context: ./landing
+      dockerfile: Dockerfile.cloud
+    ports:
+      - "9000:9000"
+      - "8080:8080"
+    container_name: vue-ui
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.81.10
 
 networks:
   customnetwork:
