@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "api-restful",
-        "image": "782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-api:latest",
+        "image": "782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest",
         "hostname": "node",
         "essential": true,
         "portMappings": [
