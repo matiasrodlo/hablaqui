@@ -3,6 +3,7 @@ version: "3.8"
 networks:
   custom_network:
     # Ip's estáticas para los contenedores
+    name: custom_network
     ipam:
       driver: default
       config:
