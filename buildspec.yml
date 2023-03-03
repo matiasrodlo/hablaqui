@@ -16,9 +16,9 @@ phases:
     commands:
       # Take these images and push them to ECR
       - echo Pushing the Docker images...
-      - docker tag hablaqui-repository-landing-ui:latest 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest
+      # - docker tag hablaqui-repository-landing-ui:latest 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest
       - docker tag hablaqui-repository-api-restful:latest 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-api:latest
-      - docker push 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest
+      # - docker push 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-landing:latest
       - docker push 782546527822.dkr.ecr.us-east-1.amazonaws.com/hablaqui-staging-api:latest
       - echo Pushing completed on `date`
       
