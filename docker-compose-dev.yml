@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 # Se especifican los servicios que se van a ejecutar
 services:
   landing-ui:
