@@ -5,6 +5,7 @@ FROM node:14-alpine
 # con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN ip addr
 
 # Declara parámetros de la línea de comandos para el proceso de construcción
 ARG API_ABSOLUTE

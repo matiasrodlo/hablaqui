@@ -1,11 +1,33 @@
 version: "3.8"
 # Se especifican los servicios que se van a ejecutar
 services:
+  landing-ui:
+    depends_on:
+      - api-restful
+    build:
+      context: ./landing
+      dockerfile: Dockerfile.cloud
+      network: custom_network
+      args:
+        - API_BUILD=http://api-restful:3000
+    ports:
+      - "9000:9000"
+      - "8080:8080"
+    container_name: vue-ui
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - API_BUILD=http://api-restful:3000
+    networks:
+      custom_network:
+        ipv4_address: 192.168.81.10
+
   api-restful:
    # Se especifica el dockerfile que se va a utilizar
     build:
       context: ./api
       dockerfile: Dockerfile.cloud
+      network: custom_network
     ports:
       - "3000:3000"
     container_name: node-api
@@ -52,17 +74,14 @@ services:
       # - VUE_APP_LANDING=${_VUE_APP_LANDING}
       # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
       # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
-  landing-ui:
-    depends_on:
-      - api-restful
-    build:
-      context: ./landing
-      dockerfile: Dockerfile.cloud
-    ports:
-      - "9000:9000"
-      - "8080:8080"
-    container_name: vue-ui
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8080
-      - API_BUILD=http://api-restful:3000
+    networks:
+      custom_network:
+        ipv4_address: 192.168.81.20
+  
+networks:
+  custom_network:
+    # Ip's estáticas para los contenedores
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.81.0/24
