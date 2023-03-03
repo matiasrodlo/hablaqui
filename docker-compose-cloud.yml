@@ -3,11 +3,11 @@ version: "3.8"
 services:
   api-restful:
    # Se especifica el dockerfile que se va a utilizar
-    ports:
-      - "172.18.0.20:3000:3000"
     build:
       context: ./api
       dockerfile: Dockerfile.cloud
+    ports:
+      - "3000:3000"
     container_name: node-api
     environment:
       - API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
@@ -55,12 +55,12 @@ services:
   landing-ui:
     depends_on:
       - api-restful
-    ports:
-      - "9000:9000"
-      - "172.18.0.10:8080:8080"
     build:
       context: ./landing
       dockerfile: Dockerfile.cloud
+    ports:
+      - "9000:9000"
+      - "8080:8080"
     container_name: vue-ui
     environment:
       - HOST=0.0.0.0
