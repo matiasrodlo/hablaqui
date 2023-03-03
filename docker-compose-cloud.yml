@@ -42,11 +42,11 @@ services:
       custom_network:
         ipv4_address: 192.168.81.20
     environment:
-      - API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
-      - API_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/
+      - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
+      - API_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/
       - BUCKETNAME=hablaqui-content
       - DEBUG_ANALYTICS=true
-      - FRONTEND_URL=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/#
+      - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
       - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
       - GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success
       - GOOGLE_CLIENT_SECRET=Jw1CJ__C-XKfJnmnf7GuVBrn
@@ -59,8 +59,8 @@ services:
       - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
       - SENDGRID_API_KEY=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
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
-      - VUE_APP_LANDING=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
-      - VUE_APP_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/api/v1
+      - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+      - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
       # - URLDB=${_URLDB}
       # - BUCKETNAME=${_BUCKETNAME}
       # - GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}

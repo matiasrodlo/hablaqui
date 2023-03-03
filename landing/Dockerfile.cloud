@@ -16,10 +16,10 @@ ARG VUE_APP_LANDING
 ARG VUE_APP_URL
 
 # Establece variables de entorno
-RUN export API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
-RUN export FRONTEND_URL=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
-RUN export VUE_APP_LANDING=http://hablaquistaginglanding-env.eba-xt3vgmpt.us-east-2.elasticbeanstalk.com/
-RUN export VUE_APP_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/api/v1
+RUN export API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
+RUN export FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+RUN export VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+RUN export VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
 RUN export NODE_ENV=production
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -34,6 +34,7 @@ COPY Dockerrun.aws.json ./
 
 # Instala las dependencias del proyecto
 RUN npm install
+RUN npm run create-env
 
 # Variables de entorno para que funcione Nuxt
 ENV HOST=0.0.0.0
@@ -43,7 +44,6 @@ ENV VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
-RUN npm run create-env
 RUN npm run generate
 
 # Se expone el puerto 9000 y 8080
