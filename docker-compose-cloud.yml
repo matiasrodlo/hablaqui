@@ -23,7 +23,7 @@ services:
       - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
       - NAMESPACE_TESTMAILS=bnwxe
       - NODE_ENV=production
-      - PORT=80
+      - PORT=3000
       - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
       - SENDGRID_API_KEY=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
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui

@@ -10,7 +10,7 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker-compose --file=docker-compose-cloud.yml up
+      - docker-compose --file=docker-compose-cloud.yml up --build
       - echo Build completed on `date`
   post_build:
     commands:
