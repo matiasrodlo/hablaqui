@@ -40,6 +40,9 @@ services:
     ports:
       - "3000:3000"
     container_name: node-api
+    networks:
+      custom_network:
+        ipv4_address: 192.168.81.20
     environment:
       - API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
       - API_URL=http://hablaquistagingapi-env.eba-9ipn8u5m.us-east-2.elasticbeanstalk.com/
@@ -83,7 +86,4 @@ services:
       # - VUE_APP_LANDING=${_VUE_APP_LANDING}
       # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
       # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
-    networks:
-      custom_network:
-        ipv4_address: 192.168.81.20
   
