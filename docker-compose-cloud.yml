@@ -7,7 +7,7 @@ services:
       context: ./api
       dockerfile: Dockerfile.cloud
     ports:
-      - "3000:3000"
+      - "172.18.0.20:3000:3000"
     container_name: node-api
     environment:
       - API_ABSOLUTE=http://hablaqui-staging.us-east-1.elasticbeanstalk.com
@@ -62,19 +62,9 @@ services:
       context: ./landing
       dockerfile: Dockerfile.cloud
     ports:
-      - "9000:9000"
-      - "8080:8080"
+      - "172.18.0.10:9000:9000"
+      - "172.18.0.10:8080:8080"
     container_name: vue-ui
     environment:
       - HOST=0.0.0.0
       - PORT=8080
-    networks:
-      customnetwork:
-        ipv4_address: 172.20.0.10
-
-networks:
-  customnetwork:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
