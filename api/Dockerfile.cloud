@@ -69,7 +69,6 @@ USER node
 # Copia packer.json y server.js a la carpeta /home/node/app, junto con la carpeta server y server.js
 COPY package.json ./
 COPY server.js ./
-COPY Dockerrun.aws.json ./
 COPY --chown=node:node /server ./server
 
 # Instala las dependencias del proyecto
