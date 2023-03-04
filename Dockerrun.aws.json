@@ -13,6 +13,23 @@
           }
         ],
         "memory": 1500
-      }
+      },
+      {
+			"name": "landing-ui",
+			"image": "782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest",
+			"hostname": "vue",
+			"essential": true,
+			"portMappings": [
+				{
+					"hostPort": 8080,
+					"containerPort": 8080
+				},
+				{
+					"hostPort": 9000,
+					"containerPort": 9000
+				}
+			],
+			"memory": 1500
+		}
     ]
 }

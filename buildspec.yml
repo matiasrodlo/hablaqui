@@ -27,5 +27,5 @@ phases:
       - echo Pushing completed on `date`
 artifacts:
   files:
-    - '**/*'
+    - 'Dockerrun.aws.json'
       
