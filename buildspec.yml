@@ -26,8 +26,4 @@ phases:
       - docker tag src_landing-ui:latest 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest
-      - docker tag 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:$IMAGE_TAG
-      - docker tag 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:$IMAGE_TAG
-      - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:$IMAGE_TAG
-      - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:$IMAGE_TAG
       - echo Pushing completed on `date`
