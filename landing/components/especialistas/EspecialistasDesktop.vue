@@ -240,6 +240,7 @@
 									() => {
 										toggle = 0;
 										getSpecialistsBestMatch();
+										getSpecialistsBestMatchId();
 									}
 								"
 							>
@@ -644,7 +645,7 @@ export default {
 
 			// Se filtran los especialistas por disponibilidad
 			if (this.dispoBoxes.length !== 0) {
-				let week = [
+				const week = [
 					'monday',
 					'tuesday',
 					'wednesday',
@@ -667,7 +668,6 @@ export default {
 									)
 								) {
 									flag = true;
-									return;
 								}
 							}
 						});
@@ -680,6 +680,7 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialists',
+			specialistsIds: 'Specialist/specialistsIds',
 			sessions: 'Specialist/sessionsLimit',
 			matchMaking: 'Specialist/matchMaking',
 		}),
@@ -693,6 +694,7 @@ export default {
 			if (oldValue) prev = oldValue;
 			const ids = this.specialistFilter.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
+			console.log(this.specialistsIds);
 		},
 		matchMaking(newVal) {
 			if (newVal) {
@@ -719,12 +721,15 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
+		const obj = this.getSpecialistsArrayMatch(['63e1727b384b67ddc9eebc33']);
+		console.log('test', obj);
 		// Si el usuaio no ha realizado la encuesta lo redirige a la evaluacion
 		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
 			this.goEvaluation();
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
+		this.actualizarMatch({ themes: this.specialties });
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
@@ -804,15 +809,27 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			console.log({ ...value });
+			// console.log({ ...value });
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-				if (this.toggle === 0) await this.getSpecialistsBestMatch();
-				if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
-				if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
+
+				if (this.toggle === 0) {
+					await this.getSpecialistsBestMatch();
+					await this.getSpecialistsBestMatchId();
+				}
+				if (this.toggle === 1) {
+					await this.getSpecialistsEconomicMatch();
+					await this.getSpecialistsEconomicMatch();
+				}
+				if (this.toggle === 2) {
+					await this.getSpecialistsAvailityMatch();
+					await this.getSpecialistsAvailityMatch();
+				}
 				this.loadingMatchMaking = false;
 			}
+			console.log('Especialistas', this.specialists);
+			console.log('ids', this.specialistsIds);
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
@@ -822,6 +839,10 @@ export default {
 			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
 			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
 			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
+			getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
+			getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
+			getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
+			getSpecialistsArrayMatch: 'Specialist/getSpecialistsArrayMatch',
 		}),
 	},
 };

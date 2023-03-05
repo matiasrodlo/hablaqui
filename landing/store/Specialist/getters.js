@@ -15,6 +15,7 @@ export default {
 			});
 	},
 	specialists: state => state.specialists,
+	specialistsIds: state => state.specialistsIds,
 	specialist: state => state.specialist,
 	sessions: state => state.sessions,
 	transactions: state => state.transactions,

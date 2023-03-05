@@ -121,11 +121,12 @@ export default {
 	async getSpecialistsArrayMatch({ commit, state }, payload) {
 		try {
 			commit('setLoadingSpecialist', true);
-			const { data } = await this.$axios('/specialists/availity-match', {
+			const { data } = await this.$axios('/specialists/get-specialists-array-match', {
 				method: 'PUT',
 				data: { spec: payload },
 			});
 			commit('setLoadingSpecialist', false);
+			console.log('data', data);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
@@ -44,6 +45,7 @@ import Appbar from '~/components/AppbarWhite';
  */
 export default {
 	components: {
+		// eslint-disable-next-line vue/no-reserved-component-names
 		Footer,
 		Appbar,
 		EspecialistasDesktop,
@@ -110,6 +112,7 @@ export default {
 				if (!this.matchMaking) {
 					this.$router.push('evaluacion');
 				} else {
+					await this.getSpecialistsBestMatchId();
 					await this.getSpecialistsBestMatch();
 				}
 			}
@@ -127,6 +130,7 @@ export default {
 			getMatchMakig: 'Specialist/getMatchMakig',
 			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
 			getSpecialists: 'Specialist/getSpecialists',
+			getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
 		}),
 	},
 };
