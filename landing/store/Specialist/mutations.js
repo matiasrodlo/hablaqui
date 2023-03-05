@@ -15,6 +15,9 @@ export default {
 	setSpecialists(state, value) {
 		state.specialists = Object.freeze(value);
 	},
+	setSpecialistsIds(state, value) {
+		state.specialistsIds = Object.freeze(value);
+	},
 	setSpecialist(state, value) {
 		state.specialist = value;
 	},

@@ -9,6 +9,7 @@ const initialState = {
 	loadingSpecialist: false,
 	payments: [],
 	specialists: [],
+	specialistsIds: [],
 	specialist: null,
 	resumeView: false,
 	sessions: [],

@@ -33,6 +33,23 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
+	async getSpecialistsBestMatchId({ commit, state }) {
+		try {
+			commit('setLoadingSpecialist', true);
+			const { data } = await this.$axios('/specialists/best-match-id', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			if (data.perfectMatch) {
+				console.log(data.matchedSpecialists);
+				commit('setSpecialistsIds', data.matchedSpecialists);
+			}
+			commit('setLoadingSpecialist', false);
+			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
 	async getSpecialistsEconomicMatch({ commit, state }) {
 		try {
 			commit('setLoadingSpecialist', true);
@@ -42,6 +59,22 @@ export default {
 			});
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
+			}
+			snackBarSuccess('Especialistas obtenidos')(commit);
+			commit('setLoadingSpecialist', false);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSpecialistsEconomicMatchIds({ commit, state }) {
+		try {
+			commit('setLoadingSpecialist', true);
+			const { data } = await this.$axios('/specialists/economic-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			if (data.perfectMatch) {
+				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
 			snackBarSuccess('Especialistas obtenidos')(commit);
 			commit('setLoadingSpecialist', false);
@@ -63,6 +96,38 @@ export default {
 			}
 			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Psicologos obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSpecialistsAvailityMatchId({ commit, state }) {
+		try {
+			commit('setLoadingSpecialist', true);
+			const { data } = await this.$axios('/specialists/availity-match', {
+				method: 'POST',
+				data: state.matchMaking,
+			});
+			console.log('availity-match', data);
+
+			if (data.perfectMatch) {
+				commit('setSpecialistsIds', data.matchedSpecialists);
+			}
+			commit('setLoadingSpecialist', false);
+			snackBarSuccess('Psicologos obtenidos')(commit);
+		} catch (e) {
+			snackBarError(e)(commit);
+		}
+	},
+	async getSpecialistsArrayMatch({ commit, state }, payload) {
+		console.log(payload);
+		try {
+			commit('setLoadingSpecialist', true);
+			const { specialists } = await this.$axios.$get(
+				'/specialists/get-specialists-array-match',
+				{ specs: payload }
+			);
+			commit('setLoadingSpecialist', false);
+			return specialists;
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
