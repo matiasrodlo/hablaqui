@@ -62,6 +62,13 @@ const retoolController = {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
 	},
+	async healthCheck(req, res) {
+		try {
+			return restResponse('OK', 200, res);
+		} catch (e) {
+			return errorCallback(e, res, 'Error procesando la solicitud');
+		}
+	}
 };
 
 export default Object.freeze(retoolController);
