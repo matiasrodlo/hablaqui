@@ -68,7 +68,7 @@ dashboardRouter.get(
 );
 
 dashboardRouter.get(
-	'/',
+	'/health-check',
 	dashboardController.heatlhCheck
 )
 
