@@ -2,6 +2,6 @@
 [
     {
         "name": "node",
-        "image": "782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest"
+        "imageUri": "782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest"
     }
 ]
