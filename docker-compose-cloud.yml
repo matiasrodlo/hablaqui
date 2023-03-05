@@ -1,46 +1,14 @@
 version: "3.8"
-# Se especifican los servicios que se van a ejecutar
-networks:
-  custom_network:
-    # Ip's estáticas para los contenedores
-    name: custom_network
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.81.0/24
-        
+# Se especifican los servicios que se van a ejecutar        
 services:
-  landing-ui:
-    build:
-      context: ./landing
-      dockerfile: Dockerfile.cloud
-      network: custom_network
-      args:
-        - API_BUILD=http://api-restful:3000
-    ports:
-      - "9000:9000"
-      - "8080:8080"
-    container_name: vue-ui
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8080
-      - API_BUILD=http://api-restful:3000
-    networks:
-      custom_network:
-        ipv4_address: 192.168.81.10
-
   api-restful:
    # Se especifica el dockerfile que se va a utilizar
     build:
       context: ./api
       dockerfile: Dockerfile.cloud
-      network: custom_network
     ports:
       - "3000:3000"
     container_name: node-api
-    networks:
-      custom_network:
-        ipv4_address: 192.168.81.20
     environment:
       - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
       - API_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/
@@ -61,27 +29,30 @@ services:
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
       - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
       - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
-      # - URLDB=${_URLDB}
-      # - BUCKETNAME=${_BUCKETNAME}
-      # - GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}
-      # - GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}
-      # - NODE_ENV=${_NODE_ENV}
-      # - PORT=${_PORT}
-      # - FRONTEND_URL=${_FRONTEND_URL}
-      # - JWT_SECRET=${_JWT_SECRET}
-      # - JWT_ALGORITHM=${_JWT_ALGORITHM}
-      # - JWT_EXPIRATION=${_JWT_EXPIRATION}
-      # - JWT_EXPIRATION_REFRESH=${_JWT_EXPIRATION_REFRESH}
-      # - JWT_SECRET_REFRESH=${_JWT_SECRET_REFRESH}
-      # - PASSWORD_RECOVERY_JWT_EXPIRATION=${_PASSWORD_RECOVERY_JWT_EXPIRATION}
-      # - API_URL=${_API_URL}
-      # - BUCKETNAME=${_BUCKETNAME}
-      # - MERCADOPAGO_KEY=${_MERCADOPAGO_KEY}
-      # - NO_REPLY_EMAIL=${_NO_REPLY_EMAIL}
-      # - NO_REPLY_PASSWORD=${_NO_REPLY_PASSWORD}
-      # - SEGMENT_API_KEY=${_SEGMENT_API_KEY}
-      # - SENDGRID_API_KEY=${_SENDGRID_API_KEY}
-      # - VUE_APP_LANDING=${_VUE_APP_LANDING}
-      # - KEY_API_TESTMAILS=${_KEY_API_TESTMAILS}
-      # - NAMESPACE_TESTMAILS=${_NAMESPACE_TESTMAILS}
-  
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.20
+  landing-ui:
+    build:
+      context: ./landing
+      dockerfile: Dockerfile.cloud
+      network: "host"
+      args:
+        - API_BUILD=http://api-restful:3000
+    ports:
+      - "9000:9000"
+      - "8080:8080"
+    container_name: vue-ui
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - API_BUILD=http://api-restful:3000
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.10
+
+networks:
+  hablaqui-network:
+    ipam:
+      config:
+        - subnet: 192.168.81.0/24

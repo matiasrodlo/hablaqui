@@ -7,7 +7,6 @@ FROM node:14-alpine
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 RUN ip addr
 RUN ping -c 4 192.168.81.20
-
 # Declara parámetros de la línea de comandos para el proceso de construcción
 ARG API_ABSOLUTE
 ARG FRONTEND_URL
