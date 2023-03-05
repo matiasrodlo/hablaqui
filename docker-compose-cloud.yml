@@ -6,14 +6,11 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.cloud
-    ports:
-      - "3000:3000"
-    container_name: node-api
-    environment:
+      args:
       - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
       - API_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/
       - BUCKETNAME=hablaqui-content
-      - DEBUG_ANALYTICS=true
+      - DEBUG_ANALYTICS="true"
       - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
       - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
       - GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success
@@ -29,6 +26,9 @@ services:
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
       - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
       - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
+    ports:
+      - "3000:3000"
+    container_name: node-api
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.20
@@ -46,7 +46,6 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8080
-      - API_BUILD=http://api-restful:3000
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.10
