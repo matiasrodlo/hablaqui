@@ -28,4 +28,5 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
+    - staging-api-image.json
+    - staging-landing-image.json
