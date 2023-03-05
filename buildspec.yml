@@ -25,3 +25,7 @@ phases:
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest
       - echo Pushing completed on `date`
+
+artifacts:
+  files:
+    - '**/*'
