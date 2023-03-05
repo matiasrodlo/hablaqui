@@ -1,14 +1,16 @@
 version: 0.2
 phases:
   pre_build:
+    # Inicia sesión en Amazon ECR
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 782546527822.dkr.ecr.us-east-2.amazonaws.com
       - echo Login completed on `date`
   build:
+    # Construye las imagenes de docker compose por separado y las sube a ECR. La
+    # razon de esto es para asegurar que se lenvantó el backend para que el frontend lo pueda utilizar
     commands:
       - echo Build started on `date`
-      # Build the Docker images
       - echo Building the production Docker image...
       - docker-compose --file=docker-compose-cloud.yml up --build -d api-restful
       - echo Api was successfully built!
@@ -17,7 +19,7 @@ phases:
       - echo Build completed on `date`
   post_build:
     commands:
-      # Take these images and push them to ECR
+      # Se le da el formato pedido por ECR y se sube a dicha plataforma
       - echo Pushing the Docker images...
       - docker images
       - docker tag src_api-restful:latest 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest
@@ -25,6 +27,3 @@ phases:
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-api:latest
       - docker push 782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-landing:latest
       - echo Pushing completed on `date`
-artifacts:
-  files:
-    - 'Dockerrun.aws.json'

@@ -5,21 +5,7 @@ FROM node:14-alpine
 # con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-RUN ip addr
-RUN ping -c 4 192.168.81.20
-# Declara parámetros de la línea de comandos para el proceso de construcción
-ARG API_ABSOLUTE
-ARG FRONTEND_URL
-ARG NODE_ENV
-ARG VUE_APP_LANDING
-ARG VUE_APP_URL
 
-# Establece variables de entorno
-RUN export API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
-RUN export FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
-RUN export VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
-RUN export VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
-RUN export NODE_ENV=production
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
@@ -32,7 +18,6 @@ COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
 RUN npm install
-RUN npm run create-env
 
 # Variables de entorno para que funcione Nuxt
 ENV HOST=0.0.0.0
