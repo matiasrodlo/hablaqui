@@ -32,7 +32,7 @@ specialistsRouter.get('/specialists/all', specialistsController.getAll);
  * @returns {Array} especialistas
  * @access authenticated
  */
-specialistsRouter.get(
+specialistsRouter.put(
 	'/specialists/get-specialists-array-match',
 	specialistsController.getSpecialistArray
 );
