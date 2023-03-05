@@ -22,10 +22,28 @@ const specialistsController = {
 			errorCallback(e, res, 'Error haciendo match');
 		}
 	},
+	async bestMatchId(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await specialistsService.bestMatchId(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
 	async economicMatch(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await specialistsService.economicMatch(
+			const { data, code } = await specialistsService.economicMatch(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async economicMatchId(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await specialistsService.economicMatchId(
 				body
 			);
 			return restResponse(data, code, res);
@@ -36,7 +54,16 @@ const specialistsController = {
 	async availityMatch(req, res) {
 		try {
 			const { body } = req;
-			const { data, code } = await specialistsService.availityMatch(
+			const { data, code } = await specialistsService.availityMatch(body);
+			return restResponse(data, code, res);
+		} catch (e) {
+			errorCallback(e, res, 'Error haciendo match');
+		}
+	},
+	async availityMatchId(req, res) {
+		try {
+			const { body } = req;
+			const { data, code } = await specialistsService.availityMatchId(
 				body
 			);
 			return restResponse(data, code, res);
@@ -179,13 +206,11 @@ const specialistsController = {
 		try {
 			const { payload } = req.body;
 			const { user } = req;
-			const {
-				data,
-				code,
-			} = await specialistsService.updateFormationExperience(
-				user,
-				payload
-			);
+			const { data, code } =
+				await specialistsService.updateFormationExperience(
+					user,
+					payload
+				);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error actualizando');
@@ -209,10 +234,8 @@ const specialistsController = {
 		try {
 			const id = req.params.id;
 			const { file } = req;
-			const {
-				data,
-				code,
-			} = await specialistsService.uploadProfilePicture(id, file);
+			const { data, code } =
+				await specialistsService.uploadProfilePicture(id, file);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(
@@ -225,12 +248,10 @@ const specialistsController = {
 	async changeToInmediateAttention(req, res) {
 		try {
 			const { user } = req;
-			const {
-				data,
-				code,
-			} = await specialistsService.changeToInmediateAttention(
-				user.specialist
-			);
+			const { data, code } =
+				await specialistsService.changeToInmediateAttention(
+					user.specialist
+				);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');
@@ -240,12 +261,14 @@ const specialistsController = {
 		try {
 			const { specs } = req.body;
 			console.log(specs);
-			const { data, code } = await specialistsService.getSpecialistArray(specs);
+			const { data, code } = await specialistsService.getSpecialistArray(
+				specs
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			return errorCallback(e, res, 'Error procesando la solicitud');
 		}
-	}
+	},
 };
 
 export default Object.freeze(specialistsController);

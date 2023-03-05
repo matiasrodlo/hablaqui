@@ -64,6 +64,11 @@ specialistsRouter.post(
 	specialistsController.bestMatch
 );
 
+specialistsRouter.post(
+	'/specialists/best-match-id',
+	specialistsController.bestMatchId
+);
+
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas con
  * el plan más barato
@@ -80,6 +85,11 @@ specialistsRouter.post(
 	specialistsController.economicMatch
 );
 
+specialistsRouter.post(
+	'/specialists/economic-match-id',
+	specialistsController.economicMatchId
+);
+
 /**
  * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking para los especialistas con
  * mayor disponibilidad de horarios.
@@ -94,6 +104,11 @@ specialistsRouter.post(
 specialistsRouter.post(
 	'/specialists/availity-match',
 	specialistsController.availityMatch
+);
+
+specialistsRouter.post(
+	'/specialists/availity-match-id',
+	specialistsController.availityMatchId
 );
 
 /**

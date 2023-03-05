@@ -114,7 +114,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 	let points = 0;
 	for (let i = 0; i < nextDays; i++) {
 		// Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
-		days[i].available.forEach(hora => {
+		days[i].available.forEach((hora) => {
 			if (
 				dayjs(hora, 'HH:mm').isBetween(
 					dayjs('00:00', 'HH:mm'),
@@ -215,11 +215,11 @@ const ponderationMatch = async (matchedList, payload) => {
 	const sessions = await Sessions.find();
 	// Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
 	let newMatchedList = await Promise.all(
-		matchedList.map(async spec => {
+		matchedList.map(async (spec) => {
 			let criteria = 0;
 			let points = normalize(spec.points, 0, 100) * weighted[criteria];
 			const sessionSpec = sessions.filter(
-				session => session.spec === spec._id
+				(session) => session.spec === spec._id
 			);
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
@@ -258,7 +258,7 @@ const ponderationMatch = async (matchedList, payload) => {
 	return newMatchedList;
 };
 
-const bestMatch = async payload => {
+const bestMatch = async (payload) => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
@@ -278,22 +278,49 @@ const bestMatch = async payload => {
 	);
 
 	// Se deja solo los ID de los especialistas
-	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
-	
+	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
+
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
 		perfectMatch,
-	});;
+	});
 };
 
-const economicMatch = async payload => {
+const bestMatchId = async (payload) => {
+	let matchedSpecialists = [];
+	let perfectMatch = true;
+	// Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
+	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
+	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
+
+	// Comienza a buscar los especialistas
+	matchedSpecialists = await Specialist.find({
+		'preferences.marketplaceVisibility': true,
+	});
+
+	// Se busca el mejor match según criterios
+	matchedSpecialists = await ponderationMatch(
+		matchedSpecialists,
+		payload,
+		weighted
+	);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
+
+	return okResponse('especialistas encontrados', {
+		matchedSpecialists,
+		perfectMatch,
+	});
+};
+
+const economicMatch = async () => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
 	});
-
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al spec más barato
@@ -302,7 +329,7 @@ const economicMatch = async payload => {
 	);
 
 	// Se deja solo los ID de los especialistas
-	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
+	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
 
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
@@ -310,7 +337,30 @@ const economicMatch = async payload => {
 	});
 };
 
-const availityMatch = async payload => {
+const economicMatchId = async () => {
+	let matchedSpecialists = [];
+	let perfectMatch = true;
+
+	matchedSpecialists = await Specialist.find({
+		'preferences.marketplaceVisibility': true,
+	});
+
+	// Se busca el mejor match según criterios
+	// Obtiene primero al spec más barato
+	matchedSpecialists.sort(
+		(a, b) => a.sessionPrices.video - b.sessionPrices.video
+	);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
+
+	return okResponse('especialistas encontrados', {
+		matchedSpecialists,
+		perfectMatch,
+	});
+};
+
+const availityMatch = async (payload) => {
 	let points = 0;
 	const nextDays = 7;
 	let pointsPerCriterion = 1;
@@ -327,10 +377,10 @@ const availityMatch = async payload => {
 
 	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
 	matchedSpecialists = await Promise.all(
-		matchedSpecialists.map(async spec => {
+		matchedSpecialists.map(async (spec) => {
 			spec.points = 0;
 			const sessionSpec = sessions.filter(
-				session => session.spec === spec._id
+				(session) => session.spec === spec._id
 			);
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				spec,
@@ -351,7 +401,56 @@ const availityMatch = async payload => {
 	matchedSpecialists.sort((a, b) => b.points - a.points);
 
 	// Se deja solo los ID de los especialistas
-	matchedSpecialists = matchedSpecialists.map(spec => spec._id);
+	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
+
+	return okResponse('especialistas encontrados', {
+		matchedSpecialists,
+		perfectMatch,
+	});
+};
+
+const availityMatchId = async (payload) => {
+	let points = 0;
+	const nextDays = 7;
+	let pointsPerCriterion = 1;
+	let matchedSpecialists = [];
+	let perfectMatch = true;
+
+	// Comienza a buscar los especialistas
+	matchedSpecialists = await Specialist.find({
+		'preferences.marketplaceVisibility': true,
+	});
+
+	// Se obtienen todas las sessiones
+	const sessions = await Sessions.find();
+
+	// Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
+	matchedSpecialists = await Promise.all(
+		matchedSpecialists.map(async (spec) => {
+			spec.points = 0;
+			const sessionSpec = sessions.filter(
+				(session) => session.spec === spec._id
+			);
+			const days = await sessionsFunctions.getFormattedSessionsForMatch(
+				spec,
+				sessionSpec
+			);
+			points = pointsDisponibilidad(
+				days,
+				payload,
+				pointsPerCriterion,
+				nextDays
+			);
+			let specialist = JSON.stringify(spec);
+			specialist = JSON.parse(specialist);
+			return { ...specialist, points };
+		})
+	);
+	// Se obtiene el especialista con mayor disponibilidad representado por b
+	matchedSpecialists.sort((a, b) => b.points - a.points);
+
+	// Se deja solo los ID de los especialistas
+	matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
 
 	return okResponse('especialistas encontrados', {
 		matchedSpecialists,
@@ -381,7 +480,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
 		return conflictResponse('Sesion no encontrada');
 	}
 	// Se verifica si el plan sigue vigente
-	sessions.plan.forEach(plan => {
+	sessions.plan.forEach((plan) => {
 		for (let i = 0; i < plan.session.length; i++) {
 			if (
 				plan.session[i]._id.toString() === sessionId.toString() &&
@@ -414,7 +513,7 @@ const updatePlan = async (specialistId, planInfo) => {
 	return okResponse('Plan creado', { specialist: updatedSpecialist });
 };
 
-const getByData = async username => {
+const getByData = async (username) => {
 	// Funcion para obtener un especialista por su username
 	const usernameSearch = await Specialist.findOne({ username });
 	if (!usernameSearch) {
@@ -423,7 +522,9 @@ const getByData = async username => {
 			specialist: idSearch,
 		});
 	}
-	return okResponse('Especialista encontrado', { specialist: usernameSearch }); // Se retorna una respuesta con el especialista
+	return okResponse('Especialista encontrado', {
+		specialist: usernameSearch,
+	}); // Se retorna una respuesta con el especialista
 };
 
 const setSchedule = async (user, payload) => {
@@ -540,7 +641,9 @@ const updateSpecialist = async (user, profile) => {
 				// Si existe una fecha de vencimiento, y esta está antes de la fecha actual adelantado un mes
 				if (
 					spec.stampSetPrices &&
-					dayjs().isBefore(dayjs(spec.stampSetPrices).add(1, 'months'))
+					dayjs().isBefore(
+						dayjs(spec.stampSetPrices).add(1, 'months')
+					)
 				)
 					profile.sessionPrices = spec.sessionPrices;
 				else profile.stampSetPrices = dayjs.tz().format();
@@ -714,7 +817,7 @@ const setPrice = async (user, newPrice) => {
 	});
 };
 
-const getClients = async specialist => {
+const getClients = async (specialist) => {
 	// Se busca las sessiones de un especialista en particular y se filtran por las que estan pagadas
 	let sessions = await Sessions.find({
 		specialist: specialist,
@@ -722,8 +825,8 @@ const getClients = async specialist => {
 
 	return okResponse('Usuarios encontrados', {
 		users: sessions
-			.filter(item => item.user)
-			.map(item => ({
+			.filter((item) => item.user)
+			.map((item) => ({
 				_id: item.user._id,
 				avatar: item.user.avatar,
 				avatarThumbnail: item.user.avatarThumbnail,
@@ -740,7 +843,7 @@ const getClients = async specialist => {
 				observation: item.observation,
 				phone: item.user.phone,
 				plan: item.plan.find(
-					plan =>
+					(plan) =>
 						plan.payment === 'success' &&
 						dayjs().isBefore(dayjs(plan.expiration))
 				),
@@ -752,23 +855,23 @@ const getClients = async specialist => {
 	});
 };
 
-const getLastSession = item => {
+const getLastSession = (item) => {
 	// Se obtiene la ultima sesion de un documento Sessions, se le da formato, se ordena, se filtra y se retorna
 	return item.plan
-		.flatMap(plan =>
-			plan.session.map(session =>
+		.flatMap((plan) =>
+			plan.session.map((session) =>
 				dayjs
 					.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm'))
 					.format('DD/MM/YYYY')
 			)
 		)
 		.sort((a, b) => new Date(b) - new Date(a))
-		.find(sessionDate =>
+		.find((sessionDate) =>
 			dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(dayjs())
 		);
 };
 
-const searchClients = async search => {
+const searchClients = async (search) => {
 	// Se busca un usuario por nombre y correo
 	const foundUser = await User.find({ email: search, name: search });
 	if (!foundUser) {
@@ -777,7 +880,7 @@ const searchClients = async search => {
 	return okResponse('Usuario encontrado', { users: foundUser });
 };
 
-const usernameAvailable = async username => {
+const usernameAvailable = async (username) => {
 	// Se verifica si el nombre de usuario ya existe para saber si el usuario está disponible
 	let available = true;
 	if (await Specialist.exists({ username })) available = false;
@@ -823,7 +926,7 @@ const uploadProfilePicture = async (specID, picture) => {
 			contentType: picture.mimetype,
 		},
 	});
-	stream.on('error', err => {
+	stream.on('error', (err) => {
 		picture.cloudStorageError = err;
 		conflictResponse('Error al subir la imagen');
 	});
@@ -878,7 +981,7 @@ const approveAvatar = async (user, id) => {
 	});
 };
 
-const changeToInmediateAttention = async spec => {
+const changeToInmediateAttention = async (spec) => {
 	/*if (user.role !== 'specialist')
 		return conflictResponse('No tienes permitida esta opción');
 	const spec = user.specialist;*/
@@ -902,16 +1005,14 @@ const changeToInmediateAttention = async spec => {
 		let sessions = await getAllSessionsFunction(spec);
 		let now = new Date();
 		// Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
-		sessions = sessions.filter(session => {
+		sessions = sessions.filter((session) => {
 			const date = dayjs
 				.tz(dayjs(session.date))
 				.format('DD/MM/YYYY HH:mm');
 			return (
 				session.status !== 'success' &&
 				dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-				dayjs(date)
-					.add(50, 'minutes')
-					.isAfter(dayjs(now))
+				dayjs(date).add(50, 'minutes').isAfter(dayjs(now))
 			);
 		});
 
@@ -944,7 +1045,7 @@ const changeToInmediateAttention = async spec => {
 	});
 };
 
-const getSpecialistArray = async specs => {
+const getSpecialistArray = async (specs) => {
 	// Se busca los especialistas que estan en el array de especialistas y se retorna el id, nombre y apellido
 	let specialist = await Specialist.find({ _id: { $in: specs } }).select(
 		'_id username name lastName code sessionPrices specialities professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
@@ -1006,8 +1107,11 @@ const specialistsService = {
 	getByData,
 	getClients,
 	bestMatch,
+	bestMatchId,
 	economicMatch,
+	economicMatchId,
 	availityMatch,
+	availityMatchId,
 	rescheduleSession,
 	searchClients,
 	setPrice,
