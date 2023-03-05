@@ -40,17 +40,17 @@ services:
       context: ./landing
       dockerfile: Dockerfile.cloud
       # Se especifica "host" para que el contenedor pueda acceder a la red local
-      network: "host"
-      args:
-        - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
-        - NODE_ENV=production
-        - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
-        - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
-        - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
+      network: "host"    
     ports:
       - "9000:9000"
       - "8080:8080"
     container_name: vue-ui
+    environment:
+      - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
+      - NODE_ENV=production
+      - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
+      - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+      - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.10

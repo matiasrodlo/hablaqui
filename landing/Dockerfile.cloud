@@ -32,7 +32,6 @@ COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
 RUN npm install
-RUN npm run create-env
 
 # Variables de entorno para que funcione Nuxt
 ENV HOST=0.0.0.0
@@ -43,6 +42,7 @@ ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run generate
+RUN npm run create-env
 
 # Se expone el puerto 9000 y 8080
 EXPOSE 9000 8080
