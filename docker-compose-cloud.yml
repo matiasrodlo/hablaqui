@@ -6,6 +6,26 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.cloud
+      args:
+        - API_ABSOLUTE
+        - API_URL
+        - BUCKETNAME=hablaqui-content
+        - DEBUG_ANALYTICS=true
+        - FRONTEND_URL
+        - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
+        - GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success
+        - GOOGLE_CLIENT_SECRET=Jw1CJ__C-XKfJnmnf7GuVBrn
+        - JWT_SECRET=hablaqui2021
+        - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
+        - MERCADOPAGO_KEY
+        - NAMESPACE_TESTMAILS=bnwxe
+        - NODE_ENV=production
+        - PORT=3000
+        - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
+        - SENDGRID_API_KEY=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
+        - URLDB
+        - VUE_APP_LANDING
+        - VUE_APP_URL
     # Se especifica el puerto que se va a utilizar y el puerto que se va a exponer
     ports:
       - "3000:3000"
@@ -21,6 +41,11 @@ services:
       dockerfile: Dockerfile.cloud
       # Se especifica "host" para que el contenedor pueda acceder a la red local
       network: "host"
+      args:
+        - API_ABSOLUTE
+        - FRONTEND_URL
+        - VUE_APP_LANDING
+        - VUE_APP_URL
     ports:
       - "9000:9000"
       - "8080:8080"
