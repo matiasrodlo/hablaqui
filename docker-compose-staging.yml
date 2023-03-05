@@ -7,25 +7,25 @@ services:
       context: ./api
       dockerfile: Dockerfile.cloud
       args:
-        - API_ABSOLUTE
-        - API_URL
+        - API_ABSOLUTE=http://alb-hablaqui-staging-api-917835484.us-east-2.elb.amazonaws.com
+        - API_URL=http://alb-hablaqui-staging-api-917835484.us-east-2.elb.amazonaws.com/
         - BUCKETNAME=hablaqui-content
         - DEBUG_ANALYTICS=true
-        - FRONTEND_URL
+        - FRONTEND_URL=http://alb-hablaqui-staging-landing-2081137506.us-east-2.elb.amazonaws.com/-
         - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
         - GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success
         - GOOGLE_CLIENT_SECRET=Jw1CJ__C-XKfJnmnf7GuVBrn
         - JWT_SECRET=hablaqui2021
         - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
-        - MERCADOPAGO_KEY
+        - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
         - NAMESPACE_TESTMAILS=bnwxe
         - NODE_ENV=production
         - PORT=3000
         - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
         - SENDGRID_API_KEY=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
-        - URLDB
-        - VUE_APP_LANDING
-        - VUE_APP_URL
+        - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
+        - VUE_APP_LANDING=http://alb-hablaqui-staging-landing-2081137506.us-east-2.elb.amazonaws.com/
+        - VUE_APP_URL=http://alb-hablaqui-staging-api-917835484.us-east-2.elb.amazonaws.com/api/v1
     # Se especifica el puerto que se va a utilizar y el puerto que se va a exponer
     ports:
       - "3000:3000"
@@ -42,10 +42,11 @@ services:
       # Se especifica "host" para que el contenedor pueda acceder a la red local
       network: "host"
       args:
-        - API_ABSOLUTE
-        - FRONTEND_URL
-        - VUE_APP_LANDING
-        - VUE_APP_URL
+        - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
+        - NODE_ENV=production
+        - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
+        - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+        - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
     ports:
       - "9000:9000"
       - "8080:8080"
