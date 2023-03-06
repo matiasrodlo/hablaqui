@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     container_name: node-api
     environment:
-      - API_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/
+      - API_URL=http://alb-staging-api-686447239.us-east-2.elb.amazonaws.com/
       - BUCKETNAME=hablaqui-content
       - DEBUG_ANALYTICS="true"
       - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
@@ -25,7 +25,7 @@ services:
       - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
       - SENDGRID_API_KEY=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
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
-      - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+      - VUE_APP_LANDING=http://alb-staging-landing-945130794.us-east-2.elb.amazonaws.com/
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.20
@@ -37,10 +37,6 @@ services:
     ports:
       - "9000:9000"
     container_name: vue-ui
-    environment:
-        - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
-        - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
-        - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.10

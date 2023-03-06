@@ -6,17 +6,6 @@ FROM node:14-alpine
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
-# Declara parámetros de la línea de comandos para el proceso de construcción
-ARG API_ABSOLUTE
-ARG NODE_ENV
-ARG VUE_APP_LANDING
-ARG VUE_APP_URL
-
-# Establece variables de entorno
-RUN export API_ABSOLUTE=${API_ABSOLUTE}
-RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
-RUN export VUE_APP_URL=${VUE_APP_URL}
-RUN export NODE_ENV=production
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
@@ -29,13 +18,12 @@ COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
 RUN npm install
-RUN npm run create-env
 
 # Variables de entorno para que funcione Nuxt
+ARG API_ABSOLUTE=http://192.168.81.20:3000
+ARG VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV HOST=0.0.0.0
 ENV PORT=9000
-ENV API_ABSOLUTE=http://192.168.81.20:3000
-ENV VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto

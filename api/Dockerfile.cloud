@@ -16,42 +16,6 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
-# Declara parámetros de la línea de comandos para el proceso de construcción
-ARG API_URL
-ARG BUCKETNAME
-ARG DEBUG_ANALYTICS
-ARG GOOGLE_CLIENT_ID
-ARG GOOGLE_CLIENT_REDIRECT
-ARG GOOGLE_CLIENT_SECRET
-ARG JWT_SECRET
-ARG KEY_API_TESTMAILS
-ARG MERCADOPAGO_KEY
-ARG NAMESPACE_TESTMAILS
-ARG NODE_ENV
-ARG PORT
-ARG SEGMENT_API_KEY
-ARG SENDGRID_API_KEY
-ARG URLDB
-ARG VUE_APP_LANDING
-
-# Establece variables de entorno
-RUN export API_URL=${API_URL}
-RUN export BUCKETNAME=${BUCKETNAME}
-RUN export DEBUG_ANALYTICS=${DEBUG_ANALYTICS}
-RUN export GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-RUN export GOOGLE_CLIENT_REDIRECT=${GOOGLE_CLIENT_REDIRECT}
-RUN export GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-RUN export JWT_SECRET=${JWT_SECRET}
-RUN export KEY_API_TESTMAILS=${KEY_API_TESTMAILS}
-RUN export MERCADOPAGO_KEY=${MERCADOPAGO_KEY}
-RUN export NAMESPACE_TESTMAILS=${NAMESPACE_TESTMAILS}
-RUN export NODE_ENV=${NODE_ENV}
-RUN export PORT=${PORT}
-RUN export SEGMENT_API_KEY=${SEGMENT_API_KEY}
-RUN export SENDGRID_API_KEY=${SENDGRID_API_KEY}
-RUN export URLDB=${URLDB}
-RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
-
 # Cambia el usuario actual a node
 USER node
 
@@ -62,7 +26,6 @@ COPY --chown=node:node /server ./server
 
 # Instala las dependencias del proyecto
 RUN npm install
-RUN npm run create-env
 RUN npm rebuild bcrypt --build-from-source
 
 # Expone el puerto 3000
