@@ -20,7 +20,7 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker-compose --file=docker-compose-cloud.yml up --build -d api-restful
+      - docker-compose --file=docker-compose-cloud.yml up --build api-restful
       - echo Api was successfully built!
       - docker-compose --file=docker-compose-cloud.yml up --build -d landing-ui
       - echo Api was successfully built!
