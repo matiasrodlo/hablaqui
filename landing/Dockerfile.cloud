@@ -18,14 +18,13 @@ RUN export API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
 RUN export VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
 RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
 
-RUN npm run create-env
-
 # Cambia el usuario actual a node
 USER node
 
 # Copia todos los archivos de la carpeta actual a la carpeta /home/node/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
+RUN npm run create-env
 
 # Instala las dependencias del proyecto
 RUN npm install
