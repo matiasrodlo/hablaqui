@@ -34,6 +34,9 @@ services:
       context: ./landing
       dockerfile: Dockerfile.cloud
       network: "host"
+      args:
+        - API_ABSOLUTE=http://alb-staging-api-686447239.us-east-2.elb.amazonaws.com
+        - VUE_APP_URL=http://alb-staging-api-686447239.us-east-2.elb.amazonaws.com/api/v1
     ports:
       - "9000:9000"
     container_name: vue-ui
