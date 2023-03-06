@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     container_name: node-api
     environment:
-      - "API_UR": "$API_URL"
+      - "API_URL": "$API_URL"
       - "MERCADOPAGO_KEY": "$MERCADOPAGO_KEY"
       - "PORT": "$PORT"
       - "SEGMENT_API_KEY": "$SEGMENT_API_KEY"
