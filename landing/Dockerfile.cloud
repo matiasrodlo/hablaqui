@@ -30,10 +30,9 @@ ENV NODE_ENV=production
 RUN npm run generate
 
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
-ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
+ENV API_ABSOLUTE=${API_ABSOLUTE}
+ENV VUE_APP_URL=${VUE_APP_URL}
 ENV VUE_APP_LANDING=${VUE_APP_LANDING}
-RUN echo "API_ABSOLUTE=${API_ABSOLUTE}"
 
 # Se expone el puerto 9000 y 8080
 EXPOSE 9000

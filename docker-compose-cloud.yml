@@ -26,8 +26,8 @@ services:
       dockerfile: Dockerfile.cloud
       network: "host"
       args:
-        - API_ABSOLUTE_ORIGINAL=$API_ABSOLUTE
-        - VUE_APP_URL_ORIGINAL=$VUE_APP_URL
+        - API_ABSOLUTE=$API_ABSOLUTE
+        - VUE_APP_URL=$VUE_APP_URL
         - VUE_APP_LANDING=$VUE_APP_LANDING
     ports:
       - "9000:9000"
