@@ -20,14 +20,16 @@ COPY --chown=node:node . ./
 RUN npm install
 
 # Variables de entorno para que funcione Nuxt
-ARG API_ABSOLUTE=http://192.168.81.20:3000
-ARG VUE_APP_URL=http://192.168.81.20:3000/api/v1
+RUN export API_ABSOLUTE=http://192.168.81.20:3000
+RUN export VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV HOST=0.0.0.0
 ENV PORT=9000
 ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run generate
+RUN unset API_ABSOLUTE
+RUN unset VUE_APP_URL
 
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
 ENV API_ABSOLUTE=${API_ABSOLUTE}
