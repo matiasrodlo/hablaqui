@@ -11,16 +11,7 @@ services:
     container_name: node-api
     environment:
       - API_URL=http://alb-staging-api-686447239.us-east-2.elb.amazonaws.com/
-      - BUCKETNAME=hablaqui-content
-      - DEBUG_ANALYTICS="true"
-      - GOOGLE_CLIENT_ID=1086967845709-nli3fg4d8nsjq34kk96j609ac57q3f2i.apps.googleusercontent.com
-      - GOOGLE_CLIENT_REDIRECT=http://localhost:8080/google-calendar/success
-      - GOOGLE_CLIENT_SECRET=Jw1CJ__C-XKfJnmnf7GuVBrn
-      - JWT_SECRET=hablaqui2021
-      - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
       - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
-      - NAMESPACE_TESTMAILS=bnwxe
-      - NODE_ENV=production
       - PORT=3000
       - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
       - SENDGRID_API_KEY=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
