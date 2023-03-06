@@ -11,7 +11,6 @@ services:
     container_name: vue-ui
     environment:
       - API_ABSOLUTE=http://localhost:3000
-      - FRONTEND_URL=http://localhost:8080/-
       - NODE_ENV=development
       - VUE_APP_URL=http://localhost:3000/api/v1
       - HOST=0.0.0.0
@@ -31,7 +30,6 @@ services:
       - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
       - NODE_ENV=development
       - PORT=3000
-      - FRONTEND_URL=http://localhost:8080/-
       - JWT_SECRET=api-hablaqui2021
       - JWT_ALGORITHM=HS256
       - JWT_EXPIRATION=30d
