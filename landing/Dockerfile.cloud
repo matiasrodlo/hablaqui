@@ -9,6 +9,17 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
+# Establece las variables de entorno
+ARG API_ABSOLUTE
+ARG VUE_APP_URL
+ARG VUE_APP_LANDING
+
+RUN export API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
+RUN export VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
+RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
+
+RUN npm run create-env
+
 # Cambia el usuario actual a node
 USER node
 
@@ -32,6 +43,8 @@ RUN npm run generate
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
 ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
 ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
+RUN echo "API_ABSOLUTE=${API_ABSOLUTE}"
+RUN echo "VUE_APP_URL=${VUE_APP_URL}"
 
 # Se expone el puerto 9000 y 8080
 EXPOSE 9000
