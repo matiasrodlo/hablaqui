@@ -9,10 +9,6 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
-# Se le cambia el nombre a las variables de entorno para que no se confundan con las del contenedor
-ARG API_ABSOLUTE_ORIGINAL=${API_ABSOLUTE}
-ARG VUE_APP_URL_ORIGINAL=${VUE_APP_URL}
-
 # Cambia el usuario actual a node
 USER node
 
