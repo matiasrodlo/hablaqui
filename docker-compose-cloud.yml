@@ -38,7 +38,10 @@ services:
       dockerfile: Dockerfile.cloud
       network: "host"
       args:
-        - API_BUILD=http://api-restful:3000
+        - API_ABSOLUTE=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com
+        - FRONTEND_URL=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/#
+        - VUE_APP_LANDING=http://hablaqui-staginglanding-env.eba-weneati6.us-east-2.elasticbeanstalk.com/
+        - VUE_APP_URL=http://hablaqui-stagingapi-env.eba-5wjm5bfz.us-east-2.elasticbeanstalk.com/api/v1
     ports:
       - "9000:9000"
       - "8080:8080"
