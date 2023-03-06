@@ -9,22 +9,12 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
-# Establece las variables de entorno
-ARG API_ABSOLUTE
-ARG VUE_APP_URL
-ARG VUE_APP_LANDING
-
-RUN export API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-RUN export VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-RUN export VUE_APP_LANDING=${VUE_APP_LANDING}
-
 # Cambia el usuario actual a node
 USER node
 
 # Copia todos los archivos de la carpeta actual a la carpeta /home/node/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
-RUN npm run create-env
 
 # Instala las dependencias del proyecto
 RUN npm install
@@ -40,10 +30,8 @@ ENV NODE_ENV=production
 RUN npm run generate
 
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
-ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-RUN echo "API_ABSOLUTE=${API_ABSOLUTE}"
-RUN echo "VUE_APP_URL=${VUE_APP_URL}"
+ENV API_ABSOLUTE=${API_ABSOLUTE}
+ENV VUE_APP_URL=${VUE_APP_URL}
 
 # Se expone el puerto 9000 y 8080
 EXPOSE 9000
