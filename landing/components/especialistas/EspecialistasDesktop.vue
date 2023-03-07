@@ -577,6 +577,7 @@ export default {
 			fullcard: [],
 			page: 1,
 			status: false,
+			specialistCounter: 0,
 			genderBoxes: [],
 			genderList: [
 				{ value: 'female', text: 'Mujer' },
@@ -820,16 +821,25 @@ export default {
 				}
 				if (this.toggle === 1) {
 					await this.getSpecialistsEconomicMatch();
-					await this.getSpecialistsEconomicMatch();
+					await this.getSpecialistsEconomicMatchId();
 				}
 				if (this.toggle === 2) {
 					await this.getSpecialistsAvailityMatch();
-					await this.getSpecialistsAvailityMatch();
+					await this.getSpecialistsAvailityMatchId();
 				}
 				this.loadingMatchMaking = false;
 			}
 			console.log('Especialistas', this.specialists);
 			console.log('ids', this.specialistsIds);
+		},
+		async getSpecialistArray(number) {
+			// Método que solicita los especialistas a medida que lo requiere la página
+			const arrayIds = [];
+			for (let i = 0; i < number; i++) {
+				arrayIds.append(this.specialistsIds[this.specialistCounter]);
+				this.specialistCounter++;
+			}
+			await this.getSpecialistsArrayMatch(arrayIds);
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
