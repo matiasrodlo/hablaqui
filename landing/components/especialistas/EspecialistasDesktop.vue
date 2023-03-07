@@ -818,14 +818,17 @@ export default {
 				if (this.toggle === 0) {
 					await this.getSpecialistsBestMatch();
 					await this.getSpecialistsBestMatchId();
+					this.specialistCounter = 0;
 				}
 				if (this.toggle === 1) {
 					await this.getSpecialistsEconomicMatch();
 					await this.getSpecialistsEconomicMatchId();
+					this.specialistCounter = 0;
 				}
 				if (this.toggle === 2) {
 					await this.getSpecialistsAvailityMatch();
 					await this.getSpecialistsAvailityMatchId();
+					this.specialistCounter = 0;
 				}
 				this.loadingMatchMaking = false;
 			}
