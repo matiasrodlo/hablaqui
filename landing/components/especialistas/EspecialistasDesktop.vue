@@ -540,7 +540,6 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import axios from 'axios';
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 
@@ -602,23 +601,23 @@ export default {
 			dispoBoxes: [],
 			dispoList: [
 				{
-					value: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')],
+					value: 'early',
 					text: 'Temprano: Antes de las 9 am',
 				},
 				{
-					value: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')],
+					value: 'morning',
 					text: 'En la mañana: Entre 9 am y 12 pm',
 				},
 				{
-					value: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')],
+					value: 'midday',
 					text: 'A Medio día: Entre 12 y 2 pm',
 				},
 				{
-					value: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')],
+					value: 'afternoon',
 					text: 'En la tarde: Entre 2 y 6 pm',
 				},
 				{
-					value: [dayjs('9:00', 'HH:mm'), dayjs('23:59', 'HH:mm')],
+					value: 'night',
 					text: 'En la noche: Después de las 6 pm',
 				},
 			],
@@ -669,6 +668,13 @@ export default {
 					'saturday',
 					'sunday',
 				];
+				const intervals = {
+					early: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')],
+					morning: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')],
+					midday: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')],
+					afternoon: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')],
+					night: [dayjs('18:00', 'HH:mm'), dayjs('23:59', 'HH:mm')],
+				};
 				result = result.filter(item => {
 					let flag = false;
 					this.dispoBoxes.forEach(dispo => {
@@ -678,9 +684,39 @@ export default {
 						week.forEach(day => {
 							if (Array.isArray(item.schedule[day])) {
 								if (
-									item.schedule[day][0].some(hour =>
-										dayjs(hour, 'HH:mm').isBetween(dispo[0], dispo[1], 'hour')
-									)
+									item.schedule[day][0].some(hour => {
+										if (dispo === 'early')
+											return dayjs(hour, 'HH:mm').isBetween(
+												intervals.early[0],
+												intervals.early[1],
+												'hour'
+											);
+										if (dispo === 'morning')
+											return dayjs(hour, 'HH:mm').isBetween(
+												intervals.morning[0],
+												intervals.morning[1],
+												'hour'
+											);
+										if (dispo === 'midday')
+											return dayjs(hour, 'HH:mm').isBetween(
+												intervals.midday[0],
+												intervals.midday[1],
+												'hour'
+											);
+										if (dispo === 'afternoon')
+											return dayjs(hour, 'HH:mm').isBetween(
+												intervals.afternoon[0],
+												intervals.afternoon[1],
+												'hour'
+											);
+										if (dispo === 'night')
+											return dayjs(hour, 'HH:mm').isBetween(
+												intervals.night[0],
+												intervals.night[1],
+												'hour'
+											);
+										return false;
+									})
 								) {
 									flag = true;
 								}
