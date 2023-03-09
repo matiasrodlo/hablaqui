@@ -540,6 +540,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import axios from 'axios';
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 
@@ -629,7 +630,10 @@ export default {
 		 */
 		specialistFilter() {
 			let result = this.specialists;
-			// Se filtran los especialistas por especialidades
+			// this.specialists es un array con los especialistas sin filtrar
+			// Se filtran los especialistas por especialidade
+
+			// this.specialties es un array con las especialidades seleccionadas
 			if (this.specialties.length !== 0)
 				result = result.filter(item => {
 					let flag = true;
@@ -640,17 +644,20 @@ export default {
 				});
 
 			// Se filtran los especialistas por género
+			// this.genderBoxes es un array con los géneros seleccionados
 			if (this.genderBoxes.length !== 0)
 				result = result.filter(item => {
 					return this.genderBoxes.includes(item.gender);
 				});
 
 			// Se filtran los especialistas por precio
+			// this.priceBoxes es un array con los precios seleccionados
 			if (this.priceBoxes.length !== 0)
 				result = result.filter(
 					item => Math.max(...this.priceBoxes) >= item.sessionPrices.video
 				);
 
+			// this.dispoBoxes es un array con las disponibilidades seleccionadas
 			// Se filtran los especialistas por disponibilidad
 			if (this.dispoBoxes.length !== 0) {
 				const week = [
@@ -737,13 +744,44 @@ export default {
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
-		this.actualizarMatch({ themes: this.specialties });
+		this.actualizarMatch({
+			themes: this.specialties,
+			gender: this.genderBoxes,
+			price: this.priceBoxes,
+			schedule: this.dispoBoxes,
+		});
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		async applyFilters() {
+			this.loadingMatchMaking = true;
+			const filters = {
+				specialties: this.specialties,
+				genders: this.genderBoxes,
+				prices: this.priceBoxes,
+				schedules: this.dispoBoxes,
+			};
+
+			if (this.toggle === 0) {
+				await this.getSpecialistsBestMatch();
+				await this.getSpecialistsBestMatchId();
+				this.specialistCounter = 0;
+			}
+			if (this.toggle === 1) {
+				await this.getSpecialistsEconomicMatch();
+				await this.getSpecialistsEconomicMatchId(filters);
+				this.specialistCounter = 0;
+			}
+			if (this.toggle === 2) {
+				await this.getSpecialistsAvailityMatch();
+				await this.getSpecialistsAvailityMatchId(filters);
+				this.specialistCounter = 0;
+			}
+			this.loadingMatchMaking = false;
+		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
@@ -817,7 +855,7 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			// console.log({ ...value });
+			console.log('value', { ...value });
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
