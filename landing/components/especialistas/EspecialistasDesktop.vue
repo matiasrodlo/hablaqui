@@ -6,7 +6,7 @@
 			:color="scrollHeight > 300 ? '#ffffff' : '#f0f8ff'"
 			style="z-index: 1"
 			class="sticky scroll"
-			height="120"
+			height="180"
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container fluid style="max-width: 1080px">
@@ -228,6 +228,13 @@
 								</v-card-text>
 							</v-card>
 						</v-menu>
+					</v-col>
+				</v-row>
+				<v-row>
+					<v-col align="center">
+						<v-btn :disabled="loadingMatchMaking" rounded color="primary" width="100%"
+							>Aplicar filtros</v-btn
+						>
 					</v-col>
 				</v-row>
 				<v-row>
