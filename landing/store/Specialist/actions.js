@@ -19,7 +19,7 @@ export default {
 	},
 	async getSpecialistsBestMatch({ commit, state }, payload) {
 		try {
-			console.log('Este es', payload);
+			console.log('payload', payload);
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/best-match', {
 				method: 'POST',
@@ -30,6 +30,7 @@ export default {
 			}
 			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
+			console.log('data', data);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}

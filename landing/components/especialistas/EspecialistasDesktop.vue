@@ -196,7 +196,12 @@
 				</v-row>
 				<v-row no-gutters>
 					<v-col class="text-right">
-						<v-btn :disabled="loadingMatchMaking" text color="primary" small
+						<v-btn
+							:disabled="loadingMatchMaking"
+							text
+							color="primary"
+							small
+							@click="applyFilters"
 							>Aplicar filtros</v-btn
 						>
 					</v-col>
@@ -225,7 +230,6 @@
 								@click="
 									() => {
 										toggle = 1;
-										getSpecialistsEconomicMatch();
 									}
 								"
 							>
@@ -241,7 +245,6 @@
 								@click="
 									() => {
 										toggle = 2;
-										getSpecialistsAvailityMatch();
 									}
 								"
 							>
@@ -613,11 +616,6 @@ export default {
 				this.dispoBoxes = newVal.schedule;
 			}
 		},
-		/* menuSpecialties(newVal) {
-			if (!newVal) {
-				this.actualizarMatch({ themes: this.specialties });
-			}
-		}, */
 	},
 	created() {
 		this.loadingMatchMaking = true;
@@ -640,12 +638,22 @@ export default {
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
+		console.log('specialists', this.specialists);
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		applyFilters() {
+			this.actualizarMatch({
+				themes: this.specialties,
+				gender: this.genderBoxes,
+				price: this.priceBoxes,
+				schedule: this.dispoBoxes,
+				model: this.models,
+			});
+		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
@@ -739,19 +747,18 @@ export default {
 					this.specialistCounter = 0;
 				}
 				if (this.toggle === 1) {
-					await this.getSpecialistsEconomicMatch();
+					await this.getSpecialistsEconomicMatch(filters);
 					// await this.getSpecialistsEconomicMatchId();
 					this.specialistCounter = 0;
 				}
 				if (this.toggle === 2) {
-					await this.getSpecialistsAvailityMatch();
+					await this.getSpecialistsAvailityMatch(filters);
 					// await this.getSpecialistsAvailityMatchId();
 					this.specialistCounter = 0;
 				}
 				this.loadingMatchMaking = false;
 			}
-			// console.log('Especialistas', this.specialists);
-			// console.log('ids', this.specialistsIds);
+			console.log(this.specialists);
 		},
 		async getSpecialistArray(number) {
 			// Método que solicita los especialistas a medida que lo requiere la página
