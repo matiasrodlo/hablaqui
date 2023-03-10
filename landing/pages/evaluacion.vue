@@ -831,10 +831,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
-import { mapMutations } from 'vuex';
 
 /** * Evaluacion - MatchMaking */
 
@@ -911,20 +910,18 @@ export default {
 	},
 	methods: {
 		async initFetch() {
-			this.toEvaluation()
+			this.toEvaluation();
 		},
 		toEvaluation() {
 			// Si el usuario está logueado y es un consultante se revisa si ha hecho el matchmaking antes de ir a la evaluación
 			this.$auth.loggedIn
-			? (
-				this.$auth.user.role === 'user' ? (
-					// Si ya realizó el matchmaking se redirige a la página de especialistas
-					this.$auth.user.match ? (
-						this.$router.push('/especialistas')
-			
-					) : null
-				) : this.$router.push('/')
-			) : null
+				? this.$auth.user.role === 'user'
+					? // Si ya realizó el matchmaking se redirige a la página de especialistas
+					  this.$auth.user.match
+						? this.$router.push('/especialistas')
+						: null
+					: this.$router.push('/')
+				: null;
 		},
 		next() {
 			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;

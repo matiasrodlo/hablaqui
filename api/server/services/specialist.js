@@ -20,6 +20,7 @@ import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
 import Analytics from 'analytics-node';
+import { filterByAvailability } from '../utils/functions/matchmaking/filterMatchmaking';
 dayjs.extend(isBetween);
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -249,7 +250,7 @@ const ponderationMatch = async (matchedList, payload) => {
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
-			return { ...specialist, points };
+			return { ...specialist, points, days: days };
 		})
 	);
 	// Se ordena el arreglo por puntuación manual del especialista

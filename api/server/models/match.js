@@ -5,24 +5,24 @@ import { Schema, model } from 'mongoose';
 let answersSchema = new Schema(
 	{
 		gender: {
-			type: String,
-			default: '',
+			type: Array,
+			default: [],
 		},
 		themes: {
 			type: Array,
 			default: [],
 		},
 		schedule: {
-			type: String,
-			default: '',
+			type: Array,
+			default: [],
 		},
 		model: {
 			type: Array,
 			default: [],
 		},
 		price: {
-			type: Number,
-			default: 0,
+			type: Array,
+			default: [],
 		},
 		user: {
 			type: Schema.Types.ObjectId,
