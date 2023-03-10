@@ -21,8 +21,8 @@ let answersSchema = new Schema(
 			default: [],
 		},
 		price: {
-			type: Array,
-			default: [],
+			type: Number,
+			default: 0,
 		},
 		user: {
 			type: Schema.Types.ObjectId,
