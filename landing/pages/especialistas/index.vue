@@ -111,9 +111,6 @@ export default {
 				await this.getMatchMakig(this.$auth.$state.user._id);
 				if (!this.matchMaking) {
 					this.$router.push('evaluacion');
-				} else {
-					await this.getSpecialistsBestMatchId();
-					await this.getSpecialistsBestMatch();
 				}
 			}
 			await this.getAppointments();

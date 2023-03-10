@@ -118,60 +118,24 @@
 						</v-menu>
 					</v-col>
 					<v-col cols="3">
-						<div id="menuPrices" style="position: relative">
-							<v-menu
+						<div
+							v-if="!loadingMatchMaking"
+							id="selectPrices"
+							style="position: relative"
+						>
+							<v-autocomplete
 								ref="menuPrices"
-								v-model="menuPrices"
-								:close-on-content-click="false"
-								transition="scale-transition"
-								offset-y
-								rounded
-								attach="#menuPrices"
-								min-width="240px"
-							>
-								<template #activator="{ on, attrs }">
-									<v-text-field
-										:value="
-											priceBoxes.length == 0
-												? priceBoxes
-												: priceBoxes.length == 1
-												? priceList.find(
-														element => element.value == priceBoxes[0]
-												  ).text
-												: `Precios ${priceBoxes.length}`
-										"
-										label="Precios"
-										readonly
-										:disabled="loadingMatchMaking"
-										outlined
-										dense
-										class="white"
-										hide-details
-										:append-icon="mdiChevronDown"
-										v-bind="attrs"
-										@click:append="() => (menuPrices = !menuPrices)"
-										v-on="on"
-									></v-text-field>
-								</template>
-								<v-card rounded height="150">
-									<v-card-text style="height: 150px; overflow-y: scroll">
-										<v-checkbox
-											v-for="(element, j) in priceList"
-											:key="j"
-											v-model="priceBoxes"
-											:value="element.value"
-											:label="element.text"
-											class="py-2"
-											hide-details
-											@change="changeInput"
-										>
-											<template #label="{ item }">
-												<span class="caption">{{ item }}</span>
-											</template>
-										</v-checkbox>
-									</v-card-text>
-								</v-card>
-							</v-menu>
+								v-model="priceBoxes"
+								outlined
+								dense
+								class="white"
+								attach="#selectPrices"
+								clearable
+								:append-icon="mdiChevronDown"
+								:items="priceList"
+								label="Precios"
+								hide-details
+							></v-autocomplete>
 						</div>
 					</v-col>
 					<v-col id="menuOthers" cols="3" style="position: relative">
@@ -230,14 +194,14 @@
 						</v-menu>
 					</v-col>
 				</v-row>
-				<v-row>
-					<v-col align="center">
-						<v-btn :disabled="loadingMatchMaking" rounded color="primary" width="100%"
+				<v-row no-gutters>
+					<v-col class="text-right">
+						<v-btn :disabled="loadingMatchMaking" text color="primary" small
 							>Aplicar filtros</v-btn
 						>
 					</v-col>
 				</v-row>
-				<v-row>
+				<v-row class="pt-0 mt-0">
 					<v-col cols="12" md="4">
 						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
 							<div
@@ -246,8 +210,6 @@
 								@click="
 									() => {
 										toggle = 0;
-										getSpecialistsBestMatch();
-										getSpecialistsBestMatchId();
 									}
 								"
 							>
@@ -306,7 +268,7 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in specialistFilter">
+					<template v-for="(item, index) in specialists">
 						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
@@ -573,7 +535,7 @@ export default {
 			flag: true,
 			specialties: [],
 			searchInput: '',
-			prices: '',
+			price: '',
 			gender: [],
 			others: [],
 			otros: '',
@@ -591,7 +553,7 @@ export default {
 				{ value: 'male', text: 'Hombre' },
 				{ value: 'transgender', text: 'Transgénero' },
 			],
-			priceBoxes: [],
+			priceBoxes: '',
 			priceList: [
 				{ value: 15000, text: 'Hasta $15.000' },
 				{ value: 20000, text: 'Hasta $20.000' },
@@ -624,110 +586,6 @@ export default {
 		};
 	},
 	computed: {
-		/**
-		 * Filtra en base a lo ingresado por el usuario
-		 */
-		specialistFilter() {
-			let result = this.specialists;
-			// this.specialists es un array con los especialistas sin filtrar
-			// Se filtran los especialistas por especialidade
-
-			// this.specialties es un array con las especialidades seleccionadas
-			if (this.specialties.length !== 0)
-				result = result.filter(item => {
-					let flag = true;
-					this.specialties.forEach(specialty => {
-						if (item.specialties.includes(specialty) === false) flag = false;
-					});
-					return flag;
-				});
-
-			// Se filtran los especialistas por género
-			// this.genderBoxes es un array con los géneros seleccionados
-			if (this.genderBoxes.length !== 0)
-				result = result.filter(item => {
-					return this.genderBoxes.includes(item.gender);
-				});
-
-			// Se filtran los especialistas por precio
-			// this.priceBoxes es un array con los precios seleccionados
-			if (this.priceBoxes.length !== 0)
-				result = result.filter(
-					item => Math.max(...this.priceBoxes) >= item.sessionPrices.video
-				);
-
-			// this.dispoBoxes es un array con las disponibilidades seleccionadas
-			// Se filtran los especialistas por disponibilidad
-			if (this.dispoBoxes.length !== 0) {
-				const week = [
-					'monday',
-					'tuesday',
-					'wednesday',
-					'thursday',
-					'friday',
-					'saturday',
-					'sunday',
-				];
-				const intervals = {
-					early: [dayjs('00:00', 'HH:mm'), dayjs('9:00', 'HH:mm')],
-					morning: [dayjs('9:00', 'HH:mm'), dayjs('12:00', 'HH:mm')],
-					midday: [dayjs('12:00', 'HH:mm'), dayjs('14:00', 'HH:mm')],
-					afternoon: [dayjs('14:00', 'HH:mm'), dayjs('18:00', 'HH:mm')],
-					night: [dayjs('18:00', 'HH:mm'), dayjs('23:59', 'HH:mm')],
-				};
-				result = result.filter(item => {
-					let flag = false;
-					this.dispoBoxes.forEach(dispo => {
-						if (flag === true) {
-							return;
-						}
-						week.forEach(day => {
-							if (Array.isArray(item.schedule[day])) {
-								if (
-									item.schedule[day][0].some(hour => {
-										if (dispo === 'early')
-											return dayjs(hour, 'HH:mm').isBetween(
-												intervals.early[0],
-												intervals.early[1],
-												'hour'
-											);
-										if (dispo === 'morning')
-											return dayjs(hour, 'HH:mm').isBetween(
-												intervals.morning[0],
-												intervals.morning[1],
-												'hour'
-											);
-										if (dispo === 'midday')
-											return dayjs(hour, 'HH:mm').isBetween(
-												intervals.midday[0],
-												intervals.midday[1],
-												'hour'
-											);
-										if (dispo === 'afternoon')
-											return dayjs(hour, 'HH:mm').isBetween(
-												intervals.afternoon[0],
-												intervals.afternoon[1],
-												'hour'
-											);
-										if (dispo === 'night')
-											return dayjs(hour, 'HH:mm').isBetween(
-												intervals.night[0],
-												intervals.night[1],
-												'hour'
-											);
-										return false;
-									})
-								) {
-									flag = true;
-								}
-							}
-						});
-					});
-					return flag;
-				});
-			}
-			return result;
-		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialists',
@@ -743,16 +601,16 @@ export default {
 		page(value, oldValue) {
 			let prev = 0;
 			if (oldValue) prev = oldValue;
-			const ids = this.specialistFilter.map(item => item._id).slice(prev * 5, value * 5);
+			const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
-			console.log(this.specialistsIds);
+			// console.log(this.specialistsIds);
 		},
 		matchMaking(newVal) {
 			if (newVal) {
 				this.specialties = newVal.themes;
-				this.gender = newVal.gender;
-				this.prices = newVal.price;
-				this.otros = newVal.schedule;
+				this.genderBoxes = newVal.gender;
+				this.priceBoxes = newVal.price;
+				this.dispoBoxes = newVal.schedule;
 			}
 		},
 		/* menuSpecialties(newVal) {
@@ -762,6 +620,7 @@ export default {
 		}, */
 	},
 	created() {
+		this.loadingMatchMaking = true;
 		// Cuando venimos de otra ruta con el chat abierto lo cerramos
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
@@ -772,57 +631,26 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
-		const obj = this.getSpecialistsArrayMatch(['63e1727b384b67ddc9eebc33']);
-		console.log('test', obj);
+		this.loadingMatchMaking = false;
 		// Si el usuaio no ha realizado la encuesta lo redirige a la evaluacion
+		// console.log('user', this.$auth.$state.user);
 		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
+			// console.log('no');
 			this.goEvaluation();
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
-		this.actualizarMatch({
-			themes: this.specialties,
-			gender: this.genderBoxes,
-			price: this.priceBoxes,
-			schedule: this.dispoBoxes,
-		});
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
-		async applyFilters() {
-			this.loadingMatchMaking = true;
-			const filters = {
-				specialties: this.specialties,
-				genders: this.genderBoxes,
-				prices: this.priceBoxes,
-				schedules: this.dispoBoxes,
-			};
-
-			if (this.toggle === 0) {
-				await this.getSpecialistsBestMatch();
-				await this.getSpecialistsBestMatchId();
-				this.specialistCounter = 0;
-			}
-			if (this.toggle === 1) {
-				await this.getSpecialistsEconomicMatch();
-				await this.getSpecialistsEconomicMatchId(filters);
-				this.specialistCounter = 0;
-			}
-			if (this.toggle === 2) {
-				await this.getSpecialistsAvailityMatch();
-				await this.getSpecialistsAvailityMatchId(filters);
-				this.specialistCounter = 0;
-			}
-			this.loadingMatchMaking = false;
-		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.specialistFilter.length / 5) {
+			if (isVisible && this.page < this.specialists.length / 5) {
 				this.page += 1;
 			}
 		},
@@ -891,30 +719,39 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			console.log('value', { ...value });
+			const filters = {
+				themes: this.specialties,
+				gender: this.genderBoxes,
+				price: this.priceBoxes,
+				schedule: this.dispoBoxes,
+				model: this.models,
+			};
+
+			// console.log('value', { ...value });
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
 
 				if (this.toggle === 0) {
-					await this.getSpecialistsBestMatch();
-					await this.getSpecialistsBestMatchId();
+					// console.log('filters', filters);
+					await this.getSpecialistsBestMatch(filters);
+					// await this.getSpecialistsBestMatchId();
 					this.specialistCounter = 0;
 				}
 				if (this.toggle === 1) {
 					await this.getSpecialistsEconomicMatch();
-					await this.getSpecialistsEconomicMatchId();
+					// await this.getSpecialistsEconomicMatchId();
 					this.specialistCounter = 0;
 				}
 				if (this.toggle === 2) {
 					await this.getSpecialistsAvailityMatch();
-					await this.getSpecialistsAvailityMatchId();
+					// await this.getSpecialistsAvailityMatchId();
 					this.specialistCounter = 0;
 				}
 				this.loadingMatchMaking = false;
 			}
-			console.log('Especialistas', this.specialists);
-			console.log('ids', this.specialistsIds);
+			// console.log('Especialistas', this.specialists);
+			// console.log('ids', this.specialistsIds);
 		},
 		async getSpecialistArray(number) {
 			// Método que solicita los especialistas a medida que lo requiere la página
@@ -933,9 +770,9 @@ export default {
 			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
 			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
 			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
-			getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
-			getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
-			getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
+			// getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
+			// getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
+			// getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
 			getSpecialistsArrayMatch: 'Specialist/getSpecialistsArrayMatch',
 		}),
 	},

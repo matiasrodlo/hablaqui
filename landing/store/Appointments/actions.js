@@ -5,6 +5,7 @@ export default {
 		try {
 			const { appointments } = await this.$axios.$get('/appointments/all');
 			commit('setAppointments', appointments);
+			console.log('appointments', appointments);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
