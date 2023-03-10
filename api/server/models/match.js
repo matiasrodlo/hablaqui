@@ -5,16 +5,16 @@ import { Schema, model } from 'mongoose';
 let answersSchema = new Schema(
 	{
 		gender: {
-			type: String,
-			default: '',
+			type: Array,
+			default: [],
 		},
 		themes: {
 			type: Array,
 			default: [],
 		},
 		schedule: {
-			type: String,
-			default: '',
+			type: Array,
+			default: [],
 		},
 		model: {
 			type: Array,

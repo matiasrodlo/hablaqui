@@ -20,6 +20,7 @@ import timezone from 'dayjs/plugin/timezone';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
 import Analytics from 'analytics-node';
+import { filterByAvailability } from '../utils/functions/matchmaking/filterMatchmaking';
 dayjs.extend(isBetween);
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -95,9 +96,9 @@ const criteriaNumberSpecialties = (spec, payload, pointsPerCriterion) => {
 
 const maximumAvailability = (payload, pointsPerCriterion) => {
 	let maximum = 0;
-	if (payload.schedule == 'morning') maximum = (12 - 6) * pointsPerCriterion;
-	if (payload.schedule == 'midday') maximum = (15 - 13) * pointsPerCriterion;
-	if (payload.schedule == 'afternoon')
+	if (payload.schedule[0] == 'morning') maximum = (12 - 6) * pointsPerCriterion;
+	if (payload.schedule[0] == 'midday') maximum = (15 - 13) * pointsPerCriterion;
+	if (payload.schedule[0] == 'afternoon')
 		maximum = (23 - 16) * pointsPerCriterion;
 	return maximum;
 };
@@ -120,7 +121,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 					dayjs('00:00', 'HH:mm'),
 					dayjs('08:59', 'HH:mm')
 				) &&
-				payload.schedule == 'early'
+				payload.schedule[0] == 'early'
 			) {
 				points += pointsPerCriterion;
 			} else if (
@@ -128,7 +129,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 					dayjs('09:00', 'HH:mm'),
 					dayjs('11:59', 'HH:mm')
 				) &&
-				payload.schedule == 'morning'
+				payload.schedule[0] == 'morning'
 			) {
 				points += pointsPerCriterion;
 			} else if (
@@ -136,7 +137,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 					dayjs('12:00', 'HH:mm'),
 					dayjs('13:59', 'HH:mm')
 				) &&
-				payload.schedule == 'midday'
+				payload.schedule[0] == 'midday'
 			) {
 				points += pointsPerCriterion;
 			} else if (
@@ -144,7 +145,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 					dayjs('14:00', 'HH:mm'),
 					dayjs('17:59', 'HH:mm')
 				) &&
-				payload.schedule == 'afternoon'
+				payload.schedule[0] == 'afternoon'
 			) {
 				points += pointsPerCriterion;
 			} else if (
@@ -152,7 +153,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 					dayjs('18:00', 'HH:mm'),
 					dayjs('23:59', 'HH:mm')
 				) &&
-				payload.schedule == 'night'
+				payload.schedule[0] == 'night'
 			) {
 				points += pointsPerCriterion;
 			}
@@ -249,7 +250,7 @@ const ponderationMatch = async (matchedList, payload) => {
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
-			return { ...specialist, points };
+			return { ...specialist, points, availitySpec: days };
 		})
 	);
 	// Se ordena el arreglo por puntuación manual del especialista
@@ -268,6 +269,9 @@ const bestMatch = async (payload) => {
 	// Comienza a buscar los especialistas
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
+		specialties: { $in: payload.themes },
+		gender: { $in: payload.gender },
+		'sessionPrices.video': { $lte: payload.price },
 	});
 
 	// Se busca el mejor match según criterios
@@ -275,6 +279,12 @@ const bestMatch = async (payload) => {
 		matchedSpecialists,
 		payload,
 		weighted
+	);
+
+	// Se filtra por disponibilidad
+	matchedSpecialists = filterByAvailability(
+		matchedSpecialists,
+		payload.schedule,
 	);
 
 	// Se deja solo los ID de los especialistas
@@ -320,12 +330,38 @@ const economicMatch = async () => {
 
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
+		specialties: { $in: payload.themes },
+		gender: { $in: payload.gender },
+		'sessionPrices.video': { $lte: payload.price },
 	});
 
 	// Se busca el mejor match según criterios
 	// Obtiene primero al spec más barato
 	matchedSpecialists.sort(
 		(a, b) => a.sessionPrices.video - b.sessionPrices.video
+	);
+
+	const sessions = await Sessions.find();
+	// Obtener la disponibilidad de los especialistas y agregarlo al objeto
+	matchedSpecialists = await Promise.all(
+		matchedSpecialists.map(async (spec) => {
+			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
+			const sessionSpec = sessions.filter((session) => session.spec === spec._id);
+			const days = await sessionsFunctions.getFormattedSessionsForMatch(
+				sessionSpec,
+				sessions
+			);
+			// De documento de mongo se pasa a un formato de objeto JSON
+			let specialist = JSON.stringify(spec);
+			specialist = JSON.parse(specialist);
+			return { ...specialist, availitySpec: days };
+		})
+	);
+
+	// Se filtra por disponibilidad
+	matchedSpecialists = filterByAvailability(
+		matchedSpecialists,
+		payload.schedule,
 	);
 
 	// Se deja solo los ID de los especialistas
@@ -394,11 +430,17 @@ const availityMatch = async (payload) => {
 			);
 			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
-			return { ...specialist, points };
+			return { ...specialist, points, availitySpec: days };
 		})
 	);
 	// Se obtiene el especialista con mayor disponibilidad representado por b
 	matchedSpecialists.sort((a, b) => b.points - a.points);
+
+	// Se filtra por disponibilidad
+	matchedSpecialists = filterByAvailability(
+		matchedSpecialists,
+		payload.schedule,
+	);
 
 	// Se deja solo los ID de los especialistas
 	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
