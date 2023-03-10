@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unused-expressions -->
 <template>
 	<div style="background-color: #f0f8ff">
 		<!-- appbar -->
@@ -496,18 +497,18 @@
 
 											<v-btn
 												:color="
-													genderConfort === 'female'
+													genderConfort === ['female']
 														? 'primary'
 														: '#BDBDBD'
 												"
-												:outlined="genderConfort !== 'female'"
+												:outlined="genderConfort !== ['female']"
 												block
 												rounded
 												large
 												class="my-4"
 												@click="
 													() => {
-														genderConfort = 'female';
+														genderConfort = ['female'];
 														step = 7;
 													}
 												"
@@ -516,16 +517,18 @@
 											</v-btn>
 											<v-btn
 												:color="
-													genderConfort === 'male' ? 'primary' : '#BDBDBD'
+													genderConfort === ['male']
+														? 'primary'
+														: '#BDBDBD'
 												"
-												:outlined="genderConfort !== 'male'"
+												:outlined="genderConfort !== ['male']"
 												block
 												rounded
 												large
 												class="my-4"
 												@click="
 													() => {
-														genderConfort = 'male';
+														genderConfort = ['male'];
 														step = 7;
 													}
 												"
@@ -831,10 +834,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { mdiRecord } from '@mdi/js';
 import Appbar from '~/components/AppbarClean.vue';
-import { mapMutations } from 'vuex';
 
 /** * Evaluacion - MatchMaking */
 
@@ -866,8 +868,8 @@ export default {
 			age: '',
 			firstTherapy: null,
 			themes: [],
-			schedule: '',
-			genderConfort: '',
+			schedule: [],
+			genderConfort: [],
 			price: 0,
 			specialties: [],
 			models: [],
@@ -908,23 +910,23 @@ export default {
 	mounted() {
 		this.initFetch();
 		this.getFormattedSessionsAll();
+		this.resetMatch();
 	},
 	methods: {
-		async initFetch() {
-			this.toEvaluation()
+		initFetch() {
+			this.toEvaluation();
 		},
 		toEvaluation() {
 			// Si el usuario está logueado y es un consultante se revisa si ha hecho el matchmaking antes de ir a la evaluación
+			// eslint-disable-next-line no-unused-expressions
 			this.$auth.loggedIn
-			? (
-				this.$auth.user.role === 'user' ? (
-					// Si ya realizó el matchmaking se redirige a la página de especialistas
-					this.$auth.user.match ? (
-						this.$router.push('/especialistas')
-			
-					) : null
-				) : this.$router.push('/')
-			) : null
+				? this.$auth.user.role === 'user' || this.$auth.user.role === 'superuser'
+					? // Si ya realizó el matchmaking se redirige a la página de especialistas
+					  this.$auth.user.match
+						? this.$router.push('/especialistas')
+						: null
+					: this.$router.push('/')
+				: null;
 		},
 		next() {
 			this.onboarding = this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
@@ -946,8 +948,8 @@ export default {
 			this.age = '';
 			this.firstTherapy = null;
 			this.themes = [];
-			this.schedule = '';
-			this.genderConfort = '';
+			this.schedule = [];
+			this.genderConfort = [];
 			this.matchedSpecialists = [];
 			this.models = [];
 			this.price = 0;
@@ -976,14 +978,17 @@ export default {
 		/**
 		 * Es el motor aqui, quien se encargar de enviar los datos al backend y redireccionar
 		 */
+		// eslint-disable-next-line require-await
 		async openPrecharge() {
 			// Método que se ejecuta cuando termina la evaluación
 			this.dialogPrecharge = true;
-			const gender = this.genderConfort === 'Me es indiferente' ? '' : this.genderConfort;
+			const gender = this.genderConfort === 'Me es indiferente' ? [] : this.genderConfort;
+			const schedule = [this.schedule];
+
 			const payload = {
 				gender,
 				themes: this.themes,
-				schedule: this.schedule,
+				schedule,
 				model: this.models,
 				price: this.price,
 			};
