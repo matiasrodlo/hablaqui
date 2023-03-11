@@ -280,7 +280,7 @@ sessionsRouter.get(
  */
 sessionsRouter.post(
 	'/specialists/cancel-session-especialist',
-	// [passport.authenticate('jwt', { session: true })],
+	[passport.authenticate('jwt', { session: true })],
 	sessionsController.cancelSessionByEspecialist
 )
 

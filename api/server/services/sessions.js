@@ -1470,14 +1470,14 @@ const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 	}
 
 	// Se envian los correos de cancelacion de sesion
-	// await mailServiceSchedule.sendCancelSessionSpec(
-	// 	cancelSessions.user,
-	// 	cancelSessions.specialist
-	// );
-	// await mailServiceReminder.sendCancelSessionUser(
-	// 	cancelSessions.user,
-	// 	cancelSessions.specialist
-	// );
+	await mailServiceSchedule.sendCancelSessionSpec(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
+	await mailServiceReminder.sendCancelSessionUser(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
 
 	return okResponse('Sesion cancelada', cancelSessions);
 };
