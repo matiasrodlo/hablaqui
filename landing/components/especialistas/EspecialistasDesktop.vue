@@ -538,7 +538,7 @@ export default {
 			flag: true,
 			specialties: [],
 			searchInput: '',
-			price: '',
+			price: 0,
 			gender: [],
 			others: [],
 			otros: '',
