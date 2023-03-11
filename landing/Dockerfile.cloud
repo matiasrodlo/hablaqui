@@ -20,8 +20,8 @@ COPY --chown=node:node . ./
 RUN npm install
 
 # Variables de entorno para que funcione Nuxt
-ARG API_ABSOLUTE=http://192.168.81.20:3000
-ARG VUE_APP_URL=http://192.168.81.20:3000/api/v1
+RUN export API_ABSOLUTE=http://192.168.81.20:3000
+RUN export VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV HOST=0.0.0.0
 ENV PORT=9000
 ENV NODE_ENV=production
@@ -30,15 +30,17 @@ ENV NODE_ENV=production
 RUN npm run generate
 
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
+RUN unset API_ABSOLUTE
+RUN unset VUE_APP_URL
 ARG API_ABSOLUTE
 ARG VUE_APP_URL
 ARG VUE_APP_LANDING
 RUN echo "API_ABSOLUTE=$API_ABSOLUTE"
 RUN echo "VUE_APP_URL=$VUE_APP_URL"
 RUN echo "VUE_APP_LANDING=$VUE_APP_LANDING"
-ENV API_ABSOLUTE=$API_ABSOLUTE
-ENV VUE_APP_URL=$VUE_APP_URL
-ENV VUE_APP_LANDING=$VUE_APP_LANDING
+RUN export API_ABSOLUTE=$API_ABSOLUTE
+RUN export VUE_APP_URL=$VUE_APP_URL
+RUN export VUE_APP_LANDING=$VUE_APP_LANDING
 RUN npm run create-env
 
 # Se expone el puerto 9000 y 8080
