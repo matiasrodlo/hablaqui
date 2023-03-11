@@ -32,6 +32,9 @@ RUN unset API_ABSOLUTE
 RUN unset VUE_APP_URL
 
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
+ARG API_ABSOLUTE
+ARG VUE_APP_URL
+ARG VUE_APP_LANDING
 RUN echo "API_ABSOLUTE=$API_ABSOLUTE"
 RUN echo "VUE_APP_URL=$VUE_APP_URL"
 RUN echo "VUE_APP_LANDING=$VUE_APP_LANDING"
