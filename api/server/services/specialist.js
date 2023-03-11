@@ -324,7 +324,7 @@ const bestMatchId = async (payload) => {
 	});
 };
 
-const economicMatch = async () => {
+const economicMatch = async (payload) => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
