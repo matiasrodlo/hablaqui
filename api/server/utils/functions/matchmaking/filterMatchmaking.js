@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 /**
  * @description Función que filtra los especialistas por disponibilidad
  * @param {Array} arraySpecialist - Array de especialistas
@@ -6,24 +8,21 @@
  */
 export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
     // Si no hay especialidades a filtrar, se retorna un array vacío
-    if (!scheduleAvaility) {
+    if (!scheduleAvaility || !arraySpecialist) {
         return arraySpecialist;
     }
     
     // Se filtran los especialistas por disponibilidad
     const arrayFinal = arraySpecialist.filter(specialist => {
-        let flag = false;
         // Se obtiene el horario del especialista
         const { availitySpec } = specialist;
-		console.log(schedule);
+		const days = availitySpec;
         // Si el horario coincide con la disponibilidad, se retorna el especialista
-        if (flag === true) {
-            return;
-        }
         // Comienza a recorrer el horario del especialista y si coincide con la disponibilidad,
         // marca la bandera como verdadera haciendo que el especialista sea retornado
-		for(let i = 0; i < 3; i++) {
-			days[i].available.forEach((hora) => {
+		let flag = false;
+		days.map(day => {
+			return day.available.map((hora) => {
 				if (
 					dayjs(hora, 'HH:mm').isBetween(
 						dayjs('00:00', 'HH:mm'),
@@ -31,7 +30,7 @@ export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
 					) &&
 					scheduleAvaility.includes('early')
 				) {
-					flag = true;
+					return flag = true;
 				} else if (
 					dayjs(hora, 'HH:mm').isBetween(
 						dayjs('09:00', 'HH:mm'),
@@ -39,7 +38,7 @@ export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
 					) &&
 					scheduleAvaility.includes('morning')
 				) {
-					flag = true;
+					return flag = true;
 				} else if (
 					dayjs(hora, 'HH:mm').isBetween(
 						dayjs('12:00', 'HH:mm'),
@@ -47,7 +46,7 @@ export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
 					) &&
 					scheduleAvaility.includes('midday')
 				) {
-					flag = true;
+					return flag = true;
 				} else if (
 					dayjs(hora, 'HH:mm').isBetween(
 						dayjs('14:00', 'HH:mm'),
@@ -55,7 +54,7 @@ export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
 					) &&
 					scheduleAvaility.includes('afternoon')
 				) {
-					flag = true;
+					return flag = true;
 				} else if (
 					dayjs(hora, 'HH:mm').isBetween(
 						dayjs('18:00', 'HH:mm'),
@@ -63,14 +62,12 @@ export const filterByAvailability = (arraySpecialist, scheduleAvaility) => {
 					) &&
 					scheduleAvaility.includes('night')
 				) {
-					flag = true;
-				} else {
-					flag = false;
+					return flag = true;
 				}
 			});
-		}
-        return flag;
+		});
+		// Si la bandera es verdadera, se retorna el especialista
+        return flag ? specialist : null;
     });
-
     return arrayFinal;
 }

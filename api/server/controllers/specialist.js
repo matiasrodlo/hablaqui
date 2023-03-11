@@ -260,7 +260,6 @@ const specialistsController = {
 	async getSpecialistArray(req, res) {
 		try {
 			const { specs } = req.body;
-			console.log(specs);
 			const { data, code } = await specialistsService.getSpecialistArray(
 				specs
 			);

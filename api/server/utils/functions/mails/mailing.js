@@ -119,7 +119,6 @@ const sessionReminder = async () => {
 	});
 	// Se recorre el array de correos y se envían los correos
 	// Busca los correos electrónicos que no han sido programados
-	console.log('pendingEmails', pendingEmails);
 	if (!pendingEmails.length > 0) {
 		return pendingEmails.length;
 	}
@@ -158,7 +157,6 @@ const sessionReminder = async () => {
 					batch = await getBatchId();
 					// Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
 					isSend = true;
-					console.log(sessionDate);
 					await mailServiceRemider.sendReminderUser(
 						user,
 						spec,
