@@ -1456,13 +1456,13 @@ const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 				'plan.$.session.$[session].status': 'canceled',
 			},
 			$inc: {
-				'plan.$.remainingSessions': +1,
+				'plan.$.remainingSessions': 1,
+				'plan.$.totalSessions': 1,
 			},
 		},
 		{
 			arrayFilters: [{ 'session._id': id }], new: true
 		}
-
 	).populate('specialist user');
 
 	if (!cancelSessions) {
@@ -1470,14 +1470,14 @@ const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 	}
 
 	// Se envian los correos de cancelacion de sesion
-	await mailServiceSchedule.sendCancelSessionSpec(
-		cancelSessions.user,
-		cancelSessions.specialist
-	);
-	await mailServiceReminder.sendCancelSessionUser(
-		cancelSessions.user,
-		cancelSessions.specialist
-	);
+	// await mailServiceSchedule.sendCancelSessionSpec(
+	// 	cancelSessions.user,
+	// 	cancelSessions.specialist
+	// );
+	// await mailServiceReminder.sendCancelSessionUser(
+	// 	cancelSessions.user,
+	// 	cancelSessions.specialist
+	// );
 
 	return okResponse('Sesion cancelada', cancelSessions);
 };
