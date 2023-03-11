@@ -25,10 +25,10 @@ services:
       context: ./landing
       dockerfile: Dockerfile.cloud
       network: "host"
-      # args:
-      #   - API_ABSOLUTE=$API_ABSOLUTE
-      #   - VUE_APP_URL=$VUE_APP_URL
-      #   - VUE_APP_LANDING=$VUE_APP_LANDING
+      args:
+        - API_ABSOLUTE=$API_ABSOLUTE
+        - VUE_APP_URL=$VUE_APP_URL
+        - VUE_APP_LANDING=$VUE_APP_LANDING
     ports:
       - "9000:9000"
     container_name: vue-ui
