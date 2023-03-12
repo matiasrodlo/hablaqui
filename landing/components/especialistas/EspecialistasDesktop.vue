@@ -256,7 +256,7 @@
 			</v-container>
 		</v-app-bar>
 		<!-- pychologist -->
-		<v-container v-if="specialists.length" fluid style="max-width: 1080px" class="my-4">
+		<v-container v-if="!loadingMatchMaking" fluid style="max-width: 1080px" class="my-4">
 			<v-row>
 				<v-col
 					v-if="loadingSpecialist"
@@ -483,7 +483,7 @@
 						</v-col>
 					</template>
 				</template>
-				<v-col v-if="false" cols="12" class="title primary--text">
+				<v-col v-if="!specialists.length" cols="12" class="title primary--text text-center">
 					No se encontraron coincidencias
 				</v-col>
 			</v-row>
@@ -530,7 +530,7 @@ export default {
 			toggle: 0,
 			mdiChevronDown,
 			mdiAccount,
-			loadingMatchMaking: false,
+			loadingMatchMaking: true,
 			menuGender: false,
 			menuSpecialties: false,
 			menuOthers: false,
@@ -603,10 +603,15 @@ export default {
 		 */
 		page(value, oldValue) {
 			let prev = 0;
-			if (oldValue) prev = oldValue;
+			if (oldValue) {
+				prev = oldValue;
+			}
+			// else {
+			//	this.getSpecialistsArrayMatch(this.specialists.slice(0, 5));
+			// }
 			const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
+			// const ids = this.specialists.slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
-			// console.log(this.specialistsIds);
 		},
 		matchMaking(newVal) {
 			if (newVal) {
