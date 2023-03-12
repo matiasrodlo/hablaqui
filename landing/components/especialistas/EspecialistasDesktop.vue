@@ -483,7 +483,11 @@
 						</v-col>
 					</template>
 				</template>
-				<v-col v-if="!specialists.length" cols="12" class="title primary--text text-center">
+				<v-col
+					v-if="!specialists.length && !initialCharge"
+					cols="12"
+					class="title primary--text text-center"
+				>
 					No se encontraron coincidencias
 				</v-col>
 			</v-row>
@@ -527,6 +531,7 @@ export default {
 	},
 	data() {
 		return {
+			initialCharge: false,
 			toggle: 0,
 			mdiChevronDown,
 			mdiAccount,
@@ -602,6 +607,7 @@ export default {
 		 * Escucha que cambio de pagina(scroll) y obtiene más sessiones
 		 */
 		page(value, oldValue) {
+			this.applyFilters();
 			let prev = 0;
 			if (oldValue) {
 				prev = oldValue;
@@ -620,6 +626,16 @@ export default {
 				this.priceBoxes = newVal.price;
 				this.dispoBoxes = newVal.schedule;
 			}
+			if (this.initialCharge === false) {
+				this.applyFilters();
+				this.initialCharge = true;
+			}
+			this.loadingMatchMaking = false;
+		},
+		specialists(newVal) {
+			if (newVal.length > 0) {
+				this.loadingMatchMaking = false;
+			}
 		},
 	},
 	created() {
@@ -634,7 +650,6 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
-		this.loadingMatchMaking = false;
 		// Si el usuaio no ha realizado la encuesta lo redirige a la evaluacion
 		// console.log('user', this.$auth.$state.user);
 		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
@@ -643,7 +658,9 @@ export default {
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
-		console.log('specialists', this.specialists);
+		if (this.matchMaking) {
+			this.applyFilters();
+		}
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
@@ -651,6 +668,13 @@ export default {
 	},
 	methods: {
 		applyFilters() {
+			console.log(
+				'filters',
+				this.specialties,
+				this.genderBoxes,
+				this.priceBoxes,
+				this.dispoBoxes
+			);
 			this.actualizarMatch({
 				themes: this.specialties,
 				gender: this.genderBoxes,
@@ -658,6 +682,7 @@ export default {
 				schedule: this.dispoBoxes,
 				model: this.models,
 			});
+			this.loadingMatchMaking = false;
 		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
