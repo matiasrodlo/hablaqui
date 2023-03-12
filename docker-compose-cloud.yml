@@ -26,9 +26,9 @@ services:
       dockerfile: Dockerfile.cloud
       network: "host"
       args:
-        - VUE_APP_URL=$VUE_APP_URL
-        - VUE_APP_LANDING=$VUE_APP_LANDING
-        - API_ABSOLUTE=$API_ABSOLUTE
+        - VUE_APP_URL
+        - VUE_APP_LANDING
+        - API_ABSOLUTE
     ports:
       - "9000:9000"
     container_name: vue-ui

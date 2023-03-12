@@ -32,15 +32,16 @@ RUN npm run generate
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
 RUN unset API_ABSOLUTE
 RUN unset VUE_APP_URL
+# Se declara las variables de entorno para que se pueda comunicar back y front
 ARG API_ABSOLUTE
 ARG VUE_APP_URL
 ARG VUE_APP_LANDING
 RUN echo "API_ABSOLUTE=$API_ABSOLUTE"
 RUN echo "VUE_APP_URL=$VUE_APP_URL"
 RUN echo "VUE_APP_LANDING=$VUE_APP_LANDING"
-RUN export API_ABSOLUTE=$API_ABSOLUTE
-RUN export VUE_APP_URL=$VUE_APP_URL
-RUN export VUE_APP_LANDING=$VUE_APP_LANDING
+ENV API_ABSOLUTE=$API_ABSOLUTE
+ENV VUE_APP_URL=$VUE_APP_URL
+ENV VUE_APP_LANDING=$VUE_APP_LANDING
 RUN npm run create-env
 
 # Se expone el puerto 9000 y 8080
