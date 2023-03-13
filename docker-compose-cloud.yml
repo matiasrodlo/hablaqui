@@ -32,6 +32,10 @@ services:
     ports:
       - "9000:9000"
     container_name: vue-ui
+    environment:
+      - VUE_APP_LANDING=$VUE_APP_LANDING
+      - VUE_APP_URL=$VUE_APP_URL
+      - API_ABSOLUTE=$API_ABSOLUTE
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.10
