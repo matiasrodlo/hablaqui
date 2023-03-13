@@ -340,11 +340,17 @@ const economicMatch = async (payload) => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
+	// Se verifica si el payload no tiene la llave de specialities, gender o price
+	const themes = payload.themes && payload.themes.length ? { specialties: { $in: payload.themes } } : {};
+	const gender = payload.gender && payload.gender.length ? { gender: { $in: payload.gender } } : {};
+	const price = payload.price ? {'sessionPrices.video': { $lte: payload.price }} : {};
+
+	// Comienza a buscar los especialistas
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
-		specialties: { $in: payload.themes },
-		gender: { $in: payload.gender },
-		'sessionPrices.video': { $lte: payload.price },
+		...themes,
+		...gender,
+		...price,
 	});
 
 	// Se busca el mejor match según criterios
@@ -371,10 +377,9 @@ const economicMatch = async (payload) => {
 	);
 
 	// Se filtra por disponibilidad
-	matchedSpecialists = filterByAvailability(
-		matchedSpecialists,
-		payload.schedule,
-	);
+	matchedSpecialists = payload.schedule && payload.schedule.length 
+		? filterByAvailability(matchedSpecialists,payload.schedule,) 
+		: matchedSpecialists;
 
 	// Se deja solo los ID de los especialistas
 	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
@@ -415,9 +420,17 @@ const availityMatch = async (payload) => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
 
+	// Se verifica si el payload no tiene la llave de specialities, gender o price
+	const themes = payload.themes && payload.themes.length ? { specialties: { $in: payload.themes } } : {};
+	const gender = payload.gender && payload.gender.length ? { gender: { $in: payload.gender } } : {};
+	const price = payload.price ? {'sessionPrices.video': { $lte: payload.price }} : {};
+
 	// Comienza a buscar los especialistas
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
+		...themes,
+		...gender,
+		...price,
 	});
 
 	// Se obtienen todas las sessiones
@@ -449,10 +462,9 @@ const availityMatch = async (payload) => {
 	matchedSpecialists.sort((a, b) => b.points - a.points);
 
 	// Se filtra por disponibilidad
-	matchedSpecialists = filterByAvailability(
-		matchedSpecialists,
-		payload.schedule,
-	);
+	matchedSpecialists = payload.schedule && payload.schedule.length 
+		? filterByAvailability(matchedSpecialists,payload.schedule,) 
+		: matchedSpecialists;
 
 	// Se deja solo los ID de los especialistas
 	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
