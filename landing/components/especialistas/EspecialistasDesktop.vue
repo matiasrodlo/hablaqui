@@ -10,7 +10,7 @@
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container fluid style="max-width: 1080px">
-				<v-row>
+				<v-row v-if="!loadingMatchMaking">
 					<v-col id="menuSpecialties" cols="3">
 						<v-menu
 							ref="menuSpecialties"
@@ -554,7 +554,7 @@ export default {
 			fullcard: [],
 			page: 1,
 			status: false,
-			specialistCounter: 0,
+			specialistCounter: 5,
 			genderBoxes: [],
 			genderList: [
 				{ value: 'female', text: 'Mujer' },
@@ -597,6 +597,7 @@ export default {
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialists',
+			newSpecialists: 'Specialist/newSpecialists',
 			specialistsIds: 'Specialist/specialistsIds',
 			sessions: 'Specialist/sessionsLimit',
 			matchMaking: 'Specialist/matchMaking',
@@ -607,16 +608,13 @@ export default {
 		 * Escucha que cambio de pagina(scroll) y obtiene más sessiones
 		 */
 		page(value, oldValue) {
-			this.applyFilters();
 			let prev = 0;
 			if (oldValue) {
 				prev = oldValue;
 			}
-			// else {
-			//	this.getSpecialistsArrayMatch(this.specialists.slice(0, 5));
-			// }
+			this.getSpecialistArray(5);
 			const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
-			// const ids = this.specialists.slice(prev * 5, value * 5);
+			// const ids = this.newSpecialists.slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
 		matchMaking(newVal) {
@@ -627,6 +625,7 @@ export default {
 				this.dispoBoxes = newVal.schedule;
 			}
 			if (this.initialCharge === false) {
+				console.log('test');
 				this.applyFilters();
 				this.initialCharge = true;
 			}
@@ -658,9 +657,6 @@ export default {
 		}
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
-		if (this.matchMaking) {
-			this.applyFilters();
-		}
 	},
 	beforeDestroy() {
 		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
@@ -668,13 +664,6 @@ export default {
 	},
 	methods: {
 		applyFilters() {
-			console.log(
-				'filters',
-				this.specialties,
-				this.genderBoxes,
-				this.priceBoxes,
-				this.dispoBoxes
-			);
 			this.actualizarMatch({
 				themes: this.specialties,
 				gender: this.genderBoxes,
@@ -757,6 +746,7 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
+			console.log('value', value);
 			const filters = {
 				themes: this.specialties,
 				gender: this.genderBoxes,
@@ -765,51 +755,54 @@ export default {
 				model: this.models,
 			};
 
-			// console.log('value', { ...value });
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
 
+				await this.resetNewSpecialists();
+
 				if (this.toggle === 0) {
 					// console.log('filters', filters);
 					await this.getSpecialistsBestMatch(filters);
-					// await this.getSpecialistsBestMatchId();
-					this.specialistCounter = 0;
+					await this.getSpecialistsBestMatchId(filters);
+					console.log('specialists ids', this.specialistsIds);
 				}
 				if (this.toggle === 1) {
 					await this.getSpecialistsEconomicMatch(filters);
-					// await this.getSpecialistsEconomicMatchId();
-					this.specialistCounter = 0;
+					await this.getSpecialistsEconomicMatchId(filters);
 				}
 				if (this.toggle === 2) {
 					await this.getSpecialistsAvailityMatch(filters);
-					// await this.getSpecialistsAvailityMatchId();
-					this.specialistCounter = 0;
+					await this.getSpecialistsAvailityMatchId(filters);
 				}
+				await this.getSpecialistsArrayMatch(this.specialistsIds.slice(0, 5));
+				console.log('newspecialists', this.newSpecialists);
+				this.specialistCounter = 5;
 				this.loadingMatchMaking = false;
 			}
-			console.log(this.specialists);
 		},
 		async getSpecialistArray(number) {
 			// Método que solicita los especialistas a medida que lo requiere la página
-			const arrayIds = [];
-			for (let i = 0; i < number; i++) {
-				arrayIds.append(this.specialistsIds[this.specialistCounter]);
-				this.specialistCounter++;
-			}
+			const arrayIds = this.specialistsIds.slice(
+				this.specialistCounter,
+				this.specialistCounter + number
+			);
+			this.specialistCounter += number;
 			await this.getSpecialistsArrayMatch(arrayIds);
+			console.log(this.newSpecialists);
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
+			resetNewSpecialists: 'Specialist/resetNewSpecialists',
 		}),
 		...mapActions({
 			updateMatchMakig: 'Specialist/updateMatchMakig',
 			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
 			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
 			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
-			// getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
-			// getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
-			// getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
+			getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
+			getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
+			getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
 			getSpecialistsArrayMatch: 'Specialist/getSpecialistsArrayMatch',
 		}),
 	},

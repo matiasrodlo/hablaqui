@@ -52,7 +52,7 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSpecialistsEconomicMatch({ commit, state }) {
+	async getSpecialistsEconomicMatch({ commit, state }, payload) {
 		try {
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/economic-match', {
@@ -68,7 +68,7 @@ export default {
 			snackBarError(e)(commit);
 		}
 	},
-	async getSpecialistsEconomicMatchIds({ commit, state }) {
+	async getSpecialistsEconomicMatchId({ commit, state }) {
 		try {
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/economic-match', {
@@ -94,7 +94,7 @@ export default {
 			console.log('availity-match', data);
 
 			if (data.perfectMatch) {
-				commit('setSpecialists', data.matchedSpecialists);
+				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
 			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Psicologos obtenidos')(commit);
@@ -122,14 +122,15 @@ export default {
 	},
 	async getSpecialistsArrayMatch({ commit, state }, payload) {
 		try {
-			console.log('payload', payload);
+			console.log('payload arraymatch', payload);
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/get-specialists-array-match', {
 				method: 'PUT',
 				data: { specs: payload },
 			});
+			commit('setNewSpecialists', state.newSpecialists.concat(data.specialist));
 			commit('setLoadingSpecialist', false);
-			console.log('data', data);
+			console.log('data arraymatch', data);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);

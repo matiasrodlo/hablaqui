@@ -10,6 +10,7 @@ const initialState = {
 	payments: [],
 	specialists: [],
 	specialistsIds: [],
+	newSpecialists: [],
 	specialist: null,
 	resumeView: false,
 	sessions: [],

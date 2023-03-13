@@ -16,6 +16,7 @@ export default {
 	},
 	specialists: state => state.specialists,
 	specialistsIds: state => state.specialistsIds,
+	newSpecialists: state => state.newSpecialists,
 	specialist: state => state.specialist,
 	sessions: state => state.sessions,
 	transactions: state => state.transactions,
