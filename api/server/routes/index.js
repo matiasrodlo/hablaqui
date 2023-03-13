@@ -32,4 +32,5 @@ export default app => {
 	app.use(apiVersion, evaluationRouter);
 	app.use(apiVersion, transactionRouter);
 	app.use(apiVersion, scriptsRouter);
+	app.use('/health-check', (req, res) => res.status(200).json({ status: true }));
 };

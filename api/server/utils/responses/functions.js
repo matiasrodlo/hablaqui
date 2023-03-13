@@ -4,7 +4,7 @@ export const restResponse = (data, code, res) =>
 		...data,
 		status: true,
 		apiVersion: 'v1',
-		baseUrl: 'localhost:3000',
+		baseUrl: process.env.API_URL,
 	});
 
 export const conflictResponse = message => ({ code: 409, data: { message } });

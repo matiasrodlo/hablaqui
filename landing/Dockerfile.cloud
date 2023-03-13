@@ -6,17 +6,11 @@ FROM node:14-alpine
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
-# Declara parámetros de la línea de comandos para el proceso de construcción
+# Variables de entorno para reemplazar lo que se hizo en el paso anterior
 ARG API_ABSOLUTE
-ARG FRONTEND_URL
-ARG VUE_APP_LANDING
 ARG VUE_APP_URL
-
-# Establece variables de entorno
-RUN export API_ABSOLUTE=${_API_ABSOLUTE}
-RUN export FRONTEND_URL=${_FRONTEND_URL}
-RUN export VUE_APP_LANDING=${_VUE_APP_LANDING}
-RUN export VUE_APP_URL=${_VUE_APP_URL}
+ENV API_ABSOLUTE=${API_ABSOLUTE}
+ENV API_ABSOLUTE=${API_ABSOLUTE}
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -29,19 +23,21 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
+RUN npm run create-env
 RUN npm install
 
 # Variables de entorno para que funcione Nuxt
+RUN export API_ABSOLUTE=http://192.168.81.20:3000
+RUN export VUE_APP_URL=http://192.168.81.20:3000/api/v1
 ENV HOST=0.0.0.0
-ENV PORT=8080
-ENV NODE_ENV=development
+ENV PORT=9000
+ENV NODE_ENV=production
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
-RUN npm run create-env
 RUN npm run generate
 
 # Se expone el puerto 9000 y 8080
-EXPOSE 9000 8080
+EXPOSE 9000
 
 # Ejecuta el comando npm run start
 ENTRYPOINT ["npm", "run", "start"]
