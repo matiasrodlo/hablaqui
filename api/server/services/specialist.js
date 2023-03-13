@@ -220,7 +220,7 @@ const ponderationMatch = async (matchedList, payload) => {
 			let criteria = 0;
 			let points = normalize(spec.points, 0, 100) * weighted[criteria];
 			const sessionSpec = sessions.filter(
-				(session) => session.spec === spec._id
+				(session) => session.specialist === spec._id
 			);
 			criteria++;
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
@@ -366,8 +366,8 @@ const economicMatch = async (payload) => {
 			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
 			const sessionSpec = sessions.filter((session) => session.specialist === spec._id);
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
+				spec,
 				sessionSpec,
-				sessions
 			);
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let specialist = JSON.stringify(spec);
@@ -440,19 +440,19 @@ const availityMatch = async (payload) => {
 	matchedSpecialists = await Promise.all(
 		matchedSpecialists.map(async (spec) => {
 			spec.points = 0;
-			const sessionSpec = sessions.filter(
-				(session) => session.specialist === spec._id
-			);
+			const sessionSpec = sessions.filter((session) => session.specialist === spec._id);
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				spec,
-				sessionSpec
+				sessionSpec,
 			);
-			points = pointsDisponibilidad(
+			points = payload.schedule && payload.schedule.length 
+			? pointsDisponibilidad(
 				days,
 				payload,
 				pointsPerCriterion,
 				nextDays
-			);
+			)
+			: 0;
 			let specialist = JSON.stringify(spec);
 			specialist = JSON.parse(specialist);
 			return { ...specialist, points, availitySpec: days };
