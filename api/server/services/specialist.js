@@ -364,7 +364,7 @@ const economicMatch = async (payload) => {
 	matchedSpecialists = await Promise.all(
 		matchedSpecialists.map(async (spec) => {
 			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
-			const sessionSpec = sessions.filter((session) => session.spec === spec._id);
+			const sessionSpec = sessions.filter((session) => session.specialist === spec._id);
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				sessionSpec,
 				sessions
@@ -441,7 +441,7 @@ const availityMatch = async (payload) => {
 		matchedSpecialists.map(async (spec) => {
 			spec.points = 0;
 			const sessionSpec = sessions.filter(
-				(session) => session.spec === spec._id
+				(session) => session.specialist === spec._id
 			);
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
 				spec,
