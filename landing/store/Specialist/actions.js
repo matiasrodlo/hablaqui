@@ -123,13 +123,13 @@ export default {
 	async getSpecialistsArrayMatch({ commit, state }, payload) {
 		try {
 			console.log('payload arraymatch', payload);
-			commit('setLoadingSpecialist', true);
+			// commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/get-specialists-array-match', {
 				method: 'PUT',
 				data: { specs: payload },
 			});
 			commit('setNewSpecialists', state.newSpecialists.concat(data.specialist));
-			commit('setLoadingSpecialist', false);
+			// commit('setLoadingSpecialist', false);
 			console.log('data arraymatch', data);
 			return data;
 		} catch (e) {
