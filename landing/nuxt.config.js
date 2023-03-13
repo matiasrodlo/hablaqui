@@ -39,9 +39,6 @@ export default {
 			// 	: 'http://localhost:3000/';
 
 			// generate routes especialistas
-			// Se ejecutan scripts para agregar profesion y cambiar rol
-			// await axios.post(`${baseURL}/scripts/remove-rol`);
-			// await axios.post(`${baseURL}/scripts/remove-profesion`);
 
 			const res = await axios.get(`${baseURL}/specialists/all`);
 			const especialistas = res.data.specialists

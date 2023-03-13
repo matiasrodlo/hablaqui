@@ -1,21 +1,21 @@
-'use strict';
+'use strict'
 
-import appointmentsRouter from './appointments';
-import authRoutes from './auth';
-import specialistsRouter from './specialist';
-import mercadopagoRouter from './mercadopago';
-import userRoutes from './user';
-import chatRouter from './chat';
-import couponRouter from './coupon';
-import recruitmentRouter from './recruitment';
-import cronRouter from './cron';
-import dashboardRouter from './dashboard';
-import sessionsRouter from './sessions';
-import evaluationRouter from './evaluation';
-import transactionRouter from './transaction';
-import scriptsRouter from './scripts';
+import appointmentsRouter from './appointments'
+import authRoutes from './auth'
+import specialistsRouter from './specialist'
+import mercadopagoRouter from './mercadopago'
+import userRoutes from './user'
+import chatRouter from './chat'
+import couponRouter from './coupon'
+import recruitmentRouter from './recruitment'
+import cronRouter from './cron'
+import dashboardRouter from './dashboard'
+import sessionsRouter from './sessions'
+import evaluationRouter from './evaluation'
+import transactionRouter from './transaction'
+import scriptsRouter from './scripts'
 
-const apiVersion = '/api/v1';
+const apiVersion = '/api/v1'
 
 export default app => {
 	app.use(apiVersion, appointmentsRouter);

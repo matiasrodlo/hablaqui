@@ -2,7 +2,7 @@
 	<v-form @submit.prevent="onSubmit">
 		<v-row no-gutters>
 			<!-- nombre -->
-			<v-col cols="12">
+			<v-col cols="6">
 				<v-text-field
 					v-model="form.name"
 					type="text"
@@ -13,7 +13,19 @@
 					:error-messages="nameErrors"
 				></v-text-field>
 			</v-col>
-			<!-- correo elecronico -->
+			<!-- Apellido -->
+			<v-col cols="6">
+				<v-text-field
+					v-model="form.lastName"
+					type="text"
+					label="Apellido"
+					outlined
+					dense
+					autocomplete="off"
+					:error-messages="lastnameErrors"
+				></v-text-field>
+			</v-col>
+			<!-- Correo -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.email"
@@ -24,7 +36,7 @@
 					:error-messages="emailErrors"
 				></v-text-field>
 			</v-col>
-			<!-- telefono -->
+			<!-- Telefono -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.phone"
@@ -102,9 +114,7 @@ import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
 const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
 
-/**
- * Componente para iniciar sesión
- */
+/** * Componente para iniciar sesión */
 export default {
 	name: 'SignUp',
 	mixins: [validationMixin],
@@ -126,10 +136,7 @@ export default {
 		};
 	},
 	computed: {
-		/**
-		 * Verifica que el email sea valido
-		 * @returns array con los errores
-		 */
+		/** * Verifica que el email sea valido * @returns array con los errores */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
@@ -137,10 +144,7 @@ export default {
 			!this.$v.form.email.email && errors.push('Escriba un email valido');
 			return errors;
 		},
-		/**
-		 * Verifica que el name sea valido
-		 * @returns array con los errores
-		 */
+		/** * Verifica que el name sea valido * @returns array con los errores */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
@@ -149,10 +153,16 @@ export default {
 			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
 			return errors;
 		},
-		/**
-		 * Verifica que el password sea valido
-		 * @returns array con los errores
-		 */
+		/** * Verifica que el lastname sea valido * @returns array con los errores */
+		lastnameErrors() {
+			const errors = [];
+			if (!this.$v.form.lastName.$dirty) return errors;
+			!this.$v.form.lastName.required && errors.push('El apellido es querido');
+			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
+			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
+			return errors;
+		},
+		/** * Verifica que el password sea valido * @returns array con los errores */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
@@ -161,10 +171,7 @@ export default {
 			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
 			return errors;
 		},
-		/**
-		 * Verifica que el telefono sea valido
-		 * @returns array con los errores
-		 */
+		/** * Verifica que el telefono sea valido * @returns array con los errores */
 		phoneErrors() {
 			const errors = [];
 			if (!this.$v.form.phone.$dirty) return errors;
@@ -178,9 +185,7 @@ export default {
 		this.defaultForm();
 	},
 	methods: {
-		/**
-		 * Establece el formulario por defecto
-		 */
+		/** * Establece el formulario por defecto */
 		defaultForm() {
 			this.form = {
 				name: '',
@@ -192,9 +197,7 @@ export default {
 				phone: '',
 			};
 		},
-		/**
-		 * Envio del formulario
-		 */
+		/** * Envio del formulario */
 		async onSubmit() {
 			// verificamos validacion
 			this.$v.$touch();
@@ -263,7 +266,6 @@ export default {
 						}
 					}
 				} catch (error) {
-					// muestra mensaje de error
 					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
 				} finally {
 					// desactivamos el loader

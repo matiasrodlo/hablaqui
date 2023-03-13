@@ -1,6 +1,6 @@
 <template>
-	<v-app>
-		<snackbar />
-		<nuxt />
-	</v-app>
+  <v-app>
+    <snackbar />
+    <nuxt />
+  </v-app>
 </template>
