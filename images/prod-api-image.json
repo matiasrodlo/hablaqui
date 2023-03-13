@@ -1,0 +1,6 @@
+[
+    {
+        "name": "node",
+        "imageUri": "782546527822.dkr.ecr.us-east-2.amazonaws.com/hablaqui-staging-production:latest"
+    }
+]
