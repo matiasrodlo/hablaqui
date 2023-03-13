@@ -201,7 +201,7 @@
 							text
 							color="primary"
 							small
-							@click="applyFilters"
+							@click="applyFiltersBtn"
 							>Aplicar filtros</v-btn
 						>
 					</v-col>
@@ -662,6 +662,10 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		applyFiltersBtn() {
+			this.page = 1;
+			this.applyFilters();
+		},
 		applyFilters() {
 			this.actualizarMatch({
 				themes: this.specialties,
@@ -758,6 +762,7 @@ export default {
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
 
 				await this.resetNewSpecialists();
+				this.specialistCounter = 0;
 
 				if (this.toggle === 0) {
 					// console.log('filters', filters);
