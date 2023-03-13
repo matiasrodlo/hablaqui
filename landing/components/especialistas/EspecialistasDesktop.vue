@@ -271,7 +271,7 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in specialists">
+					<template v-for="(item, index) in newSpecialists">
 						<v-col v-if="5 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
@@ -484,7 +484,7 @@
 					</template>
 				</template>
 				<v-col
-					v-if="!specialists.length && !initialCharge"
+					v-if="!newSpecialists.length && !initialCharge"
 					cols="12"
 					class="title primary--text text-center"
 				>
@@ -613,8 +613,8 @@ export default {
 				prev = oldValue;
 			}
 			this.getSpecialistArray(5);
-			const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
-			// const ids = this.newSpecialists.slice(prev * 5, value * 5);
+			// const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
+			const ids = this.specialistsIds.slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
 		matchMaking(newVal) {
@@ -631,7 +631,7 @@ export default {
 			}
 			this.loadingMatchMaking = false;
 		},
-		specialists(newVal) {
+		newSpecialists(newVal) {
 			if (newVal.length > 0) {
 				this.loadingMatchMaking = false;
 			}
@@ -677,7 +677,7 @@ export default {
 		 * Cambia aumenta de pagina con el scroll
 		 */
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page < this.specialists.length / 5) {
+			if (isVisible && this.page <= this.newSpecialists.length / 5) {
 				this.page += 1;
 			}
 		},
@@ -763,16 +763,16 @@ export default {
 
 				if (this.toggle === 0) {
 					// console.log('filters', filters);
-					await this.getSpecialistsBestMatch(filters);
+					// await this.getSpecialistsBestMatch(filters);
 					await this.getSpecialistsBestMatchId(filters);
 					console.log('specialists ids', this.specialistsIds);
 				}
 				if (this.toggle === 1) {
-					await this.getSpecialistsEconomicMatch(filters);
+					// await this.getSpecialistsEconomicMatch(filters);
 					await this.getSpecialistsEconomicMatchId(filters);
 				}
 				if (this.toggle === 2) {
-					await this.getSpecialistsAvailityMatch(filters);
+					// await this.getSpecialistsAvailityMatch(filters);
 					await this.getSpecialistsAvailityMatchId(filters);
 				}
 				await this.getSpecialistsArrayMatch(this.specialistsIds.slice(0, 5));
