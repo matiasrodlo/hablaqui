@@ -226,7 +226,9 @@ const ponderationMatch = async (matchedList, payload) => {
 			// Se le asigna un puntaje según la cantidad de coincidencias (3 por que son 3 especialidades)
 			points +=
 				weighted[criteria] *
-				criteriaNumberSpecialties(spec, payload, pointsPerCriterion);
+				payload.themes && payload.themes.length 
+				? criteriaNumberSpecialties(spec, payload, pointsPerCriterion)
+				: 0;
 			criteria++;
 			// Se obtiene la disponibilidad del especialista y recorre los primeros 3 días
 			const days = await sessionsFunctions.getFormattedSessionsForMatch(
@@ -235,17 +237,23 @@ const ponderationMatch = async (matchedList, payload) => {
 			);
 			points +=
 				weighted[criteria] *
-				criterioDisponibilidad(payload, pointsPerCriterion, days);
+				payload.schedule && payload.schedule.length
+				? criterioDisponibilidad(payload, pointsPerCriterion, days)
+				: 0;
 			criteria++;
 			// Se obtiene el precio del especialista y se le asigna un puntaje dado por el precio
 			points +=
-				priceCriterion(spec, payload, pointsPerCriterion) *
-				weighted[criteria];
+				weighted[criteria] *
+				payload.price && payload.price.length
+				? priceCriterion(spec, payload, pointsPerCriterion)
+				: 0;
 			criteria++;
 			// Se obtiene el modelo terapeutico del especialista y se le asigna un puntaje dado por el modelo
 			points +=
-				criterioModeloTeraupetico(spec, payload, pointsPerCriterion) *
-				weighted[criteria];
+				weighted[criteria] *
+				payload.model && payload.model.length
+				? criterioModeloTeraupetico(spec, payload, pointsPerCriterion)
+				: 0;
 			criteria++;
 			// De documento de mongo se pasa a un formato de objeto JSON
 			let specialist = JSON.stringify(spec);
@@ -258,7 +266,7 @@ const ponderationMatch = async (matchedList, payload) => {
 	// Se imprime los puntajes de cada especialista
 	return newMatchedList;
 };
-
+	
 const bestMatch = async (payload) => {
 	let matchedSpecialists = [];
 	let perfectMatch = true;
@@ -266,12 +274,17 @@ const bestMatch = async (payload) => {
 	// (puntaje manual, especialidad, disponibilidad, precio, modelo terapeutico, genero)
 	const weighted = [0.01, 0.05, 0.2, 0.5, 0.04, 0.2];
 
+	// Se verifica si el payload no tiene la llave de specialities, gender o price
+	const themes = payload.themes && payload.themes.length ? { specialties: { $in: payload.themes } } : {};
+	const gender = payload.gender && payload.gender.length ? { gender: { $in: payload.gender } } : {};
+	const price = payload.price ? {'sessionPrices.video': { $lte: payload.price }} : {};
+
 	// Comienza a buscar los especialistas
 	matchedSpecialists = await Specialist.find({
 		'preferences.marketplaceVisibility': true,
-		specialties: { $in: payload.themes },
-		gender: { $in: payload.gender },
-		'sessionPrices.video': { $lte: payload.price },
+		...themes,
+		...gender,
+		...price,
 	});
 
 	// Se busca el mejor match según criterios
@@ -282,10 +295,9 @@ const bestMatch = async (payload) => {
 	);
 
 	// Se filtra por disponibilidad
-	matchedSpecialists = filterByAvailability(
-		matchedSpecialists,
-		payload.schedule,
-	);
+	matchedSpecialists = payload.schedule && payload.schedule.length 
+		? filterByAvailability(matchedSpecialists,payload.schedule,) 
+		: matchedSpecialists;
 
 	// Se deja solo los ID de los especialistas
 	// matchedSpecialists = matchedSpecialists.map((spec) => spec._id);
