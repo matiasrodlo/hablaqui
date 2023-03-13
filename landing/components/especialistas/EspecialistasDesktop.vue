@@ -625,7 +625,6 @@ export default {
 				this.dispoBoxes = newVal.schedule;
 			}
 			if (this.initialCharge === false) {
-				console.log('test');
 				this.applyFilters();
 				this.initialCharge = true;
 			}
@@ -746,7 +745,6 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			console.log('value', value);
 			const filters = {
 				themes: this.specialties,
 				gender: this.genderBoxes,
@@ -765,7 +763,6 @@ export default {
 					// console.log('filters', filters);
 					// await this.getSpecialistsBestMatch(filters);
 					await this.getSpecialistsBestMatchId(filters);
-					console.log('specialists ids', this.specialistsIds);
 				}
 				if (this.toggle === 1) {
 					// await this.getSpecialistsEconomicMatch(filters);
@@ -776,7 +773,6 @@ export default {
 					await this.getSpecialistsAvailityMatchId(filters);
 				}
 				await this.getSpecialistsArrayMatch(this.specialistsIds.slice(0, 5));
-				console.log('newspecialists', this.newSpecialists);
 				this.specialistCounter = 5;
 				this.loadingMatchMaking = false;
 			}
@@ -789,7 +785,6 @@ export default {
 			);
 			this.specialistCounter += number;
 			await this.getSpecialistsArrayMatch(arrayIds);
-			console.log(this.newSpecialists);
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
