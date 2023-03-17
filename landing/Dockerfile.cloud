@@ -33,8 +33,9 @@ ENV NODE_ENV=production
 RUN npm run generate
 
 # Reemplaza las variables de entorno en el archivo .env API_ABSOLUTE y VUE_APP_URL por las variables originales
-RUN sed -i "s|${API_ABSOLUTE}|${ORIGINAL_API_ABSOLUTE}|g" .env
-RUN sed -i "s|${VUE_APP_URL}|${ORIGINAL_VUE_APP_URL}|g" .env
+ENV API_ABSOLUTE=${ORIGINAL_API_ABSOLUTE}
+ENV VUE_APP_URL=${ORIGINAL_VUE_APP_URL}
+RUN npm run create-env
 
 # Cambia el usuario actual a node
 USER node
