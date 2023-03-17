@@ -11,8 +11,6 @@ ARG API_ABSOLUTE
 ARG VUE_APP_URL
 ENV ORIGINAL_API_ABSOLUTE=${API_ABSOLUTE}
 ENV ORIGINAL_VUE_APP_URL=${VUE_APP_URL}
-RUN unset API_ABSOLUTE
-RUN unset VUE_APP_URL
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -25,6 +23,8 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
+RUN export API_ABSOLUTE=
+RUN export VUE_APP_URL=
 RUN npm run create-env
 RUN npm install
 
