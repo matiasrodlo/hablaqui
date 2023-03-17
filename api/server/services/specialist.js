@@ -1245,6 +1245,9 @@ const getSpecialistArray = async (specs) => {
       let specialist = await Specialist.find({ _id: spec  }).select(
         '_id username name lastName code sessionPrices specialties professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
       );
+      // Si no encuentra el especialista con el ID se lo salta
+      if (!specialist) return;
+      // Para que nos de deje modificar el array de mongo
       specialist = JSON.stringify(specialist);
       specialist = JSON.parse(specialist);
       return specialist;
