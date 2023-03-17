@@ -22,7 +22,6 @@ ENV ORIGINAL_VUE_APP_URL=${VUE_APP_URL}
 # Instala las dependencias del proyecto
 ENV API_ABSOLUTE=http://192.168.81.20:3000
 ENV VUE_APP_URL=http://192.168.81.20:3000/api/v1
-RUN npm run create-env
 RUN npm install
 
 # Variables de entorno para que funcione Nuxt
@@ -33,9 +32,9 @@ ENV NODE_ENV=production
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run generate
 
-# Reemplaza las variables de entorno en el archivo .env
-RUN sed -i "s|${ORIGINAL_API_ABSOLUTE}|${API_ABSOLUTE}|g" .env
-RUN sed -i "s|${ORIGINAL_VUE_APP_URL}|${VUE_APP_URL}|g" .env
+# Reemplaza las variables de entorno en el archivo .env API_ABSOLUTE y VUE_APP_URL por las variables originales
+RUN sed -i "s|${API_ABSOLUTE}|${ORIGINAL_API_ABSOLUTE}|g" .env
+RUN sed -i "s|${VUE_APP_URL}|${ORIGINAL_VUE_APP_URL}|g" .env
 
 # Cambia el usuario actual a node
 USER node
