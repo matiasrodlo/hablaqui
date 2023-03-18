@@ -280,7 +280,7 @@ export default {
 
   sitemap: {
     hostname: process.env.VUE_APP_LANDING
-      ? process.env.VUE_APP_LANDING
+      ? process.env.VUE_APP_LANDING_BUILD
       : 'http://localhost:9000/',
     gzip: true,
     exclude: ['/dashboard/**', '/nuevo-especialista'],
