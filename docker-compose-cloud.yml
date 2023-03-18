@@ -26,16 +26,16 @@ services:
       dockerfile: Dockerfile.cloud
       network: "host"
       args:
-        - VUE_APP_URL
+        - VUE_APP_URL_ORIGINAL
         - VUE_APP_LANDING
-        - API_ABSOLUTE
+        - API_ABSOLUTE_ORIGINAL
     ports:
       - "9000:9000"
     container_name: vue-ui
     environment:
-      - VUE_APP_LANDING=$VUE_APP_LANDING
+      - VUE_APP_LANDING=$VUE_APP_URL_ORIGINAL
       - VUE_APP_URL=$VUE_APP_URL
-      - API_ABSOLUTE=$API_ABSOLUTE
+      - API_ABSOLUTE=$API_ABSOLUTE_ORIGINAL
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.10
