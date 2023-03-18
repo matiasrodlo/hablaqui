@@ -2,8 +2,6 @@ version: "3.8"
 # Se especifican los servicios que se van a ejecutar        
 services:
   landing-ui:
-    depends_on:
-      - api-restful
     build:
       context: ./landing
       dockerfile: Dockerfile.cloud

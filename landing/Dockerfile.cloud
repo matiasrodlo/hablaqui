@@ -22,6 +22,8 @@ RUN npm install
 # Variables de entorno para que funcione Nuxt
 ARG API_ABSOLUTE
 ARG VUE_APP_URL
+ARG VUE_APP_LANDING
+ENV VUE_APP_LANDING=${VUE_APP_LANDING}
 ENV API_ABSOLUTE=${API_ABSOLUTE}
 ENV VUE_APP_URL=${VUE_APP_URL}
 ARG VUE_APP_URL_BUILD=http://192.168.81.20:3000/api/v1
@@ -29,11 +31,8 @@ ENV HOST=0.0.0.0
 ENV PORT=9000
 ENV NODE_ENV=production
 
-# Crea el archivo .env con las variables de entorno y genera el proyecto
+# Genera el proyecto
 RUN npm run generate
-
-# Variables de entorno para reemplazar lo que se hizo en el paso anterior
-
 
 # Se expone el puerto 9000
 EXPOSE 9000
