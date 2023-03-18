@@ -9,9 +9,6 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
 ARG API_ABSOLUTE_ORIGINAL
 ARG VUE_APP_URL_ORIGINAL
-ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-RUN printenv
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
@@ -31,11 +28,13 @@ RUN export API_ABSOLUTE=http://192.168.81.20:3000 VUE_APP_URL=http://192.168.81.
     echo ${API_ABSOLUTE} && echo ${VUE_APP_URL} && \
     npm run generate && \
     export API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL} VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-RUN printenv
+
+ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
+ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
 
 # Cambia el usuario actual a node
 USER node
-# Se expone el puerto 9000 y 8080
+# Se expone el puerto 9000
 EXPOSE 9000
 
 # Ejecuta el comando npm run start
