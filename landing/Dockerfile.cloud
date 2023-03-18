@@ -6,6 +6,13 @@ FROM node:14-alpine
 # archivos de la carpeta /app asignandosela a node.
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
+# Variables de entorno para reemplazar lo que se hizo en el paso anterior
+ARG API_ABSOLUTE_ORIGINAL
+ARG VUE_APP_URL_ORIGINAL
+ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
+ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
+RUN printenv
+
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
 
@@ -26,13 +33,6 @@ RUN printenv
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run generate
-
-# Variables de entorno para reemplazar lo que se hizo en el paso anterior
-ARG API_ABSOLUTE_ORIGINAL
-ARG VUE_APP_URL_ORIGINAL
-ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-RUN printenv
 
 # Cambia el usuario actual a node
 USER node
