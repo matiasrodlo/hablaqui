@@ -13,12 +13,6 @@ WORKDIR /home/node/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
 
-# Variables de entorno para reemplazar lo que se hizo en el paso anterior
-ARG API_ABSOLUTE_ORIGINAL
-ARG VUE_APP_URL_ORIGINAL
-ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
-ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
-
 # Instala las dependencias del proyecto
 RUN npm install
 
@@ -29,10 +23,16 @@ ENV NODE_ENV=production
 ARG API_ABSOLUTE=http://192.168.81.20:3000
 ARG VUE_APP_URL=http://192.168.81.20:3000/api/v1
 RUN printenv
-RUN npm run create-env
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
 RUN npm run generate
+
+# Variables de entorno para reemplazar lo que se hizo en el paso anterior
+ARG API_ABSOLUTE_ORIGINAL
+ARG VUE_APP_URL_ORIGINAL
+ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL}
+ENV VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
+RUN printenv
 
 # Cambia el usuario actual a node
 USER node
