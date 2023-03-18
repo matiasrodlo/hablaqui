@@ -26,7 +26,7 @@ ENV PORT=9000
 ENV NODE_ENV=production
 ENV API_ABSOLUTE=http://192.168.81.20:3000
 ENV VUE_APP_URL=http://192.168.81.20:3000/api/v1
-CMD npm run generate && \
+RUN npm run generate && \
     ENV API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL} VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
 
 # Cambia el usuario actual a node
