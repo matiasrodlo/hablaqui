@@ -33,9 +33,6 @@ RUN export API_ABSOLUTE=http://192.168.81.20:3000 VUE_APP_URL=http://192.168.81.
     export API_ABSOLUTE=${API_ABSOLUTE_ORIGINAL} VUE_APP_URL=${VUE_APP_URL_ORIGINAL}
 RUN printenv
 
-# Crea el archivo .env con las variables de entorno y genera el proyecto
-RUN npm run generate
-
 # Cambia el usuario actual a node
 USER node
 # Se expone el puerto 9000 y 8080
