@@ -24,8 +24,8 @@ RUN npm install
 ENV HOST=0.0.0.0
 ENV PORT=9000
 ENV NODE_ENV=production
-RUN export API_ABSOLUTE=http://192.168.81.20:3000
-RUN export VUE_APP_URL=http://192.168.81.20:3000/api/v1
+ENV API_ABSOLUTE=http://192.168.81.20:3000
+ENV VUE_APP_URL=http://192.168.81.20:3000/api/v1
 RUN printenv
 
 # Crea el archivo .env con las variables de entorno y genera el proyecto
