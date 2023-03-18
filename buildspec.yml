@@ -13,18 +13,15 @@ phases:
       - export SENDGRID_API_KEY=SG.
       - export URLDB=$URLDB
       - export VUE_APP_LANDING=$VUE_APP_LANDING
-      - export API_ABSOLUTE_ORIGINAL=$API_ABSOLUTE
-      - export VUE_APP_URL_ORIGINAL=$VUE_APP_URL
+      - export API_ABSOLUTE=$API_ABSOLUTE
+      - export VUE_APP_URL=$VUE_APP_URL
       - echo Variables de entorno extraidas
   build:
     commands:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - docker-compose --file=docker-compose-cloud.yml up --build -d api-restful
-      - echo Api was successfully built!
-      - docker-compose --file=docker-compose-cloud.yml up --build -d landing-ui
-      - echo Api was successfully built!
+      - docker-compose --file=docker-compose-cloud.yml up --build -d
       - echo Build completed on `date`
   post_build:
     commands:
