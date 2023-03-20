@@ -10,7 +10,7 @@
 			:class="scrollHeight > 300 ? 'shadowAppBar' : 'elevation-0'"
 		>
 			<v-container fluid style="max-width: 1080px">
-				<v-row v-if="!loadingMatchMaking">
+				<v-row v-if="!loadingMatchMaking && !loadingSpecialist">
 					<v-col id="menuSpecialties" cols="3">
 						<v-menu
 							ref="menuSpecialties"
@@ -52,7 +52,7 @@
 										:label="element"
 										class="py-2"
 										hide-details
-										@change="changeInput"
+										@change="applyFiltersBtn"
 									>
 										<template #label="{ item }">
 											<span class="caption">{{ item }}</span>
@@ -107,7 +107,7 @@
 										:label="element.text"
 										class="py-2"
 										hide-details
-										@change="changeInput"
+										@change="applyFiltersBtn"
 									>
 										<template #label="{ item }">
 											<span class="caption">{{ item }}</span>
@@ -135,6 +135,7 @@
 								:items="priceList"
 								label="Precios"
 								hide-details
+								@change="applyFiltersBtn"
 							></v-autocomplete>
 						</div>
 					</v-col>
@@ -183,7 +184,7 @@
 										:label="element.text"
 										class="py-2"
 										hide-details
-										@change="changeInput"
+										@change="applyFiltersBtn"
 									>
 										<template #label="{ item }">
 											<span class="caption">{{ item }}</span>
@@ -194,7 +195,8 @@
 						</v-menu>
 					</v-col>
 				</v-row>
-				<v-row no-gutters>
+				<!-- Botón de aplicar filtros -->
+				<!--v-row no-gutters>
 					<v-col class="text-right">
 						<v-btn
 							:disabled="loadingMatchMaking"
@@ -205,8 +207,8 @@
 							>Aplicar filtros</v-btn
 						>
 					</v-col>
-				</v-row>
-				<v-row class="pt-0 mt-0">
+				</v-row-->
+				<v-row v-if="!loadingMatchMaking && !loadingSpecialist">
 					<v-col cols="12" md="4">
 						<div style="border: 1px solid #e0e0e0; cursor: pointer" class="rounded-lg">
 							<div
@@ -511,7 +513,6 @@ import isBetween from 'dayjs/plugin/isBetween';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
-
 /**
  * Componente: Listado de especialistas en vista de escritorio
  */
@@ -635,6 +636,28 @@ export default {
 				this.loadingMatchMaking = false;
 			}
 		},
+		/*
+		genderBoxes(newVal) {
+			if (!this.loagingMatchMaking) {
+				this.applyFilters();
+			}
+		},
+		priceBoxes(newVal) {
+			if (!this.loagingMatchMaking) {
+				this.applyFilters();
+			}
+		},
+		dispoBoxes(newVal) {
+			if (!this.loagingMatchMaking) {
+				this.applyFilters();
+			}
+		},
+		specialties(newVal) {
+			if (!this.loagingMatchMaking) {
+				this.applyFilters();
+			}
+			
+		}, */
 	},
 	created() {
 		this.loadingMatchMaking = true;
@@ -662,12 +685,13 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
-		applyFiltersBtn() {
+		async applyFiltersBtn() {
 			this.page = 1;
-			this.applyFilters();
+			await this.applyFilters();
 		},
-		applyFilters() {
-			this.actualizarMatch({
+		async applyFilters() {
+			this.loadingMatchMaking = true;
+			await this.actualizarMatch({
 				themes: this.specialties,
 				gender: this.genderBoxes,
 				price: this.priceBoxes,
@@ -756,14 +780,11 @@ export default {
 				schedule: this.dispoBoxes,
 				model: this.models,
 			};
-
 			if (this.matchMaking !== null) {
 				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-
 				await this.resetNewSpecialists();
 				this.specialistCounter = 0;
-
 				if (this.toggle === 0) {
 					// console.log('filters', filters);
 					// await this.getSpecialistsBestMatch(filters);
@@ -818,12 +839,10 @@ export default {
 .shadowAppBar {
 	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
 }
-
 .item {
 	box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
 	transition: transform 0.6s !important;
 }
-
 .item:hover {
 	box-shadow: 0 8px 16px 0 rgba(26, 165, 216, 0.16) !important;
 }

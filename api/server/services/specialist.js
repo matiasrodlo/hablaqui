@@ -1240,16 +1240,10 @@ const changeToInmediateAttention = async (spec) => {
 
 const getSpecialistArray = async (specs) => {
 	// Se busca los especialistas que estan en el array de especialistas y se retorna el id, nombre y apellido
-	specs.map(async (spec) => {
-		let specialist = await Specialist.find({ _id: spec  }).select(
-			'_id username name lastName code sessionPrices specialties professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
-		);
-		specialist = JSON.stringify(specialist);
-		specialist = JSON.parse(specialist);
-		return specialist;
-	});
-			
-	return okResponse('Especialistas', { specs });
+	let specialist = await Specialist.find({ _id: { $in: specs } }).select(
+		'_id username name lastName code sessionPrices specialities professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
+	);
+	return okResponse('Especialistas', { specialist });
 };
 
 /*
