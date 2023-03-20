@@ -19,7 +19,7 @@ export default {
 	},
 	async getSpecialistsBestMatch({ commit, state }, payload) {
 		try {
-			// console.log('payload', payload);
+			console.log('payload', payload);
 			commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/best-match', {
 				method: 'POST',
@@ -30,7 +30,7 @@ export default {
 			}
 			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
-			// console.log('data', data);
+			console.log('data', data);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -47,6 +47,7 @@ export default {
 				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
 			commit('setLoadingSpecialist', false);
+			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
@@ -77,6 +78,7 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
+			snackBarSuccess('Especialistas obtenidos')(commit);
 			commit('setLoadingSpecialist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -89,7 +91,7 @@ export default {
 				method: 'POST',
 				data: state.matchMaking,
 			});
-			// console.log('availity-match', data);
+			console.log('availity-match', data);
 
 			if (data.perfectMatch) {
 				commit('setSpecialistsIds', data.matchedSpecialists);
@@ -107,19 +109,20 @@ export default {
 				method: 'POST',
 				data: state.matchMaking,
 			});
-			// console.log('availity-match', data);
+			console.log('availity-match', data);
 
 			if (data.perfectMatch) {
 				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
 			commit('setLoadingSpecialist', false);
+			snackBarSuccess('Psicologos obtenidos')(commit);
 		} catch (e) {
 			snackBarError(e)(commit);
 		}
 	},
 	async getSpecialistsArrayMatch({ commit, state }, payload) {
 		try {
-			// console.log('payload arraymatch', payload);
+			console.log('payload arraymatch', payload);
 			// commit('setLoadingSpecialist', true);
 			const { data } = await this.$axios('/specialists/get-specialists-array-match', {
 				method: 'PUT',
@@ -127,7 +130,7 @@ export default {
 			});
 			commit('setNewSpecialists', state.newSpecialists.concat(data.specialist));
 			// commit('setLoadingSpecialist', false);
-			// console.log('data arraymatch', data);
+			console.log('data arraymatch', data);
 			return data;
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -439,7 +442,7 @@ export default {
 	},
 	async createMatchMakig({ commit }, payload) {
 		try {
-			// console.log('payload', payload);
+			console.log('payload', payload);
 			await this.$axios(`/match/create-answers/${payload.userId}`, {
 				method: 'POST',
 				data: payload,
@@ -474,7 +477,7 @@ export default {
 			const { data } = await this.$axios(`/match/get-answers/${userId}`, {
 				method: 'GET',
 			});
-			// console.log('data', data);
+			console.log('data', data);
 			commit('setMatchMaking', data.answers);
 		} catch (e) {
 			console.error(e);
@@ -486,7 +489,7 @@ export default {
 				method: 'PATCH',
 				data: { payload },
 			});
-			// console.log(data);
+			console.log(data);
 			return data.specialist;
 		} catch (e) {
 			snackBarError(e)(commit);

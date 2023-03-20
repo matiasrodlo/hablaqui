@@ -80,7 +80,6 @@
 						:append-icon="mdiChevronDown"
 						dense
 						:outlined="scrollHeight < 300"
-						:disabled="loadingSpecialist"
 						@click:append="() => (showFilters = !showFilters)"
 						@click="showFilters = true"
 					></v-text-field>
@@ -115,7 +114,7 @@
 											<v-text-field
 												:value="
 													specialties.length > 1
-														? `${specialties.length} Especialidades seleccionadas`
+														? `Especialidades ${specialties.length}`
 														: specialties
 												"
 												readonly
@@ -141,7 +140,7 @@
 													:label="element"
 													class="py-2"
 													hide-details
-													@change="applyFiltersBtn"
+													@change="changeInput"
 												>
 													<template #label="{ item }">
 														<span class="caption">{{ item }}</span>
@@ -187,125 +186,77 @@
 								</v-card-text> -->
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">Género</h4>
-									<v-menu
-										v-model="menuGender"
-										:close-on-content-click="false"
-										transition="scale-transition"
-										offset-y
-										rounded
-									>
-										<template #activator="{ on, attrs }">
-											<v-text-field
-												:value="
-													genderBoxes.length == 0
-														? genderBoxes
-														: genderBoxes.length == 1
-														? genderList.find(
-																element =>
-																	element.value == genderBoxes[0]
-														  ).text
-														: `${genderBoxes.length} Géneros seleccionados`
-												"
-												readonly
-												outlined
-												dense
-												class="white"
-												hide-details
-												:append-icon="mdiChevronDown"
-												v-bind="attrs"
-												@click:append="() => (menuGender = !menuGender)"
-												v-on="on"
-											></v-text-field>
-										</template>
-										<v-card rounded height="150">
-											<v-card-text style="height: 150; overflow-y: scroll">
-												<v-checkbox
-													v-for="(element, j) in genderList"
-													:key="j"
-													v-model="genderBoxes"
-													:value="element.value"
-													:label="element.text"
-													class="py-2"
-													hide-details
-													@change="applyFiltersBtn"
-												>
-													<template #label="{ item }">
-														<span class="caption">{{ item }}</span>
-													</template>
-												</v-checkbox>
-											</v-card-text>
-										</v-card>
-									</v-menu>
-								</v-card-text>
-								<v-card-text class="pa-1">
-									<h4 class="titleColor font-weight-bold body-1 ml-1">Precios</h4>
 									<v-autocomplete
-										v-model="priceBoxes"
+										ref="genders"
+										v-model="gender"
 										outlined
 										dense
 										class="white"
 										:append-icon="mdiChevronDown"
-										:items="priceList"
+										:items="[
+											{ value: 'female', text: 'Mujer' },
+											{ value: 'male', text: 'Hombre' },
+											{ value: 'transgender', text: 'Transgénero' },
+										]"
+										hide-details
+										@change="e => actualizarMatch({ gender: e })"
+									></v-autocomplete>
+								</v-card-text>
+								<v-card-text class="pa-1">
+									<h4 class="titleColor font-weight-bold body-1 ml-1">Precios</h4>
+									<v-autocomplete
+										v-model="prices"
+										outlined
+										dense
+										class="white"
+										:append-icon="mdiChevronDown"
+										:items="[
+											{ value: 15000, text: 'Hasta $15.000' },
+											{ value: 20000, text: 'Hasta $20.000' },
+											{ value: 30000, text: 'Hasta $30.000' },
+											{ value: 40000, text: 'Hasta $40.000' },
+										]"
 										:menu-props="{
 											closeOnClick: true,
 										}"
 										hide-details
-										@change="applyFiltersBtn"
+										@change="e => actualizarMatch({ price: e })"
 									></v-autocomplete>
 								</v-card-text>
 								<v-card-text class="pa-1">
 									<h4 class="titleColor font-weight-bold body-1 ml-1">
 										Disponibilidad
 									</h4>
-									<v-menu
-										v-model="menuOthers"
-										:close-on-content-click="false"
-										transition="scale-transition"
-										offset-y
-										rounded
-									>
-										<template #activator="{ on, attrs }">
-											<v-text-field
-												:value="
-													dispoBoxes.length == 0
-														? dispoBoxes
-														: dispoBoxes.length == 1
-														? dispoList.find(
-																element =>
-																	element.value == dispoBoxes[0]
-														  ).text
-														: `${dispoBoxes.length} Disponibilidades seleccionadas`
-												"
-												readonly
-												outlined
-												dense
-												class="white"
-												hide-details
-												:append-icon="mdiChevronDown"
-												v-bind="attrs"
-												@click:append="() => (menuOthers = !menuOthers)"
-												v-on="on"
-											></v-text-field>
-										</template>
-										<v-card rounded height="150">
-											<v-card-text style="height: 150px; overflow-y: scroll">
-												<v-checkbox
-													v-for="(element, j) in dispoList"
-													:key="j"
-													v-model="dispoBoxes"
-													:value="element.value"
-													:label="element.text"
-													class="py-2"
-													hide-details
-													@change="applyFiltersBtn"
-												>
-													<template #label="{ item }">
-														<span class="caption">{{ item }}</span>
-													</template>
-												</v-checkbox>
-											</v-card-text>
-										</v-card>
-									</v-menu>
+									<v-autocomplete
+										ref="menuOthers"
+										v-model="otros"
+										outlined
+										dense
+										class="white"
+										:append-icon="mdiChevronDown"
+										:items="[
+											{ value: 'early', text: 'Temprano: Antes de las 9 am' },
+											{
+												value: 'morning',
+												text: 'En la mañana: Entre 9 am y 12 pm',
+											},
+											{
+												value: 'midday',
+												text: 'A Medio día: Entre 12 y 2 pm',
+											},
+											{
+												value: 'afternoon',
+												text: 'En la tarde: Entre 2 y 6 pm',
+											},
+											{
+												value: 'night',
+												text: 'En la noche: Después de las 6 pm',
+											},
+										]"
+										label="Disponibilidad"
+										hide-details
+										@change="e => actualizarMatch({ schedule: e })"
+									></v-autocomplete>
 								</v-card-text>
 							</div>
 							<v-card-actions style="flex: 0">
@@ -315,10 +266,13 @@
 									color="#E1E1E1"
 									@click="
 										() => {
+											others = [];
 											specialties = [];
-											genderBoxes = [];
-											priceBoxes = 0;
-											dispoBoxes = [];
+											gender = [];
+											languages = [];
+											models = [];
+											prices = '';
+											changeInput();
 										}
 									"
 								>
@@ -340,7 +294,7 @@
 			</v-row>
 		</v-container>
 		<!-- pychologist -->
-		<v-container v-if="!loadingMatchMaking" fluid style="max-width: 600px" class="my-4">
+		<v-container v-if="specialists.length" fluid style="max-width: 600px" class="my-4">
 			<v-row>
 				<v-col cols="12">
 					<v-sheet class="item" style="border-radius: 15px">
@@ -386,7 +340,7 @@
 										@click="
 											() => {
 												toggle = 0;
-												applyFiltersBtn();
+												getSpecialistsBestMatch();
 											}
 										"
 									>
@@ -405,7 +359,7 @@
 										@click="
 											() => {
 												toggle = 1;
-												applyFiltersBtn();
+												getSpecialistsEconomicMatch();
 											}
 										"
 									>
@@ -424,7 +378,7 @@
 										@click="
 											() => {
 												toggle = 2;
-												applyFiltersBtn();
+												getSpecialistsAvailityMatch();
 											}
 										"
 									>
@@ -448,8 +402,8 @@
 					></v-progress-circular>
 				</v-col>
 				<template v-else>
-					<template v-for="(item, index) in newSpecialists">
-						<v-col v-if="5 * page > index" :key="item._id" cols="12">
+					<template v-for="(item, index) in filterLevelThree">
+						<v-col v-if="10 * page > index" :key="item._id" cols="12">
 							<v-card
 								v-observe-visibility="{
 									callback: (isVisible, entry) =>
@@ -630,9 +584,9 @@
 					</template>
 				</template>
 				<v-col
-					v-if="!newSpecialists.length && !initialCharge"
+					v-if="specialists.length && !filterLevelThree.length"
 					cols="12"
-					class="pt-7 title primary--text text-center"
+					class="title primary--text"
 				>
 					No se encontraron coincidencias
 				</v-col>
@@ -670,8 +624,6 @@ export default {
 	},
 	data() {
 		return {
-			initialCharge: false,
-			loadingMatchMaking: false,
 			toggle: 0,
 			mdiChat,
 			showFilters: false,
@@ -680,14 +632,11 @@ export default {
 			mdiAccount,
 			status: false,
 			menuGender: false,
-			genderBoxes: [],
 			menuSpecialties: false,
 			menuOthers: false,
-			dispoBoxes: [],
-			priceBoxes: [],
 			specialties: [],
 			searchInput: '',
-			prices: 0,
+			prices: '',
 			otros: '',
 			gender: [],
 			others: [],
@@ -695,50 +644,87 @@ export default {
 			languages: [],
 			scrollHeight: 0,
 			visibles: [],
-			specialistCounter: 5,
 			fullcard: [],
 			page: null,
-			genderList: [
-				{ value: 'female', text: 'Mujer' },
-				{ value: 'male', text: 'Hombre' },
-				{ value: 'transgender', text: 'Transgénero' },
-			],
-			priceList: [
-				{ value: 15000, text: 'Hasta $15.000' },
-				{ value: 20000, text: 'Hasta $20.000' },
-				{ value: 30000, text: 'Hasta $30.000' },
-				{ value: 40000, text: 'Hasta $40.000' },
-			],
-			dispoList: [
-				{
-					value: 'early',
-					text: 'Temprano: Antes de las 9 am',
-				},
-				{
-					value: 'morning',
-					text: 'En la mañana: Entre 9 am y 12 pm',
-				},
-				{
-					value: 'midday',
-					text: 'A Medio día: Entre 12 y 2 pm',
-				},
-				{
-					value: 'afternoon',
-					text: 'En la tarde: Entre 2 y 6 pm',
-				},
-				{
-					value: 'night',
-					text: 'En la noche: Después de las 6 pm',
-				},
-			],
 		};
 	},
 	computed: {
+		/**
+		 * Filter search box
+		 * Filtra en base a los resultados del panel
+		 * Este es el filtro final que se utiliza para iterar en el template
+		 */
+		filterLevelThree() {
+			return this.filterLevelTwo.filter(item => {
+				let result = item;
+				if (this.searchInput !== null)
+					result = result._id.includes(this.searchInput) && result;
+				return result;
+			});
+		},
+		/**
+		 * Filter prices
+		 * Filtro en base a los precios de los especialistas
+		 */
+		filterLevelTwo(item) {
+			if (this.toggle == null || this.matchMaking == null) {
+				if (!this.prices) return this.filterLevelOne;
+				return this.filterLevelOne.filter(item => {
+					const prices = JSON.parse(this.prices);
+					if (prices.length > 1)
+						return (
+							prices[0] < item.sessionPrices.video &&
+							prices[1] > item.sessionPrices.video
+						);
+					else return prices[0] < item.sessionPrices.video;
+				});
+			} else return this.filterLevelOne;
+		},
+		/**
+		 * items for search box
+		 * Primer filtro de especialistas en base a:
+		 * marketplaceVisibility, inmediateAttention, gender, models, status, languages, pecialties
+		 */
+		filterLevelOne() {
+			// fitro de marketplaceVisibility
+			let result = this.specialists.filter(item => item.preferences.marketplaceVisibility);
+			// si no hay genero , models, laguajes o status marcado entonces restorna el resultado
+			if (
+				!this.gender.length &&
+				!this.models.length &&
+				!this.languages.length &&
+				!this.specialties.length &&
+				!this.status
+			)
+				return result;
+			// si quiere ver por especialista online, filtramos estos
+			if (this.status) result = result.filter(item => item.inmediateAttention.activated);
+			// if (this.gender.length)
+			// 	result = result.filter(item => {
+			// 		const trans = item.isTrans && 'transgender';
+			// 		const gender = [item.gender];
+			// 		trans && gender.push(trans);
+			// 		return gender.some(el => this.gender.some(g => g === el));
+			// 	});
+			if (this.models.length)
+				result = result.filter(item => item.models.some(el => this.models.includes(el)));
+			// filtramos segun los leguajes que habla el especialista
+			if (this.languages.length)
+				result = result.filter(item =>
+					item.languages.some(el => this.languages.some(languages => languages === el))
+				);
+			// filtramos segun las specialties
+			if (this.specialties.length) {
+				result = result.filter(item =>
+					item.specialties.some(el => this.specialties.includes(el))
+				);
+			}
+
+			return result;
+		},
 		...mapGetters({
 			appointments: 'Appointments/appointments',
 			specialists: 'Specialist/specialistsMarketPlace',
-			newSpecialists: 'Specialist/newSpecialists',
-			specialistsIds: 'Specialist/specialistsIds',
 			sessions: 'Specialist/sessionsLimit',
 			matchMaking: 'Specialist/matchMaking',
 		}),
@@ -749,35 +735,25 @@ export default {
 		 */
 		page(value, oldValue) {
 			let prev = 0;
-			if (oldValue) {
-				prev = oldValue;
-			}
-			this.getSpecialistArray(5);
-			// const ids = this.specialists.map(item => item._id).slice(prev * 5, value * 5);
-			const ids = this.specialistsIds.slice(prev * 5, value * 5);
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 10, value * 10);
 			this.getSessionsLimit(ids);
 		},
 		matchMaking(newVal) {
 			if (newVal) {
 				this.specialties = newVal.themes;
-				this.genderBoxes = newVal.gender;
-				this.priceBoxes = newVal.price;
-				this.dispoBoxes = newVal.schedule;
+				this.gender = newVal.gender;
+				this.prices = newVal.price;
+				this.otros = newVal.schedule;
 			}
-			if (this.initialCharge === false) {
-				this.applyFilters();
-				this.initialCharge = true;
-			}
-			this.loadingMatchMaking = false;
 		},
-		newSpecialists(newVal) {
-			if (newVal.length > 0) {
-				this.loadingMatchMaking = false;
+		menuSpecialties(newVal) {
+			if (!newVal) {
+				this.actualizarMatch({ themes: this.specialties });
 			}
 		},
 	},
 	created() {
-		this.loadingMatchMaking = true;
 		// Cuando venimos de otra ruta con el chat abierto lo cerramos
 		this.setFloatingChat(false);
 		//  Limpia la query url cuando viene desde mercadopago
@@ -788,11 +764,6 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
-		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
-			// console.log('no');
-			this.goEvaluation();
-		}
-		this.toggle = 0;
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
@@ -801,27 +772,11 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
-		async applyFiltersBtn() {
-			this.page = 1;
-			await this.applyFilters();
-		},
-		async applyFilters() {
-			this.loadingMatchMaking = true;
-			await this.actualizarMatch({
-				themes: this.specialties,
-				gender: this.genderBoxes,
-				price: this.priceBoxes,
-				schedule: this.dispoBoxes,
-				model: this.models,
-			});
-			this.loadingMatchMaking = false;
-			console.log('test', this.loadingMatchMaking, this.initialCharge, this.newSpecialists);
-		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
 		scrollInfinity(isVisible) {
-			if (isVisible && this.page <= this.newSpecialists.length / 5) this.page += 1;
+			if (isVisible && this.page < this.filterLevelThree.length / 10) this.page += 1;
 		},
 		/**
 		 * Esto son los especialistas que se iran viendo segun el scroll
@@ -835,9 +790,6 @@ export default {
 		 */
 		onScroll(e) {
 			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
-		},
-		goEvaluation() {
-			this.$router.push({ name: 'evaluacion' });
 		},
 		/**
 		 * Ir a la ruta de evaluacion
@@ -892,58 +844,22 @@ export default {
 			}
 		},
 		async actualizarMatch(value) {
-			const filters = {
-				themes: this.specialties,
-				gender: this.genderBoxes,
-				price: this.priceBoxes,
-				schedule: this.dispoBoxes,
-				model: this.models,
-			};
 			if (this.matchMaking !== null) {
-				this.loadingMatchMaking = true;
 				await this.updateMatchMakig({ ...value, userId: this.$auth.user._id });
-				await this.resetNewSpecialists();
-				this.specialistCounter = 0;
-				if (this.toggle === 0) {
-					// console.log('filters', filters);
-					// await this.getSpecialistsBestMatch(filters);
-					await this.getSpecialistsBestMatchId(filters);
-				}
-				if (this.toggle === 1) {
-					// await this.getSpecialistsEconomicMatch(filters);
-					await this.getSpecialistsEconomicMatchId(filters);
-				}
-				if (this.toggle === 2) {
-					// await this.getSpecialistsAvailityMatch(filters);
-					await this.getSpecialistsAvailityMatchId(filters);
-				}
-				await this.getSpecialistsArrayMatch(this.specialistsIds.slice(0, 5));
-				this.specialistCounter = 5;
-				this.loadingMatchMaking = false;
+				if (this.toggle === 0) await this.getSpecialistsBestMatch();
+				if (this.toggle === 1) await this.getSpecialistsEconomicMatch();
+				if (this.toggle === 2) await this.getSpecialistsAvailityMatch();
+				this.showFilters = false;
 			}
-		},
-		async getSpecialistArray(number) {
-			// Método que solicita los especialistas a medida que lo requiere la página
-			const arrayIds = this.specialistsIds.slice(
-				this.specialistCounter,
-				this.specialistCounter + number
-			);
-			this.specialistCounter += number;
-			await this.getSpecialistsArrayMatch(arrayIds);
 		},
 		...mapMutations({
 			setFloatingChat: 'Chat/setFloatingChat',
-			resetNewSpecialists: 'Specialist/resetNewSpecialists',
 		}),
 		...mapActions({
 			updateMatchMakig: 'Specialist/updateMatchMakig',
 			getSpecialistsBestMatch: 'Specialist/getSpecialistsBestMatch',
 			getSpecialistsAvailityMatch: 'Specialist/getSpecialistsAvailityMatch',
 			getSpecialistsEconomicMatch: 'Specialist/getSpecialistsEconomicMatch',
-			getSpecialistsBestMatchId: 'Specialist/getSpecialistsBestMatchId',
-			getSpecialistsAvailityMatchId: 'Specialist/getSpecialistsAvailityMatchId',
-			getSpecialistsEconomicMatchId: 'Specialist/getSpecialistsEconomicMatchId',
-			getSpecialistsArrayMatch: 'Specialist/getSpecialistsArrayMatch',
 		}),
 	},
 };
