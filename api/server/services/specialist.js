@@ -1240,10 +1240,21 @@ const changeToInmediateAttention = async (spec) => {
 
 const getSpecialistArray = async (specs) => {
 	// Se busca los especialistas que estan en el array de especialistas y se retorna el id, nombre y apellido
-	let specialist = await Specialist.find({ _id: { $in: specs } }).select(
-		'_id username name lastName code sessionPrices specialities professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
+	specs = await Promise.all(
+		specs.map(async (spec) => {
+			let specialist = await Specialist.find({ _id: spec }).select(
+				'_id username name lastName code sessionPrices specialties professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
+			);
+			// Si no encuentra el especialista con el ID se lo salta
+			if (!specialist) return;
+			// Para que nos de deje modificar el array de mongo
+			specialist = JSON.stringify(specialist);
+			specialist = JSON.parse(specialist);
+			return specialist;
+		})
 	);
-	return okResponse('Especialistas', { specialist });
+
+	return okResponse('Especialistas', { specs });
 };
 
 /*
