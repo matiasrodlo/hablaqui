@@ -28,6 +28,7 @@ export default {
 			if (data.perfectMatch) {
 				commit('setSpecialists', data.matchedSpecialists);
 			}
+			console.log('principio', data);
 			commit('setLoadingSpecialist', false);
 			snackBarSuccess('Especialistas recomendados obtenidos')(commit);
 			// console.log('data', data);
@@ -46,6 +47,7 @@ export default {
 				// console.log('data', data);
 				commit('setSpecialistsIds', data.matchedSpecialists);
 			}
+			console.log('principio', data);
 			commit('setLoadingSpecialist', false);
 		} catch (e) {
 			snackBarError(e)(commit);
@@ -125,6 +127,7 @@ export default {
 				method: 'PUT',
 				data: { specs: payload },
 			});
+			console.log('final', data);
 			commit('setNewSpecialists', state.newSpecialists.concat(data.specialist));
 			// commit('setLoadingSpecialist', false);
 			// console.log('data arraymatch', data);

@@ -1240,7 +1240,8 @@ const changeToInmediateAttention = async (spec) => {
 
 const getSpecialistArray = async (specs) => {
 	// Se busca los especialistas que estan en el array de especialistas y se retorna el id, nombre y apellido
-	specs = await Promise.all(
+	console.log(specs);
+	const newSpecs = await Promise.all(
 		specs.map(async (spec) => {
 			let specialist = await Specialist.find({ _id: spec }).select(
 				'_id username name lastName code sessionPrices specialties professionalDescription gender schedule approveAvatar avatar avatarThumbnail'
@@ -1253,6 +1254,12 @@ const getSpecialistArray = async (specs) => {
 			return specialist;
 		})
 	);
+	// Quitar el array de array, solo dejar el objeto
+	const newSpecsFinal = newSpecs.flat();
+
+	specs = newSpecsFinal.filter((spec) => spec !== undefined);
+
+	console.log(specs);
 
 	return okResponse('Especialistas', { specs });
 };
