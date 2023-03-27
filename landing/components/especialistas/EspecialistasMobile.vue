@@ -815,7 +815,6 @@ export default {
 				model: this.models,
 			});
 			this.loadingMatchMaking = false;
-			console.log('test', this.loadingMatchMaking, this.initialCharge, this.newSpecialists);
 		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
