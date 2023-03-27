@@ -292,7 +292,7 @@ export default {
 	async cancelSessionSpecialist({ commit }, payload) {
 		// Especialista cancela la sesión agendada
 		try {
-			const { data } = await this.$axios('/specialist/cancel-session-especialist', {
+			const { data } = await this.$axios('/specialists/cancel-session-especialist', {
 				method: 'POST',
 				data: payload,
 			});
