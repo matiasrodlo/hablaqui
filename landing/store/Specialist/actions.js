@@ -128,7 +128,7 @@ export default {
 				data: { specs: payload },
 			});
 			console.log('final', data);
-			commit('setNewSpecialists', state.newSpecialists.concat(data.specialist));
+			console.log(commit('setNewSpecialists', state.newSpecialists.concat(data.specs)));
 			// commit('setLoadingSpecialist', false);
 			// console.log('data arraymatch', data);
 			return data;

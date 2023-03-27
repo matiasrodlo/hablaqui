@@ -632,6 +632,7 @@ export default {
 			this.loadingMatchMaking = false;
 		},
 		newSpecialists(newVal) {
+			console.log('newSpecialists', newVal);
 			if (newVal.length > 0) {
 				this.loadingMatchMaking = false;
 			}
