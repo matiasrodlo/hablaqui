@@ -41,6 +41,10 @@ export default {
       // generate routes especialistas
 
       const res = await axios.get(`${baseURL}/specialists/all`)
+      console.log('res.data.specialists ', res.data.specialists)
+      console.log('res ', res)
+      console.log(baseURL)
+
       const especialistas = res.data.specialists
         .filter((specialist) => specialist.username)
         .map((specialist) => ({
