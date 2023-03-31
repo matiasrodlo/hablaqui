@@ -8,7 +8,7 @@ export default {
   publicRuntimeConfig: {
     LANDING_URL:
       process.env.NODE_ENV === 'production'
-        ? process.env.VUE_APP_LANDING
+        ? process.env.VUE_APP_LANDING_BUILD
         : 'http://localhost:9000/',
     FRONTEND_URL:
       process.env.NODE_ENV === 'production'
@@ -16,7 +16,7 @@ export default {
         : 'http://localhost:8080/#',
     API_URL:
       process.env.NODE_ENV === 'production'
-        ? process.env.VUE_APP_URL
+        ? process.env.VUE_APP_URL_BUILD
         : 'http://localhost:3000/api/v1',
     API_ABSOLUTE:
       process.env.NODE_ENV === 'production'
