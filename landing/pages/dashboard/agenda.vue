@@ -924,9 +924,14 @@ export default {
 					.tz(dayjs(a, 'MM/DD/YYYY HH:mm'))
 					.diff(dayjs.tz(dayjs(b, 'MM/DD/YYYY HH:mm')));
 			});
-			const date = allDates.find(item =>
-				dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
-			);
+			const date = allDates.find(item => {
+				const session = this.events.find(item2 => item2.date === item);
+				return (
+					dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()) &&
+					session.status !== 'canceled' &&
+					session.statusPlan !== 'pending'
+				);
+			});
 			if (date) {
 				return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY');
 			}
