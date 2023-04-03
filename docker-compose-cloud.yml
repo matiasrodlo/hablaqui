@@ -39,6 +39,41 @@ services:
     networks:
       hablaqui-network:
         ipv4_address: 192.168.81.20
+  # Toda esta sección es para levantar el wordpress
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+    container_name: wordpress
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
+      - WORDPRESS_DB_USER=$WORDPRESS_DB_USER
+      - WORDPRESS_DB_PASSWORD=$WORDPRESS_DB_PASSWORD
+      - WORDPRESS_DB_NAME=$WORDPRESS_DB_NAME
+    volumes:
+      - ./wordpress_data:/var/www/html
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.30
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.40
   
 networks:
   hablaqui-network:
