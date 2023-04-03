@@ -109,8 +109,11 @@ export default {
 		async initialFetch() {
 			if (this.$auth.$state.loggedIn) {
 				await this.getMatchMakig(this.$auth.$state.user._id);
+				console.log(1, this.$auth.$state.user);
+				console.log(2, this.$auth.user);
+				console.log(3, this.matchMaking);
 				if (!this.matchMaking) {
-					this.$router.push('evaluacion');
+					this.$router.push('/evaluacion');
 				}
 			}
 			await this.getAppointments();

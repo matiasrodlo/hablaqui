@@ -788,10 +788,10 @@ export default {
 			this.$router.replace({ query: null });
 	},
 	mounted() {
-		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
-			// console.log('no');
-			this.goEvaluation();
-		}
+		// if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
+		// console.log('no');
+		// this.goEvaluation();
+		// }
 		this.toggle = 0;
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
@@ -842,8 +842,9 @@ export default {
 		 * Ir a la ruta de evaluacion
 		 */
 		start() {
-			if (this.$auth.$state.loggedIn) this.$router.push({ name: 'evaluacion' });
-			else this.$router.push('/auth/?register=true&from=spec');
+			// if (this.$auth.$state.loggedIn && !this.$auth.user.match)
+			// this.$router.push({ name: 'evaluacion' });
+			// else this.$router.push('/auth/?register=true&from=spec');
 		},
 		/**
 		 * Busca el src del avatar

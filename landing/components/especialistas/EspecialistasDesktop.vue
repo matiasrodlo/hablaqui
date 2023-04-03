@@ -486,7 +486,12 @@
 					</template>
 				</template>
 				<v-col
-					v-if="!newSpecialists.length && !initialCharge"
+					v-if="
+						!newSpecialists.length &&
+						!loadingMatchMaking &&
+						!loadingSpecialist &&
+						initialCharge
+					"
 					cols="12"
 					class="title primary--text text-center"
 				>
@@ -673,10 +678,10 @@ export default {
 	mounted() {
 		// Si el usuaio no ha realizado la encuesta lo redirige a la evaluacion
 		// console.log('user', this.$auth.$state.user);
-		if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
-			// console.log('no');
-			this.goEvaluation();
-		}
+		// if (this.$auth.$state.user.role === 'user' && !this.$auth.$state.user.match) {
+		// console.log('no');
+		//	this.goEvaluation();
+		// }
 		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
 		window.addEventListener('scroll', this.onScroll);
 	},
@@ -798,7 +803,6 @@ export default {
 					// await this.getSpecialistsAvailityMatch(filters);
 					await this.getSpecialistsAvailityMatchId(filters);
 				}
-				await this.getSpecialistsArrayMatch(this.specialistsIds.slice(0, 5));
 				this.specialistCounter = 5;
 				this.loadingMatchMaking = false;
 			}

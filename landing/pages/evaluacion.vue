@@ -993,9 +993,9 @@ export default {
 				price: this.price,
 			};
 			if (this.$auth.loggedIn) {
-				setTimeout(() => {
+				setTimeout(async () => {
 					payload.userId = this.$auth.user._id;
-					this.createMatchMakig(payload);
+					await this.createMatchMakig(payload);
 					this.$router.push('/especialistas');
 				}, 5000);
 			} else {
