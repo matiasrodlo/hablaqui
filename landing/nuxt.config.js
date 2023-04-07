@@ -16,11 +16,11 @@ export default {
         : 'http://localhost:8080/#',
     API_URL:
       process.env.NODE_ENV === 'production'
-        ? process.env.VUE_APP_URL
+        ? process.env.VUE_APP_URL_BUILD
         : 'http://localhost:3000/api/v1',
     API_ABSOLUTE:
       process.env.NODE_ENV === 'production'
-        ? process.env.API_ABSOLUTE
+        ? process.env.API_ABSOLUTE_BUILD
         : 'http://localhost:3000/',
   },
   server: {
@@ -197,7 +197,7 @@ export default {
         name: 'main',
         url:
           process.env.NODE_ENV === 'production'
-            ? process.env.API_ABSOLUTE
+            ? process.env.API_ABSOLUTE_BUILD
             : 'http://localhost:3000',
       },
     ],
