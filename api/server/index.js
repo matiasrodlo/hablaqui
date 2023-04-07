@@ -13,7 +13,7 @@ server.listen(process.env.PORT || 3000, () => {
 
 const io = new webSocketServer(server, {
   cors: {
-    origin: '*',
+    origin: process.env.VUE_APP_LANDING,
   },
 })
 
