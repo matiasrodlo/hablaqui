@@ -805,6 +805,10 @@ export default {
 		 */
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.specialist === id);
+			if (id === '63e1727b384b67ddc9eebc33') {
+				console.log('sessions', this.sessions);
+				console.log('temp', temp);
+			}
 			if (!temp) {
 				return [];
 			}

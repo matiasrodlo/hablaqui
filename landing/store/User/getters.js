@@ -35,7 +35,7 @@ export default {
 		const filterPlans = plans.filter(
 			item => item.payment === 'success' && dayjs().isBefore(dayjs(item.expiration))
 		);
-		const totalSessions = filterPlans.reduce(
+		let totalSessions = filterPlans.reduce(
 			(sum, value) =>
 				typeof value.totalSessions === 'number' ? sum + value.totalSessions : sum,
 			0
@@ -53,6 +53,7 @@ export default {
 			});
 		});
 		appoinmentSessions -= acumulator;
+		totalSessions -= acumulator;
 		let sortedPlans = filterPlans
 			.filter(item => item.remainingSessions !== 0)
 			.sort((a, b) => a.diff - b.diff);
