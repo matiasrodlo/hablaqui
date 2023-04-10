@@ -16,9 +16,6 @@ USER node
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
 
-# Instala las dependencias del proyecto
-RUN npm install
-
 # Variables de entorno para que funcione Nuxt
 ARG API_ABSOLUTE
 ARG VUE_APP_URL
@@ -29,6 +26,9 @@ ENV VUE_APP_URL=${VUE_APP_URL}
 ENV HOST=0.0.0.0
 ENV PORT=9000
 ENV NODE_ENV=production
+
+# Instala las dependencias del proyecto
+RUN npm install
 
 # Genera el proyecto
 RUN npm run generate
