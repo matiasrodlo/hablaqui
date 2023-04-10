@@ -16,11 +16,11 @@ export default {
         : 'http://localhost:8080/#',
     API_URL:
       process.env.NODE_ENV === 'production'
-        ? process.env.VUE_APP_URL_BUILD
+        ? process.env.VUE_APP_URL
         : 'http://localhost:3000/api/v1',
     API_ABSOLUTE:
       process.env.NODE_ENV === 'production'
-        ? process.env.API_ABSOLUTE_BUILD
+        ? process.env.API_ABSOLUTE
         : 'http://localhost:3000/',
   },
   server: {
@@ -32,7 +32,7 @@ export default {
     // genera las rutas dinamicas
     async routes(callback) {
       const baseURL = process.env.VUE_APP_URL
-        ? process.env.VUE_APP_URL_BUILD
+        ? process.env.VUE_APP_URL
         : 'http://localhost:3000/api/v1'
       // const baseApi = process.env.API_ABSOLUTE
       // 	? process.env.API_ABSOLUTE
@@ -197,7 +197,7 @@ export default {
         name: 'main',
         url:
           process.env.NODE_ENV === 'production'
-            ? process.env.API_ABSOLUTE_BUILD
+            ? process.env.API_ABSOLUTE
             : 'http://localhost:3000',
       },
     ],
