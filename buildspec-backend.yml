@@ -13,6 +13,8 @@ phases:
       - export SENDGRID_API_KEY=SG.
       - export URLDB=$URLDB
       - export VUE_APP_LANDING=$VUE_APP_LANDING
+      - export VUE_APP_URL=$VUE_APP_URL
+      - export API_ABSOLUTE=$API_ABSOLUTE
       - echo Variables de entorno extraidas
   build:
     commands:
