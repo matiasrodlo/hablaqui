@@ -25,6 +25,7 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node . ./
 
 # Instala las dependencias del proyecto
+RUN npm cache clean
 RUN npm run create-env
 RUN npm install
 
