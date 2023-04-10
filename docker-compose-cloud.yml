@@ -17,6 +17,9 @@ services:
       - VUE_APP_LANDING=$VUE_APP_URL
       - VUE_APP_URL=$VUE_APP_URL
       - API_ABSOLUTE=$API_ABSOLUTE
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.10
   api-restful:
    # Se especifica el dockerfile que se va a utilizar
     build:
@@ -33,3 +36,12 @@ services:
       - SENDGRID_API_KEY=$SENDGRID_API_KEY
       - URLDB=$URLDB
       - VUE_APP_LANDING=$VUE_APP_LANDING
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.20
+
+networks:
+  hablaqui-network:
+    ipam:
+      config:
+        - subnet: 192.168.81.0/24
