@@ -15,6 +15,7 @@ phases:
       - export VUE_APP_LANDING=$VUE_APP_LANDING
       - export VUE_APP_URL=$VUE_APP_URL
       - export API_ABSOLUTE=$API_ABSOLUTE
+      - export DOCKER_HOST=127.0.0.1
       - echo Variables de entorno extraidas
   build:
     commands:
