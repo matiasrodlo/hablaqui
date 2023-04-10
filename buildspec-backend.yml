@@ -21,7 +21,7 @@ phases:
       - echo Build started on `date`
       # Build the Docker images
       - echo Building the production Docker image...
-      - sudo docker-compose --file=docker-compose-cloud.yml build api-restful
+      - sudo docker compose -f docker-compose-cloud.yml build api-restful
       - echo Api was successfully built!
       - echo Build completed on `date`
   post_build:
