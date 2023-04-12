@@ -481,6 +481,8 @@
 						</v-col>
 					</template>
 				</template>
+				<!-- Condicionales para comprobar si está cargando algo-->
+				<!-- debugMethod es un método para debuguear estos condicionales y ver como se comportan por consola-->
 				<v-col
 					v-if="
 						!newSpecialists.length &&
@@ -620,6 +622,9 @@ export default {
 			const ids = this.specialistsIds.slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
+		/**
+		 * Escucha el cambio en el matchmaking y actualiza los filtros
+		 */
 		matchMaking(newVal) {
 			if (newVal) {
 				this.specialties = newVal.themes;
@@ -633,6 +638,9 @@ export default {
 			}
 			this.loadingMatchMaking = false;
 		},
+		/**
+		 * Escucha el cambio en los especialistas y actualiza la variable de control loadingMatchMaking
+		 */
 		newSpecialists(newVal) {
 			if (newVal.length > 0) {
 				this.loadingMatchMaking = false;
@@ -719,6 +727,9 @@ export default {
 			this.page = 1;
 			await this.applyFilters();
 		},
+		/**
+		 * Aplica los filtros y actualiza el matchmaking
+		 */
 		async applyFilters() {
 			this.loadingMatchMaking = true;
 			await this.actualizarMatch({
@@ -738,6 +749,9 @@ export default {
 				this.page += 1;
 			}
 		},
+		/**
+		 * Muestra en consola los valores de las variables de control
+		 */
 		debugMethod(isVisible) {
 			if (isVisible) {
 				console.log(
@@ -816,6 +830,10 @@ export default {
 				return this.$router.push(`/${specialist.username}/?chat=true`);
 			}
 		},
+		/**
+		 * actualiza el matchmaking solicitando el nuevo match correspondiente
+		 * @param {object} value opciones seleccionadas en los filtros
+		 */
 		async actualizarMatch(value) {
 			const filters = {
 				themes: this.specialties,

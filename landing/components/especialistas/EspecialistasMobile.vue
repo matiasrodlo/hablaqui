@@ -754,6 +754,9 @@ export default {
 			const ids = this.specialistsIds.slice(prev * 5, value * 5);
 			this.getSessionsLimit(ids);
 		},
+		/**
+		 * Escucha el cambio en el matchmaking y actualiza los filtros
+		 */
 		matchMaking(newVal) {
 			if (newVal) {
 				this.specialties = newVal.themes;
@@ -767,6 +770,9 @@ export default {
 			}
 			this.loadingMatchMaking = false;
 		},
+		/**
+		 * Escucha el cambio en los especialistas y actualiza la variable de control loadingMatchMaking
+		 */
 		newSpecialists(newVal) {
 			if (newVal.length > 0) {
 				this.loadingMatchMaking = false;
@@ -825,6 +831,9 @@ export default {
 			this.page = 1;
 			await this.applyFilters();
 		},
+		/**
+		 * Aplica los filtros
+		 */
 		async applyFilters() {
 			this.loadingMatchMaking = true;
 			await this.actualizarMatch({
