@@ -569,10 +569,7 @@
 													class="text-left font-weight-medium body-2"
 													style="color: #3c3c3b"
 												>
-													${{
-														Math.ceil(item.sessionPrices.video / 100) *
-														100
-													}}
+													${{ formatPrice(item.sessionPrices.video) }}
 													/ 50 min
 												</div>
 											</nuxt-link>
@@ -801,6 +798,29 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		formatPrice(item) {
+			const price = Math.ceil(item / 100) * 100;
+			// Si el número es menor a 1000 no es necesario agregar puntos así que lo retornamos
+			if (price < 1000) {
+				return price;
+			}
+			// Se convierte el número a string
+			const priceStr = price.toString();
+			// Variable donde se construirá el número formateado
+			let result = '';
+			// Contador para ir agregando puntos
+			let counter = 0;
+			// Se recorre el número desde la derecha
+			for (let i = priceStr.length - 1; i >= 0; i--) {
+				counter++;
+				result = priceStr.charAt(i) + result;
+				// Si el contador es multiplo de 3 y no es el primer caracter se agrega un punto
+				if (counter % 3 === 0 && i !== 0) {
+					result = '.' + result;
+				}
+			}
+			return result;
+		},
 		async applyFiltersBtn() {
 			this.page = 1;
 			await this.applyFilters();
