@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import passport from 'passport';
-import sessionsController from '../controllers/sessions';
+import { Router } from 'express'
+import passport from 'passport'
+import sessionsController from '../controllers/sessions'
 
-const sessionsRouter = Router();
+const sessionsRouter = Router()
 
 /**
  * @swagger
@@ -34,10 +34,10 @@ const sessionsRouter = Router();
  * @access authenticated
  */
 sessionsRouter.get(
-	'/specialists/sessions/:idUser',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.getSessions
-);
+  '/specialists/sessions/:idUser',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.getSessions
+)
 
 /**
  * @description Devuelve todas las sesiones faltantes de un especialista
@@ -47,9 +47,9 @@ sessionsRouter.get(
  * @returns {Array} Lista con todas las sesiones faltantes del especialista en cuestión
  */
 sessionsRouter.get(
-	'/specialist/get-remaining-sessions/:spec',
-	sessionsController.getRemainingSessions
-);
+  '/specialist/get-remaining-sessions/:spec',
+  sessionsController.getRemainingSessions
+)
 
 /**
  * @description Cancela un compromiso privado de un especialista
@@ -62,10 +62,10 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.delete(
-	'/specialist/cancel-session',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.cancelSession
-);
+  '/specialist/cancel-session',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.cancelSession
+)
 
 /**
  * @description Creo No usada
@@ -75,7 +75,7 @@ sessionsRouter.delete(
  * @returns
  * @access
  */
-sessionsRouter.get('/specialist/plan-task', sessionsController.checkPlanTask);
+sessionsRouter.get('/specialist/plan-task', sessionsController.checkPlanTask)
 
 /**
  * @description Crea un plan
@@ -90,10 +90,10 @@ sessionsRouter.get('/specialist/plan-task', sessionsController.checkPlanTask);
  * @access authenticated
  */
 sessionsRouter.post(
-	'/specialists/session/create',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.createPlan
-);
+  '/specialists/session/create',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.createPlan
+)
 
 /**
  * Create a session
@@ -115,10 +115,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.put(
-	'/specialists/session/:id/plan/:idPlan',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.createSession
-);
+  '/specialists/session/:id/plan/:idPlan',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.createSession
+)
 
 /**
  * @description Crea una nueva sesion custom, un poco mas libre y menos estandarizada
@@ -131,10 +131,10 @@ sessionsRouter.put(
  * @access authenticated
  */
 sessionsRouter.post(
-	'/specialist/new-custom-session',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.customNewSession
-);
+  '/specialist/new-custom-session',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.customNewSession
+)
 
 /**
  * @description Obtiene la session de un especialista formateada para el selector
@@ -145,9 +145,9 @@ sessionsRouter.post(
  * @returns Objeto listado de las sesiones del especialista
  */
 sessionsRouter.get(
-	'/specialists/formattedSessions/:idSpecialist/:type',
-	sessionsController.getFormattedSessions
-);
+  '/specialists/formattedSessions/:idSpecialist/:type',
+  sessionsController.getFormattedSessions
+)
 
 /**
  * obtiene las sessiones de todos los especialistas formateada para el selector
@@ -159,9 +159,9 @@ sessionsRouter.get(
  * @returns Objeto listado de todas las sesiones de cada uno de los especialistas
  */
 sessionsRouter.get(
-	'/specialists/formattedSessionsAll',
-	sessionsController.formattedSessionsAll
-);
+  '/specialists/formattedSessionsAll',
+  sessionsController.formattedSessionsAll
+)
 
 /**
  * @description Obtiene las sessiones de todos los especialistas formateada y unicamente de los especialistas que pasemos en body.ids
@@ -170,9 +170,9 @@ sessionsRouter.get(
  * @returns Objeto con las sesiones formateadas
  */
 sessionsRouter.post(
-	'/specialists/sessionsLimit',
-	sessionsController.sessionsLimit
-);
+  '/specialists/sessionsLimit',
+  sessionsController.sessionsLimit
+)
 
 /**
  * @description Consigue los datos (y la tabla) de pagos del especialista.
@@ -182,10 +182,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.get(
-	'/specialist/payments/all',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.paymentsInfo
-);
+  '/specialist/payments/all',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.paymentsInfo
+)
 
 /**
  * @description Cambia la hora de una session específica
@@ -198,10 +198,10 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.post(
-	'/specialists/reschedule/:sessionsId/:id',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.reschedule
-);
+  '/specialists/reschedule/:sessionsId/:id',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.reschedule
+)
 
 /**
  * @description Actualiza una sessions (Me falta información del endpoint)
@@ -211,10 +211,10 @@ sessionsRouter.post(
  * @access authenticated
  */
 sessionsRouter.put(
-	'/specialists/update/sessions',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.updateSessions
-);
+  '/specialists/update/sessions',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.updateSessions
+)
 
 /**
  * @description: Elimina un compromiso privado de un especialista
@@ -225,9 +225,9 @@ sessionsRouter.put(
  * @returns {Object} Objecto Session con el compromiso eliminado
  */
 sessionsRouter.patch(
-	'/specialist/delete-commitment/:specId/:planId',
-	sessionsController.deleteCommitment
-);
+  '/specialist/delete-commitment/:specId/:planId',
+  sessionsController.deleteCommitment
+)
 
 /**
  * @description Devuelve todas las sesiones que no hayan expirado
@@ -237,9 +237,9 @@ sessionsRouter.patch(
  * @returns {Array} Lista con todas las sesiones del especialista en cuestión
  */
 sessionsRouter.get(
-	'/specialist/get-sessions/:spec',
-	sessionsController.getAllSessions
-);
+  '/specialist/get-sessions/:spec',
+  sessionsController.getAllSessions
+)
 
 /**
  * @description Consigue los datos (y la tabla) de pagos del especialista
@@ -250,10 +250,10 @@ sessionsRouter.get(
  * @access authenticated
  */
 sessionsRouter.get(
-	'/specialist/payments/:spec',
-	[passport.authenticate('jwt', { session: true })],
-	sessionsController.paymentsInfoFromId
-);
+  '/specialist/payments/:spec',
+  [passport.authenticate('jwt', { session: true })],
+  sessionsController.paymentsInfoFromId
+)
 
 /**
  * @description Consigue sessiones e información necesaria en front, como la fecha de expiración del plan, datos del especialista, etc.
@@ -263,9 +263,9 @@ sessionsRouter.get(
  */
 
 sessionsRouter.get(
-	'/sessions/get-all-sessions-formatted',
-	sessionsController.getAllSessionsFormatted
-);
+  '/sessions/get-all-sessions-formatted',
+  sessionsController.getAllSessionsFormatted
+)
 
 
 /**

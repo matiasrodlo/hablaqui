@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import { Router } from 'express';
-import cronController from '../controllers/cron';
+import { Router } from 'express'
+import cronController from '../controllers/cron'
 
-const cronRouter = Router();
+const cronRouter = Router()
 
 /**
  * @description: Calendariza correos para ser enviados
@@ -11,10 +11,7 @@ const cronRouter = Router();
  * @route /api/v1/cron/email-schedule/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post(
-	'/cron/email-schedule/:authToken',
-	cronController.emailSchedule
-);
+cronRouter.post('/cron/email-schedule/:authToken', cronController.emailSchedule)
 
 /**
  * @description: Verifica y actualiza el estado de las sesiones
@@ -22,10 +19,7 @@ cronRouter.post(
  * @route /api/v1/cron/session-status/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post(
-	'/cron/session-status/:authToken',
-	cronController.sessionStatus
-);
+cronRouter.post('/cron/session-status/:authToken', cronController.sessionStatus)
 
 /**
  * @description: Calendariza los correos de chat para ser enviados
@@ -34,9 +28,9 @@ cronRouter.post(
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/email-chat/:authToken',
-	cronController.scheduleChatEmails
-);
+  '/cron/email-chat/:authToken',
+  cronController.scheduleChatEmails
+)
 
 /**
  * @description: Verifica el límite de tiempo para pagar un plan pendiente de un consultante
@@ -44,7 +38,7 @@ cronRouter.post(
  * @route /api/v1/cron/limit-to-pay/:authToken
  * @param {string} params.authToken - Token de autorización
  */
-cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
+cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan)
 
 /**
  * @description: --------
@@ -53,8 +47,8 @@ cronRouter.post('/cron/limit-to-pay/:authToken', cronController.limitToPayPlan);
  * @param {string} params.authToken - Token de autorización
  */
 cronRouter.post(
-	'/cron/status/attention/:authToken',
-	cronController.statusInmediateAttention
-);
+  '/cron/status/attention/:authToken',
+  cronController.statusInmediateAttention
+)
 
-export default cronRouter;
+export default cronRouter

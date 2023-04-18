@@ -1,6 +1,6 @@
-import sessionsService from '../services/sessions.js';
-import { restResponse } from '../utils/responses/functions';
-import { errorCallback } from '../utils/functions/errorCallback';
+import sessionsService from '../services/sessions.js'
+import { restResponse } from '../utils/responses/functions'
+import { errorCallback } from '../utils/functions/errorCallback'
 
 const sessionsController = {
 	async getSessions(req, res) {
@@ -230,4 +230,4 @@ const sessionsController = {
 	},
 };
 
-export default Object.freeze(sessionsController);
+export default Object.freeze(sessionsController)

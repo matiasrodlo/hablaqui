@@ -9,9 +9,13 @@
       }
     },
     "include": [
-      "./components/**/*",
-      "./layout/**/*",
-      "./pages/**/*",
+        "./components/**/*",
+        "./layout/**/*",
+        "./pages/**/*",
     ],
-    "exclude": ["node_modules", ".nuxt", "dist"]
+    "exclude": [
+        "node_modules",
+        ".nuxt",
+        "dist"
+    ]
 }

@@ -1,5 +1,5 @@
 export default {
-	setAppointments(state, value) {
-		state.appointments = value;
-	},
-};
+  setAppointments(state, value) {
+    state.appointments = value
+  },
+}
