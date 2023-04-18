@@ -36,21 +36,29 @@ export default {
       (item) =>
         item.payment === 'success' && dayjs().isBefore(dayjs(item.expiration))
     )
-    const totalSessions = filterPlans.reduce(
+    let totalSessions = filterPlans.reduce(
       (sum, value) =>
         typeof value.totalSessions === 'number'
           ? sum + value.totalSessions
           : sum,
       0
     )
-
-    const appoinmentSessions = filterPlans.reduce(
+    let appoinmentSessions = filterPlans.reduce(
       (sum, value) =>
         typeof value.session.length === 'number'
           ? sum + value.session.length
           : sum,
       0
     )
+    // Se restan las sesiones canceladas
+    let acumulator = 0
+    filterPlans.forEach((item) => {
+      item.session.forEach((session) => {
+        if (session.status === 'canceled') acumulator += 1
+      })
+    })
+    appoinmentSessions -= acumulator
+    totalSessions -= acumulator
     let sortedPlans = filterPlans
       .filter((item) => item.remainingSessions !== 0)
       .sort((a, b) => a.diff - b.diff)

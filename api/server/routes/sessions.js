@@ -52,7 +52,7 @@ sessionsRouter.get(
 )
 
 /**
- * @description Cancela una sesión específica
+ * @description Cancela un compromiso privado de un especialista
  * @method DELETE
  * @route /api/v1/specialist/cancel-session
  * @param {ObjectId} body.sessionId - Id del esquema de sessions
@@ -267,4 +267,21 @@ sessionsRouter.get(
   sessionsController.getAllSessionsFormatted
 )
 
-export default sessionsRouter
+
+/**
+ * @description Cancela una sesión desde la perspectiva del especialista
+ * @method POST
+ * @route /api/v1/specialist/cancel-session-especialist
+ * @param {ObjectId} body.sessionId - Id del esquema de sessions
+ * @param {ObjectId} body.planId - Id del plan que contiene la sesión a cancelar
+ * @param {ObjectId} body.id - Id de la sesión a cancelar
+ * @returns Objeto con las sesiones actualizadas
+ * @access authenticated
+ */
+sessionsRouter.post(
+	'/specialists/cancel-session-especialist',
+	[passport.authenticate('jwt', { session: true })],
+	sessionsController.cancelSessionByEspecialist
+)
+
+export default sessionsRouter;

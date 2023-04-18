@@ -220,13 +220,63 @@
                   <v-spacer></v-spacer>
                   <v-btn
                     v-if="
-                      selectedEvent.status === 'pending'
+                      selectedEvent.status === 'pending' &&
+                      $auth.$state.user.role !== 'specialist'
                       // || selectedEvent.status === 'upnext'
                     "
+                    color="primary"
                     text
                     @click="() => openDialog(selectedEvent)"
                   >
                     Reprogramar
+                  </v-btn>
+                  <v-btn
+                    v-if="
+                      selectedEvent.status === 'pending' &&
+                      $auth.$state.user.role === 'specialist'
+                    "
+                    color="error"
+                    text
+                    @click="popUp = true"
+                  >
+                    Cancelar
+                    <v-dialog
+                      v-model="popUp"
+                      activator="parent"
+                      persistent
+                      max-width="500"
+                    >
+                      <v-card>
+                        <v-card-title> Advertencia </v-card-title>
+                        <v-card-text>
+                          El cancelar una sesión puede ocasionar molestias.
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-col>
+                            <v-btn
+                              small
+                              color="primary"
+                              block
+                              @click="popUp = false"
+                            >
+                              Retroceder
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              small
+                              color="error"
+                              block
+                              @click="
+                                () => cancelOneSessionSpecialist(selectedEvent)
+                              "
+                            >
+                              Cancelar
+                            </v-btn>
+                          </v-col>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-btn>
                   <v-chip
                     v-if="selectedEvent.status === 'success'"
@@ -885,6 +935,7 @@ export default {
     plan: null,
     appoinmentSessions: 0,
     totalSessions: 0,
+    popUp: false,
   }),
   computed: {
     /**
@@ -899,9 +950,14 @@ export default {
           .tz(dayjs(a, 'MM/DD/YYYY HH:mm'))
           .diff(dayjs.tz(dayjs(b, 'MM/DD/YYYY HH:mm')))
       })
-      const date = allDates.find((item) =>
-        dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs())
-      )
+      const date = allDates.find((item) => {
+        const session = this.events.find((item2) => item2.date === item)
+        return (
+          dayjs(item, 'MM/DD/YYYY HH:mm').isSameOrAfter(dayjs()) &&
+          session.status !== 'canceled' &&
+          session.statusPlan !== 'pending'
+        )
+      })
       if (date) {
         return dayjs(date, 'MM/DD/YYYY HH:mm').format('DD/MM/YY')
       }
@@ -1047,6 +1103,7 @@ export default {
      */
     getEventColor(event) {
       if (event.statusPlan === 'pending') return 'blue-grey lighten-1'
+      if (event.status === 'canceled') return 'error'
       if (event.title === 'compromiso privado') return '#efb908'
       if (event.title === 'sesion presencial') return '#00c6ea'
       return 'primary'
@@ -1310,6 +1367,19 @@ export default {
       })
       this.overlay = false
     },
+    async cancelOneSessionSpecialist(item) {
+      // Especialista cancela una sesión utilizando el endpoint de cancel-session-especialist
+      this.overlay = true
+      await this.cancelSessionSpecialist({
+        sessionsId: item.sessionsId,
+        id: item._id,
+        planId: item.idPlan,
+      })
+      this.popUp = false
+      this.overlay = false
+      this.snackBar({ content: 'Sesión cancelada', color: 'success' })
+      setTimeout(() => {}, 5000, location.reload())
+    },
     acquire() {
       if (this.plan && this.plan.specialist) {
         this.addAppointment({ date: null })
@@ -1335,10 +1405,12 @@ export default {
     ...mapMutations({
       setSessions: 'Specialist/setSessions',
       setStepLinks: 'User/setStepLinks',
+      snackBar: 'Snackbar/showMessage',
     }),
     ...mapActions({
       addSession: 'Specialist/addSession',
       cancelSession: 'Specialist/cancelSession',
+      cancelSessionSpecialist: 'Specialist/cancelSessionSpecialist',
       createCustomSession: 'Specialist/createCustomSession',
       getClients: 'Specialist/getClients',
       getSpecialist: 'Specialist/getSpecialist',

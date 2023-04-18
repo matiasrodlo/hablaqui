@@ -1404,24 +1404,64 @@ const getAllSessionsFormatted = async () => {
   return okResponse('Sesiones obtenidas', { formattedSessions })
 }
 
+const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
+	// Se busca en mongo y cancela la session agendada del plan
+	const cancelSessions = await Sessions.findOneAndUpdate(
+		{
+			_id: sessionsId,
+			'plan._id': planId,
+			'plan.session._id': id,
+		},
+		{
+			$set: {
+				'plan.$.session.$[session].status': 'canceled',
+			},
+			$inc: {
+				'plan.$.remainingSessions': 1,
+				'plan.$.totalSessions': 1,
+			},
+		},
+		{
+			arrayFilters: [{ 'session._id': id }], new: true
+		}
+	).populate('specialist user');
+
+	if (!cancelSessions) {
+		return conflictResponse('No se pudo cancelar la sesión');
+	}
+
+	// Se envian los correos de cancelacion de sesion
+	await mailServiceSchedule.sendCancelSessionSpec(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
+	await mailServiceReminder.sendCancelSessionUser(
+		cancelSessions.user,
+		cancelSessions.specialist
+	);
+
+	return okResponse('Sesion cancelada', cancelSessions);
+};
+
 const sessionsService = {
-  getSessions,
-  getRemainingSessions,
-  cancelSession,
-  checkPlanTask,
-  createPlan,
-  createSession,
-  customNewSession,
-  getFormattedSessionsForMatch,
-  getFormattedSessions,
-  formattedSessionsAll,
-  paymentsInfo,
-  reschedule,
-  updateSessions,
-  deleteCommitment,
-  getAllSessions,
-  paymentsInfoFromId,
-  getAllSessionsFormatted,
-}
+	getSessions,
+	getRemainingSessions,
+	cancelSession,
+	checkPlanTask,
+	createPlan,
+	createSession,
+	customNewSession,
+	getFormattedSessionsForMatch,
+	getFormattedSessions,
+	formattedSessionsAll,
+	paymentsInfo,
+	reschedule,
+	updateSessions,
+	deleteCommitment,
+	getAllSessions,
+	paymentsInfoFromId,
+	getAllSessionsFormatted,
+	cancelSessionByEspecialist
+};
 
 export default Object.freeze(sessionsService)

@@ -729,125 +729,125 @@ export default {
         )
       }
 
-      return result
-    },
-    ...mapGetters({
-      appointments: 'Appointments/appointments',
-      specialists: 'Specialist/specialistsMarketPlace',
-      sessions: 'Specialist/sessionsLimit',
-    }),
-  },
-  watch: {
-    /**
-     * Escucha que cambio de pagina(scroll) y obtiene más sessiones
-     */
-    page(value, oldValue) {
-      let prev = 0
-      if (oldValue) prev = oldValue
-      const ids = this.filterLevelThree
-        .map((item) => item._id)
-        .slice(prev * 5, value * 5)
-      this.getSessionsLimit(ids)
-    },
-  },
-  created() {
-    // Cuando venimos de otra ruta con el chat abierto lo cerramos
-    this.setFloatingChat(false)
-    //  Limpia la query url cuando viene desde mercadopago
-    if (
-      this.$route.name === 'especialistas' &&
-      JSON.stringify(this.$route.params) !== JSON.stringify({})
-    )
-      this.$router.replace({ query: null })
-  },
-  mounted() {
-    // Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
-    window.addEventListener('scroll', this.onScroll)
-  },
-  beforeUnmount() {
-    // Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
-    window.removeEventListener('scroll', this.onScroll)
-  },
-  methods: {
-    /**
-     * Cambia aumenta de pagina con el scroll
-     */
-    scrollInfinity(isVisible) {
-      if (isVisible && this.page < this.filterLevelThree.length / 5) {
-        this.page += 1
-      }
-    },
-    /**
-     * Esto son los especialistas que se iran viendo segun el scroll
-     */
-    handleVisivility(isVisible, entry, idSpecialist) {
-      if (isVisible && !this.visibles.includes(idSpecialist))
-        this.visibles.push(idSpecialist)
-    },
-    /**
-     * Al ejecutar la funcion guarda en scrollHeight la distancion en ese momento que tiene de scroll
-     */
-    onScroll(e) {
-      this.scrollHeight =
-        window.top.scrollY /* or: e.target.documentElement.scrollTop */
-    },
-    /**
-     * Ir a la ruta de evaluacion
-     */
-    goEvaluation() {
-      this.$router.push({ name: 'evaluacion' })
-    },
-    /**
-     * Busca el src del avatar
-     * @param {boolean} thumbnail
-     * @param {Object} specialist
-     * @returns String con el link del avatar
-     */
-    avatar(specialist, thumbnail) {
-      if (!specialist.approveAvatar) return ''
-      if (specialist.avatarThumbnail && thumbnail)
-        return specialist.avatarThumbnail
-      if (specialist.avatar) return specialist.avatar
-      return ''
-    },
-    /**
-     * @param {string} id del especialista
-     * @returns Array de sesiones
-     */
-    getSessions(id) {
-      const temp = this.sessions.find((element) => element.specialist === id)
-      if (!temp) {
-        return []
-      }
-      return temp.sessions
-    },
-    /**
-     * Reestablece valores
-     */
-    changeInput() {
-      this.page = 0
-      this.searchInput = ''
-      this.page = 1
-      this.visibles = []
-    },
-    /**
-     * si no esta logeado lo envia a registro, si no lo envia al perfil y abre el chat
-     * @param {string} specialist
-     */
-    goChat(specialist) {
-      if (!this.$auth.$state.loggedIn) {
-        this.$router.push({
-          path: `/auth/?register=true&specialist=${specialist.username}`,
-        })
-      } else {
-        return this.$router.push(`/${specialist.username}/?chat=true`)
-      }
-    },
-    ...mapMutations({
-      setFloatingChat: 'Chat/setFloatingChat',
-    }),
-  },
-}
+			return result;
+		},
+		...mapGetters({
+			appointments: 'Appointments/appointments',
+			specialists: 'Specialist/specialistsMarketPlace',
+			sessions: 'Specialist/sessionsLimit',
+		}),
+	},
+	watch: {
+		/**
+		 * Escucha que cambio de pagina(scroll) y obtiene más sessiones
+		 */
+		page(value, oldValue) {
+			let prev = 0;
+			if (oldValue) prev = oldValue;
+			const ids = this.filterLevelThree.map(item => item._id).slice(prev * 5, value * 5);
+			this.getSessionsLimit(ids);
+		},
+	},
+	created() {
+		// Cuando venimos de otra ruta con el chat abierto lo cerramos
+		this.setFloatingChat(false);
+		//  Limpia la query url cuando viene desde mercadopago
+		if (
+			this.$route.name === 'especialistas' &&
+			JSON.stringify(this.$route.params) !== JSON.stringify({})
+		)
+			this.$router.replace({ query: null });
+	},
+	mounted() {
+		// Cuando se monta el componente activamos el listener que ejecuta la funcion onscroll
+		window.addEventListener('scroll', this.onScroll);
+	},
+	beforeDestroy() {
+		// Cuando salimos de el componente removemos el listener que ejecuta la funcion onscroll
+		window.removeEventListener('scroll', this.onScroll);
+	},
+	methods: {
+		/**
+		 * Cambia aumenta de pagina con el scroll
+		 */
+		scrollInfinity(isVisible) {
+			if (isVisible && this.page < this.filterLevelThree.length / 5) {
+				this.page += 1;
+			}
+		},
+		/**
+		 * Esto son los especialistas que se iran viendo segun el scroll
+		 */
+		handleVisivility(isVisible, entry, idSpecialist) {
+			if (isVisible && !this.visibles.includes(idSpecialist))
+				this.visibles.push(idSpecialist);
+		},
+		/**
+		 * Al ejecutar la funcion guarda en scrollHeight la distancion en ese momento que tiene de scroll
+		 */
+		onScroll(e) {
+			this.scrollHeight = window.top.scrollY; /* or: e.target.documentElement.scrollTop */
+		},
+		/**
+		 * Ir a la ruta de evaluacion
+		 */
+		goEvaluation() {
+			this.$router.push({ name: 'evaluacion' });
+		},
+		/**
+		 * Busca el src del avatar
+		 * @param {boolean} thumbnail
+		 * @param {Object} specialist
+		 * @returns String con el link del avatar
+		 */
+		avatar(specialist, thumbnail) {
+			if (!specialist.approveAvatar) return '';
+			if (specialist.avatarThumbnail && thumbnail) return specialist.avatarThumbnail;
+			if (specialist.avatar) return specialist.avatar;
+			return '';
+		},
+		/**
+		 * @param {string} id del especialista
+		 * @returns Array de sesiones
+		 */
+		getSessions(id) {
+			const temp = this.sessions.find(element => element.specialist === id);
+			if (id === '63e1727b384b67ddc9eebc33') {
+				console.log('sessions', this.sessions);
+				console.log('temp', temp);
+			}
+			if (!temp) {
+				return [];
+			}
+			return temp.sessions;
+		},
+		/**
+		 * Reestablece valores
+		 */
+		changeInput() {
+			this.page = 0;
+			this.searchInput = '';
+			this.page = 1;
+			this.visibles = [];
+		},
+		/**
+		 * si no esta logeado lo envia a registro, si no lo envia al perfil y abre el chat
+		 * @param {string} specialist
+		 */
+		goChat(specialist) {
+			if (!this.$auth.$state.loggedIn) {
+				this.$router.push({
+					path: `/auth/?register=true&specialist=${specialist.username}`,
+				});
+			} else {
+				return this.$router.push(`/${specialist.username}/?chat=true`);
+			}
+		},
+		...mapMutations({
+			setFloatingChat: 'Chat/setFloatingChat',
+		}),
+	},
+};
 </script>
 
 <style lang="scss" scoped>
