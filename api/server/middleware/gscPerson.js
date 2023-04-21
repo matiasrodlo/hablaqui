@@ -1,8 +1,5 @@
-import {
-  s3,
-  getPublicUrlAvatar,
-  getPublicUrlAvatarThumb,
-} from '../config/bucket'
+import { s3Client, getPublicUrl } from '../config/bucket'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { isArray, isEmpty } from 'underscore'
 
 /**
@@ -20,24 +17,25 @@ const uploadDocuments = async (req, res, next) => {
   const pendingPromises = []
   for (let i = 0; i < req.files.documents.length; i++) {
     pendingPromises.push(
-      new Promise((resolve, reject) => {
+      new Promise(async (resolve, reject) => {
         const awsname = `${Date.now()}-${req.files.documents[i].originalname}`
-        const paramsFile = {
+        // Se utiliza para subir el archivo al bucket
+        const command = new PutObjectCommand({
           Bucket: process.env.BUCKETNAME,
-          Key: `${awsname}`,
+          Key: awsname,
           Body: req.files.documents[i].buffer,
           ContentType: req.files.documents[i].mimetype,
-        }
-        s3.putObject(paramsFile, (err, data) => {
-          if (err) {
-            console.log(err)
-            req.files.documents[i].cloudStorageError = err
-            next(err)
-          } else {
-            console.log('Archivo subido exitosamente a S3')
-            next()
-          }
         })
+        // Se sube el archivo
+        try {
+          const response = await s3Client.send(command)
+          console.log(`Object uploaded successfully at ${response.Location}`)
+          next()
+        } catch (error) {
+          console.log(err)
+          req.files.documents[i].cloudStorageError = err
+          next(error)
+        }
       })
     )
   }
@@ -46,7 +44,7 @@ const uploadDocuments = async (req, res, next) => {
   next()
 }
 
-const uploadAvatar = (req, res, next) => {
+const uploadAvatar = async (req, res, next) => {
   if (
     typeof req.files.avatar === 'undefined' ||
     (isArray(req.files.avatar) && isEmpty(req.files.avatar))
@@ -54,24 +52,25 @@ const uploadAvatar = (req, res, next) => {
     return next()
   }
   const awsname = `${Date.now()}-${req.files.documents[i].originalname}`
-  const paramsFile = {
+  // Se utiliza para subir el archivo al bucket
+  const command = new PutObjectCommand({
     Bucket: process.env.BUCKETNAME,
-    Key: `${awsname}`,
+    Key: awsname,
     Body: req.files.documents[i].buffer,
     ContentType: req.files.documents[i].mimetype,
-  }
-  s3.putObject(paramsFile, (err, data) => {
-    if (err) {
-      req.files.avatar[0].cloudStorageError = err
-      console.log(err)
-      next(err)
-    } else {
-      req.body.avatar = getPublicUrl(gcsname)
-      req.body.thumbnail = getPublicUrl(gcsname)
-      console.log('Archivo subido exitosamente a S3')
-      next()
-    }
   })
+  // Se sube el archivo
+  try {
+    const response = await s3Client.send(command)
+    console.log(`Object uploaded successfully at ${response.Location}`)
+    req.body.avatar = getPublicUrl(gcsname)
+    req.body.thumbnail = getPublicUrl(gcsname)
+    next()
+  } catch (error) {
+    console.log(err)
+    req.files.avatar[0].cloudStorageError = err
+    next(error)
+  }
 }
 
 export { uploadAvatar, uploadDocuments }

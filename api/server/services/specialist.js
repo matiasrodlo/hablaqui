@@ -781,19 +781,7 @@ const uploadProfilePicture = async (specID, picture) => {
   if (!picture) return conflictResponse('No se ha enviado ninguna imagen')
   const { name, lastName, _id } = await User.findById(specID)
   const awsname = `${specID}-${name}-${lastName}`
-  const paramsFile = {
-    Bucket: process.env.BUCKETNAME,
-    Key: `${awsname}`,
-    Body: req.file.buffer,
-    ContentType: req.file.mimetype,
-  }
-  s3.putObject(paramsFile, (err, data) => {
-    if (err) {
-      conflictResponse('Error al subir la imagen')
-    } else {
-      logInfo(`${awsname}` + ' subido exitosamente')
-    }
-  })
+  await uploadFile(awsname, picture.buffer, picture.mimetype)
 
   // Se hace el trackeo de la imagen en segment
   if (
@@ -804,20 +792,20 @@ const uploadProfilePicture = async (specID, picture) => {
       userId: _id.toString(),
       event: 'updated-profile-picture',
       properties: {
-        avatar: getPublicUrl(awsname),
+        avatar: await getPublicUrl(awsname),
       },
     })
   }
 
   await Specialist.findByIdAndUpdate(specID, {
-    avatar: getPublicUrl(awsname),
-    avatarThumbnail: getPublicUrl(awsname),
+    avatar: await getPublicUrl(awsname),
+    avatarThumbnail: await getPublicUrl(awsname),
   })
 
   return okResponse('Imagen subida', {
     // Se retorna una respuesta de exito
-    avatar: getPublicUrl(awsname),
-    avatarThumbnail: getPublicUrl(awsname),
+    avatar: await getPublicUrl(awsname),
+    avatarThumbnail: await getPublicUrl(awsname),
   })
 }
 

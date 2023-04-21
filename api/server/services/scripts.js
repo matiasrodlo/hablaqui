@@ -10,7 +10,8 @@ import Email from '../models/email'
 import Evaluation from '../models/evaluation'
 import Psychologist from '../models/psychologist'
 import transactionModel from '../models/transaction'
-const AWS = require('aws-sdk')
+import s3Client from '../config/bucket'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 const { Storage } = require('@google-cloud/storage')
 
 const changeRole = async () => {
@@ -371,28 +372,28 @@ const stepBack = async () => {
 
 const migrationGcpBucketToAws = async () => {
   const storage = new Storage()
-  const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
-  })
-  const bucketName = 'hablaqui-content'
-
-  // Obtén una lista de todos los archivos en el bucket de Cloud Storage
-  const [files] = await storage.bucket(bucketName).getFiles()
-
-  // Copia cada archivo del bucket de Cloud Storage al bucket de S3
-  await Promise.all(
-    files.map(async (file) => {
-      const [destinationFile] = await file.copy(s3, {
-        destinationBucketName: 'hablaqui-content',
-        destination: file.name,
-      })
+  try {
+    // Obtiene los archivos del bucket de GCP
+    const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
+    for (const file of gcsFiles) {
+      // Descarga el archivo
+      const [contents] = await file.download()
+      // Sube el archivo a S3
+      const s3Key = file.name
+      const s3Params = {
+        Bucket: process.env.BUCKETNAME,
+        Key: s3Key,
+        Body: contents,
+      }
+      const putObjectCommand = new PutObjectCommand(s3Params)
+      const putObjectResponse = await s3Client.send(putObjectCommand)
       console.log(
-        `Archivo ${file.name} copiado a S3 como ${destinationFile.name}.`
+        `Uploaded ${s3Key} to S3 with ETag: ${putObjectResponse.ETag}`
       )
-    })
-  )
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const scriptsService = {
@@ -402,6 +403,7 @@ const scriptsService = {
   removeRole,
   migrateAll,
   stepBack,
+  migrationGcpBucketToAws,
 }
 
 export default Object.freeze(scriptsService)

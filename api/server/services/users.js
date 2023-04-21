@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs'
 import servicesAuth from './auth'
 import { actionInfo } from '../utils/logger/infoMessages'
 import { conflictResponse, okResponse } from '../utils/responses/functions'
-import { bucket } from '../config/bucket'
+import { deleteFile } from '../config/bucket'
 import mailServiceAccount from '../utils/functions/mails/accountsShares'
 import Sessions from '../models/sessions'
 import Coupon from '../models/coupons'
@@ -259,26 +259,12 @@ const usersService = {
   async deleteFile(oldAvatar, oldAvatarThumbnail) {
     // Se verifican que las imagenes existan y se eliminan, de lo contrario se retorna un error
     if (oldAvatar) {
-      const params = {
-        Bucket: process.env.BUCKETNAME,
-        Key: oldAvatar.split('https://cdn.hablaqui.cl/').join(''),
-      }
-
-      s3.deleteObject(params, function (err, data) {
-        if (err) console.log(err, err.stack)
-        else console.log(data)
-      })
+      await deleteFile(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
     }
     if (oldAvatarThumbnail) {
-      const params = {
-        Bucket: process.env.BUCKETNAME,
-        Key: oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join(''),
-      }
-
-      s3.deleteObject(params, function (err, data) {
-        if (err) console.log(err, err.stack)
-        else console.log(data)
-      })
+      await deleteFile(
+        oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join('')
+      )
     }
   },
 

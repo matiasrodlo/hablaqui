@@ -85,6 +85,7 @@ const scriptsController = {
   removeRol,
   migrateAll,
   stepBack,
+  migrationGcpBucketToAws,
 }
 
 export default Object.freeze(scriptsController)
