@@ -372,32 +372,35 @@ const stepBack = async () => {
 
 const migrationGcpBucketToAws = async () => {
   const gcs = new Storage()
-  const gcsBucketName = 'hablaqui-content'
-  try {
-    // Obtiene los archivos del bucket de GCP
-    const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles({ prefix: 'profile-pictures' })
-    for (const file of gcsFiles) {
-      // Descarga el archivo
-      const [contents] = await file.download()
-      if (!contents || contents.length === 0 || !file.name) {
-        continue
+  const gcsBucket = ['hablaqui-content', 'hablaqui-email', 'hablaqui-blog']
+  gcsBucket.forEach(async (gcsBucketName) => {
+    try {
+      // Obtiene los archivos del bucket de GCP
+      const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
+      for (const file of gcsFiles) {
+        // Descarga el archivo
+        const [contents] = await file.download()
+        if (!contents || contents.length === 0 || !file.name) {
+          continue
+        }
+        // Sube el archivo a S3 + carpeta
+        const s3Key = file.name
+        
+        const s3Params = {
+          Bucket: process.env.BUCKETNAME,
+          Key: s3Key,
+          Body: contents,
+        }
+        const putObjectCommand = new PutObjectCommand(s3Params)
+        const putObjectResponse = await s3.s3Client.send(putObjectCommand)
+        console.log(
+          `Uploaded ${s3Key} to S3 with ETag: ${putObjectResponse.ETag}`
+        )
       }
-      // Sube el archivo a S3 + carpeta
-      const s3Key = `profile-pictures/${file.name.split('/')[1]}`
-      const s3Params = {
-        Bucket: process.env.BUCKETNAME,
-        Key: s3Key,
-        Body: contents,
-      }
-      const putObjectCommand = new PutObjectCommand(s3Params)
-      const putObjectResponse = await s3.s3Client.send(putObjectCommand)
-      console.log(
-        `Uploaded ${s3Key} to S3 with ETag: ${putObjectResponse.ETag}`
-      )
+    } catch (error) {
+      console.error(error)
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
 
 const scriptsService = {
