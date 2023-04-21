@@ -37,7 +37,7 @@ services:
       - JWT_SECRET_REFRESH=api-refresh-hablaqui2021
       - PASSWORD_RECOVERY_JWT_EXPIRATION=40m
       - API_URL=http://localhost:3000/
-      - BUCKETNAME=hablaqui-content
+      - BUCKETNAME=prueba-hablaqui
       - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
       - NO_REPLY_EMAIL=no-reply@hablaqui.com
       - NO_REPLY_PASSWORD=hablaqui2021com
@@ -46,6 +46,9 @@ services:
       - VUE_APP_LANDING=http://localhost:9000/
       - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
       - NAMESPACE_TESTMAILS=bnwxe
+      - AWS_ACCESS_KEY_ID=AKIA3MM3IMZHAI2KVI6C
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=sa-east-1
     # # Se monta la carpeta del proyecto en el contenedor (lo que hace que no sea necesario hacer build cada vez que se modifica el código)
     # Volumen de anfitrion a host, se indica la ruta de la carpeta del proyecto en el host y la ruta de la carpeta del proyecto en el contenedor
     volumes:

@@ -1,4 +1,4 @@
-import { bucket, getPublicUrl } from '../config/bucket'
+import { s3 } from '../config/bucket'
 
 /**
  * middlerware for save in google storage cloud
@@ -6,23 +6,25 @@ import { bucket, getPublicUrl } from '../config/bucket'
  */
 const storage = (req, res, next) => {
   if (!req.file) return next()
-  const gcsname = `${Date.now()}-${req.file.originalname}`
-  const file = bucket.file(gcsname)
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype,
-    },
+  const awsname = `${Date.now()}-${req.file.originalname}`
+  const paramsFile = {
+    Bucket: process.env.BUCKETNAME,
+    Key: `${awsname}`,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  }
+  s3.putObject(paramsFile, (err, data) => {
+    if (err) {
+      req.file.cloudStorageError = err
+      console.log(err)
+      next(err)
+    } else {
+      req.file.cloudStorageObject = req.file.originalname
+      req.file.cloudStoragePublicUrl = getPublicUrl(gcsname)
+      console.log('Archivo subido exitosamente a S3')
+      next()
+    }
   })
-  stream.on('error', err => {
-    req.file.cloudStorageError = err
-    next(err)
-  })
-  stream.on('finish', () => {
-    req.file.cloudStorageObject = req.file.originalname
-    req.file.cloudStoragePublicUrl = getPublicUrl(gcsname)
-    next()
-  })
-  stream.end(req.file.buffer)
 }
 
 export default storage

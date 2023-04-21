@@ -117,10 +117,10 @@ const usersService = {
 
     // Se cuenta la cantidad de sesiones agendadas que aún no han sido realizadas
     const sessionesPendientes = ultimoPlan.session.filter(
-      session => session.status === 'pending' // || session.status === 'upnext'
+      (session) => session.status === 'pending' // || session.status === 'upnext'
     ).length
     const sessionesRealizadas = ultimoPlan.session.filter(
-      session =>
+      (session) =>
         Date.parse(session.date) < Date.now() && session.status === 'success'
     ).length
 
@@ -166,7 +166,7 @@ const usersService = {
 
     // Se filtran las sesiones que no a la fecha no se han realizado
     ultimoPlan.session = ultimoPlan.session.filter(
-      session =>
+      (session) =>
         Date.parse(session.date) < Date.now() && session.status === 'success'
     )
 
@@ -259,14 +259,26 @@ const usersService = {
   async deleteFile(oldAvatar, oldAvatarThumbnail) {
     // Se verifican que las imagenes existan y se eliminan, de lo contrario se retorna un error
     if (oldAvatar) {
-      await bucket
-        .file(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
-        .delete()
+      const params = {
+        Bucket: process.env.BUCKETNAME,
+        Key: oldAvatar.split('https://cdn.hablaqui.cl/').join(''),
+      }
+
+      s3.deleteObject(params, function (err, data) {
+        if (err) console.log(err, err.stack)
+        else console.log(data)
+      })
     }
     if (oldAvatarThumbnail) {
-      await bucket
-        .file(oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join(''))
-        .delete()
+      const params = {
+        Bucket: process.env.BUCKETNAME,
+        Key: oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join(''),
+      }
+
+      s3.deleteObject(params, function (err, data) {
+        if (err) console.log(err, err.stack)
+        else console.log(data)
+      })
     }
   },
 
@@ -301,12 +313,7 @@ const usersService = {
     // Se crea una contraseña aleatoria y se crea un objeto de usuario con los datos
     // enviados por el body
     const pass =
-      Math.random()
-        .toString(36)
-        .slice(2) +
-      Math.random()
-        .toString(36)
-        .slice(2)
+      Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
     const newUser = {
       // specialist: user._id,
       isInvited: true,
@@ -402,7 +409,7 @@ const usersService = {
 
     // Se filtran los planes vigentes y que hayan sido pagados
     const planData = foundPlan.plan.filter(
-      plan =>
+      (plan) =>
         plan.payment === 'success' && dayjs().isBefore(dayjs(plan.expiration))
     )
     if (!planData) return conflictResponse('No hay planes para cancelar')
@@ -410,12 +417,12 @@ const usersService = {
     // Se comienza a recorrer los planes y se obtienen algunos datos que
     // son almacenados en el array de sessionsData
     const sessionsData = []
-    planData.forEach(plan => {
+    planData.forEach((plan) => {
       const sessions = {
         plan: plan._id,
         remainingSessions: plan.remainingSessions,
         price: plan.sessionPrice,
-        session: plan.session.filter(session => session.status !== 'success'),
+        session: plan.session.filter((session) => session.status !== 'success'),
       }
       sessionsData.push(sessions)
     })
@@ -424,13 +431,13 @@ const usersService = {
     // pendientes y se logra obtener un descuento que se usará en el cupón
     let discount = 0
     const sessionsToDelete = []
-    sessionsData.forEach(data => {
+    sessionsData.forEach((data) => {
       const remaining = data.session.length + data.remainingSessions
       discount += remaining * data.price
       sessionsToDelete.push(data.session)
     })
 
-    planData.forEach(async plan => {
+    planData.forEach(async (plan) => {
       // Se busca en la base de datos y modifica el plan
       await Sessions.updateOne(
         {
@@ -446,7 +453,7 @@ const usersService = {
       )
 
       // Se eliminan las sessiones
-      plan.session.forEach(async session => {
+      plan.session.forEach(async (session) => {
         await Sessions.updateOne(
           {
             _id: sessionsId,
