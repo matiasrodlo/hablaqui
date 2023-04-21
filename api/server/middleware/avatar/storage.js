@@ -1,4 +1,4 @@
-import { s3Client } from '../config/bucket'
+import { s3Client } from '../../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 /**
