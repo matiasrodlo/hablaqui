@@ -371,7 +371,8 @@ const stepBack = async () => {
 }
 
 const migrationGcpBucketToAws = async () => {
-  const storage = new Storage()
+  const gcs = new Storage()
+  const gcsBucketName = 'hablaqui-content'
   try {
     // Obtiene los archivos del bucket de GCP
     const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
