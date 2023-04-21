@@ -1,15 +1,14 @@
 'use strict'
-import { S3, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3' // Se importa para poder usar el servicio de S3
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3' // Se importa para poder usar el servicio de S3
 import { S3RequestPresigner } from '@aws-sdk/s3-request-presigner' // Se utiliza para obtener la url
-import { fromIni } from '@aws-sdk/credential-provider-ini' // Se utiliza para obtener las credenciales
 
-const s3Client = new S3({
+const s3Client = new S3Client({
   region: process.env.AWS_REGION,
-  credentials: fromIni({
+  credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  }),
-}) // Asignar objeto del S3
+  },
+})// Asignar objeto del S3
 
 /**
  * @description Función para obtener la url de un archivo

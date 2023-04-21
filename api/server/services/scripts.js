@@ -10,7 +10,7 @@ import Email from '../models/email'
 import Evaluation from '../models/evaluation'
 import Psychologist from '../models/psychologist'
 import transactionModel from '../models/transaction'
-import s3Client from '../config/bucket'
+import s3 from '../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 const { Storage } = require('@google-cloud/storage')
 
@@ -375,19 +375,22 @@ const migrationGcpBucketToAws = async () => {
   const gcsBucketName = 'hablaqui-content'
   try {
     // Obtiene los archivos del bucket de GCP
-    const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
+    const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles({ prefix: 'profile-pictures' })
     for (const file of gcsFiles) {
       // Descarga el archivo
       const [contents] = await file.download()
-      // Sube el archivo a S3
-      const s3Key = file.name
+      if (!contents || contents.length === 0 || !file.name) {
+        continue
+      }
+      // Sube el archivo a S3 + carpeta
+      const s3Key = `profile-pictures/${file.name.split('/')[1]}`
       const s3Params = {
         Bucket: process.env.BUCKETNAME,
         Key: s3Key,
         Body: contents,
       }
       const putObjectCommand = new PutObjectCommand(s3Params)
-      const putObjectResponse = await s3Client.send(putObjectCommand)
+      const putObjectResponse = await s3.s3Client.send(putObjectCommand)
       console.log(
         `Uploaded ${s3Key} to S3 with ETag: ${putObjectResponse.ETag}`
       )
