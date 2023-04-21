@@ -37,7 +37,7 @@ services:
       - JWT_SECRET_REFRESH=api-refresh-hablaqui2021
       - PASSWORD_RECOVERY_JWT_EXPIRATION=40m
       - API_URL=http://localhost:3000/
-      - BUCKETNAME=prueba-hablaqui
+      - BUCKETNAME=hablaqui-content
       - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
       - NO_REPLY_EMAIL=no-reply@hablaqui.com
       - NO_REPLY_PASSWORD=hablaqui2021com
