@@ -372,22 +372,28 @@ const stepBack = async () => {
 
 const migrationGcpBucketToAws = async () => {
   const gcs = new Storage()
-  const gcsBucket = ['hablaqui-content', 'hablaqui-email', 'hablaqui-blog']
+  const gcsBucket = ['hablaqui-email', 'hablaqui-content', 'hablaqui-blog']
   gcsBucket.forEach(async (gcsBucketName) => {
     try {
       // Obtiene los archivos del bucket de GCP
       const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
+      if (!gcsFiles) return okResponse('No hay archivos en el bucket')
       for (const file of gcsFiles) {
+        if (!file) 
+          continue
+        if (!file.name) {
+          continue
+        }
         // Descarga el archivo
         const [contents] = await file.download()
-        if (!contents || contents.length === 0 || !file.name) {
+        if (!contents || contents.length === 0) {
           continue
         }
         // Sube el archivo a S3 + carpeta
         const s3Key = file.name
         
         const s3Params = {
-          Bucket: process.env.BUCKETNAME,
+          Bucket: gcsBucketName,
           Key: s3Key,
           Body: contents,
         }
@@ -401,6 +407,7 @@ const migrationGcpBucketToAws = async () => {
       console.error(error)
     }
   })
+  return okResponse('Todo actualizado')
 }
 
 const scriptsService = {
