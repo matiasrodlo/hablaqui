@@ -777,11 +777,12 @@ const updateFormationExperience = async (user, payload) => {
   })
 }
 
+// Función actualmente no utilizada.
 const uploadProfilePicture = async (specID, picture) => {
   if (!picture) return conflictResponse('No se ha enviado ninguna imagen')
   const { name, lastName, _id } = await User.findById(specID)
   const awsname = `${specID}-${name}-${lastName}`
-  await uploadFile(awsname, picture.buffer, picture.mimetype)
+  await uploadFile(awsname, picture.buffer)
 
   // Se hace el trackeo de la imagen en segment
   if (
@@ -792,20 +793,20 @@ const uploadProfilePicture = async (specID, picture) => {
       userId: _id.toString(),
       event: 'updated-profile-picture',
       properties: {
-        avatar: await getPublicUrl(awsname),
+        avatar: getPublicUrlAvatar(awsname),
       },
     })
   }
 
   await Specialist.findByIdAndUpdate(specID, {
-    avatar: await getPublicUrl(awsname),
-    avatarThumbnail: await getPublicUrl(awsname),
+    avatar: getPublicUrlAvatar(awsname),
+    avatarThumbnail: getPublicUrlAvatarThumb(awsname),
   })
 
   return okResponse('Imagen subida', {
     // Se retorna una respuesta de exito
-    avatar: await getPublicUrl(awsname),
-    avatarThumbnail: await getPublicUrl(awsname),
+    avatar: getPublicUrlAvatar(awsname),
+    avatarThumbnail: getPublicUrlAvatarThumb(awsname),
   })
 }
 

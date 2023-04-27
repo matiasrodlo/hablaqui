@@ -22,18 +22,25 @@ const storage = async (req, res, next) => {
   }`
 
   // Se utiliza para subir el archivo al bucket
-  const s3Params = {
+  const s3Params = [{
     Bucket: process.env.BUCKETNAME,
-    Key: `${awsname}`,
+    Key: `profile-pictures/${awsname}`,
     Body: req.file.buffer,
-  }
+  },{
+    Bucket: process.env.BUCKETNAME,
+    Key: `profile-pictures/thumbnails/${awsname}_128x128`,
+    Body: req.file.buffer,
+  }]
   // Se sube el archivo
   try {
-    const putObjectCommand = new PutObjectCommand(s3Params)
+    const putObjectCommand = new PutObjectCommand(s3Params[0])
     const putObjectResponse = await s3.s3Client.send(putObjectCommand)
     console.log(`Object uploaded successfully at ${putObjectResponse.ETag}`)
     req.file.cloudStorageObject = req.file.originalname
     req.file.avatar = s3.getPublicUrlAvatar(awsname)
+    const putObjectCommandThumb = new PutObjectCommand(s3Params[1])
+    const putObjectResponseThumb = await s3.s3Client.send(putObjectCommandThumb)
+    console.log(`Object uploaded successfully at ${putObjectResponseThumb.ETag}`)
     req.file.avatarThumbnail = s3.getPublicUrlAvatarThumb(awsname)
     next()
   } catch (error) {

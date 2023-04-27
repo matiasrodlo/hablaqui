@@ -35,18 +35,24 @@ const getPublicUrlAvatarThumb = filename => {
  * @param {*} key - Nombre del archivo
  * @param {*} data - Archivo
  */
-const uploadFile = async (key, data, type) => {
+const uploadFile = async (key, data) => {
   // Se utiliza para subir el archivo al bucket
   const command = new PutObjectCommand({
     Bucket: process.env.BUCKETNAME,
-    Key: key,
+    Key: `profile-pictures/${key}`,
     Body: data,
-    ContentType: type,
+  })
+  const command2 = new PutObjectCommand({
+    Bucket: process.env.BUCKETNAME,
+    Key: `profile-pictures/thumbnails/${key}_128x128`,
+    Body: data,
   })
   // Se sube el archivo
   try {
     const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.Location}`)
+    console.log(`Object uploaded successfully at ${response.ETag}`)
+    const response2 = await s3Client.send(command2)
+    console.log(`Object uploaded successfully at ${response2.ETag}`)
   } catch (error) {
     console.log(error)
   }

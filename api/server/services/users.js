@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs'
 import servicesAuth from './auth'
 import { actionInfo } from '../utils/logger/infoMessages'
 import { conflictResponse, okResponse } from '../utils/responses/functions'
-import { deleteFile } from '../config/bucket'
+import s3 from '../config/bucket'
 import mailServiceAccount from '../utils/functions/mails/accountsShares'
 import Sessions from '../models/sessions'
 import Coupon from '../models/coupons'
@@ -259,11 +259,11 @@ const usersService = {
   async deleteFile(oldAvatar, oldAvatarThumbnail) {
     // Se verifican que las imagenes existan y se eliminan, de lo contrario se retorna un error
     if (oldAvatar) {
-      await deleteFile(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
+      await s3.deleteFile(oldAvatar.split('https://nuevo-cdn.hablaqui.cl/').join(''))
     }
     if (oldAvatarThumbnail) {
-      await deleteFile(
-        oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join('')
+      await s3.deleteFile(
+        oldAvatarThumbnail.split('https://nuevo-cdn.hablaqui.cl/').join('')
       )
     }
   },
