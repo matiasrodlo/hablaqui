@@ -868,7 +868,7 @@ export default {
       this.comunasRegiones = response.data
       this.regiones = response.data.map((i) => i.region)
       const { data } = await axios.get(
-        `${this.$config.VUE_URL}timezone.json`
+        `${this.$config.API_ABSOLUTE}/timezone.json`
       )
       this.timezone = data
       await this.getAppointments()
