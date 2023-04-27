@@ -304,7 +304,7 @@ export default {
     }
     // obtenemos la zona
     const { data } = await axios.get(
-      `${this.$config.API_ABSOLUTE}/timezone.json`
+      `${this.$config.VUE_URL}timezone.json`
     )
     // obtenemos las comunas y regiones de chile
     const response = await axios.get(
