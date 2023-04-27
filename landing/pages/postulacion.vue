@@ -1160,15 +1160,15 @@ export default {
     // se obtienen los datos iniciales
     this.loading = true
     const { data } = await axios.get(
-      `${this.$config.VUE_URL}/timezone.json`
+      `${this.$config.VUE_URL}timezone.json`
     )
     let responseCountries = await fetch(
-      `${this.$config.VUE_URL}/countries.json`
+      `${this.$config.VUE_URL}countries.json`
     )
     responseCountries = await responseCountries.json()
     this.countries = responseCountries
     const response = await axios.get(
-      `${this.$config.VUE_URL}/comunas-regiones.json`
+      `${this.$config.VUE_URL}comunas-regiones.json`
     )
     this.timezone = data
     this.comunasRegiones = response.data

@@ -218,7 +218,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: this.$config.VUE_URL + '/especialistas/ubicaciones',
+          content: this.$config.VUE_URL + 'especialistas/ubicaciones',
         },
         {
           hid: 'og:title',
@@ -234,7 +234,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.$config.VUE_URL + '/especialistas/ubicaciones',
+          content: this.$config.VUE_URL + 'especialistas/ubicaciones',
         },
         {
           hid: 'robots',
@@ -265,7 +265,7 @@ export default {
     },
   },
   async mounted() {
-    const response = await fetch(`${this.$config.VUE_URL}/comunas.json`, {
+    const response = await fetch(`${this.$config.VUE_URL}comunas.json`, {
       method: 'get',
     })
     this.comunas = await response.json()

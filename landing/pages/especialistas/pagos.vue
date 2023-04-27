@@ -70,18 +70,18 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: this.$config.VUE_URL + '/especialistas',
+          content: this.$config.VUE_URL + 'especialistas',
         },
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.$config.VUE_URL + '/especialistas',
+          content: this.$config.VUE_URL + 'especialistas',
         },
       ],
       link: [
         {
           rel: 'canonical',
-          href: this.$config.VUE_URL + '/especialistas/',
+          href: this.$config.VUE_URL + 'especialistas/',
         },
       ],
     }

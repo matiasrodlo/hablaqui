@@ -263,7 +263,7 @@ export default {
     },
   },
   async mounted() {
-    let response = await fetch(`${this.$config.VUE_URL}/faq.json`)
+    let response = await fetch(`${this.$config.VUE_URL}faq.json`)
     response = await response.json()
     this.selectedItem = response[0]
     this.items = response

@@ -156,7 +156,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: this.$config.VUE_URL + '/registrar-especialista',
+          content: this.$config.VUE_URL + 'registrar-especialista',
         },
         {
           hid: 'twitter:title',
@@ -166,7 +166,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.$config.VUE_URL + '/registrar-especialista',
+          content: this.$config.VUE_URL + 'registrar-especialista',
         },
         {
           hid: 'og:title',

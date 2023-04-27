@@ -15,7 +15,7 @@ export default {
       await store.dispatch('Specialist/getSpecialists')
       if (payload) return { comuna: payload }
       else {
-        const response = await fetch(`${this.$config.VUE_URL}/comunas.json`, {
+        const response = await fetch(`${this.$config.VUE_URL}comunas.json`, {
           method: 'get',
         })
         const comunas = await response.json()
@@ -38,7 +38,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: this.$config.VUE_URL + '/' + this.$route.params.slug,
+          content: this.$config.VUE_URL + this.$route.params.slug,
         },
         {
           hid: 'twitter:title',
@@ -48,7 +48,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.$config.VUE_URL + '/' + this.$route.params.slug,
+          content: this.$config.VUE_URL + this.$route.params.slug,
         },
         {
           hid: 'og:title',
