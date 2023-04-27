@@ -1163,12 +1163,12 @@ export default {
       `${this.$config.API_ABSOLUTE}/timezone.json`
     )
     let responseCountries = await fetch(
-      `${this.$config.LANDING_URL}/countries.json`
+      `${this.$config.API_ABSOLUTE}/countries.json`
     )
     responseCountries = await responseCountries.json()
     this.countries = responseCountries
     const response = await axios.get(
-      `${this.$config.LANDING_URL}/comunas-regiones.json`
+      `${this.$config.API_ABSOLUTE}/comunas-regiones.json`
     )
     this.timezone = data
     this.comunasRegiones = response.data

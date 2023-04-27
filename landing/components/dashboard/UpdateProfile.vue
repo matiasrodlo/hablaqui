@@ -308,7 +308,7 @@ export default {
     )
     // obtenemos las comunas y regiones de chile
     const response = await axios.get(
-      `${this.$config.LANDING_URL}/comunas-regiones.json`
+      `${this.$config.API_ABSOLUTE}/comunas-regiones.json`
     )
     this.comunasRegiones = response.data
     this.regiones = response.data.map((i) => i.region)
