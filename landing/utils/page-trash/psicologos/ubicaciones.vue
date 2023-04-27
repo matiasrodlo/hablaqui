@@ -265,7 +265,7 @@ export default {
     },
   },
   async mounted() {
-    const response = await fetch(`${this.$config.VUE_URL}comunas.json`, {
+    const response = await fetch(`${this.$config.API_ABSOLUTE}/comunas.json`, {
       method: 'get',
     })
     this.comunas = await response.json()

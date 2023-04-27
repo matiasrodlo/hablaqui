@@ -14,6 +14,10 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
+		API_ABSOLUTE:
+			process.env.NODE_ENV === 'production'
+				? process.env.API_ABSOLUTE
+				: 'http://localhost:3000/',
 	},
 	server: {
 		port: 9000,
