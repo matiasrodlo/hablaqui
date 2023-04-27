@@ -859,16 +859,16 @@ export default {
       await this.getRecruitments()
       await this.getSpecialist()
       await this.getFormattedSessions()
-      let banks = await fetch(`${this.$config.LANDING_URL}/bancos.json`)
+      let banks = await fetch(`${this.$config.VUE_URL}/bancos.json`)
       banks = await banks.json()
       this.banks = banks
       const response = await axios.get(
-        `${this.$config.LANDING_URL}/comunas-regiones.json`
+        `${this.$config.VUE_URL}/comunas-regiones.json`
       )
       this.comunasRegiones = response.data
       this.regiones = response.data.map((i) => i.region)
       const { data } = await axios.get(
-        `${this.$config.LANDING_URL}/timezone.json`
+        `${this.$config.VUE_URL}/timezone.json`
       )
       this.timezone = data
       await this.getAppointments()

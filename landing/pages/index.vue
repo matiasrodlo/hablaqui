@@ -897,8 +897,8 @@ export default {
       '@context': 'http://www.schema.org',
       '@type': 'Organization',
       name: 'Hablaqui',
-      url: this.$config.LANDING_URL,
-      logo: this.$config.LANDING_URL,
+      url: this.$config.VUE_URL,
+      logo: this.$config.VUE_URL,
       description:
         'Elige un especialista online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Especialistas especialistas online. ¡Comienza ahora!',
     }
@@ -906,7 +906,7 @@ export default {
   head() {
     const { path } = this.$route
     const pathWithSlash = path.endsWith('/') ? path : `${path}/`
-    const canonical = `${this.$config.LANDING_URL}${pathWithSlash}`
+    const canonical = `${this.$config.VUE_URL}${pathWithSlash}`
     return {
       title: 'Especialistas online desde $15.500 - Terapia online efectiva',
       meta: [

@@ -6,14 +6,10 @@ const isDev = process.env.DEPLOY_ENV === 'DEV';
 export default {
 	target: 'static',
 	publicRuntimeConfig: {
-		LANDING_URL:
+		VUE_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_LANDING
 				: 'http://localhost:9000/',
-		FRONTEND_URL:
-			process.env.NODE_ENV === 'production'
-				? process.env.FRONTEND_URL
-				: 'http://localhost:8080/#',
 		API_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL

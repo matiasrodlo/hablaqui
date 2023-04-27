@@ -367,7 +367,7 @@ export default {
      */
     copyLink() {
       navigator.clipboard.writeText(
-        `${this.$config.LANDING_URL}${this.specialist.username}`
+        `${this.$config.VUE_URL}${this.specialist.username}`
       )
     },
     ...mapMutations({
