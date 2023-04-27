@@ -93,7 +93,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+          content: this.$config.LANDING_URL + '/' + this.$route.params.slug,
         },
         {
           hid: 'twitter:title',
@@ -115,7 +115,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: process.env.VUE_APP_LANDING + '/' + this.$route.params.slug,
+          content: this.$config.LANDING_URL + '/' + this.$route.params.slug,
         },
         {
           hid: 'og:title',

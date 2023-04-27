@@ -535,7 +535,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: `${process.env.VUE_APP_LANDING}/para-especialistas/`,
+          content: `${this.$config.LANDING_URL}/para-especialistas/`,
         },
         {
           hid: 'twitter:title',
@@ -550,7 +550,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `${process.env.VUE_APP_LANDING}/para-especialistas`,
+          content: `${this.$config.LANDING_URL}/para-especialistas`,
         },
         {
           hid: 'og:title',

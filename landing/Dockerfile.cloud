@@ -9,8 +9,10 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # Variables de entorno para reemplazar lo que se hizo en el paso anterior
 ARG API_ABSOLUTE
 ARG VUE_APP_URL
+ARG VUE_APP_LANDING
 ENV API_ABSOLUTE=${API_ABSOLUTE}
 ENV VUE_APP_URL=${VUE_APP_URL}
+ENV VUE_APP_LANDING=${VUE_APP_LANDING}
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app

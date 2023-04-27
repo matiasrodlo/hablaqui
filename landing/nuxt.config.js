@@ -96,7 +96,9 @@ export default {
 			{
 				hid: 'twitter:url',
 				name: 'twitter:url',
-				content: process.env.VUE_APP_LANDING,
+				content: process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 			},
 			{
 				hid: 'twitter:title',
@@ -122,7 +124,9 @@ export default {
 			{
 				hid: 'og:url',
 				property: 'og:url',
-				content: process.env.VUE_APP_LANDING,
+				content: process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 			},
 			{
 				hid: 'og:title',
@@ -356,7 +360,9 @@ export default {
 		/*
 		 ** public patch
 		 */
-		publicPath: process.env.VUE_APP_LANDING,
+		publicPath: process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 		filenames: process.env.VUE_APP_LANDING
 			? {
 					img: ({ isDev }) =>
