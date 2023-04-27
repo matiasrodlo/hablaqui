@@ -16,7 +16,7 @@ export default {
 				: 'http://localhost:3000/api/v1',
 	},
 	server: {
-		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
+		port: 9000,
 		host: '0.0.0.0',
 	},
 	generate: {
