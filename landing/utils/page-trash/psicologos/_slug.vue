@@ -15,7 +15,7 @@ export default {
       await store.dispatch('Specialist/getSpecialists')
       if (payload) return { comuna: payload }
       else {
-        const response = await fetch(`${$config.VUE_URL}/comunas.json`, {
+        const response = await fetch(`${this.$config.VUE_URL}/comunas.json`, {
           method: 'get',
         })
         const comunas = await response.json()

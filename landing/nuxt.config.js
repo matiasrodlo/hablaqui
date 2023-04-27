@@ -14,10 +14,6 @@ export default {
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
-		API_ABSOLUTE:
-			process.env.NODE_ENV === 'production'
-				? process.env.API_ABSOLUTE
-				: 'http://localhost:3000/',
 	},
 	server: {
 		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
@@ -348,44 +344,44 @@ export default {
 		treeShake: true,
 	},
 	// Build Configuration: https://go.nuxtjs.dev/config-build
-	build: {
-		/*
-		 ** Analyze build files
-		 */
-		analyze: isDev,
-		/*
-		 ** public patch
-		 */
-		publicPath: process.env.NODE_ENV === 'production'
-				? process.env.VUE_APP_LANDING
-				: 'http://localhost:9000/',
-		filenames: process.env.VUE_APP_LANDING
-			? {
-					img: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
-					app: ({ isDev, isModern }) =>
-						isDev
-							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
-							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
-					chunk: ({ isDev, isModern }) =>
-						isDev
-							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
-							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
-					css: ({ isDev }) =>
-						isDev
-							? '[name].css?v=' + pkg.version
-							: 'css/[contenthash:7].css?v=' + pkg.version,
-					font: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'fonts/[name].[contenthash:7].[ext]?v=' + pkg.version,
-					video: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'videos/[name].[contenthash:7].[ext]?v=' + pkg.version,
-			  }
-			: {},
-	},
+	// build: {
+	// 	/*
+	// 	 ** Analyze build files
+	// 	 */
+	// 	analyze: isDev,
+	// 	/*
+	// 	 ** public patch
+	// 	 */
+	// 	publicPath: process.env.NODE_ENV === 'production'
+	// 			? process.env.VUE_APP_LANDING
+	// 			: 'http://localhost:9000/',
+	// 	filenames: process.env.VUE_APP_LANDING
+	// 		? {
+	// 				img: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 				app: ({ isDev, isModern }) =>
+	// 					isDev
+	// 						? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+	// 						: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+	// 				chunk: ({ isDev, isModern }) =>
+	// 					isDev
+	// 						? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+	// 						: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+	// 				css: ({ isDev }) =>
+	// 					isDev
+	// 						? '[name].css?v=' + pkg.version
+	// 						: 'css/[contenthash:7].css?v=' + pkg.version,
+	// 				font: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'fonts/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 				video: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'videos/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 		  }
+	// 		: {},
+	// },
 };
