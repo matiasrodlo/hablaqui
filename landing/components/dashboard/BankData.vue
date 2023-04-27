@@ -297,7 +297,7 @@ export default {
       // guardamos una copia profunda que utilizaremos para editar estos datos
       this.bankData = cloneDeep(this.specialist.paymentMethod)
     // listado de bancos
-    let response = await fetch(`${this.$config.LANDING_URL}/bancos.json`)
+    let response = await fetch(`${this.$config.VUE_URL}bancos.json`)
     response = await response.json()
     this.banks = response
   },

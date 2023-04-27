@@ -218,7 +218,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: process.env.VUE_APP_LANDING + '/auth',
+          content: this.$config.VUE_URL + 'auth',
         },
         {
           hid: 'twitter:title',
@@ -228,7 +228,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: process.env.VUE_APP_LANDING + '/auth',
+          content: this.$config.VUE_URL + 'auth',
         },
         {
           hid: 'og:title',

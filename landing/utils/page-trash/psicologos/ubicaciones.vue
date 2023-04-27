@@ -218,7 +218,7 @@ export default {
         {
           hid: 'twitter:url',
           name: 'twitter:url',
-          content: process.env.VUE_APP_LANDING + '/especialistas/ubicaciones',
+          content: this.$config.VUE_URL + 'especialistas/ubicaciones',
         },
         {
           hid: 'og:title',
@@ -234,7 +234,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: process.env.VUE_APP_LANDING + '/especialistas/ubicaciones',
+          content: this.$config.VUE_URL + 'especialistas/ubicaciones',
         },
         {
           hid: 'robots',
