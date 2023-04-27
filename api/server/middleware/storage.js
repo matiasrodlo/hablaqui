@@ -20,10 +20,10 @@ const storage = async (req, res, next) => {
     const response = await s3Client.send(command)
     console.log(`Object uploaded successfully at ${response.Location}`)
     req.file.cloudStorageObject = req.file.originalname
-    req.file.cloudStoragePublicUrl = getPublicUrl(gcsname)
+    req.file.cloudStoragePublicUrl = getPublicUrl(awsname)
     next()
   } catch (error) {
-    req.file.cloudStorageError = err
+    req.file.cloudStorageError = error
     console.log(error)
     next(err)
   }

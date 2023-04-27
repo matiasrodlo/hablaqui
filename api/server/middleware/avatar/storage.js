@@ -1,4 +1,4 @@
-import { s3Client } from '../../config/bucket'
+import s3 from '../../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 /**
@@ -22,24 +22,24 @@ const storage = async (req, res, next) => {
   }`
 
   // Se utiliza para subir el archivo al bucket
-  const command = new PutObjectCommand({
+  const s3Params = {
     Bucket: process.env.BUCKETNAME,
     Key: `${awsname}`,
     Body: req.file.buffer,
-    ContentType: req.file.mimetype,
-  })
+  }
   // Se sube el archivo
   try {
-    const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.Location}`)
+    const putObjectCommand = new PutObjectCommand(s3Params)
+    const putObjectResponse = await s3.s3Client.send(putObjectCommand)
+    console.log(`Object uploaded successfully at ${putObjectResponse.ETag}`)
     req.file.cloudStorageObject = req.file.originalname
-    req.file.avatar = getPublicUrl(gcsname)
-    req.file.avatarThumbnail = getPublicUrl(gcsname)
+    req.file.avatar = s3.getPublicUrlAvatar(awsname)
+    req.file.avatarThumbnail = s3.getPublicUrlAvatarThumb(awsname)
     next()
   } catch (error) {
-    req.file.cloudStorageError = err
+    req.file.cloudStorageError = error
     console.log(error)
-    next(err)
+    next(error)
   }
 }
 

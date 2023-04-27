@@ -1,6 +1,5 @@
 'use strict'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3' // Se importa para poder usar el servicio de S3
-import { S3RequestPresigner } from '@aws-sdk/s3-request-presigner' // Se utiliza para obtener la url
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
@@ -11,28 +10,24 @@ const s3Client = new S3Client({
 })// Asignar objeto del S3
 
 /**
- * @description Función para obtener la url de un archivo
+ * @description Función para obtener la url de un avatar
  * @param {*} fileName - Nombre del archivo
  * @returns
  */
-const getPublicUrl = (fileName) => {
-  // Se utiliza para obtener la url del archivo
-  const presigner = new S3RequestPresigner({ ...s3Client.config })
+const getPublicUrlAvatar = filename => {
+  // Más especifico para las imágenes de perfil.
+  return `https://nuevo-cdn.hablaqui.cl/profile-pictures/${filename}`
+}
 
-  // Se obtiene la url del archivo
-  const command = presigner.presignCommand({
-    command: {
-      input: {
-        Bucket: process.env.BUCKETNAME,
-        Key: fileName,
-      },
-    },
-    expiresIn: 3600, // Tiempo de expiración de la URL en segundos
-  })
-
-  // Se retorna la url
-  const url = command.presignedRequest.url
-  return url
+/**
+ * @description Función para obtener la url de un avatar thumbnails
+ * @param {*} filename - Nombre del archivo
+ * @returns 
+ */
+// public URL for thumnail avatars (in thumbnail resolution)
+const getPublicUrlAvatarThumb = filename => {
+  // Especifico para las imágenes de perfil en miniatura para speccologos.
+  return `https://nuevo-cdn.hablaqui.cl/profile-pictures/thumbnails/${filename}_128x128`
 }
 
 /**
@@ -77,4 +72,4 @@ const deleteFile = async (key) => {
   }
 }
 
-export default { getPublicUrl, uploadFile, deleteFile, s3Client }
+export default { getPublicUrlAvatar, getPublicUrlAvatarThumb, uploadFile, deleteFile, s3Client }
