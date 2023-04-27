@@ -11,7 +11,6 @@ ARG API_ABSOLUTE
 ARG VUE_APP_URL
 ARG VUE_APP_LANDING
 ENV API_ABSOLUTE=${API_ABSOLUTE}
-ENV VUE_APP_URL=${VUE_APP_URL}
 
 # 	Cambiar de directorio actual a /home/node/app
 WORKDIR /home/node/app
