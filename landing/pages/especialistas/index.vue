@@ -19,13 +19,8 @@
       <v-container class="white--text py-16">
         <v-row>
           <v-col>
-            disponibles a través de Hablaquí son proporcionados de forma
-            independiente por profesionales en salud mental certificados.
-            Hablaquí no proporciona ningún servicio de salud mental u otros
-            dImportante: Los serviciose atención médica. Los profesionales en
-            salud mental no pre-escriben medicamentos a través de Hablaquí. Si
-            estás experimentando una crisis o emergencia, por favor comunícate a
-            los servicios de emergencia más cercanos a tu localidad.
+            Los servicios disponibles a través de Hablaquí son proporcionados de
+            forma independiente por profesionales en salud mental certificados.
           </v-col>
         </v-row>
       </v-container>
