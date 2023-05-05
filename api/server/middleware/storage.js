@@ -1,28 +1,32 @@
-import { bucket, getPublicUrl } from '../config/bucket'
+import { s3Client } from '../config/bucket'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 /**
  * middlerware for save in google storage cloud
  * handler single image only
  */
-const storage = (req, res, next) => {
+const storage = async (req, res, next) => {
   if (!req.file) return next()
-  const gcsname = `${Date.now()}-${req.file.originalname}`
-  const file = bucket.file(gcsname)
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype,
-    },
+  const awsname = `${Date.now()}-${req.file.originalname}`
+  // Se utiliza para subir el archivo al bucket
+  const command = new PutObjectCommand({
+    Bucket: process.env.BUCKETNAME,
+    Key: `${awsname}`,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
   })
-  stream.on('error', err => {
-    req.file.cloudStorageError = err
-    next(err)
-  })
-  stream.on('finish', () => {
+  // Se sube el archivo
+  try {
+    const response = await s3Client.send(command)
+    console.log(`Object uploaded successfully at ${response.Location}`)
     req.file.cloudStorageObject = req.file.originalname
-    req.file.cloudStoragePublicUrl = getPublicUrl(gcsname)
+    req.file.cloudStoragePublicUrl = getPublicUrl(awsname)
     next()
-  })
-  stream.end(req.file.buffer)
+  } catch (error) {
+    req.file.cloudStorageError = error
+    console.log(error)
+    next(err)
+  }
 }
 
 export default storage

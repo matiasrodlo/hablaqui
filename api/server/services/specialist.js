@@ -9,11 +9,7 @@ import User from '../models/user'
 import { conflictResponse, okResponse } from '../utils/responses/functions'
 import dayjs from 'dayjs'
 import Sessions from '../models/sessions'
-import {
-  bucket,
-  getPublicUrlAvatar,
-  getPublicUrlAvatarThumb,
-} from '../config/bucket'
+import { getPublicUrl } from '../config/bucket'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -116,7 +112,7 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
   let points = 0
   for (let i = 0; i < nextDays; i++) {
     // Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
-    days[i].available.forEach(hora => {
+    days[i].available.forEach((hora) => {
       if (
         dayjs(hora, 'HH:mm').isBetween(
           dayjs('00:00', 'HH:mm'),
@@ -214,7 +210,7 @@ const ponderationMatch = async (matchedList, payload) => {
   const weighted = [0.1, 0.25, 0.25, 0.2, 0.1]
   // Devuelve una promesa que termina correctamente cuando todas las promesas en el argumento iterable han sido concluídas con éxito
   let newMatchedList = await Promise.all(
-    matchedList.map(async spec => {
+    matchedList.map(async (spec) => {
       let criteria = 0
       let points = normalize(spec.points, 0, 100) * weighted[criteria]
       criteria++
@@ -266,7 +262,7 @@ const specialistClasification = async (matchedList, payload) => {
   const pointsPerCriterion = 1
   // Entre los especialistas ya ponderados se obtiene cual es el que tiene mayor disponibilidad
   const newMatchedList = await Promise.all(
-    matchedList.map(async spec => {
+    matchedList.map(async (spec) => {
       spec.points = 0
       const days = await sessionsFunctions.getFormattedSessionsForMatch(
         spec._id
@@ -294,7 +290,7 @@ const specialistClasification = async (matchedList, payload) => {
   return resultList
 }
 
-const match = async body => {
+const match = async (body) => {
   const { payload } = body
   let matchedSpecialists = []
   let perfectMatch = true
@@ -365,7 +361,7 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
     return conflictResponse('Sesion no encontrada')
   }
   // Se verifica si el plan sigue vigente
-  sessions.plan.forEach(plan => {
+  sessions.plan.forEach((plan) => {
     for (let i = 0; i < plan.session.length; i++) {
       if (
         plan.session[i]._id.toString() === sessionId.toString() &&
@@ -398,7 +394,7 @@ const updatePlan = async (specialistId, planInfo) => {
   return okResponse('Plan creado', { specialist: updatedSpecialist })
 }
 
-const getByData = async username => {
+const getByData = async (username) => {
   // Funcion para obtener un especialista por su username
   const usernameSearch = await Specialist.findOne({ username })
   if (!usernameSearch) {
@@ -686,7 +682,7 @@ const setPrice = async (user, newPrice) => {
   })
 }
 
-const getClients = async specialist => {
+const getClients = async (specialist) => {
   // Se busca las sessiones de un especialista en particular y se filtran por las que estan pagadas
   const sessions = await Sessions.find({
     specialist,
@@ -694,8 +690,8 @@ const getClients = async specialist => {
 
   return okResponse('Usuarios encontrados', {
     users: sessions
-      .filter(item => item.user)
-      .map(item => ({
+      .filter((item) => item.user)
+      .map((item) => ({
         _id: item.user._id,
         avatar: item.user.avatar,
         avatarThumbnail: item.user.avatarThumbnail,
@@ -712,7 +708,7 @@ const getClients = async specialist => {
         observation: item.observation,
         phone: item.user.phone,
         plan: item.plan.find(
-          plan =>
+          (plan) =>
             plan.payment === 'success' &&
             dayjs().isBefore(dayjs(plan.expiration))
         ),
@@ -724,21 +720,21 @@ const getClients = async specialist => {
   })
 }
 
-const getLastSession = item => {
+const getLastSession = (item) => {
   // Se obtiene la ultima sesion de un documento Sessions, se le da formato, se ordena, se filtra y se retorna
   return item.plan
-    .flatMap(plan =>
-      plan.session.map(session =>
+    .flatMap((plan) =>
+      plan.session.map((session) =>
         dayjs.tz(dayjs(session.date, 'MM/DD/YYYY HH:mm')).format('DD/MM/YYYY')
       )
     )
     .sort((a, b) => new Date(b) - new Date(a))
-    .find(sessionDate =>
+    .find((sessionDate) =>
       dayjs(sessionDate, 'DD/MM/YYYY').isSameOrBefore(dayjs())
     )
 }
 
-const searchClients = async search => {
+const searchClients = async (search) => {
   // Se busca un usuario por nombre y correo
   const foundUser = await User.find({ email: search, name: search })
   if (!foundUser) {
@@ -747,7 +743,7 @@ const searchClients = async search => {
   return okResponse('Usuario encontrado', { users: foundUser })
 }
 
-const usernameAvailable = async username => {
+const usernameAvailable = async (username) => {
   // Se verifica si el nombre de usuario ya existe para saber si el usuario está disponible
   let available = true
   if (await Specialist.exists({ username })) available = false
@@ -781,27 +777,12 @@ const updateFormationExperience = async (user, payload) => {
   })
 }
 
+// Función actualmente no utilizada.
 const uploadProfilePicture = async (specID, picture) => {
   if (!picture) return conflictResponse('No se ha enviado ninguna imagen')
   const { name, lastName, _id } = await User.findById(specID)
-  // Se crea el archivo en GCS, GCS es un bucket de Google Cloud Storage, un bucket en Google Cloud Storage son contenedores básicos que contienen los datos
-  const gcsname = `${specID}-${name}-${lastName}`
-  const file = bucket.file(gcsname)
-  // Se crea un stream para escribir en el archivo y se escribe el metadato de la imagen
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: picture.mimetype,
-    },
-  })
-  stream.on('error', err => {
-    picture.cloudStorageError = err
-    conflictResponse('Error al subir la imagen')
-  })
-  stream.on('finish', () => {
-    logInfo(`${gcsname}` + ' subido exitosamente')
-  })
-  // Se escribe el archivo en el stream
-  stream.end(picture.buffer)
+  const awsname = `${specID}-${name}-${lastName}`
+  await uploadFile(awsname, picture.buffer)
 
   // Se hace el trackeo de la imagen en segment
   if (
@@ -812,20 +793,20 @@ const uploadProfilePicture = async (specID, picture) => {
       userId: _id.toString(),
       event: 'updated-profile-picture',
       properties: {
-        avatar: getPublicUrlAvatar(gcsname),
+        avatar: getPublicUrlAvatar(awsname),
       },
     })
   }
 
   await Specialist.findByIdAndUpdate(specID, {
-    avatar: getPublicUrlAvatar(gcsname),
-    avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+    avatar: getPublicUrlAvatar(awsname),
+    avatarThumbnail: getPublicUrlAvatarThumb(awsname),
   })
 
   return okResponse('Imagen subida', {
     // Se retorna una respuesta de exito
-    avatar: getPublicUrlAvatar(gcsname),
-    avatarThumbnail: getPublicUrlAvatarThumb(gcsname),
+    avatar: getPublicUrlAvatar(awsname),
+    avatarThumbnail: getPublicUrlAvatarThumb(awsname),
   })
 }
 
@@ -849,7 +830,7 @@ const approveAvatar = async (user, id) => {
   })
 }
 
-const changeToInmediateAttention = async spec => {
+const changeToInmediateAttention = async (spec) => {
   /* if (user.role !== 'specialist')
 		return conflictResponse('No tienes permitida esta opción');
 	const spec = user.specialist; */
@@ -873,14 +854,12 @@ const changeToInmediateAttention = async spec => {
     let sessions = await getAllSessionsFunction(spec)
     const now = new Date()
     // Se filtran las sesiones que si la fecha de la sesión es menor a la fecha actual mas 3 horas
-    sessions = sessions.filter(session => {
+    sessions = sessions.filter((session) => {
       const date = dayjs.tz(dayjs(session.date)).format('DD/MM/YYYY HH:mm')
       return (
         session.status !== 'success' &&
         dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-        dayjs(date)
-          .add(50, 'minutes')
-          .isAfter(dayjs(now))
+        dayjs(date).add(50, 'minutes').isAfter(dayjs(now))
       )
     })
 

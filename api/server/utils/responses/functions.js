@@ -1,11 +1,11 @@
 // used in all controller methods
 export const restResponse = (data, code, res) =>
-  res.status(code).json({
-    ...data,
-    status: true,
-    apiVersion: 'v1',
-    baseUrl: 'localhost:3000',
-  })
+	res.status(code).json({
+		...data,
+		status: true,
+		apiVersion: 'v1',
+		baseUrl: process.env.API_URL,
+	});
 
 export const conflictResponse = message => ({ code: 409, data: { message } })
 // se conserva la estructura antigua en este, ya que va ser ocupado en los catch del controller

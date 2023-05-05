@@ -67,4 +67,9 @@ dashboardRouter.get(
   dashboardController.getUsers
 )
 
-export default dashboardRouter
+dashboardRouter.get(
+	'/health-check',
+	dashboardController.heatlhCheck
+)
+
+export default dashboardRouter;

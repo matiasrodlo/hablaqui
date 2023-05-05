@@ -48,4 +48,14 @@ scriptsRouter.put('/scripts/migrate-all', scriptsController.migrateAll)
  */
 scriptsRouter.put('/scripts/step-back', scriptsController.stepBack)
 
+/**
+ * @description: Script migrating all the data
+ * @route /api/v1/scripts/migration-gcp-bucket-to-aws
+ * @method POST
+ */
+scriptsRouter.post(
+  '/scripts/migration-gcp-bucket-to-aws',
+  scriptsController.migrationGcpBucketToAws
+)
+
 export default scriptsRouter

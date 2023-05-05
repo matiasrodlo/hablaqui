@@ -10,6 +10,9 @@ import Email from '../models/email'
 import Evaluation from '../models/evaluation'
 import Psychologist from '../models/psychologist'
 import transactionModel from '../models/transaction'
+import s3 from '../config/bucket'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+const { Storage } = require('@google-cloud/storage')
 
 const changeRole = async () => {
   // Se buca a todos los usuarios con el rol de especialista
@@ -40,9 +43,9 @@ const addProfesion = async () => {
     return conflictResponse('No se encontro ningun reclutamiento')
   }
   // Se obtienen los id de los usuarios y especialistas
-  const spec = specialists.map(spec => spec._id)
-  const user = users.map(user => user._id)
-  const recruitment = recruitments.map(recruitment => recruitment._id)
+  const spec = specialists.map((spec) => spec._id)
+  const user = users.map((user) => user._id)
+  const recruitment = recruitments.map((recruitment) => recruitment._id)
   // Se agrega la profesion a los especialistas
   await specModel.updateMany(
     { _id: { $in: spec } },
@@ -64,7 +67,7 @@ const migrateDocumentChat = async () => {
     psychologist: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay chats por actualizar')
-  const chats = psychologist.map(chat => chat._id)
+  const chats = psychologist.map((chat) => chat._id)
   await Chat.updateMany(
     { _id: { $in: chats } },
     { $rename: { psychologist: 'specialist' } }
@@ -77,7 +80,7 @@ const migrateDocumentEmail = async () => {
     psyRef: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay correos por actualizar')
-  const emails = psychologist.map(email => email._id)
+  const emails = psychologist.map((email) => email._id)
   await Email.updateMany(
     { _id: { $in: emails } },
     {
@@ -93,7 +96,7 @@ const migrateDocumentEvaluation = async () => {
     psychologist: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay evaluaciones por actualizar')
-  const evaluations = psychologist.map(evaluation => evaluation._id)
+  const evaluations = psychologist.map((evaluation) => evaluation._id)
   await Evaluation.updateMany(
     { _id: { $in: evaluations } },
     { $rename: { psychologist: 'specialist' } }
@@ -104,7 +107,7 @@ const migrateDocumentEvaluation = async () => {
 const migrateDocumentPsychologist = async () => {
   const psychologist = await Psychologist.find()
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
-  psychologist.forEach(async psy => {
+  psychologist.forEach(async (psy) => {
     const specialist = JSON.parse(JSON.stringify(psy))
     await specModel.create(specialist)
   })
@@ -117,7 +120,7 @@ const migrateDocumentSessions = async () => {
     psychologist: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay sesiones por actualizar')
-  const sessions = psychologist.map(session => session._id)
+  const sessions = psychologist.map((session) => session._id)
   await sessionModel.updateMany(
     { _id: { $in: sessions } },
     { $rename: { psychologist: 'specialist' } }
@@ -130,7 +133,7 @@ const migrateDocumentTransactions = async () => {
     psychologist: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay transacciones por actualizar')
-  const transactions = psychologist.map(transaction => transaction._id)
+  const transactions = psychologist.map((transaction) => transaction._id)
   await transactionModel.updateMany(
     { _id: { $in: transactions } },
     { $rename: { psychologist: 'specialist' } }
@@ -144,7 +147,7 @@ const migrateDocumentUsers = async () => {
     psychologist: { $exists: true },
   })
   if (!psychologist) return okResponse('No hay usuarios por actualizar')
-  const users = psychologist.map(psy => psy._id)
+  const users = psychologist.map((psy) => psy._id)
   await userModel.updateMany(
     { _id: { $in: users } },
     { $rename: { psychologist: 'specialist' } }
@@ -161,8 +164,8 @@ const renamePsyPlans = async () => {
   })
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
   if (!recruitment) return okResponse('No hay reclutamientos por actualizar')
-  const psy = psychologist.map(psy => psy._id)
-  const rec = recruitment.map(rec => rec._id)
+  const psy = psychologist.map((psy) => psy._id)
+  const rec = recruitment.map((rec) => rec._id)
   // Cambiar el nombre de psyPlans a specPlans
   await Psychologist.updateMany(
     { _id: { $in: psy } },
@@ -209,9 +212,9 @@ const removeProfesion = async () => {
     return conflictResponse('No se encontro ningun reclutamiento')
   }
   // Se obtienen los id de los usuarios y especialistas
-  const spec = specialists.map(spec => spec._id)
-  const user = users.map(user => user._id)
-  const recruitment = recruitments.map(recruitment => recruitment._id)
+  const spec = specialists.map((spec) => spec._id)
+  const user = users.map((user) => user._id)
+  const recruitment = recruitments.map((recruitment) => recruitment._id)
   // Se agrega la profesion a los especialistas
   await specModel.updateMany(
     { _id: { $in: spec } },
@@ -242,7 +245,7 @@ const returnDocumentChat = async () => {
     psychologist: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay chats por actualizar')
-  const chats = psychologist.map(chat => chat._id)
+  const chats = psychologist.map((chat) => chat._id)
   await Chat.updateMany(
     { _id: { $in: chats } },
     {
@@ -258,7 +261,7 @@ const returnDocumentEmail = async () => {
     psyRef: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay correos por actualizar')
-  const emails = psychologist.map(email => email._id)
+  const emails = psychologist.map((email) => email._id)
   await Email.updateMany(
     { _id: { $in: emails } },
     { $rename: { specRef: 'psyRef' } }
@@ -271,7 +274,7 @@ const returnDocumentEvaluation = async () => {
     psychologist: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay evaluaciones por actualizar')
-  const evaluations = psychologist.map(evaluation => evaluation._id)
+  const evaluations = psychologist.map((evaluation) => evaluation._id)
   await Evaluation.updateMany(
     { _id: { $in: evaluations } },
     { $rename: { specialist: 'psychologist' } }
@@ -282,7 +285,7 @@ const returnDocumentEvaluation = async () => {
 const returnDocumentPsychologist = async () => {
   const psychologist = await specModel.find()
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
-  psychologist.forEach(async psy => {
+  psychologist.forEach(async (psy) => {
     const specialist = JSON.parse(JSON.stringify(psy))
     await Psychologist.create(specialist)
   })
@@ -295,7 +298,7 @@ const returnDocumentSessions = async () => {
     psychologist: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay sesiones por actualizar')
-  const sessions = psychologist.map(session => session._id)
+  const sessions = psychologist.map((session) => session._id)
   await sessionModel.updateMany(
     { _id: { $in: sessions } },
     { $rename: { specialist: 'psychologist' } }
@@ -308,7 +311,7 @@ const returnDocumentTransactions = async () => {
     psychologist: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay transacciones por actualizar')
-  const transactions = psychologist.map(transaction => transaction._id)
+  const transactions = psychologist.map((transaction) => transaction._id)
   await transactionModel.updateMany(
     { _id: { $in: transactions } },
     { $rename: { specialist: 'psychologist' } }
@@ -322,7 +325,7 @@ const returnDocumentUsers = async () => {
     psychologist: { $exists: false },
   })
   if (!psychologist) return okResponse('No hay usuarios por actualizar')
-  const users = psychologist.map(psy => psy._id)
+  const users = psychologist.map((psy) => psy._id)
   await userModel.updateMany(
     { _id: { $in: users } },
     { $rename: { specialist: 'psychologist' } }
@@ -339,8 +342,8 @@ const returnPsyPlans = async () => {
   })
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
   if (!recruitment) return okResponse('No hay reclutamientos por actualizar')
-  const psy = psychologist.map(psy => psy._id)
-  const rec = recruitment.map(rec => rec._id)
+  const psy = psychologist.map((psy) => psy._id)
+  const rec = recruitment.map((rec) => rec._id)
   // Cambiar el nombre de psyPlans a specPlans
   await Psychologist.updateMany(
     { _id: { $in: psy } },
@@ -367,6 +370,46 @@ const stepBack = async () => {
   return okResponse('Todo actualizado')
 }
 
+const migrationGcpBucketToAws = async () => {
+  const gcs = new Storage()
+  const gcsBucket = ['hablaqui-email', 'hablaqui-content', 'hablaqui-blog']
+  gcsBucket.forEach(async (gcsBucketName) => {
+    try {
+      // Obtiene los archivos del bucket de GCP
+      const [gcsFiles] = await gcs.bucket(gcsBucketName).getFiles()
+      if (!gcsFiles) return okResponse('No hay archivos en el bucket')
+      for (const file of gcsFiles) {
+        if (!file) 
+          continue
+        if (!file.name) {
+          continue
+        }
+        // Descarga el archivo
+        const [contents] = await file.download()
+        if (!contents || contents.length === 0) {
+          continue
+        }
+        // Sube el archivo a S3 + carpeta
+        const s3Key = file.name
+        
+        const s3Params = {
+          Bucket: gcsBucketName,
+          Key: s3Key,
+          Body: contents,
+        }
+        const putObjectCommand = new PutObjectCommand(s3Params)
+        const putObjectResponse = await s3.s3Client.send(putObjectCommand)
+        console.log(
+          `Uploaded ${s3Key} to S3 with ETag: ${putObjectResponse.ETag}`
+        )
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  })
+  return okResponse('Todo actualizado')
+}
+
 const scriptsService = {
   changeRole,
   addProfesion,
@@ -374,6 +417,7 @@ const scriptsService = {
   removeRole,
   migrateAll,
   stepBack,
+  migrationGcpBucketToAws,
 }
 
 export default Object.freeze(scriptsService)

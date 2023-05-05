@@ -69,6 +69,15 @@ const stepBack = async (req, res) => {
   }
 }
 
+const migrationGcpBucketToAws = async (req, res) => {
+  try {
+    const { data, code } = await scriptsService.migrationGcpBucketToAws()
+    restResponse(data, code, res)
+  } catch (e) {
+    errorCallback(e, res, 'Error registrando el postulado')
+  }
+}
+
 const scriptsController = {
   changeRole,
   addProfesion,
@@ -76,6 +85,7 @@ const scriptsController = {
   removeRol,
   migrateAll,
   stepBack,
+  migrationGcpBucketToAws,
 }
 
 export default Object.freeze(scriptsController)

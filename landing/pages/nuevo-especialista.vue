@@ -472,7 +472,7 @@ export default {
      */
     this.getAppointments()
     const response = await this.$axios.$get(
-      `${this.$config.LANDING_URL}/comunas-regiones.json`
+      `${this.$config.VUE_URL}comunas-regiones.json`
     )
     this.comunasRegiones = response
     this.regiones = response.map((i) => i.region)

@@ -6,14 +6,10 @@ const isDev = process.env.DEPLOY_ENV === 'DEV';
 export default {
 	target: 'static',
 	publicRuntimeConfig: {
-		LANDING_URL:
+		VUE_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_LANDING
 				: 'http://localhost:9000/',
-		FRONTEND_URL:
-			process.env.NODE_ENV === 'production'
-				? process.env.FRONTEND_URL
-				: 'http://localhost:8080/#',
 		API_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
@@ -24,7 +20,7 @@ export default {
 				: 'http://localhost:3000/',
 	},
 	server: {
-		port: process.env.FRONTEND_URL ? 8080 : 9000, // default: 3000
+		port: 9000,
 		host: '0.0.0.0',
 	},
 	generate: {
@@ -102,7 +98,9 @@ export default {
 			{
 				hid: 'twitter:url',
 				name: 'twitter:url',
-				content: process.env.VUE_APP_LANDING,
+				content: process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 			},
 			{
 				hid: 'twitter:title',
@@ -128,7 +126,9 @@ export default {
 			{
 				hid: 'og:url',
 				property: 'og:url',
-				content: process.env.VUE_APP_LANDING,
+				content: process.env.NODE_ENV === 'production'
+				? process.env.VUE_APP_LANDING
+				: 'http://localhost:9000/',
 			},
 			{
 				hid: 'og:title',
@@ -354,42 +354,44 @@ export default {
 		treeShake: true,
 	},
 	// Build Configuration: https://go.nuxtjs.dev/config-build
-	build: {
-		/*
-		 ** Analyze build files
-		 */
-		analyze: isDev,
-		/*
-		 ** public patch
-		 */
-		publicPath: process.env.VUE_APP_LANDING,
-		filenames: process.env.VUE_APP_LANDING
-			? {
-					img: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
-					app: ({ isDev, isModern }) =>
-						isDev
-							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
-							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
-					chunk: ({ isDev, isModern }) =>
-						isDev
-							? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
-							: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
-					css: ({ isDev }) =>
-						isDev
-							? '[name].css?v=' + pkg.version
-							: 'css/[contenthash:7].css?v=' + pkg.version,
-					font: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'fonts/[name].[contenthash:7].[ext]?v=' + pkg.version,
-					video: ({ isDev }) =>
-						isDev
-							? '[path][name].[ext]?v=' + pkg.version
-							: 'videos/[name].[contenthash:7].[ext]?v=' + pkg.version,
-			  }
-			: {},
-	},
+	// build: {
+	// 	/*
+	// 	 ** Analyze build files
+	// 	 */
+	// 	analyze: isDev,
+	// 	/*
+	// 	 ** public patch
+	// 	 */
+	// 	publicPath: process.env.NODE_ENV === 'production'
+	// 			? process.env.VUE_APP_LANDING
+	// 			: 'http://localhost:9000/',
+	// 	filenames: process.env.VUE_APP_LANDING
+	// 		? {
+	// 				img: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'img/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 				app: ({ isDev, isModern }) =>
+	// 					isDev
+	// 						? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+	// 						: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+	// 				chunk: ({ isDev, isModern }) =>
+	// 					isDev
+	// 						? `[name]${isModern ? '.modern' : ''}.js?v=` + pkg.version
+	// 						: `[contenthash:7]${isModern ? '.modern' : ''}.js?v=` + pkg.version,
+	// 				css: ({ isDev }) =>
+	// 					isDev
+	// 						? '[name].css?v=' + pkg.version
+	// 						: 'css/[contenthash:7].css?v=' + pkg.version,
+	// 				font: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'fonts/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 				video: ({ isDev }) =>
+	// 					isDev
+	// 						? '[path][name].[ext]?v=' + pkg.version
+	// 						: 'videos/[name].[contenthash:7].[ext]?v=' + pkg.version,
+	// 		  }
+	// 		: {},
+	// },
 };
