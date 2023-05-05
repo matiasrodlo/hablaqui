@@ -259,11 +259,11 @@ const usersService = {
   async deleteFile(oldAvatar, oldAvatarThumbnail) {
     // Se verifican que las imagenes existan y se eliminan, de lo contrario se retorna un error
     if (oldAvatar) {
-      await s3.deleteFile(oldAvatar.split('https://nuevo-cdn.hablaqui.cl/').join(''))
+      await s3.deleteFile(oldAvatar.split('https://cdn.hablaqui.cl/').join(''))
     }
     if (oldAvatarThumbnail) {
       await s3.deleteFile(
-        oldAvatarThumbnail.split('https://nuevo-cdn.hablaqui.cl/').join('')
+        oldAvatarThumbnail.split('https://cdn.hablaqui.cl/').join('')
       )
     }
   },

@@ -16,7 +16,7 @@ const s3Client = new S3Client({
  */
 const getPublicUrlAvatar = filename => {
   // Más especifico para las imágenes de perfil.
-  return `https://nuevo-cdn.hablaqui.cl/profile-pictures/${filename}`
+  return `https://cdn.hablaqui.cl/profile-pictures/${filename}`
 }
 
 /**
@@ -27,7 +27,7 @@ const getPublicUrlAvatar = filename => {
 // public URL for thumnail avatars (in thumbnail resolution)
 const getPublicUrlAvatarThumb = filename => {
   // Especifico para las imágenes de perfil en miniatura para speccologos.
-  return `https://nuevo-cdn.hablaqui.cl/profile-pictures/thumbnails/${filename}_128x128`
+  return `https://cdn.hablaqui.cl/profile-pictures/thumbnails/${filename}_128x128`
 }
 
 /**
