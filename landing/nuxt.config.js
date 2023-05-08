@@ -49,8 +49,6 @@ export default {
 					route: `/${specialist.username}`,
 					payload: specialist,
 				}));
-
-			const routes = especialistas.concat(comunas);
 			callback(null, especialistas);
 		},
 	},
