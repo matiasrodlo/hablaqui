@@ -50,7 +50,6 @@ export default {
         method: 'POST',
         data: { ids },
       })
-      console.log('data', data)
       commit('setSessionsLimit', data.sessions)
     } catch (e) {
       snackBarError(e)(commit)
@@ -352,7 +351,6 @@ export default {
         method: 'PATCH',
         data: { payload },
       })
-      console.log(data)
       return data.specialist
     } catch (e) {
       snackBarError(e)(commit)

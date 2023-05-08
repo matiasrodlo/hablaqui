@@ -942,7 +942,6 @@ export default {
         )
         const { formattedSessions } = data
         this.sessions = formattedSessions
-        console.log(this.sessions[0])
         return formattedSessions
       } catch (e) {
         this.snackBar({
