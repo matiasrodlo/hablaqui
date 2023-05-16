@@ -51,4 +51,14 @@ cronRouter.post(
   cronController.statusInmediateAttention
 )
 
+/**
+ * @description: --------
+ * @method POST
+ * @route /api/v1/cron/backup-mongo/:authToken
+ * @param {string} params.authToken - Token de autorización
+ * @returns {object} - { message: 'Backup realizado con éxito' }
+ */
+
+cronRouter.post('/cron/backup-mongo/:authToken', cronController.buckupMongoDb)
+
 export default cronRouter

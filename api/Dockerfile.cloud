@@ -8,6 +8,9 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 RUN apk --no-cache add --virtual builds-deps build-base python3
 
+# Se instala mongodb-comunity-tools
+RUN apk add mongodb-tools
+
 # Crea una carpeta con el parámetro -p, sin error si existe, crea directorios padre según sea necesario, 
 # con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
 # archivos de la carpeta /app asignandosela a node.

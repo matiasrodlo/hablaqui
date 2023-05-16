@@ -50,6 +50,15 @@ const cronController = {
       errorCallback(err, res)
     }
   },
+  async buckupMongoDb(req, res) {
+    try {
+      const token = req.params.authToken
+      const { data, code } = await cronService.buckupMongoDb(token)
+      return restResponse(data, code, res)
+    } catch (err) {
+      errorCallback(err, res)
+    }
+  },
 }
 
 export default Object.freeze(cronController)

@@ -15,6 +15,7 @@ import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import sgClient from '@sendgrid/client' // sendgrid es una api que permite enviar correos masivos
+import { exec } from 'child_process'
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -254,6 +255,31 @@ const cronService = {
     return okResponse(
       'Se han programado un total de ' + totalEmailSchedule + ' correos'
     )
+  },
+  async buckupMongoDb(token) {
+    // Hace un buckup de la base de datos de mongo
+    if (token !== authToken) {
+      return conflictResponse(
+        'ERROR! You are not authorized to use this endpoint.'
+      )
+    }
+    const date = dayjs().format('YYYY-MM-DD')
+    const fileName = 'backup-'+ process.env.ENTORNO_CLOUD + date + '.gz'
+    const command = `mongodump --uri=${process.env.URLDB} --archive=${fileName} --gzip`
+    const path = './' + fileName
+    const child = exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.log(error)
+        return
+      }
+      console.log(stdout)
+      console.log(stderr)
+    }
+    )
+    child.on('exit', () => {
+      console.log('Backup realizado')
+    })
+    return okResponse('Backup realizado')
   },
 }
 

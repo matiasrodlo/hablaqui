@@ -49,6 +49,7 @@ services:
       - AWS_ACCESS_KEY_ID=AKIA3MM3IMZHAI2KVI6C
       - AWS_SECRET_ACCESS_KEY=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
       - AWS_REGION=sa-east-1
+      - ENTORNO_CLOUD=dev
     # # Se monta la carpeta del proyecto en el contenedor (lo que hace que no sea necesario hacer build cada vez que se modifica el código)
     # Volumen de anfitrion a host, se indica la ruta de la carpeta del proyecto en el host y la ruta de la carpeta del proyecto en el contenedor
     volumes:
