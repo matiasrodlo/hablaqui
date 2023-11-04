@@ -368,6 +368,7 @@
                     rounded
                     color="primary"
                     class="px-8 py-2"
+                    target="_blank"
                     href="https://wa.me/message/UEPODIF6XTSYK1"
                   >
                     Comenzar
