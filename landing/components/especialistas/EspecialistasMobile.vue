@@ -429,21 +429,20 @@
                   style="width: 290px"
                   class="mx-auto my-3 text-center title primary--text font-weight-bold"
                 >
-                  Te ayudamos a encontrar a tu especialista ideal
+                  Evaluación psicológica con Inteligencia Artificial
                 </div>
                 <div
                   style="max-width: 320px"
                   class="mx-auto text-center my-3 body-1 primary--text font-weight-regular"
                 >
-                  Encuentra al especialista que necesitas, solo responde las
-                  siguientes preguntas.
+                  Obtén un documento detallado con tus síntomas y metas de tratamiento.
                 </div>
                 <div class="text-center my-4">
                   <v-btn
                     rounded
                     color="primary"
                     class="px-8 py-2"
-                    @click="start"
+                    href="https://wa.me/message/UEPODIF6XTSYK1"
                   >
                     Comenzar
                   </v-btn>

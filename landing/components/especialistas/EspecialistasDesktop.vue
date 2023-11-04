@@ -358,18 +358,17 @@
               </v-col>
               <v-col class="pl-4">
                 <div class="text-h5 primary--text font-weight-bold">
-                  Te ayudamos a encontrar a tu especialista ideal
+                  Evaluación psicológica con Inteligencia Artificial
                 </div>
                 <div class="my-2 text-h6 primary--text font-weight-regular">
-                  Encuentra al especialista que necesitas, solo responde las
-                  siguientes preguntas.
+                  Obtén un documento detallado con tus síntomas y metas de tratamiento.
                 </div>
                 <div class="my-4">
                   <v-btn
                     rounded
                     color="primary"
                     class="px-8 py-2"
-                    @click="goEvaluation"
+                    href="https://wa.me/message/UEPODIF6XTSYK1"
                   >
                     Comenzar
                   </v-btn>
