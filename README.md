@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://hablaqui.cl">
-    <img src="https://cdn.hablaqui.cl/static/logo_tiny.png" alt="Logo" width="120" height="120">
+    <img src="https://hablaqui.cl/wp-content/uploads/2022/01/d978f84d-logo-1024x242.png" alt="Logo" width="176" height="41.56">
   </a>
 
   <h3 align="center">Hablaquí</h3>
