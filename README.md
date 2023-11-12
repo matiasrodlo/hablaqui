@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://hablaqui.cl">
     <img src="https://cdn.hablaqui.cl/static/logo_tiny.png" alt="Logo" width="120" height="120">
   </a>
 
