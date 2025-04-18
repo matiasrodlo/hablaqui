@@ -4,21 +4,15 @@
 
 **Hablaquí** is an online marketplace for mental health and wellness services. Our platform connects clients with carefully vetted specialists, enabling them to schedule sessions, make payments, and receive psychological support through audio, chat, or video calls. For professionals, we provide a complete virtual office infrastructure—serving as both a workspace and a powerful online marketing platform.
 
----
-
 ## Culture
 
 Being part of **Hablaquí** means embracing a shared commitment to mental health and expanding access to it. We foster a work environment grounded in **respect, kindness, and mutual support**.
 
 While our mission as an organization is complex and challenging, we’re driven by a deep passion for human well-being. We strive to treat both our clients and collaborators with **professionalism, fairness, and empathy**.
 
----
-
 ## Workflow & Methodology
 
 We hold weekly progress meetings to review assigned tasks and ensure alignment. This workflow is managed using **Jira** and **GitHub**, which help us organize priorities and optimize productivity as a distributed team.
-
----
 
 ## Communication
 
