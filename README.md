@@ -1,41 +1,27 @@
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://hablaqui.cl">
-    <img src="https://hablaqui.cl/wp-content/uploads/2022/01/d978f84d-logo-1024x242.png" alt="Logo" width="176" height="41.56">
-  </a>
-
-  <h3 align="center">Hablaquí</h3>
-
-  <p align="center">
-   Psicólogo y terapia online de calidad sin salir de casa | Hablaquí
-    <br />
-    <a href="https://hablaqui.cl"><strong>Ir al sitio »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/landing">Landing</a>
-    ·
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/api">Backend</a>
-    ·
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/movil">Movil</a>
-  </p>
-</p>
 
 <!-- ABOUT THE PROJECT -->
-## Acerca del proyecto hablaquí
+## Hablaquí
 
-Hablaquí es un mercado de servicios de salud mental y bienestar. Una plataforma online en la que los clientes tienen acceso a especialistas seleccionados, pudiendo programar, pagar y recibir acompañamiento psicológico vía audio, chat y videollamada. Además, para el profesional tenemos la infraestructura completa de oficina y escritorio virtual, siendo así su plataforma de marketing online.
+**Hablaquí** is an online marketplace for mental health and wellness services. Our platform connects clients with carefully vetted specialists, enabling them to schedule sessions, make payments, and receive psychological support through audio, chat, or video calls. For professionals, we provide a complete virtual office infrastructure—serving as both a workspace and a powerful online marketing platform.
 
-### Cultura Interna
+---
 
-Ser colaborador de Hablaquí significa un compromiso con la salud mental y la facilitación de acceso a ella, en un ambiente laboral de respeto, amabilidad y contribución mutua.
+## Culture
 
-Si bien nuestro propósito como organización es complejo y desafiante, nos apasiona el contribuir al bienestar humano desde un trato amigable, profesional y justo, tanto para/con nuestros consultantes como colaboradores.
+Being part of **Hablaquí** means embracing a shared commitment to mental health and expanding access to it. We foster a work environment grounded in **respect, kindness, and mutual support**.
 
-### Metodología de trabajo
+While our mission as an organization is complex and challenging, we’re driven by a deep passion for human well-being. We strive to treat both our clients and collaborators with **professionalism, fairness, and empathy**.
 
-Todas las semanas hacemos reuniónes de avances en la que se revisan las actividades asignadas. Esto es facilitado gracias a la plataforma Trello y Github, que organiza y optimiza nuestro tiempo y trabajo como colaboradores de este proyecto.
+---
 
-### Comunicación
+## Workflow & Methodology
 
-Utilizamos Discord como nuestra principal plataforma de contacto, compartiendo directamente lo que hacemos o vamos pensando. Casi siempre en canales públicos, así nuestros colaboradores están siempre al tanto sobre qué está sucediendo con los equipos de cada área. Utilizamos la tecnología no solo para facilitar el acceso a la salud mental, sino que también como parte esencial del funcionamiento de nuestro equipo.
+We hold weekly progress meetings to review assigned tasks and ensure alignment. This workflow is managed using **Jira** and **GitHub**, which help us organize priorities and optimize productivity as a distributed team.
+
+---
+
+## Communication
+
+We use **Discord** as our main communication hub to share updates, brainstorm, and collaborate in real time. Most conversations happen in public channels to keep everyone informed and aligned across different teams.
+
+Technology is at the core of how we work—both in expanding access to mental health services and enabling transparent, agile collaboration.
