@@ -123,6 +123,3 @@ The application is deployed to Google Cloud Platform:
 
 ## Environment Variables
 Both the API and landing page require environment variables for proper functionality. Reference the cloudbuild.yaml file for the complete list of required variables.
-
-## About
-The project was developed during university studies and has been incubated by Digevo Ventures and accelerated by Start-Up Chile.
