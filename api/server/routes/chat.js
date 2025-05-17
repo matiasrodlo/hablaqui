@@ -1,19 +1,31 @@
+/**
+ * Chat Router
+ * 
+ * This module defines the routes for chat functionality in the Hablaquí API.
+ * It handles conversation management, message sending, and message status updates.
+ * 
+ * @module routes/chat
+ */
+
 'use strict'
 
 import { Router } from 'express'
 import passport from 'passport'
 import chatController from '../controllers/chat'
 
+// Initialize Express router
 const chatRouter = Router()
 
 /**
- * @description: Inicia una conversacion entre dos personas
- * @method POST
- * @route /api/v1/chat/start-conversation/:specialistId
- * @param {Object} user - Usuario logeado (que iniciara la conversacion)
- * @param {String} params.specialistId - Id del especialista con el que se conversara.
- * @returns: Objecto de chat (sin mensajes, pero iniciado)
- * @access: authenticated
+ * Start Conversation
+ * Initiates a new chat conversation between a user and a specialist
+ * 
+ * @route POST /api/v1/chat/start-conversation/:specialistId
+ * @param {string} req.params.specialistId - ID of the specialist to chat with
+ * @param {Object} req.user - Authenticated user object
+ * @returns {Object} New chat conversation object
+ * @throws {401} If not authenticated
+ * @throws {404} If specialist not found
  */
 chatRouter.post(
   '/chat/start-conversation/:specialistId',
@@ -22,11 +34,13 @@ chatRouter.post(
 )
 
 /**
- * @description: Consigue todos los chats del usuario loggeado.
- * @method GET
- * @route /api/v1/chat/get-chats
- * @returns: Objecto de chat
- * @access: authenticated
+ * Get User Chats
+ * Retrieves all chat conversations for the authenticated user
+ * 
+ * @route GET /api/v1/chat/get-chats
+ * @param {Object} req.user - Authenticated user object
+ * @returns {Object[]} Array of chat conversations
+ * @throws {401} If not authenticated
  */
 chatRouter.get(
   '/chat/get-chats',
@@ -35,12 +49,15 @@ chatRouter.get(
 )
 
 /**
- * @description: Consigue todos los mensajes de un solo chat.
- * @method GET
- * @route /api/v1/chat/get-messages/:spec/:user
- * @param {String} params.spec - Id del especialista
- * @param {String} params.user - Id del user
- * @access: authenticated
+ * Get Chat Messages
+ * Retrieves all messages from a specific chat conversation
+ * 
+ * @route GET /api/v1/chat/get-messages/:spec/:user
+ * @param {string} req.params.spec - Specialist ID
+ * @param {string} req.params.user - User ID
+ * @returns {Object[]} Array of chat messages
+ * @throws {401} If not authenticated
+ * @throws {404} If chat not found
  */
 chatRouter.get(
   '/chat/get-messages/:spec/:user',
@@ -49,12 +66,17 @@ chatRouter.get(
 )
 
 /**
- * @description: Envia un mensaje a ese chat.
- * @method POST
- * @route /api/v1/chat/send-message/:specialistId/:userId
- * @param {String} body.content - Cuerpo del mensaje
- * @returns: Objeto de chat con el nuevo mensaje incluido
- * @access: authenticated
+ * Send Message
+ * Sends a new message in an existing chat conversation
+ * 
+ * @route POST /api/v1/chat/send-message/:specialistId/:userId
+ * @param {string} req.params.specialistId - Specialist ID
+ * @param {string} req.params.userId - User ID
+ * @param {string} req.body.content - Message content
+ * @returns {Object} Updated chat object with new message
+ * @throws {401} If not authenticated
+ * @throws {404} If chat not found
+ * @throws {400} If message content is invalid
  */
 chatRouter.post(
   '/chat/send-message/:specialistId/:userId',
@@ -63,8 +85,11 @@ chatRouter.post(
 )
 
 /**
- * Ya no deberia de existir.
- * No se usa
+ * Create Report
+ * @deprecated This endpoint is no longer in use
+ * 
+ * @route POST /api/v1/chat/create-report/:specialistId/:userId
+ * @private
  */
 chatRouter.post(
   '/chat/create-report/:specialistId/:userId',
@@ -73,12 +98,14 @@ chatRouter.post(
 )
 
 /**
- * @description: Marca un mensaje como leido
- * @method PATCH
- * @route /api/v1/chat/read-message/:messageId
- * @param {String} params.messageId - Id del mensaje que se marcara como leido
- * @returns: Objeto de chat con el nuevo mensaje incluido
- * @access: authenticated
+ * Mark Message as Read
+ * Updates the read status of a specific message
+ * 
+ * @route PATCH /api/v1/chat/read-message/:messageId
+ * @param {string} req.params.messageId - ID of the message to mark as read
+ * @returns {Object} Updated chat object
+ * @throws {401} If not authenticated
+ * @throws {404} If message not found
  */
 chatRouter.patch(
   '/chat/read-message/:messageId',
@@ -86,4 +113,5 @@ chatRouter.patch(
   chatController.readMessage
 )
 
+// Export a frozen version of the router to prevent modifications
 export default Object.freeze(chatRouter)

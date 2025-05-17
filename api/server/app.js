@@ -1,3 +1,12 @@
+/**
+ * Hablaquí API Application
+ * 
+ * This is the main Express application file that sets up the server,
+ * middleware, database connection, and API routes.
+ * 
+ * @module app
+ */
+
 import './config/config.js'
 import bodyParser from 'body-parser'
 import cors from 'cors'
@@ -12,29 +21,35 @@ import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
+
+// Initialize Express application
 const app = express()
 
+// Initialize Google Cloud Debug Agent
 require('@google-cloud/debug-agent').start({
   serviceContext: { enableCanary: true },
 })
 
-// fisrt connect to data base
+// Connect to MongoDB database
 mongoose
   .connect(process.env.URLDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(logger.info('Data base online'))
+  .then(logger.info('Database connected successfully'))
   .catch(error => logError(error))
 
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
 
+// Rate limiting configuration
+// Limits each IP to 1000 requests per 15 minutes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs
+  max: 1000, // Maximum requests per window
 })
+
 /*
 Código comentado porque no se está usando en ninguna parte
 //limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
@@ -48,19 +63,22 @@ let corsOptions = {
 };
 */
 
-app.use(limiter)
-app.use(helmet())
-app.use(cors())
-app.use(express.static(path.join(__dirname, 'static')))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+// Middleware configuration
+app.use(limiter) // Apply rate limiting
+app.use(helmet()) // Security headers
+app.use(cors()) // Enable CORS
+app.use(express.static(path.join(__dirname, 'static'))) // Serve static files
+app.use(bodyParser.urlencoded({ extended: false })) // Parse URL-encoded bodies
+app.use(bodyParser.json()) // Parse JSON bodies
 
+// Authentication configuration
 passportConfig(passport)
 app.use(passport.initialize())
 
+// Register API routes
 routes(app)
 
-// Swagger
+// Swagger API documentation configuration
 const swaggerOptions = {
   definition: {
     info: {
@@ -73,18 +91,21 @@ const swaggerOptions = {
       servers: ['http://localhost:3000'],
     },
   },
-  apis: ['./server/routes/*.js'],
+  apis: ['./server/routes/*.js'], // Path to API routes
 }
+
+// Example OpenAPI documentation
 /**
  * @openapi
  * /specialists:
- * 	get:
- * 	description: Get all specialists
- * 	responses:
- * 		200:
- * 			description: Successful response
+ *   get:
+ *     description: Get all specialists
+ *     responses:
+ *       200:
+ *         description: Successful response
  */
 
+// Initialize Swagger documentation
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
