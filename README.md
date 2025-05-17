@@ -151,29 +151,6 @@ The application is deployed to Google Cloud Platform:
 - Deployment is managed through Cloud Build (cloudbuild.yaml)
 - Routing is configured in dispatch.yaml
 
-## Contributing
-We welcome contributions to Hablaquí! Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-Please ensure your code follows our style guidelines and includes appropriate tests.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-- Website: [www.hablaqui.cl](https://www.hablaqui.cl)
-- Email: [contact@hablaqui.cl](mailto:contact@hablaqui.cl)
-- LinkedIn: [Hablaquí](https://linkedin.com/company/hablaqui)
-
----
-
-Built with ❤️ Remotly
-
 ## Project Structure
 ```
 hablaqui/
@@ -303,3 +280,7 @@ hablaqui/
    - Use appropriate compression
    - Implement caching strategies
    - Follow naming conventions
+
+---
+
+Built with ❤️ Remotly
