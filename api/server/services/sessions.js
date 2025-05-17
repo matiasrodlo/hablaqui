@@ -1,3 +1,12 @@
+/**
+ * Sessions Service
+ * 
+ * This module provides session management services for the Hablaquí API.
+ * It handles therapy session scheduling, rescheduling, cancellation, and related operations.
+ * 
+ * @module services/sessions
+ */
+
 'use strict'
 
 import { room } from '../config/dotenv'
@@ -35,6 +44,12 @@ dayjs.tz.setDefault('America/Santiago')
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * Retrieves all sessions for a user or specialist
+ * @param {Object} userLogged - The logged-in user
+ * @param {string} idUser - ID of the user or specialist
+ * @returns {Promise<Object>} Response object containing formatted sessions
+ */
 const getSessions = async (userLogged, idUser) => {
   // iniciamos la variable
   let sessions
@@ -64,6 +79,11 @@ const getSessions = async (userLogged, idUser) => {
   return okResponse('sesiones obtenidas', { sessions })
 }
 
+/**
+ * Gets remaining sessions for a specialist
+ * @param {string} spec - Specialist ID
+ * @returns {Promise<Object>} Response object containing remaining sessions
+ */
 const getRemainingSessions = async spec => {
   let sessions = await Sessions.find({
     specialist: spec,
@@ -101,7 +121,14 @@ const getRemainingSessions = async spec => {
   })
 }
 
-// Reprogramación sesiones para psicologos
+/**
+ * Cancels a therapy session
+ * @param {Object} user - The logged-in user
+ * @param {string} planId - Plan ID
+ * @param {string} sessionsId - Sessions document ID
+ * @param {string} id - Session ID to cancel
+ * @returns {Promise<Object>} Response object containing updated sessions
+ */
 const cancelSession = async (user, planId, sessionsId, id) => {
   const cancelSessions = await Sessions.findOneAndUpdate(
     {
@@ -165,6 +192,10 @@ const cancelSession = async (user, planId, sessionsId, id) => {
   })
 }
 
+/**
+ * Checks and updates expired plans
+ * @returns {Promise<Object>} Response object indicating completion
+ */
 const checkPlanTask = async () => {
   // Busca todos los usuarios, filtra los que tienen planes, los recorre y verifica si el plan está vencido
   const allUsers = await User.find()
@@ -183,16 +214,17 @@ const checkPlanTask = async () => {
 }
 
 /**
- * @description Función que crea un plan para un usuario
- * @param {String} payload.paymentPeriod - Indica el tiempo de la suscripcion
- * @param {String} payload.title - Nombre del plan
- * @param {Number} payload.price - Precio del plan
- * @param {String} payload.coupon - Cupon usado, caso contrario es ''
- * @param {ObjectId} payload.user - Id del user
- * @param {ObjectId} payload.specialist - Id del psicologo
- * @returns
+ * Creates a new therapy plan
+ * @param {Object} params - Parameters object containing:
+ * @param {Object} params.payload - Plan details
+ * @param {string} params.payload.paymentPeriod - Subscription period
+ * @param {string} params.payload.title - Plan name
+ * @param {number} params.payload.price - Plan price
+ * @param {string} params.payload.coupon - Coupon code (empty string if none)
+ * @param {string} params.payload.user - User ID
+ * @param {string} params.payload.specialist - Specialist ID
+ * @returns {Promise<Object>} Response object containing created plan
  */
-
 const createPlan = async ({ payload }) => {
   if (payload.user === payload.specialist && payload.price !== 0) {
     return conflictResponse('No puedes suscribirte a ti mismo')
@@ -479,15 +511,13 @@ const createPlan = async ({ payload }) => {
 }
 
 /**
- * @description Crea una sesion nueva.
- * @param {Object} userLogged - user logged
- * @param {ObjectId} payload.id - Id sessions
- * @param {ObjectId} payload.idPlan - Id plan
- * @param {Object} payload - datos para guardar
- * @returns sessions actualizada
+ * Creates a new therapy session
+ * @param {Object} userLogged - The logged-in user
+ * @param {string} id - User ID
+ * @param {string} idPlan - Plan ID
+ * @param {Object} payload - Session details
+ * @returns {Promise<Object>} Response object containing created session
  */
-
-// Nueva sesion agendada correo (sin pago de sesión) para ambos
 const createSession = async (userLogged, id, idPlan, payload) => {
   const { specialist, plan, roomsUrl } = await Sessions.findOne({
     _id: id,
@@ -660,16 +690,13 @@ const createSession = async (userLogged, id, idPlan, payload) => {
     sessions: setSession(userLogged.role, [sessions]),
   })
 }
-/**
- * Creacion de sesion personalizda
- * (invitado por psicologo, o bloqueo de horas)
- * @param {Object} user Usuario logeado
- * @param {string} payload.date Fecha de la sesion
- * @param {string} payload.type Tipo de la sesion ['online', 'presencial', 'commitment', etc...]
- * @param {Number} payload.price Precio que se cobrara
- * @returns sessions
- */
 
+/**
+ * Creates a custom therapy session
+ * @param {Object} user - The logged-in user
+ * @param {Object} payload - Session details
+ * @returns {Promise<Object>} Response object containing created session
+ */
 const customNewSession = async (user, payload) => {
   try {
     // Validamos que sea psicologo
@@ -940,8 +967,12 @@ const getFormattedSessionsForMatch = async idSpecialist => {
   return sessions
 }
 
-// type: será el tipo de calendario que debe mostrar (agendamiento o reagendamiento)
-// Utilizado para traer las sessiones de un psicologo para el selector
+/**
+ * Gets formatted sessions for a specialist
+ * @param {string} idSpecialist - Specialist ID
+ * @param {string} type - Session type
+ * @returns {Promise<Object>} Response object containing formatted sessions
+ */
 const getFormattedSessions = async (idSpecialist, type) => {
   let sessions = []
   // Obtenemos el psicologo
@@ -1136,14 +1167,13 @@ const paymentsInfo = async user => {
 }
 
 /**
- * Reprogramacion de sesion
- * @param {string} userLogged Usuario logeado
- * @param {string} sessionsId sessionsId id de las sessiones
- * @param {string} id id del sub scheme session
- * @param {Object} newDate Datos a actualizar
- * @returns sessions
+ * Reschedules a therapy session
+ * @param {Object} userLogged - The logged-in user
+ * @param {string} sessionsId - Sessions document ID
+ * @param {string} id - Session ID
+ * @param {string} newDate - New session date
+ * @returns {Promise<Object>} Response object containing updated sessions
  */
-
 const reschedule = async (userLogged, sessionsId, id, newDate) => {
   // Se obtiene la session a reprogramar, se obtiene el tiempo minimo para reprogramar
   let currentSession = await Sessions.findOne({
@@ -1288,7 +1318,6 @@ const reschedule = async (userLogged, sessionsId, id, newDate) => {
  * Actualiza una sessions
  * @param {string} sessions campos a actualizar
  */
-
 const updateSessions = async sessions => {
   await Sessions.updateOne(
     {
@@ -1304,6 +1333,12 @@ const updateSessions = async sessions => {
   return okResponse('Observacion agregada')
 }
 
+/**
+ * Deletes a commitment session
+ * @param {string} planId - Plan ID
+ * @param {string} specId - Specialist ID
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const deleteCommitment = async (planId, specId) => {
   // Se busca si existe el psicologo
   const spec = await Specialist.findById(specId)
@@ -1359,6 +1394,10 @@ const paymentsInfoFromId = async spec => {
   return okResponse('Obtuvo todo sus pagos', { payments })
 }
 
+/**
+ * Gets all sessions in formatted structure
+ * @returns {Promise<Object>} Response object containing all formatted sessions
+ */
 const getAllSessionsFormatted = async () => {
   // Se obtienen todas las sessiones de mongo
   const sessions = await Sessions.find().populate('specialist user')
@@ -1404,6 +1443,13 @@ const getAllSessionsFormatted = async () => {
   return okResponse('Sesiones obtenidas', { formattedSessions })
 }
 
+/**
+ * Cancels a session by specialist
+ * @param {string} sessionsId - Sessions document ID
+ * @param {string} planId - Plan ID
+ * @param {string} id - Session ID
+ * @returns {Promise<Object>} Response object containing updated sessions
+ */
 const cancelSessionByEspecialist = async (sessionsId, planId, id) => {
 	// Se busca en mongo y cancela la session agendada del plan
 	const cancelSessions = await Sessions.findOneAndUpdate(

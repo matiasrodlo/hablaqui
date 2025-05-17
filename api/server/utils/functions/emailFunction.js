@@ -1,20 +1,45 @@
+/**
+ * Email Management Utilities
+ * 
+ * This module provides utility functions for managing email notifications,
+ * including session reminders, payment reminders, and subscription renewal notifications.
+ * 
+ * @module utils/functions/emailFunction
+ */
+
 'use strict'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import Email from '../../models/email'
+
+// Configure dayjs with required plugins
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
 /**
- * @description Funcion que crea los correos electronicos para el recordatorio de la sesion
- * @param {Object} payload - Objeto que debe contener como atributo la fecha de la sesion
- * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} spec - Objeto que contiene la informacion del especialista
- * @param {Object} sessions - Documento de la sesion
- * @param {String} roomsUrl - Url de la sala de la sesion
- * @param {String} idPlan - Id del plan de la sesion
+ * Creates email reminders for an upcoming session
+ * Creates separate reminders for both user and specialist
+ * 
+ * @param {Object} payload - Session information
+ * @param {string} payload.date - Session date in MM/DD/YYYY HH:mm format
+ * @param {Object} user - User information
+ * @param {Object} spec - Specialist information
+ * @param {Object} sessions - Session document
+ * @param {string} roomsUrl - URL for the session room
+ * @param {string} idPlan - Plan ID for the session
+ * 
+ * @example
+ * // Create session reminders
+ * await createReminder(
+ *   { date: '03/20/2024 14:30' },
+ *   userData,
+ *   specialistData,
+ *   sessionData,
+ *   'https://rooms.example.com/123',
+ *   'plan123'
+ * );
  */
 export const createReminder = async (
   payload,
@@ -86,10 +111,16 @@ export const createReminder = async (
 }
 
 /**
- * @description Funcion que crea los correos electronicos para el recordatorio pago de la sesión
- * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} spec - Objeto que contiene la informacion del especialista
- * @param {String} sessions - Objecto de la sesion
+ * Creates payment reminder emails for a session
+ * Creates hourly, daily, and weekly promotional reminders
+ * 
+ * @param {Object} user - User information
+ * @param {Object} spec - Specialist information
+ * @param {Object} sessions - Session document
+ * 
+ * @example
+ * // Create payment reminders
+ * await createPaymentReminder(userData, specialistData, sessionData);
  */
 export const createPaymentReminder = async (user, spec, sessions) => {
   await Email.create({
@@ -122,10 +153,16 @@ export const createPaymentReminder = async (user, spec, sessions) => {
 }
 
 /**
- * @description Funcion que crea los correos electronicos para el recordatorio de renovación del plan
- * @param {Object} user - Objeto que contiene la informacion del usuario
- * @param {Object} spec - Objeto que contiene la informacion del especialista
- * @param {Object} sessions - Objeto del documento de sessiones
+ * Creates subscription renewal reminder emails
+ * Creates hourly, daily, and weekly renewal reminders
+ * 
+ * @param {Object} user - User information
+ * @param {Object} spec - Specialist information
+ * @param {Object} sessions - Session document
+ * 
+ * @example
+ * // Create renewal reminders
+ * await createRenewalSubscription(userData, specialistData, sessionData);
  */
 export const createRenewalSubscription = async (user, spec, sessions) => {
   await Email.create({
@@ -157,6 +194,16 @@ export const createRenewalSubscription = async (user, spec, sessions) => {
   })
 }
 
+/**
+ * Deletes payment reminder emails for a user and specialist
+ * 
+ * @param {string} user - User ID
+ * @param {string} spec - Specialist ID
+ * 
+ * @example
+ * // Delete payment reminders
+ * await deleteReminderPayment('user123', 'specialist456');
+ */
 export const deleteReminderPayment = async (user, spec) => {
   // Busca los correos de recordatorio de pago y los elimina
   const mailsToDeleted = await Email.find({
@@ -178,6 +225,16 @@ export const deleteReminderPayment = async (user, spec) => {
   }
 }
 
+/**
+ * Deletes subscription renewal reminder emails for a user and specialist
+ * 
+ * @param {string} user - User ID
+ * @param {string} spec - Specialist ID
+ * 
+ * @example
+ * // Delete renewal reminders
+ * await deleteRenewalEmails('user123', 'specialist456');
+ */
 export const deleteRenewalEmails = async (user, spec) => {
   // Busca los correos de recordatorio de pago y los elimina
   const mailsToDeleted = await Email.find({

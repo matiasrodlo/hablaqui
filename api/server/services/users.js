@@ -1,3 +1,12 @@
+/**
+ * Users Service
+ * 
+ * This module provides user management services for the Hablaquí API.
+ * It handles user profile management, authentication, and related operations.
+ * 
+ * @module services/users
+ */
+
 'use strict' // Sirve para que el código sea mas estricto y evitar errores
 
 import User from '../models/user'
@@ -27,7 +36,16 @@ dayjs.tz.setDefault('America/Santiago')
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * User service object containing methods for user management
+ * @type {Object}
+ */
 const usersService = {
+  /**
+   * Retrieves a user's profile by ID
+   * @param {string} id - The user's ID
+   * @returns {Promise<Object>} Response object containing user profile or error
+   */
   async getProfile(id) {
     // Se busca al usuario con su id, se comprueba que exista y se retorna el objeto del usuario
     const user = await User.findById(id)
@@ -38,6 +56,12 @@ const usersService = {
       user: await servicesAuth.generateUser(user),
     })
   },
+  /**
+   * Changes a user's password
+   * @param {Object} user - The user object
+   * @param {string} newPassword - The new password
+   * @returns {Promise<Object>} Response object indicating success or failure
+   */
   async changeActualPassword(user, newPassword) {
     // Se encripta la contraseña, se edita la contraseña del usuario y se guarda en la base de datos
     user.password = bcrypt.hashSync(newPassword, 10)
@@ -45,6 +69,13 @@ const usersService = {
     logInfo(actionInfo(user.email, 'actualizo su contraseña'))
     return okResponse('Actualizó su contraseña')
   },
+  /**
+   * Updates a user's password after verifying the old password
+   * @param {Object} user - The user object
+   * @param {string} oldPassword - The current password
+   * @param {string} newPassword - The new password
+   * @returns {Promise<Object>} Response object indicating success or failure
+   */
   async updatePassword(user, oldPassword, newPassword) {
     // Busca al usuario por su id, se comprueba que la contraseñas sean distintas (actual y nueva)
     const foundUser = await User.findById(user._id)
@@ -58,6 +89,12 @@ const usersService = {
       return conflictResponse('la contraseña anterior no es correcta')
     } else return await this.changeActualPassword(foundUser, newPassword)
   },
+  /**
+   * Handles password recovery process
+   * @param {Object} user - The user object
+   * @param {string} newPassword - The new password
+   * @returns {Promise<Object>} Response object indicating success or failure
+   */
   async passwordRecovery(user, newPassword) {
     // Se busca al usuario por su id, luego comparar la contraseña actual con la nueva bajo la lógica
     // de que no deben ser iguales, luego se cambia la contraseña actual por la nueva
@@ -67,6 +104,12 @@ const usersService = {
       return conflictResponse('no puede ser la misma contraseña')
     } else return await this.changeActualPassword(foundUser, newPassword)
   },
+  /**
+   * Updates a user's profile information
+   * @param {string} id - The user's ID
+   * @param {Object} profile - The updated profile data
+   * @returns {Promise<Object>} Response object containing updated user profile
+   */
   async updateProfile(id, profile) {
     // Busca el usuario por su id y se actualiza su perfil con los datos modificados en profile
     const updated = await User.findByIdAndUpdate(id, profile, {
@@ -80,6 +123,12 @@ const usersService = {
     })
   },
 
+  /**
+   * Updates a user's subscription plan
+   * @param {Object} user - The user object
+   * @param {Object} newPlan - The new plan details
+   * @returns {Promise<Object>} Response object containing updated profile
+   */
   async updatePlan(user, newPlan) {
     // Busca el usuario por su id y actualiza el plan con el nuevo plan newPlan
     let updated = null
@@ -96,6 +145,13 @@ const usersService = {
     logInfo(actionInfo(user.email, 'actualizo su plan'))
     return okResponse('plan actualizado', { profile: updated })
   },
+  /**
+   * Updates a user's assigned specialist and transfers remaining sessions
+   * @param {Object} user - The user object
+   * @param {string} newSpecialist - ID of the new specialist
+   * @param {string} oldSpecialist - ID of the current specialist
+   * @returns {Promise<Object>} Response object indicating success or failure
+   */
   async updateSpecialist(user, newSpecialist, oldSpecialist) {
     // Se realiza una busqueda del plan del consultante
     const oldSession = await Sessions.findOne({
@@ -175,6 +231,19 @@ const usersService = {
     await oldSession.save()
     return okResponse('plan actualizado', { profile: user })
   },
+  /**
+   * Uploads or updates a user's profile picture
+   * @param {Object} params - Parameters object containing:
+   * @param {Object} params.userLogged - The logged-in user
+   * @param {string} params.avatar - URL of the full-size avatar
+   * @param {string} params.avatarThumbnail - URL of the avatar thumbnail
+   * @param {string} params.role - User's role
+   * @param {string} params.idSpecialist - ID of the specialist (if applicable)
+   * @param {string} params._id - User's ID
+   * @param {string} params.oldAvatar - URL of the previous avatar
+   * @param {string} params.oldAvatarThumbnail - URL of the previous thumbnail
+   * @returns {Promise<Object>} Response object containing updated user profile
+   */
   async uploadAvatar({
     userLogged,
     avatar,
@@ -256,6 +325,12 @@ const usersService = {
     })
   },
 
+  /**
+   * Deletes avatar files from storage
+   * @param {string} oldAvatar - URL of the avatar to delete
+   * @param {string} oldAvatarThumbnail - URL of the thumbnail to delete
+   * @returns {Promise<void>}
+   */
   async deleteFile(oldAvatar, oldAvatarThumbnail) {
     // Se verifican que las imagenes existan y se eliminan, de lo contrario se retorna un error
     if (oldAvatar) {
@@ -268,6 +343,11 @@ const usersService = {
     }
   },
 
+  /**
+   * Sets a user's status to online
+   * @param {Object} user - The user object
+   * @returns {Promise<Object>} Response object indicating success
+   */
   async setUserOnline(user) {
     // setUserOnline establece el estado de un usuario como en línea
     // const data = {
@@ -278,6 +358,11 @@ const usersService = {
     return okResponse('Usuario conectado', user)
   },
 
+  /**
+   * Sets a user's status to offline
+   * @param {Object} user - The user object
+   * @returns {Promise<Object>} Response object indicating success
+   */
   async setUserOffline(user) {
     // setUserOffline establece el estado de un usuario como desconectado
     // const data = {
@@ -288,6 +373,12 @@ const usersService = {
     return okResponse('Usuario desconectado', user)
   },
 
+  /**
+   * Registers a new user
+   * @param {Object} user - The user object
+   * @param {Object} body - Registration data
+   * @returns {Promise<Object>} Response object containing new user profile
+   */
   async registerUser(user, body) {
     if (user.role !== 'specialist') {
       return conflictResponse('Usuario activo no es especialista')
@@ -386,6 +477,11 @@ const usersService = {
       user: await servicesAuth.generateUser(createdUser),
     })
   },
+  /**
+   * Changes a user's assigned specialist
+   * @param {string} sessionsId - ID of the sessions to transfer
+   * @returns {Promise<Object>} Response object indicating success or failure
+   */
   async changeSpecialist(sessionsId) {
     // Se busca el plan con el Id del documento de sesiones
     const foundPlan = await Sessions.findById(sessionsId).populate(

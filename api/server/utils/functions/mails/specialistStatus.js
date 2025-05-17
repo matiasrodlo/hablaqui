@@ -1,3 +1,13 @@
+/**
+ * Specialist Status Email Service
+ * 
+ * This module provides email notification functionality for specialist-related events
+ * in the Hablaquí platform, including recruitment, evaluations, payments, and withdrawals.
+ * It uses SendGrid templates for consistent email formatting.
+ * 
+ * @module utils/functions/mails/specialistStatus
+ */
+
 'use strict'
 
 import sendMails from './sendMails'
@@ -5,15 +15,35 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Specialist status email service object containing methods for sending specialist-related notifications
+ * 
+ * @namespace mailService
+ */
 const mailService = {
   /**
-   * @description Send an internal email about a new spec application
-   * @param {Object} recruitedSpec - A specialist object from the database, corresponding to recruited specialist
+   * Sends an internal email about a new specialist application
+   * Notifies administrators when a new specialist applies
+   * 
+   * @param {Object} recruitedSpec - Specialist information
+   * @param {string} recruitedSpec.name - Specialist's first name
+   * @param {string} recruitedSpec.lastName - Specialist's last name
+   * @param {string} recruitedSpec.email - Specialist's email
+   * 
+   * @example
+   * // Send recruitment confirmation to admin
+   * await mailService.sendRecruitmentConfirmationAdmin({
+   *   name: 'John',
+   *   lastName: 'Doe',
+   *   email: 'john@example.com'
+   * });
    */
   async sendRecruitmentConfirmationAdmin(recruitedSpec) {
     const { name, lastName, email } = recruitedSpec
@@ -34,9 +64,21 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to a specialist about his/her new application
-   * @param {Object} recruitedSpec - A specialist object from the database, corresponding to recruited specialist
+   * Sends a confirmation email to a new specialist
+   * Notifies when their application has been received
+   * 
+   * @param {Object} recruitedSpec - Specialist information
+   * @param {string} recruitedSpec.name - Specialist's name
+   * @param {string} recruitedSpec.email - Specialist's email
+   * 
+   * @example
+   * // Send recruitment confirmation to specialist
+   * await mailService.sendRecruitmentConfirmation({
+   *   name: 'John',
+   *   email: 'john@example.com'
+   * });
    */
   async sendRecruitmentConfirmation(recruitedSpec) {
     const { email, name } = recruitedSpec
@@ -55,10 +97,17 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to the user to evaluate the specialist.
-   * @param {Object} user - A user object from the database, corresponding to the user that will evaluate the specialist
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist that will be evaluated
+   * Sends an evaluation request email to a user
+   * Notifies when they can evaluate a specialist
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * 
+   * @example
+   * // Send evaluation request
+   * await mailService.sendEnabledEvaluation(userData, specialistData);
    */
   async sendEnabledEvaluation(user, spec) {
     const dataPayload = {
@@ -77,12 +126,24 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to the specialist who must pay the plan.
-   * @param {Object} user - A user object from the database, corresponding to the specialist who must pay the plan
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist who must pay the plan
-   * @param {String} amount - The amount of the plan
-   * @param {String} url - The url to pay the plan
+   * Sends a payment reminder email to a specialist
+   * Notifies about pending plan payment
+   * 
+   * @param {Object} user - Specialist information
+   * @param {Object} spec - Specialist information (duplicate for template compatibility)
+   * @param {string} amount - Plan payment amount
+   * @param {string} url - Payment page URL
+   * 
+   * @example
+   * // Send payment reminder
+   * await mailService.pendingPlanPayment(
+   *   specialistData,
+   *   specialistData,
+   *   '$50000',
+   *   'https://payment.example.com/123'
+   * );
    */
   async pendingPlanPayment(user, spec, amount, url) {
     const dataPayload = {
@@ -103,11 +164,22 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to the specialist informing him/her that you have made a request for withdrawal from the platform.
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has made the withdrawal request
-   * @param {String} total - The total amount of the withdrawal request
-   * @param {String} date - The date of the withdrawal request
+   * Sends a withdrawal request confirmation email to a specialist
+   * Notifies when they have requested a withdrawal
+   * 
+   * @param {Object} spec - Specialist information
+   * @param {string} total - Withdrawal amount
+   * @param {string} date - Withdrawal request date
+   * 
+   * @example
+   * // Send withdrawal request confirmation
+   * await mailService.sendPaymentRequest(
+   *   specialistData,
+   *   '$100000',
+   *   '2024-03-20'
+   * );
    */
   async sendPaymentRequest(spec, total, date) {
     const dataPayload = {
@@ -127,11 +199,22 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to the specialist informing him/her that the withdrawal request has been completed.
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has made the withdrawal request
-   * @param {String} total - The total amount of the withdrawal request
-   * @param {String} date - The date of the withdrawal request
+   * Sends a withdrawal completion email to a specialist
+   * Notifies when their withdrawal request has been processed
+   * 
+   * @param {Object} spec - Specialist information
+   * @param {string} total - Withdrawal amount
+   * @param {string} date - Withdrawal completion date
+   * 
+   * @example
+   * // Send withdrawal completion notification
+   * await mailService.sendCompletePaymentRequest(
+   *   specialistData,
+   *   '$100000',
+   *   '2024-03-20'
+   * );
    */
   async sendCompletePaymentRequest(spec, total, date) {
     const dataPayload = {
@@ -151,10 +234,17 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description sends an email to the user who has completed an evaluation to a specialist.
-   * @param {Object} user - A user object from the database, corresponding to the user who has completed an evaluation
-   * @param {Object} spec - - A specialist object from the database, corresponding to the specialist who has been evaluated
+   * Sends an evaluation completion confirmation email to a user
+   * Notifies when they have completed an evaluation
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * 
+   * @example
+   * // Send evaluation completion confirmation
+   * await mailService.sendAddEvaluation(userData, specialistData);
    */
   async sendAddEvaluation(user, spec) {
     const dataPayload = {
@@ -173,10 +263,17 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description sends an email to the specialist informing him/her that a user has passed an evaluation
-   * @param {Object} user - A user object from the database, corresponding to the user who has passed an evaluation
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has been evaluated
+   * Sends a new evaluation notification email to a specialist
+   * Notifies when they have received a new evaluation
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * 
+   * @example
+   * // Send new evaluation notification
+   * await mailService.sendApproveEvaluationToSpec(userData, specialistData);
    */
   async sendApproveEvaluationToSpec(user, spec) {
     const dataPayload = {
@@ -195,10 +292,17 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description send an email to the specialist who has refused an evaluation
-   * @param {Object} user - A user object of the database, corresponding to the user who has made the evaluation
-   * @param {Object} spec - A specialist object from the database, corresponding to the specialist who has been evaluated
+   * Sends an evaluation rejection notification email to a specialist
+   * Notifies when their evaluation has been rejected
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * 
+   * @example
+   * // Send evaluation rejection notification
+   * await mailService.sendRefuseEvaluation(userData, specialistData);
    */
   async sendRefuseEvaluation(user, spec) {
     const dataPayload = {

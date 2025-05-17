@@ -1,11 +1,57 @@
+/**
+ * Session Retrieval Utilities
+ * 
+ * This module provides utility functions for retrieving and formatting session information,
+ * including session details, payment status, and scheduling information.
+ * 
+ * @module utils/functions/getAllSessionsFunction
+ */
+
 import Sessions from '../../models/sessions'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+
+// Configure dayjs with required plugins
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Retrieves and formats all sessions for a specialist
+ * Includes session details, payment information, and scheduling status
+ * 
+ * @param {string} spec - Specialist ID
+ * @returns {Promise<Array>} Array of formatted session objects
+ * 
+ * @example
+ * // Get all sessions for a specialist
+ * const sessions = await getAllSessionsFunction('specialist123');
+ * 
+ * @returns {Promise<Array<{
+ *   _id: string,
+ *   date: string,
+ *   sessionPrice: number,
+ *   idSpecialist: string,
+ *   name: string,
+ *   paidToSpecialist: boolean,
+ *   sessionsNumber: string,
+ *   sessionsId: string,
+ *   status: string,
+ *   statusPlan: string,
+ *   suscription: string,
+ *   idPlan: string,
+ *   paymentPlanDate: string,
+ *   requestDate: string,
+ *   paymentDate: string,
+ *   request: string,
+ *   hablaquiPercentage: number,
+ *   mercadoPercentage: number,
+ *   total: number,
+ *   percentage: string,
+ *   expiration: boolean
+ * }>>}
+ */
 export const getAllSessionsFunction = async spec => {
   let sessions = await Sessions.find({
     specialist: spec,

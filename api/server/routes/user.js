@@ -1,3 +1,12 @@
+/**
+ * User Router
+ * 
+ * This module defines the routes for user management in the Hablaquí API.
+ * It handles user registration, profile management, authentication, and status updates.
+ * 
+ * @module routes/user
+ */
+
 'use strict'
 
 import { Router } from 'express'
@@ -8,18 +17,22 @@ import validation from '../middleware/validation'
 import multer from '../middleware/multer'
 import storageAvatar from '../middleware/avatar/storage'
 
+// Initialize Express router
 const userRouter = Router()
 
 /**
- * @description Registro de consultante hecho por el especialista
- * @method POST
- * @route /api/v1/user/register
- * @param {String} body.name - Nombre del consultante (requerido)
- * @param {String} body.email - Email del consultante (requerido)
- * @param {String} body.rut - Rut del consultante
- * @param {String} body.phone - Número de telefono del consultante
- * @return Objeto con el usuario
- * @access authenticated (specialist)
+ * Register User by Specialist
+ * Allows a specialist to register a new client
+ * 
+ * @route POST /api/v1/user/register
+ * @param {Object} req.body - User information
+ * @param {string} req.body.name - Client's name (required)
+ * @param {string} req.body.email - Client's email (required)
+ * @param {string} req.body.rut - Client's RUT
+ * @param {string} req.body.phone - Client's phone number
+ * @returns {Object} Newly created user object
+ * @throws {401} If not authenticated as specialist
+ * @throws {400} If validation fails
  */
 userRouter.post(
   '/user/register',
@@ -31,11 +44,13 @@ userRouter.post(
 )
 
 /**
- * @description Devuelve los datos del usuario logeado
- * @method GET
- * @route /api/v1/user/profile
- * @return Objeto con el usuario
- * @access authenticated (user)
+ * Get User Profile
+ * Retrieves the profile information of the authenticated user
+ * 
+ * @route GET /api/v1/user/profile
+ * @param {Object} req.user - Authenticated user object
+ * @returns {Object} User profile information
+ * @throws {401} If not authenticated
  */
 userRouter.get(
   '/user/profile',
@@ -44,44 +59,49 @@ userRouter.get(
 )
 
 /**
- * @description Actualiza el especialista del usuario desde la intranet
- * @method PUT
- * @route /api/v1/dashboard/update/specialist
- * @param {String} body.newSpecialist - Id del especialista nuevo (requerido)
- * @param {String} body.oldSpecialist - Id del especialista anterior (requerido)
- * @param {String} body.user - Id del usuario al que se le va a cambiar el especialista (requerido)
- * @return Objeto usuario con nueva información
- * @access authenticated (user)
+ * Update User's Specialist
+ * Updates the specialist assigned to a user from the intranet
+ * 
+ * @route PUT /api/v1/dashboard/update/specialist
+ * @param {Object} req.body - Update information
+ * @param {string} req.body.newSpecialist - ID of the new specialist (required)
+ * @param {string} req.body.oldSpecialist - ID of the previous specialist (required)
+ * @param {string} req.body.user - ID of the user to update (required)
+ * @returns {Object} Updated user object
+ * @throws {401} If not authenticated
+ * @throws {404} If specialist or user not found
  */
-
 userRouter.put('/dashboard/update/specialist', userController.updateSpecialist)
 
 /**
- * @description Actualiza la información de un usuario logeado
- * @method PUT
- * @route /api/v1/user/update/profile
- * @param {Object} body.profile - Objeto con la información actualizada del perfil del usuario
- * @return Objeto usuario con nueva información
- * @access authenticated (user)
+ * Update User Profile
+ * Updates the profile information of the authenticated user
+ * 
+ * @route PUT /api/v1/user/update/profile
+ * @param {Object} req.body.profile - Updated profile information
+ * @returns {Object} Updated user object
+ * @throws {401} If not authenticated
+ * @throws {400} If validation fails
  */
 userRouter.put(
   '/user/update/profile',
   [
     passport.authenticate('jwt', { session: true }),
-    /* grantAccess('updateOwn', 'profile'), */
     validation(userSchema.updateProfile, 'body'),
   ],
   userController.updateProfile
 )
 
 /**
- * @description Actualiza la información de un usuario a través de us Id
- * @method PUT
- * @route /api/v1/user/update-one/:id
- * @param {String} params.id - ID del usuario al que se le actualizará su perfil
- * @param {Object} body.profile - Objeto con la información actulizada del perfil del usuario
- * @return Objeto usuario con nueva información
- * @access authenticated
+ * Update User by ID
+ * Updates a specific user's profile information
+ * 
+ * @route PUT /api/v1/user/update-one/:id
+ * @param {string} req.params.id - ID of the user to update
+ * @param {Object} req.body.profile - Updated profile information
+ * @returns {Object} Updated user object
+ * @throws {401} If not authenticated
+ * @throws {404} If user not found
  */
 userRouter.put(
   '/user/update-one/:id',
@@ -90,11 +110,14 @@ userRouter.put(
 )
 
 /**
- * @description Permite cambiar la contraseña de la cuenta de un usuario logeado desde un correo
- * @method PATCH
- * @route /api/v1/user/reset-password
- * @param {String} body.password - Contraseña nueva
- * @access authenticated (user)
+ * Reset Password via Email
+ * Allows a user to reset their password through email verification
+ * 
+ * @route PATCH /api/v1/user/reset-password
+ * @param {string} req.body.password - New password
+ * @returns {Object} Success message
+ * @throws {401} If not authenticated
+ * @throws {400} If password is invalid
  */
 userRouter.patch(
   '/user/reset-password',
@@ -103,12 +126,17 @@ userRouter.patch(
 )
 
 /**
- * @description Permite cambiar la contraseña de la cuenta de un usuario logeado desde su perfil
- * @method PATCH
- * @route /api/v1/user/update/password
- * @param {String} body.oldPassword - Contraseña antigua
- * @param {String} body.newPassword - Contraseña nueva
- * @access authenticated (user)
+ * Update Password
+ * Allows a user to change their password from their profile
+ * 
+ * @route PATCH /api/v1/user/update/password
+ * @param {Object} req.body - Password information
+ * @param {string} req.body.oldPassword - Current password
+ * @param {string} req.body.newPassword - New password
+ * @returns {Object} Success message
+ * @throws {401} If not authenticated
+ * @throws {400} If validation fails
+ * @throws {403} If current password is incorrect
  */
 userRouter.patch(
   '/user/update/password',
@@ -120,17 +148,20 @@ userRouter.patch(
 )
 
 /**
- * @description Actualiza/sube foto de perfil del usuario especialista principalmente
- * @method PUT
- * @route /api/v1/user/upload/avatar
- * @param {String} body._id - id de del usuario a actualizar avatar
- * @param {String} body.role - role del usuario a actualizar avatar
- * @param {String} body.name - nombre del usuario a actualizar avatar
- * @param {String} body.lastName - apellido del usuario a actualizar avatar
- * @param {String} body.idSpecialist - Para actualizar elavatar del especialista
- * @param {Object} file - Contiene los avatar o fotos de perfil del usuario
- * @return Objeto con el perfil del usuario y sus características de especialista
- * @access authenticated
+ * Upload Profile Picture
+ * Updates or uploads a user's profile picture
+ * 
+ * @route PUT /api/v1/user/upload/avatar
+ * @param {Object} req.body - User information
+ * @param {string} req.body._id - User ID
+ * @param {string} req.body.role - User role
+ * @param {string} req.body.name - User's first name
+ * @param {string} req.body.lastName - User's last name
+ * @param {string} req.body.idSpecialist - Specialist ID (if applicable)
+ * @param {Object} req.file - Profile picture file
+ * @returns {Object} Updated user profile
+ * @throws {401} If not authenticated
+ * @throws {400} If file upload fails
  */
 userRouter.put(
   '/user/upload/avatar',
@@ -143,11 +174,12 @@ userRouter.put(
 )
 
 /**
- * @description Pone al usuario loggeado como "en linea"
- * @method POST
- * @route /api/v1/user/set-status/online
- * @return El objeto del usuario actualizado
- * @access authenticated
+ * Set User Online
+ * Updates the user's status to online
+ * 
+ * @route POST /api/v1/user/set-status/online
+ * @returns {Object} Updated user object
+ * @throws {401} If not authenticated
  */
 userRouter.post(
   '/user/set-status/online',
@@ -156,11 +188,12 @@ userRouter.post(
 )
 
 /**
- * @description Pone al usuario loggeado como "desconectado"
- * @method POST
- * @route /api/v1/user/set-status/offline
- * @return El objeto del usuario actualizado
- * @access authenticated
+ * Set User Offline
+ * Updates the user's status to offline
+ * 
+ * @route POST /api/v1/user/set-status/offline
+ * @returns {Object} Updated user object
+ * @throws {401} If not authenticated
  */
 userRouter.post(
   '/user/set-status/offline',
@@ -169,11 +202,14 @@ userRouter.post(
 )
 
 /**
- * @description Permite la desvinculación de un especialista antes de terminar el plan
- * @method POST
- * @route /api/v1/user/change/specialist/:sessionId
- * @param {String} params.sessionId - Id del objeto de la sesión con el plan activo
- * @access authenticated ()
+ * Change Specialist
+ * Allows a user to change their assigned specialist before plan expiration
+ * 
+ * @route POST /api/v1/user/change/specialist/:sessionId
+ * @param {string} req.params.sessionId - ID of the active session plan
+ * @returns {Object} Updated session information
+ * @throws {401} If not authenticated
+ * @throws {404} If session not found
  */
 userRouter.post(
   '/user/change/specialist/:sessionId',

@@ -1,16 +1,48 @@
+/**
+ * Local Authentication Strategy
+ * 
+ * This module implements the local authentication strategy using Passport.js.
+ * It handles email/password authentication by verifying credentials against the database.
+ * 
+ * @module middleware/strategies/local
+ */
+
 import { Strategy as LocalStrategy } from 'passport-local'
 import bcrypt from 'bcryptjs'
 import User from '../../models/user'
 
-/* strategyConfig specified because we need to disable the session use */
+/**
+ * Local Strategy Configuration
+ * Configures the strategy to use email as username and disables session support
+ * 
+ * @type {Object}
+ */
 const strategyConfig = {
   usernameField: 'email',
   passwordField: 'password',
   session: false,
 }
-/* this is our local strategy, the callback is going to find if the user exist and the password is valid */
-/* if we want to finish the callback, we call the done() function */
-/* done(null, user) if the login is valid and done(null, false) if the login is invalid */
+
+/**
+ * Local Strategy Implementation
+ * Authenticates users using email and password
+ * 
+ * @param {string} email - User's email address
+ * @param {string} password - User's password
+ * @param {Function} done - Passport callback function
+ * 
+ * @example
+ * // Use in passport configuration
+ * passport.use(localStrategy);
+ * 
+ * // Authenticate user login
+ * router.post('/login',
+ *   passport.authenticate('local', { session: false }),
+ *   authController.handleLogin
+ * );
+ * 
+ * @returns {Promise<void>} Resolves with authenticated user or false
+ */
 const strategy = new LocalStrategy(strategyConfig, function(
   email,
   password,

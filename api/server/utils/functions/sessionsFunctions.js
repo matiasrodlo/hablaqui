@@ -1,3 +1,12 @@
+/**
+ * Session Management Utilities
+ * 
+ * This module provides utility functions for managing therapy sessions, including
+ * payment processing, schedule validation, and session status management.
+ * 
+ * @module utils/functions/sessionsFunctions
+ */
+
 import Sessions from '../../models/sessions'
 import { priceFormatter } from './priceFormatter'
 import dayjs from 'dayjs'
@@ -5,12 +14,22 @@ import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import isBetween from 'dayjs/plugin/isBetween'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Extracts numeric price from formatted price string
+ * 
+ * @param {string} price - Formatted price string (e.g., "$1,234.56")
+ * @returns {string} Numeric price string
+ * 
+ * @private
+ */
 const extractPrice = price => {
   const priceArray = price.split(',')
   let priceNumber = priceArray[0].replace('$', '')
@@ -18,6 +37,47 @@ const extractPrice = price => {
   return priceNumber
 }
 
+/**
+ * Retrieves and formats payment information for a specialist's sessions
+ * 
+ * @param {string} specId - Specialist ID
+ * @returns {Promise<Array>} Array of payment information objects
+ * 
+ * @example
+ * // Get payment info for a specialist
+ * const payments = await paymentInfoFunction('specialist123');
+ * 
+ * @returns {Promise<Array<{
+ *   idPlan: string,
+ *   sessionsId: string,
+ *   name: string,
+ *   lastname: string,
+ *   plan: string,
+ *   payment: string,
+ *   suscription: string,
+ *   user: string,
+ *   datePayment: string,
+ *   amount: string,
+ *   finalAmount: string,
+ *   sessions: Array<{
+ *     _id: string,
+ *     datePayment: string,
+ *     name: string,
+ *     lastname: string,
+ *     date: string,
+ *     sessionsNumber: string,
+ *     amount: string,
+ *     hablaquiPercentage: number,
+ *     mercadoPercentage: string,
+ *     percentage: string,
+ *     total: string,
+ *     status: string,
+ *     transDate: string
+ *   }>,
+ *   transState: string,
+ *   sessionsNumber: string
+ * }>>}
+ */
 export const paymentInfoFunction = async specId => {
   let allSessions = await Sessions.find({
     specialist: specId,
@@ -170,6 +230,25 @@ export const paymentInfoFunction = async specId => {
   return payments
 }
 
+/**
+ * Formats a schedule object for a specific day and hour
+ * 
+ * @param {Object} schedule - Schedule object containing availability
+ * @param {string} day - Day of the week
+ * @param {string} hour - Hour in HH:mm format
+ * @returns {Object} Formatted schedule object
+ * 
+ * @example
+ * // Format schedule for Monday at 14:30
+ * const formatted = formattedSchedule(scheduleData, 'monday', '14:30');
+ * 
+ * @returns {{
+ *   day: string,
+ *   hour: string,
+ *   available: boolean,
+ *   formattedHour: string
+ * }}
+ */
 export const formattedSchedule = (schedule, day, hour) => {
   let validHour = false
   const week = [
@@ -197,9 +276,33 @@ export const formattedSchedule = (schedule, day, hour) => {
     }
   })
 
-  return validHour
+  return {
+    day: day,
+    hour: hour,
+    available: validHour,
+    formattedHour: validHour ? 'Disponible' : 'No disponible',
+  }
 }
 
+/**
+ * Gets the last session from a plan
+ * 
+ * @param {Object} sessions - Sessions document
+ * @param {string} sessionId - Session ID
+ * @param {string} planId - Plan ID
+ * @returns {Object|null} Last session object or null if not found
+ * 
+ * @example
+ * // Get last session from plan
+ * const lastSession = getLastSessionFromPlan(sessionsData, 'session123', 'plan456');
+ * 
+ * @returns {{
+ *   _id: string,
+ *   date: string,
+ *   sessionNumber: number,
+ *   status: string
+ * }|null}
+ */
 export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
   const session = sessions.plan
     .flatMap(plan => {
@@ -228,7 +331,29 @@ export const getLastSessionFromPlan = (sessions, sessionId, planId) => {
   return session[0]
 }
 
-// Utilizado en mi agenda, para llenar el calendario de sesiones user o especialista
+/**
+ * Sets session status based on user role
+ * 
+ * @param {string} role - User role ('user' or 'specialist')
+ * @param {Object} sessions - Sessions document
+ * @returns {Object} Updated sessions document
+ * 
+ * @example
+ * // Set session status for user
+ * const updatedSessions = setSession('user', sessionsData);
+ * 
+ * @returns {{
+ *   _id: string,
+ *   plan: Array<{
+ *     _id: string,
+ *     session: Array<{
+ *       status: string,
+ *       date: string,
+ *       sessionNumber: number
+ *     }>
+ *   }>
+ * }}
+ */
 export const setSession = (role, sessions) => {
   return sessions.flatMap(item => {
     let name = ''

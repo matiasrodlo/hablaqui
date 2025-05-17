@@ -1,3 +1,13 @@
+/**
+ * Payment Email Service
+ * 
+ * This module provides email notification functionality for payment-related events
+ * in the Hablaquí platform, including session payments, plan purchases, and account updates.
+ * It uses SendGrid templates for consistent email formatting.
+ * 
+ * @module utils/functions/mails/payments
+ */
+
 'use strict'
 
 import sendMails from './sendMails'
@@ -5,19 +15,38 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Payment email service object containing methods for sending payment-related notifications
+ * 
+ * @namespace mailService
+ */
 const mailService = {
   /**
-   * @description Sends an email to the user who has paid for the session.
-   * @param {Object} user - A User object from the database, corresponding to the user who has paid for the session.
-   * @param {Object} spec - A User object from the database, corresponding to the specialist who has received the payment.
-   * @param {String} paid - A ID of the payment.
-   * @param {String} roomsUrl - A string that contains the URL of the room where the session will take place.
-   * @param {String} date - A string that contains the date of the session.
+   * Sends a payment confirmation email to a user
+   * Notifies when a session payment has been successfully processed
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {string} paid - Payment ID
+   * @param {string} roomsUrl - URL for the session room
+   * @param {string} date - Session date
+   * 
+   * @example
+   * // Send payment confirmation to user
+   * await mailService.sendSuccessCustomSessionPaymentUser(
+   *   userData,
+   *   specialistData,
+   *   'payment123',
+   *   'https://rooms.example.com/123',
+   *   '2024-03-20 14:30'
+   * );
    */
   async sendSuccessCustomSessionPaymentUser(user, spec, paid, roomsUrl, date) {
     const dataPayload = {
@@ -39,15 +68,27 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
-  /**
-   * @description Sends an email to the specialist who has received the payment.
-   * @param {Object} user - A User object from the database, corresponding to the user who has paid for the session.
-   * @param {Object} spec - A User object from the database, corresponding to the specialist who has received the payment.
-   * @param {String} paid - A ID of the payment.
-   * @param {String} roomsUrl - A string that contains the URL of the room where the session will take place.
-   * @param {String} date - A string that contains the date of the session.
-   */
 
+  /**
+   * Sends a payment notification email to a specialist
+   * Notifies when a user has purchased a new plan
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {string} paid - Payment ID
+   * @param {string} roomsUrl - URL for the session room
+   * @param {string} date - Session date
+   * 
+   * @example
+   * // Send payment notification to specialist
+   * await mailService.sendSuccessCustomSessionPaymentSpec(
+   *   userData,
+   *   specialistData,
+   *   'payment123',
+   *   'https://rooms.example.com/123',
+   *   '2024-03-20 14:30'
+   * );
+   */
   async sendSuccessCustomSessionPaymentSpec(user, spec, paid, roomsUrl, date) {
     const dataPayload = {
       from: 'Hablaquí <pagos@mail.hablaqui.cl>',
@@ -68,11 +109,22 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the specialist who has updated the payment account.
-   * @param {Object} specialist - A User object from the database, corresponding to the specialist who has updated the payment account.
-   * @param {String} period - A string that contains the period of the payment account.
-   * @param {String} price - A string that contains the price of the payment account.
+   * Sends a premium account confirmation email to a specialist
+   * Notifies when a specialist's payment account has been updated
+   * 
+   * @param {Object} specialist - Specialist information
+   * @param {string} period - Payment period
+   * @param {string} price - Payment amount
+   * 
+   * @example
+   * // Send premium account confirmation
+   * await mailService.sendSpecialistPay(
+   *   specialistData,
+   *   'monthly',
+   *   '$50000'
+   * );
    */
   async sendSpecialistPay(specialist, period, price) {
     const dataPayload = {

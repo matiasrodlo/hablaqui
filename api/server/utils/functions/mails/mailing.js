@@ -1,3 +1,13 @@
+/**
+ * Email Management Service
+ * 
+ * This module provides comprehensive email management functionality for the Hablaquí platform,
+ * including session reminders, payment notifications, chat notifications, and subscription renewals.
+ * It integrates with SendGrid for email delivery and includes batch processing capabilities.
+ * 
+ * @module utils/functions/mails/mailing
+ */
+
 'use strict'
 import email from '../../../models/email'
 import userModel from '../../../models/user'
@@ -23,6 +33,17 @@ dayjs.extend(isSameOrBefore)
 dayjs.tz.setDefault('America/Santiago')
 sgClient.setApiKey(process.env.SENDGRID_API_KEY)
 
+/**
+ * Generates payload for email scheduling updates
+ * 
+ * @param {dayjs} date - Date when the email should be scheduled
+ * @param {string} batch - SendGrid batch ID
+ * @param {string} reminderType - Type of reminder ('hour' or 'day')
+ * @param {boolean} isSend - Whether the email has been sent
+ * @returns {Object} Payload for email scheduling update
+ * 
+ * @private
+ */
 function generatePayload(date, batch, reminderType, isSend) {
   /**
    * @description Crea el payload para actualizar el objeto de programación de correo electrónico
@@ -40,6 +61,13 @@ function generatePayload(date, batch, reminderType, isSend) {
   }
 }
 
+/**
+ * Gets a new batch ID from SendGrid for email sending
+ * 
+ * @returns {Promise<string>} SendGrid batch ID
+ * 
+ * @private
+ */
 async function getBatchId() {
   /**
    * @description Se obtiene un batchId para el envío de correos electrónicos
@@ -59,6 +87,17 @@ async function getBatchId() {
   return batch_id
 }
 
+/**
+ * Creates a payment preference in MercadoPago
+ * 
+ * @param {Object} user - User information
+ * @param {Object} specialist - Specialist information
+ * @param {Object} plan - Plan information
+ * @param {Object} session - Session information
+ * @returns {Promise<string>} MercadoPago payment URL
+ * 
+ * @private
+ */
 async function preference(user, specialist, plan, session) {
   // Se genera un código aleatorio para el token de pago
   const randomCode = () => {
@@ -85,6 +124,13 @@ async function preference(user, specialist, plan, session) {
   return responseBody.init_point
 }
 
+/**
+ * Creates a new discount coupon
+ * 
+ * @returns {Promise<string>} Generated coupon code
+ * 
+ * @private
+ */
 async function createCoupon() {
   // Generar un número entero random
   const randomInt = (min = 100, max = 999) => {
@@ -104,6 +150,16 @@ async function createCoupon() {
   return coupon.code
 }
 
+/**
+ * Processes and sends session reminder emails
+ * Handles both hourly and daily reminders for users and specialists
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * 
+ * @example
+ * // Process session reminders
+ * const processedCount = await sessionReminder();
+ */
 const sessionReminder = async () => {
   // Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
   const pendingEmails = await email.find({
@@ -200,6 +256,16 @@ const sessionReminder = async () => {
   return pendingEmails.length
 }
 
+/**
+ * Processes and sends payment reminder emails
+ * Handles payment notifications and promotional incentives
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * 
+ * @example
+ * // Process payment reminders
+ * const processedCount = await reminderPayment();
+ */
 const reminderPayment = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({
@@ -298,6 +364,16 @@ const reminderPayment = async () => {
   return pendingEmails.length
 }
 
+/**
+ * Processes and sends chat notification emails
+ * Handles unread message notifications
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * 
+ * @example
+ * // Process chat notifications
+ * const processedCount = await reminderChat();
+ */
 const reminderChat = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({
@@ -357,6 +433,16 @@ const reminderChat = async () => {
   return pendingEmails.length
 }
 
+/**
+ * Processes and sends subscription renewal reminder emails
+ * Handles renewal notifications for expiring subscriptions
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * 
+ * @example
+ * // Process renewal reminders
+ * const processedCount = await reminderRenewal();
+ */
 const reminderRenewal = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({

@@ -1,3 +1,13 @@
+/**
+ * Schedule Email Service
+ * 
+ * This module provides email notification functionality for scheduling-related events
+ * in the Hablaquí platform, including appointment confirmations, rescheduling notifications,
+ * and session scheduling updates. It uses SendGrid templates for consistent email formatting.
+ * 
+ * @module utils/functions/mails/schedule
+ */
+
 'use strict'
 
 import sendMails from './sendMails'
@@ -5,16 +15,30 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Schedule email service object containing methods for sending scheduling-related notifications
+ * 
+ * @namespace mailService
+ */
 const mailService = {
   /**
-   * @description Send an appointmet purchase confirmation to a user
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {string} date - The date of the appointment
+   * Sends a subscription confirmation email to a user
+   * Notifies when a user has purchased a new plan
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {string} price - Plan price
+   * 
+   * @example
+   * // Send subscription confirmation
+   * await mailService.sendAppConfirmationUser(userData, specialistData, '$50000');
    */
   async sendAppConfirmationUser(user, spec, price) {
     const { email, name } = user
@@ -35,11 +59,18 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an appointmet purchase confirmation to a spec
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {string} date - The date of the appointment
+   * Sends a new plan notification email to a specialist
+   * Notifies when a user has purchased a new plan
+   * 
+   * @param {Object} spec - Specialist information
+   * @param {Object} user - User information
+   * @param {string} price - Plan price
+   * 
+   * @example
+   * // Send new plan notification
+   * await mailService.sendAppConfirmationSpec(specialistData, userData, '$50000');
    */
   async sendAppConfirmationSpec(spec, user, price) {
     const nameUser = user.name
@@ -63,23 +94,30 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying them that a specialist has scheduled a session with them.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} specialist - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} paymentURL - The URL to the payment page
-   * @param {String} date - The date of the appointment
-   * @param {String} value - The value of the appointment
-   * @param {String} type - The type of appointment
+   * Sends a custom session notification email to a user
+   * Notifies when a specialist has scheduled a session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} specialist - Specialist information
+   * @param {string} paymentURL - Payment page URL
+   * @param {string} date - Session date and time
+   * @param {string} value - Session value
+   * @param {string} type - Session type
+   * 
+   * @example
+   * // Send custom session notification
+   * await mailService.sendCustomSessionToUser(
+   *   userData,
+   *   specialistData,
+   *   'https://payment.example.com/123',
+   *   '2024-03-20 14:30',
+   *   '$50000',
+   *   'online'
+   * );
    */
-  async sendCustomSessionToUser(
-    user,
-    specialist,
-    paymentURL,
-    date,
-    value,
-    type
-  ) {
+  async sendCustomSessionToUser(user, specialist, paymentURL, date, value, type) {
     const dataPayload = {
       from: 'Hablaquí <pagos@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
@@ -101,23 +139,30 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the specialist notifying them that a user has scheduled a session with them.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} specialist - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} paymentURL - The URL to the payment page
-   * @param {String} date - The date of the appointment
-   * @param {String} value - The value of the appointment
-   * @param {String} type - The type of appointment
+   * Sends a custom session notification email to a specialist
+   * Notifies when a user has scheduled a session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} specialist - Specialist information
+   * @param {string} paymentURL - Payment page URL
+   * @param {string} date - Session date and time
+   * @param {string} value - Session value
+   * @param {string} type - Session type
+   * 
+   * @example
+   * // Send custom session notification
+   * await mailService.sendCustomSessionToSpec(
+   *   userData,
+   *   specialistData,
+   *   'https://payment.example.com/123',
+   *   '2024-03-20 14:30',
+   *   '$50000',
+   *   'online'
+   * );
    */
-  async sendCustomSessionToSpec(
-    user,
-    specialist,
-    paymentURL,
-    date,
-    value,
-    type
-  ) {
+  async sendCustomSessionToSpec(user, specialist, paymentURL, date, value, type) {
     const dataPayload = {
       from: 'Hablaquí <pagos@mail.hablaqui.cl>',
       to: specialist.name + '<' + specialist.email + '>',
@@ -139,11 +184,24 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying them that they have successfully rescheduled.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} sessionDate - The date of the appointment
+   * Sends a rescheduling confirmation email to a user
+   * Notifies when a session has been successfully rescheduled
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {Object} sessionDate - Session date information
+   * @param {string} sessionDate.date - Session date
+   * @param {string} sessionDate.hour - Session hour
+   * 
+   * @example
+   * // Send rescheduling confirmation
+   * await mailService.sendRescheduleToUser(
+   *   userData,
+   *   specialistData,
+   *   { date: '2024-03-20', hour: '14:30' }
+   * );
    */
   async sendRescheduleToUser(user, spec, sessionDate) {
     const dataPayload = {
@@ -164,12 +222,26 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the specialist notifying them that a user has rescheduled.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} sessionDate - The date of the appointment
-   * @param {String} url - The URL to the payment page
+   * Sends a rescheduling notification email to a specialist
+   * Notifies when a user has rescheduled a session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {Object} sessionDate - Session date information
+   * @param {string} sessionDate.date - Session date
+   * @param {string} sessionDate.hour - Session hour
+   * @param {string} url - Payment page URL
+   * 
+   * @example
+   * // Send rescheduling notification
+   * await mailService.sendRescheduleToSpec(
+   *   userData,
+   *   specialistData,
+   *   { date: '2024-03-20', hour: '14:30' },
+   *   'https://payment.example.com/123'
+   * );
    */
   async sendRescheduleToSpec(user, spec, sessionDate, url) {
     const dataPayload = {
@@ -191,10 +263,17 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying them that they have requested a rescheduled session.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
+   * Sends a rescheduling request notification email to a specialist
+   * Notifies when a user has requested to reschedule a session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * 
+   * @example
+   * // Send rescheduling request
+   * await mailService.sendCancelSessionSpec(userData, specialistData);
    */
   async sendCancelSessionSpec(user, spec) {
     const dataPayload = {
@@ -213,12 +292,26 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying him/her that the specialist has rescheduled the session.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} sessionDate - The date of the appointment
-   * @param {String} url - The URL to the appointment page
+   * Sends a specialist-initiated rescheduling notification email to a user
+   * Notifies when a specialist has rescheduled a session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {Object} sessionDate - Session date information
+   * @param {string} sessionDate.date - Session date
+   * @param {string} sessionDate.hour - Session hour
+   * @param {string} url - Session page URL
+   * 
+   * @example
+   * // Send specialist rescheduling notification
+   * await mailService.sendRescheduleToUserBySpec(
+   *   userData,
+   *   specialistData,
+   *   { date: '2024-03-20', hour: '14:30' },
+   *   'https://session.example.com/123'
+   * );
    */
   async sendRescheduleToUserBySpec(user, spec, sessionDate, url) {
     const dataPayload = {
@@ -240,18 +333,32 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Send an email to the specialist notifying him/her that you have rescheduled the session.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} sessionDate - The date of the appointment
-   * @param {String} url - The URL to the appointment page
+   * Sends a specialist-initiated rescheduling notification email to a specialist
+   * Notifies when a specialist has rescheduled their own session
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {Object} sessionDate - Session date information
+   * @param {string} sessionDate.date - Session date
+   * @param {string} sessionDate.hour - Session hour
+   * @param {string} url - Session page URL
+   * 
+   * @example
+   * // Send specialist self-rescheduling notification
+   * await mailService.sendRescheduleToSpecBySpec(
+   *   userData,
+   *   specialistData,
+   *   { date: '2024-03-20', hour: '14:30' },
+   *   'https://session.example.com/123'
+   * );
    */
   async sendRescheduleToSpecBySpec(user, spec, sessionDate, url) {
     const dataPayload = {
       from: 'Hablaquí <reprogramacion@mail.hablaqui.cl>',
       to: spec.name + '<' + spec.email + '>',
-      subject: 'Has reprogramado la sesión',
+      subject: 'Has reprogramado una sesión',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
       templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
       asm: {
@@ -267,65 +374,84 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying them that a user has scheduled a session.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {String} date - The date of the appointment
-   * @param {String} url - The URL to the appointment page
-   * @param {String} session - The session number
+   * Sends a session scheduling notification email to a specialist
+   * Notifies when a new session has been scheduled
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {string} date - Session date
+   * @param {string} url - Session page URL
+   * @param {Object} session - Session information
+   * 
+   * @example
+   * // Send session scheduling notification
+   * await mailService.sendScheduleToSpec(
+   *   userData,
+   *   specialistData,
+   *   '2024-03-20',
+   *   'https://session.example.com/123',
+   *   sessionData
+   * );
    */
   async sendScheduleToSpec(user, spec, date, url, session) {
-    const nameUser = user.name
-    const lastNameUser = user.lastName
-    const { name } = spec
     const dataPayload = {
       from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
       to: spec.name + '<' + spec.email + '>',
-      subject: 'Se ha agendado una sesión',
+      subject: 'Han agendado una sesión con usted',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-2d64663ef57743bfb061130fb49e1625',
+      templateId: 'd-2d162b2b082b4b21851d6e0be428e64f',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
-        user_first_name: nameUser,
-        user_last_name: lastNameUser,
-        psy_name: name,
+        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
+        date,
+        hour: session.hour,
+        psy_name: spec.name,
         url,
-        date: dayjs(date).format('DD/MM/YYYY'),
-        hour: dayjs(date).format('HH:mm'),
-        session,
       },
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * @description Sends an email to the user notifying them that they have scheduled a session.
-   * @param {Object} user - A User object from the database, corresponding to the client
-   * @param {Object} spec - A Specialist object from the database, corresponding to the specialist attending the user
-   * @param {Object} date - The date of the appointment
-   * @param {String} url - The URL to the appointment page
-   * @param {String} session - The session number
+   * Sends a session scheduling notification email to a user
+   * Notifies when a new session has been scheduled
+   * 
+   * @param {Object} user - User information
+   * @param {Object} spec - Specialist information
+   * @param {string} date - Session date
+   * @param {string} url - Session page URL
+   * @param {Object} session - Session information
+   * 
+   * @example
+   * // Send session scheduling notification
+   * await mailService.sendScheduleToUser(
+   *   userData,
+   *   specialistData,
+   *   '2024-03-20',
+   *   'https://session.example.com/123',
+   *   sessionData
+   * );
    */
   async sendScheduleToUser(user, spec, date, url, session) {
-    const { email, name } = user
     const dataPayload = {
       from: 'Hablaquí <agendamientos@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: 'Su sesión ha sido agendada',
+      to: user.name + '<' + user.email + '>',
+      subject: 'Su sesión ha sido agendada exitosamente',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-93dcae8eaa45480286f29e25d88d173d',
+      templateId: 'd-f57ecb113d6d48a684203ebb82782976',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
-        psy_name: spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
-        user_first_name: name,
+        user_name: user.name,
+        date,
+        hour: session.hour,
+        psy_name: spec.name + ' ' + spec.lastName,
         url,
-        date: dayjs(date).format('DD/MM/YYYY'),
-        hour: dayjs(date).format('HH:mm'),
-        session,
       },
     }
     await sendMails(dataPayload)
