@@ -1,8 +1,10 @@
 ![image](https://github.com/user-attachments/assets/aa68a627-647a-4ec2-b814-58ddb9c0f82b)
 
-A mental health marketplace and SaaS platform connecting users with a network of over 200 certified specialists. The platform facilitates scheduling, payments, and secure video.
+A mental health marketplace and SaaS platform connecting users with a network of over 200 certified specialists. The platform facilitates scheduling, payments, and secure video consultations.
 
 Hablaquí was born at the Startup School of Adolfo Ibáñez University and was later incubated by Digevo Ventures, accelerated through Start-Up Chile, and backed by Google for Startups.
+
+[Watch Product Demo](https://www.youtube.com/watch?v=3OhoPxWkAcM)
 
 ## Features
 Hablaquí provides a comprehensive solution for mental health services:
@@ -19,8 +21,6 @@ Hablaquí provides a comprehensive solution for mental health services:
 
 - **Specialist Discovery**: Advanced search and filtering system to help users find the right specialist for their specific needs.
 
-## Demo
-[Watch on YouTube](https://www.youtube.com/watch?v=3OhoPxWkAcM)
 
 ## Architecture
 The project consists of three main components:
@@ -124,3 +124,5 @@ The application is deployed to Google Cloud Platform:
 ## Environment Variables
 Both the API and landing page require environment variables for proper functionality. Reference the cloudbuild.yaml file for the complete list of required variables.
 
+## About
+The project was developed during university studies and has been incubated by Digevo Ventures and accelerated by Start-Up Chile.
