@@ -8,18 +8,22 @@ The Hablaquí mobile app is built using Flutter, providing a cross-platform solu
 ### Directory Structure
 ```
 movil/
-├── lib/
-│   ├── screens/       # UI screens
-│   ├── widgets/       # Reusable components
-│   ├── models/        # Data models
-│   ├── services/      # API services
-│   ├── utils/         # Helper functions
-│   ├── helpers/       # Utility classes
-│   ├── pages/         # Page components
-│   └── classes/       # Business logic classes
-├── android/          # Android platform code
-├── ios/             # iOS platform code
-└── web/             # Web platform code
+├── lib/             # Main Flutter code
+│   ├── screens/     # UI screens
+│   ├── widgets/     # Reusable components
+│   ├── models/      # Data models
+│   ├── services/    # API services
+│   ├── utils/       # Helper functions
+│   ├── helpers/     # Utility classes
+│   ├── pages/       # Page components
+│   └── classes/     # Business logic classes
+├── test/            # Test files
+├── images/          # Image assets
+├── android/         # Android platform code
+├── ios/            # iOS platform code
+├── web/            # Web platform code
+├── pubspec.yaml     # Dependencies
+└── README.md        # Project documentation
 ```
 
 ## Key Components

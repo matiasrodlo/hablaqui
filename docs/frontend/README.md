@@ -8,22 +8,26 @@ The Hablaquí landing page and web application is built using Nuxt.js (Vue.js), 
 ### Directory Structure
 ```
 landing/
-├── components/
-│   ├── common/       # Shared components
-│   ├── layout/       # Layout components
-│   ├── sections/     # Page sections
-│   ├── auth/         # Authentication
-│   ├── chat/         # Chat interface
-│   ├── dashboard/    # Dashboard components
-│   └── evaluation/   # Evaluation forms
-├── pages/           # Vue pages
-├── assets/          # Static assets
-│   ├── images/      # Image files
-│   ├── styles/      # CSS/SCSS files
-│   └── fonts/       # Font files
-├── plugins/         # Nuxt plugins
-├── store/           # Vuex store
-└── utils/           # Utility functions
+├── components/       # Vue components
+│   ├── common/      # Shared components
+│   ├── layout/      # Layout components
+│   ├── sections/    # Page sections
+│   ├── auth/        # Authentication
+│   ├── chat/        # Chat interface
+│   ├── dashboard/   # Dashboard components
+│   └── evaluation/  # Evaluation forms
+├── pages/          # Vue pages
+├── layouts/        # Page layouts
+├── assets/         # Static assets
+│   ├── images/     # Image files
+│   ├── styles/     # CSS/SCSS files
+│   └── fonts/      # Font files
+├── plugins/        # Nuxt plugins
+├── store/          # Vuex store
+├── utils/          # Utility functions
+├── static/         # Public static files
+├── nuxt.config.js  # Nuxt configuration
+└── package.json    # Dependencies
 ```
 
 ## Key Components

@@ -8,17 +8,21 @@ The Hablaquí API is a Node.js-based REST API that serves as the backend for the
 ### Directory Structure
 ```
 api/
-├── server/
-│   ├── controllers/    # Request handlers
-│   ├── models/        # Database models
-│   ├── routes/        # API endpoints
-│   ├── services/      # Business logic
-│   ├── middleware/    # Request middleware
-│   ├── utils/         # Helper functions
-│   ├── config/        # Configuration
-│   ├── schemas/       # Data validation
-│   ├── templates/     # Email templates
-│   └── static/        # Static files
+├── server/           # Main server code
+│   ├── controllers/  # Request handlers
+│   ├── models/      # Database models
+│   ├── routes/      # API endpoints
+│   ├── services/    # Business logic
+│   ├── middleware/  # Request middleware
+│   ├── utils/       # Helper functions
+│   ├── config/      # Configuration
+│   ├── schemas/     # Data validation
+│   ├── templates/   # Email templates
+│   └── static/      # Static files
+├── tests/           # Test files
+├── server.js        # Entry point
+├── app.yaml         # App Engine config
+└── package.json     # Dependencies
 ```
 
 ### Key Components
