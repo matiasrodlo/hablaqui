@@ -2,6 +2,8 @@
 
 A mental health marketplace and SaaS platform connecting users with a network of over 200 certified specialists. The platform facilitates scheduling, payments, and secure video consultations.
 
+[Watch Product Demo](https://www.youtube.com/watch?v=3OhoPxWkAcM)
+
 ## Features
 Hablaquí provides a comprehensive solution for mental health services:
 
@@ -17,8 +19,6 @@ Hablaquí provides a comprehensive solution for mental health services:
 
 - **Specialist Discovery**: Advanced search and filtering system to help users find the right specialist for their specific needs.
 
-## Demo
-[Watch on YouTube](https://www.youtube.com/watch?v=3OhoPxWkAcM)
 
 ## Architecture
 The project consists of three main components:
