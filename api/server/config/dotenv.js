@@ -1,7 +1,23 @@
-// ============================
-// Enviroment development
-// Establece las variables de entorno para el trabajo local
-// ============================
+/**
+ * Environment Variable Configuration
+ * 
+ * This module loads and exports environment variables for the Hablaquí system.
+ * It uses dotenv to load variables from .env file and provides default values where needed.
+ * 
+ * Environment Variables:
+ * - Server Configuration (port, node_env)
+ * - Database Configuration (url_db)
+ * - Authentication (jwt_secret, jwt_algorithm, jwt_expiration)
+ * - Google OAuth (google_client_id, google_client_secret)
+ * - MercadoPago Integration (mercadopago keys and URLs)
+ * - SMS Service Configuration
+ * - Email Configuration
+ * - Cloud Storage Configuration
+ * 
+ * @module config/dotenv
+ * @requires dotenv - Environment variable loader
+ */
+
 import dotenv from 'dotenv'
 dotenv.config()
 // process.env.URLDB = process.env.URLDB || 'mongodb://localhost:27017/sochamar';

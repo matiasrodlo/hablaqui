@@ -1,3 +1,6 @@
+// Scripts Controller
+// This controller handles HTTP requests related to administrative scripts, such as changing roles, managing professions, and migrating data.
+
 'use strict'
 
 import scriptsService from '../services/scripts'
@@ -109,6 +112,7 @@ const migrationGcpBucketToAws = async (req, res) => {
   }
 }
 
+// Controller object containing script-related operations
 const scriptsController = {
   changeRole,
   addProfesion,

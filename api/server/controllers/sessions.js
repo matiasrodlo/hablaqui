@@ -7,10 +7,13 @@
  * @module controllers/sessions
  */
 
+'use strict'
+
 import sessionsService from '../services/sessions.js'
 import { restResponse } from '../utils/responses/functions'
 import { errorCallback } from '../utils/functions/errorCallback'
 
+// Controller object containing session-related operations
 const sessionsController = {
 	/**
 	 * Get User Sessions
@@ -281,11 +284,17 @@ const sessionsController = {
 	 */
 	async reschedule(req, res) {
 		try {
-			const { user, body } = req;
-			const { data, code } = await sessionsService.reschedule(user, body);
+			const { user } = req;
+			const { sessionsId, planId, id } = req.body;
+			const { data, code } = await sessionsService.reschedule(
+				user,
+				sessionsId,
+				planId,
+				id
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'Error rescheduling the session');
+			errorCallback(e, res, 'Error rescheduling session');
 		}
 	},
 
@@ -301,8 +310,14 @@ const sessionsController = {
 	 */
 	async updateSessions(req, res) {
 		try {
-			const { body } = req;
-			const { data, code } = await sessionsService.updateSessions(body);
+			const { user } = req;
+			const { sessionsId, planId, id } = req.body;
+			const { data, code } = await sessionsService.updateSessions(
+				user,
+				sessionsId,
+				planId,
+				id
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error updating sessions');
@@ -321,8 +336,14 @@ const sessionsController = {
 	 */
 	async deleteCommitment(req, res) {
 		try {
-			const { body } = req;
-			const { data, code } = await sessionsService.deleteCommitment(body);
+			const { user } = req;
+			const { sessionsId, planId, id } = req.body;
+			const { data, code } = await sessionsService.deleteCommitment(
+				user,
+				sessionsId,
+				planId,
+				id
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error deleting commitment');
@@ -398,8 +419,14 @@ const sessionsController = {
 	 */
 	async cancelSessionByEspecialist(req, res) {
 		try {
-			const { user, body } = req;
-			const { data, code } = await sessionsService.cancelSessionByEspecialist(user, body);
+			const { user } = req;
+			const { sessionsId, planId, id } = req.body;
+			const { data, code } = await sessionsService.cancelSessionByEspecialist(
+				user,
+				sessionsId,
+				planId,
+				id
+			);
 			return restResponse(data, code, res);
 		} catch (e) {
 			errorCallback(e, res, 'Error canceling session by specialist');
