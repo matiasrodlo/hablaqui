@@ -1,3 +1,22 @@
+/**
+ * InformationGeneralSpec Component
+ *
+ * Displays and allows editing of general information for a specialist, such as bio, experience, and contact details.
+ * Includes validation, error handling, and responsive layout.
+ *
+ * Key Features:
+ * - Editable specialist information fields
+ * - Validation and error messages
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify form components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <InformationGeneralSpec :specialist="specialist" />
+ */
 <template>
   <v-row class="mb-16 mt-10">
     <v-col cols="12">

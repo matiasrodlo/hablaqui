@@ -1,3 +1,24 @@
+/**
+ * FloatingChat Component
+ *
+ * A floating chat button and interface for users to access chat with specialists from anywhere in the dashboard.
+ * Supports mobile and desktop layouts, unread message indicators, and chat state management.
+ *
+ * Key Features:
+ * - Floating chat button
+ * - Unread message badge
+ * - Fullscreen dialog (mobile) or menu (desktop)
+ * - Chat state and specialist selection
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-badge, v-img, v-dialog, v-menu
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <FloatingChat />
+ */
 <template>
   <div>
     <v-badge
