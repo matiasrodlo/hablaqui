@@ -3,8 +3,8 @@
 # This is the Flutter project configuration file for the Hablaquí mobile application.
 # It defines the project metadata, dependencies, and asset configurations.
 
-name: movil
-description: Hablaquí mobile application for online therapy and specialist consultations.
+name: hablaqui
+description: A Flutter application for connecting users with language specialists, providing a seamless experience for language learning and practice.
 
 # Prevent accidental publishing to pub.dev
 publish_to: 'none'
@@ -20,50 +20,108 @@ version: 1.0.0+1
 
 # SDK constraints
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 # Project dependencies
 dependencies:
   flutter:
     sdk: flutter
 
+  # State Management
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
+
+  # Network & API
+  dio: ^5.3.2
+  http: ^1.1.0
+  connectivity_plus: ^5.0.1
+
+  # Storage
+  shared_preferences: ^2.2.1
+  flutter_secure_storage: ^9.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
   # UI Components
-  cupertino_icons: ^1.0.2  # iOS-style icons
-  carousel_slider: ^3.0.0  # Image carousel widget
-  font_awesome_flutter: ^9.1.0  # Font Awesome icons
+  cupertino_icons: ^1.0.6
+  flutter_svg: ^2.0.7
+  cached_network_image: ^3.3.0
+  shimmer: ^3.0.0
+  lottie: ^2.7.0
 
-  # Networking and Data
-  http: ^0.13.3  # HTTP client for API requests
-  shared_preferences: ^2.0.6  # Local storage
-  flutter_pusher: ^1.0.2  # Real-time updates
-  intl: ^0.17.0  # Internationalization and formatting
+  # Authentication & Security
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.7.3
+  google_sign_in: ^6.1.4
+  flutter_facebook_auth: ^6.0.3
 
-  # Platform Integration
-  url_launcher: ^6.0.9  # URL handling and external links
+  # Communication
+  agora_rtc_engine: ^6.2.6
+  flutter_local_notifications: ^15.1.1
+  firebase_messaging: ^14.6.7
+
+  # Utilities
+  intl: ^0.18.1
+  logger: ^2.0.1
+  path_provider: ^2.1.1
+  image_picker: ^1.0.4
+  url_launcher: ^6.1.14
+  package_info_plus: ^4.2.0
+  device_info_plus: ^9.1.1
 
 # Development dependencies
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  # Testing
+  mockito: ^5.4.2
+  build_runner: ^2.4.6
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.2
+
+  # Code Quality
+  flutter_lints: ^2.0.3
+  custom_lint: ^0.5.7
+  dart_code_metrics: ^5.7.6
+
 # Flutter-specific configuration
 flutter:
   # Enable Material Design
   uses-material-design: true
 
-  # Asset configuration
+  # Asset organization
   assets:
-    - images/  # Application images and icons
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+    - assets/fonts/
 
-  # Font configuration (commented out - add when needed)
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  # Font configuration
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+
+# Flutter configuration
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash.png
+  android_12:
+    image: assets/images/splash.png
+    icon_background_color: "#FFFFFF"
+  ios: true
+  web: false
