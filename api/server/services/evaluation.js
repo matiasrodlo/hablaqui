@@ -1,3 +1,29 @@
+/**
+ * Evaluation Service
+ * 
+ * This module handles all evaluation-related functionality for the Hablaquí system.
+ * It provides rating management, evaluation processing, and specialist feedback features.
+ * 
+ * Features:
+ * - User ratings for specialists
+ * - Evaluation submission and approval
+ * - Rating calculations and averages
+ * - Specialist performance metrics
+ * - Email notifications for evaluations
+ * - Evaluation moderation workflow
+ * - Performance tracking
+ * - Feedback management
+ * 
+ * @module services/evaluation
+ * @requires ../models/specialist - Specialist model
+ * @requires ../models/evaluation - Evaluation model
+ * @requires ../models/sessions - Session model
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../utils/functions/evaluationFunction - Evaluation utilities
+ * @requires ../utils/functions/mails/specialistStatus - Email service
+ * @requires dayjs - Date handling
+ */
+
 'use strict'
 
 import Specialist from '../models/specialist'
@@ -13,6 +39,22 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Adds a new rating for a specialist
+ * 
+ * This function:
+ * 1. Validates user-specialist relationship
+ * 2. Creates rating object with user data
+ * 3. Updates specialist's ratings array
+ * 4. Returns updated specialist data
+ * 
+ * @async
+ * @param {Object} user - User submitting the rating
+ * @param {number} newRating - Rating value
+ * @param {string} comment - Rating comment
+ * @param {string} specialist - Specialist ID
+ * @returns {Promise<Object>} Response with updated specialist data
+ */
 const addRating = async (user, newRating, comment, specialist) => {
   // Verifica que el usuario sea un especialista, crea el rating y lo agrega al especialista
   if (user.specialist != specialist) {
@@ -36,6 +78,19 @@ const addRating = async (user, newRating, comment, specialist) => {
   })
 }
 
+/**
+ * Calculates and retrieves the average rating for a specialist
+ * 
+ * This function:
+ * 1. Retrieves specialist data
+ * 2. Validates existence of ratings
+ * 3. Calculates average rating
+ * 4. Returns rating value
+ * 
+ * @async
+ * @param {string} specialist - Specialist ID
+ * @returns {Promise<Object>} Response with average rating
+ */
 const getRating = async specialist => {
   // Obtiene el rating de un especialista, verifica que el especialista tenga al
   // menos una evaluacion y obtiene el promedio del rating
@@ -54,6 +109,19 @@ const getRating = async specialist => {
   })
 }
 
+/**
+ * Retrieves all approved evaluations for a specialist
+ * 
+ * This function:
+ * 1. Validates user role
+ * 2. Retrieves specialist's evaluations
+ * 3. Filters approved evaluations
+ * 4. Returns formatted evaluation data
+ * 
+ * @async
+ * @param {Object} user - Specialist user object
+ * @returns {Promise<Object>} Response with evaluations
+ */
 const getEvaluationsSpec = async user => {
   if (user.role !== 'specialist') {
     return conflictResponse('No eres especialista')
@@ -83,6 +151,19 @@ const getEvaluationsSpec = async user => {
   })
 }
 
+/**
+ * Retrieves all evaluations for admin review
+ * 
+ * This function:
+ * 1. Validates admin role
+ * 2. Retrieves all evaluations
+ * 3. Formats evaluation data
+ * 4. Sorts by date
+ * 
+ * @async
+ * @param {Object} user - Admin user object
+ * @returns {Promise<Object>} Response with all evaluations
+ */
 const getAllEvaluations = async user => {
   if (user.role !== 'superuser') return conflictResponse('No admin')
   // Obtiene todas las evaluaciones de un especialista incluso las que no han sido aprobadas
@@ -116,6 +197,23 @@ const getAllEvaluations = async user => {
   })
 }
 
+/**
+ * Approves an evaluation and updates specialist ratings
+ * Sends notification emails to both user and specialist
+ * 
+ * This function:
+ * 1. Validates admin role
+ * 2. Updates evaluation status
+ * 3. Recalculates specialist ratings
+ * 4. Sends notification emails
+ * 5. Returns updated evaluation
+ * 
+ * @async
+ * @param {Object} user - Admin user object
+ * @param {string} evaluationsId - Evaluation collection ID
+ * @param {string} evaluationId - Specific evaluation ID
+ * @returns {Promise<Object>} Response with updated evaluation
+ */
 const approveEvaluation = async (user, evaluationsId, evaluationId) => {
   if (user.role !== 'superuser') return conflictResponse('No admin')
   // Encuentra la evaluacion y la aprueba
@@ -179,6 +277,21 @@ const approveEvaluation = async (user, evaluationsId, evaluationId) => {
   return okResponse('Evaluación aprobada', { evaluation })
 }
 
+/**
+ * Refuses an evaluation and sends notification emails
+ * 
+ * This function:
+ * 1. Validates admin role
+ * 2. Updates evaluation status
+ * 3. Sends notification emails
+ * 4. Returns updated evaluation
+ * 
+ * @async
+ * @param {Object} user - Admin user object
+ * @param {string} evaluationsId - Evaluation collection ID
+ * @param {string} evaluationId - Specific evaluation ID
+ * @returns {Promise<Object>} Response with updated evaluation
+ */
 const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
   if (user.role !== 'superuser') return conflictResponse('No admin')
   // Encuentra la evaluacion y la rechaza
@@ -200,6 +313,22 @@ const refuseEvaluation = async (user, evaluationsId, evaluationId) => {
 
   return okResponse('Sesion rechazada', { evaluations })
 }
+
+/**
+ * Adds a new evaluation for a specialist
+ * 
+ * This function:
+ * 1. Validates user-specialist relationship
+ * 2. Creates evaluation object
+ * 3. Updates specialist's evaluations
+ * 4. Sends notification emails
+ * 
+ * @async
+ * @param {Object} user - User submitting evaluation
+ * @param {string} specId - Specialist ID
+ * @param {Object} payload - Evaluation data
+ * @returns {Promise<Object>} Response with created evaluation
+ */
 const addEvaluation = async (user, specId, payload) => {
   if (user.role !== 'user') return conflictResponse('No eres usuario')
 
@@ -284,6 +413,10 @@ const getEvaluationsById = async userId => {
   return okResponse('evaluaciones', { evaluations })
 }
 
+/**
+ * Evaluation service object containing all evaluation-related business logic
+ * @type {Object}
+ */
 const evaluationService = {
   addRating,
   getRating,
@@ -294,4 +427,5 @@ const evaluationService = {
   addEvaluation,
   getEvaluationsById,
 }
+
 export default Object.freeze(evaluationService)

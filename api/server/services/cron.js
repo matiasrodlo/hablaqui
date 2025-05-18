@@ -1,3 +1,30 @@
+/**
+ * Cron Service
+ *
+ * This module provides scheduled task functionality for the Hablaquí platform.
+ * It includes background jobs for updating session statuses, sending scheduled emails,
+ * managing immediate attention states, and unifying mailing operations.
+ *
+ * Key Features:
+ * - Scheduled email notifications (chat, session, payment, etc.)
+ * - Session status updates and automation
+ * - Specialist immediate attention state management
+ * - Batch email processing and mailing unification
+ * - Secure token-based access for cron endpoints
+ *
+ * @module services/cron
+ * @requires ../utils/functions/mails/mailing - Email management service
+ * @requires ../models/email - Email model
+ * @requires ../models/chat - Chat model
+ * @requires ../models/user - User model
+ * @requires ../models/specialist - Specialist model
+ * @requires ../utils/functions/mails/reminder - Reminder email service
+ * @requires ../utils/functions/mails/specialistStatus - Specialist email service
+ * @requires dayjs - Date handling
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../models/sessions - Sessions model
+ * @requires @sendgrid/client - SendGrid API client
+ */
 'use-strict'
 import mailService from '../utils/functions/mails/mailing'
 import email from '../models/email'
@@ -25,10 +52,18 @@ sgClient.setApiKey(process.env.SENDGRID_API_KEY)
 
 const authToken = 'MWYkx6jOiUcpx5w7UUhB'
 
+/**
+ * Updates the number of successful sessions for each user and triggers evaluation notifications
+ * when a user reaches 3 successful sessions.
+ * 
+ * This function:
+ * 1. Retrieves all users
+ * 2. For each user, finds their sessions
+ * 3. Counts successful sessions from paid plans
+ * 4. Updates the session count and evaluation notification status
+ * 5. Sends evaluation notification email when threshold is reached
+ */
 async function getNumberSuccess() {
-  /**
-   * @description Actualiza la cantidad de sessiones exitosas de las sessiones.
-   */
   const users = await userModel.find()
   users.forEach(async user => {
     const sessions = await sessionsModel
@@ -70,6 +105,18 @@ async function getNumberSuccess() {
  */
 
 const cronService = {
+  /**
+   * Manages the immediate attention status for specialists
+   * 
+   * This function:
+   * 1. Verifies authentication token
+   * 2. Finds all specialists
+   * 3. Checks each specialist's immediate attention status
+   * 4. Deactivates immediate attention if expiration date has passed
+   * 
+   * @param {string} token - Authentication token for cron job
+   * @returns {Object} Response indicating status change
+   */
   async statusInmediateAttention(token) {
     if (token !== authToken) {
       return conflictResponse(
@@ -100,6 +147,21 @@ const cronService = {
     })
     return okResponse('Estados cambiados')
   },
+  /**
+   * Schedules and sends chat notification emails
+   * 
+   * This function:
+   * 1. Verifies authentication token
+   * 2. Finds unread chat messages
+   * 3. For each unread message:
+   *    - Sends notification to appropriate recipient (user or specialist)
+   *    - Creates email record for tracking
+   *    - Schedules follow-up notification
+   * 4. Updates message read status
+   * 
+   * @param {string} token - Authentication token for cron job
+   * @returns {Object} Response indicating email status
+   */
   async scheduleChatEmails(token) {
     if (token !== authToken) {
       return conflictResponse(
@@ -141,6 +203,20 @@ const cronService = {
 
     return okResponse('Se han enviado los correos')
   },
+  /**
+   * Updates the status of pending sessions
+   * 
+   * This function:
+   * 1. Verifies authentication token
+   * 2. Retrieves all pending sessions
+   * 3. For each session:
+   *    - Checks session date and status
+   *    - Updates status to 'success' if session time has passed
+   * 4. Updates successful session count
+   * 
+   * @param {string} token - Authentication token for cron job
+   * @returns {Object} Response indicating session updates
+   */
   async sessionStatus(token) {
     if (token !== authToken) {
       return conflictResponse(
@@ -201,6 +277,20 @@ const cronService = {
     await getNumberSuccess()
     return okResponse('Sesiones actualizadas')
   },
+  /**
+   * Manages payment deadlines for session plans
+   * 
+   * This function:
+   * 1. Verifies authentication token
+   * 2. Finds all sessions with pending payments
+   * 3. For each pending payment:
+   *    - Checks if payment deadline (3 hours) has passed
+   *    - Updates payment status to 'failed' if deadline exceeded
+   *    - Clears remaining sessions and session data
+   * 
+   * @param {string} token - Authentication token for cron job
+   * @returns {Object} Response indicating plan updates
+   */
   async limitToPayPlan(token) {
     if (token !== authToken) {
       return conflictResponse(
@@ -238,6 +328,21 @@ const cronService = {
     })
     return okResponse('Planes actualizados')
   },
+  /**
+   * Unifies and processes all pending email notifications
+   * 
+   * This function:
+   * 1. Verifies authentication token
+   * 2. Processes different types of email notifications:
+   *    - Session reminders
+   *    - Payment reminders
+   *    - Chat reminders
+   *    - Renewal reminders
+   * 3. Returns total count of scheduled emails
+   * 
+   * @param {string} token - Authentication token for cron job
+   * @returns {Object} Response with total scheduled emails count
+   */
   async unifyMailing(token) {
     if (token !== authToken) {
       return conflictResponse(

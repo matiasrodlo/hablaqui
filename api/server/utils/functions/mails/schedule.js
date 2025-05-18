@@ -28,6 +28,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { logError } from '../../../config/pino'
+import { emailTemplates } from './templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -509,6 +511,138 @@ const mailService = {
       },
     }
     await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a session scheduling confirmation email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send session scheduling confirmation
+   * await sendSessionScheduled(sessionData, userData, specialistData);
+   */
+  async sendSessionScheduled(session, user, specialist) {
+    try {
+      const template = emailTemplates.sessionScheduled(session, user, specialist)
+      return await sendMails({
+        to: user.email,
+        subject: 'Session Scheduled - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending session scheduled email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a session rescheduling notification email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @param {Object} oldTime - Previous session time
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send session rescheduling notification
+   * await sendSessionRescheduled(sessionData, userData, specialistData, oldTimeData);
+   */
+  async sendSessionRescheduled(session, user, specialist, oldTime) {
+    try {
+      const template = emailTemplates.sessionRescheduled(session, user, specialist, oldTime)
+      return await sendMails({
+        to: user.email,
+        subject: 'Session Rescheduled - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending session rescheduled email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a session cancellation notification email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @param {string} reason - Cancellation reason
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send session cancellation notification
+   * await sendSessionCancelled(sessionData, userData, specialistData, 'User request');
+   */
+  async sendSessionCancelled(session, user, specialist, reason) {
+    try {
+      const template = emailTemplates.sessionCancelled(session, user, specialist, reason)
+      return await sendMails({
+        to: user.email,
+        subject: 'Session Cancelled - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending session cancelled email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a session reminder email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @param {string} reminderType - Type of reminder ('day' or 'hour')
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send session reminder
+   * await sendSessionReminder(sessionData, userData, specialistData, 'day');
+   */
+  async sendSessionReminder(session, user, specialist, reminderType) {
+    try {
+      const template = emailTemplates.sessionReminder(session, user, specialist, reminderType)
+      return await sendMails({
+        to: user.email,
+        subject: `Session Reminder (${reminderType}) - Hablaqui`,
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending session reminder email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a session availability update email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @param {Object} availability - Updated availability data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send availability update
+   * await sendAvailabilityUpdate(specialistData, availabilityData);
+   */
+  async sendAvailabilityUpdate(specialist, availability) {
+    try {
+      const template = emailTemplates.availabilityUpdate(specialist, availability)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Availability Updated - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending availability update email:', error)
+      throw error
+    }
   },
 }
 

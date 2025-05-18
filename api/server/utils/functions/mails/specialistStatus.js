@@ -27,6 +27,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { logError } from '../../../config/pino'
+import { emailTemplates } from './templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -386,6 +388,132 @@ const mailService = {
       },
     }
     await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a specialist verification email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @param {string} verificationToken - Verification token
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send specialist verification email
+   * await mailService.sendSpecialistVerification(specialistData, 'verification-token-123');
+   */
+  async sendSpecialistVerification(specialist, verificationToken) {
+    try {
+      const template = emailTemplates.specialistVerification(specialist, verificationToken)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Specialist Verification - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending specialist verification email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a specialist status update email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @param {string} newStatus - New status
+   * @param {string} reason - Reason for status change
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send status update email
+   * await mailService.sendStatusUpdate(specialistData, 'active', 'Profile completed');
+   */
+  async sendStatusUpdate(specialist, newStatus, reason) {
+    try {
+      const template = emailTemplates.specialistStatusUpdate(specialist, newStatus, reason)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Status Update - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending status update email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a specialist profile update notification email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @param {Object} changes - Profile changes
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send profile update notification
+   * await mailService.sendProfileUpdate(specialistData, { specialties: ['New Specialty'] });
+   */
+  async sendProfileUpdate(specialist, changes) {
+    try {
+      const template = emailTemplates.specialistProfileUpdate(specialist, changes)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Profile Updated - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending profile update email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a specialist onboarding completion email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send onboarding completion email
+   * await mailService.sendOnboardingComplete(specialistData);
+   */
+  async sendOnboardingComplete(specialist) {
+    try {
+      const template = emailTemplates.specialistOnboardingComplete(specialist)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Onboarding Complete - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending onboarding completion email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a specialist account suspension email
+   * 
+   * @param {Object} specialist - Specialist data
+   * @param {string} reason - Suspension reason
+   * @param {string} duration - Suspension duration
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send account suspension email
+   * await mailService.sendAccountSuspended(specialistData, 'Policy violation', '30 days');
+   */
+  async sendAccountSuspended(specialist, reason, duration) {
+    try {
+      const template = emailTemplates.specialistAccountSuspended(specialist, reason, duration)
+      return await sendMails({
+        to: specialist.email,
+        subject: 'Account Suspended - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending account suspension email:', error)
+      throw error
+    }
   },
 }
 

@@ -1,30 +1,15 @@
 /**
- * Account Shares Email Service
+ * Accounts and Shares Email Utility
  * 
- * This module provides email notification functionality for account-related events
- * in the Hablaquí platform, including welcome emails, password recovery, email verification,
- * and account changes. It uses SendGrid templates for consistent email formatting.
- * 
- * Key features:
- * - Welcome emails for new users and specialists
- * - Password recovery notifications
- * - Email verification
- * - Account change notifications
- * - Photo upload notifications
- * - Plan cancellation notifications
- * - Specialist change notifications
- * - Timezone-aware date handling
- * 
- * The service uses SendGrid templates for consistent email formatting and includes
- * unsubscribe groups for email management. All emails are sent with proper reply-to
- * addresses and support contact information.
+ * This module provides functions for sending account and share-related emails in the Hablaquí platform,
+ * including account creation, sharing, and collaboration notifications.
  * 
  * @module utils/functions/mails/accountsShares
  */
 
-'use strict'
-
-import sendMails from './sendMails'
+import { logError } from '../../../config/pino'
+import { sendEmail } from './sendMails'
+import { emailTemplates } from './templates'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -37,311 +22,139 @@ dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
 /**
- * Account shares email service object containing methods for sending account-related notifications
+ * Sends an account creation confirmation email
  * 
- * @namespace mailService
+ * @param {Object} user - User data
+ * @param {string} verificationToken - Account verification token
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send account creation confirmation
+ * await sendAccountCreated(userData, 'verification-token-123');
  */
-const mailService = {
-  /**
-   * Sends a welcome email to a new user
-   * Notifies when a new user account is created
-   * 
-   * @param {Object} user - User information
-   * @param {string} user.email - User's email address
-   * @param {string} user.name - User's first name
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send welcome email to new user
-   * await mailService.sendWelcomeNewUser({
-   *   email: 'user@example.com',
-   *   name: 'John'
-   * });
-   */
-  async sendWelcomeNewUser(user) {
-    const { email, name } = user
-    const dataPayload = {
-      from: 'Hablaquí <bienvenida@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: 'Bienvenido/a a Hablaquí',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-0c5ca742f0df44b48f445bdedf6f85a8',
-      dynamicTemplateData: {
-        user_first_name: name,
-      },
-      asm: {
-        group_id: 16321,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends a welcome email to a new specialist
-   * Notifies when a specialist's account is approved
-   * 
-   * @param {Object} user - Specialist information
-   * @param {string} user.email - Specialist's email address
-   * @param {string} user.name - Specialist's first name
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send welcome email to new specialist
-   * await mailService.sendWelcomeNewSpecialist({
-   *   email: 'specialist@example.com',
-   *   name: 'Dr. Smith'
-   * });
-   */
-  async sendWelcomeNewSpecialist(user) {
-    const { email, name } = user
-    const dataPayload = {
-      from: 'Hablaquí para Especialistas <bienvenida-especialistas@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: 'Enhorabuena, hemos aprobado a su cuenta',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-78caf64c2f9340a39abd4d5af7d4a0f6',
-      dynamicTemplateData: {
-        first_name: name,
-      },
-      asm: {
-        group_id: 16321,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends a welcome email to a new user created by a specialist
-   * Notifies when a specialist invites a new user
-   * 
-   * @param {Object} spec - Specialist information
-   * @param {string} spec.name - Specialist's first name
-   * @param {string} spec.lastName - Specialist's last name
-   * @param {Object} newUser - New user information
-   * @param {string} newUser.name - User's first name
-   * @param {string} newUser.email - User's email address
-   * @param {string} pass - Temporary password for the new user
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send welcome email to invited user
-   * await mailService.sendGuestNewUser(
-   *   { name: 'Dr. Smith', lastName: 'Jones' },
-   *   { name: 'John', email: 'john@example.com' },
-   *   'temporary123'
-   * );
-   */
-  async sendGuestNewUser(spec, newUser, pass) {
-    const { name, email } = newUser
-    const dataPayload = {
-      from: 'Hablaquí <invitaciones@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: 'Ha sido invitado a Hablaquí por su especialista',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-785749c477ff43e0bdd8b5a8fe9ec17e',
-      dynamicTemplateData: {
-        name,
-        email,
-        password: pass,
-        psy_first_name: spec.name,
-        psy_last_name: spec.lastName,
-      },
-      asm: {
-        group_id: 16321,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends a password recovery email to a user
-   * Notifies when a user requests password recovery
-   * 
-   * @param {Object} user - User information
-   * @param {string} user.email - User's email address
-   * @param {string} user.name - User's first name
-   * @param {string} url - Password recovery URL
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send password recovery email
-   * await mailService.sendPasswordRecovery(
-   *   { email: 'user@example.com', name: 'John' },
-   *   'https://recovery.example.com/token123'
-   * );
-   */
-  async sendPasswordRecovery(user, url) {
-    const { email, name } = user
-    const dataPayload = {
-      from: 'Hablaquí <recuperacion@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: 'Recupera tu contraseña de Hablaquí',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-f025d6b8c63a4567897817ecd8f31aee',
-      dynamicTemplateData: {
-        url,
-      },
-      asm: {
-        group_id: 16321,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends an email verification email to a new user
-   * Notifies when a new user needs to verify their email
-   * 
-   * @param {Object} user - User information
-   * @param {string} user.email - User's email address
-   * @param {string} user.name - User's first name
-   * @param {string} url - Email verification URL
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send email verification
-   * await mailService.sendVerifyEmail(
-   *   { email: 'user@example.com', name: 'John' },
-   *   'https://verify.example.com/token123'
-   * );
-   */
-  async sendVerifyEmail(user, url) {
-    const dataPayload = {
-      from: 'Hablaquí <verificacion@mail.hablaqui.cl>',
-      to: user.name + '<' + user.email + '>',
-      subject: 'Verificación de cuenta de Hablaquí',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-8e397d37317c403ea7bb53cbbadac30a',
-      asm: {
-        group_id: 16321,
-      },
-      dynamicTemplateData: {
-        user_name: user.name,
-        verify_url: url,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends an internal notification about a specialist's photo upload
-   * Notifies support team when a specialist uploads a new photo
-   * 
-   * @param {Object} spec - Specialist information
-   * @param {string} spec.name - Specialist's first name
-   * @param {string} spec.lastName - Specialist's last name
-   * @param {string} spec.email - Specialist's email address
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send photo upload notification
-   * await mailService.sendUploadPicture({
-   *   name: 'Dr. Smith',
-   *   lastName: 'Jones',
-   *   email: 'smith@example.com'
-   * });
-   */
-  async sendUploadPicture(spec) {
-    const dataPayload = {
-      from: 'Hablaquí <internal@mail.hablaqui.cl>',
-      to: 'direccion@hablaqui.com',
-      subject: '[Internal] Nueva foto de especialista',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-8ee906349e144427ad0103a31507541a',
-      asm: {
-        group_id: 16321,
-      },
-      dynamicTemplateData: {
-        psy_first_name: spec.name,
-        psy_last_name: spec.lastName,
-        psy_email: spec.email,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends a plan cancellation notification to a user
-   * Notifies when a user cancels their subscription plan
-   * 
-   * @param {Object} user - User information
-   * @param {string} user.name - User's first name
-   * @param {string} user.email - User's email address
-   * @param {Object} spec - Specialist information
-   * @param {string} spec.name - Specialist's first name
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send plan cancellation notification
-   * await mailService.sendCancelPlanToUser(
-   *   { name: 'John', email: 'john@example.com' },
-   *   { name: 'Dr. Smith' }
-   * );
-   */
-  async sendCancelPlanToUser(user, spec) {
-    const dataPayload = {
-      from: 'Hablaquí <planes@mail.hablaqui.cl>',
-      to: user.name + '<' + user.email + '>',
-      subject: 'Plan cancelado',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
-      asm: {
-        group_id: 16321,
-      },
-      dynamicTemplateData: {
-        user_name: user.name,
-        psy_name: spec.name,
-      },
-    }
-    await sendMails(dataPayload)
-  },
-
-  /**
-   * Sends a specialist change notification to a user
-   * Notifies when a user's specialist is changed
-   * 
-   * @param {Object} user - User information
-   * @param {string} user.name - User's first name
-   * @param {string} user.email - User's email address
-   * @param {Object} spec - New specialist information
-   * @param {string} spec.name - Specialist's first name
-   * @param {string} coupon - Discount coupon code (optional)
-   * @returns {Promise<void>}
-   * @throws {Error} If email sending fails
-   * 
-   * @example
-   * // Send specialist change notification
-   * await mailService.sendChangeSpeccologistToUser(
-   *   { name: 'John', email: 'john@example.com' },
-   *   { name: 'Dr. Smith' },
-   *   'WELCOME20'
-   * );
-   */
-  async sendChangeSpeccologistToUser(user, spec, coupon) {
-    const dataPayload = {
-      from: 'Hablaquí <cambios@mail.hablaqui.cl>',
-      to: user.name + '<' + user.email + '>',
-      subject: 'Cambio de especialista',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
-      asm: {
-        group_id: 16321,
-      },
-      dynamicTemplateData: {
-        user_name: user.name,
-        psy_name: spec.name,
-        coupon: coupon || '',
-      },
-    }
-    await sendMails(dataPayload)
-  },
+const sendAccountCreated = async (user, verificationToken) => {
+  try {
+    const template = emailTemplates.accountCreated(user, verificationToken)
+    return await sendEmail({
+      to: user.email,
+      subject: 'Account Created - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending account creation email:', error)
+    throw error
+  }
 }
 
-export default Object.freeze(mailService)
+/**
+ * Sends a share invitation email
+ * 
+ * @param {Object} share - Share data
+ * @param {Object} sender - Sender user data
+ * @param {Object} recipient - Recipient user data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send share invitation
+ * await sendShareInvitation(shareData, senderData, recipientData);
+ */
+const sendShareInvitation = async (share, sender, recipient) => {
+  try {
+    const template = emailTemplates.shareInvitation(share, sender, recipient)
+    return await sendEmail({
+      to: recipient.email,
+      subject: 'Share Invitation - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending share invitation email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a share acceptance notification email
+ * 
+ * @param {Object} share - Share data
+ * @param {Object} sender - Sender user data
+ * @param {Object} recipient - Recipient user data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send share acceptance notification
+ * await sendShareAccepted(shareData, senderData, recipientData);
+ */
+const sendShareAccepted = async (share, sender, recipient) => {
+  try {
+    const template = emailTemplates.shareAccepted(share, sender, recipient)
+    return await sendEmail({
+      to: sender.email,
+      subject: 'Share Accepted - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending share acceptance email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a share rejection notification email
+ * 
+ * @param {Object} share - Share data
+ * @param {Object} sender - Sender user data
+ * @param {Object} recipient - Recipient user data
+ * @param {string} reason - Rejection reason
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send share rejection notification
+ * await sendShareRejected(shareData, senderData, recipientData, 'Not interested');
+ */
+const sendShareRejected = async (share, sender, recipient, reason) => {
+  try {
+    const template = emailTemplates.shareRejected(share, sender, recipient, reason)
+    return await sendEmail({
+      to: sender.email,
+      subject: 'Share Rejected - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending share rejection email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a collaboration request email
+ * 
+ * @param {Object} collaboration - Collaboration data
+ * @param {Object} sender - Sender user data
+ * @param {Object} recipient - Recipient user data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send collaboration request
+ * await sendCollaborationRequest(collaborationData, senderData, recipientData);
+ */
+const sendCollaborationRequest = async (collaboration, sender, recipient) => {
+  try {
+    const template = emailTemplates.collaborationRequest(collaboration, sender, recipient)
+    return await sendEmail({
+      to: recipient.email,
+      subject: 'Collaboration Request - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending collaboration request email:', error)
+    throw error
+  }
+}
+
+module.exports = {
+  sendAccountCreated,
+  sendShareInvitation,
+  sendShareAccepted,
+  sendShareRejected,
+  sendCollaborationRequest
+}

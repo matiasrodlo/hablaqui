@@ -1,125 +1,239 @@
 /**
- * Response Utility Functions
+ * Response Functions Utilities
  * 
- * This module provides standardized response functions for the API.
- * It includes functions for creating consistent HTTP responses with proper status codes
- * and data structures.
+ * This module provides standardized response functions for the Hablaquí API.
+ * It includes functions for creating consistent success and error responses
+ * with proper status codes and data formatting.
+ * 
+ * Features:
+ * - Standardized response format
+ * - HTTP status code mapping
+ * - Response data formatting
+ * - Success/error handling
+ * - Pagination support
  * 
  * @module utils/responses/functions
  */
 
+'use strict'
+
 /**
- * Creates a standardized REST API response
+ * Standard success response format
  * 
- * @param {Object} data - Response data to be sent
- * @param {number} code - HTTP status code
+ * @typedef {Object} SuccessResponse
+ * @property {boolean} status - Always true for success responses
+ * @property {string} message - Success message
+ * @property {*} [data] - Response data
+ * @property {number} [code] - HTTP status code
+ */
+
+/**
+ * Creates a standardized success response
+ * 
  * @param {Object} res - Express response object
- * @returns {Object} JSON response with status, API version, and base URL
+ * @param {string} message - Success message
+ * @param {*} [data] - Response data
+ * @param {number} [code=200] - HTTP status code
+ * @returns {SuccessResponse} Formatted success response
  * 
  * @example
- * // Send a successful response
- * restResponse({ user: userData }, 200, res);
+ * // Send success response with data
+ * successResponse(res, 'User created successfully', { id: 1 });
  */
-export const restResponse = (data, code, res) =>
-	res.status(code).json({
-		...data,
+export const successResponse = (res, message, data = null, code = 200) => {
+	const response = {
 		status: true,
-		apiVersion: 'v1',
-		baseUrl: process.env.API_URL,
-	});
+		message,
+		code
+	}
+
+	if (data !== null) {
+		response.data = data
+	}
+
+	return res.status(code).json(response)
+}
 
 /**
- * Creates a conflict response (409)
- * Used when there's a conflict with the current state of the resource
+ * Creates a paginated success response
  * 
- * @param {string} message - Conflict message
- * @returns {Object} Response object with 409 status code
- * 
- * @example
- * // Return conflict response
- * return conflictResponse('User already exists');
- */
-export const conflictResponse = message => ({ code: 409, data: { message } })
-
-/**
- * Creates an error response (400)
- * Used in catch blocks to handle errors
- * 
- * @param {Error} e - Error object
  * @param {Object} res - Express response object
- * @returns {Object} JSON response with error details
+ * @param {string} message - Success message
+ * @param {Array} data - Response data array
+ * @param {number} total - Total number of items
+ * @param {number} page - Current page number
+ * @param {number} limit - Items per page
+ * @returns {SuccessResponse} Formatted paginated response
  * 
  * @example
- * // Handle error in catch block
- * catch (error) {
- *   errorResponse(error, res);
- * }
+ * // Send paginated response
+ * paginatedResponse(res, 'Users retrieved', users, 100, 1, 10);
  */
-export const errorResponse = (e, res) =>
-  res
-    .status(400)
-    .json({ status: false, error: e.message, description: e.description })
+export const paginatedResponse = (res, message, data, total, page, limit) => {
+	return successResponse(res, message, {
+		data,
+		pagination: {
+			total,
+			page,
+			limit,
+			pages: Math.ceil(total / limit)
+		}
+	})
+}
 
 /**
  * Creates a created response (201)
- * Used when a new resource is successfully created
  * 
+ * @param {Object} res - Express response object
  * @param {string} message - Success message
- * @param {Object} [data={}] - Additional response data
- * @returns {Object} Response object with 201 status code
+ * @param {*} [data] - Response data
+ * @returns {SuccessResponse} Formatted created response
  * 
  * @example
- * // Return created response
- * return createdResponse('User created successfully', { userId: newUser.id });
+ * // Send created response
+ * createdResponse(res, 'Resource created', { id: 1 });
  */
-export const createdResponse = (message, data = {}) => ({
-  code: 201,
-  data: { message, ...data },
-})
-
-/**
- * Creates an OK response (200)
- * Used for successful operations
- * 
- * @param {string} message - Success message
- * @param {Object} [data={}] - Additional response data
- * @returns {Object} Response object with 200 status code
- * 
- * @example
- * // Return OK response
- * return okResponse('Operation successful', { result: data });
- */
-export const okResponse = (message, data = {}) => ({
-  code: 200,
-  data: { message, ...data },
-})
+export const createdResponse = (res, message, data = null) => {
+	return successResponse(res, message, data, 201)
+}
 
 /**
  * Creates a no content response (204)
- * Used when the operation was successful but there's no content to return
  * 
- * @param {string} message - Success message
- * @param {Object} [data={}] - Additional response data
- * @returns {Object} Response object with 204 status code
+ * @param {Object} res - Express response object
+ * @returns {Object} Empty response with 204 status code
  * 
  * @example
- * // Return no content response
- * return noContentResponse('Resource deleted successfully');
+ * // Send no content response
+ * noContentResponse(res);
  */
-export const noContentResponse = (message, data = {}) => ({
-  code: 204,
-  data: { message, ...data },
-})
+export const noContentResponse = (res) => {
+	return res.status(204).send()
+}
+
+/**
+ * Creates a bad request response (400)
+ * 
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
+ * 
+ * @example
+ * // Send bad request response
+ * badRequestResponse(res, 'Invalid input');
+ */
+export const badRequestResponse = (res, message) => {
+	return res.status(400).json({
+		status: false,
+		message,
+		code: 400
+	})
+}
+
+/**
+ * Creates an unauthorized response (401)
+ * 
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
+ * 
+ * @example
+ * // Send unauthorized response
+ * unauthorizedResponse(res, 'Authentication required');
+ */
+export const unauthorizedResponse = (res, message) => {
+	return res.status(401).json({
+		status: false,
+		message,
+		code: 401
+	})
+}
+
+/**
+ * Creates a forbidden response (403)
+ * 
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
+ * 
+ * @example
+ * // Send forbidden response
+ * forbiddenResponse(res, 'Insufficient permissions');
+ */
+export const forbiddenResponse = (res, message) => {
+	return res.status(403).json({
+		status: false,
+		message,
+		code: 403
+	})
+}
 
 /**
  * Creates a not found response (404)
- * Used when the requested resource is not found
  * 
- * @param {string} message - Not found message
- * @returns {Object} Response object with 404 status code
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
  * 
  * @example
- * // Return not found response
- * return notFoundResponse('User not found');
+ * // Send not found response
+ * notFoundResponse(res, 'Resource not found');
  */
-export const notFoundResponse = message => ({ code: 404, data: { message } })
+export const notFoundResponse = (res, message) => {
+	return res.status(404).json({
+		status: false,
+		message,
+		code: 404
+	})
+}
+
+/**
+ * Creates a conflict response (409)
+ * 
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
+ * 
+ * @example
+ * // Send conflict response
+ * conflictResponse(res, 'Resource already exists');
+ */
+export const conflictResponse = (res, message) => {
+	return res.status(409).json({
+		status: false,
+		message,
+		code: 409
+	})
+}
+
+/**
+ * Creates an internal server error response (500)
+ * 
+ * @param {Object} res - Express response object
+ * @param {string} message - Error message
+ * @returns {Object} Formatted error response
+ * 
+ * @example
+ * // Send internal server error response
+ * serverErrorResponse(res, 'Internal server error');
+ */
+export const serverErrorResponse = (res, message) => {
+	return res.status(500).json({
+		status: false,
+		message,
+		code: 500
+	})
+}
+
+module.exports = {
+	successResponse,
+	paginatedResponse,
+	createdResponse,
+	noContentResponse,
+	badRequestResponse,
+	unauthorizedResponse,
+	forbiddenResponse,
+	notFoundResponse,
+	conflictResponse,
+	serverErrorResponse
+}

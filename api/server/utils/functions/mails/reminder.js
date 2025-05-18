@@ -29,6 +29,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { logError } from '../../../config/pino'
+import { emailTemplates } from './templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -489,6 +491,137 @@ const mailService = {
       },
     }
     await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a session reminder email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @param {string} reminderType - Type of reminder ('day' or 'hour')
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send session reminder
+   * await mailService.sendSessionReminder(sessionData, userData, specialistData, 'day');
+   */
+  async sendSessionReminder(session, user, specialist, reminderType) {
+    try {
+      const template = emailTemplates.sessionReminder(session, user, specialist, reminderType)
+      return await sendMails({
+        to: user.email,
+        subject: `Session Reminder (${reminderType}) - Hablaqui`,
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending session reminder email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a payment reminder email
+   * 
+   * @param {Object} payment - Payment data
+   * @param {Object} user - User data
+   * @param {string} dueDate - Payment due date
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send payment reminder
+   * await mailService.sendPaymentReminder(paymentData, userData, '2024-03-20');
+   */
+  async sendPaymentReminder(payment, user, dueDate) {
+    try {
+      const template = emailTemplates.paymentReminder(payment, user, dueDate)
+      return await sendMails({
+        to: user.email,
+        subject: 'Payment Reminder - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending payment reminder email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a subscription renewal reminder email
+   * 
+   * @param {Object} subscription - Subscription data
+   * @param {Object} user - User data
+   * @param {string} renewalDate - Subscription renewal date
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send subscription renewal reminder
+   * await mailService.sendSubscriptionRenewalReminder(subscriptionData, userData, '2024-03-20');
+   */
+  async sendSubscriptionRenewalReminder(subscription, user, renewalDate) {
+    try {
+      const template = emailTemplates.subscriptionRenewal(subscription, user, renewalDate)
+      return await sendMails({
+        to: user.email,
+        subject: 'Subscription Renewal Reminder - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending subscription renewal reminder email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a follow-up reminder email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send follow-up reminder
+   * await mailService.sendFollowUpReminder(sessionData, userData, specialistData);
+   */
+  async sendFollowUpReminder(session, user, specialist) {
+    try {
+      const template = emailTemplates.followUpReminder(session, user, specialist)
+      return await sendMails({
+        to: user.email,
+        subject: 'Follow-up Reminder - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending follow-up reminder email:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a feedback reminder email
+   * 
+   * @param {Object} session - Session data
+   * @param {Object} user - User data
+   * @param {Object} specialist - Specialist data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send feedback reminder
+   * await mailService.sendFeedbackReminder(sessionData, userData, specialistData);
+   */
+  async sendFeedbackReminder(session, user, specialist) {
+    try {
+      const template = emailTemplates.feedbackReminder(session, user, specialist)
+      return await sendMails({
+        to: user.email,
+        subject: 'Session Feedback - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending feedback reminder email:', error)
+      throw error
+    }
   },
 }
 

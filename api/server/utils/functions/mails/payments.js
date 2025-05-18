@@ -15,6 +15,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { logError } from '../../../config/pino'
+import { emailTemplates } from './templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -143,6 +145,116 @@ const mailService = {
       },
     }
     await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a payment confirmation email
+   * 
+   * @param {Object} payment - Payment data
+   * @param {string} payment.id - Payment ID
+   * @param {number} payment.amount - Payment amount
+   * @param {string} payment.currency - Payment currency
+   * @param {Object} user - User data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send payment confirmation
+   * await sendPaymentConfirmation({
+   *   id: 'pay_123',
+   *   amount: 10000,
+   *   currency: 'CLP'
+   * }, userData);
+   */
+  async sendPaymentConfirmation(payment, user) {
+    try {
+      const template = emailTemplates.paymentConfirmation(payment, user)
+      return await sendMails({
+        to: user.email,
+        subject: 'Payment Confirmation - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending payment confirmation:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a payment receipt email
+   * 
+   * @param {Object} payment - Payment data
+   * @param {Object} user - User data
+   * @param {Object} session - Session data
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send payment receipt
+   * await sendPaymentReceipt(paymentData, userData, sessionData);
+   */
+  async sendPaymentReceipt(payment, user, session) {
+    try {
+      const template = emailTemplates.paymentReceipt(payment, user, session)
+      return await sendMails({
+        to: user.email,
+        subject: 'Payment Receipt - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending payment receipt:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a payment reminder email
+   * 
+   * @param {Object} payment - Payment data
+   * @param {Object} user - User data
+   * @param {string} dueDate - Payment due date
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send payment reminder
+   * await sendPaymentReminder(paymentData, userData, '2024-03-20');
+   */
+  async sendPaymentReminder(payment, user, dueDate) {
+    try {
+      const template = emailTemplates.paymentReminder(payment, user, dueDate)
+      return await sendMails({
+        to: user.email,
+        subject: 'Payment Reminder - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending payment reminder:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Sends a subscription renewal reminder email
+   * 
+   * @param {Object} subscription - Subscription data
+   * @param {Object} user - User data
+   * @param {string} renewalDate - Subscription renewal date
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * // Send subscription renewal reminder
+   * await sendSubscriptionRenewalReminder(subscriptionData, userData, '2024-03-20');
+   */
+  async sendSubscriptionRenewalReminder(subscription, user, renewalDate) {
+    try {
+      const template = emailTemplates.subscriptionRenewal(subscription, user, renewalDate)
+      return await sendMails({
+        to: user.email,
+        subject: 'Subscription Renewal Reminder - Hablaqui',
+        html: template
+      })
+    } catch (error) {
+      logError('Error sending subscription renewal reminder:', error)
+      throw error
+    }
   },
 }
 

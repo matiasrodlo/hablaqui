@@ -1,113 +1,123 @@
 /**
  * Email Sending Utility
  * 
- * This module provides the core email sending functionality for the Hablaquí platform.
- * It integrates with SendGrid's mail service to handle email delivery and logging.
- * 
- * Key features:
- * - Simple text and HTML email support
- * - SendGrid dynamic templates integration
- * - Email tracking and analytics
- * - Unsubscribe group management
- * - Batch sending capabilities
- * - Error handling and logging
- * - Timezone-aware date handling
- * 
- * The module uses SendGrid's API for reliable email delivery and includes
- * comprehensive error handling and logging. All emails are sent with proper
- * tracking and unsubscribe group settings for compliance.
+ * This module provides core functionality for sending emails in the Hablaquí platform.
+ * It handles email template rendering, sending, and error handling.
  * 
  * @module utils/functions/mails/sendMails
  */
 
-import sgMail from '@sendgrid/mail'
-import { logInfo } from '../../../config/pino'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
-
-// Configure SendGrid with API key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-
-// Configure dayjs with required plugins
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.tz.setDefault('America/Santiago')
+import { logError } from '../../../config/pino'
+import nodemailer from 'nodemailer'
+import { emailTemplates } from './templates'
 
 /**
- * Sends an email using SendGrid's mail service
- * Handles email delivery and logs the result
+ * Creates a nodemailer transporter for sending emails
  * 
- * @param {Object} dataPayload - Email configuration object
- * @param {string} dataPayload.from - Sender email address
- * @param {string} dataPayload.to - Recipient email address
- * @param {string} dataPayload.subject - Email subject
- * @param {string} [dataPayload.reply_to] - Reply-to email address
- * @param {string} [dataPayload.templateId] - SendGrid template ID
- * @param {Object} [dataPayload.asm] - SendGrid unsubscribe group settings
- * @param {number} [dataPayload.asm.group_id] - Unsubscribe group ID
- * @param {Object} [dataPayload.dynamicTemplateData] - Template variables
- * @param {string} [dataPayload.batchId] - SendGrid batch ID for tracking
- * @param {string} [dataPayload.text] - Plain text email content
- * @param {string} [dataPayload.html] - HTML email content
- * 
- * @returns {Promise<Object>} SendGrid response object containing:
- *   - statusCode: HTTP status code
- *   - headers: Response headers
- *   - body: Response body with message details
- * 
- * @throws {Error} If email sending fails, with details about the error
- * 
- * @example
- * // Send a simple text email
- * await sendMails({
- *   from: 'notifications@example.com',
- *   to: 'user@example.com',
- *   subject: 'Test Email',
- *   text: 'Hello World'
- * });
- * 
- * @example
- * // Send a templated email with unsubscribe group
- * await sendMails({
- *   from: 'notifications@example.com',
- *   to: 'user@example.com',
- *   subject: 'Welcome',
- *   templateId: 'd-template123',
- *   asm: {
- *     group_id: 16321
- *   },
- *   dynamicTemplateData: {
- *     name: 'John',
- *     url: 'https://example.com'
- *   }
- * });
- * 
- * @example
- * // Send a batch email with tracking
- * await sendMails({
- *   from: 'notifications@example.com',
- *   to: 'user@example.com',
- *   subject: 'Newsletter',
- *   templateId: 'd-template456',
- *   batchId: 'batch123',
- *   dynamicTemplateData: {
- *     content: 'Latest updates'
- *   }
- * });
+ * @returns {Object} Configured nodemailer transporter
+ * @private
  */
-const sendMails = async dataPayload => {
-  return new Promise((resolve, reject) => {
-    sgMail.send(dataPayload, function(error, body) {
-      if (error) {
-        reject(error)
-        logInfo(error)
-      } else {
-        resolve(body)
-        logInfo(body)
-      }
-    })
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE === 'true',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
   })
 }
 
-export default sendMails
+/**
+ * Sends an email using the configured transporter
+ * 
+ * @param {Object} options - Email options
+ * @param {string} options.to - Recipient email address
+ * @param {string} options.subject - Email subject
+ * @param {string} options.html - Email body in HTML format
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send a simple email
+ * await sendEmail({
+ *   to: 'user@example.com',
+ *   subject: 'Welcome to Hablaqui',
+ *   html: '<h1>Welcome!</h1>'
+ * });
+ */
+const sendEmail = async (options) => {
+  try {
+    const transporter = createTransporter()
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      ...options
+    })
+    return info
+  } catch (error) {
+    logError('Error sending email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a template-based email
+ * 
+ * @param {string} templateName - Name of the email template to use
+ * @param {Object} data - Data to be used in template rendering
+ * @param {string} to - Recipient email address
+ * @param {string} subject - Email subject
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send a template email
+ * await sendTemplateEmail('welcome', { name: 'John' }, 'user@example.com', 'Welcome!');
+ */
+const sendTemplateEmail = async (templateName, data, to, subject) => {
+  try {
+    const template = emailTemplates[templateName](data)
+    return await sendEmail({
+      to,
+      subject,
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending template email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a bulk email to multiple recipients
+ * 
+ * @param {string} templateName - Name of the email template to use
+ * @param {Array<Object>} recipients - Array of recipient data objects
+ * @param {string} subject - Email subject
+ * @returns {Promise<Array>} Array of send results
+ * 
+ * @example
+ * // Send bulk emails
+ * await sendBulkEmail('newsletter', [
+ *   { email: 'user1@example.com', name: 'John' },
+ *   { email: 'user2@example.com', name: 'Jane' }
+ * ], 'Newsletter');
+ */
+const sendBulkEmail = async (templateName, recipients, subject) => {
+  try {
+    const results = await Promise.all(
+      recipients.map(recipient =>
+        sendTemplateEmail(templateName, recipient, recipient.email, subject)
+      )
+    )
+    return results
+  } catch (error) {
+    logError('Error sending bulk email:', error)
+    throw error
+  }
+}
+
+module.exports = {
+  sendEmail,
+  sendTemplateEmail,
+  sendBulkEmail
+}

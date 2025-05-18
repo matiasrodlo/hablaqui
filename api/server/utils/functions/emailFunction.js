@@ -1,10 +1,23 @@
 /**
- * Email Management Utilities
+ * Email Function Utilities
  * 
- * This module provides utility functions for managing email notifications,
- * including session reminders, payment reminders, and subscription renewal notifications.
+ * This module provides email-related utility functions for the Hablaquí system.
+ * It handles email sending, scheduling, and management for various system events.
+ * 
+ * Features:
+ * - Email sending with SendGrid
+ * - Session confirmation emails
+ * - Session reminders
+ * - Password reset emails
+ * - Welcome emails
+ * - Payment reminders
+ * - Subscription renewal notifications
  * 
  * @module utils/functions/emailFunction
+ * @requires ../config/pino - Logging
+ * @requires ../config/dotenv - Environment configuration
+ * @requires dayjs - Date handling
+ * @requires @sendgrid/mail - Email service
  */
 
 'use strict'
@@ -12,11 +25,165 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import Email from '../../models/email'
+import { logError } from '../../config/pino'
+import nodemailer from 'nodemailer'
+import { emailTemplates } from './mails/templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
+
+/**
+ * Creates a nodemailer transporter for sending emails
+ * 
+ * @returns {Object} Configured nodemailer transporter
+ * 
+ * @private
+ */
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE === 'true',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  })
+}
+
+/**
+ * Sends an email using the configured transporter
+ * 
+ * @param {Object} options - Email options
+ * @param {string} options.to - Recipient email address
+ * @param {string} options.subject - Email subject
+ * @param {string} options.html - Email body in HTML format
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send a simple email
+ * await sendEmail({
+ *   to: 'user@example.com',
+ *   subject: 'Welcome to Hablaqui',
+ *   html: '<h1>Welcome!</h1>'
+ * });
+ */
+const sendEmail = async (options) => {
+  try {
+    const transporter = createTransporter()
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      ...options
+    })
+    return info
+  } catch (error) {
+    logError('Error sending email:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a session confirmation email
+ * 
+ * @param {Object} session - Session data
+ * @param {Object} user - User data
+ * @param {Object} specialist - Specialist data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send session confirmation
+ * await sendSessionConfirmation(session, user, specialist);
+ */
+const sendSessionConfirmation = async (session, user, specialist) => {
+  try {
+    const template = emailTemplates.sessionConfirmation(session, user, specialist)
+    return await sendEmail({
+      to: user.email,
+      subject: 'Session Confirmation - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending session confirmation:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a session reminder email
+ * 
+ * @param {Object} session - Session data
+ * @param {Object} user - User data
+ * @param {Object} specialist - Specialist data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send session reminder
+ * await sendSessionReminder(session, user, specialist);
+ */
+const sendSessionReminder = async (session, user, specialist) => {
+  try {
+    const template = emailTemplates.sessionReminder(session, user, specialist)
+    return await sendEmail({
+      to: user.email,
+      subject: 'Session Reminder - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending session reminder:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a password reset email
+ * 
+ * @param {Object} user - User data
+ * @param {string} resetToken - Password reset token
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send password reset email
+ * await sendPasswordReset(user, resetToken);
+ */
+const sendPasswordReset = async (user, resetToken) => {
+  try {
+    const template = emailTemplates.passwordReset(user, resetToken)
+    return await sendEmail({
+      to: user.email,
+      subject: 'Password Reset - Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending password reset:', error)
+    throw error
+  }
+}
+
+/**
+ * Sends a welcome email to new users
+ * 
+ * @param {Object} user - User data
+ * @returns {Promise<Object>} Send result
+ * 
+ * @example
+ * // Send welcome email
+ * await sendWelcomeEmail(user);
+ */
+const sendWelcomeEmail = async (user) => {
+  try {
+    const template = emailTemplates.welcome(user)
+    return await sendEmail({
+      to: user.email,
+      subject: 'Welcome to Hablaqui',
+      html: template
+    })
+  } catch (error) {
+    logError('Error sending welcome email:', error)
+    throw error
+  }
+}
 
 /**
  * Creates email reminders for an upcoming session
@@ -254,4 +421,17 @@ export const deleteRenewalEmails = async (user, spec) => {
       await Email.findByIdAndDelete(mail._id).catch(err => console.log(err))
     })
   }
+}
+
+module.exports = {
+  sendEmail,
+  sendSessionConfirmation,
+  sendSessionReminder,
+  sendPasswordReset,
+  sendWelcomeEmail,
+  createReminder,
+  createPaymentReminder,
+  createRenewalSubscription,
+  deleteReminderPayment,
+  deleteRenewalEmails
 }

@@ -1,19 +1,37 @@
 /**
- * Session Management Utilities
+ * Session Function Utilities
  * 
- * This module provides utility functions for managing therapy sessions, including
- * payment processing, schedule validation, and session status management.
+ * This module provides utility functions for managing therapy sessions
+ * in the Hablaquí system. It handles session scheduling, rescheduling,
+ * cancellation, and availability checking.
+ * 
+ * Features:
+ * - Session scheduling and management
+ * - Availability checking
+ * - Session rescheduling
+ * - Session cancellation
+ * - Time slot validation
+ * - Conflict detection
+ * - Calendar integration
  * 
  * @module utils/functions/sessionsFunctions
+ * @requires ../config/pino - Logging
+ * @requires ../models/sessions - Session model
+ * @requires ../models/specialist - Specialist model
+ * @requires dayjs - Date handling
  */
 
+'use strict'
+
+import { logError } from '../../config/pino'
 import Sessions from '../../models/sessions'
-import { priceFormatter } from './priceFormatter'
+import Specialist from '../../models/specialist'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import isBetween from 'dayjs/plugin/isBetween'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { priceFormatter } from './priceFormatter'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -23,18 +41,137 @@ dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
 /**
- * Extracts numeric price from formatted price string
+ * Schedules a new therapy session
  * 
- * @param {string} price - Formatted price string (e.g., "$1,234.56")
- * @returns {string} Numeric price string
- * 
- * @private
+ * @async
+ * @param {Object} sessionData - Session configuration
+ * @param {string} sessionData.userId - User ID
+ * @param {string} sessionData.specialistId - Specialist ID
+ * @param {string} sessionData.date - Session date
+ * @param {string} sessionData.time - Session time
+ * @returns {Promise<Object>} Created session
  */
-const extractPrice = price => {
-  const priceArray = price.split(',')
-  let priceNumber = priceArray[0].replace('$', '')
-  priceNumber = priceNumber + priceArray[1]
-  return priceNumber
+const scheduleSession = async sessionData => {
+  try {
+    // Validate session time is available
+    const isAvailable = await checkAvailability(
+      sessionData.specialistId,
+      sessionData.date,
+      sessionData.time
+    )
+
+    if (!isAvailable) {
+      throw new Error('Selected time slot is not available')
+    }
+
+    // Create new session
+    const session = new Sessions({
+      user: sessionData.userId,
+      specialist: sessionData.specialistId,
+      date: new Date(`${sessionData.date}T${sessionData.time}`),
+      status: 'scheduled',
+      type: sessionData.type || 'regular'
+    })
+
+    await session.save()
+    return session
+  } catch (error) {
+    logError('Error scheduling session:', error)
+    throw error
+  }
+}
+
+/**
+ * Reschedules an existing session
+ * 
+ * @async
+ * @param {string} sessionId - Session ID
+ * @param {Object} newSchedule - New schedule data
+ * @param {string} newSchedule.date - New date
+ * @param {string} newSchedule.time - New time
+ * @returns {Promise<Object>} Updated session
+ */
+const rescheduleSession = async (sessionId, newSchedule) => {
+  try {
+    const session = await Sessions.findById(sessionId)
+    if (!session) {
+      throw new Error('Session not found')
+    }
+
+    // Check if new time is available
+    const isAvailable = await checkAvailability(
+      session.specialist,
+      newSchedule.date,
+      newSchedule.time
+    )
+
+    if (!isAvailable) {
+      throw new Error('Selected time slot is not available')
+    }
+
+    // Update session
+    session.date = new Date(`${newSchedule.date}T${newSchedule.time}`)
+    session.status = 'rescheduled'
+    await session.save()
+
+    return session
+  } catch (error) {
+    logError('Error rescheduling session:', error)
+    throw error
+  }
+}
+
+/**
+ * Cancels a scheduled session
+ * 
+ * @async
+ * @param {string} sessionId - Session ID
+ * @returns {Promise<Object>} Cancelled session
+ */
+const cancelSession = async sessionId => {
+  try {
+    const session = await Sessions.findById(sessionId)
+    if (!session) {
+      throw new Error('Session not found')
+    }
+
+    session.status = 'cancelled'
+    session.cancellationReason = reason
+    session.cancelledAt = new Date()
+    await session.save()
+
+    return session
+  } catch (error) {
+    logError('Error cancelling session:', error)
+    throw error
+  }
+}
+
+/**
+ * Checks session availability
+ * 
+ * @async
+ * @param {string} specialistId - Specialist ID
+ * @param {string} date - Date to check
+ * @param {string} time - Time to check
+ * @returns {Promise<boolean>} Availability status
+ */
+const checkAvailability = async (specialistId, date, time) => {
+  try {
+    const sessionTime = new Date(`${date}T${time}`)
+    
+    // Check for existing sessions at the same time
+    const existingSession = await Sessions.findOne({
+      specialist: specialistId,
+      date: sessionTime,
+      status: { $in: ['scheduled', 'rescheduled'] }
+    })
+
+    return !existingSession
+  } catch (error) {
+    logError('Error checking availability:', error)
+    throw error
+  }
 }
 
 /**
@@ -417,4 +554,11 @@ export const setSession = (role, sessions) => {
       })
     })
   })
+}
+
+module.exports = {
+  scheduleSession,
+  rescheduleSession,
+  cancelSession,
+  checkAvailability
 }

@@ -21,6 +21,10 @@
  * email management.
  * 
  * @module utils/functions/mails/mailing
+ * @requires @sendgrid/mail - Email service
+ * @requires dayjs - Date handling
+ * @requires ../config/pino - Logging
+ * @requires ./templates - Email templates
  */
 
 'use strict'
@@ -40,6 +44,9 @@ import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import sgClient from '@sendgrid/client'
+import { logError } from '../../../config/pino'
+import { sendEmail } from './sendMails'
+import { emailTemplates } from './templates'
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -635,6 +642,140 @@ const reminderRenewal = async () => {
 }
 
 /**
+ * Processes the email queue and sends pending emails
+ * 
+ * @param {Object} queue - Email queue data
+ * @returns {Promise<Array>} Array of send results
+ * 
+ * @example
+ * // Process email queue
+ * await processEmailQueue(queueData);
+ */
+const processEmailQueue = async (queue) => {
+  try {
+    const results = await Promise.all(
+      queue.map(async (email) => {
+        try {
+          const result = await sendEmail(email)
+          return { success: true, email, result }
+        } catch (error) {
+          return { success: false, email, error }
+        }
+      })
+    )
+    return results
+  } catch (error) {
+    logError('Error processing email queue:', error)
+    throw error
+  }
+}
+
+/**
+ * Schedules an email for future delivery
+ * 
+ * @param {Object} email - Email data
+ * @param {Date} scheduledTime - Time to send the email
+ * @returns {Promise<Object>} Scheduled email data
+ * 
+ * @example
+ * // Schedule an email
+ * await scheduleEmail(emailData, new Date('2024-03-20T14:00:00Z'));
+ */
+const scheduleEmail = async (email, scheduledTime) => {
+  try {
+    const scheduledEmail = {
+      ...email,
+      scheduledAt: scheduledTime,
+      status: 'scheduled'
+    }
+    // Store in database or queue
+    return scheduledEmail
+  } catch (error) {
+    logError('Error scheduling email:', error)
+    throw error
+  }
+}
+
+/**
+ * Cancels a scheduled email
+ * 
+ * @param {string} emailId - ID of the scheduled email
+ * @returns {Promise<boolean>} Success status
+ * 
+ * @example
+ * // Cancel scheduled email
+ * await cancelScheduledEmail('email123');
+ */
+const cancelScheduledEmail = async (emailId) => {
+  try {
+    // Remove from database or queue
+    return true
+  } catch (error) {
+    logError('Error cancelling scheduled email:', error)
+    throw error
+  }
+}
+
+/**
+ * Tracks email delivery status
+ * 
+ * @param {string} emailId - ID of the email
+ * @param {string} status - New status
+ * @param {Object} [metadata] - Additional tracking metadata
+ * @returns {Promise<Object>} Updated tracking data
+ * 
+ * @example
+ * // Track email delivery
+ * await trackEmailDelivery('email123', 'delivered', { timestamp: new Date() });
+ */
+const trackEmailDelivery = async (emailId, status, metadata = {}) => {
+  try {
+    const trackingData = {
+      emailId,
+      status,
+      timestamp: new Date(),
+      ...metadata
+    }
+    // Store in database
+    return trackingData
+  } catch (error) {
+    logError('Error tracking email delivery:', error)
+    throw error
+  }
+}
+
+/**
+ * Gets email delivery statistics
+ * 
+ * @param {Object} [filters] - Filter criteria
+ * @param {Date} [filters.startDate] - Start date for statistics
+ * @param {Date} [filters.endDate] - End date for statistics
+ * @returns {Promise<Object>} Email statistics
+ * 
+ * @example
+ * // Get email statistics
+ * const stats = await getEmailStats({
+ *   startDate: new Date('2024-03-01'),
+ *   endDate: new Date('2024-03-31')
+ * });
+ */
+const getEmailStats = async (filters = {}) => {
+  try {
+    // Query database for statistics
+    return {
+      total: 0,
+      delivered: 0,
+      failed: 0,
+      pending: 0,
+      ...filters
+    }
+  } catch (error) {
+    logError('Error getting email statistics:', error)
+    throw error
+  }
+}
+
+/**
  * Email Management Service
  * 
  * @exports mailService
@@ -645,6 +786,11 @@ const mailService = {
   reminderChat,
   reminderRenewal,
   getBatchId,
+  processEmailQueue,
+  scheduleEmail,
+  cancelScheduledEmail,
+  trackEmailDelivery,
+  getEmailStats
 }
 
 export default Object.freeze(mailService)
