@@ -78,3 +78,8 @@ networks:
       driver: default
       config:
         - subnet: 192.168.81.0/24  # Custom subnet for development
+
+# Define named volumes for data persistence
+volumes:
+  mongodb_data:  # Volume for MongoDB data
+  redis_data:    # Volume for Redis data

@@ -1,115 +1,78 @@
-# Flutter application configuration for Hablaqui mobile app
-# This file defines the app's dependencies, assets, and configuration
-# Used for managing Flutter/Dart packages and resources
+# Flutter Project Configuration
+# This file defines the configuration and dependencies for the Hablaqui mobile app
 
+# Project metadata
 name: hablaqui
 description: Hablaqui - Mental Health Marketplace and SaaS Platform Mobile App
-
-# Prevent accidental publishing to pub.dev
 publish_to: 'none'
-
-# Version information
-# Format: version_name+version_code
-# - version_name: Semantic version (MAJOR.MINOR.PATCH)
-# - version_code: Build number for app stores
-# 
-# Android: version_name = versionName, version_code = versionCode
-# iOS: version_name = CFBundleShortVersionString, version_code = CFBundleVersion
 version: 1.0.0+1
 
-# SDK constraints
+# Environment configuration
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=2.17.0 <3.0.0"  # Dart SDK version constraints
 
-# Project dependencies
+# Dependencies
 dependencies:
   flutter:
     sdk: flutter
-
-  # State Management
-  flutter_bloc: ^8.1.3
-  equatable: ^2.0.5
-
-  # Network & API
-  dio: ^5.3.2
-  http: ^1.1.0
-  connectivity_plus: ^5.0.1
-
+  # State management
+  provider: ^6.0.5        # State management solution
+  flutter_bloc: ^8.1.3    # BLoC pattern implementation
+  
+  # UI components
+  cupertino_icons: ^1.0.5  # iOS-style icons
+  flutter_svg: ^2.0.5     # SVG rendering
+  cached_network_image: ^3.2.3  # Image caching
+  
+  # Networking
+  dio: ^5.1.1            # HTTP client
+  connectivity_plus: ^4.0.1  # Network connectivity
+  
   # Storage
-  shared_preferences: ^2.2.0
-  flutter_secure_storage: ^9.0.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-
-  # UI Components
-  cupertino_icons: ^1.0.2
-  flutter_svg: ^2.0.7
-  cached_network_image: ^3.2.3
-  shimmer: ^3.0.0
-  lottie: ^2.7.0
-
-  # Authentication & Security
-  firebase_core: ^2.15.1
-  firebase_auth: ^4.7.3
-  google_sign_in: ^6.1.4
-  flutter_facebook_auth: ^6.0.3
-
-  # Communication
-  agora_rtc_engine: ^6.2.6
-  flutter_local_notifications: ^15.1.1
-  firebase_messaging: ^14.6.7
-
+  shared_preferences: ^2.1.1  # Local storage
+  hive: ^2.2.3           # NoSQL database
+  hive_flutter: ^1.1.0   # Flutter integration for Hive
+  
+  # Authentication
+  firebase_auth: ^4.6.2  # Firebase authentication
+  google_sign_in: ^6.1.4  # Google Sign-In
+  
   # Utilities
-  intl: ^0.18.1
-  logger: ^2.0.1
-  path_provider: ^2.1.1
-  image_picker: ^1.0.2
-  url_launcher: ^6.1.12
-  package_info_plus: ^4.2.0
-  device_info_plus: ^9.1.1
-  provider: ^6.0.5
+  intl: ^0.18.0         # Internationalization
+  url_launcher: ^6.1.11  # URL handling
+  package_info_plus: ^4.0.2  # App package information
+  device_info_plus: ^9.0.2  # Device information
 
 # Development dependencies
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.2  # Flutter linting rules
+  build_runner: ^2.4.4   # Code generation
+  hive_generator: ^2.0.0  # Hive code generation
 
-  # Testing
-  mockito: ^5.4.2
-  build_runner: ^2.4.6
-  flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.2
-
-  # Code Quality
-  flutter_lints: ^2.0.2
-  custom_lint: ^0.5.7
-  dart_code_metrics: ^5.7.6
-
-# Flutter-specific configuration
+# Flutter configuration
 flutter:
-  # Enable Material Design
+  # Material Design icons
   uses-material-design: true
-
-  # Asset organization
+  
+  # Asset configuration
   assets:
     - assets/images/
     - assets/icons/
-    - assets/animations/
     - assets/fonts/
-
+  
   # Font configuration
   fonts:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
-        - asset: assets/fonts/Poppins-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-          weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
 
-# Flutter configuration
+# Flutter-specific configuration
 flutter_icons:
   android: "launcher_icon"
   ios: true

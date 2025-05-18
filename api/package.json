@@ -1,37 +1,52 @@
 {
+  // API Project Configuration
+  // This file defines the configuration and dependencies for the Hablaqui API
+
+  // Project metadata
   "name": "hablaqui-api",
   "version": "1.0.0",
   "description": "Backend API for Hablaqui Mental Health Marketplace and SaaS Platform",
-  "main": "src/index.js",
+  "private": true,
+
+  // Main entry point
+  "main": "server.js",
+
+  // Scripts for development and deployment
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    // Development scripts
+    "dev": "nodemon server.js",  // Run server with auto-reload
+    "start": "node server.js",   // Run server in production
+
+    // Build scripts
+    "build": "npm run lint && npm run test",  // Build and verify
+    "clean": "rm -rf dist",      // Clean build artifacts
+
+    // Test scripts
+    "test": "jest",             // Run tests
+    "test:watch": "jest --watch",  // Run tests in watch mode
+    "test:coverage": "jest --coverage",  // Generate test coverage
+
+    // Lint scripts
+    "lint": "eslint .",         // Lint all files
+    "lint:fix": "eslint . --fix"  // Fix linting issues
   },
+
+  // Production dependencies
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.5.0",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5",
-    "helmet": "^7.0.0",
-    "jsonwebtoken": "^9.0.1",
-    "bcryptjs": "^2.4.3",
-    "morgan": "^1.10.0",
-    "winston": "^3.10.0",
-    "joi": "^17.9.2",
-    "multer": "^1.4.5-lts.1",
-    "aws-sdk": "^2.1450.0",
-    "stripe": "^13.5.0",
-    "nodemailer": "^6.9.4",
-    "socket.io": "^4.7.2"
+    "express": "^4.18.2",       // Web framework
+    "cors": "^2.8.5",           // CORS middleware
+    "helmet": "^7.0.0",         // Security headers
+    "morgan": "^1.10.0",        // HTTP request logger
+    "compression": "^1.7.4",    // Response compression
+    "express-rate-limit": "^6.7.0",  // Rate limiting
+    "dotenv": "^16.0.3"         // Environment variables
   },
+
+  // Development dependencies
   "devDependencies": {
-    "jest": "^29.6.4",
-    "supertest": "^6.3.3",
-    "nodemon": "^3.0.1",
-    "eslint": "^8.47.0",
-    "prettier": "^3.0.2"
+    "nodemon": "^2.0.22",       // Auto-reload for development
+    "jest": "^29.5.0",          // Testing framework
+    "eslint": "^8.40.0",        // Linting
+    "supertest": "^6.3.3"       // HTTP testing
   }
 }

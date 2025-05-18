@@ -1,34 +1,55 @@
 {
-  // Compiler options for JavaScript language service
+  // JavaScript Configuration
+  // This file configures JavaScript language features and module resolution
+
+  // Compiler options
   "compilerOptions": {
-    // Base URL for resolving non-relative module names
+    // Base URL for non-relative module names
     "baseUrl": ".",
-    // Path mapping for module resolution
+
+    // Module resolution strategy
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    // Target ECMAScript version
+    "target": "esnext",
+
+    // Enable all strict type checking options
+    "strict": true,
+
+    // Allow JavaScript files to be compiled
+    "allowJs": true,
+
+    // Allow default imports from modules with no default export
+    "allowSyntheticDefaultImports": true,
+
+    // Resolve modules using Node.js style
+    "resolveJsonModule": true,
+
+    // Enable experimental decorators
+    "experimentalDecorators": true,
+
+    // Path aliases for module imports
     "paths": {
-      // Alias for source files in the src directory
-      "~/*": ["./src/*"],
-      "@/*": ["./src/*"],
-      // Alias for root directory files
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "~/*": ["./*"],
+      "@/*": ["./*"]
     }
   },
-  // Files to include in the JavaScript language service
+
+  // Files to include in the project
   "include": [
-    // Vue components
-    "./components/**/*",
-    // Page layouts
-    "./layout/**/*",
-    // Application pages
-    "./pages/**/*"
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.vue",
+    "**/*.js",
+    "**/*.jsx"
   ],
-  // Files to exclude from the JavaScript language service
+
+  // Files to exclude from the project
   "exclude": [
-    // Node modules directory
     "node_modules",
-    // Nuxt build directory
+    "dist",
     ".nuxt",
-    // Production build directory
-    "dist"
+    ".output"
   ]
 }

@@ -1,43 +1,41 @@
 /**
  * Validation Middleware
  * 
- * This middleware provides request validation functionality using Joi schemas.
- * It validates incoming requests against a provided schema before executing the service function.
+ * This module provides request validation middleware for the Hablaquí API.
+ * It validates incoming request data against defined schemas using Joi.
+ * 
+ * Features:
+ * - Request body validation
+ * - Request parameters validation
+ * - Request query validation
+ * - Custom validation error messages
+ * - Schema-based validation rules
  * 
  * @module middleware/validation
+ * @requires joi - Schema validation library
+ * @requires ../utils/responses/functions - Response utilities
  */
 
-import { logError } from '../config/pino'
-/* En base a un esquema y propiedad, podemos validar la request antes de ejecutar
-la funcion del service.
-La variable propiedad nos sirve para hacer validaciones en body,params,query,etc''
-*/
+'use strict'
+
+import Joi from 'joi'
+import { conflictResponse } from '../utils/responses/functions'
 
 /**
- * Creates a validation middleware function that validates request data against a Joi schema
+ * Request validation middleware
+ * Validates request data against provided schema
  * 
- * @param {Object} schema - Joi validation schema to validate against
- * @param {string} property - Request property to validate ('body', 'params', 'query', etc.)
- * @returns {Function} Express middleware function that validates the request
- * 
- * @example
- * // Validate request body against userSchema
- * router.post('/users', validation(userSchema, 'body'), userController.createUser);
- * 
- * @example
- * // Validate URL parameters against idSchema
- * router.get('/users/:id', validation(idSchema, 'params'), userController.getUser);
+ * @param {Object} schema - Joi validation schema
+ * @returns {Function} Express middleware function
+ * @throws {Error} If validation fails
  */
-const validation = (schema, property) => {
+const validation = schema => {
   return (req, res, next) => {
-    const { error } = schema.validate(req[property])
-    if (!error) {
-      next()
-    } else {
-      const { details } = error
-      logError(details[0].message)
-      res.status(422).json({ errors: details })
+    const { error } = schema.validate(req.body)
+    if (error) {
+      return conflictResponse(error.details[0].message)
     }
+    next()
   }
 }
 

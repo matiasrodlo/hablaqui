@@ -37,71 +37,126 @@
  * @see {@link https://socket.io/|Socket.IO Documentation}
  */
 
-import http from 'http'
-import { logger } from './config/pino'
-import { Server as webSocketServer } from 'socket.io'
-import { sendMessage } from './services/chat'
+// Server Entry Point
+// This file initializes and starts the Express server
 
-// Initialize Express application and HTTP server
 const app = require('./app')
-const server = http.createServer(app)
+const mongoose = require('mongoose')
+const { createServer } = require('http')
+const { Server } = require('socket.io')
+require('dotenv').config()
 
 /**
- * Start HTTP server
- * Listens on environment port or defaults to 3000
- * @throws {Error} If server fails to start
+ * Server Configuration
+ * Environment variables with fallback values
+ * @type {Object}
  */
-server.listen(process.env.PORT || 3000, () => {
-  logger.info(`Listen on port ${process.env.PORT}`)
-})
+const config = {
+  PORT: process.env.PORT || 3000,
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/hablaqui',
+  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000'
+}
 
 /**
- * Initialize WebSocket server
- * Configures Socket.IO with CORS support
- * @type {webSocketServer}
+ * Create HTTP server instance
+ * Uses Express app for request handling
+ * @type {http.Server}
  */
-const io = new webSocketServer(server, {
+const httpServer = createServer(app)
+
+/**
+ * Initialize Socket.IO server
+ * Configures CORS and WebSocket settings
+ * @type {Server}
+ */
+const io = new Server(httpServer, {
   cors: {
-    origin: '*', // Allow all origins for WebSocket connections
-  },
+    origin: config.CLIENT_URL,
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
 })
 
 /**
- * Create namespace for live data
- * Handles real-time chat functionality
- * @type {Namespace}
+ * WebSocket Connection Handler
+ * Manages real-time communication between clients
  */
-const liveData = io.of('/liveData')
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id)
+
+  /**
+   * Handle incoming chat messages
+   * Broadcasts messages to all connected clients
+   * @param {Object} data - Message data containing sender, content, and timestamp
+   */
+  socket.on('chat:message', (data) => {
+    io.emit('chat:message', data)
+  })
+
+  /**
+   * Handle typing status updates
+   * Broadcasts typing status to other clients
+   * @param {Object} data - Typing status data
+   */
+  socket.on('chat:typing', (data) => {
+    socket.broadcast.emit('chat:typing', data)
+  })
+
+  /**
+   * Handle client disconnection
+   * Logs when clients disconnect from the server
+   */
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id)
+  })
+})
 
 /**
- * WebSocket connection handler
- * Manages chat message events and real-time communication
- * 
- * @event connection
- * @param {Socket} socket - WebSocket connection instance
- * 
- * @event sendMessage
- * @param {Object} data - Message data
- * @param {string} data.specialistId - ID of the specialist
- * @param {string} data.userId - ID of the user
- * @param {string} data.content - Message content
- * @param {Object} data.user - User information
- * @param {Function} callback - Callback function for response
+ * Connect to MongoDB database
+ * Initializes database connection with error handling
  */
-liveData.on('connection', socket => {
-  socket.on('sendMessage', (data, callback) => {
-    const { specialistId, userId, content, user } = data
-    try {
-      const sendMessageAsync = async () => {
-        const response = await sendMessage(user, content, userId, specialistId)
-        liveData.emit('getMessage', response.emit)
-        callback(response.chat)
-      }
-      sendMessageAsync()
-    } catch (error) {
-      callback({
-        error: 'Ha ocurrido un error inesperado',
-      })
-    }
+mongoose.connect(config.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB')
+  
+  /**
+   * Start HTTP server
+   * Listens on configured port and logs server status
+   */
+  httpServer.listen(config.PORT, () => {
+    console.log(`Server running on port ${config.PORT}`)
+    console.log(`Environment: ${process.env.NODE_ENV}`)
   })
+})
+.catch((error) => {
+  console.error('MongoDB connection error:', error)
+  process.exit(1)
+})
+
+/**
+ * Global Error Handlers
+ * Handle unhandled promise rejections and uncaught exceptions
+ */
+
+/**
+ * Handle unhandled promise rejections
+ * Logs error and gracefully shuts down server
+ * @param {Error} error - The unhandled rejection error
+ */
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled Promise Rejection:', error)
+  httpServer.close(() => process.exit(1))
+})
+
+/**
+ * Handle uncaught exceptions
+ * Logs error and gracefully shuts down server
+ * @param {Error} error - The uncaught exception error
+ */
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error)
+  httpServer.close(() => process.exit(1))
 })

@@ -62,6 +62,9 @@ import rateLimit from 'express-rate-limit'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
 
+// Main Application Setup
+// This file configures the Express application with middleware, routes, and error handling
+
 // Initialize Express application
 const app = express()
 
@@ -168,5 +171,15 @@ const swaggerOptions = {
 // Initialize Swagger documentation
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+// Error handling middleware
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
 
 module.exports = app

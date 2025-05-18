@@ -1,56 +1,35 @@
 # Development Dockerfile
-# This file defines the container configuration for development environment.
-# It includes development tools, hot-reloading support, and debugging capabilities.
+# This file defines the development environment for the application
 
-# Use Node.js 18.x with Alpine Linux as base image
-# Alpine provides a minimal base image for faster builds and smaller size
+# Use Node.js LTS version as the base image
 FROM node:18-alpine
 
-# Set working directory in container
+# Set working directory in the container
 WORKDIR /app
 
-# Install development dependencies
-# These packages are needed for development but not for production
+# Install system dependencies
 RUN apk add --no-cache \
-    curl \  # For health checks
-    git \  # For version control
-    python3 \  # For node-gyp
-    make \  # For building native modules
-    g++ \  # For compiling native modules
-    vim \  # For editing files in container
-    && npm install -g nodemon  # For hot-reloading
+    python3 \
+    make \
+    g++ \
+    git \
+    curl
 
 # Copy package files
-# This is done before copying the rest of the code to leverage Docker's layer caching
 COPY package*.json ./
 
 # Install dependencies
-# Development dependencies are included for hot-reloading and debugging
 RUN npm install
 
-# Copy source code
-# The rest of the application code is copied after installing dependencies
+# Copy application code
 COPY . .
 
-# Expose development ports
-# These ports are used for the development server and debugging
-EXPOSE 3000  # Backend API port
-EXPOSE 8080  # Nuxt.js development server port
-EXPOSE 9000  # Frontend development server port
+# Expose the port the app runs on
+EXPOSE 3000
 
-# Set development environment variables
-ENV NODE_ENV=development \
-    PORT=3000 \
-    HOST=0.0.0.0
+# Set environment variables
+ENV NODE_ENV=development
+ENV PORT=3000
 
-# Create non-root user for security
-# This follows the principle of least privilege
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
-    && chown -R appuser:appgroup /app
-
-# Switch to non-root user
-USER appuser
-
-# Start development server with hot-reloading
-# Nodemon is used to automatically restart the server when code changes
+# Start the development server
 CMD ["npm", "run", "dev"]

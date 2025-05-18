@@ -35,13 +35,65 @@
  * @see {@link https://github.com/standard-things/esm|ESM Documentation}
  */
 
-// Configure ESM loader to enable ES6 module syntax
-// Options can be set via:
-// 1. Parameter in require('esm')(module, options)
-// 2. Environment variable ESM_OPTIONS
-// 3. .esmrc file in the project root
-// eslint-disable-next-line no-global-assign
-require = require('esm')(module /*, options */)
+// Express.js Server Configuration
+// This file sets up the main server for the Hablaqui API
 
-// Export the main server application
-module.exports = require('./server/index.js')
+// Import required modules
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+
+// Import environment configuration
+require('dotenv').config();
+
+// Create Express application
+const app = express();
+
+// Security middleware
+app.use(helmet());  // Set security-related HTTP headers
+app.use(cors());    // Enable CORS for all routes
+
+// Request parsing middleware
+app.use(express.json());      // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded bodies
+
+// Logging middleware
+app.use(morgan('dev'));  // HTTP request logger
+
+// Compression middleware
+app.use(compression());  // Compress response bodies
+
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 100  // Limit each IP to 100 requests per windowMs
+});
+app.use(limiter);  // Apply rate limiting to all routes
+
+// Import route handlers
+const authRoutes = require('./server/routes/auth');
+const userRoutes = require('./server/routes/users');
+const chatRoutes = require('./server/routes/chat');
+
+// Register routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/chat', chatRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

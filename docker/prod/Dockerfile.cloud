@@ -1,57 +1,38 @@
-# Production Dockerfile
-# This file defines the container configuration for production environment.
-# It uses multi-stage builds to optimize the final image size and security.
+# Cloud Production Dockerfile
+# This file defines the production environment for cloud deployment
 
-# Stage 1: Dependencies
-# This stage installs all dependencies and builds the application
-FROM node:18-alpine AS builder
+# Use Node.js LTS version as the base image
+FROM node:18-alpine
 
-# Set working directory
+# Set working directory in the container
 WORKDIR /app
 
-# Install build dependencies
+# Install system dependencies
 RUN apk add --no-cache \
     python3 \
     make \
     g++ \
-    git
+    git \
+    curl
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-# Production dependencies only, no dev dependencies
+# Install production dependencies only
 RUN npm ci --only=production
 
-# Copy source code
+# Copy application code
 COPY . .
 
-# Build application
-# This step generates optimized production assets
+# Build the application
 RUN npm run build
 
-# Stage 2: Production
-# This stage creates the final production image
-FROM node:18-alpine
+# Expose the port the app runs on
+EXPOSE 3000
 
-# Set working directory
-WORKDIR /app
-
-# Install production dependencies only
-RUN apk add --no-cache \
-    curl \  # For health checks
-    tini \  # For proper process management
-    && npm install -g pm2  # For process management
-
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-
-# Set production environment variables
-ENV NODE_ENV=production \
-    PORT=3000 \
-    HOST=0.0.0.0
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
 
 # Create non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
@@ -60,13 +41,5 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
 # Switch to non-root user
 USER appuser
 
-# Expose production port
-EXPOSE 3000
-
-# Use tini as init process
-# This ensures proper signal handling and zombie process reaping
-ENTRYPOINT ["/sbin/tini", "--"]
-
-# Start application with PM2
-# PM2 provides process management, monitoring, and automatic restarts
-CMD ["pm2-runtime", "start", "dist/server.js", "--name", "hablaqui"]
+# Start the production server
+CMD ["npm", "start"]

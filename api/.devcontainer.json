@@ -1,9 +1,43 @@
 {
-    "name": "API RESTful",
+    // VS Code Dev Container Configuration
+    // This file configures the development container for the API service
+
+    // Name of the development container
+    "name": "Hablaqui API Development",
+
+    // Docker Compose configuration
     "dockerComposeFile": "../docker-compose-dev.yml",
-    "service": "api-restful",
+    "service": "api",
     "shutdownAction": "stopCompose",
-    "workspaceFolder": "/home/node/app",
+    "workspaceFolder": "/workspace/api",
+
+    // VS Code settings for the container
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+        }
+    },
+
+    // Extensions to install in the container
+    "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "ms-azuretools.vscode-docker"
+    ],
+
+    // Port forwarding configuration
+    "forwardPorts": [3000],
+
+    // Post-create commands
+    "postCreateCommand": "npm install",
+
+    // Remote user configuration
+    "remoteUser": "node",
+
+    // Customizations for VS Code
     "customizations": {
         "vscode": {
             "extensions": [
@@ -21,7 +55,10 @@
                 "editor.formatOnType": false, // required
                 "editor.formatOnSave": true, // optional 
                 "editor.formatOnSaveMode": "file",
-                "editor.defaultFormatter": "rvest.vs-code-prettier-eslint" // required to format on save
+                "editor.defaultFormatter": "rvest.vs-code-prettier-eslint", // required to format on save
+                "editor.codeActionsOnSave": {
+                    "source.fixAll.eslint": true
+                }
             }
         },
         "codespaces": {
