@@ -1,24 +1,20 @@
 /**
  * MiniCalendar Component
- * 
- * A compact calendar component that displays the next available session dates and times
- * for a specialist. Features a simplified view of upcoming sessions with the ability to
- * expand to a full calendar view.
- * 
- * The component includes:
- * - Next available date display
- * - Quick access to upcoming session times
- * - Expandable full calendar view
- * - Session booking functionality
- * - Timezone-aware date formatting
- * 
+ *
+ * A compact calendar component for selecting dates, used in scheduling and availability features.
+ *
+ * Key Features:
+ * - Date selection
+ * - Compact, mobile-friendly design
+ * - Customizable appearance
+ * - Responsive layout
+ *
+ * Requirements:
+ * - Vuetify calendar or date-picker components
+ *
  * @component
  * @example
- * <MiniCalendar
- *   :id-spec="specialistId"
- *   :username="specialistUsername"
- *   :sessions="availableSessions"
- * />
+ * <MiniCalendar />
  */
 <template>
   <div class="my-3">
